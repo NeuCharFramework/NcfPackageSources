@@ -29,6 +29,11 @@
                             @@click="handleElVisibleOpenBtn('drawerAgent')">
                             <i class="el-icon-plus"></i>
                         </div>
+                        <div class="sidebar-titleRow-icon df-wn flex-ac flex-jc"
+                            title="管理远程 A2A 智能体" style="margin-left:6px;background:#fff7ed;color:#d97706;"
+                            @@click="openRemoteAgentManager">
+                            <i class="el-icon-connection"></i>
+                        </div>
                     </div>
                     <div class="df-wn flex-ac flex-jsb sidebar-search-row">
                         <el-input v-model="agentQueryList.filter" placeholder="请输入名称搜索" suffix-icon="el-icon-search"
@@ -84,6 +89,8 @@
                             <el-radio-button label="panel">面板视图</el-radio-button>
                             <el-radio-button label="three">3D视图</el-radio-button>
                         </el-radio-group>
+                        <el-button size="mini" type="warning" plain icon="el-icon-connection" style="margin-left:10px;"
+                            @@click="openRemoteAgentManager">远程 A2A 智能体</el-button>
                     </div>
                     <el-scrollbar v-if="agentListViewMode === 'panel'" class="sidebar-agent-container" wrap-class="scrollbar-wrapper">
                         <div ref="agentElListBox" class="agent-listWrap">
@@ -1602,6 +1609,70 @@
         </div>
     </div>
 </el-drawer>
+@* 抽屉 远程 A2A 智能体管理 *@
+<el-drawer :visible.sync="visible.drawerRemoteAgent" direction="rtl" :with-header="false" :wrapper-closable="false"
+    :close-on-press-escape="false" size="900px">
+    <div class="drawerRtl">
+        <div class="drawerRtl__header">
+            <div class="drawerRtl__header__title"><el-tag type="warning" size="mini">REMOTE A2A</el-tag> 远程智能体</div>
+            <div class="drawerRtl__header__close" @@click="visible.drawerRemoteAgent = false">&times;</div>
+        </div>
+        <div class="drawerRtl__body">
+            <div class="df-wn flex-ac flex-jsb" style="gap:10px;margin-bottom:14px;">
+                <el-input v-model="remoteAgentQueryList.filter" size="small" placeholder="按名称筛选"
+                    @@change="getRemoteAgentListData"></el-input>
+                <el-button type="primary" size="small" icon="el-icon-plus" @@click="openRemoteAgentEditor()">新增远程 A2A</el-button>
+            </div>
+            <div class="form-help-text" style="margin-bottom:12px;">数据库仅保存密钥引用；实际令牌请在部署配置 <code>A2A:Secrets:密钥名</code> 中维护。</div>
+            <el-table :data="remoteAgentList" max-height="560" style="width:100%;border:1px solid rgba(229,229,229,1);">
+                <el-table-column label="类型" width="105">
+                    <template slot-scope="{ row }"><el-tag type="warning" size="mini">A2A 远程</el-tag></template>
+                </el-table-column>
+                <el-table-column prop="name" label="智能体" width="145" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="agentCardUrl" label="Agent Card 地址" min-width="220" show-overflow-tooltip></el-table-column>
+                <el-table-column label="连接" width="90">
+                    <template slot-scope="{ row }">
+                        <el-tag :type="row.connectionStatus === 1 ? 'success' : (row.connectionStatus === 2 ? 'danger' : 'info')" size="mini">{{ remoteConnectionStatusText(row.connectionStatus) }}</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column label="状态" width="75">
+                    <template slot-scope="{ row }"><el-tag :type="row.enable ? 'success' : 'info'" size="mini">{{ row.enable ? '启用' : '停用' }}</el-tag></template>
+                </el-table-column>
+                <el-table-column label="操作" width="260" fixed="right">
+                    <template slot-scope="{ row }">
+                        <el-button type="primary" size="mini" @@click="openRemoteAgentEditor(row)">编辑</el-button>
+                        <el-button size="mini" @@click="testRemoteAgent(row)">测试</el-button>
+                        <el-button size="mini" @@click="setRemoteAgentEnable(row,!row.enable)">{{ row.enable ? '停用' : '启用' }}</el-button>
+                        <el-button type="danger" size="mini" @@click="deleteRemoteAgent(row)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+    </div>
+</el-drawer>
+<el-dialog :visible.sync="visible.dialogRemoteAgentEditor" :title="remoteAgentForm.id ? '编辑远程 A2A 智能体' : '新增远程 A2A 智能体'" width="620px" :close-on-click-modal="false">
+    <el-form v-if="visible.dialogRemoteAgentEditor" ref="remoteAgentELForm" :model="remoteAgentForm" :rules="remoteAgentFormRules" :size="elSize" label-width="150px">
+        <el-form-item label="名称" prop="name"><el-input v-model="remoteAgentForm.name" placeholder="例如：外部研究助手"></el-input></el-form-item>
+        <el-form-item label="类型"><el-tag type="warning">A2A 远程智能体</el-tag></el-form-item>
+        <el-form-item label="Agent Card 地址" prop="agentCardUrl"><el-input v-model="remoteAgentForm.agentCardUrl" placeholder="https://host/.well-known/agent-card.json"></el-input></el-form-item>
+        <el-form-item label="是否启用"><el-switch v-model="remoteAgentForm.enable"></el-switch></el-form-item>
+        <el-form-item label="连接超时（秒）"><el-input-number v-model="remoteAgentForm.timeoutSeconds" :min="5" :max="600"></el-input-number></el-form-item>
+        <el-form-item label="鉴权方式">
+            <el-select v-model="remoteAgentForm.authenticationMode" style="width:100%;">
+                <el-option label="无鉴权" :value="0"></el-option>
+                <el-option label="Bearer Token" :value="1"></el-option>
+                <el-option label="自定义请求头" :value="2"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item v-if="remoteAgentForm.authenticationMode === 2" label="请求头名称"><el-input v-model="remoteAgentForm.authHeaderName" placeholder="例如 X-API-Key"></el-input></el-form-item>
+        <el-form-item v-if="remoteAgentForm.authenticationMode !== 0" label="部署密钥名"><el-input v-model="remoteAgentForm.authSecretKey" placeholder="只填写密钥名，不填写令牌正文"></el-input></el-form-item>
+        <el-form-item label="说明"><el-input v-model="remoteAgentForm.description" type="textarea" :rows="3" placeholder="可选，仅管理员可见"></el-input></el-form-item>
+    </el-form>
+    <span slot="footer">
+        <el-button :size="elSize" @@click="closeRemoteAgentEditor">取消</el-button>
+        <el-button :size="elSize" type="primary" @@click="saveRemoteAgent">保存</el-button>
+    </span>
+</el-dialog>
 @* 抽屉 新增|编辑 组 *@
 <el-drawer :visible.sync="visible.drawerGroup" direction="rtl" :with-header="false" :wrapper-closable="false"
     :close-on-press-escape="false" size="960px">
@@ -1622,7 +1693,7 @@
                     <el-checkbox v-model="groupForm.enable">启用该组</el-checkbox>
                     <div class="form-help-text">新建组默认启用。停用后不会创建新任务，也不会作为 Workflow 节点使用。</div>
                 </el-form-item>
-                <el-form-item label="组成员" prop="members">
+                <el-form-item label="本地成员" prop="members">
                     <div class="groupFMB">
                         <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
                             <div class="df-wn flex-ac" style="gap: 10px;">
@@ -1641,6 +1712,7 @@
                                 <div class="df flex-ac flex-js" style="gap:10px">
                                     <div v-for="(item,index) in groupForm.members" :key="item.id"
                                         class="df-wn flex-ac groupFMB_ma_list_item">
+                                        <el-tag type="primary" size="mini" style="margin-right:4px;">本地</el-tag>
                                         <span class="groupFMB_ma_list_item_text">{{ item.name }}</span>
                                         <i class="el-icon-close cursorPointer"
                                             @@click="groupMembersCancel(item,index)"></i>
@@ -1671,6 +1743,49 @@
                         @@next-click="getAgentListData($event,'groupAgent')">
                         </el-pagination> *@
                     </div>
+                </el-form-item>
+                <el-form-item label="远程 A2A 成员">
+                    <div class="groupFMB">
+                        <div class="df-wn flex-ac flex-jsb" style="gap:10px;margin-bottom:10px;">
+                            <div class="df-wn flex-ac" style="gap:10px;">
+                                <el-input v-model="groupRemoteAgentQueryList.filter" size="small" placeholder="按名称筛选"
+                                    @@change="getRemoteAgentListData('groupRemoteAgent')"></el-input>
+                                <el-button size="small" icon="el-icon-search" @@click="getRemoteAgentListData('groupRemoteAgent')">搜索</el-button>
+                            </div>
+                            <el-button type="warning" plain size="small" icon="el-icon-connection" @@click="openRemoteAgentManager">管理远程 A2A</el-button>
+                        </div>
+                        <div class="df-wn flex-as flex-js" style="gap:10px;margin-bottom:10px;">
+                            <span class="groupFMB_ma_label">已选择:</span>
+                            <div class="groupFMB_ma_list">
+                                <div class="df flex-ac flex-js" style="gap:10px">
+                                    <div v-for="item in groupForm.remoteMembers" :key="'remote-'+item.id"
+                                        class="df-wn flex-ac groupFMB_ma_list_item" style="border-color:#f59e0b;background:#fffbeb;">
+                                        <el-tag type="warning" size="mini" style="margin-right:4px;">A2A</el-tag>
+                                        <span class="groupFMB_ma_list_item_text">{{ item.name }}</span>
+                                        <i class="el-icon-close cursorPointer" @@click="groupRemoteMembersCancel(item)"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <el-table ref="groupRemoteAgentTable" key="groupRemoteAgentTable" :data="groupRemoteAgentList" max-height="260"
+                            style="width:100%;margin-bottom:8px;border:1px solid rgba(245,158,11,.35);"
+                            @@selection-change="handleRemoteSelectionChange">
+                            <el-table-column type="selection" width="36"></el-table-column>
+                            <el-table-column label="类型" width="78"><template slot-scope="{ row }"><el-tag type="warning" size="mini">A2A</el-tag></template></el-table-column>
+                            <el-table-column prop="name" label="智能体名称" width="150" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="agentCardUrl" label="Agent Card 地址" min-width="190" show-overflow-tooltip></el-table-column>
+                            <el-table-column label="连接" width="90"><template slot-scope="{ row }"><el-tag :type="row.connectionStatus === 1 ? 'success' : (row.connectionStatus === 2 ? 'danger' : 'info')" size="mini">{{ remoteConnectionStatusText(row.connectionStatus) }}</el-tag></template></el-table-column>
+                        </el-table>
+                        <div class="form-help-text">远程成员默认仅收到任务指令和当前轮的文本结论；不会收到工具调用、原始模型内容或完整历史。</div>
+                    </div>
+                </el-form-item>
+                <el-form-item label="上下文共享">
+                    <el-select v-model="groupForm.contextSharingMode" clearable placeholder="远程成员默认：指令 + 关键结论" style="width:100%;">
+                        <el-option label="兼容旧组：完整历史（仅无远程成员）" :value="0"></el-option>
+                        <el-option label="任务指令 + 当前轮关键结论" :value="1"></el-option>
+                        <el-option label="仅任务指令" :value="2"></el-option>
+                    </el-select>
+                    <div class="form-help-text">混合群组会采用所有远程成员要求中最严格的策略；本地群未设置时保持升级前行为。</div>
                 </el-form-item>
                 <el-form-item label="群主" prop="adminAgentTemplateId">
                     @* @change="handleChange($event,'')" *@

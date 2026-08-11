@@ -17,6 +17,8 @@ var app = new Vue({
       // 显隐 visible
       visible: {
         drawerAgent: false, // 智能体 新增|编辑
+        drawerRemoteAgent: false, // 远程 A2A 智能体管理
+        dialogRemoteAgentEditor: false, // 远程 A2A 智能体新增|编辑
         dialogGroupAgent: false, // 智能体 新增dialog
         drawerGroup: false, // 组 新增|编辑
         drawerGroupStart: false, // 组 启动 
@@ -100,6 +102,28 @@ var app = new Vue({
         }
       ],
       agentList: [],
+      remoteAgentQueryList: {
+        pageIndex: 0,
+        pageSize: 0,
+        filter: '',
+      },
+      remoteAgentList: [],
+      remoteAgentForm: {
+        id: 0,
+        name: '',
+        description: '',
+        enable: true,
+        protocol: 0,
+        agentCardUrl: '',
+        authenticationMode: 0,
+        authHeaderName: '',
+        authSecretKey: '',
+        timeoutSeconds: 60,
+      },
+      remoteAgentFormRules: {
+        name: [{ required: true, message: '请填写远程智能体名称', trigger: 'blur' }],
+        agentCardUrl: [{ required: true, message: '请填写 A2A Agent Card 地址', trigger: 'blur' }]
+      },
       knowledgeBaseOptions: [],
       fillCardNum: 0, // 为了保持最后一行的样式 填充的card数量
       agentListElResizeObserver: null,
@@ -229,6 +253,13 @@ var app = new Vue({
       isGetGroupAgent: false,
       groupAgentList: [], // 组新增时的智能体列表
       groupAgentTotal: 0,
+      isGetGroupRemoteAgent: false,
+      groupRemoteAgentList: [],
+      groupRemoteAgentQueryList: {
+        pageIndex: 0,
+        pageSize: 0,
+        filter: '',
+      },
       // 组 ---end
       // 任务 task ---start
       taskQueryList: {
@@ -323,7 +354,9 @@ var app = new Vue({
         enable: true, // 新建组默认启用
         name: '', // 名称
         members: [], // 成员列表
+        remoteMembers: [], // 远程 A2A 成员列表
         description: '', // 说明
+        contextSharingMode: null, // null 时本地群沿用旧行为，远程成员默认最小化共享
         adminAgentTemplateId: '', // 群主即agent
         enterAgentTemplateId: '' // 对接人即agent
       },
@@ -847,10 +880,10 @@ var app = new Vue({
         return ''
       }
       return JSON.stringify({
-        agents: (snapshot.agents || []).map(item => [item.id, item.chattingCount, item.score, item.enable]),
+        agents: (snapshot.agents || []).map(item => [item.participantKey || `local:${item.id}`, item.chattingCount, item.score, item.enable, item.agentKind, item.connectionStatus]),
         groups: (snapshot.groups || []).map(item => [item.id, item.enable, item.runningTaskCount, item.state, item.taskStatusCounts]),
-        links: (snapshot.links || []).map(item => [item.groupId, item.agentId]),
-        collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.agentIds])
+        links: (snapshot.links || []).map(item => [item.groupId, item.participantKey || `local:${item.agentId}`]),
+        collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.participantKeys || item.agentIds])
       })
     },
     buildFilteredAgentGraphSnapshot(snapshot) {
@@ -884,7 +917,7 @@ var app = new Vue({
 
       const groupIdSet = new Set(filteredGroups.map(item => item.id))
       const filteredLinks = allLinks.filter(item => groupIdSet.has(item.groupId))
-      const agentIdSet = new Set(filteredLinks.map(item => item.agentId))
+      const participantKeySet = new Set(filteredLinks.map(item => item.participantKey || `local:${item.agentId}`))
 
       const hasExplicitGroupConstraint = Boolean(selectedGroupId)
         || this.agentGraphShowOnlyActiveGroup
@@ -892,7 +925,7 @@ var app = new Vue({
 
       // Keep ungrouped agents visible when there is no explicit group/status constraint.
       const filteredAgents = hasExplicitGroupConstraint
-        ? allAgents.filter(item => agentIdSet.has(item.id))
+        ? allAgents.filter(item => participantKeySet.has(item.participantKey || `local:${item.id}`))
         : allAgents
 
       const filteredCollaborations = allCollaborations.filter(item => {
@@ -1035,7 +1068,9 @@ var app = new Vue({
         return
       }
 
-      const graphAgentMap = new Map(graphAgents.map(item => [item.id, item]))
+      const graphAgentMap = new Map(graphAgents
+        .filter(item => !item.agentKind || item.agentKind === 'Local')
+        .map(item => [item.id, item]))
       const mergedList = this.agentList.map(item => {
         const graph = graphAgentMap.get(item.id)
         if (!graph) {
@@ -1162,6 +1197,137 @@ var app = new Vue({
         5: '#F56C6C'
       }
       return statusColorMap[Number(status)] || '#C0C4CC'
+    },
+    remoteConnectionStatusText(status) {
+      const statusMap = { 0: '未检测', 1: '可用', 2: '不可用' }
+      return statusMap[Number(status)] || '未检测'
+    },
+    async getRemoteAgentListData(listType = 'remoteAgent') {
+      const query = listType === 'groupRemoteAgent'
+        ? { ...this.groupRemoteAgentQueryList }
+        : { ...this.remoteAgentQueryList }
+      try {
+        const response = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.GetList?${getInterfaceQueryStr(query)}`)
+        const data = response?.data ?? {}
+        if (!data.success) {
+          throw new Error(data.errorMessage || data.data || '加载远程 A2A 智能体失败')
+        }
+
+        const list = data?.data?.list ?? []
+        if (listType === 'groupRemoteAgent') {
+          this.$set(this, 'groupRemoteAgentList', list)
+          this.$nextTick(() => {
+            this.isGetGroupRemoteAgent = false
+            if (!this.visible.drawerGroup || !this.groupForm.remoteMembers?.length) return
+            const selected = list.filter(item => this.groupForm.remoteMembers.some(member => member.id === item.id))
+            this.toggleRemoteSelection(selected)
+          })
+        } else {
+          this.$set(this, 'remoteAgentList', list)
+        }
+      } catch (err) {
+        console.log('getRemoteAgentListData', err)
+        this.$message.error(err?.message || '加载远程 A2A 智能体失败')
+      }
+    },
+    openRemoteAgentManager() {
+      this.visible.drawerRemoteAgent = true
+      this.getRemoteAgentListData()
+    },
+    openRemoteAgentEditor(item = null) {
+      const defaults = this.$options.data().remoteAgentForm
+      this.$set(this, 'remoteAgentForm', { ...defaults, ...(item || {}) })
+      this.visible.dialogRemoteAgentEditor = true
+    },
+    closeRemoteAgentEditor() {
+      this.visible.dialogRemoteAgentEditor = false
+      this.$set(this, 'remoteAgentForm', this.$options.data().remoteAgentForm)
+      this.$nextTick(() => this.$refs.remoteAgentELForm?.clearValidate())
+    },
+    async saveRemoteAgent() {
+      this.$refs.remoteAgentELForm.validate(async (valid) => {
+        if (!valid) return
+        try {
+          const response = await serviceAM.post(
+            '/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.SetRemoteAgent',
+            this.remoteAgentForm)
+          const data = response?.data ?? {}
+          if (!data.success) throw new Error(data.errorMessage || data.data || '保存失败')
+          this.$message.success('远程 A2A 智能体已保存')
+          this.closeRemoteAgentEditor()
+          await this.getRemoteAgentListData()
+          if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
+        } catch (err) {
+          this.$message.error(err?.message || '保存远程 A2A 智能体失败')
+        }
+      })
+    },
+    async testRemoteAgent(item) {
+      try {
+        const response = await serviceAM.post(
+          `/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.TestConnection?id=${item.id}`,
+          {})
+        const data = response?.data ?? {}
+        if (!data.success) throw new Error(data.errorMessage || data.data || '连接测试失败')
+        this.$message.success(data.data || 'A2A Agent Card 连接成功')
+        await this.getRemoteAgentListData()
+        if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
+      } catch (err) {
+        this.$message.error(err?.message || '连接测试失败')
+      }
+    },
+    async setRemoteAgentEnable(item, enable) {
+      try {
+        const response = await serviceAM.post(
+          `/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.Enable?id=${item.id}&enable=${enable}`,
+          {})
+        const data = response?.data ?? {}
+        if (!data.success) throw new Error(data.errorMessage || data.data || '状态更新失败')
+        this.$message.success(data.data || '状态已更新')
+        await this.getRemoteAgentListData()
+        if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
+      } catch (err) {
+        this.$message.error(err?.message || '状态更新失败')
+      }
+    },
+    deleteRemoteAgent(item) {
+      this.$confirm(`确认删除远程 A2A 智能体“${item.name}”？已加入群组的智能体不可删除。`, '删除确认', { type: 'warning' })
+        .then(async () => {
+          try {
+            const response = await serviceAM.post(
+              `/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.Delete?id=${item.id}`,
+              {})
+            const data = response?.data ?? {}
+            if (!data.success) throw new Error(data.errorMessage || data.data || '删除失败')
+            this.$message.success(data.data || '已删除')
+            await this.getRemoteAgentListData()
+            if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
+          } catch (err) {
+            this.$message.error(err?.message || '删除失败')
+          }
+        })
+        .catch(() => { })
+    },
+    toggleRemoteSelection(rows) {
+      if (rows) {
+        rows.forEach(row => this.$refs?.groupRemoteAgentTable?.toggleRowSelection(row))
+      } else {
+        this.$refs?.groupRemoteAgentTable?.clearSelection()
+      }
+    },
+    handleRemoteSelectionChange(val) {
+      if (this.isGetGroupRemoteAgent) return
+      const selectedIds = new Set((val || []).map(item => item.id))
+      const visibleIds = new Set((this.groupRemoteAgentList || []).map(item => item.id))
+      const retained = (this.groupForm.remoteMembers || []).filter(item => !visibleIds.has(item.id))
+      const selected = (this.groupRemoteAgentList || []).filter(item => selectedIds.has(item.id))
+      this.$set(this.groupForm, 'remoteMembers', [...retained, ...selected])
+    },
+    groupRemoteMembersCancel(item) {
+      const index = this.groupForm.remoteMembers.findIndex(member => member.id === item.id)
+      if (index !== -1) this.groupForm.remoteMembers.splice(index, 1)
+      const row = this.groupRemoteAgentList.find(agent => agent.id === item.id)
+      if (row) this.toggleRemoteSelection([row])
     },
     // 获取 智能体 数据
     async getAgentListData(listType, page = 0) {
@@ -2146,11 +2312,11 @@ var app = new Vue({
       // 组 新增|编辑
       if (saveType === 'drawerGroup') {
         serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.SetChatGroup'
-        if (serviceForm.members) {
-          const membersIds = serviceForm.members.map(item => item.id)
-          serviceForm.memberAgentTemplateIds = membersIds
-          serviceURL += `?${getInterfaceQueryStr({ memberAgentTemplateIds: membersIds })}`
-        }
+        const memberAgentTemplateIds = (serviceForm.members || []).map(item => item.id)
+        const remoteAgentIds = (serviceForm.remoteMembers || []).map(item => item.id)
+        serviceForm.memberAgentTemplateIds = memberAgentTemplateIds
+        serviceForm.remoteAgentIds = remoteAgentIds
+        serviceURL += `?${getInterfaceQueryStr({ memberAgentTemplateIds, remoteAgentIds })}`
       }
       // 组启动（运行任务） ['drawerGroupStart', 'drawerTaskStart'].includes(btnType)
       if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
@@ -2175,6 +2341,8 @@ var app = new Vue({
             formName = 'groupForm'
             // 重置 组获取智能体query
             this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
+            this.$set(this, 'groupRemoteAgentQueryList', this.$options.data().groupRemoteAgentQueryList)
+            this.groupRemoteAgentList = []
           }
           // 组 启动
           if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
@@ -2778,7 +2946,7 @@ var app = new Vue({
         formName = 'evaluationForm'
       }
       if (formName) {
-        if (btnType === 'drawerAgent' && item) {
+          if (btnType === 'drawerAgent' && item) {
           console.log('item', item);
           // 创建一个新的对象来存储表单数据
           const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
@@ -2794,25 +2962,22 @@ var app = new Vue({
           console.log('Loaded form data:', formData);
           console.log('functionCallTags:', this.functionCallTags);
 
-        } else if (btnType === 'drawerGroup') {
-          if (item.chatGroupDto) {
-            Object.assign(this[formName], {
-              ...item.chatGroupDto,
-              members: item.agentTemplateDtoList || item.chatGroupMembers || []
-            })
-          } else {
-            await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${item.id}`)
+          } else if (btnType === 'drawerGroup') {
+            // 列表/详情对象字段并不完全一致；始终由专用接口取得本地和远程成员，
+            // 这样编辑既有 Group 时不会误清除已配置的 A2A 成员。
+            const groupId = item.chatGroupDto ? item.chatGroupDto.id : item.id
+            await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${groupId}`)
               .then(res => {
                 const data = res?.data ?? {}
                 if (data.success) {
                   const groupDetail = data?.data ?? {}
                   Object.assign(this[formName], {
                     ...groupDetail.chatGroupDto,
-                    members: groupDetail.agentTemplateDtoList || groupDetail.chatGroupMembers || []
+                    members: groupDetail.agentTemplateDtoList || groupDetail.chatGroupMembers || [],
+                    remoteMembers: (groupDetail.remoteMemberDtoList || []).map(member => member.remoteAgentDto || member)
                   })
                 }
               })
-          }
           // // 获取 全部智能体数据
           // this.getAgentListData('groupAgent')
         } else if (btnType === 'drawerTaskStart') {
@@ -2846,6 +3011,7 @@ var app = new Vue({
       }
       if (btnType === 'drawerGroup') {
         this.getAgentListData('groupAgent')
+        this.getRemoteAgentListData('groupRemoteAgent')
       }
       this.visible[visibleKey] = true
     },
@@ -2882,6 +3048,8 @@ var app = new Vue({
             // 重置 组获取智能体query
             this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
             this.groupAgentList = []
+            this.$set(this, 'groupRemoteAgentQueryList', this.$options.data().groupRemoteAgentQueryList)
+            this.groupRemoteAgentList = []
           }
           // 组 启动
           if (['drawerGroupStart', 'drawerTaskStart'].includes(btnType)) {

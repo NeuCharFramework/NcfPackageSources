@@ -2,70 +2,71 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Oracle.EntityFrameworkCore.Metadata;
 using Senparc.Xncf.AgentsManager.Models;
 
 #nullable disable
 
-namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
+namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Dm
 {
-    [DbContext(typeof(AgentsManagerSenparcEntities_Oracle))]
-    partial class AgentsManagerSenparcEntities_OracleModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AgentsManagerSenparcEntities_Dm))]
+    [Migration("20260811172229_Add_A2A_RemoteAgents")]
+    partial class Add_A2A_RemoteAgents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn)
                 .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.ChatTask", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("AiModelId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int>("ChatGroupId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Description")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<DateTime>("EndTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<int>("HookPlatform")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<string>("HookPlatformParameter")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<bool>("IsArchived")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("IsPersonality")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -74,26 +75,26 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
 
                     b.Property<string>("PromptCommand")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("ResultComment")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<bool>("Score")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<int>("Status")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -104,53 +105,52 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("Avastar")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<bool>("Enable")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<string>("FunctionCallNames")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("HookRobotParameter")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<int>("HookRobotType")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int?>("KnowledgeBaseId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("McpEndpoints")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("PromptCode")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
@@ -158,10 +158,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
 
                     b.Property<string>("SystemMessage")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -174,51 +174,50 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<int>("AdminAgentTemplateId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int?>("ContextSharingMode")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Description")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<bool>("Enable")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<int>("EnterAgentTemplateId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("State")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -233,69 +232,68 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("ChatGroupId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int>("ChatTaskId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<int?>("FromAgentTemplateId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<string>("FromParticipantKey")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("FromParticipantKind")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("FromParticipantName")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<int>("MessageType")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int>("MyProperty")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("RemoteContextId")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("RemoteTaskId")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int?>("ToAgentTemplateId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -314,39 +312,38 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("AgentTemplateId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int>("ChatGroupId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<string>("UID")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.HasKey("Id");
 
@@ -359,45 +356,44 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("ChatGroupId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int?>("ContextSharingMode")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<bool>("Enable")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("RemoteAgentId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<string>("UID")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.HasKey("Id");
 
@@ -415,12 +411,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
-
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
@@ -431,51 +426,51 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                         .HasColumnType("NVARCHAR2(450)");
 
                     b.Property<string>("AuthHeaderName")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("AuthSecretKey")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<int>("AuthenticationMode")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int>("ConnectionStatus")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Description")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<bool>("Enable")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("NUMBER(1)");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime?>("LastHealthCheckAt")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("LastHealthCheckMessage")
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<int>("Protocol")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.Property<int>("TimeoutSeconds")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 

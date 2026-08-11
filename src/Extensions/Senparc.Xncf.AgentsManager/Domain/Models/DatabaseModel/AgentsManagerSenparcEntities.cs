@@ -35,6 +35,16 @@ namespace Senparc.Xncf.AgentsManager.Models
 
         public DbSet<ChatGroupMember> ChatGroupMembers { get; set; }
 
+        /// <summary>
+        /// 通过 A2A 协议接入的远程智能体。
+        /// </summary>
+        public DbSet<RemoteAgent> RemoteAgents { get; set; }
+
+        /// <summary>
+        /// ChatGroup 的远程智能体成员。保留 ChatGroupMember 作为本地 Agent 的兼容表。
+        /// </summary>
+        public DbSet<ChatGroupRemoteMember> ChatGroupRemoteMembers { get; set; }
+
         public DbSet<ChatGroupHistory> ChatGroupHistories { get; set; }
 
         public DbSet<ChatTask> ChatTasks { get; set; }

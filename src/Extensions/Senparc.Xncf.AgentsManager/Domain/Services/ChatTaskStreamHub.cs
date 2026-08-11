@@ -200,6 +200,8 @@ public sealed class ChatTaskStreamEvent
     public int ChatTaskId { get; set; }
     public int? HistoryId { get; set; }
     public int? FromAgentTemplateId { get; set; }
+    public string FromParticipantKey { get; set; }
+    public string FromParticipantKind { get; set; }
     public string FromAgentName { get; set; }
     public string ResponseId { get; set; }
     public string Text { get; set; }

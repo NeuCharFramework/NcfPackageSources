@@ -148,6 +148,7 @@ new Vue({
             run: {
                 running: false,
                 validating: false,
+                aborting: false,
                 input: '',
                 runId: '',
                 status: 'idle',
@@ -248,6 +249,7 @@ new Vue({
         },
         runStatusText() {
             if (this.run.validating) return '正在校验参数和节点引用';
+            if (this.run.aborting) return '正在中止工作流，等待当前节点响应取消';
             if (this.run.running) return '工作流运行中，编辑已锁定';
             if (this.run.status === 'success') return '最近一次测试运行成功';
             if (this.run.status === 'failed') return '最近一次测试运行失败';
@@ -457,8 +459,13 @@ new Vue({
                 },
                 aggregate: {
                     title: '聚合',
-                    description: '等待全部已激活的上游分支完成，再把输出按连线顺序合并为数组。',
-                    rows: [{ label: '可配置项', value: '多个上游输入绑定' }, { label: '输出', value: '聚合数组' }]
+                    description: '等待全部已激活的上游分支完成，再按连线顺序汇总，并只向下游输出一次。',
+                    rows: [{ label: '可配置项', value: '多个上游输入、输出内容' }, { label: '输出', value: '一次汇总结果' }]
+                },
+                merge: {
+                    title: '逐项合流',
+                    description: '每条上游输入到达后都独立向下游发出一次；下游按稳定的执行计划顺序串行处理。',
+                    rows: [{ label: '可配置项', value: '多个上游输入绑定' }, { label: '输出', value: '每个输入各输出一次' }]
                 },
                 parallel: {
                     title: '并行',
@@ -708,6 +715,7 @@ new Vue({
             const config = type === 'condition'
                 ? { left: '{{input}}', operator: 'equals', right: '' }
                 : type === 'delay' ? { seconds: 1 }
+                    : type === 'aggregate' ? { outputTemplate: '' }
                     : type === 'neubell'
                         ? { title: 'Workflow 提醒', summary: '{{input}}', consumeMode: 'item' }
                         : {};
@@ -1111,7 +1119,7 @@ new Vue({
             const nodes = this.form.graph.nodes.filter(item => next.includes(item.id));
             this.setSelectedNodes(nodes);
         },
-        supportsMultipleInputs(node) { return node && ['aggregate', 'function'].includes(node.type); },
+        supportsMultipleInputs(node) { return node && ['aggregate', 'merge', 'function'].includes(node.type); },
         supportsMultipleOutputs(node) { return node && ['condition', 'parallel'].includes(node.type); },
         targetFor(node, sourceHandle) {
             const edge = this.form.graph.edges.find(item => item.source === node.id && item.sourceHandle === sourceHandle);
@@ -1154,7 +1162,7 @@ new Vue({
             if (targetId && this.form.graph.edges.some(edge =>
                 edge.source === node.id && edge.target === targetId && edge.sourceHandle === handle)) return true;
             if (targetId && !this.canConnect(node, target, handle)) {
-                if (!silent) this.$notify({ title: '无法连接', message: '目标已有上游、连接会形成循环，或节点不支持该连接方式。多对一目标可使用 Function 或聚合节点。', type: 'warning' });
+                if (!silent) this.$notify({ title: '无法连接', message: '目标已有上游、连接会形成循环，或节点不支持该连接方式。多对一目标可使用 Function、聚合或逐项合流节点。', type: 'warning' });
                 return false;
             }
             if (node.type !== 'parallel') {
@@ -1776,7 +1784,8 @@ new Vue({
             if (node.type === 'manual-trigger') return '由用户手动运行';
             if (node.type === 'delay') return `${node.config.seconds || 0} 秒`;
             if (node.type === 'condition') return `${node.config.operator || 'equals'} ${this.configValueLabel(node.config.right)}`;
-            if (node.type === 'aggregate') return '合并多个上游输出为数组';
+            if (node.type === 'aggregate') return node.config.outputTemplate ? '汇总全部输入后只输出一次' : '请设置汇总输出内容';
+            if (node.type === 'merge') return '每个上游输入独立向下游发送一次';
             if (node.type === 'parallel') return '同时分发到所有下游分支';
             if (node.type === 'console') return '输出到下方 Console';
             if (node.type === 'neubell') {
@@ -1909,8 +1918,13 @@ new Vue({
                     : [{ path: '$', label: '完整输出', typeName: 'any', isArray: false, requiresIndex: false }];
                 return this.withObservedOutputFields(node, [...outputFields, ...this.functionSelectionInputFields(fn)]);
             }
-            if (node.type === 'aggregate') return this.withObservedOutputFields(node,
-                [{ path: '$', label: '聚合结果', typeName: 'any', isArray: true, requiresIndex: false }]);
+            if (node.type === 'aggregate') {
+                const rawArray = String(node.config?.outputTemplate || '').trim() === '{{input}}';
+                return this.withObservedOutputFields(node,
+                    [{ path: '$', label: rawArray ? '聚合数组' : '聚合输出', typeName: 'any', isArray: rawArray, requiresIndex: false }]);
+            }
+            if (node.type === 'merge') return this.withObservedOutputFields(node,
+                [{ path: '$', label: '当前输入项', typeName: 'any', isArray: false, requiresIndex: false }]);
             const observed = this.observedOutputFields(node);
             if (observed.length) return observed;
             if (node.type === 'webhook-trigger') {
@@ -2207,9 +2221,13 @@ new Vue({
             if (requireRunnable && disconnected.length) return '画布中仍有未连接到触发器的节点。';
             for (const node of this.form.graph.nodes) {
                 const incoming = this.incomingEdges(node.id);
-                if (!this.supportsMultipleInputs(node) && incoming.length > 1) return `节点“${node.name}”只允许一个上游；多对一目标请使用 Function 或聚合节点。`;
+                if (!this.supportsMultipleInputs(node) && incoming.length > 1) return `节点“${node.name}”只允许一个上游；多对一目标请使用 Function、聚合或逐项合流节点。`;
             }
             if (!requireRunnable) return '';
+            for (const node of this.form.graph.nodes.filter(item => item.type === 'aggregate')) {
+                if (!String(node.config?.outputTemplate || '').trim()) return `聚合节点“${node.name}”必须设置输出内容。`;
+                if (String(node.config.outputTemplate).length > 8000) return `聚合节点“${node.name}”的输出内容不能超过 8000 个字符。`;
+            }
             for (const node of this.form.graph.nodes.filter(item => item.type === 'function')) {
                 const fn = this.findFunction(node.config);
                 if (!fn || !fn.moduleAvailable) return `节点“${node.name}”引用的模块未开启或 Function 已移除。`;
@@ -2466,14 +2484,41 @@ new Vue({
                     return;
                 }
                 this.run.running = false;
+                this.run.aborting = false;
                 this.run.status = snapshot.succeeded ? 'success' : 'failed';
                 this.run.finalOutput = snapshot.finalOutput || '';
                 this.run.error = snapshot.errorMessage || '';
                 this.appendConsole('workflow', snapshot.succeeded ? '工作流运行完成。' : (snapshot.errorMessage || '工作流运行失败。'), snapshot.succeeded ? 'success' : 'failed', snapshot.finalOutput);
             } catch (error) {
-                this.run.running = false; this.run.status = 'failed';
+                this.run.running = false; this.run.aborting = false; this.run.status = 'failed';
                 this.run.error = this.errorMessage(error, '读取运行状态失败。');
                 this.appendConsole('workflow', this.run.error, 'failed');
+            }
+        },
+        async abortWorkflow() {
+            if (!this.run.running || this.run.aborting || !this.run.runId) return;
+            try {
+                if (this.$confirm) {
+                    await this.$confirm('将停止当前工作流。已启动的外部调用可能需要等待其自身响应取消。', '确认中止运行', {
+                        confirmButtonText: '中止',
+                        cancelButtonText: '继续运行',
+                        type: 'warning'
+                    });
+                }
+            } catch (_) {
+                return;
+            }
+
+            this.run.aborting = true;
+            try {
+                await service.post('/Admin/NeuCharWorkflow/Index?handler=AbortRun', { runId: this.run.runId }, { customAlert: true });
+                this.appendConsole('workflow', '已请求手动中止，正在等待当前节点响应取消。', 'running');
+                this.clearRunPoll();
+                this.pollRun();
+            } catch (error) {
+                const message = this.errorMessage(error, '中止工作流失败。');
+                this.run.aborting = false;
+                this.$notify({ title: '无法中止', message, type: 'error' });
             }
         },
         applyRunEvent(event) {
@@ -2497,7 +2542,7 @@ new Vue({
         clearRunPoll() { if (this.run.pollTimer) window.clearTimeout(this.run.pollTimer); this.run.pollTimer = null; },
         resetRunState() {
             this.clearRunPoll();
-            this.run.running = false; this.run.validating = false; this.run.runId = ''; this.run.status = 'idle';
+            this.run.running = false; this.run.validating = false; this.run.aborting = false; this.run.runId = ''; this.run.status = 'idle';
             this.run.events = []; this.run.lastSequence = 0; this.run.nodeStates = {}; this.run.finalOutput = ''; this.run.error = '';
         },
         errorMessage(error, fallback) {

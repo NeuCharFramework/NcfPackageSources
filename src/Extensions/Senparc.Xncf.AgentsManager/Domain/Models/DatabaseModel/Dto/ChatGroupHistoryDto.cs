@@ -41,6 +41,16 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
         public AgentTemplate ToAgentTemplate { get; set; }
 
+        public string FromParticipantKey { get; set; }
+
+        public string FromParticipantKind { get; set; }
+
+        public string FromParticipantName { get; set; }
+
+        public string RemoteContextId { get; set; }
+
+        public string RemoteTaskId { get; set; }
+
         //public int? FromChatGroupMemberId { get; set; }
 
         //public ChatGroupMember FromChatGroupMember { get; set; }
@@ -106,6 +116,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             FromAgentTemplate = chatGroupHistory.FromAgentTemplate;
             ToAgentTemplateId = chatGroupHistory.ToAgentTemplateId;
             ToAgentTemplate = chatGroupHistory.ToAgentTemplate;
+            FromParticipantKey = chatGroupHistory.FromParticipantKey;
+            FromParticipantKind = chatGroupHistory.FromParticipantKind;
+            FromParticipantName = chatGroupHistory.FromParticipantName;
+            RemoteContextId = chatGroupHistory.RemoteContextId;
+            RemoteTaskId = chatGroupHistory.RemoteTaskId;
             //FromChatGroupMemberId = chatGroupHistory.FromChatGroupMemberId;
             //FromChatGroupMember = chatGroupHistory.FromChatGroupMember;
             //ToChatGroupMemberId = chatGroupHistory.ToChatGroupMemberId;

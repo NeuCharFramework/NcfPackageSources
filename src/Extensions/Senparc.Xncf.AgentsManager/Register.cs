@@ -119,6 +119,8 @@ namespace Senparc.Xncf.AgentsManager
                 profile.CreateMap<AgentTemplate, AgentTemplateSimpleStatusDto>().ReverseMap();
                 profile.CreateMap<ChatGroup, ChatGroupDto>().ReverseMap();
                 profile.CreateMap<ChatGroupMember, ChatGroupMemberDto>().ReverseMap();
+                profile.CreateMap<RemoteAgent, RemoteAgentDto>().ReverseMap();
+                profile.CreateMap<ChatGroupRemoteMember, ChatGroupRemoteMemberDto>().ReverseMap();
                 profile.CreateMap<ChatGroupHistory, ChatGroupHistoryDto>().ReverseMap();
                 profile.CreateMap<ChatTask, ChatTaskDto>().ReverseMap();
             });
@@ -133,6 +135,10 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
             services.AddScoped<ChatGroupMemberService>();
+            services.AddScoped<ChatGroupRemoteMemberService>();
+            services.AddScoped<RemoteAgentService>();
+            services.AddHttpClient(RemoteA2AAgentFactory.HttpClientName);
+            services.AddScoped<RemoteA2AAgentFactory>();
             services.AddScoped<AgentsWorkflowObjectProvider>();
             services.AddScoped<IWorkflowObjectProvider>(serviceProvider =>
                 serviceProvider.GetRequiredService<AgentsWorkflowObjectProvider>());
@@ -167,7 +173,6 @@ namespace Senparc.Xncf.AgentsManager
         }
     }
 }
-
 
 
 

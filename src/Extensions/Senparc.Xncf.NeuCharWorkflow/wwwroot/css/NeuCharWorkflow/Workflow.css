@@ -246,6 +246,7 @@
 .workflow-node-picker .node-picker-neubell,
 .workflow-node-picker .node-picker-function { border-left-color: #409eff; }
 .workflow-node-picker .node-picker-aggregate { border-left-color: #00a6a6; }
+.workflow-node-picker .node-picker-merge { border-left-color: #d97917; }
 .workflow-node-picker .node-picker-parallel { border-left-color: #7957d5; }
 .workflow-node-picker .node-picker-console { border-left-color: #34495e; }
 .workflow-node-picker .node-picker-end { border-left-color: #909399; }
@@ -468,6 +469,7 @@
 .canvas-minimap-node.node-condition { background: #e6a23c; box-shadow: inset 3px 0 0 #e6a23c; }
 .canvas-minimap-node.node-agent, .canvas-minimap-node.node-agent-group { background: #8e5ad7; box-shadow: inset 3px 0 0 #8e5ad7; }
 .canvas-minimap-node.node-aggregate { background: #00a6a6; box-shadow: inset 3px 0 0 #00a6a6; }
+.canvas-minimap-node.node-merge { background: #d97917; box-shadow: inset 3px 0 0 #d97917; }
 .canvas-minimap-node.node-parallel { background: #7957d5; box-shadow: inset 3px 0 0 #7957d5; }
 .canvas-minimap-node.node-console { background: #34495e; box-shadow: inset 3px 0 0 #34495e; }
 .canvas-minimap-node.node-end { background: #909399; box-shadow: inset 3px 0 0 #909399; }
@@ -562,6 +564,7 @@
 .workflow-node.node-condition { border-left-color: #e6a23c; }
 .workflow-node.node-agent, .workflow-node.node-agent-group { border-left-color: #8e5ad7; }
 .workflow-node.node-aggregate { border-left-color: #00a6a6; }
+.workflow-node.node-merge { border-left-color: #d97917; }
 .workflow-node.node-parallel { border-left-color: #7957d5; }
 .workflow-node.node-console { border-left-color: #34495e; }
 .workflow-node.node-end { border-left-color: #909399; }

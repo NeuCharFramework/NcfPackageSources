@@ -148,6 +148,23 @@ public class IndexModel(
         return snapshot == null ? NotFound() : Ok(snapshot);
     }
 
+    public IActionResult OnPostAbortRun([FromBody] AbortWorkflowRunRequest request)
+    {
+        try
+        {
+            workflowAppService.AbortRun(request?.RunId ?? Guid.Empty, CurrentAdminUserId);
+            return Ok(new { success = true });
+        }
+        catch (WorkflowConflictException ex)
+        {
+            return StatusCode(409, ex.Message);
+        }
+        catch (WorkflowInputException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     public async Task<IActionResult> OnPostDeleteAsync([FromBody] DeleteWorkflowRequest request)
     {
         try
@@ -187,5 +204,10 @@ public class IndexModel(
     public sealed class DeleteWorkflowRequest
     {
         public int Id { get; set; }
+    }
+
+    public sealed class AbortWorkflowRunRequest
+    {
+        public Guid RunId { get; set; }
     }
 }

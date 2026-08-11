@@ -109,6 +109,13 @@
                                    :disabled="!form.id || editingLocked || disconnectedNodes.length>0"
                                    :title="disconnectedNodes.length?'请先连接所有草稿节点后再测试运行':'保存并测试运行'"
                                    @@click="startWorkflow">运行</el-button>
+                        <el-button v-if="run.running"
+                                   size="small"
+                                   type="danger"
+                                   plain
+                                   icon="el-icon-circle-close"
+                                   :loading="run.aborting"
+                                   @@click="abortWorkflow">中止</el-button>
                         <el-button size="small"
                                    plain
                                    icon="el-icon-plus"
@@ -760,7 +767,20 @@
                                         <el-input v-if="!isBinding(selectedNode.config.prompt)" type="textarea" :rows="6" v-model="selectedNode.config.prompt" :disabled="editingLocked" placeholder="可使用输入占位符"></el-input>
                                         <el-cascader :value="configBindingSelection(selectedNode,'prompt')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable placeholder="关联上游 Output" @@change="setConfigBinding(selectedNode,'prompt',$event)"></el-cascader>
                                     </el-form-item>
-                                    <el-alert v-if="selectedNode.type==='aggregate'" title="聚合节点会等待所有已激活的上游分支结束，再按连线顺序输出数组。" type="info" :closable="false"></el-alert>
+                                    <template v-if="selectedNode.type==='aggregate'">
+                                        <el-form-item label="汇总输出内容" required>
+                                            <el-input v-model="selectedNode.config.outputTemplate"
+                                                      type="textarea"
+                                                      :rows="4"
+                                                      :disabled="editingLocked"
+                                                      maxlength="8000"
+                                                      show-word-limit
+                                                      placeholder="例如：共 {{= length(input) }} 项：{{= join(input, '，') }}"></el-input>
+                                            <p v-pre class="node-config-help">必须设置。<code>{{input}}</code> 保留聚合数组；<code>{{= length(input) }}</code>、<code>{{= join(input, '，') }}</code> 等为受限表达式，不执行任意 JavaScript。</p>
+                                        </el-form-item>
+                                        <el-alert title="聚合会等待所有已激活的上游分支结束，再按连线顺序汇总，并只向下游输出一次。" type="info" :closable="false"></el-alert>
+                                    </template>
+                                    <el-alert v-if="selectedNode.type==='merge'" title="逐项合流不会等待全部输入：每条输入都会独立向下游发出一次。下游按稳定的执行计划顺序串行运行，单次工作流最多处理 500 次逐项激活。" type="info" :closable="false"></el-alert>
                                     <el-alert v-if="selectedNode.type==='parallel'" title="并行节点将同一输入同时分发到所有后续分支；各分支独立运行。" type="info" :closable="false"></el-alert>
                                     <el-alert v-if="selectedNode.type==='console'" title="运行到此节点时，会在页面底部 Console 打印其输入并继续向下传递。" type="info" :closable="false"></el-alert>
                                     <el-alert v-if="selectedNode.type==='neubell'" title="运行时会创建一条 Workflow 纽铃提醒；从 Footer 点击提醒会进入任务列表并按上方设置进行消费。" type="info" :closable="false"></el-alert>
@@ -778,6 +798,7 @@
                         <span v-if="run.error" class="run-error">{{run.error}}</span>
                         <el-input v-model="run.input" :disabled="editingLocked" size="small" placeholder="测试输入（传入触发器）"></el-input>
                         <el-button type="primary" size="small" icon="el-icon-video-play" :loading="run.validating || run.running" :disabled="!form.id" @@click="startWorkflow">校验并运行</el-button>
+                        <el-button v-if="run.running" type="danger" size="small" plain icon="el-icon-circle-close" :loading="run.aborting" @@click="abortWorkflow">中止</el-button>
                         <el-button type="text" size="small" :icon="run.consoleOpen?'el-icon-arrow-down':'el-icon-arrow-up'" @@click="run.consoleOpen=!run.consoleOpen">Console</el-button>
                     </div>
                     <div v-show="run.consoleOpen" class="workflow-console">
@@ -823,6 +844,7 @@
                 <el-button plain icon="el-icon-s-operation" :class="['node-picker-system-button','node-picker-condition']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'condition','条件判断')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('condition','条件判断','hover')" @@mouseleave.native="hideSystemPreview('condition','条件判断')" @@click="previewSystem('condition','条件判断','click')" @@dblclick.native="selectSystem('condition','条件判断')">条件</el-button>
                 <el-button plain icon="el-icon-time" :class="['node-picker-system-button','node-picker-delay']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'delay','等待')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('delay','等待','hover')" @@mouseleave.native="hideSystemPreview('delay','等待')" @@click="previewSystem('delay','等待','click')" @@dblclick.native="selectSystem('delay','等待')">等待</el-button>
                 <el-button plain icon="el-icon-collection" :class="['node-picker-system-button','node-picker-aggregate']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'aggregate','聚合')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('aggregate','聚合','hover')" @@mouseleave.native="hideSystemPreview('aggregate','聚合')" @@click="previewSystem('aggregate','聚合','click')" @@dblclick.native="selectSystem('aggregate','聚合')">聚合</el-button>
+                <el-button plain icon="el-icon-sort" :class="['node-picker-system-button','node-picker-merge']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'merge','逐项合流')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('merge','逐项合流','hover')" @@mouseleave.native="hideSystemPreview('merge','逐项合流')" @@click="previewSystem('merge','逐项合流','click')" @@dblclick.native="selectSystem('merge','逐项合流')">逐项合流</el-button>
                 <el-button plain icon="el-icon-share" :class="['node-picker-system-button','node-picker-parallel']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'parallel','并行')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('parallel','并行','hover')" @@mouseleave.native="hideSystemPreview('parallel','并行')" @@click="previewSystem('parallel','并行','click')" @@dblclick.native="selectSystem('parallel','并行')">并行</el-button>
                 <el-button plain icon="el-icon-monitor" :class="['node-picker-system-button','node-picker-console']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'console','Console 打印')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('console','Console 打印','hover')" @@mouseleave.native="hideSystemPreview('console','Console 打印')" @@click="previewSystem('console','Console 打印','click')" @@dblclick.native="selectSystem('console','Console 打印')">Console</el-button>
                 <el-button plain icon="el-icon-bell" :class="['node-picker-system-button','node-picker-neubell']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'neubell','发送纽铃')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('neubell','发送纽铃','hover')" @@mouseleave.native="hideSystemPreview('neubell','发送纽铃')" @@click="previewSystem('neubell','发送纽铃','click')" @@dblclick.native="selectSystem('neubell','发送纽铃')">发送纽铃</el-button>

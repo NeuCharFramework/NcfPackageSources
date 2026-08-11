@@ -21,6 +21,7 @@ namespace Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
 /// </summary>
 public sealed class NeuCharWorkflowAppService
 {
+    private const int TaskListPageSize = 30;
     private static readonly JsonSerializerOptions DesignerJsonOptions = new(JsonSerializerDefaults.Web);
     private readonly NeuCharWorkflowService _workflowService;
     private readonly NeuCharWorkflowVersionService _workflowVersionService;
@@ -254,12 +255,25 @@ public sealed class NeuCharWorkflowAppService
     public NeuCharWorkflowRunSnapshot? GetRunStatus(Guid runId, int adminUserId, long afterSequence) =>
         runId == Guid.Empty ? null : _runCoordinator.GetSnapshot(runId, adminUserId, afterSequence);
 
+    public void AbortRun(Guid runId, int adminUserId)
+    {
+        if (runId == Guid.Empty)
+        {
+            throw new WorkflowInputException("中止请求缺少有效的运行 ID。");
+        }
+        if (!_runCoordinator.TryAbort(runId, adminUserId, out var error))
+        {
+            throw new WorkflowConflictException(error ?? "工作流任务无法中止。");
+        }
+    }
+
     /// <summary>
     /// 汇总属于当前管理员的历史执行日志与进程内实时运行。实时运行由协调器提供节点级进度，
     /// 已完成任务则使用持久化日志，以便应用重启后仍然可查。
     /// </summary>
-    public async Task<IReadOnlyList<WorkflowTaskListItem>> GetTaskListAsync(
+    public async Task<WorkflowTaskListPage> GetTaskListAsync(
         int adminUserId,
+        int? beforeExecutionLogId = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -269,7 +283,10 @@ public sealed class NeuCharWorkflowAppService
             OrderingType.Descending).ConfigureAwait(false);
         var workflowNames = workflows.ToDictionary(z => z.Id, z => z.Name);
         var workflowIds = workflowNames.Keys.ToList();
-        var activeRuns = _runCoordinator.GetActiveRuns(adminUserId);
+        var loadLatest = !beforeExecutionLogId.HasValue || beforeExecutionLogId.Value <= 0;
+        var activeRuns = loadLatest
+            ? _runCoordinator.GetActiveRuns(adminUserId)
+            : Array.Empty<NeuCharWorkflowActiveRun>();
 
         var tasks = activeRuns.Select(run => new WorkflowTaskListItem(
             $"live:{run.RunId:N}",
@@ -287,18 +304,22 @@ public sealed class NeuCharWorkflowAppService
 
         if (workflowIds.Count == 0)
         {
-            return tasks;
+            return new WorkflowTaskListPage(tasks.OrderByDescending(z => z.StartedAt).ToList(), false, null);
         }
 
-        var logs = await _executionLogService.GetFullListAsync(
-            z => workflowIds.Contains(z.WorkflowId),
-            z => z.StartedAt,
+        var logPage = await _executionLogService.GetObjectListAsync(
+            1,
+            TaskListPageSize + 1,
+            z => workflowIds.Contains(z.WorkflowId) &&
+                 (!beforeExecutionLogId.HasValue || beforeExecutionLogId.Value <= 0 || z.Id < beforeExecutionLogId.Value),
+            z => z.Id,
             OrderingType.Descending).ConfigureAwait(false);
         var activeWorkflowIds = activeRuns.Select(z => z.WorkflowId).ToHashSet();
-        tasks.AddRange(logs
+        var fetchedLogs = logPage.ToList();
+        var pageLogs = fetchedLogs.Take(TaskListPageSize).ToList();
+        tasks.AddRange(pageLogs
             // 由协调器托管的运行有节点级实时流；隐藏其尚未完成的数据库镜像，避免同一任务显示两次。
             .Where(log => log.FinishedAt != null || !activeWorkflowIds.Contains(log.WorkflowId))
-            .Take(200)
             .Select(log => new WorkflowTaskListItem(
                 $"log:{log.Id}",
                 log.WorkflowId,
@@ -309,16 +330,55 @@ public sealed class NeuCharWorkflowAppService
                 ToTaskStatus(log),
                 log.StartedAt,
                 log.FinishedAt,
-                log.Succeeded == true ? log.ResultSummary : null,
+                log.ResultSummary,
                 log.Succeeded == false ? log.Error : null,
                 GetTaskRunId(log.WorkflowId, log.CorrelationId),
                 log.Id,
                 CanReplay(log))));
 
-        return tasks
-            .OrderByDescending(z => z.StartedAt)
-            .Take(200)
-            .ToList();
+        return new WorkflowTaskListPage(
+            tasks.OrderByDescending(z => z.StartedAt).ToList(),
+            fetchedLogs.Count > TaskListPageSize,
+            pageLogs.LastOrDefault()?.Id);
+    }
+
+    /// <summary>
+    /// 预览当前管理员可清理的运行历史。只处理已完成的执行日志，进程内或数据库中仍未完成的任务不会被包含。
+    /// </summary>
+    public async Task<WorkflowTaskCleanupPreview> PreviewTaskCleanupAsync(
+        int adminUserId,
+        CancellationToken cancellationToken = default)
+    {
+        var cutoff = DateTime.UtcNow;
+        var logs = await GetCompletedTaskLogsAsync(adminUserId, cutoff, cancellationToken).ConfigureAwait(false);
+        return ToTaskCleanupPreview(logs, cutoff);
+    }
+
+    /// <summary>
+    /// 永久删除当前管理员在指定预览截止时间以前已完成的执行日志。运行中任务不在此范围内。
+    /// </summary>
+    public async Task<WorkflowTaskCleanupResult> CleanupCompletedTasksAsync(
+        int adminUserId,
+        DateTime cutoff,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var effectiveCutoff = cutoff.Kind == DateTimeKind.Utc ? cutoff : cutoff.ToUniversalTime();
+        if (effectiveCutoff == DateTime.MinValue)
+        {
+            throw new WorkflowInputException("清理请求缺少有效的预览截止时间。");
+        }
+        if (effectiveCutoff > DateTime.UtcNow)
+        {
+            effectiveCutoff = DateTime.UtcNow;
+        }
+
+        var logs = await GetCompletedTaskLogsAsync(adminUserId, effectiveCutoff, cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+        // 使用单次 SaveChanges 的批量删除，避免大量历史记录逐条提交导致“快速清理”长时间占用页面。
+        await _executionLogService.DeleteAllAsync(logs).ConfigureAwait(false);
+
+        return new WorkflowTaskCleanupResult(logs.Count, effectiveCutoff);
     }
 
     /// <summary>
@@ -552,6 +612,38 @@ public sealed class NeuCharWorkflowAppService
     private Task<WorkflowEntity?> GetOwnedWorkflowAsync(int workflowId, int adminUserId) =>
         _workflowService.GetObjectAsync(z => z.Id == workflowId && z.AdminUserId == adminUserId);
 
+    private async Task<List<NeuCharWorkflowExecutionLog>> GetCompletedTaskLogsAsync(
+        int adminUserId,
+        DateTime cutoff,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var workflowIds = (await _workflowService.GetFullListAsync(
+            z => z.AdminUserId == adminUserId,
+            z => z.Id,
+            OrderingType.Ascending).ConfigureAwait(false))
+            .Select(z => z.Id)
+            .ToList();
+        if (workflowIds.Count == 0)
+        {
+            return new List<NeuCharWorkflowExecutionLog>();
+        }
+
+        var logs = await _executionLogService.GetFullListAsync(
+            z => workflowIds.Contains(z.WorkflowId) && z.FinishedAt != null && z.FinishedAt <= cutoff,
+            z => z.Id,
+            OrderingType.Descending).ConfigureAwait(false);
+        return logs.ToList();
+    }
+
+    private static WorkflowTaskCleanupPreview ToTaskCleanupPreview(
+        IReadOnlyCollection<NeuCharWorkflowExecutionLog> logs,
+        DateTime cutoff) => new(
+        logs.Count,
+        logs.Count(log => log.Succeeded == true),
+        logs.Count(log => log.Succeeded != true),
+        cutoff);
+
     private static void ValidateSaveCommand(SaveWorkflowCommand? request)
     {
         if (request == null || string.IsNullOrWhiteSpace(request.Name))
@@ -752,6 +844,23 @@ public sealed record WorkflowTaskListItem(
     Guid? RunId,
     int? ExecutionLogId,
     bool ReplayAvailable);
+
+/// <summary>任务列表的游标分页结果。游标只定位已持久化的执行日志；进行中的任务仅出现在最新页。</summary>
+public sealed record WorkflowTaskListPage(
+    IReadOnlyList<WorkflowTaskListItem> Items,
+    bool HasMore,
+    int? NextExecutionLogId);
+
+/// <summary>一次快速清理在确认前展示的不可恢复数据范围。</summary>
+public sealed record WorkflowTaskCleanupPreview(
+    int CompletedCount,
+    int SucceededCount,
+    int FailedCount,
+    DateTime Cutoff);
+
+public sealed record WorkflowTaskCleanupResult(
+    int DeletedCount,
+    DateTime Cutoff);
 
 public sealed record WorkflowReplayEvent(
     int Sequence,

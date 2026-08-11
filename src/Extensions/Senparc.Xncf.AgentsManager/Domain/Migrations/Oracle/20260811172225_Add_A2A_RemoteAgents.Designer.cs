@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 using Senparc.Xncf.AgentsManager.Models;
@@ -11,9 +12,11 @@ using Senparc.Xncf.AgentsManager.Models;
 namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
 {
     [DbContext(typeof(AgentsManagerSenparcEntities_Oracle))]
-    partial class AgentsManagerSenparcEntities_OracleModelSnapshot : ModelSnapshot
+    [Migration("20260811172225_Add_A2A_RemoteAgents")]
+    partial class Add_A2A_RemoteAgents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

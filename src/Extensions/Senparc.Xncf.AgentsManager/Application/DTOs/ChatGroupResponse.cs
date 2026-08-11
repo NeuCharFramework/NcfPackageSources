@@ -31,6 +31,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     {
         public ChatGroupDto ChatGroupDto { get; set; }
         public List<AgentTemplateDto> AgentTemplateDtoList { get; set; }
+        /// <summary>
+        /// 远程成员与本地 AgentTemplateDtoList 并行返回，保证旧调用方仍可使用原字段。
+        /// </summary>
+        public List<ChatGroupRemoteMemberDto> RemoteMemberDtoList { get; set; } = new List<ChatGroupRemoteMemberDto>();
     }
 
 

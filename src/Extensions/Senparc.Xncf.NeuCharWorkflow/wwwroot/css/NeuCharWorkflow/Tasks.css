@@ -66,6 +66,17 @@
 .workflow-task-empty .el-icon-document { color: #aeb9c7; font-size: 38px; }
 .workflow-task-empty h3 { margin: 10px 0 6px; color: #5c6878; }
 .workflow-task-empty p { margin: 0; }
+.workflow-task-load-state {
+    display: flex;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    color: #8a95a4;
+    font-size: 13px;
+    border-top: 1px solid #eef1f5;
+}
+.workflow-task-load-state .el-icon-loading { color: #409eff; }
 
 @media (max-width: 900px) {
     .workflow-task-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }

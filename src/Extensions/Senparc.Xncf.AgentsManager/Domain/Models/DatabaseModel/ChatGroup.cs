@@ -52,6 +52,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         public string Description { get; private set; }
 
         /// <summary>
+        /// 群组向参与者分发上下文的策略。null 表示沿用升级前的完整历史行为。
+        /// </summary>
+        public ChatGroupContextSharingMode? ContextSharingMode { get; private set; }
+
+        /// <summary>
         /// 管理员代理模板Id
         /// </summary>
         [Required]
@@ -96,6 +101,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             Enable = chatGroupDto.Enable;
             State = chatGroupDto.State;
             Description = chatGroupDto.Description;
+            ContextSharingMode = chatGroupDto.ContextSharingMode;
             AdminAgentTemplateId = chatGroupDto.AdminAgentTemplateId;
             EnterAgentTemplateId = chatGroupDto.EnterAgentTemplateId;
         }

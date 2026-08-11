@@ -22,11 +22,12 @@
     <div class="neuchar-page-header workflow-tasks-header">
         <div>
             <h2>Workflow 任务</h2>
-            <p>查看最近 200 条运行记录；正在运行的任务会自动更新，可直接进入画布查看节点进度。</p>
+            <p>首次仅加载最新 30 条运行记录；滚动到底部会继续加载历史，正在运行的任务会自动更新。</p>
         </div>
         <div class="workflow-tasks-header-actions">
             <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" placeholder="搜索工作流或状态"></el-input>
-            <el-button size="small" icon="el-icon-refresh" :loading="loading" @@click="loadTasks">刷新</el-button>
+            <el-button size="small" icon="el-icon-delete" type="danger" plain :loading="cleaning" @@click="quickCleanTasks">快速清理</el-button>
+            <el-button size="small" icon="el-icon-refresh" :loading="loading" @@click="refreshTasks">刷新</el-button>
         </div>
     </div>
     <el-alert v-if="neuBellConsumeMessage"
@@ -76,8 +77,11 @@
                     <span :class="['workflow-task-message',{error:scope.row.status==='failed'}]">{{summaryText(scope.row)}}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="150" align="right">
+            <el-table-column label="操作" width="210" align="right">
                 <template slot-scope="scope">
+                    <el-button v-if="scope.row.status==='running'" type="danger" size="mini" plain icon="el-icon-circle-close"
+                               :loading="abortingTaskId===scope.row.taskId"
+                               @@click.stop="abortTask(scope.row)">中止</el-button>
                     <el-button type="primary" size="mini" plain icon="el-icon-video-play"
                                :disabled="scope.row.status==='running' || !scope.row.replayAvailable"
                                @@click.stop="openTask(scope.row)">
@@ -90,6 +94,12 @@
             <i class="el-icon-document"></i>
             <h3>{{tasks.length ? '没有匹配的任务' : '还没有运行记录'}}</h3>
             <p>{{tasks.length ? '调整搜索关键词或状态筛选后再试。' : '从工作流画布运行、Webhook 或定时触发后，任务会显示在这里。运行结束后可进入只读回看。'}}</p>
+        </div>
+        <div v-if="tasks.length" class="workflow-task-load-state" aria-live="polite">
+            <i v-if="loadingMore" class="el-icon-loading"></i>
+            <span v-if="loadingMore">正在加载更多记录…</span>
+            <span v-else-if="hasMore">继续向下滚动以加载更多记录</span>
+            <span v-else>没有更多记录</span>
         </div>
     </section>
 </div>

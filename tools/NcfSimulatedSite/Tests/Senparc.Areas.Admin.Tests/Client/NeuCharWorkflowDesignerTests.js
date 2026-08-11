@@ -29,6 +29,8 @@ const workflowAppServicePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Application/AppServices/NeuCharWorkflowAppService.cs');
 const runCoordinatorPath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Domain/Services/NeuCharWorkflowRunCoordinator.cs');
+const workflowEnginePath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Domain/Services/NeuCharWorkflowEngine.cs');
 const moduleFunctionPagePath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/Areas/Admin/Pages/XncfModule/Start.cshtml');
 const moduleFunctionScriptPath = path.resolve(__dirname,
@@ -1063,8 +1065,23 @@ const tasksPage = fs.readFileSync(tasksPagePath, 'utf8');
 const tasksStyles = fs.readFileSync(tasksStylePath, 'utf8');
 const workflowAppService = fs.readFileSync(workflowAppServicePath, 'utf8');
 const runCoordinator = fs.readFileSync(runCoordinatorPath, 'utf8');
+const workflowEngine = fs.readFileSync(workflowEnginePath, 'utf8');
 assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=List') && tasksPage.includes('回看运行'),
     'The task page should expose a task-list endpoint and an explicit replay action.');
+assert.ok(tasksPage.includes('@@click.stop="abortTask(scope.row)"') && fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=Abort'),
+    'The task page should expose a manual abort action for active runs.');
+assert.ok(tasksPage.includes('没有更多记录') && tasksPage.includes('快速清理') &&
+    fs.readFileSync(tasksScriptPath, 'utf8').includes('beforeExecutionLogId') &&
+    fs.readFileSync(tasksScriptPath, 'utf8').includes('loadMoreTasks') &&
+    fs.readFileSync(tasksScriptPath, 'utf8').includes('handleScroll'),
+    'The task page should use a cursor-backed incremental loader and explicitly signal the end of history.');
+assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=CleanupPreview') &&
+    fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=Cleanup') &&
+    workflowAppService.includes('PreviewTaskCleanupAsync') && workflowAppService.includes('CleanupCompletedTasksAsync') &&
+    workflowAppService.includes('z.FinishedAt != null'),
+    'Quick cleanup should preview then delete only completed task logs, never active tasks.');
+assert.ok(page.includes('@@click="abortWorkflow"') && fs.readFileSync(scriptPath, 'utf8').includes('handler=AbortRun'),
+    'The workflow editor should keep a visible abort action while a test run is active.');
 assert.match(tasksStyles, /\.workflow-task-table \.el-table__row\s*\{[^}]*cursor:\s*pointer;/s,
     'Task rows should make their workflow-board navigation discoverable.');
 assert.ok(workflowAppService.includes('GetTaskListAsync') && workflowAppService.includes('WorkflowTaskListItem'),
@@ -1073,6 +1090,16 @@ assert.ok(workflowAppService.includes('GetReplayAsync') && workflowAppService.in
     'The application service should retrieve immutable task replays and create a disabled editable draft from them.');
 assert.ok(runCoordinator.includes('GetActiveRuns') && runCoordinator.includes('NeuCharWorkflowActiveRun'),
     'The task list should use the coordinator for currently running node-level task state.');
+assert.ok(runCoordinator.includes('TryAbort') && runCoordinator.includes('手动中止') && workflowAppService.includes('AbortRun'),
+    'Manual aborts should be authorized by run ID and persisted as an explicit failed result.');
+assert.ok(page.includes("'merge','逐项合流'") && page.includes('汇总输出内容') &&
+    fs.readFileSync(scriptPath, 'utf8').includes("['aggregate', 'merge', 'function']") &&
+    fs.readFileSync(scriptPath, 'utf8').includes('outputTemplate'),
+    'The designer should distinguish once-only aggregation from per-item merge and expose aggregate output content.');
+assert.ok(workflowEngine.includes('"merge"') && workflowEngine.includes('MaxStreamActivations') &&
+    workflowEngine.includes('ResolveAggregateOutput') && workflowEngine.includes('ValidateAggregateOutputTemplate') &&
+    workflowEngine.includes('不能位于逐项合流节点之后'),
+    'The engine should serially propagate merge activations, validate aggregate output templates, and reject ambiguous merge-to-aggregate chains.');
 const replayPage = fs.readFileSync(replayPagePath, 'utf8');
 const replayScript = fs.readFileSync(replayScriptPath, 'utf8');
 const replayStyles = fs.readFileSync(replayStylePath, 'utf8');

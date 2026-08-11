@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WorkflowEntity = Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflow;
+using WorkflowExecutionLog = Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflowExecutionLog;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
@@ -55,6 +57,7 @@ public sealed class NeuCharWorkflowRunCoordinator
     {
         private readonly object _gate = new();
         private readonly List<NeuCharWorkflowRunEvent> _events = new();
+        private readonly CancellationTokenSource _manualAbort = new();
         private long _sequence;
 
         public RunState(Guid runId, int workflowId, int adminUserId, string input, string source)
@@ -77,6 +80,46 @@ public sealed class NeuCharWorkflowRunCoordinator
         public bool? Succeeded { get; private set; }
         public string ErrorMessage { get; private set; }
         public string FinalOutput { get; private set; }
+        public bool IsManuallyAborted { get; private set; }
+        public CancellationToken ManualAbortToken => _manualAbort.Token;
+
+        public bool TryAbort(out string? error)
+        {
+            lock (_gate)
+            {
+                if (!Running)
+                {
+                    error = "该工作流任务已结束，无法中止。";
+                    return false;
+                }
+                if (IsManuallyAborted)
+                {
+                    error = null;
+                    return true;
+                }
+
+                IsManuallyAborted = true;
+                _events.Add(new NeuCharWorkflowRunEvent(
+                    ++_sequence,
+                    string.Empty,
+                    "Workflow",
+                    "running",
+                    "已请求手动中止，正在等待当前节点响应取消。",
+                    string.Empty,
+                    DateTimeOffset.UtcNow));
+            }
+            _manualAbort.Cancel();
+            error = null;
+            return true;
+        }
+
+        public string? GetManualAbortResult()
+        {
+            lock (_gate)
+            {
+                return IsManuallyAborted ? "手动中止" : null;
+            }
+        }
 
         public void Add(NeuCharWorkflowProgress progress)
         {
@@ -197,6 +240,16 @@ public sealed class NeuCharWorkflowRunCoordinator
             : null;
     }
 
+    public bool TryAbort(Guid runId, int adminUserId, out string? error)
+    {
+        if (!_runs.TryGetValue(runId, out var state) || state.AdminUserId != adminUserId)
+        {
+            error = "运行任务不存在或不属于当前账号。";
+            return false;
+        }
+        return state.TryAbort(out error);
+    }
+
     public IReadOnlyList<NeuCharWorkflowActiveRun> GetActiveRuns(int adminUserId)
     {
         Cleanup();
@@ -210,12 +263,14 @@ public sealed class NeuCharWorkflowRunCoordinator
     private async Task ExecuteAsync(RunState state)
     {
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(
-            _applicationLifetime.ApplicationStopping);
+            _applicationLifetime.ApplicationStopping,
+            state.ManualAbortToken);
         timeout.CancelAfter(TimeSpan.FromMinutes(10));
         try
         {
             using var scope = _scopeFactory.CreateScope();
             var workflowService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowService>();
+            var executionLogService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowExecutionLogService>();
             var engine = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowEngine>();
             var workflow = await workflowService.GetObjectAsync(z => z.Id == state.WorkflowId)
                 .ConfigureAwait(false);
@@ -225,11 +280,34 @@ public sealed class NeuCharWorkflowRunCoordinator
                 return;
             }
 
+            if (state.GetManualAbortResult() != null)
+            {
+                await CompleteManualAbortBeforeExecutionAsync(workflow, workflowService, executionLogService, state)
+                    .ConfigureAwait(false);
+                return;
+            }
+
             var graph = engine.ParseAndValidateGraph(workflow.GraphJson);
-            var validationError = await engine.ValidateReferencesAsync(graph, timeout.Token).ConfigureAwait(false);
+            string? validationError;
+            try
+            {
+                validationError = await engine.ValidateReferencesAsync(graph, timeout.Token).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (state.GetManualAbortResult() != null)
+            {
+                await CompleteManualAbortBeforeExecutionAsync(workflow, workflowService, executionLogService, state)
+                    .ConfigureAwait(false);
+                return;
+            }
             if (validationError != null)
             {
                 state.Complete(false, null, validationError);
+                return;
+            }
+            if (state.GetManualAbortResult() != null)
+            {
+                await CompleteManualAbortBeforeExecutionAsync(workflow, workflowService, executionLogService, state)
+                    .ConfigureAwait(false);
                 return;
             }
 
@@ -243,20 +321,41 @@ public sealed class NeuCharWorkflowRunCoordinator
                 state.Input,
                 timeout.Token,
                 state.Add,
-                state.RunId.ToString("N")).ConfigureAwait(false);
+                state.RunId.ToString("N"),
+                state.GetManualAbortResult).ConfigureAwait(false);
             workflow.MarkCompleted(result.Success, result.ErrorMessage);
             await workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
             state.Complete(result.Success, result.Output, result.ErrorMessage);
         }
         catch (OperationCanceledException)
         {
-            state.Complete(false, null, "工作流测试运行已超时或服务正在停止。");
+            var message = state.GetManualAbortResult() ?? "工作流测试运行已超时或服务正在停止。";
+            state.Complete(false, message, message);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Workflow 测试运行异常：WorkflowId={WorkflowId}, RunId={RunId}", state.WorkflowId, state.RunId);
             state.Complete(false, null, ex.Message);
         }
+    }
+
+    private static async Task CompleteManualAbortBeforeExecutionAsync(
+        WorkflowEntity workflow,
+        NeuCharWorkflowService workflowService,
+        NeuCharWorkflowExecutionLogService executionLogService,
+        RunState state)
+    {
+        const string message = "手动中止";
+        workflow.MarkCompleted(false, message);
+        await workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
+
+        var executionLog = new WorkflowExecutionLog(
+            workflow.Id,
+            workflow.Name,
+            $"workflow-{workflow.Id}-run-{state.RunId:N}");
+        executionLog.Complete(false, message, message, "[]");
+        await executionLogService.SaveObjectAsync(executionLog).ConfigureAwait(false);
+        state.Complete(false, message, message);
     }
 
     private void Cleanup()

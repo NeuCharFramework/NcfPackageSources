@@ -84,12 +84,18 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 {
     private sealed class AgentRuntimeContext
     {
-        public required AgentTemplate Template { get; init; }
-        public required AgentTemplateDto TemplateDto { get; init; }
-        public required ChatClientAgent Agent { get; init; }
-        public required IWantToRun Runner { get; init; }
-        public required ChatClientAgentOptions AgentOptions { get; init; }
+        public required string ParticipantKey { get; init; }
+        public required string ParticipantKind { get; init; }
+        public int? LocalAgentTemplateId { get; init; }
+        public int? RemoteAgentId { get; init; }
+        public AgentTemplate? Template { get; init; }
+        public AgentTemplateDto? TemplateDto { get; init; }
+        public required AIAgent Agent { get; init; }
+        public IWantToRun? Runner { get; init; }
+        public ChatClientAgentOptions? AgentOptions { get; init; }
         public SenparcAiSetting? Setting { get; init; }
+
+        public bool IsRemote => RemoteAgentId.HasValue;
     }
 
     private sealed class AgentRunResult
@@ -183,7 +189,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var logger = new StringBuilder();
 
             var chatGroupMemberService = services.GetRequiredService<ChatGroupMemberService>();
+            var chatGroupRemoteMemberService = services.GetRequiredService<ChatGroupRemoteMemberService>();
             var agentTemplateService = services.GetRequiredService<AgentsTemplateService>();
+            var remoteA2AAgentFactory = services.GetRequiredService<RemoteA2AAgentFactory>();
             var promptItemService = services.GetRequiredService<PromptItemService>();
             chatTaskService = services.GetRequiredService<ChatTaskService>();
             var chatGroupHistoryService = services.GetRequiredService<ChatGroupHistoryService>();
@@ -368,6 +376,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                 runtimeContexts.Add(new AgentRuntimeContext
                 {
+                    ParticipantKey = $"local:{template.Id}",
+                    ParticipantKind = "Local",
+                    LocalAgentTemplateId = template.Id,
                     Template = template,
                     TemplateDto = templateDto,
                     Agent = runner.Kernel.ChatClientAgent,
@@ -377,15 +388,44 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 });
             }
 
+            var remoteGroupMembers = await chatGroupRemoteMemberService.GetFullListAsync(
+                z => z.ChatGroupId == groupId,
+                includes: nameof(ChatGroupRemoteMember.RemoteAgent));
+            foreach (var remoteMember in remoteGroupMembers)
+            {
+                if (!remoteMember.Enable || remoteMember.RemoteAgent == null || !remoteMember.RemoteAgent.Enable)
+                {
+                    var remoteName = remoteMember.RemoteAgent?.Name ?? remoteMember.RemoteAgentId.ToString();
+                    logger.AppendLine($"远程智能体【{remoteName}】目前为关闭状态，跳过对话");
+                    continue;
+                }
+
+                try
+                {
+                    var remoteAgent = await remoteA2AAgentFactory.CreateAsync(remoteMember.RemoteAgent);
+                    runtimeContexts.Add(new AgentRuntimeContext
+                    {
+                        ParticipantKey = RemoteA2AAgentFactory.BuildParticipantKey(remoteMember.RemoteAgentId),
+                        ParticipantKind = "RemoteA2A",
+                        RemoteAgentId = remoteMember.RemoteAgentId,
+                        Agent = remoteAgent
+                    });
+                }
+                catch (Exception ex)
+                {
+                    throw new NcfExceptionBase($"远程智能体【{remoteMember.RemoteAgent.Name}】无法加入 ChatGroup：{ex.Message}", ex);
+                }
+            }
+
             if (runtimeContexts.Count == 0)
             {
                 throw new NcfExceptionBase($"聊天组【{chatGroup.Name}】没有可用的启用智能体。");
             }
 
-            var adminContext = runtimeContexts.FirstOrDefault(z => z.Template.Id == chatGroup.AdminAgentTemplateId)
+            var adminContext = runtimeContexts.FirstOrDefault(z => z.LocalAgentTemplateId == chatGroup.AdminAgentTemplateId)
                 ?? throw new NcfExceptionBase($"聊天组【{chatGroup.Name}】未找到有效群主智能体（ID：{chatGroup.AdminAgentTemplateId}）。");
 
-            var enterContext = runtimeContexts.FirstOrDefault(z => z.Template.Id == chatGroup.EnterAgentTemplateId)
+            var enterContext = runtimeContexts.FirstOrDefault(z => z.LocalAgentTemplateId == chatGroup.EnterAgentTemplateId)
                 ?? adminContext;
 
             if (runtimeContexts.Count == 1)
@@ -425,9 +465,16 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var maxWorkflowTurns = request.ChatMaxRound > 0 ? request.ChatMaxRound : ChatMaxRound;
             var effectiveWorkflowTurns = Math.Max(2, maxWorkflowTurns);
             var multiAgentContexts = runtimeContexts
-                .OrderByDescending(z => z.Template.Id == adminContext.Template.Id)
-                .ThenByDescending(z => z.Template.Id == enterContext.Template.Id)
+                .OrderByDescending(z => z.ParticipantKey == adminContext.ParticipantKey)
+                .ThenByDescending(z => z.ParticipantKey == enterContext.ParticipantKey)
                 .ToList();
+            var hasRemoteParticipants = multiAgentContexts.Any(z => z.IsRemote);
+            var effectiveContextSharingMode = ResolveContextSharingMode(
+                chatGroup.ContextSharingMode,
+                remoteGroupMembers
+                    .Where(z => z.Enable && z.RemoteAgent?.Enable == true)
+                    .Select(z => z.ContextSharingMode),
+                hasRemoteParticipants);
 
             if (multiAgentContexts.Count < 2)
             {
@@ -440,8 +487,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             Workflow workflow = AgentWorkflowBuilder
                 .CreateGroupChatBuilderWith(agents =>
                 {
-                    var manager = new RoundRobinGroupChatManager(
+                    var manager = new ContextSharingRoundRobinGroupChatManager(
                         agents,
+                        effectiveContextSharingMode,
                         async (_, history, _) =>
                         {
                             var latestText = history?
@@ -460,7 +508,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 .WithDescription(string.IsNullOrWhiteSpace(chatGroup.Description) ? "AgentsManager ChatGroup Workflow" : chatGroup.Description)
                 .Build();
 
-            var taskPrompt = BuildWorkflowPrompt(adminContext.Agent.Name, multiAgentContexts.Select(z => z.Agent.Name), userCommand);
+            var taskPrompt = BuildWorkflowPrompt(
+                adminContext.Agent.Name,
+                multiAgentContexts.Select(z => z.Agent.Name),
+                userCommand,
+                effectiveContextSharingMode);
 
             var contextByExecutorId = BuildRuntimeContextIndex(runtimeContexts);
 
@@ -516,11 +568,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     {
                         await PublishSyntheticChunkEventsAsync(
                             chatTask.Id,
-                            speakerContext.TemplateDto.Id,
+                            speakerContext.LocalAgentTemplateId,
                             speakerContext.Agent.Name,
                             responseKey,
                             normalizedText,
-                            roundIndex);
+                            roundIndex,
+                            speakerContext.ParticipantKey,
+                            speakerContext.ParticipantKind);
                         streamedResponseKeys.Add(responseKey);
                     }
 
@@ -539,11 +593,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     PublishMessageEvent(
                         chatTask.Id,
                         history?.Id,
-                        speakerContext.TemplateDto.Id,
+                        speakerContext.LocalAgentTemplateId,
                         speakerContext.Agent.Name,
                         responseKey,
                         normalizedText,
-                        usageSnapshot);
+                        usageSnapshot,
+                        speakerContext.ParticipantKey,
+                        speakerContext.ParticipantKind);
                 }
                 else
                 {
@@ -675,11 +731,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                             streamedResponseKeys.Add(responseId);
                                             PublishChunkEvent(
                                                 chatTask.Id,
-                                                streamContext.TemplateDto.Id,
+                                                streamContext.LocalAgentTemplateId,
                                                 streamContext.Agent.Name,
                                                 responseId,
                                                 updateText,
-                                                roundIndex + 1);
+                                                roundIndex + 1,
+                                                streamContext.ParticipantKey,
+                                                streamContext.ParticipantKind);
                                         }
                                     }
 
@@ -796,11 +854,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                                         streamedResponseKeys.Add(responseId);
                                                         PublishChunkEvent(
                                                             chatTask.Id,
-                                                            streamContext.TemplateDto.Id,
+                                                            streamContext.LocalAgentTemplateId,
                                                             streamContext.Agent.Name,
                                                             responseId,
                                                             updateText,
-                                                            roundIndex + 1);
+                                                            roundIndex + 1,
+                                                            streamContext.ParticipantKey,
+                                                            streamContext.ParticipantKind);
                                                     }
                                                 }
 
@@ -923,6 +983,26 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             if (roundIndex == 0 || workflowFailed)
             {
+                if (hasRemoteParticipants)
+                {
+                    // 本地顺序回退依赖 IWantToRun，不能把远程 A2A Agent 错当作本地模型执行。
+                    // 这里保留已有消息并明确结束原因，避免在故障时意外丢弃远程参与者。
+                    var remoteFallbackNotice = workflowFailed
+                        ? $"系统提示：混合 Agent 编排失败（{workflowFailureReason}），未执行本地回退以避免跳过远程 A2A 成员。"
+                        : "系统提示：混合 Agent 编排未返回可展示内容，未执行本地回退以避免跳过远程 A2A 成员。";
+                    logger.AppendLine($"[{chatGroup.Name}] {remoteFallbackNotice}");
+                    if (workflowFailed)
+                    {
+                        await PersistAgentResponseAsync(
+                            Guid.NewGuid().ToString("n"),
+                            enterContext.Agent.Name,
+                            remoteFallbackNotice,
+                            null,
+                            DateTime.Now);
+                    }
+                }
+                else
+                {
                 if (workflowFailed)
                 {
                     logger.AppendLine($"[{chatGroup.Name}] 多智能体工作流中断，自动降级为顺序轮转回退执行。");
@@ -957,6 +1037,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         fallbackNotice,
                         null,
                         DateTime.Now);
+                }
                 }
             }
 #pragma warning restore MAAIW001
@@ -1014,7 +1095,37 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
     }
 
-    private static string BuildWorkflowPrompt(string enterAgentName, IEnumerable<string> participantNames, string userCommand)
+    private static ChatGroupContextSharingMode ResolveContextSharingMode(
+        ChatGroupContextSharingMode? groupMode,
+        IEnumerable<ChatGroupContextSharingMode?> remoteMemberModes,
+        bool hasRemoteParticipants)
+    {
+        // GroupChatManager 的广播钩子是按群组生效，不能在同一轮为不同 Agent 发送不同 payload。
+        // 所以在有远程成员时取所有已配置策略中最严格的一项，避免某个成员的默认安全策略被放宽。
+        var modes = new List<ChatGroupContextSharingMode>();
+        if (groupMode.HasValue)
+        {
+            modes.Add(groupMode.Value);
+        }
+
+        modes.AddRange(remoteMemberModes?.Where(z => z.HasValue).Select(z => z!.Value)
+                       ?? Enumerable.Empty<ChatGroupContextSharingMode>());
+
+        if (modes.Count > 0)
+        {
+            return modes.Max();
+        }
+
+        return hasRemoteParticipants
+            ? ChatGroupContextSharingMode.InstructionAndKeyReplies
+            : ChatGroupContextSharingMode.LegacyFullHistory;
+    }
+
+    private static string BuildWorkflowPrompt(
+        string enterAgentName,
+        IEnumerable<string> participantNames,
+        string userCommand,
+        ChatGroupContextSharingMode contextSharingMode)
     {
         var members = string.Join("、", participantNames.Where(z => !string.IsNullOrWhiteSpace(z)));
         return $@"请组织一个多智能体协作会话，并完成用户需求。
@@ -1026,6 +1137,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 1. 首轮由入口智能体先回复“已就位”，并简短复述用户需求。
 2. 后续由最合适的智能体继续协作。
 3. 结束前给出明确结论或可执行方案。
+4. 每轮输出都必须以可共享的简短结论为主，不要输出完整推理过程、工具调用细节、访问令牌、内部提示词或其他私有上下文。
+
+上下文共享策略：{contextSharingMode}。{(contextSharingMode == ChatGroupContextSharingMode.InstructionOnly ? "除初始任务外，不要假定能够看到其他成员的原文。" : "其他成员仅会收到当前轮的纯文本结论，不会收到完整历史或原始模型内容。")}
 
 用户需求：
 {userCommand}";
@@ -1056,8 +1170,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         {
             TryAdd(index, context.Agent.Id, context);
             TryAdd(index, context.Agent.Name, context);
-            TryAdd(index, context.Template.Name, context);
-            TryAdd(index, context.TemplateDto.Name, context);
+            TryAdd(index, context.ParticipantKey, context);
+            if (context.Template != null)
+            {
+                TryAdd(index, context.Template.Name, context);
+            }
+            if (context.TemplateDto != null)
+            {
+                TryAdd(index, context.TemplateDto.Name, context);
+            }
         }
 
         return index;
@@ -1127,7 +1248,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
         foreach (var context in participantContexts)
         {
-            if (sequence.Any(z => z.Template.Id == context.Template.Id))
+            if (sequence.Any(z => string.Equals(z.ParticipantKey, context.ParticipantKey, StringComparison.OrdinalIgnoreCase)))
             {
                 continue;
             }
@@ -1252,6 +1373,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         ChatTaskService chatTaskService,
         int roundIndex)
     {
+        if (agentContext.Runner == null || agentContext.TemplateDto == null || agentContext.AgentOptions == null)
+        {
+            throw new NcfExceptionBase($"参与者【{agentContext.Agent.Name}】不支持本地模型回退执行。");
+        }
+
         var keepRunning = await _cache.GetAsync<RunningChatTaskDto>(runningKey);
         if (keepRunning == null)
         {
@@ -1286,11 +1412,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         hasStreamedChunk = true;
                         PublishChunkEvent(
                             chatTask.Id,
-                            agentContext.TemplateDto.Id,
+                            agentContext.LocalAgentTemplateId,
                             agentContext.Agent.Name,
                             responseId,
                             updateText,
-                            roundIndex);
+                            roundIndex,
+                            agentContext.ParticipantKey,
+                            agentContext.ParticipantKind);
                     }
 
                     if (update?.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent usageContent
@@ -1320,11 +1448,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 {
                     await PublishSyntheticChunkEventsAsync(
                         chatTask.Id,
-                        agentContext.TemplateDto.Id,
+                        agentContext.LocalAgentTemplateId,
                         agentContext.Agent.Name,
                         responseId,
                         output,
-                        roundIndex);
+                        roundIndex,
+                        agentContext.ParticipantKey,
+                        agentContext.ParticipantKind);
                     hasStreamedChunk = true;
                 }
 
@@ -1343,11 +1473,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 PublishMessageEvent(
                     chatTask.Id,
                     history?.Id,
-                    agentContext.TemplateDto.Id,
+                    agentContext.LocalAgentTemplateId,
                     agentContext.Agent.Name,
                     responseId,
                     output,
-                    usageSnapshot);
+                    usageSnapshot,
+                    agentContext.ParticipantKey,
+                    agentContext.ParticipantKind);
 
                 return new AgentRunResult
                 {
@@ -1387,11 +1519,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     {
                         await PublishSyntheticChunkEventsAsync(
                             chatTask.Id,
-                            agentContext.TemplateDto.Id,
+                            agentContext.LocalAgentTemplateId,
                             agentContext.Agent.Name,
                             responseId,
                             fallbackResult.Output,
-                            roundIndex);
+                            roundIndex,
+                            agentContext.ParticipantKey,
+                            agentContext.ParticipantKind);
                         hasStreamedChunk = true;
                     }
 
@@ -1410,11 +1544,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     PublishMessageEvent(
                         chatTask.Id,
                         fallbackHistory?.Id,
-                        agentContext.TemplateDto.Id,
+                        agentContext.LocalAgentTemplateId,
                         agentContext.Agent.Name,
                         responseId,
                         fallbackResult.Output,
-                        fallbackUsageSnapshot);
+                        fallbackUsageSnapshot,
+                        agentContext.ParticipantKey,
+                        agentContext.ParticipantKind);
 
                     return new AgentRunResult
                     {
@@ -1443,11 +1579,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             {
                 await PublishSyntheticChunkEventsAsync(
                     chatTask.Id,
-                    agentContext.TemplateDto.Id,
+                    agentContext.LocalAgentTemplateId,
                     agentContext.Agent.Name,
                     responseId,
                     errorMessage,
-                    roundIndex);
+                    roundIndex,
+                    agentContext.ParticipantKey,
+                    agentContext.ParticipantKind);
                 hasStreamedChunk = true;
             }
 
@@ -1466,11 +1604,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             PublishMessageEvent(
                 chatTask.Id,
                 history?.Id,
-                agentContext.TemplateDto.Id,
+                agentContext.LocalAgentTemplateId,
                 agentContext.Agent.Name,
                 responseId,
                 errorMessage,
-                usageSnapshot);
+                usageSnapshot,
+                agentContext.ParticipantKey,
+                agentContext.ParticipantKind);
 
             throw;
         }
@@ -1734,35 +1874,38 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         StringBuilder logger,
         ChatUsageSnapshot usageSnapshot)
     {
-        try
+        if (speakerContext.TemplateDto != null)
         {
-            await AgentTemplatePrintMessageMiddleware.SendWechatMessageAsync(
-                messageText,
-                speakerContext.TemplateDto,
-                chatGroupDto,
-                chatTaskDto);
-        }
-        catch (Exception ex)
-        {
-            SenparcTrace.SendCustomLog("SendWechatMessage 发生异常", ex.Message);
+            try
+            {
+                await AgentTemplatePrintMessageMiddleware.SendWechatMessageAsync(
+                    messageText,
+                    speakerContext.TemplateDto,
+                    chatGroupDto,
+                    chatTaskDto);
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.SendCustomLog("SendWechatMessage 发生异常", ex.Message);
+            }
         }
 
         var usageRemark = ChatUsageRemarkCodec.EncodeMessage(usageSnapshot);
 
         logger.AppendLine($"[{chatGroup.Name}]组 {speakerContext.Agent.Name} 发送消息：{messageText}");
 
-        var historyDto = new ChatGroupHistoryDto(
-            chatGroupDto.Id,
-            chatTaskDto.Id,
-            null,
-            speakerContext.TemplateDto.Id,
-            null,
-            speakerContext.TemplateDto.Id,
-            null,
-            messageText,
-            MessageType.Text,
-            Status.Finished)
+        var historyDto = new ChatGroupHistoryDto
         {
+            ChatGroupId = chatGroupDto.Id,
+            ChatTaskId = chatTaskDto.Id,
+            FromAgentTemplateId = speakerContext.LocalAgentTemplateId,
+            ToAgentTemplateId = speakerContext.LocalAgentTemplateId,
+            FromParticipantKey = speakerContext.ParticipantKey,
+            FromParticipantKind = speakerContext.ParticipantKind,
+            FromParticipantName = speakerContext.Agent.Name,
+            Message = messageText,
+            MessageType = MessageType.Text,
+            Status = Status.Finished,
             AdminRemark = usageRemark
         };
 
@@ -1893,7 +2036,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         string fromAgentName,
         string responseId,
         string text,
-        int roundIndex)
+        int roundIndex,
+        string participantKey = null,
+        string participantKind = null)
     {
         if (string.IsNullOrWhiteSpace(responseId) || string.IsNullOrWhiteSpace(text))
         {
@@ -1914,7 +2059,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 fromAgentName,
                 responseId,
                 chunkList[i],
-                roundIndex);
+                roundIndex,
+                participantKey,
+                participantKind);
 
             if (i < chunkList.Count - 1)
             {
@@ -2250,13 +2397,17 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         string fromAgentName,
         string responseId,
         string text,
-        int roundIndex)
+        int roundIndex,
+        string participantKey = null,
+        string participantKind = null)
     {
         _chatTaskStreamHub.Publish(new ChatTaskStreamEvent
         {
             EventType = "chunk",
             ChatTaskId = chatTaskId,
             FromAgentTemplateId = fromAgentTemplateId,
+            FromParticipantKey = participantKey,
+            FromParticipantKind = participantKind,
             FromAgentName = fromAgentName,
             ResponseId = responseId,
             Text = text,
@@ -2273,7 +2424,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         string fromAgentName,
         string responseId,
         string message,
-        ChatUsageSnapshot usageSnapshot)
+        ChatUsageSnapshot usageSnapshot,
+        string participantKey = null,
+        string participantKind = null)
     {
         _chatTaskStreamHub.Publish(new ChatTaskStreamEvent
         {
@@ -2281,6 +2434,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             ChatTaskId = chatTaskId,
             HistoryId = historyId,
             FromAgentTemplateId = fromAgentTemplateId,
+            FromParticipantKey = participantKey,
+            FromParticipantKind = participantKind,
             FromAgentName = fromAgentName,
             ResponseId = responseId,
             Text = message,

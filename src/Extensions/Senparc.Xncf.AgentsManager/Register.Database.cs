@@ -50,6 +50,11 @@ namespace Senparc.Xncf.AgentsManager
 
             modelBuilder.ApplyConfiguration(new ChatGroupConfigurationMapping());
             modelBuilder.ApplyConfiguration(new AgentTemplateConfigurationMapping());
+            // 远程 A2A Agent 的映射必须显式注册：当前模块的设计时 DbContext
+            // 不会自动扫描新增的 Mapping 类型。缺少此处会导致索引与 NoAction 删除策略
+            // 没有写入数据库迁移。
+            modelBuilder.ApplyConfiguration(new RemoteAgentConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new ChatGroupRemoteMemberConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)

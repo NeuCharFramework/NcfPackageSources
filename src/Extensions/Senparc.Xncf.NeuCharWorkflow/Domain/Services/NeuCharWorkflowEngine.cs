@@ -77,11 +77,12 @@ public sealed record NeuCharWorkflowProgress(
 
 public sealed class NeuCharWorkflowEngine
 {
+    private const int MaxStreamActivations = 500;
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private static readonly HashSet<string> AllowedNodeTypes = new(StringComparer.OrdinalIgnoreCase)
     {
         "manual-trigger", "interval-trigger", "webhook-trigger", "function", "delay", "condition", "agent", "agent-group",
-        "aggregate", "parallel", "console", "neubell", "end"
+        "aggregate", "merge", "parallel", "console", "neubell", "end"
     };
 
     private sealed record ResolvedFunctionReference(
@@ -147,6 +148,13 @@ public sealed class NeuCharWorkflowEngine
         foreach (var node in graph.Nodes)
         {
             node.Config ??= new JsonObject();
+            // 已保存的旧聚合节点直接输出数组。迁移到可配置输出时保留这一明确模板，
+            // 以免升级后让既有工作流失效；新建节点会以空模板提示用户主动配置。
+            if (node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase) &&
+                !node.Config.ContainsKey("outputTemplate"))
+            {
+                node.Config["outputTemplate"] = "{{input}}";
+            }
         }
         if (graph.Nodes.Count > 100 || graph.Edges.Count > 200)
         {
@@ -208,10 +216,11 @@ public sealed class NeuCharWorkflowEngine
             var outgoing = graph.Edges.Where(z => z.Source == node.Id).ToList();
             var incoming = graph.Edges.Where(z => z.Target == node.Id).ToList();
             if (!node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase) &&
+                !node.Type.Equals("merge", StringComparison.OrdinalIgnoreCase) &&
                 !node.Type.Equals("function", StringComparison.OrdinalIgnoreCase) &&
                 incoming.Count > 1)
             {
-                throw new InvalidOperationException($"节点“{node.Name ?? node.Id}”只允许一个上游连接；多对一目标请使用 Function 或聚合节点。");
+                throw new InvalidOperationException($"节点“{node.Name ?? node.Id}”只允许一个上游连接；多对一目标请使用 Function、聚合或逐项合流节点。");
             }
             if (node.Type.Equals("condition", StringComparison.OrdinalIgnoreCase))
             {
@@ -232,6 +241,18 @@ public sealed class NeuCharWorkflowEngine
                      outgoing.Count > 1)
             {
                 throw new InvalidOperationException($"节点“{node.Name ?? node.Id}”只能连接一个后续节点。");
+            }
+        }
+
+        foreach (var aggregate in graph.Nodes.Where(node =>
+                     node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase)))
+        {
+            if (graph.Nodes.Any(node =>
+                    node.Type.Equals("merge", StringComparison.OrdinalIgnoreCase) &&
+                    IsUpstream(graph, node.Id, aggregate.Id)))
+            {
+                throw new InvalidOperationException(
+                    $"聚合节点“{aggregate.Name ?? aggregate.Id}”不能位于逐项合流节点之后；请在合流前完成聚合，或让逐项链路直接结束。");
             }
         }
 
@@ -268,7 +289,15 @@ public sealed class NeuCharWorkflowEngine
             {
                 return nodeBindingError;
             }
-            if (node.Type.Equals("function", StringComparison.OrdinalIgnoreCase))
+            if (node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase))
+            {
+                var aggregateOutputError = ValidateAggregateOutputTemplate(node.Config);
+                if (aggregateOutputError != null)
+                {
+                    return $"节点“{node.Name ?? node.Id}”：{aggregateOutputError}";
+                }
+            }
+            else if (node.Type.Equals("function", StringComparison.OrdinalIgnoreCase))
             {
                 var reference = await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false);
                 if (reference == null)
@@ -441,7 +470,8 @@ public sealed class NeuCharWorkflowEngine
         string input,
         CancellationToken cancellationToken = default,
         Action<NeuCharWorkflowProgress> progress = null,
-        string? runId = null)
+        string? runId = null,
+        Func<string?>? cancellationResult = null)
     {
         var graph = ParseAndValidateGraph(workflow.GraphJson);
         var trace = new List<string>();
@@ -514,13 +544,19 @@ public sealed class NeuCharWorkflowEngine
             // together. Aggregate nodes are deliberately held until every active branch has
             // settled. Tracking the active edges (rather than only source nodes) also makes a
             // skipped condition branch harmless instead of causing a duplicate input or wait.
-            var ready = new List<(NeuCharWorkflowNode node, JsonNode value)>
+            //
+            // A merge node starts a stream: each input is subsequently carried through its
+            // downstream chain as an independent activation. Stream activations are executed
+            // one by one in graph/edge scheduling order, which keeps side-effecting Functions
+            // deterministic and replayable instead of racing them by completion time.
+            var ready = new List<(NeuCharWorkflowNode node, JsonNode value, bool isStream)>
             {
-                (trigger, triggerInput)
+                (trigger, triggerInput, false)
             };
             var scheduled = new HashSet<string>(StringComparer.Ordinal) { trigger.Id };
             var waitingAggregateEdges = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
             var outputs = new Dictionary<string, JsonNode>(StringComparer.Ordinal);
+            var streamActivationCount = 0;
             // Only Selection values are retained for bindings; do not retain unrelated input
             // parameters such as passwords in the runtime source cache.
             var functionSelectionInputs = new ConcurrentDictionary<string, JsonNode>(StringComparer.Ordinal);
@@ -537,14 +573,18 @@ public sealed class NeuCharWorkflowEngine
                         .Select(pair => (node: nodes[pair.Key], activeEdgeIds: pair.Value))
                         .OrderBy(item => graph.Nodes.FindIndex(node => node.Id == item.node.Id))
                         .Select(item => (item.node, value: (JsonNode)BuildAggregateInput(
-                            graph, item.node, item.activeEdgeIds, outputs)))
+                            graph, item.node, item.activeEdgeIds, outputs), isStream: false))
                         .ToList();
                     waitingAggregateEdges.Clear();
                 }
 
                 var wave = ready;
-                ready = new List<(NeuCharWorkflowNode node, JsonNode value)>();
-                var executions = await Task.WhenAll(wave.Select(async item =>
+                ready = new List<(NeuCharWorkflowNode node, JsonNode value, bool isStream)>();
+                var ordinaryWave = wave.Where(item => !item.isStream).ToList();
+                var streamWave = wave.Where(item => item.isStream).ToList();
+                var executions = new List<(NeuCharWorkflowNode node, bool isStream, string replayInputText,
+                    (bool success, JsonNode output, bool? condition, string error) execution)>();
+                var ordinaryExecutions = await Task.WhenAll(ordinaryWave.Select(async item =>
                 {
                     var replayInputText = await BuildReplayInputTextAsync(
                             item.node,
@@ -563,10 +603,33 @@ public sealed class NeuCharWorkflowEngine
                             correlationId,
                             cancellationToken)
                         .ConfigureAwait(false);
-                    return (item.node, replayInputText, execution);
+                    return (item.node, item.isStream, replayInputText, execution);
                 })).ConfigureAwait(false);
+                executions.AddRange(ordinaryExecutions);
 
-                foreach (var (node, replayInputText, execution) in executions)
+                foreach (var item in streamWave)
+                {
+                    var replayInputText = await BuildReplayInputTextAsync(
+                            item.node,
+                            item.value,
+                            outputs,
+                            functionSelectionInputs,
+                            cancellationToken)
+                        .ConfigureAwait(false);
+                    Report(progress, item.node, "running", "开始执行节点。", null, input: replayInputText);
+                    var execution = await ExecuteNodeAsync(
+                            workflow,
+                            item.node,
+                            item.value,
+                            outputs,
+                            functionSelectionInputs,
+                            correlationId,
+                            cancellationToken)
+                        .ConfigureAwait(false);
+                    executions.Add((item.node, true, replayInputText, execution));
+                }
+
+                foreach (var (node, isStream, replayInputText, execution) in executions)
                 {
                     trace.Add($"{node.Name ?? node.Type}: {(execution.success ? "OK" : "FAILED")}");
                     if (!execution.success)
@@ -608,9 +671,29 @@ public sealed class NeuCharWorkflowEngine
                             }
                             activeEdgeIds.Add(edge.Id);
                         }
+                        else if (target.Type.Equals("merge", StringComparison.OrdinalIgnoreCase))
+                        {
+                            // Each incoming edge activates a merge independently; no join or
+                            // de-duplication is applied here.
+                            if (++streamActivationCount > MaxStreamActivations)
+                            {
+                                throw new InvalidOperationException($"逐项合流产生的执行次数超过 {MaxStreamActivations} 次；请缩小分支或拆分工作流。");
+                            }
+                            ready.Add((target, finalOutput.DeepClone(), true));
+                        }
+                        else if (isStream || node.Type.Equals("merge", StringComparison.OrdinalIgnoreCase))
+                        {
+                            // Keep every item in a merge stream alive through all downstream
+                            // nodes. The next loop executes this queue serially.
+                            if (++streamActivationCount > MaxStreamActivations)
+                            {
+                                throw new InvalidOperationException($"逐项合流产生的执行次数超过 {MaxStreamActivations} 次；请缩小分支或拆分工作流。");
+                            }
+                            ready.Add((target, finalOutput.DeepClone(), true));
+                        }
                         else if (scheduled.Add(target.Id))
                         {
-                            ready.Add((target, finalOutput.DeepClone()));
+                            ready.Add((target, finalOutput.DeepClone(), false));
                         }
                     }
                 }
@@ -620,6 +703,17 @@ public sealed class NeuCharWorkflowEngine
             workflowLog.Complete(true, finalOutputText, null, JsonSerializer.Serialize(replayEvents, JsonOptions));
             await _logService.SaveObjectAsync(workflowLog).ConfigureAwait(false);
             return new NeuCharWorkflowRunResult(true, finalOutputText, trace);
+        }
+        catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested)
+        {
+            var message = cancellationResult?.Invoke();
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                message = ex.Message;
+            }
+            workflowLog.Complete(false, message, message, JsonSerializer.Serialize(replayEvents, JsonOptions));
+            await _logService.SaveObjectAsync(workflowLog).ConfigureAwait(false);
+            return new NeuCharWorkflowRunResult(false, message, trace, message);
         }
         catch (Exception ex)
         {
@@ -761,6 +855,8 @@ public sealed class NeuCharWorkflowEngine
                         cancellationToken)
                     .ConfigureAwait(false);
             case "aggregate":
+                return (true, ResolveAggregateOutput(node.Config, input, outputs, functionSelectionInputs), null, null);
+            case "merge":
             case "parallel":
             case "console":
             case "end":
@@ -925,6 +1021,36 @@ public sealed class NeuCharWorkflowEngine
             "ends-with" => left.EndsWith(right, StringComparison.OrdinalIgnoreCase),
             _ => string.Equals(left, right, StringComparison.OrdinalIgnoreCase)
         };
+    }
+
+    private static JsonNode ResolveAggregateOutput(
+        JsonObject config,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
+    {
+        var template = GetString(config, "outputTemplate")?.Trim();
+        // {{input}} is the explicit compatibility/template form for preserving the raw
+        // aggregate array instead of serializing it to text.
+        if (string.Equals(template, "{{input}}", StringComparison.OrdinalIgnoreCase))
+        {
+            return input?.DeepClone();
+        }
+
+        // Reuse the restricted template renderer so aggregate output has the
+        // same safe {{= expression }} semantics as text parameters. A plain
+        // {{input}} was handled above to keep the aggregate value typed as an
+        // array; mixed text always has a textual result.
+        var resolved = ResolveTemplate(
+            new JsonObject { ["text"] = template ?? string.Empty },
+            input,
+            outputs,
+            functionSelectionInputs);
+        if (NodeToText(resolved).Length > 8_000)
+        {
+            throw new InvalidOperationException("聚合节点输出内容超过 8000 个字符。");
+        }
+        return resolved;
     }
 
     private static JsonNode ResolveRuntimeValue(
@@ -1400,6 +1526,53 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
+    private static string ValidateAggregateOutputTemplate(JsonObject config)
+    {
+        var template = GetString(config, "outputTemplate");
+        if (string.IsNullOrWhiteSpace(template))
+        {
+            return "聚合节点必须设置输出内容。可使用 {{input}}、length(input)、join(input, '，') 等受限表达式。";
+        }
+        if (template.Length > 8_000)
+        {
+            return "聚合输出内容不能超过 8000 个字符。";
+        }
+
+        var position = 0;
+        var tokenCount = 0;
+        while (true)
+        {
+            var start = template.IndexOf("{{", position, StringComparison.Ordinal);
+            if (start < 0)
+            {
+                return null;
+            }
+            var end = template.IndexOf("}}", start + 2, StringComparison.Ordinal);
+            if (end < 0 || ++tokenCount > 32)
+            {
+                return "聚合输出内容中的占位符缺少结束标记，或数量超过 32 个。";
+            }
+
+            var token = template[(start + 2)..end].Trim();
+            if (string.Equals(token, "input", StringComparison.OrdinalIgnoreCase))
+            {
+                position = end + 2;
+                continue;
+            }
+            if (token.StartsWith("=", StringComparison.Ordinal))
+            {
+                var expression = token[1..].Trim();
+                if (!NeuCharWorkflowExpressionEngine.TryValidate(expression, new[] { "input" }, out var error))
+                {
+                    return $"聚合输出表达式无效：{error}";
+                }
+                position = end + 2;
+                continue;
+            }
+            return "聚合输出内容仅支持 {{input}} 或 {{= 表达式 }}。";
+        }
+    }
+
     private static string ValidateTemplate(
         Senparc.Ncf.XncfBase.FunctionParameterInfo parameter,
         JsonObject template)
@@ -1583,12 +1756,23 @@ public sealed class NeuCharWorkflowEngine
         }
         if (node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase))
         {
+            var preservesArray = string.Equals(GetString(node.Config, "outputTemplate")?.Trim(), "{{input}}",
+                StringComparison.OrdinalIgnoreCase);
+            return new NeuCharFunctionOutputDescriptor(
+                preservesArray ? "any" : "string",
+                preservesArray ? "Object[]" : "聚合输出文本",
+                preservesArray,
+                preservesArray ? "any" : null,
+                new[] { new NeuCharFunctionOutputFieldDescriptor("$", preservesArray ? "聚合数组" : "聚合输出", "any", preservesArray, false) });
+        }
+        if (node.Type.Equals("merge", StringComparison.OrdinalIgnoreCase))
+        {
             return new NeuCharFunctionOutputDescriptor(
                 "any",
-                "Object[]",
-                true,
-                "any",
-                new[] { new NeuCharFunctionOutputFieldDescriptor("$", "聚合结果", "any", true, false) });
+                "逐项合流输出",
+                false,
+                null,
+                new[] { new NeuCharFunctionOutputFieldDescriptor("$", "当前输入项", "any", false, false) });
         }
         if (node.Type.Equals("webhook-trigger", StringComparison.OrdinalIgnoreCase))
         {

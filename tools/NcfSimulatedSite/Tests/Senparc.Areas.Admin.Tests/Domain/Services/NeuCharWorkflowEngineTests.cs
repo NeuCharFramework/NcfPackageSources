@@ -305,6 +305,107 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public void ParseAndValidateGraph_LegacyAggregate_ShouldAddRawArrayOutputTemplate()
+    {
+        var engine = CreateEngine();
+        var graph = engine.ParseAndValidateGraph(
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"aggregate", "type":"aggregate" }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"aggregate" }] }""");
+
+        Assert.AreEqual("{{input}}", graph.Nodes.Single(node => node.Id == "aggregate").Config["outputTemplate"]!.GetValue<string>());
+    }
+
+    [TestMethod]
+    public void ParseAndValidateGraph_MergeWithTwoInputs_ShouldBeAllowed()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "condition", "type": "condition" },
+                { "id": "merge", "type": "merge", "name": "逐项合流" },
+                { "id": "console", "type": "console" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "condition" },
+                { "id": "edge-2", "source": "condition", "target": "merge", "sourceHandle": "true" },
+                { "id": "edge-3", "source": "condition", "target": "merge", "sourceHandle": "false" },
+                { "id": "edge-4", "source": "merge", "target": "console" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+
+        Assert.AreEqual(2, graph.Edges.Count(edge => edge.Target == "merge"));
+        Assert.IsTrue(graph.Nodes.Any(node => node.Type == "merge"));
+    }
+
+    [TestMethod]
+    public void ParseAndValidateGraph_AggregateAfterMerge_ShouldBeRejected()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "merge", "type": "merge" },
+                { "id": "aggregate", "type": "aggregate" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "merge" },
+                { "id": "edge-2", "source": "merge", "target": "aggregate" }
+              ]
+            }
+            """;
+
+        var exception = Assert.ThrowsException<InvalidOperationException>(() => engine.ParseAndValidateGraph(graphJson));
+
+        StringAssert.Contains(exception.Message, "不能位于逐项合流节点之后");
+    }
+
+    [TestMethod]
+    public async Task ValidateReferencesAsync_Aggregate_ShouldRequireConfiguredOutputContent()
+    {
+        var engine = CreateEngine();
+        var graph = engine.ParseAndValidateGraph(
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"aggregate", "type":"aggregate", "name":"汇总", "config":{ "outputTemplate":"" } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"aggregate" }] }""");
+
+        var error = await engine.ValidateReferencesAsync(graph);
+
+        StringAssert.Contains(error, "必须设置输出内容");
+    }
+
+    [TestMethod]
+    public void AggregateOutputTemplate_ShouldPreserveArrayOrRenderRestrictedExpression()
+    {
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "ResolveAggregateOutput",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        var input = new JsonArray(JsonValue.Create("A"), JsonValue.Create("B"));
+        var raw = (JsonNode)method.Invoke(null, new object[]
+        {
+            new JsonObject { ["outputTemplate"] = "{{input}}" },
+            input,
+            new Dictionary<string, JsonNode>(),
+            new Dictionary<string, JsonNode>()
+        })!;
+        var rendered = (JsonNode)method.Invoke(null, new object[]
+        {
+            new JsonObject { ["outputTemplate"] = "共 {{= length(input) }} 项" },
+            input,
+            new Dictionary<string, JsonNode>(),
+            new Dictionary<string, JsonNode>()
+        })!;
+
+        Assert.IsInstanceOfType(raw, typeof(JsonArray));
+        Assert.AreEqual(2, raw.AsArray().Count);
+        Assert.AreEqual("共 2 项", rendered.GetValue<string>());
+    }
+
+    [TestMethod]
     public void AggregateInput_ShouldContainOnlyActiveIncomingEdgesInGraphOrder()
     {
         var method = typeof(NeuCharWorkflowEngine).GetMethod(
@@ -595,6 +696,32 @@ public class NeuCharWorkflowEngineTests
 
         Assert.IsTrue(schema.Fields.Any(field => field.Path == "$.items.name" && field.RequiresIndex));
         Assert.IsFalse(schema.Fields.Any(field => field.Path.Contains("token")));
+    }
+
+    [TestMethod]
+    public void RunCoordinator_ManualAbort_ShouldCompleteAsFailedWithManualAbortResult()
+    {
+        var runStateType = typeof(NeuCharWorkflowRunCoordinator).GetNestedType(
+            "RunState",
+            BindingFlags.NonPublic)!;
+        var constructor = runStateType.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Single();
+        var state = constructor.Invoke(new object[] { Guid.NewGuid(), 12, 34, string.Empty, "manual" });
+        var abortArguments = new object?[] { null };
+
+        var accepted = (bool)runStateType.GetMethod("TryAbort")!.Invoke(state, abortArguments)!;
+        var cancellationToken = (CancellationToken)runStateType.GetProperty("ManualAbortToken")!.GetValue(state)!;
+        var result = (string?)runStateType.GetMethod("GetManualAbortResult")!.Invoke(state, null);
+        runStateType.GetMethod("Complete")!.Invoke(state, new object?[] { false, "手动中止", "手动中止" });
+        var snapshot = (NeuCharWorkflowRunSnapshot)runStateType.GetMethod("Snapshot")!.Invoke(state, new object[] { 0L })!;
+
+        Assert.IsTrue(accepted);
+        Assert.IsNull(abortArguments[0]);
+        Assert.IsTrue(cancellationToken.IsCancellationRequested);
+        Assert.AreEqual("手动中止", result);
+        Assert.IsFalse(snapshot.Running);
+        Assert.AreEqual(false, snapshot.Succeeded);
+        Assert.AreEqual("手动中止", snapshot.FinalOutput);
+        Assert.AreEqual("手动中止", snapshot.ErrorMessage);
     }
 
     private static Task<AppResponseBase<List<SampleOutput>>> ListOutputFunction() => null!;
