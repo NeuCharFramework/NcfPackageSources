@@ -41,6 +41,36 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public async Task ParseAndValidateGraph_LayoutDirection_ShouldPersistAndNormalize()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "layout": { "direction": "horizontal" },
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "end", "type": "end" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "end" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+        var editableJson = await engine.BuildEditableGraphJsonAsync(graphJson);
+
+        Assert.AreEqual("horizontal", graph.Layout.Direction);
+        StringAssert.Contains(editableJson, "\"layout\"");
+        StringAssert.Contains(editableJson, "\"horizontal\"");
+
+        var legacyGraph = engine.ParseAndValidateGraph(
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" }], "edges":[] }""");
+        Assert.AreEqual("vertical", legacyGraph.Layout.Direction);
+    }
+
+    [TestMethod]
     public void ParseAndValidateGraph_Cycle_ShouldBeRejected()
     {
         var engine = CreateEngine();

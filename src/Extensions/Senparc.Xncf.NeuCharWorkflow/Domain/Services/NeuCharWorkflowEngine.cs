@@ -30,6 +30,14 @@ public sealed class NeuCharWorkflowGraph
 {
     public List<NeuCharWorkflowNode> Nodes { get; set; } = new();
     public List<NeuCharWorkflowEdge> Edges { get; set; } = new();
+    /// <summary>仅用于设计器呈现，不参与工作流执行语义。</summary>
+    public NeuCharWorkflowLayout Layout { get; set; } = new();
+}
+
+public sealed class NeuCharWorkflowLayout
+{
+    /// <summary>层级布局的阅读方向：vertical（默认）或 horizontal。</summary>
+    public string Direction { get; set; } = "vertical";
 }
 
 public sealed class NeuCharWorkflowNode
@@ -129,6 +137,10 @@ public sealed class NeuCharWorkflowEngine
 
         graph.Nodes ??= new List<NeuCharWorkflowNode>();
         graph.Edges ??= new List<NeuCharWorkflowEdge>();
+        graph.Layout ??= new NeuCharWorkflowLayout();
+        graph.Layout.Direction = string.Equals(graph.Layout.Direction, "horizontal", StringComparison.OrdinalIgnoreCase)
+            ? "horizontal"
+            : "vertical";
         foreach (var node in graph.Nodes)
         {
             node.Config ??= new JsonObject();

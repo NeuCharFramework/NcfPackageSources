@@ -18,7 +18,95 @@
     <link rel="stylesheet" href="~/css/NeuCharWorkflow/Workflow.css" />
 }
 
+<script type="text/x-template" id="workflow-node-picker-template">
+    <div class="workflow-node-picker" :class="{'is-edge-insert':edgeInsert}">
+        <div class="workflow-node-picker-filters">
+            <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" placeholder="搜索 Function 或模块"></el-input>
+            <el-select v-model="module" size="small" clearable filterable placeholder="全部模块">
+                <el-option v-for="name in moduleNames" :key="name" :label="name" :value="name"></el-option>
+            </el-select>
+        </div>
+
+        <div class="palette-system-grid">
+            <el-button plain icon="el-icon-s-operation" :class="['node-picker-system-button','node-picker-condition']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'condition','条件判断')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('condition','条件判断','hover')" @@mouseleave.native="hideSystemPreview('condition','条件判断')" @@click="previewSystem('condition','条件判断','click')" @@dblclick.native="selectSystem('condition','条件判断')">条件</el-button>
+            <el-button plain icon="el-icon-time" :class="['node-picker-system-button','node-picker-delay']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'delay','等待')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('delay','等待','hover')" @@mouseleave.native="hideSystemPreview('delay','等待')" @@click="previewSystem('delay','等待','click')" @@dblclick.native="selectSystem('delay','等待')">等待</el-button>
+            <el-button plain icon="el-icon-collection" :class="['node-picker-system-button','node-picker-aggregate']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'aggregate','聚合')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('aggregate','聚合','hover')" @@mouseleave.native="hideSystemPreview('aggregate','聚合')" @@click="previewSystem('aggregate','聚合','click')" @@dblclick.native="selectSystem('aggregate','聚合')">聚合</el-button>
+            <el-button plain icon="el-icon-monitor" :class="['node-picker-system-button','node-picker-console']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'console','Console 打印')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('console','Console 打印','hover')" @@mouseleave.native="hideSystemPreview('console','Console 打印')" @@click="previewSystem('console','Console 打印','click')" @@dblclick.native="selectSystem('console','Console 打印')">Console</el-button>
+            <el-button plain icon="el-icon-bell" :class="['node-picker-system-button','node-picker-neubell']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'neubell','发送纽铃')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('neubell','发送纽铃','hover')" @@mouseleave.native="hideSystemPreview('neubell','发送纽铃')" @@click="previewSystem('neubell','发送纽铃','click')" @@dblclick.native="selectSystem('neubell','发送纽铃')">发送纽铃</el-button>
+            <el-button plain icon="el-icon-circle-check" :class="['node-picker-system-button','node-picker-end']" :disabled="locked || edgeInsert" :title="edgeInsert?'结束节点不能插入到连线中':''" draggable="true" @@dragstart.native="startSystemDrag($event,'end','结束')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('end','结束','hover')" @@mouseleave.native="hideSystemPreview('end','结束')" @@click="previewSystem('end','结束','click')" @@dblclick.native="selectSystem('end','结束')">结束</el-button>
+        </div>
+
+        <el-divider>NeuCharPivot Function</el-divider>
+        <div v-if="filteredFunctions.length" class="palette-functions">
+            <button v-for="fn in filteredFunctions"
+                    :key="functionIdentity(fn)"
+                    :class="['palette-item','node-picker-function',{'is-unavailable':!fn.moduleAvailable}]"
+                    :disabled="locked"
+                    draggable="true"
+                    @@dragstart="startFunctionDrag($event,fn)"
+                    @@dragend="finishDrag"
+                    @@mouseenter="previewNode('function',fn,'hover')"
+                    @@mouseleave="hideNodePreview('function',fn)"
+                    @@click="previewNode('function',fn,'click')"
+                    @@dblclick="selectFunction(fn)">
+                <span class="palette-item-copy">
+                    <strong>{{fn.functionName}}</strong>
+                    <small>{{fn.moduleName}} · {{fn.moduleAvailable?'可用':'模块未安装或未开启'}}</small>
+                    <small v-if="fn.catalogError" class="palette-error">参数元数据读取失败，已保留 Function</small>
+                </span>
+                <span role="button"
+                      :class="['palette-pin',{active:isPinned(fn)}]"
+                      :title="isPinned(fn)?'取消置顶':'置顶'"
+                      @@click.stop="$emit('toggle-pin', fn)">
+                    <i :class="isPinned(fn)?'el-icon-star-on':'el-icon-star-off'"></i>
+                </span>
+            </button>
+        </div>
+        <div v-else class="palette-empty">没有匹配的 Function</div>
+
+        <template v-if="objects.length">
+            <el-divider>AgentsManager</el-divider>
+            <button v-for="object in objects"
+                    :key="object.providerId+object.objectId"
+                    :class="['palette-item','node-picker-'+object.kind,{'is-unavailable':!object.enabled}]"
+                    :disabled="locked"
+                    draggable="true"
+                    @@dragstart="startObjectDrag($event,object)"
+                    @@dragend="finishDrag"
+                    @@mouseenter="previewNode('object',object,'hover')"
+                    @@mouseleave="hideNodePreview('object',object)"
+                    @@click="previewNode('object',object,'click')"
+                    @@dblclick="selectObject(object)">
+                <span class="palette-item-copy">
+                    <strong>{{object.name}}</strong>
+                    <small>{{object.kind==='agent-group'?'Agent 组':'独立 Agent'}} · {{object.enabled?'可用':'不可用'}}</small>
+                </span>
+            </button>
+        </template>
+    </div>
+</script>
+
 <div class="neuchar-page workflow-page" v-loading="loading">
+    <transition name="workflow-node-preview-fade">
+        <section v-if="nodePreview.visible" class="workflow-node-preview" @@mousedown.stop @@click.stop>
+            <header>
+                <span class="workflow-node-preview-kind">{{nodePreviewDetails.kind}}</span>
+                <el-button type="text" icon="el-icon-close" title="关闭节点详情" aria-label="关闭节点详情" @@click="dismissNodePreview"></el-button>
+            </header>
+            <h2>{{nodePreviewDetails.title}}</h2>
+            <p v-if="nodePreviewDetails.description" class="workflow-node-preview-description">{{nodePreviewDetails.description}}</p>
+            <dl v-if="nodePreviewDetails.rows.length" class="workflow-node-preview-details">
+                <div v-for="row in nodePreviewDetails.rows" :key="row.label+row.value">
+                    <dt>{{row.label}}</dt>
+                    <dd :title="row.value">{{row.value}}</dd>
+                </div>
+            </dl>
+            <footer>
+                <span>{{nodePreview.mode==='click'?'点击其它位置关闭，或 15 秒后自动关闭':'移开节点后关闭'}}</span>
+                <strong>{{nodePreviewDetails.actionText}}</strong>
+            </footer>
+        </section>
+    </transition>
     <div :class="['workflow-shell',shellClasses]">
         <aside class="workflow-list-pane">
             <div class="workflow-list-heading">
@@ -98,7 +186,10 @@
                                     <i class="el-icon-setting"></i> 工作流设置
                                 </el-dropdown-item>
                                 <el-dropdown-item command="auto-layout" :disabled="editingLocked">
-                                    <i class="el-icon-magic-stick"></i> 自动排版
+                                    <i class="el-icon-magic-stick"></i> 按设置自动排版
+                                </el-dropdown-item>
+                                <el-dropdown-item command="align-grid" :disabled="editingLocked">
+                                    <i class="el-icon-s-grid"></i> 就近网格对齐
                                 </el-dropdown-item>
                                 <el-dropdown-item command="fit-canvas">
                                     <i class="el-icon-full-screen"></i> 适应画布
@@ -151,6 +242,25 @@
                                                      controls-position="right"></el-input-number>
                                     <span v-if="form.autoSaveMinutes>0">分钟</span>
                                 </div>
+                            </el-form-item>
+                            <el-form-item label="自动排列方向" title="影响“按设置自动排版”的层级阅读方向；默认纵向">
+                                <el-radio-group v-model="form.graph.layout.direction" :disabled="editingLocked">
+                                    <el-radio-button label="vertical">纵向</el-radio-button>
+                                    <el-radio-button label="horizontal">横向</el-radio-button>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="画布对齐">
+                                <div class="workflow-layout-actions">
+                                    <el-button size="small"
+                                               icon="el-icon-magic-stick"
+                                               :disabled="editingLocked"
+                                               @@click="autoLayout()">按方向重新排列</el-button>
+                                    <el-button size="small"
+                                               icon="el-icon-s-grid"
+                                               :disabled="editingLocked"
+                                               @@click="alignToNearbyGrid()">就近网格对齐</el-button>
+                                </div>
+                                <p class="workflow-layout-help">就近网格对齐只做有限距离吸附和防重叠；会优先保留当前阅读顺序，并避免把连线拉得更长。</p>
                             </el-form-item>
                         </div>
 
@@ -268,80 +378,45 @@
                                        @@click="paletteCollapsed=!paletteCollapsed"></el-button>
                         </div>
                         <div v-show="!paletteCollapsed" class="palette-content">
-                            <el-input v-model="paletteSearch" size="small" clearable prefix-icon="el-icon-search" placeholder="搜索 Function 或模块"></el-input>
-                            <el-select v-model="paletteModule" size="small" clearable filterable placeholder="全部模块">
-                                <el-option v-for="name in moduleNames" :key="name" :label="name" :value="name"></el-option>
-                            </el-select>
-
-                            <div class="palette-system-grid">
-                                <el-button plain icon="el-icon-s-operation" :disabled="editingLocked" @@click="addSimpleNode('condition','条件判断')">条件</el-button>
-                                <el-button plain icon="el-icon-time" :disabled="editingLocked" @@click="addSimpleNode('delay','等待')">等待</el-button>
-                                <el-button plain icon="el-icon-collection" :disabled="editingLocked" @@click="addSimpleNode('aggregate','聚合')">聚合</el-button>
-                                <el-button plain icon="el-icon-monitor" :disabled="editingLocked" @@click="addSimpleNode('console','Console 打印')">Console</el-button>
-                                <el-button plain icon="el-icon-bell" :disabled="editingLocked" @@click="addSimpleNode('neubell','发送纽铃')">发送纽铃</el-button>
-                                <el-button plain icon="el-icon-circle-check" :disabled="editingLocked" @@click="addSimpleNode('end','结束')">结束</el-button>
-                            </div>
-
-                            <el-divider>NeuCharPivot Function</el-divider>
-                            <div v-if="filteredFunctions.length" class="palette-functions">
-                                <button v-for="fn in filteredFunctions"
-                                        :key="functionIdentity(fn)"
-                                        class="palette-item"
-                                        :disabled="editingLocked || !fn.moduleAvailable"
-                                        @@click="addFunctionNode(fn)">
-                                    <span class="palette-item-copy">
-                                        <strong>{{fn.functionName}}</strong>
-                                        <small>{{fn.moduleName}} · {{fn.moduleAvailable?'可用':'模块未安装或未开启'}}</small>
-                                        <small v-if="fn.catalogError" class="palette-error">参数元数据读取失败，已保留 Function</small>
-                                    </span>
-                                    <span role="button"
-                                          :class="['palette-pin',{active:isPinned(fn)}]"
-                                          :title="isPinned(fn)?'取消置顶':'置顶'"
-                                          @@click.stop="togglePin(fn)">
-                                        <i :class="isPinned(fn)?'el-icon-star-on':'el-icon-star-off'"></i>
-                                    </span>
-                                </button>
-                            </div>
-                            <div v-else class="palette-empty">没有匹配的 Function</div>
-
-                            <template v-if="workflowObjects.length">
-                                <el-divider>AgentsManager</el-divider>
-                                <button v-for="object in workflowObjects"
-                                        :key="object.providerId+object.objectId"
-                                        class="palette-item"
-                                        :disabled="editingLocked || !object.enabled"
-                                        @@click="addObjectNode(object)">
-                                    <span class="palette-item-copy">
-                                        <strong>{{object.name}}</strong>
-                                        <small>{{object.kind==='agent-group'?'Agent 组':'独立 Agent'}} · {{object.enabled?'可用':'不可用'}}</small>
-                                    </span>
-                                </button>
-                            </template>
+                            <workflow-node-picker :functions="functions"
+                                                  :objects="workflowObjects"
+                                                  :pinned-function-keys="pinnedFunctions"
+                                                  :locked="editingLocked"
+                                                  @@select-system="addSimpleNode"
+                                                  @@select-function="addFunctionNode"
+                                                  @@select-object="addObjectNode"
+                                                  @@toggle-pin="togglePin"
+                                                  @@preview-node="showNodePreview"
+                                                  @@hide-preview-node="hideHoveredNodePreview"
+                                                  @@drag-node="beginPaletteNodeDrag"
+                                                  @@drag-end="endPaletteNodeDrag"></workflow-node-picker>
                         </div>
                     </aside>
 
                     <section ref="canvas"
                              class="workflow-canvas"
                              :class="{'is-panning':canvasPan.active}"
-                             @@mousedown="startCanvasPan"
+                             @@mousedown="onCanvasMouseDown"
                              @@wheel.prevent="zoomCanvas"
                              @@scroll="updateCanvasViewport"
-                             @@contextmenu.prevent="closeContextMenu">
+                             @@dragover.prevent="onCanvasDragOver"
+                             @@drop.prevent="onCanvasDrop"
+                             @@contextmenu.prevent="onCanvasContextMenu">
                         <div class="workflow-scale-surface" :style="{width:scaledCanvasSize.width+'px',height:scaledCanvasSize.height+'px'}">
                             <div ref="stage"
-                                 class="workflow-stage"
-                                 :style="{width:canvasSize.width+'px',height:canvasSize.height+'px',transform:'scale('+canvasZoom+')'}"
-                                 @@mousedown.self="cancelConnection">
+                                 :class="['workflow-stage', {'is-horizontal-layout':layoutDirection==='horizontal'}]"
+                                 :style="{width:canvasSize.width+'px',height:canvasSize.height+'px',transform:'scale('+canvasZoom+')'}">
                                 <svg class="workflow-wires" :width="canvasSize.width" :height="canvasSize.height" aria-hidden="true">
                                     <defs>
                                         <marker id="workflow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z"></path></marker>
                                     </defs>
-                                    <g v-for="edge in form.graph.edges" :key="edge.id">
+                                    <g v-for="edge in form.graph.edges" :key="edge.id" :class="{'edge-insert-candidate':activeInsertionEdgeId===edge.id}">
                                         <path :d="edgePath(edge)" marker-end="url(#workflow-arrow)"></path>
                                         <text v-if="edge.sourceHandle==='true' || edge.sourceHandle==='false'" :x="edgeLabelX(edge)" :y="edgeLabelY(edge)">{{edge.sourceHandle==='true'?'真':'假'}}</text>
                                     </g>
                                     <path v-if="connectionDraft.sourceId" class="draft-wire" :d="draftEdgePath()"></path>
                                 </svg>
+                                <div v-if="selectionBox.active" class="workflow-selection-box" :style="selectionBoxStyle"></div>
 
                                 <button v-for="edge in form.graph.edges"
                                         :key="'delete-'+edge.id"
@@ -352,14 +427,72 @@
                                         title="删除连线"
                                         @@mousedown.stop
                                         @@click.stop="removeEdge(edge)">×</button>
+                                <button v-for="edge in form.graph.edges"
+                                        :key="'insert-'+edge.id"
+                                        type="button"
+                                        class="edge-insert"
+                                        :style="edgeInsertPosition(edge)"
+                                        :disabled="editingLocked"
+                                        title="在线中插入节点"
+                                        aria-label="在线中插入节点"
+                                        @@mousedown.stop
+                                        @@click.stop="openEdgeInsertMenu(edge)">+</button>
+
+                                <section v-if="edgeInsertMenu.visible"
+                                         class="workflow-edge-insert-menu"
+                                         :style="edgeInsertMenuStyle"
+                                         @@mousedown.stop
+                                         @@click.stop>
+                                    <header class="workflow-edge-insert-heading">
+                                        <span><i class="el-icon-plus"></i> 在线中插入节点</span>
+                                        <el-button type="text" icon="el-icon-close" title="关闭" @@click="closeEdgeInsertMenu"></el-button>
+                                    </header>
+                                    <p>原连线会替换为“上游 → 新节点 → 下游”。</p>
+                                    <workflow-node-picker :functions="functions"
+                                                          :objects="workflowObjects"
+                                                          :pinned-function-keys="pinnedFunctions"
+                                                          :locked="editingLocked"
+                                                          edge-insert
+                                                          @@select-system="insertSimpleNode"
+                                                          @@select-function="insertFunctionNode"
+                                                          @@select-object="insertObjectNode"
+                                                          @@toggle-pin="togglePin"
+                                                          @@preview-node="showNodePreview"
+                                                          @@hide-preview-node="hideHoveredNodePreview"
+                                                          @@drag-node="beginPaletteNodeDrag"
+                                                          @@drag-end="endPaletteNodeDrag"></workflow-node-picker>
+                                </section>
+
+                                <section v-if="canvasNodeInsertMenu.visible"
+                                         class="workflow-edge-insert-menu workflow-canvas-node-insert-menu"
+                                         :style="canvasNodeInsertMenuStyle"
+                                         @@mousedown.stop
+                                         @@click.stop>
+                                    <header class="workflow-edge-insert-heading">
+                                        <span><i class="el-icon-plus"></i> 在此处新增节点</span>
+                                        <el-button type="text" icon="el-icon-close" title="关闭" @@click="closeCanvasNodeInsertMenu"></el-button>
+                                    </header>
+                                    <p>双击节点添加到右键所选位置；也可直接拖放到画布。</p>
+                                    <workflow-node-picker :functions="functions"
+                                                          :objects="workflowObjects"
+                                                          :pinned-function-keys="pinnedFunctions"
+                                                          :locked="editingLocked"
+                                                          @@select-system="addCanvasContextSimpleNode"
+                                                          @@select-function="addCanvasContextFunctionNode"
+                                                          @@select-object="addCanvasContextObjectNode"
+                                                          @@toggle-pin="togglePin"
+                                                          @@preview-node="showNodePreview"
+                                                          @@hide-preview-node="hideHoveredNodePreview"
+                                                          @@drag-node="beginPaletteNodeDrag"
+                                                          @@drag-end="endPaletteNodeDrag"></workflow-node-picker>
+                                </section>
 
                                 <article v-for="(node,index) in form.graph.nodes"
                                          :key="node.id"
-                                         :class="['workflow-node','node-'+node.type,'state-'+nodeState(node),{selected:selectedNodeId===node.id}]"
+                                         :class="['workflow-node','node-'+node.type,'state-'+nodeState(node),{selected:isNodeSelected(node),'is-multi-selected':selectedNodeIds.length>1 && isNodeSelected(node)}]"
                                          :style="{left:node.x+'px',top:node.y+'px'}"
                                          @@mousedown.stop="startDrag($event,node)"
-                                         @@contextmenu.stop.prevent="openNodeContextMenu($event,node)"
-                                         @@click.stop="selectNode(node)">
+                                         @@contextmenu.stop.prevent="openNodeContextMenu($event,node)">
                                     <button v-if="!node.type.endsWith('trigger')"
                                             type="button"
                                             class="node-port node-input"
@@ -390,7 +523,7 @@
                                             title="拖动连接后续节点"
                                             @@mousedown.stop="beginConnection($event,node,'default')"></button>
                                 </article>
-                                <div v-if="connectionDraft.sourceId" class="connection-hint">从“{{connectionSourceName}}”拖到目标节点顶部端口；松开到空白处可取消。</div>
+                                <div v-if="connectionDraft.sourceId" class="connection-hint">从“{{connectionSourceName}}”拖到目标节点{{layoutDirection==='horizontal'?'左侧':'顶部'}}端口；松开到空白处可取消。</div>
                             </div>
                         </div>
                         <div class="canvas-zoom-controls" :style="canvasZoomControlsStyle" @@mousedown.stop @@wheel.stop>
@@ -424,12 +557,26 @@
                              :style="{left:contextMenu.x+'px',top:contextMenu.y+'px'}"
                              @@mousedown.stop
                              @@click.stop>
+                            <span v-if="selectedNodeIds.length>1" class="workflow-context-menu-summary">已选择 {{selectedNodeIds.length}} 个节点</span>
                             <button type="button"
-                                    :disabled="editingLocked || !canDuplicateNode(contextMenu.node)"
+                                    :disabled="editingLocked || !selectedDuplicableNodes.length"
                                     @@click="duplicateContextNode">复制</button>
                             <button type="button"
-                                    :disabled="editingLocked || !canDeleteNode(contextMenu.node)"
+                                    :disabled="editingLocked || !selectedDeletableNodes.length"
                                     @@click="removeContextNode">删除</button>
+                        </div>
+                        <div v-if="canvasContextMenu.visible"
+                             class="workflow-context-menu workflow-canvas-context-menu"
+                             :style="{left:canvasContextMenu.x+'px',top:canvasContextMenu.y+'px'}"
+                             @@mousedown.stop
+                             @@click.stop>
+                            <button type="button"
+                                    :disabled="editingLocked"
+                                    @@click="openCanvasNodeInsertMenu"><i class="el-icon-plus"></i> 新增节点</button>
+                            <span class="workflow-context-menu-divider"></span>
+                            <button type="button" :disabled="editingLocked" @@click="autoLayoutFromCanvasMenu"><i class="el-icon-magic-stick"></i> 按设置自动排版</button>
+                            <button type="button" :disabled="editingLocked" @@click="alignGridFromCanvasMenu"><i class="el-icon-s-grid"></i> 就近网格对齐</button>
+                            <button type="button" @@click="fitCanvasFromCanvasMenu"><i class="el-icon-full-screen"></i> 适应画布</button>
                         </div>
                     </section>
 

@@ -124,6 +124,61 @@ const cyclicContext = {
 vueOptions.methods.autoLayout.call(cyclicContext);
 assert.ok(cyclicContext.form.graph.nodes.every(node => Number.isFinite(node.x) && Number.isFinite(node.y)),
     'Auto layout must terminate safely even for a legacy malformed cycle.');
+assert.strictEqual(cyclicContext.form.graph.layout.direction, 'vertical',
+    'Legacy workflows without layout metadata should continue to use the vertical default.');
+
+const horizontalLayoutContext = {
+    editingLocked: false,
+    form: {
+        graph: {
+            layout: { direction: 'vertical' },
+            nodes: [
+                { id: 'trigger', type: 'manual-trigger', x: 40, y: 40 },
+                { id: 'delay', type: 'delay', x: 80, y: 80 },
+                { id: 'end', type: 'end', x: 120, y: 120 }
+            ],
+            edges: [
+                { source: 'trigger', target: 'delay' },
+                { source: 'delay', target: 'end' }
+            ]
+        }
+    },
+    canvasSize: {},
+    updateCanvasSize: vueOptions.methods.updateCanvasSize
+};
+vueOptions.methods.autoLayout.call(horizontalLayoutContext, 'horizontal');
+assert.strictEqual(horizontalLayoutContext.form.graph.layout.direction, 'horizontal',
+    'Selecting horizontal layout should persist the reading direction in the graph.');
+assert.ok(horizontalLayoutContext.form.graph.nodes[2].x > horizontalLayoutContext.form.graph.nodes[1].x,
+    'Horizontal auto layout should place later levels to the right of earlier levels.');
+
+const gridAlignmentContext = {
+    editingLocked: false,
+    form: {
+        graph: {
+            layout: { direction: 'vertical' },
+            nodes: [
+                { id: 'trigger', type: 'manual-trigger', x: 83, y: 57 },
+                { id: 'delay', type: 'delay', x: 93, y: 62 },
+                { id: 'end', type: 'end', x: 378, y: 177 }
+            ],
+            edges: [
+                { source: 'trigger', target: 'delay' },
+                { source: 'delay', target: 'end' }
+            ]
+        }
+    },
+    canvasSize: {},
+    isHorizontalLayout() { return vueOptions.methods.isHorizontalLayout.call(this); },
+    updateCanvasSize: vueOptions.methods.updateCanvasSize
+};
+vueOptions.methods.alignToNearbyGrid.call(gridAlignmentContext);
+assert.ok(gridAlignmentContext.form.graph.nodes.every(node => node.x % 40 === 0 && node.y % 40 === 0),
+    'Nearby-grid alignment should snap every node to the visible 40px grid.');
+const firstGridNode = gridAlignmentContext.form.graph.nodes[0];
+const secondGridNode = gridAlignmentContext.form.graph.nodes[1];
+assert.ok(Math.abs(firstGridNode.x - secondGridNode.x) >= 240 || Math.abs(firstGridNode.y - secondGridNode.y) >= 112,
+    'Nearby-grid alignment should minimally separate nodes that would overlap after snapping.');
 
 const cycleContext = {
     form: { graph: { edges: [{ source: 'b', target: 'a' }] } }
@@ -197,14 +252,138 @@ const functionBranchContext = {
 assert.strictEqual(vueOptions.methods.canConnect.call(functionBranchContext, branchSource, functionTarget, 'false'), true,
     'A Function node should accept multiple upstream branches.');
 
+const insertSource = { id: 'source', type: 'condition', x: 80, y: 60 };
+const insertTarget = { id: 'target', type: 'delay', x: 80, y: 300 };
+const originalInsertEdge = { id: 'edge-original', source: 'source', target: 'target', sourceHandle: 'false' };
+let generatedEdgeNumber = 0;
+const insertionContext = {
+    editingLocked: false,
+    form: { graph: { nodes: [insertSource, insertTarget], edges: [originalInsertEdge] } },
+    edgeInsertMenu: { visible: true, edge: originalInsertEdge, x: 0, y: 0 },
+    selectedNodeId: '',
+    selectedNodeIds: [],
+    inspectorCollapsed: false,
+    makeId(prefix) { generatedEdgeNumber += 1; return `${prefix}-${generatedEdgeNumber}`; },
+    incomingEdges: vueOptions.methods.incomingEdges,
+    supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    wouldCreateCycle: vueOptions.methods.wouldCreateCycle,
+    isHorizontalLayout() { return false; },
+    closeEdgeInsertMenu: vueOptions.methods.closeEdgeInsertMenu,
+    setSelectedNodes: vueOptions.methods.setSelectedNodes,
+    cancelConnection: vueOptions.methods.cancelConnection,
+    updateCanvasSize() { this.canvasUpdated = true; },
+    scheduleAutoSave() { this.autoSaveScheduled = true; },
+    $notify() { throw new Error('The valid inline insertion should not show a warning.'); }
+};
+insertionContext.canConnect = (...args) => vueOptions.methods.canConnect.call(insertionContext, ...args);
+insertionContext.findInsertedNodePosition = (...args) => vueOptions.methods.findInsertedNodePosition.call(insertionContext, ...args);
+const insertedNode = { id: 'inserted', type: 'delay', name: '插入等待', x: 0, y: 0, config: { seconds: 1 } };
+assert.strictEqual(vueOptions.methods.insertNodeIntoEdge.call(insertionContext, insertedNode, originalInsertEdge), insertedNode,
+    'Inserting a valid node should return the inserted node.');
+assert.strictEqual(insertionContext.form.graph.edges.length, 2,
+    'Inline insertion should replace one existing edge with two edges.');
+assert.ok(insertionContext.form.graph.edges.some(edge => edge.source === 'source' && edge.target === 'inserted' && edge.sourceHandle === 'false'),
+    'Inline insertion should preserve a condition branch handle on the upstream half.');
+assert.ok(insertionContext.form.graph.edges.some(edge => edge.source === 'inserted' && edge.target === 'target' && edge.sourceHandle === 'default'),
+    'Inline insertion should connect the new node to the original downstream target.');
+assert.strictEqual(insertionContext.selectedNodeId, 'inserted',
+    'Inline insertion should select the newly inserted node for follow-up configuration.');
+assert.strictEqual(insertionContext.edgeInsertMenu.visible, false,
+    'Inline insertion should close the picker after replacing the edge.');
+assert.ok(insertionContext.canvasUpdated && insertionContext.autoSaveScheduled,
+    'Inline insertion should refresh the canvas and participate in automatic saving.');
+
+const edgeHitSource = { id: 'hit-source', type: 'delay', x: 100, y: 40 };
+const edgeHitTarget = { id: 'hit-target', type: 'delay', x: 100, y: 280 };
+const edgeHit = { id: 'edge-hit', source: 'hit-source', target: 'hit-target', sourceHandle: 'default' };
+const edgeHitContext = {
+    form: { graph: { nodes: [edgeHitSource, edgeHitTarget], edges: [edgeHit], layout: { direction: 'vertical' } } },
+    isHorizontalLayout: vueOptions.methods.isHorizontalLayout,
+    edgeStart: vueOptions.methods.edgeStart,
+    edgeEnd: vueOptions.methods.edgeEnd,
+    cubicPoint: vueOptions.methods.cubicPoint,
+    pointToSegmentDistance: vueOptions.methods.pointToSegmentDistance
+};
+assert.strictEqual(vueOptions.methods.findEdgeAtPoint.call(edgeHitContext, { x: 210, y: 196 }), edgeHit,
+    'Dragging a palette block over a Bézier link should identify the nearby edge for highlighting.');
+assert.strictEqual(vueOptions.methods.findEdgeAtPoint.call(edgeHitContext, { x: 450, y: 196 }), null,
+    'Only a nearby link should become an insertion target while dragging.');
+
+let paletteDropRequest = null;
+const paletteDropContext = {
+    editingLocked: false,
+    paletteDrag: { active: true, kind: 'system', payload: { type: 'delay', name: '等待' }, hoverEdgeId: 'edge-hit' },
+    canvasPoint() { return { x: 210, y: 196 }; },
+    findEdgeAtPoint() { return edgeHit; },
+    endPaletteNodeDrag() { this.paletteDrag = { active: false, kind: '', payload: null, hoverEdgeId: '' }; },
+    addSimpleNode(type, name, edge) { paletteDropRequest = { type, name, edge }; },
+    $notify() { throw new Error('Dropping over a highlighted edge should insert rather than warn.'); }
+};
+vueOptions.methods.onCanvasDrop.call(paletteDropContext, {});
+assert.deepStrictEqual(paletteDropRequest, { type: 'delay', name: '等待', edge: edgeHit },
+    'Dropping a palette node over a highlighted edge should route through the same inline insertion pipeline.');
+assert.strictEqual(paletteDropContext.paletteDrag.active, false,
+    'Completing a palette drop should clear the temporary edge highlight state.');
+
+let blankCanvasDropRequest = null;
+const blankCanvasDropContext = {
+    editingLocked: false,
+    paletteDrag: { active: true, kind: 'system', payload: { type: 'delay', name: '等待' }, hoverEdgeId: '' },
+    canvasPoint() { return { x: 360, y: 240 }; },
+    findEdgeAtPoint() { return null; },
+    endPaletteNodeDrag() { this.paletteDrag = { active: false, kind: '', payload: null, hoverEdgeId: '' }; },
+    placePaletteNodeAtCanvas(kind, payload, point) { blankCanvasDropRequest = { kind, payload, point }; }
+};
+vueOptions.methods.onCanvasDrop.call(blankCanvasDropContext, {});
+assert.deepStrictEqual(blankCanvasDropRequest, {
+    kind: 'system', payload: { type: 'delay', name: '等待' }, point: { x: 360, y: 240 }
+}, 'Dropping a palette node onto empty canvas space should add it at that location instead of rejecting the drop.');
+
+let nodePreviewTimer = null;
+const originalSetTimeout = sandbox.window.setTimeout;
+sandbox.window.setTimeout = (callback, delay) => {
+    nodePreviewTimer = { callback, delay };
+    return nodePreviewTimer;
+};
+const nodePreviewContext = {
+    nodePreview: { visible: false, kind: '', payload: null, key: '', mode: 'hover' },
+    nodePreviewTimer: null,
+    clearNodePreviewTimer: vueOptions.methods.clearNodePreviewTimer,
+    dismissNodePreview: vueOptions.methods.dismissNodePreview
+};
+vueOptions.methods.showNodePreview.call(nodePreviewContext, {
+    kind: 'function', key: 'function:sample', payload: { functionName: '创建沙箱' }
+}, 'click');
+assert.strictEqual(nodePreviewContext.nodePreview.mode, 'click', 'A first click should lock the node detail preview.');
+assert.strictEqual(nodePreviewTimer.delay, 15000, 'A click-locked node detail preview should auto-close after 15 seconds.');
+vueOptions.methods.showNodePreview.call(nodePreviewContext, {
+    kind: 'system', key: 'system:delay', payload: { type: 'delay' }
+}, 'hover');
+assert.strictEqual(nodePreviewContext.nodePreview.key, 'function:sample', 'Hovering another block must not replace a click-locked preview.');
+vueOptions.methods.hideHoveredNodePreview.call(nodePreviewContext, 'function:sample');
+assert.strictEqual(nodePreviewContext.nodePreview.visible, true, 'Leaving a block must not close a click-locked preview.');
+nodePreviewTimer.callback();
+assert.strictEqual(nodePreviewContext.nodePreview.visible, false, 'The 15-second detail preview callback should close the preview.');
+vueOptions.methods.showNodePreview.call(nodePreviewContext, {
+    kind: 'system', key: 'system:delay', payload: { type: 'delay' }
+}, 'hover');
+vueOptions.methods.hideHoveredNodePreview.call(nodePreviewContext, 'system:delay');
+assert.strictEqual(nodePreviewContext.nodePreview.visible, false, 'A hover-only node detail preview should close when leaving that block.');
+sandbox.window.setTimeout = originalSetTimeout;
+
 const duplicateNode = { id: 'node-1', type: 'delay', name: '等待', x: 80, y: 120, config: { seconds: 3 } };
 const duplicateContext = {
     editingLocked: false,
     form: { graph: { nodes: [duplicateNode], edges: [] } },
     selectedNodeId: '',
+    selectedNodeIds: [],
+    inspectorCollapsed: false,
     makeId() { return 'delay-copy'; },
     canDuplicateNode: vueOptions.methods.canDuplicateNode,
+    duplicateNodes: vueOptions.methods.duplicateNodes,
+    setSelectedNodes: vueOptions.methods.setSelectedNodes,
     cancelConnection: vueOptions.methods.cancelConnection,
+    closeEdgeInsertMenu: vueOptions.methods.closeEdgeInsertMenu,
     updateCanvasSize() {},
     scheduleAutoSave() {}
 };
@@ -215,14 +394,107 @@ assert.deepStrictEqual([duplicate.x, duplicate.y], [120, 160], 'Copying a node s
 assert.strictEqual(vueOptions.methods.canDuplicateNode.call({}, { type: 'manual-trigger' }), false,
     'The workflow trigger must not be duplicated into an invalid second trigger.');
 
+const batchSource = { id: 'batch-source', type: 'delay', name: '等待', x: 80, y: 100, config: {} };
+const batchTarget = { id: 'batch-target', type: 'console', name: 'Console', x: 360, y: 100, config: {} };
+const batchEdge = { id: 'batch-edge', source: 'batch-source', target: 'batch-target', sourceHandle: 'default' };
+let batchCopyId = 0;
+const batchCopyContext = {
+    editingLocked: false,
+    form: { graph: { nodes: [batchSource, batchTarget], edges: [batchEdge] } },
+    selectedNodeId: 'batch-target',
+    selectedNodeIds: ['batch-source', 'batch-target'],
+    inspectorCollapsed: false,
+    makeId(prefix) { batchCopyId += 1; return `${prefix}-copy-${batchCopyId}`; },
+    canDuplicateNode: vueOptions.methods.canDuplicateNode,
+    setSelectedNodes: vueOptions.methods.setSelectedNodes,
+    cancelConnection: vueOptions.methods.cancelConnection,
+    closeEdgeInsertMenu: vueOptions.methods.closeEdgeInsertMenu,
+    updateCanvasSize() {},
+    scheduleAutoSave() {}
+};
+const batchCopies = vueOptions.methods.duplicateNodes.call(batchCopyContext, [batchSource, batchTarget]);
+assert.strictEqual(batchCopies.length, 2, 'Copying a selection should create one copy per selected eligible node.');
+assert.strictEqual(batchCopyContext.form.graph.edges.length, 2,
+    'Copying a selection should retain connections whose source and target are both selected.');
+assert.ok(batchCopyContext.form.graph.edges.some(edge => edge.source === batchCopies[0].id && edge.target === batchCopies[1].id),
+    'A copied selection should reconnect the copied nodes instead of pointing back to the originals.');
+assert.strictEqual(JSON.stringify(batchCopyContext.selectedNodeIds), JSON.stringify(batchCopies.map(node => node.id)),
+    'The copied nodes should become the active selection for immediate collective movement.');
+
+const selectionNodeA = { id: 'selection-a', type: 'delay', x: 80, y: 100 };
+const selectionNodeB = { id: 'selection-b', type: 'console', x: 330, y: 100 };
+const selectionNodeC = { id: 'selection-c', type: 'end', x: 700, y: 100 };
+const selectionContext = {
+    form: { graph: { nodes: [selectionNodeA, selectionNodeB, selectionNodeC] } },
+    selectedNodeId: '',
+    selectedNodeIds: [],
+    inspectorCollapsed: true,
+    selectionBox: { active: true, startX: 40, startY: 60, endX: 600, endY: 250, additive: false },
+    emptySelectionBox: vueOptions.methods.emptySelectionBox,
+    nodeIntersectsSelection: vueOptions.methods.nodeIntersectsSelection,
+    setSelectedNodes: vueOptions.methods.setSelectedNodes
+};
+vueOptions.methods.completeSelectionBox.call(selectionContext);
+assert.strictEqual(JSON.stringify(selectionContext.selectedNodeIds), JSON.stringify(['selection-a', 'selection-b']),
+    'Dragging a selection rectangle should select every intersecting node and exclude nodes outside the box.');
+assert.strictEqual(selectionContext.selectedNodeId, 'selection-b',
+    'The latest selected node should remain the single-node inspector target after marquee selection.');
+
+const groupDragNodeA = { id: 'group-a', x: 100, y: 100 };
+const groupDragNodeB = { id: 'group-b', x: 360, y: 140 };
+const groupDragContext = {
+    canvasPan: { active: false },
+    selectionBox: { active: false },
+    dragState: {
+        node: groupDragNodeA,
+        nodes: [groupDragNodeA, groupDragNodeB],
+        positions: [{ id: 'group-a', x: 100, y: 100 }, { id: 'group-b', x: 360, y: 140 }],
+        startX: 120,
+        startY: 120,
+        hoverEdgeId: ''
+    },
+    connectionDraft: { sourceId: '' },
+    canvasPoint() { return { x: 180, y: 200 }; },
+    updateCanvasSize() { this.canvasUpdated = true; }
+};
+vueOptions.methods.onPointerMove.call(groupDragContext, {});
+assert.deepStrictEqual([groupDragNodeA.x, groupDragNodeA.y, groupDragNodeB.x, groupDragNodeB.y], [160, 180, 420, 220],
+    'Dragging one member of a multi-selection should move all selected nodes by the same delta.');
+assert.strictEqual(groupDragContext.dragState.hoverEdgeId, '',
+    'A multi-node drag must not accidentally enter the single-node edge insertion flow.');
+
+const batchRemoveContext = {
+    editingLocked: false,
+    form: { graph: { nodes: [batchSource, batchTarget], edges: [batchEdge] } },
+    selectedNodeId: 'batch-target',
+    selectedNodeIds: ['batch-source', 'batch-target'],
+    inspectorCollapsed: false,
+    canDeleteNode: vueOptions.methods.canDeleteNode,
+    setSelectedNodes: vueOptions.methods.setSelectedNodes,
+    cancelConnection: vueOptions.methods.cancelConnection,
+    closeEdgeInsertMenu: vueOptions.methods.closeEdgeInsertMenu,
+    updateCanvasSize() {},
+    scheduleAutoSave() {}
+};
+const removedNodes = vueOptions.methods.removeNodes.call(batchRemoveContext, [batchSource, batchTarget]);
+assert.strictEqual(removedNodes.length, 2, 'Deleting a selection should remove every selected deletable node.');
+assert.strictEqual(batchRemoveContext.form.graph.nodes.length, 0, 'Deleting a selection should remove the selected nodes from the graph.');
+assert.strictEqual(batchRemoveContext.form.graph.edges.length, 0, 'Deleting a selection should remove edges attached to any selected node.');
+
 const panCanvas = { scrollLeft: 100, scrollTop: 80 };
 let panPrevented = false;
 const panContext = {
     $refs: { canvas: panCanvas },
     contextMenu: { visible: true, node: { id: 'node-1' } },
+    canvasContextMenu: { visible: false, x: 0, y: 0, point: null },
+    canvasNodeInsertMenu: { visible: false, x: 0, y: 0, point: null },
     dragState: { node: duplicateNode },
     connectionDraft: { sourceId: '', sourceHandle: '', x: 0, y: 0 },
     closeContextMenu: vueOptions.methods.closeContextMenu,
+    closeCanvasContextMenu: vueOptions.methods.closeCanvasContextMenu,
+    closeCanvasNodeInsertMenu: vueOptions.methods.closeCanvasNodeInsertMenu,
+    closeEdgeInsertMenu: vueOptions.methods.closeEdgeInsertMenu,
+    emptySelectionBox: vueOptions.methods.emptySelectionBox,
     cancelConnection: vueOptions.methods.cancelConnection,
     startCanvasPan: vueOptions.methods.startCanvasPan,
     onPointerMove: vueOptions.methods.onPointerMove,
@@ -240,6 +512,59 @@ assert.deepStrictEqual([panCanvas.scrollLeft, panCanvas.scrollTop], [130, 120],
 assert.strictEqual(panPrevented, true, 'Canvas panning should suppress the browser context menu gesture.');
 vueOptions.methods.onPointerUp.call(panContext);
 assert.strictEqual(panContext.canvasPan.active, false, 'Canvas panning should stop on mouse release.');
+
+const canvasContextMenuContext = {
+    editingLocked: false,
+    canvasPan: { active: false, moved: false },
+    suppressCanvasContextMenuUntil: 0,
+    contextMenu: { visible: false, x: 0, y: 0, node: null },
+    canvasContextMenu: { visible: false, x: 0, y: 0, point: null },
+    canvasNodeInsertMenu: { visible: false, x: 0, y: 0, point: null },
+    edgeInsertMenu: { visible: false, edge: null, x: 0, y: 0 },
+    canvasSize: { width: 1200, height: 760 },
+    canvasPoint() { return { x: 280, y: 180 }; },
+    closeContextMenu: vueOptions.methods.closeContextMenu,
+    closeCanvasContextMenu: vueOptions.methods.closeCanvasContextMenu,
+    closeCanvasNodeInsertMenu: vueOptions.methods.closeCanvasNodeInsertMenu,
+    closeEdgeInsertMenu: vueOptions.methods.closeEdgeInsertMenu,
+    cancelConnection() {},
+    openCanvasContextMenu: vueOptions.methods.openCanvasContextMenu
+};
+vueOptions.methods.onCanvasContextMenu.call(canvasContextMenuContext, {
+    clientX: 420, clientY: 280, target: { tagName: 'DIV' }
+});
+assert.strictEqual(canvasContextMenuContext.canvasContextMenu.visible, true,
+    'A right click on blank canvas space should open the canvas shortcut menu.');
+assert.deepStrictEqual(canvasContextMenuContext.canvasContextMenu.point, { x: 280, y: 180 },
+    'The canvas shortcut menu should retain the world position for subsequent node insertion.');
+canvasContextMenuContext.openCanvasNodeInsertMenu = vueOptions.methods.openCanvasNodeInsertMenu;
+vueOptions.methods.openCanvasNodeInsertMenu.call(canvasContextMenuContext);
+assert.strictEqual(canvasContextMenuContext.canvasNodeInsertMenu.visible, true,
+    'Choosing “新增节点” should open the reusable node picker at the clicked canvas position.');
+assert.deepStrictEqual(canvasContextMenuContext.canvasNodeInsertMenu.point, { x: 280, y: 180 },
+    'The node picker should retain the original context-click location rather than using its own popup coordinates.');
+
+let contextNodeAddRequest = null;
+const canvasNodeAddContext = {
+    canvasNodeInsertMenu: { visible: true, x: 292, y: 192, point: { x: 280, y: 180 } },
+    closeCanvasNodeInsertMenu: vueOptions.methods.closeCanvasNodeInsertMenu,
+    dismissNodePreview() {},
+    placePaletteNodeAtCanvas(kind, payload, point) { contextNodeAddRequest = { kind, payload, point }; },
+    addCanvasContextNode: vueOptions.methods.addCanvasContextNode
+};
+vueOptions.methods.addCanvasContextSimpleNode.call(canvasNodeAddContext, 'delay', '等待');
+assert.strictEqual(JSON.stringify(contextNodeAddRequest), JSON.stringify({
+    kind: 'system', payload: { type: 'delay', name: '等待' }, point: { x: 280, y: 180 }
+}), 'A node selected from the blank-canvas picker should be placed at the right-click position.');
+
+const suppressedContextMenu = {
+    canvasPan: { active: false, moved: false },
+    suppressCanvasContextMenuUntil: Date.now() + 1000,
+    openCanvasContextMenu() { throw new Error('A completed pan must not open a canvas context menu.'); }
+};
+vueOptions.methods.onCanvasContextMenu.call(suppressedContextMenu, { target: { tagName: 'DIV' } });
+assert.strictEqual(suppressedContextMenu.suppressCanvasContextMenuUntil, 0,
+    'The first context menu event after a right-button pan should be suppressed and then cleared.');
 
 assert.strictEqual(vueOptions.methods.clampCanvasZoom.call({}, 3), 2,
     'Canvas zoom should not exceed the supported maximum.');
@@ -320,17 +645,43 @@ assert.strictEqual(shortcutPrevented, true, 'Command+S should prevent the browse
 
 const page = fs.readFileSync(pagePath, 'utf8');
 const styles = fs.readFileSync(stylePath, 'utf8');
-assert.ok(page.includes('class="workflow-stage"'), 'Workflow page should render the visual graph stage.');
-assert.ok(page.includes("addSimpleNode('condition','条件判断')"), 'Workflow palette should expose condition nodes.');
-assert.ok(page.includes("addSimpleNode('aggregate','聚合')"), 'Workflow palette should expose multi-input aggregate nodes.');
-assert.ok(page.includes("addSimpleNode('console','Console 打印')"), 'Workflow palette should expose console output nodes.');
-assert.ok(page.includes("addSimpleNode('neubell','发送纽铃')"), 'Workflow palette should expose a NeuBell notification node.');
-assert.ok(page.includes("addSimpleNode('end','结束')"), 'Workflow palette should expose end nodes.');
+assert.ok(page.includes("['workflow-stage', {'is-horizontal-layout':layoutDirection==='horizontal'}]"),
+    'Workflow page should render the visual graph stage and expose the horizontal layout state.');
+assert.ok(page.includes('id="workflow-node-picker-template"') && page.includes('<workflow-node-picker'),
+    'The sidebar and inline picker should share one node-picker template.');
+assert.ok(page.includes('@@drag-node="beginPaletteNodeDrag"') && page.includes('@@drop.prevent="onCanvasDrop"'),
+    'Node-picker blocks should be draggable onto the canvas and handled by one insertion drop path.');
+assert.ok(page.includes('@@preview-node="showNodePreview"') && page.includes('@@dblclick="selectFunction(fn)"') && page.includes('nodePreviewDetails.actionText'),
+    'Node picker blocks should preview on the first interaction and reserve double-click for adding a node.');
+assert.ok(page.includes("selectSystem('condition','条件判断')"), 'The shared picker should expose condition nodes.');
+assert.ok(page.includes("selectSystem('aggregate','聚合')"), 'The shared picker should expose multi-input aggregate nodes.');
+assert.ok(page.includes("selectSystem('console','Console 打印')"), 'The shared picker should expose console output nodes.');
+assert.ok(page.includes("selectSystem('neubell','发送纽铃')"), 'The shared picker should expose a NeuBell notification node.');
+assert.ok(page.includes("selectSystem('end','结束')"), 'The shared picker should expose end nodes.');
 assert.ok(page.includes('class="edge-delete"'), 'Every edge should expose a midpoint delete control.');
-assert.ok(page.includes('startCanvasPan'), 'The canvas should support right-button panning.');
+assert.ok(page.includes('class="edge-insert"') && page.includes('workflow-edge-insert-menu'),
+    'Every edge should expose a plus action that opens an inline insertion picker.');
+assert.ok(styles.includes('.workflow-edge-insert-menu') && styles.includes('.edge-insert'),
+    'The inline picker and plus action should receive dedicated canvas styles.');
+assert.ok(styles.includes('.workflow-node-preview') && styles.includes('rgba(28, 42, 59, .80)'),
+    'Node detail previews should use the centered translucent overlay treatment.');
+assert.ok(styles.includes('.edge-insert-candidate path') && styles.includes('.node-picker-function') && styles.includes('.node-picker-agent'),
+    'Dragging should visibly highlight an eligible edge and palette blocks should mirror node-type colors.');
+assert.ok(page.includes('@@mousedown="onCanvasMouseDown"') && fs.readFileSync(scriptPath, 'utf8').includes('startCanvasPan(event)'),
+    'The canvas should preserve right-button panning alongside drag selection.');
+assert.ok(page.includes('@@contextmenu.prevent="onCanvasContextMenu"') && page.includes('workflow-canvas-context-menu') && page.includes('canvasNodeInsertMenu.visible'),
+    'Blank canvas right clicks should expose a shortcut menu and a position-aware node picker.');
+assert.ok(page.includes('按设置自动排版</button>') && page.includes('就近网格对齐</button>') && page.includes('适应画布</button>'),
+    'The canvas shortcut menu should surface the common overflow layout actions.');
+assert.ok(page.includes('onCanvasMouseDown') && page.includes('class="workflow-selection-box"') && page.includes('selectedNodeIds'),
+    'The canvas should expose a drag-selection rectangle and a multi-node selection state.');
 assert.ok(page.includes('openNodeContextMenu'), 'Nodes should expose a context menu on right click.');
 assert.ok(page.includes('class="workflow-context-menu"'), 'The node context menu should be rendered in the workflow page.');
 assert.ok(page.includes('>复制</button>') && page.includes('>删除</button>'), 'The node context menu should expose copy and delete actions.');
+assert.ok(styles.includes('.workflow-selection-box') && styles.includes('.workflow-node.is-multi-selected'),
+    'Multi-selection should have a visible marquee and selected-node treatment.');
+assert.ok(styles.includes('.workflow-canvas-context-menu') && styles.includes('.workflow-canvas-node-insert-menu'),
+    'Canvas shortcut commands and the contextual node picker should share dedicated styles.');
 assert.ok(page.includes('value="webhook"'), 'Workflow trigger settings should expose a Webhook mode.');
 assert.ok(page.includes('webhookMethod'), 'Webhook settings should allow choosing the HTTP method.');
 assert.ok(page.includes('addWebhookParameter'), 'Webhook settings should allow defining request parameters.');
@@ -349,6 +700,10 @@ assert.ok(page.includes('>保存</el-button>') && page.includes('>运行</el-but
     'Primary save, run and node-creation actions should remain visible with textual labels.');
 assert.ok(page.includes(':visible.sync="workflowSettingsVisible"') && page.includes('工作流设置'),
     'Low-frequency workflow settings should move into an on-demand dialog.');
+assert.ok(page.includes('form.graph.layout.direction') && page.includes('按方向重新排列') && page.includes('就近网格对齐'),
+    'Workflow settings should select a persisted layout direction and expose a non-destructive nearby-grid alignment action.');
+assert.ok(styles.includes('.workflow-stage.is-horizontal-layout .node-input') && styles.includes('.workflow-layout-help'),
+    'Horizontal layout should switch the ports to left-to-right while nearby-grid guidance remains visible in settings.');
 assert.ok(page.includes('@@command="handleWorkflowAction"') && page.includes('删除工作流'),
     'Destructive workflow actions should live in a compact overflow menu.');
 assert.ok(page.includes('selectedWorkflowObject'), 'Agent nodes should show the selected workflow object details.');
@@ -645,15 +1000,20 @@ async function verifyUnsavedChangeGuards() {
         'The overflow menu should retain a new-workflow fallback when the list is unavailable on a narrow screen.');
 
     let autoLayoutCalled = false;
+    let gridAlignmentCalled = false;
     let fitCanvasCalled = false;
     const canvasActionContext = {
         autoLayout() { autoLayoutCalled = true; },
+        alignToNearbyGrid() { gridAlignmentCalled = true; },
         fitCanvasToNodes() { fitCanvasCalled = true; }
     };
     await vueOptions.methods.handleWorkflowAction.call(canvasActionContext, 'auto-layout');
+    await vueOptions.methods.handleWorkflowAction.call(canvasActionContext, 'align-grid');
     await vueOptions.methods.handleWorkflowAction.call(canvasActionContext, 'fit-canvas');
     assert.strictEqual(autoLayoutCalled, true,
         'The compact overflow menu should retain the automatic layout action.');
+    assert.strictEqual(gridAlignmentCalled, true,
+        'The compact overflow menu should expose nearby-grid alignment without forcing a full re-layout.');
     assert.strictEqual(fitCanvasCalled, true,
         'The compact overflow menu should retain the fit-canvas action.');
 }

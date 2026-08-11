@@ -1,3 +1,81 @@
+if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
+    Vue.component('workflow-node-picker', {
+        template: '#workflow-node-picker-template',
+        props: {
+            functions: { type: Array, default: () => [] },
+            objects: { type: Array, default: () => [] },
+            pinnedFunctionKeys: { type: Array, default: () => [] },
+            locked: { type: Boolean, default: false },
+            edgeInsert: { type: Boolean, default: false }
+        },
+        data() {
+            return { keyword: '', module: '' };
+        },
+        computed: {
+            moduleNames() {
+                return [...new Set(this.functions.map(fn => fn.moduleName).filter(Boolean))].sort();
+            },
+            filteredFunctions() {
+                const keyword = this.keyword.trim().toLowerCase();
+                return this.functions.filter(fn => {
+                    const moduleMatched = !this.module || fn.moduleName === this.module;
+                    const keywordMatched = !keyword || [fn.functionName, fn.moduleName, fn.description, fn.functionKey]
+                        .some(value => String(value || '').toLowerCase().includes(keyword));
+                    return moduleMatched && keywordMatched;
+                }).sort((left, right) => {
+                    const pinDiff = Number(this.isPinned(right)) - Number(this.isPinned(left));
+                    return pinDiff || String(left.moduleName).localeCompare(String(right.moduleName), 'zh-CN') ||
+                        String(left.functionName).localeCompare(String(right.functionName), 'zh-CN');
+                });
+            }
+        },
+        methods: {
+            functionIdentity(fn) { return `${String(fn.moduleUid).toLowerCase()}|${String(fn.functionKey).toLowerCase()}`; },
+            isPinned(fn) { return this.pinnedFunctionKeys.includes(this.functionIdentity(fn)); },
+            nodePreviewKey(kind, payload) {
+                if (kind === 'system') return `system:${String(payload?.type || '')}`;
+                if (kind === 'function') return `function:${this.functionIdentity(payload || {})}`;
+                return `object:${String(payload?.providerId || '').toLowerCase()}:${String(payload?.objectId || '')}`;
+            },
+            previewNode(kind, payload, mode) {
+                if (!payload) return;
+                this.$emit('preview-node', { kind, payload, key: this.nodePreviewKey(kind, payload) }, mode === 'click' ? 'click' : 'hover');
+            },
+            hideNodePreview(kind, payload) {
+                this.$emit('hide-preview-node', this.nodePreviewKey(kind, payload || {}));
+            },
+            previewSystem(type, name, mode) { this.previewNode('system', { type, name }, mode); },
+            hideSystemPreview(type, name) { this.hideNodePreview('system', { type, name }); },
+            selectSystem(type, name) {
+                if (!this.locked && !(this.edgeInsert && type === 'end')) this.$emit('select-system', type, name);
+            },
+            selectFunction(fn) {
+                if (!this.locked && fn && fn.moduleAvailable) this.$emit('select-function', fn);
+            },
+            selectObject(object) {
+                if (!this.locked && object && object.enabled) this.$emit('select-object', object);
+            },
+            startDrag(event, kind, payload) {
+                const unavailable = (kind === 'function' && !payload?.moduleAvailable) || (kind === 'object' && !payload?.enabled);
+                if (this.locked || unavailable || (this.edgeInsert && kind === 'system' && payload && payload.type === 'end')) {
+                    event.preventDefault();
+                    return;
+                }
+                if (event.dataTransfer) {
+                    event.dataTransfer.effectAllowed = 'copy';
+                    event.dataTransfer.setData('text/plain', 'neucharworkflow-node');
+                }
+                this.$emit('hide-preview-node');
+                this.$emit('drag-node', kind, payload);
+            },
+            startSystemDrag(event, type, name) { this.startDrag(event, 'system', { type, name }); },
+            startFunctionDrag(event, fn) { this.startDrag(event, 'function', fn); },
+            startObjectDrag(event, object) { this.startDrag(event, 'object', object); },
+            finishDrag() { this.$emit('drag-end'); }
+        }
+    });
+}
+
 new Vue({
     el: '#app',
     data() {
@@ -10,8 +88,6 @@ new Vue({
             listCollapsed: false,
             paletteCollapsed: true,
             inspectorCollapsed: true,
-            paletteModule: '',
-            paletteSearch: '',
             pinnedFunctions: [],
             editing: false,
             discardConfirming: false,
@@ -28,14 +104,23 @@ new Vue({
                 pendingSelection: []
             },
             selectedNodeId: '',
+            selectedNodeIds: [],
+            selectionBox: { active: false, startX: 0, startY: 0, endX: 0, endY: 0, additive: false },
             connectionDraft: { sourceId: '', sourceHandle: '', x: 0, y: 0 },
             dragState: null,
-            canvasPan: { active: false, startX: 0, startY: 0, startScrollLeft: 0, startScrollTop: 0 },
+            canvasPan: { active: false, moved: false, startX: 0, startY: 0, startScrollLeft: 0, startScrollTop: 0 },
+            suppressCanvasContextMenuUntil: 0,
             contextMenu: { visible: false, x: 0, y: 0, node: null },
+            canvasContextMenu: { visible: false, x: 0, y: 0, point: null },
+            edgeInsertMenu: { visible: false, edge: null, x: 0, y: 0 },
+            canvasNodeInsertMenu: { visible: false, x: 0, y: 0, point: null },
+            paletteDrag: { active: false, kind: '', payload: null, hoverEdgeId: '' },
+            nodePreview: { visible: false, kind: '', payload: null, key: '', mode: 'hover' },
+            nodePreviewTimer: null,
             canvasSize: { width: 1200, height: 760 },
             canvasZoom: 1,
             canvasViewport: { width: 0, height: 0, scrollLeft: 0, scrollTop: 0, left: 0, right: 0, bottom: 0, windowWidth: 0, windowHeight: 0 },
-            form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [] } },
+            form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [], layout: { direction: 'vertical' } } },
             saveState: {
                 saving: false,
                 lastSavedSignature: '',
@@ -65,21 +150,13 @@ new Vue({
             const keyword = this.keyword.trim().toLowerCase();
             return keyword ? this.workflows.filter(item => String(item.name).toLowerCase().includes(keyword)) : this.workflows;
         },
-        moduleNames() { return [...new Set(this.functions.map(fn => fn.moduleName))].sort(); },
-        filteredFunctions() {
-            const keyword = this.paletteSearch.trim().toLowerCase();
-            return this.functions.filter(fn => {
-                const moduleMatched = !this.paletteModule || fn.moduleName === this.paletteModule;
-                const keywordMatched = !keyword || [fn.functionName, fn.moduleName, fn.description, fn.functionKey]
-                    .some(value => String(value || '').toLowerCase().includes(keyword));
-                return moduleMatched && keywordMatched;
-            }).sort((left, right) => {
-                const pinDiff = Number(this.isPinned(right)) - Number(this.isPinned(left));
-                return pinDiff || String(left.moduleName).localeCompare(String(right.moduleName), 'zh-CN') ||
-                    String(left.functionName).localeCompare(String(right.functionName), 'zh-CN');
-            });
-        },
         selectedNode() { return this.form.graph.nodes.find(node => node.id === this.selectedNodeId); },
+        selectedNodes() {
+            const selectedIds = new Set(this.selectedNodeIds || []);
+            return this.form.graph.nodes.filter(node => selectedIds.has(node.id));
+        },
+        selectedDuplicableNodes() { return this.selectedNodes.filter(node => this.canDuplicateNode(node)); },
+        selectedDeletableNodes() { return this.selectedNodes.filter(node => this.canDeleteNode(node)); },
         selectedFunction() {
             return this.selectedNode && this.selectedNode.type === 'function'
                 ? this.findFunction(this.selectedNode.config)
@@ -98,6 +175,28 @@ new Vue({
             return node ? node.name : '';
         },
         editingLocked() { return this.run.running; },
+        layoutDirection() {
+            return this.form.graph && this.form.graph.layout && this.form.graph.layout.direction === 'horizontal'
+                ? 'horizontal'
+                : 'vertical';
+        },
+        activeInsertionEdgeId() {
+            return this.dragState?.hoverEdgeId || this.paletteDrag.hoverEdgeId || '';
+        },
+        nodePreviewDetails() {
+            return this.describeNodePreview(this.nodePreview);
+        },
+        selectionBoxStyle() {
+            const selection = this.selectionBox;
+            const left = Math.min(Number(selection.startX || 0), Number(selection.endX || 0));
+            const top = Math.min(Number(selection.startY || 0), Number(selection.endY || 0));
+            return {
+                left: `${left}px`,
+                top: `${top}px`,
+                width: `${Math.abs(Number(selection.endX || 0) - Number(selection.startX || 0))}px`,
+                height: `${Math.abs(Number(selection.endY || 0) - Number(selection.startY || 0))}px`
+            };
+        },
         currentSaveSignature() {
             return JSON.stringify({
                 name: String(this.form.name || '').trim(),
@@ -193,6 +292,18 @@ new Vue({
                 right: `${Math.max(14, Math.round(viewport.windowWidth - viewport.right + 14))}px`,
                 bottom: `${Math.max(14, Math.round(viewport.windowHeight - viewport.bottom + 14))}px`
             };
+        },
+        edgeInsertMenuStyle() {
+            return {
+                left: `${this.edgeInsertMenu.x}px`,
+                top: `${this.edgeInsertMenu.y}px`
+            };
+        },
+        canvasNodeInsertMenuStyle() {
+            return {
+                left: `${this.canvasNodeInsertMenu.x}px`,
+                top: `${this.canvasNodeInsertMenu.y}px`
+            };
         }
     },
     watch: {
@@ -213,6 +324,7 @@ new Vue({
         window.addEventListener('beforeunload', this.onBeforeUnload);
         window.addEventListener('resize', this.updateCanvasViewport);
         window.addEventListener('scroll', this.updateCanvasViewport, true);
+        if (typeof document !== 'undefined') document.addEventListener('click', this.onDocumentClick, true);
         this.$nextTick(() => {
             this.updateCanvasViewport();
             if (typeof ResizeObserver !== 'undefined' && this.$refs.canvas) {
@@ -228,13 +340,143 @@ new Vue({
         window.removeEventListener('beforeunload', this.onBeforeUnload);
         window.removeEventListener('resize', this.updateCanvasViewport);
         window.removeEventListener('scroll', this.updateCanvasViewport, true);
+        if (typeof document !== 'undefined') document.removeEventListener('click', this.onDocumentClick, true);
         if (this.canvasResizeObserver) this.canvasResizeObserver.disconnect();
+        this.dismissNodePreview();
         this.clearAutoSaveTimer();
         this.clearRunPoll();
     },
     methods: {
         emptyForm() {
-            return { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [] } };
+            return { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [], layout: { direction: 'vertical' } } };
+        },
+        ensureGraphLayout(graph) {
+            const target = graph || { nodes: [], edges: [] };
+            target.layout = target.layout && typeof target.layout === 'object' ? target.layout : {};
+            target.layout.direction = target.layout.direction === 'horizontal' ? 'horizontal' : 'vertical';
+            return target;
+        },
+        systemNodePreview(type, fallbackName) {
+            const definitions = {
+                condition: {
+                    title: '条件判断',
+                    description: '根据左值、比较符和右值决定后续执行“真”或“假”分支。',
+                    rows: [{ label: '可配置项', value: '左值、比较符、右值' }, { label: '输出分支', value: '真 / 假' }]
+                },
+                delay: {
+                    title: '等待',
+                    description: '在继续执行下游节点前等待指定的秒数。',
+                    rows: [{ label: '可配置项', value: '等待秒数' }]
+                },
+                aggregate: {
+                    title: '聚合',
+                    description: '把多个上游输出合并为一个数组，供后续节点统一使用。',
+                    rows: [{ label: '可配置项', value: '多个上游输入绑定' }, { label: '输出', value: '聚合数组' }]
+                },
+                console: {
+                    title: 'Console 打印',
+                    description: '将上游数据输出到本页底部的执行 Console，便于调试。',
+                    rows: [{ label: '可配置项', value: '要打印的输入数据' }]
+                },
+                neubell: {
+                    title: '发送纽铃',
+                    description: '向订阅者发送 NeuBell 提醒，并可设定点击后的消费方式。',
+                    rows: [{ label: '可配置项', value: '订阅、标题、内容、消费方式' }, { label: '可选消费', value: '当前提醒 / 当前订阅全部 / 仅查看' }]
+                },
+                end: {
+                    title: '结束',
+                    description: '标记工作流的结束位置；不能插入到已有连线中。',
+                    rows: [{ label: '限制', value: '无后续节点，不能在线中插入' }]
+                }
+            };
+            return definitions[type] || { title: fallbackName || '系统节点', description: '工作流内置节点。', rows: [] };
+        },
+        describeNodePreview(preview) {
+            const safePreview = preview || {};
+            const payload = safePreview.payload || {};
+            if (safePreview.kind === 'system') {
+                const definition = this.systemNodePreview(payload.type, payload.name);
+                return {
+                    kind: '工作流系统节点',
+                    title: definition.title,
+                    description: definition.description,
+                    rows: definition.rows,
+                    actionText: payload.type === 'end' ? '可拖到画布添加；不能插入连线' : '双击或拖到画布以添加'
+                };
+            }
+            if (safePreview.kind === 'function') {
+                const parameters = this.functionParameters(payload) || [];
+                const rows = [
+                    { label: '所属模块', value: String(payload.moduleName || '未标注模块') },
+                    { label: 'Function 标识', value: String(payload.functionKey || '未标注') },
+                    { label: '状态', value: payload.moduleAvailable ? '可用' : '模块未安装或未开启' }
+                ];
+                parameters.slice(0, 4).forEach((parameter, index) => {
+                    const name = this.parameterDisplayName(parameter, index);
+                    const description = this.parameterDescription(parameter);
+                    rows.push({ label: `参数 · ${name}`, value: description || (parameter.required ? '必填参数' : '可选参数') });
+                });
+                if (parameters.length > 4) rows.push({ label: '更多参数', value: `另有 ${parameters.length - 4} 个参数可在节点设置中配置` });
+                return {
+                    kind: 'NeuCharPivot Function',
+                    title: String(payload.functionName || '未命名 Function'),
+                    description: String(payload.description || '暂无 Function 说明。'),
+                    rows,
+                    actionText: payload.moduleAvailable ? '双击或拖到画布以添加' : '模块未开启，暂不能添加'
+                };
+            }
+            if (safePreview.kind === 'object') {
+                const metadata = payload.metadata || {};
+                const objectType = payload.kind === 'agent-group' ? 'Agent 组' : '独立 Agent';
+                const description = String(metadata.description || payload.description || `${objectType} 节点会在工作流中处理上游输入。`);
+                return {
+                    kind: 'AgentsManager',
+                    title: String(payload.name || objectType),
+                    description,
+                    rows: [
+                        { label: '节点类型', value: objectType },
+                        { label: '所属模块', value: String(payload.moduleName || 'AgentsManager') },
+                        { label: '状态', value: payload.enabled ? '可用' : '不可用' }
+                    ],
+                    actionText: payload.enabled ? '双击或拖到画布以添加' : '当前对象不可用，暂不能添加'
+                };
+            }
+            return { kind: '节点详情', title: '添加节点', description: '', rows: [], actionText: '双击或拖到画布以添加' };
+        },
+        clearNodePreviewTimer() {
+            if (this.nodePreviewTimer !== null && this.nodePreviewTimer !== undefined) window.clearTimeout(this.nodePreviewTimer);
+            this.nodePreviewTimer = null;
+        },
+        showNodePreview(descriptor, mode) {
+            if (!descriptor || !descriptor.kind || !descriptor.payload) return;
+            const previewMode = mode === 'click' ? 'click' : 'hover';
+            if (previewMode === 'hover' && this.nodePreview.visible && this.nodePreview.mode === 'click') return;
+            this.clearNodePreviewTimer();
+            this.nodePreview = {
+                visible: true,
+                kind: descriptor.kind,
+                payload: descriptor.payload,
+                key: descriptor.key || `${descriptor.kind}:${Date.now()}`,
+                mode: previewMode
+            };
+            if (previewMode === 'click') {
+                this.nodePreviewTimer = window.setTimeout(() => this.dismissNodePreview(), 15000);
+            }
+        },
+        dismissNodePreview() {
+            this.clearNodePreviewTimer();
+            this.nodePreview = { visible: false, kind: '', payload: null, key: '', mode: 'hover' };
+        },
+        hideHoveredNodePreview(key) {
+            if (this.nodePreview.visible && this.nodePreview.mode === 'hover' && (!key || key === this.nodePreview.key)) {
+                this.dismissNodePreview();
+            }
+        },
+        onDocumentClick(event) {
+            if (!this.nodePreview.visible) return;
+            const target = event && event.target;
+            if (target && typeof target.closest === 'function' && target.closest('.workflow-node-picker, .workflow-node-preview')) return;
+            this.dismissNodePreview();
         },
         async loadAll() {
             this.loading = true;
@@ -276,9 +518,11 @@ new Vue({
             this.editing = true;
             this.workflowSettingsVisible = false;
             this.webhookHelpVisible = false;
-            this.selectedNodeId = '';
+            this.setSelectedNodes([], { openInspector: false });
+            this.selectionBox = this.emptySelectionBox();
             this.resetSaveState();
             this.cancelConnection();
+            this.closeEdgeInsertMenu();
             this.resetRunState();
             this.syncTriggerNode();
             this.$nextTick(this.autoLayout);
@@ -295,6 +539,7 @@ new Vue({
                 const graph = NeuCharWorkflowUi.parseJson(item.graphJson, { nodes: [], edges: [] });
                 graph.nodes = graph.nodes || [];
                 graph.edges = graph.edges || [];
+                this.ensureGraphLayout(graph);
                 graph.nodes.forEach(node => {
                     node.config = node.config || {};
                     node.x = Number.isFinite(Number(node.x)) ? Number(node.x) : 80;
@@ -324,8 +569,10 @@ new Vue({
                     revision: Number(item.revision || 0)
                 };
                 this.editing = true;
-                this.selectedNodeId = graph.nodes.length ? graph.nodes[0].id : '';
+                this.setSelectedNodes(graph.nodes.length ? [graph.nodes[0]] : [], { openInspector: false });
+                this.selectionBox = this.emptySelectionBox();
                 this.cancelConnection();
+                this.closeEdgeInsertMenu();
                 this.resetRunState();
                 this.markSaved();
                 this.$nextTick(() => {
@@ -357,23 +604,21 @@ new Vue({
             } else {
                 const trigger = { id: this.makeId('trigger'), type, name: type === 'interval-trigger' ? '间隔触发' : type === 'webhook-trigger' ? 'Webhook 触发' : '手动触发', x: 430, y: 60, config: type === 'webhook-trigger' ? { webhookParameters: [] } : {} };
                 this.form.graph.nodes.unshift(trigger);
-                this.selectedNodeId = trigger.id;
+                this.setSelectedNodes([trigger]);
             }
             this.updateCanvasSize();
         },
-        addSimpleNode(type, name) {
-            if (this.editingLocked) return;
+        createSimpleNode(type, name) {
             const config = type === 'condition'
                 ? { left: '{{input}}', operator: 'equals', right: '' }
                 : type === 'delay' ? { seconds: 1 }
                     : type === 'neubell'
                         ? { title: 'Workflow 提醒', summary: '{{input}}', consumeMode: 'item' }
                         : {};
-            this.appendNode({ id: this.makeId(type), type, name, x: 80, y: 80, config });
+            return { id: this.makeId(type), type, name, x: 80, y: 80, config };
         },
-        addFunctionNode(fn) {
-            if (this.editingLocked || !fn.moduleAvailable) return;
-            this.appendNode({
+        createFunctionNode(fn) {
+            return {
                 id: this.makeId('function'),
                 type: 'function',
                 name: fn.functionName,
@@ -385,28 +630,193 @@ new Vue({
                     functionKey: fn.functionKey,
                     parameters: NeuCharWorkflowUi.createParameterValues(fn)
                 }
-            });
+            };
         },
-        addObjectNode(object) {
-            if (this.editingLocked || !object.enabled) return;
-            this.appendNode({
+        createObjectNode(object) {
+            return {
                 id: this.makeId(object.kind),
                 type: object.kind,
                 name: object.name,
                 x: 80,
                 y: 80,
                 config: { providerId: object.providerId, objectId: object.objectId, prompt: '处理以下输入：{{input}}' }
-            });
+            };
         },
-        appendNode(node) {
+        addSimpleNode(type, name, insertionEdge) {
+            if (this.editingLocked) return;
+            this.dismissNodePreview();
+            return this.appendNode(this.createSimpleNode(type, name), insertionEdge);
+        },
+        addFunctionNode(fn, insertionEdge) {
+            if (this.editingLocked || !fn.moduleAvailable) return;
+            this.dismissNodePreview();
+            return this.appendNode(this.createFunctionNode(fn), insertionEdge);
+        },
+        addObjectNode(object, insertionEdge) {
+            if (this.editingLocked || !object.enabled) return;
+            this.dismissNodePreview();
+            return this.appendNode(this.createObjectNode(object), insertionEdge);
+        },
+        insertSimpleNode(type, name) { return this.addSimpleNode(type, name, this.edgeInsertMenu.edge); },
+        insertFunctionNode(fn) { return this.addFunctionNode(fn, this.edgeInsertMenu.edge); },
+        insertObjectNode(object) { return this.addObjectNode(object, this.edgeInsertMenu.edge); },
+        beginPaletteNodeDrag(kind, payload) {
+            if (this.editingLocked || !kind || !payload) return;
+            this.dismissNodePreview();
+            this.closeContextMenu();
+            this.closeCanvasContextMenu();
+            this.closeCanvasNodeInsertMenu();
+            this.closeEdgeInsertMenu();
+            this.paletteDrag = { active: true, kind, payload, hoverEdgeId: '' };
+        },
+        endPaletteNodeDrag() {
+            this.paletteDrag = { active: false, kind: '', payload: null, hoverEdgeId: '' };
+        },
+        onCanvasDragOver(event) {
+            if (!this.paletteDrag.active || this.editingLocked) return;
+            const edge = this.findEdgeAtPoint(this.canvasPoint(event));
+            this.paletteDrag.hoverEdgeId = edge ? edge.id : '';
+            if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
+        },
+        onCanvasDrop(event) {
+            if (!this.paletteDrag.active || this.editingLocked) return;
+            const drag = this.paletteDrag;
+            const point = this.canvasPoint(event);
+            const edge = this.findEdgeAtPoint(point);
+            this.endPaletteNodeDrag();
+            if (edge) {
+                if (drag.kind === 'system') this.addSimpleNode(drag.payload.type, drag.payload.name, edge);
+                else if (drag.kind === 'function') this.addFunctionNode(drag.payload, edge);
+                else if (drag.kind === 'object') this.addObjectNode(drag.payload, edge);
+                return;
+            }
+            this.placePaletteNodeAtCanvas(drag.kind, drag.payload, point);
+        },
+        placePaletteNodeAtCanvas(kind, payload, point) {
+            if (this.editingLocked || !payload) return null;
+            let node = null;
+            if (kind === 'system') node = this.createSimpleNode(payload.type, payload.name);
+            else if (kind === 'function' && payload.moduleAvailable) node = this.createFunctionNode(payload);
+            else if (kind === 'object' && payload.enabled) node = this.createObjectNode(payload);
+            if (!node) return null;
+            const snap = 20;
+            node.x = Math.max(20, Math.round((Number(point?.x || 0) - 110) / snap) * snap);
+            node.y = Math.max(50, Math.round((Number(point?.y || 0) - 46) / snap) * snap);
+            this.form.graph.nodes.push(node);
+            this.setSelectedNodes([node]);
+            this.cancelConnection();
+            this.closeEdgeInsertMenu();
+            this.updateCanvasSize();
+            this.scheduleAutoSave();
+            return node;
+        },
+        appendNode(node, insertionEdge) {
+            if (insertionEdge) return this.insertNodeIntoEdge(node, insertionEdge);
             const previous = [...this.form.graph.nodes].reverse().find(item =>
                 item.type !== 'end' && item.type !== 'condition' && !this.form.graph.edges.some(edge => edge.source === item.id));
             this.form.graph.nodes.push(node);
             if (previous && !String(node.type).endsWith('trigger') && this.canConnect(previous, node, 'default')) {
                 this.setTarget(previous, 'default', node.id, true);
             }
-            this.selectedNodeId = node.id;
+            this.setSelectedNodes([node]);
             this.autoLayout();
+            return node;
+        },
+        insertNodeIntoEdge(node, edge, existingNode) {
+            if (this.editingLocked || !node || node.type === 'end' || String(node.type || '').endsWith('trigger')) {
+                if (!this.editingLocked) this.$notify({ title: '无法插入节点', message: '结束或触发器节点不能插入到已有连线中。', type: 'warning' });
+                return null;
+            }
+            const liveEdge = this.form.graph.edges.find(item => item.id === edge.id);
+            const source = liveEdge && this.form.graph.nodes.find(item => item.id === liveEdge.source);
+            const target = liveEdge && this.form.graph.nodes.find(item => item.id === liveEdge.target);
+            if (!liveEdge || !source || !target) {
+                this.closeEdgeInsertMenu();
+                this.$notify({ title: '无法插入节点', message: '原连线已变化，请重新打开插入菜单。', type: 'warning' });
+                return null;
+            }
+
+            const sourceHandle = source.type === 'condition'
+                ? (liveEdge.sourceHandle === 'false' ? 'false' : 'true')
+                : 'default';
+            const insertedHandle = node.type === 'condition' ? 'true' : 'default';
+            const originalEdges = this.form.graph.edges;
+            this.form.graph.edges = originalEdges.filter(item => item.id !== liveEdge.id);
+            const valid = this.canConnect(source, node, sourceHandle) && this.canConnect(node, target, insertedHandle);
+            if (!valid) {
+                this.form.graph.edges = originalEdges;
+                this.$notify({ title: '无法插入节点', message: '该节点无法同时连接原连线的上下游，请选择其他节点。', type: 'warning' });
+                return null;
+            }
+
+            const position = this.findInsertedNodePosition(source, target);
+            node.x = position.x;
+            node.y = position.y;
+            if (!existingNode) this.form.graph.nodes.push(node);
+            this.form.graph.edges.push(
+                { id: this.makeId('edge'), source: source.id, target: node.id, sourceHandle },
+                { id: this.makeId('edge'), source: node.id, target: target.id, sourceHandle: insertedHandle });
+            this.setSelectedNodes([node]);
+            this.cancelConnection();
+            this.closeEdgeInsertMenu();
+            this.updateCanvasSize();
+            this.scheduleAutoSave();
+            return node;
+        },
+        insertExistingNodeIntoEdge(node, edge) {
+            if (!node || !edge || this.editingLocked) return null;
+            const relatedEdges = this.form.graph.edges.filter(item => item.source === node.id || item.target === node.id);
+            if (relatedEdges.length) {
+                this.$notify({
+                    title: '请先断开节点',
+                    message: '为避免静默改变已有流程，只能将尚未连接的节点拖入连线。',
+                    type: 'warning'
+                });
+                return null;
+            }
+            return this.insertNodeIntoEdge(node, edge, true);
+        },
+        findInsertedNodePosition(source, target) {
+            const nodeWidth = 220;
+            const nodeHeight = 92;
+            const nodeGap = 20;
+            const gridSize = 40;
+            const sourceX = Number.isFinite(Number(source.x)) ? Number(source.x) : 20;
+            const sourceY = Number.isFinite(Number(source.y)) ? Number(source.y) : 20;
+            const targetX = Number.isFinite(Number(target.x)) ? Number(target.x) : sourceX + 280;
+            const targetY = Number.isFinite(Number(target.y)) ? Number(target.y) : sourceY + 160;
+            const preferred = {
+                x: Math.max(20, Math.round(((sourceX + targetX) / 2) / gridSize) * gridSize),
+                y: Math.max(20, Math.round(((sourceY + targetY) / 2) / gridSize) * gridSize)
+            };
+            const occupied = this.form.graph.nodes.map(item => ({ x: Number(item.x) || 0, y: Number(item.y) || 0 }));
+            const isFree = candidate => !occupied.some(position =>
+                Math.abs(candidate.x - position.x) < nodeWidth + nodeGap &&
+                Math.abs(candidate.y - position.y) < nodeHeight + nodeGap);
+            let best = null;
+            let bestScore = Number.POSITIVE_INFINITY;
+            for (let ring = 0; ring <= 12; ring++) {
+                for (let offsetX = -ring; offsetX <= ring; offsetX++) {
+                    for (let offsetY = -ring; offsetY <= ring; offsetY++) {
+                        if (ring && Math.abs(offsetX) !== ring && Math.abs(offsetY) !== ring) continue;
+                        const candidate = {
+                            x: Math.max(20, preferred.x + offsetX * gridSize),
+                            y: Math.max(20, preferred.y + offsetY * gridSize)
+                        };
+                        if (!isFree(candidate)) continue;
+                        const distance = Math.hypot(candidate.x - preferred.x, candidate.y - preferred.y);
+                        const directionalPenalty = this.isHorizontalLayout()
+                            ? Math.abs(candidate.y - preferred.y) * .18
+                            : Math.abs(candidate.x - preferred.x) * .18;
+                        const score = distance + directionalPenalty;
+                        if (score < bestScore) {
+                            best = candidate;
+                            bestScore = score;
+                        }
+                    }
+                }
+            }
+            return best || preferred;
         },
         canDeleteNode(node) {
             return !!node && !String(node.type || '').endsWith('trigger');
@@ -414,62 +824,196 @@ new Vue({
         canDuplicateNode(node) {
             return !!node && !String(node.type || '').endsWith('trigger');
         },
-        duplicateNode(node) {
-            if (this.editingLocked || !this.canDuplicateNode(node)) return false;
-            const copy = JSON.parse(JSON.stringify(node));
-            copy.id = this.makeId(node.type || 'node');
-            copy.name = `${node.name || '节点'}（副本）`;
-            copy.x = Number(node.x || 0) + 40;
-            copy.y = Number(node.y || 0) + 40;
-            this.form.graph.nodes.push(copy);
-            this.selectedNodeId = copy.id;
+        isNodeSelected(node) {
+            return !!node && (this.selectedNodeIds || []).includes(node.id);
+        },
+        setSelectedNodes(nodes, options) {
+            const selected = [...new Set((nodes || []).filter(Boolean).map(node => node.id))];
+            this.selectedNodeIds = selected;
+            this.selectedNodeId = selected.length ? selected[selected.length - 1] : '';
+            if (options?.openInspector !== false && selected.length && this.inspectorCollapsed) this.inspectorCollapsed = false;
+        },
+        duplicateNodes(nodes) {
+            if (this.editingLocked) return [];
+            const sourceNodes = (nodes || []).filter(node => this.canDuplicateNode(node));
+            if (!sourceNodes.length) return [];
+            const copiedIds = new Set(sourceNodes.map(node => node.id));
+            const nodeIdMap = new Map();
+            const copies = sourceNodes.map(node => {
+                const copy = JSON.parse(JSON.stringify(node));
+                copy.id = this.makeId(node.type || 'node');
+                copy.name = `${node.name || '节点'}（副本）`;
+                copy.x = Number(node.x || 0) + 40;
+                copy.y = Number(node.y || 0) + 40;
+                nodeIdMap.set(node.id, copy.id);
+                return copy;
+            });
+            const copiedEdges = this.form.graph.edges
+                .filter(edge => copiedIds.has(edge.source) && copiedIds.has(edge.target))
+                .map(edge => ({
+                    ...JSON.parse(JSON.stringify(edge)),
+                    id: this.makeId('edge'),
+                    source: nodeIdMap.get(edge.source),
+                    target: nodeIdMap.get(edge.target)
+                }));
+            this.form.graph.nodes.push(...copies);
+            this.form.graph.edges.push(...copiedEdges);
+            this.setSelectedNodes(copies);
             this.cancelConnection();
+            this.closeEdgeInsertMenu();
             this.updateCanvasSize();
             this.scheduleAutoSave();
-            return copy;
+            return copies;
+        },
+        duplicateNode(node) {
+            return this.duplicateNodes([node])[0] || false;
+        },
+        removeNodes(nodes) {
+            if (this.editingLocked) return [];
+            const removable = (nodes || []).filter(node => this.canDeleteNode(node));
+            if (!removable.length) return [];
+            const removedIds = new Set(removable.map(node => node.id));
+            this.form.graph.nodes = this.form.graph.nodes.filter(node => !removedIds.has(node.id));
+            this.form.graph.edges = this.form.graph.edges.filter(edge => !removedIds.has(edge.source) && !removedIds.has(edge.target));
+            const remainingSelection = (this.selectedNodeIds || []).filter(id => !removedIds.has(id));
+            const remainingNodes = this.form.graph.nodes.filter(node => remainingSelection.includes(node.id));
+            this.setSelectedNodes(remainingNodes, { openInspector: false });
+            this.cancelConnection();
+            this.closeEdgeInsertMenu();
+            this.updateCanvasSize();
+            this.scheduleAutoSave();
+            return removable;
         },
         removeNode(node) {
-            if (this.editingLocked || String(node.type).endsWith('trigger')) return;
-            this.form.graph.nodes = this.form.graph.nodes.filter(item => item.id !== node.id);
-            this.form.graph.edges = this.form.graph.edges.filter(edge => edge.source !== node.id && edge.target !== node.id);
-            this.selectedNodeId = '';
-            this.cancelConnection();
-            this.updateCanvasSize();
-            this.scheduleAutoSave();
+            this.removeNodes([node]);
         },
         openNodeContextMenu(event, node) {
             const documentElement = typeof document !== 'undefined' ? document.documentElement : null;
             const viewportWidth = Number(window.innerWidth || (documentElement && documentElement.clientWidth) || 0);
             const viewportHeight = Number(window.innerHeight || (documentElement && documentElement.clientHeight) || 0);
             const menuWidth = 156;
-            const menuHeight = 92;
+            if (!this.isNodeSelected(node)) this.setSelectedNodes([node]);
+            const menuHeight = this.selectedNodeIds && this.selectedNodeIds.length > 1 ? 116 : 92;
             this.contextMenu = {
                 visible: true,
                 x: Math.max(0, viewportWidth ? Math.min(event.clientX, viewportWidth - menuWidth) : event.clientX),
                 y: Math.max(0, viewportHeight ? Math.min(event.clientY, viewportHeight - menuHeight) : event.clientY),
                 node
             };
-            this.selectedNodeId = node.id;
+            this.closeEdgeInsertMenu();
+            this.closeCanvasContextMenu();
+            this.closeCanvasNodeInsertMenu();
         },
         duplicateContextNode() {
-            const node = this.contextMenu.node;
             this.closeContextMenu();
-            this.duplicateNode(node);
+            this.duplicateNodes(this.selectedDuplicableNodes);
         },
         removeContextNode() {
-            const node = this.contextMenu.node;
             this.closeContextMenu();
-            if (node && this.canDeleteNode(node)) this.removeNode(node);
+            this.removeNodes(this.selectedDeletableNodes);
         },
         closeContextMenu() {
             this.contextMenu.visible = false;
             this.contextMenu.node = null;
         },
-        selectNode(node) {
+        closeCanvasContextMenu() {
+            this.canvasContextMenu = { visible: false, x: 0, y: 0, point: null };
+        },
+        closeCanvasNodeInsertMenu() {
+            this.canvasNodeInsertMenu = { visible: false, x: 0, y: 0, point: null };
+        },
+        onCanvasContextMenu(event) {
+            const target = event && event.target;
+            if (Date.now() < Number(this.suppressCanvasContextMenuUntil || 0)) {
+                this.suppressCanvasContextMenuUntil = 0;
+                return;
+            }
+            if (this.canvasPan.active && this.canvasPan.moved) return;
+            if (target && typeof target.closest === 'function' &&
+                target.closest('.workflow-node, button, .workflow-edge-insert-menu, .workflow-context-menu, .canvas-zoom-controls, .canvas-minimap')) return;
+            const tagName = String(target?.tagName || '').toLowerCase();
+            if (['path', 'text', 'line'].includes(tagName)) return;
+            this.openCanvasContextMenu(event);
+        },
+        openCanvasContextMenu(event) {
+            const documentElement = typeof document !== 'undefined' ? document.documentElement : null;
+            const viewportWidth = Number(window.innerWidth || (documentElement && documentElement.clientWidth) || 0);
+            const viewportHeight = Number(window.innerHeight || (documentElement && documentElement.clientHeight) || 0);
+            const menuWidth = 196;
+            const menuHeight = 168;
+            const point = this.canvasPoint(event);
             this.closeContextMenu();
-            this.selectedNodeId = node.id;
-            if (!this.inspectorCollapsed) return;
-            this.inspectorCollapsed = false;
+            this.closeEdgeInsertMenu();
+            this.closeCanvasNodeInsertMenu();
+            this.cancelConnection();
+            this.canvasContextMenu = {
+                visible: true,
+                x: Math.max(0, viewportWidth ? Math.min(event.clientX, viewportWidth - menuWidth) : event.clientX),
+                y: Math.max(0, viewportHeight ? Math.min(event.clientY, viewportHeight - menuHeight) : event.clientY),
+                point
+            };
+        },
+        openCanvasNodeInsertMenu() {
+            if (this.editingLocked || !this.canvasContextMenu.point) return;
+            const point = this.canvasContextMenu.point;
+            const menuWidth = 372;
+            const menuHeight = 520;
+            this.closeCanvasContextMenu();
+            this.closeContextMenu();
+            this.closeEdgeInsertMenu();
+            this.canvasNodeInsertMenu = {
+                visible: true,
+                point,
+                x: Math.max(18, Math.min(Math.max(18, this.canvasSize.width - menuWidth - 18), Math.round(point.x + 12))),
+                y: Math.max(18, Math.min(Math.max(18, this.canvasSize.height - menuHeight - 18), Math.round(point.y + 12)))
+            };
+        },
+        addCanvasContextNode(kind, payload) {
+            const point = this.canvasNodeInsertMenu.point;
+            this.closeCanvasNodeInsertMenu();
+            this.dismissNodePreview();
+            if (!point || !payload) return null;
+            return this.placePaletteNodeAtCanvas(kind, payload, point);
+        },
+        addCanvasContextSimpleNode(type, name) {
+            return this.addCanvasContextNode('system', { type, name });
+        },
+        addCanvasContextFunctionNode(fn) {
+            return this.addCanvasContextNode('function', fn);
+        },
+        addCanvasContextObjectNode(object) {
+            return this.addCanvasContextNode('object', object);
+        },
+        autoLayoutFromCanvasMenu() {
+            this.closeCanvasContextMenu();
+            this.autoLayout();
+        },
+        alignGridFromCanvasMenu() {
+            this.closeCanvasContextMenu();
+            this.alignToNearbyGrid();
+        },
+        fitCanvasFromCanvasMenu() {
+            this.closeCanvasContextMenu();
+            this.fitCanvasToNodes();
+        },
+        selectNode(node, event) {
+            this.closeContextMenu();
+            this.closeEdgeInsertMenu();
+            this.closeCanvasContextMenu();
+            this.closeCanvasNodeInsertMenu();
+            if (!node) return;
+            const current = this.selectedNodeIds || [];
+            const additive = !!(event && (event.metaKey || event.ctrlKey));
+            let next = current;
+            if (additive) {
+                next = current.includes(node.id)
+                    ? current.filter(id => id !== node.id)
+                    : [...current, node.id];
+            } else if (!current.includes(node.id)) {
+                next = [node.id];
+            }
+            const nodes = this.form.graph.nodes.filter(item => next.includes(item.id));
+            this.setSelectedNodes(nodes);
         },
         supportsMultipleInputs(node) { return node && ['aggregate', 'function'].includes(node.type); },
         supportsMultipleOutputs(node) { return node && node.type === 'condition'; },
@@ -539,6 +1083,90 @@ new Vue({
         removeEdge(edge) {
             if (this.editingLocked) return;
             this.form.graph.edges = this.form.graph.edges.filter(item => item.id !== edge.id);
+            if (this.edgeInsertMenu.edge && this.edgeInsertMenu.edge.id === edge.id) this.closeEdgeInsertMenu();
+            this.scheduleAutoSave();
+        },
+        openEdgeInsertMenu(edge) {
+            if (this.editingLocked || !edge) return;
+            const liveEdge = this.form.graph.edges.find(item => item.id === edge.id);
+            if (!liveEdge) return;
+            const start = this.edgeStart(liveEdge);
+            const end = this.edgeEnd(liveEdge);
+            const menuWidth = 372;
+            const menuHeight = 520;
+            const x = (start.x + end.x) / 2 - menuWidth / 2;
+            const y = (start.y + end.y) / 2 + 20;
+            this.closeContextMenu();
+            this.closeCanvasContextMenu();
+            this.closeCanvasNodeInsertMenu();
+            this.cancelConnection();
+            this.edgeInsertMenu = {
+                visible: true,
+                edge: liveEdge,
+                x: Math.max(18, Math.min(Math.max(18, this.canvasSize.width - menuWidth - 18), Math.round(x))),
+                y: Math.max(18, Math.min(Math.max(18, this.canvasSize.height - menuHeight - 18), Math.round(y)))
+            };
+        },
+        closeEdgeInsertMenu() {
+            this.edgeInsertMenu = { visible: false, edge: null, x: 0, y: 0 };
+        },
+        closeCanvasOverlays() {
+            this.cancelConnection();
+            this.closeContextMenu();
+            this.closeCanvasContextMenu();
+            this.closeEdgeInsertMenu();
+            this.closeCanvasNodeInsertMenu();
+        },
+        emptySelectionBox() {
+            return { active: false, startX: 0, startY: 0, endX: 0, endY: 0, additive: false };
+        },
+        onCanvasMouseDown(event) {
+            if (event.button === 2) {
+                this.startCanvasPan(event);
+                return;
+            }
+            if (event.button !== 0) return;
+            const target = event.target;
+            if (target && typeof target.closest === 'function' &&
+                target.closest('.workflow-node, button, .workflow-edge-insert-menu, .workflow-context-menu, .canvas-zoom-controls, .canvas-minimap')) return;
+            this.startSelectionBox(event);
+        },
+        startSelectionBox(event) {
+            if (event.button !== 0 || !this.$refs.canvas) return;
+            const point = this.canvasPoint(event);
+            this.closeCanvasOverlays();
+            this.dragState = null;
+            this.selectionBox = {
+                active: true,
+                startX: point.x,
+                startY: point.y,
+                endX: point.x,
+                endY: point.y,
+                additive: !!(event.metaKey || event.ctrlKey)
+            };
+            event.preventDefault();
+        },
+        nodeIntersectsSelection(node, selection) {
+            const left = Math.min(selection.startX, selection.endX);
+            const right = Math.max(selection.startX, selection.endX);
+            const top = Math.min(selection.startY, selection.endY);
+            const bottom = Math.max(selection.startY, selection.endY);
+            const nodeLeft = Number(node.x || 0);
+            const nodeTop = Number(node.y || 0);
+            const nodeRight = nodeLeft + 220;
+            const nodeBottom = nodeTop + 92;
+            return nodeLeft < right && nodeRight > left && nodeTop < bottom && nodeBottom > top;
+        },
+        completeSelectionBox() {
+            const selection = this.selectionBox;
+            this.selectionBox = this.emptySelectionBox();
+            if (!selection.active) return;
+            const intersected = this.form.graph.nodes.filter(node => this.nodeIntersectsSelection(node, selection));
+            const existing = selection.additive
+                ? this.form.graph.nodes.filter(node => (this.selectedNodeIds || []).includes(node.id))
+                : [];
+            const selected = [...existing, ...intersected.filter(node => !existing.some(item => item.id === node.id))];
+            this.setSelectedNodes(selected, { openInspector: selected.length === 1 });
         },
         refreshCanvasViewport() {
             if (typeof this.$nextTick === 'function') this.$nextTick(() => this.updateCanvasViewport());
@@ -621,10 +1249,15 @@ new Vue({
             const canvas = this.$refs.canvas;
             if (!canvas) return;
             this.closeContextMenu();
+            this.closeCanvasContextMenu();
+            this.closeCanvasNodeInsertMenu();
+            this.closeEdgeInsertMenu();
             this.dragState = null;
+            this.selectionBox = this.emptySelectionBox();
             this.cancelConnection();
             this.canvasPan = {
                 active: true,
+                moved: false,
                 startX: event.clientX,
                 startY: event.clientY,
                 startScrollLeft: canvas.scrollLeft,
@@ -636,23 +1269,61 @@ new Vue({
             if (this.editingLocked || event.button !== 0 || event.target.closest('button,.node-port')) return;
             const canvas = this.$refs.canvas;
             if (!canvas) return;
+            this.selectionBox = this.emptySelectionBox();
+            this.selectNode(node, event);
+            if (event.metaKey || event.ctrlKey) return;
             const point = this.canvasPoint(event);
-            this.dragState = { node, offsetX: point.x - Number(node.x), offsetY: point.y - Number(node.y) };
-            this.selectNode(node);
+            const nodes = this.form.graph.nodes.filter(item => (this.selectedNodeIds || []).includes(item.id));
+            const positions = nodes.map(item => ({ id: item.id, x: Number(item.x || 0), y: Number(item.y || 0) }));
+            this.dragState = {
+                node,
+                nodes,
+                positions,
+                startX: point.x,
+                startY: point.y,
+                offsetX: point.x - Number(node.x),
+                offsetY: point.y - Number(node.y),
+                hoverEdgeId: ''
+            };
             event.preventDefault();
         },
         onPointerMove(event) {
             if (this.canvasPan.active) {
                 const canvas = this.$refs.canvas;
                 if (canvas) {
+                    if (Math.abs(event.clientX - this.canvasPan.startX) > 3 || Math.abs(event.clientY - this.canvasPan.startY) > 3) {
+                        this.canvasPan.moved = true;
+                    }
                     canvas.scrollLeft = Math.max(0, this.canvasPan.startScrollLeft - (event.clientX - this.canvasPan.startX));
                     canvas.scrollTop = Math.max(0, this.canvasPan.startScrollTop - (event.clientY - this.canvasPan.startY));
                 }
             }
+            if (this.selectionBox.active) {
+                const point = this.canvasPoint(event);
+                this.selectionBox.endX = point.x;
+                this.selectionBox.endY = point.y;
+            }
             if (this.dragState) {
                 const point = this.canvasPoint(event);
-                this.dragState.node.x = Math.max(20, point.x - this.dragState.offsetX);
-                this.dragState.node.y = Math.max(50, point.y - this.dragState.offsetY);
+                if (this.dragState.nodes.length > 1) {
+                    const deltaX = point.x - this.dragState.startX;
+                    const deltaY = point.y - this.dragState.startY;
+                    this.dragState.positions.forEach(position => {
+                        const node = this.dragState.nodes.find(item => item.id === position.id);
+                        if (!node) return;
+                        node.x = Math.max(20, position.x + deltaX);
+                        node.y = Math.max(50, position.y + deltaY);
+                    });
+                    this.dragState.hoverEdgeId = '';
+                } else {
+                    this.dragState.node.x = Math.max(20, point.x - this.dragState.offsetX);
+                    this.dragState.node.y = Math.max(50, point.y - this.dragState.offsetY);
+                    const candidate = this.findEdgeAtPoint({
+                        x: Number(this.dragState.node.x) + 110,
+                        y: Number(this.dragState.node.y) + 46
+                    }, this.dragState.node.id);
+                    this.dragState.hoverEdgeId = candidate ? candidate.id : '';
+                }
                 this.updateCanvasSize();
             }
             if (this.connectionDraft.sourceId) {
@@ -662,21 +1333,88 @@ new Vue({
             }
         },
         onPointerUp() {
+            const panMoved = !!(this.canvasPan.active && this.canvasPan.moved);
             this.canvasPan.active = false;
+            this.canvasPan.moved = false;
+            if (panMoved) this.suppressCanvasContextMenuUntil = Date.now() + 600;
+            if (this.selectionBox.active) this.completeSelectionBox();
+            const dragState = this.dragState;
             this.dragState = null;
+            if (dragState?.hoverEdgeId && dragState.nodes.length === 1) {
+                const edge = this.form.graph.edges.find(item => item.id === dragState.hoverEdgeId);
+                if (edge) this.insertExistingNodeIntoEdge(dragState.node, edge);
+            }
+            if (dragState && typeof this.scheduleAutoSave === 'function') this.scheduleAutoSave();
             if (this.connectionDraft.sourceId) window.setTimeout(() => this.cancelConnection(), 0);
+        },
+        isHorizontalLayout() {
+            return !!(this.form && this.form.graph && this.form.graph.layout &&
+                this.form.graph.layout.direction === 'horizontal');
+        },
+        cubicPoint(start, end, t) {
+            const horizontal = this.isHorizontalLayout();
+            const bend = Math.max(45, horizontal ? Math.abs(end.x - start.x) / 2 : Math.abs(end.y - start.y) / 2);
+            const control1 = horizontal
+                ? { x: start.x + bend, y: start.y }
+                : { x: start.x, y: start.y + bend };
+            const control2 = horizontal
+                ? { x: end.x - bend, y: end.y }
+                : { x: end.x, y: end.y - bend };
+            const inverse = 1 - t;
+            return {
+                x: inverse ** 3 * start.x + 3 * inverse ** 2 * t * control1.x + 3 * inverse * t ** 2 * control2.x + t ** 3 * end.x,
+                y: inverse ** 3 * start.y + 3 * inverse ** 2 * t * control1.y + 3 * inverse * t ** 2 * control2.y + t ** 3 * end.y
+            };
+        },
+        pointToSegmentDistance(point, start, end) {
+            const deltaX = end.x - start.x;
+            const deltaY = end.y - start.y;
+            const denominator = deltaX * deltaX + deltaY * deltaY;
+            if (!denominator) return Math.hypot(point.x - start.x, point.y - start.y);
+            const ratio = Math.max(0, Math.min(1, ((point.x - start.x) * deltaX + (point.y - start.y) * deltaY) / denominator));
+            return Math.hypot(point.x - (start.x + ratio * deltaX), point.y - (start.y + ratio * deltaY));
+        },
+        findEdgeAtPoint(point, ignoredNodeId) {
+            if (!point || !this.form?.graph?.edges?.length) return null;
+            let closestEdge = null;
+            let closestDistance = 18;
+            this.form.graph.edges.forEach(edge => {
+                if (ignoredNodeId && (edge.source === ignoredNodeId || edge.target === ignoredNodeId)) return;
+                const start = this.edgeStart(edge);
+                const end = this.edgeEnd(edge);
+                let previous = start;
+                for (let step = 1; step <= 28; step++) {
+                    const current = this.cubicPoint(start, end, step / 28);
+                    const distance = this.pointToSegmentDistance(point, previous, current);
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closestEdge = edge;
+                    }
+                    previous = current;
+                }
+            });
+            return closestEdge;
         },
         edgeStart(edge) {
             const source = this.form.graph.nodes.find(node => node.id === edge.source);
             if (!source) return { x: 0, y: 0 };
+            if (this.isHorizontalLayout()) {
+                const offset = source.type === 'condition' ? (edge.sourceHandle === 'false' ? 66 : 26) : 46;
+                return { x: Number(source.x) + 220, y: Number(source.y) + offset };
+            }
             const offset = source.type === 'condition' ? (edge.sourceHandle === 'false' ? 145 : 75) : 110;
             return { x: Number(source.x) + offset, y: Number(source.y) + 92 };
         },
         edgeEnd(edge) {
             const target = this.form.graph.nodes.find(node => node.id === edge.target);
+            if (target && this.isHorizontalLayout()) return { x: Number(target.x), y: Number(target.y) + 46 };
             return target ? { x: Number(target.x) + 110, y: Number(target.y) } : { x: 0, y: 0 };
         },
         curvePath(start, end) {
+            if (this.isHorizontalLayout()) {
+                const bend = Math.max(45, Math.abs(end.x - start.x) / 2);
+                return `M ${start.x} ${start.y} C ${start.x + bend} ${start.y}, ${end.x - bend} ${end.y}, ${end.x} ${end.y}`;
+            }
             const bend = Math.max(45, Math.abs(end.y - start.y) / 2);
             return `M ${start.x} ${start.y} C ${start.x} ${start.y + bend}, ${end.x} ${end.y - bend}, ${end.x} ${end.y}`;
         },
@@ -685,15 +1423,27 @@ new Vue({
             if (!this.connectionDraft.sourceId) return '';
             return this.curvePath(this.edgeStart({ source: this.connectionDraft.sourceId, sourceHandle: this.connectionDraft.sourceHandle }), this.connectionDraft);
         },
-        edgeDeletePosition(edge) {
+        edgeActionPosition(edge, offsetX) {
             const start = this.edgeStart(edge); const end = this.edgeEnd(edge);
-            return { left: `${(start.x + end.x) / 2 - 11}px`, top: `${(start.y + end.y) / 2 - 11}px` };
+            return {
+                left: `${(start.x + end.x) / 2 + offsetX}px`,
+                top: `${(start.y + end.y) / 2 - 11}px`
+            };
         },
-        edgeLabelX(edge) { const start = this.edgeStart(edge); return start.x + 5; },
-        edgeLabelY(edge) { const start = this.edgeStart(edge); return start.y + 20; },
-        autoLayout() {
+        edgeDeletePosition(edge) { return this.edgeActionPosition(edge, -25); },
+        edgeInsertPosition(edge) { return this.edgeActionPosition(edge, 3); },
+        edgeLabelX(edge) { const start = this.edgeStart(edge); return start.x + (this.isHorizontalLayout() ? 12 : 5); },
+        edgeLabelY(edge) { const start = this.edgeStart(edge); return start.y + (this.isHorizontalLayout() ? -8 : 20); },
+        autoLayout(direction) {
             if (this.editingLocked || !this.form.graph.nodes.length) return;
-            const nodes = this.form.graph.nodes;
+            const graph = this.form.graph;
+            graph.layout = graph.layout && typeof graph.layout === 'object' ? graph.layout : {};
+            const layoutDirection = direction === 'horizontal' ||
+                (direction !== 'vertical' && graph.layout.direction === 'horizontal')
+                ? 'horizontal'
+                : 'vertical';
+            graph.layout.direction = layoutDirection;
+            const nodes = graph.nodes;
             const trigger = nodes.find(node => String(node.type).endsWith('trigger')) || nodes[0];
             const level = { [trigger.id]: 0 };
             const queue = [trigger.id];
@@ -712,12 +1462,90 @@ new Vue({
             nodes.forEach(node => { const key = level[node.id]; if (!groups[key]) groups[key] = []; groups[key].push(node); });
             Object.keys(groups).sort((a, b) => Number(a) - Number(b)).forEach(levelKey => {
                 const group = groups[levelKey];
-                const spacing = 270;
-                const totalWidth = (group.length - 1) * spacing;
-                group.forEach((node, index) => {
-                    node.x = Math.max(40, 500 - totalWidth / 2 + index * spacing);
-                    node.y = 60 + Number(levelKey) * 165;
-                });
+                if (layoutDirection === 'horizontal') {
+                    const spacing = 142;
+                    const totalHeight = (group.length - 1) * spacing;
+                    group.forEach((node, index) => {
+                        node.x = 60 + Number(levelKey) * 300;
+                        node.y = Math.max(60, 360 - totalHeight / 2 + index * spacing);
+                    });
+                } else {
+                    const spacing = 270;
+                    const totalWidth = (group.length - 1) * spacing;
+                    group.forEach((node, index) => {
+                        node.x = Math.max(40, 500 - totalWidth / 2 + index * spacing);
+                        node.y = 60 + Number(levelKey) * 165;
+                    });
+                }
+            });
+            this.updateCanvasSize();
+        },
+        alignToNearbyGrid() {
+            if (this.editingLocked || !this.form.graph.nodes.length) return;
+            const graph = this.form.graph;
+            const nodes = graph.nodes;
+            const edges = graph.edges || [];
+            const gridSize = 40;
+            const nodeWidth = 220;
+            const nodeHeight = 92;
+            const nodeGap = 20;
+            const maximumSearchRings = 6;
+            const maximumPreferredEdgeLength = this.isHorizontalLayout() ? 440 : 360;
+            const snap = value => Math.max(gridSize, Math.round((Number(value) || gridSize) / gridSize) * gridSize);
+            const original = new Map(nodes.map(node => [node.id, { x: snap(node.x), y: snap(node.y) }]));
+            const positions = new Map();
+            const occupied = [];
+            const orderedNodes = [...nodes].sort((left, right) => {
+                const topDifference = (Number(left.y) || 0) - (Number(right.y) || 0);
+                if (topDifference) return topDifference;
+                const leftDifference = (Number(left.x) || 0) - (Number(right.x) || 0);
+                return leftDifference || String(left.id).localeCompare(String(right.id));
+            });
+            const isFree = candidate => !occupied.some(position =>
+                Math.abs(candidate.x - position.x) < nodeWidth + nodeGap &&
+                Math.abs(candidate.y - position.y) < nodeHeight + nodeGap);
+            const edgeLengthPenalty = (node, candidate) => edges.reduce((penalty, edge) => {
+                const otherId = edge.source === node.id ? edge.target : edge.target === node.id ? edge.source : '';
+                if (!otherId) return penalty;
+                const other = positions.get(otherId) || original.get(otherId);
+                if (!other) return penalty;
+                const distance = Math.hypot(candidate.x - other.x, candidate.y - other.y);
+                const excess = Math.max(0, distance - maximumPreferredEdgeLength);
+                return penalty + excess * excess * 0.4;
+            }, 0);
+
+            orderedNodes.forEach(node => {
+                const base = original.get(node.id);
+                let best = null;
+                let bestScore = Number.POSITIVE_INFINITY;
+                for (let ring = 0; ring <= maximumSearchRings; ring++) {
+                    for (let offsetX = -ring; offsetX <= ring; offsetX++) {
+                        for (let offsetY = -ring; offsetY <= ring; offsetY++) {
+                            if (ring && Math.abs(offsetX) !== ring && Math.abs(offsetY) !== ring) continue;
+                            const candidate = {
+                                x: Math.max(gridSize, base.x + offsetX * gridSize),
+                                y: Math.max(gridSize, base.y + offsetY * gridSize)
+                            };
+                            if (!isFree(candidate)) continue;
+                            const movement = Math.abs(candidate.x - base.x) + Math.abs(candidate.y - base.y);
+                            const score = movement * 18 + edgeLengthPenalty(node, candidate);
+                            if (score < bestScore) {
+                                best = candidate;
+                                bestScore = score;
+                            }
+                        }
+                    }
+                }
+                if (!best) {
+                    const rightmost = occupied.length
+                        ? Math.max(...occupied.map(position => position.x + nodeWidth + nodeGap))
+                        : base.x;
+                    best = { x: snap(rightmost), y: base.y };
+                }
+                node.x = best.x;
+                node.y = best.y;
+                positions.set(node.id, best);
+                occupied.push(best);
             });
             this.updateCanvasSize();
         },
@@ -1340,6 +2168,7 @@ new Vue({
                 const graph = NeuCharWorkflowUi.parseJson(saved.graphJson, this.form.graph);
                 graph.nodes = graph.nodes || [];
                 graph.edges = graph.edges || [];
+                this.ensureGraphLayout(graph);
                 this.form.graph = graph;
             }
             this.markSaved();
@@ -1479,6 +2308,10 @@ new Vue({
             }
             if (action === 'auto-layout') {
                 this.autoLayout();
+                return;
+            }
+            if (action === 'align-grid') {
+                this.alignToNearbyGrid();
                 return;
             }
             if (action === 'fit-canvas') {
