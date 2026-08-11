@@ -25,6 +25,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.35.0 新增数据库升级维护流程与多平台下载入口
 
+    修改标识：Senparc - 20260812
+    修改描述：补齐 UseAuthentication，避免重启后旧 Cookie 被误判为 403
+
 ----------------------------------------------------------------*/
 
 //以下数据库模块的命名空间根据需要添加或删除
@@ -158,6 +161,7 @@ app.UseDatabaseMaintenanceMode();
 app.UseCookiePolicy();
 
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

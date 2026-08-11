@@ -31,6 +31,9 @@
     修改标识：Senparc - 20260808
     修改描述：v0.4.0 注册 Host 指标采集、换票签发与纽铃示例服务
 
+    修改标识：Senparc - 20260812
+    修改描述：对齐 Admin Cookie 默认 Scheme，失效会话引导登录而非 403
+
 ----------------------------------------------------------------*/
 
 /* 
@@ -40,6 +43,7 @@
  * 如果需要学习扩展模块，请参考 【Senparc.ExtensionAreaTemplate】 项目的 Register.cs 文件！
  */
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -340,8 +344,16 @@ namespace Senparc.Areas.Admin
 
             //鉴权配置
             //添加基于Cookie的权限验证：https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-2.1&tabs=aspnetcore2x
+            // 默认 Scheme 必须与 AddCookie 注册名一致（NcfAdminAuthorizeScheme），
+            // 否则重启后旧 Cookie / 未带 AdminMember 声明时容易落到 AccessDenied(403)。
             builder.Services
-                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme = AdminAuthorizeAttribute.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = AdminAuthorizeAttribute.AuthenticationScheme;
+                    options.DefaultChallengeScheme = AdminAuthorizeAttribute.AuthenticationScheme;
+                    options.DefaultForbidScheme = AdminAuthorizeAttribute.AuthenticationScheme;
+                })
                 .AddCookie(AdminAuthorizeAttribute.AuthenticationScheme, options =>
                 {
                     options.AccessDeniedPath = "/Admin/Forbidden/";
@@ -349,6 +361,7 @@ namespace Senparc.Areas.Admin
                     // The authentication cookie is never a browser-readable API
                     // value. Keep it out of document.cookie to limit XSS impact.
                     options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
                     options.Cookie.SameSite = SameSiteMode.Strict;
                     // Keep Secure cookies on HTTPS while allowing local HTTP hosts
                     // (for example Safari/WebKit on http://localhost) to persist login.
@@ -364,6 +377,53 @@ namespace Senparc.Areas.Admin
                             {
                                 context.ShouldRenew = false;
                             }
+                            return Task.CompletedTask;
+                        },
+                        OnValidatePrincipal = async context =>
+                        {
+                            // 缺少管理员声明的会话视为无效，清除 Cookie 后走重新登录。
+                            if (context.Principal?.Identity?.IsAuthenticated != true)
+                            {
+                                return;
+                            }
+
+                            if (!context.Principal.HasClaim(claim =>
+                                    claim.Type == NcfAuthorizationPolicyNames.AdminMemberClaim))
+                            {
+                                context.RejectPrincipal();
+                                await context.HttpContext.SignOutAsync(AdminAuthorizeAttribute.AuthenticationScheme);
+                            }
+                        },
+                        OnRedirectToAccessDenied = context =>
+                        {
+                            // 未形成有效管理员身份时不应显示 403，应 Challenge 到登录页。
+                            var principal = context.HttpContext.User;
+                            var isAdmin = principal?.Identity?.IsAuthenticated == true
+                                && principal.HasClaim(claim =>
+                                    claim.Type == NcfAuthorizationPolicyNames.AdminMemberClaim);
+                            if (!isAdmin)
+                            {
+                                var returnUrl = $"{context.Request.PathBase}{context.Request.Path}{context.Request.QueryString}";
+                                var loginPath = options.LoginPath.HasValue ? options.LoginPath.Value : "/Admin/Login/";
+                                context.Response.Redirect(
+                                    $"{loginPath}?ReturnUrl={Uri.EscapeDataString(returnUrl)}");
+                                return Task.CompletedTask;
+                            }
+
+                            // 已登录但无权限：保持 Forbidden / 403 行为。
+                            if (string.Equals(
+                                    context.Request.Headers.XRequestedWith,
+                                    "XMLHttpRequest",
+                                    StringComparison.OrdinalIgnoreCase))
+                            {
+                                context.Response.Headers.Location = context.RedirectUri;
+                                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                            }
+                            else
+                            {
+                                context.Response.Redirect(context.RedirectUri);
+                            }
+
                             return Task.CompletedTask;
                         }
                     };

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,14 @@ public class AdminAuthenticationConfigurationTests
             .Get(AdminAuthorizeAttribute.AuthenticationScheme);
 
         Assert.IsTrue(options.Cookie.HttpOnly);
+        Assert.IsTrue(options.Cookie.IsEssential);
         Assert.AreEqual(SameSiteMode.Strict, options.Cookie.SameSite);
         Assert.AreEqual(CookieSecurePolicy.SameAsRequest, options.Cookie.SecurePolicy);
+
+        var authOptions = serviceProvider.GetRequiredService<IOptionsMonitor<AuthenticationOptions>>().CurrentValue;
+        Assert.AreEqual(AdminAuthorizeAttribute.AuthenticationScheme, authOptions.DefaultScheme);
+        Assert.AreEqual(AdminAuthorizeAttribute.AuthenticationScheme, authOptions.DefaultAuthenticateScheme);
+        Assert.AreEqual(AdminAuthorizeAttribute.AuthenticationScheme, authOptions.DefaultChallengeScheme);
+        Assert.AreEqual(AdminAuthorizeAttribute.AuthenticationScheme, authOptions.DefaultForbidScheme);
     }
 }

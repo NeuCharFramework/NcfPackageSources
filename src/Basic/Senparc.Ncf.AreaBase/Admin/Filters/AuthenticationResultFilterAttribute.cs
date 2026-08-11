@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260731
     修改描述：v0.23.0-preview4 将 Handler 缺失与无权限提示接入核心多语言资源
 
+    修改标识：Senparc - 20260812
+    修改描述：未形成有效管理员会话时引导登录，避免误返回 403
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -80,31 +83,53 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
             if (isIgnore || (resourceCodes.Any(_ => "*".Equals(_)) && isAjax))
             {
                 await next();
+                return;
             }
-            else
+
+            // 无有效管理员会话时走登录，而不是菜单权限失败后的 403/Forbidden。
+            var adminWorkContext = serviceProvider.GetService<IAdminWorkContextProvider>()?.GetAdminWorkContext();
+            if (adminWorkContext == null || adminWorkContext.AdminUserId <= 0)
             {
-                string url = string.Join(string.Empty, context.RouteData.Values.Values.Reverse());
-                if (!url.StartsWith("/"))
+                var returnUrl = $"{context.HttpContext.Request.Path}{context.HttpContext.Request.QueryString}";
+                if (isAjax)
                 {
-                    url = string.Concat("/", url); // /Admin/AdminUserInfo/Index
-                }
-                System.Diagnostics.Debug.WriteLine("url:{0}", url);
-                canAccessResource = await serviceProvider.GetService<SysRolePermissionService>().HasPermissionAsync(resourceCodes, url, isAjax);// await Task.FromResult(true);//TODO...
-                if (canAccessResource)
-                {
-                    await next();
+                    context.Result = new JsonResult(new AjaxReturnModel()
+                    {
+                        Success = false,
+                        Msg = NcfCoreResource.Get("Auth.Forbidden", "您没有权限访问")
+                    })
+                    { StatusCode = (int)System.Net.HttpStatusCode.Unauthorized };
                 }
                 else
                 {
-                    string path = context.HttpContext.Request.Path.Value;
-                    IActionResult actionResult = null;
-                    if (isAjax)
-                    {
-                        actionResult = new OkObjectResult(new AjaxReturnModel<string>(path) { Msg = NcfCoreResource.Get("Auth.Forbidden", "您没有权限访问"), Success = false }) { StatusCode = (int)System.Net.HttpStatusCode.Forbidden };
-                    }
-
-                    context.Result = actionResult ?? new RedirectResult("/Admin/Forbidden?url=" + System.Web.HttpUtility.UrlEncode(path));
+                    context.Result = new RedirectResult(
+                        "/Admin/Login?ReturnUrl=" + System.Web.HttpUtility.UrlEncode(returnUrl));
                 }
+
+                return;
+            }
+
+            string url = string.Join(string.Empty, context.RouteData.Values.Values.Reverse());
+            if (!url.StartsWith("/"))
+            {
+                url = string.Concat("/", url); // /Admin/AdminUserInfo/Index
+            }
+            System.Diagnostics.Debug.WriteLine("url:{0}", url);
+            canAccessResource = await serviceProvider.GetService<SysRolePermissionService>().HasPermissionAsync(resourceCodes, url, isAjax);// await Task.FromResult(true);//TODO...
+            if (canAccessResource)
+            {
+                await next();
+            }
+            else
+            {
+                string path = context.HttpContext.Request.Path.Value;
+                IActionResult actionResult = null;
+                if (isAjax)
+                {
+                    actionResult = new OkObjectResult(new AjaxReturnModel<string>(path) { Msg = NcfCoreResource.Get("Auth.Forbidden", "您没有权限访问"), Success = false }) { StatusCode = (int)System.Net.HttpStatusCode.Forbidden };
+                }
+
+                context.Result = actionResult ?? new RedirectResult("/Admin/Forbidden?url=" + System.Web.HttpUtility.UrlEncode(path));
             }
         }
 

@@ -13,8 +13,12 @@
     修改标识：Senparc - 20260804
     修改描述：v0.35.0 新增数据库升级维护流程与多平台下载入口
 
+    修改标识：Senparc - 20260812
+    修改描述：默认将 Data Protection 密钥持久化到 App_Data，避免重启后登录 Cookie 校验异常
+
 ----------------------------------------------------------------*/
 
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Senparc.AI.Interfaces;
@@ -55,7 +59,27 @@ namespace Senparc.Web
             Console.WriteLine("============ logMsg =============");
             Console.WriteLine(logMsg);
             Console.WriteLine("============ logMsg END =============");
-            
+
+            #region Data Protection（登录 Cookie / Antiforgery 密钥）
+
+            // 默认：持久化到站点 App_Data/DataProtection-Keys。
+            // 首次运行自动生成 key-*.xml，开发者无需手工创建或拷贝；请勿将密钥提交到 Git。
+            var dataProtectionKeysDirectory = Path.Combine(
+                builder.Environment.ContentRootPath,
+                "App_Data",
+                "DataProtection-Keys");
+            Directory.CreateDirectory(dataProtectionKeysDirectory);
+            builder.Services.AddDataProtection()
+                .SetApplicationName("Senparc.NCF")
+                .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeysDirectory));
+
+            // 可选：改用系统用户目录（macOS/Linux: ~/.aspnet/DataProtection-Keys；
+            // Windows: %LOCALAPPDATA%\ASP.NET\DataProtection-Keys）。
+            // 启用时请注释上方 AddDataProtection() 块，并取消下一行注释：
+            // builder.Services.AddDataProtection().SetApplicationName("Senparc.NCF");
+
+            #endregion
+
             // 注册 EventBus 并自动扫描所有模块的 EventHandler
             // 必须在 StartWebEngine 之后，确保所有模块程序集已加载
             var assembliesToScan = AppDomain.CurrentDomain.GetAssemblies()
