@@ -99,6 +99,11 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
         {
             public List<IFormFile> files { get; set; }
             public List<string> descriptions { get; set; }
+            /// <summary>
+            /// Browser folder uploads provide one relative path per file. The
+            /// value is validated server-side and never used as a disk path.
+            /// </summary>
+            public List<string> relativePaths { get; set; }
             public int? folderId { get; set; }
             public NcfFileResourceScope resourceScope { get; set; } = NcfFileResourceScope.KnowledgeBase;
         }
@@ -115,6 +120,11 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
                 return BadRequest($"一次最多上传 {NcfFileService.MaxFilesPerUpload} 个文件。");
             }
 
+            if (model.relativePaths?.Count > 0 && model.relativePaths.Count != model.files.Count)
+            {
+                return BadRequest("文件夹上传的路径信息不完整，请重新选择文件夹。");
+            }
+
             if (model.files.Sum(file => file?.Length ?? 0L) > NcfFileService.MaxTotalUploadBytes)
             {
                 return BadRequest($"单次上传总大小不能超过 {NcfFileService.MaxTotalUploadBytes / 1024 / 1024} MB。");
@@ -129,7 +139,20 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
 
                 if (file?.Length > 0)
                 {
-                    var entity = await _fileService.UploadFileAsync(file, model.resourceScope, model.folderId);
+                    var relativePath = model.relativePaths != null && model.relativePaths.Count > i
+                        ? model.relativePaths[i]
+                        : null;
+                    var targetFolderId = model.folderId;
+                    if (!string.IsNullOrWhiteSpace(relativePath))
+                    {
+                        var folderSegments = NcfFolderUploadPath.GetFolderSegments(relativePath, file.FileName);
+                        targetFolderId = await _folderService.GetOrCreateFolderPathAsync(
+                            folderSegments,
+                            model.folderId,
+                            model.resourceScope);
+                    }
+
+                    var entity = await _fileService.UploadFileAsync(file, model.resourceScope, targetFolderId);
                     if (!string.IsNullOrEmpty(description))
                     {
                         await _fileService.UpdateFileNoteAsync(entity.Id, description);

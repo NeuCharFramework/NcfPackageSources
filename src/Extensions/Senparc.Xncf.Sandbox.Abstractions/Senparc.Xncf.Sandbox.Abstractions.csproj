@@ -6,6 +6,8 @@
     <RootNamespace>Senparc.Xncf.Sandbox.Abstractions</RootNamespace>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='TemplateRelease'">true</GeneratePackageOnBuild>
     <Description>Senparc.Xncf.Sandbox 契约与集成事件抽象</Description>
     <Copyright>Senparc</Copyright>
     <PackageTags>Senparc,NeuCharFramework,NCF</PackageTags>
@@ -13,7 +15,32 @@
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>沙箱环境 Abstractions</Title>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
+      [2026-08-13] v0.1.0-preview1 发布沙箱契约包，供宿主与 Sandbox 模块共享 Session/Runtime 抽象
+      1、提供 SandboxSessionInfo、RuntimeKind、SessionStatus 与模板键契约
+      2、作为 Senparc.Xncf.Sandbox 的 NuGet 依赖独立发布，避免消费者还原失败
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
 </Project>

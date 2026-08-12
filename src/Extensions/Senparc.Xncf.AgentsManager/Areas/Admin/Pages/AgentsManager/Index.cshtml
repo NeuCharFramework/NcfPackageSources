@@ -104,7 +104,8 @@
                                     <div class="agentCard-statebox" :class="[getStatusColor(aitem,'1')]">
                                         {{ getStatusText(aitem,'1') }}
                                     </div>
-                                    <span v-if="aitem.hasPublishedA2A" class="agentCard-a2aBadge">A2A</span>
+                                    <el-tag v-if="aitem.hasPublishedA2A" :type="aitem.publishedA2AEnabled ? 'warning' : 'info'"
+                                        size="mini" class="agentCard-a2aBadge">A2A</el-tag>
                                 </div>
                                 <div class="agentCard-upperHalfbox">
                                     <div class="df-wn flex-ac flex-jc avatarBox">
@@ -113,34 +114,26 @@
                                     <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
                                         aitem.name }}</div>
                                 </div>
+                                <div class="agentCard-middleHalfbox text-ellipsis-2line" :title="aitem.description">{{
+                                    aitem.description }}
+                                </div>
                                 <div class="agentCard-statistics">
-                                    <div class="agentCard-statistic">
-                                        <span>完成轮次</span>
-                                        <strong>{{ formatUsageCount(aitem.completedConversationRounds) }}</strong>
-                                    </div>
-                                    <div class="agentCard-statistic">
-                                        <span>总 Token</span>
-                                        <strong>{{ formatUsageCount(aitem.totalTokens) }}</strong>
-                                    </div>
-                                    <div class="agentCard-knowledge text-ellipsis" :title="aitem.knowledgeBaseName || '未绑定知识库'">
-                                        <i class="el-icon-collection-tag"></i>
-                                        <span>{{ aitem.knowledgeBaseName || '未绑定知识库' }}</span>
-                                    </div>
+                                    <span>完成轮次 {{ formatUsageCount(aitem.completedConversationRounds) }}</span>
+                                    <span>Token {{ formatUsageCount(aitem.totalTokens) }}</span>
+                                    <span class="text-ellipsis" :title="aitem.knowledgeBaseName || '未绑定知识库'">{{ aitem.knowledgeBaseName || '未绑定知识库' }}</span>
                                 </div>
                                 <div class="agentCard-lowerHalfbox">
-                                    <div class="agentCard-quickMetrics">
-                                        <span><small>参加中</small><strong>{{ aitem.chattingCount }}</strong></span>
-                                        <span><small>评分</small><strong>{{ aitem.score }}</strong></span>
-                                    </div>
-                                    <div class="agentCard-actions">
-                                        <button type="button" class="agentCard-actionButton"
-                                            @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">编辑</button>
-                                        <button type="button" class="agentCard-actionButton agentCard-actionButton--a2a"
-                                            :title="aitem.hasPublishedA2A ? '管理 A2A 发布配置' : '发布为 A2A'"
-                                            @@click="openPublishedA2AEditor(aitem)">A2A</button>
-                                        <button type="button" class="agentCard-actionButton" @@click="handleAgentView(aitem,aindex)">详情</button>
-                                        <button type="button" class="agentCard-actionButton agentCard-actionButton--danger" @@click="handleAgentDelete(aitem)">删除</button>
-                                    </div>
+                                    <div class="lowerHalfbox_label">参加中</div>
+                                    <div class="lowerHalfbox_quantity">{{ aitem.chattingCount }}</div>
+                                    <div class="lowerHalfbox_label">评分</div>
+                                    <div class="lowerHalfbox_score">{{ aitem.score }}</div>
+                                    <button type="button" class="lowerHalfbox_operation"
+                                        @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">编辑</button>
+                                    <button type="button" class="lowerHalfbox_operation lowerHalfbox_operation--a2a"
+                                        :title="aitem.hasPublishedA2A ? '管理 A2A 发布配置' : '发布为 A2A'"
+                                        @@click="openPublishedA2AEditor(aitem)">{{ aitem.hasPublishedA2A ? '管理 A2A' : '发布 A2A' }}</button>
+                                    <button type="button" class="lowerHalfbox_operation" title="查看该智能体关联的任务"
+                                        @@click="handleAgentView(aitem,aindex)">查看任务</button>
                                 </div>
                             </div>
                             <div v-for="fitem in fillCardNum" :key="fitem" style="flex-grow: 1;flex-basis: 315px;">
@@ -301,8 +294,6 @@
                                     :style="{'color': agentDetails.agentTemplateDto.enable ? '#F56C6C' : '#2a82e4' }"
                                     @@click="setAgentState('stop', agentDetails)">{{
                                     agentDetails.agentTemplateDto.enable ? '停用' : '启用' }}</span>
-                                <span class="btnText" style="color: #F56C6C; margin-left: 10px;"
-                                    @@click="handleAgentDelete(agentDetails)">删除</span>
                             </div>
                         </div>
                     </div>
@@ -576,8 +567,7 @@
                                             </el-scrollbar>
                                         </div>
                                         <div class="taskmain-members">
-                                            <template
-                                                v-if="agentDetailsGroupDetails && agentDetailsGroupDetails.agentTemplateDtoList">
+                                            <template v-if="agentDetailsGroupDetailsTaskDetails">
                                                 <div class="taskmain-members-usage">
                                                     <div class="taskmain-members-usage-title">用量概览</div>
                                                     <div class="taskmain-members-usage-list">
@@ -601,13 +591,13 @@
                                                 </div>
                                                 <el-input v-model="agentGroupTaskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'agentGroupTask')"></el-input>
                                                 <div class="taskmain-members-title">
-                                                    机器人·{{ getGroupParticipantList(agentDetailsGroupDetails).length }}
+                                                    机器人·{{ agentDetailsGroupTaskMemberList.length }}
                                                 </div>
                                                 <el-scrollbar class="sidebar-taskmembers-container"
                                                     wrap-class="scrollbar-wrapper">
                                                     <div class="df-wn flex-dc taskmain-members-listWrap">
                                                         <participant-quick-action
-                                                            v-for="mitem in getGroupParticipantList(agentDetailsGroupDetails)"
+                                                            v-for="mitem in agentDetailsGroupTaskMemberList"
                                                             :key="mitem.participantKey"
                                                             v-show="mitem.name.includes(agentGroupTaskMemberfilter)"
                                                             :participant="mitem"
@@ -1078,7 +1068,7 @@
                             </el-scrollbar>
                         </div>
                         <div class="taskmain-members">
-                            <template v-if="groupDetails&&groupDetails.agentTemplateDtoList">
+                            <template v-if="groupTaskDetails">
                                 <div class="taskmain-members-usage">
                                     <div class="taskmain-members-usage-title">用量概览</div>
                                     <div class="taskmain-members-usage-list">
@@ -1102,12 +1092,12 @@
                                 </div>
                                 <el-input v-model="groupTaskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'groupTask')"></el-input>
                                 <div class="taskmain-members-title">
-                                    机器人·{{ getGroupParticipantList(groupDetails).length }}
+                                    机器人·{{ groupTaskMemberList.length }}
                                 </div>
                                 <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                     <div class="df-wn flex-dc taskmain-members-listWrap">
                                         <participant-quick-action
-                                            v-for="mitem in getGroupParticipantList(groupDetails)"
+                                            v-for="mitem in groupTaskMemberList"
                                             :key="mitem.participantKey"
                                             v-show="mitem.name.includes(groupTaskMemberfilter)"
                                             :participant="mitem"
@@ -1490,7 +1480,11 @@
             <el-form v-if="visible.drawerAgent" ref="agentELForm" :model="agentForm" :rules="agentFormRules"
                 :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
                 <el-form-item label="智能体名称" prop="name">
-                    <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
+                    <div class="agentNameFormField">
+                        <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
+                        <el-button v-if="agentForm.id" size="small" type="danger" plain icon="el-icon-delete"
+                            @@click="handleAgentDelete(agentForm, { closeEditor: true })">删除智能体</el-button>
+                    </div>
                 </el-form-item>
                 <el-form-item label="SystemMessage" required>
                     <el-radio-group v-model="agentForm.systemMessageType" @@change="handleSystemMessageTypeChange">

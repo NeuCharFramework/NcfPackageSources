@@ -578,7 +578,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             }
         }
 
-        private async Task PopulateAgentMetadataAsync<TAgentDto>(IEnumerable<TAgentDto> agentDtos)
+        public async Task PopulateAgentMetadataAsync<TAgentDto>(IEnumerable<TAgentDto> agentDtos)
             where TAgentDto : AgentTemplateDto
         {
             var dtoList = agentDtos?.Where(z => z != null).ToList() ?? new List<TAgentDto>();

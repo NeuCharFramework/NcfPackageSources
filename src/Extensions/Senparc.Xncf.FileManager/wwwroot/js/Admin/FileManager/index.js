@@ -1,5 +1,8 @@
 (function () {
     const pageUrl = window.location.pathname || '/Admin/FileManager/Index';
+    const maxFilesPerUpload = 20;
+    const maxTotalUploadBytes = 100 * 1024 * 1024;
+    const maxFileSizeBytes = 50 * 1024 * 1024;
 
     function unwrap(response) {
         return response && response.data && response.data.data !== undefined ? response.data.data : response.data;
@@ -7,7 +10,29 @@
 
     function errorMessage(error) {
         const data = error && error.response && error.response.data;
-        return (data && (data.message || data.title)) || (error && error.message) || '请求失败';
+        const message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
+        if (message) return message;
+        if (error && error.response && error.response.status === 400) {
+            return '请求被服务器拒绝，请刷新页面后重试。';
+        }
+        return (error && error.message) || '请求失败';
+    }
+
+    function getRequestVerificationToken() {
+        const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+        if (!tokenInput || !tokenInput.value) {
+            throw new Error('页面防伪令牌缺失，请刷新页面后重试。');
+        }
+        return tokenInput.value;
+    }
+
+    function post(url, data, config) {
+        const requestConfig = config || {};
+        requestConfig.headers = Object.assign({}, requestConfig.headers, {
+            RequestVerificationToken: getRequestVerificationToken(),
+            'x-requested-with': 'XMLHttpRequest'
+        });
+        return axios.post(url, data, requestConfig);
     }
 
     new Vue({
@@ -28,7 +53,7 @@
                     children: 'children',
                     isLeaf: function (data) { return data && data.hasChildren === false; }
                 },
-                uploadDialog: { visible: false, fileList: [], uploading: false },
+                uploadDialog: { visible: false, fileList: [], uploading: false, progress: 0, mode: 'files', folderRootName: '' },
                 folderDialog: { visible: false, loading: false, editing: false, form: { id: null, name: '', description: '' } },
                 guideDialogVisible: false
             };
@@ -49,6 +74,10 @@
             uploadTargetText: function () {
                 const currentFolder = this.folderPath.length ? this.folderPath[this.folderPath.length - 1].name : '根目录';
                 return this.resourceScopeName + ' / ' + currentFolder;
+            },
+            uploadFolderSummary: function () {
+                if (this.uploadDialog.mode !== 'folder' || !this.uploadDialog.fileList.length) return '';
+                return '已选择文件夹“' + this.uploadDialog.folderRootName + '”，共 ' + this.uploadDialog.fileList.length + ' 个文件；上传后会在左侧文件树中还原原始目录结构。';
             }
         },
         created: function () {
@@ -152,7 +181,7 @@
             handleSizeChange: function (value) { this.page.size = value; this.page.page = 1; this.getList(); },
             handleNoteChange: async function (row) {
                 try {
-                    await axios.post(pageUrl + '?handler=EditNote', { id: row.id, note: row.description || '' });
+                    await post(pageUrl + '?handler=EditNote', { id: row.id, note: row.description || '' });
                     this.$message.success('备注已更新');
                 } catch (error) {
                     this.$message.error('更新备注失败：' + errorMessage(error));
@@ -163,7 +192,7 @@
                 try {
                     const referenceHint = this.isSiteAsset ? '' : '；若它仍被知识库关联，系统会阻止删除';
                     await this.$confirm('删除后无法恢复' + referenceHint + '，确认删除“' + row.fileName + '”吗？', '确认删除', { type: 'warning' });
-                    await axios.post(pageUrl + '?handler=Delete&id=' + encodeURIComponent(row.id));
+                    await post(pageUrl + '?handler=Delete&id=' + encodeURIComponent(row.id));
                     this.$message.success('已删除');
                     await this.getList();
                 } catch (error) {
@@ -172,7 +201,7 @@
             },
             setPublication: async function (row, publish) {
                 try {
-                    await axios.post(pageUrl + '?handler=SetSiteAssetPublication', { id: row.id, publish: publish });
+                    await post(pageUrl + '?handler=SetSiteAssetPublication', { id: row.id, publish: publish });
                     this.$message.success(publish ? '资源已公开' : '资源已设为私有');
                     await this.getList();
                 } catch (error) {
@@ -188,34 +217,110 @@
                     this.$prompt('请复制以下公开 URL', '公开 URL', { inputValue: url, inputType: 'textarea' });
                 }
             },
-            showUploadDialog: function () { this.uploadDialog.visible = true; this.uploadDialog.fileList = []; },
+            resetUploadDialog: function (visible) {
+                this.uploadDialog = { visible: visible, fileList: [], uploading: false, progress: 0, mode: 'files', folderRootName: '' };
+                if (this.$refs.upload) this.$refs.upload.clearFiles();
+            },
+            showUploadDialog: function () { this.resetUploadDialog(true); },
             handleFileChange: function (file, fileList) {
                 if (file.description === undefined) this.$set(file, 'description', '');
                 this.uploadDialog.fileList = fileList;
+                this.uploadDialog.mode = 'files';
+                this.uploadDialog.folderRootName = '';
+            },
+            chooseUploadFolder: function () {
+                const input = this.$refs.folderUploadInput;
+                if (!input || !('webkitdirectory' in input)) {
+                    this.$message.warning('当前浏览器不支持选择文件夹，请使用最新版 Chrome、Edge 或 Safari。');
+                    return;
+                }
+                input.click();
+            },
+            handleFolderSelection: function (event) {
+                const rawFiles = Array.prototype.slice.call((event.target && event.target.files) || []);
+                if (!rawFiles.length) return;
+
+                const paths = rawFiles.map(function (file) { return file.webkitRelativePath || ''; });
+                const rootNames = Array.from(new Set(paths.map(function (path) { return path.split('/')[0]; }).filter(Boolean)));
+                if (paths.some(function (path) { return !path; }) || rootNames.length !== 1) {
+                    this.$message.error('浏览器未提供完整的文件夹相对路径，请重新选择一个文件夹。');
+                    return;
+                }
+
+                if (this.$refs.upload) this.$refs.upload.clearFiles();
+                this.uploadDialog.fileList = rawFiles.map(function (rawFile, index) {
+                    return {
+                        uid: 'folder-' + Date.now() + '-' + index,
+                        name: rawFile.name,
+                        size: rawFile.size,
+                        status: 'ready',
+                        raw: rawFile,
+                        relativePath: rawFile.webkitRelativePath,
+                        description: ''
+                    };
+                });
+                this.uploadDialog.mode = 'folder';
+                this.uploadDialog.folderRootName = rootNames[0];
+                event.target.value = '';
             },
             beforeUpload: function () { return false; },
+            createUploadBatches: function (fileList) {
+                const batches = [];
+                let batch = [];
+                let batchBytes = 0;
+                fileList.forEach(function (file) {
+                    const rawFile = file.raw || file;
+                    if (!rawFile || !rawFile.size) throw new Error('存在无法读取的文件，请重新选择。');
+                    if (rawFile.size > maxFileSizeBytes) throw new Error('文件“' + file.name + '”超过 50 MB，无法上传。');
+                    if (batch.length && (batch.length >= maxFilesPerUpload || batchBytes + rawFile.size > maxTotalUploadBytes)) {
+                        batches.push(batch);
+                        batch = [];
+                        batchBytes = 0;
+                    }
+                    batch.push(file);
+                    batchBytes += rawFile.size;
+                });
+                if (batch.length) batches.push(batch);
+                return batches;
+            },
             submitUpload: async function () {
                 if (!this.uploadDialog.fileList.length) { this.$message.warning('请选择要上传的文件'); return; }
                 this.uploadDialog.uploading = true;
+                this.uploadDialog.progress = 0;
+                let uploadedCount = 0;
                 try {
-                    const formData = new FormData();
-                    this.uploadDialog.fileList.forEach(function (file) {
-                        formData.append('files', file.raw);
-                        formData.append('descriptions', file.description || '');
-                    });
-                    formData.append('resourceScope', this.resourceScope);
-                    if (this.currentFolderId != null) formData.append('folderId', this.currentFolderId);
-                    await axios.post(pageUrl + '?handler=Upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-                    this.$message.success('上传成功；站点静态资源仍需显式公开后才可被站点引用。');
+                    const files = this.uploadDialog.fileList.slice();
+                    const batches = this.createUploadBatches(files);
+                    for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+                        const formData = new FormData();
+                        batches[batchIndex].forEach(function (file) {
+                            const rawFile = file.raw || file;
+                            formData.append('files', rawFile);
+                            formData.append('descriptions', file.description || '');
+                            formData.append('relativePaths', file.relativePath || rawFile.webkitRelativePath || '');
+                        });
+                        formData.append('resourceScope', this.resourceScope);
+                        if (this.currentFolderId != null) formData.append('folderId', this.currentFolderId);
+                        // 同时放入表单和请求头，兼容 Razor Pages 的 multipart 防伪验证。
+                        formData.append('__RequestVerificationToken', getRequestVerificationToken());
+                        await post(pageUrl + '?handler=Upload', formData);
+                        uploadedCount += batches[batchIndex].length;
+                        this.uploadDialog.progress = Math.round(uploadedCount * 100 / files.length);
+                    }
+                    this.$message.success(this.uploadDialog.mode === 'folder'
+                        ? '文件夹上传完成，已保留原始目录结构。'
+                        : '上传成功；站点静态资源仍需显式公开后才可被站点引用。');
                     this.uploadDialog.visible = false;
+                    this.reloadFolderTree();
                     await this.getList();
                 } catch (error) {
-                    this.$message.error('上传失败：' + errorMessage(error));
+                    const partialMessage = uploadedCount > 0 ? '，已完成 ' + uploadedCount + ' 个文件' : '';
+                    this.$message.error('上传失败' + partialMessage + '：' + errorMessage(error));
                 } finally {
                     this.uploadDialog.uploading = false;
                 }
             },
-            cancelUpload: function () { this.uploadDialog.visible = false; },
+            cancelUpload: function () { this.resetUploadDialog(false); },
             showCreateFolderDialog: function () {
                 this.folderDialog = { visible: true, loading: false, editing: false, form: { id: null, name: '', description: '' } };
             },
@@ -228,9 +333,9 @@
                 this.folderDialog.loading = true;
                 try {
                     if (this.folderDialog.editing) {
-                        await axios.post(pageUrl + '?handler=UpdateFolder', { id: form.id, name: form.name, description: form.description || '' });
+                        await post(pageUrl + '?handler=UpdateFolder', { id: form.id, name: form.name, description: form.description || '' });
                     } else {
-                        await axios.post(pageUrl + '?handler=CreateFolder', {
+                        await post(pageUrl + '?handler=CreateFolder', {
                             name: form.name,
                             description: form.description || '',
                             parentId: this.currentFolderId,
@@ -249,7 +354,7 @@
             deleteFolder: async function (folder) {
                 try {
                     await this.$confirm('仅空文件夹可以删除。确认删除“' + folder.name + '”吗？', '确认删除', { type: 'warning' });
-                    await axios.post(pageUrl + '?handler=DeleteFolder&id=' + encodeURIComponent(folder.id));
+                    await post(pageUrl + '?handler=DeleteFolder&id=' + encodeURIComponent(folder.id));
                     if (this.currentFolderId === folder.id) await this.enterFolder(null);
                     this.reloadFolderTree();
                     this.$message.success('文件夹已删除');
