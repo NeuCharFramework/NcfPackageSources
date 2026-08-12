@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.2-preview6</Version>
+    <Version>0.4.3-preview7</Version>
     <AssemblyName>Senparc.Xncf.SenMapic</AssemblyName>
     <RootNamespace>Senparc.Xncf.SenMapic</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -49,6 +49,7 @@
       2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
       3、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
       4、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+      [2026-08-13] v0.4.3-preview7 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

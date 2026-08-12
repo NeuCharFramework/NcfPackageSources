@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.6</Version>
+    <Version>0.0.7</Version>
     <PackageReleaseNotes>
 [2026-07-07] v0.0.1 Dependency updates from upstream modules
 1、Dependency update from Senparc.Areas.Admin to 0.0.5
@@ -17,6 +17,9 @@
 [2026-08-08] v0.0.6 补充 Host 实时指标与纽铃示例测试
 1、覆盖 HostMetricsCollector 指标采集与首页指标面板相关行为
 2、覆盖 NeuBellTestProvider 示例提醒的可用性与执行路径
+[2026-08-13] v0.0.7 扩充后台模块、A2A、工作流和线程行为测试覆盖
+1、覆盖 NeuCharPivot、NeuCharWorkflow、A2A 管理及 UI 行为变更
+2、补充线程取消、参数归一化与管理认证场景测试
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -52,6 +55,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
     <ProjectReference Include="..\..\..\..\src\Basic\Senparc.Ncf.UnitTestExtension\Senparc.Ncf.UnitTestExtension.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Extensions\Senparc.Xncf.NeuCharWorkflow\Senparc.Xncf.NeuCharWorkflow.csproj" />
   </ItemGroup>
 
 </Project>

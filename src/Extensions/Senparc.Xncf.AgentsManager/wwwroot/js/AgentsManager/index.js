@@ -17,6 +17,9 @@ var app = new Vue({
       // 显隐 visible
       visible: {
         drawerAgent: false, // 智能体 新增|编辑
+        drawerRemoteAgent: false, // 远程 A2A 智能体管理
+        dialogRemoteAgentEditor: false, // 远程 A2A 智能体新增|编辑
+        dialogPublishedA2A: false, // 将本地 Agent 发布为 A2A 服务
         dialogGroupAgent: false, // 智能体 新增dialog
         drawerGroup: false, // 组 新增|编辑
         drawerGroupStart: false, // 组 启动 
@@ -100,6 +103,50 @@ var app = new Vue({
         }
       ],
       agentList: [],
+      remoteAgentQueryList: {
+        pageIndex: 0,
+        pageSize: 0,
+        filter: '',
+      },
+      remoteAgentList: [],
+      remoteAgentBatchTesting: false,
+      remoteAgentTestingIds: {},
+      remoteAgentForm: {
+        id: 0,
+        name: '',
+        description: '',
+        enable: true,
+        protocol: 0,
+        agentCardUrl: '',
+        authenticationMode: 0,
+        authHeaderName: '',
+        authSecretKey: '',
+        timeoutSeconds: 60,
+      },
+      remoteAgentFormRules: {
+        name: [{ required: true, message: '请填写远程智能体名称', trigger: 'blur' }],
+        agentCardUrl: [{ required: true, message: '请填写 A2A Agent Card 地址', trigger: 'blur' }]
+      },
+      publishedA2AForm: {
+        id: 0,
+        agentTemplateId: 0,
+        publicAgentKey: '',
+        enable: false,
+        cardName: '',
+        cardDescription: '',
+        skillId: 'chat',
+        skillName: '',
+        skillDescription: '',
+        allowFunctionCalls: false,
+        maxInputCharacters: 12000,
+        authenticationMode: 0,
+        authHeaderName: '',
+        authSecretKey: '',
+        agentCardUrl: ''
+      },
+      publishedA2AFormRules: {
+        publicAgentKey: [{ required: true, message: '请填写公开标识', trigger: 'blur' }]
+      },
       knowledgeBaseOptions: [],
       fillCardNum: 0, // 为了保持最后一行的样式 填充的card数量
       agentListElResizeObserver: null,
@@ -229,6 +276,13 @@ var app = new Vue({
       isGetGroupAgent: false,
       groupAgentList: [], // 组新增时的智能体列表
       groupAgentTotal: 0,
+      isGetGroupRemoteAgent: false,
+      groupRemoteAgentList: [],
+      groupRemoteAgentQueryList: {
+        pageIndex: 0,
+        pageSize: 0,
+        filter: '',
+      },
       // 组 ---end
       // 任务 task ---start
       taskQueryList: {
@@ -282,7 +336,7 @@ var app = new Vue({
       // 任务 task ---end
       // 智能体 新增|编辑
       agentForm: {
-        id: 0, // 0 是新增 
+        id: 0, // 0 是新增
         name: '', // 名称
         systemMessageType: '1',
         systemMessage: '', // 
@@ -295,6 +349,8 @@ var app = new Vue({
         mcpEndpoints: '', // MCP Endpoints
         knowledgeBaseId: null, // 绑定的知识库
       },
+      // 编辑现有智能体时，等待 PromptRange 候选项返回后再确定“自选”或“手动”。
+      agentSystemMessageTypeDetectionPending: false,
       agentFormRules: {
         name: [
           { required: true, message: '请填写', trigger: 'blur' },
@@ -320,9 +376,12 @@ var app = new Vue({
       },
       // 组 新增|编辑
       groupForm: {
+        enable: true, // 新建组默认启用
         name: '', // 名称
         members: [], // 成员列表
+        remoteMembers: [], // 远程 A2A 成员列表
         description: '', // 说明
+        contextSharingMode: null, // null 时本地群沿用旧行为，远程成员默认最小化共享
         adminAgentTemplateId: '', // 群主即agent
         enterAgentTemplateId: '' // 对接人即agent
       },
@@ -353,6 +412,10 @@ var app = new Vue({
         personality: true, // 是否采用个性化
         description: ''
       },
+      groupStartParticipants: [],
+      groupStartParticipantLoading: false,
+      groupStartPromptCaretStart: 0,
+      groupStartPromptCaretEnd: 0,
       groupStartFormRules: {
         chatGroupId: [
           { required: true, message: '请填写', trigger: 'blur' },
@@ -421,6 +484,7 @@ var app = new Vue({
       functionCallTags: [], // 用于编辑时临时存储标签
       pluginTypes: [], // 存储所有可用的插件类型
       agentAutoAttachXncf: false, // 是否自动附加所有 XNCF 功能插件
+      editorFormInitialSnapshots: {}, // 打开编辑器时的表单快照，用于避免无变更时仍二次确认
       // MCP Endpoints相关
       mcpEndpointInputVisible: false,
       mcpEndpointNameValue: '',
@@ -429,6 +493,13 @@ var app = new Vue({
       mcpEndpointOriginalName: '',
       currentMcpTools: [], // 当前查看的MCP工具列表
       agentListViewMode: 'panel',
+      agentStatisticMetric: 'totalTokens',
+      agentStatisticMetricOptions: [
+        { value: 'totalTokens', label: 'Token 消耗', unit: 'Token' },
+        { value: 'completedConversationRounds', label: '完成对话轮数', unit: '轮' },
+        { value: 'chattingCount', label: '进行中会话', unit: '个' },
+        { value: 'score', label: '评分', unit: '分' }
+      ],
       agentGraphSnapshot: {
         agents: [],
         groups: [],
@@ -476,6 +547,39 @@ var app = new Vue({
         console.error('Failed to parse mcpEndpoints:', e);
         return {};
       }
+    },
+    agentStatisticMetricOption() {
+      return this.agentStatisticMetricOptions.find(item => item.value === this.agentStatisticMetric)
+        || this.agentStatisticMetricOptions[0]
+    },
+    agentStatisticMetricLabel() {
+      return this.agentStatisticMetricOption.label
+    },
+    agentStatisticMetricUnit() {
+      return this.agentStatisticMetricOption.unit
+    },
+    agentStatisticMetricTotal() {
+      return (this.agentList || []).reduce((total, agent) => total + this.getAgentStatisticMetricValue(agent), 0)
+    },
+    agentStatisticTiles() {
+      const agents = this.agentList || []
+      const values = agents.map(agent => this.getAgentStatisticMetricValue(agent))
+      const maxValue = Math.max(0, ...values)
+
+      return agents
+        .map(agent => {
+          const value = this.getAgentStatisticMetricValue(agent)
+          // 使用平方根缩放，保留大用量的面积差异，同时避免少数极大值吞没整个图面。
+          const ratio = maxValue > 0 ? Math.sqrt(value / maxValue) : 0
+          const span = Math.max(2, Math.min(6, Math.round(2 + ratio * 4)))
+          return {
+            agent,
+            value,
+            span,
+            title: `${agent.name || '未命名智能体'}：${this.agentStatisticMetricLabel} ${this.formatAgentStatisticValue(value)} ${this.agentStatisticMetricUnit}。点击编辑。`
+          }
+        })
+        .sort((left, right) => right.value - left.value || String(left.agent.name || '').localeCompare(String(right.agent.name || '')))
     },
     agentGraphGroupOptions() {
       return (this.agentGraphSnapshot.groups || []).map(item => ({
@@ -642,6 +746,33 @@ var app = new Vue({
       const pad = n => String(n).padStart(2, '0')
       return pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds())
     },
+    getAgentStatisticMetricValue(agent) {
+      const value = Number(agent?.[this.agentStatisticMetric] || 0)
+      return Number.isFinite(value) && value > 0 ? value : 0
+    },
+    formatAgentStatisticValue(value) {
+      const numeric = Number(value || 0)
+      if (!Number.isFinite(numeric)) return '0'
+      if (this.agentStatisticMetric === 'score') {
+        return numeric.toLocaleString('en-US', { maximumFractionDigits: 1 })
+      }
+      return this.formatUsageCount(numeric)
+    },
+    agentStatisticTileStyle(tile) {
+      const span = Math.max(2, Number(tile?.span || 2))
+      return {
+        gridColumn: `span ${span}`,
+        gridRow: `span ${span}`
+      }
+    },
+    async refreshAgentStatistics() {
+      await this.getAgentListData('agent')
+      this.$message.success('统计数据已刷新')
+    },
+    handleAgentStatisticTileClick(agent) {
+      if (!agent) return
+      this.handleEditDrawerOpenBtn('drawerAgent', agent)
+    },
     parseHashRoute() {
       const raw = (window.location.hash || '').replace(/^#/, '')
       const route = {
@@ -649,7 +780,8 @@ var app = new Vue({
         view: '',
         agentId: null,
         groupId: null,
-        taskId: null
+        taskId: null,
+        remoteAgentId: null
       }
       if (!raw) {
         return route
@@ -660,6 +792,7 @@ var app = new Vue({
       route.agentId = Number(params.get('agentId') || 0) || null
       route.groupId = Number(params.get('groupId') || 0) || null
       route.taskId = Number(params.get('taskId') || 0) || null
+      route.remoteAgentId = Number(params.get('remoteAgentId') || 0) || null
       return route
     },
     setHashRoute(route) {
@@ -682,6 +815,9 @@ var app = new Vue({
       if (route.taskId) {
         params.set('taskId', String(route.taskId))
       }
+      if (route.remoteAgentId) {
+        params.set('remoteAgentId', String(route.remoteAgentId))
+      }
       const nextHash = params.toString()
       if ((window.location.hash || '').replace(/^#/, '') === nextHash) {
         return
@@ -693,8 +829,8 @@ var app = new Vue({
         tab: this.tabsActiveName || 'first'
       }
       if (route.tab === 'first') {
-        if (this.agentListViewMode === 'three') {
-          route.view = 'three'
+        if (['three', 'stats'].includes(this.agentListViewMode)) {
+          route.view = this.agentListViewMode
         }
         if (this.scrollbarAgentIndex) {
           route.agentId = this.scrollbarAgentIndex
@@ -730,12 +866,24 @@ var app = new Vue({
         return
       }
       const route = this.parseHashRoute()
-      if (!route.tab && !route.groupId && !route.taskId && !route.agentId) {
+      if (!route.tab && !route.groupId && !route.taskId && !route.agentId && !route.remoteAgentId) {
         return
       }
 
       this.isApplyingHashRoute = true
       try {
+        if (route.tab === 'remoteA2A') {
+          this.visible.drawerRemoteAgent = true
+          await this.getRemoteAgentListData()
+          if (route.view === 'edit' && route.remoteAgentId) {
+            const remoteAgent = (this.remoteAgentList || []).find(item => item.id === route.remoteAgentId)
+            if (remoteAgent) {
+              this.openRemoteAgentEditor(remoteAgent)
+            }
+          }
+          return
+        }
+
         const tab = ['first', 'second', 'third'].includes(route.tab) ? route.tab : 'first'
         if (this.tabsActiveName !== tab) {
           this.tabsActiveName = tab
@@ -743,8 +891,16 @@ var app = new Vue({
         }
 
         if (tab === 'first') {
-          if (route.view === 'three') {
-            this.handleAgentListViewModeChange('three', true)
+          if (route.view === 'edit' && route.agentId) {
+            await this.getAgentListData('agent')
+            const editAgent = (this.agentList || []).find(item => item.id === route.agentId)
+            if (editAgent) {
+              await this.handleEditDrawerOpenBtn('drawerAgent', editAgent)
+            }
+            return
+          }
+          if (['three', 'stats'].includes(route.view)) {
+            this.handleAgentListViewModeChange(route.view, true)
           }
           if (route.agentId) {
             await this.getAgentListData('agent')
@@ -758,6 +914,13 @@ var app = new Vue({
 
         if (tab === 'second') {
           await this.getGroupListData('group')
+          if (route.view === 'edit' && route.groupId) {
+            const editGroup = (this.groupList || []).find(item => item.id === route.groupId)
+            if (editGroup) {
+              await this.handleEditDrawerOpenBtn('drawerGroup', editGroup)
+            }
+            return
+          }
           if (route.groupId) {
             const groupItem = (this.groupList || []).find(item => item.id === route.groupId)
             if (groupItem) {
@@ -831,10 +994,10 @@ var app = new Vue({
         return ''
       }
       return JSON.stringify({
-        agents: (snapshot.agents || []).map(item => [item.id, item.chattingCount, item.score, item.enable]),
-        groups: (snapshot.groups || []).map(item => [item.id, item.runningTaskCount, item.state, item.taskStatusCounts]),
-        links: (snapshot.links || []).map(item => [item.groupId, item.agentId]),
-        collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.agentIds])
+        agents: (snapshot.agents || []).map(item => [item.participantKey || `local:${item.id}`, item.chattingCount, item.score, item.enable, item.agentKind, item.connectionStatus]),
+        groups: (snapshot.groups || []).map(item => [item.id, item.enable, item.runningTaskCount, item.state, item.taskStatusCounts]),
+        links: (snapshot.links || []).map(item => [item.groupId, item.participantKey || `local:${item.agentId}`]),
+        collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.participantKeys || item.agentIds])
       })
     },
     buildFilteredAgentGraphSnapshot(snapshot) {
@@ -868,7 +1031,7 @@ var app = new Vue({
 
       const groupIdSet = new Set(filteredGroups.map(item => item.id))
       const filteredLinks = allLinks.filter(item => groupIdSet.has(item.groupId))
-      const agentIdSet = new Set(filteredLinks.map(item => item.agentId))
+      const participantKeySet = new Set(filteredLinks.map(item => item.participantKey || `local:${item.agentId}`))
 
       const hasExplicitGroupConstraint = Boolean(selectedGroupId)
         || this.agentGraphShowOnlyActiveGroup
@@ -876,7 +1039,7 @@ var app = new Vue({
 
       // Keep ungrouped agents visible when there is no explicit group/status constraint.
       const filteredAgents = hasExplicitGroupConstraint
-        ? allAgents.filter(item => agentIdSet.has(item.id))
+        ? allAgents.filter(item => participantKeySet.has(item.participantKey || `local:${item.id}`))
         : allAgents
 
       const filteredCollaborations = allCollaborations.filter(item => {
@@ -908,7 +1071,10 @@ var app = new Vue({
     handleAgentListViewModeChange(mode, fromHash = false) {
       if (!fromHash && !this.isApplyingHashRoute) {
         this.agentListViewMode = mode || 'panel'
-        this.navigateByHash(this.buildCurrentRoute({ tab: 'first', view: this.agentListViewMode === 'three' ? 'three' : null }))
+        this.navigateByHash(this.buildCurrentRoute({
+          tab: 'first',
+          view: ['three', 'stats'].includes(this.agentListViewMode) ? this.agentListViewMode : null
+        }))
         return
       }
       this.agentListViewMode = mode || 'panel'
@@ -922,7 +1088,10 @@ var app = new Vue({
         this.stopAgentGraphPolling()
         this.destroyAgentGraph3d()
       }
-      this.syncHashRoute({ tab: 'first', view: this.agentListViewMode === 'three' ? 'three' : null })
+      this.syncHashRoute({
+        tab: 'first',
+        view: ['three', 'stats'].includes(this.agentListViewMode) ? this.agentListViewMode : null
+      })
     },
     ensureAgentGraph3d() {
       if (!this.$refs.agent3dContainer || typeof AgentGraph3D === 'undefined') {
@@ -1019,7 +1188,9 @@ var app = new Vue({
         return
       }
 
-      const graphAgentMap = new Map(graphAgents.map(item => [item.id, item]))
+      const graphAgentMap = new Map(graphAgents
+        .filter(item => !item.agentKind || item.agentKind === 'Local')
+        .map(item => [item.id, item]))
       const mergedList = this.agentList.map(item => {
         const graph = graphAgentMap.get(item.id)
         if (!graph) {
@@ -1146,6 +1317,376 @@ var app = new Vue({
         5: '#F56C6C'
       }
       return statusColorMap[Number(status)] || '#C0C4CC'
+    },
+    remoteConnectionStatusText(status) {
+      const statusMap = { 0: '未检测', 1: '可用', 2: '不可用' }
+      return statusMap[Number(status)] || '未检测'
+    },
+    remoteConnectionStatusType(status) {
+      const statusTypeMap = { 0: 'info', 1: 'success', 2: 'danger' }
+      return statusTypeMap[Number(status)] || 'info'
+    },
+    remoteParticipantAvailabilityText(participant) {
+      if (!participant?.enable) return '已停用'
+      return this.remoteConnectionStatusText(participant.connectionStatus)
+    },
+    remoteParticipantAvailabilityType(participant) {
+      if (!participant?.enable) return 'info'
+      return this.remoteConnectionStatusType(participant.connectionStatus)
+    },
+    isRemoteAgentTesting(remoteAgentId) {
+      return !!this.remoteAgentTestingIds?.[Number(remoteAgentId)]
+    },
+    setRemoteAgentTesting(remoteAgentIds, testing) {
+      ;(remoteAgentIds || []).forEach(remoteAgentId => {
+        const id = Number(remoteAgentId)
+        if (id > 0) this.$set(this.remoteAgentTestingIds, id, testing)
+      })
+    },
+    applyRemoteConnectionResults(results) {
+      const resultById = new Map((results || [])
+        .filter(result => Number(result?.remoteAgentId) > 0)
+        .map(result => [Number(result.remoteAgentId), result]))
+      if (!resultById.size) return
+
+      const updateRemoteAgent = remoteAgent => {
+        const remoteAgentId = Number(remoteAgent?.id || remoteAgent?.remoteAgentId || 0)
+        const result = resultById.get(remoteAgentId)
+        if (!remoteAgent || !result) return
+        Object.assign(remoteAgent, result.remoteAgentDto || {})
+        if (result.remoteAgentDto?.connectionStatus === undefined) {
+          remoteAgent.connectionStatus = result.success ? 1 : 2
+          remoteAgent.lastHealthCheckMessage = result.message || ''
+        }
+      }
+      const updateParticipantList = participantList => {
+        ;(participantList || []).forEach(participant => {
+          if (participant?.agentKind === 'RemoteA2A') updateRemoteAgent(participant)
+        })
+      }
+      const updateGroupDetail = groupDetail => {
+        ;(groupDetail?.remoteMemberDtoList || []).forEach(member => updateRemoteAgent(member?.remoteAgentDto))
+      }
+
+      ;[this.remoteAgentList, this.groupRemoteAgentList, this.groupForm?.remoteMembers]
+        .forEach(remoteAgentList => (remoteAgentList || []).forEach(updateRemoteAgent))
+      updateParticipantList(this.groupStartParticipants)
+      updateParticipantList(this.taskMemberList)
+      updateParticipantList(this.agentDetailsTaskMemberList)
+      updateGroupDetail(this.groupDetails)
+      updateGroupDetail(this.agentDetailsGroupDetails)
+    },
+    async testRemoteAgentConnections(remoteAgentIds, options = {}) {
+      const requestedIds = [...new Set((remoteAgentIds || []).map(Number).filter(id => id > 0))]
+      const testAll = options.testAll === true
+      if (!testAll && requestedIds.length === 0) return []
+
+      const loadingIds = testAll
+        ? (this.remoteAgentList || []).map(item => item.id)
+        : requestedIds
+      if (testAll) this.remoteAgentBatchTesting = true
+      this.setRemoteAgentTesting(loadingIds, true)
+      try {
+        const response = await serviceAM.post(
+          '/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.TestConnections',
+          { remoteAgentIds: testAll ? [] : requestedIds })
+        const data = response?.data ?? {}
+        if (!data.success) throw new Error(data.errorMessage || data.data || '连接测试失败')
+
+        const results = data?.data?.results ?? []
+        this.applyRemoteConnectionResults(results)
+        if (options.refreshLists) {
+          await this.getRemoteAgentListData()
+          if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
+        }
+        return results
+      } catch (err) {
+        if (!options.silent) this.$message.error(err?.message || '连接测试失败')
+        throw err
+      } finally {
+        this.setRemoteAgentTesting(loadingIds, false)
+        if (testAll) this.remoteAgentBatchTesting = false
+      }
+    },
+    showRemoteAgentTestSummary(results) {
+      const failedResults = (results || []).filter(result => !result.success)
+      if (!results?.length) {
+        this.$message.warning('没有可测试的远程 A2A 智能体')
+        return
+      }
+      if (!failedResults.length) {
+        this.$message.success(`全部通过：${results.length} 个远程 A2A 智能体均可用`)
+        return
+      }
+      const failedLines = failedResults.map(result => `${result.name || `#${result.remoteAgentId}`}：${result.message || '不可用'}`)
+      this.$alert(`通过 ${results.length - failedResults.length} 个，未通过 ${failedResults.length} 个。\n\n${failedLines.join('\n')}`,
+        '远程 A2A 批量测试结果', { type: 'warning', confirmButtonText: '知道了' })
+    },
+    async getRemoteAgentListData(listType = 'remoteAgent') {
+      const query = listType === 'groupRemoteAgent'
+        ? { ...this.groupRemoteAgentQueryList }
+        : { ...this.remoteAgentQueryList }
+      try {
+        const response = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.GetList?${getInterfaceQueryStr(query)}`)
+        const data = response?.data ?? {}
+        if (!data.success) {
+          throw new Error(data.errorMessage || data.data || '加载远程 A2A 智能体失败')
+        }
+
+        const list = data?.data?.list ?? []
+        if (listType === 'groupRemoteAgent') {
+          this.$set(this, 'groupRemoteAgentList', list)
+          this.$nextTick(() => {
+            this.isGetGroupRemoteAgent = false
+            if (!this.visible.drawerGroup || !this.groupForm.remoteMembers?.length) return
+            const selected = list.filter(item => this.groupForm.remoteMembers.some(member => member.id === item.id))
+            this.toggleRemoteSelection(selected)
+          })
+        } else {
+          this.$set(this, 'remoteAgentList', list)
+        }
+      } catch (err) {
+        console.log('getRemoteAgentListData', err)
+        this.$message.error(err?.message || '加载远程 A2A 智能体失败')
+      }
+    },
+    openRemoteAgentManager() {
+      this.visible.drawerRemoteAgent = true
+      this.getRemoteAgentListData()
+    },
+    async openPublishedA2AEditor(item) {
+      const agent = item?.agentTemplateDto || item || this.agentForm
+      const agentTemplateId = Number(agent?.id || agent?.agentTemplateId || 0)
+      if (!agentTemplateId) {
+        this.$message.warning('请先保存本地智能体，再配置 A2A 对外发布')
+        return
+      }
+
+      const defaults = this.$options.data().publishedA2AForm
+      try {
+        const response = await serviceAM.get(
+          `/api/Senparc.Xncf.AgentsManager/PublishedA2AAgentAppService/Xncf.AgentsManager_PublishedA2AAgentAppService.GetByAgentTemplateId?agentTemplateId=${agentTemplateId}`)
+        const data = response?.data ?? {}
+        if (!data.success) throw new Error(data.errorMessage || data.data || '加载 A2A 发布配置失败')
+        const existed = data.data || {}
+        this.$set(this, 'publishedA2AForm', {
+          ...defaults,
+          ...existed,
+          agentTemplateId,
+          publicAgentKey: existed.publicAgentKey || `agent-${agentTemplateId}`,
+          cardName: existed.cardName || agent.name || '',
+          cardDescription: existed.cardDescription || agent.description || ''
+        })
+        this.visible.dialogPublishedA2A = true
+        this.$nextTick(() => this.$refs.publishedA2AELForm?.clearValidate())
+      } catch (err) {
+        this.$message.error(err?.message || '加载 A2A 发布配置失败')
+      }
+    },
+    closePublishedA2AEditor() {
+      this.visible.dialogPublishedA2A = false
+      this.$set(this, 'publishedA2AForm', this.$options.data().publishedA2AForm)
+    },
+    async savePublishedA2A() {
+      this.$refs.publishedA2AELForm.validate(async (valid) => {
+        if (!valid) return
+
+        if (this.publishedA2AForm.enable) {
+          const riskItems = [
+            '外部系统调用后，输入及 Agent 的正常回复都会跨越本系统边界；请确认 Prompt、知识库和回复内容可对外共享。',
+            '每次调用可能产生模型与工具成本；请在 HTTPS 网关配置访问控制、限流、监控和告警。'
+          ]
+          if (this.publishedA2AForm.authenticationMode === 0) {
+            riskItems.push('当前未启用入站鉴权。仅可用于隔离、受控网络；不可直接暴露到公网。')
+          }
+          if (this.publishedA2AForm.allowFunctionCalls) {
+            riskItems.push('已允许本地 Function / MCP 工具调用。外部输入可能间接触发读写或外部访问，请确认工具权限最小化。')
+          }
+
+          try {
+            await this.$confirm(
+              `<div>启用后，此本地 Agent 将作为标准 A2A 服务接受外部调用。</div><ul style="padding-left:20px;margin:10px 0 0;"><li>${riskItems.join('</li><li>')}</li></ul>`,
+              '确认启用 A2A 对外服务',
+              {
+                type: 'warning',
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '我已知悉并保存',
+                cancelButtonText: '取消'
+              })
+          } catch (_) {
+            return
+          }
+        }
+
+        try {
+          const response = await serviceAM.post(
+            '/api/Senparc.Xncf.AgentsManager/PublishedA2AAgentAppService/Xncf.AgentsManager_PublishedA2AAgentAppService.SetPublishedAgent',
+            this.publishedA2AForm)
+          const data = response?.data ?? {}
+          if (!data.success) throw new Error(data.errorMessage || data.data || '保存失败')
+          this.$set(this, 'publishedA2AForm', { ...this.publishedA2AForm, ...(data.data || {}) })
+          await this.getAgentListData('agent')
+          this.$message.success(this.publishedA2AForm.enable ? '本地 Agent 已发布为 A2A 服务' : 'A2A 发布配置已保存（当前未启用）')
+        } catch (err) {
+          this.$message.error(err?.message || '保存 A2A 发布配置失败')
+        }
+      })
+    },
+    async copyPublishedA2AUrl() {
+      const url = this.publishedA2AForm.agentCardUrl
+      if (!url) return
+      try {
+        await navigator.clipboard.writeText(url)
+        this.$message.success('A2A Agent Card 地址已复制')
+      } catch (err) {
+        this.$message.warning('复制失败，请手动复制地址')
+      }
+    },
+    openRemoteAgentEditor(item = null) {
+      const defaults = this.$options.data().remoteAgentForm
+      this.$set(this, 'remoteAgentForm', { ...defaults, ...(item || {}) })
+      this.visible.dialogRemoteAgentEditor = true
+    },
+    closeRemoteAgentEditor() {
+      this.visible.dialogRemoteAgentEditor = false
+      this.$set(this, 'remoteAgentForm', this.$options.data().remoteAgentForm)
+      this.$nextTick(() => this.$refs.remoteAgentELForm?.clearValidate())
+    },
+    async saveRemoteAgent() {
+      this.$refs.remoteAgentELForm.validate(async (valid) => {
+        if (!valid) return
+        try {
+          const response = await serviceAM.post(
+            '/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.SetRemoteAgent',
+            this.remoteAgentForm)
+          const data = response?.data ?? {}
+          if (!data.success) throw new Error(data.errorMessage || data.data || '保存失败')
+          this.$message.success('远程 A2A 智能体已保存')
+          this.closeRemoteAgentEditor()
+          await this.getRemoteAgentListData()
+          if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
+        } catch (err) {
+          this.$message.error(err?.message || '保存远程 A2A 智能体失败')
+        }
+      })
+    },
+    async testRemoteAgent(item) {
+      try {
+        const results = await this.testRemoteAgentConnections([item?.id], { silent: true, refreshLists: true })
+        const result = results[0]
+        if (!result?.success) {
+          this.$message.error(result?.message || '连接测试失败')
+          return
+        }
+        this.$message.success(result.message || 'A2A Agent Card 连接成功')
+      } catch (err) {
+        this.$message.error(err?.message || '连接测试失败')
+      }
+    },
+    async testAllRemoteAgents() {
+      try {
+        const results = await this.testRemoteAgentConnections([], { testAll: true, silent: true, refreshLists: true })
+        this.showRemoteAgentTestSummary(results)
+      } catch (err) {
+        this.$message.error(err?.message || '批量连接测试失败')
+      }
+    },
+    async autoTestRemoteParticipants(participants) {
+      const remoteAgentIds = (participants || [])
+        .filter(participant => participant?.agentKind === 'RemoteA2A')
+        .map(participant => participant.id)
+      if (!remoteAgentIds.length) return []
+
+      try {
+        const results = await this.testRemoteAgentConnections(remoteAgentIds, { silent: true })
+        const failedCount = results.filter(result => !result.success).length
+        if (failedCount) {
+          this.$message.warning(`${failedCount} 个远程 A2A 智能体当前不可用，可在成员列表中手动重测`)
+        }
+        return results
+      } catch (err) {
+        console.warn('autoTestRemoteParticipants failed', err)
+        return []
+      }
+    },
+    async testGroupStartRemoteAgent(participant) {
+      try {
+        const results = await this.testRemoteAgentConnections([participant?.id], { silent: true })
+        const result = results[0]
+        if (result?.success) {
+          this.$message.success(result.message || 'A2A Agent Card 连接成功')
+        } else {
+          this.$message.error(result?.message || '连接测试失败')
+        }
+      } catch (err) {
+        this.$message.error(err?.message || '连接测试失败')
+      }
+    },
+    async testTaskRemoteAgent(participant) {
+      try {
+        const results = await this.testRemoteAgentConnections([participant?.id], { silent: true })
+        const result = results[0]
+        if (result?.success) {
+          this.$message.success(result.message || 'A2A Agent Card 连接成功')
+        } else {
+          this.$message.error(result?.message || '连接测试失败')
+        }
+      } catch (err) {
+        this.$message.error(err?.message || '连接测试失败')
+      }
+    },
+    async setRemoteAgentEnable(item, enable) {
+      try {
+        const response = await serviceAM.post(
+          `/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.Enable?id=${item.id}&enable=${enable}`,
+          {})
+        const data = response?.data ?? {}
+        if (!data.success) throw new Error(data.errorMessage || data.data || '状态更新失败')
+        this.$message.success(data.data || '状态已更新')
+        await this.getRemoteAgentListData()
+        if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
+      } catch (err) {
+        this.$message.error(err?.message || '状态更新失败')
+      }
+    },
+    deleteRemoteAgent(item) {
+      this.$confirm(`确认删除远程 A2A 智能体“${item.name}”？已加入群组的智能体不可删除。`, '删除确认', { type: 'warning' })
+        .then(async () => {
+          try {
+            const response = await serviceAM.post(
+              `/api/Senparc.Xncf.AgentsManager/RemoteAgentAppService/Xncf.AgentsManager_RemoteAgentAppService.Delete?id=${item.id}`,
+              {})
+            const data = response?.data ?? {}
+            if (!data.success) throw new Error(data.errorMessage || data.data || '删除失败')
+            this.$message.success(data.data || '已删除')
+            await this.getRemoteAgentListData()
+            if (this.visible.drawerGroup) await this.getRemoteAgentListData('groupRemoteAgent')
+          } catch (err) {
+            this.$message.error(err?.message || '删除失败')
+          }
+        })
+        .catch(() => { })
+    },
+    toggleRemoteSelection(rows) {
+      if (rows) {
+        rows.forEach(row => this.$refs?.groupRemoteAgentTable?.toggleRowSelection(row))
+      } else {
+        this.$refs?.groupRemoteAgentTable?.clearSelection()
+      }
+    },
+    handleRemoteSelectionChange(val) {
+      if (this.isGetGroupRemoteAgent) return
+      const selectedIds = new Set((val || []).map(item => item.id))
+      const visibleIds = new Set((this.groupRemoteAgentList || []).map(item => item.id))
+      const retained = (this.groupForm.remoteMembers || []).filter(item => !visibleIds.has(item.id))
+      const selected = (this.groupRemoteAgentList || []).filter(item => selectedIds.has(item.id))
+      this.$set(this.groupForm, 'remoteMembers', [...retained, ...selected])
+    },
+    groupRemoteMembersCancel(item) {
+      const index = this.groupForm.remoteMembers.findIndex(member => member.id === item.id)
+      if (index !== -1) this.groupForm.remoteMembers.splice(index, 1)
+      const row = this.groupRemoteAgentList.find(agent => agent.id === item.id)
+      if (row) this.toggleRemoteSelection([row])
     },
     // 获取 智能体 数据
     async getAgentListData(listType, page = 0) {
@@ -1695,7 +2236,7 @@ var app = new Vue({
         return
       }
       await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetItem?id=${id}`)
-        .then(res => {
+        .then(async res => {
           const data = res?.data ?? {}
           if (data.success) {
             // 不是仅详情时 清除轮询
@@ -1730,10 +2271,9 @@ var app = new Vue({
               if (detailType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupTaskHistoryList', [])
               if (detailType === 'groupTask') this.$set(this, 'groupTaskHistoryList', [])
 
-              if (['task', 'agentTask'].includes(detailType)) {
-                // 获取任务成员列表
-                this.getTaskMemberListData(detailType, taskDetail.chatGroupId)
-              }
+              // 打开任务详情时检测一次远程 A2A 成员；后续仅由用户手动触发重测。
+              const taskMemberList = await this.getTaskMemberListData(detailType, taskDetail.chatGroupId)
+              await this.autoTestRemoteParticipants(taskMemberList)
               // 首次获取历史 + 开启实时流
               this.getTaskRecordListData(detailType, taskDetail.id, '', true)
               this.startTaskHistoryStream(detailType, taskDetail.id, taskDetail.status)
@@ -1884,27 +2424,32 @@ var app = new Vue({
     },
     // 获取 任务 成员列表
     async getTaskMemberListData(memberType, chatGroupld) {
-      await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${chatGroupld}`)
-        .then(res => {
-          const data = res?.data ?? {}
-          if (data.success) {
-            const taskMemberList = data?.data?.agentTemplateDtoList ?? []
-            // 任务
-            if (memberType === 'task') {
-              this.$set(this, 'taskMemberList', taskMemberList)
-            }
-            // 智能体 任务
-            if (memberType === 'agentTask') {
-              this.$set(this, 'agentDetailsTaskMemberList', taskMemberList)
-            }
-          } else {
-            app.$message({
-              message: data.errorMessage || data.data || 'Error',
-              type: 'error',
-              duration: 5 * 1000
-            })
-          }
+      try {
+        const res = await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${chatGroupld}`)
+        const data = res?.data ?? {}
+        if (!data.success) {
+          throw new Error(data.errorMessage || data.data || '加载任务成员失败')
+        }
+
+        const groupDetail = data?.data ?? {}
+        const taskMemberList = this.getGroupParticipantList(groupDetail)
+        // 任务
+        if (memberType === 'task') {
+          this.$set(this, 'taskMemberList', taskMemberList)
+        }
+        // 智能体 任务
+        if (memberType === 'agentTask') {
+          this.$set(this, 'agentDetailsTaskMemberList', taskMemberList)
+        }
+        return taskMemberList
+      } catch (err) {
+        app.$message({
+          message: err?.message || '加载任务成员失败',
+          type: 'error',
+          duration: 5 * 1000
         })
+        return []
+      }
     },
     openUsageAnalytics(detailType, taskDetail) {
       if (!taskDetail || !taskDetail.id) return
@@ -2130,11 +2675,11 @@ var app = new Vue({
       // 组 新增|编辑
       if (saveType === 'drawerGroup') {
         serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.SetChatGroup'
-        if (serviceForm.members) {
-          const membersIds = serviceForm.members.map(item => item.id)
-          serviceForm.memberAgentTemplateIds = membersIds
-          serviceURL += `?${getInterfaceQueryStr({ memberAgentTemplateIds: membersIds })}`
-        }
+        const memberAgentTemplateIds = (serviceForm.members || []).map(item => item.id)
+        const remoteAgentIds = (serviceForm.remoteMembers || []).map(item => item.id)
+        serviceForm.memberAgentTemplateIds = memberAgentTemplateIds
+        serviceForm.remoteAgentIds = remoteAgentIds
+        serviceURL += `?${getInterfaceQueryStr({ memberAgentTemplateIds, remoteAgentIds })}`
       }
       // 组启动（运行任务） ['drawerGroupStart', 'drawerTaskStart'].includes(btnType)
       if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
@@ -2159,6 +2704,8 @@ var app = new Vue({
             formName = 'groupForm'
             // 重置 组获取智能体query
             this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
+            this.$set(this, 'groupRemoteAgentQueryList', this.$options.data().groupRemoteAgentQueryList)
+            this.groupRemoteAgentList = []
           }
           // 组 启动
           if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
@@ -2177,8 +2724,12 @@ var app = new Vue({
           if (refName) {
             this.$refs[refName].resetFields();
           }
+          if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
+            this.agentSystemMessageTypeDetectionPending = false
+          }
+          delete this.editorFormInitialSnapshots[this.getEditorVisibleKey(saveType)]
           this.$nextTick(() => {
-            this.visible[saveType] = false
+            this.visible[this.getEditorVisibleKey(saveType)] = false
           })
           // 重新获取数据
           if (['drawerGroup', 'drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
@@ -2246,6 +2797,9 @@ var app = new Vue({
               'dialogGroupAgent': 'groupAgent'
             }
             this.getAgentListData(agentMapStr[saveType])
+            if (saveType === 'drawerAgent') {
+              await this.refreshAgentParameterItem(response.data?.data)
+            }
           } else if (saveType === 'dialogTaskEvaluation') {
             // 重新获取任务详情 
             let detail = {}
@@ -2607,13 +3161,16 @@ var app = new Vue({
       const shouldAutoFollow = this.isHistoryNearBottom(this.getHistoryScrollbarRef(listType), false)
       const historyList = this.getHistoryListByType(listType).filter(item => !item || item._generating !== true).slice()
       const existedIndex = historyList.findIndex(item => item.id === draftKey)
-      const agentInfo = this.getTaskSenderInfo(listType, payload.fromAgentTemplateId || 0) || {}
+      const agentInfo = this.getTaskSenderInfo(listType, payload) || {}
       const oldMessage = existedIndex > -1 ? (historyList[existedIndex].message || '') : ''
       const mergedMessage = `${oldMessage}${payload.text || ''}`
 
       const draftItem = {
         id: draftKey,
         fromAgentTemplateId: payload.fromAgentTemplateId || 0,
+        fromParticipantKey: payload.fromParticipantKey || '',
+        fromParticipantKind: payload.fromParticipantKind || '',
+        fromParticipantName: payload.fromAgentName || '',
         addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : new Date().toISOString(),
         message: mergedMessage,
         messageHtml: this.renderSafeMarkdown(mergedMessage || ''),
@@ -2762,7 +3319,7 @@ var app = new Vue({
         formName = 'evaluationForm'
       }
       if (formName) {
-        if (btnType === 'drawerAgent' && item) {
+          if (btnType === 'drawerAgent' && item) {
           console.log('item', item);
           // 创建一个新的对象来存储表单数据
           const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
@@ -2778,25 +3335,22 @@ var app = new Vue({
           console.log('Loaded form data:', formData);
           console.log('functionCallTags:', this.functionCallTags);
 
-        } else if (btnType === 'drawerGroup') {
-          if (item.chatGroupDto) {
-            Object.assign(this[formName], {
-              ...item.chatGroupDto,
-              members: item.agentTemplateDtoList || item.chatGroupMembers || []
-            })
-          } else {
-            await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${item.id}`)
+          } else if (btnType === 'drawerGroup') {
+            // 列表/详情对象字段并不完全一致；始终由专用接口取得本地和远程成员，
+            // 这样编辑既有 Group 时不会误清除已配置的 A2A 成员。
+            const groupId = item.chatGroupDto ? item.chatGroupDto.id : item.id
+            await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${groupId}`)
               .then(res => {
                 const data = res?.data ?? {}
                 if (data.success) {
                   const groupDetail = data?.data ?? {}
                   Object.assign(this[formName], {
                     ...groupDetail.chatGroupDto,
-                    members: groupDetail.agentTemplateDtoList || groupDetail.chatGroupMembers || []
+                    members: groupDetail.agentTemplateDtoList || groupDetail.chatGroupMembers || [],
+                    remoteMembers: (groupDetail.remoteMemberDtoList || []).map(member => member.remoteAgentDto || member)
                   })
                 }
               })
-          }
           // // 获取 全部智能体数据
           // this.getAgentListData('groupAgent')
         } else if (btnType === 'drawerTaskStart') {
@@ -2809,29 +3363,273 @@ var app = new Vue({
         }
         // 回显 表单值
         // this.$set(this, `${formName}`, deepClone(item))
+        if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)
+          && (item?.agentTemplateDto?.id || item?.id)) {
+          // systemMessageType 不是持久化字段。先挂载“自选”控件并完成候选项加载，
+          // 再根据实际是否存在该 PromptCode 判断类型，避免慢网络下被过早判定为“手动”。
+          this.agentSystemMessageTypeDetectionPending = true
+          this.$set(this.agentForm, 'systemMessageType', '1')
+        }
         // 打开 抽屉
         this.handleElVisibleOpenBtn(btnType)
       }
     },
+    buildGroupStartParticipants(groupDetail) {
+      const participants = this.getGroupParticipantList(groupDetail)
+        .filter(participant => participant && participant.name)
+        .map(participant => Object.assign({}, participant, { roles: [] }))
+      const participantByKey = new Map(participants.map(participant => [participant.participantKey, participant]))
+      const chatGroupDto = groupDetail?.chatGroupDto || groupDetail || {}
+      const fallbackRoleAgents = [
+        {
+          roleName: '群主',
+          agentTemplateDto: {
+            id: chatGroupDto.adminAgentTemplateId,
+            name: chatGroupDto.adminAgentTemplateName
+          }
+        },
+        {
+          roleName: '对接人',
+          agentTemplateDto: {
+            id: chatGroupDto.enterAgentTemplateId,
+            name: chatGroupDto.enterAgentTemplateName
+          }
+        }
+      ]
+      const roleAgents = (groupDetail?.roleAgentTemplateDtoList || []).concat(fallbackRoleAgents)
+
+      roleAgents.forEach(role => {
+        const agent = role?.agentTemplateDto
+        const roleName = (role?.roleName || '').trim()
+        if (!agent?.id || !agent?.name || !roleName) return
+
+        const participantKey = `local:${agent.id}`
+        let participant = participantByKey.get(participantKey)
+        if (!participant) {
+          participant = Object.assign({}, agent, {
+            participantKey,
+            agentKind: 'Local',
+            roles: []
+          })
+          participants.push(participant)
+          participantByKey.set(participantKey, participant)
+        }
+        if (!participant.roles.includes(roleName)) {
+          participant.roles.push(roleName)
+        }
+      })
+
+      return participants
+    },
+    async loadGroupStartParticipants(chatGroupId) {
+      const requestedGroupId = Number(chatGroupId || 0)
+      if (!requestedGroupId) return
+
+      this.groupStartParticipantLoading = true
+      try {
+        const response = await serviceAM.post(
+          `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetChatGroupItem?id=${requestedGroupId}`)
+        const data = response?.data ?? {}
+        if (!data.success) {
+          throw new Error(data.errorMessage || data.data || '加载群组成员失败')
+        }
+        if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
+          this.groupStartParticipants = this.buildGroupStartParticipants(data.data || {})
+          await this.autoTestRemoteParticipants(this.groupStartParticipants)
+        }
+      } catch (error) {
+        console.warn('loadGroupStartParticipants failed', error)
+        if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
+          this.$message.warning('无法刷新完整组员列表，当前仅显示已加载的组员')
+        }
+      } finally {
+        if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
+          this.groupStartParticipantLoading = false
+        }
+      }
+    },
+    getGroupStartPromptTextarea() {
+      const input = this.$refs?.groupStartPromptCommand
+      return input?.$refs?.textarea
+        || input?.textarea
+        || input?.$el?.querySelector?.('textarea')
+        || null
+    },
+    rememberGroupStartPromptCaret(event) {
+      const textarea = event?.target?.tagName === 'TEXTAREA'
+        ? event.target
+        : this.getGroupStartPromptTextarea()
+      if (!textarea) return
+
+      this.groupStartPromptCaretStart = Number.isInteger(textarea.selectionStart)
+        ? textarea.selectionStart
+        : (this.groupStartForm.promptCommand || '').length
+      this.groupStartPromptCaretEnd = Number.isInteger(textarea.selectionEnd)
+        ? textarea.selectionEnd
+        : this.groupStartPromptCaretStart
+    },
+    insertGroupStartMention(participant) {
+      const participantName = (participant?.name || '').trim()
+      if (!participantName) return
+
+      const textarea = this.getGroupStartPromptTextarea()
+      const promptCommand = this.groupStartForm.promptCommand || ''
+      const start = Number.isInteger(textarea?.selectionStart)
+        ? textarea.selectionStart
+        : Math.min(this.groupStartPromptCaretStart, promptCommand.length)
+      const end = Number.isInteger(textarea?.selectionEnd)
+        ? textarea.selectionEnd
+        : Math.min(Math.max(start, this.groupStartPromptCaretEnd), promptCommand.length)
+      const before = promptCommand.slice(0, start)
+      const after = promptCommand.slice(end)
+      const prefix = before && !/\s$/.test(before) ? ' ' : ''
+      const suffix = after && !/^\s/.test(after) ? ' ' : ''
+      const mention = `${prefix}@${participantName}${suffix}`
+      const caretPosition = before.length + mention.length
+
+      this.groupStartForm.promptCommand = `${before}${mention}${after}`
+      this.groupStartPromptCaretStart = caretPosition
+      this.groupStartPromptCaretEnd = caretPosition
+      this.$nextTick(() => {
+        const currentTextarea = this.getGroupStartPromptTextarea()
+        currentTextarea?.focus?.()
+        currentTextarea?.setSelectionRange?.(caretPosition, caretPosition)
+      })
+    },
+    getEditorFormName(btnType) {
+      if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) return 'agentForm'
+      if (btnType === 'drawerGroup') return 'groupForm'
+      if (['drawerGroupStart', 'drawerTaskStart'].includes(btnType)) return 'groupStartForm'
+      if (btnType === 'dialogTaskEvaluation') return 'evaluationForm'
+      return ''
+    },
+    getEditorVisibleKey(btnType) {
+      return btnType === 'drawerTaskStart' ? 'drawerGroupStart' : btnType
+    },
+    normalizeEditorSnapshotValue(value, fieldName = '') {
+      if (Array.isArray(value)) {
+        const normalized = value.map(item => this.normalizeEditorSnapshotValue(item))
+        // Group 成员的选择顺序不影响实际保存结果，避免控件回填时造成伪变更。
+        if (['members', 'remoteMembers'].includes(fieldName)) {
+          return normalized.sort((left, right) => {
+            const leftKey = `${left?.id ?? ''}:${left?.name ?? ''}`
+            const rightKey = `${right?.id ?? ''}:${right?.name ?? ''}`
+            return leftKey.localeCompare(rightKey)
+          })
+        }
+        return normalized
+      }
+      if (value && typeof value === 'object') {
+        return Object.keys(value)
+          .sort()
+          .reduce((result, key) => {
+            // 这两个字段在提交时由成员列表派生，不属于用户编辑内容。
+            if (['memberAgentTemplateIds', 'remoteAgentIds'].includes(key)) return result
+            result[key] = this.normalizeEditorSnapshotValue(value[key], key)
+            return result
+          }, {})
+      }
+      return typeof value === 'undefined' ? null : value
+    },
+    buildEditorFormSnapshot(btnType) {
+      const formName = this.getEditorFormName(btnType)
+      if (!formName) return ''
+      const snapshot = { form: this[formName] || {} }
+      if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
+        snapshot.functionCallTags = this.functionCallTags || []
+      }
+      return JSON.stringify(this.normalizeEditorSnapshotValue(snapshot))
+    },
+    captureEditorFormSnapshot(btnType) {
+      const visibleKey = this.getEditorVisibleKey(btnType)
+      if (!this.visible[visibleKey]) return
+      this.$set(this.editorFormInitialSnapshots, visibleKey, this.buildEditorFormSnapshot(btnType))
+    },
+    isEditorFormDirty(btnType) {
+      const visibleKey = this.getEditorVisibleKey(btnType)
+      const original = this.editorFormInitialSnapshots[visibleKey]
+      // 未取得初始快照时保守处理，避免误丢弃刚刚编辑的内容。
+      return !original || original !== this.buildEditorFormSnapshot(btnType)
+    },
+    closeEditorForm(btnType) {
+      const visibleKey = this.getEditorVisibleKey(btnType)
+      const formName = this.getEditorFormName(btnType)
+      let refName = ''
+
+      if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
+        refName = 'agentELForm'
+      }
+      if (btnType === 'drawerGroup') {
+        refName = 'groupELForm'
+        this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
+        this.groupAgentList = []
+        this.$set(this, 'groupRemoteAgentQueryList', this.$options.data().groupRemoteAgentQueryList)
+        this.groupRemoteAgentList = []
+      }
+      if (['drawerGroupStart', 'drawerTaskStart'].includes(btnType)) {
+        refName = 'groupStartELForm'
+        this.groupStartParticipants = []
+        this.groupStartParticipantLoading = false
+        this.groupStartPromptCaretStart = 0
+        this.groupStartPromptCaretEnd = 0
+      }
+      if (btnType === 'dialogTaskEvaluation') {
+        refName = 'evaluationELForm'
+      }
+
+      if (formName) {
+        this.$set(this, formName, this.$options.data()[formName])
+      }
+      this.$refs[refName]?.resetFields?.()
+      delete this.editorFormInitialSnapshots[visibleKey]
+      this.$nextTick(() => {
+        this.visible[visibleKey] = false
+      })
+
+      if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
+        this.functionCallTags = []
+        this.functionCallInputVisible = false
+        this.functionCallInputValue = ''
+        this.agentAutoAttachXncf = false
+        this.agentSystemMessageTypeDetectionPending = false
+      }
+    },
     // Dailog|抽屉 打开 按钮
-    handleElVisibleOpenBtn(btnType, formData) {
+    async handleElVisibleOpenBtn(btnType, formData) {
       // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
       // console.log('通用新增按钮:', btnType);
       let visibleKey = btnType
-      // 组 启动 
+      // 组 启动
       if (btnType === 'drawerGroupStart') {
         // 详情: formData.chatGroupDto 列表: formData
-        this.groupStartForm.groupName = formData.chatGroupDto ? formData.chatGroupDto.name : formData.name
-        this.groupStartForm.name = formData.chatGroupDto ? `${formData.chatGroupDto.name}1` : `${formData.name}1`
-        this.groupStartForm.chatGroupId = formData.chatGroupDto ? formData.chatGroupDto.id : formData.id
+        const chatGroup = formData?.chatGroupDto || formData || {}
+        this.groupStartForm.groupName = chatGroup.name || ''
+        this.groupStartForm.name = chatGroup.name ? `${chatGroup.name}1` : ''
+        this.groupStartForm.chatGroupId = chatGroup.id || ''
+        this.groupStartParticipants = this.buildGroupStartParticipants(formData)
+        this.groupStartPromptCaretStart = 0
+        this.groupStartPromptCaretEnd = 0
+        this.visible[visibleKey] = true
+        await this.loadGroupStartParticipants(this.groupStartForm.chatGroupId)
+        this.$nextTick(() => this.captureEditorFormSnapshot(visibleKey))
+        return
       }
       if (btnType === 'drawerTaskStart') {
         visibleKey = 'drawerGroupStart'
       }
+      let initialSnapshotLoader = null
       if (btnType === 'drawerGroup') {
-        this.getAgentListData('groupAgent')
+        // 成员选择控件会在列表到达后回填；待回填完成再建立快照，避免误判为用户修改。
+        initialSnapshotLoader = Promise.all([
+          this.getAgentListData('groupAgent'),
+          this.getRemoteAgentListData('groupRemoteAgent')
+        ]).catch(() => { })
       }
       this.visible[visibleKey] = true
+      if (initialSnapshotLoader) {
+        await initialSnapshotLoader
+      }
+      this.$nextTick(() => this.captureEditorFormSnapshot(visibleKey))
     },
     // Dailog|抽屉 关闭 按钮
     handleElVisibleClose(btnType) {
@@ -2850,51 +3648,16 @@ var app = new Vue({
         })
         return
       }
-      // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          let refName = '', formName = ''
-          // 智能体
-          if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
-            refName = 'agentELForm'
-            formName = 'agentForm'
-          }
-          // 组
-          if (btnType === 'drawerGroup') {
-            refName = 'groupELForm'
-            formName = 'groupForm'
-            // 重置 组获取智能体query
-            this.$set(this, 'groupAgentQueryList', this.$options.data().groupAgentQueryList)
-            this.groupAgentList = []
-          }
-          // 组 启动
-          if (['drawerGroupStart', 'drawerTaskStart'].includes(btnType)) {
-            refName = 'groupStartELForm'
-            formName = 'groupStartForm'
-          }
-          // 任务评价
-          if (btnType === 'dialogTaskEvaluation') {
-            refName = 'evaluationELForm'
-            formName = 'evaluationForm'
-          }
-          if (formName) {
-            this.$set(this, `${formName}`, this.$options.data()[formName])
-            // Object.assign(this[formName],this.$options.data()[formName])
-          }
-          if (refName) {
-            this.$refs[refName].resetFields();
-          }
-          this.$nextTick(() => {
-            this.visible[btnType] = false
-          })
-          // 清理 Function Calls 数据
-          if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)) {
-            this.functionCallTags = []
-            this.functionCallInputVisible = false
-            this.functionCallInputValue = ''
-            this.agentAutoAttachXncf = false
-          }
-        })
+      if (!this.getEditorFormName(btnType)) return
+
+      // 没有任何表单修改时直接关闭；仅在可能丢弃用户输入时询问。
+      if (!this.isEditorFormDirty(btnType)) {
+        this.closeEditorForm(btnType)
+        return
+      }
+
+      this.$confirm('当前修改尚未保存，确认关闭？')
+        .then(_ => this.closeEditorForm(btnType))
         .catch(_ => { });
     },
     // Dailog|抽屉 提交 按钮
@@ -2958,6 +3721,26 @@ var app = new Vue({
 
       }
       console.log('识别事件', e);
+    },
+
+    handleSystemMessageTypeChange() {
+      // 用户显式切换时，应以用户的选择为准，不再让异步加载结果覆盖它。
+      this.agentSystemMessageTypeDetectionPending = false
+    },
+
+    handleSystemMessageOptionsLoaded(options) {
+      if (!this.agentSystemMessageTypeDetectionPending) {
+        return
+      }
+
+      const systemMessage = typeof this.agentForm?.systemMessage === 'string'
+        ? this.agentForm.systemMessage.trim()
+        : String(this.agentForm?.systemMessage ?? '').trim()
+      const selectedFromPromptRange = (options || []).some(option =>
+        String(option?.value ?? '').trim() === systemMessage)
+
+      this.agentSystemMessageTypeDetectionPending = false
+      this.$set(this.agentForm, 'systemMessageType', selectedFromPromptRange ? '1' : '2')
     },
 
     // 切换 tabs 页面
@@ -3223,6 +4006,50 @@ var app = new Vue({
           message: '已取消操作'
         });
       });
+    },
+    // 组启用 / 停用
+    async setGroupState(item) {
+      const group = item?.chatGroupDto || item
+      if (!group || !group.id) return
+
+      const willEnable = !group.enable
+      const actionText = willEnable ? '启用' : '停用'
+      const messageText = willEnable
+        ? `<div>是否确认启用组“${group.name}”？</div><div>启用后可再次创建新任务，并可作为 Workflow 节点使用。</div>`
+        : `<div>是否确认停用组“${group.name}”？</div><div>停用后不会创建新任务或作为 Workflow 节点使用；已经启动的任务不会被中断。</div>`
+
+      try {
+        await this.$confirm(messageText, '操作确认', {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+
+        const serviceURL = `/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.Enable?id=${group.id}&enable=${willEnable}`
+        const res = await serviceAM.post(serviceURL)
+        if (!res?.data?.success) {
+          throw new Error(res?.data?.errorMessage || res?.data?.data || '操作失败')
+        }
+
+        this.$message({ type: 'success', message: `组已${actionText}` })
+        if (this.tabsActiveName === 'second') {
+          await this.getGroupListData('group')
+        } else if (this.agentDetails?.agentTemplateDto?.id) {
+          await this.getGroupListData('agentGroup', this.agentDetails.agentTemplateDto.id)
+        }
+        await this.refreshAgentGraphSnapshot(this.agentListViewMode === 'three')
+      } catch (error) {
+        if (error === 'cancel' || error === 'close') {
+          this.$message({ type: 'info', message: '已取消操作' })
+          return
+        }
+        this.$message({
+          message: error?.message || '操作失败',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      }
     },
 
     handleAgentDelete(item) {
@@ -3711,11 +4538,45 @@ var app = new Vue({
         this.agentParameterTabsValue = '0'
       })
     },
+    // 从参数弹窗直接复用现有 Agent 编辑表单，保留当前对话上下文
+    async openAgentParameterEditor(item) {
+      if (!item || item.agentKind === 'RemoteA2A' || !item.id) {
+        return
+      }
+      await this.handleEditDrawerOpenBtn('drawerAgent', item)
+    },
+    // Agent 编辑保存后同步当前参数弹窗，避免关闭抽屉后仍显示旧名称、描述或参数
+    async refreshAgentParameterItem(savedAgent) {
+      if (!this.visible.dialogAgentParameter || !savedAgent?.id) {
+        return
+      }
+
+      const index = this.agentParameterList.findIndex(item => item.id === savedAgent.id)
+      if (index < 0) {
+        return
+      }
+
+      const current = Object.assign({}, this.agentParameterList[index], savedAgent)
+      this.$set(this.agentParameterList, index, current)
+      try {
+        const refreshed = await this.buildAgentParameterList([current])
+        if (refreshed[0]) {
+          this.$set(this.agentParameterList, index, refreshed[0])
+        }
+      } catch (e) {
+        // 基础信息已经同步；状态接口失败时保留原有参数展示
+        console.warn('refreshAgentParameterItem: refresh status failed for agent', savedAgent.id, e)
+      }
+    },
     // 构建智能体参数列表：为基础 DTO 列表补充 promptItemDto / aiModelDto / promptRangeDto 及历史输出
     async buildAgentParameterList(baseList) {
       const result = []
       for (const agent of baseList) {
         const enriched = Object.assign({}, agent, { outputList: [] })
+        if (agent.agentKind === 'RemoteA2A') {
+          result.push(enriched)
+          continue
+        }
         // 获取智能体运行状态（含 promptItemDto / aiModelDto / promptRangeDto）
         // 使用 serviceAM 并设置 customAlert，由拦截器静默处理错误
         try {
@@ -4074,24 +4935,114 @@ var app = new Vue({
     handleTaskFilterChange(val, listType) {
       if (listType === 'agentGroupTask') {
         // 智能体 组 任务
-        const chatGroupMembers = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
+        const chatGroupMembers = this.getGroupParticipantList(this.agentDetailsGroupDetails)
         const filterList = chatGroupMembers.filter(item => item.name.includes(val))
-        this.agentGroupTaskMemberfilterList = filterList.map(item => item.id)
+        this.agentGroupTaskMemberfilterList = filterList.map(item => this.getParticipantKey(item))
       } else if (listType === 'groupTask') {
         // 组 任务
-        const chatGroupMembers = this.groupDetails?.agentTemplateDtoList ?? []
+        const chatGroupMembers = this.getGroupParticipantList(this.groupDetails)
         const filterList = chatGroupMembers.filter(item => item.name.includes(val))
-        this.groupTaskMemberfilterList = filterList.map(item => item.id)
+        this.groupTaskMemberfilterList = filterList.map(item => this.getParticipantKey(item))
       } else if (listType === 'agentTask') {
         // 智能体 任务
         const filterList = this.agentDetailsTaskMemberList.filter(item => item.name.includes(val))
-        this.agentTaskMemberfilterList = filterList.map(item => item.id)
+        this.agentTaskMemberfilterList = filterList.map(item => this.getParticipantKey(item))
       } else if (listType === 'task') {
         // 任务
         const filterList = this.taskMemberList.filter(item => item.name.includes(val))
-        this.taskMemberfilterList = filterList.map(item => item.id)
+        this.taskMemberfilterList = filterList.map(item => this.getParticipantKey(item))
         console.log('handleTaskFilterChange', this.taskMemberfilterList);
       }
+    },
+
+    getTaskHistoryListForParticipantInfo(taskType) {
+      const historyByType = {
+        task: this.taskHistoryList,
+        agentTask: this.agentDetailsTaskHistoryList,
+        agentGroupTask: this.agentDetailsGroupTaskHistoryList,
+        groupTask: this.groupTaskHistoryList,
+      }
+      return Array.isArray(historyByType[taskType]) ? historyByType[taskType] : []
+    },
+
+    getParticipantQuickInfo(taskType, participant) {
+      const participantKey = this.getParticipantKey(participant)
+      const relatedHistory = this.getTaskHistoryListForParticipantInfo(taskType)
+        .filter(item => this.getParticipantKey(item) === participantKey)
+      const usage = this.buildTaskHistoryUsageSummary(relatedHistory)
+      const hasReportedTokenUsage = relatedHistory.some(item => {
+        return ['promptTokens', 'completionTokens', 'totalTokens']
+          .some(field => item?.[field] !== null && item?.[field] !== undefined)
+      })
+      const isRemote = participant?.agentKind === 'RemoteA2A'
+      const enabled = participant?.enable !== false
+      const statusText = isRemote
+        ? this.remoteParticipantAvailabilityText(participant)
+        : (enabled ? '已启用' : '已停用')
+      const statusType = isRemote
+        ? this.remoteParticipantAvailabilityType(participant)
+        : (enabled ? 'success' : 'info')
+      const currentUsageText = usage.messageCount === 0
+        ? '尚无已完成回复'
+        : (hasReportedTokenUsage
+          ? `${this.formatUsageCount(usage.messageCount)} 条回复 · ${this.formatUsageCount(usage.totalTokens)} Token`
+          : `${this.formatUsageCount(usage.messageCount)} 条回复 · Token 未由远端反馈`)
+      const totalTokens = Number(participant?.totalTokens || 0)
+
+      return {
+        kindText: isRemote ? '远程 A2A' : '本地 Agent',
+        kindType: isRemote ? 'warning' : 'primary',
+        statusText,
+        statusType,
+        description: participant?.description || '暂无简介',
+        currentUsageText,
+        responseTimeText: this.formatResponseMilliseconds(usage.averageResponseMilliseconds, '暂无响应时长'),
+        totalUsageText: totalTokens > 0
+          ? `${this.formatUsageCount(totalTokens)} Token`
+          : '暂无累计数据',
+        activityText: this.formatActivityTime(participant?.lastActiveTime || participant?.lastHealthCheckAt),
+        healthMessage: isRemote ? (participant?.lastHealthCheckMessage || '尚未执行连接检测') : '',
+        isRemote,
+      }
+    },
+
+    getGroupParticipantList(groupDetail) {
+      const localAgents = groupDetail?.agentTemplateDtoList ?? []
+      const remoteMembers = groupDetail?.remoteMemberDtoList ?? []
+      const remoteAgents = remoteMembers
+        .map(member => {
+          const remote = member?.remoteAgentDto
+          if (!remote || !remote.id) return null
+          return Object.assign({}, remote, {
+            participantKey: `remote:${remote.id}`,
+            agentKind: 'RemoteA2A',
+            avastar: null,
+            enable: !!member.enable && !!remote.enable,
+            connectionStatus: remote.connectionStatus
+          })
+        })
+        .filter(Boolean)
+
+      return localAgents.map(agent => Object.assign({}, agent, {
+        participantKey: `local:${agent.id}`,
+        agentKind: 'Local'
+      })).concat(remoteAgents)
+    },
+
+    getParticipantKey(participantOrHistory) {
+      if (!participantOrHistory) return ''
+      if (participantOrHistory.fromParticipantKey) return participantOrHistory.fromParticipantKey
+      if (participantOrHistory.participantKey) return participantOrHistory.participantKey
+      if (participantOrHistory.fromAgentTemplateId !== undefined && participantOrHistory.fromAgentTemplateId !== null) {
+        return `local:${participantOrHistory.fromAgentTemplateId}`
+      }
+      return participantOrHistory.id !== undefined && participantOrHistory.id !== null
+        ? `local:${participantOrHistory.id}`
+        : ''
+    },
+
+    historyMatchesMemberFilter(historyItem, filterText, matchedParticipantKeys) {
+      return !filterText || matchedParticipantKeys.includes(this.getParticipantKey(historyItem))
     },
 
     // el-scrollbar 触底滚动 到底部
@@ -4115,34 +5066,40 @@ var app = new Vue({
     },
     // 获取发送人名称
     getTaskSenderName(taskType, historyItem) {
-      const sender = this.getTaskSenderInfo(taskType, historyItem?.fromAgentTemplateId)
+      const sender = this.getTaskSenderInfo(taskType, historyItem)
       if (sender && sender.name) {
         return sender.name
       }
-      return historyItem?._streamAgentName || (historyItem?._generating ? 'Generating...' : '')
+      return historyItem?.fromParticipantName || historyItem?._streamAgentName || (historyItem?._generating ? 'Generating...' : '')
     },
-    getTaskSenderInfo(taskType, formId) {
+    getTaskSenderInfo(taskType, participantOrHistory) {
+      const participantKey = this.getParticipantKey(participantOrHistory)
+      const formId = participantOrHistory?.fromAgentTemplateId ?? participantOrHistory?.id ?? participantOrHistory
       // 智能体 组 任务
       if (taskType === 'agentGroupTask') {
-        const chatGroupMembers = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
-        const fintItem = chatGroupMembers.find(item => item.id === formId)
+        const chatGroupMembers = this.getGroupParticipantList(this.agentDetailsGroupDetails)
+        const fintItem = chatGroupMembers.find(item => this.getParticipantKey(item) === participantKey)
+          || chatGroupMembers.find(item => item.agentKind !== 'RemoteA2A' && item.id === formId)
         return fintItem ?? {}
       }
       // 组 任务
       if (taskType === 'groupTask') {
-        const chatGroupMembers = this.groupDetails?.agentTemplateDtoList ?? []
-        const fintItem = chatGroupMembers.find(item => item.id === formId)
+        const chatGroupMembers = this.getGroupParticipantList(this.groupDetails)
+        const fintItem = chatGroupMembers.find(item => this.getParticipantKey(item) === participantKey)
+          || chatGroupMembers.find(item => item.agentKind !== 'RemoteA2A' && item.id === formId)
         return fintItem ?? {}
       }
       // 智能体 任务
       if (taskType === 'agentTask') {
-        const fintItem = this.agentDetailsTaskMemberList.find(item => item.id === formId)
+        const fintItem = this.agentDetailsTaskMemberList.find(item => this.getParticipantKey(item) === participantKey)
+          || this.agentDetailsTaskMemberList.find(item => item.agentKind !== 'RemoteA2A' && item.id === formId)
         return fintItem ?? {}
       }
 
       // 任务
       if (taskType === 'task') {
-        const fintItem = this.taskMemberList.find(item => item.id === formId)
+        const fintItem = this.taskMemberList.find(item => this.getParticipantKey(item) === participantKey)
+          || this.taskMemberList.find(item => item.agentKind !== 'RemoteA2A' && item.id === formId)
         return fintItem ?? {}
       }
 
@@ -4942,6 +5899,76 @@ function sanitizeTaskHtml(value) {
   return template.innerHTML
 }
 
+// 任务右侧成员列表：名称始终完整展示，点击后查看与当前任务关联的摘要。
+Vue.component('participant-quick-action', {
+  props: {
+    participant: {
+      type: Object,
+      required: true
+    },
+    quickInfo: {
+      type: Object,
+      required: true
+    },
+    testing: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    avatarUrl() {
+      return this.participant?.avastar || '/images/AgentsManager/avatar/avatar1.png'
+    },
+    testRemote() {
+      this.$emit('test-remote')
+    }
+  },
+  template: `
+    <el-popover placement="left-start" :width="320" trigger="click" popper-class="participant-quick-info-popover">
+      <section class="participant-quick-info">
+        <div class="participant-quick-info__header">
+          <img :src="avatarUrl()" alt="" class="participant-quick-info__avatar">
+          <div>
+            <div class="participant-quick-info__name">{{ participant.name }}</div>
+            <div class="participant-quick-info__tags">
+              <el-tag :type="quickInfo.kindType" size="mini">{{ quickInfo.kindText }}</el-tag>
+              <el-tag :type="quickInfo.statusType" size="mini">{{ quickInfo.statusText }}</el-tag>
+            </div>
+          </div>
+        </div>
+        <div class="participant-quick-info__description">{{ quickInfo.description }}</div>
+        <div class="participant-quick-info__metrics">
+          <div><span>当前任务用量</span><strong>{{ quickInfo.currentUsageText }}</strong></div>
+          <div><span>平均响应</span><strong>{{ quickInfo.responseTimeText }}</strong></div>
+          <div><span>累计 Token</span><strong>{{ quickInfo.totalUsageText }}</strong></div>
+          <div><span>最近活动</span><strong>{{ quickInfo.activityText }}</strong></div>
+        </div>
+        <div v-if="quickInfo.isRemote" class="participant-quick-info__health" :title="quickInfo.healthMessage">
+          <span>连接检测</span>
+          <span>{{ quickInfo.healthMessage }}</span>
+        </div>
+        <div class="participant-quick-info__footer">
+          <span>用量仅统计当前任务中已加载的记录</span>
+          <el-button v-if="quickInfo.isRemote" type="text" size="mini" :loading="testing" @click.stop="testRemote">测试连接</el-button>
+        </div>
+      </section>
+      <button slot="reference" type="button" class="taskmain-member-action" :title="'查看 ' + participant.name + ' 的信息'">
+        <span class="taskmain-member-action__avatar">
+          <img :src="avatarUrl()" alt="">
+        </span>
+        <span class="taskmain-member-action__content">
+          <span class="taskmain-member-action__name">{{ participant.name }}</span>
+          <span class="taskmain-member-action__meta">
+            <el-tag :type="quickInfo.kindType" size="mini">{{ quickInfo.kindText }}</el-tag>
+            <el-tag :type="quickInfo.statusType" size="mini">{{ quickInfo.statusText }}</el-tag>
+          </span>
+        </span>
+        <i class="el-icon-arrow-right taskmain-member-action__arrow" aria-hidden="true"></i>
+      </button>
+    </el-popover>
+  `
+})
+
 // task-html-renderer 渲染任务对话记录的内容
 Vue.component('task-html-renderer', {
   props: ['content'],
@@ -5222,6 +6249,7 @@ Vue.component('load-more-select', {
             this.interesLoading = false
             this.currentPageSize = listData?.length ?? 0
             this.interestsOptions = this.interestsOptions.concat(listData)
+            this.$emit('options-loaded', this.interestsOptions)
             // [...this.interestsOptions, ...listData]
             // console.log(this.interestsOptions, 888)
           } else {

@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.5</Version>
+		<Version>0.0.6</Version>
 		<PackageReleaseNotes>
 		  [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
 		  1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.2-preview2
@@ -15,6 +15,7 @@
 		  [2026-08-08] v0.0.5 Dependency updates from upstream projects
 		  1、Dependency update from Senparc.Xncf.Terminal to 0.22.4-preview6
 		  2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+		  [2026-08-13] v0.0.6 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.7-preview7; Senparc.Xncf.Terminal to 0.22.5-preview7
 </PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>

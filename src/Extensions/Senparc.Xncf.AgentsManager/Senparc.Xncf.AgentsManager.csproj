@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.14.1-preview10</Version>
+    <Version>0.15.0-preview11</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -107,6 +107,10 @@
 		6、Dependency update from Senparc.Xncf.AgentsManager.Abstractions to 0.2.4-preview4
 		7、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.2.4-preview4
 		8、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+		[2026-08-13] v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+		1、新增远程 A2A 智能体接入、发布管理及多数据库迁移
+		2、统一本地与 A2A AgentTemplate 执行、支持群聊启停和取消回退
+		3、优化 AgentsManager 统计、操作按钮、历史记录与响应式布局
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -122,6 +126,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.8.0" />
+    <PackageReference Include="Microsoft.Agents.AI.A2A" Version="1.8.0-preview.260528.1" />
     <PackageReference Include="Senparc.AI.Agents" Version="$(SenparcAiAgentsVersion)" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
     <PackageReference Include="Senparc.Weixin.Work" Version="3.32.1" />
@@ -167,6 +172,7 @@
     <ProjectReference Include="..\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.KnowledgeBase\Senparc.Xncf.KnowledgeBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.AgentsManager.Abstractions\Senparc.Xncf.AgentsManager.Abstractions.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.NeuCharWorkflow.Abstractions\Senparc.Xncf.NeuCharWorkflow.Abstractions.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
   </ItemGroup>

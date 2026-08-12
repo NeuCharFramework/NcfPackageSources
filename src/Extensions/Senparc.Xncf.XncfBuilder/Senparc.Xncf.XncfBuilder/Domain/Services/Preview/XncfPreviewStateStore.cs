@@ -4,10 +4,14 @@
     文件名：XncfPreviewStateStore.cs
     文件功能描述：XNCF 隔离预览任务和 Host 状态的数据库存储
 
+
     创建标识：Senparc - 20260802
 
     修改标识：Senparc - 20260804
     修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
 
 ----------------------------------------------------------------*/
 
@@ -172,7 +176,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 
                 var sessionIds = recentTasks.Select(task => task.SessionId).ToArray();
                 var hosts = await hostRepository.GetObjectListAsync(
-                        host => !host.Flag && sessionIds.Contains(host.SessionId),
+                        host => !host.Flag && Enumerable.Contains(sessionIds, host.SessionId),
                         host => host.UpdatedAtUtc,
                         OrderingType.Descending,
                         0,

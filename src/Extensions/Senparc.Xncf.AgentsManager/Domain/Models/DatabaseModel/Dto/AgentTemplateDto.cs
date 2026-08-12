@@ -3,15 +3,18 @@
   
     文件名：AgentTemplateDto.cs
     文件功能描述：AgentTemplateDto 相关实现
-    
-    
+
+
     创建标识：Senparc - 20240616
-    
+
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
     修改标识：Senparc - 20260804
     修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
 ----------------------------------------------------------------*/
 
@@ -122,6 +125,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
     {
         public int ChattingCount { get; set; }
         public float Score { get; set; }
+        public bool HasPublishedA2A { get; set; }
+        public bool PublishedA2AEnabled { get; set; }
     }
 
     public class AgentTemplateStatusDto

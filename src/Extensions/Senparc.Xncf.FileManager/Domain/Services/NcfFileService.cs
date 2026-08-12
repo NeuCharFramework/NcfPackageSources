@@ -1,133 +1,146 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
-  
+
     文件名：NcfFileService.cs
-    文件功能描述：NcfFileService 相关实现
-    
-    
+    文件功能描述：统一管理知识库源文件和站点静态资源的物理存储、元数据及公开访问边界
+
+
     创建标识：Senparc - 20250112
-    
-    修改标识：Senparc - 20260704
-    修改描述：vNext 补充标准化文件头注释
 
-    修改标识：Senparc - 20260729
-    修改描述：v0.3.1-preview3 加强文件上传校验和物理路径安全
-
-    修改标识：Senparc - 20260804
-    修改描述：v0.5.0-preview5 新增文件文本提取与文件管理服务
+    修改标识：Senparc - 20260813
+    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
 
 ----------------------------------------------------------------*/
 
-using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
 using System;
-using System.IO;
-using System.Threading.Tasks;
-using System.Linq;
 using System.Collections.Generic;
-using Senparc.Ncf.Core.Models;
-using Senparc.CO2NET.Trace;
-using Microsoft.Extensions.DependencyInjection;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
 
-namespace Senparc.Xncf.FileManager.Domain.Services
+namespace Senparc.Xncf.FileManager.Domain.Services;
+
+public sealed class NcfFileReadResult
 {
-    public class NcfFileService : ServiceBase<NcfFile>
+    public NcfFileReadResult(NcfFile file, Stream stream)
     {
-        public const long MaxFileSizeBytes = 50L * 1024 * 1024;
-        public const long MaxTotalUploadBytes = 100L * 1024 * 1024;
-        public const int MaxFilesPerUpload = 20;
+        File = file;
+        Stream = stream;
+    }
 
-        private static readonly HashSet<string> AllowedExtensions = new(StringComparer.OrdinalIgnoreCase)
+    public NcfFile File { get; }
+    public Stream Stream { get; }
+}
+
+public class NcfFileService : ServiceBase<NcfFile>
+{
+    public const long MaxFileSizeBytes = 50L * 1024 * 1024;
+    public const long MaxTotalUploadBytes = 100L * 1024 * 1024;
+    public const int MaxFilesPerUpload = 20;
+
+    private readonly string _baseFilePath;
+
+    public NcfFileService(IRepositoryBase<NcfFile> repo, IServiceProvider serviceProvider)
+        : base(repo, serviceProvider)
+    {
+        _baseFilePath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, "App_Data", "NcfFiles");
+        Directory.CreateDirectory(_baseFilePath);
+    }
+
+    /// <summary>
+    /// Lists only one resource scope. This is intentional: an asset picker must
+    /// never accidentally show documents that are meant for a knowledge base.
+    /// </summary>
+    public async Task<PagedList<NcfFileDto>> GetFilesAsync(
+        int page,
+        int pageSize,
+        int? folderId,
+        NcfFileResourceScope resourceScope = NcfFileResourceScope.KnowledgeBase)
+    {
+        EnsureValidScope(resourceScope);
+        var result = (await GetObjectListAsync(
+                page,
+                pageSize,
+                z => z.FolderId == folderId && z.ResourceScope == resourceScope,
+                z => z.Id,
+                OrderingType.Descending,
+                null))
+            .ToDtoPagedList<NcfFile, NcfFileDto>(this);
+
+        foreach (var dto in result)
         {
-            ".txt", ".log", ".md", ".csv", ".json", ".xml", ".pdf",
-            ".jpg", ".jpeg", ".png", ".gif", ".webp",
-            ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".zip",
-            ".markdown", ".tsv", ".yaml", ".yml", ".html", ".htm", ".css",
-            ".js", ".ts", ".cs", ".sql"
-        };
-
-        /// <summary>
-        /// 文件存储的基础路径
-        /// </summary>
-        private readonly string _baseFilePath;
-
-        public NcfFileService(IRepositoryBase<NcfFile> repo, IServiceProvider serviceProvider)
-            : base(repo, serviceProvider)
-        {
-            try
-            {
-                _baseFilePath = Path.Combine(Senparc.CO2NET.Config.RootDirectoryPath, "App_Data", "NcfFiles");
-                Senparc.CO2NET.Helpers.FileHelper.TryCreateDirectory(_baseFilePath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+            dto.PublicUrl = GetPublicAssetUrl(dto);
         }
 
-        // 列表（支持按文件夹过滤）
-        public async Task<PagedList<NcfFileDto>> GetFilesAsync(int page, int pageSize, int? folderId)
+        return result;
+    }
+
+    /// <summary>
+    /// Backward-compatible overload: callers predating the resource boundary
+    /// keep creating knowledge-base sources.
+    /// </summary>
+    public Task<NcfFile> UploadFileAsync(IFormFile file, int? folderId = null)
+    {
+        return UploadFileAsync(file, NcfFileResourceScope.KnowledgeBase, folderId);
+    }
+
+    public async Task<NcfFile> UploadFileAsync(
+        IFormFile file,
+        NcfFileResourceScope resourceScope,
+        int? folderId = null)
+    {
+        if (file == null || file.Length <= 0)
         {
-            var result = (await GetObjectListAsync(page, pageSize, z => z.FolderId == folderId, z => z.Id, OrderingType.Descending, null))
-                .ToDtoPagedList<NcfFile, NcfFileDto>(this);
-            return result;
+            throw new ArgumentException("上传文件不能为空。", nameof(file));
         }
 
-        public async Task<NcfFile> UploadFileAsync(IFormFile file, int? folderId = null)
+        if (file.Length > MaxFileSizeBytes)
         {
-            if (file == null || file.Length <= 0)
-            {
-                throw new ArgumentException("上传文件不能为空。", nameof(file));
-            }
+            throw new InvalidOperationException($"单个文件不能超过 {MaxFileSizeBytes / 1024 / 1024} MB。");
+        }
 
-            if (file.Length > MaxFileSizeBytes)
-            {
-                throw new InvalidOperationException($"单个文件不能超过 {MaxFileSizeBytes / 1024 / 1024} MB。");
-            }
+        EnsureValidScope(resourceScope);
+        await ValidateFolderAsync(folderId, resourceScope);
 
-            if (folderId.HasValue)
-            {
-                var folderService = base.ServiceProvider.GetRequiredService<NcfFolderService>();
-                var folder = await folderService.GetObjectAsync(z => z.Id == folderId.Value);
-                if (folder == null)
-                {
-                    throw new InvalidOperationException($"目标文件夹不存在：{folderId.Value}");
-                }
-            }
+        var originalFileName = Path.GetFileName((file.FileName ?? string.Empty).Replace('\\', '/'));
+        var fileExtension = NcfFileResourcePolicy.NormalizeExtension(originalFileName);
+        if (!NcfFileResourcePolicy.IsAllowedExtension(resourceScope, fileExtension))
+        {
+            throw new InvalidOperationException(resourceScope == NcfFileResourceScope.KnowledgeBase
+                ? "知识库文件仅支持可安全提取的文本和 Office Open XML 格式。"
+                : "站点静态资源仅支持图片、音视频和字体格式；不接受 HTML、SVG、JavaScript 或压缩包。" );
+        }
 
-            var originalFileName = Path.GetFileName((file.FileName ?? string.Empty).Replace('\\', '/'));
-            var fileExtension = Path.GetExtension(originalFileName)?.ToLowerInvariant();
-            if (string.IsNullOrWhiteSpace(fileExtension) || !AllowedExtensions.Contains(fileExtension))
-            {
-                throw new InvalidOperationException("不允许上传该文件类型。仅支持常见文档、图片、文本和压缩包格式。");
-            }
+        if (string.IsNullOrWhiteSpace(originalFileName))
+        {
+            originalFileName = $"upload{fileExtension}";
+        }
+        if (originalFileName.Length > 250)
+        {
+            originalFileName = originalFileName[..250];
+        }
 
-            if (string.IsNullOrWhiteSpace(originalFileName))
-            {
-                originalFileName = $"upload{fileExtension}";
-            }
-            if (originalFileName.Length > 250)
-            {
-                originalFileName = originalFileName[..250];
-            }
+        var now = DateTime.Now;
+        var datePath = string.Join('/', NcfFileResourcePolicy.GetStorageRoot(resourceScope), now.Year.ToString(), now.Month.ToString("00"));
+        var fullPath = Path.Combine(_baseFilePath, datePath.Replace('/', Path.DirectorySeparatorChar));
+        Directory.CreateDirectory(fullPath);
 
-            var datePath = Path.Combine(DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString("00"));
-            var fullPath = Path.Combine(_baseFilePath, datePath);
-            Directory.CreateDirectory(fullPath);
+        var storageFileName = Guid.NewGuid().ToString("N");
+        var physicalPath = Path.Combine(fullPath, storageFileName + fileExtension);
 
-            var storageFileName = Guid.NewGuid().ToString("N");
-
-            var physicalPath = Path.Combine(fullPath, storageFileName + fileExtension);
-            using (var stream = new FileStream(physicalPath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
+        try
+        {
+            var contentHash = await CopyAndHashAsync(file, physicalPath);
             var ncfFile = new NcfFile
             {
                 FileName = originalFileName,
@@ -136,170 +149,297 @@ namespace Senparc.Xncf.FileManager.Domain.Services
                 FileSize = file.Length,
                 FileExtension = fileExtension,
                 FileType = GetFileType(fileExtension),
-                UploadTime = DateTime.Now,
+                ContentType = NcfFileResourcePolicy.GetContentType(fileExtension),
+                ContentHash = contentHash,
+                ResourceScope = resourceScope,
+                AccessLevel = NcfFileAccessLevel.Private,
+                UploadTime = now,
                 FolderId = folderId
             };
 
-            try
-            {
-                await SaveObjectAsync(ncfFile);
-
-            }
-            catch (Exception ex)
-            {
-                if (File.Exists(physicalPath))
-                {
-                    File.Delete(physicalPath);
-                }
-                SenparcTrace.BaseExceptionLog(ex);
-                throw;
-            }
+            await SaveObjectAsync(ncfFile);
             return ncfFile;
         }
-
-        public async Task UpdateFileNoteAsync(int id, string note)
+        catch (Exception ex)
         {
-            var file = await GetObjectAsync(z => z.Id == id);
-            if (file == null)
+            if (File.Exists(physicalPath))
             {
-                throw new InvalidOperationException($"文件不存在：{id}");
+                File.Delete(physicalPath);
             }
+            SenparcTrace.BaseExceptionLog(ex);
+            throw;
+        }
+    }
 
-            note = note?.Trim();
-            if (note?.Length > 300)
-            {
-                throw new ArgumentException("文件备注不能超过 300 个字符。", nameof(note));
-            }
-
-            file.Description = note;
-            await SaveObjectAsync(file);
+    public async Task UpdateFileNoteAsync(int id, string note)
+    {
+        var file = await GetObjectAsync(z => z.Id == id);
+        if (file == null)
+        {
+            throw new InvalidOperationException($"文件不存在：{id}");
         }
 
-        public async Task DeleteFileAsync(int id)
+        note = note?.Trim();
+        if (note?.Length > 300)
         {
-            var file = await GetObjectAsync(z => z.Id == id);
-            if (file == null)
-            {
-                return;
-            }
-
-            var fullPath = ResolvePhysicalPath(file);
-            string stagedPath = null;
-            if (File.Exists(fullPath))
-            {
-                stagedPath = fullPath + $".deleting-{Guid.NewGuid():N}";
-                File.Move(fullPath, stagedPath);
-            }
-
-            try
-            {
-                await DeleteObjectAsync(file);
-                if (stagedPath != null && File.Exists(stagedPath))
-                {
-                    File.Delete(stagedPath);
-                }
-            }
-            catch
-            {
-                if (stagedPath != null && File.Exists(stagedPath) && !File.Exists(fullPath))
-                {
-                    File.Move(stagedPath, fullPath);
-                }
-                throw;
-            }
+            throw new ArgumentException("文件备注不能超过 300 个字符。", nameof(note));
         }
 
-        public async Task<(byte[] FileBytes, string FileName)> GetFileBytes(int id)
+        file.Description = note;
+        await SaveObjectAsync(file);
+    }
+
+    public async Task SetSiteAssetPublicationAsync(int id, bool publish)
+    {
+        var file = await GetObjectAsync(z => z.Id == id)
+            ?? throw new InvalidOperationException($"文件不存在：{id}");
+
+        if (publish)
         {
-            var file = await GetObjectAsync(z => z.Id == id);
-            if (file == null)
-            {
-                return (new byte[0], "文件不存在！");
-            }
-
-            var fullPath = ResolvePhysicalPath(file);
-            if (!System.IO.File.Exists(fullPath))
-            {
-                return (new byte[0], "文件不存在！");
-            }
-
-            var bytes = await System.IO.File.ReadAllBytesAsync(fullPath);
-            return (bytes, file.FileName);
+            NcfFileResourcePolicy.EnsureCanPublish(file);
+        }
+        else if (file.ResourceScope != NcfFileResourceScope.SiteAsset)
+        {
+            throw new InvalidOperationException("只有站点静态资源可以修改公开状态。");
         }
 
-        /// <summary>
-        /// 读取并提取可供知识库使用的纯文本内容。
-        /// </summary>
-        public async Task<NcfFileTextExtractionResult> GetExtractedTextAsync(int id)
+        file.AccessLevel = publish ? NcfFileAccessLevel.Public : NcfFileAccessLevel.Private;
+        await SaveObjectAsync(file);
+    }
+
+    public async Task DeleteFileAsync(int id)
+    {
+        var file = await GetObjectAsync(z => z.Id == id);
+        if (file == null)
         {
-            var file = await GetObjectAsync(z => z.Id == id);
-            if (file == null)
-            {
-                throw new FileNotFoundException($"文件记录不存在：{id}");
-            }
-
-            var fileInfo = await GetFileBytes(id);
-            if (fileInfo.FileBytes.Length == 0)
-            {
-                throw new FileNotFoundException($"文件物理内容不存在：{file.FileName}");
-            }
-
-            return NcfFileTextExtractor.Extract(fileInfo.FileBytes, file.FileExtension, file.FileName);
+            return;
         }
 
-        private string ResolvePhysicalPath(NcfFile file)
+        // Consumers own their references. Run their guards before moving the
+        // physical file so a rejected deletion cannot leave a broken source.
+        foreach (var guard in ServiceProvider.GetServices<INcfFileDeletionGuard>())
         {
-            if (file == null || string.IsNullOrWhiteSpace(file.FilePath) ||
-                string.IsNullOrWhiteSpace(file.StorageFileName) || string.IsNullOrWhiteSpace(file.FileExtension))
-            {
-                throw new InvalidOperationException("文件物理路径信息无效。");
-            }
-
-            var pathParts = file.FilePath.Split(
-                new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar },
-                StringSplitOptions.RemoveEmptyEntries);
-            if (pathParts.Length != 2
-                || pathParts[0].Length != 4
-                || !int.TryParse(pathParts[0], out _)
-                || !int.TryParse(pathParts[1], out var month)
-                || month is < 1 or > 12
-                || !Guid.TryParseExact(file.StorageFileName, "N", out _)
-                || !AllowedExtensions.Contains(file.FileExtension))
-            {
-                throw new InvalidOperationException("文件物理路径元数据非法。");
-            }
-
-            var basePath = Path.GetFullPath(_baseFilePath);
-            var fullPath = Path.GetFullPath(Path.Combine(
-                basePath,
-                file.FilePath,
-                file.StorageFileName + file.FileExtension));
-            var expectedPrefix = basePath.EndsWith(Path.DirectorySeparatorChar)
-                ? basePath
-                : basePath + Path.DirectorySeparatorChar;
-
-            var pathComparison = OperatingSystem.IsWindows()
-                ? StringComparison.OrdinalIgnoreCase
-                : StringComparison.Ordinal;
-            if (!fullPath.StartsWith(expectedPrefix, pathComparison))
-            {
-                throw new InvalidOperationException("文件物理路径越界。");
-            }
-
-            return fullPath;
+            await guard.EnsureCanDeleteAsync(file);
         }
 
-        private FileType GetFileType(string extension)
+        var fullPath = ResolvePhysicalPath(file);
+        string stagedPath = null;
+        if (File.Exists(fullPath))
         {
-            return extension.ToLower() switch
-            {
-                ".txt" or ".log" or ".md" or ".markdown" or ".csv" or ".tsv" or ".yaml" or ".yml" => FileType.Text,
-                ".doc" or ".docx" => FileType.Word,
-                ".ppt" or ".pptx" => FileType.PowerPoint,
-                ".xls" or ".xlsx" => FileType.Excel,
-                ".cs" or ".js" or ".html" or ".css" or ".xml" or ".json" => FileType.Code,
-                _ => FileType.Other,
-            };
+            stagedPath = fullPath + $".deleting-{Guid.NewGuid():N}";
+            File.Move(fullPath, stagedPath);
         }
+
+        try
+        {
+            await DeleteObjectAsync(file);
+            if (stagedPath != null && File.Exists(stagedPath))
+            {
+                File.Delete(stagedPath);
+            }
+        }
+        catch
+        {
+            if (stagedPath != null && File.Exists(stagedPath) && !File.Exists(fullPath))
+            {
+                File.Move(stagedPath, fullPath);
+            }
+            throw;
+        }
+    }
+
+    public async Task<(byte[] FileBytes, string FileName)> GetFileBytes(int id)
+    {
+        var file = await GetObjectAsync(z => z.Id == id);
+        if (file == null)
+        {
+            return (Array.Empty<byte>(), "文件不存在！");
+        }
+
+        var fullPath = ResolvePhysicalPath(file);
+        if (!File.Exists(fullPath))
+        {
+            return (Array.Empty<byte>(), "文件不存在！");
+        }
+
+        var bytes = await File.ReadAllBytesAsync(fullPath);
+        return (bytes, file.FileName);
+    }
+
+    /// <summary>
+    /// Opens a file only after its metadata and resource boundary have been
+    /// validated. The caller owns the returned stream and must let ASP.NET Core
+    /// dispose it after the response completes.
+    /// </summary>
+    public async Task<NcfFileReadResult> OpenReadAsync(int id, bool requirePublicSiteAsset = false)
+    {
+        var file = await GetObjectAsync(z => z.Id == id);
+        if (file == null || (requirePublicSiteAsset &&
+                             (file.ResourceScope != NcfFileResourceScope.SiteAsset ||
+                              file.AccessLevel != NcfFileAccessLevel.Public)))
+        {
+            return null;
+        }
+
+        var fullPath = ResolvePhysicalPath(file);
+        if (!File.Exists(fullPath))
+        {
+            return null;
+        }
+
+        var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read, 64 * 1024, useAsync: true);
+        return new NcfFileReadResult(file, stream);
+    }
+
+    /// <summary>
+    /// Reads and extracts plain text only from knowledge-base sources.
+    /// </summary>
+    public async Task<NcfFileTextExtractionResult> GetExtractedTextAsync(int id)
+    {
+        var file = await GetObjectAsync(z => z.Id == id);
+        if (file == null)
+        {
+            throw new FileNotFoundException($"文件记录不存在：{id}");
+        }
+
+        if (file.ResourceScope != NcfFileResourceScope.KnowledgeBase)
+        {
+            throw new InvalidOperationException("站点静态资源不能作为知识库来源。");
+        }
+
+        var fileInfo = await GetFileBytes(id);
+        if (fileInfo.FileBytes.Length == 0)
+        {
+            throw new FileNotFoundException($"文件物理内容不存在：{file.FileName}");
+        }
+
+        return NcfFileTextExtractor.Extract(fileInfo.FileBytes, file.FileExtension, file.FileName);
+    }
+
+    public static string GetPublicAssetUrl(NcfFile file)
+    {
+        return file == null
+            ? null
+            : GetPublicAssetUrl(file.Id, file.ResourceScope, file.AccessLevel, file.ContentHash);
+    }
+
+    public static string GetPublicAssetUrl(NcfFileDto file)
+    {
+        return file == null
+            ? null
+            : GetPublicAssetUrl(file.Id, file.ResourceScope, file.AccessLevel, file.ContentHash);
+    }
+
+    private static string GetPublicAssetUrl(
+        int id,
+        NcfFileResourceScope resourceScope,
+        NcfFileAccessLevel accessLevel,
+        string contentHash)
+    {
+        if (resourceScope != NcfFileResourceScope.SiteAsset ||
+            accessLevel != NcfFileAccessLevel.Public ||
+            string.IsNullOrWhiteSpace(contentHash) || contentHash.Length < 16)
+        {
+            return null;
+        }
+
+        return $"/assets/{id}/{contentHash[..16].ToLowerInvariant()}";
+    }
+
+    private async Task ValidateFolderAsync(int? folderId, NcfFileResourceScope resourceScope)
+    {
+        if (!folderId.HasValue)
+        {
+            return;
+        }
+
+        var folderService = ServiceProvider.GetRequiredService<NcfFolderService>();
+        var folder = await folderService.GetObjectAsync(z => z.Id == folderId.Value);
+        if (folder == null)
+        {
+            throw new InvalidOperationException($"目标文件夹不存在：{folderId.Value}");
+        }
+
+        if (folder.ResourceScope != resourceScope)
+        {
+            throw new InvalidOperationException("目标文件夹的资源用途与当前上传用途不一致。");
+        }
+    }
+
+    private static async Task<string> CopyAndHashAsync(IFormFile file, string physicalPath)
+    {
+        using var sha256 = SHA256.Create();
+        await using var output = new FileStream(physicalPath, FileMode.CreateNew, FileAccess.Write, FileShare.None, 64 * 1024, useAsync: true);
+        await using var hashStream = new CryptoStream(output, sha256, CryptoStreamMode.Write, leaveOpen: false);
+        await file.CopyToAsync(hashStream);
+        hashStream.FlushFinalBlock();
+        return Convert.ToHexString(sha256.Hash!);
+    }
+
+    private string ResolvePhysicalPath(NcfFile file)
+    {
+        if (file == null || string.IsNullOrWhiteSpace(file.FilePath) ||
+            string.IsNullOrWhiteSpace(file.StorageFileName) || string.IsNullOrWhiteSpace(file.FileExtension) ||
+            !NcfFileResourcePolicy.IsValidScope(file.ResourceScope))
+        {
+            throw new InvalidOperationException("文件物理路径信息无效。");
+        }
+
+        var pathParts = file.FilePath.Replace('\\', '/').Split('/', StringSplitOptions.RemoveEmptyEntries);
+        var expectedRoot = NcfFileResourcePolicy.GetStorageRoot(file.ResourceScope);
+        var isLegacyKnowledgeBasePath = file.ResourceScope == NcfFileResourceScope.KnowledgeBase && pathParts.Length == 2;
+        var isScopedPath = pathParts.Length == 3 && string.Equals(pathParts[0], expectedRoot, StringComparison.Ordinal);
+        var yearIndex = isScopedPath ? 1 : 0;
+
+        if ((!isLegacyKnowledgeBasePath && !isScopedPath) ||
+            pathParts[yearIndex].Length != 4 ||
+            !int.TryParse(pathParts[yearIndex], out _) ||
+            !int.TryParse(pathParts[yearIndex + 1], out var month) ||
+            month is < 1 or > 12 ||
+            !Guid.TryParseExact(file.StorageFileName, "N", out _) ||
+            !NcfFileResourcePolicy.IsAllowedStoredExtension(file.ResourceScope, file.FileExtension))
+        {
+            throw new InvalidOperationException("文件物理路径元数据非法。");
+        }
+
+        var basePath = Path.GetFullPath(_baseFilePath);
+        var fullPath = Path.GetFullPath(Path.Combine(
+            basePath,
+            file.FilePath.Replace('/', Path.DirectorySeparatorChar),
+            file.StorageFileName + file.FileExtension));
+        var expectedPrefix = basePath.EndsWith(Path.DirectorySeparatorChar)
+            ? basePath
+            : basePath + Path.DirectorySeparatorChar;
+
+        var pathComparison = OperatingSystem.IsWindows()
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+        if (!fullPath.StartsWith(expectedPrefix, pathComparison))
+        {
+            throw new InvalidOperationException("文件物理路径越界。");
+        }
+
+        return fullPath;
+    }
+
+    private static void EnsureValidScope(NcfFileResourceScope resourceScope)
+    {
+        if (!NcfFileResourcePolicy.IsValidScope(resourceScope))
+        {
+            throw new ArgumentOutOfRangeException(nameof(resourceScope));
+        }
+    }
+
+    private static FileType GetFileType(string extension)
+    {
+        return extension.ToLowerInvariant() switch
+        {
+            ".txt" or ".log" or ".md" or ".markdown" or ".csv" or ".tsv" or ".yaml" or ".yml" => FileType.Text,
+            ".doc" or ".docx" => FileType.Word,
+            ".ppt" or ".pptx" => FileType.PowerPoint,
+            ".xls" or ".xlsx" => FileType.Excel,
+            ".cs" or ".js" or ".html" or ".htm" or ".css" or ".xml" or ".json" or ".ts" or ".sql" => FileType.Code,
+            _ => FileType.Other,
+        };
     }
 }

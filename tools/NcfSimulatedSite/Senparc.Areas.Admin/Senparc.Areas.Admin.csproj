@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.4.0</Version>
+		<Version>0.5.0</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -40,6 +40,10 @@
     2、新增 HostMetricsCollector，采集并展示 CPU、内存、网络与进程实时指标
     3、补充纽铃可见提醒示例 Provider 与请求参数，完善首页与页脚相关交互
     4、同步多语言资源以支持指标面板与换票相关文案
+    [2026-08-13] v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    1、新增 NeuCharPivot 工作流、执行日志、版本与自动保存管理入口
+    2、集成 A2A 发布配置、NeuBell、Webhook、回放和并行工作流页面
+    3、优化 AgentsManager 统计、操作交互及后台认证兼容
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -257,7 +258,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
         }
 
         [TestMethod]
-        public async Task HostedStart_ShouldHydratePersistedInterruptedHistory()
+        public async Task InitializePersistence_ShouldHydratePersistedInterruptedHistory()
         {
             var startedAt = DateTimeOffset.UtcNow.AddMinutes(-5);
             var interruptedAt = DateTimeOffset.UtcNow.AddMinutes(-1);
@@ -285,7 +286,7 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
             });
             var service = new XncfPreviewService(stateStore: store);
 
-            await ((IHostedService)service).StartAsync(CancellationToken.None);
+            await service.InitializePersistenceAsync(CancellationToken.None);
             var session = service.GetSession("persisted-session", includeOutput: true);
 
             Assert.IsNotNull(session);
@@ -298,18 +299,77 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
         }
 
         [TestMethod]
-        public async Task HostedStart_MissingPersistenceTables_ShouldContinueWithMemoryState()
+        public async Task InitializePersistence_MissingPersistenceTables_ShouldContinueWithMemoryState()
         {
             var service = new XncfPreviewService(
                 stateStore: new FailingPreviewStateStore(
                     new InvalidOperationException("Invalid object name 'XncfBuilderXncfPreviewTask'.")));
 
-            await ((IHostedService)service).StartAsync(CancellationToken.None);
+            await service.InitializePersistenceAsync(CancellationToken.None);
             var persistenceStatus = service.GetPersistenceStatus();
 
             Assert.IsFalse(persistenceStatus.IsAvailable);
             StringAssert.Contains(persistenceStatus.StatusMessage, "主站将继续运行");
             StringAssert.Contains(persistenceStatus.ErrorMessage, "XncfBuilderXncfPreviewTask");
+        }
+
+        [TestMethod]
+        public async Task HostedStart_ShouldDeferPersistenceUntilApplicationStarted()
+        {
+            using var lifetime = new TestHostApplicationLifetime();
+            var stateStore = new DeferredPreviewStateStore();
+            var previewService = new XncfPreviewService(stateStore: stateStore);
+            var initializer = new XncfPreviewPersistenceInitializerHostedService(previewService, lifetime);
+
+            await ((IHostedService)previewService).StartAsync(CancellationToken.None);
+            await initializer.StartAsync(CancellationToken.None);
+            await Task.Delay(50);
+            Assert.IsFalse(stateStore.LoadStarted.Task.IsCompleted);
+
+            try
+            {
+                lifetime.StartApplication();
+                await stateStore.LoadStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+                stateStore.CompleteLoad();
+                await stateStore.LoadCompleted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+                Assert.IsTrue(previewService.GetPersistenceStatus().IsAvailable);
+            }
+            finally
+            {
+                await initializer.StopAsync(CancellationToken.None);
+            }
+        }
+
+        [TestMethod]
+        public async Task HostedStop_WhenShutdownTimesOutWaitingForPreviewOperation_ShouldCompleteAfterCleanupWithoutThrow()
+        {
+            var service = new XncfPreviewService();
+            var operationLock = (SemaphoreSlim)typeof(XncfPreviewService)
+                .GetField("_operationLock", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetValue(service);
+            await operationLock.WaitAsync();
+            var lockHeld = true;
+
+            try
+            {
+                using var shutdownCancellation = new CancellationTokenSource();
+                var stopTask = ((IHostedService)service).StopAsync(shutdownCancellation.Token);
+                await Task.Delay(50);
+                Assert.IsFalse(stopTask.IsCompleted);
+
+                shutdownCancellation.Cancel();
+                operationLock.Release();
+                lockHeld = false;
+                await stopTask;
+            }
+            finally
+            {
+                if (lockHeld)
+                {
+                    operationLock.Release();
+                }
+            }
         }
 
         [TestMethod]
@@ -402,6 +462,70 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
                 CancellationToken cancellationToken = default)
             {
                 return Task.CompletedTask;
+            }
+        }
+
+        private sealed class DeferredPreviewStateStore : IXncfPreviewStateStore
+        {
+            private readonly TaskCompletionSource<IReadOnlyList<XncfPreviewPersistenceSnapshot>> _loadResult =
+                new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            public TaskCompletionSource LoadStarted { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            public TaskCompletionSource LoadCompleted { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            public async Task<IReadOnlyList<XncfPreviewPersistenceSnapshot>> LoadRecentAndInterruptAsync(
+                int maxCount,
+                DateTimeOffset interruptedAt,
+                CancellationToken cancellationToken = default)
+            {
+                LoadStarted.TrySetResult();
+                var snapshots = await _loadResult.Task.WaitAsync(cancellationToken);
+                LoadCompleted.TrySetResult();
+                return snapshots;
+            }
+
+            public Task SaveAsync(
+                XncfPreviewPersistenceSnapshot snapshot,
+                CancellationToken cancellationToken = default)
+            {
+                return Task.CompletedTask;
+            }
+
+            public void CompleteLoad()
+            {
+                _loadResult.TrySetResult(Array.Empty<XncfPreviewPersistenceSnapshot>());
+            }
+        }
+
+        private sealed class TestHostApplicationLifetime : IHostApplicationLifetime, IDisposable
+        {
+            private readonly CancellationTokenSource _applicationStarted = new();
+            private readonly CancellationTokenSource _applicationStopping = new();
+            private readonly CancellationTokenSource _applicationStopped = new();
+
+            public CancellationToken ApplicationStarted => _applicationStarted.Token;
+
+            public CancellationToken ApplicationStopping => _applicationStopping.Token;
+
+            public CancellationToken ApplicationStopped => _applicationStopped.Token;
+
+            public void StartApplication()
+            {
+                _applicationStarted.Cancel();
+            }
+
+            public void StopApplication()
+            {
+                _applicationStopping.Cancel();
+                _applicationStopped.Cancel();
+            }
+
+            public void Dispose()
+            {
+                _applicationStarted.Dispose();
+                _applicationStopping.Dispose();
+                _applicationStopped.Dispose();
             }
         }
 

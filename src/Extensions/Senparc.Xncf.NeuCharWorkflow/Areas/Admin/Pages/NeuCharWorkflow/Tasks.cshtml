@@ -1,0 +1,110 @@
+@page
+@model Senparc.Xncf.NeuCharWorkflow.Areas.NeuCharWorkflow.Pages.TasksModel
+@using Microsoft.Extensions.Localization
+@using Senparc.Xncf.NeuCharWorkflow
+@inject IStringLocalizer<NeuCharWorkflowResource> XR
+@{
+    ViewData["Title"] = XR["Title.Tasks"];
+    Layout = "_Layout_Vue";
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>@XR["Module.MenuName"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.Tasks"]</el-breadcrumb-item>
+}
+
+@section Style {
+    <link rel="stylesheet" href="~/css/NeuCharWorkflow/common.css" />
+    <link rel="stylesheet" href="~/css/NeuCharWorkflow/Tasks.css" />
+}
+
+<div class="neuchar-page workflow-tasks-page" v-loading="loading">
+    <div class="neuchar-page-header workflow-tasks-header">
+        <div>
+            <h2>Workflow 任务</h2>
+            <p>首次仅加载最新 30 条运行记录；滚动到底部会继续加载历史，正在运行的任务会自动更新。</p>
+        </div>
+        <div class="workflow-tasks-header-actions">
+            <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" placeholder="搜索工作流或状态"></el-input>
+            <el-button size="small" icon="el-icon-delete" type="danger" plain :loading="cleaning" @@click="quickCleanTasks">快速清理</el-button>
+            <el-button size="small" icon="el-icon-refresh" :loading="loading" @@click="refreshTasks">刷新</el-button>
+        </div>
+    </div>
+    <el-alert v-if="neuBellConsumeMessage"
+              :title="neuBellConsumeMessage"
+              :type="neuBellConsumeError ? 'warning' : 'success'"
+              :closable="false"
+              class="workflow-task-consume-status"></el-alert>
+
+    <section class="workflow-task-summary" aria-label="任务统计">
+        <button type="button" :class="['workflow-task-summary-card',{active:statusFilter===''}]" @@click="statusFilter=''">
+            <strong>{{tasks.length}}</strong><span>全部任务</span>
+        </button>
+        <button type="button" :class="['workflow-task-summary-card',{active:statusFilter==='running'}]" @@click="statusFilter='running'">
+            <strong>{{statusCount('running')}}</strong><span>正在运行</span>
+        </button>
+        <button type="button" :class="['workflow-task-summary-card',{active:statusFilter==='success'}]" @@click="statusFilter='success'">
+            <strong>{{statusCount('success')}}</strong><span>运行成功</span>
+        </button>
+        <button type="button" :class="['workflow-task-summary-card',{active:statusFilter==='failed'}]" @@click="statusFilter='failed'">
+            <strong>{{statusCount('failed')}}</strong><span>运行失败</span>
+        </button>
+    </section>
+
+    <section class="workflow-task-table-wrap">
+        <el-table v-if="filteredTasks.length" :data="filteredTasks" size="small" class="workflow-task-table" :row-class-name="taskRowClass" @@row-click="openTask">
+            <el-table-column label="工作流" min-width="180">
+                <template slot-scope="scope">
+                    <div class="workflow-task-workflow">
+                        <strong>{{scope.row.workflowName}}</strong>
+                        <small>#{{scope.row.workflowId}} · {{sourceText(scope.row.source)}}</small>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column label="状态" width="118">
+                <template slot-scope="scope">
+                    <el-tag size="mini" :type="statusType(scope.row.status)" effect="dark">{{statusText(scope.row.status)}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="开始时间" width="172">
+                <template slot-scope="scope">{{formatDate(scope.row.startedAt)}}</template>
+            </el-table-column>
+            <el-table-column label="完成时间" width="172">
+                <template slot-scope="scope">{{scope.row.finishedAt ? formatDate(scope.row.finishedAt) : '—'}}</template>
+            </el-table-column>
+            <el-table-column label="当前进度 / 结果" min-width="260">
+                <template slot-scope="scope">
+                    <span :class="['workflow-task-message',{error:scope.row.status==='failed'}]">{{summaryText(scope.row)}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" width="210" align="right">
+                <template slot-scope="scope">
+                    <el-button v-if="scope.row.status==='running'" type="danger" size="mini" plain icon="el-icon-circle-close"
+                               :loading="abortingTaskId===scope.row.taskId"
+                               @@click.stop="abortTask(scope.row)">中止</el-button>
+                    <el-button type="primary" size="mini" plain icon="el-icon-video-play"
+                               :disabled="scope.row.status==='running' || !scope.row.replayAvailable"
+                               @@click.stop="openTask(scope.row)">
+                        {{scope.row.status==='running' ? '运行中' : (scope.row.replayAvailable ? '回看运行' : '暂无快照')}}
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div v-else class="neuchar-empty workflow-task-empty">
+            <i class="el-icon-document"></i>
+            <h3>{{tasks.length ? '没有匹配的任务' : '还没有运行记录'}}</h3>
+            <p>{{tasks.length ? '调整搜索关键词或状态筛选后再试。' : '从工作流画布运行、Webhook 或定时触发后，任务会显示在这里。运行结束后可进入只读回看。'}}</p>
+        </div>
+        <div v-if="tasks.length" class="workflow-task-load-state" aria-live="polite">
+            <i v-if="loadingMore" class="el-icon-loading"></i>
+            <span v-if="loadingMore">正在加载更多记录…</span>
+            <span v-else-if="hasMore">继续向下滚动以加载更多记录</span>
+            <span v-else>没有更多记录</span>
+        </div>
+    </section>
+</div>
+
+@section scripts {
+    <script src="~/js/NeuCharWorkflow/common.js"></script>
+    <script src="~/js/NeuCharWorkflow/Tasks.js"></script>
+}

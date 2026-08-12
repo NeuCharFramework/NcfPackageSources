@@ -1,14 +1,14 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
-
+  
     文件名：AgentsManagerSenparcEntities_SqliteModelSnapshot.cs
-    文件功能描述：维护 Entity Framework 数据模型快照。
+    文件功能描述：数据库迁移与模型快照
 
 
     创建标识：Senparc - 20231021
 
-    修改标识：Senparc - 20260804
-    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
 ----------------------------------------------------------------*/
 
@@ -191,6 +191,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("ContextSharingMode")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
@@ -254,6 +257,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Property<int?>("FromAgentTemplateId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("FromParticipantKey")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FromParticipantKind")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FromParticipantName")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TEXT");
 
@@ -269,6 +281,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RemoteContextId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RemoteTaskId")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -336,6 +354,220 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.ToTable("Senparc_AgentsManager_ChatGroupMember");
                 });
 
+            modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.ChatGroupRemoteMember", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ChatGroupId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ContextSharingMode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Enable")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("RemoteAgentId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UID")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatGroupId");
+
+                    b.HasIndex("RemoteAgentId");
+
+                    b.HasIndex("ChatGroupId", "RemoteAgentId")
+                        .IsUnique();
+
+                    b.ToTable("Senparc_AgentsManager_ChatGroupRemoteMember");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.PublishedA2AAgent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AgentTemplateId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AllowFunctionCalls")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AuthHeaderName")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AuthSecretKey")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AuthenticationMode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CardDescription")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CardName")
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Enable")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("MaxInputCharacters")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PublicAgentKey")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SkillDescription")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SkillId")
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SkillName")
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AgentTemplateId")
+                        .IsUnique();
+
+                    b.HasIndex("Enable");
+
+                    b.HasIndex("PublicAgentKey")
+                        .IsUnique();
+
+                    b.ToTable("Senparc_AgentsManager_PublishedA2AAgent");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.RemoteAgent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AgentCardUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AuthHeaderName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AuthSecretKey")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AuthenticationMode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ConnectionStatus")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Enable")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("LastHealthCheckAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastHealthCheckMessage")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Protocol")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TimeoutSeconds")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AgentCardUrl");
+
+                    b.HasIndex("Enable");
+
+                    b.ToTable("Senparc_AgentsManager_RemoteAgent");
+                });
+
             modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.ChatGroup", b =>
                 {
                     b.HasOne("Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate", "AdminAgentTemplate")
@@ -397,6 +629,17 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Navigation("AgentTemplate");
                 });
 
+            modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.ChatGroupRemoteMember", b =>
+                {
+                    b.HasOne("Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.RemoteAgent", "RemoteAgent")
+                        .WithMany("ChatGroupRemoteMembers")
+                        .HasForeignKey("RemoteAgentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("RemoteAgent");
+                });
+
             modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate", b =>
                 {
                     b.Navigation("AdminChatGroups");
@@ -408,6 +651,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Navigation("FromChatGroupHistories");
 
                     b.Navigation("ToChatGroupHistoies");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.RemoteAgent", b =>
+                {
+                    b.Navigation("ChatGroupRemoteMembers");
                 });
 #pragma warning restore 612, 618
         }

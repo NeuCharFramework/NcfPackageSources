@@ -9,6 +9,22 @@
     return Math.abs(hash);
   }
 
+  // Id 仅在本地 Agent 域内唯一；混合群组使用 ParticipantKey 规避本地/远程同号冲突。
+  function participantKey(agent) {
+    return agent && agent.participantKey ? agent.participantKey : 'local:' + (agent ? agent.id : '0');
+  }
+
+  function linkParticipantKey(link) {
+    return link && link.participantKey ? link.participantKey : 'local:' + (link ? link.agentId : '0');
+  }
+
+  function collaborationParticipantKeys(collaboration) {
+    if (collaboration && Array.isArray(collaboration.participantKeys) && collaboration.participantKeys.length) {
+      return collaboration.participantKeys;
+    }
+    return (collaboration && collaboration.agentIds ? collaboration.agentIds : []).map(function (id) { return 'local:' + id; });
+  }
+
   function textSprite(text, options) {
     const fontSize = options.fontSize || 24;
     const padding = options.padding || 14;
@@ -394,10 +410,14 @@
 
     const groupGeom = new THREE.CylinderGeometry(0.9, 0.9, 16, 16);
     groups.forEach(function (group) {
+      const isEnabled = group.enable !== false;
+      const hasRunningTask = group.runningTaskCount > 0;
       const mat = new THREE.MeshStandardMaterial({
-        color: group.runningTaskCount > 0 ? 0x48c5ff : 0x7f91a6,
+        color: !isEnabled ? 0x6c5561 : (hasRunningTask ? 0x48c5ff : 0x7f91a6),
+        emissive: !isEnabled ? 0x331821 : 0x000000,
+        emissiveIntensity: !isEnabled ? 0.34 : 0,
         transparent: true,
-        opacity: 0.86,
+        opacity: isEnabled ? 0.86 : 0.48,
         metalness: 0.15,
         roughness: 0.55
       });
@@ -415,16 +435,18 @@
       const cancelled = statusMap[4] || statusMap['4'] || 0;
       const failed = statusMap[5] || statusMap['5'] || 0;
       const totalTasks = waiting + chatting + paused + finished + cancelled + failed;
+      const enableText = isEnabled ? '已启用' : '已停用';
       const text = group.name
+        + '\n状态:' + enableText
         + '\nTasks:' + totalTasks + ' Running:' + group.runningTaskCount
         + '\nW:' + waiting + ' C:' + chatting + ' P:' + paused + ' F:' + finished;
       const label = textSprite(text, {
         fontSize: 24,
         padding: 16,
         scaleDivisor: 18,
-        background: 'rgba(5,14,26,0.90)',
-        border: 'rgba(72,197,255,0.65)',
-        color: '#DDEFFF'
+        background: isEnabled ? 'rgba(5,14,26,0.90)' : 'rgba(40,17,24,0.92)',
+        border: isEnabled ? 'rgba(72,197,255,0.65)' : 'rgba(239,119,139,0.82)',
+        color: isEnabled ? '#DDEFFF' : '#FFE2E8'
       });
       label.position.set(group._pos.x, 19, group._pos.z);
       this.scene.add(label);
@@ -435,32 +457,34 @@
 
     const memberships = new Map();
     links.forEach(function (link) {
-      if (!memberships.has(link.agentId)) {
-        memberships.set(link.agentId, []);
+      const key = linkParticipantKey(link);
+      if (!memberships.has(key)) {
+        memberships.set(key, []);
       }
-      memberships.get(link.agentId).push(link.groupId);
+      memberships.get(key).push(link.groupId);
     });
 
     const activeGroupIds = new Set((this.currentSnapshot.collaborations || []).map(function (c) { return c.groupId; }));
     const activeAgentIds = new Set();
     const activeLinkKeySet = new Set();
     (this.currentSnapshot.collaborations || []).forEach(function (col) {
-      (col.agentIds || []).forEach(function (id) {
-        activeAgentIds.add(id);
-        activeLinkKeySet.add(col.groupId + '-' + id);
+      collaborationParticipantKeys(col).forEach(function (key) {
+        activeAgentIds.add(key);
+        activeLinkKeySet.add(col.groupId + '-' + key);
       });
     });
     const agentGeom = new THREE.SphereGeometry(1.6, 22, 22);
 
     agents.forEach(function (agent, index) {
-      const memberGroupIds = memberships.get(agent.id) || [];
+      const agentKey = participantKey(agent);
+      const memberGroupIds = memberships.get(agentKey) || [];
       let target = null;
 
       const activeGroupId = memberGroupIds.find(function (groupId) { return activeGroupIds.has(groupId); });
       if (activeGroupId) {
         const groupNode = this.groupById.get(activeGroupId);
         if (groupNode) {
-          const h = hashNumber(agent.id);
+          const h = hashNumber(agentKey);
           const theta = (h % 360) * Math.PI / 180;
           const spread = 4 + (h % 3);
           target = new THREE.Vector3(
@@ -474,7 +498,7 @@
       if (!target && memberGroupIds.length > 0) {
         const groupNode = this.groupById.get(memberGroupIds[0]);
         if (groupNode) {
-          const h = hashNumber(agent.id + '-base');
+          const h = hashNumber(agentKey + '-base');
           const theta = (h % 360) * Math.PI / 180;
           const spread = 10 + (h % 6);
           target = new THREE.Vector3(
@@ -491,7 +515,7 @@
       }
 
       const mat = new THREE.MeshStandardMaterial({
-        color: agent.enable ? 0x5ed4ff : 0x6e7d90,
+        color: agent.enable ? (agent.agentKind === 'RemoteA2A' ? 0xf59e0b : 0x5ed4ff) : 0x6e7d90,
         transparent: true,
         opacity: 0.98,
         metalness: 0.08,
@@ -499,7 +523,7 @@
       });
       const sphere = new THREE.Mesh(agentGeom, mat);
       sphere.position.copy(target);
-      sphere.userData = { type: 'agent', agentId: agent.id };
+      sphere.userData = { type: 'agent', agentId: agentKey };
       this.decorateCuteAgent(sphere, agent.enable);
       this.scene.add(sphere);
 
@@ -508,6 +532,7 @@
       const stateText = agent.enable ? 'Enabled' : 'Disabled';
       const label = textSprite(
         agent.name
+        + '\nType:' + (agent.agentKind === 'RemoteA2A' ? 'Remote A2A' : 'Local')
         + '\nPrompt:' + promptText
         + '\nScore:' + scoreText + '  Running:' + (agent.chattingCount || 0)
         + '\nState:' + stateText,
@@ -520,7 +545,7 @@
         color: '#E8F7FF'
       });
       label.position.set(target.x, target.y + 3.7, target.z);
-      label.userData = { type: 'agent-label', agentId: agent.id };
+      label.userData = { type: 'agent-label', agentId: agentKey };
       label.material.opacity = 0.42;
       this.scene.add(label);
 
@@ -531,9 +556,9 @@
         target: target,
         groupIds: memberGroupIds,
         pulseRing: null,
-        isActive: activeAgentIds.has(agent.id) || agent.chattingCount > 0,
-        pulsePhase: (hashNumber(agent.id) % 100) / 10,
-        motionPhase: (hashNumber(agent.id + '-motion') % 100) / 16,
+        isActive: activeAgentIds.has(agentKey) || agent.chattingCount > 0,
+        pulsePhase: (hashNumber(agentKey) % 100) / 10,
+        motionPhase: (hashNumber(agentKey + '-motion') % 100) / 16,
         baseY: target.y
       };
 
@@ -554,11 +579,11 @@
       }
 
       this.agentObjects.push(entry);
-      this.agentById.set(agent.id, entry);
+      this.agentById.set(agentKey, entry);
     }.bind(this));
 
     (this.currentSnapshot.collaborations || []).forEach(function (col) {
-      const members = (col.agentIds || []).map(function (id) { return this.agentById.get(id); }.bind(this)).filter(Boolean);
+      const members = collaborationParticipantKeys(col).map(function (key) { return this.agentById.get(key); }.bind(this)).filter(Boolean);
       if (members.length < 2) {
         return;
       }
@@ -577,7 +602,8 @@
 
     links.forEach(function (link) {
       const groupNode = this.groupById.get(link.groupId);
-      const agentNode = this.agentById.get(link.agentId);
+      const linkKey = linkParticipantKey(link);
+      const agentNode = this.agentById.get(linkKey);
       if (!groupNode || !agentNode) {
         return;
       }
@@ -590,11 +616,13 @@
         opacity: 0.5
       });
       const line = new THREE.Line(geometry, material);
-      const activeKey = link.groupId + '-' + link.agentId;
+      const activeKey = link.groupId + '-' + linkKey;
+      const isGroupEnabled = groupNode.group.enable !== false;
       line.userData = {
         groupId: link.groupId,
-        agentId: link.agentId,
-        isActive: activeLinkKeySet.has(activeKey),
+        agentId: linkKey,
+        isActive: isGroupEnabled && activeLinkKeySet.has(activeKey),
+        isGroupEnabled: isGroupEnabled,
         phase: (hashNumber(activeKey) % 100) / 10,
         flowDot: null
       };
@@ -616,6 +644,10 @@
       }
 
       this.scene.add(line);
+      if (!isGroupEnabled) {
+        line.material.color.setHex(0x735764);
+        line.material.opacity = 0.24;
+      }
       this.linkObjects.push(line);
     }.bind(this));
 
@@ -751,18 +783,22 @@
 
     if (activeGroup) {
       const focused = (this.currentSnapshot.groups || []).find(function (g) { return g.id === activeGroup; });
-      if (focused && Array.isArray(focused.memberAgentIds)) {
-        focused.memberAgentIds.forEach(function (id) { activeMemberSet.add(id); });
+      if (focused) {
+        const memberKeys = (Array.isArray(focused.memberParticipantKeys) && focused.memberParticipantKeys.length)
+          ? focused.memberParticipantKeys
+          : (focused.memberAgentIds || []).map(function (id) { return 'local:' + id; });
+        memberKeys.forEach(function (key) { activeMemberSet.add(key); });
       }
     }
 
     this.agentObjects.forEach(function (entry) {
-      const isHovered = this.activeAgentId && entry.agent.id === this.activeAgentId;
-      const isGroupFocused = activeGroup && activeMemberSet.has(entry.agent.id);
-      const opacity = !activeGroup || activeMemberSet.has(entry.agent.id) ? 0.98 : 0.08;
+      const agentKey = participantKey(entry.agent);
+      const isHovered = this.activeAgentId && agentKey === this.activeAgentId;
+      const isGroupFocused = activeGroup && activeMemberSet.has(agentKey);
+      const opacity = !activeGroup || activeMemberSet.has(agentKey) ? 0.98 : 0.08;
       entry.mesh.material.opacity = opacity;
       if (entry.label) {
-        const baseOpacity = !activeGroup || activeMemberSet.has(entry.agent.id) ? 0.42 : 0.1;
+        const baseOpacity = !activeGroup || activeMemberSet.has(agentKey) ? 0.42 : 0.1;
         entry.label.material.opacity = (isHovered || isGroupFocused) ? 1 : baseOpacity;
       }
     }.bind(this));
@@ -780,7 +816,7 @@
     this.linkObjects.forEach(function (line) {
       if (!activeGroup) {
         if (!line.userData.isActive) {
-          line.material.opacity = 0.5;
+          line.material.opacity = line.userData.isGroupEnabled ? 0.5 : 0.24;
         }
       } else {
         line.material.opacity = line.userData.groupId === activeGroup ? 0.85 : 0.08;

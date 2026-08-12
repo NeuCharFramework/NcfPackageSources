@@ -3,10 +3,10 @@
   
     文件名：ChatTaskStreamHub.cs
     文件功能描述：ChatTaskStreamHub 服务逻辑
-    
-    
+
+
     创建标识：Senparc - 20260626
-    
+
     修改标识：Senparc - 20260701
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
@@ -21,6 +21,10 @@
 
     修改标识：Senparc - 20260705
     修改描述：v0.11.2-preview4 重构系统配置初始化与更新流程并统一模型处理
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -200,6 +204,8 @@ public sealed class ChatTaskStreamEvent
     public int ChatTaskId { get; set; }
     public int? HistoryId { get; set; }
     public int? FromAgentTemplateId { get; set; }
+    public string FromParticipantKey { get; set; }
+    public string FromParticipantKind { get; set; }
     public string FromAgentName { get; set; }
     public string ResponseId { get; set; }
     public string Text { get; set; }

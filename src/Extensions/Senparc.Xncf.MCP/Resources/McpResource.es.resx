@@ -28,7 +28,7 @@
     <value>Ejecutar MCP</value>
   </data>
   <data name="Function.MCP.Execute.Description" xml:space="preserve">
-    <value>Ejecuta MCP; la dirección predeterminada del módulo es http://localhost:5000/{Module Name}/sse</value>
+    <value>Ejecuta MCP; la dirección predeterminada del módulo es http://localhost:5080/{Module Name}/sse</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Función de ejemplo</value>
@@ -91,7 +91,7 @@
     <value>Servidor MCP||Elija un servidor registrado o introduzca una dirección personalizada</value>
   </data>
   <data name="Parameter.MCP.Endpoint" xml:space="preserve">
-    <value>Dirección del servidor MCP||Obligatoria para entrada manual; predeterminada: http://localhost:5000/mcp-senparc-xncf-mcp/sse</value>
+    <value>Dirección del servidor MCP||Obligatoria para entrada manual; predeterminada: http://localhost:5080/mcp-senparc-xncf-mcp/sse</value>
   </data>
   <data name="Parameter.MCP.Request" xml:space="preserve">
     <value>Solicitud||Solicitud que se enviará al servidor MCP</value>

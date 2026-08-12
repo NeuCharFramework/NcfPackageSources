@@ -28,7 +28,7 @@
     <value>MCP を実行</value>
   </data>
   <data name="Function.MCP.Execute.Description" xml:space="preserve">
-    <value>MCP を実行します。モジュール選択時の既定アドレスは http://localhost:5000/{Module Name}/sse です</value>
+    <value>MCP を実行します。モジュール選択時の既定アドレスは http://localhost:5080/{Module Name}/sse です</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>サンプル関数</value>
@@ -91,7 +91,7 @@
     <value>MCP サーバー||登録済みサーバーを選択するか、カスタムアドレスを入力します</value>
   </data>
   <data name="Parameter.MCP.Endpoint" xml:space="preserve">
-    <value>MCP サーバーアドレス||手動入力時は必須です。既定値：http://localhost:5000/mcp-senparc-xncf-mcp/sse</value>
+    <value>MCP サーバーアドレス||手動入力時は必須です。既定値：http://localhost:5080/mcp-senparc-xncf-mcp/sse</value>
   </data>
   <data name="Parameter.MCP.Request" xml:space="preserve">
     <value>リクエスト||MCP サーバーへ送信するリクエスト</value>

@@ -28,7 +28,7 @@
     <value>Выполнить MCP</value>
   </data>
   <data name="Function.MCP.Execute.Description" xml:space="preserve">
-    <value>Выполняет MCP; адрес модуля по умолчанию: http://localhost:5000/{Module Name}/sse</value>
+    <value>Выполняет MCP; адрес модуля по умолчанию: http://localhost:5080/{Module Name}/sse</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Пример функции</value>
@@ -91,7 +91,7 @@
     <value>Сервер MCP||Выберите зарегистрированный сервер или введите пользовательский адрес</value>
   </data>
   <data name="Parameter.MCP.Endpoint" xml:space="preserve">
-    <value>Адрес сервера MCP||Обязателен при ручном вводе; по умолчанию: http://localhost:5000/mcp-senparc-xncf-mcp/sse</value>
+    <value>Адрес сервера MCP||Обязателен при ручном вводе; по умолчанию: http://localhost:5080/mcp-senparc-xncf-mcp/sse</value>
   </data>
   <data name="Parameter.MCP.Request" xml:space="preserve">
     <value>Запрос||Запрос для отправки серверу MCP</value>

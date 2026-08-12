@@ -3,15 +3,18 @@
   
     文件名：Register.Database.cs
     文件功能描述：Register.Database 相关实现
-    
-    
+
+
     创建标识：Senparc - 20240616
-    
+
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
     修改标识：Senparc - 20260804
     修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
 ----------------------------------------------------------------*/
 
@@ -50,6 +53,12 @@ namespace Senparc.Xncf.AgentsManager
 
             modelBuilder.ApplyConfiguration(new ChatGroupConfigurationMapping());
             modelBuilder.ApplyConfiguration(new AgentTemplateConfigurationMapping());
+            // 远程 A2A Agent 的映射必须显式注册：当前模块的设计时 DbContext
+            // 不会自动扫描新增的 Mapping 类型。缺少此处会导致索引与 NoAction 删除策略
+            // 没有写入数据库迁移。
+            modelBuilder.ApplyConfiguration(new RemoteAgentConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new ChatGroupRemoteMemberConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new PublishedA2AAgentConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)

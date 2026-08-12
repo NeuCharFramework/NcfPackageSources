@@ -1,4 +1,4 @@
-new Vue({
+var app = new Vue({
     el: "#app",
     data() {
         var validateCode = (rule, value, callback) => {
@@ -268,14 +268,16 @@ new Vue({
                 const id = typeof fileId === 'number' ? fileId : parseInt(fileId, 10);
                 if (!isNaN(id)) {
                     that.groupForm.files = that.groupForm.files || [];
-                    that.groupForm.files.push({ id: id, name: file.name || file.fileName || '' });
+                    if (!that.groupForm.files.some(item => Number(item.id) === id)) {
+                        that.groupForm.files.push({ id: id, name: file.name || file.fileName || '' });
+                    }
                 }
                 await that.getFileListData('file');
                 that.$nextTick(() => {
                     const row = that.fileList.find(i => i.id === id);
                     if (row) that.toggleSelection(that.groupForm.files.map(f => that.fileList.find(i => i.id === f.id)).filter(Boolean));
                 });
-                that.$notify({ title: '成功', message: '文件已上传至文件管理', type: 'success' });
+                that.$notify({ title: '成功', message: '资料已上传并勾选，请点击“确认”保存关联', type: 'success' });
             } else {
                 that.$notify.error({ title: '失败', message: (res && res.errorMessage) || '上传失败，请重试' });
             }
@@ -557,7 +559,7 @@ new Vue({
                         const res = await service.post(serviceURL, requestData);
                         const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
                         if (success) {
-                            that.$notify({ title: '成功', message: `知识库文件关联已同步（${fileIds.length} 个）`, type: 'success', duration: 2000 });
+                            that.$notify({ title: '成功', message: `已保存 ${fileIds.length} 份资料关联；请点击“向量化”使召回结果更新。`, type: 'success', duration: 3500 });
                             that.visible.drawerGroup = false;
                             that.getList();
                         } else {
@@ -736,63 +738,25 @@ new Vue({
             this.fileQueryList.pageIndex = 1
             this.getFileListData('file')
         },
-        // 配置页文件列表：删除文件（删除数据库与物理文件，并刷新列表与已选）
-        handleConfigFileDelete(row) {
-            const that = this
-            that.$confirm(`确认删除文件「${row.fileName || row.name}」吗？删除后数据库与物理文件均会移除。`, '删除确认', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                that.doDeleteFileById(row.id).then(ok => {
-                    if (ok) {
-                        that.groupForm.files = (that.groupForm.files || []).filter(f => f.id !== row.id)
-                        that.getFileListData('file')
-                    }
-                })
-            }).catch(() => {})
+        // 配置抽屉只管理“关联”。删除文件会影响其他知识库和物理资源，必须回文件资源管理页单独执行。
+        removeConfigFileSelection(row) {
+            this.groupForm.files = (this.groupForm.files || []).filter(f => Number(f.id) !== Number(row.id))
+            this.$nextTick(() => {
+                const table = this.$refs.groupAgentTable
+                if (table) table.toggleRowSelection(row, false)
+            })
         },
-        // 配置页文件列表：批量删除（删除当前选中的多行，并同步数据库与物理文件）
-        handleConfigFileBatchDelete() {
-            const that = this
-            const selected = (that.groupForm.files || []).slice()
-            if (selected.length === 0) {
-                that.$message.warning('请先勾选需要删除的文件')
+        clearConfigFileSelection() {
+            if (!(this.groupForm.files || []).length) {
+                this.$message.info('当前没有已选择的资料')
                 return
             }
-            that.$confirm(`确认删除已选中的 ${selected.length} 个文件吗？删除后数据库与物理文件均会移除。`, '批量删除确认', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
+            this.$confirm('仅取消当前知识库的待保存关联，不会删除文件。确认继续吗？', '清空选择', {
+                confirmButtonText: '清空', cancelButtonText: '取消', type: 'warning'
             }).then(() => {
-                const deleteUrl = '/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.DeleteFile'
-                const promises = selected.map(f => service.post(deleteUrl, { id: f.id }).then(res => {
-                    const ok = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)))
-                    return !!ok
-                }).catch(() => false))
-                Promise.all(promises).then(results => {
-                    const successCount = results.filter(Boolean).length
-                    that.groupForm.files = []
-                    that.getFileListData('file')
-                    that.$notify({
-                        title: successCount === selected.length ? '成功' : '部分完成',
-                        message: `已删除 ${successCount}/${selected.length} 个文件`,
-                        type: successCount === selected.length ? 'success' : 'warning'
-                    })
-                })
+                this.groupForm.files = []
+                this.$nextTick(() => this.$refs.groupAgentTable?.clearSelection())
             }).catch(() => {})
-        },
-        doDeleteFileById(id) {
-            const url = '/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.DeleteFile'
-            return service.post(url, { id: id }).then(res => {
-                const ok = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)))
-                if (ok) this.$notify({ title: '成功', message: '文件已删除', type: 'success' })
-                else this.$notify({ title: '失败', message: (res && res.data && res.data.errorMessage) || '删除失败', type: 'error' })
-                return ok
-            }).catch(err => {
-                this.$notify({ title: '错误', message: '删除失败: ' + (err.message || err), type: 'error' })
-                return false
-            })
         },
         getCurrentRow(row) {
             let that = this

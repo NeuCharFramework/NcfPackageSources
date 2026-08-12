@@ -3,15 +3,18 @@
   
     文件名：ChatGroupHistory.cs
     文件功能描述：ChatGroupHistory 数据模型定义
-    
-    
+
+
     创建标识：Senparc - 20240616
-    
+
     修改标识：Senparc - 20260701
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
 ----------------------------------------------------------------*/
 
@@ -52,6 +55,23 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
 
         [InverseProperty(nameof(AgentTemplate.ToChatGroupHistoies))]
         public AgentTemplate ToAgentTemplate { get; private set; }
+
+        /// <summary>
+        /// 统一参与者键，例如 local:12 或 remote:5。旧记录保持 null，由原有 AgentTemplateId 继续兼容读取。
+        /// </summary>
+        public string FromParticipantKey { get; private set; }
+
+        /// <summary>参与者类型：Local 或 RemoteA2A。</summary>
+        public string FromParticipantKind { get; private set; }
+
+        /// <summary>写入历史时的显示名称，远程 Agent 不依赖本地模板即可展示。</summary>
+        public string FromParticipantName { get; private set; }
+
+        /// <summary>A2A 会话上下文 ID，仅远程消息使用。</summary>
+        public string RemoteContextId { get; private set; }
+
+        /// <summary>A2A 任务 ID，仅远程消息使用。</summary>
+        public string RemoteTaskId { get; private set; }
 
         //[ForeignKey(nameof(FromChatGroupMember))]
         //public int? FromChatGroupMemberId { get; private set; }
@@ -103,6 +123,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             FromAgentTemplate = chatGroupHistoryDto.FromAgentTemplate;
             ToAgentTemplateId = chatGroupHistoryDto.ToAgentTemplateId;
             ToAgentTemplate = chatGroupHistoryDto.ToAgentTemplate;
+            FromParticipantKey = chatGroupHistoryDto.FromParticipantKey;
+            FromParticipantKind = chatGroupHistoryDto.FromParticipantKind;
+            FromParticipantName = chatGroupHistoryDto.FromParticipantName;
+            RemoteContextId = chatGroupHistoryDto.RemoteContextId;
+            RemoteTaskId = chatGroupHistoryDto.RemoteTaskId;
             //FromChatGroupMemberId = chatGroupHistoryDto.FromChatGroupMemberId;
             //FromChatGroupMember = chatGroupHistoryDto.FromChatGroupMember;
             //ToChatGroupMemberId = chatGroupHistoryDto.ToChatGroupMemberId;

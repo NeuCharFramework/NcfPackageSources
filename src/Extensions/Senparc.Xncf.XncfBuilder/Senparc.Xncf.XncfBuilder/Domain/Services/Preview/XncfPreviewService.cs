@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
 
+    修改标识：Senparc - 20260813
+    修改描述：v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Hosting;
@@ -94,9 +97,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             _persistenceStatusUpdatedAt = DateTimeOffset.Now;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             Directory.CreateDirectory(_previewRoot);
+            return Task.CompletedTask;
+        }
+
+        internal async Task InitializePersistenceAsync(CancellationToken cancellationToken)
+        {
             if (_stateStore == null)
             {
                 return;
@@ -111,7 +119,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                     .ConfigureAwait(false);
                 foreach (var snapshot in persistedSessions)
                 {
-                    _sessions[snapshot.SessionId] = RestoreState(snapshot);
+                    _sessions.TryAdd(snapshot.SessionId, RestoreState(snapshot));
                 }
 
                 SetPersistenceAvailable();
@@ -126,9 +134,25 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            await _operationLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+            RequestHostStopForActiveSessions();
+
             try
             {
+                await _operationLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                _logger?.LogInformation(
+                    "XNCF preview cleanup did not acquire the operation lock before host shutdown completed. " +
+                    "Active previews have already received the stop signal; waiting for their cleanup to finish.");
+                await _operationLock.WaitAsync(CancellationToken.None).ConfigureAwait(false);
+            }
+
+            try
+            {
+                // An in-flight request can have created a session while shutdown was waiting for the lock.
+                RequestHostStopForActiveSessions();
+
                 foreach (var state in _sessions.Values.ToArray())
                 {
                     if (GetStage(state).IsTerminal())
@@ -142,7 +166,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                         "主站正在关闭预览进程。",
                         null,
                         CancellationToken.None).ConfigureAwait(false);
-                    await StopStateAsync(state, deleteFiles: true, log: null, cancellationToken).ConfigureAwait(false);
+                    await StopStateAsync(state, deleteFiles: true, log: null, CancellationToken.None).ConfigureAwait(false);
                     await SetStageAndPersistAsync(
                         state,
                         XncfPreviewStage.Stopped,
@@ -1372,6 +1396,31 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             catch
             {
                 // The process may have exited between the checks.
+            }
+        }
+
+        private void RequestHostStopForActiveSessions()
+        {
+            foreach (var state in _sessions.Values.ToArray())
+            {
+                if (GetStage(state).IsTerminal())
+                {
+                    continue;
+                }
+
+                state.StopCancellation.Cancel();
+                SetStage(state, XncfPreviewStage.Stopping, "主站正在关闭预览进程。", null);
+
+                Process process;
+                lock (state.SyncRoot)
+                {
+                    process = state.Process;
+                }
+
+                if (process != null)
+                {
+                    TryKill(process);
+                }
             }
         }
 

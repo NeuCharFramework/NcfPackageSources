@@ -3,12 +3,15 @@
   
     文件名：ThreadInfo.cs
     文件功能描述：ThreadInfo 相关实现
-    
-    
+
+
     创建标识：Senparc - 20200724
-    
+
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.25.0-preview7 增强线程生命周期控制与函数参数数值类型解析
 
 ----------------------------------------------------------------*/
 
@@ -18,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase.Threads
@@ -43,6 +47,12 @@ namespace Senparc.Ncf.XncfBase.Threads
         /// 发生异常时的处理
         /// </summary>
         public Func<Exception, Task> ExceptionHandler { get; set; }
+
+        /// <summary>
+        /// 应用正在停止时取消的令牌，由 <see cref="XncfThreadBuilder"/> 在启动线程时提供。
+        /// </summary>
+        public CancellationToken StoppingToken { get; internal set; } = CancellationToken.None;
+
         /// <summary>
         /// 最后故事记录
         /// </summary>

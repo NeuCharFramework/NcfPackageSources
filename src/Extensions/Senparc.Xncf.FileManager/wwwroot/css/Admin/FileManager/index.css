@@ -1,19 +1,116 @@
+.file-manager-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.file-manager-folders {
+    width: 270px;
+    flex: 0 0 270px;
+}
+
+.file-manager-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.file-manager-card-header,
+.file-manager-toolbar,
+.file-manager-tree-node {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.file-manager-root-button {
+    width: 100%;
+    margin-bottom: 6px;
+    text-align: left;
+}
+
+.file-manager-root-button.is-active {
+    color: #409eff;
+    background: #ecf5ff;
+}
+
+.file-manager-tree-node {
+    width: 100%;
+    min-width: 0;
+}
+
+.file-manager-tree-actions {
+    display: none;
+    white-space: nowrap;
+}
+
+.el-tree-node__content:hover .file-manager-tree-actions {
+    display: inline-flex;
+}
+
+.file-manager-tree-actions .el-button {
+    margin-left: 2px;
+    padding: 2px;
+}
+
 .filter-container {
     padding-bottom: 10px;
+}
+
+.file-manager-scope-select {
+    width: 160px;
+    margin-right: 8px;
+}
+
+.file-manager-scope-hint,
+.file-manager-upload-target {
+    margin-bottom: 12px;
+}
+
+.folder-breadcrumb {
+    margin: 6px 0 12px;
 }
 
 .pagination-container {
     padding: 20px 0;
 }
 
-.el-upload-dragger {
-    width: 100%;
+.file-manager-upload-note {
+    margin-top: 10px;
 }
 
-.el-upload {
-    width: 100%;
+.file-manager-empty {
+    display: flex;
+    min-height: 180px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    color: #909399;
 }
 
-.el-dialog .el-upload {
-    width: auto;
-} 
+.file-manager-empty i {
+    color: #409eff;
+    font-size: 30px;
+}
+
+.file-manager-empty strong {
+    color: #606266;
+}
+
+.file-manager-guide {
+    margin: 0;
+    padding-left: 22px;
+    color: #606266;
+    line-height: 1.9;
+}
+
+@media (max-width: 900px) {
+    .file-manager-layout {
+        display: block;
+    }
+
+    .file-manager-folders {
+        width: auto;
+        margin-bottom: 16px;
+    }
+}

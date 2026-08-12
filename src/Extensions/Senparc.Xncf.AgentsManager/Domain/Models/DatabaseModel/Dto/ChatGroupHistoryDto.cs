@@ -3,15 +3,18 @@
   
     文件名：ChatGroupHistoryDto.cs
     文件功能描述：ChatGroupHistoryDto 数据传输对象定义
-    
-    
+
+
     创建标识：Senparc - 20240616
-    
+
     修改标识：Senparc - 20260701
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
 ----------------------------------------------------------------*/
 
@@ -40,6 +43,16 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public int? ToAgentTemplateId { get; set; }
 
         public AgentTemplate ToAgentTemplate { get; set; }
+
+        public string FromParticipantKey { get; set; }
+
+        public string FromParticipantKind { get; set; }
+
+        public string FromParticipantName { get; set; }
+
+        public string RemoteContextId { get; set; }
+
+        public string RemoteTaskId { get; set; }
 
         //public int? FromChatGroupMemberId { get; set; }
 
@@ -106,6 +119,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             FromAgentTemplate = chatGroupHistory.FromAgentTemplate;
             ToAgentTemplateId = chatGroupHistory.ToAgentTemplateId;
             ToAgentTemplate = chatGroupHistory.ToAgentTemplate;
+            FromParticipantKey = chatGroupHistory.FromParticipantKey;
+            FromParticipantKind = chatGroupHistory.FromParticipantKind;
+            FromParticipantName = chatGroupHistory.FromParticipantName;
+            RemoteContextId = chatGroupHistory.RemoteContextId;
+            RemoteTaskId = chatGroupHistory.RemoteTaskId;
             //FromChatGroupMemberId = chatGroupHistory.FromChatGroupMemberId;
             //FromChatGroupMember = chatGroupHistory.FromChatGroupMember;
             //ToChatGroupMemberId = chatGroupHistory.ToChatGroupMemberId;

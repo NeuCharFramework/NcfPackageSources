@@ -3,10 +3,10 @@
   
     文件名：Register.cs
     文件功能描述：模块注册与初始化逻辑
-    
-    
+
+
     创建标识：Senparc - 20200818
-    
+
     修改标识：Senparc - 20260701
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
@@ -19,9 +19,14 @@
     修改标识：Senparc - 20260717
     修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+
 ----------------------------------------------------------------*/
 
+using A2A.AspNetCore;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -40,7 +45,9 @@ using Senparc.Xncf.AgentsManager.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
+using Senparc.Ncf.Shared.Abstractions.ChatAgent;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -51,11 +58,13 @@ namespace Senparc.Xncf.AgentsManager
     [XncfRegister]
     public partial class Register : XncfRegisterBase, IXncfRegister
     {
+        public const string ModuleUid = "D858D7FA-775A-4690-9023-CFB0B3B84994";
+
         #region IXncfRegister 接口
 
         public override string Name => "Senparc.Xncf.AgentsManager";
 
-        public override string Uid => "D858D7FA-775A-4690-9023-CFB0B3B84994";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
+        public override string Uid => ModuleUid;//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
         public override string Version => "0.3.22";//必须填写版本号
 
@@ -115,6 +124,9 @@ namespace Senparc.Xncf.AgentsManager
                 profile.CreateMap<AgentTemplate, AgentTemplateSimpleStatusDto>().ReverseMap();
                 profile.CreateMap<ChatGroup, ChatGroupDto>().ReverseMap();
                 profile.CreateMap<ChatGroupMember, ChatGroupMemberDto>().ReverseMap();
+                profile.CreateMap<RemoteAgent, RemoteAgentDto>().ReverseMap();
+                profile.CreateMap<ChatGroupRemoteMember, ChatGroupRemoteMemberDto>().ReverseMap();
+                profile.CreateMap<PublishedA2AAgent, PublishedA2AAgentDto>().ReverseMap();
                 profile.CreateMap<ChatGroupHistory, ChatGroupHistoryDto>().ReverseMap();
                 profile.CreateMap<ChatTask, ChatTaskDto>().ReverseMap();
             });
@@ -129,6 +141,19 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
             services.AddScoped<ChatGroupMemberService>();
+            services.AddScoped<ChatGroupRemoteMemberService>();
+            services.AddScoped<RemoteAgentService>();
+            services.AddScoped<PublishedA2AAgentService>();
+            services.AddScoped<AgentTemplateRunner>();
+            services.AddHttpClient(RemoteA2AAgentFactory.HttpClientName);
+            services.AddScoped<RemoteA2AAgentFactory>();
+            services.AddHttpContextAccessor();
+            services.AddSingleton<PublishedA2AServerRegistry>();
+            services.AddSingleton<PublishedA2ARequestHandler>();
+            services.AddScoped<PublishedA2AAgentFactory>();
+            services.AddScoped<AgentsWorkflowObjectProvider>();
+            services.AddScoped<IWorkflowObjectProvider>(serviceProvider =>
+                serviceProvider.GetRequiredService<AgentsWorkflowObjectProvider>());
 
             //AI Plugins DI
             services.AddScoped<PromptCatalyzerPlugin>();
@@ -156,12 +181,34 @@ namespace Senparc.Xncf.AgentsManager
             aiPlugins.Add(typeof(FormatorPlugin));
             aiPlugins.Add(typeof(TranslatorPlugin));
 
+            // NCF 模块在宿主 UseRouting() 之前初始化。为 A2A JSON-RPC 建立独立分支，
+            // 确保其自身先路由再映射端点，而 Agent Card 的 GET 请求仍交给 MVC 控制器。
+            app.UseWhen(context =>
+            {
+                if (!HttpMethods.IsPost(context.Request.Method))
+                {
+                    return false;
+                }
+
+                var segments = context.Request.Path.Value?.Trim('/').Split('/');
+                return segments?.Length == 2
+                    && string.Equals(segments[0], "a2a", StringComparison.OrdinalIgnoreCase)
+                    && !string.IsNullOrWhiteSpace(segments[1]);
+            }, a2aApp =>
+            {
+                a2aApp.UseRouting();
+                a2aApp.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapA2A(
+                        a2aApp.ApplicationServices.GetRequiredService<PublishedA2ARequestHandler>(),
+                        "/a2a/{agentKey}");
+                });
+            });
+
             return base.UseXncfModule(app, registerService);
         }
     }
 }
-
-
 
 
 

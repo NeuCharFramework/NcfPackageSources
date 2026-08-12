@@ -12,6 +12,7 @@ using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using System.Reflection;
 
 namespace Senparc.Xncf.AgentsManagerTests
 {
@@ -176,6 +177,85 @@ namespace Senparc.Xncf.AgentsManagerTests
     {
         public AgentsManagerTestBase() : base(null, new AgentsManagerSeedData())
         {
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_PublicAgentKey_IsNormalizedAndValidated()
+        {
+            Assert.AreEqual("product-agent-1", PublishedA2AAgent.NormalizePublicAgentKey(" Product-Agent-1 "));
+            Assert.ThrowsException<ArgumentException>(() => PublishedA2AAgent.NormalizePublicAgentKey("product_agent"));
+        }
+
+        [TestMethod]
+        public void RemoteA2AAgentCardUrl_UsesPathRelativeToTheAgentRoot()
+        {
+            var splitMethod = typeof(RemoteA2AAgentFactory).GetMethod(
+                "SplitAgentCardUrl",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(splitMethod);
+
+            if (splitMethod.Invoke(
+                    null,
+                    new object[] { new Uri("http://localhost:5000/a2a/agent-5013/.well-known/agent-card.json") })
+                is not ValueTuple<Uri, string> result)
+            {
+                Assert.Fail("Remote Agent Card URL split result is invalid.");
+                return;
+            }
+
+            Assert.AreEqual("http://localhost:5000/a2a/agent-5013/", result.Item1.AbsoluteUri);
+            Assert.AreEqual(".well-known/agent-card.json", result.Item2);
+            Assert.AreEqual(
+                "http://localhost:5000/a2a/agent-5013/.well-known/agent-card.json",
+                new Uri(result.Item1, result.Item2).AbsoluteUri);
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_UpstreamServiceFailure_IsNotPublishedAsAResponse()
+        {
+            var containsFailureMethod = typeof(PublishedA2AAgentFactory).GetMethod(
+                "ContainsServiceFailureSignature",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(containsFailureMethod);
+
+            Assert.IsTrue((bool)containsFailureMethod.Invoke(
+                null,
+                new object[] { "Service request failed. Status:403 (Forbidden)" })!);
+            Assert.IsTrue((bool)containsFailureMethod.Invoke(
+                null,
+                new object[] { "ClientResultException: StatusCode: 401" })!);
+            Assert.IsFalse((bool)containsFailureMethod.Invoke(
+                null,
+                new object[] { "结论：HTTP 403 需要由用户检查权限。" })!);
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_UsesLocalChatGroupCompatibleExecutionProfile()
+        {
+            var local = AgentTemplateRunRequest.ForLocalWorkflow(5013, "workflow-run", null);
+            var a2aWithoutTools = AgentTemplateRunRequest.ForPublishedA2A(5013, "agent-5013", false);
+            var a2aWithExplicitTools = AgentTemplateRunRequest.ForPublishedA2A(5013, "agent-5013", true);
+
+            Assert.AreEqual(AgentTemplateRunRequest.LocalWorkflowCompatibleProfile, local.ProfileName);
+            Assert.AreEqual(AgentTemplateRunRequest.LocalChatGroupCompatibleProfile, a2aWithoutTools.ProfileName);
+            Assert.AreEqual(2000, a2aWithoutTools.MaxOutputTokens);
+            Assert.AreEqual(0.3f, a2aWithoutTools.Temperature);
+            Assert.AreEqual(0.3f, a2aWithoutTools.TopP);
+            Assert.IsTrue(local.UseFreshAgentSession);
+            Assert.AreEqual(local.UseFreshAgentSession, a2aWithoutTools.UseFreshAgentSession);
+            Assert.IsFalse(local.AllowFunctionCalls);
+            Assert.IsFalse(a2aWithoutTools.AllowFunctionCalls);
+            Assert.IsTrue(a2aWithExplicitTools.AllowFunctionCalls);
+            Assert.AreEqual(a2aWithoutTools.MaxOutputTokens, a2aWithExplicitTools.MaxOutputTokens);
+            Assert.AreEqual(a2aWithoutTools.Temperature, a2aWithExplicitTools.Temperature);
+        }
+
+        [TestMethod]
+        public void AgentTemplateRunner_IsSharedByWorkflowAndPublishedA2A()
+        {
+            Assert.IsNotNull(_serviceProvider.GetRequiredService<AgentTemplateRunner>());
+            Assert.IsNotNull(_serviceProvider.GetRequiredService<AgentsWorkflowObjectProvider>());
+            Assert.IsNotNull(_serviceProvider.GetRequiredService<PublishedA2AAgentFactory>());
         }
 
         [TestMethod]

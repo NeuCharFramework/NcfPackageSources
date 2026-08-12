@@ -4,6 +4,7 @@
     文件名：INeuBellProvider.cs
     文件功能描述：纽铃模块监控公共契约
 
+
     创建标识：Senparc - 20260803
 
     修改标识：Senparc - 20260804
@@ -11,6 +12,9 @@
 
     修改标识：Senparc - 20260804
     修改描述：v0.4.0-preview3 将公共契约统一更名为 NeuBell/纽铃
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.6.0-preview5 扩展工作流与智能体共享契约，支持 NeuBell 通知和对象编辑元数据
 
 ----------------------------------------------------------------*/
 
@@ -63,6 +67,24 @@ namespace Senparc.Ncf.Shared.Abstractions.NeuBell
         string ModuleUid => null;
 
         ValueTask<NeuBellSnapshot> GetSnapshotAsync(
+            NeuBellRequestContext context,
+            CancellationToken cancellationToken = default);
+    }
+
+    /// <summary>
+    /// 可选的纽铃消费能力。Provider 不实现此接口时，调用方只能导航至其 DetailUrl，
+    /// 不会把“点击查看”错误地当成业务已处理（例如 DesktopBridge 的设备审核）。
+    /// </summary>
+    public interface INeuBellConsumableProvider
+    {
+        /// <summary>只消费当前订阅下指定的一条提醒；返回实际消费数量。</summary>
+        ValueTask<int> ConsumeItemAsync(
+            NeuBellRequestContext context,
+            string itemId,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>消费当前订阅下当前用户可见的全部提醒；返回实际消费数量。</summary>
+        ValueTask<int> ConsumeAllAsync(
             NeuBellRequestContext context,
             CancellationToken cancellationToken = default);
     }

@@ -41,9 +41,14 @@ public static class Program
             knowledgeBaseIntegrationTests.Extract_ShouldRejectFormatsThatNeedPdfOrOcrRuntime();
             knowledgeBaseIntegrationTests.AgentTemplate_ShouldKeepKnowledgeBaseBindingWhenUpdated();
 
+            var fileResourceBoundaryTests = new FileResourceBoundaryTests();
+            fileResourceBoundaryTests.ResourceProfiles_ShouldKeepKnowledgeBaseAndSiteAssetsSeparated();
+            fileResourceBoundaryTests.PublicAssetUrl_ShouldRequirePublishedStaticAssetAndFingerprint();
+
             Console.WriteLine("UsageAnalyticsTests passed.");
             Console.WriteLine("PromptUsageHelperTests passed.");
             Console.WriteLine("KnowledgeBaseIntegrationTests passed.");
+            Console.WriteLine("FileResourceBoundaryTests passed.");
             return 0;
         }
         catch (Exception ex)

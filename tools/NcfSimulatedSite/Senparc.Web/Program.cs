@@ -3,10 +3,10 @@
   
     文件名：Program.cs
     文件功能描述：Program 相关实现
-    
-    
+
+
     创建标识：Senparc - 20241028
-    
+
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
@@ -24,6 +24,12 @@
 
     修改标识：Senparc - 20260804
     修改描述：v0.35.0 新增数据库升级维护流程与多平台下载入口
+
+    修改标识：Senparc - 20260812
+    修改描述：补齐 UseAuthentication，避免重启后旧 Cookie 被误判为 403
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.36.0 集成工作流模块与 A2A 发布配置并修复认证持久化
 
 ----------------------------------------------------------------*/
 
@@ -158,6 +164,7 @@ app.UseDatabaseMaintenanceMode();
 app.UseCookiePolicy();
 
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

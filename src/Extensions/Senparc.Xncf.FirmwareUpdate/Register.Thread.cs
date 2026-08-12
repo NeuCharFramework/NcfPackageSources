@@ -3,12 +3,15 @@
   
     文件名：Register.Thread.cs
     文件功能描述：Register.Thread 相关实现
-    
-    
+
+
     创建标识：Senparc - 20260504
-    
+
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.4.2-preview7 增强固件更新线程停止时的取消与异常处理
 
 ----------------------------------------------------------------*/
 
@@ -32,6 +35,7 @@ public partial class Register : IXncfThread
             {
                 try
                 {
+                    threadInfo.StoppingToken.ThrowIfCancellationRequested();
                     threadInfo.RecordStory("开始检查镜像任务");
 
                     using var scope = app.ApplicationServices.CreateScope();
@@ -46,9 +50,16 @@ public partial class Register : IXncfThread
                     }
 
                     var mirror = sp.GetRequiredService<NcfPackageMirrorService>();
-                    var msg = await mirror.RunAsync(sp, manualTrigger: false).ConfigureAwait(false);
+                    var msg = await mirror.RunAsync(
+                        sp,
+                        manualTrigger: false,
+                        threadInfo.StoppingToken).ConfigureAwait(false);
                     threadInfo.RecordStory(msg);
                     SenparcTrace.SendCustomLog("FirmwareUpdate", msg);
+                }
+                catch (OperationCanceledException) when (threadInfo.StoppingToken.IsCancellationRequested)
+                {
+                    threadInfo.RecordStory("应用正在停止，已取消镜像任务。");
                 }
                 catch (NcfModuleException)
                 {

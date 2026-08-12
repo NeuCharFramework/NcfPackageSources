@@ -3,20 +3,24 @@
   
     文件名：FunctionRequestParameterNormalizer.cs
     文件功能描述：FunctionRequestParameterNormalizer 相关实现
-    
-    
+
+
     创建标识：Senparc - 20260424
-    
+
     修改标识：Senparc - 20260704
     修改描述：v0.23.2-preview1 增强函数请求参数归一化与占位符处理能力
 
     修改标识：Senparc - 20260804
     修改描述：v0.24.0-preview5 统一数据库设计时工厂与函数参数处理
 
+    修改标识：Senparc - 20260813
+    修改描述：v0.25.0-preview7 增强线程生命周期控制与函数参数数值类型解析
+
 ----------------------------------------------------------------*/
 using Senparc.Ncf.XncfBase.Functions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -139,6 +143,33 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             if (IsNullableType(targetType, typeof(long)) && long.TryParse(firstValue, out var longValue))
             {
                 return JsonValue.Create(longValue);
+            }
+
+            if (IsNullableType(targetType, typeof(decimal)) && decimal.TryParse(
+                    firstValue,
+                    NumberStyles.Number,
+                    CultureInfo.InvariantCulture,
+                    out var decimalValue))
+            {
+                return JsonValue.Create(decimalValue);
+            }
+
+            if (IsNullableType(targetType, typeof(double)) && double.TryParse(
+                    firstValue,
+                    NumberStyles.Float | NumberStyles.AllowThousands,
+                    CultureInfo.InvariantCulture,
+                    out var doubleValue))
+            {
+                return JsonValue.Create(doubleValue);
+            }
+
+            if (IsNullableType(targetType, typeof(float)) && float.TryParse(
+                    firstValue,
+                    NumberStyles.Float | NumberStyles.AllowThousands,
+                    CultureInfo.InvariantCulture,
+                    out var floatValue))
+            {
+                return JsonValue.Create(floatValue);
             }
 
             if (IsNullableType(targetType, typeof(bool)) && bool.TryParse(firstValue, out var boolValue))

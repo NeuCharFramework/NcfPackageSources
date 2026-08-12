@@ -3,15 +3,18 @@
   
     文件名：MyFuctionAppService.cs
     文件功能描述：MyFuctionAppService 服务逻辑
-    
-    
+
+
     创建标识：Senparc - 20211031
-    
+
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
     修改标识：Senparc - 20260717
     修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.5.0-preview8 补充 A2A 发布管理所需 MCP 功能与多语言资源
 
 ----------------------------------------------------------------*/
 
@@ -139,7 +142,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 //var clientTransport = new StdioClientTransport(new StdioClientTransportOptions
                 //{
                 //    Name = "NCF-Server",
-                //    Command = "curl http://localhost:5000/sse/sse",
+                //    Command = "curl http://localhost:5080/sse/sse",
                 //    // Arguments = ["-y", "@modelcontextprotocol/server-everything"],
                 //});
 
@@ -163,27 +166,28 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                         if (mcpServerInfo != null)
                         {
                             // 构建完整的服务器地址
-                            endpoint = $"http://localhost:5000/{mcpServerInfo.McpRoute}/sse";
+                            // 默认端口避开 macOS AirPlay 占用的 5000
+                            endpoint = $"http://localhost:5080/{mcpServerInfo.McpRoute}/sse";
                             Console.WriteLine($"使用选中的 MCP 服务器: {mcpServerInfo.XncfName}，路由: {mcpServerInfo.McpRoute}/sse");
                         }
                         else
                         {
                             // 如果找不到对应的服务器信息，回退到默认地址
-                            endpoint = "http://localhost:5000/mcp-senparc-xncf-mcp/sse";
+                            endpoint = "http://localhost:5080/mcp-senparc-xncf-mcp/sse";
                             Console.WriteLine($"警告：找不到选中的 MCP 服务器信息，使用默认端点");
                         }
                     }
                     else
                     {
                         // 如果解析失败，回退到默认地址
-                        endpoint = "http://localhost:5000/mcp-senparc-xncf-mcp/sse";
+                        endpoint = "http://localhost:5080/mcp-senparc-xncf-mcp/sse";
                         Console.WriteLine($"警告：无法解析选中的 MCP 服务器标识: {selectedMcpServer}，使用默认端点");
                     }
                 }
                 else
                 {
                     // 如果选中了"手动输入"或没有选择，使用手动输入的端点
-                    endpoint = request.Endpoint.IsNullOrEmpty() ? "http://localhost:5000/mcp-senparc-xncf-mcp/sse" : request.Endpoint;
+                    endpoint = request.Endpoint.IsNullOrEmpty() ? "http://localhost:5080/mcp-senparc-xncf-mcp/sse" : request.Endpoint;
                     Console.WriteLine("使用手动输入的端点");
                 }
 

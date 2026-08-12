@@ -3,15 +3,18 @@
   
     文件名：Register.Area.cs
     文件功能描述：Register.Area 相关实现
-    
-    
+
+
     创建标识：Senparc - 20250105
-    
+
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
     修改标识：Senparc - 20260717
     修改描述：v0.3.0-preview2 为 FileManager 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
 
 ----------------------------------------------------------------*/
 
@@ -36,10 +39,9 @@ namespace Senparc.Xncf.FileManager
         public string HomeUrl => "/Admin/FileManager/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(), FileManagerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
-                         new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/Index"), FileManagerResource.Get("Area.FileManager.Files", "文件管理"),"fa fa-file"),
-			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/DatabaseSample"), FileManagerResource.Get("Area.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
-			 		};
+                         // HomeUrl 已指向同一页面；不要重复注册“首页”，也不要把示例页暴露给实际管理员。
+                         new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/Index"), FileManagerResource.Get("Area.FileManager.Files", "文件资源管理"),"fa fa-file")
+        };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {

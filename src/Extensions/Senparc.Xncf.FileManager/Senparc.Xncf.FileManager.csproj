@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.1-preview6</Version>
+    <Version>0.6.0-preview1</Version>
     <AssemblyName>Senparc.Xncf.FileManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.FileManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -45,6 +45,11 @@
       2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
       3、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
       4、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+      [2026-08-13] v0.6.0-preview1 重构文件资源边界
+      1、区分知识库源文件和站点静态资源，按用途隔离文件夹、列表与知识库摄取
+      2、站点资源默认私有，显式发布后提供带 SHA-256 指纹的公开 URL 和长期缓存
+      3、补齐 MIME、完整性指纹、流式下载、目录编辑删除与静态资源发布管理
+      4、同步当前窗口中的资源边界模型、服务与管理页兼容性调整
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -54,6 +59,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <EmbeddedResource Include="wwwroot\**\*" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
   </ItemGroup>

@@ -3,10 +3,10 @@
   
     文件名：AgentTemplateAppService.cs
     文件功能描述：AgentTemplateAppService 服务逻辑
-    
-    
+
+
     创建标识：Senparc - 20240616
-    
+
     修改标识：Senparc - 20260701
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
@@ -21,6 +21,9 @@
 
     修改标识：Senparc - 20260804
     修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
 ----------------------------------------------------------------*/
 
@@ -267,6 +270,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
 
                 var chatGroupMemberService = base.GetRequiredService<ChatGroupMemberService>();
                 var chatTaskService = base.GetRequiredService<ChatTaskService>();
+                var publishedA2AAgentService = base.GetRequiredService<PublishedA2AAgentService>();
 
                 var agentIds = list.Select(z => z.Id).Distinct().ToList();
                 var groupMembers = agentIds.Count > 0
@@ -285,6 +289,13 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 var activeTaskCountByGroup = activeTasks
                     .GroupBy(z => z.ChatGroupId)
                     .ToDictionary(g => g.Key, g => g.Count());
+                var publishedA2AAgents = agentIds.Count > 0
+                    ? (await publishedA2AAgentService.GetFullListAsync(z => agentIds.Contains(z.AgentTemplateId))).ToList()
+                    : new List<Models.DatabaseModel.Models.PublishedA2AAgent>();
+                // AgentTemplateId is logically unique. Keep the list query resilient to any historical duplicate data.
+                var publishedA2AByAgentId = publishedA2AAgents
+                    .GroupBy(z => z.AgentTemplateId)
+                    .ToDictionary(group => group.Key, group => group.OrderByDescending(z => z.Id).First());
 
                 var promptScoreCache = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
                 var dtoList = new List<AgentTemplateSimpleStatusDto>();
@@ -303,6 +314,11 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                         activeTaskCountByGroup.TryGetValue(groupId, out var count) ? count : 0);
 
                     dto.Score = await GetAgentScoreByPromptCodeAsync(dto.PromptCode, promptScoreCache);
+                    if (publishedA2AByAgentId.TryGetValue(item.Id, out var publishedA2A))
+                    {
+                        dto.HasPublishedA2A = true;
+                        dto.PublishedA2AEnabled = publishedA2A.Enable;
+                    }
                     dtoList.Add(dto);
                 }
 
@@ -739,6 +755,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             var chatGroupService = base.GetRequiredService<ChatGroupService>();
             var chatGroupMemberService = base.GetRequiredService<ChatGroupMemberService>();
             var chatGroupHistoryService = base.GetRequiredService<ChatGroupHistoryService>();
+            var publishedA2AAgentService = base.GetRequiredService<PublishedA2AAgentService>();
 
             var groupsAsRole = await chatGroupService.GetFullListAsync(
                 z => idSet.Contains(z.AdminAgentTemplateId) || idSet.Contains(z.EnterAgentTemplateId));
@@ -795,9 +812,16 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     await chatGroupHistoryService.DeleteObjectAsync(history);
                 }
 
+                // 发布配置是 Agent 的附加能力；删除本地 Agent 时一并撤销，避免遗留不可访问的公开标识。
+                var publishedA2AAgent = await publishedA2AAgentService.GetByAgentTemplateIdAsync(id);
+                if (publishedA2AAgent != null)
+                {
+                    await publishedA2AAgentService.DeleteObjectAsync(publishedA2AAgent);
+                }
+
                 await _agentsTemplateService.DeleteObjectAsync(agent);
                 deleted++;
-                logger.Append($"✓ 已删除 Agent【{agent.Name}】（成员关系 {members.Count} 条，消息记录 {histories.Count} 条）");
+                logger.Append($"✓ 已删除 Agent【{agent.Name}】（成员关系 {members.Count} 条，消息记录 {histories.Count} 条{(publishedA2AAgent != null ? "，已撤销 A2A 发布" : string.Empty)}）");
             }
 
             logger.Append($"删除 Agent 完成：成功 {deleted}，阻止 {blocked}，不存在 {missing}");

@@ -17,207 +17,116 @@
 
 <div id="app" class="recall-test-page">
     <div class="recall-test-wrap">
-        <div class="recall-test-layout">
-            <div class="recall-test-left">
-                <h1 class="recall-test-title">召回测试</h1>
-                <p class="recall-test-desc">根据给定的查询文本测试知识的召回效果。</p>
-
-                <div class="knowledge-base-select-row">
-                    <span class="kb-select-label">知识库</span>
-                    <el-select v-model="selectedKnowledgeBaseId"
-                               filterable
-                               clearable
-                               placeholder="输入关键字搜索并选择知识库"
-                               class="kb-select"
-                               @@focus="loadKnowledgeBaseList"
-                               @@visible-change="onKbSelectVisibleChange">
-                        <el-option v-for="item in knowledgeBaseList"
-                                   :key="item.id"
-                                   :label="item.name"
-                                   :value="item.id">
-                        </el-option>
-                    </el-select>
-                </div>
-
-                <div class="source-text-box">
-                    <div class="source-text-header">
-                        <span class="source-text-label">源文本</span>
-                        <el-button type="text" size="small" class="inverted-index-btn" icon="el-icon-document" @@click="openSearchSettingsDrawer">倒排索引</el-button>
-                    </div>
-                    <div class="source-text-area-wrap">
-                        <el-input type="textarea"
-                                  v-model="recallContent"
-                                  :maxlength="200"
-                                  :rows="10"
-                                  placeholder="请输入查询文本"
-                                  class="source-textarea"></el-input>
-                        <div class="source-text-footer">
-                            <span class="char-count">{{ recallContent.length }}/200</span>
-                            <el-button type="primary" class="test-btn" @@click="doRecall" :loading="recallLoading" icon="el-icon-video-play">测试</el-button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="records-section">
-                    <div class="records-title">记录</div>
-                    <div class="records-table-wrap">
-                        <el-table :data="recordPageList"
-                                  size="small"
-                                  border
-                                  class="records-table"
-                                  :height="recordTableHeight">
-                            <el-table-column prop="queryContent" label="查询内容" min-width="100" show-overflow-tooltip></el-table-column>
-                            <el-table-column label="召回率" min-width="100" show-overflow-tooltip>
-                                <template slot-scope="scope">{{ scope.row.score != null && scope.row.score !== '' ? scope.row.score : '—' }}</template>
-                            </el-table-column>
-                            <el-table-column prop="dataSource" label="数据源" width="120" show-overflow-tooltip></el-table-column>
-                            <el-table-column prop="time" label="时间↓" width="140" align="center"></el-table-column>
-                        </el-table>
-                    </div>
-                    <el-pagination class="records-pagination"
-                                   :current-page.sync="recordPage"
-                                   :page-sizes="[5, 10, 15, 20]"
-                                   :page-size.sync="recordPageSize"
-                                   :total="recordTotal"
-                                   layout="total, sizes, prev, pager, next, jumper"
-                                   @@size-change="handleRecordSizeChange"
-                                   @@current-change="handleRecordPageChange">
-                    </el-pagination>
-                </div>
+        <div class="recall-test-heading">
+            <div>
+                <h1>召回测试</h1>
+                <p>用一个真实问题检查知识库返回了哪些资料片段。相似度分数用于排序参考，不等同于“召回率”。</p>
             </div>
-
-            <div class="recall-test-right">
-                <div class="recall-result-title">{{ recallResults.length }} 个召回段落</div>
-                <div class="recall-cards-wrap">
-                    <div class="recall-cards">
-                        <div v-for="(item, index) in recallResults" :key="index" class="recall-card">
-                            <div class="recall-card-label">{{ item.chunkName || ('Chunk-' + String(index + 1).padStart(2, '0')) }} {{ item.charCount || (item.content ? item.content.length : 0) }} 字符</div>
-                            <div class="recall-card-content">{{ item.content }}</div>
-                            @* <div v-if="item.tags && item.tags.length" class="recall-card-tags">
-                        <span v-for="(tag, ti) in item.tags" :key="ti" class="recall-tag">#{{ tag }}</span>
-                    </div>
-                    <div class="recall-card-source">
-                        <i class="el-icon-document"></i>
-                        <span>{{ item.sourceFile || '—' }}</span>
-                    </div> *@
-                            <el-button type="text" size="small" class="recall-card-open" @@click="openParagraphDetail(item, index)">打开 <i class="el-icon-right"></i></el-button>
-                        </div>
-                    </div>
-                    <div v-if="recallResults.length === 0" class="empty-result">暂无召回结果，请选择知识库、输入源文本并点击「测试」</div>
-                </div>
-            </div>
+            <el-button size="small" icon="el-icon-setting" @@click="visible.searchSettingsDrawer = true">检索设置</el-button>
         </div>
+
+        <el-alert class="recall-test-guide" type="info" :closable="false" show-icon
+                  title="使用步骤：选择已完成向量化的知识库 → 输入用户会问的问题 → 查看来源和相似度 → 不理想时回到“配置”调整资料并重新向量化。">
+        </el-alert>
+
+        <div class="recall-test-layout">
+            <section class="recall-test-left">
+                <el-card shadow="never">
+                    <div slot="header" class="panel-heading"><span>发起一次测试</span></div>
+                    <div class="knowledge-base-select-row">
+                        <label class="kb-select-label">知识库</label>
+                        <el-select v-model="selectedKnowledgeBaseId" filterable clearable placeholder="搜索并选择已向量化的知识库" class="kb-select">
+                            <el-option v-for="item in knowledgeBaseList" :key="item.id" :label="item.label" :value="item.id" :disabled="!item.ready"></el-option>
+                        </el-select>
+                    </div>
+                    <p class="field-tip" v-if="selectedKnowledgeBase">{{ selectedKnowledgeBase.ready ? '该知识库已完成向量化，可以开始测试。' : '该知识库尚未向量化，请先回到知识库管理页执行“向量化”。' }}</p>
+
+                    <div class="query-box">
+                        <div class="query-box-header">
+                            <label class="query-label">测试问题</label>
+                            <span class="char-count">{{ recallContent.length }}/200</span>
+                        </div>
+                        <el-input type="textarea" v-model="recallContent" :maxlength="200" :rows="8"
+                                  placeholder="例如：如何创建一个新的知识库？" class="query-textarea"></el-input>
+                        <p class="field-tip">尽量输入真实用户会问的完整问题，避免只输入一个关键词。</p>
+                        <div class="query-actions">
+                            <span>本次最多返回 {{ topK }} 个片段</span>
+                            <el-button type="primary" icon="el-icon-video-play" @@click="doRecall" :loading="recallLoading">开始测试</el-button>
+                        </div>
+                    </div>
+                </el-card>
+            </section>
+
+            <section class="recall-test-right">
+                <el-card shadow="never" class="result-panel">
+                    <div slot="header" class="panel-heading">
+                        <span>测试结果 <em v-if="recallResults.length">{{ recallResults.length }} 个片段</em></span>
+                        <span v-if="lastElapsedMilliseconds != null" class="result-duration">耗时 {{ lastElapsedMilliseconds }} ms</span>
+                    </div>
+                    <div v-if="recallResults.length" class="recall-cards">
+                        <article v-for="item in recallResults" :key="item.rank" class="recall-card">
+                            <div class="recall-card-meta">
+                                <strong>第 {{ item.rank }} 条</strong>
+                                <el-tag size="mini" type="info">相似度 {{ formatScore(item.score) }}</el-tag>
+                            </div>
+                            <p class="recall-card-content">{{ item.content }}</p>
+                            <div class="recall-card-source"><i class="el-icon-document"></i> 来源：{{ item.sourceName || '未提供来源名称' }}</div>
+                            <div class="recall-card-actions">
+                                <a v-if="item.sourceLink" :href="item.sourceLink" target="_blank" rel="noopener noreferrer">打开来源 <i class="el-icon-top-right"></i></a>
+                                <el-button type="text" size="mini" @@click="openParagraphDetail(item)">查看全文</el-button>
+                            </div>
+                        </article>
+                    </div>
+                    <div v-else class="empty-result"><i class="el-icon-search"></i><strong>还没有测试结果</strong><span>选择知识库并输入问题后，结果会显示在这里。</span></div>
+                </el-card>
+            </section>
+        </div>
+
+        <section class="records-section">
+            <div class="records-title">本页测试记录</div>
+            <el-table :data="recordPageList" size="small" border>
+                <el-table-column prop="queryContent" label="测试问题" min-width="220" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="knowledgeBaseName" label="知识库" min-width="150" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="resultCount" label="返回片段" width="100" align="center"></el-table-column>
+                <el-table-column label="最高相似度" width="120" align="center"><template slot-scope="scope">{{ formatScore(scope.row.highestScore) }}</template></el-table-column>
+                <el-table-column prop="time" label="测试时间" width="170" align="center"></el-table-column>
+            </el-table>
+            <el-pagination class="records-pagination" :current-page.sync="recordPage" :page-sizes="[5, 10, 15, 20]"
+                           :page-size.sync="recordPageSize" :total="recordTotal" layout="total, sizes, prev, pager, next"
+                           @@size-change="handleRecordSizeChange" @@current-change="handleRecordPageChange">
+            </el-pagination>
+        </section>
     </div>
 
-    @* 检索设置抽屉：点击倒排索引打开，可设置 Top K 并传给召回接口 *@
-    <el-drawer title="检索设置"
-               :visible.sync="visible.searchSettingsDrawer"
-               direction="rtl"
-               size="380px"
-               :with-header="true"
-               custom-class="search-settings-drawer">
+    <el-drawer title="检索设置" :visible.sync="visible.searchSettingsDrawer" direction="rtl" size="380px">
         <div class="search-settings-body">
-            <p class="search-settings-desc">了解更多关于检索方法。</p>
             <div class="search-settings-item">
-                <div class="search-settings-label">检索方法</div>
-                <div class="search-method-display"><i class="el-icon-document"></i> 倒排索引</div>
-                <p class="search-method-tip">倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。</p>
+                <div class="search-settings-label">检索方式</div>
+                <div class="search-method-display"><i class="el-icon-connection"></i> 语义向量检索</div>
+                <p class="search-method-tip">系统将问题和资料片段转换为向量后按语义相近程度排序。不同模型和向量库的分数范围可能不同，因此不要把它当作固定百分比或召回率。</p>
             </div>
             <div class="search-settings-item">
-                <div class="search-settings-label">
-                    Top K
-                    <el-tooltip content="召回返回的片段数量" placement="top">
-                        <i class="el-icon-question"></i>
-                    </el-tooltip>
-                </div>
+                <div class="search-settings-label">返回片段数量（Top K）</div>
+                <p class="search-method-tip">先从 5 开始。结果太少可提高，结果太杂可降低；本设置只影响当前页面后续测试。</p>
                 <div class="topk-row">
-                    <el-slider v-model="topK" :min="1" :max="20" :step="1" show-stops style="flex:1;margin-right:16px;"></el-slider>
-                    <el-input-number v-model="topK" :min="1" :max="20" :step="1" size="small" controls-position="right" style="width:100px;"></el-input-number>
+                    <el-slider v-model="topK" :min="1" :max="20" :step="1" show-stops></el-slider>
+                    <el-input-number v-model="topK" :min="1" :max="20" :step="1" size="small" controls-position="right"></el-input-number>
                 </div>
             </div>
         </div>
-        <div class="search-settings-footer">
-            <el-button size="small" @@click="visible.searchSettingsDrawer = false">取消</el-button>
-            <el-button size="small" type="primary" @@click="saveSearchSettings">保存</el-button>
-        </div>
+        <div class="search-settings-footer"><el-button type="primary" size="small" @@click="visible.searchSettingsDrawer = false">完成</el-button></div>
     </el-drawer>
 
-    @* 段落详情弹框：点击召回片段「打开」显示 *@
-    <el-dialog title="段落详情"
-               :visible.sync="visible.paragraphDetailDialog"
-               width="560px"
-               custom-class="paragraph-detail-dialog"
-               @@close="paragraphDetailItem = null">
+    <el-dialog title="召回片段详情" :visible.sync="visible.paragraphDetailDialog" width="620px" @@close="paragraphDetailItem = null">
         <template v-if="paragraphDetailItem">
-            <div class="paragraph-detail-chunk">{{ paragraphDetailChunkName }}</div>
-            @* <div class="paragraph-detail-source">
-                <i class="el-icon-document"></i>
-                <span>{{ paragraphDetailItem.sourceFile || '—' }}</span>
-            </div> *@
-            <div class="paragraph-detail-title" v-if="paragraphDetailItem.title">{{ paragraphDetailItem.title }}</div>
+            <div class="paragraph-detail-meta">第 {{ paragraphDetailItem.rank }} 条 · 相似度 {{ formatScore(paragraphDetailItem.score) }}</div>
+            <div class="paragraph-detail-source">来源：{{ paragraphDetailItem.sourceName || '未提供来源名称' }}</div>
             <div class="paragraph-detail-content">{{ paragraphDetailItem.content || '—' }}</div>
-            <div class="paragraph-detail-keywords" v-if="paragraphDetailTags.length">
-                <span class="paragraph-detail-keywords-label">关键词</span>
-                <div class="paragraph-detail-tags">
-                    <span v-for="(tag, ti) in paragraphDetailTags" :key="ti" class="recall-tag">#{{ tag }}</span>
-                </div>
-            </div>
         </template>
-    </el-dialog>
-
-    <el-dialog title="属性管理" :visible.sync="visible.attrDialog" width="500px" @@close="closeAttrDialog">
-        <el-button size="small" type="primary" @@click="addAttr" style="margin-bottom:10px">+ 新增属性</el-button>
-        <el-table :data="attributeList" size="small" border>
-            <el-table-column prop="name" label="属性名"></el-table-column>
-            <el-table-column label="操作" width="150" align="center">
-                <template slot-scope="scope">
-                    <el-button type="text" size="small" @@click="editAttr(scope.row)">编辑</el-button>
-                    <el-button type="text" size="small" class="danger" @@click="deleteAttr(scope.row)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-form v-if="visible.attrForm" label-width="80px" size="small" style="margin-top:12px">
-            <el-form-item label="属性名">
-                <el-input v-model="attrForm.name" placeholder="属性名"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" size="small" @@click="saveAttr">保存</el-button>
-                <el-button size="small" @@click="visible.attrForm = false">取消</el-button>
-            </el-form-item>
-        </el-form>
-        <div slot="footer">
-            <el-button size="small" @@click="visible.attrDialog = false">关闭</el-button>
-        </div>
-    </el-dialog>
-
-    <el-dialog title="标签管理" :visible.sync="visible.tagDialog" width="500px" @@close="closeTagDialog">
-        <el-button size="small" type="primary" @@click="addTag" style="margin-bottom:10px">+ 新增标签</el-button>
-        <el-table :data="tagList" size="small" border>
-            <el-table-column prop="name" label="标签名"></el-table-column>
-            <el-table-column label="操作" width="150" align="center">
-                <template slot-scope="scope">
-                    <el-button type="text" size="small" @@click="editTag(scope.row)">编辑</el-button>
-                    <el-button type="text" size="small" class="danger" @@click="deleteTag(scope.row)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-form v-if="visible.tagForm" label-width="80px" size="small" style="margin-top:12px">
-            <el-form-item label="标签名">
-                <el-input v-model="tagForm.name" placeholder="标签名"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" size="small" @@click="saveTag">保存</el-button>
-                <el-button size="small" @@click="visible.tagForm = false">取消</el-button>
-            </el-form-item>
-        </el-form>
-        <div slot="footer">
-            <el-button size="small" @@click="visible.tagDialog = false">关闭</el-button>
-        </div>
     </el-dialog>
 </div>
 
-@section scripts
-{
+@section scripts {
     @await Html.PartialAsync("_LocalizationScripts")
     <script src="~/js/KnowledgeBase/Pages/RecallTest/recallTest.js"></script>
 }

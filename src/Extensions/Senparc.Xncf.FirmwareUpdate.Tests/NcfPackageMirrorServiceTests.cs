@@ -172,6 +172,31 @@ public sealed class NcfPackageMirrorServiceTests
     }
 
     [TestMethod]
+    public async Task SyncFeedAsync_WhenMetadataRequestIsCanceled_PreservesExistingManifest()
+    {
+        const string oldManifest = "{\"tag_name\":\"old\",\"name\":\"old\",\"assets\":[]}";
+        var manifestPath = Path.Combine(_testRoot, NcfPackageMirrorService.LatestReleaseFileName);
+        await File.WriteAllTextAsync(manifestPath, oldManifest);
+        var handler = new CancellationAwareHandler();
+        using var client = new HttpClient(handler);
+        using var cancellation = new CancellationTokenSource();
+        var service = CreateService(client);
+
+        var syncTask = service.SyncFeedAsync(
+            client,
+            _testRoot,
+            NcfPackageMirrorService.HostFeedDefinition,
+            cancellation.Token);
+        await handler.RequestStarted.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        cancellation.Cancel();
+
+        await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => syncTask);
+
+        Assert.AreEqual(oldManifest, await File.ReadAllTextAsync(manifestPath));
+        Assert.IsFalse(Directory.EnumerateFiles(_testRoot, "*.tmp-*", SearchOption.AllDirectories).Any());
+    }
+
+    [TestMethod]
     public void GetSyncFailureReason_WhenTimeoutIsWrapped_ReturnsFriendlyChineseMessage()
     {
         var exception = new InvalidOperationException(
@@ -281,5 +306,19 @@ public sealed class NcfPackageMirrorServiceTests
             {
                 Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json")
             });
+    }
+
+    private sealed class CancellationAwareHandler : HttpMessageHandler
+    {
+        public TaskCompletionSource RequestStarted { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            RequestStarted.TrySetResult();
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
     }
 }
