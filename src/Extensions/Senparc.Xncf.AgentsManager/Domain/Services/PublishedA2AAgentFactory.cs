@@ -60,7 +60,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     A2AErrorCode.InvalidParams);
             }
 
-            var execution = await _agentTemplateRunner.RunAsync(
+            // ChatGroup 将同一类本地 Agent 直接交给 ChatClientAgent 的流式执行器。
+            // 已发布 A2A 必须走同一入口，不能经 IWantToRun.RunChatAsync 的兼容包装层，
+            // 否则相同模板在群组与对外 A2A 中可能形成不同的上游模型请求。
+            var execution = await _agentTemplateRunner.RunWithChatClientAgentAsync(
                 template,
                 userText,
                 AgentTemplateRunRequest.ForPublishedA2A(

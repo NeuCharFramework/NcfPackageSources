@@ -103,6 +103,70 @@ public sealed class AgentTemplateRunner
     }
 
     /// <summary>
+    /// 使用 <see cref="ChatClientAgent"/> 的流式入口执行。
+    /// 该入口与 ChatGroup 交给 Microsoft Agent Framework 编排器的本地 Agent 相同，
+    /// 用于已发布 A2A Agent，避免再经过 <see cref="IWantToRun.RunChatAsync"/> 的兼容包装层。
+    /// </summary>
+    public async Task<AgentTemplateRunResult> RunWithChatClientAgentAsync(
+        AgentTemplate template,
+        string userText,
+        AgentTemplateRunRequest request,
+        Action<AgentTemplateExecutionDiagnostics> onPrepared = null,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(template);
+        ArgumentNullException.ThrowIfNull(request);
+
+        var build = await BuildAsync(
+                template,
+                userText,
+                request,
+                onPrepared,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        if (!build.Success)
+        {
+            return AgentTemplateRunResult.Failed(build.ErrorMessage, build.Diagnostics);
+        }
+
+        var agent = build.Runner.Kernel?.ChatClientAgent;
+        if (agent == null)
+        {
+            return AgentTemplateRunResult.Failed("独立 Agent 未能创建 ChatClientAgent。", build.Diagnostics);
+        }
+
+        var input = userText ?? string.Empty;
+        var session = request.UseFreshAgentSession ? build.Runner.Kernel?.AgentSession : null;
+        AgentResponse response;
+        try
+        {
+            response = await agent.RunStreamingAsync(
+                    input,
+                    session,
+                    options: null,
+                    cancellationToken: cancellationToken)
+                .ToAgentResponseAsync(cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch when (session != null)
+        {
+            // 与原有 RunChatAsync 路径一致：部分模型适配器不接受 AgentSession 时退回无状态执行。
+            response = await agent.RunStreamingAsync(
+                    input,
+                    session: null,
+                    options: null,
+                    cancellationToken: cancellationToken)
+                .ToAgentResponseAsync(cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        var output = response?.Text?.Trim();
+        return string.IsNullOrWhiteSpace(output)
+            ? AgentTemplateRunResult.Failed("独立 Agent 没有返回有效内容。", build.Diagnostics)
+            : AgentTemplateRunResult.Succeeded(output, build.Diagnostics);
+    }
+
+    /// <summary>
     /// 构造可被工作流编排复用的本地 Agent 运行器。所有入口都必须经由此方法，
     /// 避免 A2A 与页面中的本地 Agent 出现模型或 Prompt 配置分叉。
     /// </summary>

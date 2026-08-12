@@ -104,8 +104,7 @@
                                     <div class="agentCard-statebox" :class="[getStatusColor(aitem,'1')]">
                                         {{ getStatusText(aitem,'1') }}
                                     </div>
-                                    <el-tag v-if="aitem.hasPublishedA2A" :type="aitem.publishedA2AEnabled ? 'warning' : 'info'"
-                                        size="mini" class="agentCard-a2aBadge">A2A</el-tag>
+                                    <span v-if="aitem.hasPublishedA2A" class="agentCard-a2aBadge">A2A</span>
                                 </div>
                                 <div class="agentCard-upperHalfbox">
                                     <div class="df-wn flex-ac flex-jc avatarBox">

@@ -256,6 +256,8 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsNotNull(_serviceProvider.GetRequiredService<AgentTemplateRunner>());
             Assert.IsNotNull(_serviceProvider.GetRequiredService<AgentsWorkflowObjectProvider>());
             Assert.IsNotNull(_serviceProvider.GetRequiredService<PublishedA2AAgentFactory>());
+            Assert.IsNotNull(typeof(AgentTemplateRunner).GetMethod(
+                nameof(AgentTemplateRunner.RunWithChatClientAgentAsync)));
         }
 
         [TestMethod]
