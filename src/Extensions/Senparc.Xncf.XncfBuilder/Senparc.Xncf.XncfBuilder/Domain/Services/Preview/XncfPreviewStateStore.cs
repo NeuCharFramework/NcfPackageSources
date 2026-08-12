@@ -172,7 +172,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 
                 var sessionIds = recentTasks.Select(task => task.SessionId).ToArray();
                 var hosts = await hostRepository.GetObjectListAsync(
-                        host => !host.Flag && sessionIds.Contains(host.SessionId),
+                        host => !host.Flag && Enumerable.Contains(sessionIds, host.SessionId),
                         host => host.UpdatedAtUtc,
                         OrderingType.Descending,
                         0,

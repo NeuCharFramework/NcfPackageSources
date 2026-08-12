@@ -139,12 +139,16 @@
         });
         document.body.appendChild(canvas);
 
-        const colors = ['#ff4d6d', '#ffd166', '#06d6a0', '#00bbf9', '#9b5de5', '#f15bb5'];
+        const colors = ['#ff1b6b', '#ff6b35', '#ffd166', '#8ac926', '#06d6a0', '#00bbf9', '#4361ee', '#7b2cbf', '#f15bb5'];
         const particles = [];
+        const confetti = [];
         const burstCount = 5;
+        const confettiWaveCount = 6;
         const burstIntervalMs = 240;
+        const confettiWaveIntervalMs = 280;
         let frameId = null;
         let nextBurst = 0;
+        let nextConfettiWave = 0;
         let width = 1;
         let height = 1;
         let stopped = false;
@@ -165,7 +169,6 @@
         function launchBurst(index) {
             const x = width * (.12 + Math.random() * .76);
             const y = height * (.14 + Math.random() * .42);
-            const color = colors[index % colors.length];
             for (let particleIndex = 0; particleIndex < 42; particleIndex++) {
                 const angle = Math.PI * 2 * particleIndex / 42 + Math.random() * .12;
                 const speed = 2.8 + Math.random() * 4.8;
@@ -177,8 +180,26 @@
                     velocityX: Math.cos(angle) * speed,
                     velocityY: Math.sin(angle) * speed,
                     life: 48 + Math.random() * 34,
-                    color: color,
+                    color: colors[(index + particleIndex + Math.floor(Math.random() * 3)) % colors.length],
                     size: 1.2 + Math.random() * 1.8
+                });
+            }
+        }
+
+        function launchConfetti() {
+            for (let confettiIndex = 0; confettiIndex < 34; confettiIndex++) {
+                confetti.push({
+                    x: Math.random() * width,
+                    y: -18 - Math.random() * 150,
+                    velocityX: -1.1 + Math.random() * 2.2,
+                    velocityY: 1.5 + Math.random() * 2.2,
+                    angle: Math.random() * Math.PI * 2,
+                    spin: -.15 + Math.random() * .3,
+                    wave: Math.random() * Math.PI * 2,
+                    life: 125 + Math.random() * 85,
+                    width: 5 + Math.random() * 6,
+                    height: 11 + Math.random() * 12,
+                    color: colors[Math.floor(Math.random() * colors.length)]
                 });
             }
         }
@@ -210,9 +231,14 @@
             while (nextBurst < burstCount && elapsed >= nextBurst * burstIntervalMs) {
                 launchBurst(nextBurst++);
             }
+            while (nextConfettiWave < confettiWaveCount && elapsed >= nextConfettiWave * confettiWaveIntervalMs) {
+                launchConfetti();
+                nextConfettiWave++;
+            }
 
             context.clearRect(0, 0, width, height);
             context.globalCompositeOperation = 'lighter';
+            const drag = Math.pow(.985, frameScale);
             for (let index = particles.length - 1; index >= 0; index--) {
                 const particle = particles[index];
                 particle.life -= frameScale;
@@ -224,8 +250,8 @@
                 particle.previousY = particle.y;
                 particle.x += particle.velocityX * frameScale;
                 particle.y += particle.velocityY * frameScale;
-                particle.velocityX *= Math.pow(.985, frameScale);
-                particle.velocityY = particle.velocityY * Math.pow(.985, frameScale) + .045 * frameScale;
+                particle.velocityX *= drag;
+                particle.velocityY = particle.velocityY * drag + .045 * frameScale;
                 const alpha = Math.min(1, particle.life / 20);
                 context.globalAlpha = alpha;
                 context.strokeStyle = particle.color;
@@ -242,7 +268,30 @@
             context.globalAlpha = 1;
             context.globalCompositeOperation = 'source-over';
 
-            if (nextBurst < burstCount || particles.length) {
+            for (let index = confetti.length - 1; index >= 0; index--) {
+                const ribbon = confetti[index];
+                ribbon.life -= frameScale;
+                if (ribbon.life <= 0 || ribbon.y > height + ribbon.height) {
+                    confetti.splice(index, 1);
+                    continue;
+                }
+                ribbon.x += (ribbon.velocityX + Math.sin(elapsed * .006 + ribbon.wave) * .8) * frameScale;
+                ribbon.y += ribbon.velocityY * frameScale;
+                ribbon.velocityY += .012 * frameScale;
+                ribbon.angle += (ribbon.spin + Math.sin(elapsed * .01 + ribbon.wave) * .03) * frameScale;
+                context.save();
+                context.globalAlpha = Math.min(1, ribbon.life / 22);
+                context.translate(ribbon.x, ribbon.y);
+                context.rotate(ribbon.angle);
+                context.fillStyle = ribbon.color;
+                context.fillRect(-ribbon.width / 2, -ribbon.height / 2, ribbon.width, ribbon.height);
+                context.globalAlpha *= .35;
+                context.fillStyle = '#fff';
+                context.fillRect(-ribbon.width / 2, -ribbon.height / 2, ribbon.width * .28, ribbon.height);
+                context.restore();
+            }
+
+            if (nextBurst < burstCount || nextConfettiWave < confettiWaveCount || particles.length || confetti.length) {
                 frameId = requestFrame(draw);
             } else {
                 cleanup();

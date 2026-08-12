@@ -94,9 +94,14 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             _persistenceStatusUpdatedAt = DateTimeOffset.Now;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             Directory.CreateDirectory(_previewRoot);
+            return Task.CompletedTask;
+        }
+
+        internal async Task InitializePersistenceAsync(CancellationToken cancellationToken)
+        {
             if (_stateStore == null)
             {
                 return;
@@ -111,7 +116,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                     .ConfigureAwait(false);
                 foreach (var snapshot in persistedSessions)
                 {
-                    _sessions[snapshot.SessionId] = RestoreState(snapshot);
+                    _sessions.TryAdd(snapshot.SessionId, RestoreState(snapshot));
                 }
 
                 SetPersistenceAvailable();

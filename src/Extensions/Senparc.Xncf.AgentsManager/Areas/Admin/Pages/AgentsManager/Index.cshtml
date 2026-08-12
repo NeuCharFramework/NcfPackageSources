@@ -118,22 +118,32 @@
                                     aitem.description }}
                                 </div>
                                 <div class="agentCard-statistics">
-                                    <span>完成轮次 {{ formatUsageCount(aitem.completedConversationRounds) }}</span>
-                                    <span>Token {{ formatUsageCount(aitem.totalTokens) }}</span>
-                                    <span class="text-ellipsis" :title="aitem.knowledgeBaseName || '未绑定知识库'">{{ aitem.knowledgeBaseName || '未绑定知识库' }}</span>
+                                    <div class="agentCard-statistic">
+                                        <span>完成轮次</span>
+                                        <strong>{{ formatUsageCount(aitem.completedConversationRounds) }}</strong>
+                                    </div>
+                                    <div class="agentCard-statistic">
+                                        <span>总 Token</span>
+                                        <strong>{{ formatUsageCount(aitem.totalTokens) }}</strong>
+                                    </div>
+                                    <div class="agentCard-knowledge text-ellipsis" :title="aitem.knowledgeBaseName || '未绑定知识库'">
+                                        <i class="el-icon-collection-tag"></i>
+                                        <span>{{ aitem.knowledgeBaseName || '未绑定知识库' }}</span>
+                                    </div>
                                 </div>
                                 <div class="agentCard-lowerHalfbox">
-                                    <div class="lowerHalfbox_label">参加中</div>
-                                    <div class="lowerHalfbox_quantity">{{ aitem.chattingCount }}</div>
-                                    <div class="lowerHalfbox_label">评分</div>
-                                    <div class="lowerHalfbox_score">{{ aitem.score }}</div>
-                                    <div class="lowerHalfbox_operation"
-                                        @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">编辑
+                                    <div class="agentCard-quickMetrics">
+                                        <span><small>参加中</small><strong>{{ aitem.chattingCount }}</strong></span>
+                                        <span><small>评分</small><strong>{{ aitem.score }}</strong></span>
                                     </div>
-                                    <div class="lowerHalfbox_operation" style="color:#d97706;"
-                                        @@click="openPublishedA2AEditor(aitem)">{{ aitem.hasPublishedA2A ? '管理 A2A' : '发布 A2A' }}</div>
-                                    <div class="lowerHalfbox_operation" @@click="handleAgentView(aitem,aindex)">详情</div>
-                                    <div class="lowerHalfbox_operation" @@click="handleAgentDelete(aitem)">删除</div>
+                                    <div class="agentCard-actions">
+                                        <button type="button" class="agentCard-actionButton"
+                                            @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">编辑</button>
+                                        <button type="button" class="agentCard-actionButton agentCard-actionButton--a2a"
+                                            @@click="openPublishedA2AEditor(aitem)">{{ aitem.hasPublishedA2A ? '管理 A2A' : '发布 A2A' }}</button>
+                                        <button type="button" class="agentCard-actionButton" @@click="handleAgentView(aitem,aindex)">详情</button>
+                                        <button type="button" class="agentCard-actionButton agentCard-actionButton--danger" @@click="handleAgentDelete(aitem)">删除</button>
+                                    </div>
                                 </div>
                             </div>
                             <div v-for="fitem in fillCardNum" :key="fitem" style="flex-grow: 1;flex-basis: 315px;">

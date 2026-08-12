@@ -122,6 +122,7 @@ namespace Senparc.Xncf.XncfBuilder
                     serviceProvider.GetRequiredService<XncfPreviewService>());
                 services.AddSingleton<IHostedService>(serviceProvider =>
                     serviceProvider.GetRequiredService<XncfPreviewService>());
+                services.AddSingleton<IHostedService, XncfPreviewPersistenceInitializerHostedService>();
             }
 
             // Senparc.Xncf.AIKernel 模块
@@ -143,4 +144,3 @@ namespace Senparc.Xncf.XncfBuilder
         }
     }
 }
-

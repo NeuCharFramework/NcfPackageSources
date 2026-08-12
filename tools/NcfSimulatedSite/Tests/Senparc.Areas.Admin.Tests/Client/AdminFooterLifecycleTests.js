@@ -17,6 +17,7 @@ let mixinRegistrationCount = 0;
 let animationFrameCount = 0;
 let animationFrameCancelCount = 0;
 let canvasStrokeCount = 0;
+let canvasFillRectCount = 0;
 let capturedMixin = null;
 let timerSequence = 0;
 const timeoutCallbacks = new Map();
@@ -65,7 +66,8 @@ const document = {
             getContext() {
                 return {
                     setTransform() { }, clearRect() { }, beginPath() { }, moveTo() { }, lineTo() { },
-                    stroke() { canvasStrokeCount++; }, arc() { }, fill() { }
+                    stroke() { canvasStrokeCount++; }, arc() { }, fill() { }, fillRect() { canvasFillRectCount++; },
+                    save() { }, restore() { }, translate() { }, rotate() { }
                 };
             }
         };
@@ -361,6 +363,7 @@ async function run() {
     assert.strictEqual(animationFrameCallbacks.size, 1);
     fireAnimationFrame(Array.from(animationFrameCallbacks.keys())[0], 100);
     assert.ok(canvasStrokeCount > 0);
+    assert.ok(canvasFillRectCount > 0);
     assert.strictEqual(animationFrameCallbacks.size, 1);
 
     capturedMixin.beforeDestroy.call(layoutRoot);

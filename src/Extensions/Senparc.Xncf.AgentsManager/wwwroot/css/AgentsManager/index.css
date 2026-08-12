@@ -733,55 +733,101 @@ height:100%;
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 30px;
+    gap: 20px;
+    padding: 2px;
 }
 
 .agent-cardBox {
     flex-grow: 1;
-    /* flex-basis: 390px; */
-    /* min-width: 390px; */
     flex-basis: 315px;
-    /* min-width: 315px; */
-    height: 205px;
-    border-radius: 2px;
-    background: rgba(255, 255, 255, 1);
-    border: 1px solid rgba(229, 229, 229, 1);
+    min-width: 0;
+    min-height: 232px;
+    border: 1px solid #e5eaf2;
+    border-radius: 14px;
+    background:
+        linear-gradient(135deg, rgba(64, 158, 255, .055), rgba(64, 158, 255, 0) 48%),
+        #fff;
     position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 16px rgba(31, 55, 89, .06);
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.agent-cardBox::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    content: '';
+    background: linear-gradient(180deg, #5ba8ff 0%, #3485e9 100%);
+}
+
+.agent-cardBox:hover {
+    transform: translateY(-3px);
+    border-color: #c9e1fb;
+    box-shadow: 0 13px 28px rgba(35, 91, 153, .14);
 }
 
 .agentCard-stateboxStack {
     position: absolute;
-    top: 26px;
-    right: 0px;
+    top: 18px;
+    right: 18px;
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 5px;
+    align-items: center;
+    gap: 6px;
 }
 
 .agentCard-statebox {
-    width: 51px;
-    height: 21px;
-    border-radius: 10px 0px 0px 10px;
-    line-height: 21px;
-    padding-left: 13px;
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0 9px;
+    border-radius: 999px;
     font-size: 12px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    text-align: left;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: .2px;
+    color: #23783b;
+    background: #edf9ef;
+}
+
+.agentCard-statebox.standColor,
+.agentCard-statebox.successColor {
+    color: #23783b;
+    background: #edf9ef;
+}
+
+.agentCard-statebox.stopColor,
+.agentCard-statebox.cancelledColor {
+    color: #667085;
+    background: #f2f4f7;
+}
+
+.agentCard-statebox.proceColor,
+.agentCard-statebox.chartColor,
+.agentCard-statebox.waitColor {
+    color: #1f6fc5;
+    background: #ebf5ff;
+}
+
+.agentCard-statebox.errorColor {
+    color: #c73838;
+    background: #fff0f0;
 }
 
 .agentCard-a2aBadge {
-    margin-right: 5px;
+    margin: 0;
+    border-radius: 999px;
+    font-weight: 600;
 }
 
 .agentCard-upperHalfbox {
-    /* padding: 20px 20px 13px; */
-    padding: 20px 55px 13px 20px;
+    padding: 18px 116px 10px 20px;
     display: flex;
-    flex-wrap: nowrap;
     align-items: center;
-    gap: 20px;
+    min-width: 0;
+    gap: 12px;
 }
 
 /* .agentCard-upperHalfbox .upperHalfbox_avatar {
@@ -795,29 +841,21 @@ height:100%;
 } */
 .agentCard-upperHalfbox>.avatarBox {
     flex-shrink: 0;
-    /* width: 84px;
-    height: 84px; */
-    width: 38px;
-    height: 38px;
-    border-radius: 2px;
-    background: rgba(255, 255, 255, 1);
-    border: 1px solid rgba(229, 229, 229, 1);
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
-    /* cursor: pointer; */
+    width: 44px;
+    height: 44px;
+    border: 1px solid #d8eaff;
+    border-radius: 13px;
+    background: linear-gradient(145deg, #f5faff, #e7f3ff);
+    box-shadow: 0 5px 12px rgba(64, 158, 255, .14);
     overflow: hidden;
 }
 
 .agentCard-upperHalfbox>.avatarBox>img {
     flex-shrink: 0;
-    width: 25px;
+    width: 28px;
     height: auto;
-    transform: translateY(-38px);
-    /* //颜色、x轴偏移量、y轴偏移量, */
-    filter: drop-shadow(#409eff 0 38px);
-    /* background-image: url(''), linear-gradient(#409eff, #409eff);
-    background-blend-mode: lighten;
-    background-size: cover; */
-    /* height: 30px; */
+    transform: translateY(-44px);
+    filter: drop-shadow(#409eff 0 44px);
 }
 
 .agentCard-upperHalfbox .upperHalfbox_describe {
@@ -829,13 +867,11 @@ height:100%;
 }
 
 .agentCard-upperHalfbox .upperHalfbox_describe_title {
-    flex-grow: 1;
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    color: rgba(56, 56, 56, 1);
-    text-align: left;
-    /* vertical-align: top; */
+    min-width: 0;
+    font-size: 15px;
+    font-weight: 650;
+    line-height: 1.35;
+    color: #1f2937;
 }
 
 .agentCard-upperHalfbox .upperHalfbox_describe_introduce {
@@ -848,78 +884,171 @@ height:100%;
 }
 
 .agentCard-middleHalfbox {
-    height: 40px;
-    margin-bottom: 10px;
-    padding: 0px 20px;
-    font-size: 14px;
+    height: 38px;
+    margin: 0 20px 12px;
+    padding: 0;
+    font-size: 12px;
     font-weight: 400;
-    letter-spacing: 0px;
-    color: rgba(128, 128, 128, 1);
-    text-align: left;
+    line-height: 19px;
+    color: #7a8494;
 }
 
 .agentCard-statistics {
     display: grid;
-    grid-template-columns: auto auto minmax(80px, 1fr);
-    gap: 10px;
-    padding: 0 20px 10px;
-    color: #606266;
-    font-size: 12px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(92px, 1.25fr);
+    align-items: center;
+    gap: 8px;
+    margin: 0 20px 14px;
+    padding: 8px 10px;
+    border: 1px solid #edf1f6;
+    border-radius: 10px;
+    background: rgba(248, 250, 252, .9);
 }
 
-.agentCard-statistics > span:last-child {
-    color: #409eff;
+.agentCard-statistic {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 2px;
+}
+
+.agentCard-statistic span {
+    color: #8993a4;
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+.agentCard-statistic strong {
+    overflow: hidden;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+}
+
+.agentCard-knowledge {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: 4px;
+    color: #3376cd;
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+.agentCard-knowledge i {
+    flex-shrink: 0;
+    font-size: 13px;
+}
+
+.agentCard-knowledge span {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .agentCard-lowerHalfbox {
-    padding: 12px 20px;
-    border-top: 1px solid rgba(229, 229, 229, 1);
     display: flex;
-    flex-wrap: nowrap;
     align-items: center;
-    justify-content: flex-start;
-    gap: 15px;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 20px 12px;
+    border-top: 1px solid #eef1f5;
+    background: rgba(250, 252, 255, .72);
 }
 
-.agentCard-lowerHalfbox .lowerHalfbox_label {
+.agentCard-quickMetrics {
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    color: rgba(56, 56, 56, 1);
-    text-align: left;
-    /* vertical-align: top; */
+    gap: 10px;
 }
 
-.agentCard-lowerHalfbox .lowerHalfbox_quantity {
-    flex-grow: 1;
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    color: rgba(255, 141, 26, 1);
-    text-align: left;
-    /* vertical-align: top; */
+.agentCard-quickMetrics > span {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
 }
 
-.agentCard-lowerHalfbox .lowerHalfbox_score {
-    flex-grow: 1;
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    color: rgba(255, 87, 51, 1);
-    text-align: left;
-    /* vertical-align: top; */
+.agentCard-quickMetrics small {
+    color: #7d8797;
+    font-size: 11px;
 }
 
-.agentCard-lowerHalfbox .lowerHalfbox_operation {
-    flex-shrink: 0;
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    color: rgba(64, 158, 255, 1);
-    text-align: left;
+.agentCard-quickMetrics strong {
+    color: #e78125;
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.agentCard-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0;
+    gap: 3px;
+}
+
+.agentCard-actionButton {
+    padding: 3px 5px;
+    border: 0;
+    border-radius: 5px;
+    color: #3376cd;
+    background: transparent;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 550;
+    line-height: 18px;
+    white-space: nowrap;
     cursor: pointer;
-    /* vertical-align: top; */
+    transition: color .16s ease, background-color .16s ease;
+}
+
+.agentCard-actionButton:hover,
+.agentCard-actionButton:focus-visible {
+    outline: none;
+    color: #1766ba;
+    background: #eaf4ff;
+}
+
+.agentCard-actionButton--a2a {
+    color: #c86d12;
+}
+
+.agentCard-actionButton--a2a:hover,
+.agentCard-actionButton--a2a:focus-visible {
+    color: #a95406;
+    background: #fff4e6;
+}
+
+.agentCard-actionButton--danger {
+    color: #d04b4b;
+}
+
+.agentCard-actionButton--danger:hover,
+.agentCard-actionButton--danger:focus-visible {
+    color: #b93737;
+    background: #fff0f0;
+}
+
+@media (max-width: 520px) {
+    .agent-listWrap {
+        gap: 12px;
+    }
+
+    .agent-cardBox {
+        flex-basis: 100%;
+    }
+
+    .agentCard-lowerHalfbox {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .agentCard-actions {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
 }
 
 /* 智能体详情 */
