@@ -4,10 +4,14 @@
     文件名：NeuBellTest_Request.cs
     文件功能描述：纽铃可见提醒示例 Function 请求参数
 
+
     创建标识：Senparc - 20260805
 
     修改标识：Senparc - 20260808
     修改描述：v0.4.0 新增纽铃示例 Function 请求参数
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
 
 ----------------------------------------------------------------*/
 

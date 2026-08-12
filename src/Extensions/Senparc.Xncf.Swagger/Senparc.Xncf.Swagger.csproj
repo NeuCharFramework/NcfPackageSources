@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.2-preview6</Version>
+    <Version>0.20.3-preview7</Version>
     <!--<LangVersion>lastest</LangVersion>-->
     <LangVersion>preview</LangVersion>
     <AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
@@ -53,6 +53,7 @@
 				[2026-08-08] v0.20.2-preview6 Dependency updates from upstream projects
 				1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
 				2、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+				[2026-08-13] v0.20.3-preview7 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>

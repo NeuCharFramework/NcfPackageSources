@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.28.1-preview6</Version>
+    <Version>0.28.2-preview7</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -69,6 +69,7 @@
 				1、新增数据库安装与升级状态检测、升级异常及 Razor 维护流程支持
 				2、扩展 SystemConfig.FooterContent、缓存与页脚内容安全清理能力
 				[2026-08-08] v0.28.1-preview6 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.5.0-preview4
+				[2026-08-13] v0.28.2-preview7 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.6.0-preview5
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

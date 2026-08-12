@@ -3,6 +3,13 @@
 
     文件名：NeuCharWorkflowRunCoordinator.cs
     文件功能描述：NeuChar Workflow 测试运行状态、节点进度与 Console 协调器
+
+
+    创建标识：Senparc - 20260809
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

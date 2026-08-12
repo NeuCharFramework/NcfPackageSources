@@ -3,6 +3,13 @@
 
     文件名：AgentsWorkflowObjectProvider.cs
     文件功能描述：向 NeuChar Workflow 提供 AgentsManager 组和独立 Agent
+
+
+    创建标识：Senparc - 20260809
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;

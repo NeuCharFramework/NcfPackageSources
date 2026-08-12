@@ -3,6 +3,13 @@
 
     文件名：NeuCharWorkflowFunctionService.cs
     文件功能描述：NeuCharPivot Function 目录、参数验证和统一安全执行入口
+
+
+    创建标识：Senparc - 20260809
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Helpers;

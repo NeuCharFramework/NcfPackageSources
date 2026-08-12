@@ -3,6 +3,13 @@
 
     文件名：AgentTemplateRunner.cs
     文件功能描述：统一执行本地 AgentTemplate；A2A 仅在其上叠加协议与授权策略
+
+
+    创建标识：Senparc - 20260813
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;

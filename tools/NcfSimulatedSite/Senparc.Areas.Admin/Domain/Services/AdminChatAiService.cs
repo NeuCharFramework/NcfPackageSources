@@ -3,10 +3,10 @@
   
     文件名：AdminChatAiService.cs
     文件功能描述：AdminChatAiService 服务逻辑
-    
-    
+
+
     创建标识：Senparc - 20260327
-    
+
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
@@ -15,6 +15,9 @@
 
     修改标识：Senparc - 20260731
     修改描述：v0.2.1 切换到新版 AgentKernel 原生 RunChatAsync 接口以适配 CO2NET 4.2.0
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
 
 ----------------------------------------------------------------*/
 

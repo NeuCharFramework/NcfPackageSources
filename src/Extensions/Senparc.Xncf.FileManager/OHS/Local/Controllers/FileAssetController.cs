@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：FileAssetController.cs
+    文件功能描述：HTTP 控制器与远程接口
+
+
+    创建标识：Senparc - 20260813
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+
+----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Xncf.FileManager.Domain.Services;

@@ -2,6 +2,12 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.1.0-preview1</Version>
+    <PackageReleaseNotes>
+      [2026-08-13] v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+      1、支持版本与自动保存、Webhook 触发、并行节点和执行回放
+      2、增强模板绑定、输出 schema、表达式评估与 NeuBell 任务管理
+      3、完善 ChatGroup 集成、任务布局及管理页面交互
+    </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

@@ -3,10 +3,10 @@
   
     文件名：AdminSenparcEntities.cs
     文件功能描述：AdminSenparcEntities 相关功能实现
-    
-    
+
+
     创建标识：Senparc - 20241028
-    
+
     修改标识：Senparc - 20260705
     修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
 
@@ -15,6 +15,10 @@
 
     修改标识：Senparc - 20260809
     修改描述：Workflow 已迁出至 Senparc.Xncf.NeuCharWorkflow，本上下文仅保留 NeuCharPivot 与执行日志
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

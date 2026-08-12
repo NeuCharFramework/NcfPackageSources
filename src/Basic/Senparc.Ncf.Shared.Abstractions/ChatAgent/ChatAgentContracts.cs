@@ -3,6 +3,13 @@
 
     文件名：ChatAgentContracts.cs
     文件功能描述：系统级 ChatAgent、NeuCharPivot 与 Workflow 公共契约
+
+
+    创建标识：Senparc - 20260809
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.6.0-preview5 扩展工作流与智能体共享契约，支持 NeuBell 通知和对象编辑元数据
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Shared.Abstractions.Events;

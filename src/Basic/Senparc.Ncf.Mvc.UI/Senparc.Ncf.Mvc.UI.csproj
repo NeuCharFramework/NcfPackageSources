@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.22.2-preview6</Version>
+    <Version>0.22.3-preview7</Version>
     <AssemblyName>Senparc.Ncf.Mvc.UI</AssemblyName>
     <RootNamespace>Senparc.Ncf.Mvc.UI</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -35,6 +35,7 @@
 				2、保留现有分页 HTML 结构与默认中文回退
 				[2026-08-04] v0.22.1-preview5 Dependency update from Senparc.Ncf.Core to 0.28.0-preview5
 				[2026-08-08] v0.22.2-preview6 Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+				[2026-08-13] v0.22.3-preview7 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

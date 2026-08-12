@@ -3,15 +3,18 @@
   
     文件名：MyFuctionAppService.cs
     文件功能描述：MyFuctionAppService 服务逻辑
-    
-    
+
+
     创建标识：Senparc - 20211031
-    
+
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
     修改标识：Senparc - 20260717
     修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.5.0-preview8 补充 A2A 发布管理所需 MCP 功能与多语言资源
 
 ----------------------------------------------------------------*/
 

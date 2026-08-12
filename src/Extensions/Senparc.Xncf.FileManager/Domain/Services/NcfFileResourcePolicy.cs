@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：NcfFileResourcePolicy.cs
+    文件功能描述：领域服务与业务流程实现
+
+
+    创建标识：Senparc - 20260813
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+
+----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.StaticFiles;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using System;

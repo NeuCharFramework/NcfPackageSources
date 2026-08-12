@@ -3,6 +3,13 @@
 
     文件名：ChatAgentService.cs
     文件功能描述：基于 EventBus 的系统级 ChatAgent 与 NeuCharPivot 生成服务
+
+
+    创建标识：Senparc - 20260809
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;

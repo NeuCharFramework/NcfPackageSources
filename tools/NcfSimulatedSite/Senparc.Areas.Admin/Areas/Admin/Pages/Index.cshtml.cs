@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Index.cshtml.cs
+    文件功能描述：集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+
+
+    创建标识：Senparc - 20241028
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+
+----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
 using Senparc.Ncf.Core.Models.DataBaseModel;

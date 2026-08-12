@@ -7,6 +7,9 @@
 
     创建标识：Senparc - 20260813
 
+    修改标识：Senparc - 20260813
+    修改描述：v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Hosting;

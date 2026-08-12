@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：KnowledgeBaseFileDeletionGuard.cs
+    文件功能描述：领域服务与业务流程实现
+
+
+    创建标识：Senparc - 20260813
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
+
+----------------------------------------------------------------*/
+
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.FileManager.Domain.Services;
 using Senparc.Xncf.KnowledgeBase.Services;

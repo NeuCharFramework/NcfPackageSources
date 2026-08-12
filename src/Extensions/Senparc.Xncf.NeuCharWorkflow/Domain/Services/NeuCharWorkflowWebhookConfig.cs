@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：NeuCharWorkflowWebhookConfig.cs
+    文件功能描述：领域服务与业务流程实现
+
+
+    创建标识：Senparc - 20260809
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

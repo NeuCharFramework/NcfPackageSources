@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.13.4-preview6</Version>
+    <Version>0.13.5-preview7</Version>
     <AssemblyName>Senparc.Xncf.AreasBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.AreasBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -44,6 +44,7 @@
 				[2026-08-08] v0.13.4-preview6 Dependency updates from upstream projects
 				1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
 				2、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+				[2026-08-13] v0.13.5-preview7 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

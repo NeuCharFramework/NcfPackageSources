@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.23.2-preview6</Version>
+    <Version>0.23.3-preview7</Version>
     <AssemblyName>Senparc.Ncf.AreaBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.AreaBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -53,6 +53,9 @@
 				2、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
 				3、Dependency update from Senparc.Ncf.SMS to 0.20.6-preview6
 				4、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+				[2026-08-13] v0.23.3-preview7 修复后台会话失效时的登录跳转并持久化数据保护密钥
+				1、无效管理员会话自动跳转登录页并统一 Cookie 方案
+				2、持久化数据保护密钥，降低认证状态丢失导致的 403
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.1-preview7</Version>
+    <Version>0.6.0-preview8</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -52,6 +52,10 @@
 		4、Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
 		5、Dependency update from Senparc.Xncf.FileManager to 0.5.1-preview6
 		6、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+		[2026-08-13] v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
+		1、增加知识库文件删除边界保护并同步资源服务策略
+		2、优化知识库列表、召回测试页面及多语言交互反馈
+		3、适配统一 Agent 执行和文件资源边界变更
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

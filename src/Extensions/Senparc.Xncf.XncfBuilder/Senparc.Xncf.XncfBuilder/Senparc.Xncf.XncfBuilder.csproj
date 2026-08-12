@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.39.1-preview9</Version>
+    <Version>0.40.0-preview10</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -119,6 +119,9 @@
 			5、Dependency update from Senparc.Xncf.MCP to 0.4.4-preview7
 			6、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
 			7、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
+			[2026-08-13] v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
+			1、新增预览状态持久化服务和托管初始化流程
+			2、提升 Agent 模板预览在重启及并发场景下的稳定性
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

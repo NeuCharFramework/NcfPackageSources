@@ -3,6 +3,13 @@
 
     文件名：WorkflowObjectContracts.cs
     文件功能描述：NeuChar Workflow 面向其他 XNCF 模块的受控对象契约
+
+
+    创建标识：Senparc - 20260810
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.1.0-preview1 扩展工作流模块的对象与事件契约
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;

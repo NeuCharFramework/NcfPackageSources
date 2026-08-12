@@ -3,10 +3,10 @@
   
     文件名：AuthenticationResultFilterAttribute.cs
     文件功能描述：AuthenticationResultFilterAttribute 相关实现
-    
-    
+
+
     创建标识：Senparc - 20200724
-    
+
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
@@ -15,6 +15,9 @@
 
     修改标识：Senparc - 20260812
     修改描述：未形成有效管理员会话时引导登录，避免误返回 403
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.23.3-preview7 修复后台会话失效时的登录跳转并持久化数据保护密钥
 
 ----------------------------------------------------------------*/
 

@@ -3,15 +3,18 @@
   
     文件名：ChatGroupAppService.cs
     文件功能描述：ChatGroupAppService 相关实现
-    
-    
+
+
     创建标识：Senparc - 20260704
-    
+
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
     修改标识：Senparc - 20260717
     修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
 ----------------------------------------------------------------*/
 

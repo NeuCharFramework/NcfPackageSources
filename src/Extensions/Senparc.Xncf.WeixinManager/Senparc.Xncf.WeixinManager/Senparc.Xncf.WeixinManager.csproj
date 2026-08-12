@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.24.2-preview7</Version>
+    <Version>0.24.3-preview8</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -95,6 +95,7 @@
 		8、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
 		9、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
 		10、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
+		[2026-08-13] v0.24.3-preview8 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7; Senparc.Xncf.PromptRange to 0.19.2-preview10; Senparc.Xncf.Swagger to 0.20.3-preview7
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

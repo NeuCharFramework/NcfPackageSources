@@ -3,15 +3,18 @@
   
     文件名：FunctionRequestParameterNormalizer.cs
     文件功能描述：FunctionRequestParameterNormalizer 相关实现
-    
-    
+
+
     创建标识：Senparc - 20260424
-    
+
     修改标识：Senparc - 20260704
     修改描述：v0.23.2-preview1 增强函数请求参数归一化与占位符处理能力
 
     修改标识：Senparc - 20260804
     修改描述：v0.24.0-preview5 统一数据库设计时工厂与函数参数处理
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.25.0-preview7 增强线程生命周期控制与函数参数数值类型解析
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.XncfBase.Functions;
