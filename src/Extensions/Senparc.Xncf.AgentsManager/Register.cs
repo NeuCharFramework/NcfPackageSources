@@ -141,6 +141,7 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<ChatGroupRemoteMemberService>();
             services.AddScoped<RemoteAgentService>();
             services.AddScoped<PublishedA2AAgentService>();
+            services.AddScoped<AgentTemplateRunner>();
             services.AddHttpClient(RemoteA2AAgentFactory.HttpClientName);
             services.AddScoped<RemoteA2AAgentFactory>();
             services.AddHttpContextAccessor();

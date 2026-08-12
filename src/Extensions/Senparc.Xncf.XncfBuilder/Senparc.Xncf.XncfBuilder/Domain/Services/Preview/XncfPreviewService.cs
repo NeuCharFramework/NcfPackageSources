@@ -126,9 +126,25 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            await _operationLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+            RequestHostStopForActiveSessions();
+
             try
             {
+                await _operationLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                _logger?.LogInformation(
+                    "XNCF preview cleanup did not acquire the operation lock before host shutdown completed. " +
+                    "Active previews have already received the stop signal; waiting for their cleanup to finish.");
+                await _operationLock.WaitAsync(CancellationToken.None).ConfigureAwait(false);
+            }
+
+            try
+            {
+                // An in-flight request can have created a session while shutdown was waiting for the lock.
+                RequestHostStopForActiveSessions();
+
                 foreach (var state in _sessions.Values.ToArray())
                 {
                     if (GetStage(state).IsTerminal())
@@ -142,7 +158,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                         "主站正在关闭预览进程。",
                         null,
                         CancellationToken.None).ConfigureAwait(false);
-                    await StopStateAsync(state, deleteFiles: true, log: null, cancellationToken).ConfigureAwait(false);
+                    await StopStateAsync(state, deleteFiles: true, log: null, CancellationToken.None).ConfigureAwait(false);
                     await SetStageAndPersistAsync(
                         state,
                         XncfPreviewStage.Stopped,
@@ -1372,6 +1388,31 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             catch
             {
                 // The process may have exited between the checks.
+            }
+        }
+
+        private void RequestHostStopForActiveSessions()
+        {
+            foreach (var state in _sessions.Values.ToArray())
+            {
+                if (GetStage(state).IsTerminal())
+                {
+                    continue;
+                }
+
+                state.StopCancellation.Cancel();
+                SetStage(state, XncfPreviewStage.Stopping, "主站正在关闭预览进程。", null);
+
+                Process process;
+                lock (state.SyncRoot)
+                {
+                    process = state.Process;
+                }
+
+                if (process != null)
+                {
+                    TryKill(process);
+                }
             }
         }
 

@@ -1486,15 +1486,15 @@
                     <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
                 </el-form-item>
                 <el-form-item label="SystemMessage" required>
-                    <el-radio-group v-model="agentForm.systemMessageType">
+                    <el-radio-group v-model="agentForm.systemMessageType" @@change="handleSystemMessageTypeChange">
                         <el-radio label="1" border>自选</el-radio>
                         <el-radio label="2" border>手动</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item v-if="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
+                <el-form-item v-show="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
                     @* @change="handleChange($event,'')" *@
                     <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage"
-                        direction="vertical" placeholder="请选择" />
+                        direction="vertical" placeholder="请选择" @@options-loaded="handleSystemMessageOptionsLoaded" />
                 </el-form-item>
                 <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
                     <el-input  
@@ -1977,14 +1977,14 @@
             <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
         </el-form-item>
         <el-form-item label="SystemMessage" required>
-            <el-radio-group v-model="agentForm.systemMessageType">
+            <el-radio-group v-model="agentForm.systemMessageType" @@change="handleSystemMessageTypeChange">
                 <el-radio label="1" border>自选</el-radio>
                 <el-radio label="2" border>手动</el-radio>
             </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
+        <el-form-item v-show="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
             <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage" direction="vertical"
-                placeholder="请选择" />
+                placeholder="请选择" @@options-loaded="handleSystemMessageOptionsLoaded" />
         </el-form-item>
         <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
             <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>

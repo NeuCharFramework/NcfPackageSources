@@ -230,6 +230,33 @@ namespace Senparc.Xncf.AgentsManagerTests
         }
 
         [TestMethod]
+        public void PublishedA2AAgent_UsesLocalWorkflowCompatibleExecutionProfile()
+        {
+            var local = AgentTemplateRunRequest.ForLocalWorkflow(5013, "workflow-run", null);
+            var a2aWithoutTools = AgentTemplateRunRequest.ForPublishedA2A(5013, "agent-5013", false);
+            var a2aWithExplicitTools = AgentTemplateRunRequest.ForPublishedA2A(5013, "agent-5013", true);
+
+            Assert.AreEqual(AgentTemplateRunRequest.LocalWorkflowCompatibleProfile, local.ProfileName);
+            Assert.AreEqual(local.ProfileName, a2aWithoutTools.ProfileName);
+            Assert.AreEqual(local.MaxOutputTokens, a2aWithoutTools.MaxOutputTokens);
+            Assert.AreEqual(local.Temperature, a2aWithoutTools.Temperature);
+            Assert.AreEqual(local.TopP, a2aWithoutTools.TopP);
+            Assert.IsFalse(local.AllowFunctionCalls);
+            Assert.IsFalse(a2aWithoutTools.AllowFunctionCalls);
+            Assert.IsTrue(a2aWithExplicitTools.AllowFunctionCalls);
+            Assert.AreEqual(local.MaxOutputTokens, a2aWithExplicitTools.MaxOutputTokens);
+            Assert.AreEqual(local.Temperature, a2aWithExplicitTools.Temperature);
+        }
+
+        [TestMethod]
+        public void AgentTemplateRunner_IsSharedByWorkflowAndPublishedA2A()
+        {
+            Assert.IsNotNull(_serviceProvider.GetRequiredService<AgentTemplateRunner>());
+            Assert.IsNotNull(_serviceProvider.GetRequiredService<AgentsWorkflowObjectProvider>());
+            Assert.IsNotNull(_serviceProvider.GetRequiredService<PublishedA2AAgentFactory>());
+        }
+
+        [TestMethod]
         public async Task TestSeedDataInitialization()
         {
             #region 验证 PromptRange 初始化数据

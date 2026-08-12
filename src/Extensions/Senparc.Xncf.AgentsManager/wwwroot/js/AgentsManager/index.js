@@ -336,7 +336,7 @@ var app = new Vue({
       // 任务 task ---end
       // 智能体 新增|编辑
       agentForm: {
-        id: 0, // 0 是新增 
+        id: 0, // 0 是新增
         name: '', // 名称
         systemMessageType: '1',
         systemMessage: '', // 
@@ -349,6 +349,8 @@ var app = new Vue({
         mcpEndpoints: '', // MCP Endpoints
         knowledgeBaseId: null, // 绑定的知识库
       },
+      // 编辑现有智能体时，等待 PromptRange 候选项返回后再确定“自选”或“手动”。
+      agentSystemMessageTypeDetectionPending: false,
       agentFormRules: {
         name: [
           { required: true, message: '请填写', trigger: 'blur' },
@@ -2722,6 +2724,9 @@ var app = new Vue({
           if (refName) {
             this.$refs[refName].resetFields();
           }
+          if (['drawerAgent', 'dialogGroupAgent'].includes(saveType)) {
+            this.agentSystemMessageTypeDetectionPending = false
+          }
           delete this.editorFormInitialSnapshots[this.getEditorVisibleKey(saveType)]
           this.$nextTick(() => {
             this.visible[this.getEditorVisibleKey(saveType)] = false
@@ -3358,6 +3363,13 @@ var app = new Vue({
         }
         // 回显 表单值
         // this.$set(this, `${formName}`, deepClone(item))
+        if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)
+          && (item?.agentTemplateDto?.id || item?.id)) {
+          // systemMessageType 不是持久化字段。先挂载“自选”控件并完成候选项加载，
+          // 再根据实际是否存在该 PromptCode 判断类型，避免慢网络下被过早判定为“手动”。
+          this.agentSystemMessageTypeDetectionPending = true
+          this.$set(this.agentForm, 'systemMessageType', '1')
+        }
         // 打开 抽屉
         this.handleElVisibleOpenBtn(btnType)
       }
@@ -3579,6 +3591,7 @@ var app = new Vue({
         this.functionCallInputVisible = false
         this.functionCallInputValue = ''
         this.agentAutoAttachXncf = false
+        this.agentSystemMessageTypeDetectionPending = false
       }
     },
     // Dailog|抽屉 打开 按钮
@@ -3708,6 +3721,26 @@ var app = new Vue({
 
       }
       console.log('识别事件', e);
+    },
+
+    handleSystemMessageTypeChange() {
+      // 用户显式切换时，应以用户的选择为准，不再让异步加载结果覆盖它。
+      this.agentSystemMessageTypeDetectionPending = false
+    },
+
+    handleSystemMessageOptionsLoaded(options) {
+      if (!this.agentSystemMessageTypeDetectionPending) {
+        return
+      }
+
+      const systemMessage = typeof this.agentForm?.systemMessage === 'string'
+        ? this.agentForm.systemMessage.trim()
+        : String(this.agentForm?.systemMessage ?? '').trim()
+      const selectedFromPromptRange = (options || []).some(option =>
+        String(option?.value ?? '').trim() === systemMessage)
+
+      this.agentSystemMessageTypeDetectionPending = false
+      this.$set(this.agentForm, 'systemMessageType', selectedFromPromptRange ? '1' : '2')
     },
 
     // 切换 tabs 页面
@@ -6216,6 +6249,7 @@ Vue.component('load-more-select', {
             this.interesLoading = false
             this.currentPageSize = listData?.length ?? 0
             this.interestsOptions = this.interestsOptions.concat(listData)
+            this.$emit('options-loaded', this.interestsOptions)
             // [...this.interestsOptions, ...listData]
             // console.log(this.interestsOptions, 888)
           } else {

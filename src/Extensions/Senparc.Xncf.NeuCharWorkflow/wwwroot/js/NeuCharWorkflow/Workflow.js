@@ -2057,6 +2057,7 @@ new Vue({
                 const objectId = String(object.objectId || '');
                 if (objectId.startsWith('agent:')) return `/Admin/AgentsManager/Index#tab=first&view=edit&agentId=${encodeURIComponent(objectId.substring(6))}`;
                 if (objectId.startsWith('group:')) return `/Admin/AgentsManager/Index#tab=second&view=edit&groupId=${encodeURIComponent(objectId.substring(6))}`;
+                if (objectId.startsWith('a2a:')) return `/Admin/AgentsManager/Index#tab=remoteA2A&view=edit&remoteAgentId=${encodeURIComponent(objectId.substring(4))}`;
             }
             return '';
         },

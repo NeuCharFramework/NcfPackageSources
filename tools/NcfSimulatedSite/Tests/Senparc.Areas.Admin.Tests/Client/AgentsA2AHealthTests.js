@@ -89,6 +89,7 @@ const context = vm.createContext({
     String,
     Map,
     Set,
+    URLSearchParams,
     formatDate(value) { return `formatted:${value}`; }
 });
 
@@ -150,6 +151,20 @@ async function run() {
         'Group detail data should retain the latest remote health state.');
     assert.strictEqual(viewModel.remoteParticipantAvailabilityText(viewModel.taskMemberList[0]), '可用');
     assert.strictEqual(viewModel.remoteParticipantAvailabilityType(viewModel.taskMemberList[0]), 'success');
+
+    let editedRemoteAgentId = null;
+    viewModel.getRemoteAgentListData = async () => {
+        viewModel.remoteAgentList = [{ id: 7, name: '外部研究员' }];
+    };
+    viewModel.openRemoteAgentEditor = remoteAgent => {
+        editedRemoteAgentId = remoteAgent.id;
+    };
+    context.window.location = { hash: '#tab=remoteA2A&view=edit&remoteAgentId=7' };
+    await viewModel.applyHashRoute();
+    assert.strictEqual(viewModel.visible.drawerRemoteAgent, true,
+        'A remote-A2A route should open the remote agent manager.');
+    assert.strictEqual(editedRemoteAgentId, 7,
+        'A remote-A2A edit route should open the requested remote agent editor.');
 
     viewModel.taskHistoryList = [{
         fromParticipantKey: 'remote:7',

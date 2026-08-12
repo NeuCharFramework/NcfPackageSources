@@ -106,6 +106,155 @@
     const initialState = window.NCF_ADMIN_FOOTER_INITIAL_STATE || {};
     const maximumVisibleNeuBellToasts = 2;
     const neuBellToastDurationMs = 30000;
+    const footerEasterEggClickCount = 10;
+    const footerEasterEggClickWindowMs = 3500;
+
+    function stopFooterFireworks() {
+        if (footerRuntime.fireworksCleanup) {
+            footerRuntime.fireworksCleanup();
+            footerRuntime.fireworksCleanup = null;
+        }
+    }
+
+    function playFooterFireworks() {
+        stopFooterFireworks();
+        if (!document.body || typeof document.createElement !== 'function') {
+            return;
+        }
+
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext && canvas.getContext('2d');
+        if (!context) {
+            return;
+        }
+
+        canvas.setAttribute('aria-hidden', 'true');
+        Object.assign(canvas.style, {
+            position: 'fixed',
+            inset: '0',
+            width: '100vw',
+            height: '100vh',
+            pointerEvents: 'none',
+            zIndex: '2147483647'
+        });
+        document.body.appendChild(canvas);
+
+        const colors = ['#ff4d6d', '#ffd166', '#06d6a0', '#00bbf9', '#9b5de5', '#f15bb5'];
+        const particles = [];
+        const burstCount = 5;
+        const burstIntervalMs = 240;
+        let frameId = null;
+        let nextBurst = 0;
+        let width = 1;
+        let height = 1;
+        let stopped = false;
+        let lastFrameAt = 0;
+        let startedAt = null;
+        const requestFrame = window.requestAnimationFrame || (callback => window.setTimeout(() => callback(Date.now()), 16));
+        const cancelFrame = window.cancelAnimationFrame || window.clearTimeout;
+
+        function resize() {
+            const scale = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+            width = Math.max(1, window.innerWidth || document.documentElement.clientWidth || 1);
+            height = Math.max(1, window.innerHeight || document.documentElement.clientHeight || 1);
+            canvas.width = Math.round(width * scale);
+            canvas.height = Math.round(height * scale);
+            context.setTransform(scale, 0, 0, scale, 0, 0);
+        }
+
+        function launchBurst(index) {
+            const x = width * (.12 + Math.random() * .76);
+            const y = height * (.14 + Math.random() * .42);
+            const color = colors[index % colors.length];
+            for (let particleIndex = 0; particleIndex < 42; particleIndex++) {
+                const angle = Math.PI * 2 * particleIndex / 42 + Math.random() * .12;
+                const speed = 2.8 + Math.random() * 4.8;
+                particles.push({
+                    x: x,
+                    y: y,
+                    previousX: x,
+                    previousY: y,
+                    velocityX: Math.cos(angle) * speed,
+                    velocityY: Math.sin(angle) * speed,
+                    life: 48 + Math.random() * 34,
+                    color: color,
+                    size: 1.2 + Math.random() * 1.8
+                });
+            }
+        }
+
+        function cleanup() {
+            if (stopped) {
+                return;
+            }
+            stopped = true;
+            if (frameId !== null) {
+                cancelFrame(frameId);
+            }
+            window.removeEventListener('resize', resize);
+            if (canvas.parentNode) {
+                canvas.parentNode.removeChild(canvas);
+            }
+        }
+
+        function draw(frameAt) {
+            if (stopped) {
+                return;
+            }
+            const now = Number.isFinite(frameAt) ? frameAt : Date.now();
+            const frameScale = Math.min(2, Math.max(.5, (now - (lastFrameAt || now)) / 16.67));
+            lastFrameAt = now;
+            startedAt = startedAt === null ? now : startedAt;
+            const elapsed = now - startedAt;
+
+            while (nextBurst < burstCount && elapsed >= nextBurst * burstIntervalMs) {
+                launchBurst(nextBurst++);
+            }
+
+            context.clearRect(0, 0, width, height);
+            context.globalCompositeOperation = 'lighter';
+            for (let index = particles.length - 1; index >= 0; index--) {
+                const particle = particles[index];
+                particle.life -= frameScale;
+                if (particle.life <= 0) {
+                    particles.splice(index, 1);
+                    continue;
+                }
+                particle.previousX = particle.x;
+                particle.previousY = particle.y;
+                particle.x += particle.velocityX * frameScale;
+                particle.y += particle.velocityY * frameScale;
+                particle.velocityX *= Math.pow(.985, frameScale);
+                particle.velocityY = particle.velocityY * Math.pow(.985, frameScale) + .045 * frameScale;
+                const alpha = Math.min(1, particle.life / 20);
+                context.globalAlpha = alpha;
+                context.strokeStyle = particle.color;
+                context.lineWidth = particle.size;
+                context.beginPath();
+                context.moveTo(particle.previousX, particle.previousY);
+                context.lineTo(particle.x, particle.y);
+                context.stroke();
+                context.fillStyle = '#fff';
+                context.beginPath();
+                context.arc(particle.x, particle.y, particle.size * .72, 0, Math.PI * 2);
+                context.fill();
+            }
+            context.globalAlpha = 1;
+            context.globalCompositeOperation = 'source-over';
+
+            if (nextBurst < burstCount || particles.length) {
+                frameId = requestFrame(draw);
+            } else {
+                cleanup();
+                footerRuntime.fireworksCleanup = null;
+            }
+        }
+
+        resize();
+        window.addEventListener('resize', resize);
+        footerRuntime.fireworksCleanup = cleanup;
+        frameId = requestFrame(draw);
+    }
 
     // 每个 Admin 页面都会加载此 mixin，因此必须严格控制请求数和长连接生命周期。
     const footerMixin = {
@@ -216,6 +365,18 @@
             },
             openFullAdminChat() {
                 window.location.href = '/Admin/AdminChat/Chat';
+            },
+            handleFooterTimeClick() {
+                const now = Date.now();
+                if (now - (this._footerTimeLastClickedAt || 0) > footerEasterEggClickWindowMs) {
+                    this._footerTimeClickCount = 0;
+                }
+                this._footerTimeLastClickedAt = now;
+                this._footerTimeClickCount = (this._footerTimeClickCount || 0) + 1;
+                if (this._footerTimeClickCount >= footerEasterEggClickCount) {
+                    this._footerTimeClickCount = 0;
+                    playFooterFireworks();
+                }
             },
             clearFooterConsole() {
                 window.NcfAdminConsole.clear();
@@ -516,6 +677,7 @@
             pauseFooter() {
                 // 后台页签不应保留 SSE、轮询或挂起的 HTTP 请求。
                 this.footerPaused = true;
+                stopFooterFireworks();
                 if (this.footerClockTimer) {
                     window.clearInterval(this.footerClockTimer);
                     this.footerClockTimer = null;

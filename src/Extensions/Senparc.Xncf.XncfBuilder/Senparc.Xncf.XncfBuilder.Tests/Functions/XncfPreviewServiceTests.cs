@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -310,6 +311,37 @@ namespace Senparc.Xncf.XncfBuilder.Tests.Functions
             Assert.IsFalse(persistenceStatus.IsAvailable);
             StringAssert.Contains(persistenceStatus.StatusMessage, "主站将继续运行");
             StringAssert.Contains(persistenceStatus.ErrorMessage, "XncfBuilderXncfPreviewTask");
+        }
+
+        [TestMethod]
+        public async Task HostedStop_WhenShutdownTimesOutWaitingForPreviewOperation_ShouldCompleteAfterCleanupWithoutThrow()
+        {
+            var service = new XncfPreviewService();
+            var operationLock = (SemaphoreSlim)typeof(XncfPreviewService)
+                .GetField("_operationLock", BindingFlags.Instance | BindingFlags.NonPublic)
+                .GetValue(service);
+            await operationLock.WaitAsync();
+            var lockHeld = true;
+
+            try
+            {
+                using var shutdownCancellation = new CancellationTokenSource();
+                var stopTask = ((IHostedService)service).StopAsync(shutdownCancellation.Token);
+                await Task.Delay(50);
+                Assert.IsFalse(stopTask.IsCompleted);
+
+                shutdownCancellation.Cancel();
+                operationLock.Release();
+                lockHeld = false;
+                await stopTask;
+            }
+            finally
+            {
+                if (lockHeld)
+                {
+                    operationLock.Release();
+                }
+            }
         }
 
         [TestMethod]

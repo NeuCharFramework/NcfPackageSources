@@ -1047,6 +1047,9 @@ assert.strictEqual(vueOptions.methods.workflowObjectEditUrl.call({}, { editUrl: 
 assert.strictEqual(vueOptions.methods.workflowObjectEditUrl.call({}, { providerId: 'agents-manager', objectId: 'agent:42' }),
     '/Admin/AgentsManager/Index#tab=first&view=edit&agentId=42',
     'AgentsManager objects should resolve to the in-app agent editor anchor.');
+assert.strictEqual(vueOptions.methods.workflowObjectEditUrl.call({}, { providerId: 'agents-manager', objectId: 'a2a:42' }),
+    '/Admin/AgentsManager/Index#tab=remoteA2A&view=edit&remoteAgentId=42',
+    'Remote A2A objects should resolve to their in-app editor anchor.');
 assert.strictEqual(vueOptions.methods.functionPageUrl(
     { moduleUid: 'Senparc.Xncf.SenMapic', functionKey: 'Crawl Page' },
     'run'),

@@ -7,20 +7,12 @@
 
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
-using Senparc.AI;
-using Senparc.AI.AgentKernel;
-using Senparc.AI.AgentKernel.Extensions;
-using Senparc.AI.AgentKernel.Handlers;
-using Senparc.AI.AgentKernel.IWantToExtensions;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
-using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
-using Senparc.Xncf.AIKernel.Domain.Services;
-using Senparc.Xncf.PromptRange.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,8 +26,7 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
     public const string ProviderName = "agents-manager";
     private readonly AgentsTemplateService _agentService;
     private readonly ChatGroupService _groupService;
-    private readonly PromptItemService _promptItemService;
-    private readonly AIModelService _aiModelService;
+    private readonly AgentTemplateRunner _agentTemplateRunner;
     private readonly XncfModuleService _moduleService;
     private readonly RemoteAgentService _remoteAgentService;
     private readonly RemoteA2AAgentFactory _remoteA2AAgentFactory;
@@ -43,16 +34,14 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
     public AgentsWorkflowObjectProvider(
         AgentsTemplateService agentService,
         ChatGroupService groupService,
-        PromptItemService promptItemService,
-        AIModelService aiModelService,
+        AgentTemplateRunner agentTemplateRunner,
         XncfModuleService moduleService,
         RemoteAgentService remoteAgentService,
         RemoteA2AAgentFactory remoteA2AAgentFactory)
     {
         _agentService = agentService;
         _groupService = groupService;
-        _promptItemService = promptItemService;
-        _aiModelService = aiModelService;
+        _agentTemplateRunner = agentTemplateRunner;
         _moduleService = moduleService;
         _remoteAgentService = remoteAgentService;
         _remoteA2AAgentFactory = remoteA2AAgentFactory;
@@ -125,7 +114,7 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 z.Description,
                 z.Enable,
                 "fa fa-exchange",
-                "/Admin/AgentsManager/Index#tab=remoteA2A",
+                $"/Admin/AgentsManager/Index#tab=remoteA2A&view=edit&remoteAgentId={z.Id}",
                 new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 {
                     ["id"] = z.Id.ToString(),
@@ -196,52 +185,18 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             return new WorkflowObjectExecutionResult(false, null, "独立 Agent 不存在或未启用。");
         }
 
-        var setting = Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting;
-        var promptContent = string.Empty;
-        if (!string.IsNullOrWhiteSpace(agent.PromptCode))
-        {
-            var promptItem = await _promptItemService.GetBestPromptAsync(agent.PromptCode, true).ConfigureAwait(false);
-            if (promptItem != null)
-            {
-                promptContent = promptItem.Content ?? string.Empty;
-                var modelId = request.AiModelId > 0 ? request.AiModelId : promptItem.ModelId;
-                if (modelId > 0)
-                {
-                    var aiModel = await _aiModelService.GetObjectAsync(z => z.Id == modelId).ConfigureAwait(false);
-                    if (aiModel != null)
-                    {
-                        setting = _aiModelService.BuildSenparcAiSetting(
-                            _aiModelService.Mapper.Map<AIModelDto>(aiModel));
-                    }
-                }
-            }
-        }
-
-        if (setting == null || setting.AiPlatform == AiPlatform.UnSet)
-        {
-            return new WorkflowObjectExecutionResult(false, null, "没有可用于独立 Agent 的 Chat 模型。");
-        }
-
-        cancellationToken.ThrowIfCancellationRequested();
-        var handler = new AgentAiHandler(setting);
-#pragma warning disable MEAI001
-        var runner = await handler.IWantTo(setting).ConfigChatModel(
-            $"WorkflowAgent-{agentId}-{request.CorrelationId}",
-            new ChatClientAgentOptions
-            {
-                ChatOptions = new ChatOptions
-                {
-                    Instructions = string.Join("\n\n", new[] { agent.SystemMessage, promptContent }.Where(z => !string.IsNullOrWhiteSpace(z))),
-                    MaxOutputTokens = 3000,
-                    Temperature = 0.5f
-                }
-            }).BuildKernelWithAgentSessionAsync().ConfigureAwait(false);
-#pragma warning restore MEAI001
-        var result = await runner.RunChatAsync(request.Input ?? string.Empty).ConfigureAwait(false);
-        var output = result?.OutputString?.Trim();
-        return string.IsNullOrWhiteSpace(output)
-            ? new WorkflowObjectExecutionResult(false, null, "独立 Agent 没有返回有效内容。")
-            : new WorkflowObjectExecutionResult(true, output);
+        var execution = await _agentTemplateRunner.RunAsync(
+                agent,
+                request.Input,
+                AgentTemplateRunRequest.ForLocalWorkflow(
+                    agentId,
+                    request.CorrelationId,
+                    request.AiModelId > 0 ? request.AiModelId : null),
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return execution.Success
+            ? new WorkflowObjectExecutionResult(true, execution.Output)
+            : new WorkflowObjectExecutionResult(false, null, execution.ErrorMessage);
     }
 
     private async ValueTask<WorkflowObjectExecutionResult> ExecuteRemoteA2AAsync(

@@ -127,9 +127,9 @@
                                 <i class="fa fa-bell-o"></i><span>@AR["Admin.Footer.NeuBellLabel"]</span>
                                 <span class="admin-footer-badge" v-if="neuBellTotalCount">{{ neuBellTotalCount }}</span>
                             </button>
-                            <span class="admin-footer-time" title="服务器时间">
+                            <button type="button" class="admin-footer-time" @@click="handleFooterTimeClick" title="服务器时间" aria-label="服务器时间">
                                 <i class="fa fa-clock-o"></i> {{ serverTimeText }}
-                            </span>
+                            </button>
                         </div>
                         <div class="admin-footer-copyright">
                             @AR["Admin.Layout.PoweredBy"] <a href="https://www.ncf.pub" target="_blank" rel="noopener noreferrer">NeuCharFramework</a>
