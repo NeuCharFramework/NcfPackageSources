@@ -267,6 +267,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
 
                 var chatGroupMemberService = base.GetRequiredService<ChatGroupMemberService>();
                 var chatTaskService = base.GetRequiredService<ChatTaskService>();
+                var publishedA2AAgentService = base.GetRequiredService<PublishedA2AAgentService>();
 
                 var agentIds = list.Select(z => z.Id).Distinct().ToList();
                 var groupMembers = agentIds.Count > 0
@@ -285,6 +286,13 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 var activeTaskCountByGroup = activeTasks
                     .GroupBy(z => z.ChatGroupId)
                     .ToDictionary(g => g.Key, g => g.Count());
+                var publishedA2AAgents = agentIds.Count > 0
+                    ? (await publishedA2AAgentService.GetFullListAsync(z => agentIds.Contains(z.AgentTemplateId))).ToList()
+                    : new List<Models.DatabaseModel.Models.PublishedA2AAgent>();
+                // AgentTemplateId is logically unique. Keep the list query resilient to any historical duplicate data.
+                var publishedA2AByAgentId = publishedA2AAgents
+                    .GroupBy(z => z.AgentTemplateId)
+                    .ToDictionary(group => group.Key, group => group.OrderByDescending(z => z.Id).First());
 
                 var promptScoreCache = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
                 var dtoList = new List<AgentTemplateSimpleStatusDto>();
@@ -303,6 +311,11 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                         activeTaskCountByGroup.TryGetValue(groupId, out var count) ? count : 0);
 
                     dto.Score = await GetAgentScoreByPromptCodeAsync(dto.PromptCode, promptScoreCache);
+                    if (publishedA2AByAgentId.TryGetValue(item.Id, out var publishedA2A))
+                    {
+                        dto.HasPublishedA2A = true;
+                        dto.PublishedA2AEnabled = publishedA2A.Enable;
+                    }
                     dtoList.Add(dto);
                 }
 

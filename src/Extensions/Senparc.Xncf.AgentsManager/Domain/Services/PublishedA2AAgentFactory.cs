@@ -92,6 +92,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 publishedAgent.PublicAgentKey,
                 template.Id,
                 DescribeExecutionModel(executionConfiguration));
+            SenparcTrace.SendCustomLog(
+                "AgentsManager.A2A.ExecutionModel",
+                $"DiagnosticId={diagnosticId}; Agent={publishedAgent.PublicAgentKey}; TemplateId={template.Id}; " +
+                DescribeExecutionModel(executionConfiguration));
 
             var agentHandler = new AgentAiHandler(setting);
             var tools = publishedAgent.AllowFunctionCalls
@@ -143,6 +147,10 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     publishedAgent.PublicAgentKey,
                     DescribeExecutionModel(executionConfiguration),
                     SummarizeFailure(output));
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.A2A.UpstreamModelFailure",
+                    $"DiagnosticId={diagnosticId}; Agent={publishedAgent.PublicAgentKey}; " +
+                    DescribeExecutionModel(executionConfiguration) + "; Failure=" + SummarizeFailure(output));
                 throw new A2AException(
                     $"The published A2A agent's upstream model service rejected the request. DiagnosticId: {diagnosticId}. Check server diagnostics.",
                     A2AErrorCode.InternalError);

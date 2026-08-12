@@ -122,6 +122,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
     {
         public int ChattingCount { get; set; }
         public float Score { get; set; }
+        public bool HasPublishedA2A { get; set; }
+        public bool PublishedA2AEnabled { get; set; }
     }
 
     public class AgentTemplateStatusDto

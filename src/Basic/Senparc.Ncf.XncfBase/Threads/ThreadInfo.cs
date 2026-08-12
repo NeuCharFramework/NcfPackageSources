@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase.Threads
@@ -43,6 +44,12 @@ namespace Senparc.Ncf.XncfBase.Threads
         /// 发生异常时的处理
         /// </summary>
         public Func<Exception, Task> ExceptionHandler { get; set; }
+
+        /// <summary>
+        /// 应用正在停止时取消的令牌，由 <see cref="XncfThreadBuilder"/> 在启动线程时提供。
+        /// </summary>
+        public CancellationToken StoppingToken { get; internal set; } = CancellationToken.None;
+
         /// <summary>
         /// 最后故事记录
         /// </summary>

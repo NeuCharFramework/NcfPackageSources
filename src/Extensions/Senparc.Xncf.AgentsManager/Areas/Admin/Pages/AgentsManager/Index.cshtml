@@ -70,6 +70,7 @@
                         <div class="sidebar-agentitem text-ellipsis"
                             :class="{'sidebar-agentitem_active':scrollbarAgentIndex === ''}"
                             @@click="handleAgentViewAll">
+                            <i class="el-icon-s-custom sidebar-all-item-icon" aria-hidden="true"></i>
                             全部智能体
                         </div>
                         <div v-for="(item,index) in agentList" :key="item.id" class="sidebar-agentitem text-ellipsis"
@@ -91,6 +92,7 @@
                         <el-radio-group v-model="agentListViewMode" size="mini" @@change="handleAgentListViewModeChange">
                             <el-radio-button label="panel">面板视图</el-radio-button>
                             <el-radio-button label="three">3D视图</el-radio-button>
+                            <el-radio-button label="stats">统计图</el-radio-button>
                         </el-radio-group>
                         <el-button size="mini" type="warning" plain icon="el-icon-connection" style="margin-left:10px;"
                             @@click="openRemoteAgentManager">远程 A2A 智能体</el-button>
@@ -98,8 +100,12 @@
                     <el-scrollbar v-if="agentListViewMode === 'panel'" class="sidebar-agent-container" wrap-class="scrollbar-wrapper">
                         <div ref="agentElListBox" class="agent-listWrap">
                             <div v-for="(aitem,aindex) in agentList" :key="aindex" class="agent-cardBox">
-                                <div class="agentCard-statebox" :class="[getStatusColor(aitem,'1')]">
-                                    {{ getStatusText(aitem,'1') }}
+                                <div class="agentCard-stateboxStack">
+                                    <div class="agentCard-statebox" :class="[getStatusColor(aitem,'1')]">
+                                        {{ getStatusText(aitem,'1') }}
+                                    </div>
+                                    <el-tag v-if="aitem.hasPublishedA2A" :type="aitem.publishedA2AEnabled ? 'warning' : 'info'"
+                                        size="mini" class="agentCard-a2aBadge">A2A</el-tag>
                                 </div>
                                 <div class="agentCard-upperHalfbox">
                                     <div class="df-wn flex-ac flex-jc avatarBox">
@@ -125,7 +131,7 @@
                                         @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">编辑
                                     </div>
                                     <div class="lowerHalfbox_operation" style="color:#d97706;"
-                                        @@click="openPublishedA2AEditor(aitem)">发布 A2A</div>
+                                        @@click="openPublishedA2AEditor(aitem)">{{ aitem.hasPublishedA2A ? '管理 A2A' : '发布 A2A' }}</div>
                                     <div class="lowerHalfbox_operation" @@click="handleAgentView(aitem,aindex)">详情</div>
                                     <div class="lowerHalfbox_operation" @@click="handleAgentDelete(aitem)">删除</div>
                                 </div>
@@ -137,7 +143,7 @@
                         </div>
 
                     </el-scrollbar>
-                    <div v-else class="agent-3d-wrap">
+                    <div v-else-if="agentListViewMode === 'three'" class="agent-3d-wrap">
                         <div class="agent-3d-controls">
                             <el-select v-model="agentGraphFilterGroupId" size="mini" clearable placeholder="全部组" @@change="handleAgentGraphFilterChange">
                                 <el-option v-for="item in agentGraphGroupOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -171,6 +177,50 @@
                         </div>
                         <pre class="agent-3d-debug">{{ agentGraphDebugText }}</pre>
                         <div ref="agent3dContainer" class="agent-3d-canvas"></div>
+                    </div>
+                    <div v-else class="agent-statistics-wrap">
+                        <div class="agent-statistics-toolbar">
+                            <div>
+                                <div class="agent-statistics-toolbar__title">智能体统计图</div>
+                                <div class="agent-statistics-toolbar__hint">方块面积表示所选指标的相对大小；点击方块可直接编辑对应智能体。</div>
+                            </div>
+                            <div class="agent-statistics-toolbar__actions">
+                                <el-select v-model="agentStatisticMetric" size="mini" style="width:150px;">
+                                    <el-option v-for="option in agentStatisticMetricOptions" :key="option.value"
+                                        :label="option.label" :value="option.value"></el-option>
+                                </el-select>
+                                <el-button size="mini" icon="el-icon-refresh" @@click="refreshAgentStatistics">刷新数据</el-button>
+                            </div>
+                        </div>
+                        <div class="agent-statistics-summary">
+                            <div class="agent-statistics-summary__item">
+                                <span>本地 Agents</span>
+                                <strong>{{ formatUsageCount(agentList.length) }}</strong>
+                            </div>
+                            <div class="agent-statistics-summary__item">
+                                <span>{{ agentStatisticMetricLabel }}合计</span>
+                                <strong>{{ formatAgentStatisticValue(agentStatisticMetricTotal) }} {{ agentStatisticMetricUnit }}</strong>
+                            </div>
+                            <div class="agent-statistics-summary__item agent-statistics-summary__note">
+                                <span>统计范围</span>
+                                <strong>已记录的本地 Agent 累计/实时数据</strong>
+                            </div>
+                        </div>
+                        <el-scrollbar class="agent-statistics-scrollbar" wrap-class="scrollbar-wrapper">
+                            <div v-if="agentStatisticTiles.length" class="agent-statistics-grid">
+                                <button v-for="tile in agentStatisticTiles" :key="tile.agent.id" type="button"
+                                    class="agent-statistics-tile" :class="{'is-disabled': !tile.agent.enable, 'is-a2a': tile.agent.hasPublishedA2A}"
+                                    :style="agentStatisticTileStyle(tile)" :title="tile.title"
+                                    @@click="handleAgentStatisticTileClick(tile.agent)">
+                                    <span class="agent-statistics-tile__status">{{ getStatusText(tile.agent,'1') }}</span>
+                                    <span v-if="tile.agent.hasPublishedA2A" class="agent-statistics-tile__a2a">A2A</span>
+                                    <span class="agent-statistics-tile__name">{{ tile.agent.name }}</span>
+                                    <span class="agent-statistics-tile__value">{{ formatAgentStatisticValue(tile.value) }} {{ agentStatisticMetricUnit }}</span>
+                                    <span class="agent-statistics-tile__action"><i class="el-icon-edit" aria-hidden="true"></i> 编辑</span>
+                                </button>
+                            </div>
+                            <div v-else class="agent-statistics-empty">暂无可统计的智能体。</div>
+                        </el-scrollbar>
                     </div>
                 </template>
                 @* 智能体详情 *@
@@ -549,14 +599,15 @@
                                                 <el-scrollbar class="sidebar-taskmembers-container"
                                                     wrap-class="scrollbar-wrapper">
                                                     <div class="df-wn flex-dc taskmain-members-listWrap">
-                                                        <div v-for="mitem in getGroupParticipantList(agentDetailsGroupDetails)"
-                                                            :key="mitem.participantKey" v-show="mitem.name.includes(agentGroupTaskMemberfilter)" class="taskmain-members-listWrap-item">
-                                                            <div class="df-wn flex-ac flex-jc avatarBox">
-                                                                <img :src="mitem.avastar | showAvatar" alt="">
-                                                            </div>
-                                                            <span class="name text-ellipsis">{{ mitem.name }}</span>
-                                                            <el-tag v-if="mitem.agentKind === 'RemoteA2A'" type="warning" size="mini">A2A</el-tag>
-                                                        </div>
+                                                        <participant-quick-action
+                                                            v-for="mitem in getGroupParticipantList(agentDetailsGroupDetails)"
+                                                            :key="mitem.participantKey"
+                                                            v-show="mitem.name.includes(agentGroupTaskMemberfilter)"
+                                                            :participant="mitem"
+                                                            :quick-info="getParticipantQuickInfo('agentGroupTask', mitem)"
+                                                            :testing="isRemoteAgentTesting(mitem.id)"
+                                                            @@test-remote="testTaskRemoteAgent(mitem)">
+                                                        </participant-quick-action>
                                                     </div>
                                                 </el-scrollbar>
                                             </template>
@@ -683,14 +734,15 @@
                                         <el-scrollbar class="sidebar-taskmembers-container"
                                             wrap-class="scrollbar-wrapper">
                                             <div class="df-wn flex-dc taskmain-members-listWrap">
-                                                <div v-for="mitem in agentDetailsTaskMemberList" :key="mitem.participantKey || ('local-' + mitem.id)" v-show="mitem.name.includes(agentTaskMemberfilter)"
-                                                    class="taskmain-members-listWrap-item">
-                                                    <div class="df-wn flex-ac flex-jc avatarBox">
-                                                        <img :src="mitem.avastar | showAvatar" alt="">
-                                                    </div>
-                                                    <span class="name text-ellipsis">{{ mitem.name }}</span>
-                                                    <el-tag v-if="mitem.agentKind === 'RemoteA2A'" type="warning" size="mini">A2A</el-tag>
-                                                </div>
+                                                <participant-quick-action
+                                                    v-for="mitem in agentDetailsTaskMemberList"
+                                                    :key="mitem.participantKey || ('local-' + mitem.id)"
+                                                    v-show="mitem.name.includes(agentTaskMemberfilter)"
+                                                    :participant="mitem"
+                                                    :quick-info="getParticipantQuickInfo('agentTask', mitem)"
+                                                    :testing="isRemoteAgentTesting(mitem.id)"
+                                                    @@test-remote="testTaskRemoteAgent(mitem)">
+                                                </participant-quick-action>
                                             </div>
                                         </el-scrollbar>
                                     </div>
@@ -762,6 +814,7 @@
                     <template v-if="groupList&&groupList.length">
                         <div class="sidebar-agentitem text-ellipsis"
                         :class="{'sidebar-agentitem_active':scrollbarGroupIndex === ''}" @@click="handleGroupViewAll">
+                        <i class="el-icon-s-grid sidebar-all-item-icon" aria-hidden="true"></i>
                         全部组
                     </div>
                     <div v-for="(item,index) in groupList" :key="item.id" class="sidebar-agentitem text-ellipsis"
@@ -1046,13 +1099,15 @@
                                 </div>
                                 <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                     <div class="df-wn flex-dc taskmain-members-listWrap">
-                                        <div v-for="mitem in getGroupParticipantList(groupDetails)" :key="mitem.participantKey" v-show="mitem.name.includes(groupTaskMemberfilter)" class="taskmain-members-listWrap-item">
-                                            <div class="df-wn flex-ac flex-jc avatarBox">
-                                                <img :src="mitem.avastar | showAvatar" alt="">
-                                            </div>
-                                            <span class="name text-ellipsis">{{ mitem.name }}</span>
-                                            <el-tag v-if="mitem.agentKind === 'RemoteA2A'" type="warning" size="mini">A2A</el-tag>
-                                        </div>
+                                        <participant-quick-action
+                                            v-for="mitem in getGroupParticipantList(groupDetails)"
+                                            :key="mitem.participantKey"
+                                            v-show="mitem.name.includes(groupTaskMemberfilter)"
+                                            :participant="mitem"
+                                            :quick-info="getParticipantQuickInfo('groupTask', mitem)"
+                                            :testing="isRemoteAgentTesting(mitem.id)"
+                                            @@test-remote="testTaskRemoteAgent(mitem)">
+                                        </participant-quick-action>
                                     </div>
                                 </el-scrollbar>
                             </template>
@@ -1114,6 +1169,7 @@
                     <template v-if="taskList&&taskList.length">
                         <div class="sidebar-agentitem text-ellipsis"
                         :class="{'sidebar-agentitem_active':scrollbarTaskIndex === ''}" @@click="handleTaskViewAll">
+                        <i class="el-icon-s-order sidebar-all-item-icon" aria-hidden="true"></i>
                         全部任务
                     </div>
                     <div v-for="(item,index) in taskList" :key="item.id || index" class="sidebar-agentitem sidebar-taskitem"
@@ -1311,14 +1367,15 @@
                             </div>
                             <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskmain-members-listWrap">
-                                    <div v-for="mitem in taskMemberList" :key="mitem.participantKey || ('local-' + mitem.id)" v-show="mitem.name.includes(taskMemberfilter)"
-                                        class="taskmain-members-listWrap-item">
-                                        <div class="df-wn flex-ac flex-jc avatarBox">
-                                            <img :src="mitem.avastar | showAvatar" alt="">
-                                    </div>
-                                    <span class="name text-ellipsis">{{ mitem.name }}</span>
-                                    <el-tag v-if="mitem.agentKind === 'RemoteA2A'" type="warning" size="mini">A2A</el-tag>
-                                    </div>
+                                    <participant-quick-action
+                                        v-for="mitem in taskMemberList"
+                                        :key="mitem.participantKey || ('local-' + mitem.id)"
+                                        v-show="mitem.name.includes(taskMemberfilter)"
+                                        :participant="mitem"
+                                        :quick-info="getParticipantQuickInfo('task', mitem)"
+                                        :testing="isRemoteAgentTesting(mitem.id)"
+                                        @@test-remote="testTaskRemoteAgent(mitem)">
+                                    </participant-quick-action>
                                 </div>
                             </el-scrollbar>
                         </div>
@@ -1641,7 +1698,11 @@
             <div class="df-wn flex-ac flex-jsb" style="gap:10px;margin-bottom:14px;">
                 <el-input v-model="remoteAgentQueryList.filter" size="small" placeholder="按名称筛选"
                     @@change="getRemoteAgentListData"></el-input>
-                <el-button type="primary" size="small" icon="el-icon-plus" @@click="openRemoteAgentEditor()">新增远程 A2A</el-button>
+                <div class="df-wn flex-ac" style="gap:8px;">
+                    <el-button type="warning" plain size="small" icon="el-icon-connection" :loading="remoteAgentBatchTesting"
+                        @@click="testAllRemoteAgents">测试全部</el-button>
+                    <el-button type="primary" size="small" icon="el-icon-plus" @@click="openRemoteAgentEditor()">新增远程 A2A</el-button>
+                </div>
             </div>
             <div class="form-help-text" style="margin-bottom:12px;">数据库仅保存密钥引用；实际令牌请在部署配置 <code>A2A:Secrets:密钥名</code> 中维护。</div>
             <el-table :data="remoteAgentList" max-height="560" style="width:100%;border:1px solid rgba(229,229,229,1);">
@@ -1661,7 +1722,8 @@
                 <el-table-column label="操作" width="260" fixed="right">
                     <template slot-scope="{ row }">
                         <el-button type="primary" size="mini" @@click="openRemoteAgentEditor(row)">编辑</el-button>
-                        <el-button size="mini" @@click="testRemoteAgent(row)">测试</el-button>
+                        <el-button size="mini" :loading="isRemoteAgentTesting(row.id)" :disabled="remoteAgentBatchTesting"
+                            @@click="testRemoteAgent(row)">测试</el-button>
                         <el-button size="mini" @@click="setRemoteAgentEnable(row,!row.enable)">{{ row.enable ? '停用' : '启用' }}</el-button>
                         <el-button type="danger" size="mini" @@click="deleteRemoteAgent(row)">删除</el-button>
                     </template>
@@ -1859,14 +1921,30 @@
                     <div class="groupStartMentions" v-loading="groupStartParticipantLoading">
                         <div class="form-help-text">点击组员即可在下方任务描述的当前光标位置插入提及。</div>
                         <div v-if="groupStartParticipants.length" class="groupStartMentions__list">
-                            <el-button v-for="participant in groupStartParticipants" :key="participant.participantKey"
-                                type="primary" plain size="small" class="groupStartMentions__item"
-                                @@click="insertGroupStartMention(participant)">
-                                <span class="groupStartMentions__name">@@{{ participant.name }}</span>
-                                <el-tag v-if="participant.agentKind === 'RemoteA2A'" type="warning" size="mini">A2A</el-tag>
-                                <el-tag v-for="roleName in participant.roles" :key="participant.participantKey + '-' + roleName"
-                                    type="info" effect="plain" size="mini">{{ roleName }}</el-tag>
-                            </el-button>
+                            <div v-for="participant in groupStartParticipants" :key="participant.participantKey"
+                                class="groupStartMentions__participant">
+                                <el-button type="primary" plain size="small" class="groupStartMentions__item"
+                                    @@click="insertGroupStartMention(participant)">
+                                    <span class="groupStartMentions__name">@@{{ participant.name }}</span>
+                                    <el-tag v-if="participant.agentKind === 'RemoteA2A'" type="warning" size="mini">A2A</el-tag>
+                                    <el-tag v-for="roleName in participant.roles" :key="participant.participantKey + '-' + roleName"
+                                        type="info" effect="plain" size="mini">{{ roleName }}</el-tag>
+                                </el-button>
+                                <div class="groupStartMentions__details">
+                                    <template v-if="participant.agentKind === 'RemoteA2A'">
+                                        <el-tag :type="remoteParticipantAvailabilityType(participant)" size="mini"
+                                            :title="participant.lastHealthCheckMessage || ''">{{ remoteParticipantAvailabilityText(participant) }}</el-tag>
+                                        <span>超时 {{ participant.timeoutSeconds || 60 }} 秒</span>
+                                        <span v-if="participant.lastHealthCheckAt">检测 {{ participant.lastHealthCheckAt | showFormatDate }}</span>
+                                        <el-button type="text" size="mini" :loading="isRemoteAgentTesting(participant.id)"
+                                            @@click.stop="testGroupStartRemoteAgent(participant)">测试</el-button>
+                                    </template>
+                                    <template v-else>
+                                        <el-tag :type="participant.enable ? 'success' : 'info'" size="mini">{{ participant.enable ? '本地已启用' : '本地已停用' }}</el-tag>
+                                    </template>
+                                    <span v-if="participant.description" class="groupStartMentions__description text-ellipsis" :title="participant.description">{{ participant.description }}</span>
+                                </div>
+                            </div>
                         </div>
                         <div v-else class="groupStartMentions__empty">当前群组没有可提及的组员。</div>
                     </div>

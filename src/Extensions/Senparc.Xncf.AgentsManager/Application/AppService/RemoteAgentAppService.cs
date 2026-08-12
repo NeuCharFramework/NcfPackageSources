@@ -102,21 +102,58 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             {
                 var remoteAgent = await _remoteAgentService.GetObjectAsync(z => z.Id == id)
                     ?? throw new NcfExceptionBase($"未找到远程 Agent，ID：{id}");
+                var result = await TestRemoteAgentConnectionAsync(remoteAgent);
+                if (!result.Success)
+                {
+                    throw new NcfExceptionBase(result.Message);
+                }
+                return result.Message;
+            });
+        }
 
-                try
+        /// <summary>
+        /// 批量检测远程 A2A Agent Card。每个 Agent 独立更新其连接信息；单项失败不会中止整批检测。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<RemoteAgent_TestConnectionsResponse>> TestConnections(
+            [FromBody] RemoteAgent_TestConnectionsRequest request)
+        {
+            return await this.GetResponseAsync<RemoteAgent_TestConnectionsResponse>(async (response, logger) =>
+            {
+                var requestedIds = request?.RemoteAgentIds?
+                    .Where(z => z > 0)
+                    .Distinct()
+                    .ToList() ?? new List<int>();
+                var result = new RemoteAgent_TestConnectionsResponse();
+
+                if (requestedIds.Count == 0)
                 {
-                    var message = await _remoteA2AAgentFactory.TestConnectionAsync(remoteAgent);
-                    remoteAgent.SetConnectionStatus(RemoteAgentConnectionStatus.Available, message);
-                    await _remoteAgentService.SaveObjectAsync(remoteAgent);
-                    return message;
+                    var allAgents = await _remoteAgentService.GetFullListAsync(z => true, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending);
+                    foreach (var remoteAgent in allAgents)
+                    {
+                        result.Results.Add(await TestRemoteAgentConnectionAsync(remoteAgent));
+                    }
+                    return result;
                 }
-                catch (Exception ex)
+
+                var remoteAgents = await _remoteAgentService.GetFullListAsync(z => requestedIds.Contains(z.Id));
+                var remoteAgentMap = remoteAgents.ToDictionary(z => z.Id);
+                foreach (var remoteAgentId in requestedIds)
                 {
-                    var message = $"A2A 连接失败：{ex.Message}";
-                    remoteAgent.SetConnectionStatus(RemoteAgentConnectionStatus.Unavailable, message);
-                    await _remoteAgentService.SaveObjectAsync(remoteAgent);
-                    throw new NcfExceptionBase(message, ex);
+                    if (!remoteAgentMap.TryGetValue(remoteAgentId, out var remoteAgent))
+                    {
+                        result.Results.Add(new RemoteAgent_ConnectionTestResult
+                        {
+                            RemoteAgentId = remoteAgentId,
+                            Success = false,
+                            Message = $"未找到远程 Agent，ID：{remoteAgentId}"
+                        });
+                        continue;
+                    }
+
+                    result.Results.Add(await TestRemoteAgentConnectionAsync(remoteAgent));
                 }
+                return result;
             });
         }
 
@@ -182,6 +219,46 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 && string.IsNullOrWhiteSpace(dto.AuthSecretKey))
             {
                 throw new NcfExceptionBase("已启用鉴权，请填写部署配置中的密钥名。");
+            }
+        }
+
+        private async Task<RemoteAgent_ConnectionTestResult> TestRemoteAgentConnectionAsync(RemoteAgent remoteAgent)
+        {
+            try
+            {
+                var message = await _remoteA2AAgentFactory.TestConnectionAsync(remoteAgent);
+                remoteAgent.SetConnectionStatus(RemoteAgentConnectionStatus.Available, message);
+                await _remoteAgentService.SaveObjectAsync(remoteAgent);
+                return new RemoteAgent_ConnectionTestResult
+                {
+                    RemoteAgentId = remoteAgent.Id,
+                    Name = remoteAgent.Name,
+                    Success = true,
+                    Message = message,
+                    RemoteAgentDto = new RemoteAgentDto(remoteAgent)
+                };
+            }
+            catch (Exception ex)
+            {
+                var message = $"A2A 连接失败：{ex.Message}";
+                remoteAgent.SetConnectionStatus(RemoteAgentConnectionStatus.Unavailable, message);
+                try
+                {
+                    await _remoteAgentService.SaveObjectAsync(remoteAgent);
+                }
+                catch (Exception saveException)
+                {
+                    message = $"{message}；无法保存连接状态：{saveException.Message}";
+                }
+
+                return new RemoteAgent_ConnectionTestResult
+                {
+                    RemoteAgentId = remoteAgent.Id,
+                    Name = remoteAgent.Name,
+                    Success = false,
+                    Message = message,
+                    RemoteAgentDto = new RemoteAgentDto(remoteAgent)
+                };
             }
         }
     }

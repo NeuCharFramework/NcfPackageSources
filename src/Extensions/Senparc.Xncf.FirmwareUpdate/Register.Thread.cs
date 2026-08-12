@@ -32,6 +32,7 @@ public partial class Register : IXncfThread
             {
                 try
                 {
+                    threadInfo.StoppingToken.ThrowIfCancellationRequested();
                     threadInfo.RecordStory("开始检查镜像任务");
 
                     using var scope = app.ApplicationServices.CreateScope();
@@ -46,9 +47,16 @@ public partial class Register : IXncfThread
                     }
 
                     var mirror = sp.GetRequiredService<NcfPackageMirrorService>();
-                    var msg = await mirror.RunAsync(sp, manualTrigger: false).ConfigureAwait(false);
+                    var msg = await mirror.RunAsync(
+                        sp,
+                        manualTrigger: false,
+                        threadInfo.StoppingToken).ConfigureAwait(false);
                     threadInfo.RecordStory(msg);
                     SenparcTrace.SendCustomLog("FirmwareUpdate", msg);
+                }
+                catch (OperationCanceledException) when (threadInfo.StoppingToken.IsCancellationRequested)
+                {
+                    threadInfo.RecordStory("应用正在停止，已取消镜像任务。");
                 }
                 catch (NcfModuleException)
                 {
