@@ -143,6 +143,16 @@ public sealed class NeuCharWorkflowAppService
         var hasDisconnectedNodes = _workflowEngine.GetDisconnectedNodes(graph).Count > 0;
         // 未连接节点属于草稿；保留它们以便继续编辑，但不要让定时或 Webhook 触发半成品。
         var enabled = request.Enabled && !hasDisconnectedNodes;
+        var subWorkflowError = await _workflowEngine.ValidateSubWorkflowReferencesAsync(
+            graph,
+            workflow?.Id ?? 0,
+            adminUserId,
+            requireEnabled: enabled,
+            cancellationToken).ConfigureAwait(false);
+        if (subWorkflowError != null)
+        {
+            throw new WorkflowInputException(subWorkflowError);
+        }
         if (enabled)
         {
             var referenceError = await _workflowEngine.ValidateReferencesAsync(graph, cancellationToken).ConfigureAwait(false);
@@ -578,6 +588,16 @@ public sealed class NeuCharWorkflowAppService
         if (validationError != null)
         {
             throw new WorkflowInputException(validationError);
+        }
+        var subWorkflowError = await _workflowEngine.ValidateSubWorkflowReferencesAsync(
+            graph,
+            workflow.Id,
+            workflow.AdminUserId,
+            requireEnabled: true,
+            cancellationToken).ConfigureAwait(false);
+        if (subWorkflowError != null)
+        {
+            throw new WorkflowInputException(subWorkflowError);
         }
     }
 

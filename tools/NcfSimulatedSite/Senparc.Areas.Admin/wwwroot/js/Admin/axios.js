@@ -55,6 +55,12 @@ service.interceptors.response.use(
     },
     error => {
         console.log('err' + error);
+        // Workflow uses customAlert to render a 400 validation failure in its
+        // own node-aware panel. Do not call the legacy global `app` here: this
+        // page deliberately has no globally named Vue instance.
+        if (error && error.config && error.config.customAlert) {
+            return Promise.reject(error);
+        }
         if (error.message.includes('401')) {
             app.$message({
                 message: ncfT('Admin.Session.ExpiredRedirect'),

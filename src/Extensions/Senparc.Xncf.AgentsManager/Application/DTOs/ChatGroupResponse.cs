@@ -31,10 +31,26 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     {
         public ChatGroupDto ChatGroupDto { get; set; }
         public List<AgentTemplateDto> AgentTemplateDtoList { get; set; }
+
+        /// <summary>
+        /// 群主、对接人等角色对应的本地智能体。角色不一定已经出现在普通成员列表中，
+        /// 因此单独返回，供调用方完整展示可参与群组任务的人员。
+        /// </summary>
+        public List<ChatGroupRoleAgentDto> RoleAgentTemplateDtoList { get; set; } = new List<ChatGroupRoleAgentDto>();
+
         /// <summary>
         /// 远程成员与本地 AgentTemplateDtoList 并行返回，保证旧调用方仍可使用原字段。
         /// </summary>
         public List<ChatGroupRemoteMemberDto> RemoteMemberDtoList { get; set; } = new List<ChatGroupRemoteMemberDto>();
+    }
+
+    /// <summary>
+    /// ChatGroup 中承担特定角色的本地智能体。
+    /// </summary>
+    public class ChatGroupRoleAgentDto
+    {
+        public string RoleName { get; set; }
+        public AgentTemplateDto AgentTemplateDto { get; set; }
     }
 
 

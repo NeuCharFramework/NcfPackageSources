@@ -209,6 +209,36 @@
                 </section>
             </div>
         </el-drawer>
+
+        <section v-if="neuBellToastEntries.length"
+                 :class="['admin-neubell-toast-stack', { 'is-expanded': neuBellToastExpanded }]"
+                 aria-live="polite"
+                 aria-label="NeuBell 提醒">
+            <header class="admin-neubell-toast-toolbar">
+                <span><i class="fa fa-bell-o"></i> NeuBell 提醒</span>
+                <button type="button" class="admin-neubell-toast-clear" @@click="clearAllNeuBellToasts">关闭全部</button>
+            </header>
+            <div class="admin-neubell-toast-list">
+                <button v-for="entry in neuBellToastVisibleItems"
+                        :key="entry.key"
+                        type="button"
+                        class="admin-neubell-toast-card"
+                        @@click="openNeuBellToast(entry)">
+                    <span class="admin-neubell-toast-icon"><i :class="entry.providerIcon || 'fa fa-bell-o'"></i></span>
+                    <span class="admin-neubell-toast-content">
+                        <strong>{{ entry.item.title || entry.providerName || 'NeuBell' }}</strong>
+                        <small>{{ entry.item.summary }}</small>
+                    </span>
+                    <i class="el-icon-arrow-right admin-neubell-toast-arrow"></i>
+                </button>
+            </div>
+            <button v-if="neuBellToastOverflowCount"
+                    type="button"
+                    class="admin-neubell-toast-expand"
+                    @@click="toggleNeuBellToastExpanded">
+                {{ neuBellToastExpanded ? '收起' : '还有 ' + neuBellToastOverflowCount + ' 条，点击展开' }}
+            </button>
+        </section>
     </div>
     <!--lib-->
     <script src="~/lib/vue/vue.js"></script>

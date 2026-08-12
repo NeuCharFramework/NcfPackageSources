@@ -739,6 +739,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             var chatGroupService = base.GetRequiredService<ChatGroupService>();
             var chatGroupMemberService = base.GetRequiredService<ChatGroupMemberService>();
             var chatGroupHistoryService = base.GetRequiredService<ChatGroupHistoryService>();
+            var publishedA2AAgentService = base.GetRequiredService<PublishedA2AAgentService>();
 
             var groupsAsRole = await chatGroupService.GetFullListAsync(
                 z => idSet.Contains(z.AdminAgentTemplateId) || idSet.Contains(z.EnterAgentTemplateId));
@@ -795,9 +796,16 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     await chatGroupHistoryService.DeleteObjectAsync(history);
                 }
 
+                // 发布配置是 Agent 的附加能力；删除本地 Agent 时一并撤销，避免遗留不可访问的公开标识。
+                var publishedA2AAgent = await publishedA2AAgentService.GetByAgentTemplateIdAsync(id);
+                if (publishedA2AAgent != null)
+                {
+                    await publishedA2AAgentService.DeleteObjectAsync(publishedA2AAgent);
+                }
+
                 await _agentsTemplateService.DeleteObjectAsync(agent);
                 deleted++;
-                logger.Append($"✓ 已删除 Agent【{agent.Name}】（成员关系 {members.Count} 条，消息记录 {histories.Count} 条）");
+                logger.Append($"✓ 已删除 Agent【{agent.Name}】（成员关系 {members.Count} 条，消息记录 {histories.Count} 条{(publishedA2AAgent != null ? "，已撤销 A2A 发布" : string.Empty)}）");
             }
 
             logger.Append($"删除 Agent 完成：成功 {deleted}，阻止 {blocked}，不存在 {missing}");

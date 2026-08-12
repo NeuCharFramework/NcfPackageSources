@@ -31,6 +31,8 @@ const runCoordinatorPath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Domain/Services/NeuCharWorkflowRunCoordinator.cs');
 const workflowEnginePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Domain/Services/NeuCharWorkflowEngine.cs');
+const adminAxiosPath = path.resolve(__dirname,
+    '../../../Senparc.Areas.Admin/wwwroot/js/Admin/axios.js');
 const moduleFunctionPagePath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/Areas/Admin/Pages/XncfModule/Start.cshtml');
 const moduleFunctionScriptPath = path.resolve(__dirname,
@@ -43,6 +45,54 @@ const workflowRootEndOffset = workflowPageMarkup.lastIndexOf('</div>\n\n@section
 
 assert.ok(nodePickerTemplateOffset > workflowRootEndOffset,
     'The node-picker template must be emitted outside the shared #app root so its v-for aliases are not evaluated by the page Vue instance.');
+assert.match(workflowPageMarkup, /class="workflow-validation-panel"/,
+    'The Workflow page must render a persistent validation error panel.');
+assert.match(workflowPageMarkup, /:data-node-id="node\.id"/,
+    'Each Workflow node must expose its id so validation focus can target it.');
+assert.ok(workflowPageMarkup.includes('工作流变量'),
+    'Workflow settings must expose declared workflow variables.');
+assert.ok(workflowPageMarkup.includes('调用工作流'),
+    'The picker and node inspector must expose the sub-workflow node.');
+assert.ok(workflowPageMarkup.includes('安全代码'),
+    'The picker and node inspector must expose the constrained Safe Code node.');
+assert.ok(workflowPageMarkup.includes('A2A'),
+    'Remote A2A objects must be visually distinguishable in the picker.');
+
+const axiosInterceptors = {};
+const axiosSandbox = {
+    axios: {
+        create() {
+            return {
+                interceptors: {
+                    request: { use() {} },
+                    response: {
+                        use(success, failure) {
+                            axiosInterceptors.failure = failure;
+                        }
+                    }
+                }
+            };
+        }
+    },
+    window: { document: { getElementsByName() { return [{ value: 'token' }]; } } },
+    app: {},
+    ncfT(key) { return key; },
+    Promise: {
+        reject(value) { return { rejected: value }; },
+        resolve(value) { return { resolved: value }; }
+    },
+    console: { log() {} }
+};
+vm.createContext(axiosSandbox);
+vm.runInContext(fs.readFileSync(adminAxiosPath, 'utf8'), axiosSandbox, { filename: adminAxiosPath });
+const validationResponseError = {
+    message: 'Request failed with status code 400',
+    config: { customAlert: true },
+    response: { status: 400, data: '聚合节点必须设置输出内容。' }
+};
+const interceptedValidationError = axiosInterceptors.failure(validationResponseError);
+assert.strictEqual(interceptedValidationError.rejected, validationResponseError,
+    'A customAlert validation request must bypass the legacy global app message handler and reach Workflow unchanged.');
 
 let vueOptions = null;
 function Vue(options) { vueOptions = options; }
@@ -83,6 +133,20 @@ vm.runInContext(fs.readFileSync(scriptPath, 'utf8'), sandbox, { filename: script
 assert.ok(vueOptions && vueOptions.methods, 'Workflow designer should register a Vue view model.');
 assert.strictEqual(registeredVueComponents['workflow-node-picker'].template, nodePickerTemplateMarkup,
     'The node picker must cache its template before Vue renders the shared #app root and removes script template nodes.');
+assert.ok(registeredVueComponents['workflow-rich-text-input'],
+    'Workflow text fields should share a registered rich-text formula input component.');
+assert.match(registeredVueComponents['workflow-rich-text-input'].template, /workflow-rich-text-badge/,
+    'The shared text input should visibly identify formula support.');
+assert.match(registeredVueComponents['workflow-rich-text-input'].template, /@mouseup\.stop/,
+    'Formula editor controls must keep their pointer completion event away from the canvas handler.');
+assert.match(workflowPageMarkup, /@@mouseup\.native\.stop/,
+    'Pointer events inside the formula dialog must not reach the global canvas pointer handler.');
+assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('subWorkflowTargets()'),
+    'The designer must provide valid target workflows to the sub-workflow selector.');
+assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('openSubWorkflow(workflowId)'),
+    'The sub-workflow selector must support opening a target workflow in a separate tab.');
+assert.ok(fs.readFileSync(stylePath, 'utf8').includes('node-a2a'),
+    'The canvas must assign remote A2A nodes their own visual style.');
 
 const scheduledWorkflow = { triggerType: 'interval', enabled: true, nextRunAt: '2026-08-12T12:15:00Z' };
 const workflowScheduleContext = {
@@ -163,6 +227,15 @@ assert.ok(cyclicContext.form.graph.nodes.every(node => Number.isFinite(node.x) &
     'Auto layout must terminate safely even for a legacy malformed cycle.');
 assert.strictEqual(cyclicContext.form.graph.layout.direction, 'vertical',
     'Legacy workflows without layout metadata should continue to use the vertical default.');
+
+const variableNormalizationContext = {};
+const normalizedGraph = vueOptions.methods.ensureGraphLayout.call(variableNormalizationContext, {
+    nodes: [],
+    edges: [],
+    variables: [{ name: 'customerName', value: 'Ada' }]
+});
+assert.deepStrictEqual(JSON.parse(JSON.stringify(normalizedGraph.variables)), [{ name: 'customerName', value: 'Ada' }],
+    'Workflow graph normalization should preserve declared workflow variables.');
 
 const horizontalLayoutContext = {
     editingLocked: false,
@@ -252,6 +325,57 @@ assert.strictEqual(vueOptions.methods.validate.call(draftContext, { requireRunna
 assert.match(vueOptions.methods.validate.call(draftContext, { requireRunnable: true }), /未连接到触发器/,
     'Testing a workflow should continue to reject disconnected draft nodes.');
 
+const validationContext = {
+    form: {
+        graph: {
+            nodes: [
+                { id: 'trigger', type: 'manual-trigger', name: '手动触发', x: 40, y: 40 },
+                { id: 'orphan', type: 'delay', name: '草稿等待', x: 760, y: 520 }
+            ],
+            edges: []
+        }
+    },
+    extractValidationNodeIds: vueOptions.methods.extractValidationNodeIds,
+    inferValidationNodeIds: vueOptions.methods.inferValidationNodeIds,
+    getDisconnectedNodes: vueOptions.methods.getDisconnectedNodes
+};
+const parsedValidationIssue = vueOptions.methods.validationIssueFromError.call(
+    validationContext,
+    '节点“草稿等待”缺少必填参数“输入”。',
+    '节点检查失败。');
+assert.strictEqual(Array.from(parsedValidationIssue.nodeIds).join(','), 'orphan',
+    'Validation messages containing a node name must resolve to the node id used by the canvas.');
+validationContext.validation = parsedValidationIssue;
+assert.strictEqual(vueOptions.methods.nodeValidationError.call(validationContext, validationContext.form.graph.nodes[1]),
+    parsedValidationIssue.message,
+    'The resolved validation issue must be available to the node renderer for its error highlight.');
+const disconnectedIssue = vueOptions.methods.validationIssueFromError.call(
+    validationContext,
+    '画布中仍有未连接到触发器的节点。',
+    '节点检查失败。');
+assert.strictEqual(Array.from(disconnectedIssue.nodeIds).join(','), 'orphan',
+    'A disconnected-node validation message must highlight every unreachable node even without a node name in the message.');
+
+const focusValidationContext = {
+    ...validationContext,
+    selectedNodeId: '',
+    selectedNodeIds: [],
+    inspectorCollapsed: true,
+    canvasZoom: 1,
+    canvasSafeInsets: { left: 0, right: 0 },
+    $refs: { canvas: { clientWidth: 500, clientHeight: 300, scrollLeft: 0, scrollTop: 0 } },
+    stageContentTop() { return 0; },
+    updateCanvasViewport() {},
+    $nextTick(callback) { callback(); },
+    setSelectedNodes: vueOptions.methods.setSelectedNodes
+};
+assert.strictEqual(vueOptions.methods.focusValidationIssue.call(focusValidationContext, { nodeId: 'orphan' }), true,
+    'Clicking a validation item must focus the referenced node.');
+assert.strictEqual(focusValidationContext.selectedNodeId, 'orphan',
+    'Focusing a validation issue must select the invalid node in the inspector.');
+assert.ok(focusValidationContext.$refs.canvas.scrollLeft > 0 && focusValidationContext.$refs.canvas.scrollTop > 0,
+    'Focusing a validation issue must scroll the canvas toward the invalid node.');
+
 const source = { id: 'source', type: 'function' };
 const oldTarget = { id: 'old', type: 'delay' };
 const newTarget = { id: 'new', type: 'console' };
@@ -288,6 +412,28 @@ assert.strictEqual(parallelContext.form.graph.edges.length, 2,
     'A parallel node should preserve every independently connected downstream branch.');
 assert.strictEqual(vueOptions.methods.supportsMultipleOutputs(parallelSource), true,
     'The designer should identify parallel nodes as multi-output nodes.');
+
+const loopNode = vueOptions.methods.createSimpleNode.call({ makeId(type) { return `${type}-1`; } }, 'loop', '循环（For）');
+assert.strictEqual(loopNode.config.count, 3,
+    'A new loop node should start with a small, bounded For count.');
+assert.match(vueOptions.methods.systemNodePreview.call({}, 'loop', '循环（For）').description, /不提供 while/,
+    'The loop preview should clearly explain that it is not an unbounded while loop.');
+const loopValidationContext = {
+    form: {
+        name: '循环测试',
+        triggerType: 'manual',
+        graph: {
+            nodes: [{ id: 'trigger', type: 'manual-trigger' }, { id: 'loop', type: 'loop', name: '循环', config: { count: 101 } }],
+            edges: [{ id: 'edge-1', source: 'trigger', target: 'loop' }]
+        }
+    },
+    getDisconnectedNodes() { return []; },
+    incomingEdges: vueOptions.methods.incomingEdges,
+    supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    isBinding: vueOptions.methods.isBinding
+};
+assert.match(vueOptions.methods.validate.call(loopValidationContext, { requireRunnable: true }), /1 到 100/,
+    'The designer should reject a static loop count outside the safe range before run.');
 
 const branchSource = { id: 'condition', type: 'condition' };
 const branchTarget = { id: 'target', type: 'delay' };
@@ -489,6 +635,7 @@ const selectionContext = {
     inspectorCollapsed: true,
     selectionBox: { active: true, startX: 40, startY: 60, endX: 600, endY: 250, additive: false },
     emptySelectionBox: vueOptions.methods.emptySelectionBox,
+    clearSelectionBox: vueOptions.methods.clearSelectionBox,
     nodeIntersectsSelection: vueOptions.methods.nodeIntersectsSelection,
     setSelectedNodes: vueOptions.methods.setSelectedNodes
 };
@@ -497,6 +644,55 @@ assert.strictEqual(JSON.stringify(selectionContext.selectedNodeIds), JSON.string
     'Dragging a selection rectangle should select every intersecting node and exclude nodes outside the box.');
 assert.strictEqual(selectionContext.selectedNodeId, 'selection-b',
     'The latest selected node should remain the single-node inspector target after marquee selection.');
+
+const unchangedSelectionIds = ['selection-a'];
+const unchangedSelectionContext = {
+    selectedNodeId: 'selection-a',
+    selectedNodeIds: unchangedSelectionIds,
+    inspectorCollapsed: false
+};
+vueOptions.methods.setSelectedNodes.call(unchangedSelectionContext, [selectionNodeA]);
+assert.strictEqual(unchangedSelectionContext.selectedNodeIds, unchangedSelectionIds,
+    'Selecting the already-selected node must not replace the reactive selection array.');
+
+const formulaPointerContext = {
+    canvasPan: { active: false, moved: false },
+    selectionBox: { active: true, startX: 10, startY: 10, endX: 20, endY: 20, additive: false },
+    templateEditor: { visible: false },
+    dragState: null,
+    connectionDraft: { sourceId: '' },
+    suppressCanvasContextMenuUntil: 0,
+    emptySelectionBox: vueOptions.methods.emptySelectionBox,
+    clearSelectionBox: vueOptions.methods.clearSelectionBox,
+    completeSelectionBox() { throw new Error('Formula controls must not complete an active canvas selection.'); }
+};
+vueOptions.methods.onPointerUp.call(formulaPointerContext, {
+    target: { closest(selector) { return selector.includes('.parameter-template-actions') ? {} : null; } }
+});
+assert.strictEqual(formulaPointerContext.selectionBox.active, false,
+    'Releasing a formula editor control must clear, rather than complete, a stale canvas selection.');
+
+const formulaOpenContext = {
+    editingLocked: false,
+    selectionBox: { active: true, startX: 10, startY: 10, endX: 20, endY: 20, additive: false },
+    canvasPan: { active: true, moved: true },
+    dragState: { node: selectionNodeA },
+    emptySelectionBox: vueOptions.methods.emptySelectionBox,
+    clearSelectionBox: vueOptions.methods.clearSelectionBox,
+    clearCanvasPointerInteraction: vueOptions.methods.clearCanvasPointerInteraction,
+    isBinding() { return false; },
+    templateFor() { return null; }
+};
+vueOptions.methods.openNodeTemplateEditor.call(formulaOpenContext, {
+    id: 'selection-a',
+    config: { title: 'test' }
+}, 'title');
+assert.strictEqual(formulaOpenContext.selectionBox.active, false,
+    'Opening the formula editor must discard a stale marquee selection before it can reach the next pointer-up.');
+assert.strictEqual(formulaOpenContext.canvasPan.active, false,
+    'Opening the formula editor must end an in-flight canvas pan.');
+assert.strictEqual(formulaOpenContext.dragState, null,
+    'Opening the formula editor must end an in-flight node drag.');
 
 const groupDragNodeA = { id: 'group-a', x: 100, y: 100 };
 const groupDragNodeB = { id: 'group-b', x: 360, y: 140 };
@@ -705,6 +901,13 @@ const overlayViewportContext = {
 vueOptions.methods.updateCanvasViewport.call(overlayViewportContext);
 assert.strictEqual(JSON.stringify(overlayViewportContext.canvasSafeInsets), JSON.stringify({ left: 298, right: 348 }),
     'The canvas should reserve the actual overlay widths plus a readable gap on both sides.');
+const unchangedSafeInsets = overlayViewportContext.canvasSafeInsets;
+const unchangedViewport = overlayViewportContext.canvasViewport;
+vueOptions.methods.updateCanvasViewport.call(overlayViewportContext);
+assert.strictEqual(overlayViewportContext.canvasSafeInsets, unchangedSafeInsets,
+    'Repeated equal overlay measurements must not replace the reactive safe-inset object.');
+assert.strictEqual(overlayViewportContext.canvasViewport, unchangedViewport,
+    'Repeated equal viewport measurements must not replace the reactive viewport object.');
 const canvasSurfaceStyle = vueOptions.computed.canvasSurfaceStyle.call({
     scaledCanvasSize: { width: 1200, height: 700 },
     canvasSafeInsets: overlayViewportContext.canvasSafeInsets
@@ -771,6 +974,8 @@ assert.ok(page.includes('@@drag-node="beginPaletteNodeDrag"') && page.includes('
 assert.ok(page.includes('@@preview-node="showNodePreview"') && page.includes('@@dblclick="selectFunction(fn)"') && page.includes('nodePreviewDetails.actionText'),
     'Node picker blocks should preview on the first interaction and reserve double-click for adding a node.');
 assert.ok(page.includes("selectSystem('condition','条件判断')"), 'The shared picker should expose condition nodes.');
+assert.ok(page.includes("selectSystem('loop','循环（For）')") && page.includes('重复次数（For）') && page.includes('loopCountOutputOptions()'),
+    'The shared picker should expose a novice-friendly bounded For loop with a selectable upstream count.');
 assert.ok(page.includes("selectSystem('aggregate','聚合')"), 'The shared picker should expose multi-input aggregate nodes.');
 assert.ok(page.includes("selectSystem('parallel','并行')"), 'The shared picker should expose a parallel fan-out node.');
 assert.ok(page.includes("selectSystem('console','Console 打印')"), 'The shared picker should expose console output nodes.');
@@ -783,8 +988,13 @@ assert.ok(styles.includes('.workflow-edge-insert-menu') && styles.includes('.edg
     'The inline picker and plus action should receive dedicated canvas styles.');
 assert.ok(styles.includes('.workflow-node-preview') && styles.includes('rgba(28, 42, 59, .80)'),
     'Node detail previews should use the centered translucent overlay treatment.');
+assert.ok(page.includes("'is-hover-preview':nodePreview.mode==='hover'") &&
+    /\.workflow-node-preview\.is-hover-preview\s*\{[^}]*pointer-events:\s*none;/s.test(styles),
+    'Hover-only node previews must not intercept the pointer, so covered palette buttons remain clickable without flicker.');
 assert.ok(styles.includes('.edge-insert-candidate path') && styles.includes('.node-picker-function') && styles.includes('.node-picker-agent'),
     'Dragging should visibly highlight an eligible edge and palette blocks should mirror node-type colors.');
+assert.ok(styles.includes('.node-picker-loop') && styles.includes('.workflow-loop-count-binding'),
+    'The loop palette entry and upstream-count binding state should have dedicated visual treatment.');
 assert.ok(page.includes('@@mousedown="onCanvasMouseDown"') && fs.readFileSync(scriptPath, 'utf8').includes('startCanvasPan(event)'),
     'The canvas should preserve right-button panning alongside drag selection.');
 assert.ok(page.includes('@@contextmenu.prevent="onCanvasContextMenu"') && page.includes('workflow-canvas-context-menu') && page.includes('canvasNodeInsertMenu.visible'),
@@ -881,7 +1091,8 @@ assert.deepStrictEqual(
 assert.strictEqual(selectionFields[1].isArray, true,
     'A multi-select Function input should remain an array when bound downstream.');
 const templateNormalizationContext = {
-    templatePlaceholder: vueOptions.methods.templatePlaceholder
+    templatePlaceholder: vueOptions.methods.templatePlaceholder,
+    templateUsesBindingToken: vueOptions.methods.templateUsesBindingToken
 };
 const normalizedTemplateBindings = vueOptions.methods.normalizeTemplateBindings.call(templateNormalizationContext,
     '保留 {{value_1}}，第二个变量已删除', [
@@ -891,6 +1102,13 @@ const normalizedTemplateBindings = vueOptions.methods.normalizeTemplateBindings.
 assert.strictEqual(JSON.stringify(normalizedTemplateBindings), JSON.stringify([
     { token: 'value_1', source: { nodeId: 'source-a', path: '$' } }
 ]), 'Applying the variable editor must discard bindings whose placeholders were manually removed from the text.');
+const formulaTemplateBindings = vueOptions.methods.normalizeTemplateBindings.call(templateNormalizationContext,
+    '{{= substring(value_1, 0, 10) }}', [
+        { token: 'value_1', source: { nodeId: 'source-a', path: '$' } }
+    ]);
+assert.strictEqual(JSON.stringify(formulaTemplateBindings), JSON.stringify([
+    { token: 'value_1', source: { nodeId: 'source-a', path: '$' } }
+]), 'Applying a formula that references value_1 must retain its inserted upstream binding.');
 const templateSaveNode = { id: 'target', config: { parameters: {} } };
 const templateSaveContext = {
     templateEditor: {
@@ -903,6 +1121,7 @@ const templateSaveContext = {
     form: { graph: { nodes: [templateSaveNode] } },
     normalizeTemplateBindings: vueOptions.methods.normalizeTemplateBindings,
     templatePlaceholder: vueOptions.methods.templatePlaceholder,
+    templateUsesBindingToken: vueOptions.methods.templateUsesBindingToken,
     $set(target, key, value) { target[key] = value; }
 };
 vueOptions.methods.saveParameterTemplate.call(templateSaveContext);
@@ -941,19 +1160,24 @@ assert.ok(page.includes('关联上游 Output'), 'Node parameters should expose u
 assert.ok(page.includes('Function 预载输入选择'), 'Function parameters should explain that upstream Selection values can be bound.');
 assert.ok(page.includes('预载输入选择'),
     'Function Selection values loaded with the Function should be specially identified as preloaded binding sources.');
-assert.ok(page.includes('编辑文本与插入变量') && page.includes('saveParameterTemplate') && page.includes('appendTemplateBinding'),
+assert.ok(page.includes(':title="templateEditorTitle"') && page.includes('saveParameterTemplate') && page.includes('appendTemplateBinding'),
     'Text parameters should offer a beginner-friendly dialog for inserting multiple upstream bindings into manual text.');
 assert.ok(page.includes(':close-on-click-modal="false"') && page.includes(':close-on-press-escape="false"'),
     'The variable editor must only close through an explicit close, cancel, or apply action so edits are not lost accidentally.');
 assert.ok(page.includes('parameter-template-card') && page.includes('templateEditor.bindings'),
     'Mixed text bindings should remain visible and editable after the dialog is closed.');
+assert.ok(page.includes("selectedNode.config.title") && page.includes("selectedNode.config.summary") &&
+    page.includes("selectedNode.config.prompt") && page.includes('workflow-rich-text-input'),
+    'NeuBell title/content and Agent Prompt should use the shared formula text input.');
+assert.ok(styles.includes('.workflow-rich-text-input') && styles.includes('.workflow-rich-text-info'),
+    'Formula text inputs should have a distinct visual treatment and an info icon.');
 assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('$template'),
     'The designer should persist mixed text binding values with an explicit template contract.');
 assert.ok(!page.includes("{{'{{'+item.token+'}}'}}"),
     'Vue templates must not embed a literal closing interpolation delimiter inside another interpolation.');
 assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('templatePlaceholder(token)'),
     'Mixed-text variable tags should render their placeholder through a method, avoiding Vue 2 interpolation parsing errors.');
-assert.ok(page.includes(':placeholder="templateEditorPlaceholder"') && page.includes(':title="templateEditorBindingHelp"'),
+assert.ok(page.includes(':placeholder="templateEditorPlaceholder"') && page.includes(':title="templateEditorBindingHelpText"'),
     'Literal variable examples must come from view-model strings rather than nested Vue interpolations in Razor markup.');
 assert.ok(page.includes("openFunctionPage(selectedFunction,'settings')") && page.includes("openFunctionPage(selectedFunction,'run')"),
     'Function nodes should offer separate settings and execution links.');
@@ -1096,10 +1320,18 @@ assert.ok(page.includes("'merge','逐项合流'") && page.includes('汇总输出
     fs.readFileSync(scriptPath, 'utf8').includes("['aggregate', 'merge', 'function']") &&
     fs.readFileSync(scriptPath, 'utf8').includes('outputTemplate'),
     'The designer should distinguish once-only aggregation from per-item merge and expose aggregate output content.');
+assert.ok(page.includes('Console 打印内容') && page.includes('仅影响 Console 展示，不改变下游输入') &&
+    fs.readFileSync(scriptPath, 'utf8').includes("printTemplate: '{{input}}'") &&
+    workflowEngine.includes('ResolveConsolePrintOutput') && workflowEngine.includes('"printTemplate"'),
+    'The Console node should expose a configurable print template while preserving its raw downstream input.');
 assert.ok(workflowEngine.includes('"merge"') && workflowEngine.includes('MaxStreamActivations') &&
     workflowEngine.includes('ResolveAggregateOutput') && workflowEngine.includes('ValidateAggregateOutputTemplate') &&
     workflowEngine.includes('不能位于逐项合流节点之后'),
     'The engine should serially propagate merge activations, validate aggregate output templates, and reject ambiguous merge-to-aggregate chains.');
+assert.ok(workflowEngine.includes('MaxLoopIterations') && workflowEngine.includes('TryResolveLoopCount') &&
+    workflowEngine.includes('循环或逐项合流产生的执行次数超过') &&
+    workflowEngine.includes('不能位于循环节点之后'),
+    'The engine should enforce bounded loop counts and protect loop/merge stream activations with one global cap.');
 const replayPage = fs.readFileSync(replayPagePath, 'utf8');
 const replayScript = fs.readFileSync(replayScriptPath, 'utf8');
 const replayStyles = fs.readFileSync(replayStylePath, 'utf8');

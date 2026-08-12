@@ -20,7 +20,10 @@
 
 <div class="neuchar-page workflow-page" v-loading="loading">
     <transition name="workflow-node-preview-fade">
-        <section v-if="nodePreview.visible" class="workflow-node-preview" @@mousedown.stop @@click.stop>
+        <section v-if="nodePreview.visible"
+                 :class="['workflow-node-preview', {'is-hover-preview':nodePreview.mode==='hover'}]"
+                 @@mousedown.stop
+                 @@click.stop>
             <header>
                 <span class="workflow-node-preview-kind">{{nodePreviewDetails.kind}}</span>
                 <el-button type="text" icon="el-icon-close" title="关闭节点详情" aria-label="关闭节点详情" @@click="dismissNodePreview"></el-button>
@@ -151,8 +154,26 @@
                     </div>
                 </div>
 
+                <section v-if="validationIssues.length" class="workflow-validation-panel" role="alert" aria-live="assertive">
+                    <div class="workflow-validation-panel-header">
+                        <strong><i class="el-icon-warning"></i> 节点检查失败</strong>
+                        <el-button type="text" size="mini" @@click="clearValidationIssue">清除提示</el-button>
+                    </div>
+                    <button v-for="issue in validationIssues"
+                            :key="(issue.nodeId || 'workflow') + '-' + issue.message"
+                            type="button"
+                            class="workflow-validation-item"
+                            :disabled="!issue.nodeId"
+                            @@click="focusValidationIssue(issue)">
+                        <span class="workflow-validation-item-node">{{issue.label}}</span>
+                        <span class="workflow-validation-item-message">{{issue.message}}</span>
+                        <i v-if="issue.nodeId" class="el-icon-right"></i>
+                    </button>
+                </section>
+
                 <el-dialog title="工作流设置"
                            :visible.sync="workflowSettingsVisible"
+                           :close-on-click-modal="false"
                            width="min(720px, calc(100vw - 32px))"
                            append-to-body>
                     <el-form label-position="top" size="small" :class="{'form-locked':editingLocked}">
@@ -211,6 +232,42 @@
                             </el-form-item>
                         </div>
 
+                        <section class="workflow-variable-settings">
+                            <div class="workflow-variable-settings-heading">
+                                <div>
+                                    <strong>工作流变量</strong>
+                                    <p>在这里声明默认值，后续受限公式用 <code v-pre>{{= vars.变量名 }}</code> 读取；安全代码节点可在本次运行中重新赋值。</p>
+                                </div>
+                                <el-button size="small"
+                                           icon="el-icon-plus"
+                                           :disabled="editingLocked || form.graph.variables.length>=30"
+                                           @@click="addWorkflowVariable">添加变量</el-button>
+                            </div>
+                            <el-alert title="变量名只能使用字母、数字、下划线，且以字母或下划线开头。默认值可使用受限公式；不会执行 JavaScript。"
+                                      type="info"
+                                      :closable="false"></el-alert>
+                            <div v-if="form.graph.variables.length" class="workflow-variable-list">
+                                <div v-for="(variable,index) in form.graph.variables" :key="'workflow-variable-'+index" class="workflow-variable-row">
+                                    <el-input v-model="variable.name"
+                                              :disabled="editingLocked"
+                                              maxlength="64"
+                                              placeholder="变量名，例如 customerName"></el-input>
+                                    <workflow-rich-text-input v-model="variable.value"
+                                                              multiline
+                                                              :rows="2"
+                                                              :disabled="editingLocked"
+                                                              :editable="false"
+                                                              :maxlength="8000"
+                                                              :help-text="'默认值支持受限公式，例如 {{= now() }} 或 {{= upper(vars.customerName) }}。'"></workflow-rich-text-input>
+                                    <el-button type="text"
+                                               class="workflow-variable-remove"
+                                               :disabled="editingLocked"
+                                               @@click="removeWorkflowVariable(index)">删除</el-button>
+                                </div>
+                            </div>
+                            <p v-else class="workflow-variable-empty">尚未声明变量。先添加变量，才能在“安全代码”节点中对它赋值。</p>
+                        </section>
+
                         <div v-if="form.triggerType==='webhook'" class="workflow-webhook-config">
                             <div class="webhook-config-heading">
                                 <strong>Webhook 触发配置</strong>
@@ -266,10 +323,12 @@
                     </span>
                 </el-dialog>
 
-                <el-dialog title="编辑文本与插入变量"
+                <el-dialog :title="templateEditorTitle"
                            :visible.sync="templateEditor.visible"
                            :close-on-click-modal="false"
                            :close-on-press-escape="false"
+                           @@mousedown.native.stop
+                           @@mouseup.native.stop
                            width="min(760px, calc(100vw - 32px))"
                            append-to-body>
                     <p class="template-editor-help">先输入固定文字，再从下方选择上游输出或“预载输入选择”。系统会插入一个可见的占位符；同一文本可插入多个变量。</p>
@@ -282,7 +341,7 @@
                               :rows="12"
                               :disabled="editingLocked"
                               :placeholder="templateEditorPlaceholder"></el-input>
-                    <div class="template-editor-picker">
+                    <div v-if="templateEditor.allowBindings" class="template-editor-picker">
                         <span>插入上游值</span>
                         <el-cascader :value="templateEditor.pendingSelection"
                                      :options="upstreamOutputOptions(null)"
@@ -293,7 +352,7 @@
                                      placeholder="选择节点、输出或预载输入选择"
                                      @@change="appendTemplateBinding"></el-cascader>
                     </div>
-                    <div v-if="templateEditor.bindings.length" class="template-binding-tags">
+                    <div v-if="templateEditor.allowBindings && templateEditor.bindings.length" class="template-binding-tags">
                         <div v-for="item in templateEditor.bindings" :key="item.token" class="template-binding-item">
                             <el-tag :disable-transitions="true"
                                     :title="templateBindingLabel(item.source)"
@@ -311,13 +370,13 @@
                                              placeholder="列表索引"></el-input-number>
                         </div>
                     </div>
-                    <el-alert :title="templateEditorBindingHelp"
+                    <el-alert :title="templateEditorBindingHelpText"
                               type="info"
                               :closable="false"
                               show-icon></el-alert>
                     <span slot="footer" class="dialog-footer">
                         <el-button @@click="templateEditor.visible=false">取消</el-button>
-                        <el-button type="primary" :disabled="editingLocked" @@click="saveParameterTemplate">应用到参数</el-button>
+                        <el-button type="primary" :disabled="editingLocked" @@click="saveParameterTemplate">应用</el-button>
                     </span>
                 </el-dialog>
 
@@ -442,8 +501,10 @@
 
                                 <article v-for="(node,index) in form.graph.nodes"
                                          :key="node.id"
-                                         :class="['workflow-node','node-'+node.type,'state-'+nodeState(node),{selected:isNodeSelected(node),'is-multi-selected':selectedNodeIds.length>1 && isNodeSelected(node)}]"
+                                         :data-node-id="node.id"
+                                         :class="['workflow-node','node-'+node.type,'state-'+nodeState(node),{selected:isNodeSelected(node),'is-multi-selected':selectedNodeIds.length>1 && isNodeSelected(node),'validation-error':!!nodeValidationError(node)}]"
                                          :style="{left:node.x+'px',top:node.y+'px'}"
+                                         :title="nodeValidationError(node) || ''"
                                          @@mousedown.stop="startDrag($event,node)"
                                          @@contextmenu.stop.prevent="openNodeContextMenu($event,node)">
                                     <button v-if="!node.type.endsWith('trigger')"
@@ -466,6 +527,7 @@
                                         </span>
                                         <el-button v-else-if="!node.type.endsWith('trigger')" type="text" icon="el-icon-delete" :disabled="editingLocked" @@click.stop="removeNode(node)"></el-button>
                                     </div>
+                                    <span v-if="nodeValidationError(node)" class="workflow-node-validation-badge" :title="nodeValidationError(node)" aria-label="节点检查失败">!</span>
                                     <template v-if="node.type==='condition'">
                                         <button type="button" class="node-port node-output node-output-true" title="拖动真分支" @@mousedown.stop="beginConnection($event,node,'true')">真</button>
                                         <button type="button" class="node-port node-output node-output-false" title="拖动假分支" @@mousedown.stop="beginConnection($event,node,'false')">假</button>
@@ -635,17 +697,13 @@
                                                 </div>
                                             </template>
                                             <template v-else-if="!isBinding(selectedNode.config.parameters[parameter.name])">
-                                                <div v-if="parameter.parameterType===0" class="parameter-text-input">
-                                                    <el-input :disabled="editingLocked"
-                                                              v-model="selectedNode.config.parameters[parameter.name]"
-                                                              placeholder="手动输入"></el-input>
-                                                    <el-button type="default"
-                                                               icon="el-icon-connection"
-                                                               title="编辑文本并插入上游变量"
-                                                               aria-label="编辑文本并插入上游变量"
-                                                               :disabled="editingLocked || !canUseTemplate(parameter)"
-                                                               @@click="openParameterTemplateEditor(selectedNode,parameter)">变量</el-button>
-                                                </div>
+                                                <workflow-rich-text-input v-if="parameter.parameterType===0"
+                                                                          v-model="selectedNode.config.parameters[parameter.name]"
+                                                                          :disabled="editingLocked"
+                                                                          :editable="canUseTemplate(parameter)"
+                                                                          :help-text="'可使用 {{input}} 引用当前输入；也可以打开编辑器插入上游输出并组合成一段文本。'"
+                                                                          placeholder="手动输入或使用公式"
+                                                                          @@edit-template="openParameterTemplateEditor(selectedNode,parameter)"></workflow-rich-text-input>
                                                 <el-input v-else-if="parameter.parameterType===3"
                                                           type="password"
                                                           :disabled="editingLocked"
@@ -704,7 +762,12 @@
 
                                     <template v-if="selectedNode.type==='condition'">
                                         <el-form-item label="左值">
-                                            <el-input v-if="!isBinding(selectedNode.config.left)" v-model="selectedNode.config.left" :disabled="editingLocked" placeholder="手动输入或使用输入占位符"></el-input>
+                                            <workflow-rich-text-input v-if="!isBinding(selectedNode.config.left)"
+                                                                      v-model="selectedNode.config.left"
+                                                                      :disabled="editingLocked"
+                                                                      :help-text="'可使用 {{input}} 或受限公式，也可以插入上游输出作为文本片段。'"
+                                                                      placeholder="手动输入、公式或插入变量"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'left',{fieldLabel:'条件左值'})"></workflow-rich-text-input>
                                             <el-cascader :value="configBindingSelection(selectedNode,'left')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable placeholder="关联上游 Output" @@change="setConfigBinding(selectedNode,'left',$event)"></el-cascader>
                                         </el-form-item>
                                         <el-form-item label="判断">
@@ -713,19 +776,85 @@
                                             </el-select>
                                         </el-form-item>
                                         <el-form-item label="右值">
-                                            <el-input v-if="!isBinding(selectedNode.config.right)" v-model="selectedNode.config.right" :disabled="editingLocked"></el-input>
+                                            <workflow-rich-text-input v-if="!isBinding(selectedNode.config.right)"
+                                                                      v-model="selectedNode.config.right"
+                                                                      :disabled="editingLocked"
+                                                                      :help-text="'可使用 {{input}} 或受限公式，也可以插入上游输出作为文本片段。'"
+                                                                      placeholder="手动输入、公式或插入变量"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'right',{fieldLabel:'条件右值'})"></workflow-rich-text-input>
                                             <el-cascader :value="configBindingSelection(selectedNode,'right')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable placeholder="关联上游 Output" @@change="setConfigBinding(selectedNode,'right',$event)"></el-cascader>
                                         </el-form-item>
                                     </template>
                                     <el-form-item v-if="selectedNode.type==='delay'" label="等待秒数（单节点最多 30 秒）">
                                         <el-input-number v-model="selectedNode.config.seconds" :disabled="editingLocked" :min="0" :max="30"></el-input-number>
                                     </el-form-item>
+                                    <template v-if="selectedNode.type==='loop'">
+                                        <el-form-item label="重复次数（For）">
+                                            <div v-if="isBinding(selectedNode.config.count)" class="workflow-loop-count-binding">
+                                                <strong>引用上游：{{loopCountSourceLabel(selectedNode)}}</strong>
+                                                <span>运行时读取，必须是 1–100 的整数。</span>
+                                                <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetLoopCountManual(selectedNode)">改为固定次数</el-button>
+                                            </div>
+                                            <el-input-number v-else v-model="selectedNode.config.count" :disabled="editingLocked" :min="1" :max="100" :step="1" :precision="0"></el-input-number>
+                                            <el-cascader :value="configBindingSelection(selectedNode,'count')"
+                                                         :options="loopCountOutputOptions()"
+                                                         :disabled="editingLocked || !loopCountOutputOptions().length"
+                                                         clearable
+                                                         filterable
+                                                         placeholder="或引用上游次数（1–100）"
+                                                         @@change="setLoopCountBinding(selectedNode,$event)"></el-cascader>
+                                            <p class="node-config-help">For 循环只会重复有限次数；每轮按顺序执行下游，并传递相同输入。不会执行 while，也不允许画布回连。</p>
+                                        </el-form-item>
+                                        <el-alert title="安全上限：单个循环最多 100 次；循环与逐项合流的下游激活合计最多 500 次。"
+                                                  type="info"
+                                                  :closable="false"></el-alert>
+                                    </template>
                                     <template v-if="selectedNode.type==='neubell'">
                                         <el-form-item label="提醒标题">
-                                            <el-input v-model="selectedNode.config.title" :disabled="editingLocked" maxlength="200" show-word-limit placeholder="例如：工作流需要处理"></el-input>
+                                            <template v-if="isTemplateValue(selectedNode.config.title)">
+                                                <div class="parameter-template-card workflow-rich-text-template-card">
+                                                    <div class="parameter-template-summary">{{parameterTemplateSummary(selectedNode.config.title)}}</div>
+                                                    <div class="parameter-template-tags">
+                                                        <el-tag v-for="item in parameterTemplateBindings(selectedNode.config.title)" :key="item.token" size="mini" :title="templateBindingLabel(item.source)">{{templatePlaceholder(item.token)}}</el-tag>
+                                                    </div>
+                                                    <div class="parameter-template-actions">
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'title',{fieldLabel:'提醒标题'})">编辑公式文本</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'title')">改为手动输入</el-button>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <workflow-rich-text-input v-else
+                                                                      v-model="selectedNode.config.title"
+                                                                      :disabled="editingLocked"
+                                                                      :maxlength="200"
+                                                                      :show-word-limit="true"
+                                                                      :help-text="'提醒标题支持 {{input}}、受限公式和上游变量，运行时会先解析再创建纽铃。'"
+                                                                      placeholder="例如：工作流需要处理"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'title',{fieldLabel:'提醒标题'})"></workflow-rich-text-input>
                                         </el-form-item>
                                         <el-form-item label="提醒内容">
-                                            <el-input v-model="selectedNode.config.summary" type="textarea" :rows="4" :disabled="editingLocked" maxlength="4000" show-word-limit placeholder="可使用 {{input}} 插入当前节点输入"></el-input>
+                                            <template v-if="isTemplateValue(selectedNode.config.summary)">
+                                                <div class="parameter-template-card workflow-rich-text-template-card">
+                                                    <div class="parameter-template-summary">{{parameterTemplateSummary(selectedNode.config.summary)}}</div>
+                                                    <div class="parameter-template-tags">
+                                                        <el-tag v-for="item in parameterTemplateBindings(selectedNode.config.summary)" :key="item.token" size="mini" :title="templateBindingLabel(item.source)">{{templatePlaceholder(item.token)}}</el-tag>
+                                                    </div>
+                                                    <div class="parameter-template-actions">
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'summary',{fieldLabel:'提醒内容'})">编辑公式文本</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'summary')">改为手动输入</el-button>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <workflow-rich-text-input v-else
+                                                                      v-model="selectedNode.config.summary"
+                                                                      multiline
+                                                                      :rows="4"
+                                                                      :disabled="editingLocked"
+                                                                      :maxlength="4000"
+                                                                      :show-word-limit="true"
+                                                                      :help-text="'提醒内容支持 {{input}}、受限公式和上游变量，运行时会先解析再创建纽铃。'"
+                                                                      placeholder="可使用 {{input}} 插入当前节点输入"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'summary',{fieldLabel:'提醒内容'})"></workflow-rich-text-input>
                                         </el-form-item>
                                         <el-form-item label="打开任务后的消费方式">
                                             <el-select v-model="selectedNode.config.consumeMode" :disabled="editingLocked">
@@ -736,12 +865,12 @@
                                             <p class="node-config-help">用于有明确查看即已读场景；例如 DesktopBridge 等需要业务审核的提醒应选择“只查看”。</p>
                                         </el-form-item>
                                     </template>
-                                    <template v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group'">
+                                    <template v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group' || selectedNode.type==='a2a'">
                                         <div class="workflow-object-card">
                                             <div class="workflow-object-card-header">
                                                 <div>
                                                     <strong>{{selectedWorkflowObject ? selectedWorkflowObject.name : selectedNode.name}}</strong>
-                                                    <small>{{selectedWorkflowObject ? (selectedWorkflowObject.kind==='agent-group'?'Agent 组':'独立 Agent') : '对象不可用'}}</small>
+                                                    <small>{{selectedWorkflowObject ? (selectedWorkflowObject.kind==='a2a'?'远程 A2A Agent':selectedWorkflowObject.kind==='agent-group'?'Agent 组':'独立 Agent') : '对象不可用'}}</small>
                                                 </div>
                                                 <el-button v-if="selectedWorkflowObject && workflowObjectEditUrl(selectedWorkflowObject)"
                                                            type="primary"
@@ -752,7 +881,7 @@
                                                            @@click="openWorkflowObjectEditor(selectedWorkflowObject)">编辑</el-button>
                                             </div>
                                             <el-alert v-if="!selectedWorkflowObject"
-                                                      title="Agent 不存在、所属模块未开启或已被移除"
+                                                      title="Agent 或 A2A 连接不存在、所属模块未开启或已被移除"
                                                       type="warning"
                                                       :closable="false"></el-alert>
                                             <dl v-else class="workflow-object-details">
@@ -763,26 +892,151 @@
                                             </dl>
                                         </div>
                                     </template>
-                                    <el-form-item v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group'" label="Prompt">
-                                        <el-input v-if="!isBinding(selectedNode.config.prompt)" type="textarea" :rows="6" v-model="selectedNode.config.prompt" :disabled="editingLocked" placeholder="可使用输入占位符"></el-input>
+                                    <el-form-item v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group' || selectedNode.type==='a2a'" label="Prompt">
+                                        <template v-if="isTemplateValue(selectedNode.config.prompt)">
+                                            <div class="parameter-template-card workflow-rich-text-template-card">
+                                                <div class="parameter-template-summary">{{parameterTemplateSummary(selectedNode.config.prompt)}}</div>
+                                                <div class="parameter-template-tags">
+                                                    <el-tag v-for="item in parameterTemplateBindings(selectedNode.config.prompt)" :key="item.token" size="mini" :title="templateBindingLabel(item.source)">{{templatePlaceholder(item.token)}}</el-tag>
+                                                </div>
+                                                <div class="parameter-template-actions">
+                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'Prompt'})">编辑公式文本</el-button>
+                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'prompt')">改为手动输入</el-button>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <workflow-rich-text-input v-else-if="!isBinding(selectedNode.config.prompt)"
+                                                                  v-model="selectedNode.config.prompt"
+                                                                  multiline
+                                                                  :rows="6"
+                                                                  :disabled="editingLocked"
+                                                                  :help-text="'Prompt 支持 {{input}}、受限公式和上游变量，运行时会先解析再提交给 Agent。'"
+                                                                  placeholder="可使用输入占位符、公式或插入变量"
+                                                                  @@edit-template="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'Prompt'})"></workflow-rich-text-input>
                                         <el-cascader :value="configBindingSelection(selectedNode,'prompt')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable placeholder="关联上游 Output" @@change="setConfigBinding(selectedNode,'prompt',$event)"></el-cascader>
                                     </el-form-item>
+                                    <template v-if="selectedNode.type==='sub-workflow'">
+                                        <el-form-item label="要调用的工作流" required>
+                                            <el-select v-model="selectedNode.config.workflowId"
+                                                       :disabled="editingLocked"
+                                                       filterable
+                                                       placeholder="选择已保存的工作流">
+                                                <el-option v-for="workflow in subWorkflowTargets"
+                                                           :key="workflow.id"
+                                                           :label="workflow.name + (workflow.enabled ? '' : '（未启用）')"
+                                                           :value="workflow.id"
+                                                           :disabled="!workflow.enabled"></el-option>
+                                            </el-select>
+                                            <el-button v-if="selectedNode.config.workflowId"
+                                                       size="mini"
+                                                       icon="el-icon-view"
+                                                       :disabled="editingLocked"
+                                                       @@click="openSubWorkflow(selectedNode.config.workflowId)">快速查看</el-button>
+                                            <p class="node-config-help">只显示当前用户已保存的工作流。保存和运行前会完整检查多层引用，禁止直接或间接调用回自身。</p>
+                                        </el-form-item>
+                                        <el-form-item label="传入子工作流的输入">
+                                            <workflow-rich-text-input v-model="selectedNode.config.prompt"
+                                                                      multiline
+                                                                      :rows="4"
+                                                                      :disabled="editingLocked"
+                                                                      :help-text="'支持 {{input}}、受限公式和上游变量；子工作流完成后，它的最终输出会作为本节点输出。'"
+                                                                      placeholder="默认：{{input}}"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'传入子工作流的输入'})"></workflow-rich-text-input>
+                                            <el-cascader :value="configBindingSelection(selectedNode,'prompt')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable placeholder="关联上游 Output" @@change="setConfigBinding(selectedNode,'prompt',$event)"></el-cascader>
+                                        </el-form-item>
+                                        <el-alert title="子工作流会以独立执行记录运行；父流程只接收其最终输出。最多嵌套 8 层，目标必须属于当前用户且已启用。" type="info" :closable="false"></el-alert>
+                                    </template>
+                                    <template v-if="selectedNode.type==='code'">
+                                        <el-form-item label="安全代码：变量赋值" required>
+                                            <p class="node-config-help">这不是任意 JavaScript：每一行都是一次受限赋值。可用 <code v-pre>{{input}}</code>、<code v-pre>{{= vars.变量名 }}</code> 和全部公式函数；赋值只影响本次运行。</p>
+                                            <div v-if="selectedNode.config.assignments && selectedNode.config.assignments.length" class="workflow-code-assignments">
+                                                <div v-for="(assignment,index) in selectedNode.config.assignments" :key="'code-assignment-'+index" class="workflow-code-assignment-row">
+                                                    <el-select v-model="assignment.name"
+                                                               :disabled="editingLocked"
+                                                               filterable
+                                                               placeholder="选择工作流变量">
+                                                        <el-option v-for="variable in form.graph.variables"
+                                                                   :key="variable.name || ('variable-'+index)"
+                                                                   :label="variable.name || '（未命名变量）'"
+                                                                   :value="variable.name"
+                                                                   :disabled="!variable.name"></el-option>
+                                                    </el-select>
+                                                    <workflow-rich-text-input v-model="assignment.value"
+                                                                              multiline
+                                                                              :rows="2"
+                                                                              :disabled="editingLocked"
+                                                                              :editable="false"
+                                                                              :maxlength="8000"
+                                                                              :help-text="'例如：{{= upper(input) }}；使用 vars.变量名 读取当前变量值。'"></workflow-rich-text-input>
+                                                    <el-button type="text"
+                                                               :disabled="editingLocked"
+                                                               @@click="removeCodeAssignment(selectedNode,index)">删除</el-button>
+                                                </div>
+                                            </div>
+                                            <p v-else class="workflow-variable-empty">尚未设置赋值。请至少添加一条。</p>
+                                            <el-button size="small"
+                                                       icon="el-icon-plus"
+                                                       :disabled="editingLocked || !form.graph.variables.length || (selectedNode.config.assignments || []).length>=30"
+                                                       @@click="addCodeAssignment(selectedNode)">添加赋值</el-button>
+                                        </el-form-item>
+                                        <el-alert title="安全代码节点总会透传原始输入；它只修改 vars 中已声明的变量。相同执行波次内会先按画布顺序执行安全代码，再启动其他独立节点。" type="info" :closable="false"></el-alert>
+                                    </template>
                                     <template v-if="selectedNode.type==='aggregate'">
                                         <el-form-item label="汇总输出内容" required>
-                                            <el-input v-model="selectedNode.config.outputTemplate"
-                                                      type="textarea"
-                                                      :rows="4"
-                                                      :disabled="editingLocked"
-                                                      maxlength="8000"
-                                                      show-word-limit
-                                                      placeholder="例如：共 {{= length(input) }} 项：{{= join(input, '，') }}"></el-input>
+                                            <template v-if="isTemplateValue(selectedNode.config.outputTemplate)">
+                                                <div class="parameter-template-card workflow-rich-text-template-card">
+                                                    <div class="parameter-template-summary">{{parameterTemplateSummary(selectedNode.config.outputTemplate)}}</div>
+                                                    <div class="parameter-template-actions">
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'outputTemplate',{fieldLabel:'汇总输出内容',allowBindings:false})">编辑公式文本</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'outputTemplate')">改为手动输入</el-button>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <workflow-rich-text-input v-else
+                                                                      v-model="selectedNode.config.outputTemplate"
+                                                                      multiline
+                                                                      :rows="4"
+                                                                      :disabled="editingLocked"
+                                                                      :maxlength="8000"
+                                                                      :show-word-limit="true"
+                                                                      :help-text="'支持 {{input}} 保留聚合数组，也支持 {{= length(input) }}、{{= join(input, \'，\') }} 等受限公式；不执行任意 JavaScript。'"
+                                                                      edit-label="编辑公式"
+                                                                      placeholder="例如：共 {{= length(input) }} 项：{{= join(input, '，') }}"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'outputTemplate',{fieldLabel:'汇总输出内容',allowBindings:false})"></workflow-rich-text-input>
                                             <p v-pre class="node-config-help">必须设置。<code>{{input}}</code> 保留聚合数组；<code>{{= length(input) }}</code>、<code>{{= join(input, '，') }}</code> 等为受限表达式，不执行任意 JavaScript。</p>
                                         </el-form-item>
                                         <el-alert title="聚合会等待所有已激活的上游分支结束，再按连线顺序汇总，并只向下游输出一次。" type="info" :closable="false"></el-alert>
                                     </template>
                                     <el-alert v-if="selectedNode.type==='merge'" title="逐项合流不会等待全部输入：每条输入都会独立向下游发出一次。下游按稳定的执行计划顺序串行运行，单次工作流最多处理 500 次逐项激活。" type="info" :closable="false"></el-alert>
                                     <el-alert v-if="selectedNode.type==='parallel'" title="并行节点将同一输入同时分发到所有后续分支；各分支独立运行。" type="info" :closable="false"></el-alert>
-                                    <el-alert v-if="selectedNode.type==='console'" title="运行到此节点时，会在页面底部 Console 打印其输入并继续向下传递。" type="info" :closable="false"></el-alert>
+                                    <template v-if="selectedNode.type==='console'">
+                                        <el-form-item label="Console 打印内容">
+                                            <template v-if="isTemplateValue(selectedNode.config.printTemplate)">
+                                                <div class="parameter-template-card workflow-rich-text-template-card">
+                                                    <div class="parameter-template-summary">{{parameterTemplateSummary(selectedNode.config.printTemplate)}}</div>
+                                                    <div class="parameter-template-tags">
+                                                        <el-tag v-for="item in parameterTemplateBindings(selectedNode.config.printTemplate)" :key="item.token" size="mini" :title="templateBindingLabel(item.source)">{{templatePlaceholder(item.token)}}</el-tag>
+                                                    </div>
+                                                    <div class="parameter-template-actions">
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'printTemplate',{fieldLabel:'Console 打印内容'})">编辑公式文本</el-button>
+                                                        <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'printTemplate')">改为手动输入</el-button>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <workflow-rich-text-input v-else
+                                                                      v-model="selectedNode.config.printTemplate"
+                                                                      multiline
+                                                                      :rows="4"
+                                                                      :disabled="editingLocked"
+                                                                      :maxlength="8000"
+                                                                      :show-word-limit="true"
+                                                                      :help-text="'默认 {{input}} 会打印当前输入；也支持受限公式和上游变量。仅影响 Console 展示，不改变下游输入。'"
+                                                                      placeholder="默认：{{input}}"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'printTemplate',{fieldLabel:'Console 打印内容'})"></workflow-rich-text-input>
+                                            <p v-pre class="node-config-help">默认 <code>{{input}}</code> 打印当前输入。此配置仅影响 Console 展示，节点仍向下游透传原始输入。</p>
+                                        </el-form-item>
+                                        <el-alert title="运行到此节点时，会按上述模板在页面底部 Console 打印内容；原始输入会继续向下游传递。" type="info" :closable="false"></el-alert>
+                                    </template>
                                     <el-alert v-if="selectedNode.type==='neubell'" title="运行时会创建一条 Workflow 纽铃提醒；从 Footer 点击提醒会进入任务列表并按上方设置进行消费。" type="info" :closable="false"></el-alert>
                                 </el-form>
                             </template>
@@ -843,6 +1097,9 @@
             <div class="palette-system-grid">
                 <el-button plain icon="el-icon-s-operation" :class="['node-picker-system-button','node-picker-condition']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'condition','条件判断')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('condition','条件判断','hover')" @@mouseleave.native="hideSystemPreview('condition','条件判断')" @@click="previewSystem('condition','条件判断','click')" @@dblclick.native="selectSystem('condition','条件判断')">条件</el-button>
                 <el-button plain icon="el-icon-time" :class="['node-picker-system-button','node-picker-delay']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'delay','等待')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('delay','等待','hover')" @@mouseleave.native="hideSystemPreview('delay','等待')" @@click="previewSystem('delay','等待','click')" @@dblclick.native="selectSystem('delay','等待')">等待</el-button>
+                <el-button plain icon="el-icon-refresh" :class="['node-picker-system-button','node-picker-loop']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'loop','循环（For）')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('loop','循环（For）','hover')" @@mouseleave.native="hideSystemPreview('loop','循环（For）')" @@click="previewSystem('loop','循环（For）','click')" @@dblclick.native="selectSystem('loop','循环（For）')">循环</el-button>
+                <el-button plain icon="el-icon-document" :class="['node-picker-system-button','node-picker-sub-workflow']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'sub-workflow','调用工作流')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('sub-workflow','调用工作流','hover')" @@mouseleave.native="hideSystemPreview('sub-workflow','调用工作流')" @@click="previewSystem('sub-workflow','调用工作流','click')" @@dblclick.native="selectSystem('sub-workflow','调用工作流')">调用流程</el-button>
+                <el-button plain icon="el-icon-edit-outline" :class="['node-picker-system-button','node-picker-code']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'code','安全代码')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('code','安全代码','hover')" @@mouseleave.native="hideSystemPreview('code','安全代码')" @@click="previewSystem('code','安全代码','click')" @@dblclick.native="selectSystem('code','安全代码')">安全代码</el-button>
                 <el-button plain icon="el-icon-collection" :class="['node-picker-system-button','node-picker-aggregate']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'aggregate','聚合')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('aggregate','聚合','hover')" @@mouseleave.native="hideSystemPreview('aggregate','聚合')" @@click="previewSystem('aggregate','聚合','click')" @@dblclick.native="selectSystem('aggregate','聚合')">聚合</el-button>
                 <el-button plain icon="el-icon-sort" :class="['node-picker-system-button','node-picker-merge']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'merge','逐项合流')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('merge','逐项合流','hover')" @@mouseleave.native="hideSystemPreview('merge','逐项合流')" @@click="previewSystem('merge','逐项合流','click')" @@dblclick.native="selectSystem('merge','逐项合流')">逐项合流</el-button>
                 <el-button plain icon="el-icon-share" :class="['node-picker-system-button','node-picker-parallel']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'parallel','并行')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('parallel','并行','hover')" @@mouseleave.native="hideSystemPreview('parallel','并行')" @@click="previewSystem('parallel','并行','click')" @@dblclick.native="selectSystem('parallel','并行')">并行</el-button>
@@ -880,10 +1137,10 @@
             <div v-else class="palette-empty">没有匹配的 Function</div>
 
             <template v-if="objects.length">
-                <el-divider>AgentsManager</el-divider>
+                <el-divider>AgentsManager / A2A</el-divider>
                 <button v-for="object in objects"
                         :key="object.providerId+object.objectId"
-                        :class="['palette-item','node-picker-'+object.kind,{'is-unavailable':!object.enabled}]"
+                        :class="['palette-item','node-picker-'+object.kind,{'is-a2a-object':object.kind==='a2a','is-unavailable':!object.enabled}]"
                         :disabled="locked"
                         draggable="true"
                         @@dragstart="startObjectDrag($event,object)"
@@ -894,8 +1151,9 @@
                         @@dblclick="selectObject(object)">
                     <span class="palette-item-copy">
                         <strong>{{object.name}}</strong>
-                        <small>{{object.kind==='agent-group'?'Agent 组':'独立 Agent'}} · {{object.enabled?'可用':'不可用'}}</small>
+                        <small>{{object.kind==='a2a'?'远程 A2A Agent':object.kind==='agent-group'?'Agent 组':'独立 Agent'}} · {{object.enabled?'可用':'不可用'}}</small>
                     </span>
+                    <el-tag v-if="object.kind==='a2a'" size="mini" type="warning" effect="plain">A2A</el-tag>
                 </button>
             </template>
         </div>

@@ -21,7 +21,9 @@
 
 ----------------------------------------------------------------*/
 
+using A2A.AspNetCore;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -121,6 +123,7 @@ namespace Senparc.Xncf.AgentsManager
                 profile.CreateMap<ChatGroupMember, ChatGroupMemberDto>().ReverseMap();
                 profile.CreateMap<RemoteAgent, RemoteAgentDto>().ReverseMap();
                 profile.CreateMap<ChatGroupRemoteMember, ChatGroupRemoteMemberDto>().ReverseMap();
+                profile.CreateMap<PublishedA2AAgent, PublishedA2AAgentDto>().ReverseMap();
                 profile.CreateMap<ChatGroupHistory, ChatGroupHistoryDto>().ReverseMap();
                 profile.CreateMap<ChatTask, ChatTaskDto>().ReverseMap();
             });
@@ -137,8 +140,13 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<ChatGroupMemberService>();
             services.AddScoped<ChatGroupRemoteMemberService>();
             services.AddScoped<RemoteAgentService>();
+            services.AddScoped<PublishedA2AAgentService>();
             services.AddHttpClient(RemoteA2AAgentFactory.HttpClientName);
             services.AddScoped<RemoteA2AAgentFactory>();
+            services.AddHttpContextAccessor();
+            services.AddSingleton<PublishedA2AServerRegistry>();
+            services.AddSingleton<PublishedA2ARequestHandler>();
+            services.AddScoped<PublishedA2AAgentFactory>();
             services.AddScoped<AgentsWorkflowObjectProvider>();
             services.AddScoped<IWorkflowObjectProvider>(serviceProvider =>
                 serviceProvider.GetRequiredService<AgentsWorkflowObjectProvider>());
@@ -168,6 +176,30 @@ namespace Senparc.Xncf.AgentsManager
             aiPlugins.Add(typeof(CrawlPlugin));
             aiPlugins.Add(typeof(FormatorPlugin));
             aiPlugins.Add(typeof(TranslatorPlugin));
+
+            // NCF 模块在宿主 UseRouting() 之前初始化。为 A2A JSON-RPC 建立独立分支，
+            // 确保其自身先路由再映射端点，而 Agent Card 的 GET 请求仍交给 MVC 控制器。
+            app.UseWhen(context =>
+            {
+                if (!HttpMethods.IsPost(context.Request.Method))
+                {
+                    return false;
+                }
+
+                var segments = context.Request.Path.Value?.Trim('/').Split('/');
+                return segments?.Length == 2
+                    && string.Equals(segments[0], "a2a", StringComparison.OrdinalIgnoreCase)
+                    && !string.IsNullOrWhiteSpace(segments[1]);
+            }, a2aApp =>
+            {
+                a2aApp.UseRouting();
+                a2aApp.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapA2A(
+                        a2aApp.ApplicationServices.GetRequiredService<PublishedA2ARequestHandler>(),
+                        "/a2a/{agentKey}");
+                });
+            });
 
             return base.UseXncfModule(app, registerService);
         }

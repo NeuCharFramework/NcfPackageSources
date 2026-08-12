@@ -84,6 +84,49 @@ if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
             finishDrag() { this.$emit('drag-end'); }
         }
     });
+
+    Vue.component('workflow-rich-text-input', {
+        props: {
+            value: { type: [String, Number], default: '' },
+            disabled: { type: Boolean, default: false },
+            multiline: { type: Boolean, default: false },
+            rows: { type: Number, default: 4 },
+            maxlength: { type: [Number, String], default: null },
+            showWordLimit: { type: Boolean, default: false },
+            placeholder: { type: String, default: '' },
+            helpText: { type: String, default: '' },
+            editable: { type: Boolean, default: true },
+            editLabel: { type: String, default: '变量/公式' }
+        },
+        template: `
+            <div :class="['workflow-rich-text-input', {'is-disabled': disabled, 'is-multiline': multiline}]">
+                <div class="workflow-rich-text-input-header">
+                    <span class="workflow-rich-text-badge"><i class="el-icon-magic-stick"></i>支持公式文本</span>
+                    <el-tooltip v-if="helpText" effect="dark" placement="top-start" :content="helpText">
+                        <i class="el-icon-info workflow-rich-text-info" tabindex="0" aria-label="公式文本说明"></i>
+                    </el-tooltip>
+                </div>
+                <div class="workflow-rich-text-input-control">
+                    <el-input :value="value"
+                              :type="multiline ? 'textarea' : 'text'"
+                              :rows="rows"
+                              :disabled="disabled"
+                              :maxlength="maxlength"
+                              :show-word-limit="showWordLimit"
+                              :placeholder="placeholder"
+                              @input="$emit('input', $event)"></el-input>
+                    <el-button v-if="editable"
+                               type="default"
+                               icon="el-icon-connection"
+                               :disabled="disabled"
+                               :title="editLabel"
+                               :aria-label="editLabel"
+                               @mousedown.stop
+                               @mouseup.stop
+                               @click.stop="$emit('edit-template')">{{editLabel}}</el-button>
+                </div>
+            </div>`
+    });
 }
 
 new Vue({
@@ -107,12 +150,15 @@ new Vue({
             webhookHelpVisible: false,
             workflowSettingsVisible: false,
             templateEditorPlaceholder: '例如：请根据 {{value_1}} 生成一段摘要',
-            templateEditorBindingHelp: '删除一个变量标签时，它在文本中的对应占位符也会一并删除。文本参数可以继续使用 {{input}} 引用触发器输入。',
-            templateExpressionHelp: '表达式写法：{{= if(contains(value_1, \"VIP\"), upper(value_1), \"普通\") }}。支持 if、contains、substring、length、trim、lower、upper、first、last、at、join、比较和判断；不执行 JavaScript。',
+            templateEditorBindingHelp: '删除一个变量标签时，它在文本中的对应占位符也会一并删除。所有公式文本都可以使用 {{input}} 引用当前输入；带“支持公式文本”标记的字段还可以插入上游输出。',
+            templateExpressionHelp: '表达式写法：{{= if(contains(value_1, \"VIP\"), upper(value_1), \"普通\") }}。支持 if、contains、substring、length、trim、lower、upper、first、last、at、join、now、formatDate、split、replace、sort/orderBy、reverse、take、skip、sum、min、max、unique、比较和判断。工作流变量须写为 {{= vars.变量名 }}；不执行 JavaScript。',
             templateEditor: {
                 visible: false,
                 nodeId: '',
+                configKey: '',
                 parameterName: '',
+                fieldLabel: '',
+                allowBindings: true,
                 text: '',
                 bindings: [],
                 pendingSelection: []
@@ -135,7 +181,7 @@ new Vue({
             canvasSafeInsets: { left: 0, right: 0 },
             canvasZoom: 1,
             canvasViewport: { width: 0, height: 0, scrollLeft: 0, scrollTop: 0, left: 0, right: 0, bottom: 0, windowWidth: 0, windowHeight: 0 },
-            form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [], layout: { direction: 'vertical' } } },
+            form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [], variables: [], layout: { direction: 'vertical' } } },
             saveState: {
                 saving: false,
                 lastSavedSignature: '',
@@ -145,6 +191,7 @@ new Vue({
                 autoSaveBlockedSignature: '',
                 timer: null
             },
+            validation: { message: '', nodeIds: [], source: '' },
             run: {
                 running: false,
                 validating: false,
@@ -180,7 +227,7 @@ new Vue({
                 : null;
         },
         selectedWorkflowObject() {
-            if (!this.selectedNode || !['agent', 'agent-group'].includes(this.selectedNode.type)) return null;
+            if (!this.selectedNode || !['agent', 'agent-group', 'a2a'].includes(this.selectedNode.type)) return null;
             const config = this.selectedNode.config || {};
             return this.workflowObjects.find(item =>
                 String(item.providerId || '').toLowerCase() === String(config.providerId || '').toLowerCase() &&
@@ -199,6 +246,10 @@ new Vue({
         },
         activeInsertionEdgeId() {
             return this.dragState?.hoverEdgeId || this.paletteDrag.hoverEdgeId || '';
+        },
+        subWorkflowTargets() {
+            const currentId = Number(this.form.id || 0);
+            return (this.workflows || []).filter(workflow => Number(workflow.id) !== currentId);
         },
         nodePreviewDetails() {
             return this.describeNodePreview(this.nodePreview);
@@ -239,6 +290,16 @@ new Vue({
             if (this.saveState.lastSavedLabel) return `已保存 ${this.saveState.lastSavedLabel}`;
             return this.form.id ? '已保存' : '尚未保存';
         },
+        validationIssues() {
+            const message = String(this.validation?.message || '').trim();
+            if (!message) return [];
+            const nodeIds = Array.isArray(this.validation?.nodeIds) ? this.validation.nodeIds : [];
+            if (!nodeIds.length) return [{ nodeId: '', label: '工作流', message }];
+            return nodeIds.map(nodeId => {
+                const node = this.form.graph.nodes.find(item => item.id === nodeId);
+                return { nodeId, label: node ? (node.name || node.id) : nodeId, message };
+            });
+        },
         shellClasses() {
             return {
                 'list-collapsed': this.listCollapsed,
@@ -259,6 +320,16 @@ new Vue({
             return this.form.id
                 ? `${window.location.origin}/api/Senparc.Xncf.NeuCharWorkflow/neuchar-workflow/webhook/${this.form.id}`
                 : '';
+        },
+        templateEditorTitle() {
+            return this.templateEditor.fieldLabel
+                ? `编辑${this.templateEditor.fieldLabel}`
+                : '编辑文本与插入变量';
+        },
+        templateEditorBindingHelpText() {
+            return this.templateEditor.allowBindings
+                ? this.templateEditorBindingHelp
+                : '此字段只支持当前输入和受限公式；表达式不会执行任意 JavaScript。';
         },
         canvasZoomPercent() { return Math.round(this.canvasZoom * 100); },
         scaledCanvasSize() {
@@ -437,12 +508,16 @@ new Vue({
             return `下次执行：${nextRun.getFullYear()}-${pad(nextRun.getMonth() + 1)}-${pad(nextRun.getDate())} ${pad(nextRun.getHours())}:${pad(nextRun.getMinutes())}`;
         },
         emptyForm() {
-            return { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [], layout: { direction: 'vertical' } } };
+            return { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [], variables: [], layout: { direction: 'vertical' } } };
         },
         ensureGraphLayout(graph) {
             const target = graph || { nodes: [], edges: [] };
             target.layout = target.layout && typeof target.layout === 'object' ? target.layout : {};
             target.layout.direction = target.layout.direction === 'horizontal' ? 'horizontal' : 'vertical';
+            target.variables = Array.isArray(target.variables) ? target.variables.map(variable => ({
+                name: String(variable?.name || ''),
+                value: variable?.value == null ? '' : variable.value
+            })) : [];
             return target;
         },
         systemNodePreview(type, fallbackName) {
@@ -456,6 +531,21 @@ new Vue({
                     title: '等待',
                     description: '在继续执行下游节点前等待指定的秒数。',
                     rows: [{ label: '可配置项', value: '等待秒数' }]
+                },
+                loop: {
+                    title: '循环（For）',
+                    description: '将同一输入按指定次数依次交给下游处理。仅支持有限次数，不提供 while 或画布回连。',
+                    rows: [{ label: '重复次数', value: '固定 1–100 次，或引用上游单值' }, { label: '执行方式', value: '每轮按顺序执行，下游收到相同输入' }]
+                },
+                'sub-workflow': {
+                    title: '调用工作流',
+                    description: '把当前输入传给另一个已启用的工作流，并把其最终输出交回本节点的下游。保存和运行前都会阻止循环引用。',
+                    rows: [{ label: '可配置项', value: '目标工作流、传入输入' }, { label: '限制', value: '仅可调用自己的已启用工作流，最多嵌套 8 层' }]
+                },
+                code: {
+                    title: '安全代码',
+                    description: '按顺序为预先声明的工作流变量赋值。只允许受限公式，不运行 JavaScript、网络、文件或循环。',
+                    rows: [{ label: '可配置项', value: '变量赋值、受限公式' }, { label: '输出', value: '原始输入继续向下游传递' }]
                 },
                 aggregate: {
                     title: '聚合',
@@ -474,8 +564,8 @@ new Vue({
                 },
                 console: {
                     title: 'Console 打印',
-                    description: '将上游数据输出到本页底部的执行 Console，便于调试。',
-                    rows: [{ label: '可配置项', value: '要打印的输入数据' }]
+                    description: '将指定模板解析后的内容输出到本页底部的执行 Console，便于调试；不会改变下游输入。',
+                    rows: [{ label: '可配置项', value: '打印内容（默认 {{input}}）' }]
                 },
                 neubell: {
                     title: '发送纽铃',
@@ -526,10 +616,10 @@ new Vue({
             }
             if (safePreview.kind === 'object') {
                 const metadata = payload.metadata || {};
-                const objectType = payload.kind === 'agent-group' ? 'Agent 组' : '独立 Agent';
+                const objectType = payload.kind === 'a2a' ? '远程 A2A Agent' : payload.kind === 'agent-group' ? 'Agent 组' : '独立 Agent';
                 const description = String(metadata.description || payload.description || `${objectType} 节点会在工作流中处理上游输入。`);
                 return {
-                    kind: 'AgentsManager',
+                    kind: payload.kind === 'a2a' ? 'A2A 远程连接' : 'AgentsManager',
                     title: String(payload.name || objectType),
                     description,
                     rows: [
@@ -610,6 +700,13 @@ new Vue({
             } catch (error) {
                 this.$notify({ title: '无法打开任务', message: this.errorMessage(error, '任务或工作流已不存在。'), type: 'warning' });
             }
+        },
+        openSubWorkflow(workflowId) {
+            const id = Number(workflowId || 0);
+            if (!Number.isInteger(id) || id <= 0) return;
+            const url = '/Admin/NeuCharWorkflow/Index?workflowId=' + encodeURIComponent(id);
+            const viewer = window.open(url, '_blank', 'noopener,noreferrer');
+            if (viewer) viewer.opener = null;
         },
         async createWorkflow() {
             if (this.editingLocked || this.saveState.saving || !await this.confirmDiscardChanges('新建工作流')) return;
@@ -715,7 +812,11 @@ new Vue({
             const config = type === 'condition'
                 ? { left: '{{input}}', operator: 'equals', right: '' }
                 : type === 'delay' ? { seconds: 1 }
+                    : type === 'loop' ? { count: 3 }
+                    : type === 'sub-workflow' ? { workflowId: 0, prompt: '{{input}}' }
+                    : type === 'code' ? { assignments: [] }
                     : type === 'aggregate' ? { outputTemplate: '' }
+                    : type === 'console' ? { printTemplate: '{{input}}' }
                     : type === 'neubell'
                         ? { title: 'Workflow 提醒', summary: '{{input}}', consumeMode: 'item' }
                         : {};
@@ -933,8 +1034,11 @@ new Vue({
         },
         setSelectedNodes(nodes, options) {
             const selected = [...new Set((nodes || []).filter(Boolean).map(node => node.id))];
-            this.selectedNodeIds = selected;
-            this.selectedNodeId = selected.length ? selected[selected.length - 1] : '';
+            const current = this.selectedNodeIds || [];
+            const selectionChanged = selected.length !== current.length || selected.some((id, index) => id !== current[index]);
+            const selectedNodeId = selected.length ? selected[selected.length - 1] : '';
+            if (selectionChanged) this.selectedNodeIds = selected;
+            if (this.selectedNodeId !== selectedNodeId) this.selectedNodeId = selectedNodeId;
             if (options?.openInspector !== false && selected.length && this.inspectorCollapsed) this.inspectorCollapsed = false;
         },
         duplicateNodes(nodes) {
@@ -1232,6 +1336,19 @@ new Vue({
         emptySelectionBox() {
             return { active: false, startX: 0, startY: 0, endX: 0, endY: 0, additive: false };
         },
+        clearSelectionBox() {
+            if (!this.selectionBox || !this.selectionBox.active) return false;
+            this.selectionBox = this.emptySelectionBox();
+            return true;
+        },
+        clearCanvasPointerInteraction() {
+            this.clearSelectionBox();
+            this.dragState = null;
+            if (this.canvasPan) {
+                this.canvasPan.active = false;
+                this.canvasPan.moved = false;
+            }
+        },
         onCanvasMouseDown(event) {
             if (event.button === 2) {
                 this.startCanvasPan(event);
@@ -1270,8 +1387,8 @@ new Vue({
             return nodeLeft < right && nodeRight > left && nodeTop < bottom && nodeBottom > top;
         },
         completeSelectionBox() {
-            const selection = this.selectionBox;
-            this.selectionBox = this.emptySelectionBox();
+            const selection = { ...(this.selectionBox || this.emptySelectionBox()) };
+            this.clearSelectionBox();
             if (!selection.active) return;
             const intersected = this.form.graph.nodes.filter(node => this.nodeIntersectsSelection(node, selection));
             const existing = selection.additive
@@ -1310,11 +1427,11 @@ new Vue({
             const rightOverlayWidth = inspectorRect && Number(inspectorRect.right || 0) >= Number(rect.right || 0) - 1
                 ? Math.max(0, Math.min(canvasWidth, Number(rect.right || 0) - Number(inspectorRect.left || 0)))
                 : 0;
-            this.canvasSafeInsets = {
+            const nextSafeInsets = {
                 left: leftOverlayWidth ? leftOverlayWidth + overlayGap : 0,
                 right: rightOverlayWidth ? rightOverlayWidth + overlayGap : 0
             };
-            this.canvasViewport = {
+            const nextViewport = {
                 width: Number(canvas.clientWidth || 0),
                 height: Number(canvas.clientHeight || 0),
                 scrollLeft: Number(canvas.scrollLeft || 0),
@@ -1325,6 +1442,9 @@ new Vue({
                 windowWidth: typeof window === 'undefined' ? 0 : Number(window.innerWidth || 0),
                 windowHeight: typeof window === 'undefined' ? 0 : Number(window.innerHeight || 0)
             };
+            const hasChanged = (current, next) => Object.keys(next).some(key => !current || current[key] !== next[key]);
+            if (hasChanged(this.canvasSafeInsets, nextSafeInsets)) this.canvasSafeInsets = nextSafeInsets;
+            if (hasChanged(this.canvasViewport, nextViewport)) this.canvasViewport = nextViewport;
         },
         clampCanvasZoom(value) {
             return Math.round(Math.min(2, Math.max(.02, Number(value) || 1)) * 100) / 100;
@@ -1476,12 +1596,17 @@ new Vue({
                 this.connectionDraft.y = point.y;
             }
         },
-        onPointerUp() {
+        onPointerUp(event) {
             const panMoved = !!(this.canvasPan.active && this.canvasPan.moved);
+            const target = event && event.target;
+            const pointerOnFormulaControl = !!(target && target.closest && target.closest('.workflow-rich-text-input, .parameter-template-actions'));
             this.canvasPan.active = false;
             this.canvasPan.moved = false;
             if (panMoved) this.suppressCanvasContextMenuUntil = Date.now() + 600;
-            if (this.selectionBox.active) this.completeSelectionBox();
+            if (this.selectionBox.active) {
+                if ((this.templateEditor && this.templateEditor.visible) || pointerOnFormulaControl) this.clearSelectionBox();
+                else this.completeSelectionBox();
+            }
             const dragState = this.dragState;
             this.dragState = null;
             if (dragState?.hoverEdgeId && dragState.nodes.length === 1) {
@@ -1783,18 +1908,128 @@ new Vue({
             if (node.type === 'webhook-trigger') return '等待外部 Webhook 请求';
             if (node.type === 'manual-trigger') return '由用户手动运行';
             if (node.type === 'delay') return `${node.config.seconds || 0} 秒`;
+            if (node.type === 'loop') return this.isBinding(node.config?.count)
+                ? '从上游读取次数（最多 100 次）'
+                : `顺序重复 ${node.config?.count || 3} 次`;
+            if (node.type === 'sub-workflow') {
+                const workflow = (this.workflows || []).find(item => Number(item.id) === Number(node.config?.workflowId || 0));
+                return workflow ? '调用：' + workflow.name : '请选择目标工作流';
+            }
+            if (node.type === 'code') return '设置 ' + (Array.isArray(node.config?.assignments) ? node.config.assignments.length : 0) + ' 个工作流变量';
             if (node.type === 'condition') return `${node.config.operator || 'equals'} ${this.configValueLabel(node.config.right)}`;
             if (node.type === 'aggregate') return node.config.outputTemplate ? '汇总全部输入后只输出一次' : '请设置汇总输出内容';
             if (node.type === 'merge') return '每个上游输入独立向下游发送一次';
             if (node.type === 'parallel') return '同时分发到所有下游分支';
-            if (node.type === 'console') return '输出到下方 Console';
+            if (node.type === 'console') return node.config?.printTemplate ? '按模板输出到下方 Console' : '输出到下方 Console';
             if (node.type === 'neubell') {
                 const mode = String(node.config?.consumeMode || 'none');
                 return mode === 'provider' ? '点击后消费本订阅全部提醒'
                     : mode === 'item' ? '点击后消费当前提醒' : '点击后仅查看任务';
             }
             if (node.type === 'end') return '流程在此结束';
-            return node.type === 'agent-group' ? 'Agent 组' : node.type === 'agent' ? '独立 Agent' : node.type;
+            return node.type === 'agent-group' ? 'Agent 组' : node.type === 'agent' ? '独立 Agent' : node.type === 'a2a' ? '远程 A2A Agent' : node.type;
+        },
+        nodeValidationError(node) {
+            if (!node || !this.validation || !Array.isArray(this.validation.nodeIds)) return '';
+            return this.validation.nodeIds.includes(node.id) ? String(this.validation.message || '') : '';
+        },
+        extractValidationNodeIds(message) {
+            const text = String(message || '');
+            const nodes = this.form && this.form.graph && Array.isArray(this.form.graph.nodes)
+                ? this.form.graph.nodes
+                : [];
+            if (!text || !nodes.length) return [];
+            const labels = [];
+            const pattern = /节点[“"']([^”"']+)[”"']/g;
+            let match;
+            while ((match = pattern.exec(text)) !== null) labels.push(match[1]);
+            return [...new Set(labels
+                .map(label => nodes.find(node => String(node.id) === label || String(node.name || '') === label)?.id)
+                .filter(Boolean))];
+        },
+        inferValidationNodeIds(message) {
+            const directMatches = this.extractValidationNodeIds(message);
+            if (directMatches.length) return directMatches;
+            const nodes = this.form && this.form.graph && Array.isArray(this.form.graph.nodes)
+                ? this.form.graph.nodes
+                : [];
+            if (/未连接到触发器/.test(String(message || '')) && typeof this.getDisconnectedNodes === 'function') {
+                return this.getDisconnectedNodes().map(node => node.id);
+            }
+            if (/触发器节点类型无效/.test(String(message || ''))) {
+                return nodes.filter(node => String(node.type || '').endsWith('trigger')).map(node => node.id);
+            }
+            if (/必须且只能包含一个触发器/.test(String(message || ''))) {
+                return nodes.filter(node => String(node.type || '').endsWith('trigger')).map(node => node.id);
+            }
+            return [];
+        },
+        validationIssueFromError(error, fallback) {
+            const responseData = error && error.response ? error.response.data : error;
+            let message = '';
+            let nodeIds = [];
+            if (typeof responseData === 'string') {
+                message = responseData;
+            } else if (responseData && typeof responseData === 'object') {
+                message = responseData.message || responseData.detail || responseData.title || responseData.error || '';
+                const validation = responseData.validation || responseData.errors;
+                const rawNodeIds = responseData.nodeIds || responseData.nodeId ||
+                    (validation && (validation.nodeIds || validation.nodeId));
+                nodeIds = Array.isArray(rawNodeIds) ? rawNodeIds : (rawNodeIds ? [rawNodeIds] : []);
+                if (!message && validation && typeof validation === 'object' && !Array.isArray(validation)) {
+                    message = Object.values(validation).flat().join('；');
+                }
+            }
+            if (!message && typeof error === 'string') message = error;
+            message = String(message || fallback || '节点检查失败。');
+            nodeIds = [...new Set(nodeIds.map(nodeId => String(nodeId)).filter(Boolean))];
+            return {
+                message,
+                nodeIds: [...new Set([...nodeIds, ...this.inferValidationNodeIds(message)])]
+            };
+        },
+        showValidationIssue(error, fallback, options) {
+            options = options || {};
+            const issue = error && typeof error === 'object' && typeof error.message === 'string' && Array.isArray(error.nodeIds)
+                ? error
+                : this.validationIssueFromError(error, fallback);
+            const nodeIds = options.nodeIds || issue.nodeIds || [];
+            this.validation = {
+                message: issue.message,
+                nodeIds,
+                source: options.source || ''
+            };
+            if (options.focus !== false && nodeIds.length) {
+                this.focusValidationIssue(nodeIds[0]);
+            }
+            return { ...issue, nodeIds };
+        },
+        clearValidationIssue() {
+            this.validation = { message: '', nodeIds: [], source: '' };
+        },
+        focusValidationIssue(issue) {
+            const nodeId = typeof issue === 'string' ? issue : issue && issue.nodeId;
+            const node = this.form.graph.nodes.find(item => item.id === nodeId);
+            if (!node) return false;
+            this.setSelectedNodes([node]);
+            const focus = () => {
+                const canvas = this.$refs && this.$refs.canvas;
+                if (!canvas) return;
+                const insets = this.canvasSafeInsets || {};
+                const safeLeft = Math.max(0, Number(insets.left) || 0);
+                const safeRight = Math.max(0, Number(insets.right) || 0);
+                const stageContentTop = this.stageContentTop ? this.stageContentTop(canvas) : 0;
+                const usableWidth = Math.max(1, Number(canvas.clientWidth || 0) - safeLeft - safeRight);
+                const nodeCenterX = (Number(node.x || 0) + 110) * this.canvasZoom;
+                const nodeCenterY = (Number(node.y || 0) + 46) * this.canvasZoom;
+                canvas.scrollLeft = Math.max(0, safeLeft + nodeCenterX - usableWidth / 2);
+                canvas.scrollTop = Math.max(0,
+                    stageContentTop + nodeCenterY - (Number(canvas.clientHeight || 0) + stageContentTop) / 2);
+                this.updateCanvasViewport();
+            };
+            if (typeof this.$nextTick === 'function') this.$nextTick(focus);
+            else focus();
+            return true;
         },
         nodeState(node) { return this.run.nodeStates[node.id] || ''; },
         functionParameters(fn) { return NeuCharWorkflowUi.normalizeParameterSchema(NeuCharWorkflowUi.parseJson(fn.parameterSchemaJson, [])); },
@@ -1829,7 +2064,7 @@ new Vue({
             if (!object) return [];
             const metadata = object.metadata || {};
             const rows = [
-                { label: '类型', value: metadata.type || (object.kind === 'agent-group' ? 'Agent 组' : '独立 Agent') },
+                { label: '类型', value: metadata.type || (object.kind === 'a2a' ? '远程 A2A Agent' : object.kind === 'agent-group' ? 'Agent 组' : '独立 Agent') },
                 { label: '状态', value: object.enabled ? '可用 / 已启用' : '不可用 / 已停用' },
                 { label: '说明', value: object.description || '' }
             ];
@@ -1933,7 +2168,7 @@ new Vue({
                     ? parameters.filter(parameter => String(parameter.name || '').trim()).map(parameter => ({ path: `$.${String(parameter.name).trim()}`, label: parameter.name, typeName: 'any', isArray: false, requiresIndex: false }))
                     : [{ path: '$', label: 'Webhook 输入', typeName: 'object', isArray: false, requiresIndex: false }];
             }
-            if (['manual-trigger', 'interval-trigger', 'webhook-trigger', 'agent', 'agent-group'].includes(node.type)) return [{ path: '$', label: '文本输出', typeName: 'string', isArray: false, requiresIndex: false }];
+            if (['manual-trigger', 'interval-trigger', 'webhook-trigger', 'agent', 'agent-group', 'a2a', 'sub-workflow'].includes(node.type)) return [{ path: '$', label: '文本输出', typeName: 'string', isArray: false, requiresIndex: false }];
             const incoming = this.form.graph.edges.find(edge => edge.target === node.id);
             const source = incoming && this.form.graph.nodes.find(item => item.id === incoming.source);
             return source ? this.nodeOutputFields(source, visited) : [{ path: '$', label: '节点输出', typeName: 'any', isArray: false, requiresIndex: false }];
@@ -2009,14 +2244,57 @@ new Vue({
             return source && field ? `${source.name} · ${field.label}` : '已失效的上游来源';
         },
         templatePlaceholder(token) { return `{{${String(token || '')}}}`; },
-        openParameterTemplateEditor(node, parameter) {
-            if (this.editingLocked || !node || !parameter || !this.canUseTemplate(parameter)) return;
-            const currentValue = node.config.parameters?.[parameter.name];
+        templateUsesBindingToken(text, token) {
+            const value = String(text || '');
+            if (value.includes(this.templatePlaceholder(token))) return true;
+            const escapedToken = String(token || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            if (!escapedToken) return false;
+            const tokenPattern = new RegExp(`(^|[^A-Za-z0-9_])${escapedToken}(?=$|[^A-Za-z0-9_])`, 'i');
+            let position = 0;
+            while (true) {
+                const start = value.indexOf('{{=', position);
+                if (start < 0) return false;
+                const end = value.indexOf('}}', start + 3);
+                if (end < 0) return false;
+                if (tokenPattern.test(value.substring(start + 3, end))) return true;
+                position = end + 2;
+            }
+        },
+        openNodeTemplateEditor(node, configKey, options = {}) {
+            if (this.editingLocked || !node || !configKey) return;
+            const currentValue = node.config?.[configKey];
+            if (this.isBinding(currentValue)) return;
+            this.clearCanvasPointerInteraction();
             const template = this.templateFor(currentValue);
             this.templateEditor = {
                 visible: true,
                 nodeId: node.id,
+                configKey,
+                parameterName: '',
+                fieldLabel: options.fieldLabel || configKey,
+                allowBindings: options.allowBindings !== false,
+                text: template ? String(template.text || '') : (typeof currentValue === 'string' ? currentValue : ''),
+                bindings: template && Array.isArray(template.bindings)
+                    ? template.bindings.filter(item => item && item.source).map(item => ({
+                        token: String(item.token || ''),
+                        source: { ...item.source }
+                    }))
+                    : [],
+                pendingSelection: []
+            };
+        },
+        openParameterTemplateEditor(node, parameter) {
+            if (this.editingLocked || !node || !parameter || !this.canUseTemplate(parameter)) return;
+            const currentValue = node.config.parameters?.[parameter.name];
+            this.clearCanvasPointerInteraction();
+            const template = this.templateFor(currentValue);
+            this.templateEditor = {
+                visible: true,
+                nodeId: node.id,
+                configKey: 'parameters',
                 parameterName: parameter.name,
+                fieldLabel: `${this.parameterDisplayName(parameter)}文本`,
+                allowBindings: true,
                 text: template ? String(template.text || '') : (typeof currentValue === 'string' ? currentValue : ''),
                 bindings: template && Array.isArray(template.bindings)
                     ? template.bindings.filter(item => item && item.source).map(item => ({
@@ -2034,7 +2312,7 @@ new Vue({
             (Array.isArray(bindings) ? bindings : []).forEach(item => {
                 const token = String(item?.token || '').trim();
                 if (!item?.source || !/^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(token) || tokens.has(token.toLowerCase())) return;
-                if (!value.includes(this.templatePlaceholder(token))) return;
+                if (!this.templateUsesBindingToken(value, token)) return;
                 tokens.add(token.toLowerCase());
                 kept.push({ token, source: { ...item.source } });
             });
@@ -2063,14 +2341,19 @@ new Vue({
         saveParameterTemplate() {
             const editor = this.templateEditor;
             const node = this.form.graph.nodes.find(item => item.id === editor.nodeId);
-            if (!node || !editor.parameterName || !node.config.parameters) {
+            const isParameter = !editor.configKey || editor.configKey === 'parameters';
+            const target = isParameter ? node?.config?.parameters : node?.config;
+            const targetKey = isParameter ? editor.parameterName : editor.configKey;
+            if (!node || !targetKey || !target) {
                 editor.visible = false;
                 return;
             }
             const text = String(editor.text || '');
-            const bindings = this.normalizeTemplateBindings(text, editor.bindings);
+            const bindings = editor.allowBindings === false
+                ? []
+                : this.normalizeTemplateBindings(text, editor.bindings);
             const hasTemplate = bindings.length > 0 ? true : text.includes('{{=');
-            this.$set(node.config.parameters, editor.parameterName,
+            this.$set(target, targetKey,
                 hasTemplate ? { $template: { text, bindings } } : text);
             editor.visible = false;
         },
@@ -2082,6 +2365,10 @@ new Vue({
         parameterTemplateBindings(value) {
             const template = this.templateFor(value);
             return template && Array.isArray(template.bindings) ? template.bindings : [];
+        },
+        resetNodeTemplateManual(node, configKey) {
+            if (!node || !node.config || !configKey) return;
+            this.$set(node.config, configKey, '');
         },
         bindingFor(node, parameter) { return node && node.config.parameters && this.isBinding(node.config.parameters[parameter.name]) ? node.config.parameters[parameter.name].$source : null; },
         resolvedBindingFor(node, parameter) {
@@ -2162,6 +2449,33 @@ new Vue({
             const value = node && node.config[key];
             return this.isBinding(value) ? [value.$source.nodeId, value.$source.path || '$'] : [];
         },
+        loopCountOutputOptions() {
+            return this.upstreamNodes(this.selectedNode).map(node => ({
+                value: node.id,
+                label: node.name,
+                children: this.nodeOutputFields(node)
+                    .filter(field => !field.isArray && !field.requiresIndex)
+                    .map(field => ({
+                        value: field.path,
+                        label: `${field.label} · 运行时必须为 1–100 的整数${field.observed ? ' · 运行观察' : ''}`
+                    }))
+            })).filter(option => option.children.length);
+        },
+        loopCountSourceLabel(node) {
+            const binding = node?.config?.count?.$source;
+            return binding ? this.templateBindingLabel(binding) : '已失效的上游来源';
+        },
+        setLoopCountBinding(node, selection) {
+            if (!selection || selection.length < 2) {
+                this.$set(node.config, 'count', 3);
+                return;
+            }
+            this.setConfigBinding(node, 'count', selection);
+        },
+        resetLoopCountManual(node) {
+            if (!node || !node.config) return;
+            this.$set(node.config, 'count', 3);
+        },
         setConfigBinding(node, key, selection) {
             if (!selection || selection.length < 2) { this.$set(node.config, key, ''); return; }
             const source = this.form.graph.nodes.find(item => item.id === selection[0]);
@@ -2201,6 +2515,19 @@ new Vue({
         validate(options) {
             const requireRunnable = !options || options.requireRunnable !== false;
             if (!this.form.name.trim()) return '请输入工作流名称。';
+            const variables = this.form.graph?.variables || [];
+            if (variables.length > 30) return '单个工作流最多允许 30 个变量。';
+            const variableNames = new Set();
+            for (const variable of variables) {
+                const name = String(variable?.name || '').trim();
+                if (!/^[A-Za-z_][A-Za-z0-9_]{0,63}$/.test(name) || /^(input|vars)$/i.test(name)) {
+                    return '工作流变量名必须唯一，以字母或下划线开头，仅包含字母、数字、下划线；不能使用 input 或 vars。';
+                }
+                const key = name.toLowerCase();
+                if (variableNames.has(key)) return `工作流变量“${name}”重复。`;
+                variableNames.add(key);
+                if (String(variable?.value ?? '').length > 8000) return `工作流变量“${name}”的值不能超过 8000 个字符。`;
+            }
             const triggers = this.form.graph.nodes.filter(node => String(node.type).endsWith('trigger'));
             if (triggers.length !== 1) return '工作流必须且只能包含一个触发器。';
             const trigger = triggers[0];
@@ -2228,6 +2555,30 @@ new Vue({
                 if (!String(node.config?.outputTemplate || '').trim()) return `聚合节点“${node.name}”必须设置输出内容。`;
                 if (String(node.config.outputTemplate).length > 8000) return `聚合节点“${node.name}”的输出内容不能超过 8000 个字符。`;
             }
+            for (const node of this.form.graph.nodes.filter(item => item.type === 'loop')) {
+                if (this.isBinding(node.config?.count)) continue;
+                const count = Number(node.config?.count);
+                if (!Number.isInteger(count) || count < 1 || count > 100) {
+                    return `循环节点“${node.name}”的次数必须为 1 到 100 的整数，或引用上游单值。`;
+                }
+            }
+            for (const node of this.form.graph.nodes.filter(item => item.type === 'code')) {
+                const assignments = Array.isArray(node.config?.assignments) ? node.config.assignments : [];
+                if (!assignments.length || assignments.length > 30) return `安全代码节点“${node.name}”必须设置 1 到 30 条变量赋值。`;
+                for (const assignment of assignments) {
+                    if (!variableNames.has(String(assignment?.name || '').trim().toLowerCase())) {
+                        return `安全代码节点“${node.name}”只能给已定义的工作流变量赋值。`;
+                    }
+                    if (String(assignment?.value ?? '').length > 8000) return `安全代码节点“${node.name}”的赋值不能超过 8000 个字符。`;
+                }
+            }
+            for (const node of this.form.graph.nodes.filter(item => item.type === 'sub-workflow')) {
+                const targetId = Number(node.config?.workflowId || 0);
+                const target = (this.workflows || []).find(item => Number(item.id) === targetId);
+                if (!targetId || !target) return `调用工作流节点“${node.name}”必须选择一个已保存的目标工作流。`;
+                if (!target.enabled) return `调用工作流节点“${node.name}”的目标工作流尚未启用。`;
+                if (targetId === Number(this.form.id || 0)) return `调用工作流节点“${node.name}”不能调用当前工作流。`;
+            }
             for (const node of this.form.graph.nodes.filter(item => item.type === 'function')) {
                 const fn = this.findFunction(node.config);
                 if (!fn || !fn.moduleAvailable) return `节点“${node.name}”引用的模块未开启或 Function 已移除。`;
@@ -2241,11 +2592,29 @@ new Vue({
                     if (compatibility.level === 'danger' || compatibility.level === 'warning') return `节点“${node.name}”参数“${parameter.title || parameter.name}”：${compatibility.text}`;
                 }
             }
-            for (const node of this.form.graph.nodes.filter(item => item.type === 'agent' || item.type === 'agent-group')) {
+            for (const node of this.form.graph.nodes.filter(item => ['agent', 'agent-group', 'a2a'].includes(item.type))) {
                 const object = this.workflowObjects.find(item => item.providerId === node.config.providerId && item.objectId === node.config.objectId);
-                if (!object || !object.enabled) return `节点“${node.name}”引用的 Agent 不可用。`;
+                if (!object || !object.enabled) return `节点“${node.name}”引用的 Agent 或 A2A 连接不可用。`;
             }
             return '';
+        },
+        addWorkflowVariable() {
+            if (this.editingLocked || this.form.graph.variables.length >= 30) return;
+            this.form.graph.variables.push({ name: '', value: '' });
+        },
+        removeWorkflowVariable(index) {
+            if (this.editingLocked) return;
+            this.form.graph.variables.splice(index, 1);
+        },
+        addCodeAssignment(node) {
+            if (this.editingLocked || !node) return;
+            node.config = node.config || {};
+            node.config.assignments = Array.isArray(node.config.assignments) ? node.config.assignments : [];
+            if (node.config.assignments.length < 30) node.config.assignments.push({ name: '', value: '' });
+        },
+        removeCodeAssignment(node, index) {
+            if (this.editingLocked || !Array.isArray(node?.config?.assignments)) return;
+            node.config.assignments.splice(index, 1);
         },
         addWebhookParameter() {
             if (this.editingLocked || this.form.webhookParameters.length >= 50) return;
@@ -2396,9 +2765,13 @@ new Vue({
             }
             const error = this.validate({ requireRunnable: false });
             if (error) {
+                const issue = this.showValidationIssue(error, '请检查节点配置。', {
+                    source: 'save',
+                    focus: !options.automatic
+                });
                 this.saveState.status = 'error';
-                this.saveState.error = error;
-                if (!options.automatic) this.$notify({ title: '无法保存', message: error, type: 'warning' });
+                this.saveState.error = issue.message;
+                if (!options.automatic) this.$notify({ title: '无法保存', message: issue.message, type: 'warning' });
                 return null;
             }
             this.saveState.saving = true;
@@ -2420,6 +2793,7 @@ new Vue({
                 }, { customAlert: true });
                 const saved = NeuCharWorkflowUi.unwrap(response);
                 this.applySavedWorkflow(saved);
+                this.clearValidationIssue();
                 if (!options.silent) {
                     const draftCount = this.disconnectedNodes.length;
                     const message = draftCount
@@ -2430,7 +2804,11 @@ new Vue({
                 await this.loadAll();
                 return saved;
             } catch (error) {
-                const message = this.errorMessage(error, '请检查节点配置。');
+                const issue = this.showValidationIssue(error, '请检查节点配置。', {
+                    source: 'save',
+                    focus: !options.automatic
+                });
+                const message = issue.message;
                 this.saveState.status = 'error';
                 this.saveState.error = message;
                 if (options.automatic && this.currentSaveSignature === saveSignature) {
@@ -2444,7 +2822,16 @@ new Vue({
         async startWorkflow() {
             if (this.run.running || this.run.validating) return;
             const localError = this.validate({ requireRunnable: true });
-            if (localError) { this.appendConsole('validation', localError, 'failed'); this.$notify({ title: '运行前校验失败', message: localError, type: 'warning' }); return; }
+            if (localError) {
+                const issue = this.showValidationIssue(localError, '运行前校验失败。', {
+                    source: 'run',
+                    nodeIds: /未连接到触发器/.test(localError) ? this.getDisconnectedNodes().map(node => node.id) : undefined
+                });
+                this.appendConsole('validation', issue.message, 'failed');
+                this.$notify({ title: '运行前校验失败', message: issue.message, type: 'warning' });
+                return;
+            }
+            this.clearValidationIssue();
             this.run.validating = true;
             this.run.error = '';
             this.run.finalOutput = '';
@@ -2464,7 +2851,8 @@ new Vue({
                 this.run.lastSequence = 0;
                 this.pollRun();
             } catch (error) {
-                const message = this.errorMessage(error, '运行前校验失败。');
+                const issue = this.showValidationIssue(error, '运行前校验失败。', { source: 'run' });
+                const message = issue.message;
                 this.run.status = 'failed'; this.run.error = message;
                 this.appendConsole('validation', message, 'failed');
                 this.$notify({ title: '无法运行', message, type: 'error' });
@@ -2546,8 +2934,7 @@ new Vue({
             this.run.events = []; this.run.lastSequence = 0; this.run.nodeStates = {}; this.run.finalOutput = ''; this.run.error = '';
         },
         errorMessage(error, fallback) {
-            const data = error && error.response && error.response.data;
-            return String((data && (data.title || data.detail || data)) || fallback);
+            return this.validationIssueFromError(error, fallback).message;
         },
         async handleWorkflowAction(action) {
             if (action === 'new') {

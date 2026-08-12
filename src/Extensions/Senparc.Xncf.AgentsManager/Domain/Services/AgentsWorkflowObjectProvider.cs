@@ -37,19 +37,25 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
     private readonly PromptItemService _promptItemService;
     private readonly AIModelService _aiModelService;
     private readonly XncfModuleService _moduleService;
+    private readonly RemoteAgentService _remoteAgentService;
+    private readonly RemoteA2AAgentFactory _remoteA2AAgentFactory;
 
     public AgentsWorkflowObjectProvider(
         AgentsTemplateService agentService,
         ChatGroupService groupService,
         PromptItemService promptItemService,
         AIModelService aiModelService,
-        XncfModuleService moduleService)
+        XncfModuleService moduleService,
+        RemoteAgentService remoteAgentService,
+        RemoteA2AAgentFactory remoteA2AAgentFactory)
     {
         _agentService = agentService;
         _groupService = groupService;
         _promptItemService = promptItemService;
         _aiModelService = aiModelService;
         _moduleService = moduleService;
+        _remoteAgentService = remoteAgentService;
+        _remoteA2AAgentFactory = remoteA2AAgentFactory;
     }
 
     public string ProviderId => ProviderName;
@@ -67,6 +73,10 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             z => z.Name,
             OrderingType.Ascending).ConfigureAwait(false);
         var groups = await _groupService.GetFullListAsync(
+            z => true,
+            z => z.Name,
+            OrderingType.Ascending).ConfigureAwait(false);
+        var remoteAgents = await _remoteAgentService.GetFullListAsync(
             z => true,
             z => z.Name,
             OrderingType.Ascending).ConfigureAwait(false);
@@ -107,6 +117,24 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                     ["adminAgentTemplateId"] = z.AdminAgentTemplateId.ToString(),
                     ["enterAgentTemplateId"] = z.EnterAgentTemplateId.ToString()
                 })))
+            .Concat(remoteAgents.Select(z => new WorkflowObjectDescriptor(
+                ProviderId,
+                $"a2a:{z.Id}",
+                "a2a",
+                z.Name,
+                z.Description,
+                z.Enable,
+                "fa fa-exchange",
+                "/Admin/AgentsManager/Index#tab=remoteA2A",
+                new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["id"] = z.Id.ToString(),
+                    ["type"] = "远程 A2A Agent",
+                    ["enabled"] = z.Enable ? "true" : "false",
+                    ["protocol"] = z.Protocol.ToString(),
+                    ["connectionStatus"] = z.ConnectionStatus.ToString(),
+                    ["agentCardUrl"] = z.AgentCardUrl ?? string.Empty
+                })))
             .ToList();
     }
 
@@ -146,6 +174,12 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             int.TryParse(request.ObjectId[6..], out var agentId))
         {
             return await ExecuteSingleAgentAsync(agentId, request, cancellationToken).ConfigureAwait(false);
+        }
+
+        if (request.ObjectId?.StartsWith("a2a:", StringComparison.OrdinalIgnoreCase) == true &&
+            int.TryParse(request.ObjectId[4..], out var remoteAgentId))
+        {
+            return await ExecuteRemoteA2AAsync(remoteAgentId, request, cancellationToken).ConfigureAwait(false);
         }
 
         return new WorkflowObjectExecutionResult(false, null, "无法识别的 AgentsManager 工作流对象。");
@@ -208,6 +242,46 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         return string.IsNullOrWhiteSpace(output)
             ? new WorkflowObjectExecutionResult(false, null, "独立 Agent 没有返回有效内容。")
             : new WorkflowObjectExecutionResult(true, output);
+    }
+
+    private async ValueTask<WorkflowObjectExecutionResult> ExecuteRemoteA2AAsync(
+        int remoteAgentId,
+        WorkflowObjectExecutionRequest request,
+        CancellationToken cancellationToken)
+    {
+        var remoteAgent = await _remoteAgentService.GetObjectAsync(z => z.Id == remoteAgentId).ConfigureAwait(false);
+        if (remoteAgent == null || !remoteAgent.Enable)
+        {
+            return new WorkflowObjectExecutionResult(false, null, "远程 A2A Agent 不存在或未启用。");
+        }
+
+        try
+        {
+            var agent = await _remoteA2AAgentFactory.CreateAsync(remoteAgent, cancellationToken).ConfigureAwait(false);
+            // A2A errors are emitted on the streaming event channel. Calling RunAsync() here
+            // can collapse a remote A2A error into "did not produce any response events", which
+            // hides the failure returned by the remote server. Aggregate the same stream used by
+            // ChatGroup so callers receive the actual A2A exception and its diagnostic id.
+            var response = await agent.RunStreamingAsync(
+                    request.Input ?? string.Empty,
+                    session: null,
+                    options: null,
+                    cancellationToken: cancellationToken)
+                .ToAgentResponseAsync(cancellationToken)
+                .ConfigureAwait(false);
+            var output = response?.Text?.Trim();
+            return string.IsNullOrWhiteSpace(output)
+                ? new WorkflowObjectExecutionResult(false, null, "远程 A2A Agent 没有返回可显示内容。")
+                : new WorkflowObjectExecutionResult(true, output);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            return new WorkflowObjectExecutionResult(false, null, $"远程 A2A Agent 调用失败：{ex.Message}");
+        }
     }
 
     private async Task<bool> IsModuleAvailableAsync()

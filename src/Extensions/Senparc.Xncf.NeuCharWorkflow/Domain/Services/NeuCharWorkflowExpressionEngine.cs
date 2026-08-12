@@ -25,7 +25,9 @@ public static class NeuCharWorkflowExpressionEngine
     private static readonly HashSet<string> Functions = new(StringComparer.OrdinalIgnoreCase)
     {
         "if", "coalesce", "contains", "startsWith", "endsWith", "length", "substring",
-        "trim", "lower", "upper", "first", "last", "at", "join", "toNumber"
+        "trim", "lower", "upper", "first", "last", "at", "join", "toNumber",
+        "now", "formatDate", "split", "replace", "sort", "orderBy", "reverse",
+        "take", "skip", "sum", "min", "max", "unique"
     };
 
     public static bool TryValidate(string expression, IEnumerable<string> allowedVariables, out string error)
@@ -246,6 +248,28 @@ public static class NeuCharWorkflowExpressionEngine
             if (name.Equals("last", StringComparison.OrdinalIgnoreCase)) return Index(Arg(0), Length(Arg(0)) - 1);
             if (name.Equals("at", StringComparison.OrdinalIgnoreCase)) return Index(Arg(0), (int)Number(Arg(1)));
             if (name.Equals("join", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Join(Arg(0), Text(Arg(1))));
+            if (name.Equals("now", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(DateTimeOffset.UtcNow.ToString("O", CultureInfo.InvariantCulture));
+            if (name.Equals("formatDate", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!DateTimeOffset.TryParse(Text(Arg(0)), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var date))
+                    throw Error("formatDate 的第一个参数必须是日期或 now() 的结果");
+                var format = args.Count > 1 ? Text(Arg(1)) : "yyyy-MM-dd HH:mm:ss";
+                if (format.Length > 80) throw Error("日期格式不能超过 80 个字符");
+                return JsonValue.Create(date.ToString(format, CultureInfo.InvariantCulture));
+            }
+            if (name.Equals("split", StringComparison.OrdinalIgnoreCase))
+                return new JsonArray(Text(Arg(0)).Split(Text(Arg(1)), StringSplitOptions.None).Select(item => JsonValue.Create(item)).ToArray());
+            if (name.Equals("replace", StringComparison.OrdinalIgnoreCase))
+                return JsonValue.Create(Text(Arg(0)).Replace(Text(Arg(1)), Text(Arg(2)), StringComparison.Ordinal));
+            if (name.Equals("sort", StringComparison.OrdinalIgnoreCase) || name.Equals("orderBy", StringComparison.OrdinalIgnoreCase))
+                return Sort(Arg(0), args.Count > 1 ? Text(Arg(1)) : string.Empty, args.Count > 2 ? Text(Arg(2)) : "asc");
+            if (name.Equals("reverse", StringComparison.OrdinalIgnoreCase)) return Reverse(Arg(0));
+            if (name.Equals("take", StringComparison.OrdinalIgnoreCase)) return Slice(Arg(0), 0, (int)Number(Arg(1)));
+            if (name.Equals("skip", StringComparison.OrdinalIgnoreCase)) return Slice(Arg(0), (int)Number(Arg(1)), int.MaxValue);
+            if (name.Equals("sum", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(ToArray(Arg(0)).Sum(Number));
+            if (name.Equals("min", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(ToArray(Arg(0)).Select(Number).DefaultIfEmpty(0).Min());
+            if (name.Equals("max", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(ToArray(Arg(0)).Select(Number).DefaultIfEmpty(0).Max());
+            if (name.Equals("unique", StringComparison.OrdinalIgnoreCase)) return Unique(Arg(0));
             return JsonValue.Create(Number(Arg(0)));
         }
 
@@ -335,6 +359,41 @@ public static class NeuCharWorkflowExpressionEngine
     private static int Length(JsonNode value) => value is JsonArray array ? array.Count : Text(value).Length;
     private static bool Contains(JsonNode value, JsonNode sought) => value is JsonArray array ? array.Any(x => Equal(x, sought)) : Text(value).Contains(Text(sought), StringComparison.OrdinalIgnoreCase);
     private static string Join(JsonNode value, string separator) => value is JsonArray array ? string.Join(separator, array.Select(Text)) : Text(value);
+    private static IEnumerable<JsonNode> ToArray(JsonNode value) => value is JsonArray array
+        ? array.Where(item => item != null).Select(item => item!)
+        : value == null ? Enumerable.Empty<JsonNode>() : new[] { value };
+    private static JsonNode Reverse(JsonNode value) => new JsonArray(ToArray(value).Reverse().Select(item => item.DeepClone()).ToArray());
+    private static JsonNode Slice(JsonNode value, int skip, int take) => new JsonArray(ToArray(value)
+        .Skip(Math.Max(0, skip)).Take(Math.Max(0, take)).Select(item => item.DeepClone()).ToArray());
+    private static JsonNode Unique(JsonNode value) => new JsonArray(ToArray(value)
+        .GroupBy(Text, StringComparer.Ordinal).Select(group => group.First().DeepClone()).ToArray());
+    private static JsonNode Sort(JsonNode value, string path, string direction)
+    {
+        if (value is not JsonArray array) return value?.DeepClone() ?? JsonValue.Create(string.Empty);
+        if (!string.IsNullOrWhiteSpace(path) && !path.Split('.').All(segment =>
+                segment.Length > 0 && segment.All(character => char.IsLetterOrDigit(character) || character == '_')))
+            throw new ExpressionException("sort/orderBy 的字段路径只能包含字母、数字、下划线和点。");
+        if (!string.Equals(direction, "asc", StringComparison.OrdinalIgnoreCase) &&
+            !string.Equals(direction, "desc", StringComparison.OrdinalIgnoreCase))
+            throw new ExpressionException("sort/orderBy 的排序方向只能是 asc 或 desc。");
+        var items = array.Select((item, index) => new { Item = item, Index = index, Key = ReadPath(item, path) });
+        var result = string.Equals(direction, "desc", StringComparison.OrdinalIgnoreCase)
+            ? items.OrderByDescending(item => SortKey(item.Key), StringComparer.Ordinal).ThenBy(item => item.Index)
+            : items.OrderBy(item => SortKey(item.Key), StringComparer.Ordinal).ThenBy(item => item.Index);
+        return new JsonArray(result.Select(item => item.Item?.DeepClone()).ToArray());
+    }
+    private static JsonNode ReadPath(JsonNode value, string path)
+    {
+        var current = value;
+        foreach (var segment in (path ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (current is not JsonObject obj || !obj.TryGetPropertyValue(segment, out current)) return null;
+        }
+        return current;
+    }
+    private static string SortKey(JsonNode value) => decimal.TryParse(Text(value), NumberStyles.Number, CultureInfo.InvariantCulture, out var number)
+        ? number.ToString("00000000000000000000000000000000.0000000000000000000000000000", CultureInfo.InvariantCulture)
+        : Text(value);
     private static string Text(JsonNode value)
     {
         if (value == null) return string.Empty;

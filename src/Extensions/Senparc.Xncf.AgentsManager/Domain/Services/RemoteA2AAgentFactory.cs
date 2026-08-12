@@ -130,7 +130,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             var wellKnownIndex = absolutePath.IndexOf(wellKnownPath, StringComparison.OrdinalIgnoreCase);
             if (wellKnownIndex < 0)
             {
-                return (configuredUri, null);
+                var rootUrl = configuredUri.GetLeftPart(UriPartial.Path).TrimEnd('/') + "/";
+                return (new Uri(rootUrl, UriKind.Absolute), ".well-known/agent-card.json");
             }
 
             var basePath = absolutePath.Substring(0, wellKnownIndex);
@@ -140,7 +141,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 baseUrlText += "/";
             }
 
-            return (new Uri(baseUrlText, UriKind.Absolute), configuredUri.PathAndQuery);
+            // A2ACardResolver combines baseUrl and agentCardPath as a relative URI.
+            // Passing the complete configured path here duplicates the path segment for
+            // per-agent discovery URLs such as /a2a/{key}/.well-known/agent-card.json.
+            var agentCardPath = absolutePath.Substring(wellKnownIndex).TrimStart('/');
+            if (!string.IsNullOrWhiteSpace(configuredUri.Query))
+            {
+                agentCardPath += configuredUri.Query;
+            }
+
+            return (new Uri(baseUrlText, UriKind.Absolute), agentCardPath);
         }
     }
 }

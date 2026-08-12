@@ -411,6 +411,95 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.MySql
                     b.ToTable("Senparc_AgentsManager_ChatGroupRemoteMember");
                 });
 
+            modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.PublishedA2AAgent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<int>("AgentTemplateId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("AllowFunctionCalls")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("AuthHeaderName")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("AuthSecretKey")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("AuthenticationMode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CardDescription")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<string>("CardName")
+                        .HasMaxLength(120)
+                        .HasColumnType("varchar(120)");
+
+                    b.Property<bool>("Enable")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("MaxInputCharacters")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PublicAgentKey")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<string>("SkillDescription")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<string>("SkillId")
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("SkillName")
+                        .HasMaxLength(120)
+                        .HasColumnType("varchar(120)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AgentTemplateId")
+                        .IsUnique();
+
+                    b.HasIndex("Enable");
+
+                    b.HasIndex("PublicAgentKey")
+                        .IsUnique();
+
+                    b.ToTable("Senparc_AgentsManager_PublishedA2AAgent");
+                });
+
             modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.RemoteAgent", b =>
                 {
                     b.Property<int>("Id")

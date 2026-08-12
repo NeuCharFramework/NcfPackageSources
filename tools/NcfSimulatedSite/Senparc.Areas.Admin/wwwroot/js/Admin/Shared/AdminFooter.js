@@ -3,9 +3,12 @@
 
     function createAdminConsole() {
         const maximumConsoleEntries = 200;
+        const repeatedConsoleEntryWindowMs = 10000;
         const consoleEntries = [];
         const consoleListeners = new Set();
         let consoleSequence = 0;
+        let lastConsoleEntrySignature = '';
+        let lastConsoleEntryAt = 0;
 
         function formatConsoleValue(value) {
             if (value instanceof Error) {
@@ -22,11 +25,21 @@
         }
 
         function publishConsoleEntry(level, values) {
+            const message = Array.from(values).map(formatConsoleValue).join(' ');
+            const now = Date.now();
+            const signature = `${level}:${message}`;
+            // Vue 会把 render 异常写入 console。Footer 若立即把同一异常再写入响应式状态，
+            // 就会触发新的根组件渲染并形成自激循环；浏览器原始 Console 仍会完整保留每次错误。
+            if (signature === lastConsoleEntrySignature && now - lastConsoleEntryAt < repeatedConsoleEntryWindowMs) {
+                return;
+            }
+            lastConsoleEntrySignature = signature;
+            lastConsoleEntryAt = now;
             const entry = {
                 id: ++consoleSequence,
                 level: level,
                 time: new Date().toLocaleTimeString(),
-                message: Array.from(values).map(formatConsoleValue).join(' ')
+                message: message
             };
             consoleEntries.push(entry);
             if (consoleEntries.length > maximumConsoleEntries) {
@@ -51,6 +64,8 @@
             },
             clear() {
                 consoleEntries.splice(0, consoleEntries.length);
+                lastConsoleEntrySignature = '';
+                lastConsoleEntryAt = 0;
                 consoleListeners.forEach(listener => listener([]));
             }
         };
@@ -89,6 +104,8 @@
     }
 
     const initialState = window.NCF_ADMIN_FOOTER_INITIAL_STATE || {};
+    const maximumVisibleNeuBellToasts = 2;
+    const neuBellToastDurationMs = 30000;
 
     // 每个 Admin 页面都会加载此 mixin，因此必须严格控制请求数和长连接生命周期。
     const footerMixin = {
@@ -113,7 +130,9 @@
                 footerEventSource: null,
                 footerStateRequest: null,
                 footerStateCancelSource: null,
-                neuBellNotificationHandles: {},
+                neuBellToastEntries: [],
+                neuBellToastExpanded: false,
+                neuBellToastTimers: {},
                 neuBellNotifyOnRefresh: false,
                 neuBellRefreshQueued: false,
                 footerCommunicationOwner: false,
@@ -142,6 +161,13 @@
                     .filter(provider => provider.enabled)
                     .reduce((providerTotal, provider) => providerTotal + (provider.items || [])
                         .reduce((itemTotal, item) => itemTotal + Math.max(0, Number(item.count) || 0), 0), 0);
+            },
+            neuBellToastVisibleItems() {
+                const entries = this.neuBellToastEntries || [];
+                return this.neuBellToastExpanded ? entries : entries.slice(0, maximumVisibleNeuBellToasts);
+            },
+            neuBellToastOverflowCount() {
+                return Math.max(0, (this.neuBellToastEntries || []).length - maximumVisibleNeuBellToasts);
             }
         },
         mounted() {
@@ -225,15 +251,66 @@
                 });
                 return counts;
             },
-            closeNeuBellNotification(key) {
-                const notification = this.neuBellNotificationHandles[key];
-                if (notification && typeof notification.close === 'function') {
-                    notification.close();
+            clearNeuBellToastTimer(key) {
+                const timer = this.neuBellToastTimers[key];
+                if (timer) {
+                    window.clearTimeout(timer);
                 }
-                delete this.neuBellNotificationHandles[key];
+                delete this.neuBellToastTimers[key];
+            },
+            closeNeuBellToast(key) {
+                this.clearNeuBellToastTimer(key);
+                const index = (this.neuBellToastEntries || []).findIndex(entry => entry.key === key);
+                if (index >= 0) {
+                    this.neuBellToastEntries.splice(index, 1);
+                }
+                if (this.neuBellToastEntries.length === 0) {
+                    this.neuBellToastExpanded = false;
+                }
+            },
+            clearAllNeuBellToasts() {
+                Object.keys(this.neuBellToastTimers).forEach(key => this.clearNeuBellToastTimer(key));
+                this.neuBellToastEntries.splice(0, this.neuBellToastEntries.length);
+                this.neuBellToastExpanded = false;
             },
             closeAllNeuBellNotifications() {
-                Object.keys(this.neuBellNotificationHandles).forEach(key => this.closeNeuBellNotification(key));
+                // 保留旧方法名，兼容可能由页面脚本调用的生命周期清理入口。
+                this.clearAllNeuBellToasts();
+            },
+            scheduleNeuBellToastExpiry(key) {
+                this.clearNeuBellToastTimer(key);
+                // 右下角提示只是视觉提醒；到期不会消费服务端的业务提醒。
+                this.neuBellToastTimers[key] = window.setTimeout(() => {
+                    this.closeNeuBellToast(key);
+                }, neuBellToastDurationMs);
+            },
+            upsertNeuBellToast(provider, item) {
+                const key = this.neuBellItemKey(provider.providerId, item.id);
+                const entry = {
+                    key: key,
+                    providerId: provider.providerId,
+                    providerName: provider.displayName,
+                    providerIcon: provider.icon,
+                    item: Object.assign({}, item)
+                };
+                const entries = this.neuBellToastEntries;
+                const existingIndex = entries.findIndex(existing => existing.key === key);
+                if (existingIndex >= 0) {
+                    entries.splice(existingIndex, 1);
+                }
+                entries.unshift(entry);
+                this.scheduleNeuBellToastExpiry(key);
+            },
+            toggleNeuBellToastExpanded() {
+                if (this.neuBellToastOverflowCount > 0) {
+                    this.neuBellToastExpanded = !this.neuBellToastExpanded;
+                }
+            },
+            openNeuBellToast(entry) {
+                this.neuBellDrawerVisible = true;
+                if (entry && entry.key) {
+                    this.closeNeuBellToast(entry.key);
+                }
             },
             syncNeuBellNotifications(previousProviders, nextProviders, showNewNotifications) {
                 const previousCounts = this.getNeuBellItemCounts(previousProviders);
@@ -255,35 +332,13 @@
                             return;
                         }
 
-                        this.closeNeuBellNotification(key);
-                        if (typeof this.$notify !== 'function') {
-                            return;
-                        }
-
-                        const supportedTypes = ['success', 'warning', 'info', 'error'];
-                        const notificationType = supportedTypes.indexOf(item.severity) >= 0 ? item.severity : 'info';
-                        let notification = null;
-                        notification = this.$notify({
-                            title: item.title || provider.displayName || 'NeuBell',
-                            message: item.summary || '',
-                            type: notificationType,
-                            duration: 0,
-                            position: 'bottom-right',
-                            onClose: () => {
-                                if (this.neuBellNotificationHandles[key] === notification) {
-                                    delete this.neuBellNotificationHandles[key];
-                                }
-                            }
-                        });
-                        if (notification) {
-                            this.neuBellNotificationHandles[key] = notification;
-                        }
+                        this.upsertNeuBellToast(provider, item);
                     });
                 });
 
-                Object.keys(this.neuBellNotificationHandles).forEach(key => {
-                    if (!visibleItemKeys[key]) {
-                        this.closeNeuBellNotification(key);
+                (this.neuBellToastEntries || []).slice().forEach(entry => {
+                    if (!visibleItemKeys[entry.key]) {
+                        this.closeNeuBellToast(entry.key);
                     }
                 });
             },

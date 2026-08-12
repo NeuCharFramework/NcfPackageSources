@@ -17,6 +17,7 @@ using Senparc.Ncf.Core.Enums;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -31,8 +32,16 @@ public sealed class NeuCharWorkflowGraph
 {
     public List<NeuCharWorkflowNode> Nodes { get; set; } = new();
     public List<NeuCharWorkflowEdge> Edges { get; set; } = new();
+    /// <summary>工作流级变量。运行时通过 <c>vars.变量名</c> 在受限公式中读取。</summary>
+    public List<NeuCharWorkflowVariable> Variables { get; set; } = new();
     /// <summary>仅用于设计器呈现，不参与工作流执行语义。</summary>
     public NeuCharWorkflowLayout Layout { get; set; } = new();
+}
+
+public sealed class NeuCharWorkflowVariable
+{
+    public string Name { get; set; }
+    public JsonNode? Value { get; set; }
 }
 
 public sealed class NeuCharWorkflowLayout
@@ -78,11 +87,14 @@ public sealed record NeuCharWorkflowProgress(
 public sealed class NeuCharWorkflowEngine
 {
     private const int MaxStreamActivations = 500;
+    private const int MaxLoopIterations = 100;
+    private const int MaxWorkflowVariables = 30;
+    private const string WorkflowVariablesOutputKey = "__workflow_variables__";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private static readonly HashSet<string> AllowedNodeTypes = new(StringComparer.OrdinalIgnoreCase)
     {
-        "manual-trigger", "interval-trigger", "webhook-trigger", "function", "delay", "condition", "agent", "agent-group",
-        "aggregate", "merge", "parallel", "console", "neubell", "end"
+        "manual-trigger", "interval-trigger", "webhook-trigger", "function", "delay", "condition", "agent", "agent-group", "a2a",
+        "aggregate", "merge", "parallel", "loop", "sub-workflow", "code", "console", "neubell", "end"
     };
 
     private sealed record ResolvedFunctionReference(
@@ -90,7 +102,7 @@ public sealed class NeuCharWorkflowEngine
         string DefaultParametersJson);
 
     private readonly NeuCharWorkflowService _workflowService;
-    private readonly NeuCharWorkflowFunctionService _functionService;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly NeuCharWorkflowExecutionLogService _logService;
     private readonly NeuCharWorkflowParameterProtector _parameterProtector;
     private readonly IReadOnlyDictionary<string, IWorkflowObjectProvider> _objectProviders;
@@ -99,7 +111,7 @@ public sealed class NeuCharWorkflowEngine
 
     public NeuCharWorkflowEngine(
         NeuCharWorkflowService workflowService,
-        NeuCharWorkflowFunctionService functionService,
+        IServiceScopeFactory scopeFactory,
         NeuCharWorkflowExecutionLogService logService,
         NeuCharWorkflowParameterProtector parameterProtector,
         IEnumerable<IWorkflowObjectProvider> objectProviders,
@@ -107,7 +119,7 @@ public sealed class NeuCharWorkflowEngine
         INeuBellPublisher? neuBellPublisher = null)
     {
         _workflowService = workflowService;
-        _functionService = functionService;
+        _scopeFactory = scopeFactory;
         _logService = logService;
         _parameterProtector = parameterProtector;
         _objectProviders = objectProviders
@@ -141,6 +153,7 @@ public sealed class NeuCharWorkflowEngine
 
         graph.Nodes ??= new List<NeuCharWorkflowNode>();
         graph.Edges ??= new List<NeuCharWorkflowEdge>();
+        graph.Variables ??= new List<NeuCharWorkflowVariable>();
         graph.Layout ??= new NeuCharWorkflowLayout();
         graph.Layout.Direction = string.Equals(graph.Layout.Direction, "horizontal", StringComparison.OrdinalIgnoreCase)
             ? "horizontal"
@@ -155,11 +168,32 @@ public sealed class NeuCharWorkflowEngine
             {
                 node.Config["outputTemplate"] = "{{input}}";
             }
+            // Console 节点早期固定打印其输入。补上显式模板后，既有工作流仍保留原有显示结果。
+            if (node.Type.Equals("console", StringComparison.OrdinalIgnoreCase) &&
+                !node.Config.ContainsKey("printTemplate"))
+            {
+                node.Config["printTemplate"] = "{{input}}";
+            }
+            // Loop 是有限次数的 For，不支持 while 或图上的回连。给旧图/导入图补上
+            // 明确默认值，避免缺省配置被当成无上限循环。
+            if (node.Type.Equals("loop", StringComparison.OrdinalIgnoreCase) &&
+                !node.Config.ContainsKey("count"))
+            {
+                node.Config["count"] = 3;
+            }
+            // Code is deliberately an assignment list rather than arbitrary JavaScript. This
+            // keeps a workflow's state changes inspectable, bounded and safe to replay.
+            if (node.Type.Equals("code", StringComparison.OrdinalIgnoreCase) &&
+                !node.Config.ContainsKey("assignments"))
+            {
+                node.Config["assignments"] = new JsonArray();
+            }
         }
         if (graph.Nodes.Count > 100 || graph.Edges.Count > 200)
         {
             throw new InvalidOperationException("单个工作流最多允许 100 个节点和 200 条连接。");
         }
+        ValidateWorkflowVariables(graph.Variables);
 
         if (graph.Nodes.Any(z => string.IsNullOrWhiteSpace(z.Id) || !AllowedNodeTypes.Contains(z.Type)))
         {
@@ -254,6 +288,13 @@ public sealed class NeuCharWorkflowEngine
                 throw new InvalidOperationException(
                     $"聚合节点“{aggregate.Name ?? aggregate.Id}”不能位于逐项合流节点之后；请在合流前完成聚合，或让逐项链路直接结束。");
             }
+            if (graph.Nodes.Any(node =>
+                    node.Type.Equals("loop", StringComparison.OrdinalIgnoreCase) &&
+                    IsUpstream(graph, node.Id, aggregate.Id)))
+            {
+                throw new InvalidOperationException(
+                    $"聚合节点“{aggregate.Name ?? aggregate.Id}”不能位于循环节点之后；请在循环前完成聚合，或改用逐项合流处理每一轮输入。");
+            }
         }
 
         if (requireAllNodesReachable)
@@ -289,6 +330,27 @@ public sealed class NeuCharWorkflowEngine
             {
                 return nodeBindingError;
             }
+            if (node.Type.Equals("loop", StringComparison.OrdinalIgnoreCase))
+            {
+                var loopCountError = ValidateLoopCountConfiguration(node.Config);
+                if (loopCountError != null)
+                {
+                    return $"节点“{node.Name ?? node.Id}”：{loopCountError}";
+                }
+            }
+            if (node.Type.Equals("code", StringComparison.OrdinalIgnoreCase))
+            {
+                var codeError = ValidateCodeAssignments(node.Config, graph.Variables);
+                if (codeError != null)
+                {
+                    return $"节点“{node.Name ?? node.Id}”：{codeError}";
+                }
+            }
+            var textTemplateError = ValidateNodeTextTemplates(node);
+            if (textTemplateError != null)
+            {
+                return $"节点“{node.Name ?? node.Id}”：{textTemplateError}";
+            }
             if (node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase))
             {
                 var aggregateOutputError = ValidateAggregateOutputTemplate(node.Config);
@@ -296,6 +358,11 @@ public sealed class NeuCharWorkflowEngine
                 {
                     return $"节点“{node.Name ?? node.Id}”：{aggregateOutputError}";
                 }
+            }
+            else if (node.Type.Equals("console", StringComparison.OrdinalIgnoreCase) &&
+                     GetRuntimeText(node.Config, "printTemplate")?.Length > 8_000)
+            {
+                return $"节点“{node.Name ?? node.Id}”的 Console 打印内容不能超过 8000 个字符。";
             }
             else if (node.Type.Equals("function", StringComparison.OrdinalIgnoreCase))
             {
@@ -337,13 +404,14 @@ public sealed class NeuCharWorkflowEngine
                 {
                     return $"节点“{node.Name ?? node.Id}”的纽铃消费方式无效。";
                 }
-                if (GetString(node.Config, "title")?.Length > 200 || GetString(node.Config, "summary")?.Length > 4_000)
+                if (GetRuntimeText(node.Config, "title")?.Length > 200 || GetRuntimeText(node.Config, "summary")?.Length > 4_000)
                 {
                     return $"节点“{node.Name ?? node.Id}”的纽铃标题或内容超过允许长度。";
                 }
             }
             else if (node.Type.Equals("agent", StringComparison.OrdinalIgnoreCase) ||
-                     node.Type.Equals("agent-group", StringComparison.OrdinalIgnoreCase))
+                     node.Type.Equals("agent-group", StringComparison.OrdinalIgnoreCase) ||
+                     node.Type.Equals("a2a", StringComparison.OrdinalIgnoreCase))
             {
                 var providerId = GetString(node.Config, "providerId");
                 var objectId = GetString(node.Config, "objectId");
@@ -363,6 +431,72 @@ public sealed class NeuCharWorkflowEngine
             }
         }
 
+        return null;
+    }
+
+    /// <summary>校验子工作流归属、可用性及整个引用链，防止保存后出现直接或间接递归。</summary>
+    public async Task<string?> ValidateSubWorkflowReferencesAsync(
+        NeuCharWorkflowGraph graph,
+        int currentWorkflowId,
+        int adminUserId,
+        bool requireEnabled,
+        CancellationToken cancellationToken = default)
+    {
+        async Task<string?> VisitAsync(int workflowId, HashSet<int> path)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (workflowId <= 0)
+            {
+                return "子工作流必须选择一个已保存的工作流。";
+            }
+            if (workflowId == currentWorkflowId || !path.Add(workflowId))
+            {
+                return "子工作流不能循环引用自身或上游工作流。";
+            }
+            if (path.Count > 8)
+            {
+                return "子工作流嵌套最多允许 8 层。";
+            }
+
+            var workflow = await _workflowService.GetObjectAsync(z =>
+                z.Id == workflowId && z.AdminUserId == adminUserId).ConfigureAwait(false);
+            if (workflow == null)
+            {
+                return $"子工作流 #{workflowId} 不存在，或不属于当前用户。";
+            }
+            if (requireEnabled && !workflow.Enabled)
+            {
+                return $"子工作流“{workflow.Name}”未启用，不能在运行中调用。";
+            }
+
+            NeuCharWorkflowGraph targetGraph;
+            try
+            {
+                targetGraph = ParseAndValidateGraph(workflow.GraphJson, requireAllNodesReachable: false);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return $"子工作流“{workflow.Name}”配置无效：{ex.Message}";
+            }
+            foreach (var childId in GetSubWorkflowIds(targetGraph))
+            {
+                var childError = await VisitAsync(childId, new HashSet<int>(path)).ConfigureAwait(false);
+                if (childError != null)
+                {
+                    return childError;
+                }
+            }
+            return null;
+        }
+
+        foreach (var workflowId in GetSubWorkflowIds(graph))
+        {
+            var error = await VisitAsync(workflowId, new HashSet<int>()).ConfigureAwait(false);
+            if (error != null)
+            {
+                return error;
+            }
+        }
         return null;
     }
 
@@ -471,10 +605,17 @@ public sealed class NeuCharWorkflowEngine
         CancellationToken cancellationToken = default,
         Action<NeuCharWorkflowProgress> progress = null,
         string? runId = null,
-        Func<string?>? cancellationResult = null)
+        Func<string?>? cancellationResult = null,
+        IReadOnlyCollection<int>? ancestorWorkflowIds = null)
     {
         var graph = ParseAndValidateGraph(workflow.GraphJson);
         var trace = new List<string>();
+        var workflowPath = new HashSet<int>(ancestorWorkflowIds ?? Array.Empty<int>());
+        if (!workflowPath.Add(workflow.Id))
+        {
+            const string message = "子工作流检测到循环引用，已拒绝执行。";
+            return new NeuCharWorkflowRunResult(false, string.Empty, trace, message);
+        }
         var replayEvents = new List<NeuCharWorkflowProgress>();
         var callerProgress = progress;
         var progressLock = new object();
@@ -560,6 +701,11 @@ public sealed class NeuCharWorkflowEngine
             // Only Selection values are retained for bindings; do not retain unrelated input
             // parameters such as passwords in the runtime source cache.
             var functionSelectionInputs = new ConcurrentDictionary<string, JsonNode>(StringComparer.Ordinal);
+            outputs[WorkflowVariablesOutputKey] = BuildWorkflowVariables(
+                graph.Variables,
+                triggerInput,
+                outputs,
+                functionSelectionInputs);
             JsonNode finalOutput = JsonValue.Create(input ?? string.Empty);
             while (ready.Count > 0 || waitingAggregateEdges.Count > 0)
             {
@@ -584,7 +730,15 @@ public sealed class NeuCharWorkflowEngine
                 var streamWave = wave.Where(item => item.isStream).ToList();
                 var executions = new List<(NeuCharWorkflowNode node, bool isStream, string replayInputText,
                     (bool success, JsonNode output, bool? condition, string error) execution)>();
-                var ordinaryExecutions = await Task.WhenAll(ordinaryWave.Select(async item =>
+                // A code node changes the run-local vars object. Execute those state barriers
+                // first and in canvas order; all other independent nodes may still run together.
+                var orderedOrdinaryWave = ordinaryWave
+                    .OrderBy(item => item.node.Type.Equals("code", StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+                    .ThenBy(item => graph.Nodes.FindIndex(node => node.Id == item.node.Id))
+                    .ToList();
+                var ordinaryExecutions = new List<(NeuCharWorkflowNode node, bool isStream, string replayInputText,
+                    (bool success, JsonNode output, bool? condition, string error) execution)>();
+                foreach (var item in orderedOrdinaryWave.Where(item => item.node.Type.Equals("code", StringComparison.OrdinalIgnoreCase)))
                 {
                     var replayInputText = await BuildReplayInputTextAsync(
                             item.node,
@@ -601,10 +755,41 @@ public sealed class NeuCharWorkflowEngine
                             outputs,
                             functionSelectionInputs,
                             correlationId,
-                            cancellationToken)
+                            cancellationToken,
+                            workflowPath)
                         .ConfigureAwait(false);
-                    return (item.node, item.isStream, replayInputText, execution);
-                })).ConfigureAwait(false);
+                    if (!execution.success)
+                    {
+                        Report(progress, item.node, "failed", execution.error, null, input: replayInputText);
+                        throw new InvalidOperationException(execution.error);
+                    }
+                    ordinaryExecutions.Add((item.node, item.isStream, replayInputText, execution));
+                }
+                var parallelOrdinaryExecutions = await Task.WhenAll(orderedOrdinaryWave
+                    .Where(item => !item.node.Type.Equals("code", StringComparison.OrdinalIgnoreCase))
+                    .Select(async item =>
+                    {
+                        var replayInputText = await BuildReplayInputTextAsync(
+                                item.node,
+                                item.value,
+                                outputs,
+                                functionSelectionInputs,
+                                cancellationToken)
+                            .ConfigureAwait(false);
+                        Report(progress, item.node, "running", "开始执行节点。", null, input: replayInputText);
+                        var execution = await ExecuteNodeAsync(
+                                workflow,
+                                item.node,
+                                item.value,
+                                outputs,
+                                functionSelectionInputs,
+                                correlationId,
+                                cancellationToken,
+                                workflowPath)
+                            .ConfigureAwait(false);
+                        return (item.node, item.isStream, replayInputText, execution);
+                    })).ConfigureAwait(false);
+                ordinaryExecutions.AddRange(parallelOrdinaryExecutions);
                 executions.AddRange(ordinaryExecutions);
 
                 foreach (var item in streamWave)
@@ -624,7 +809,8 @@ public sealed class NeuCharWorkflowEngine
                             outputs,
                             functionSelectionInputs,
                             correlationId,
-                            cancellationToken)
+                            cancellationToken,
+                            workflowPath)
                         .ConfigureAwait(false);
                     executions.Add((item.node, true, replayInputText, execution));
                 }
@@ -647,7 +833,12 @@ public sealed class NeuCharWorkflowEngine
                         replayInputText);
                     if (node.Type.Equals("console", StringComparison.OrdinalIgnoreCase))
                     {
-                        Report(progress, node, "console", "Console 输出", outputText);
+                        var printOutput = ResolveConsolePrintOutput(
+                            node.Config,
+                            finalOutput,
+                            outputs,
+                            functionSelectionInputs);
+                        Report(progress, node, "console", "Console 输出", NodeToText(printOutput));
                     }
 
                     var outgoing = graph.Edges.Where(z => z.Source == node.Id);
@@ -658,6 +849,37 @@ public sealed class NeuCharWorkflowEngine
                         Report(progress, node, "branch", $"选择{(branch == "true" ? "真" : "假")}分支。", branch);
                         outgoing = outgoing.Where(z =>
                             string.Equals(z.SourceHandle, branch, StringComparison.OrdinalIgnoreCase));
+                    }
+                    if (node.Type.Equals("loop", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (!TryResolveLoopCount(
+                                node.Config,
+                                finalOutput,
+                                outputs,
+                                functionSelectionInputs,
+                                out var loopCount,
+                                out var loopError))
+                        {
+                            throw new InvalidOperationException(loopError);
+                        }
+
+                        trace.Add($"{node.Name ?? node.Type}: loop={loopCount}");
+                        Report(progress, node, "loop", $"For 循环将按顺序执行下游 {loopCount} 次。", loopCount.ToString(CultureInfo.InvariantCulture));
+                        foreach (var edge in outgoing)
+                        {
+                            var target = nodes[edge.Target];
+                            for (var iteration = 0; iteration < loopCount; iteration++)
+                            {
+                                // Loop/merge share one global guard, including nested loops and
+                                // long stream chains. This makes a dynamic upstream count safe.
+                                if (++streamActivationCount > MaxStreamActivations)
+                                {
+                                    throw new InvalidOperationException($"循环或逐项合流产生的执行次数超过 {MaxStreamActivations} 次；请缩小次数、分支或拆分工作流。");
+                                }
+                                ready.Add((target, finalOutput.DeepClone(), true));
+                            }
+                        }
+                        continue;
                     }
                     foreach (var edge in outgoing)
                     {
@@ -823,7 +1045,8 @@ public sealed class NeuCharWorkflowEngine
         IReadOnlyDictionary<string, JsonNode> outputs,
         ConcurrentDictionary<string, JsonNode> functionSelectionInputs,
         string correlationId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<int> workflowPath)
     {
         switch (node.Type.ToLowerInvariant())
         {
@@ -838,12 +1061,35 @@ public sealed class NeuCharWorkflowEngine
             case "condition":
                 var condition = EvaluateCondition(node.Config, input, outputs, functionSelectionInputs);
                 return (true, input, condition, null);
+            case "loop":
+                return TryResolveLoopCount(
+                    node.Config,
+                    input,
+                    outputs,
+                    functionSelectionInputs,
+                    out _,
+                    out var loopError)
+                    ? (true, input, null, null)
+                    : (false, null, null, loopError);
             case "function":
                 return await ExecuteFunctionNodeAsync(node, input, outputs, functionSelectionInputs, cancellationToken).ConfigureAwait(false);
             case "agent":
             case "agent-group":
+            case "a2a":
                 return await ExecuteWorkflowObjectNodeAsync(node, input, outputs, functionSelectionInputs, correlationId, cancellationToken)
                     .ConfigureAwait(false);
+            case "sub-workflow":
+                return await ExecuteSubWorkflowNodeAsync(
+                        workflow,
+                        node,
+                        input,
+                        outputs,
+                        functionSelectionInputs,
+                        cancellationToken,
+                        workflowPath)
+                    .ConfigureAwait(false);
+            case "code":
+                return ExecuteCodeNode(node, input, outputs, functionSelectionInputs);
             case "neubell":
                 return await ExecuteNeuBellNodeAsync(
                         workflow,
@@ -897,11 +1143,15 @@ public sealed class NeuCharWorkflowEngine
             resolvedParameters,
             reference.Descriptor.Parameters);
         var parameterJson = resolvedParameters.ToJsonString();
-        var result = await _functionService.ExecuteAsync(
-            reference.Descriptor.ModuleUid,
-            reference.Descriptor.FunctionKey,
-            parameterJson,
-            cancellationToken).ConfigureAwait(false);
+        // Function services and their repositories are scoped. A workflow wave may execute
+        // independent Function nodes concurrently, so never reuse the engine's request scope
+        // for the actual invocation; each node gets its own DbContext graph.
+        var result = await ExecuteInFunctionScopeAsync(functionService => functionService.ExecuteAsync(
+                reference.Descriptor.ModuleUid,
+                reference.Descriptor.FunctionKey,
+                parameterJson,
+                cancellationToken))
+            .ConfigureAwait(false);
         return result.Success
             ? (true, ToJsonNode(result.Data), null, null)
             : (false, null, null, result.ErrorMessage);
@@ -997,6 +1247,129 @@ public sealed class NeuCharWorkflowEngine
             : (false, null, null, result.ErrorMessage);
     }
 
+    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteSubWorkflowNodeAsync(
+        WorkflowEntity parentWorkflow,
+        NeuCharWorkflowNode node,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        ConcurrentDictionary<string, JsonNode> functionSelectionInputs,
+        CancellationToken cancellationToken,
+        IReadOnlyCollection<int> workflowPath)
+    {
+        var workflowId = GetInt(node.Config, "workflowId", 0);
+        if (workflowId <= 0)
+        {
+            return (false, null, null, "调用工作流节点尚未选择目标工作流。");
+        }
+        if (workflowPath.Contains(workflowId))
+        {
+            return (false, null, null, "调用工作流会形成循环引用，已拒绝执行。");
+        }
+
+        var childWorkflow = await _workflowService.GetObjectAsync(item =>
+                item.Id == workflowId && item.AdminUserId == parentWorkflow.AdminUserId)
+            .ConfigureAwait(false);
+        if (childWorkflow == null)
+        {
+            return (false, null, null, "目标工作流不存在，或不属于当前用户。");
+        }
+        if (!childWorkflow.Enabled)
+        {
+            return (false, null, null, $"目标工作流“{childWorkflow.Name}”未启用。");
+        }
+
+        var promptValue = ResolveRuntimeValue(
+            node.Config?["prompt"]?.DeepClone() ?? JsonValue.Create("{{input}}"),
+            input,
+            outputs,
+            functionSelectionInputs);
+        var result = await RunAsync(
+                childWorkflow,
+                NodeToText(promptValue),
+                cancellationToken,
+                progress: null,
+                runId: null,
+                cancellationResult: null,
+                ancestorWorkflowIds: workflowPath)
+            .ConfigureAwait(false);
+        return result.Success
+            ? (true, JsonValue.Create(result.Output ?? string.Empty), null, null)
+            : (false, null, null, result.ErrorMessage ?? "子工作流执行失败。");
+    }
+
+    private static (bool success, JsonNode output, bool? condition, string error) ExecuteCodeNode(
+        NeuCharWorkflowNode node,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
+    {
+        if (outputs is not IDictionary<string, JsonNode> mutableOutputs ||
+            !mutableOutputs.TryGetValue(WorkflowVariablesOutputKey, out var storedVariables) ||
+            storedVariables is not JsonObject variables)
+        {
+            return (false, null, null, "工作流变量运行时上下文不可用。");
+        }
+        if (node.Config?["assignments"] is not JsonArray assignments)
+        {
+            return (false, null, null, "安全代码节点的赋值配置无效。");
+        }
+
+        foreach (var assignment in assignments.OfType<JsonObject>())
+        {
+            var name = GetString(assignment, "name")?.Trim();
+            if (string.IsNullOrWhiteSpace(name) || !variables.ContainsKey(name))
+            {
+                return (false, null, null, $"安全代码节点不能为未定义的工作流变量“{name ?? "(空)"}”赋值。");
+            }
+            variables[name] = ResolveRuntimeValue(
+                assignment["value"]?.DeepClone() ?? JsonValue.Create(string.Empty),
+                input,
+                outputs,
+                functionSelectionInputs);
+        }
+        return (true, input, null, null);
+    }
+
+    private static bool TryResolveLoopCount(
+        JsonObject config,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs,
+        out int count,
+        out string error)
+    {
+        count = 0;
+        error = null;
+        try
+        {
+            var value = ResolveRuntimeValue(
+                config?["count"]?.DeepClone() ?? JsonValue.Create(3),
+                input,
+                outputs,
+                functionSelectionInputs);
+            if (TryReadLoopCount(value, out count))
+            {
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            error = $"循环次数引用无法解析：{ex.Message}";
+            return false;
+        }
+
+        error = $"循环次数必须为 1 到 {MaxLoopIterations} 的整数；上游引用在运行时也必须提供此范围内的单个数字。";
+        return false;
+    }
+
+    private static bool TryReadLoopCount(JsonNode value, out int count)
+    {
+        count = 0;
+        var text = NodeToText(value).Trim();
+        return int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out count) &&
+               count is >= 1 and <= MaxLoopIterations;
+    }
+
     private static bool EvaluateCondition(
         JsonObject config,
         JsonNode input,
@@ -1029,7 +1402,8 @@ public sealed class NeuCharWorkflowEngine
         IReadOnlyDictionary<string, JsonNode> outputs,
         IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
     {
-        var template = GetString(config, "outputTemplate")?.Trim();
+        var templateValue = config?["outputTemplate"]?.DeepClone();
+        var template = GetRuntimeText(config, "outputTemplate")?.Trim();
         // {{input}} is the explicit compatibility/template form for preserving the raw
         // aggregate array instead of serializing it to text.
         if (string.Equals(template, "{{input}}", StringComparison.OrdinalIgnoreCase))
@@ -1041,16 +1415,39 @@ public sealed class NeuCharWorkflowEngine
         // same safe {{= expression }} semantics as text parameters. A plain
         // {{input}} was handled above to keep the aggregate value typed as an
         // array; mixed text always has a textual result.
-        var resolved = ResolveTemplate(
-            new JsonObject { ["text"] = template ?? string.Empty },
-            input,
-            outputs,
-            functionSelectionInputs);
+        var resolved = templateValue is JsonObject { } templateObject && templateObject["$template"] is JsonObject
+            ? ResolveRuntimeValue(templateObject, input, outputs, functionSelectionInputs)
+            : ResolveTemplate(
+                new JsonObject { ["text"] = template ?? string.Empty },
+                input,
+                outputs,
+                functionSelectionInputs);
         if (NodeToText(resolved).Length > 8_000)
         {
             throw new InvalidOperationException("聚合节点输出内容超过 8000 个字符。");
         }
         return resolved;
+    }
+
+    /// <summary>
+    /// 解析 Console 的展示内容。该值只供执行 Console 使用，Console 节点本身仍透传原始输入，
+    /// 因而不会改变下游节点看到的数据类型或内容。
+    /// </summary>
+    private static JsonNode ResolveConsolePrintOutput(
+        JsonObject config,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
+    {
+        var templateValue = config?["printTemplate"]?.DeepClone() ?? JsonValue.Create("{{input}}");
+        var template = GetRuntimeText(config, "printTemplate")?.Trim();
+        if (string.IsNullOrWhiteSpace(template) ||
+            string.Equals(template, "{{input}}", StringComparison.OrdinalIgnoreCase))
+        {
+            return input?.DeepClone();
+        }
+
+        return ResolveRuntimeValue(templateValue, input, outputs, functionSelectionInputs);
     }
 
     private static JsonNode ResolveRuntimeValue(
@@ -1087,12 +1484,45 @@ public sealed class NeuCharWorkflowEngine
         }
         if (node is JsonValue jsonValue && jsonValue.TryGetValue<string>(out var text))
         {
+            if (text.Contains("{{=", StringComparison.Ordinal))
+            {
+                return ResolveTemplate(
+                    new JsonObject { ["text"] = text },
+                    input,
+                    outputs,
+                    functionSelectionInputs);
+            }
             return JsonValue.Create((text ?? string.Empty).Replace(
-                "{{input}}",
-                NodeToText(input),
-                StringComparison.Ordinal));
+                    "{{input}}",
+                    NodeToText(input),
+                    StringComparison.Ordinal));
         }
         return node?.DeepClone();
+    }
+
+    private static JsonObject BuildWorkflowVariables(
+        IEnumerable<NeuCharWorkflowVariable> definitions,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs)
+    {
+        var values = new JsonObject();
+        // Place the object into the runtime map before evaluating values so a later declaration
+        // may deliberately refer to an earlier one through vars.name, without exposing host data.
+        if (outputs is IDictionary<string, JsonNode> mutableOutputs)
+        {
+            mutableOutputs[WorkflowVariablesOutputKey] = values;
+        }
+        foreach (var definition in definitions ?? Enumerable.Empty<NeuCharWorkflowVariable>())
+        {
+            var name = definition.Name.Trim();
+            values[name] = ResolveRuntimeValue(
+                definition.Value?.DeepClone() ?? JsonValue.Create(string.Empty),
+                input,
+                outputs,
+                functionSelectionInputs);
+        }
+        return values;
     }
 
     /// <summary>
@@ -1112,6 +1542,11 @@ public sealed class NeuCharWorkflowEngine
         {
             ["input"] = input
         };
+        if (outputs.TryGetValue(WorkflowVariablesOutputKey, out var workflowVariables) &&
+            workflowVariables is JsonObject)
+        {
+            variables["vars"] = workflowVariables;
+        }
         if (template["bindings"] is JsonArray bindings)
         {
             foreach (var (index, item) in bindings.Select((item, index) => (index, item)))
@@ -1200,6 +1635,59 @@ public sealed class NeuCharWorkflowEngine
             }
         }
         return -1;
+    }
+
+    private static bool TemplateReferencesToken(string text, string token)
+    {
+        if (string.IsNullOrWhiteSpace(token)) return false;
+        if (text.Contains($"{{{{{token}}}}}", StringComparison.Ordinal)) return true;
+        var position = 0;
+        while (true)
+        {
+            var start = text.IndexOf("{{=", position, StringComparison.Ordinal);
+            if (start < 0) return false;
+            var end = FindTemplateExpressionEnd(text, start + 3);
+            if (end < 0) return false;
+            if (ExpressionReferencesToken(text[(start + 3)..end], token)) return true;
+            position = end + 2;
+        }
+    }
+
+    private static bool ExpressionReferencesToken(string expression, string token)
+    {
+        var quote = '\0';
+        var escaped = false;
+        for (var index = 0; index < expression.Length;)
+        {
+            var character = expression[index];
+            if (quote != '\0')
+            {
+                if (!escaped && character == quote) quote = '\0';
+                escaped = !escaped && character == '\\';
+                if (character != '\\') escaped = false;
+                index++;
+                continue;
+            }
+            if (character is '\'' or '"')
+            {
+                quote = character;
+                index++;
+                continue;
+            }
+            if (character != '_' && !char.IsLetter(character))
+            {
+                index++;
+                continue;
+            }
+
+            var start = index++;
+            while (index < expression.Length &&
+                   (expression[index] == '_' || char.IsLetterOrDigit(expression[index]))) index++;
+            var length = index - start;
+            if (length == token.Length &&
+                string.Compare(expression, start, token, 0, length, StringComparison.OrdinalIgnoreCase) == 0) return true;
+        }
+        return false;
     }
 
     private static bool IsTemplateToken(string token) =>
@@ -1387,6 +1875,54 @@ public sealed class NeuCharWorkflowEngine
         catch { return null; }
     }
 
+    private static string GetRuntimeText(JsonObject config, string name)
+    {
+        var value = config?[name];
+        if (value is JsonObject obj && obj["$template"] is JsonObject template)
+        {
+            return GetString(template, "text");
+        }
+        return GetString(config, name);
+    }
+
+    private static string ValidateNodeTextTemplates(NeuCharWorkflowNode node)
+    {
+        var fields = node.Type.ToLowerInvariant() switch
+        {
+            "condition" => new[] { "left", "right" },
+            "agent" or "agent-group" or "a2a" or "sub-workflow" => new[] { "prompt" },
+            "neubell" => new[] { "title", "summary" },
+            "aggregate" => new[] { "outputTemplate" },
+            "console" => new[] { "printTemplate" },
+            _ => Array.Empty<string>()
+        };
+
+        foreach (var field in fields)
+        {
+            var error = ValidateRuntimeTextValue(node.Config?[field]);
+            if (error != null)
+            {
+                return $"字段“{field}”：{error}";
+            }
+        }
+
+        return null;
+    }
+
+    private static string ValidateRuntimeTextValue(JsonNode value)
+    {
+        if (value is JsonObject obj && obj["$template"] is JsonObject template)
+        {
+            return ValidateTemplateText(template);
+        }
+        if (value is JsonValue jsonValue && jsonValue.TryGetValue<string>(out var text) &&
+            text.Contains("{{=", StringComparison.Ordinal))
+        {
+            return ValidateTemplateText(new JsonObject { ["text"] = text });
+        }
+        return null;
+    }
+
     private static string? TryGetWorkflowRunId(string correlationId)
     {
         const string marker = "-run-";
@@ -1415,13 +1951,22 @@ public sealed class NeuCharWorkflowEngine
         {
             return null;
         }
-        var catalog = await _functionService.GetCatalogAsync(moduleUid, true, cancellationToken)
+        var catalog = await ExecuteInFunctionScopeAsync(functionService =>
+                functionService.GetCatalogAsync(moduleUid, true, cancellationToken))
             .ConfigureAwait(false);
         var descriptor = catalog.FirstOrDefault(z =>
             string.Equals(z.FunctionKey, functionKey, StringComparison.OrdinalIgnoreCase));
         return descriptor == null
             ? null
             : new ResolvedFunctionReference(descriptor, "{}");
+    }
+
+    private async Task<T> ExecuteInFunctionScopeAsync<T>(
+        Func<NeuCharWorkflowFunctionService, Task<T>> operation)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var functionService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowFunctionService>();
+        return await operation(functionService).ConfigureAwait(false);
     }
 
     private static bool IsSameFunctionReference(NeuCharWorkflowNode left, NeuCharWorkflowNode right)
@@ -1445,7 +1990,22 @@ public sealed class NeuCharWorkflowEngine
         {
             var parameterKey = parameters.Select(z => z.Key).FirstOrDefault(z =>
                 string.Equals(z, parameter.Name, StringComparison.OrdinalIgnoreCase));
-            if (parameterKey == null || parameters[parameterKey] is not JsonObject value)
+            if (parameterKey == null)
+            {
+                continue;
+            }
+
+            if (parameter.ParameterType == Senparc.Ncf.XncfBase.ParameterType.Text &&
+                parameters[parameterKey] is JsonValue)
+            {
+                var formulaError = ValidateRuntimeTextValue(parameters[parameterKey]);
+                if (formulaError != null)
+                {
+                    return $"节点“{targetNode.Name}”参数“{parameter.Title ?? parameter.Name}”：{formulaError}";
+                }
+            }
+
+            if (parameters[parameterKey] is not JsonObject value)
             {
                 continue;
             }
@@ -1526,9 +2086,101 @@ public sealed class NeuCharWorkflowEngine
         return null;
     }
 
+    private static void ValidateWorkflowVariables(IReadOnlyCollection<NeuCharWorkflowVariable> variables)
+    {
+        if (variables.Count > MaxWorkflowVariables)
+        {
+            throw new InvalidOperationException($"单个工作流最多允许 {MaxWorkflowVariables} 个变量。");
+        }
+
+        var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var variable in variables)
+        {
+            var name = variable?.Name?.Trim();
+            if (string.IsNullOrWhiteSpace(name) ||
+                !char.IsLetter(name[0]) && name[0] != '_' ||
+                name.Length > 64 ||
+                name.Any(character => !char.IsLetterOrDigit(character) && character != '_') ||
+                !names.Add(name) ||
+                string.Equals(name, "input", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(name, "vars", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("工作流变量名必须唯一，以字母或下划线开头，且仅包含字母、数字、下划线；不能使用 input 或 vars。");
+            }
+            if (variable?.Value?.ToJsonString().Length > 8_000)
+            {
+                throw new InvalidOperationException($"工作流变量“{name}”的值不能超过 8000 个字符。");
+            }
+            var expressionError = ValidateRuntimeTextValue(variable?.Value);
+            if (expressionError != null)
+            {
+                throw new InvalidOperationException($"工作流变量“{name}”：{expressionError}");
+            }
+        }
+    }
+
+    private static string ValidateCodeAssignments(
+        JsonObject config,
+        IReadOnlyCollection<NeuCharWorkflowVariable> workflowVariables)
+    {
+        if (config?["assignments"] is not JsonArray assignments)
+        {
+            return "安全代码节点必须提供变量赋值列表。";
+        }
+        if (assignments.Count == 0 || assignments.Count > MaxWorkflowVariables)
+        {
+            return $"安全代码节点一次必须设置 1 到 {MaxWorkflowVariables} 条变量赋值。";
+        }
+
+        var declaredNames = (workflowVariables ?? Array.Empty<NeuCharWorkflowVariable>())
+            .Select(variable => variable?.Name?.Trim())
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        foreach (var (item, index) in assignments.Select((item, index) => (item, index)))
+        {
+            if (item is not JsonObject assignment)
+            {
+                return $"第 {index + 1} 条变量赋值格式无效。";
+            }
+            var name = GetString(assignment, "name")?.Trim();
+            if (string.IsNullOrWhiteSpace(name) || !declaredNames.Contains(name))
+            {
+                return $"第 {index + 1} 条赋值必须选择已定义的工作流变量。";
+            }
+            if (assignment["value"]?.ToJsonString().Length > 8_000)
+            {
+                return $"变量“{name}”的赋值不能超过 8000 个字符。";
+            }
+            var expressionError = ValidateRuntimeTextValue(assignment["value"]);
+            if (expressionError != null)
+            {
+                return $"变量“{name}”：{expressionError}";
+            }
+        }
+        return null;
+    }
+
+    private static IEnumerable<int> GetSubWorkflowIds(NeuCharWorkflowGraph graph) =>
+        (graph?.Nodes ?? Enumerable.Empty<NeuCharWorkflowNode>())
+            .Where(node => node.Type.Equals("sub-workflow", StringComparison.OrdinalIgnoreCase))
+            .Select(node => GetInt(node.Config, "workflowId", 0));
+
+    private static string ValidateLoopCountConfiguration(JsonObject config)
+    {
+        var count = config?["count"];
+        if (count is JsonObject { } countObject && countObject["$source"] is JsonObject)
+        {
+            return null;
+        }
+
+        return TryReadLoopCount(count, out _)
+            ? null
+            : $"循环次数必须为 1 到 {MaxLoopIterations} 的整数，或引用上游单值。";
+    }
+
     private static string ValidateAggregateOutputTemplate(JsonObject config)
     {
-        var template = GetString(config, "outputTemplate");
+        var template = GetRuntimeText(config, "outputTemplate");
         if (string.IsNullOrWhiteSpace(template))
         {
             return "聚合节点必须设置输出内容。可使用 {{input}}、length(input)、join(input, '，') 等受限表达式。";
@@ -1562,7 +2214,7 @@ public sealed class NeuCharWorkflowEngine
             if (token.StartsWith("=", StringComparison.Ordinal))
             {
                 var expression = token[1..].Trim();
-                if (!NeuCharWorkflowExpressionEngine.TryValidate(expression, new[] { "input" }, out var error))
+                if (!NeuCharWorkflowExpressionEngine.TryValidate(expression, new[] { "input", "vars" }, out var error))
                 {
                     return $"聚合输出表达式无效：{error}";
                 }
@@ -1591,7 +2243,7 @@ public sealed class NeuCharWorkflowEngine
         {
             return "文本模板的变量列表格式无效。";
         }
-        var tokens = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "input" };
+        var tokens = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "input", "vars" };
         foreach (var (index, item) in (bindings ?? new JsonArray()).Select((item, index) => (index, item)))
         {
             if (item is not JsonObject entry)
@@ -1607,7 +2259,7 @@ public sealed class NeuCharWorkflowEngine
             {
                 return $"第 {index + 1} 个变量缺少绑定来源。";
             }
-            if (!text.Contains($"{{{{{token}}}}}", StringComparison.Ordinal))
+            if (!TemplateReferencesToken(text, token))
             {
                 return $"变量“{token}”没有出现在文本中。";
             }
@@ -1634,6 +2286,62 @@ public sealed class NeuCharWorkflowEngine
             expressionPosition = end + 2;
         }
         return null;
+    }
+
+    private static string ValidateTemplateText(JsonObject template)
+    {
+        if (template["text"] is not JsonValue textValue || !textValue.TryGetValue<string>(out var text))
+        {
+            return "文本模板缺少可编辑的文本内容。";
+        }
+        var bindings = template["bindings"] as JsonArray;
+        if (template["bindings"] != null && bindings == null)
+        {
+            return "文本模板的变量列表格式无效。";
+        }
+        var tokens = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "input", "vars" };
+        foreach (var (index, item) in (bindings ?? new JsonArray()).Select((item, index) => (index, item)))
+        {
+            if (item is not JsonObject entry)
+            {
+                return $"第 {index + 1} 个变量格式无效。";
+            }
+            var token = GetString(entry, "token");
+            if (!IsTemplateToken(token) || !tokens.Add(token))
+            {
+                return $"第 {index + 1} 个变量名称无效或重复。";
+            }
+            if (entry["source"] is not JsonObject)
+            {
+                return $"第 {index + 1} 个变量缺少绑定来源。";
+            }
+            if (!TemplateReferencesToken(text, token))
+            {
+                return $"变量“{token}”没有出现在文本中。";
+            }
+        }
+
+        var expressionPosition = 0;
+        var expressionCount = 0;
+        while (true)
+        {
+            var start = text.IndexOf("{{=", expressionPosition, StringComparison.Ordinal);
+            if (start < 0)
+            {
+                return null;
+            }
+            var end = FindTemplateExpressionEnd(text, start + 3);
+            if (end < 0 || ++expressionCount > 32)
+            {
+                return "文本表达式缺少结束标记，或数量超过 32 个。";
+            }
+            var expression = text[(start + 3)..end].Trim();
+            if (!NeuCharWorkflowExpressionEngine.TryValidate(expression, tokens, out var error))
+            {
+                return $"文本表达式无效：{error}";
+            }
+            expressionPosition = end + 2;
+        }
     }
 
     private async Task<string> ValidateNodeBindingsAsync(
@@ -1668,7 +2376,7 @@ public sealed class NeuCharWorkflowEngine
                 }
                 return $"节点“{targetNode.Name ?? targetNode.Id}”的 {configPath} 引用的输出字段“{path}”已不存在。";
             }
-            if (!string.Equals(GetString(binding, "sourceKind") ?? "output", field.SourceKind ?? "output", StringComparison.OrdinalIgnoreCase))
+            if (!BindingSourceKindMatches(configPath, binding, field))
             {
                 return $"节点“{targetNode.Name ?? targetNode.Id}”的 {configPath} 关联字段的类型已在模块更新后发生变化，请重新选择来源。";
             }
@@ -1736,6 +2444,29 @@ public sealed class NeuCharWorkflowEngine
         }
     }
 
+    private static bool BindingSourceKindMatches(
+        string configPath,
+        JsonObject binding,
+        NeuCharFunctionOutputFieldDescriptor field)
+    {
+        var bindingKind = GetString(binding, "sourceKind") ?? "output";
+        var fieldKind = field.SourceKind ?? "output";
+        if (string.Equals(bindingKind, fieldKind, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        // Runtime-observed fields are not part of a module's declared output contract. Text
+        // templates and the loop count both accept a single runtime value, so an observed field
+        // that now overlaps the generic "$" output descriptor remains usable after re-indexing.
+        var path = GetString(binding, "path") ?? "$";
+        var acceptsObservedOutput = configPath.Contains(".$template.bindings[", StringComparison.Ordinal) ||
+                                    string.Equals(configPath, "config.count", StringComparison.Ordinal);
+        return acceptsObservedOutput &&
+               IsObservedOutputBinding(binding, path) &&
+               string.Equals(fieldKind, "output", StringComparison.OrdinalIgnoreCase);
+    }
+
     private async Task<NeuCharFunctionOutputDescriptor> GetNodeOutputDescriptorAsync(
         NeuCharWorkflowGraph graph,
         NeuCharWorkflowNode node,
@@ -1756,7 +2487,7 @@ public sealed class NeuCharWorkflowEngine
         }
         if (node.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase))
         {
-            var preservesArray = string.Equals(GetString(node.Config, "outputTemplate")?.Trim(), "{{input}}",
+            var preservesArray = string.Equals(GetRuntimeText(node.Config, "outputTemplate")?.Trim(), "{{input}}",
                 StringComparison.OrdinalIgnoreCase);
             return new NeuCharFunctionOutputDescriptor(
                 preservesArray ? "any" : "string",
@@ -1802,7 +2533,7 @@ public sealed class NeuCharWorkflowEngine
                     ? fields
                     : new[] { new NeuCharFunctionOutputFieldDescriptor("$", "Webhook 输入", "object", false, false) });
         }
-        if (node.Type is "delay" or "condition" or "console" or "end")
+        if (node.Type is "delay" or "condition" or "loop" or "code" or "console" or "end")
         {
             var incoming = graph.Edges.FirstOrDefault(z =>
                 string.Equals(z.Target, node.Id, StringComparison.Ordinal));
@@ -1819,7 +2550,7 @@ public sealed class NeuCharWorkflowEngine
                     visited).ConfigureAwait(false);
             }
         }
-        var typeName = node.Type is "manual-trigger" or "interval-trigger" or "agent" or "agent-group"
+        var typeName = node.Type is "manual-trigger" or "interval-trigger" or "agent" or "agent-group" or "a2a" or "sub-workflow"
             ? "string"
             : "any";
         return new NeuCharFunctionOutputDescriptor(

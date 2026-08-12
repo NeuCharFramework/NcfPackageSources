@@ -55,6 +55,7 @@ namespace Senparc.Xncf.AgentsManager
             // 没有写入数据库迁移。
             modelBuilder.ApplyConfiguration(new RemoteAgentConfigurationMapping());
             modelBuilder.ApplyConfiguration(new ChatGroupRemoteMemberConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new PublishedA2AAgentConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)

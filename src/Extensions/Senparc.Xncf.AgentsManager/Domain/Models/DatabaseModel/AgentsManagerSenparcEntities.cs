@@ -45,6 +45,11 @@ namespace Senparc.Xncf.AgentsManager.Models
         /// </summary>
         public DbSet<ChatGroupRemoteMember> ChatGroupRemoteMembers { get; set; }
 
+        /// <summary>
+        /// 将本地 AgentTemplate 发布为标准 A2A 服务的附加配置。
+        /// </summary>
+        public DbSet<PublishedA2AAgent> PublishedA2AAgents { get; set; }
+
         public DbSet<ChatGroupHistory> ChatGroupHistories { get; set; }
 
         public DbSet<ChatTask> ChatTasks { get; set; }

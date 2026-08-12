@@ -51,4 +51,33 @@ Remote authentication is deliberately reference-only. The database stores `AuthS
 }
 ```
 
+## Publish a local Agent as an A2A service
+
+An existing local `AgentTemplate` can also be exposed to another NCF installation, or to any A2A-compatible client, without coupling the two systems. Open the local Agent editor and select **配置 / 发布为 A2A Agent**. The publishing configuration is stored in the additive `PublishedA2AAgent` table; it does not change existing AgentTemplate, ChatGroup, or ChatGroupMember records.
+
+When enabled, the standard discovery URL is:
+
+```text
+https://your-public-host/a2a/{public-agent-key}/.well-known/agent-card.json
+```
+
+The Agent Card advertises the standard A2A JSON-RPC interface at `https://your-public-host/a2a/{public-agent-key}`. A second NCF system can paste the discovery URL into its **远程 A2A 智能体** configuration, test the card, then add that remote Agent to a ChatGroup.
+
+For reverse-proxy deployments, configure the externally visible base address so the Agent Card never advertises an internal host name:
+
+```json
+{
+  "A2A": {
+    "PublicBaseUrl": "https://your-public-host",
+    "InboundSecrets": {
+      "partner-ncf": "replace-with-deployment-secret"
+    }
+  }
+}
+```
+
+`Bearer Token` and custom-header incoming authentication read only from `A2A:InboundSecrets:{AuthSecretKey}`. The secret body is not stored in the database, returned by the admin API, included in logs, or put into the Agent Card. Publishing is disabled by default. Function Calling and MCP tools are also disabled by default for A2A requests; enabling them is an explicit per-published-Agent decision for trusted callers only.
+
+The A2A boundary instructs the local Agent to return shareable conclusions rather than hidden reasoning, system prompt text, secrets, or tool traces. It cannot prevent a model from intentionally placing sensitive content in a normal response, so public Agent descriptions, prompts, connected knowledge bases, and enabled tools still require a deliberate data-access review.
+
 Choose `research-agent-token` as the remote agent's deployment key name. The default mixed-group policy forwards only the initial instruction and the current round's bounded text conclusion. It removes tool calls, raw provider representations, usage data, and earlier history from the participant broadcast. This reduces exposure but does not transform an agent's voluntarily emitted text into a guaranteed semantic summary; prompts therefore require a concise shared conclusion and prohibit chain-of-thought/private content.

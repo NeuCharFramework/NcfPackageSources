@@ -51,6 +51,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly ChatGroupRemoteMemberService _chatGroupRemoteMemberService;
         private readonly AgentsTemplateService _agentsTemplateService;
         private readonly RemoteAgentService _remoteAgentService;
+        private readonly PublishedA2AAgentService _publishedA2AAgentService;
         private readonly AIModelService _aIModelService;
         private readonly ChatTaskService _chatTaskService;
         private readonly PromptItemService _promptItemService;
@@ -62,6 +63,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             ChatGroupRemoteMemberService chatGroupRemoteMemberService,
             AgentsTemplateService agentsTemplateService,
             RemoteAgentService remoteAgentService,
+            PublishedA2AAgentService publishedA2AAgentService,
             AIModelService aIModelService,
             ChatTaskService chatTaskService,
             PromptItemService promptItemService,
@@ -72,6 +74,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             this._chatGroupRemoteMemberService = chatGroupRemoteMemberService;
             this._agentsTemplateService = agentsTemplateService;
             this._remoteAgentService = remoteAgentService;
+            this._publishedA2AAgentService = publishedA2AAgentService;
             this._aIModelService = aIModelService;
             this._chatTaskService = chatTaskService;
             this._promptItemService = promptItemService;
@@ -598,6 +601,32 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
 
                 var agents = members.Select(z => agentTemplateService.Mapping<AgentTemplateDto>(z.AgentTemplate)).ToList();
+                var roleAgentIds = new[] { item.AdminAgentTemplateId, item.EnterAgentTemplateId }
+                    .Where(agentId => agentId > 0)
+                    .Distinct()
+                    .ToList();
+                var roleAgents = roleAgentIds.Count == 0
+                    ? new List<AgentTemplate>()
+                    : await agentTemplateService.GetFullListAsync(z => roleAgentIds.Contains(z.Id));
+                var roleAgentMap = roleAgents.ToDictionary(z => z.Id);
+                var roleAgentDtoList = new List<ChatGroupRoleAgentDto>();
+
+                foreach (var role in new[]
+                {
+                    new { RoleName = "群主", AgentTemplateId = item.AdminAgentTemplateId },
+                    new { RoleName = "对接人", AgentTemplateId = item.EnterAgentTemplateId }
+                })
+                {
+                    if (roleAgentMap.TryGetValue(role.AgentTemplateId, out var roleAgent))
+                    {
+                        roleAgentDtoList.Add(new ChatGroupRoleAgentDto
+                        {
+                            RoleName = role.RoleName,
+                            AgentTemplateDto = agentTemplateService.Mapping<AgentTemplateDto>(roleAgent)
+                        });
+                    }
+                }
+
                 var remoteMembers = await remoteMemberService.GetFullListAsync(
                     z => z.ChatGroupId == id,
                     z => z.Id,
@@ -608,6 +637,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 {
                     ChatGroupDto = this._chatGroupService.Mapping<ChatGroupDto>(item),
                     AgentTemplateDtoList = agents,
+                    RoleAgentTemplateDtoList = roleAgentDtoList,
                     RemoteMemberDtoList = remoteMembers.Select(z => new ChatGroupRemoteMemberDto(z)).ToList()
                 };
             });
@@ -837,6 +867,108 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             });
         }
 
+        /// <summary>
+        /// 获取后台首页使用的 Agents 轻量运行概览。
+        /// 不返回 Prompt、对话内容或 Agent Card 等敏感配置。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<AgentsDashboardOverviewResponse>> GetDashboardOverview()
+        {
+            return await this.GetResponseAsync<AgentsDashboardOverviewResponse>(async (response, logger) =>
+            {
+                var localAgents = await _agentsTemplateService.GetFullListAsync(z => true);
+                var remoteAgents = await _remoteAgentService.GetFullListAsync(z => true);
+                var publishedAgents = await _publishedA2AAgentService.GetFullListAsync(z => true);
+                var groups = await _chatGroupService.GetFullListAsync(z => true);
+
+                var activeTasks = await _chatTaskService.GetFullListAsync(z =>
+                    z.Status == ChatTask_Status.Waiting
+                    || z.Status == ChatTask_Status.Chatting
+                    || z.Status == ChatTask_Status.Paused);
+
+                var activeGroupIds = activeTasks
+                    .Select(z => z.ChatGroupId)
+                    .Distinct()
+                    .ToHashSet();
+                var chattingGroupIds = activeTasks
+                    .Where(z => z.Status == ChatTask_Status.Chatting)
+                    .Select(z => z.ChatGroupId)
+                    .Distinct()
+                    .ToHashSet();
+
+                var activeLocalAgentIds = new HashSet<int>();
+                var activeRemoteAgentIds = new HashSet<int>();
+                var chattingLocalAgentIds = new HashSet<int>();
+                var chattingRemoteAgentIds = new HashSet<int>();
+
+                if (activeGroupIds.Count > 0)
+                {
+                    var activeMembers = await _chatGroupMemeberService.GetFullListAsync(
+                        z => activeGroupIds.Contains(z.ChatGroupId));
+                    var activeRemoteMembers = await _chatGroupRemoteMemberService.GetFullListAsync(
+                        z => activeGroupIds.Contains(z.ChatGroupId));
+
+                    foreach (var agentId in activeMembers.Select(z => z.AgentTemplateId))
+                    {
+                        activeLocalAgentIds.Add(agentId);
+                    }
+                    foreach (var remoteAgentId in activeRemoteMembers.Select(z => z.RemoteAgentId))
+                    {
+                        activeRemoteAgentIds.Add(remoteAgentId);
+                    }
+
+                    foreach (var group in groups.Where(z => activeGroupIds.Contains(z.Id)))
+                    {
+                        activeLocalAgentIds.Add(group.AdminAgentTemplateId);
+                        activeLocalAgentIds.Add(group.EnterAgentTemplateId);
+                    }
+
+                    if (chattingGroupIds.Count > 0)
+                    {
+                        foreach (var agentId in activeMembers
+                            .Where(z => chattingGroupIds.Contains(z.ChatGroupId))
+                            .Select(z => z.AgentTemplateId))
+                        {
+                            chattingLocalAgentIds.Add(agentId);
+                        }
+                        foreach (var remoteAgentId in activeRemoteMembers
+                            .Where(z => chattingGroupIds.Contains(z.ChatGroupId))
+                            .Select(z => z.RemoteAgentId))
+                        {
+                            chattingRemoteAgentIds.Add(remoteAgentId);
+                        }
+
+                        foreach (var group in groups.Where(z => chattingGroupIds.Contains(z.Id)))
+                        {
+                            chattingLocalAgentIds.Add(group.AdminAgentTemplateId);
+                            chattingLocalAgentIds.Add(group.EnterAgentTemplateId);
+                        }
+                    }
+                }
+
+                return new AgentsDashboardOverviewResponse
+                {
+                    LocalAgentCount = localAgents.Count,
+                    LocalAgentEnabledCount = localAgents.Count(z => z.Enable),
+                    RemoteA2AAgentCount = remoteAgents.Count,
+                    RemoteA2AAgentEnabledCount = remoteAgents.Count(z => z.Enable),
+                    PublishedA2AAgentCount = publishedAgents.Count,
+                    PublishedA2AAgentEnabledCount = publishedAgents.Count(z => z.Enable),
+                    GroupCount = groups.Count,
+                    GroupEnabledCount = groups.Count(z => z.Enable),
+                    ActiveGroupCount = activeGroupIds.Count,
+                    ChattingGroupCount = chattingGroupIds.Count,
+                    ActiveTaskCount = activeTasks.Count,
+                    ChattingTaskCount = activeTasks.Count(z => z.Status == ChatTask_Status.Chatting),
+                    WaitingOrPausedTaskCount = activeTasks.Count(z => z.Status == ChatTask_Status.Waiting || z.Status == ChatTask_Status.Paused),
+                    ActiveLocalAgentCount = activeLocalAgentIds.Count,
+                    ActiveRemoteA2AAgentCount = activeRemoteAgentIds.Count,
+                    ChattingLocalAgentCount = chattingLocalAgentIds.Count,
+                    ChattingRemoteA2AAgentCount = chattingRemoteAgentIds.Count
+                };
+            });
+        }
+
         private async Task<float> GetPromptScoreAsync(string promptCode, Dictionary<string, float> scoreCache)
         {
             if (string.IsNullOrWhiteSpace(promptCode))
@@ -1025,6 +1157,30 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         public List<AgentGraphGroupDto> Groups { get; set; } = new List<AgentGraphGroupDto>();
         public List<AgentGraphLinkDto> Links { get; set; } = new List<AgentGraphLinkDto>();
         public List<AgentGraphCollaborationDto> Collaborations { get; set; } = new List<AgentGraphCollaborationDto>();
+    }
+
+    /// <summary>
+    /// 首页 Agents 运行概览。所有活跃数字仅表示关联到未完成任务的参与者，不透露任务内容。
+    /// </summary>
+    public class AgentsDashboardOverviewResponse
+    {
+        public int LocalAgentCount { get; set; }
+        public int LocalAgentEnabledCount { get; set; }
+        public int RemoteA2AAgentCount { get; set; }
+        public int RemoteA2AAgentEnabledCount { get; set; }
+        public int PublishedA2AAgentCount { get; set; }
+        public int PublishedA2AAgentEnabledCount { get; set; }
+        public int GroupCount { get; set; }
+        public int GroupEnabledCount { get; set; }
+        public int ActiveGroupCount { get; set; }
+        public int ChattingGroupCount { get; set; }
+        public int ActiveTaskCount { get; set; }
+        public int ChattingTaskCount { get; set; }
+        public int WaitingOrPausedTaskCount { get; set; }
+        public int ActiveLocalAgentCount { get; set; }
+        public int ActiveRemoteA2AAgentCount { get; set; }
+        public int ChattingLocalAgentCount { get; set; }
+        public int ChattingRemoteA2AAgentCount { get; set; }
     }
 
     public class AgentGraphAgentDto

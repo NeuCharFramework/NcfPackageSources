@@ -6,9 +6,11 @@
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.AppServices;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Nodes;
 
 namespace Senparc.Areas.Admin.Tests.Domain.Services;
@@ -315,6 +317,89 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public void ParseAndValidateGraph_LegacyConsole_ShouldAddRawInputPrintTemplate()
+    {
+        var engine = CreateEngine();
+        var graph = engine.ParseAndValidateGraph(
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"console", "type":"console" }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"console" }] }""");
+
+        Assert.AreEqual("{{input}}", graph.Nodes.Single(node => node.Id == "console").Config["printTemplate"]!.GetValue<string>());
+    }
+
+    [TestMethod]
+    public void ParseAndValidateGraph_LegacyLoop_ShouldAddBoundedDefaultCount()
+    {
+        var engine = CreateEngine();
+        var graph = engine.ParseAndValidateGraph(
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"loop", "type":"loop" },{ "id":"console", "type":"console" }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"loop" },{ "id":"edge-2", "source":"loop", "target":"console" }] }""");
+
+        Assert.AreEqual(3, graph.Nodes.Single(node => node.Id == "loop").Config["count"]!.GetValue<int>());
+    }
+
+    [TestMethod]
+    public async Task ValidateReferencesAsync_Loop_ShouldRequireBoundedIntegerCount()
+    {
+        var engine = CreateEngine();
+        var graph = engine.ParseAndValidateGraph(
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"loop", "type":"loop", "name":"循环", "config":{ "count":101 } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"loop" }] }""");
+
+        var error = await engine.ValidateReferencesAsync(graph);
+
+        StringAssert.Contains(error, "1 到 100");
+    }
+
+    [TestMethod]
+    public void LoopCount_ShouldResolveSingleNumericRuntimeValue()
+    {
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "TryResolveLoopCount",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        object?[] arguments =
+        {
+            new JsonObject { ["count"] = "4" },
+            JsonValue.Create("input"),
+            new Dictionary<string, JsonNode>(),
+            new Dictionary<string, JsonNode>(),
+            0,
+            null
+        };
+
+        var success = (bool)method.Invoke(null, arguments)!;
+
+        Assert.IsTrue(success);
+        Assert.AreEqual(4, (int)arguments[4]!);
+        Assert.IsNull(arguments[5]);
+    }
+
+    [TestMethod]
+    public void LoopCount_ShouldResolveUpstreamRuntimeValue()
+    {
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "TryResolveLoopCount",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        object?[] arguments =
+        {
+            new JsonObject
+            {
+                ["count"] = new JsonObject
+                {
+                    ["$source"] = new JsonObject { ["nodeId"] = "source", ["path"] = "$" }
+                }
+            },
+            JsonValue.Create("input"),
+            new Dictionary<string, JsonNode> { ["source"] = JsonValue.Create("4")! },
+            new Dictionary<string, JsonNode>(),
+            0,
+            null
+        };
+
+        var success = (bool)method.Invoke(null, arguments)!;
+
+        Assert.IsTrue(success);
+        Assert.AreEqual(4, (int)arguments[4]!);
+    }
+
+    [TestMethod]
     public void ParseAndValidateGraph_MergeWithTwoInputs_ShouldBeAllowed()
     {
         var engine = CreateEngine();
@@ -367,6 +452,30 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public void ParseAndValidateGraph_AggregateAfterLoop_ShouldBeRejected()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "loop", "type": "loop", "config": { "count": 2 } },
+                { "id": "aggregate", "type": "aggregate" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "loop" },
+                { "id": "edge-2", "source": "loop", "target": "aggregate" }
+              ]
+            }
+            """;
+
+        var exception = Assert.ThrowsException<InvalidOperationException>(() => engine.ParseAndValidateGraph(graphJson));
+
+        StringAssert.Contains(exception.Message, "不能位于循环节点之后");
+    }
+
+    [TestMethod]
     public async Task ValidateReferencesAsync_Aggregate_ShouldRequireConfiguredOutputContent()
     {
         var engine = CreateEngine();
@@ -403,6 +512,91 @@ public class NeuCharWorkflowEngineTests
         Assert.IsInstanceOfType(raw, typeof(JsonArray));
         Assert.AreEqual(2, raw.AsArray().Count);
         Assert.AreEqual("共 2 项", rendered.GetValue<string>());
+    }
+
+    [TestMethod]
+    public void AggregateOutputTemplate_ShouldResolveRichTextTemplateWrapper()
+    {
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "ResolveAggregateOutput",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        var template = new JsonObject
+        {
+            ["outputTemplate"] = new JsonObject
+            {
+                ["$template"] = new JsonObject
+                {
+                    ["text"] = "汇总 {{= length(input) }} 项"
+                }
+            }
+        };
+        var input = new JsonArray(JsonValue.Create("A"), JsonValue.Create("B"));
+
+        var rendered = (JsonNode)method.Invoke(null, new object[]
+        {
+            template,
+            input,
+            new Dictionary<string, JsonNode>(),
+            new Dictionary<string, JsonNode>()
+        })!;
+
+        Assert.AreEqual("汇总 2 项", rendered.GetValue<string>());
+    }
+
+    [TestMethod]
+    public void ConsolePrintTemplate_ShouldRenderWithoutChangingRawInput()
+    {
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "ResolveConsolePrintOutput",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        var input = JsonValue.Create("vip");
+        var raw = (JsonNode)method.Invoke(null, new object[]
+        {
+            new JsonObject { ["printTemplate"] = "{{input}}" },
+            input,
+            new Dictionary<string, JsonNode>(),
+            new Dictionary<string, JsonNode>()
+        })!;
+        var rendered = (JsonNode)method.Invoke(null, new object[]
+        {
+            new JsonObject { ["printTemplate"] = "收到：{{= upper(input) }}" },
+            input,
+            new Dictionary<string, JsonNode>(),
+            new Dictionary<string, JsonNode>()
+        })!;
+
+        Assert.AreEqual("vip", raw.GetValue<string>());
+        Assert.AreEqual("收到：VIP", rendered.GetValue<string>());
+    }
+
+    [TestMethod]
+    public void RuntimeText_ShouldResolveFormulaWhenEnteredWithoutTemplateWrapper()
+    {
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "ResolveRuntimeValue",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        var resolved = (JsonNode)method.Invoke(null, new object[]
+        {
+            JsonValue.Create("标题：{{= upper(input) }}"),
+            JsonValue.Create("vip"),
+            new Dictionary<string, JsonNode>(),
+            new Dictionary<string, JsonNode>()
+        })!;
+
+        Assert.AreEqual("标题：VIP", resolved.GetValue<string>());
+    }
+
+    [TestMethod]
+    public async Task ValidateReferencesAsync_NeuBell_ShouldRejectInvalidRichTextFormula()
+    {
+        var engine = CreateEngine();
+        const string graphJson = """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"notify", "type":"neubell", "name":"发送纽铃", "config":{ "title":"{{= unknown(input) }}", "summary":"内容" } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"notify" }] }""";
+        var graph = engine.ParseAndValidateGraph(graphJson);
+
+        var error = await engine.ValidateReferencesAsync(graph);
+
+        StringAssert.Contains(error, "文本表达式无效");
     }
 
     [TestMethod]
@@ -461,6 +655,34 @@ public class NeuCharWorkflowEngineTests
         var graph = engine.ParseAndValidateGraph(graphJson);
 
         Assert.AreEqual(2, graph.Edges.Count(z => z.Target == "function"));
+    }
+
+    [TestMethod]
+    public async Task FunctionScope_ConcurrentOperations_ShouldResolveDifferentScopedFunctionServices()
+    {
+        var services = new ServiceCollection();
+        services.AddScoped<NeuCharWorkflowFunctionService>(_ =>
+            new NeuCharWorkflowFunctionService(null!, null!));
+        using var serviceProvider = services.BuildServiceProvider();
+        var engine = new NeuCharWorkflowEngine(
+            null!,
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            null!,
+            null!,
+            Array.Empty<IWorkflowObjectProvider>());
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "ExecuteInFunctionScopeAsync",
+            BindingFlags.Instance | BindingFlags.NonPublic)!.MakeGenericMethod(typeof(int));
+        Func<NeuCharWorkflowFunctionService, Task<int>> operation = service =>
+            Task.FromResult(RuntimeHelpers.GetHashCode(service));
+
+        var tasks = Enumerable.Range(0, 2)
+            .Select(_ => (Task<int>)method.Invoke(engine, new object[] { operation })!)
+            .ToArray();
+        var identities = await Task.WhenAll(tasks);
+
+        Assert.AreNotEqual(identities[0], identities[1],
+            "Concurrent Function operations must not share the same scoped Function service/DbContext graph.");
     }
 
     [TestMethod]
@@ -684,6 +906,153 @@ public class NeuCharWorkflowEngineTests
         Assert.AreEqual("VIP", result!.GetValue<string>());
         Assert.IsFalse(NeuCharWorkflowExpressionEngine.TryValidate(
             "system.exit()", new[] { "value_1" }, out _));
+    }
+
+    [TestMethod]
+    public void TemplateExpression_ShouldSupportDateAndStableArrayHelpers()
+    {
+        var variables = new Dictionary<string, JsonNode>
+        {
+            ["items"] = JsonNode.Parse("""
+            [
+                { "name": "second", "score": 2 },
+                { "name": "first", "score": 3 },
+                { "name": "third", "score": 2 }
+            ]
+            """)!
+        };
+
+        var valid = NeuCharWorkflowExpressionEngine.TryEvaluate(
+            "orderBy(items, 'score', 'desc')[0].name",
+            variables,
+            out var sortedName,
+            out var error);
+        Assert.IsTrue(valid, error);
+        Assert.AreEqual("first", sortedName!.GetValue<string>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate(
+            "orderBy(items, 'score', 'desc')[1].name",
+            variables,
+            out var stableName,
+            out error), error);
+        Assert.AreEqual("second", stableName!.GetValue<string>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate(
+            "now()",
+            variables,
+            out var timestamp,
+            out error), error);
+        Assert.IsTrue(DateTimeOffset.TryParse(timestamp!.GetValue<string>(), out _));
+        Assert.IsFalse(NeuCharWorkflowExpressionEngine.TryValidate(
+            "fetch('https://example.invalid')", new[] { "items" }, out _));
+    }
+
+    [TestMethod]
+    public async Task WorkflowVariablesAndSafeCode_ShouldRemainRunLocalAndRequireDeclaration()
+    {
+        var engine = CreateEngine();
+        const string graphJson = """
+            {
+              "variables": [
+                { "name": "greeting", "value": "hello" },
+                { "name": "shout", "value": "{{= upper(vars.greeting) }}" }
+              ],
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "code", "type": "code", "name": "更新变量", "config": {
+                  "assignments": [{ "name": "greeting", "value": "{{= upper(input) }}" }]
+                }},
+                { "id": "end", "type": "end" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "code" },
+                { "id": "edge-2", "source": "code", "target": "end" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+        Assert.AreEqual(2, graph.Variables.Count);
+        Assert.IsNull(await engine.ValidateReferencesAsync(graph));
+
+        var outputs = new Dictionary<string, JsonNode>();
+        var buildVariables = typeof(NeuCharWorkflowEngine).GetMethod(
+            "BuildWorkflowVariables",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        var values = (JsonObject)buildVariables.Invoke(null, new object[]
+        {
+            graph.Variables,
+            JsonValue.Create("welcome"),
+            outputs,
+            new Dictionary<string, JsonNode>()
+        })!;
+        Assert.AreEqual("HELLO", values["shout"]!.GetValue<string>());
+
+        var executeCode = typeof(NeuCharWorkflowEngine).GetMethod(
+            "ExecuteCodeNode",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        executeCode.Invoke(null, new object[]
+        {
+            graph.Nodes.Single(node => node.Type == "code"),
+            JsonValue.Create("welcome"),
+            outputs,
+            new Dictionary<string, JsonNode>()
+        });
+        Assert.AreEqual("WELCOME", values["greeting"]!.GetValue<string>());
+
+        var invalidGraph = engine.ParseAndValidateGraph(
+            graphJson.Replace(
+                "\"assignments\": [{ \"name\": \"greeting\"",
+                "\"assignments\": [{ \"name\": \"notDeclared\"",
+                StringComparison.Ordinal));
+        var invalidError = await engine.ValidateReferencesAsync(invalidGraph);
+        StringAssert.Contains(invalidError, "已定义的工作流变量");
+    }
+
+    [TestMethod]
+    public void TemplateExpressionBinding_ShouldValidateAndRenderWithoutDirectPlaceholder()
+    {
+        var validate = typeof(NeuCharWorkflowEngine).GetMethod("ValidateTemplateText", BindingFlags.NonPublic | BindingFlags.Static)!;
+        var resolve = typeof(NeuCharWorkflowEngine).GetMethod("ResolveTemplate", BindingFlags.NonPublic | BindingFlags.Static)!;
+        var template = JsonNode.Parse("""{ "$template": { "text": "{{= substring(value_1, 0, 3) }}", "bindings": [{ "token": "value_1", "source": { "nodeId": "source", "path": "$" } }] } }""")!;
+
+        Assert.IsNull(validate.Invoke(null, new object[] { template["$template"]! }));
+        var rendered = (JsonNode)resolve.Invoke(null, new object[]
+        {
+            template["$template"]!, JsonValue.Create("input"),
+            new Dictionary<string, JsonNode> { ["source"] = JsonValue.Create("abcdef")! },
+            new Dictionary<string, JsonNode>()
+        })!;
+        Assert.AreEqual("abc", rendered.GetValue<string>());
+    }
+
+    [TestMethod]
+    public async Task ValidateReferencesAsync_TemplateObservedOutput_ShouldNotRequireReselectionAfterBindingReindex()
+    {
+        var engine = CreateEngine();
+        const string graphJson = """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger", "name": "触发" },
+                { "id": "stage", "type": "delay", "name": "阶段", "config": { "seconds": 1 } },
+                { "id": "notify", "type": "neubell", "name": "发送纽铃", "config": {
+                  "title": "提醒",
+                  "summary": { "$template": {
+                    "text": "只保留 {{value_2}}",
+                    "bindings": [{ "token": "value_2", "source": {
+                      "nodeId": "stage", "path": "$", "sourceKind": "observed-output"
+                    }}]
+                  }}
+                }}
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "stage" },
+                { "id": "edge-2", "source": "stage", "target": "notify" }
+              ]
+            }
+            """;
+
+        var error = await engine.ValidateReferencesAsync(engine.ParseAndValidateGraph(graphJson));
+
+        Assert.IsNull(error);
     }
 
     [TestMethod]

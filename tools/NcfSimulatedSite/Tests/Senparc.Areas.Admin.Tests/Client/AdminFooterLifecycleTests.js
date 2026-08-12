@@ -16,9 +16,7 @@ let eventSourceCloseCount = 0;
 let mixinRegistrationCount = 0;
 let capturedMixin = null;
 let timerSequence = 0;
-let notificationCount = 0;
-let notificationCloseCount = 0;
-let lastNotificationOptions = null;
+const timeoutCallbacks = new Map();
 let consumeRequest = null;
 let stateProviders = [{
     providerId: 'test-provider',
@@ -101,8 +99,14 @@ const window = {
     },
     setInterval() { return ++timerSequence; },
     clearInterval() { },
-    setTimeout() { return ++timerSequence; },
-    clearTimeout() { },
+    setTimeout(callback) {
+        const timer = ++timerSequence;
+        timeoutCallbacks.set(timer, callback);
+        return timer;
+    },
+    clearTimeout(timer) {
+        timeoutCallbacks.delete(timer);
+    },
     EventSource: function EventSource() {
         eventSourceCount++;
         const listeners = new Map();
@@ -151,29 +155,26 @@ function createViewModel(element) {
     const viewModel = Object.assign({
         $el: element,
         $root: null,
-        $notify(options) {
-            notificationCount++;
-            lastNotificationOptions = options;
-            let closed = false;
-            return {
-                close() {
-                    if (closed) {
-                        return;
-                    }
-                    closed = true;
-                    notificationCloseCount++;
-                    if (typeof options.onClose === 'function') {
-                        options.onClose();
-                    }
-                }
-            };
-        }
     }, capturedMixin.data());
     viewModel.$root = viewModel;
     Object.keys(capturedMixin.methods).forEach(name => {
         viewModel[name] = capturedMixin.methods[name].bind(viewModel);
     });
+    Object.keys(capturedMixin.computed).forEach(name => {
+        Object.defineProperty(viewModel, name, {
+            configurable: true,
+            get() { return capturedMixin.computed[name].call(viewModel); }
+        });
+    });
     return viewModel;
+}
+
+function fireTimeout(timer) {
+    const callback = timeoutCallbacks.get(timer);
+    timeoutCallbacks.delete(timer);
+    if (callback) {
+        callback();
+    }
 }
 
 async function flushPromises() {
@@ -185,6 +186,17 @@ async function flushPromises() {
 async function run() {
     vm.runInContext(script, context, { filename: scriptPath });
     const firstConsole = window.NcfAdminConsole;
+
+    let mirroredConsoleEntries = [];
+    const unsubscribeConsole = firstConsole.subscribe(entries => { mirroredConsoleEntries = entries; });
+    window.console.error('same Vue render failure');
+    window.console.error('same Vue render failure');
+    assert.strictEqual(mirroredConsoleEntries.length, 1,
+        'The Footer must not repeatedly mirror an identical Console error into reactive state.');
+    window.console.warn('a different Console entry');
+    assert.strictEqual(mirroredConsoleEntries.length, 2,
+        'The Footer Console must retain different diagnostics while suppressing only identical repeats.');
+    unsubscribeConsole();
 
     // 重复加载不得再次包装 Console 或重复注册全局 mixin。
     vm.runInContext(script, context, { filename: scriptPath });
@@ -203,9 +215,8 @@ async function run() {
     assert.strictEqual(layoutRoot.footerCommunicationOwner, true);
     assert.strictEqual(stateRequestCount, 1);
     assert.strictEqual(eventSourceCount, 1);
-    assert.strictEqual(notificationCount, 0);
 
-    // SSE 刷新后，新增提醒应显示持久弹窗并增加 Footer 徽标。
+    // SSE 刷新后，新增提醒应显示右下角 Toast，并增加 Footer 徽标。
     stateProviders = [{
         providerId: 'test-provider',
         displayName: 'Test Provider',
@@ -222,12 +233,12 @@ async function run() {
     eventSources[0].emit('neubell-changed');
     await flushPromises();
     assert.strictEqual(stateRequestCount, 2);
-    assert.strictEqual(notificationCount, 1);
-    assert.strictEqual(lastNotificationOptions.title, 'NeuBell test reminder');
-    assert.strictEqual(lastNotificationOptions.duration, 0);
+    assert.strictEqual(layoutRoot.neuBellToastEntries.length, 1);
+    assert.strictEqual(capturedMixin.computed.neuBellToastVisibleItems.call(layoutRoot).length, 1);
+    assert.ok(layoutRoot.neuBellToastTimers['test-provider:function-reminder']);
     assert.strictEqual(capturedMixin.computed.neuBellTotalCount.call(layoutRoot), 1);
 
-    // 支持消费的 Provider 可从抽屉消费本条提醒，并刷新状态、关闭持久弹窗。
+    // 支持消费的 Provider 可从抽屉消费本条提醒，并刷新状态、关闭右下角 Toast。
     await layoutRoot.consumeNeuBell(layoutRoot.neuBellProviders[0], layoutRoot.neuBellProviders[0].items[0], false);
     await flushPromises();
     assert.strictEqual(stateRequestCount, 3);
@@ -235,7 +246,50 @@ async function run() {
     assert.strictEqual(consumeRequest.data.providerId, 'test-provider');
     assert.strictEqual(consumeRequest.data.itemId, 'function-reminder');
     assert.strictEqual(consumeRequest.data.consumeAll, false);
-    assert.strictEqual(notificationCloseCount, 1);
+    assert.strictEqual(layoutRoot.neuBellToastEntries.length, 0);
+    assert.strictEqual(capturedMixin.computed.neuBellTotalCount.call(layoutRoot), 0);
+
+    // 同时出现多条提醒时最多展示 2 条；点击展开后可查看全部，关闭只影响视觉 Toast。
+    stateProviders = [{
+        providerId: 'test-provider',
+        displayName: 'Test Provider',
+        defaultVisible: true,
+        canConsume: true,
+        items: [
+            { id: 'reminder-1', title: 'Reminder 1', summary: 'First reminder.', count: 1, severity: 'info' },
+            { id: 'reminder-2', title: 'Reminder 2', summary: 'Second reminder.', count: 1, severity: 'warning' },
+            { id: 'reminder-3', title: 'Reminder 3', summary: 'Third reminder.', count: 1, severity: 'error' }
+        ]
+    }];
+    eventSources[0].emit('neubell-changed');
+    await flushPromises();
+    assert.strictEqual(stateRequestCount, 4);
+    assert.strictEqual(layoutRoot.neuBellToastEntries.length, 3);
+    assert.strictEqual(capturedMixin.computed.neuBellToastVisibleItems.call(layoutRoot).length, 2);
+    assert.strictEqual(capturedMixin.computed.neuBellToastOverflowCount.call(layoutRoot), 1);
+    layoutRoot.toggleNeuBellToastExpanded();
+    assert.strictEqual(capturedMixin.computed.neuBellToastVisibleItems.call(layoutRoot).length, 3);
+    layoutRoot.toggleNeuBellToastExpanded();
+    assert.strictEqual(capturedMixin.computed.neuBellToastVisibleItems.call(layoutRoot).length, 2);
+
+    const expiringToastKey = layoutRoot.neuBellToastEntries[0].key;
+    fireTimeout(layoutRoot.neuBellToastTimers[expiringToastKey]);
+    assert.strictEqual(layoutRoot.neuBellToastEntries.length, 2);
+    layoutRoot.clearAllNeuBellToasts();
+    assert.strictEqual(layoutRoot.neuBellToastEntries.length, 0);
+    assert.strictEqual(capturedMixin.computed.neuBellTotalCount.call(layoutRoot), 3,
+        '关闭视觉 Toast 不得自动消费服务端提醒。');
+
+    stateProviders = [{
+        providerId: 'test-provider',
+        displayName: 'Test Provider',
+        defaultVisible: true,
+        canConsume: true,
+        items: []
+    }];
+    eventSources[0].emit('neubell-changed');
+    await flushPromises();
+    assert.strictEqual(stateRequestCount, 5);
     assert.strictEqual(capturedMixin.computed.neuBellTotalCount.call(layoutRoot), 0);
 
     // 即使出现第二个独立 Vue 根实例，也不能增加 state/SSE 通讯通道。
@@ -243,7 +297,7 @@ async function run() {
     capturedMixin.mounted.call(duplicateLayoutRoot);
     await flushPromises();
     assert.strictEqual(duplicateLayoutRoot.footerCommunicationOwner, false);
-    assert.strictEqual(stateRequestCount, 3);
+    assert.strictEqual(stateRequestCount, 5);
     assert.strictEqual(eventSourceCount, 1);
 
     capturedMixin.beforeDestroy.call(layoutRoot);
@@ -254,7 +308,7 @@ async function run() {
     capturedMixin.mounted.call(duplicateLayoutRoot);
     await flushPromises();
     assert.strictEqual(duplicateLayoutRoot.footerCommunicationOwner, true);
-    assert.strictEqual(stateRequestCount, 4);
+    assert.strictEqual(stateRequestCount, 6);
     assert.strictEqual(eventSourceCount, 2);
     capturedMixin.beforeDestroy.call(duplicateLayoutRoot);
     assert.strictEqual(eventSourceCloseCount, 2);

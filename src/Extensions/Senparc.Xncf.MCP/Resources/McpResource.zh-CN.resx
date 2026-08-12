@@ -79,7 +79,7 @@
     <value>MCP 服务器||选择已注册的 MCP 服务器，或手动输入自定义服务器地址</value>
   </data>
   <data name="Parameter.MCP.Endpoint" xml:space="preserve">
-    <value>MCP 服务器地址||选择手动输入时必须填写；默认 http://localhost:5000/mcp-senparc-xncf-mcp/sse</value>
+    <value>MCP 服务器地址||选择手动输入时必须填写；默认 http://localhost:5080/mcp-senparc-xncf-mcp/sse</value>
   </data>
   <data name="Parameter.MCP.Request" xml:space="preserve">
     <value>请求||向 MCP 服务器发送的请求</value>
