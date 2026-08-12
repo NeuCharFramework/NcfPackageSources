@@ -17,6 +17,7 @@
 using Senparc.Ncf.XncfBase.Functions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
@@ -139,6 +140,33 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             if (IsNullableType(targetType, typeof(long)) && long.TryParse(firstValue, out var longValue))
             {
                 return JsonValue.Create(longValue);
+            }
+
+            if (IsNullableType(targetType, typeof(decimal)) && decimal.TryParse(
+                    firstValue,
+                    NumberStyles.Number,
+                    CultureInfo.InvariantCulture,
+                    out var decimalValue))
+            {
+                return JsonValue.Create(decimalValue);
+            }
+
+            if (IsNullableType(targetType, typeof(double)) && double.TryParse(
+                    firstValue,
+                    NumberStyles.Float | NumberStyles.AllowThousands,
+                    CultureInfo.InvariantCulture,
+                    out var doubleValue))
+            {
+                return JsonValue.Create(doubleValue);
+            }
+
+            if (IsNullableType(targetType, typeof(float)) && float.TryParse(
+                    firstValue,
+                    NumberStyles.Float | NumberStyles.AllowThousands,
+                    CultureInfo.InvariantCulture,
+                    out var floatValue))
+            {
+                return JsonValue.Create(floatValue);
             }
 
             if (IsNullableType(targetType, typeof(bool)) && bool.TryParse(firstValue, out var boolValue))

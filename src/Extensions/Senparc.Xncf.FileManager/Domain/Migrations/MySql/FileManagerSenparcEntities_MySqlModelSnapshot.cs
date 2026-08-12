@@ -75,12 +75,25 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.MySql
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AccessLevel")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
+
+                    b.Property<string>("ContentHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<string>("ContentType")
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(300)
@@ -118,6 +131,11 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.MySql
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
+                    b.Property<int>("ResourceScope")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(100);
+
                     b.Property<string>("StorageFileName")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -129,6 +147,8 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.MySql
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ResourceScope", "FolderId");
 
                     b.ToTable("Senparc_FileManager_NcfFile");
                 });
@@ -173,10 +193,17 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.MySql
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
+                    b.Property<int>("ResourceScope")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(100);
+
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ResourceScope", "ParentId");
 
                     b.ToTable("Senparc_FileManager_NcfFolder");
                 });

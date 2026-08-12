@@ -36,10 +36,9 @@ namespace Senparc.Xncf.FileManager
         public string HomeUrl => "/Admin/FileManager/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(), FileManagerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
-                         new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/Index"), FileManagerResource.Get("Area.FileManager.Files", "文件管理"),"fa fa-file"),
-			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/DatabaseSample"), FileManagerResource.Get("Area.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
-			 		};
+                         // HomeUrl 已指向同一页面；不要重复注册“首页”，也不要把示例页暴露给实际管理员。
+                         new AreaPageMenuItem(GetAreaUrl($"/Admin/FileManager/Index"), FileManagerResource.Get("Area.FileManager.Files", "文件资源管理"),"fa fa-file")
+        };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
         {

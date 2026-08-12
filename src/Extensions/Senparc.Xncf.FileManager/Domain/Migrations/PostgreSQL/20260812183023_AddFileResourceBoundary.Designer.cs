@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Senparc.Xncf.FileManager.Models;
@@ -11,9 +12,11 @@ using Senparc.Xncf.FileManager.Models;
 namespace Senparc.Xncf.FileManager.Domain.Migrations.PostgreSQL
 {
     [DbContext(typeof(FileManagerSenparcEntities_PostgreSQL))]
-    partial class FileManagerSenparcEntities_PostgreSQLModelSnapshot : ModelSnapshot
+    [Migration("20260812183023_AddFileResourceBoundary")]
+    partial class AddFileResourceBoundary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

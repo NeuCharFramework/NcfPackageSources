@@ -36,6 +36,7 @@ using Senparc.Ncf.Service;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.FileManager.Domain.Services;
+using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 using Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Response;
@@ -47,6 +48,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -277,6 +279,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 throw new NcfExceptionBase($"File with ID {fileId} not found.");
             }
 
+            if (file.ResourceScope != NcfFileResourceScope.KnowledgeBase)
+            {
+                throw new NcfExceptionBase("Only KnowledgeBase source files can be added to a knowledge base.");
+            }
+
             var knowledgeBase = await GetObjectAsync(z => z.Id == knowledgeBaseId);
             if (knowledgeBase == null)
             {
@@ -410,25 +417,44 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 throw new NcfExceptionBase($"知识库 '{knowledgeBase.Name}' 尚未完成向量化，不能执行 RAG 召回。");
             }
 
+            content = content.Trim();
+            if (content.Length > 2000)
+            {
+                throw new NcfExceptionBase("召回查询内容不能超过 2000 个字符。");
+            }
+
             topK = Math.Clamp(topK, 1, 20);
             var runner = await BuildEmbeddingRunnerAsync(knowledgeBase, knowledgeBase.VectorCollectionName);
             var store = runner.CreateTextSearchStore();
             IEnumerable<TextSearchDocument> vectorResult = null;
+            var stopwatch = Stopwatch.StartNew();
             await ExecuteWithRetryAsync(async () =>
             {
-                vectorResult = await store.SearchAsync(content.Trim(), topK);
+                vectorResult = await store.SearchAsync(content, topK);
             }, "知识库召回");
+            stopwatch.Stop();
 
             return (vectorResult ?? Array.Empty<TextSearchDocument>())
-                .Select(item => new RecallTestResponse
+                .Select((item, index) => new RecallTestResponse
                 {
+                    Rank = index + 1,
                     Score = item.Score,
                     Content = item.Text,
-                    SourceName = item.SourceName,
-                    SourceLink = item.SourceLink,
-                    RecallTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    ContentLength = item.Text?.Length ?? 0,
+                    SourceName = string.IsNullOrWhiteSpace(item.SourceName) ? "未命名来源" : item.SourceName,
+                    SourceLink = GetSafeSourceLink(item.SourceLink),
+                    RecallTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    ElapsedMilliseconds = stopwatch.ElapsedMilliseconds
                 })
                 .ToList();
+        }
+
+        private static string GetSafeSourceLink(string sourceLink)
+        {
+            return Uri.TryCreate(sourceLink, UriKind.Absolute, out var uri)
+                   && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps)
+                ? uri.AbsoluteUri
+                : null;
         }
 
         /// <summary>

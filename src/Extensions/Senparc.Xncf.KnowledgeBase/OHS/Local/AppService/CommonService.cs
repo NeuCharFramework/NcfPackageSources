@@ -38,6 +38,7 @@ using Microsoft.Extensions.Options;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Config;
 using Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Config;
 using Senparc.Xncf.FileManager.Domain.Services;
+using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using Senparc.Ncf.Core.Authorization;
 using Senparc.Xncf.AreaBase.Admin.Filters;
 
@@ -63,7 +64,8 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         {
             return await this.GetResponseAsync<AppResponseBase<string>, string>(async (response, logger) =>
             {
-                var result = await ncfFileService.UploadFileAsync(file);
+                // 知识库内嵌上传只能创建资料文件，绝不能借此写入可公开的站点资源区。
+                var result = await ncfFileService.UploadFileAsync(file, NcfFileResourceScope.KnowledgeBase);
                 return result.Id.ToString();
             });
         }

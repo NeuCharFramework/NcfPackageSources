@@ -27,6 +27,7 @@ using System;
 using System.Threading.Tasks;
 using Senparc.Xncf.FileManager.Domain;
 using Senparc.Xncf.FileManager.Domain.Services;
+using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
 using System.Linq;
 using Senparc.Ncf.Core.Authorization;
@@ -103,6 +104,7 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
             return await this.GetResponseAsync<FileTemplate_GetListResponse>(async (response, logger) =>
             {
                 var seh = new SenparcExpressionHelper<Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.NcfFile>();
+                seh.ValueCompare.AndAlso(true, _ => _.ResourceScope == NcfFileResourceScope.KnowledgeBase);
                 seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(filter), _ => _.FileName.Contains(filter));
                 var where = seh.BuildWhereExpression();
                 var list = await this.fileService.GetObjectListAsync(pageIndex, pageSize, where, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);

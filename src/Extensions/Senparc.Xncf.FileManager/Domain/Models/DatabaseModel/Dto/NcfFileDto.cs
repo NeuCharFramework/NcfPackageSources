@@ -26,6 +26,11 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto
         public FileType FileType { get; set; }
         public string Description { get; set; }
         public DateTime UploadTime { get; set; }
+        public NcfFileResourceScope ResourceScope { get; set; }
+        public NcfFileAccessLevel AccessLevel { get; set; }
+        public string ContentType { get; set; }
+        public string ContentHash { get; set; }
+        public string PublicUrl { get; set; }
         
         // 用于前端显示的属性
         public string FileSizeDisplay => GetFileSizeDisplay();
@@ -38,4 +43,4 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto
             return $"{FileSize / (1024.0 * 1024):F2}MB";
         }
     }
-} 
+}

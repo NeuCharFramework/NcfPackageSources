@@ -151,7 +151,7 @@ new Vue({
             workflowSettingsVisible: false,
             templateEditorPlaceholder: '例如：请根据 {{value_1}} 生成一段摘要',
             templateEditorBindingHelp: '删除一个变量标签时，它在文本中的对应占位符也会一并删除。所有公式文本都可以使用 {{input}} 引用当前输入；带“支持公式文本”标记的字段还可以插入上游输出。',
-            templateExpressionHelp: '表达式写法：{{= if(contains(value_1, \"VIP\"), upper(value_1), \"普通\") }}。支持 if、contains、substring、length、trim、lower、upper、first、last、at、join、now、formatDate、split、replace、sort/orderBy、reverse、take、skip、sum、min、max、unique、比较和判断。工作流变量须写为 {{= vars.变量名 }}；不执行 JavaScript。',
+            templateExpressionHelp: '表达式写法：{{= if(contains(value_1, \"VIP\"), upper(value_1), \"普通\") }}。支持 if、contains、substring、length、trim、lower、upper、first、last、at、join、toNumber/toInt/toLong/toDecimal/toBool/toString、now、formatDate、split、replace、sort/orderBy、reverse、take、skip、sum、min、max、unique、比较和判断。非字符串参数请只填写完整公式，例如 {{= toInt(value_1) }}；加入前后文本后结果始终是字符串。工作流变量须写为 {{= vars.变量名 }}；不执行 JavaScript。',
             templateEditor: {
                 visible: false,
                 nodeId: '',
@@ -2222,6 +2222,52 @@ new Vue({
         canUseTemplate(parameter) {
             return Number(parameter?.parameterType) === 0 && !this.expectedShape(parameter).isArray;
         },
+        formulaValueText(value) {
+            const template = this.templateFor(value);
+            return template ? String(template.text || '') : (typeof value === 'string' ? value : '');
+        },
+        isPureFormulaExpression(text) {
+            const trimmed = String(text || '').trim();
+            return /^\{\{=[\s\S]*\}\}$/.test(trimmed);
+        },
+        inferredFormulaType(text) {
+            if (!this.isPureFormulaExpression(text)) return 'string';
+            const expression = String(text).trim().slice(3, -2).trim();
+            if (/^(toNumber|toInt|toLong|toDecimal)\s*\(/i.test(expression) ||
+                /^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(expression)) return 'number';
+            if (/^toBool\s*\(/i.test(expression) || /^(true|false)$/i.test(expression)) return 'boolean';
+            if (/^toString\s*\(/i.test(expression) || /^(['"]).*\1$/s.test(expression)) return 'string';
+            return 'any';
+        },
+        formulaParameterCompatibility(parameter, value) {
+            const expected = this.expectedShape(parameter);
+            if (expected.isArray || ['any', 'object', 'string'].includes(expected.typeName)) return null;
+            const text = this.formulaValueText(value);
+            if (!text.includes('{{=')) return null;
+            if (!this.isPureFormulaExpression(text)) {
+                return {
+                    level: 'danger',
+                    text: `目标参数需要 ${expected.typeName}；类型转换公式必须独占整个输入，例如 {{= ${expected.typeName === 'boolean' ? 'toBool' : 'toInt'}(value_1) }}`
+                };
+            }
+            const actual = this.inferredFormulaType(text);
+            if (actual !== 'any' && actual !== expected.typeName) {
+                return { level: 'warning', text: `纯公式结果为 ${actual}，但目标参数需要 ${expected.typeName}` };
+            }
+            return {
+                level: 'success',
+                text: actual === 'any'
+                    ? `纯公式模式：运行时结果会保留类型；目标参数需要 ${expected.typeName}`
+                    : `纯公式结果：${actual} → 目标参数 ${expected.typeName}`
+            };
+        },
+        functionParameterFormulaHelp(parameter) {
+            const expected = this.expectedShape(parameter);
+            const basic = '可使用 {{input}} 引用当前输入；也可以打开编辑器插入上游输出。';
+            if (expected.isArray || ['any', 'object', 'string'].includes(expected.typeName)) return `${basic} 组合前后文本时结果为字符串。`;
+            const converter = expected.typeName === 'boolean' ? 'toBool' : 'toInt';
+            return `${basic} 目标参数需要 ${expected.typeName}：只填写完整公式（例如 {{= ${converter}(value_1) }}）会保留其类型；加入前后文本后结果会变成字符串。`;
+        },
         createSourceBinding(selection) {
             if (!selection || selection.length < 2) return null;
             const source = this.form.graph.nodes.find(item => item.id === selection[0]);
@@ -2406,10 +2452,12 @@ new Vue({
         },
         bindingCompatibility(node, parameter) {
             const value = node && node.config?.parameters?.[parameter.name];
+            const formulaCompatibility = this.formulaParameterCompatibility(parameter, value);
+            if (formulaCompatibility && ['danger', 'warning'].includes(formulaCompatibility.level)) return formulaCompatibility;
             if (this.isTemplateValue(value)) {
                 if (!this.canUseTemplate(parameter)) return { level: 'danger', text: '此参数不支持在文本中嵌入变量' };
                 const bindings = this.parameterTemplateBindings(value);
-                if (!bindings.length) return { level: 'manual', text: '手动输入' };
+                if (!bindings.length) return formulaCompatibility || { level: 'manual', text: '手动输入' };
                 const invalid = bindings.find(item => {
                     const source = this.form.graph.nodes.find(node => node.id === item?.source?.nodeId);
                     const field = source && this.nodeOutputFields(source).find(candidate =>
@@ -2422,10 +2470,10 @@ new Vue({
                 });
                 return invalid
                     ? { level: 'danger', text: '文本中的变量来源已失效，或缺少上游列表索引' }
-                    : { level: 'success', text: `文本中嵌入 ${bindings.length} 个上游值` };
+                    : formulaCompatibility || { level: 'success', text: `文本中嵌入 ${bindings.length} 个上游值` };
             }
             const rawBinding = this.bindingFor(node, parameter);
-            if (!rawBinding) return { level: 'manual', text: '手动输入' };
+            if (!rawBinding) return formulaCompatibility || { level: 'manual', text: '手动输入' };
             const source = this.form.graph.nodes.find(item => item.id === rawBinding.nodeId);
             const field = source && this.nodeOutputFields(source).find(item => item.path === (rawBinding.path || '$'));
             if (!source || !this.upstreamNodes(node).some(item => item.id === source.id)) return { level: 'danger', text: '关联节点已不是有效上游节点' };

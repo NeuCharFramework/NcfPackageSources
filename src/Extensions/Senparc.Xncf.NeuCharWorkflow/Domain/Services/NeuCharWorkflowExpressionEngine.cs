@@ -26,6 +26,7 @@ public static class NeuCharWorkflowExpressionEngine
     {
         "if", "coalesce", "contains", "startsWith", "endsWith", "length", "substring",
         "trim", "lower", "upper", "first", "last", "at", "join", "toNumber",
+        "toInt", "toLong", "toDecimal", "toBool", "toString",
         "now", "formatDate", "split", "replace", "sort", "orderBy", "reverse",
         "take", "skip", "sum", "min", "max", "unique"
     };
@@ -248,6 +249,12 @@ public static class NeuCharWorkflowExpressionEngine
             if (name.Equals("last", StringComparison.OrdinalIgnoreCase)) return Index(Arg(0), Length(Arg(0)) - 1);
             if (name.Equals("at", StringComparison.OrdinalIgnoreCase)) return Index(Arg(0), (int)Number(Arg(1)));
             if (name.Equals("join", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Join(Arg(0), Text(Arg(1))));
+            if (name.Equals("toNumber", StringComparison.OrdinalIgnoreCase) ||
+                name.Equals("toDecimal", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Decimal(Arg(0)));
+            if (name.Equals("toInt", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Int32(Arg(0)));
+            if (name.Equals("toLong", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Int64(Arg(0)));
+            if (name.Equals("toBool", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Boolean(Arg(0)));
+            if (name.Equals("toString", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Text(Arg(0)));
             if (name.Equals("now", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(DateTimeOffset.UtcNow.ToString("O", CultureInfo.InvariantCulture));
             if (name.Equals("formatDate", StringComparison.OrdinalIgnoreCase))
             {
@@ -270,7 +277,7 @@ public static class NeuCharWorkflowExpressionEngine
             if (name.Equals("min", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(ToArray(Arg(0)).Select(Number).DefaultIfEmpty(0).Min());
             if (name.Equals("max", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(ToArray(Arg(0)).Select(Number).DefaultIfEmpty(0).Max());
             if (name.Equals("unique", StringComparison.OrdinalIgnoreCase)) return Unique(Arg(0));
-            return JsonValue.Create(Number(Arg(0)));
+            throw Error($"不支持函数“{name}”");
         }
 
         private JsonNode Variable(string name)
@@ -356,6 +363,30 @@ public static class NeuCharWorkflowExpressionEngine
     private static bool Equal(JsonNode left, JsonNode right) => string.Equals(Text(left), Text(right), StringComparison.Ordinal);
     private static bool IsNumber(JsonNode value) => decimal.TryParse(Text(value), NumberStyles.Number, CultureInfo.InvariantCulture, out _);
     private static decimal Number(JsonNode value) => decimal.TryParse(Text(value), NumberStyles.Number, CultureInfo.InvariantCulture, out var number) ? number : throw new ExpressionException("需要数字参数。");
+    private static int Int32(JsonNode value) => int.TryParse(Text(value).Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var number)
+        ? number
+        : throw ConversionError(value, "Int32");
+    private static long Int64(JsonNode value) => long.TryParse(Text(value).Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var number)
+        ? number
+        : throw ConversionError(value, "Int64");
+    private static decimal Decimal(JsonNode value) => decimal.TryParse(Text(value).Trim(), NumberStyles.Number, CultureInfo.InvariantCulture, out var number)
+        ? number
+        : throw ConversionError(value, "Decimal");
+    private static bool Boolean(JsonNode value)
+    {
+        if (value is JsonValue json && json.TryGetValue<bool>(out var boolean)) return boolean;
+        var text = Text(value).Trim();
+        if (bool.TryParse(text, out boolean)) return boolean;
+        if (text == "1") return true;
+        if (text == "0") return false;
+        throw ConversionError(value, "Boolean");
+    }
+    private static ExpressionException ConversionError(JsonNode value, string typeName)
+    {
+        var text = Text(value);
+        var preview = text.Length <= 120 ? text : $"{text[..120]}…";
+        return new ExpressionException($"无法将“{preview}”转换为 {typeName}。");
+    }
     private static int Length(JsonNode value) => value is JsonArray array ? array.Count : Text(value).Length;
     private static bool Contains(JsonNode value, JsonNode sought) => value is JsonArray array ? array.Any(x => Equal(x, sought)) : Text(value).Contains(Text(sought), StringComparison.OrdinalIgnoreCase);
     private static string Join(JsonNode value, string separator) => value is JsonArray array ? string.Join(separator, array.Select(Text)) : Text(value);

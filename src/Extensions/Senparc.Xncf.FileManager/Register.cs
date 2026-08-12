@@ -49,7 +49,7 @@ namespace Senparc.Xncf.FileManager
 
         public override string Uid => "BC7769FE-E094-4EAF-9B1F-D82670D1D691";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.2.5";//必须填写版本号
+        public override string Version => "0.6.0";//必须填写版本号
 
         public override string MenuName => FileManagerResource.Get("Module.FileManager.MenuName", "文件管理");
 

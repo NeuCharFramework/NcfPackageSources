@@ -1025,6 +1025,59 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public void TemplateExpressionConversions_ShouldPreserveWholeFormulaTypesAndRenderMixedText()
+    {
+        var variables = new Dictionary<string, JsonNode>
+        {
+            ["value_1"] = JsonValue.Create("42")!
+        };
+
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate("toInt(value_1)", variables, out var intValue, out var intError), intError);
+        Assert.AreEqual(42, intValue!.GetValue<int>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate("toLong('3000000000')", variables, out var longValue, out var longError), longError);
+        Assert.AreEqual(3_000_000_000L, longValue!.GetValue<long>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate("toDecimal('42.5')", variables, out var decimalValue, out var decimalError), decimalError);
+        Assert.AreEqual(42.5m, decimalValue!.GetValue<decimal>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate("toBool('1')", variables, out var boolValue, out var boolError), boolError);
+        Assert.IsTrue(boolValue!.GetValue<bool>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate("toString(42)", variables, out var stringValue, out var stringError), stringError);
+        Assert.AreEqual("42", stringValue!.GetValue<string>());
+        Assert.IsFalse(NeuCharWorkflowExpressionEngine.TryEvaluate("toInt('not-a-number')", variables, out _, out var conversionError));
+        StringAssert.Contains(conversionError, "无法将“not-a-number”转换为 Int32");
+
+        var resolve = typeof(NeuCharWorkflowEngine).GetMethod("ResolveTemplate", BindingFlags.NonPublic | BindingFlags.Static)!;
+        var typedTemplate = JsonNode.Parse("""{ "text": "{{= toInt(value_1) }}", "bindings": [{ "token": "value_1", "source": { "nodeId": "source", "path": "$" } }] }""")!;
+        var typedResult = (JsonNode)resolve.Invoke(null, new object[]
+        {
+            typedTemplate, JsonValue.Create("input"),
+            new Dictionary<string, JsonNode> { ["source"] = JsonValue.Create("42")! },
+            new Dictionary<string, JsonNode>()
+        })!;
+        Assert.AreEqual(42, typedResult.GetValue<int>());
+
+        var mixedTemplate = JsonNode.Parse("""{ "text": "编号 {{= toInt(value_1) }}", "bindings": [{ "token": "value_1", "source": { "nodeId": "source", "path": "$" } }] }""")!;
+        var mixedResult = (JsonNode)resolve.Invoke(null, new object[]
+        {
+            mixedTemplate, JsonValue.Create("input"),
+            new Dictionary<string, JsonNode> { ["source"] = JsonValue.Create("42")! },
+            new Dictionary<string, JsonNode>()
+        })!;
+        Assert.AreEqual("编号 42", mixedResult.GetValue<string>());
+    }
+
+    [TestMethod]
+    public void TemplateExpressionConversions_ShouldRejectInvalidLiteralDuringValidation()
+    {
+        var validate = typeof(NeuCharWorkflowEngine).GetMethod("ValidateTemplateText", BindingFlags.NonPublic | BindingFlags.Static)!;
+        var error = (string?)validate.Invoke(null, new object[]
+        {
+            JsonNode.Parse("""{ "text": "{{= toInt('not-a-number') }}" }""")!
+        });
+
+        StringAssert.Contains(error, "无法将“not-a-number”转换为 Int32");
+    }
+
+    [TestMethod]
     public async Task ValidateReferencesAsync_TemplateObservedOutput_ShouldNotRequireReselectionAfterBindingReindex()
     {
         var engine = CreateEngine();

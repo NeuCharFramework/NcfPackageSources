@@ -33,6 +33,30 @@ namespace Senparc.Xncf.FileManager.Models
 
         public DbSet<NcfFolder> NcfFolders { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Existing FileManager records predate the resource boundary. Keep
+            // them private KnowledgeBase sources during migration so no historic
+            // upload is accidentally exposed through the public asset endpoint.
+            modelBuilder.Entity<NcfFile>(entity =>
+            {
+                entity.Property(file => file.ResourceScope)
+                    .HasDefaultValue(NcfFileResourceScope.KnowledgeBase);
+                entity.Property(file => file.AccessLevel)
+                    .HasDefaultValue(NcfFileAccessLevel.Private);
+                entity.HasIndex(file => new { file.ResourceScope, file.FolderId });
+            });
+
+            modelBuilder.Entity<NcfFolder>(entity =>
+            {
+                entity.Property(folder => folder.ResourceScope)
+                    .HasDefaultValue(NcfFileResourceScope.KnowledgeBase);
+                entity.HasIndex(folder => new { folder.ResourceScope, folder.ParentId });
+            });
+        }
+
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 

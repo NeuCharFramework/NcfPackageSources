@@ -34,5 +34,10 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
         public string Description { get; set; }
 
         public DateTime CreateTime { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// 文件夹只承载一种用途，避免在一个目录中混放知识库资料和可公开访问的站点资源。
+        /// </summary>
+        public NcfFileResourceScope ResourceScope { get; set; } = NcfFileResourceScope.KnowledgeBase;
     }
 }

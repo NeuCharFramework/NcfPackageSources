@@ -733,7 +733,7 @@ height:100%;
     flex-wrap: wrap;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 20px;
+    gap: 14px;
     padding: 2px;
 }
 
@@ -741,15 +741,14 @@ height:100%;
     flex-grow: 1;
     flex-basis: 315px;
     min-width: 0;
-    min-height: 232px;
-    border: 1px solid #e5eaf2;
-    border-radius: 14px;
-    background:
-        linear-gradient(135deg, rgba(64, 158, 255, .055), rgba(64, 158, 255, 0) 48%),
-        #fff;
+    box-sizing: border-box;
+    height: 138px;
+    border: 1px solid #e8edf4;
+    border-radius: 10px;
+    background: #fff;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 5px 16px rgba(31, 55, 89, .06);
+    box-shadow: 0 2px 8px rgba(31, 55, 89, .045);
     transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
 
@@ -757,34 +756,34 @@ height:100%;
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
+    width: 3px;
     height: 100%;
     content: '';
     background: linear-gradient(180deg, #5ba8ff 0%, #3485e9 100%);
 }
 
 .agent-cardBox:hover {
-    transform: translateY(-3px);
+    transform: translateY(-1px);
     border-color: #c9e1fb;
-    box-shadow: 0 13px 28px rgba(35, 91, 153, .14);
+    box-shadow: 0 7px 16px rgba(35, 91, 153, .1);
 }
 
 .agentCard-stateboxStack {
     position: absolute;
-    top: 18px;
-    right: 18px;
+    top: 13px;
+    right: 14px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 }
 
 .agentCard-statebox {
     display: inline-flex;
     align-items: center;
-    min-height: 24px;
-    padding: 0 9px;
+    min-height: 20px;
+    padding: 0 7px;
     border-radius: 999px;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     line-height: 1;
     letter-spacing: .2px;
@@ -819,15 +818,18 @@ height:100%;
 .agentCard-a2aBadge {
     margin: 0;
     border-radius: 999px;
+    font-size: 10px;
     font-weight: 600;
 }
 
 .agentCard-upperHalfbox {
-    padding: 18px 116px 10px 20px;
+    box-sizing: border-box;
+    height: 56px;
+    padding: 11px 92px 10px 16px;
     display: flex;
     align-items: center;
     min-width: 0;
-    gap: 12px;
+    gap: 9px;
 }
 
 /* .agentCard-upperHalfbox .upperHalfbox_avatar {
@@ -841,21 +843,21 @@ height:100%;
 } */
 .agentCard-upperHalfbox>.avatarBox {
     flex-shrink: 0;
-    width: 44px;
-    height: 44px;
+    width: 34px;
+    height: 34px;
     border: 1px solid #d8eaff;
-    border-radius: 13px;
+    border-radius: 10px;
     background: linear-gradient(145deg, #f5faff, #e7f3ff);
-    box-shadow: 0 5px 12px rgba(64, 158, 255, .14);
+    box-shadow: none;
     overflow: hidden;
 }
 
 .agentCard-upperHalfbox>.avatarBox>img {
     flex-shrink: 0;
-    width: 28px;
+    width: 22px;
     height: auto;
-    transform: translateY(-44px);
-    filter: drop-shadow(#409eff 0 44px);
+    transform: translateY(-34px);
+    filter: drop-shadow(#409eff 0 34px);
 }
 
 .agentCard-upperHalfbox .upperHalfbox_describe {
@@ -868,9 +870,9 @@ height:100%;
 
 .agentCard-upperHalfbox .upperHalfbox_describe_title {
     min-width: 0;
-    font-size: 15px;
-    font-weight: 650;
-    line-height: 1.35;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.25;
     color: #1f2937;
 }
 
@@ -883,46 +885,38 @@ height:100%;
     /* vertical-align: top; */
 }
 
-.agentCard-middleHalfbox {
-    height: 38px;
-    margin: 0 20px 12px;
-    padding: 0;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 19px;
-    color: #7a8494;
-}
-
 .agentCard-statistics {
+    box-sizing: border-box;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(92px, 1.25fr);
+    grid-template-columns: auto auto minmax(0, 1fr);
     align-items: center;
-    gap: 8px;
-    margin: 0 20px 14px;
-    padding: 8px 10px;
-    border: 1px solid #edf1f6;
-    border-radius: 10px;
-    background: rgba(248, 250, 252, .9);
+    gap: 10px;
+    height: 35px;
+    margin: 0 16px;
+    padding: 0;
+    border-top: 1px solid #f0f3f7;
+    border-bottom: 1px solid #f0f3f7;
+    background: transparent;
 }
 
 .agentCard-statistic {
     display: flex;
-    flex-direction: column;
+    align-items: baseline;
     min-width: 0;
-    gap: 2px;
+    gap: 3px;
 }
 
 .agentCard-statistic span {
     color: #8993a4;
-    font-size: 11px;
+    font-size: 10px;
     line-height: 1.2;
 }
 
 .agentCard-statistic strong {
     overflow: hidden;
     color: #344054;
-    font-size: 13px;
-    font-weight: 650;
+    font-size: 11px;
+    font-weight: 600;
     line-height: 1.25;
     text-overflow: ellipsis;
 }
@@ -931,15 +925,15 @@ height:100%;
     display: flex;
     align-items: center;
     min-width: 0;
-    gap: 4px;
+    gap: 3px;
     color: #3376cd;
-    font-size: 11px;
+    font-size: 10px;
     line-height: 1.2;
 }
 
 .agentCard-knowledge i {
     flex-shrink: 0;
-    font-size: 13px;
+    font-size: 11px;
 }
 
 .agentCard-knowledge span {
@@ -948,37 +942,39 @@ height:100%;
 }
 
 .agentCard-lowerHalfbox {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
-    padding: 10px 20px 12px;
-    border-top: 1px solid #eef1f5;
-    background: rgba(250, 252, 255, .72);
+    gap: 6px;
+    height: 41px;
+    padding: 6px 16px 8px;
+    border-top: 0;
+    background: transparent;
 }
 
 .agentCard-quickMetrics {
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    gap: 10px;
+    gap: 7px;
 }
 
 .agentCard-quickMetrics > span {
     display: inline-flex;
     align-items: baseline;
-    gap: 4px;
+    gap: 3px;
 }
 
 .agentCard-quickMetrics small {
     color: #7d8797;
-    font-size: 11px;
+    font-size: 10px;
 }
 
 .agentCard-quickMetrics strong {
     color: #e78125;
-    font-size: 13px;
-    font-weight: 650;
+    font-size: 11px;
+    font-weight: 600;
 }
 
 .agentCard-actions {
@@ -986,19 +982,19 @@ height:100%;
     align-items: center;
     justify-content: flex-end;
     min-width: 0;
-    gap: 3px;
+    gap: 1px;
 }
 
 .agentCard-actionButton {
-    padding: 3px 5px;
+    padding: 2px 3px;
     border: 0;
-    border-radius: 5px;
+    border-radius: 4px;
     color: #3376cd;
     background: transparent;
     font: inherit;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 550;
-    line-height: 18px;
+    line-height: 15px;
     white-space: nowrap;
     cursor: pointer;
     transition: color .16s ease, background-color .16s ease;
@@ -1038,6 +1034,8 @@ height:100%;
 
     .agent-cardBox {
         flex-basis: 100%;
+        height: auto;
+        min-height: 138px;
     }
 
     .agentCard-lowerHalfbox {

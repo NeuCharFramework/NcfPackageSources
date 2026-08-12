@@ -152,18 +152,21 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             // Diagnostics deliberately contain only model metadata and counts. Prompt、密钥、完整端点、工具定义
             // 都不会写入日志，便于安全地将 A2A 路径与本地 Agent 执行配置比对。
             _logger.LogInformation(
-                "Published A2A run {DiagnosticId} for agent {AgentKey} (template {TemplateId}) uses {ExecutionProfile}; {ModelDescription}; functions={FunctionCallsEnabled}; toolCount={ToolCount}",
+                "Published A2A run {DiagnosticId} for agent {AgentKey} (template {TemplateId}) uses {ExecutionProfile}; {ModelDescription}; credential={CredentialState}; session={SessionStrategy}; functions={FunctionCallsEnabled}; toolCount={ToolCount}",
                 diagnosticId,
                 publishedAgent.PublicAgentKey,
                 diagnostics.TemplateId,
                 diagnostics.ExecutionProfile,
                 diagnostics.ModelDescription,
+                diagnostics.CredentialState,
+                diagnostics.SessionStrategy,
                 diagnostics.FunctionCallsEnabled,
                 diagnostics.ToolCount);
             SenparcTrace.SendCustomLog(
                 "AgentsManager.A2A.ExecutionModel",
                 $"DiagnosticId={diagnosticId}; Agent={publishedAgent.PublicAgentKey}; TemplateId={diagnostics.TemplateId}; " +
                 $"profile={diagnostics.ExecutionProfile}; {diagnostics.ModelDescription}; " +
+                $"credential={diagnostics.CredentialState}; session={diagnostics.SessionStrategy}; " +
                 $"functionCalls={diagnostics.FunctionCallsEnabled}; toolCount={diagnostics.ToolCount}");
         }
 

@@ -693,6 +693,7 @@
 .workflow-rich-text-input-control > .el-input { flex: 1 1 auto; min-width: 0; }
 .workflow-rich-text-input-control > .el-button { flex: 0 0 auto; min-height: 32px; padding-inline: 9px; }
 .workflow-rich-text-input.is-multiline .workflow-rich-text-input-control > .el-button { min-height: 32px; }
+.parameter-formula-compatibility { margin-top: 6px; padding: 5px 8px; border: 1px solid; border-radius: 5px; font-size: 12px; line-height: 1.45; }
 .parameter-template-card.workflow-rich-text-template-card { background: #f7f8ff; border-color: #b7c4f0; }
 .parameter-template-card { display: grid; gap: 7px; padding: 9px; color: #465466; background: #f4f8ff; border: 1px solid #bdd8ff; border-radius: 6px; }
 .parameter-template-summary { overflow: hidden; font-size: 12px; line-height: 1.45; text-overflow: ellipsis; white-space: nowrap; }

@@ -114,9 +114,6 @@
                                     <div class="upperHalfbox_describe_title text-ellipsis" :title="aitem.name">{{
                                         aitem.name }}</div>
                                 </div>
-                                <div class="agentCard-middleHalfbox text-ellipsis-2line" :title="aitem.description">{{
-                                    aitem.description }}
-                                </div>
                                 <div class="agentCard-statistics">
                                     <div class="agentCard-statistic">
                                         <span>完成轮次</span>
@@ -140,7 +137,8 @@
                                         <button type="button" class="agentCard-actionButton"
                                             @@click="handleEditDrawerOpenBtn('drawerAgent',aitem)">编辑</button>
                                         <button type="button" class="agentCard-actionButton agentCard-actionButton--a2a"
-                                            @@click="openPublishedA2AEditor(aitem)">{{ aitem.hasPublishedA2A ? '管理 A2A' : '发布 A2A' }}</button>
+                                            :title="aitem.hasPublishedA2A ? '管理 A2A 发布配置' : '发布为 A2A'"
+                                            @@click="openPublishedA2AEditor(aitem)">A2A</button>
                                         <button type="button" class="agentCard-actionButton" @@click="handleAgentView(aitem,aindex)">详情</button>
                                         <button type="button" class="agentCard-actionButton agentCard-actionButton--danger" @@click="handleAgentDelete(aitem)">删除</button>
                                     </div>

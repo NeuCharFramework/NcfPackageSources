@@ -11,12 +11,15 @@
 
 @section breadcrumbs {
     <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
-    <el-breadcrumb-item>知识库管理管理</el-breadcrumb-item>
+    <el-breadcrumb-item>知识库管理</el-breadcrumb-item>
     <el-breadcrumb-item>知识库管理列表</el-breadcrumb-item>
 }
 
 <div>
     <div class="admin-role">
+        <el-alert title="新手操作顺序：新建知识库并配置 Embedding 与向量库 → 在“配置”中关联资料 → 点击“向量化” → 到“召回测试”核验结果。"
+                  type="info" :closable="false" show-icon style="margin-bottom: 12px;">
+        </el-alert>
         <el-row class="filter-condition" :gutter="8">
             <el-col :span="2"></el-col>
             <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
@@ -158,7 +161,7 @@
             <div class="drawerRtl">
                 @* 内容中的头（包括标题和关闭图标） *@
                 <div class="drawerRtl__header">
-                    <div class="drawerRtl__header__title">{{ groupForm.id ? '编辑知识库关联' : '新增知识库关联' }} </div>
+                    <div class="drawerRtl__header__title">管理知识库资料</div>
                     <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerGroup')">&times;</div>
                 </div>
                 @* 内容中的主体内容 *@
@@ -170,12 +173,16 @@
                                 <el-option v-for="item in contentTypeData" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item v-if="groupForm.contentType === 2" label="文件列表" prop="files">
+                        <el-alert v-if="groupForm.contentType === 2"
+                                  title="保存资料关联后，已构建的向量会失效；请返回列表点击“向量化”后再进行召回测试。"
+                                  type="warning" :closable="false" show-icon style="margin-bottom: 16px;">
+                        </el-alert>
+                        <el-form-item v-if="groupForm.contentType === 2" label="选择知识库资料" prop="files">
                             <div class="groupFMB">
                                 <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
                                     <div class="df-wn flex-ac" style="gap: 10px;">
                                         <el-input v-model="fileQueryList.filter" size="small"
-                                                  placeholder="文件名称" style="width:auto;"></el-input>
+                                                  placeholder="按文件名搜索" style="width:auto;"></el-input>
                                         <el-button size="small" icon="el-icon-search"
                                                    @@click="handleConfigFileSearch">搜索</el-button>
                                     </div>
@@ -183,13 +190,13 @@
                                 <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
                                     <div class="df-wn flex-ac" style="gap: 10px;">
                                         <el-button size="small" type="primary" icon="el-icon-upload2"
-                                                   @@click="handleElVisibleOpenBtn('dialogFile')">上传文件</el-button>
-                                        <el-button size="small" type="danger" icon="el-icon-delete"
-                                                   @@click="handleConfigFileBatchDelete">批量删除</el-button>
+                                                   @@click="handleElVisibleOpenBtn('dialogFile')">上传知识库资料</el-button>
+                                        <el-button size="small" icon="el-icon-close"
+                                                   @@click="clearConfigFileSelection">清空选择</el-button>
                                     </div>
                                 </div>
                                 <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
-                                    <span class="groupFMB_ma_label">已选择:</span>
+                                    <span class="groupFMB_ma_label">已选择资料:</span>
                                     <div class="groupFMB_ma_list">
                                         <div class="df flex-ac flex-js" style="gap:10px">
                                             <div v-for="(item,index) in groupForm.files" :key="item.id"
@@ -205,7 +212,7 @@
                                           style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
                                           @@selection-change="handleConfigFileSelectionChange">
                                     <el-table-column type="selection" width="30"></el-table-column>
-                                    <el-table-column prop="fileName" label="文件名" width="200"
+                                    <el-table-column prop="fileName" label="可关联资料" width="200"
                                                      show-overflow-tooltip></el-table-column>
                                     <el-table-column prop="fileSize" label="文件大小" width="100">
                                     </el-table-column>
@@ -218,15 +225,13 @@
                                     </el-table-column> *@
                                     <el-table-column fixed="right" label="操作" width="130">
                                         <template slot-scope="{ row }">
-                                            @* <el-button type="primary" size="small"
-                                                       @@click="handleEditDrawerOpenBtn('dialogGroupAgent',row)">编辑</el-button> *@
-                                            <el-button type="danger" size="small"
-                                                       @@click="handleConfigFileDelete(row)">删除</el-button>
+                                            <el-button size="small"
+                                                       @@click="removeConfigFileSelection(row)">取消选择</el-button>
                                         </template>
                                     </el-table-column>
                                 </el-table>
                                 <div class="df-wn flex-ac flex-jsb" style="margin-top:10px;flex-wrap:wrap;gap:8px;">
-                                    <span class="el-pagination__total" style="margin-right:12px;">当前选中 {{ groupForm.files.length }} 行</span>
+                                    <span class="el-pagination__total" style="margin-right:12px;">当前已选 {{ groupForm.files.length }} 份资料</span>
                                     <el-pagination :current-page.sync="fileQueryList.pageIndex"
                                                    :page-size="fileQueryList.pageSize"
                                                    :page-sizes="[10, 20, 50,100]"
@@ -251,8 +256,8 @@
             </div>
         </el-drawer>
 
-        @* 配置页内「新建文件」上传弹框：选择文件后调用上传接口写入 FileManage，保存时与知识库关联 *@
-        <el-dialog title="新建文件"
+        @* 配置页内上传：仅创建知识库用途的文件，随后由当前抽屉保存关联。 *@
+        <el-dialog title="上传知识库资料"
                    :visible.sync="visible.dialogFile"
                    width="480px"
                    :close-on-click-modal="false"
@@ -266,8 +271,8 @@
                        :on-success="configUploadSuccess"
                        :on-error="configUploadError"
                        :file-list="configUploadFileList">
-                <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-                <div slot="tip" class="el-upload__tip">选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联</div>
+                <el-button slot="trigger" size="small" type="primary">选择资料文件</el-button>
+                <div slot="tip" class="el-upload__tip">仅支持可安全提取的文本和 Office 文件。上传后会自动勾选；仍需点击当前抽屉的“确认”才会关联到知识库。</div>
             </el-upload>
             <div slot="footer" class="dialog-footer">
                 <el-button size="mini" @@click="visible.dialogFile = false">关闭</el-button>

@@ -1,6 +1,3 @@
-﻿    <el-menu-item index="1">
-        <a :href="'/Admin/FileManager/Index?uid='+moduleData.xncfModuleDto.uid"><i class="fa fa-laptop"></i>@XR["Area.Home"]</a>
-    </el-menu-item>
-    <el-menu-item index="2">
-        <a :href="'/Admin/FileManager/DatabaseSample?uid='+moduleData.xncfModuleDto.uid"><i class="fa fa-bookmark-o"></i>@XR["Area.DatabaseSample"]</a>
-    </el-menu-item>
+﻿<el-menu-item index="FileManager">
+    <a :href="'/Admin/FileManager/Index?uid='+moduleData.xncfModuleDto.uid"><i class="fa fa-file"></i>@XR["Area.FileManager.Files"]</a>
+</el-menu-item>

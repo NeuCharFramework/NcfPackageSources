@@ -230,22 +230,24 @@ namespace Senparc.Xncf.AgentsManagerTests
         }
 
         [TestMethod]
-        public void PublishedA2AAgent_UsesLocalWorkflowCompatibleExecutionProfile()
+        public void PublishedA2AAgent_UsesLocalChatGroupCompatibleExecutionProfile()
         {
             var local = AgentTemplateRunRequest.ForLocalWorkflow(5013, "workflow-run", null);
             var a2aWithoutTools = AgentTemplateRunRequest.ForPublishedA2A(5013, "agent-5013", false);
             var a2aWithExplicitTools = AgentTemplateRunRequest.ForPublishedA2A(5013, "agent-5013", true);
 
             Assert.AreEqual(AgentTemplateRunRequest.LocalWorkflowCompatibleProfile, local.ProfileName);
-            Assert.AreEqual(local.ProfileName, a2aWithoutTools.ProfileName);
-            Assert.AreEqual(local.MaxOutputTokens, a2aWithoutTools.MaxOutputTokens);
-            Assert.AreEqual(local.Temperature, a2aWithoutTools.Temperature);
-            Assert.AreEqual(local.TopP, a2aWithoutTools.TopP);
+            Assert.AreEqual(AgentTemplateRunRequest.LocalChatGroupCompatibleProfile, a2aWithoutTools.ProfileName);
+            Assert.AreEqual(2000, a2aWithoutTools.MaxOutputTokens);
+            Assert.AreEqual(0.3f, a2aWithoutTools.Temperature);
+            Assert.AreEqual(0.3f, a2aWithoutTools.TopP);
+            Assert.IsTrue(local.UseFreshAgentSession);
+            Assert.AreEqual(local.UseFreshAgentSession, a2aWithoutTools.UseFreshAgentSession);
             Assert.IsFalse(local.AllowFunctionCalls);
             Assert.IsFalse(a2aWithoutTools.AllowFunctionCalls);
             Assert.IsTrue(a2aWithExplicitTools.AllowFunctionCalls);
-            Assert.AreEqual(local.MaxOutputTokens, a2aWithExplicitTools.MaxOutputTokens);
-            Assert.AreEqual(local.Temperature, a2aWithExplicitTools.Temperature);
+            Assert.AreEqual(a2aWithoutTools.MaxOutputTokens, a2aWithExplicitTools.MaxOutputTokens);
+            Assert.AreEqual(a2aWithoutTools.Temperature, a2aWithExplicitTools.Temperature);
         }
 
         [TestMethod]

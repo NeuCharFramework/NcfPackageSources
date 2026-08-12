@@ -98,6 +98,7 @@ namespace Senparc.Xncf.KnowledgeBase
         {
             services.AddScoped<ColorAppService>();
             services.AddScoped<Domain.Services.KnowledgeBaseService>();
+            services.AddScoped<Senparc.Xncf.FileManager.Domain.Services.INcfFileDeletionGuard, Domain.Services.KnowledgeBaseFileDeletionGuard>();
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();

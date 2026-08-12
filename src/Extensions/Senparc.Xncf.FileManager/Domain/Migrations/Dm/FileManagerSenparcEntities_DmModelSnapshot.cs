@@ -72,12 +72,25 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Dm
                         .HasColumnType("INT")
                         .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AccessLevel")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasDefaultValue(0);
+
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("ContentHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("NVARCHAR2(64)");
+
+                    b.Property<string>("ContentType")
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(300)
@@ -115,6 +128,11 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Dm
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<int>("ResourceScope")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasDefaultValue(100);
+
                     b.Property<string>("StorageFileName")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(32767)");
@@ -126,6 +144,8 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Dm
                         .HasColumnType("TIMESTAMP");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ResourceScope", "FolderId");
 
                     b.ToTable("Senparc_FileManager_NcfFile");
                 });
@@ -169,10 +189,17 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Dm
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<int>("ResourceScope")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasDefaultValue(100);
+
                     b.Property<int>("TenantId")
                         .HasColumnType("INT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ResourceScope", "ParentId");
 
                     b.ToTable("Senparc_FileManager_NcfFolder");
                 });

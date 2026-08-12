@@ -1563,12 +1563,49 @@ public sealed class NeuCharWorkflowEngine
                 variables[token] = ResolveBinding(source, outputs, functionSelectionInputs);
             }
         }
+
+        // A template consisting of one formula is a value expression, not text interpolation.
+        // Preserve its JSON type so a Function request can receive an Int32, Boolean, Decimal,
+        // etc. rather than the textual rendering of that value. Any surrounding text keeps the
+        // existing text-template behavior for backwards compatibility.
+        if (TryGetWholeTemplateExpression(text, out var wholeExpression))
+        {
+            if (!NeuCharWorkflowExpressionEngine.TryEvaluate(wholeExpression, variables, out var value, out var error))
+            {
+                throw new InvalidOperationException($"文本表达式无效：{error}");
+            }
+            if (NodeToText(value).Length > 8_000)
+            {
+                throw new InvalidOperationException("文本表达式的结果超过 8000 个字符。");
+            }
+            return value?.DeepClone();
+        }
+
         text = RenderTemplateExpressions(text, variables);
         foreach (var (token, value) in variables)
         {
             text = text.Replace($"{{{{{token}}}}}", NodeToText(value), StringComparison.Ordinal);
         }
         return JsonValue.Create(text);
+    }
+
+    private static bool TryGetWholeTemplateExpression(string text, out string expression)
+    {
+        expression = null;
+        var trimmed = (text ?? string.Empty).Trim();
+        if (!trimmed.StartsWith("{{=", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        var end = FindTemplateExpressionEnd(trimmed, 3);
+        if (end < 0 || end + 2 != trimmed.Length)
+        {
+            return false;
+        }
+
+        expression = trimmed[3..end].Trim();
+        return expression.Length > 0;
     }
 
     private static string RenderTemplateExpressions(string text, IReadOnlyDictionary<string, JsonNode> variables)

@@ -25,9 +25,16 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Response
 {
     public class RecallTestResponse
     {
+        /// <summary>当前测试中的返回顺序，从 1 开始。</summary>
+        public int Rank { get; set; }
+
+        /// <summary>向量库返回的相似度分数，仅适合在同一检索配置下比较。</summary>
         public double? Score { get; set; }
+
         public string Content { get; set; }
+        public int ContentLength { get; set; }
         public string RecallTime { get; set; }
+        public long ElapsedMilliseconds { get; set; }
         public string SourceName { get; set; }
         public string SourceLink { get; set; }
     }

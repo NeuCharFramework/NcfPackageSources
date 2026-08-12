@@ -42,7 +42,7 @@ namespace Senparc.Xncf.KnowledgeBase
         public string HomeUrl => "/Admin/KnowledgeBase/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-            new AreaPageMenuItem(GetAreaHomeUrl(), KnowledgeBaseResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+            // HomeUrl 与知识库管理页相同，保留一个真实入口即可。
             new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/Index"), KnowledgeBaseResource.Get("Area.KnowledgeBase.Management", "知识库管理"),"fa fa-bookmark-o"),
             new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/RecallTest"), KnowledgeBaseResource.Get("Area.KnowledgeBase.RecallTest", "召回测试"),"fa fa-bookmark-o"),
         };

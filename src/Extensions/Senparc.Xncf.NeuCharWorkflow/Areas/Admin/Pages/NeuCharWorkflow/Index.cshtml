@@ -689,6 +689,11 @@
                                                                 :title="templateBindingLabel(item.source)">
                                                             {{templatePlaceholder(item.token)}}
                                                         </el-tag>
+                                                        <el-tag v-if="formulaParameterCompatibility(parameter,selectedNode.config.parameters[parameter.name])"
+                                                                :type="formulaParameterCompatibility(parameter,selectedNode.config.parameters[parameter.name]).level"
+                                                                size="mini">
+                                                            {{formulaParameterCompatibility(parameter,selectedNode.config.parameters[parameter.name]).text}}
+                                                        </el-tag>
                                                     </div>
                                                     <div class="parameter-template-actions">
                                                         <el-button type="text" size="mini" :disabled="editingLocked" @@click="openParameterTemplateEditor(selectedNode,parameter)">编辑文本与变量</el-button>
@@ -701,9 +706,13 @@
                                                                           v-model="selectedNode.config.parameters[parameter.name]"
                                                                           :disabled="editingLocked"
                                                                           :editable="canUseTemplate(parameter)"
-                                                                          :help-text="'可使用 {{input}} 引用当前输入；也可以打开编辑器插入上游输出并组合成一段文本。'"
+                                                                          :help-text="functionParameterFormulaHelp(parameter)"
                                                                           placeholder="手动输入或使用公式"
                                                                           @@edit-template="openParameterTemplateEditor(selectedNode,parameter)"></workflow-rich-text-input>
+                                                <div v-if="formulaParameterCompatibility(parameter,selectedNode.config.parameters[parameter.name])"
+                                                     :class="['parameter-formula-compatibility','binding-'+formulaParameterCompatibility(parameter,selectedNode.config.parameters[parameter.name]).level]">
+                                                    {{formulaParameterCompatibility(parameter,selectedNode.config.parameters[parameter.name]).text}}
+                                                </div>
                                                 <el-input v-else-if="parameter.parameterType===3"
                                                           type="password"
                                                           :disabled="editingLocked"

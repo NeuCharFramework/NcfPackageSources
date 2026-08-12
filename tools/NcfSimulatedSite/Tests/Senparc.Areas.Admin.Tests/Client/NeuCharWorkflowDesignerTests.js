@@ -1112,6 +1112,29 @@ const formulaTemplateBindings = vueOptions.methods.normalizeTemplateBindings.cal
 assert.strictEqual(JSON.stringify(formulaTemplateBindings), JSON.stringify([
     { token: 'value_1', source: { nodeId: 'source-a', path: '$' } }
 ]), 'Applying a formula that references value_1 must retain its inserted upstream binding.');
+const formulaCompatibilityContext = {
+    expectedShape: vueOptions.methods.expectedShape,
+    isTemplateValue: vueOptions.methods.isTemplateValue,
+    templateFor: vueOptions.methods.templateFor,
+    formulaValueText: vueOptions.methods.formulaValueText,
+    isPureFormulaExpression: vueOptions.methods.isPureFormulaExpression,
+    inferredFormulaType: vueOptions.methods.inferredFormulaType
+};
+const numericFormulaParameter = { parameterType: 0, systemType: 'System.Int32' };
+const typedFormulaStatus = vueOptions.methods.formulaParameterCompatibility.call(formulaCompatibilityContext,
+    numericFormulaParameter, { $template: { text: '{{= toInt(value_1) }}', bindings: [] } });
+assert.strictEqual(typedFormulaStatus.level, 'success',
+    'A complete toInt formula should be visibly accepted for an Int32 Function parameter.');
+assert.match(typedFormulaStatus.text, /number/,
+    'Formula compatibility should expose the inferred result type to the designer.');
+const mixedFormulaStatus = vueOptions.methods.formulaParameterCompatibility.call(formulaCompatibilityContext,
+    numericFormulaParameter, '{{= toInt(value_1) }} 个');
+assert.strictEqual(mixedFormulaStatus.level, 'danger',
+    'An Int32 parameter must reject formula text with surrounding characters because it becomes a string.');
+const stringFormulaStatus = vueOptions.methods.formulaParameterCompatibility.call(formulaCompatibilityContext,
+    numericFormulaParameter, '{{= toString(value_1) }}');
+assert.strictEqual(stringFormulaStatus.level, 'warning',
+    'An explicitly string-valued formula should be identified before it is used for an Int32 parameter.');
 const templateSaveNode = { id: 'target', config: { parameters: {} } };
 const templateSaveContext = {
     templateEditor: {

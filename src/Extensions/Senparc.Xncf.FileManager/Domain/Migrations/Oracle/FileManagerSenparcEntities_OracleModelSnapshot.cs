@@ -75,12 +75,25 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Oracle
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AccessLevel")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasDefaultValue(0);
+
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("ContentHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("NVARCHAR2(64)");
+
+                    b.Property<string>("ContentType")
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(300)
@@ -118,6 +131,11 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Oracle
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<int>("ResourceScope")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasDefaultValue(100);
+
                     b.Property<string>("StorageFileName")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
@@ -129,6 +147,8 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Oracle
                         .HasColumnType("TIMESTAMP(7)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ResourceScope", "FolderId");
 
                     b.ToTable("Senparc_FileManager_NcfFile");
                 });
@@ -173,10 +193,17 @@ namespace Senparc.Xncf.FileManager.Domain.Migrations.Oracle
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<int>("ResourceScope")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)")
+                        .HasDefaultValue(100);
+
                     b.Property<int>("TenantId")
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ResourceScope", "ParentId");
 
                     b.ToTable("Senparc_FileManager_NcfFolder");
                 });

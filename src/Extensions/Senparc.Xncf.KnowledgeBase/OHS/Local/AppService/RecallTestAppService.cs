@@ -59,19 +59,28 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         {
             return await this.GetResponseAsync<AppResponseBase<List<RecallTestResponse>>, List<RecallTestResponse>>(async (response, logger) =>
             {
-                logger.Append($"开始召回测试: {request.Content} ...");
-                System.Console.WriteLine($"开始召回测试: {request.Content} ...");
+                if (request == null || request.Id <= 0)
+                {
+                    throw new ArgumentException("请选择有效的知识库。", nameof(request));
+                }
+
+                request.Content = request.Content?.Trim();
+                if (string.IsNullOrWhiteSpace(request.Content))
+                {
+                    throw new ArgumentException("请输入要测试的问题。", nameof(request));
+                }
+
                 try
                 {
                     var topK = request.TopK <= 0 ? 5 : Math.Min(20, Math.Max(1, request.TopK));
+                    // 查询文本可能含业务内容，只记录可诊断的元信息，避免写入控制台和日志。
+                    logger.Append($"开始召回测试：知识库 #{request.Id}，TopK={topK}。");
                     var result = await knowledgeBaseService.RecallTestAsync(request.Id, request.Content, topK);
-                    //logger.Append(result);
                     return result;
                 }
                 catch (Exception ex)
                 {
-                    logger.Append($"向量化处理失败：{ex.Message}");
-                    System.Console.WriteLine(ex.Message);
+                    logger.Append($"召回测试失败：{ex.Message}");
                     throw;
                 }
             });
