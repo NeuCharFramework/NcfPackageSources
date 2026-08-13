@@ -120,7 +120,12 @@
                                 <div class="agentCard-statistics">
                                     <span>完成轮次 {{ formatUsageCount(aitem.completedConversationRounds) }}</span>
                                     <span>Token {{ formatUsageCount(aitem.totalTokens) }}</span>
-                                    <span class="text-ellipsis" :title="aitem.knowledgeBaseName || '未绑定知识库'">{{ aitem.knowledgeBaseName || '未绑定知识库' }}</span>
+                                    <button v-if="aitem.knowledgeBaseId" type="button" class="agentCard-knowledgeBaseLink text-ellipsis"
+                                        :title="`${aitem.knowledgeBaseName || '知识库'}（${getKnowledgeBaseBindingInfo(aitem.knowledgeBaseId).text}），点击管理资料`"
+                                        @@click.stop="openKnowledgeBase(aitem.knowledgeBaseId, 'materials')">
+                                        {{ aitem.knowledgeBaseName || '知识库' }} · {{ getKnowledgeBaseBindingInfo(aitem.knowledgeBaseId).text }}
+                                    </button>
+                                    <span v-else class="text-ellipsis" title="未绑定知识库">未绑定知识库</span>
                                 </div>
                                 <div class="agentCard-lowerHalfbox">
                                     <div class="lowerHalfbox_label">参加中</div>
@@ -298,7 +303,22 @@
                         </div>
                     </div>
                     <div class="agentDetails-statistics">
-                        <span>绑定知识库：{{ agentDetails.agentTemplateDto.knowledgeBaseName || '未绑定' }}</span>
+                        <span class="agentDetails-knowledgeBase">
+                            <span>绑定知识库：</span>
+                            <el-button v-if="agentDetails.agentTemplateDto.knowledgeBaseId" type="text" size="mini"
+                                @@click="openKnowledgeBase(agentDetails.agentTemplateDto.knowledgeBaseId, 'materials')">
+                                {{ agentDetails.agentTemplateDto.knowledgeBaseName || '知识库' }}
+                            </el-button>
+                            <span v-else>未绑定</span>
+                            <el-tag v-if="agentDetails.agentTemplateDto.knowledgeBaseId" size="mini"
+                                :type="getKnowledgeBaseBindingInfo(agentDetails.agentTemplateDto.knowledgeBaseId).type">
+                                {{ getKnowledgeBaseBindingInfo(agentDetails.agentTemplateDto.knowledgeBaseId).text }}
+                            </el-tag>
+                            <el-button v-if="agentDetails.agentTemplateDto.knowledgeBaseId" type="text" size="mini"
+                                @@click="openKnowledgeBase(agentDetails.agentTemplateDto.knowledgeBaseId, 'materials')">资料</el-button>
+                            <el-button v-if="agentDetails.agentTemplateDto.knowledgeBaseId" type="text" size="mini"
+                                @@click="openKnowledgeBase(agentDetails.agentTemplateDto.knowledgeBaseId, 'edit')">设置</el-button>
+                        </span>
                         <span>完成对话轮数：{{ formatUsageCount(agentDetails.agentTemplateDto.completedConversationRounds) }}</span>
                         <span>完成任务：{{ formatUsageCount(agentDetails.agentTemplateDto.completedTaskCount) }}</span>
                         <span>输入 Token：{{ formatUsageCount(agentDetails.agentTemplateDto.promptTokens) }}</span>
@@ -1520,6 +1540,17 @@
                             :label="item.isEmbedded ? item.name : `${item.name}（未向量化）`"
                             :value="item.id" :disabled="!item.isEmbedded"></el-option>
                     </el-select>
+                    <div v-if="agentForm.knowledgeBaseId" class="knowledgeBase-shortcuts">
+                        <el-tag size="mini" :type="getKnowledgeBaseBindingInfo(agentForm.knowledgeBaseId).type">
+                            {{ getKnowledgeBaseBindingInfo(agentForm.knowledgeBaseId).text }}
+                        </el-tag>
+                        <el-button size="mini" type="primary" plain icon="el-icon-folder-opened"
+                            @@click="openKnowledgeBase(agentForm.knowledgeBaseId, 'materials')">管理资料</el-button>
+                        <el-button size="mini" plain icon="el-icon-setting"
+                            @@click="openKnowledgeBase(agentForm.knowledgeBaseId, 'edit')">编辑设置</el-button>
+                        <el-button size="mini" type="text" icon="el-icon-refresh"
+                            @@click="refreshKnowledgeBaseOptions">刷新状态</el-button>
+                    </div>
                     <div class="form-help-text">绑定后会在模型调用前优先执行 RAG 召回；召回失败时保留模型回退能力。</div>
                 </el-form-item>
                 <el-form-item label="外接平台" prop="hookRobotType">
@@ -1999,6 +2030,15 @@
                     :label="item.isEmbedded ? item.name : `${item.name}（未向量化）`"
                     :value="item.id" :disabled="!item.isEmbedded"></el-option>
             </el-select>
+            <div v-if="agentForm.knowledgeBaseId" class="knowledgeBase-shortcuts">
+                <el-tag size="mini" :type="getKnowledgeBaseBindingInfo(agentForm.knowledgeBaseId).type">
+                    {{ getKnowledgeBaseBindingInfo(agentForm.knowledgeBaseId).text }}
+                </el-tag>
+                <el-button size="mini" type="primary" plain icon="el-icon-folder-opened"
+                    @@click="openKnowledgeBase(agentForm.knowledgeBaseId, 'materials')">管理资料</el-button>
+                <el-button size="mini" plain icon="el-icon-setting"
+                    @@click="openKnowledgeBase(agentForm.knowledgeBaseId, 'edit')">编辑设置</el-button>
+            </div>
         </el-form-item>
         <el-form-item label="说明" prop="description">
             <el-input type="textarea" v-model="agentForm.description" :rows="4" placeholder="请填写"></el-input>

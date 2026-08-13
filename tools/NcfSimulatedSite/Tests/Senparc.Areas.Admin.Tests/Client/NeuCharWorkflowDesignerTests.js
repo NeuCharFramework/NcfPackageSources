@@ -999,6 +999,8 @@ assert.ok(page.includes('@@mousedown="onCanvasMouseDown"') && fs.readFileSync(sc
     'The canvas should preserve right-button panning alongside drag selection.');
 assert.ok(page.includes('@@contextmenu.prevent="onCanvasContextMenu"') && page.includes('workflow-canvas-context-menu') && page.includes('canvasNodeInsertMenu.visible'),
     'Blank canvas right clicks should expose a shortcut menu and a position-aware node picker.');
+assert.match(page, /<section v-if="canvasNodeInsertMenu\.visible"[\s\S]*?@@wheel\.stop>/,
+    'The blank-canvas node picker must keep wheel events inside its fixed popup instead of zooming the canvas.');
 assert.ok(page.includes('按设置自动排版</button>') && page.includes('就近网格对齐</button>') && page.includes('适应画布</button>'),
     'The canvas shortcut menu should surface the common overflow layout actions.');
 assert.ok(page.includes('onCanvasMouseDown') && page.includes('class="workflow-selection-box"') && page.includes('selectedNodeIds'),

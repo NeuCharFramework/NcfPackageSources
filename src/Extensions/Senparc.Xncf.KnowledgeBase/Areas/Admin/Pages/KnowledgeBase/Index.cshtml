@@ -46,7 +46,7 @@
                 </el-col>
             </el-row>
         </div>
-        <el-table :data="tableData" style="width:100%;" size="mini" max-height="700" row-key="id" border ref="multipleTable" @@selection-change="handleSelectionChange" @@row-dblclick="handleDbClick">
+        <el-table :data="tableData" style="width:100%;" size="mini" max-height="700" row-key="id" border highlight-current-row ref="multipleTable" @@selection-change="handleSelectionChange" @@row-dblclick="handleDbClick">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column v-if="colData[0].istrue" prop="embeddingModelId" align="left" label="Embedding模型Id" sortable :filters="filterTableHeader.embeddingModelId" :filter-method="filterHandler"></el-table-column>
 
