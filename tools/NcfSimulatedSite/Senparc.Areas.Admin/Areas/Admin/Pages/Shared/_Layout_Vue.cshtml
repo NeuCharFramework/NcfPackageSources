@@ -123,7 +123,7 @@
                                 <i class="fa fa-terminal"></i><span>Console</span>
                                 <span class="admin-footer-badge" v-if="consoleEntries.length">{{ consoleEntries.length }}</span>
                             </button>
-                            <button v-if="neuBellAvailable" type="button" class="admin-footer-action" @@click="neuBellDrawerVisible = true" title="@AR["Admin.Footer.NeuBellLabel"]">
+                            <button v-if="footerAvailabilityKnown" type="button" class="admin-footer-action" @@click="neuBellDrawerVisible = true" title="@AR["Admin.Footer.NeuBellLabel"]">
                                 <i class="fa fa-bell-o"></i><span>@AR["Admin.Footer.NeuBellLabel"]</span>
                                 <span class="admin-footer-badge" v-if="neuBellTotalCount">{{ neuBellTotalCount }}</span>
                             </button>

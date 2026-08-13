@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.15.0-preview12</Version>
+    <Version>0.15.0-preview15</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -115,6 +115,16 @@
 		1、发布型 A2A 复用 IWantToRun 严格流式入口，保留真实上游异常并支持取消请求
 		2、Azure / NeuCharAI 在发生真实 403 时仅回退一次 DeploymentName=ModelId，不切换 Endpoint、Key 或系统默认模型
 		3、依赖 Senparc.AI.AgentKernel 0.1.12，模型 SDK 统一使用 AgentKernel 配置的 HttpClient transport
+		[2026-08-13] v0.15.0-preview13 修复发布型 A2A 与本地 Agent 的请求模式差异
+		1、发布型 A2A 改用 IWantToRun 严格非流式响应入口，A2A 协议流与模型服务流解耦
+		2、保持原始上游异常、会话回退和 403 的受控 DeploymentName 兼容回退
+		3、执行诊断新增 modelRequest=strict-non-streaming，便于与本地 Agent 调用比对
+		[2026-08-13] v0.15.0-preview14 增强发布型 A2A 的 Azure-compatible 403 兼容与诊断
+		1、真实 403 后可按 AIModel 配置的 API Version 受控重试，不改变模型、Endpoint、Key 或系统默认模型
+		2、记录脱敏模型请求路由、API Version、鉴权形态和服务端 request-id，便于定位上游拒绝原因
+		[2026-08-13] v0.15.0-preview15 统一本地与发布型 Agent 的模型错误语义
+		1、本地工作流与发布型 A2A 共用严格响应入口，避免把上游 401/403 伪装为 Agent 正常文本
+		2、补充 AIModel API Version 受控替换回归测试，保证仅修改 api-version 查询参数
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

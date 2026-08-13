@@ -248,6 +248,7 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsFalse(a2aWithoutTools.AllowFunctionCalls);
             Assert.IsTrue(a2aWithExplicitTools.AllowFunctionCalls);
             Assert.IsTrue(a2aWithoutTools.AllowDeploymentNameModelIdFallback);
+            Assert.IsTrue(a2aWithoutTools.EnableModelTransportDiagnostics);
             Assert.IsFalse(local.AllowDeploymentNameModelIdFallback);
             Assert.AreEqual(a2aWithoutTools.MaxOutputTokens, a2aWithExplicitTools.MaxOutputTokens);
             Assert.AreEqual(a2aWithoutTools.Temperature, a2aWithExplicitTools.Temperature);
@@ -296,6 +297,44 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsNotNull(typeof(PublishedA2AAgentFactory).GetMethod(
                 "LogExecutionFailure",
                 BindingFlags.NonPublic | BindingFlags.Instance));
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_UsesStrictNonStreamingModelExecution()
+        {
+            // Published A2A may stream its protocol events, but it must not force a provider-side
+            // streaming request. Some Azure-compatible gateways authorise ordinary Chat requests
+            // while rejecting streaming routes; this must stay aligned with local Agent execution.
+            Assert.IsNotNull(typeof(AgentTemplateRunner).GetMethod(
+                "ExecuteBuiltResponseRunnerAsync",
+                BindingFlags.NonPublic | BindingFlags.Static));
+            Assert.IsNull(typeof(AgentTemplateRunner).GetMethod(
+                "ExecuteBuiltStreamingRunnerAsync",
+                BindingFlags.NonPublic | BindingFlags.Static));
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_ConfiguredApiVersionFallback_ReplacesOnlyApiVersion()
+        {
+            var transportType = typeof(AgentTemplateRunner).Assembly.GetType(
+                "Senparc.Xncf.AgentsManager.Domain.Services.PublishedA2AModelTransport",
+                throwOnError: true);
+            var replaceMethod = transportType.GetMethod(
+                "ReplaceApiVersion",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(replaceMethod);
+
+            var result = replaceMethod.Invoke(
+                null,
+                new object[]
+                {
+                    new Uri("https://example.invalid/team/openai/deployments/deepseek-chat/chat/completions?api-version=2025-04-01-preview&trace=1"),
+                    "2022-12-01"
+                }) as Uri;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("/team/openai/deployments/deepseek-chat/chat/completions", result.AbsolutePath);
+            Assert.AreEqual("api-version=2022-12-01&trace=1", result.Query.TrimStart('?'));
         }
 
         [TestMethod]
