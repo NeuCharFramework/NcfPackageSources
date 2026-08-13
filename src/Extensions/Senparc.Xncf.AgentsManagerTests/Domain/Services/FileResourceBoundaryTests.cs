@@ -8,6 +8,8 @@
 
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.FileManager.Domain.Services;
+using System;
+using System.Linq;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests;
 
@@ -44,5 +46,17 @@ public class FileResourceBoundaryTests
         asset.AccessLevel = NcfFileAccessLevel.Public;
         asset.ResourceScope = NcfFileResourceScope.KnowledgeBase;
         Assert.IsNull(NcfFileService.GetPublicAssetUrl(asset));
+    }
+
+    [TestMethod]
+    public void FolderUploadPath_ShouldKeepRelativeSegmentsAndRejectTraversal()
+    {
+        var folders = NcfFolderUploadPath.GetFolderSegments("产品资料/2026/入门/说明.docx", "说明.docx");
+        CollectionAssert.AreEqual(new[] { "产品资料", "2026", "入门" }, folders.ToArray());
+
+        Assert.ThrowsException<ArgumentException>(() =>
+            NcfFolderUploadPath.GetFolderSegments("产品资料/../说明.docx", "说明.docx"));
+        Assert.ThrowsException<ArgumentException>(() =>
+            NcfFolderUploadPath.GetFolderSegments("产品资料/伪造名称.docx", "说明.docx"));
     }
 }

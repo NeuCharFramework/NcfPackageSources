@@ -78,6 +78,14 @@
     margin-top: 10px;
 }
 
+.file-manager-folder-input {
+    display: none;
+}
+
+.file-manager-folder-upload-summary {
+    margin: 12px 0;
+}
+
 .file-manager-empty {
     display: flex;
     min-height: 180px;

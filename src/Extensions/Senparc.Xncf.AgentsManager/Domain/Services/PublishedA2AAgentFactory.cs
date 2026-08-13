@@ -60,15 +60,33 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     A2AErrorCode.InvalidParams);
             }
 
-            var execution = await _agentTemplateRunner.RunAsync(
-                template,
-                userText,
-                AgentTemplateRunRequest.ForPublishedA2A(
-                    template.Id,
-                    publishedAgent.PublicAgentKey,
-                    publishedAgent.AllowFunctionCalls),
-                diagnostics => LogExecutionModel(diagnosticId, publishedAgent, diagnostics),
-                cancellationToken).ConfigureAwait(false);
+            // ChatGroup 将同一类本地 Agent 直接交给 ChatClientAgent 的流式执行器。
+            // 已发布 A2A 必须走同一入口，不能经 IWantToRun.RunChatAsync 的兼容包装层，
+            // 否则相同模板在群组与对外 A2A 中可能形成不同的上游模型请求。
+            AgentTemplateRunResult execution;
+            try
+            {
+                execution = await _agentTemplateRunner.RunWithChatClientAgentAsync(
+                    template,
+                    userText,
+                    AgentTemplateRunRequest.ForPublishedA2A(
+                        template.Id,
+                        publishedAgent.PublicAgentKey,
+                        publishedAgent.AllowFunctionCalls),
+                    diagnostics => LogExecutionModel(diagnosticId, publishedAgent, diagnostics),
+                    cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                LogExecutionFailure(diagnosticId, publishedAgent, ex);
+                throw new A2AException(
+                    $"The published A2A agent failed while processing the model response. DiagnosticId: {diagnosticId}. Check server diagnostics.",
+                    A2AErrorCode.InternalError);
+            }
             if (!execution.Success)
             {
                 throw new A2AException(execution.ErrorMessage ?? "The A2A agent did not return a displayable response.", A2AErrorCode.InvalidAgentResponse);
@@ -182,6 +200,21 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 $"profile={diagnostics.ExecutionProfile}; {diagnostics.ModelDescription}; " +
                 $"credential={diagnostics.CredentialState}; session={diagnostics.SessionStrategy}; " +
                 $"functionCalls={diagnostics.FunctionCallsEnabled}; toolCount={diagnostics.ToolCount}");
+        }
+
+        private void LogExecutionFailure(string diagnosticId, PublishedA2AAgent publishedAgent, Exception exception)
+        {
+            var summary = SummarizeFailure($"{exception.GetType().Name}: {exception.Message}");
+            _logger.LogError(
+                exception,
+                "Published A2A run {DiagnosticId} for agent {AgentKey} failed while aggregating the model response. {Failure}",
+                diagnosticId,
+                publishedAgent.PublicAgentKey,
+                summary);
+            SenparcTrace.SendCustomLog(
+                "AgentsManager.A2A.ExecutionFailure",
+                $"DiagnosticId={diagnosticId}; Agent={publishedAgent.PublicAgentKey}; " +
+                $"ExceptionType={exception.GetType().FullName}; Failure={summary}");
         }
 
         private static bool ContainsServiceFailureSignature(string? text)

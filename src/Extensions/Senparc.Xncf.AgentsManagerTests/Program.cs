@@ -44,6 +44,7 @@ public static class Program
             var fileResourceBoundaryTests = new FileResourceBoundaryTests();
             fileResourceBoundaryTests.ResourceProfiles_ShouldKeepKnowledgeBaseAndSiteAssetsSeparated();
             fileResourceBoundaryTests.PublicAssetUrl_ShouldRequirePublishedStaticAssetAndFingerprint();
+            fileResourceBoundaryTests.FolderUploadPath_ShouldKeepRelativeSegmentsAndRejectTraversal();
 
             Console.WriteLine("UsageAnalyticsTests passed.");
             Console.WriteLine("PromptUsageHelperTests passed.");

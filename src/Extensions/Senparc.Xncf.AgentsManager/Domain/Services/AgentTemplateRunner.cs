@@ -33,6 +33,7 @@ using Senparc.Xncf.PromptRange.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -103,6 +104,148 @@ public sealed class AgentTemplateRunner
     }
 
     /// <summary>
+    /// 使用 IWantToRun 的严格流式入口执行。
+    /// 该入口复用本地 Agent 的 Prompt 替换、模型参数和工具配置，同时保留模型服务的原始异常，
+    /// 使 A2A 不会把 401/403 等上游故障伪装成一条正常的 Agent 回复。
+    /// </summary>
+    public async Task<AgentTemplateRunResult> RunWithChatClientAgentAsync(
+        AgentTemplate template,
+        string userText,
+        AgentTemplateRunRequest request,
+        Action<AgentTemplateExecutionDiagnostics> onPrepared = null,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(template);
+        ArgumentNullException.ThrowIfNull(request);
+
+        var build = await BuildAsync(
+                template,
+                userText,
+                request,
+                onPrepared,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        if (!build.Success)
+        {
+            return AgentTemplateRunResult.Failed(build.ErrorMessage, build.Diagnostics);
+        }
+
+        try
+        {
+            return await ExecuteBuiltStreamingRunnerAsync(build, userText, request, cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception ex) when (request.AllowDeploymentNameModelIdFallback
+                                   && ContainsForbiddenStatus(ex)
+                                   && TryBuildAlternateDeploymentModel(build.EffectiveModel, out var fallbackModel))
+        {
+            // Some Azure-compatible gateways expose a model identifier as the actual deployment
+            // route. ChatGroup already supports this compatibility fallback; publish it through the
+            // shared runner so A2A performs the same model selection without silently changing to a
+            // different system-default model.
+            var fallbackSetting = _aiModelService.BuildSenparcAiSetting(fallbackModel);
+            var fallbackRequest = request.WithDeploymentNameModelIdFallback(fallbackSetting);
+            SenparcTrace.SendCustomLog(
+                "AgentsManager.AgentTemplateRunner.DeploymentFallback",
+                $"Agent={template.Id}; Platform={fallbackModel.AiPlatform}; " +
+                $"Deployment={build.EffectiveModel.DeploymentName}; FallbackDeployment={fallbackModel.DeploymentName}");
+
+            var fallbackBuild = await BuildAsync(
+                    template,
+                    userText,
+                    fallbackRequest,
+                    onPrepared,
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            if (!fallbackBuild.Success)
+            {
+                return AgentTemplateRunResult.Failed(fallbackBuild.ErrorMessage, fallbackBuild.Diagnostics);
+            }
+
+            return await ExecuteBuiltStreamingRunnerAsync(fallbackBuild, userText, fallbackRequest, cancellationToken)
+                .ConfigureAwait(false);
+        }
+    }
+
+    private static async Task<AgentTemplateRunResult> ExecuteBuiltStreamingRunnerAsync(
+        AgentTemplateRunnerBuildResult build,
+        string userText,
+        AgentTemplateRunRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (build.Runner?.Kernel?.ChatClientAgent == null)
+        {
+            return AgentTemplateRunResult.Failed("独立 Agent 未能创建 ChatClientAgent。", build.Diagnostics);
+        }
+
+        var input = userText ?? string.Empty;
+        var session = request.UseFreshAgentSession ? build.Runner.Kernel.AgentSession : null;
+        string output;
+        try
+        {
+            output = await CollectStreamedAgentTextAsync(build.Runner, input, session, cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception ex) when (session != null && !ContainsForbiddenStatus(ex))
+        {
+            // 部分模型适配器不接受 AgentSession 时退回无状态执行；权限错误则由上层
+            // 的受控 DeploymentName 兼容回退处理，避免不必要地重复提交同一请求。
+            output = await CollectStreamedAgentTextAsync(build.Runner, input, session: null, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        return string.IsNullOrWhiteSpace(output)
+            ? AgentTemplateRunResult.Failed("独立 Agent 没有返回有效内容。", build.Diagnostics)
+            : AgentTemplateRunResult.Succeeded(output, build.Diagnostics);
+    }
+
+    /// <summary>
+    /// 只收集真实文本片段，避免依赖 <c>ToAgentResponseAsync()</c> 对不同模型流结束事件
+    /// 的聚合行为。请求仍然经 IWantToRun 执行，确保 Prompt 参数替换和 ChatOptions 清理一致。
+    /// </summary>
+    private static async Task<string> CollectStreamedAgentTextAsync(
+        IWantToRun runner,
+        string input,
+        AgentSession session,
+        CancellationToken cancellationToken)
+    {
+        var output = new StringBuilder();
+        await foreach (var update in runner.RunChatStreamingAsync(
+                           input,
+                           session,
+                           options: null,
+                           cancellationToken: cancellationToken)
+                       .WithCancellation(cancellationToken)
+                       .ConfigureAwait(false))
+        {
+            if (!string.IsNullOrWhiteSpace(update.Text))
+            {
+                output.Append(update.Text);
+                continue;
+            }
+
+            var contentText = update.Contents?
+                .OfType<TextContent>()
+                .Select(z => z.Text)
+                .Where(z => !string.IsNullOrWhiteSpace(z));
+            if (contentText != null)
+            {
+                output.Append(string.Concat(contentText));
+            }
+        }
+
+        return output.ToString().Trim();
+    }
+
+    /// <summary>
     /// 构造可被工作流编排复用的本地 Agent 运行器。所有入口都必须经由此方法，
     /// 避免 A2A 与页面中的本地 Agent 出现模型或 Prompt 配置分叉。
     /// </summary>
@@ -160,7 +303,12 @@ public sealed class AgentTemplateRunner
             .ConfigureAwait(false);
 #pragma warning restore MEAI001
 
-        return AgentTemplateRunnerBuildResult.Succeeded(runner, agentOptions, configuration.Setting, diagnostics);
+        return AgentTemplateRunnerBuildResult.Succeeded(
+            runner,
+            agentOptions,
+            configuration.Setting,
+            configuration.ResolvedModel,
+            diagnostics);
     }
 
     private async Task<AgentTemplateExecutionConfiguration> ResolveConfigurationAsync(
@@ -238,6 +386,7 @@ public sealed class AgentTemplateRunner
 
         return new AgentTemplateExecutionConfiguration(
             setting,
+            resolvedModel,
             instructions,
             new AgentTemplateExecutionDiagnostics(
                 request.ProfileName,
@@ -384,8 +533,49 @@ public sealed class AgentTemplateRunner
             : "custom";
     }
 
+    private static bool ContainsForbiddenStatus(Exception exception)
+    {
+        var message = exception?.ToString() ?? string.Empty;
+        return message.Contains("Status: 403", StringComparison.OrdinalIgnoreCase)
+               || message.Contains("StatusCode: 403", StringComparison.OrdinalIgnoreCase)
+               || (message.Contains("403", StringComparison.OrdinalIgnoreCase)
+                   && message.Contains("Forbidden", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool TryBuildAlternateDeploymentModel(AIModelDto model, out AIModelDto fallbackModel)
+    {
+        fallbackModel = null;
+        if (model == null
+            || (model.AiPlatform != AiPlatform.AzureOpenAI && model.AiPlatform != AiPlatform.NeuCharAI)
+            || string.IsNullOrWhiteSpace(model.ModelId)
+            || string.Equals(model.DeploymentName, model.ModelId, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        fallbackModel = new AIModelDto
+        {
+            Id = model.Id,
+            Alias = $"{model.Alias ?? "Model"}_DeploymentAsModelId",
+            DeploymentName = model.ModelId,
+            ModelId = model.ModelId,
+            Endpoint = model.Endpoint,
+            AiPlatform = model.AiPlatform,
+            ConfigModelType = model.ConfigModelType,
+            OrganizationId = model.OrganizationId,
+            ApiKey = model.ApiKey,
+            ApiVersion = model.ApiVersion,
+            Note = model.Note,
+            MaxToken = model.MaxToken,
+            IsShared = model.IsShared,
+            Show = model.Show
+        };
+        return true;
+    }
+
     private sealed record AgentTemplateExecutionConfiguration(
         ISenparcAiSetting Setting,
+        AIModelDto ResolvedModel,
         string Instructions,
         AgentTemplateExecutionDiagnostics Diagnostics);
 }
@@ -412,6 +602,11 @@ public sealed class AgentTemplateRunRequest
     /// 是否使用本次执行新建的 AgentSession。不会跨请求保存 A2A 历史。
     /// </summary>
     public bool UseFreshAgentSession { get; init; } = true;
+    /// <summary>
+    /// Azure-compatible provider compatibility mode: on a real 403, retry once with deployment name
+    /// equal to the configured model identifier. The fallback never changes endpoint, API key or model.
+    /// </summary>
+    public bool AllowDeploymentNameModelIdFallback { get; init; }
     public string RunnerName { get; init; }
     public int MaxOutputTokens { get; init; } = 3000;
     public float Temperature { get; init; } = 0.5f;
@@ -438,7 +633,28 @@ public sealed class AgentTemplateRunRequest
             Temperature = 0.3f,
             TopP = 0.3f,
             // 对外工具执行必须由发布配置显式开启；模型与 Prompt 运行路径仍与本地 ChatGroup 一致。
-            AllowFunctionCalls = allowFunctionCalls
+            AllowFunctionCalls = allowFunctionCalls,
+            AllowDeploymentNameModelIdFallback = true
+        };
+    }
+
+    public AgentTemplateRunRequest WithDeploymentNameModelIdFallback(ISenparcAiSetting setting)
+    {
+        ArgumentNullException.ThrowIfNull(setting);
+        return new AgentTemplateRunRequest
+        {
+            ProfileName = $"{ProfileName}-deployment-model-id-fallback",
+            AllowFunctionCalls = AllowFunctionCalls,
+            DefaultSetting = setting,
+            // DefaultSetting is deliberately the alternate form of the same resolved model. Do not
+            // re-apply the Prompt-bound model configuration during the compatibility retry.
+            UseTemplateModelSettings = false,
+            UseFreshAgentSession = UseFreshAgentSession,
+            AllowDeploymentNameModelIdFallback = false,
+            RunnerName = $"{RunnerName}-deployment-model-id-fallback",
+            MaxOutputTokens = MaxOutputTokens,
+            Temperature = Temperature,
+            TopP = TopP
         };
     }
 }
@@ -460,6 +676,7 @@ public sealed record AgentTemplateRunnerBuildResult(
     IWantToRun Runner,
     ChatClientAgentOptions AgentOptions,
     ISenparcAiSetting EffectiveSetting,
+    AIModelDto EffectiveModel,
     AgentTemplateExecutionDiagnostics Diagnostics,
     string ErrorMessage)
 {
@@ -467,13 +684,14 @@ public sealed record AgentTemplateRunnerBuildResult(
         IWantToRun runner,
         ChatClientAgentOptions agentOptions,
         ISenparcAiSetting effectiveSetting,
+        AIModelDto effectiveModel,
         AgentTemplateExecutionDiagnostics diagnostics)
-        => new(true, runner, agentOptions, effectiveSetting, diagnostics, null);
+        => new(true, runner, agentOptions, effectiveSetting, effectiveModel, diagnostics, null);
 
     public static AgentTemplateRunnerBuildResult Failed(
         string errorMessage,
         AgentTemplateExecutionDiagnostics diagnostics)
-        => new(false, null, null, null, diagnostics, errorMessage);
+        => new(false, null, null, null, null, diagnostics, errorMessage);
 }
 
 public sealed record AgentTemplateRunResult(

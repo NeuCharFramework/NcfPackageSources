@@ -88,6 +88,36 @@ namespace Senparc.Xncf.FileManager.Domain.Services
             return path;
         }
 
+        /// <summary>
+        /// Resolves a relative folder path below <paramref name="rootFolderId"/>.
+        /// Existing levels are reused, so multiple browser upload batches retain
+        /// one coherent directory tree.
+        /// </summary>
+        public async Task<int?> GetOrCreateFolderPathAsync(
+            IEnumerable<string> folderSegments,
+            int? rootFolderId,
+            NcfFileResourceScope resourceScope = NcfFileResourceScope.KnowledgeBase)
+        {
+            EnsureValidScope(resourceScope);
+            await ValidateParentAsync(rootFolderId, resourceScope);
+
+            var parentId = rootFolderId;
+            foreach (var rawSegment in folderSegments ?? Enumerable.Empty<string>())
+            {
+                var name = NormalizeName(rawSegment);
+                var folder = await GetObjectAsync(z =>
+                    z.ParentId == parentId && z.ResourceScope == resourceScope && z.Name == name);
+                if (folder == null)
+                {
+                    folder = await CreateFolderAsync(name, parentId, null, resourceScope);
+                }
+
+                parentId = folder.Id;
+            }
+
+            return parentId;
+        }
+
         public async Task<NcfFolder> CreateFolderAsync(
             string name,
             int? parentId,

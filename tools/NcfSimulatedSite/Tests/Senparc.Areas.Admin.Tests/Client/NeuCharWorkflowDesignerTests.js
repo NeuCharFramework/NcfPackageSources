@@ -1232,6 +1232,8 @@ assert.ok(!page.includes(':visible.sync="runDialogVisible"'),
     'Workflow execution should remain in the persistent dock instead of using a modal dialog.');
 assert.match(styles, /\.workflow-list\s*\{[^}]*overflow-y:\s*auto;[^}]*overscroll-behavior:\s*contain;/s,
     'The workflow name list should scroll independently without chaining to the editor.');
+assert.match(styles, /\.workflow-list\s*\{[^}]*padding-top:\s*1px;[^}]*overflow-y:\s*auto;/s,
+    'The workflow list should leave room for the active first item border above its translated position.');
 assert.match(styles, /\.palette-content,\s*\.inspector-content\s*\{[^}]*overflow-y:\s*auto;[^}]*overscroll-behavior:\s*contain;/s,
     'The node palette and inspector should each own their vertical scroll area.');
 assert.match(styles, /\.workflow-canvas\s*\{[^}]*height:\s*100%;[^}]*overflow:\s*auto;[^}]*overscroll-behavior:\s*contain;/s,
@@ -1375,6 +1377,12 @@ assert.ok(replayScript.includes('centerCurrentNode') && replayScript.includes("b
     'Selecting or playing a replay step should smoothly center its node in the canvas viewport.');
 assert.match(replayStyles, /\.workflow-replay-canvas-wrap\s*\{[^}]*scroll-behavior:\s*smooth;/s,
     'The replay canvas should retain smooth scrolling when the browser handles the scroll transition.');
+assert.ok(replayPage.includes('workflow-replay-timeline-list'),
+    'Replay steps should live in a dedicated scrollable list beneath the fixed heading.');
+assert.match(replayStyles, /\.workflow-replay-layout\s*\{[^}]*grid-template-rows:\s*minmax\(0,\s*1fr\);[^}]*height:\s*clamp\(420px,\s*calc\(100vh - 310px\),\s*720px\);[^}]*min-height:\s*0;/s,
+    'The replay layout should stay within the available viewport instead of growing with the event count.');
+assert.match(replayStyles, /\.workflow-replay-timeline-list\s*\{[^}]*overflow-y:\s*auto;[^}]*overscroll-behavior:\s*contain;/s,
+    'The replay step list should scroll independently without chaining into the page or canvas.');
 let replayVueOptions = null;
 function ReplayVue(options) { replayVueOptions = options; }
 const replaySandbox = {

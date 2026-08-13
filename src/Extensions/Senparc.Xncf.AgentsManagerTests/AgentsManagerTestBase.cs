@@ -8,6 +8,7 @@ using Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -246,8 +247,42 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsFalse(local.AllowFunctionCalls);
             Assert.IsFalse(a2aWithoutTools.AllowFunctionCalls);
             Assert.IsTrue(a2aWithExplicitTools.AllowFunctionCalls);
+            Assert.IsTrue(a2aWithoutTools.AllowDeploymentNameModelIdFallback);
+            Assert.IsFalse(local.AllowDeploymentNameModelIdFallback);
             Assert.AreEqual(a2aWithoutTools.MaxOutputTokens, a2aWithExplicitTools.MaxOutputTokens);
             Assert.AreEqual(a2aWithoutTools.Temperature, a2aWithExplicitTools.Temperature);
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_DeploymentNameFallback_KeepsTheSameModelBoundary()
+        {
+            var fallbackMethod = typeof(AgentTemplateRunner).GetMethod(
+                "TryBuildAlternateDeploymentModel",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(fallbackMethod);
+
+            var source = new AIModelDto
+            {
+                Id = 8,
+                Alias = "published-a2a",
+                AiPlatform = Senparc.AI.AiPlatform.NeuCharAI,
+                ConfigModelType = AIKernel.Domain.Models.ConfigModelType.Chat,
+                ModelId = "deepseek-chat",
+                DeploymentName = "gateway-deployment",
+                Endpoint = "https://example.invalid/",
+                ApiKey = "test-key",
+                ApiVersion = "2025-04-01-preview"
+            };
+            object?[] arguments = { source, null };
+
+            Assert.IsTrue((bool)fallbackMethod.Invoke(null, arguments)!);
+            var fallback = arguments[1] as AIModelDto;
+            Assert.IsNotNull(fallback);
+            Assert.AreEqual(source.ModelId, fallback.DeploymentName);
+            Assert.AreEqual(source.ModelId, fallback.ModelId);
+            Assert.AreEqual(source.Endpoint, fallback.Endpoint);
+            Assert.AreEqual(source.ApiKey, fallback.ApiKey);
+            Assert.AreEqual(source.AiPlatform, fallback.AiPlatform);
         }
 
         [TestMethod]
@@ -256,6 +291,11 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsNotNull(_serviceProvider.GetRequiredService<AgentTemplateRunner>());
             Assert.IsNotNull(_serviceProvider.GetRequiredService<AgentsWorkflowObjectProvider>());
             Assert.IsNotNull(_serviceProvider.GetRequiredService<PublishedA2AAgentFactory>());
+            Assert.IsNotNull(typeof(AgentTemplateRunner).GetMethod(
+                nameof(AgentTemplateRunner.RunWithChatClientAgentAsync)));
+            Assert.IsNotNull(typeof(PublishedA2AAgentFactory).GetMethod(
+                "LogExecutionFailure",
+                BindingFlags.NonPublic | BindingFlags.Instance));
         }
 
         [TestMethod]

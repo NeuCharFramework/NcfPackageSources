@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <Version>0.2.5-preview5</Version>
     <AssemblyName>Senparc.Xncf.AIKernel.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel.Abstractions</RootNamespace>
@@ -14,7 +14,7 @@
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>Senparc.Xncf.AIKernel.Abstractions</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
@@ -24,13 +24,13 @@
       [2026-08-04] v0.2.3-preview3 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.4.0-preview3
       [2026-08-08] v0.2.4-preview4 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.5.0-preview4
       [2026-08-13] v0.2.5-preview5 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.6.0-preview5
+      1、TargetFramework 调整为 net10.0，与 Shared.Abstractions 对齐并纳入解决方案以便 NuGet 发布
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.AIKernel.Abstractions.XML</DocumentationFile>
+    <OutputPath>..\..\BuildOutPut</OutputPath>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -38,8 +38,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='TemplateRelease'">
-    <OutputPath>..\..\..\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\..\BuildOutPut\Senparc.Xncf.AIKernel.Abstractions.XML</DocumentationFile>
+    <OutputPath>..\..\BuildOutPut</OutputPath>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>

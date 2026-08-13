@@ -630,6 +630,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     }
                 }
 
+                // 任务详情的成员标签需要与 Agent 列表使用同一份历史用量和活动时间统计。
+                // GetChatGroupItem 原先只映射基础 AgentTemplate，导致这些字段保持默认值。
+                var agentTemplateAppService = base.GetRequiredService<AgentTemplateAppService>();
+                await agentTemplateAppService.PopulateAgentMetadataAsync(
+                    agents.Concat(roleAgentDtoList.Select(z => z.AgentTemplateDto)));
+
                 var remoteMembers = await remoteMemberService.GetFullListAsync(
                     z => z.ChatGroupId == id,
                     z => z.Id,

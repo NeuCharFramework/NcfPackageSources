@@ -52,15 +52,17 @@
         <div class="workflow-replay-layout">
             <aside class="workflow-replay-timeline">
                 <h3>执行步骤</h3>
-                <button type="button" :class="['workflow-replay-timeline-item',{active:stepIndex===-1}]" @@click="resetPlayback">
-                    <span class="workflow-replay-timeline-dot"></span><span><strong>开始</strong><small>加载运行快照</small></span>
-                </button>
-                <button v-for="(item,index) in replay.events" :key="item.sequence"
-                        type="button" :class="['workflow-replay-timeline-item',{active:stepIndex===index,passed:index<=stepIndex,failed:item.status==='failed'}]"
-                        @@click="goToStep(index)">
-                    <span class="workflow-replay-timeline-dot"></span>
-                    <span><strong>{{ item.nodeName }}</strong><small>{{ eventSummary(item) }}</small></span>
-                </button>
+                <div class="workflow-replay-timeline-list">
+                    <button type="button" :class="['workflow-replay-timeline-item',{active:stepIndex===-1}]" @@click="resetPlayback">
+                        <span class="workflow-replay-timeline-dot"></span><span><strong>开始</strong><small>加载运行快照</small></span>
+                    </button>
+                    <button v-for="(item,index) in replay.events" :key="item.sequence"
+                            type="button" :class="['workflow-replay-timeline-item',{active:stepIndex===index,passed:index<=stepIndex,failed:item.status==='failed'}]"
+                            @@click="goToStep(index)">
+                        <span class="workflow-replay-timeline-dot"></span>
+                        <span><strong>{{ item.nodeName }}</strong><small>{{ eventSummary(item) }}</small></span>
+                    </button>
+                </div>
             </aside>
 
             <main ref="canvasViewport" class="workflow-replay-canvas-wrap">

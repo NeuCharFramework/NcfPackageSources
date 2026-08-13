@@ -182,6 +182,7 @@ var app = new Vue({
       agentDetailsGroupTaskList: [], // 组 任务列表
       agentDetailsGroupTaskHistoryList: [],
       agentDetailsGroupDetailsTaskDetails: '',
+      agentDetailsGroupTaskMemberList: [],
       agentGroupTaskMemberfilter: '',
       agentGroupTaskMemberfilterList: [],
       // 智能体详情 任务
@@ -261,6 +262,7 @@ var app = new Vue({
       groupTaskListLastNew: [],
       groupTaskDetails: '',
       groupTaskHistoryList: [],
+      groupTaskMemberList: [],
       groupTaskMemberfilter: '',
       groupTaskMemberfilterList: [],
       // 组 新增|编辑 智能体
@@ -2244,6 +2246,11 @@ var app = new Vue({
               this.clearHistoryTimer()
             }
 
+            if (!detailsOn) {
+              if (detailType === 'agentGroupTask') this.$set(this, 'agentDetailsGroupTaskMemberList', [])
+              if (detailType === 'groupTask') this.$set(this, 'groupTaskMemberList', [])
+            }
+
             let taskDetail = data?.data?.chatTaskDto ?? ''
             if (taskDetail) {
               taskDetail = Object.assign({}, detail, taskDetail)
@@ -2433,6 +2440,28 @@ var app = new Vue({
 
         const groupDetail = data?.data ?? {}
         const taskMemberList = this.getGroupParticipantList(groupDetail)
+
+        // 任务详情页的成员面板使用组详情状态渲染。启动任务后，任务详情请求可能
+        // 先于组详情请求完成；用这里取得的完整组数据回填对应状态，避免右侧面板
+        // 因为竞态暂时没有 groupDetails 而显示为空，重新进入页面才恢复。
+        const mergeTaskGroupDetail = (currentDetail) => {
+          const current = currentDetail || {}
+          return Object.assign({}, current, groupDetail, {
+            chatGroupDto: Object.assign({}, current.chatGroupDto || {}, groupDetail.chatGroupDto || {})
+          })
+        }
+
+        if (memberType === 'groupTask') {
+          this.$set(this, 'groupDetails', mergeTaskGroupDetail(this.groupDetails))
+        }
+        if (memberType === 'agentGroupTask') {
+          this.$set(this, 'agentDetailsGroupDetails', mergeTaskGroupDetail(this.agentDetailsGroupDetails))
+          this.$set(this, 'agentDetailsGroupTaskMemberList', taskMemberList)
+        }
+        if (memberType === 'groupTask') {
+          this.$set(this, 'groupTaskMemberList', taskMemberList)
+        }
+
         // 任务
         if (memberType === 'task') {
           this.$set(this, 'taskMemberList', taskMemberList)
@@ -2461,9 +2490,8 @@ var app = new Vue({
       let members = []
       if (detailType === 'task') members = this.taskMemberList || []
       if (detailType === 'agentTask') members = this.agentDetailsTaskMemberList || []
-      if (detailType === 'groupTask') members = (this.groupDetails && this.groupDetails.agentTemplateDtoList) || []
-      if (detailType === 'agentGroupTask') {
-        members = (this.agentDetailsGroupDetails && this.agentDetailsGroupDetails.agentTemplateDtoList) || []
+      if (['groupTask', 'agentGroupTask'].includes(detailType)) {
+        members = this.getTaskParticipantList(detailType)
       }
 
       this.usageAnalyticsAgentOptions = members.map(item => ({
@@ -4052,7 +4080,7 @@ var app = new Vue({
       }
     },
 
-    handleAgentDelete(item) {
+    handleAgentDelete(item, { closeEditor = false } = {}) {
       const itemData = item?.agentTemplateDto || item
       if (!itemData || !itemData.id) return
 
@@ -4105,10 +4133,11 @@ var app = new Vue({
           '<div style="margin-top:8px;">同时会删除与该智能体相关的历史消息记录，且不可恢复。</div>'
         ].join('')
 
-        this.$confirm(previewMessage, '操作确认', {
+        this.$confirm(previewMessage, '删除智能体确认', {
           dangerouslyUseHTMLString: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
+          confirmButtonText: '删除智能体',
+          cancelButtonText: '取消',
+          type: 'warning'
         }).then(() => {
           serviceAM.post(serviceURL).then(res => {
             if (res.data.success) {
@@ -4116,6 +4145,9 @@ var app = new Vue({
                 type: 'success',
                 message: '删除成功!'
               })
+              if (closeEditor) {
+                this.visible.drawerAgent = false
+              }
               this.handleAgentViewAll()
             } else {
               app.$message({
@@ -4199,6 +4231,7 @@ var app = new Vue({
       this.groupTaskList = []
       this.groupTaskDetails = ''
       this.groupTaskHistoryList = []
+      this.groupTaskMemberList = []
       this.groupSelection = []
       this.groupTaskMemberfilter = ''
       this.groupTaskMemberfilterList = []
@@ -4223,6 +4256,7 @@ var app = new Vue({
         this.agentDetailsGroupTaskList = []
         this.agentDetailsGroupDetailsTaskDetails = ''
         this.agentDetailsGroupTaskHistoryList = []
+        this.agentDetailsGroupTaskMemberList = []
         this.agentGroupTaskMemberfilter = ''
         this.agentGroupTaskMemberfilterList = []
         this.getGroupDetailData(clickType, item.id, item)
@@ -4244,6 +4278,7 @@ var app = new Vue({
         this.groupTaskList = []
         this.groupTaskDetails = ''
         this.groupTaskHistoryList = []
+        this.groupTaskMemberList = []
         this.groupTaskMemberfilter = ''
         this.groupTaskMemberfilterList = []
         this.getGroupDetailData(clickType, item.id, item)
@@ -4431,6 +4466,7 @@ var app = new Vue({
         // 清空详情数据
         this.agentDetailsGroupDetailsTaskDetails = ''
         this.agentDetailsGroupTaskHistoryList = []
+        this.agentDetailsGroupTaskMemberList = []
         this.agentGroupTaskMemberfilter = ''
         this.agentGroupTaskMemberfilterList = []
         this.getTaskDetailData(clickType, item.id, item)
@@ -4440,6 +4476,7 @@ var app = new Vue({
         // 清空详情数据
         this.groupTaskDetails = ''
         this.groupTaskHistoryList = []
+        this.groupTaskMemberList = []
         this.groupTaskMemberfilter = ''
         this.groupTaskMemberfilterList = []
         this.getTaskDetailData(clickType, item.id, item)
@@ -4505,29 +4542,71 @@ var app = new Vue({
       } else if (optype === 'agentTask') {
         baseList = this.agentDetailsTaskMemberList ?? []
       } else if (optype === 'agentGroupTaskAdmin') {
-        let agentDtoList = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
+        const agentGroupId = this.agentDetailsGroupDetailsTaskDetails?.chatGroupId
+          || this.agentDetailsGroupDetails?.chatGroupDto?.id
+        if (!this.agentDetailsGroupTaskMemberList.length && agentGroupId) {
+          await this.getTaskMemberListData('agentGroupTask', agentGroupId)
+        }
+        let agentDtoList = this.agentDetailsGroupTaskMemberList.length
+          ? this.agentDetailsGroupTaskMemberList
+          : (this.agentDetailsGroupDetails?.agentTemplateDtoList ?? [])
         let adminAgentId = this.agentDetailsGroupDetails?.chatGroupDto?.adminAgentTemplateId ?? ''
-        let findItem = agentDtoList.find(a => a.id === adminAgentId)
+        let findItem = agentDtoList.find(a => String(a.id) === String(adminAgentId))
         baseList = findItem ? [findItem] : []
       } else if (optype === 'agentGroupTaskEnter') {
-        let agentDtoList = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
+        const agentGroupId = this.agentDetailsGroupDetailsTaskDetails?.chatGroupId
+          || this.agentDetailsGroupDetails?.chatGroupDto?.id
+        if (!this.agentDetailsGroupTaskMemberList.length && agentGroupId) {
+          await this.getTaskMemberListData('agentGroupTask', agentGroupId)
+        }
+        let agentDtoList = this.agentDetailsGroupTaskMemberList.length
+          ? this.agentDetailsGroupTaskMemberList
+          : (this.agentDetailsGroupDetails?.agentTemplateDtoList ?? [])
         let enterAgentId = this.agentDetailsGroupDetails?.chatGroupDto?.enterAgentTemplateId ?? ''
-        let findItem = agentDtoList.find(a => a.id === enterAgentId)
+        let findItem = agentDtoList.find(a => String(a.id) === String(enterAgentId))
         baseList = findItem ? [findItem] : []
       } else if (optype === 'agentGroupTask') {
-        baseList = this.agentDetailsGroupDetails?.agentTemplateDtoList ?? []
+        const agentGroupId = this.agentDetailsGroupDetailsTaskDetails?.chatGroupId
+          || this.agentDetailsGroupDetails?.chatGroupDto?.id
+        if (!this.agentDetailsGroupTaskMemberList.length && agentGroupId) {
+          await this.getTaskMemberListData('agentGroupTask', agentGroupId)
+        }
+        baseList = this.agentDetailsGroupTaskMemberList.length
+          ? this.agentDetailsGroupTaskMemberList
+          : (this.agentDetailsGroupDetails?.agentTemplateDtoList ?? [])
       } else if (optype === 'groupTaskAdmin') {
-        let agentDtoList = this.groupDetails?.agentTemplateDtoList ?? []
+        const groupTaskChatGroupId = this.groupTaskDetails?.chatGroupId
+          || this.groupDetails?.chatGroupDto?.id
+        if (!this.groupTaskMemberList.length && groupTaskChatGroupId) {
+          await this.getTaskMemberListData('groupTask', groupTaskChatGroupId)
+        }
+        let agentDtoList = this.groupTaskMemberList.length
+          ? this.groupTaskMemberList
+          : (this.groupDetails?.agentTemplateDtoList ?? [])
         let adminAgentId = this.groupDetails?.chatGroupDto?.adminAgentTemplateId ?? ''
-        let findItem = agentDtoList.find(a => a.id === adminAgentId)
+        let findItem = agentDtoList.find(a => String(a.id) === String(adminAgentId))
         baseList = findItem ? [findItem] : []
       } else if (optype === 'groupTaskEnter') {
-        let agentDtoList = this.groupDetails?.agentTemplateDtoList ?? []
+        const groupTaskChatGroupId = this.groupTaskDetails?.chatGroupId
+          || this.groupDetails?.chatGroupDto?.id
+        if (!this.groupTaskMemberList.length && groupTaskChatGroupId) {
+          await this.getTaskMemberListData('groupTask', groupTaskChatGroupId)
+        }
+        let agentDtoList = this.groupTaskMemberList.length
+          ? this.groupTaskMemberList
+          : (this.groupDetails?.agentTemplateDtoList ?? [])
         let enterAgentId = this.groupDetails?.chatGroupDto?.enterAgentTemplateId ?? ''
-        let findItem = agentDtoList.find(a => a.id === enterAgentId)
+        let findItem = agentDtoList.find(a => String(a.id) === String(enterAgentId))
         baseList = findItem ? [findItem] : []
       } else if (optype === 'groupTask') {
-        baseList = this.groupDetails?.agentTemplateDtoList ?? []
+        const groupTaskChatGroupId = this.groupTaskDetails?.chatGroupId
+          || this.groupDetails?.chatGroupDto?.id
+        if (!this.groupTaskMemberList.length && groupTaskChatGroupId) {
+          await this.getTaskMemberListData('groupTask', groupTaskChatGroupId)
+        }
+        baseList = this.groupTaskMemberList.length
+          ? this.groupTaskMemberList
+          : (this.groupDetails?.agentTemplateDtoList ?? [])
       }
       // 填充状态与历史输出后再打开弹窗
       this.agentParameterList = await this.buildAgentParameterList(baseList)
@@ -4935,12 +5014,12 @@ var app = new Vue({
     handleTaskFilterChange(val, listType) {
       if (listType === 'agentGroupTask') {
         // 智能体 组 任务
-        const chatGroupMembers = this.getGroupParticipantList(this.agentDetailsGroupDetails)
+        const chatGroupMembers = this.getTaskParticipantList(listType)
         const filterList = chatGroupMembers.filter(item => item.name.includes(val))
         this.agentGroupTaskMemberfilterList = filterList.map(item => this.getParticipantKey(item))
       } else if (listType === 'groupTask') {
         // 组 任务
-        const chatGroupMembers = this.getGroupParticipantList(this.groupDetails)
+        const chatGroupMembers = this.getTaskParticipantList(listType)
         const filterList = chatGroupMembers.filter(item => item.name.includes(val))
         this.groupTaskMemberfilterList = filterList.map(item => this.getParticipantKey(item))
       } else if (listType === 'agentTask') {
@@ -5008,7 +5087,39 @@ var app = new Vue({
 
     getGroupParticipantList(groupDetail) {
       const localAgents = groupDetail?.agentTemplateDtoList ?? []
+      const roleAgents = groupDetail?.roleAgentTemplateDtoList ?? []
       const remoteMembers = groupDetail?.remoteMemberDtoList ?? []
+      const localParticipantMap = new Map()
+      const localParticipants = localAgents.map(agent => {
+        const participant = Object.assign({}, agent, {
+          participantKey: `local:${agent.id}`,
+          agentKind: 'Local',
+          roles: []
+        })
+        localParticipantMap.set(agent.id, participant)
+        return participant
+      })
+
+      roleAgents.forEach(role => {
+        const agent = role?.agentTemplateDto
+        const roleName = String(role?.roleName || '').trim()
+        if (!agent?.id) return
+
+        let participant = localParticipantMap.get(agent.id)
+        if (!participant) {
+          participant = Object.assign({}, agent, {
+            participantKey: `local:${agent.id}`,
+            agentKind: 'Local',
+            roles: []
+          })
+          localParticipantMap.set(agent.id, participant)
+          localParticipants.push(participant)
+        }
+        if (roleName && !participant.roles.includes(roleName)) {
+          participant.roles.push(roleName)
+        }
+      })
+
       const remoteAgents = remoteMembers
         .map(member => {
           const remote = member?.remoteAgentDto
@@ -5023,10 +5134,23 @@ var app = new Vue({
         })
         .filter(Boolean)
 
-      return localAgents.map(agent => Object.assign({}, agent, {
-        participantKey: `local:${agent.id}`,
-        agentKind: 'Local'
-      })).concat(remoteAgents)
+      return localParticipants.concat(remoteAgents)
+    },
+
+    getTaskParticipantList(taskType) {
+      if (taskType === 'agentGroupTask' && this.agentDetailsGroupTaskMemberList.length) {
+        return this.agentDetailsGroupTaskMemberList
+      }
+      if (taskType === 'groupTask' && this.groupTaskMemberList.length) {
+        return this.groupTaskMemberList
+      }
+      if (taskType === 'agentGroupTask') {
+        return this.getGroupParticipantList(this.agentDetailsGroupDetails)
+      }
+      if (taskType === 'groupTask') {
+        return this.getGroupParticipantList(this.groupDetails)
+      }
+      return []
     },
 
     getParticipantKey(participantOrHistory) {
@@ -5077,16 +5201,16 @@ var app = new Vue({
       const formId = participantOrHistory?.fromAgentTemplateId ?? participantOrHistory?.id ?? participantOrHistory
       // 智能体 组 任务
       if (taskType === 'agentGroupTask') {
-        const chatGroupMembers = this.getGroupParticipantList(this.agentDetailsGroupDetails)
+        const chatGroupMembers = this.getTaskParticipantList(taskType)
         const fintItem = chatGroupMembers.find(item => this.getParticipantKey(item) === participantKey)
-          || chatGroupMembers.find(item => item.agentKind !== 'RemoteA2A' && item.id === formId)
+          || chatGroupMembers.find(item => item.agentKind !== 'RemoteA2A' && String(item.id) === String(formId))
         return fintItem ?? {}
       }
       // 组 任务
       if (taskType === 'groupTask') {
-        const chatGroupMembers = this.getGroupParticipantList(this.groupDetails)
+        const chatGroupMembers = this.getTaskParticipantList(taskType)
         const fintItem = chatGroupMembers.find(item => this.getParticipantKey(item) === participantKey)
-          || chatGroupMembers.find(item => item.agentKind !== 'RemoteA2A' && item.id === formId)
+          || chatGroupMembers.find(item => item.agentKind !== 'RemoteA2A' && String(item.id) === String(formId))
         return fintItem ?? {}
       }
       // 智能体 任务

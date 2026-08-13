@@ -143,9 +143,13 @@
             :before-upload="beforeUpload"
             :file-list="uploadDialog.fileList">
             <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-            <div slot="tip" class="el-upload__tip">{{ uploadExtensionHint }}</div>
+            <el-button size="small" icon="el-icon-folder-opened" @@click.stop="chooseUploadFolder">选择文件夹</el-button>
+            <div slot="tip" class="el-upload__tip">{{ uploadExtensionHint }}。选择文件夹后会保留其完整层级结构；每批最多 20 个文件，系统会自动分批上传。</div>
         </el-upload>
+        <input ref="folderUploadInput" class="file-manager-folder-input" type="file" webkitdirectory directory multiple @@change="handleFolderSelection" />
+        <el-alert v-if="uploadFolderSummary" class="file-manager-folder-upload-summary" type="success" :closable="false" show-icon :title="uploadFolderSummary"></el-alert>
         <el-alert class="file-manager-upload-target" type="info" show-icon :closable="false" title="上传位置" :description="uploadTargetText"></el-alert>
+        <el-progress v-if="uploadDialog.uploading" :percentage="uploadDialog.progress" :stroke-width="10" status="success"></el-progress>
         <div v-for="file in uploadDialog.fileList" :key="file.uid" class="file-manager-upload-note">
             <el-input v-model="file.description" :placeholder="file.name + ' 的备注'" size="small"></el-input>
         </div>
