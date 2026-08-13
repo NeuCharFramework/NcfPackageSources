@@ -441,15 +441,25 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 await PopulateAgentMetadataAsync(new[] { agentTemplateDto });
 
                 var promptCode = agentTemplateDto.PromptCode;
-                var promptItem = await this._promptItemService.GetBestPromptAsync(promptCode, true);
-                var promptItemDto = this._promptItemService.Mapping<PromptItemDto>(promptItem);
+                PromptItemDto promptItemDto = null;
+                PromptRangeDto promptRangeDto = null;
+                AIModelDto aiModelDto = null;
 
-                var promptRangeDto = await _promptRangeService.GetAsync(promptItem.RangeId);
-                promptItemDto.PromptRange = promptRangeDto;
+                // PromptCode 兼容两种数据：PromptRange 版本号，或用户手动输入的 SystemMessage。
+                // 手动 Prompt 没有关联 PromptItem，不能直接交给 GetBestPromptAsync，否则会被当作
+                // RangeName 查询并返回“找不到对应的靶场”。
+                if (!string.IsNullOrWhiteSpace(promptCode) && PromptItem.IsPromptVersion(promptCode.Trim()))
+                {
+                    var promptItem = await this._promptItemService.GetBestPromptAsync(promptCode.Trim(), true);
+                    promptItemDto = this._promptItemService.Mapping<PromptItemDto>(promptItem);
 
-                var aiModelService = base.GetService<AIModelService>();
-                var aiModel = await aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
-                var aiModelDto = aiModelService.Mapping<AIModelDto>(aiModel);
+                    promptRangeDto = await _promptRangeService.GetAsync(promptItem.RangeId);
+                    promptItemDto.PromptRange = promptRangeDto;
+
+                    var aiModelService = base.GetService<AIModelService>();
+                    var aiModel = await aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
+                    aiModelDto = aiModelService.Mapping<AIModelDto>(aiModel);
+                }
 
                 var result = new AgentTemplate_GetItemStatusResponse()
                 {

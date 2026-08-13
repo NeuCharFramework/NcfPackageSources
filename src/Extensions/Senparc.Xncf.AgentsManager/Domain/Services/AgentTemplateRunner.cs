@@ -33,6 +33,7 @@ using Senparc.Xncf.PromptRange.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -137,33 +138,64 @@ public sealed class AgentTemplateRunner
 
         var input = userText ?? string.Empty;
         var session = request.UseFreshAgentSession ? build.Runner.Kernel?.AgentSession : null;
-        AgentResponse response;
+        string output;
         try
         {
-            response = await agent.RunStreamingAsync(
-                    input,
-                    session,
-                    options: null,
-                    cancellationToken: cancellationToken)
-                .ToAgentResponseAsync(cancellationToken)
+            output = await CollectStreamedAgentTextAsync(agent, input, session, cancellationToken)
                 .ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch when (session != null)
         {
             // 与原有 RunChatAsync 路径一致：部分模型适配器不接受 AgentSession 时退回无状态执行。
-            response = await agent.RunStreamingAsync(
-                    input,
-                    session: null,
-                    options: null,
-                    cancellationToken: cancellationToken)
-                .ToAgentResponseAsync(cancellationToken)
+            output = await CollectStreamedAgentTextAsync(agent, input, session: null, cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        var output = response?.Text?.Trim();
         return string.IsNullOrWhiteSpace(output)
             ? AgentTemplateRunResult.Failed("独立 Agent 没有返回有效内容。", build.Diagnostics)
             : AgentTemplateRunResult.Succeeded(output, build.Diagnostics);
+    }
+
+    /// <summary>
+    /// 与 ChatGroup 的事件处理方式一致，只收集真实文本片段，避免依赖
+    /// <c>ToAgentResponseAsync()</c> 对不同模型流结束事件的聚合行为。
+    /// </summary>
+    private static async Task<string> CollectStreamedAgentTextAsync(
+        ChatClientAgent agent,
+        string input,
+        AgentSession session,
+        CancellationToken cancellationToken)
+    {
+        var output = new StringBuilder();
+        await foreach (var update in agent.RunStreamingAsync(
+                           input,
+                           session,
+                           options: null,
+                           cancellationToken: cancellationToken)
+                       .WithCancellation(cancellationToken)
+                       .ConfigureAwait(false))
+        {
+            if (!string.IsNullOrWhiteSpace(update.Text))
+            {
+                output.Append(update.Text);
+                continue;
+            }
+
+            var contentText = update.Contents?
+                .OfType<TextContent>()
+                .Select(z => z.Text)
+                .Where(z => !string.IsNullOrWhiteSpace(z));
+            if (contentText != null)
+            {
+                output.Append(string.Concat(contentText));
+            }
+        }
+
+        return output.ToString().Trim();
     }
 
     /// <summary>

@@ -84,6 +84,7 @@
 .workflow-list {
     min-height: 0;
     margin-top: 12px;
+    padding-top: 1px;
     padding-right: 3px;
     overflow-x: hidden;
     overflow-y: auto;

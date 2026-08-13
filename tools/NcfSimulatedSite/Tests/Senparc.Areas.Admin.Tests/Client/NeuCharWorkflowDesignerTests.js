@@ -1232,6 +1232,8 @@ assert.ok(!page.includes(':visible.sync="runDialogVisible"'),
     'Workflow execution should remain in the persistent dock instead of using a modal dialog.');
 assert.match(styles, /\.workflow-list\s*\{[^}]*overflow-y:\s*auto;[^}]*overscroll-behavior:\s*contain;/s,
     'The workflow name list should scroll independently without chaining to the editor.');
+assert.match(styles, /\.workflow-list\s*\{[^}]*padding-top:\s*1px;[^}]*overflow-y:\s*auto;/s,
+    'The workflow list should leave room for the active first item border above its translated position.');
 assert.match(styles, /\.palette-content,\s*\.inspector-content\s*\{[^}]*overflow-y:\s*auto;[^}]*overscroll-behavior:\s*contain;/s,
     'The node palette and inspector should each own their vertical scroll area.');
 assert.match(styles, /\.workflow-canvas\s*\{[^}]*height:\s*100%;[^}]*overflow:\s*auto;[^}]*overscroll-behavior:\s*contain;/s,

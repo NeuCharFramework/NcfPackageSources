@@ -257,15 +257,15 @@
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">靶场:</span>
                                 <span class="value">
-                                    {{ handlePromptShowName('1',agentDetails) }}
+                                    {{ agentDetails.promptRangeDto ? handlePromptShowName('1',agentDetails) : '手动 Prompt' }}
                                 </span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">
                                 <span class="label">靶道:</span>
                                 <span class="value">
-                                    {{ handlePromptShowName('2',agentDetails) }}
+                                    {{ agentDetails.promptItemDto ? handlePromptShowName('2',agentDetails) : '--' }}
                                 </span>
-                                <span class="btnText"
+                                <span v-if="agentDetails.promptItemDto" class="btnText"
                                     @@click="jumpPromptRange('promptRange',agentDetails.promptItemDto)">打靶</span>
                             </div>
                             <div class="df-wn flex-ac flex-js itemBox">

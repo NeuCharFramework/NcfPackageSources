@@ -258,6 +258,9 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsNotNull(_serviceProvider.GetRequiredService<PublishedA2AAgentFactory>());
             Assert.IsNotNull(typeof(AgentTemplateRunner).GetMethod(
                 nameof(AgentTemplateRunner.RunWithChatClientAgentAsync)));
+            Assert.IsNotNull(typeof(PublishedA2AAgentFactory).GetMethod(
+                "LogExecutionFailure",
+                BindingFlags.NonPublic | BindingFlags.Instance));
         }
 
         [TestMethod]
