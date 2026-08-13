@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.15.0-preview11</Version>
+    <Version>0.15.0-preview12</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -111,6 +111,10 @@
 		1、新增远程 A2A 智能体接入、发布管理及多数据库迁移
 		2、统一本地与 A2A AgentTemplate 执行、支持群聊启停和取消回退
 		3、优化 AgentsManager 统计、操作按钮、历史记录与响应式布局
+		[2026-08-13] v0.15.0-preview12 修复发布型 A2A 与本地 Agent 的模型执行一致性
+		1、发布型 A2A 复用 IWantToRun 严格流式入口，保留真实上游异常并支持取消请求
+		2、Azure / NeuCharAI 在发生真实 403 时仅回退一次 DeploymentName=ModelId，不切换 Endpoint、Key 或系统默认模型
+		3、依赖 Senparc.AI.AgentKernel 0.1.12，模型 SDK 统一使用 AgentKernel 配置的 HttpClient transport
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

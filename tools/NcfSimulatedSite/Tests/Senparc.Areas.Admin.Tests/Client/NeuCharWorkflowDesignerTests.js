@@ -1377,6 +1377,12 @@ assert.ok(replayScript.includes('centerCurrentNode') && replayScript.includes("b
     'Selecting or playing a replay step should smoothly center its node in the canvas viewport.');
 assert.match(replayStyles, /\.workflow-replay-canvas-wrap\s*\{[^}]*scroll-behavior:\s*smooth;/s,
     'The replay canvas should retain smooth scrolling when the browser handles the scroll transition.');
+assert.ok(replayPage.includes('workflow-replay-timeline-list'),
+    'Replay steps should live in a dedicated scrollable list beneath the fixed heading.');
+assert.match(replayStyles, /\.workflow-replay-layout\s*\{[^}]*grid-template-rows:\s*minmax\(0,\s*1fr\);[^}]*height:\s*clamp\(420px,\s*calc\(100vh - 310px\),\s*720px\);[^}]*min-height:\s*0;/s,
+    'The replay layout should stay within the available viewport instead of growing with the event count.');
+assert.match(replayStyles, /\.workflow-replay-timeline-list\s*\{[^}]*overflow-y:\s*auto;[^}]*overscroll-behavior:\s*contain;/s,
+    'The replay step list should scroll independently without chaining into the page or canvas.');
 let replayVueOptions = null;
 function ReplayVue(options) { replayVueOptions = options; }
 const replaySandbox = {
