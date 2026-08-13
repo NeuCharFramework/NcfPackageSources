@@ -61,6 +61,17 @@ namespace Senparc.Ncf.Core.AppServices
 
         public string DescriptionResourceKey { get; }
 
+        /// <summary>
+        /// Gets or sets whether this function may be imported automatically by an AI conversation.
+        /// <para>
+        /// This only controls automatic AI tool exposure. It deliberately does not affect the
+        /// normal FunctionRender page or a caller that invokes the AppService explicitly.
+        /// Mutating, host-level operations should opt out and expose a constrained workflow tool
+        /// instead.
+        /// </para>
+        /// </summary>
+        public bool AllowAiInvocation { get; set; } = true;
+
         public FunctionRenderAttribute(string name, string description, Type registerType/*TODO：可提供系统模块的默认值*/)
         {
             _name = name;

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.15.0-preview15</Version>
+    <Version>0.15.0-preview17</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -125,6 +125,12 @@
 		[2026-08-13] v0.15.0-preview15 统一本地与发布型 Agent 的模型错误语义
 		1、本地工作流与发布型 A2A 共用严格响应入口，避免把上游 401/403 伪装为 Agent 正常文本
 		2、补充 AIModel API Version 受控替换回归测试，保证仅修改 api-version 查询参数
+		[2026-08-13] v0.15.0-preview16 修复 NeuCharAI 的 API Version 兼容回退边界
+		1、保留 AIModel 配置的有效 API Version，并在为空或等于 SDK 固定版本时尝试同 Endpoint 的 NeuChar 兼容默认版本
+		2、执行日志显示配置版本和回退来源，便于区分 AIModel 数据与 SDK 默认请求
+		[2026-08-13] v0.15.0-preview17 对齐发布 A2A 与本地 Agent 的模型传输边界
+		1、诊断传输遇到真实 403 后，使用完全相同模型配置通过 AgentKernel 标准本地传输重试，不切换系统默认模型
+		2、安全记录请求结构与上游标准错误字段，保留响应给 SDK 处理且不记录 Prompt、输入或凭证
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

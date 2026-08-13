@@ -1537,7 +1537,7 @@
                 <el-form-item label="绑定知识库" prop="knowledgeBaseId">
                     <el-select v-model="agentForm.knowledgeBaseId" clearable filterable style="width:100%" placeholder="不绑定知识库">
                         <el-option v-for="item in knowledgeBaseOptions" :key="item.id"
-                            :label="item.isEmbedded ? item.name : `${item.name}（未向量化）`"
+                            :label="getKnowledgeBaseOptionLabel(item)"
                             :value="item.id" :disabled="!item.isEmbedded"></el-option>
                     </el-select>
                     <div v-if="agentForm.knowledgeBaseId" class="knowledgeBase-shortcuts">
@@ -1551,7 +1551,10 @@
                         <el-button size="mini" type="text" icon="el-icon-refresh"
                             @@click="refreshKnowledgeBaseOptions">刷新状态</el-button>
                     </div>
-                    <div class="form-help-text">绑定后会在模型调用前优先执行 RAG 召回；召回失败时保留模型回退能力。</div>
+                    <div class="form-help-text">
+                        绑定后会在模型调用前优先执行 RAG 召回；召回失败时保留模型回退能力。
+                        <template v-if="getKnowledgeBaseBindingInfo(agentForm.knowledgeBaseId).text === '旧版向量化，待发布'">旧版向量数据需要在知识库中重新向量化，才能升级为 Agent 可安全隔离检索的发布集合。</template>
+                    </div>
                 </el-form-item>
                 <el-form-item label="外接平台" prop="hookRobotType">
                     <el-select v-model="agentForm.hookRobotType" style="width:100%" placeholder="请选择">
@@ -2027,7 +2030,7 @@
         <el-form-item label="绑定知识库" prop="knowledgeBaseId">
             <el-select v-model="agentForm.knowledgeBaseId" clearable filterable style="width:100%" placeholder="不绑定知识库">
                 <el-option v-for="item in knowledgeBaseOptions" :key="item.id"
-                    :label="item.isEmbedded ? item.name : `${item.name}（未向量化）`"
+                    :label="getKnowledgeBaseOptionLabel(item)"
                     :value="item.id" :disabled="!item.isEmbedded"></el-option>
             </el-select>
             <div v-if="agentForm.knowledgeBaseId" class="knowledgeBase-shortcuts">

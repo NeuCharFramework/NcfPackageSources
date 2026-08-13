@@ -129,7 +129,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             var functionRenderBags = generationOptions?.AllowFunctionInvocation != false
                 ? moduleUids
                     .SelectMany(uid => Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.GetByModuleUid(uid))
-                    .Where(z => z.MethodInfo != null && z.MethodInfo.DeclaringType != null)
+                    // FunctionRender is also used by the normal Admin UI. AI exposure is an
+                    // explicit second permission boundary so host-mutating legacy functions are
+                    // never imported merely because their module is attached to a chat session.
+                    .Where(z => z.MethodInfo != null
+                                && z.MethodInfo.DeclaringType != null
+                                && z.FunctionRenderAttribute?.AllowAiInvocation != false)
                     .ToList()
                 : new List<FunctionRenderBag>();
 

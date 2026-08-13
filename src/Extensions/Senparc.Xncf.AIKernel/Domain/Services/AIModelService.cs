@@ -163,14 +163,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        NeuCharAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharAIApiVersion = GetApiVersionOrDefault(aiModel.ApiVersion),
                         NeuCharEndpoint = normalizedEndpoint,
                         ModelName = modelName,
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureOpenAIApiVersion = GetApiVersionOrDefault(aiModel.ApiVersion),
                         AzureEndpoint = normalizedEndpoint,
                         ModelName = modelName,
                         DeploymentName = aiModel.DeploymentName
@@ -180,7 +180,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureOpenAIApiVersion = GetApiVersionOrDefault(aiModel.ApiVersion),
                         AzureEndpoint = normalizedEndpoint,
                         ModelName = modelName,
                         DeploymentName = aiModel.DeploymentName
@@ -369,14 +369,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
                     {
                         ApiKey = llModel.ApiKey,
-                        NeuCharAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharAIApiVersion = GetApiVersionOrDefault(llModel.ApiVersion),
                         NeuCharEndpoint = normalizedEndpoint,
                         ModelName = modelName
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = llModel.ApiKey,
-                        AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureOpenAIApiVersion = GetApiVersionOrDefault(llModel.ApiVersion),
                         AzureEndpoint = normalizedEndpoint,
                         DeploymentName = llModel.DeploymentName,
                         ModelName = modelName
@@ -386,7 +386,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = llModel.ApiKey,
-                        AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureOpenAIApiVersion = GetApiVersionOrDefault(llModel.ApiVersion),
                         AzureEndpoint = normalizedEndpoint,
                         DeploymentName = llModel.DeploymentName,
                         ModelName = modelName
@@ -560,6 +560,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
 
             return normalized;
+        }
+
+        private static string GetApiVersionOrDefault(string apiVersion)
+        {
+            // AzureOpenAIKeys / NeuCharAIKeys both define 2022-12-01 as the legacy-compatible
+            // default. Do not replace it with null when an imported or manually created AIModel
+            // does not specify ApiVersion; downstream AgentKernel execution needs the value.
+            return string.IsNullOrWhiteSpace(apiVersion) ? "2022-12-01" : apiVersion.Trim();
         }
 
         /// <summary>

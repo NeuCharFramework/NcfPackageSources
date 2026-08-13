@@ -92,6 +92,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 
         public string ModuleProjectName { get; init; }
 
+        /// <summary>
+        /// Absolute path of the solution used for this build. It is displayed for traceability;
+        /// callers must never treat it as an authority to write source files.
+        /// </summary>
+        public string SolutionFilePath { get; init; }
+
         public int Port { get; init; }
 
         public int StartupTimeoutSeconds { get; init; } = 120;
@@ -148,6 +154,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         public DateTimeOffset? StoppedAt { get; init; }
 
         public int? ExitCode { get; init; }
+
+        /// <summary>
+        /// Per-session published output. The directory is removed after a stopped/replaced/failed
+        /// preview, so this value can legitimately point to a path that no longer exists.
+        /// </summary>
+        public string PublishDirectory { get; init; }
     }
 
     public sealed class XncfPreviewPersistenceInfo

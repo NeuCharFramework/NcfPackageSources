@@ -562,11 +562,15 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 }
 
                 var list = await knowledgeBaseService.GetFullListAsync(z => true, z => z.Name, Ncf.Core.Enums.OrderingType.Ascending);
+                var embeddingStatuses = await knowledgeBaseService.GetEmbeddingStatusesAsync(list);
                 return list.Select(z => new KnowledgeBaseOptionResponse
                 {
                     Id = z.Id,
                     Name = z.Name,
-                    IsEmbedded = z.EmbeddedTime.HasValue && !string.IsNullOrWhiteSpace(z.VectorCollectionName)
+                    EmbeddingStatus = embeddingStatuses.TryGetValue(z.Id, out var embeddingStatus)
+                        ? embeddingStatus.ToString().ToLowerInvariant()
+                        : KnowledgeBaseEmbeddingStatus.Pending.ToString().ToLowerInvariant(),
+                    IsEmbedded = KnowledgeBaseService.IsEmbeddingPublished(z)
                 }).ToList();
             });
         }
@@ -582,8 +586,15 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 ?? throw new InvalidOperationException("KnowledgeBase 模块服务未启用，无法绑定知识库。");
             var knowledgeBase = await knowledgeBaseService.GetObjectAsync(z => z.Id == knowledgeBaseId.Value)
                 ?? throw new InvalidOperationException($"绑定的知识库不存在：{knowledgeBaseId.Value}");
-            if (!knowledgeBase.EmbeddedTime.HasValue || string.IsNullOrWhiteSpace(knowledgeBase.VectorCollectionName))
+            if (!KnowledgeBaseService.IsEmbeddingPublished(knowledgeBase))
             {
+                var embeddingStatuses = await knowledgeBaseService.GetEmbeddingStatusesAsync([knowledgeBase]);
+                if (embeddingStatuses.TryGetValue(knowledgeBase.Id, out var embeddingStatus)
+                    && embeddingStatus == KnowledgeBaseEmbeddingStatus.Legacy)
+                {
+                    throw new InvalidOperationException($"知识库“{knowledgeBase.Name}”已有旧版向量数据，请在知识库中重新向量化并发布后再绑定到 Agent。");
+                }
+
                 throw new InvalidOperationException($"知识库“{knowledgeBase.Name}”尚未完成向量化，暂不能绑定到 Agent。");
             }
         }

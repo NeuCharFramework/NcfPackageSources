@@ -124,6 +124,12 @@
                                     <el-col :xs="24" :sm="12" style="margin-top:8px;">
                                         <strong>模块 DLL SHA-256：</strong><span style="word-break:break-all;">{{ scope.row.moduleAssemblySha256 || '尚未生成' }}</span>
                                     </el-col>
+                                    <el-col :xs="24" style="margin-top:8px;">
+                                        <strong>本次构建源码解决方案：</strong><span style="word-break:break-all;">{{ scope.row.solutionFilePath || '—' }}</span>
+                                    </el-col>
+                                    <el-col :xs="24" style="margin-top:8px;">
+                                        <strong>预览部署（publish）目录：</strong><span style="word-break:break-all;">{{ scope.row.publishDirectory || '尚未创建或已回收' }}</span>
+                                    </el-col>
                                 </el-row>
                             </el-card>
                             <div style="margin-top:12px;font-weight:600;">最近输出（最多 300 行）</div>

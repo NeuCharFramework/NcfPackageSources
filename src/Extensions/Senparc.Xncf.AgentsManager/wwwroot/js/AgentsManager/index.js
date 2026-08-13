@@ -5522,9 +5522,22 @@ var app = new Vue({
       if (!knowledgeBase) {
         return { text: '知识库不可用', type: 'danger' }
       }
+      if (knowledgeBase.embeddingStatus === 'legacy') {
+        return { text: '旧版向量化，待发布', type: 'warning' }
+      }
       return knowledgeBase.isEmbedded
         ? { text: '可检索', type: 'success' }
         : { text: '待向量化', type: 'warning' }
+    },
+
+    getKnowledgeBaseOptionLabel(knowledgeBase) {
+      if (!knowledgeBase) return ''
+      if (knowledgeBase.embeddingStatus === 'legacy') {
+        return `${knowledgeBase.name}（已向量化，待重新发布）`
+      }
+      return knowledgeBase.isEmbedded
+        ? knowledgeBase.name
+        : `${knowledgeBase.name}（未向量化）`
     },
 
     buildKnowledgeBaseUrl(knowledgeBaseId, focus = 'materials') {

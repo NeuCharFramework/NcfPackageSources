@@ -1098,6 +1098,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             {
                 SessionId = state.SessionId,
                 ModuleProjectName = state.ModuleProjectName,
+                SolutionFilePath = state.SolutionFilePath,
                 Url = url,
                 ProcessId = processId,
                 StartedAt = startedAt,
@@ -1119,7 +1120,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 ProcessStartedAt = processStartedAt,
                 HealthyAt = healthyAt,
                 StoppedAt = stoppedAt,
-                ExitCode = exitCode
+                ExitCode = exitCode,
+                PublishDirectory = state.PublishDirectory
             };
         }
 

@@ -130,6 +130,64 @@ public sealed class AgentTemplateRunner
         {
             var lastForbiddenException = ex;
 
+            // Diagnostics are implemented with a caller-supplied HttpClient. Before changing any
+            // model setting, retry through AgentKernel's ordinary local transport so the published
+            // A2A path has the same final transport boundary as a local Agent. This retry keeps the
+            // same Prompt, model, deployment, endpoint and credential, and never falls back to the
+            // system-default model.
+            if (request.EnableModelTransportDiagnostics)
+            {
+                try
+                {
+                    var standardTransportRequest = request.WithStandardModelTransportFallback();
+                    SenparcTrace.SendCustomLog(
+                        "AgentsManager.AgentTemplateRunner.StandardTransportFallback",
+                        $"Agent={template.Id}; Platform={build.EffectiveModel.AiPlatform}; " +
+                        $"Model={build.EffectiveModel.ModelId}; Deployment={build.EffectiveModel.DeploymentName}");
+
+                    var standardTransportBuild = await BuildAsync(
+                            template,
+                            userText,
+                            standardTransportRequest,
+                            onPrepared,
+                            cancellationToken: cancellationToken)
+                        .ConfigureAwait(false);
+                    if (!standardTransportBuild.Success)
+                    {
+                        return AgentTemplateRunResult.Failed(
+                            standardTransportBuild.ErrorMessage,
+                            standardTransportBuild.Diagnostics);
+                    }
+
+                    var standardTransportResult = await ExecuteBuiltResponseRunnerAsync(
+                            standardTransportBuild,
+                            userText,
+                            standardTransportRequest,
+                            cancellationToken)
+                        .ConfigureAwait(false);
+                    if (standardTransportResult.Success)
+                    {
+                        SenparcTrace.SendCustomLog(
+                            "AgentsManager.AgentTemplateRunner.StandardTransportFallback",
+                            $"Agent={template.Id}; Result=Succeeded; model and credential unchanged");
+                    }
+
+                    return standardTransportResult;
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    throw;
+                }
+                catch (Exception standardTransportException) when (ContainsForbiddenStatus(standardTransportException))
+                {
+                    lastForbiddenException = standardTransportException;
+                    SenparcTrace.SendCustomLog(
+                        "AgentsManager.AgentTemplateRunner.StandardTransportFallback",
+                        $"Agent={template.Id}; Result=Forbidden; " +
+                        $"ExceptionType={standardTransportException.GetType().FullName}");
+                }
+            }
+
             // Some Azure-compatible gateways expose a model identifier as the actual deployment
             // route. ChatGroup already supports this compatibility fallback; publish it through the
             // shared runner so A2A performs the same model selection without silently changing to a
@@ -166,17 +224,20 @@ public sealed class AgentTemplateRunner
                 }
             }
 
-            if (TryGetConfiguredApiVersionFallback(build.EffectiveModel, out var configuredApiVersion))
+            foreach (var apiVersionFallback in GetApiVersionCompatibilityFallbacks(
+                         build.EffectiveModel,
+                         build.EffectiveSetting))
             {
                 try
                 {
                     using var apiVersionScope = request.EnableModelTransportDiagnostics
-                        ? PublishedA2AModelTransport.Begin(request.DiagnosticId, configuredApiVersion)
+                        ? PublishedA2AModelTransport.Begin(request.DiagnosticId, apiVersionFallback.ApiVersion)
                         : null;
                     SenparcTrace.SendCustomLog(
                         "AgentsManager.AgentTemplateRunner.ApiVersionFallback",
                         $"Agent={template.Id}; Platform={build.EffectiveModel.AiPlatform}; " +
-                        $"ConfiguredApiVersion={configuredApiVersion}; Model={build.EffectiveModel.ModelId}");
+                        $"ApiVersion={apiVersionFallback.ApiVersion}; Source={apiVersionFallback.Source}; " +
+                        $"Model={build.EffectiveModel.ModelId}");
 
                     var apiVersionRequest = request.WithApiVersionCompatibilityFallback();
                     var apiVersionBuild = await BuildAsync(
@@ -525,7 +586,8 @@ public sealed class AgentTemplateRunner
 
         return $"model source={modelSource}; aiModelId={model.Id}; " +
                $"platform={model.AiPlatform}; type={model.ConfigModelType}; model={model.ModelId}; " +
-               $"endpointHost={GetEndpointHost(model.Endpoint)}";
+               $"endpointHost={GetEndpointHost(model.Endpoint)}; " +
+               $"configuredApiVersion={GetConfiguredApiVersion(model, setting)}";
     }
 
     private static string GetEndpointHost(string endpoint)
@@ -580,20 +642,75 @@ public sealed class AgentTemplateRunner
         return true;
     }
 
-    private static bool TryGetConfiguredApiVersionFallback(AIModelDto model, out string apiVersion)
+    private static IReadOnlyList<ApiVersionCompatibilityFallback> GetApiVersionCompatibilityFallbacks(
+        AIModelDto model,
+        ISenparcAiSetting setting)
     {
-        apiVersion = string.Empty;
+        var candidates = new List<ApiVersionCompatibilityFallback>();
         if (model == null
-            || (model.AiPlatform != AiPlatform.AzureOpenAI && model.AiPlatform != AiPlatform.NeuCharAI)
-            || string.IsNullOrWhiteSpace(model.ApiVersion)
-            || string.Equals(model.ApiVersion, "2025-04-01-preview", StringComparison.OrdinalIgnoreCase))
+            || (model.AiPlatform != AiPlatform.AzureOpenAI && model.AiPlatform != AiPlatform.NeuCharAI))
         {
-            return false;
+            return candidates;
         }
 
-        apiVersion = model.ApiVersion.Trim();
-        return apiVersion.Length <= 64;
+        AddApiVersionCandidate(candidates, model.ApiVersion, "AIModel");
+        AddApiVersionCandidate(candidates, GetSettingApiVersion(model.AiPlatform, setting), "EffectiveSetting");
+
+        // NeuChar's existing NCF model configuration and legacy Azure-compatible gateway default to
+        // this version. The MAF Azure client currently emits 2025-04-01-preview unconditionally;
+        // only after that request has actually received 403 do we attempt this same-endpoint
+        // compatibility form. It never changes the model, endpoint, key or authorization scope.
+        if (model.AiPlatform == AiPlatform.NeuCharAI
+            && string.Equals(GetEndpointHost(model.Endpoint), "www.neuchar.com", StringComparison.OrdinalIgnoreCase))
+        {
+            AddApiVersionCandidate(candidates, "2022-12-01", "NeuCharLegacyDefault");
+        }
+
+        return candidates;
     }
+
+    private static void AddApiVersionCandidate(
+        ICollection<ApiVersionCompatibilityFallback> candidates,
+        string apiVersion,
+        string source)
+    {
+        if (string.IsNullOrWhiteSpace(apiVersion))
+        {
+            return;
+        }
+
+        var normalized = apiVersion.Trim();
+        if (normalized.Length > 64
+            || string.Equals(normalized, "2025-04-01-preview", StringComparison.OrdinalIgnoreCase)
+            || candidates.Any(z => string.Equals(z.ApiVersion, normalized, StringComparison.OrdinalIgnoreCase)))
+        {
+            return;
+        }
+
+        candidates.Add(new ApiVersionCompatibilityFallback(normalized, source));
+    }
+
+    private static string GetConfiguredApiVersion(AIModelDto model, ISenparcAiSetting setting)
+    {
+        if (!string.IsNullOrWhiteSpace(model?.ApiVersion))
+        {
+            return model.ApiVersion.Trim();
+        }
+
+        return GetSettingApiVersion(model?.AiPlatform, setting) ?? "unset";
+    }
+
+    private static string GetSettingApiVersion(AiPlatform? platform, ISenparcAiSetting setting)
+    {
+        return platform switch
+        {
+            AiPlatform.AzureOpenAI => setting?.AzureOpenAIApiVersion,
+            AiPlatform.NeuCharAI => setting?.NeuCharAIApiVersion,
+            _ => null
+        };
+    }
+
+    private sealed record ApiVersionCompatibilityFallback(string ApiVersion, string Source);
 
     private sealed record AgentTemplateExecutionConfiguration(
         ISenparcAiSetting Setting,
@@ -690,6 +807,29 @@ public sealed class AgentTemplateRunRequest
             EnableModelTransportDiagnostics = EnableModelTransportDiagnostics,
             DiagnosticId = DiagnosticId,
             RunnerName = $"{RunnerName}-deployment-model-id-fallback",
+            MaxOutputTokens = MaxOutputTokens,
+            Temperature = Temperature,
+            TopP = TopP
+        };
+    }
+
+    public AgentTemplateRunRequest WithStandardModelTransportFallback()
+    {
+        return new AgentTemplateRunRequest
+        {
+            ProfileName = $"{ProfileName}-standard-transport-fallback",
+            AiModelId = AiModelId,
+            AllowFunctionCalls = AllowFunctionCalls,
+            DefaultSetting = DefaultSetting,
+            UseTemplateModelSettings = UseTemplateModelSettings,
+            UseFreshAgentSession = UseFreshAgentSession,
+            // The caller executes this built runner directly, so nested fallback handling is not
+            // needed. Most importantly, diagnostics are disabled to restore AgentKernel's ordinary
+            // local HttpClient pipeline without changing the effective model configuration.
+            AllowDeploymentNameModelIdFallback = false,
+            EnableModelTransportDiagnostics = false,
+            DiagnosticId = DiagnosticId,
+            RunnerName = $"{RunnerName}-standard-transport-fallback",
             MaxOutputTokens = MaxOutputTokens,
             Temperature = Temperature,
             TopP = TopP

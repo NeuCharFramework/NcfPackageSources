@@ -39,6 +39,13 @@ namespace Senparc.Xncf.XncfBuilder
 
         public DbSet<XncfPreviewHost> XncfPreviewHosts { get; set; }
 
+        /// <summary>
+        /// Persistent source of truth for isolated create/modify/validate/merge jobs.
+        /// Migration is intentionally supplied by the host administrator together with the
+        /// existing XncfBuilder migrations.
+        /// </summary>
+        public DbSet<XncfDevelopmentJob> XncfDevelopmentJobs { get; set; }
+
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
 
     }

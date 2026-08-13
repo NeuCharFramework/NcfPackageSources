@@ -407,7 +407,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return $"{request.OrgName}.Xncf.{request.XncfName}";
         }
 
-        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Generate.Name", "Function.XncfBuilder.Generate.Description", typeof(Register))]
+        // Legacy direct generation writes into the selected solution immediately. Keep it for
+        // an administrator using the Builder page, but never make it an AI chat tool. The
+        // isolated development-job workflow is the only AI-capable creation path.
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Generate.Name", "Function.XncfBuilder.Generate.Description", typeof(Register), AllowAiInvocation = false)]
         public async Task<StringAppResponse> Build(BuildXncf_BuildRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

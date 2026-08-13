@@ -10,8 +10,12 @@
 using Senparc.CO2NET.Trace;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,6 +26,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services;
 /// </summary>
 internal static class PublishedA2AModelTransport
 {
+    private const int MaxDiagnosticBodyBytes = 256 * 1024;
+    private const int MaxDiagnosticTextLength = 480;
     private static readonly AsyncLocal<ModelRequestContext> CurrentContext = new();
     private static readonly HttpClient Client = new(new PublishedA2AModelHttpMessageHandler(), disposeHandler: true);
 
@@ -78,15 +84,21 @@ internal static class PublishedA2AModelTransport
 
             try
             {
+                var requestSummary = context == null
+                    ? "unavailable"
+                    : await BuildRequestSummaryAsync(request, cancellationToken).ConfigureAwait(false);
                 var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
                 if (context != null && !response.IsSuccessStatusCode)
                 {
+                    var providerError = await ReadAndRestoreProviderErrorAsync(response, cancellationToken)
+                        .ConfigureAwait(false);
                     SenparcTrace.SendCustomLog(
                         "AgentsManager.A2A.ModelProviderResponse",
                         $"DiagnosticId={context.DiagnosticId}; Status={(int)response.StatusCode}; " +
                         $"Route={GetSafeRoute(request.RequestUri)}; ApiVersion={GetApiVersion(request.RequestUri)}; " +
                         $"ApiVersionOverrideApplied={!string.IsNullOrWhiteSpace(context.ApiVersionOverride)}; " +
-                        $"Auth={GetAuthenticationShape(request)}; ProviderRequestId={GetProviderRequestId(response)}");
+                        $"Auth={GetAuthenticationShape(request)}; ProviderRequestId={GetProviderRequestId(response)}; " +
+                        $"Request={requestSummary}; ProviderError={providerError}");
                 }
 
                 return response;
@@ -102,6 +114,198 @@ internal static class PublishedA2AModelTransport
                     $"Auth={GetAuthenticationShape(request)}; Failure={Summarize(ex.Message)}");
                 throw;
             }
+        }
+
+        private static async Task<string> BuildRequestSummaryAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            var contentType = request.Content?.Headers.ContentType?.MediaType ?? "unset";
+            var contentLength = request.Content?.Headers.ContentLength;
+            if (request.Content == null)
+            {
+                return $"contentType={contentType}; bytes=0; messages=0; roles=none; tools=0; stream=unset";
+            }
+
+            try
+            {
+                var bytes = await request.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+                contentLength ??= bytes.LongLength;
+                if (bytes.Length == 0 || bytes.Length > MaxDiagnosticBodyBytes)
+                {
+                    return $"contentType={contentType}; bytes={contentLength}; bodyShape=not-inspected";
+                }
+
+                using var document = JsonDocument.Parse(bytes);
+                var root = document.RootElement;
+                if (root.ValueKind != JsonValueKind.Object)
+                {
+                    return $"contentType={contentType}; bytes={contentLength}; bodyShape={root.ValueKind}";
+                }
+
+                var messageCount = 0;
+                var roles = new List<string>();
+                if (root.TryGetProperty("messages", out var messages) && messages.ValueKind == JsonValueKind.Array)
+                {
+                    messageCount = messages.GetArrayLength();
+                    foreach (var message in messages.EnumerateArray())
+                    {
+                        if (message.ValueKind == JsonValueKind.Object
+                            && message.TryGetProperty("role", out var role)
+                            && role.ValueKind == JsonValueKind.String)
+                        {
+                            var roleText = role.GetString();
+                            if (!string.IsNullOrWhiteSpace(roleText) && !roles.Contains(roleText, StringComparer.OrdinalIgnoreCase))
+                            {
+                                roles.Add(roleText);
+                            }
+                        }
+                    }
+                }
+
+                var toolCount = root.TryGetProperty("tools", out var tools) && tools.ValueKind == JsonValueKind.Array
+                    ? tools.GetArrayLength()
+                    : 0;
+                var stream = GetSafeScalar(root, "stream");
+                var maxTokens = GetSafeScalar(root, "max_tokens");
+                var maxCompletionTokens = GetSafeScalar(root, "max_completion_tokens");
+                var temperature = GetSafeScalar(root, "temperature");
+                var topP = GetSafeScalar(root, "top_p");
+
+                return $"contentType={contentType}; bytes={contentLength}; messages={messageCount}; " +
+                       $"roles={(roles.Count == 0 ? "none" : string.Join(',', roles))}; tools={toolCount}; " +
+                       $"stream={stream}; maxTokens={maxTokens}; maxCompletionTokens={maxCompletionTokens}; " +
+                       $"temperature={temperature}; topP={topP}";
+            }
+            catch (Exception ex) when (ex is JsonException or InvalidOperationException or HttpRequestException or IOException)
+            {
+                return $"contentType={contentType}; bytes={(contentLength?.ToString() ?? "unset")}; " +
+                       $"bodyShape=unavailable({ex.GetType().Name})";
+            }
+        }
+
+        private static async Task<string> ReadAndRestoreProviderErrorAsync(
+            HttpResponseMessage response,
+            CancellationToken cancellationToken)
+        {
+            if (response.Content == null)
+            {
+                return "empty";
+            }
+
+            var originalContent = response.Content;
+            var originalHeaders = originalContent.Headers
+                .Select(header => new KeyValuePair<string, IEnumerable<string>>(header.Key, header.Value.ToArray()))
+                .ToList();
+
+            byte[] bytes;
+            try
+            {
+                bytes = await originalContent.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex is IOException or HttpRequestException or InvalidOperationException)
+            {
+                return $"unavailable({ex.GetType().Name})";
+            }
+
+            var replacement = new ByteArrayContent(bytes);
+            foreach (var header in originalHeaders)
+            {
+                replacement.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+
+            response.Content = replacement;
+            originalContent.Dispose();
+
+            if (bytes.Length == 0)
+            {
+                return "empty";
+            }
+
+            if (bytes.Length > MaxDiagnosticBodyBytes)
+            {
+                return $"withheld-too-large({bytes.Length} bytes)";
+            }
+
+            return ExtractProviderError(Encoding.UTF8.GetString(bytes));
+        }
+
+        private static string ExtractProviderError(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return "empty";
+            }
+
+            try
+            {
+                using var document = JsonDocument.Parse(text);
+                var root = document.RootElement;
+                var error = root.ValueKind == JsonValueKind.Object
+                            && root.TryGetProperty("error", out var nestedError)
+                    ? nestedError
+                    : root;
+
+                if (error.ValueKind == JsonValueKind.String)
+                {
+                    return $"message={SanitizeDiagnosticText(error.GetString())}";
+                }
+
+                if (error.ValueKind == JsonValueKind.Object)
+                {
+                    var fields = new List<string>();
+                    AddSafeErrorField(fields, error, "code");
+                    AddSafeErrorField(fields, error, "type");
+                    AddSafeErrorField(fields, error, "param");
+                    AddSafeErrorField(fields, error, "message");
+                    if (fields.Count > 0)
+                    {
+                        return string.Join(", ", fields);
+                    }
+                }
+
+                return $"json-without-standard-error; bytes={Encoding.UTF8.GetByteCount(text)}";
+            }
+            catch (JsonException)
+            {
+                return $"text={SanitizeDiagnosticText(text)}";
+            }
+        }
+
+        private static void AddSafeErrorField(List<string> fields, JsonElement error, string propertyName)
+        {
+            if (!error.TryGetProperty(propertyName, out var value)
+                || value.ValueKind is JsonValueKind.Object or JsonValueKind.Array or JsonValueKind.Null or JsonValueKind.Undefined)
+            {
+                return;
+            }
+
+            fields.Add($"{propertyName}={SanitizeDiagnosticText(value.ToString())}");
+        }
+
+        private static string GetSafeScalar(JsonElement root, string propertyName)
+        {
+            if (!root.TryGetProperty(propertyName, out var value)
+                || value.ValueKind is JsonValueKind.Object or JsonValueKind.Array or JsonValueKind.Null or JsonValueKind.Undefined)
+            {
+                return "unset";
+            }
+
+            return Summarize(value.ToString(), 64);
+        }
+
+        private static string SanitizeDiagnosticText(string? text)
+        {
+            var normalized = Regex.Replace(text ?? string.Empty, "<[^>]+>", " ");
+            normalized = Regex.Replace(normalized, @"(?i)\bbearer\s+\S+", "Bearer [redacted]");
+            normalized = Regex.Replace(
+                normalized,
+                @"(?i)(authorization|api[-_ ]?key|token|secret)\s*[:=]\s*['""]?[^,;\s'""]+",
+                "$1=[redacted]");
+            normalized = Regex.Replace(normalized, @"(?i)\bsk-[A-Za-z0-9_-]{8,}\b", "[redacted]");
+            normalized = Regex.Replace(normalized, @"https?://\S+", "[url-redacted]");
+            normalized = Regex.Replace(normalized, @"\s+", " ").Trim();
+            return Summarize(normalized, MaxDiagnosticTextLength);
         }
 
         private static Uri? ReplaceApiVersion(Uri? uri, string apiVersion)
@@ -186,10 +390,10 @@ internal static class PublishedA2AModelTransport
             return "unset";
         }
 
-        private static string Summarize(string? text)
+        private static string Summarize(string? text, int maxLength = 240)
         {
             var normalized = (text ?? string.Empty).Replace('\r', ' ').Replace('\n', ' ').Trim();
-            return normalized.Length <= 240 ? normalized : normalized[..240];
+            return normalized.Length <= maxLength ? normalized : normalized[..maxLength];
         }
     }
 }

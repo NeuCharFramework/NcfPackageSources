@@ -67,6 +67,14 @@ namespace Senparc.Xncf.XncfBuilder
             modelBuilder.Entity<XncfPreviewHost>()
                 .HasIndex(host => new { host.Status, host.UpdatedAtUtc });
 
+            modelBuilder.Entity<XncfDevelopmentJob>()
+                .HasIndex(job => job.JobId)
+                .IsUnique();
+            modelBuilder.Entity<XncfDevelopmentJob>()
+                .HasIndex(job => new { job.Stage, job.UpdatedAtUtc });
+            modelBuilder.Entity<XncfDevelopmentJob>()
+                .HasIndex(job => new { job.ModuleProjectName, job.CreatedAtUtc });
+
             //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
             //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
         }

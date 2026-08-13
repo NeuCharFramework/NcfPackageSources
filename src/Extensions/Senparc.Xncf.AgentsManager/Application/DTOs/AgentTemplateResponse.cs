@@ -44,6 +44,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        /// <summary>
+        /// published：已发布的隔离集合，可安全用于 Agent RAG；
+        /// legacy：旧版切片已向量化，但未升级为隔离集合；
+        /// pending：尚无可用向量。
+        /// </summary>
+        public string EmbeddingStatus { get; set; }
         public bool IsEmbedded { get; set; }
     }
 }

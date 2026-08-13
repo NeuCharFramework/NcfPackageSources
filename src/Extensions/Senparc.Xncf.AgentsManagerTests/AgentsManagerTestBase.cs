@@ -13,7 +13,9 @@ using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using System.Net.Http;
 using System.Reflection;
+using System.Text;
 
 namespace Senparc.Xncf.AgentsManagerTests
 {
@@ -319,7 +321,11 @@ namespace Senparc.Xncf.AgentsManagerTests
             var transportType = typeof(AgentTemplateRunner).Assembly.GetType(
                 "Senparc.Xncf.AgentsManager.Domain.Services.PublishedA2AModelTransport",
                 throwOnError: true);
-            var replaceMethod = transportType.GetMethod(
+            var handlerType = transportType.GetNestedType(
+                "PublishedA2AModelHttpMessageHandler",
+                BindingFlags.NonPublic);
+            Assert.IsNotNull(handlerType);
+            var replaceMethod = handlerType.GetMethod(
                 "ReplaceApiVersion",
                 BindingFlags.NonPublic | BindingFlags.Static);
             Assert.IsNotNull(replaceMethod);
@@ -335,6 +341,150 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsNotNull(result);
             Assert.AreEqual("/team/openai/deployments/deepseek-chat/chat/completions", result.AbsolutePath);
             Assert.AreEqual("api-version=2022-12-01&trace=1", result.Query.TrimStart('?'));
+        }
+
+        [TestMethod]
+        public async Task PublishedA2AAgent_ProviderDiagnostics_DoNotIncludePromptOrCredentials()
+        {
+            var transportType = typeof(AgentTemplateRunner).Assembly.GetType(
+                "Senparc.Xncf.AgentsManager.Domain.Services.PublishedA2AModelTransport",
+                throwOnError: true);
+            var handlerType = transportType.GetNestedType(
+                "PublishedA2AModelHttpMessageHandler",
+                BindingFlags.NonPublic);
+            Assert.IsNotNull(handlerType);
+
+            var requestSummaryMethod = handlerType.GetMethod(
+                "BuildRequestSummaryAsync",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(requestSummaryMethod);
+            using var request = new HttpRequestMessage(HttpMethod.Post, "https://example.invalid/chat")
+            {
+                Content = new StringContent(
+                    "{\"messages\":[{\"role\":\"system\",\"content\":\"PRIVATE-PROMPT\"},{\"role\":\"user\",\"content\":\"PRIVATE-INPUT\"}],\"tools\":[{}],\"stream\":false,\"max_tokens\":2000,\"temperature\":0.3,\"top_p\":0.3}",
+                    Encoding.UTF8,
+                    "application/json")
+            };
+            var summaryTask = requestSummaryMethod.Invoke(
+                null,
+                new object[] { request, CancellationToken.None }) as Task<string>;
+            Assert.IsNotNull(summaryTask);
+            var summary = await summaryTask;
+
+            StringAssert.Contains(summary, "messages=2");
+            StringAssert.Contains(summary, "roles=system,user");
+            StringAssert.Contains(summary, "tools=1");
+            StringAssert.Contains(summary, "stream=False");
+            Assert.IsFalse(summary.Contains("PRIVATE-PROMPT", StringComparison.Ordinal));
+            Assert.IsFalse(summary.Contains("PRIVATE-INPUT", StringComparison.Ordinal));
+
+            var extractProviderErrorMethod = handlerType.GetMethod(
+                "ExtractProviderError",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(extractProviderErrorMethod);
+            var providerError = extractProviderErrorMethod.Invoke(
+                null,
+                new object[]
+                {
+                    "{\"error\":{\"code\":\"Forbidden\",\"type\":\"gateway_policy\",\"message\":\"Authorization: Bearer super-secret-token at https://private.example/path\"},\"echoed_prompt\":\"PRIVATE-PROMPT\"}"
+                }) as string;
+
+            StringAssert.Contains(providerError, "code=Forbidden");
+            StringAssert.Contains(providerError, "type=gateway_policy");
+            Assert.IsFalse(providerError.Contains("super-secret-token", StringComparison.Ordinal));
+            Assert.IsFalse(providerError.Contains("private.example", StringComparison.Ordinal));
+            Assert.IsFalse(providerError.Contains("PRIVATE-PROMPT", StringComparison.Ordinal));
+
+            var readProviderErrorMethod = handlerType.GetMethod(
+                "ReadAndRestoreProviderErrorAsync",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(readProviderErrorMethod);
+            const string providerPayload = "{\"error\":{\"code\":\"Forbidden\",\"message\":\"Policy denied\"}}";
+            using var response = new HttpResponseMessage(System.Net.HttpStatusCode.Forbidden)
+            {
+                Content = new StringContent(providerPayload, Encoding.UTF8, "application/json")
+            };
+            var providerErrorTask = readProviderErrorMethod.Invoke(
+                null,
+                new object[] { response, CancellationToken.None }) as Task<string>;
+            Assert.IsNotNull(providerErrorTask);
+            var restoredProviderError = await providerErrorTask;
+            var replayedPayload = await response.Content.ReadAsStringAsync();
+
+            StringAssert.Contains(restoredProviderError, "code=Forbidden");
+            Assert.AreEqual(providerPayload, replayedPayload);
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_StandardTransportFallback_PreservesModelBoundary()
+        {
+            var source = AgentTemplateRunRequest.ForPublishedA2A(
+                5013,
+                "agent-5013",
+                allowFunctionCalls: true,
+                diagnosticId: "diagnostic-id");
+
+            var fallback = source.WithStandardModelTransportFallback();
+
+            Assert.IsFalse(fallback.EnableModelTransportDiagnostics);
+            Assert.IsFalse(fallback.AllowDeploymentNameModelIdFallback);
+            Assert.AreEqual(source.AiModelId, fallback.AiModelId);
+            Assert.AreEqual(source.DefaultSetting, fallback.DefaultSetting);
+            Assert.AreEqual(source.UseTemplateModelSettings, fallback.UseTemplateModelSettings);
+            Assert.AreEqual(source.AllowFunctionCalls, fallback.AllowFunctionCalls);
+            Assert.AreEqual(source.MaxOutputTokens, fallback.MaxOutputTokens);
+            Assert.AreEqual(source.Temperature, fallback.Temperature);
+            Assert.AreEqual(source.TopP, fallback.TopP);
+            Assert.AreEqual(source.DiagnosticId, fallback.DiagnosticId);
+            StringAssert.Contains(fallback.ProfileName, "standard-transport-fallback");
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_NeuCharLegacyApiVersionFallback_IsAvailableWhenSdkVersionIsConfigured()
+        {
+            var candidatesMethod = typeof(AgentTemplateRunner).GetMethod(
+                "GetApiVersionCompatibilityFallbacks",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(candidatesMethod);
+
+            var candidates = candidatesMethod.Invoke(
+                null,
+                new object[]
+                {
+                    new AIModelDto
+                    {
+                        AiPlatform = Senparc.AI.AiPlatform.NeuCharAI,
+                        Endpoint = "https://www.neuchar.com/developer/",
+                        ApiVersion = "2025-04-01-preview"
+                    },
+                    null!
+                }) as System.Collections.IEnumerable;
+
+            Assert.IsNotNull(candidates);
+            var hasLegacyDefault = false;
+            foreach (var candidate in candidates)
+            {
+                var apiVersion = candidate.GetType().GetProperty("ApiVersion")?.GetValue(candidate) as string;
+                var source = candidate.GetType().GetProperty("Source")?.GetValue(candidate) as string;
+                if (apiVersion == "2022-12-01" && source == "NeuCharLegacyDefault")
+                {
+                    hasLegacyDefault = true;
+                    break;
+                }
+            }
+
+            Assert.IsTrue(hasLegacyDefault);
+        }
+
+        [TestMethod]
+        public void AIModelService_EmptyApiVersion_UsesLegacyCompatibleDefault()
+        {
+            var getApiVersionOrDefault = typeof(AIModelService).GetMethod(
+                "GetApiVersionOrDefault",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(getApiVersionOrDefault);
+            Assert.AreEqual("2022-12-01", getApiVersionOrDefault.Invoke(null, new object[] { null! }) as string);
+            Assert.AreEqual("2024-10-21", getApiVersionOrDefault.Invoke(null, new object[] { " 2024-10-21 " }) as string);
         }
 
         [TestMethod]
