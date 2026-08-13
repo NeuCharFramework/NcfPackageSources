@@ -30,6 +30,7 @@ using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.KnowledgeBase.Domain.Services;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
+using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -129,6 +130,14 @@ public sealed class AgentTemplateRunner
         catch (Exception ex) when (request.AllowDeploymentNameModelIdFallback && ContainsForbiddenStatus(ex))
         {
             var lastForbiddenException = ex;
+
+            // Provider-declared application state cannot be repaired by changing transport,
+            // deployment spelling or API version. Preserve the explicit, sanitized provider
+            // reason and stop before issuing duplicate model requests.
+            if (PublishedA2AModelTransport.TryGetTerminalFailure(request.DiagnosticId, out var terminalFailure))
+            {
+                throw new PublishedA2AModelProviderException(terminalFailure, ex);
+            }
 
             // Diagnostics are implemented with a caller-supplied HttpClient. Before changing any
             // model setting, retry through AgentKernel's ordinary local transport so the published
@@ -340,22 +349,32 @@ public sealed class AgentTemplateRunner
             ? await BuildAgentToolsAsync(handler, template, cancellationToken).ConfigureAwait(false)
             : new List<AITool>();
 
-        var diagnostics = configuration.Diagnostics with
-        {
-            FunctionCallsEnabled = request.AllowFunctionCalls,
-            ToolCount = tools.Count
-        };
-        onPrepared?.Invoke(diagnostics);
-
+        var promptParameters = request.UseTemplatePromptParameters
+            ? configuration.PromptItem
+            : null;
         var chatOptions = new ChatOptions
         {
             Instructions = configuration.Instructions,
-            MaxOutputTokens = request.MaxOutputTokens,
-            Temperature = request.Temperature,
-            TopP = request.TopP,
+            MaxOutputTokens = promptParameters?.MaxToken > 0
+                ? promptParameters.MaxToken
+                : request.MaxOutputTokens,
+            Temperature = promptParameters?.Temperature ?? request.Temperature,
+            TopP = promptParameters?.TopP ?? request.TopP,
+            FrequencyPenalty = promptParameters?.FrequencyPenalty,
+            PresencePenalty = promptParameters?.PresencePenalty,
+            StopSequences = ParseStopSequences(promptParameters?.StopSequences),
             AllowMultipleToolCalls = tools.Count > 0,
             Tools = tools.Count > 0 ? tools.Cast<AITool>().ToList() : null
         };
+        var diagnostics = configuration.Diagnostics with
+        {
+            FunctionCallsEnabled = request.AllowFunctionCalls,
+            ToolCount = tools.Count,
+            ExecutionParameters = DescribeExecutionParameters(
+                promptParameters == null ? "caller-default" : $"prompt:{template.PromptCode}",
+                chatOptions)
+        };
+        onPrepared?.Invoke(diagnostics);
         var agentOptions = new ChatClientAgentOptions
         {
             Name = template.Name,
@@ -387,6 +406,7 @@ public sealed class AgentTemplateRunner
     {
         var setting = request.DefaultSetting ?? Senparc.AI.Config.SenparcAiSetting as ISenparcAiSetting;
         var promptContent = template.SystemMessage;
+        PromptItemDto resolvedPromptItem = null;
         AIModelDto resolvedModel = null;
         var modelSource = request.DefaultSetting == null ? "system-default" : "caller-default";
 
@@ -399,6 +419,7 @@ public sealed class AgentTemplateRunner
                     .ConfigureAwait(false);
                 if (promptResult?.PromptItem != null)
                 {
+                    resolvedPromptItem = promptResult.PromptItem;
                     promptContent = promptResult.PromptItem.Content ?? string.Empty;
                     if (request.UseTemplateModelSettings)
                     {
@@ -456,6 +477,7 @@ public sealed class AgentTemplateRunner
             setting,
             resolvedModel,
             instructions,
+            resolvedPromptItem,
             new AgentTemplateExecutionDiagnostics(
                 request.ProfileName,
                 template.Id,
@@ -466,8 +488,37 @@ public sealed class AgentTemplateRunner
                 request.UseFreshAgentSession
                     ? "fresh-session-with-stateless-fallback"
                     : "stateless",
+                ExecutionParameters: "unresolved",
                 FunctionCallsEnabled: false,
                 ToolCount: 0));
+    }
+
+    private static IList<string> ParseStopSequences(string stopSequences)
+    {
+        if (string.IsNullOrWhiteSpace(stopSequences))
+        {
+            return null;
+        }
+
+        try
+        {
+            var values = JsonSerializer.Deserialize<List<string>>(stopSequences);
+            return values?.Where(z => !string.IsNullOrEmpty(z)).ToList();
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    private static string DescribeExecutionParameters(string source, ChatOptions options)
+    {
+        return $"source={source}; maxOutputTokens={options?.MaxOutputTokens?.ToString() ?? "unset"}; " +
+               $"temperature={options?.Temperature?.ToString() ?? "unset"}; " +
+               $"topP={options?.TopP?.ToString() ?? "unset"}; " +
+               $"frequencyPenalty={options?.FrequencyPenalty?.ToString() ?? "unset"}; " +
+               $"presencePenalty={options?.PresencePenalty?.ToString() ?? "unset"}; " +
+               $"stopSequences={options?.StopSequences?.Count ?? 0}";
     }
 
     private async Task<string> AppendKnowledgeBaseContextAsync(
@@ -716,6 +767,7 @@ public sealed class AgentTemplateRunner
         ISenparcAiSetting Setting,
         AIModelDto ResolvedModel,
         string Instructions,
+        PromptItemDto PromptItem,
         AgentTemplateExecutionDiagnostics Diagnostics);
 }
 
@@ -738,6 +790,11 @@ public sealed class AgentTemplateRunRequest
     /// </summary>
     public bool UseTemplateModelSettings { get; init; } = true;
     /// <summary>
+    /// 是否沿用 Prompt 版本中的 MaxToken、Temperature、TopP、Penalty 与 StopSequences。
+    /// 发布型 A2A 和本地独立 Agent 默认开启；ChatGroup 可随“个性化参数”选项切换。
+    /// </summary>
+    public bool UseTemplatePromptParameters { get; init; } = true;
+    /// <summary>
     /// 是否使用本次执行新建的 AgentSession。不会跨请求保存 A2A 历史。
     /// </summary>
     public bool UseFreshAgentSession { get; init; } = true;
@@ -747,7 +804,8 @@ public sealed class AgentTemplateRunRequest
     /// </summary>
     public bool AllowDeploymentNameModelIdFallback { get; init; }
     /// <summary>
-    /// 仅发布型 A2A 启用：记录脱敏模型传输诊断，并允许在 403 后按 AIModel 的 API Version 兼容重试。
+    /// 仅供显式诊断流程启用：记录脱敏模型传输信息。
+    /// 发布型 A2A 正常路径保持关闭，以便与本地 Agent 使用同一标准传输。
     /// </summary>
     public bool EnableModelTransportDiagnostics { get; init; }
     /// <summary>
@@ -778,15 +836,14 @@ public sealed class AgentTemplateRunRequest
         return new AgentTemplateRunRequest
         {
             RunnerName = $"WorkflowAgent-{agentTemplateId}-A2A-{publicAgentKey}",
-            ProfileName = LocalChatGroupCompatibleProfile,
-            // A2A 发布的 Agent 对齐 AgentsManager 页面内 ChatGroup 的默认运行参数。
-            MaxOutputTokens = 2000,
-            Temperature = 0.3f,
-            TopP = 0.3f,
-            // 对外工具执行必须由发布配置显式开启；模型与 Prompt 运行路径仍与本地 ChatGroup 一致。
+            ProfileName = LocalWorkflowCompatibleProfile,
+            // 发布型 A2A 与本地独立 Agent 一样沿用 Prompt 绑定的模型与完整参数。
+            // 对外工具执行仍必须由发布配置显式开启。
             AllowFunctionCalls = allowFunctionCalls,
-            AllowDeploymentNameModelIdFallback = true,
-            EnableModelTransportDiagnostics = true,
+            UseTemplateModelSettings = true,
+            UseTemplatePromptParameters = true,
+            AllowDeploymentNameModelIdFallback = false,
+            EnableModelTransportDiagnostics = false,
             DiagnosticId = diagnosticId
         };
     }
@@ -802,6 +859,7 @@ public sealed class AgentTemplateRunRequest
             // DefaultSetting is deliberately the alternate form of the same resolved model. Do not
             // re-apply the Prompt-bound model configuration during the compatibility retry.
             UseTemplateModelSettings = false,
+            UseTemplatePromptParameters = UseTemplatePromptParameters,
             UseFreshAgentSession = UseFreshAgentSession,
             AllowDeploymentNameModelIdFallback = false,
             EnableModelTransportDiagnostics = EnableModelTransportDiagnostics,
@@ -822,6 +880,7 @@ public sealed class AgentTemplateRunRequest
             AllowFunctionCalls = AllowFunctionCalls,
             DefaultSetting = DefaultSetting,
             UseTemplateModelSettings = UseTemplateModelSettings,
+            UseTemplatePromptParameters = UseTemplatePromptParameters,
             UseFreshAgentSession = UseFreshAgentSession,
             // The caller executes this built runner directly, so nested fallback handling is not
             // needed. Most importantly, diagnostics are disabled to restore AgentKernel's ordinary
@@ -845,6 +904,7 @@ public sealed class AgentTemplateRunRequest
             AllowFunctionCalls = AllowFunctionCalls,
             DefaultSetting = DefaultSetting,
             UseTemplateModelSettings = UseTemplateModelSettings,
+            UseTemplatePromptParameters = UseTemplatePromptParameters,
             UseFreshAgentSession = UseFreshAgentSession,
             AllowDeploymentNameModelIdFallback = false,
             EnableModelTransportDiagnostics = EnableModelTransportDiagnostics,
@@ -863,6 +923,7 @@ public sealed record AgentTemplateExecutionDiagnostics(
     string ModelDescription,
     string CredentialState,
     string SessionStrategy,
+    string ExecutionParameters,
     bool FunctionCallsEnabled,
     int ToolCount);
 

@@ -49,6 +49,7 @@ using Senparc.CO2NET.RegisterServices;
 using Microsoft.AspNetCore.Routing;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Preview;
+using Senparc.Xncf.XncfBuilder.Domain.Services.Development;
 
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -116,6 +117,17 @@ namespace Senparc.Xncf.XncfBuilder
             if (!services.Any(d => d.ServiceType == typeof(IXncfPreviewStateStore)))
             {
                 services.AddSingleton<IXncfPreviewStateStore, XncfPreviewStateStore>();
+            }
+
+            // The workflow service owns per-job operation locks; its state store creates short
+            // database scopes so no scoped repository can escape into this singleton.
+            if (!services.Any(d => d.ServiceType == typeof(IXncfDevelopmentJobStateStore)))
+            {
+                services.AddSingleton<IXncfDevelopmentJobStateStore, XncfDevelopmentJobStateStore>();
+            }
+            if (!services.Any(d => d.ServiceType == typeof(IXncfDevelopmentJobService)))
+            {
+                services.AddSingleton<IXncfDevelopmentJobService, XncfDevelopmentJobService>();
             }
 
             if (!services.Any(d => d.ServiceType == typeof(XncfPreviewService)))

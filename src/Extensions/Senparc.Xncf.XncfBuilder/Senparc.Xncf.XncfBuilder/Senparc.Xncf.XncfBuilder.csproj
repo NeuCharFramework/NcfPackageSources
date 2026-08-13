@@ -185,6 +185,9 @@
     <ProjectReference Include="..\Senparc.Xncf.XncfBuilder.Abstractions\Senparc.Xncf.XncfBuilder.Abstractions.csproj" />
     <ProjectReference Include="..\..\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
     <ProjectReference Include="..\..\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
+    <!-- Optional Sandbox module implements the contract at runtime. The Builder only depends on
+         the abstraction so production deployments may omit Sandbox and fail closed. -->
+    <ProjectReference Include="..\..\Senparc.Xncf.Sandbox.Abstractions\Senparc.Xncf.Sandbox.Abstractions.csproj" />
     <ProjectReference Include="..\..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
     <ProjectReference Include="..\..\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
     <PackageReference Include="System.CodeDom" Version="8.0.0" />

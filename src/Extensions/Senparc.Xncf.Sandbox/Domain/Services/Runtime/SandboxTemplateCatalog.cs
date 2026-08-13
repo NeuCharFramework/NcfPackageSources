@@ -40,6 +40,20 @@ public static class SandboxTemplateCatalog
                 DefaultCpuLimit = 1,
                 DefaultMemoryMb = 1024,
                 DefaultTtl = TimeSpan.FromMinutes(45)
+            },
+            [SandboxTemplateKeys.NcfPreview] = new SandboxTemplateDefinition
+            {
+                Key = SandboxTemplateKeys.NcfPreview,
+                DisplayName = "NCF/XNCF Preview (pinned image required)",
+                PreferredRuntime = SandboxRuntimeKind.Docker,
+                Interactive = true,
+                // This intentionally cannot be used safely until Images:Overrides:ncf-preview is
+                // configured with an organisation-approved digest.
+                Image = "ncf-preview:must-configure-digest",
+                ContainerPort = 8080,
+                DefaultCpuLimit = 1,
+                DefaultMemoryMb = 1536,
+                DefaultTtl = TimeSpan.FromMinutes(30)
             }
         };
 

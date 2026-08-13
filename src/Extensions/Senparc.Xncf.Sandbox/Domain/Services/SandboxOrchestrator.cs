@@ -79,6 +79,8 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         int ownerUserId,
         string templateKey,
         SandboxRuntimeKind? preferredRuntime = null,
+        Func<string, CancellationToken, Task>? initializeWorkspace = null,
+        SandboxNcfPreviewRuntimeOptions? ncfPreview = null,
         CancellationToken cancellationToken = default)
     {
         if (!SandboxTemplateCatalog.TryGet(templateKey, out var template))
@@ -107,6 +109,12 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             var runtimeKind = preferredRuntime ?? template.PreferredRuntime;
             var runtime = await ResolveRuntimeAsync(runtimeKind, cancellationToken).ConfigureAwait(false);
 
+            if (string.Equals(template.Key, SandboxTemplateKeys.NcfPreview, StringComparison.OrdinalIgnoreCase)
+                && ncfPreview == null)
+            {
+                throw new InvalidOperationException("NCF 预览必须通过受控工作负载服务创建。");
+            }
+
             var sessionId = Guid.NewGuid().ToString("N");
             var ttl = template.DefaultTtl > _quota.MaxTtl ? _quota.MaxTtl : template.DefaultTtl;
             var cpu = Math.Min(template.DefaultCpuLimit, 2d);
@@ -133,6 +141,10 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                 }
 
                 var workspace = Path.Combine(_workspaceRoot, sessionId);
+                if (initializeWorkspace != null)
+                {
+                    await initializeWorkspace(workspace, cancellationToken).ConfigureAwait(false);
+                }
                 var created = await runtime.CreateInteractiveAsync(
                         new SandboxCreateRuntimeRequest
                         {
@@ -140,13 +152,16 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                             Template = template,
                             CpuLimit = cpu,
                             MemoryMb = memory,
-                            WorkspaceDirectory = workspace
+                            WorkspaceDirectory = workspace,
+                            NcfPreview = ncfPreview
                         },
                         cancellationToken)
                     .ConfigureAwait(false);
 
                 // 对外只暴露代理路径；HostPort/Token 仅服务端代理使用。
-                var accessUrl = SandboxJupyterPaths.GetLabEntryUrl(sessionId);
+                var accessUrl = string.Equals(template.Key, SandboxTemplateKeys.NcfPreview, StringComparison.OrdinalIgnoreCase)
+                    ? SandboxNcfPreviewPaths.GetEntryUrl(sessionId)
+                    : SandboxJupyterPaths.GetLabEntryUrl(sessionId);
                 entity.MarkRunning(created.RuntimeHandle, created.HostPort, accessUrl, created.AccessToken, created.Message);
                 await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
                 _logger.LogInformation(
@@ -268,6 +283,38 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             SessionId = entity.SessionId,
             HostPort = entity.HostPort.Value,
             AccessToken = entity.AccessToken
+        };
+    }
+
+    /// <summary>
+    /// Resolves the loopback target for an NCF preview. Unlike Jupyter, no bearer token is needed
+    /// upstream; the proxy strips all caller credentials and requires the host Admin cookie.
+    /// </summary>
+    public async Task<SandboxNcfPreviewProxyTarget?> TryGetNcfPreviewProxyTargetAsync(
+        string sessionId,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(sessionId))
+        {
+            return null;
+        }
+
+        using var scope = _scopeFactory.CreateScope();
+        var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
+        var entity = await sessionService.GetBySessionIdAsync(sessionId.Trim().ToLowerInvariant()).ConfigureAwait(false);
+        if (entity == null
+            || entity.Status != SandboxSessionStatus.Running
+            || !entity.HostPort.HasValue
+            || entity.HostPort.Value <= 0
+            || !string.Equals(entity.TemplateKey, SandboxTemplateKeys.NcfPreview, StringComparison.OrdinalIgnoreCase))
+        {
+            return null;
+        }
+
+        return new SandboxNcfPreviewProxyTarget
+        {
+            SessionId = entity.SessionId,
+            HostPort = entity.HostPort.Value
         };
     }
 

@@ -14,6 +14,7 @@ using System.Net.Sockets;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Senparc.Xncf.Sandbox.Abstractions;
+using Senparc.Xncf.Sandbox.Domain.Services;
 
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 
@@ -53,6 +54,11 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         SandboxCreateRuntimeRequest request,
         CancellationToken cancellationToken = default)
     {
+        if (string.Equals(request.Template.Key, SandboxTemplateKeys.NcfPreview, StringComparison.OrdinalIgnoreCase))
+        {
+            return await CreateNcfPreviewAsync(request, cancellationToken).ConfigureAwait(false);
+        }
+
         if (!request.Template.Interactive)
         {
             throw new InvalidOperationException($"模板 {request.Template.Key} 不是交互式模板。");
@@ -109,6 +115,110 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             AccessUrl = SandboxJupyterPaths.GetLabEntryUrl(request.SessionId),
             AccessToken = token,
             Message = "JupyterLab 已启动；请通过站点反向代理访问（需管理员登录）。"
+        };
+    }
+
+    /// <summary>
+    /// Starts one fixed NCF preview sequence. There is deliberately no user-provided command,
+    /// Docker socket, host networking, capability or writable host checkout in this workload.
+    /// The supplied workspace is already Sandbox-owned and may be mutated only inside the
+    /// container for obj/bin/publish output.
+    /// </summary>
+    private async Task<SandboxCreateRuntimeResult> CreateNcfPreviewAsync(
+        SandboxCreateRuntimeRequest request,
+        CancellationToken cancellationToken)
+    {
+        var preview = request.NcfPreview
+                      ?? throw new InvalidOperationException("NCF 预览缺少服务器生成的运行配置。");
+        ValidateNcfPreviewValue(preview.SolutionRelativePath, nameof(preview.SolutionRelativePath));
+        ValidateNcfPreviewValue(preview.ModuleProjectName, nameof(preview.ModuleProjectName));
+        var previewBasePath = string.IsNullOrWhiteSpace(preview.BasePath)
+            ? SandboxNcfPreviewPaths.GetBasePath(request.SessionId)
+            : preview.BasePath;
+        var hostPort = GetFreeTcpPort();
+        Directory.CreateDirectory(request.WorkspaceDirectory);
+        var image = _imageResolver.Resolve(request.Template.Key, request.Template.Image);
+        if (!image.Contains("@sha256:", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException(
+                "NCF Sandbox 预览镜像必须由 SenparcXncfSandbox:Images:Overrides:ncf-preview 配置为不可变 digest（例如 image@sha256:...）。");
+        }
+
+        var network = preview.AllowDependencyRestoreNetwork
+            ? preview.RestoreNetworkName
+            : "none";
+        if (string.IsNullOrWhiteSpace(network)
+            || (preview.AllowDependencyRestoreNetwork && !IsSafeDockerNetworkName(network)))
+        {
+            throw new InvalidOperationException("NCF Sandbox 预览的依赖还原网络未配置为受控 Docker 网络。");
+        }
+
+        _logger.LogInformation(
+            "Sandbox NCF preview image resolved: image={Image} network={Network} session={SessionId}",
+            image,
+            network,
+            request.SessionId);
+
+        var args = new List<string>
+        {
+            "run", "-d",
+            "--name", $"ncf-sandbox-{request.SessionId}",
+            "--label", "ncf.sandbox=1",
+            "--label", $"ncf.sandbox.session={request.SessionId}",
+            "--cpus", request.CpuLimit.ToString("0.###"),
+            "--memory", $"{request.MemoryMb}m",
+            "--pids-limit", "256",
+            "--cap-drop", "ALL",
+            "--security-opt", "no-new-privileges",
+            "--read-only",
+            "--tmpfs", "/tmp:rw,noexec,nosuid,size=256m",
+            "--network", network,
+            "-p", $"127.0.0.1:{hostPort}:{request.Template.ContainerPort}",
+            "-v", $"{request.WorkspaceDirectory}:/workspace",
+            "-w", "/workspace",
+            "-e", "HOME=/tmp/home",
+            "-e", "DOTNET_CLI_HOME=/tmp/dotnet-home",
+            "-e", "DOTNET_CLI_TELEMETRY_OPTOUT=1",
+            "-e", $"NCF_SOLUTION_RELATIVE_PATH={preview.SolutionRelativePath.Replace('\\', '/')}",
+            "-e", $"NCF_XNCF_PREVIEW_PATH_BASE={previewBasePath}",
+            image,
+            "sh", "-c", NcfPreviewLaunchScript
+        };
+
+        var run = await RunDockerAsync(
+                args,
+                null,
+                TimeSpan.FromSeconds(Math.Clamp(preview.StartupTimeoutSeconds + 30, 60, 600)),
+                cancellationToken)
+            .ConfigureAwait(false);
+        if (run.ExitCode != 0)
+        {
+            throw new InvalidOperationException($"Docker NCF 预览启动失败: {run.StdErr}\n{run.StdOut}");
+        }
+
+        var containerId = run.StdOut.Trim();
+        try
+        {
+            await WaitForOpenTcpPortAsync(
+                    hostPort,
+                    TimeSpan.FromSeconds(Math.Clamp(preview.StartupTimeoutSeconds, 30, 600)),
+                    cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch
+        {
+            var logs = await RunDockerAsync(new[] { "logs", "--tail", "160", containerId }, null, TimeSpan.FromSeconds(20), CancellationToken.None)
+                .ConfigureAwait(false);
+            await DestroyAsync(containerId, CancellationToken.None).ConfigureAwait(false);
+            throw new InvalidOperationException($"NCF Sandbox 预览未在规定时间内监听端口。\n{logs.StdErr}\n{logs.StdOut}");
+        }
+
+        return new SandboxCreateRuntimeResult
+        {
+            RuntimeHandle = containerId,
+            HostPort = hostPort,
+            AccessUrl = SandboxNcfPreviewPaths.GetEntryUrl(request.SessionId),
+            Message = "NCF Sandbox 预览已启动；仅通过管理员鉴权的反向代理访问。"
         };
     }
 
@@ -266,6 +376,59 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         listener.Stop();
         return port;
     }
+
+    private static async Task WaitForOpenTcpPortAsync(int port, TimeSpan timeout, CancellationToken cancellationToken)
+    {
+        var deadline = DateTimeOffset.UtcNow.Add(timeout);
+        Exception? lastError = null;
+        while (DateTimeOffset.UtcNow < deadline)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            try
+            {
+                using var client = new TcpClient();
+                await client.ConnectAsync(IPAddress.Loopback, port, cancellationToken).ConfigureAwait(false);
+                return;
+            }
+            catch (Exception ex) when (ex is SocketException or OperationCanceledException)
+            {
+                if (ex is OperationCanceledException && cancellationToken.IsCancellationRequested)
+                {
+                    throw;
+                }
+                lastError = ex;
+                await Task.Delay(500, cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        throw new TimeoutException($"NCF preview port {port} did not become available: {lastError?.Message}");
+    }
+
+    private static bool IsSafeDockerNetworkName(string value) =>
+        value.All(ch => char.IsLetterOrDigit(ch) || ch is '-' or '_' or '.');
+
+    private static void ValidateNcfPreviewValue(string value, string parameterName)
+    {
+        if (string.IsNullOrWhiteSpace(value)
+            || Path.IsPathRooted(value)
+            || value.Contains("..", StringComparison.Ordinal)
+            || value.IndexOfAny(new[] { '\r', '\n', '\0' }) >= 0)
+        {
+            throw new ArgumentException("NCF 预览路径参数无效。", parameterName);
+        }
+    }
+
+    private const string NcfPreviewLaunchScript = """
+        set -eu
+        solution="/workspace/${NCF_SOLUTION_RELATIVE_PATH}"
+        solution_dir="$(dirname "$solution")"
+        web_project="$solution_dir/Senparc.Web/Senparc.Web.csproj"
+        test -f "$solution"
+        test -f "$web_project"
+        dotnet restore "$web_project" --ignore-failed-sources --disable-parallel
+        dotnet publish "$web_project" --no-restore --no-self-contained --configuration Debug --output /workspace/.ncf-preview-publish --disable-build-servers -m:1 /p:UseAppHost=false
+        exec dotnet /workspace/.ncf-preview-publish/Senparc.Web.dll --urls=http://0.0.0.0:8080 --environment=XncfPreview
+        """;
 
     private async Task<(int ExitCode, string StdOut, string StdErr)> RunDockerAsync(
         IReadOnlyList<string> args,

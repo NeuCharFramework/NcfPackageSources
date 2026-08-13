@@ -93,10 +93,17 @@ namespace Senparc.Areas.Admin.Domain.Services.AIPlugins
                 sb.AppendLine($"- **支持 MCP**: {(register.EnableMcpServer ? "是" : "否")}");
 
                 // 获取 FunctionRender 注册的功能列表
-                if (Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var functionGroup) && functionGroup.Any())
+                var aiCallableFunctions = Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var functionGroup)
+                    ? functionGroup.Values
+                        // This plugin is itself an AI tool. Do not advertise legacy UI-only or
+                        // host-mutating FunctionRender methods as capabilities the chat can call.
+                        .Where(f => f.FunctionRenderAttribute?.AllowAiInvocation != false)
+                        .ToArray()
+                    : Array.Empty<Ncf.XncfBase.FunctionRenders.FunctionRenderBag>();
+                if (aiCallableFunctions.Any())
                 {
-                    sb.AppendLine($"\n### 可用功能（FunctionRender，共 {functionGroup.Count} 个）：");
-                    foreach (var f in functionGroup.Values)
+                    sb.AppendLine($"\n### 可供 AI 调用的功能（FunctionRender，共 {aiCallableFunctions.Length} 个）：");
+                    foreach (var f in aiCallableFunctions)
                     {
                         sb.AppendLine($"- **{f.FunctionRenderAttribute.Name}**：{f.FunctionRenderAttribute.Description}");
                     }

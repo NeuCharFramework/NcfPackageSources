@@ -92,12 +92,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 
         public string ModuleProjectName { get; init; }
 
-        /// <summary>
-        /// Absolute path of the solution used for this build. It is displayed for traceability;
-        /// callers must never treat it as an authority to write source files.
-        /// </summary>
-        public string SolutionFilePath { get; init; }
-
         public int Port { get; init; }
 
         public int StartupTimeoutSeconds { get; init; } = 120;
@@ -110,6 +104,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         public string SessionId { get; init; }
 
         public string ModuleProjectName { get; init; }
+
+        /// <summary>
+        /// Absolute path of the solution used for this build. It is displayed for traceability;
+        /// callers must never treat it as an authority to write source files.
+        /// </summary>
+        public string SolutionFilePath { get; init; }
 
         public string Url { get; init; }
 

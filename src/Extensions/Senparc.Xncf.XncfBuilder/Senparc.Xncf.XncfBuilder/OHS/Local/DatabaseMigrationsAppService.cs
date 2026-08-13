@@ -191,7 +191,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
         }
 
-        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.AddMigration.Name", "Function.XncfBuilder.AddMigration.Description", typeof(Register))]
+        // Migration generation writes project files and migration sources directly. It remains an
+        // administrator UI operation, not an automatically imported AI chat function.
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.AddMigration.Name", "Function.XncfBuilder.AddMigration.Description", typeof(Register), AllowAiInvocation = false)]
         public async Task<StringAppResponse> AddMigration(DatabaseMigrations_MigrationRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

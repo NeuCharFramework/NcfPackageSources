@@ -21,28 +21,29 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 {
     public sealed class XncfDevelopmentJobSnapshot
     {
-        public string JobId { get; init; }
-        public XncfDevelopmentJobMode Mode { get; init; }
-        public string ModuleProjectName { get; init; }
-        public string TargetSolutionFilePath { get; init; }
-        public string WorkspaceRootPath { get; init; }
-        public string WorkspaceSolutionFilePath { get; init; }
-        public string Requirement { get; init; }
-        public XncfDevelopmentJobStage Stage { get; init; }
-        public string StatusMessage { get; init; }
-        public string ErrorMessage { get; init; }
-        public string TargetModuleFingerprint { get; init; }
-        public string WorkspaceModuleFingerprint { get; init; }
-        public string ValidationSummary { get; init; }
-        public string DiffSummary { get; init; }
-        public string PreviewSessionId { get; init; }
-        public string SandboxSessionId { get; init; }
-        public string PreviewUrl { get; init; }
-        public DateTimeOffset CreatedAt { get; init; }
-        public DateTimeOffset UpdatedAt { get; init; }
-        public DateTimeOffset? CompletedAt { get; init; }
-        public DateTimeOffset? MergeRequestedAt { get; init; }
-        public DateTimeOffset? AppliedAt { get; init; }
+        public string JobId { get; set; }
+        public int OwnerAdminUserId { get; set; }
+        public XncfDevelopmentJobMode Mode { get; set; }
+        public string ModuleProjectName { get; set; }
+        public string TargetSolutionFilePath { get; set; }
+        public string WorkspaceRootPath { get; set; }
+        public string WorkspaceSolutionFilePath { get; set; }
+        public string Requirement { get; set; }
+        public XncfDevelopmentJobStage Stage { get; set; }
+        public string StatusMessage { get; set; }
+        public string ErrorMessage { get; set; }
+        public string TargetModuleFingerprint { get; set; }
+        public string WorkspaceModuleFingerprint { get; set; }
+        public string ValidationSummary { get; set; }
+        public string DiffSummary { get; set; }
+        public string PreviewSessionId { get; set; }
+        public string SandboxSessionId { get; set; }
+        public string PreviewUrl { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
+        public DateTimeOffset? CompletedAt { get; set; }
+        public DateTimeOffset? MergeRequestedAt { get; set; }
+        public DateTimeOffset? AppliedAt { get; set; }
     }
 
     public interface IXncfDevelopmentJobStateStore
@@ -50,6 +51,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
         Task SaveAsync(XncfDevelopmentJobSnapshot snapshot, CancellationToken cancellationToken = default);
         Task<XncfDevelopmentJobSnapshot> GetAsync(string jobId, CancellationToken cancellationToken = default);
         Task<IReadOnlyList<XncfDevelopmentJobSnapshot>> GetRecentAsync(int maxCount, CancellationToken cancellationToken = default);
+        XncfDevelopmentPersistenceInfo GetPersistenceStatus();
     }
 
     /// <summary>
@@ -60,6 +62,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly SemaphoreSlim _writeLock = new(1, 1);
+        private readonly object _persistenceStatusLock = new();
+        private bool _persistenceAvailable = true;
+        private string _persistenceStatusMessage = "隔离开发任务数据库持久化可用。";
+        private string _persistenceErrorMessage;
+        private DateTimeOffset _persistenceStatusUpdatedAt = DateTimeOffset.UtcNow;
+        private DateTimeOffset? _retryAfter;
 
         public XncfDevelopmentJobStateStore(IServiceScopeFactory serviceScopeFactory)
         {
@@ -74,21 +82,30 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
                 throw new ArgumentException("开发任务缺少 JobId。", nameof(snapshot));
             }
 
-            await _writeLock.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
-                await using var scope = _serviceScopeFactory.CreateAsyncScope();
-                var repository = scope.ServiceProvider.GetRequiredService<IRepositoryBase<XncfDevelopmentJob>>();
-                var entity = await repository.GetFirstOrDefaultObjectAsync(
-                        job => !job.Flag && job.JobId == snapshot.JobId)
-                    .ConfigureAwait(false);
-                entity ??= new XncfDevelopmentJob(snapshot);
-                entity.Apply(snapshot);
-                await repository.SaveAsync(entity).ConfigureAwait(false);
+                await _writeLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    await using var scope = _serviceScopeFactory.CreateAsyncScope();
+                    var repository = scope.ServiceProvider.GetRequiredService<IRepositoryBase<XncfDevelopmentJob>>();
+                    var entity = await repository.GetFirstOrDefaultObjectAsync(
+                            job => !job.Flag && job.JobId == snapshot.JobId)
+                        .ConfigureAwait(false);
+                    entity ??= new XncfDevelopmentJob(snapshot);
+                    entity.Apply(snapshot);
+                    await repository.SaveAsync(entity).ConfigureAwait(false);
+                    MarkPersistenceAvailable();
+                }
+                finally
+                {
+                    _writeLock.Release();
+                }
             }
-            finally
+            catch (Exception ex)
             {
-                _writeLock.Release();
+                MarkPersistenceUnavailable(ex);
+                throw;
             }
         }
 
@@ -99,12 +116,21 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
                 return null;
             }
 
-            await using var scope = _serviceScopeFactory.CreateAsyncScope();
-            var repository = scope.ServiceProvider.GetRequiredService<IRepositoryBase<XncfDevelopmentJob>>();
-            var entity = await repository.GetFirstOrDefaultObjectAsync(
-                    job => !job.Flag && job.JobId == jobId.Trim())
-                .ConfigureAwait(false);
-            return entity == null ? null : ToSnapshot(entity);
+            try
+            {
+                await using var scope = _serviceScopeFactory.CreateAsyncScope();
+                var repository = scope.ServiceProvider.GetRequiredService<IRepositoryBase<XncfDevelopmentJob>>();
+                var entity = await repository.GetFirstOrDefaultObjectAsync(
+                        job => !job.Flag && job.JobId == jobId.Trim())
+                    .ConfigureAwait(false);
+                MarkPersistenceAvailable();
+                return entity == null ? null : ToSnapshot(entity);
+            }
+            catch (Exception ex)
+            {
+                MarkPersistenceUnavailable(ex);
+                throw;
+            }
         }
 
         public async Task<IReadOnlyList<XncfDevelopmentJobSnapshot>> GetRecentAsync(
@@ -116,16 +142,64 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
                 throw new ArgumentOutOfRangeException(nameof(maxCount));
             }
 
-            await using var scope = _serviceScopeFactory.CreateAsyncScope();
-            var repository = scope.ServiceProvider.GetRequiredService<IRepositoryBase<XncfDevelopmentJob>>();
-            var jobs = await repository.GetObjectListAsync(
-                    job => !job.Flag,
-                    job => job.UpdatedAtUtc,
-                    OrderingType.Descending,
-                    1,
-                    maxCount)
-                .ConfigureAwait(false);
-            return jobs.Select(ToSnapshot).ToArray();
+            try
+            {
+                await using var scope = _serviceScopeFactory.CreateAsyncScope();
+                var repository = scope.ServiceProvider.GetRequiredService<IRepositoryBase<XncfDevelopmentJob>>();
+                var jobs = await repository.GetObjectListAsync(
+                        job => !job.Flag,
+                        job => job.UpdatedAtUtc,
+                        OrderingType.Descending,
+                        1,
+                        maxCount)
+                    .ConfigureAwait(false);
+                MarkPersistenceAvailable();
+                return jobs.Select(ToSnapshot).ToArray();
+            }
+            catch (Exception ex)
+            {
+                MarkPersistenceUnavailable(ex);
+                throw;
+            }
+        }
+
+        public XncfDevelopmentPersistenceInfo GetPersistenceStatus()
+        {
+            lock (_persistenceStatusLock)
+            {
+                return new XncfDevelopmentPersistenceInfo
+                {
+                    IsAvailable = _persistenceAvailable,
+                    StatusMessage = _persistenceStatusMessage,
+                    ErrorMessage = _persistenceErrorMessage,
+                    UpdatedAt = _persistenceStatusUpdatedAt,
+                    RetryAfter = _retryAfter
+                };
+            }
+        }
+
+        private void MarkPersistenceAvailable()
+        {
+            lock (_persistenceStatusLock)
+            {
+                _persistenceAvailable = true;
+                _persistenceStatusMessage = "隔离开发任务数据库持久化可用。";
+                _persistenceErrorMessage = null;
+                _persistenceStatusUpdatedAt = DateTimeOffset.UtcNow;
+                _retryAfter = null;
+            }
+        }
+
+        private void MarkPersistenceUnavailable(Exception exception)
+        {
+            lock (_persistenceStatusLock)
+            {
+                _persistenceAvailable = false;
+                _persistenceStatusMessage = "隔离开发任务表不可用；已暂缓状态查询，等待数据库迁移完成后重试。";
+                _persistenceErrorMessage = exception.Message;
+                _persistenceStatusUpdatedAt = DateTimeOffset.UtcNow;
+                _retryAfter = _persistenceStatusUpdatedAt.AddSeconds(30);
+            }
         }
 
         private static XncfDevelopmentJobSnapshot ToSnapshot(XncfDevelopmentJob job)
@@ -133,6 +207,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             return new XncfDevelopmentJobSnapshot
             {
                 JobId = job.JobId,
+                OwnerAdminUserId = job.OwnerAdminUserId,
                 Mode = job.Mode,
                 ModuleProjectName = job.ModuleProjectName,
                 TargetSolutionFilePath = job.TargetSolutionFilePath,

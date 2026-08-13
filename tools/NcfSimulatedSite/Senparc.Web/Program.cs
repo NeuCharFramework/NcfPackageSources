@@ -89,6 +89,21 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+// A Sandbox NCF preview is exposed through /sandbox-preview/{sessionId}. The value is supplied
+// only by the fixed Sandbox container workload; normal sites have no path-base at all. Applying
+// it before NCF/static/routing middleware keeps links, redirects and WebSocket endpoints inside
+// the authenticated reverse-proxy prefix instead of leaking to the main host root.
+var xncfPreviewPathBase = Environment.GetEnvironmentVariable("NCF_XNCF_PREVIEW_PATH_BASE");
+if (!string.IsNullOrWhiteSpace(xncfPreviewPathBase)
+    && xncfPreviewPathBase.StartsWith('/')
+    && !xncfPreviewPathBase.Contains("..", StringComparison.Ordinal)
+    && !xncfPreviewPathBase.Contains('\\')
+    && !xncfPreviewPathBase.Contains('\r')
+    && !xncfPreviewPathBase.Contains('\n'))
+{
+    app.UsePathBase(xncfPreviewPathBase);
+}
+
 // Configure request localization (cookie first, then query/header providers)
 var supportedCultures = LanguageController.SupportedCultures;
 var localizationOptions = new RequestLocalizationOptions()

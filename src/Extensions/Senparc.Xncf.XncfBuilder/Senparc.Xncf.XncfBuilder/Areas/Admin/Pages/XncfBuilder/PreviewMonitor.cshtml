@@ -6,6 +6,8 @@
     var stateUrl = Url.Page("./PreviewMonitor", "State", new { uid = Model.Uid });
     var outputUrl = Url.Page("./PreviewMonitor", "SessionOutput", new { uid = Model.Uid });
     var stopUrl = Url.Page("./PreviewMonitor", "Stop", new { uid = Model.Uid });
+    var applyDevelopmentUrl = Url.Page("./PreviewMonitor", "ApplyDevelopment", new { uid = Model.Uid });
+    var discardDevelopmentUrl = Url.Page("./PreviewMonitor", "DiscardDevelopment", new { uid = Model.Uid });
 }
 
 @section breadcrumbs {
@@ -33,6 +35,16 @@
                 show-icon
                 :closable="false"
                 :description="persistenceStatus.statusMessage + (persistenceStatus.errorMessage ? ' 原因：' + persistenceStatus.errorMessage : '')">
+            </el-alert>
+
+            <el-alert
+                v-if="developmentStatus && !developmentStatus.isAvailable"
+                style="margin-top:12px;"
+                title="隔离开发任务数据库持久化尚未就绪"
+                type="warning"
+                show-icon
+                :closable="false"
+                :description="developmentStatus.statusMessage + (developmentStatus.errorMessage ? ' 原因：' + developmentStatus.errorMessage : '')">
             </el-alert>
 
             <el-alert
@@ -191,6 +203,43 @@
                 </el-table>
             </el-card>
 
+            <el-card shadow="never" style="margin-top:16px;">
+                <div slot="header" class="clearfix">
+                    <span><i class="fa fa-code"></i>&nbsp;隔离开发 / Sandbox 预览任务</span>
+                    <span style="margin-left:8px;color:#909399;font-size:12px;">AI 只能写隔离工作区；合入必须由管理员输入确认短语。</span>
+                </div>
+                <el-table :data="developmentJobs" row-key="jobId" border stripe empty-text="当前没有隔离开发任务">
+                    <el-table-column prop="moduleProjectName" label="模块" min-width="220"></el-table-column>
+                    <el-table-column label="模式 / 阶段" min-width="175">
+                        <template slot-scope="scope">
+                            <div>{{ developmentModeLabel(scope.row.mode) }}</div>
+                            <el-tag :type="developmentTagType(scope.row.stage)" size="small">{{ developmentStageLabel(scope.row.stage) }}</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="状态与差异" min-width="300">
+                        <template slot-scope="scope">
+                            <div>{{ scope.row.statusMessage || '—' }}</div>
+                            <div style="color:#909399;font-size:12px;line-height:18px;">{{ scope.row.diffSummary || '尚未生成差异摘要' }}</div>
+                            <div v-if="scope.row.errorMessage" style="color:#f56c6c;font-size:12px;line-height:18px;">{{ scope.row.errorMessage }}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="路径 / Sandbox" min-width="330">
+                        <template slot-scope="scope">
+                            <div style="word-break:break-all;">目标：{{ scope.row.targetSolutionFilePath || '—' }}</div>
+                            <div style="word-break:break-all;color:#909399;font-size:12px;">隔离：{{ scope.row.workspaceSolutionFilePath || '—' }}</div>
+                            <div v-if="scope.row.sandboxSessionId" style="font-size:12px;">Sandbox：{{ scope.row.sandboxSessionId }}</div>
+                            <el-link v-if="scope.row.previewUrl" :href="scope.row.previewUrl" target="_blank" type="primary">打开 Sandbox 预览</el-link>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" width="180" fixed="right">
+                        <template slot-scope="scope">
+                            <el-button v-if="isAwaitingApproval(scope.row)" type="success" size="mini" @@click="applyDevelopment(scope.row)">人工合入</el-button>
+                            <el-button v-if="!scope.row.isTerminal" type="danger" size="mini" @@click="discardDevelopment(scope.row)">丢弃</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-card>
+
             <el-alert
                 style="margin-top:16px;"
                 title="源码生成或修改完成后，调用“启动 XNCF 隔离预览”才会进入此监控队列；源码指纹用于证明本次构建对应的确切源码快照。"
@@ -214,6 +263,8 @@
                     stageMap: {},
                     hostStatusMap: {},
                     persistenceStatus: null,
+                    developmentJobs: [],
+                    developmentStatus: null,
                     outputBySession: {},
                     expandedSessionIds: [],
                     updatedAt: null,
@@ -229,7 +280,9 @@
                     visibilityHandler: null,
                     stateUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(stateUrl)),
                     outputUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(outputUrl)),
-                    stopUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(stopUrl))
+                    stopUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(stopUrl)),
+                    applyDevelopmentUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(applyDevelopmentUrl)),
+                    discardDevelopmentUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(discardDevelopmentUrl))
                 };
             },
             computed: {
@@ -327,6 +380,8 @@
                         }, {});
                         this.pipelineStages = response.data.pipelineStages || [];
                         this.persistenceStatus = response.data.persistenceStatus || null;
+                        this.developmentJobs = response.data.developmentJobs || [];
+                        this.developmentStatus = response.data.developmentStatus || null;
                         this.stageMap = this.stageDefinitions.reduce((map, item) => {
                             map[item.value] = item;
                             return map;
@@ -394,6 +449,67 @@
                             this.$message.error(this.errorMessage(error, "停止预览失败。"));
                         }
                     }
+                },
+                applyDevelopment: async function (row) {
+                    const expected = "APPLY " + row.moduleProjectName;
+                    try {
+                        const prompt = await this.$prompt(
+                            "请先确认隔离工作区、差异和 Sandbox 预览。输入 " + expected + " 才会将受控差异写入目标源码。",
+                            "人工合入 XNCF 模块",
+                            {
+                                confirmButtonText: "合入",
+                                cancelButtonText: "取消",
+                                inputErrorMessage: "确认短语必须完全匹配：" + expected
+                            });
+                        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                        const separator = this.applyDevelopmentUrl.indexOf("?") >= 0 ? "&" : "?";
+                        const response = await axios.post(
+                            this.applyDevelopmentUrl + separator + "jobId=" + encodeURIComponent(row.jobId)
+                            + "&confirmationPhrase=" + encodeURIComponent(prompt.value),
+                            null,
+                            { headers: { "RequestVerificationToken": token } });
+                        this.$message.success(response.data.message);
+                        await this.loadState(false);
+                    } catch (error) {
+                        if (error !== "cancel" && error !== "close") {
+                            this.$message.error(this.errorMessage(error, "合入失败。"));
+                        }
+                    }
+                },
+                discardDevelopment: async function (row) {
+                    try {
+                        await this.$confirm(
+                            "将停止对应 Sandbox 预览并删除隔离工作区，目标源码不会改变。确定丢弃 " + row.moduleProjectName + " 吗？",
+                            "丢弃隔离开发任务",
+                            { confirmButtonText: "丢弃", cancelButtonText: "取消", type: "warning" });
+                        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                        const separator = this.discardDevelopmentUrl.indexOf("?") >= 0 ? "&" : "?";
+                        const response = await axios.post(
+                            this.discardDevelopmentUrl + separator + "jobId=" + encodeURIComponent(row.jobId),
+                            null,
+                            { headers: { "RequestVerificationToken": token } });
+                        this.$message.success(response.data.message);
+                        await this.loadState(false);
+                    } catch (error) {
+                        if (error !== "cancel" && error !== "close") {
+                            this.$message.error(this.errorMessage(error, "丢弃失败。"));
+                        }
+                    }
+                },
+                developmentModeLabel: function (mode) {
+                    return mode === 0 ? "新建模块" : "修改现有模块";
+                },
+                developmentStageLabel: function (stage) {
+                    return ["快照中", "可编写", "校验中", "Sandbox 预览中", "待审阅", "等待人工合入", "已合入", "已丢弃", "失败"][stage] || "未知";
+                },
+                developmentTagType: function (stage) {
+                    if (stage === 6) return "success";
+                    if (stage === 8) return "danger";
+                    if (stage === 7) return "info";
+                    return stage === 5 ? "warning" : "primary";
+                },
+                isAwaitingApproval: function (row) {
+                    return row.stage === 5;
                 },
                 stageName: function (stage) {
                     return this.stageMap[stage] ? this.stageMap[stage].name : "Unknown";

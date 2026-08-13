@@ -24,6 +24,9 @@ namespace Senparc.Xncf.XncfBuilder
         [Required, MaxLength(64)]
         public string JobId { get; private set; }
 
+        /// <summary>Admin user that initiated the sandbox workload and receives its quota.</summary>
+        public int OwnerAdminUserId { get; private set; }
+
         [Required]
         public XncfDevelopmentJobMode Mode { get; private set; }
 
@@ -94,6 +97,7 @@ namespace Senparc.Xncf.XncfBuilder
         internal void Apply(XncfDevelopmentJobSnapshot snapshot)
         {
             Mode = snapshot.Mode;
+            OwnerAdminUserId = snapshot.OwnerAdminUserId;
             ModuleProjectName = snapshot.ModuleProjectName;
             TargetSolutionFilePath = snapshot.TargetSolutionFilePath;
             WorkspaceRootPath = snapshot.WorkspaceRootPath;

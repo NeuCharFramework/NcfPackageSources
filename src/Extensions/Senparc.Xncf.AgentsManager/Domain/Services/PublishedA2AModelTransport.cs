@@ -9,6 +9,7 @@
 
 using Senparc.CO2NET.Trace;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,15 +30,38 @@ internal static class PublishedA2AModelTransport
     private const int MaxDiagnosticBodyBytes = 256 * 1024;
     private const int MaxDiagnosticTextLength = 480;
     private static readonly AsyncLocal<ModelRequestContext> CurrentContext = new();
+    private static readonly ConcurrentDictionary<string, ModelProviderFailure> LatestFailures = new();
     private static readonly HttpClient Client = new(new PublishedA2AModelHttpMessageHandler(), disposeHandler: true);
 
     public static HttpClient SharedClient => Client;
 
     public static IDisposable Begin(string diagnosticId, string? apiVersionOverride = null)
     {
+        diagnosticId = string.IsNullOrWhiteSpace(diagnosticId) ? "unset" : diagnosticId;
         var previous = CurrentContext.Value;
+        if (previous == null || !string.Equals(previous.DiagnosticId, diagnosticId, StringComparison.Ordinal))
+        {
+            LatestFailures.TryRemove(diagnosticId, out _);
+        }
+
         CurrentContext.Value = new ModelRequestContext(diagnosticId, apiVersionOverride);
         return new ContextScope(previous);
+    }
+
+    public static bool TryGetTerminalFailure(string? diagnosticId, out ModelProviderFailure failure)
+    {
+        failure = null;
+        return !string.IsNullOrWhiteSpace(diagnosticId)
+               && LatestFailures.TryGetValue(diagnosticId, out failure)
+               && failure.IsTerminalConfigurationFailure;
+    }
+
+    public static void ClearFailure(string? diagnosticId)
+    {
+        if (!string.IsNullOrWhiteSpace(diagnosticId))
+        {
+            LatestFailures.TryRemove(diagnosticId, out _);
+        }
     }
 
     private sealed record ModelRequestContext(string DiagnosticId, string? ApiVersionOverride);
@@ -92,6 +116,10 @@ internal static class PublishedA2AModelTransport
                 {
                     var providerError = await ReadAndRestoreProviderErrorAsync(response, cancellationToken)
                         .ConfigureAwait(false);
+                    LatestFailures[context.DiagnosticId] = new ModelProviderFailure(
+                        (int)response.StatusCode,
+                        providerError,
+                        IsTerminalConfigurationFailure(providerError));
                     SenparcTrace.SendCustomLog(
                         "AgentsManager.A2A.ModelProviderResponse",
                         $"DiagnosticId={context.DiagnosticId}; Status={(int)response.StatusCode}; " +
@@ -272,6 +300,19 @@ internal static class PublishedA2AModelTransport
             }
         }
 
+        private static bool IsTerminalConfigurationFailure(string? providerError)
+        {
+            if (string.IsNullOrWhiteSpace(providerError))
+            {
+                return false;
+            }
+
+            return providerError.Contains("AI 应用不可用或已暂时停用", StringComparison.OrdinalIgnoreCase)
+                   || providerError.Contains("AI应用不可用或已暂时停用", StringComparison.OrdinalIgnoreCase)
+                   || providerError.Contains("AI application is unavailable", StringComparison.OrdinalIgnoreCase)
+                   || providerError.Contains("AI application has been disabled", StringComparison.OrdinalIgnoreCase);
+        }
+
         private static void AddSafeErrorField(List<string> fields, JsonElement error, string propertyName)
         {
             if (!error.TryGetProperty(propertyName, out var value)
@@ -395,5 +436,28 @@ internal static class PublishedA2AModelTransport
             var normalized = (text ?? string.Empty).Replace('\r', ' ').Replace('\n', ' ').Trim();
             return normalized.Length <= maxLength ? normalized : normalized[..maxLength];
         }
+    }
+
+    internal sealed record ModelProviderFailure(
+        int StatusCode,
+        string ProviderError,
+        bool IsTerminalConfigurationFailure)
+    {
+        public string ClientMessage => IsTerminalConfigurationFailure
+            ? "AI 应用不可用或已暂时停用。请在 NeuChar 开发者后台启用对应 AI 应用，或为当前 AIModel 更新有效的 DeveloperId、Endpoint 与 ApiKey。"
+            : "上游模型服务拒绝了请求。";
+    }
+}
+
+internal sealed class PublishedA2AModelProviderException : Exception
+{
+    public PublishedA2AModelTransport.ModelProviderFailure Failure { get; }
+
+    public PublishedA2AModelProviderException(
+        PublishedA2AModelTransport.ModelProviderFailure failure,
+        Exception innerException)
+        : base(failure?.ClientMessage ?? "上游模型服务拒绝了请求。", innerException)
+    {
+        Failure = failure;
     }
 }

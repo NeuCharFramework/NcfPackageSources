@@ -40,6 +40,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 
     public sealed class XncfDevelopmentCreateOptions
     {
+        public int OwnerAdminUserId { get; init; }
         public string SolutionFilePath { get; init; }
         public XncfDevelopmentJobMode Mode { get; init; }
         public string ModuleProjectName { get; init; }
@@ -61,6 +62,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
     public sealed class XncfDevelopmentJobInfo
     {
         public string JobId { get; init; }
+        public int OwnerAdminUserId { get; init; }
         public XncfDevelopmentJobMode Mode { get; init; }
         public string ModuleProjectName { get; init; }
         public string TargetSolutionFilePath { get; init; }
@@ -95,6 +97,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
         string PreviousSha256,
         string Sha256);
 
+    public sealed class XncfDevelopmentPersistenceInfo
+    {
+        public bool IsAvailable { get; init; }
+        public string StatusMessage { get; init; }
+        public string ErrorMessage { get; init; }
+        public DateTimeOffset UpdatedAt { get; init; }
+        public DateTimeOffset? RetryAfter { get; init; }
+    }
+
     public interface IXncfDevelopmentJobService
     {
         Task<XncfDevelopmentJobInfo> CreateAsync(
@@ -119,7 +130,6 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 
         Task<XncfDevelopmentJobInfo> StartSandboxPreviewAsync(
             string jobId,
-            int ownerUserId = 0,
             CancellationToken cancellationToken = default);
 
         Task<XncfDevelopmentJobInfo> RequestMergeApprovalAsync(
@@ -144,5 +154,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
         Task<IReadOnlyList<XncfDevelopmentJobInfo>> GetRecentAsync(
             int maxCount = 100,
             CancellationToken cancellationToken = default);
+
+        XncfDevelopmentPersistenceInfo GetPersistenceStatus();
     }
 }

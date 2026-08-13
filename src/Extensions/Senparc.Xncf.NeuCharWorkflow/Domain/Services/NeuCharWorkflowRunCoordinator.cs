@@ -322,7 +322,7 @@ public sealed class NeuCharWorkflowRunCoordinator
                 ? NeuCharWorkflowEngine.CalculateNextRun(workflow.TriggerType, workflow.TriggerConfigJson, DateTime.UtcNow)
                 : workflow.NextRunAt;
             workflow.MarkStarted(nextRun);
-            await workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
+            await workflowService.SaveRuntimeStartedAsync(workflow).ConfigureAwait(false);
             var result = await engine.RunAsync(
                 workflow,
                 state.Input,
@@ -331,7 +331,7 @@ public sealed class NeuCharWorkflowRunCoordinator
                 state.RunId.ToString("N"),
                 state.GetManualAbortResult).ConfigureAwait(false);
             workflow.MarkCompleted(result.Success, result.ErrorMessage);
-            await workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
+            await workflowService.SaveRuntimeCompletedAsync(workflow).ConfigureAwait(false);
             state.Complete(result.Success, result.Output, result.ErrorMessage);
         }
         catch (OperationCanceledException)
@@ -354,7 +354,7 @@ public sealed class NeuCharWorkflowRunCoordinator
     {
         const string message = "手动中止";
         workflow.MarkCompleted(false, message);
-        await workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
+        await workflowService.SaveRuntimeCompletedAsync(workflow).ConfigureAwait(false);
 
         var executionLog = new WorkflowExecutionLog(
             workflow.Id,

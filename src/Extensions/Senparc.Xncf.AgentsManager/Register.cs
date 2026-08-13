@@ -31,6 +31,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.Enums;
@@ -146,6 +147,10 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<PublishedA2AAgentService>();
             services.AddScoped<AgentTemplateRunner>();
             services.AddHttpClient(RemoteA2AAgentFactory.HttpClientName);
+            // Aspire ServiceDefaults 会在所有 HttpClient 上添加固定 30 秒的 Polly 尝试超时。
+            // A2A 请求可能需要更长的模型推理时间，并且 POST 不能被隐式重试；
+            // 由 Filter 在最终 Handler 链中移除该管道，改用 RemoteAgent.TimeoutSeconds。
+            services.AddSingleton<IHttpMessageHandlerBuilderFilter, RemoteA2AHttpMessageHandlerBuilderFilter>();
             services.AddScoped<RemoteA2AAgentFactory>();
             services.AddHttpContextAccessor();
             services.AddSingleton<PublishedA2AServerRegistry>();

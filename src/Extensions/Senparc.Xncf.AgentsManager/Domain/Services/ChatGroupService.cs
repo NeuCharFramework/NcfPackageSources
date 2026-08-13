@@ -91,6 +91,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         public required string ParticipantKind { get; init; }
         public int? LocalAgentTemplateId { get; init; }
         public int? RemoteAgentId { get; init; }
+        public int? RemoteTimeoutSeconds { get; init; }
         public AgentTemplate? Template { get; init; }
         public AgentTemplateDto? TemplateDto { get; init; }
         public required AIAgent Agent { get; init; }
@@ -342,6 +343,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         AllowFunctionCalls = true,
                         DefaultSetting = senparcAiSetting,
                         UseTemplateModelSettings = personality,
+                        UseTemplatePromptParameters = personality,
                         MaxOutputTokens = 2000,
                         Temperature = 0.3f,
                         TopP = 0.3f
@@ -386,6 +388,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         ParticipantKey = RemoteA2AAgentFactory.BuildParticipantKey(remoteMember.RemoteAgentId),
                         ParticipantKind = "RemoteA2A",
                         RemoteAgentId = remoteMember.RemoteAgentId,
+                        RemoteTimeoutSeconds = remoteMember.RemoteAgent.TimeoutSeconds,
                         Agent = remoteAgent
                     });
                 }
@@ -880,7 +883,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                 break;
                             case ExecutorFailedEvent executorFailed:
                                 workflowFailed = true;
-                                workflowFailureReason = $"Executor '{executorFailed.ExecutorId}' failed: {executorFailed.Data}";
+                                var executorFailureDetails = executorFailed.Data?.ToString() ?? string.Empty;
+                                SenparcTrace.SendCustomLog(
+                                    "AgentsManager.ChatGroup.ExecutorFailure",
+                                    $"Group={chatGroup.Id}; Task={chatTask.Id}; Executor={executorFailed.ExecutorId}; " +
+                                    executorFailureDetails);
+                                workflowFailureReason = FormatExecutorFailureReason(
+                                    executorFailed.ExecutorId,
+                                    executorFailureDetails,
+                                    contextByExecutorId);
                                 logger.AppendLine($"[{chatGroup.Name}] 执行器错误：{workflowFailureReason}");
                                 shouldExit = true;
                                 break;
@@ -1195,6 +1206,53 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
 
         return false;
+    }
+
+    private static string FormatExecutorFailureReason(
+        string executorId,
+        string failureDetails,
+        IReadOnlyDictionary<string, AgentRuntimeContext> contextIndex)
+    {
+        var normalizedExecutorId = string.IsNullOrWhiteSpace(executorId) ? "unknown" : executorId;
+        var normalizedDetails = failureDetails?.Trim() ?? string.Empty;
+
+        if (TryResolveRuntimeContext(contextIndex, executorId, out var context)
+            && context.IsRemote
+            && IsTimeoutFailure(normalizedDetails))
+        {
+            var timeoutSeconds = context.RemoteTimeoutSeconds.GetValueOrDefault(60);
+            return $"远程 A2A 智能体【{context.Agent.Name}】调用超时（当前远程配置为 {timeoutSeconds} 秒）。" +
+                   "可在远程 A2A 编辑页提高“连接超时（秒）”（最高 600 秒）。";
+        }
+
+        if (string.IsNullOrWhiteSpace(normalizedDetails))
+        {
+            return $"Executor '{normalizedExecutorId}' failed.";
+        }
+
+        var firstLine = normalizedDetails
+            .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+            .FirstOrDefault()?.Trim();
+        if (string.IsNullOrWhiteSpace(firstLine))
+        {
+            firstLine = normalizedDetails;
+        }
+
+        return $"Executor '{normalizedExecutorId}' failed: {firstLine}" +
+               (normalizedDetails.Length > firstLine.Length ? "（详细堆栈已写入 SenparcTrace）" : string.Empty);
+    }
+
+    private static bool IsTimeoutFailure(string failureDetails)
+    {
+        if (string.IsNullOrWhiteSpace(failureDetails))
+        {
+            return false;
+        }
+
+        return failureDetails.Contains("TimeoutRejectedException", StringComparison.OrdinalIgnoreCase)
+               || failureDetails.Contains("allowed timeout", StringComparison.OrdinalIgnoreCase)
+               || failureDetails.Contains("HttpClient.Timeout", StringComparison.OrdinalIgnoreCase)
+               || failureDetails.Contains("timed out", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsExitSignal(string text)

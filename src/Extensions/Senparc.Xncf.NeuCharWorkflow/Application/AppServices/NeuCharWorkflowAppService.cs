@@ -250,10 +250,10 @@ public sealed class NeuCharWorkflowAppService
             ?? throw new WorkflowNotFoundException();
         await ValidateWorkflowAsync(workflow, cancellationToken).ConfigureAwait(false);
         workflow.MarkStarted(workflow.NextRunAt);
-        await _workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
+        await _workflowService.SaveRuntimeStartedAsync(workflow).ConfigureAwait(false);
         var result = await _workflowEngine.RunAsync(workflow, input, cancellationToken).ConfigureAwait(false);
         workflow.MarkCompleted(result.Success, result.ErrorMessage);
-        await _workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
+        await _workflowService.SaveRuntimeCompletedAsync(workflow).ConfigureAwait(false);
         return result;
     }
 

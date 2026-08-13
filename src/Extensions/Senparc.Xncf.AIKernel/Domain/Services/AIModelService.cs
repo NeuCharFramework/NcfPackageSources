@@ -261,7 +261,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 TopP = 0.5,
             };
 
-            var agentAiHandler = base._serviceProvider.GetService<AgentAiHandler>();
+            // The requested model must own the AgentKernel pipeline. Resolving the scoped
+            // AgentAiHandler from DI here uses the system-default SenparcAiSetting and can make a
+            // failed database model appear healthy when the default model succeeds.
+            var agentAiHandler = CreateModelAgentHandler(senparcAiSetting);
             var chatOptions = new ChatClientAgentOptions()
             {
                 ChatOptions = new Microsoft.Extensions.AI.ChatOptions()
@@ -275,13 +278,18 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions())
             };
 
-            var iWantToRun = await agentAiHandler.IWantTo()
+            var iWantToRun = await agentAiHandler.IWantTo(senparcAiSetting)
                 .ConfigChatModel("SenparcNCF", chatOptions)
                 .BuildKernelWithAgentSessionAsync();
 
             //var request = iWantToRun.CreateRequest(prompt);
             var aiResult = await iWantToRun.RunChatAsync(prompt, agentSession);
             return aiResult;
+        }
+
+        private static AgentAiHandler CreateModelAgentHandler(SenparcAiSetting senparcAiSetting)
+        {
+            return new AgentAiHandler(senparcAiSetting);
         }
 
         public async Task<string> UpdateModelsFromNeuCharAsync(NeuCharGetModelJsonResult modelResult, int developerId, string apiKey)

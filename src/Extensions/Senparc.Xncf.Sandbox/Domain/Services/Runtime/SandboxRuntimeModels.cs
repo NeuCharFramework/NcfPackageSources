@@ -22,6 +22,21 @@ public sealed class SandboxCreateRuntimeRequest
     public required double CpuLimit { get; init; }
     public required int MemoryMb { get; init; }
     public required string WorkspaceDirectory { get; init; }
+    /// <summary>
+    /// Present only for the fixed-function NCF preview template. It is populated by the server,
+    /// never by a browser or an AI-provided shell command.
+    /// </summary>
+    public SandboxNcfPreviewRuntimeOptions? NcfPreview { get; init; }
+}
+
+public sealed class SandboxNcfPreviewRuntimeOptions
+{
+    public required string SolutionRelativePath { get; init; }
+    public required string ModuleProjectName { get; init; }
+    public required string BasePath { get; init; }
+    public bool AllowDependencyRestoreNetwork { get; init; }
+    public string? RestoreNetworkName { get; init; }
+    public int StartupTimeoutSeconds { get; init; } = 180;
 }
 
 public sealed class SandboxCreateRuntimeResult

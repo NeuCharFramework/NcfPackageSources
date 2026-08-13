@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.15.0-preview17</Version>
+    <Version>0.15.0-preview20</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -131,6 +131,16 @@
 		[2026-08-13] v0.15.0-preview17 对齐发布 A2A 与本地 Agent 的模型传输边界
 		1、诊断传输遇到真实 403 后，使用完全相同模型配置通过 AgentKernel 标准本地传输重试，不切换系统默认模型
 		2、安全记录请求结构与上游标准错误字段，保留响应给 SDK 处理且不记录 Prompt、输入或凭证
+		[2026-08-14] v0.15.0-preview18 明确处理发布 A2A 的上游应用停用错误
+		1、识别 NeuChar AI 应用不可用或停用响应并停止无意义的传输、Deployment 与 API Version 重试
+		2、向 Workflow/A2A 返回脱敏且可操作的模型配置错误，并保留 DiagnosticId
+		[2026-08-14] v0.15.0-preview19 发布型 A2A 完整复用本地 Agent 执行配置
+		1、A2A 正常路径复用本地 RunAsync 与 AgentKernel 标准传输，不再替换 HttpClient、Deployment 或 API Version
+		2、沿用 Prompt 版本的 MaxToken、Temperature、TopP、Penalty 与 StopSequences，避免固定参数覆盖 DeepSeek 等模型配置
+		3、执行诊断补充参数来源和脱敏参数摘要，便于核对本地与 A2A 的实际执行配置
+		[2026-08-14] v0.15.0-preview20 修正 ChatGroup 远程 A2A 超时边界
+		1、防止 Aspire 默认 Polly 管道的 30 秒 AttemptTimeout 覆盖 RemoteAgent.TimeoutSeconds
+		2、远程 A2A 请求统一使用可配置的 5-600 秒整体超时，并避免对可能已开始执行的 POST 进行隐式重试
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

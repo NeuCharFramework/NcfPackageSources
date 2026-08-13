@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.15.3-preview11</Version>
+    <Version>0.15.3-preview12</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -93,6 +93,9 @@
 		[2026-08-13] v0.15.3-preview11 保留 AIModel API Version 的兼容默认值
 		1、当 NeuCharAI / AzureOpenAI 模型未设置 ApiVersion 时，保留 2022-12-01 默认值而不写入 null
 		2、为 AgentKernel 与历史模型配置提供一致的 Azure-compatible API Version 语义
+		[2026-08-14] v0.15.3-preview12 修复 AIModel 指定模型测试的配置穿透
+		1、RunModelsync 使用调用方传入的 SenparcAiSetting 创建 AgentKernel，不再误用系统默认模型
+		2、避免默认模型成功被误判为数据库目标模型可用
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
