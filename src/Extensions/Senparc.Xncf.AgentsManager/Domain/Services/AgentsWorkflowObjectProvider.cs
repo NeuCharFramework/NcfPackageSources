@@ -161,7 +161,8 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 Description = $"NeuChar Workflow {request.CorrelationId}",
                 Personality = false,
                 HookPlatform = HookPlatform.None,
-                CorrelationId = request.CorrelationId
+                CorrelationId = request.CorrelationId,
+                CancellationToken = cancellationToken
             }).ConfigureAwait(false);
             return new WorkflowObjectExecutionResult(true, $"Agent 组“{group.Name}”已完成本轮任务。");
         }

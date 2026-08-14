@@ -213,6 +213,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         /// 可选：业务关联 ID（例如 Prompt 优化的 RequestId），用于在执行上下文中关联工具调用
         /// </summary>
         public string CorrelationId { get; set; }
+
+        /// <summary>
+        /// 可选：由 Workflow 或宿主传入的取消信号。该属性不参与 HTTP 模型绑定，
+        /// 仅用于进程内调用以便及时终止外部 Agent 资源。
+        /// </summary>
+        [JsonIgnore]
+        public System.Threading.CancellationToken CancellationToken { get; set; }
     }
 
     /// <summary>

@@ -257,6 +257,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 return -1;
             }
 
+            if (!AgentTemplateRunner.IsPromptRangeReference(promptCode))
+            {
+                return -1;
+            }
+
             try
             {
                 var promptItem = await _promptItemService.GetBestPromptAsync(promptCode, true);
@@ -982,6 +987,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             if (string.IsNullOrWhiteSpace(promptCode))
             {
+                return -1;
+            }
+
+            if (!AgentTemplateRunner.IsPromptRangeReference(promptCode))
+            {
+                scoreCache[promptCode] = -1;
                 return -1;
             }
 

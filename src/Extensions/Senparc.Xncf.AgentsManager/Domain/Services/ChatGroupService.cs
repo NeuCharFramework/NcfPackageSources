@@ -74,6 +74,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Threading;
 using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
@@ -170,6 +171,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
     private async Task RunChatGroupExecutionCoreAsync(ChatGroup_RunGroupRequest request)
     {
+        var cancellationToken = request.CancellationToken;
+        cancellationToken.ThrowIfCancellationRequested();
+
         IDisposable activeOptimizationScope = null;
         if (!string.IsNullOrWhiteSpace(request.CorrelationId))
         {
@@ -216,11 +220,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             if (aiModelId <= 0)
             {
                 var adminAgent = await agentTemplateService.GetObjectAsync(z => z.Id == chatGroup.AdminAgentTemplateId);
-                if (adminAgent != null && !adminAgent.PromptCode.IsNullOrEmpty())
+                if (adminAgent != null && AgentTemplateRunner.IsPromptRangeReference(adminAgent.PromptCode))
                 {
                     try
                     {
-                        var adminPrompt = await promptItemService.GetBestPromptAsync(adminAgent.PromptCode, true);
+                        var adminPrompt = await promptItemService.GetBestPromptAsync(adminAgent.PromptCode.Trim(), true);
                         if (adminPrompt != null && adminPrompt.ModelId > 0)
                         {
                             aiModelId = adminPrompt.ModelId;
@@ -423,7 +427,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     runningKey,
                     chatTask,
                     chatTaskService,
-                    1);
+                    1,
+                    cancellationToken);
 
                 if (!singleAgentResult.HasOutput)
                 {
@@ -629,7 +634,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             {
                 run = await InProcessExecution.RunStreamingAsync(
                     workflow,
-                    new List<ChatMessage> { new(ChatRole.User, taskPrompt) });
+                    new List<ChatMessage> { new(ChatRole.User, taskPrompt) },
+                    cancellationToken: cancellationToken);
 
                 var emittedTurnTokens = 0;
                 var idleSuperStepCount = 0;
@@ -664,7 +670,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                     var hadEventsInCurrentSuperStep = false;
 
-                    await foreach (var workflowEvent in run.WatchStreamAsync())
+                    await foreach (var workflowEvent in run.WatchStreamAsync(cancellationToken))
                     {
                         hadEventsInCurrentSuperStep = true;
 
@@ -954,6 +960,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     }
                 }
             }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
             catch (Exception workflowEx)
             {
                 workflowFailed = true;
@@ -1015,7 +1025,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     chatTask,
                     chatTaskService,
                     Math.Max(1, roundIndex + 1),
-                    effectiveWorkflowTurns);
+                    effectiveWorkflowTurns,
+                    cancellationToken);
 
                 if (!hasFallbackOutput && workflowFailed)
                 {
@@ -1341,7 +1352,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         ChatTask chatTask,
         ChatTaskService chatTaskService,
         int startRoundIndex,
-        int maxRoundCount)
+        int maxRoundCount,
+        CancellationToken cancellationToken)
     {
         var sequence = BuildFallbackRoundRobinSequence(participantContexts, enterContext);
         if (sequence.Count == 0)
@@ -1355,6 +1367,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
         for (var i = 0; i < totalRounds; i++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var context = sequence[i % sequence.Count];
             var prompt = i == 0
                 ? userCommand
@@ -1373,7 +1386,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 runningKey,
                 chatTask,
                 chatTaskService,
-                roundIndex);
+                roundIndex,
+                cancellationToken);
 
             if (result.HasOutput)
             {
@@ -1407,8 +1421,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         string runningKey,
         ChatTask chatTask,
         ChatTaskService chatTaskService,
-        int roundIndex)
+        int roundIndex,
+        CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         if (agentContext.Runner == null || agentContext.TemplateDto == null || agentContext.AgentOptions == null)
         {
             throw new NcfExceptionBase($"参与者【{agentContext.Agent.Name}】不支持本地模型回退执行。");

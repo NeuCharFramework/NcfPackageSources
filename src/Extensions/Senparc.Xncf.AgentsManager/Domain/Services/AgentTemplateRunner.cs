@@ -62,6 +62,13 @@ public sealed class AgentTemplateRunner
         _aiModelService = aiModelService;
     }
 
+    /// <summary>
+    /// 判断 AgentTemplate 中存储的值是否为 PromptRange 版本引用。
+    /// 非版本格式的内容是用户直接输入的 System Message，禁止交给 PromptRange 查询。
+    /// </summary>
+    public static bool IsPromptRangeReference(string promptCode)
+        => !string.IsNullOrWhiteSpace(promptCode) && PromptItem.IsPromptVersion(promptCode.Trim());
+
     public async Task<AgentTemplateRunResult> RunAsync(
         AgentTemplate template,
         string userText,
@@ -412,7 +419,7 @@ public sealed class AgentTemplateRunner
 
         if (!string.IsNullOrWhiteSpace(template.PromptCode))
         {
-            if (PromptItem.IsPromptVersion(template.PromptCode))
+            if (IsPromptRangeReference(template.PromptCode))
             {
                 var promptResult = await _promptItemService
                     .GetWithVersionAsync(template.PromptCode, true)
