@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.41.0-preview11 增强隔离开发任务与 Sandbox 预览流程
+
 ----------------------------------------------------------------*/
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
@@ -191,7 +194,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         {
         }
 
-        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.AddMigration.Name", "Function.XncfBuilder.AddMigration.Description", typeof(Register))]
+        // Migration generation writes project files and migration sources directly. It remains an
+        // administrator UI operation, not an automatically imported AI chat function.
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.AddMigration.Name", "Function.XncfBuilder.AddMigration.Description", typeof(Register), AllowAiInvocation = false)]
         public async Task<StringAppResponse> AddMigration(DatabaseMigrations_MigrationRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

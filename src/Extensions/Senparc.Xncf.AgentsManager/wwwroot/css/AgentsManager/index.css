@@ -858,6 +858,25 @@ height:100%;
     color: #409eff;
 }
 
+.agentCard-knowledgeBaseLink {
+    overflow: hidden;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    color: #409eff;
+    background: transparent;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.agentCard-knowledgeBaseLink:hover,
+.agentCard-knowledgeBaseLink:focus-visible {
+    outline: none;
+    color: #2378cc;
+    text-decoration: underline;
+}
+
 .agentCard-lowerHalfbox {
     padding: 12px 20px;
     border-top: 1px solid rgba(229, 229, 229, 1);
@@ -951,6 +970,22 @@ height:100%;
     border: 1px solid #ebeef5;
     color: #606266;
     font-size: 13px;
+}
+
+.agentDetails-knowledgeBase,
+.knowledgeBase-shortcuts {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.knowledgeBase-shortcuts {
+    margin-top: 8px;
+}
+
+.knowledgeBase-shortcuts .el-button + .el-button {
+    margin-left: 0;
 }
 
 .form-help-text {

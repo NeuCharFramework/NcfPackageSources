@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.10</Version>
+    <Version>0.0.11</Version>
     <PackageReleaseNotes>
         [2026-07-01] v0.0.1 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
         [2026-07-02] v0.0.1 新增 PromptRange 与 AgentsManager 使用记录能力，升级并适配 net10.0 框架
@@ -29,6 +29,8 @@
         [2026-08-13] v0.0.10 补充 AgentsManager A2A、线程和参数解析测试覆盖
         1、覆盖远程与发布 A2A 管理流程及 AgentTemplateRunner
         2、补充文件资源边界、线程停止和数值参数归一化测试
+        [2026-08-15] v0.0.11 补充 AgentTemplate 与远程 A2A 回归测试
+        1、覆盖手动 Prompt、取消令牌和远程执行边界
 </PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>

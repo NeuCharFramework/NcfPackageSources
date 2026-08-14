@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp;
@@ -253,6 +256,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private async Task<float> GetAgentScoreByPromptCodeAsync(string promptCode)
         {
             if (string.IsNullOrWhiteSpace(promptCode))
+            {
+                return -1;
+            }
+
+            if (!AgentTemplateRunner.IsPromptRangeReference(promptCode))
             {
                 return -1;
             }
@@ -982,6 +990,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             if (string.IsNullOrWhiteSpace(promptCode))
             {
+                return -1;
+            }
+
+            if (!AgentTemplateRunner.IsPromptRangeReference(promptCode))
+            {
+                scoreCache[promptCode] = -1;
                 return -1;
             }
 

@@ -25,6 +25,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;
@@ -81,21 +84,26 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             Console.Write(request.ToJson(true));
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                SenparcAI_GetByVersionResponse promptResult;
-                var promptCode = await NormalizePromptCodeAsync(request.GetSystemMessagePromptCode());
+                var requestedPrompt = request.GetSystemMessagePromptCode();
+                var promptCode = AgentTemplateRunner.IsPromptRangeReference(requestedPrompt)
+                    ? await NormalizePromptCodeAsync(requestedPrompt)
+                    : requestedPrompt;
+                var promptTemplate = promptCode;
 
-                try
+                if (AgentTemplateRunner.IsPromptRangeReference(promptCode))
                 {
-                    //检查 PromptCode 是否存在
-                    promptResult = await _promptItemService.GetWithVersionAsync(promptCode, isAvg: true);
+                    try
+                    {
+                        // 只有 PromptRange 版本引用才需要解析；普通文本直接作为 System Message。
+                        var promptResult = await _promptItemService.GetWithVersionAsync(promptCode, isAvg: true);
+                        promptTemplate = promptResult.PromptItem.Content;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Prompt Code 不存在的时候，会抛出异常。
+                        return ex.Message;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    // Prompt Code不存在的时候，会抛出异常
-                    return ex.Message;
-                }
-
-                var promptTemplate = promptResult.PromptItem.Content;// Prompt
 
                 await ValidateKnowledgeBaseBindingAsync(request.KnowledgeBaseId);
                 var agentTemplateDto = new AgentTemplateDto(request.Name, promptCode, true,
@@ -342,6 +350,12 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 return -1;
             }
 
+            if (!AgentTemplateRunner.IsPromptRangeReference(promptCode))
+            {
+                scoreCache[promptCode] = -1;
+                return -1;
+            }
+
             if (scoreCache.TryGetValue(promptCode, out var cachedScore))
             {
                 return cachedScore;
@@ -448,7 +462,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 // PromptCode 兼容两种数据：PromptRange 版本号，或用户手动输入的 SystemMessage。
                 // 手动 Prompt 没有关联 PromptItem，不能直接交给 GetBestPromptAsync，否则会被当作
                 // RangeName 查询并返回“找不到对应的靶场”。
-                if (!string.IsNullOrWhiteSpace(promptCode) && PromptItem.IsPromptVersion(promptCode.Trim()))
+                if (AgentTemplateRunner.IsPromptRangeReference(promptCode))
                 {
                     var promptItem = await this._promptItemService.GetBestPromptAsync(promptCode.Trim(), true);
                     promptItemDto = this._promptItemService.Mapping<PromptItemDto>(promptItem);
@@ -562,11 +576,15 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 }
 
                 var list = await knowledgeBaseService.GetFullListAsync(z => true, z => z.Name, Ncf.Core.Enums.OrderingType.Ascending);
+                var embeddingStatuses = await knowledgeBaseService.GetEmbeddingStatusesAsync(list);
                 return list.Select(z => new KnowledgeBaseOptionResponse
                 {
                     Id = z.Id,
                     Name = z.Name,
-                    IsEmbedded = z.EmbeddedTime.HasValue && !string.IsNullOrWhiteSpace(z.VectorCollectionName)
+                    EmbeddingStatus = embeddingStatuses.TryGetValue(z.Id, out var embeddingStatus)
+                        ? embeddingStatus.ToString().ToLowerInvariant()
+                        : KnowledgeBaseEmbeddingStatus.Pending.ToString().ToLowerInvariant(),
+                    IsEmbedded = KnowledgeBaseService.IsEmbeddingPublished(z)
                 }).ToList();
             });
         }
@@ -582,8 +600,15 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 ?? throw new InvalidOperationException("KnowledgeBase 模块服务未启用，无法绑定知识库。");
             var knowledgeBase = await knowledgeBaseService.GetObjectAsync(z => z.Id == knowledgeBaseId.Value)
                 ?? throw new InvalidOperationException($"绑定的知识库不存在：{knowledgeBaseId.Value}");
-            if (!knowledgeBase.EmbeddedTime.HasValue || string.IsNullOrWhiteSpace(knowledgeBase.VectorCollectionName))
+            if (!KnowledgeBaseService.IsEmbeddingPublished(knowledgeBase))
             {
+                var embeddingStatuses = await knowledgeBaseService.GetEmbeddingStatusesAsync([knowledgeBase]);
+                if (embeddingStatuses.TryGetValue(knowledgeBase.Id, out var embeddingStatus)
+                    && embeddingStatus == KnowledgeBaseEmbeddingStatus.Legacy)
+                {
+                    throw new InvalidOperationException($"知识库“{knowledgeBase.Name}”已有旧版向量数据，请在知识库中重新向量化并发布后再绑定到 Agent。");
+                }
+
                 throw new InvalidOperationException($"知识库“{knowledgeBase.Name}”尚未完成向量化，暂不能绑定到 Agent。");
             }
         }

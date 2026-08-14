@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.41.0-preview11 增强隔离开发任务与 Sandbox 预览流程
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -105,6 +108,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 
         public string ModuleProjectName { get; init; }
 
+        /// <summary>
+        /// Absolute path of the solution used for this build. It is displayed for traceability;
+        /// callers must never treat it as an authority to write source files.
+        /// </summary>
+        public string SolutionFilePath { get; init; }
+
         public string Url { get; init; }
 
         public int ProcessId { get; init; }
@@ -148,6 +157,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         public DateTimeOffset? StoppedAt { get; init; }
 
         public int? ExitCode { get; init; }
+
+        /// <summary>
+        /// Per-session published output. The directory is removed after a stopped/replaced/failed
+        /// preview, so this value can legitimately point to a path that no longer exists.
+        /// </summary>
+        public string PublishDirectory { get; init; }
     }
 
     public sealed class XncfPreviewPersistenceInfo

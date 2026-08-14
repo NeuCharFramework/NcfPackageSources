@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.10.7-preview7</Version>
+    <Version>0.10.8-preview8</Version>
     <AssemblyName>Senparc.Ncf.Database.Oracle</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.Oracle</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -37,6 +37,7 @@
 				1、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
 				2、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
 				[2026-08-13] v0.10.7-preview7 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.Database to 0.21.7-preview7
+				[2026-08-15] v0.10.8-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

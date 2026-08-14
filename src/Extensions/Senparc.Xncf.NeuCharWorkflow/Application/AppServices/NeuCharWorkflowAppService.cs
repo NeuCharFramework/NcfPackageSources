@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.2.0-preview2 增强工作流并行与运行控制
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -250,10 +253,10 @@ public sealed class NeuCharWorkflowAppService
             ?? throw new WorkflowNotFoundException();
         await ValidateWorkflowAsync(workflow, cancellationToken).ConfigureAwait(false);
         workflow.MarkStarted(workflow.NextRunAt);
-        await _workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
+        await _workflowService.SaveRuntimeStartedAsync(workflow).ConfigureAwait(false);
         var result = await _workflowEngine.RunAsync(workflow, input, cancellationToken).ConfigureAwait(false);
         workflow.MarkCompleted(result.Success, result.ErrorMessage);
-        await _workflowService.SaveObjectAsync(workflow).ConfigureAwait(false);
+        await _workflowService.SaveRuntimeCompletedAsync(workflow).ConfigureAwait(false);
         return result;
     }
 

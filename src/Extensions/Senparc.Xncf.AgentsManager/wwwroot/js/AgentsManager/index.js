@@ -148,6 +148,7 @@ var app = new Vue({
         publicAgentKey: [{ required: true, message: '请填写公开标识', trigger: 'blur' }]
       },
       knowledgeBaseOptions: [],
+      knowledgeBaseOptionsLoaded: false,
       fillCardNum: 0, // 为了保持最后一行的样式 填充的card数量
       agentListElResizeObserver: null,
       scrollbarAgentIndex: '', // 侧边智能体index 默认全部
@@ -5509,15 +5510,95 @@ var app = new Vue({
       }
     },
 
-    async getKnowledgeBaseOptions() {
+    getKnowledgeBaseBindingInfo(knowledgeBaseId) {
+      const id = Number(knowledgeBaseId || 0)
+      if (!Number.isInteger(id) || id <= 0) {
+        return { text: '未绑定', type: 'info' }
+      }
+      if (!this.knowledgeBaseOptionsLoaded) {
+        return { text: '正在读取状态', type: 'info' }
+      }
+      const knowledgeBase = (this.knowledgeBaseOptions || []).find(item => Number(item.id) === id)
+      if (!knowledgeBase) {
+        return { text: '知识库不可用', type: 'danger' }
+      }
+      if (knowledgeBase.embeddingStatus === 'legacy') {
+        return { text: '旧版向量化，待发布', type: 'warning' }
+      }
+      return knowledgeBase.isEmbedded
+        ? { text: '可检索', type: 'success' }
+        : { text: '待向量化', type: 'warning' }
+    },
+
+    getKnowledgeBaseOptionLabel(knowledgeBase) {
+      if (!knowledgeBase) return ''
+      if (knowledgeBase.embeddingStatus === 'legacy') {
+        return `${knowledgeBase.name}（已向量化，待重新发布）`
+      }
+      return knowledgeBase.isEmbedded
+        ? knowledgeBase.name
+        : `${knowledgeBase.name}（未向量化）`
+    },
+
+    buildKnowledgeBaseUrl(knowledgeBaseId, focus = 'materials') {
+      const id = Number(knowledgeBaseId || 0)
+      if (!Number.isInteger(id) || id <= 0) return ''
+
+      const url = new URL('/Admin/KnowledgeBase/Index', window.location.origin)
+      url.searchParams.set('knowledgeBaseId', String(id))
+      url.searchParams.set('focus', focus === 'materials' ? 'materials' : 'edit')
+      return url.pathname + url.search
+    },
+
+    openKnowledgeBase(knowledgeBaseId, focus = 'materials') {
+      const url = this.buildKnowledgeBaseUrl(knowledgeBaseId, focus)
+      if (!url) {
+        this.$message.warning('请先选择有效的知识库。')
+        return
+      }
+
+      const targetName = `NcfKnowledgeBase_${knowledgeBaseId}`
+      const openedWindow = window.open(url, targetName)
+      if (openedWindow) {
+        openedWindow.focus()
+        return
+      }
+
+      this.$confirm(
+        '当前环境不能打开新窗口。为保留尚未保存的 Agent 修改，请先保存；确认后将在当前页面跳转到知识库。',
+        '打开知识库',
+        {
+          confirmButtonText: '仍要跳转',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        .then(() => window.location.assign(url))
+        .catch(() => {})
+    },
+
+    async refreshKnowledgeBaseOptions() {
+      await this.getKnowledgeBaseOptions(true)
+    },
+
+    async getKnowledgeBaseOptions(showFeedback = false) {
       try {
         const res = await serviceAM.get('/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetKnowledgeBaseOptions')
         if (res?.data?.success) {
           this.knowledgeBaseOptions = Array.isArray(res.data.data) ? res.data.data : []
+          if (showFeedback) {
+            this.$message.success('知识库状态已刷新')
+          }
+        } else if (showFeedback) {
+          this.$message.error(res?.data?.errorMessage || '知识库状态刷新失败')
         }
       } catch (error) {
         console.error('获取知识库列表失败:', error)
         this.knowledgeBaseOptions = []
+        if (showFeedback) {
+          this.$message.error('知识库状态刷新失败')
+        }
+      } finally {
+        this.knowledgeBaseOptionsLoaded = true
       }
     },
 

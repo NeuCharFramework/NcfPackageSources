@@ -262,6 +262,68 @@ assert.strictEqual(horizontalLayoutContext.form.graph.layout.direction, 'horizon
 assert.ok(horizontalLayoutContext.form.graph.nodes[2].x > horizontalLayoutContext.form.graph.nodes[1].x,
     'Horizontal auto layout should place later levels to the right of earlier levels.');
 
+const crossingReductionContext = {
+    editingLocked: false,
+    form: {
+        graph: {
+            layout: { direction: 'vertical' },
+            // The two final nodes are intentionally stored in reverse order. A plain BFS
+            // layer dump would therefore cross the A/B branch edges.
+            nodes: [
+                { id: 'trigger', type: 'manual-trigger', x: 0, y: 0 },
+                { id: 'parallel', type: 'parallel', x: 0, y: 0 },
+                { id: 'branch-a', type: 'delay', x: 0, y: 0 },
+                { id: 'branch-b', type: 'delay', x: 0, y: 0 },
+                { id: 'branch-b-end', type: 'end', x: 0, y: 0 },
+                { id: 'branch-a-end', type: 'end', x: 0, y: 0 }
+            ],
+            edges: [
+                { source: 'trigger', target: 'parallel' },
+                { source: 'parallel', target: 'branch-a' },
+                { source: 'parallel', target: 'branch-b' },
+                { source: 'branch-a', target: 'branch-a-end' },
+                { source: 'branch-b', target: 'branch-b-end' }
+            ]
+        }
+    },
+    canvasSize: {},
+    updateCanvasSize: vueOptions.methods.updateCanvasSize
+};
+vueOptions.methods.autoLayout.call(crossingReductionContext);
+const crossingReductionNodes = crossingReductionContext.form.graph.nodes;
+const crossingReductionNode = id => crossingReductionNodes.find(node => node.id === id);
+assert.ok(crossingReductionNode('branch-a').x < crossingReductionNode('branch-b').x,
+    'Layer ordering should keep parallel branches in their original reading order.');
+assert.ok(crossingReductionNode('branch-a-end').x < crossingReductionNode('branch-b-end').x,
+    'Barycenter ordering should prevent two parallel branch edges from crossing.');
+
+const conditionOrderContext = {
+    editingLocked: false,
+    form: {
+        graph: {
+            layout: { direction: 'horizontal' },
+            nodes: [
+                { id: 'trigger', type: 'manual-trigger', x: 0, y: 0 },
+                { id: 'condition', type: 'condition', x: 0, y: 0 },
+                { id: 'false-node', type: 'delay', x: 0, y: 0 },
+                { id: 'true-node', type: 'delay', x: 0, y: 0 }
+            ],
+            edges: [
+                { source: 'trigger', target: 'condition' },
+                { source: 'condition', target: 'false-node', sourceHandle: 'false' },
+                { source: 'condition', target: 'true-node', sourceHandle: 'true' }
+            ]
+        }
+    },
+    canvasSize: {},
+    updateCanvasSize: vueOptions.methods.updateCanvasSize
+};
+vueOptions.methods.autoLayout.call(conditionOrderContext);
+const conditionOrderNodes = conditionOrderContext.form.graph.nodes;
+const conditionOrderNode = id => conditionOrderNodes.find(node => node.id === id);
+assert.ok(conditionOrderNode('true-node').y < conditionOrderNode('false-node').y,
+    'Condition branches should remain ordered true above false in horizontal layouts.');
+
 const gridAlignmentContext = {
     editingLocked: false,
     form: {
@@ -416,8 +478,13 @@ assert.strictEqual(vueOptions.methods.supportsMultipleOutputs(parallelSource), t
 const loopNode = vueOptions.methods.createSimpleNode.call({ makeId(type) { return `${type}-1`; } }, 'loop', '循环（For）');
 assert.strictEqual(loopNode.config.count, 3,
     'A new loop node should start with a small, bounded For count.');
-assert.match(vueOptions.methods.systemNodePreview.call({}, 'loop', '循环（For）').description, /不提供 while/,
-    'The loop preview should clearly explain that it is not an unbounded while loop.');
+assert.match(vueOptions.methods.systemNodePreview.call({}, 'loop', '循环（For）').description, /循环结束/,
+    'The loop preview should clearly explain how to mark the bounded loop body.');
+const loopEndNode = vueOptions.methods.createSimpleNode.call({ makeId(type) { return `${type}-1`; } }, 'loop-end', '循环结束');
+assert.strictEqual(loopEndNode.type, 'loop-end',
+    'The designer should provide an explicit loop-end boundary node.');
+assert.match(vueOptions.methods.systemNodePreview.call({}, 'loop-end', '循环结束').description, /最后一个循环体节点/,
+    'The loop-end preview should explain that the following nodes run after all iterations.');
 const loopValidationContext = {
     form: {
         name: '循环测试',
@@ -434,6 +501,36 @@ const loopValidationContext = {
 };
 assert.match(vueOptions.methods.validate.call(loopValidationContext, { requireRunnable: true }), /1 到 100/,
     'The designer should reject a static loop count outside the safe range before run.');
+
+const boundedLoopValidationContext = {
+    form: {
+        name: '有边界循环测试',
+        triggerType: 'manual',
+        graph: {
+            nodes: [
+                { id: 'trigger', type: 'manual-trigger' },
+                { id: 'loop', type: 'loop', name: '循环', config: { count: 2 } },
+                { id: 'body', type: 'delay', name: '循环体' },
+                { id: 'loop-end', type: 'loop-end', name: '循环结束' },
+                { id: 'after', type: 'console', name: '循环后' }
+            ],
+            edges: [
+                { id: 'edge-1', source: 'trigger', target: 'loop' },
+                { id: 'edge-2', source: 'loop', target: 'body' },
+                { id: 'edge-3', source: 'body', target: 'loop-end' },
+                { id: 'edge-4', source: 'loop-end', target: 'after' }
+            ]
+        }
+    },
+    getDisconnectedNodes() { return []; },
+    incomingEdges: vueOptions.methods.incomingEdges,
+    supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    isBinding: vueOptions.methods.isBinding,
+    loopBoundaryNodes: vueOptions.methods.loopBoundaryNodes,
+    loopBoundaryValidationError: vueOptions.methods.loopBoundaryValidationError
+};
+assert.strictEqual(vueOptions.methods.validate.call(boundedLoopValidationContext, { requireRunnable: true }), '',
+    'A loop with a linear body and explicit loop-end should pass designer validation.');
 
 const branchSource = { id: 'condition', type: 'condition' };
 const branchTarget = { id: 'target', type: 'delay' };
@@ -999,6 +1096,8 @@ assert.ok(page.includes('@@mousedown="onCanvasMouseDown"') && fs.readFileSync(sc
     'The canvas should preserve right-button panning alongside drag selection.');
 assert.ok(page.includes('@@contextmenu.prevent="onCanvasContextMenu"') && page.includes('workflow-canvas-context-menu') && page.includes('canvasNodeInsertMenu.visible'),
     'Blank canvas right clicks should expose a shortcut menu and a position-aware node picker.');
+assert.match(page, /<section v-if="canvasNodeInsertMenu\.visible"[\s\S]*?@@wheel\.stop>/,
+    'The blank-canvas node picker must keep wheel events inside its fixed popup instead of zooming the canvas.');
 assert.ok(page.includes('按设置自动排版</button>') && page.includes('就近网格对齐</button>') && page.includes('适应画布</button>'),
     'The canvas shortcut menu should surface the common overflow layout actions.');
 assert.ok(page.includes('onCanvasMouseDown') && page.includes('class="workflow-selection-box"') && page.includes('selectedNodeIds'),
@@ -1227,6 +1326,8 @@ assert.ok(tasksScript.includes("neuBellProvider") && tasksScript.includes("servi
 assert.ok(sourceIncludesFitOnLoad(), 'Editing an existing workflow should fit all nodes after its canvas has rendered.');
 assert.ok(page.includes('自动保存'), 'Workflow settings should expose the auto-save interval.');
 assert.ok(page.includes(':precision="0"'), 'The auto-save editor must only accept whole minutes so a fractional interval cannot create a rapid save loop.');
+assert.ok(page.includes("selectSystem('loop-end','循环结束')") && page.includes('循环体边界'),
+    'The designer should expose an explicit loop-end node and explain its continuation semantics.');
 assert.ok(page.includes('Command/Ctrl + S'), 'Workflow save should advertise the system save shortcut.');
 assert.ok(!page.includes(':visible.sync="runDialogVisible"'),
     'Workflow execution should remain in the persistent dock instead of using a modal dialog.');

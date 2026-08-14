@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.25.0-preview7</Version>
+    <Version>0.25.1-preview8</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -77,6 +77,7 @@
 			[2026-08-13] v0.25.0-preview7 增强线程生命周期控制与函数参数数值类型解析
 			1、为线程停止流程引入取消令牌并改善异常回退
 			2、支持 decimal、double、float 及可空数值 JSON 参数解析
+			[2026-08-15] v0.25.1-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

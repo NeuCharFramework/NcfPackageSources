@@ -31,6 +31,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+
 ----------------------------------------------------------------*/
 
 #nullable enable annotations
@@ -74,6 +77,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Threading;
 using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
@@ -91,6 +95,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         public required string ParticipantKind { get; init; }
         public int? LocalAgentTemplateId { get; init; }
         public int? RemoteAgentId { get; init; }
+        public int? RemoteTimeoutSeconds { get; init; }
         public AgentTemplate? Template { get; init; }
         public AgentTemplateDto? TemplateDto { get; init; }
         public required AIAgent Agent { get; init; }
@@ -169,6 +174,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
     private async Task RunChatGroupExecutionCoreAsync(ChatGroup_RunGroupRequest request)
     {
+        var cancellationToken = request.CancellationToken;
+        cancellationToken.ThrowIfCancellationRequested();
+
         IDisposable activeOptimizationScope = null;
         if (!string.IsNullOrWhiteSpace(request.CorrelationId))
         {
@@ -215,11 +223,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             if (aiModelId <= 0)
             {
                 var adminAgent = await agentTemplateService.GetObjectAsync(z => z.Id == chatGroup.AdminAgentTemplateId);
-                if (adminAgent != null && !adminAgent.PromptCode.IsNullOrEmpty())
+                if (adminAgent != null && AgentTemplateRunner.IsPromptRangeReference(adminAgent.PromptCode))
                 {
                     try
                     {
-                        var adminPrompt = await promptItemService.GetBestPromptAsync(adminAgent.PromptCode, true);
+                        var adminPrompt = await promptItemService.GetBestPromptAsync(adminAgent.PromptCode.Trim(), true);
                         if (adminPrompt != null && adminPrompt.ModelId > 0)
                         {
                             aiModelId = adminPrompt.ModelId;
@@ -342,6 +350,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         AllowFunctionCalls = true,
                         DefaultSetting = senparcAiSetting,
                         UseTemplateModelSettings = personality,
+                        UseTemplatePromptParameters = personality,
                         MaxOutputTokens = 2000,
                         Temperature = 0.3f,
                         TopP = 0.3f
@@ -386,6 +395,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         ParticipantKey = RemoteA2AAgentFactory.BuildParticipantKey(remoteMember.RemoteAgentId),
                         ParticipantKind = "RemoteA2A",
                         RemoteAgentId = remoteMember.RemoteAgentId,
+                        RemoteTimeoutSeconds = remoteMember.RemoteAgent.TimeoutSeconds,
                         Agent = remoteAgent
                     });
                 }
@@ -420,7 +430,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     runningKey,
                     chatTask,
                     chatTaskService,
-                    1);
+                    1,
+                    cancellationToken);
 
                 if (!singleAgentResult.HasOutput)
                 {
@@ -626,7 +637,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             {
                 run = await InProcessExecution.RunStreamingAsync(
                     workflow,
-                    new List<ChatMessage> { new(ChatRole.User, taskPrompt) });
+                    new List<ChatMessage> { new(ChatRole.User, taskPrompt) },
+                    cancellationToken: cancellationToken);
 
                 var emittedTurnTokens = 0;
                 var idleSuperStepCount = 0;
@@ -661,7 +673,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                     var hadEventsInCurrentSuperStep = false;
 
-                    await foreach (var workflowEvent in run.WatchStreamAsync())
+                    await foreach (var workflowEvent in run.WatchStreamAsync(cancellationToken))
                     {
                         hadEventsInCurrentSuperStep = true;
 
@@ -880,7 +892,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                 break;
                             case ExecutorFailedEvent executorFailed:
                                 workflowFailed = true;
-                                workflowFailureReason = $"Executor '{executorFailed.ExecutorId}' failed: {executorFailed.Data}";
+                                var executorFailureDetails = executorFailed.Data?.ToString() ?? string.Empty;
+                                SenparcTrace.SendCustomLog(
+                                    "AgentsManager.ChatGroup.ExecutorFailure",
+                                    $"Group={chatGroup.Id}; Task={chatTask.Id}; Executor={executorFailed.ExecutorId}; " +
+                                    executorFailureDetails);
+                                workflowFailureReason = FormatExecutorFailureReason(
+                                    executorFailed.ExecutorId,
+                                    executorFailureDetails,
+                                    contextByExecutorId);
                                 logger.AppendLine($"[{chatGroup.Name}] 执行器错误：{workflowFailureReason}");
                                 shouldExit = true;
                                 break;
@@ -943,6 +963,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     }
                 }
             }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
             catch (Exception workflowEx)
             {
                 workflowFailed = true;
@@ -1004,7 +1028,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     chatTask,
                     chatTaskService,
                     Math.Max(1, roundIndex + 1),
-                    effectiveWorkflowTurns);
+                    effectiveWorkflowTurns,
+                    cancellationToken);
 
                 if (!hasFallbackOutput && workflowFailed)
                 {
@@ -1197,6 +1222,53 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return false;
     }
 
+    private static string FormatExecutorFailureReason(
+        string executorId,
+        string failureDetails,
+        IReadOnlyDictionary<string, AgentRuntimeContext> contextIndex)
+    {
+        var normalizedExecutorId = string.IsNullOrWhiteSpace(executorId) ? "unknown" : executorId;
+        var normalizedDetails = failureDetails?.Trim() ?? string.Empty;
+
+        if (TryResolveRuntimeContext(contextIndex, executorId, out var context)
+            && context.IsRemote
+            && IsTimeoutFailure(normalizedDetails))
+        {
+            var timeoutSeconds = context.RemoteTimeoutSeconds.GetValueOrDefault(60);
+            return $"远程 A2A 智能体【{context.Agent.Name}】调用超时（当前远程配置为 {timeoutSeconds} 秒）。" +
+                   "可在远程 A2A 编辑页提高“连接超时（秒）”（最高 600 秒）。";
+        }
+
+        if (string.IsNullOrWhiteSpace(normalizedDetails))
+        {
+            return $"Executor '{normalizedExecutorId}' failed.";
+        }
+
+        var firstLine = normalizedDetails
+            .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+            .FirstOrDefault()?.Trim();
+        if (string.IsNullOrWhiteSpace(firstLine))
+        {
+            firstLine = normalizedDetails;
+        }
+
+        return $"Executor '{normalizedExecutorId}' failed: {firstLine}" +
+               (normalizedDetails.Length > firstLine.Length ? "（详细堆栈已写入 SenparcTrace）" : string.Empty);
+    }
+
+    private static bool IsTimeoutFailure(string failureDetails)
+    {
+        if (string.IsNullOrWhiteSpace(failureDetails))
+        {
+            return false;
+        }
+
+        return failureDetails.Contains("TimeoutRejectedException", StringComparison.OrdinalIgnoreCase)
+               || failureDetails.Contains("allowed timeout", StringComparison.OrdinalIgnoreCase)
+               || failureDetails.Contains("HttpClient.Timeout", StringComparison.OrdinalIgnoreCase)
+               || failureDetails.Contains("timed out", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static bool IsExitSignal(string text)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -1283,7 +1355,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         ChatTask chatTask,
         ChatTaskService chatTaskService,
         int startRoundIndex,
-        int maxRoundCount)
+        int maxRoundCount,
+        CancellationToken cancellationToken)
     {
         var sequence = BuildFallbackRoundRobinSequence(participantContexts, enterContext);
         if (sequence.Count == 0)
@@ -1297,6 +1370,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
         for (var i = 0; i < totalRounds; i++)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var context = sequence[i % sequence.Count];
             var prompt = i == 0
                 ? userCommand
@@ -1315,7 +1389,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 runningKey,
                 chatTask,
                 chatTaskService,
-                roundIndex);
+                roundIndex,
+                cancellationToken);
 
             if (result.HasOutput)
             {
@@ -1349,8 +1424,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         string runningKey,
         ChatTask chatTask,
         ChatTaskService chatTaskService,
-        int roundIndex)
+        int roundIndex,
+        CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         if (agentContext.Runner == null || agentContext.TemplateDto == null || agentContext.AgentOptions == null)
         {
             throw new NcfExceptionBase($"参与者【{agentContext.Agent.Name}】不支持本地模型回退执行。");

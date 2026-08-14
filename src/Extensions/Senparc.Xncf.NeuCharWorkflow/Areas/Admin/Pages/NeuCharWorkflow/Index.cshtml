@@ -454,7 +454,8 @@
                                          class="workflow-edge-insert-menu"
                                          :style="edgeInsertMenuStyle"
                                          @@mousedown.stop
-                                         @@click.stop>
+                                         @@click.stop
+                                         @@wheel.stop>
                                     <header class="workflow-edge-insert-heading">
                                         <span><i class="el-icon-plus"></i> 在线中插入节点</span>
                                         <el-button type="text" icon="el-icon-close" title="关闭" @@click="closeEdgeInsertMenu"></el-button>
@@ -479,7 +480,8 @@
                                          class="workflow-edge-insert-menu workflow-canvas-node-insert-menu"
                                          :style="canvasNodeInsertMenuStyle"
                                          @@mousedown.stop
-                                         @@click.stop>
+                                         @@click.stop
+                                         @@wheel.stop>
                                     <header class="workflow-edge-insert-heading">
                                         <span><i class="el-icon-plus"></i> 在此处新增节点</span>
                                         <el-button type="text" icon="el-icon-close" title="关闭" @@click="closeCanvasNodeInsertMenu"></el-button>
@@ -812,12 +814,17 @@
                                                          filterable
                                                          placeholder="或引用上游次数（1–100）"
                                                          @@change="setLoopCountBinding(selectedNode,$event)"></el-cascader>
-                                            <p class="node-config-help">For 循环只会重复有限次数；每轮按顺序执行下游，并传递相同输入。不会执行 while，也不允许画布回连。</p>
+                                            <p class="node-config-help">如需限制循环范围，请将“循环结束”放在循环体最后；其后的节点会在全部轮次完成后只执行一次。</p>
                                         </el-form-item>
                                         <el-alert title="安全上限：单个循环最多 100 次；循环与逐项合流的下游激活合计最多 500 次。"
                                                   type="info"
                                                   :closable="false"></el-alert>
                                     </template>
+                                    <el-alert v-else-if="selectedNode.type==='loop-end'"
+                                              title="循环体边界"
+                                              description="请把此节点连接在循环体最后；它后面的节点会等待所有轮次完成后再执行一次。"
+                                              type="success"
+                                              :closable="false"></el-alert>
                                     <template v-if="selectedNode.type==='neubell'">
                                         <el-form-item label="提醒标题">
                                             <template v-if="isTemplateValue(selectedNode.config.title)">
@@ -1107,6 +1114,7 @@
                 <el-button plain icon="el-icon-s-operation" :class="['node-picker-system-button','node-picker-condition']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'condition','条件判断')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('condition','条件判断','hover')" @@mouseleave.native="hideSystemPreview('condition','条件判断')" @@click="previewSystem('condition','条件判断','click')" @@dblclick.native="selectSystem('condition','条件判断')">条件</el-button>
                 <el-button plain icon="el-icon-time" :class="['node-picker-system-button','node-picker-delay']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'delay','等待')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('delay','等待','hover')" @@mouseleave.native="hideSystemPreview('delay','等待')" @@click="previewSystem('delay','等待','click')" @@dblclick.native="selectSystem('delay','等待')">等待</el-button>
                 <el-button plain icon="el-icon-refresh" :class="['node-picker-system-button','node-picker-loop']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'loop','循环（For）')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('loop','循环（For）','hover')" @@mouseleave.native="hideSystemPreview('loop','循环（For）')" @@click="previewSystem('loop','循环（For）','click')" @@dblclick.native="selectSystem('loop','循环（For）')">循环</el-button>
+                <el-button plain icon="el-icon-circle-check" :class="['node-picker-system-button','node-picker-loop-end']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'loop-end','循环结束')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('loop-end','循环结束','hover')" @@mouseleave.native="hideSystemPreview('loop-end','循环结束')" @@click="previewSystem('loop-end','循环结束','click')" @@dblclick.native="selectSystem('loop-end','循环结束')">循环结束</el-button>
                 <el-button plain icon="el-icon-document" :class="['node-picker-system-button','node-picker-sub-workflow']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'sub-workflow','调用工作流')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('sub-workflow','调用工作流','hover')" @@mouseleave.native="hideSystemPreview('sub-workflow','调用工作流')" @@click="previewSystem('sub-workflow','调用工作流','click')" @@dblclick.native="selectSystem('sub-workflow','调用工作流')">调用流程</el-button>
                 <el-button plain icon="el-icon-edit-outline" :class="['node-picker-system-button','node-picker-code']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'code','安全代码')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('code','安全代码','hover')" @@mouseleave.native="hideSystemPreview('code','安全代码')" @@click="previewSystem('code','安全代码','click')" @@dblclick.native="selectSystem('code','安全代码')">安全代码</el-button>
                 <el-button plain icon="el-icon-collection" :class="['node-picker-system-button','node-picker-aggregate']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'aggregate','聚合')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('aggregate','聚合','hover')" @@mouseleave.native="hideSystemPreview('aggregate','聚合')" @@click="previewSystem('aggregate','聚合','click')" @@dblclick.native="selectSystem('aggregate','聚合')">聚合</el-button>

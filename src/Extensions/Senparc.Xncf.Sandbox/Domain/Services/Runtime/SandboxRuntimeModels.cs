@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：SandboxRuntimeModels.cs
+    文件功能描述：沙箱模板、运行时请求和配额模型
+
+
+    创建标识：Senparc - 20260808
+
+    修改标识：Senparc - 20260815
+    修改描述：v0.2.0-preview3 增加 NCF 预览沙箱工作负载
+
+----------------------------------------------------------------*/
+
 using Senparc.Xncf.Sandbox.Abstractions;
 
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
@@ -22,6 +36,21 @@ public sealed class SandboxCreateRuntimeRequest
     public required double CpuLimit { get; init; }
     public required int MemoryMb { get; init; }
     public required string WorkspaceDirectory { get; init; }
+    /// <summary>
+    /// Present only for the fixed-function NCF preview template. It is populated by the server,
+    /// never by a browser or an AI-provided shell command.
+    /// </summary>
+    public SandboxNcfPreviewRuntimeOptions? NcfPreview { get; init; }
+}
+
+public sealed class SandboxNcfPreviewRuntimeOptions
+{
+    public required string SolutionRelativePath { get; init; }
+    public required string ModuleProjectName { get; init; }
+    public required string BasePath { get; init; }
+    public bool AllowDependencyRestoreNetwork { get; init; }
+    public string? RestoreNetworkName { get; init; }
+    public int StartupTimeoutSeconds { get; init; } = 180;
 }
 
 public sealed class SandboxCreateRuntimeResult

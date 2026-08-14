@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.41.0-preview11 增强隔离开发任务与 Sandbox 预览流程
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +29,9 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     public partial class BuildXncfAppService
     {
-        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Preview.Name", "Function.XncfBuilder.Preview.Description", typeof(Register))]
+        // This legacy preview starts a child process from the supplied host source tree. It is
+        // intentionally excluded from AI; development jobs preview only their isolated snapshot.
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Preview.Name", "Function.XncfBuilder.Preview.Description", typeof(Register), AllowAiInvocation = false)]
         public async Task<StringAppResponse> Preview(BuildXncf_PreviewRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -127,6 +132,18 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         html.Append("<br />PID ").Append(session.ProcessId);
                     }
 
+                    if (!string.IsNullOrWhiteSpace(session.SolutionFilePath))
+                    {
+                        html.Append("<br />Source solution: ")
+                            .Append(WebUtility.HtmlEncode(session.SolutionFilePath));
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(session.PublishDirectory))
+                    {
+                        html.Append("<br />Published preview directory: ")
+                            .Append(WebUtility.HtmlEncode(session.PublishDirectory));
+                    }
+
                     if (session.ProcessStartedAt.HasValue)
                     {
                         html.Append("<br />Host started: ")
@@ -171,7 +188,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             }).ConfigureAwait(false);
         }
 
-        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.StopPreview.Name", "Function.XncfBuilder.StopPreview.Description", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.StopPreview.Name", "Function.XncfBuilder.StopPreview.Description", typeof(Register), AllowAiInvocation = false)]
         public async Task<StringAppResponse> StopPreview(BuildXncf_StopPreviewRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

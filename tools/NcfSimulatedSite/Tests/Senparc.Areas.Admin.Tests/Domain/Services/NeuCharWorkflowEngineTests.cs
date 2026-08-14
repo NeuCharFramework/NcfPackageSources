@@ -337,6 +337,71 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public void ParseAndValidateGraph_ExplicitLoopBoundary_ShouldAllowContinuation()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "loop", "type": "loop", "config": { "count": 2 } },
+                { "id": "body", "type": "delay" },
+                { "id": "loop-end", "type": "loop-end" },
+                { "id": "after", "type": "console" },
+                { "id": "end", "type": "end" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "loop" },
+                { "id": "edge-2", "source": "loop", "target": "body" },
+                { "id": "edge-3", "source": "body", "target": "loop-end" },
+                { "id": "edge-4", "source": "loop-end", "target": "after" },
+                { "id": "edge-5", "source": "after", "target": "end" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+
+        Assert.AreEqual("loop-end", graph.Nodes.Single(node => node.Id == "loop-end").Type);
+        Assert.AreEqual("after", graph.Edges.Single(edge => edge.Source == "loop-end").Target);
+    }
+
+    [TestMethod]
+    public void ParseAndValidateGraph_LoopBoundaryWithBranch_ShouldBeRejected()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "loop", "type": "loop", "config": { "count": 2 } },
+                { "id": "parallel", "type": "parallel" },
+                { "id": "body-a", "type": "delay" },
+                { "id": "body-b", "type": "delay" },
+                { "id": "loop-end", "type": "loop-end" },
+                { "id": "end", "type": "end" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "loop" },
+                { "id": "edge-2", "source": "loop", "target": "parallel" },
+                { "id": "edge-3", "source": "parallel", "target": "body-a" },
+                { "id": "edge-4", "source": "parallel", "target": "body-b" },
+                { "id": "edge-5", "source": "body-a", "target": "loop-end" },
+                { "id": "edge-6", "source": "body-b", "target": "loop-end" },
+                { "id": "edge-7", "source": "loop-end", "target": "end" }
+              ]
+            }
+            """;
+
+        var exception = Assert.ThrowsException<InvalidOperationException>(
+            () => engine.ParseAndValidateGraph(graphJson));
+
+        StringAssert.Contains(exception.Message, "普通节点组成的单一路径");
+    }
+
+    [TestMethod]
     public async Task ValidateReferencesAsync_Loop_ShouldRequireBoundedIntegerCount()
     {
         var engine = CreateEngine();

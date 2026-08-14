@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.41.0-preview11 增强隔离开发任务与 Sandbox 预览流程
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Hosting;
@@ -1098,6 +1101,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             {
                 SessionId = state.SessionId,
                 ModuleProjectName = state.ModuleProjectName,
+                SolutionFilePath = state.SolutionFilePath,
                 Url = url,
                 ProcessId = processId,
                 StartedAt = startedAt,
@@ -1119,7 +1123,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 ProcessStartedAt = processStartedAt,
                 HealthyAt = healthyAt,
                 StoppedAt = stoppedAt,
-                ExitCode = exitCode
+                ExitCode = exitCode,
+                PublishDirectory = state.PublishDirectory
             };
         }
 

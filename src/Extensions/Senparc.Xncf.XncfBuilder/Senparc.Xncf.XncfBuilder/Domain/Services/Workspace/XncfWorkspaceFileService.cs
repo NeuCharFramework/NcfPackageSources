@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.41.0-preview11 增强隔离开发任务与 Sandbox 预览流程
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -150,6 +153,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
         {
             ArgumentNullException.ThrowIfNull(content);
 
+            // The isolated workspace is intentionally not a general file system. Keeping project,
+            // restore and host configuration files immutable prevents an AI-generated edit from
+            // adding packages, MSBuild targets, secrets or a different host execution path.
+            ValidateWritableCodeFile(relativeFilePath);
+
             if (content.IndexOf('\0') >= 0)
             {
                 throw new ArgumentException("代码文件内容不能包含 NUL 字符。", nameof(content));
@@ -214,6 +222,35 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Workspace
         {
             using var stream = File.OpenRead(filePath);
             return Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant();
+        }
+
+        internal static void ValidateWritableCodeFile(string relativeFilePath)
+        {
+            if (string.IsNullOrWhiteSpace(relativeFilePath))
+            {
+                throw new ArgumentException("必须提供模块内的相对文件路径。", nameof(relativeFilePath));
+            }
+
+            var fileName = Path.GetFileName(relativeFilePath);
+            var extension = Path.GetExtension(fileName);
+            var allowedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                ".cs", ".cshtml", ".razor", ".js", ".ts", ".css", ".scss", ".json", ".md", ".resx"
+            };
+            if (!allowedExtensions.Contains(extension))
+            {
+                throw new UnauthorizedAccessException("隔离开发工具仅允许写入模块代码、页面、脚本、样式、资源和 JSON/Markdown 文件。");
+            }
+
+            if (fileName.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase)
+                || fileName.EndsWith(".props", StringComparison.OrdinalIgnoreCase)
+                || fileName.EndsWith(".targets", StringComparison.OrdinalIgnoreCase)
+                || fileName.Equals("nuget.config", StringComparison.OrdinalIgnoreCase)
+                || fileName.StartsWith("appsettings", StringComparison.OrdinalIgnoreCase)
+                || fileName.StartsWith("Directory.Build", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new UnauthorizedAccessException("隔离开发工具不允许修改项目、包源、MSBuild 或应用配置文件。");
+            }
         }
 
         private static string ComputeSha256(byte[] bytes)

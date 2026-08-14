@@ -6,6 +6,9 @@
 
     创建标识：Senparc - 20260808
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.2.0-preview3 增加 NCF 预览沙箱工作负载
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http;
@@ -24,6 +27,7 @@ using Senparc.Xncf.Sandbox.Domain.Services;
 using Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 using Senparc.Xncf.Sandbox.Models;
 using Senparc.Xncf.Sandbox.OHS.Local.Middleware;
+using Senparc.Xncf.Sandbox.Abstractions;
 using System.Reflection;
 
 namespace Senparc.Xncf.Sandbox;
@@ -62,6 +66,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
     public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
     {
         services.Configure<SandboxImageOptions>(configuration.GetSection(SandboxImageOptions.SectionName));
+        services.Configure<SandboxNcfPreviewOptions>(configuration.GetSection(SandboxNcfPreviewOptions.SectionName));
         services.AddSingleton<ISandboxImageResolver, SandboxImageResolver>();
         services.AddSingleton(new SandboxQuotaPolicy());
         services.AddSingleton<DockerSandboxRuntime>();
@@ -69,11 +74,19 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         services.AddSingleton<ISandboxRuntime>(sp => sp.GetRequiredService<DockerSandboxRuntime>());
         services.AddSingleton<ISandboxRuntime>(sp => sp.GetRequiredService<WasmSandboxRuntime>());
         services.AddSingleton<SandboxOrchestrator>();
+        services.AddSingleton<SandboxNcfPreviewWorkloadService>();
+        services.AddSingleton<IXncfSandboxPreviewService>(sp => sp.GetRequiredService<SandboxNcfPreviewWorkloadService>());
         services.AddHostedService(sp => sp.GetRequiredService<SandboxOrchestrator>());
 
         services.AddScoped<SandboxSessionService>();
         services.AddScoped<SandboxAppService>();
         services.AddHttpClient(SandboxJupyterProxyMiddleware.HttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+            {
+                AllowAutoRedirect = false,
+                UseCookies = false
+            });
+        services.AddHttpClient(SandboxNcfPreviewProxyMiddleware.HttpClientName)
             .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
             {
                 AllowAutoRedirect = false,
@@ -92,6 +105,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         // JupyterLab 交互需要 WebSocket；鉴权与 token 注入在中间件内完成。
         app.UseWebSockets();
         app.UseMiddleware<SandboxJupyterProxyMiddleware>();
+        app.UseMiddleware<SandboxNcfPreviewProxyMiddleware>();
 
         return base.UseXncfModule(app, registerService);
     }

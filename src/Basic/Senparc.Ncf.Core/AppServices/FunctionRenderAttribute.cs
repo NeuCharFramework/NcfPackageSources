@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.25.0-preview2 新增统一资源本地化基础设施并支持 FunctionRender 动态文案
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.29.0-preview8 新增 FunctionRender 的 AI 自动调用控制
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -60,6 +63,17 @@ namespace Senparc.Ncf.Core.AppServices
         public string NameResourceKey { get; }
 
         public string DescriptionResourceKey { get; }
+
+        /// <summary>
+        /// Gets or sets whether this function may be imported automatically by an AI conversation.
+        /// <para>
+        /// This only controls automatic AI tool exposure. It deliberately does not affect the
+        /// normal FunctionRender page or a caller that invokes the AppService explicitly.
+        /// Mutating, host-level operations should opt out and expose a constrained workflow tool
+        /// instead.
+        /// </para>
+        /// </summary>
+        public bool AllowAiInvocation { get; set; } = true;
 
         public FunctionRenderAttribute(string name, string description, Type registerType/*TODO：可提供系统模块的默认值*/)
         {

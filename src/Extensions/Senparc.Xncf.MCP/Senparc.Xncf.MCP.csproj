@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.0-preview8</Version>
+    <Version>0.5.1-preview9</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -59,6 +59,7 @@
       [2026-08-13] v0.5.0-preview8 补充 A2A 发布管理所需 MCP 功能与多语言资源
       1、扩展发布智能体相关 MCP 应用服务能力
       2、补齐多语言资源，保持管理端功能文案一致
+      [2026-08-15] v0.5.1-preview9 Dependency update from Senparc.Xncf.AIKernel to 0.15.3-preview12
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

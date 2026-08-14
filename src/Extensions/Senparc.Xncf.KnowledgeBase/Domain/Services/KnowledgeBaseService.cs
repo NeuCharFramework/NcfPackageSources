@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.7.0-preview9 增强知识库向量发布状态识别
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -87,6 +90,57 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 .Take(PageSize)
                 .ToList();
             return this.Mapper.Map<List<KnowledgeBaseDto>>(knowledgeBases);
+        }
+
+        /// <summary>
+        /// 获取知识库的向量发布状态。新版只有在生成独立集合后才可供 Agent 绑定；
+        /// 同时识别旧版仅在切片上保存 <see cref="KnowledgeBaseItem.IsEmbedded"/> 的记录，
+        /// 以免管理界面将其误报为“未向量化”。
+        /// </summary>
+        public async Task<IReadOnlyDictionary<int, KnowledgeBaseEmbeddingStatus>> GetEmbeddingStatusesAsync(
+            IEnumerable<KnowledgeBase.Models.DatabaseModel.KnowledgeBase> knowledgeBases)
+        {
+            var knowledgeBaseList = knowledgeBases?
+                .Where(z => z != null)
+                .GroupBy(z => z.Id)
+                .Select(z => z.First())
+                .ToList() ?? new List<KnowledgeBase.Models.DatabaseModel.KnowledgeBase>();
+            var result = knowledgeBaseList.ToDictionary(
+                z => z.Id,
+                z => IsEmbeddingPublished(z)
+                    ? KnowledgeBaseEmbeddingStatus.Published
+                    : KnowledgeBaseEmbeddingStatus.Pending);
+
+            var legacyCandidateIds = knowledgeBaseList
+                .Where(z => result[z.Id] == KnowledgeBaseEmbeddingStatus.Pending)
+                .Select(z => z.Id)
+                .ToList();
+            if (legacyCandidateIds.Count == 0)
+            {
+                return result;
+            }
+
+            var items = await _knowledgeBaseDetailService.GetFullListAsync(z =>
+                legacyCandidateIds.Contains(z.KnowledgeBasesId));
+            foreach (var itemGroup in items
+                         .Where(z => !string.IsNullOrWhiteSpace(z.Content))
+                         .GroupBy(z => z.KnowledgeBasesId))
+            {
+                // 旧实现只在资料切片中记录 IsEmbedded，并且按 Embedding 模型共享集合。
+                // 这不能等同于新版 Agent 所需的“已发布、知识库隔离”的状态，故只标识为 legacy。
+                if (itemGroup.Any() && itemGroup.All(z => z.IsEmbedded))
+                {
+                    result[itemGroup.Key] = KnowledgeBaseEmbeddingStatus.Legacy;
+                }
+            }
+
+            return result;
+        }
+
+        public static bool IsEmbeddingPublished(KnowledgeBase.Models.DatabaseModel.KnowledgeBase knowledgeBase)
+        {
+            return knowledgeBase?.EmbeddedTime.HasValue == true
+                   && !string.IsNullOrWhiteSpace(knowledgeBase.VectorCollectionName);
         }
 
         public async Task CreateOrUpdateAsync(KnowledgeBase_InsertDto dto)

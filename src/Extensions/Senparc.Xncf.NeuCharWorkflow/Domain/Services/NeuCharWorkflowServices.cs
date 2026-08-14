@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.2.0-preview2 增强工作流并行与运行控制
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -19,6 +22,7 @@ using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
 using WorkflowEntity = Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflow;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
@@ -26,6 +30,38 @@ public sealed class NeuCharWorkflowService : WorkflowClientServiceBase<WorkflowE
 {
     public NeuCharWorkflowService(INeuCharWorkflowRepository repository, IServiceProvider serviceProvider)
         : base(repository, serviceProvider) { }
+
+    /// <summary>
+    /// 只保存运行状态字段。运行时可能持有开始执行时读取的旧工作流定义，不能通过普通实体保存
+    /// 把旧的 GraphJson、Revision 或编辑字段覆盖回数据库。
+    /// </summary>
+    public Task SaveRuntimeStartedAsync(WorkflowEntity workflow) =>
+        SaveRuntimePropertiesAsync(workflow,
+            nameof(WorkflowEntity.LastRunAt),
+            nameof(WorkflowEntity.NextRunAt),
+            nameof(WorkflowEntity.LastUpdateTime));
+
+    public Task SaveRuntimeCompletedAsync(WorkflowEntity workflow) =>
+        SaveRuntimePropertiesAsync(workflow,
+            nameof(WorkflowEntity.LastSucceeded),
+            nameof(WorkflowEntity.LastError),
+            nameof(WorkflowEntity.LastUpdateTime));
+
+    private async Task SaveRuntimePropertiesAsync(WorkflowEntity workflow, params string[] propertyNames)
+    {
+        ArgumentNullException.ThrowIfNull(workflow);
+
+        var context = BaseData.BaseDB.BaseDataContext;
+        var entry = context.Entry(workflow);
+        context.ChangeTracker.DetectChanges();
+        var runtimeProperties = propertyNames.ToHashSet(StringComparer.Ordinal);
+        foreach (var property in entry.Properties)
+        {
+            property.IsModified = runtimeProperties.Contains(property.Metadata.Name);
+        }
+
+        await context.SaveChangesAsync().ConfigureAwait(false);
+    }
 }
 
 public sealed class NeuCharWorkflowVersionService : WorkflowClientServiceBase<NeuCharWorkflowVersion>

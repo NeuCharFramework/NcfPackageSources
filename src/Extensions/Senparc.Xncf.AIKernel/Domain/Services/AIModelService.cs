@@ -28,6 +28,9 @@
     修改标识：Senparc - 20260724
     修改描述：v0.14.0-preview5 同步 NeuChar 模型 API 版本并优化模型信息复制交互
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.15.3-preview12 修复指定 AI 模型配置穿透并保留兼容 API Version
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -163,14 +166,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        NeuCharAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharAIApiVersion = GetApiVersionOrDefault(aiModel.ApiVersion),
                         NeuCharEndpoint = normalizedEndpoint,
                         ModelName = modelName,
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureOpenAIApiVersion = GetApiVersionOrDefault(aiModel.ApiVersion),
                         AzureEndpoint = normalizedEndpoint,
                         ModelName = modelName,
                         DeploymentName = aiModel.DeploymentName
@@ -180,7 +183,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureOpenAIApiVersion = GetApiVersionOrDefault(aiModel.ApiVersion),
                         AzureEndpoint = normalizedEndpoint,
                         ModelName = modelName,
                         DeploymentName = aiModel.DeploymentName
@@ -261,7 +264,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 TopP = 0.5,
             };
 
-            var agentAiHandler = base._serviceProvider.GetService<AgentAiHandler>();
+            // The requested model must own the AgentKernel pipeline. Resolving the scoped
+            // AgentAiHandler from DI here uses the system-default SenparcAiSetting and can make a
+            // failed database model appear healthy when the default model succeeds.
+            var agentAiHandler = CreateModelAgentHandler(senparcAiSetting);
             var chatOptions = new ChatClientAgentOptions()
             {
                 ChatOptions = new Microsoft.Extensions.AI.ChatOptions()
@@ -275,13 +281,18 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions())
             };
 
-            var iWantToRun = await agentAiHandler.IWantTo()
+            var iWantToRun = await agentAiHandler.IWantTo(senparcAiSetting)
                 .ConfigChatModel("SenparcNCF", chatOptions)
                 .BuildKernelWithAgentSessionAsync();
 
             //var request = iWantToRun.CreateRequest(prompt);
             var aiResult = await iWantToRun.RunChatAsync(prompt, agentSession);
             return aiResult;
+        }
+
+        private static AgentAiHandler CreateModelAgentHandler(SenparcAiSetting senparcAiSetting)
+        {
+            return new AgentAiHandler(senparcAiSetting);
         }
 
         public async Task<string> UpdateModelsFromNeuCharAsync(NeuCharGetModelJsonResult modelResult, int developerId, string apiKey)
@@ -369,14 +380,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
                     {
                         ApiKey = llModel.ApiKey,
-                        NeuCharAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        NeuCharAIApiVersion = GetApiVersionOrDefault(llModel.ApiVersion),
                         NeuCharEndpoint = normalizedEndpoint,
                         ModelName = modelName
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = llModel.ApiKey,
-                        AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureOpenAIApiVersion = GetApiVersionOrDefault(llModel.ApiVersion),
                         AzureEndpoint = normalizedEndpoint,
                         DeploymentName = llModel.DeploymentName,
                         ModelName = modelName
@@ -386,7 +397,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = llModel.ApiKey,
-                        AzureOpenAIApiVersion = llModel.ApiVersion, // SK中实际上没有用ApiVersion
+                        AzureOpenAIApiVersion = GetApiVersionOrDefault(llModel.ApiVersion),
                         AzureEndpoint = normalizedEndpoint,
                         DeploymentName = llModel.DeploymentName,
                         ModelName = modelName
@@ -560,6 +571,14 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
 
             return normalized;
+        }
+
+        private static string GetApiVersionOrDefault(string apiVersion)
+        {
+            // AzureOpenAIKeys / NeuCharAIKeys both define 2022-12-01 as the legacy-compatible
+            // default. Do not replace it with null when an imported or manually created AIModel
+            // does not specify ApiVersion; downstream AgentKernel execution needs the value.
+            return string.IsNullOrWhiteSpace(apiVersion) ? "2022-12-01" : apiVersion.Trim();
         }
 
         /// <summary>

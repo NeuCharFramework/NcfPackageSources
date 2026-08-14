@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：SandboxTemplateCatalog.cs
+    文件功能描述：沙箱运行模板目录与查找服务
+
+
+    创建标识：Senparc - 20260808
+
+    修改标识：Senparc - 20260815
+    修改描述：v0.2.0-preview3 增加 NCF 预览沙箱工作负载
+
+----------------------------------------------------------------*/
+
 using Senparc.Xncf.Sandbox.Abstractions;
 
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
@@ -40,6 +54,20 @@ public static class SandboxTemplateCatalog
                 DefaultCpuLimit = 1,
                 DefaultMemoryMb = 1024,
                 DefaultTtl = TimeSpan.FromMinutes(45)
+            },
+            [SandboxTemplateKeys.NcfPreview] = new SandboxTemplateDefinition
+            {
+                Key = SandboxTemplateKeys.NcfPreview,
+                DisplayName = "NCF/XNCF Preview (pinned image required)",
+                PreferredRuntime = SandboxRuntimeKind.Docker,
+                Interactive = true,
+                // This intentionally cannot be used safely until Images:Overrides:ncf-preview is
+                // configured with an organisation-approved digest.
+                Image = "ncf-preview:must-configure-digest",
+                ContainerPort = 8080,
+                DefaultCpuLimit = 1,
+                DefaultMemoryMb = 1536,
+                DefaultTtl = TimeSpan.FromMinutes(30)
             }
         };
 

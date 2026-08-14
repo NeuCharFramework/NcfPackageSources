@@ -62,5 +62,15 @@ namespace Senparc.Ncf.Core.Tests.AppServices
                 CultureInfo.CurrentUICulture = previousUiCulture;
             }
         }
+
+        [TestMethod]
+        public void FunctionRenderAttribute_ShouldAllowExplicitAiOptOut()
+        {
+            var attribute = new FunctionRenderAttribute("Safe workflow", "description", typeof(LocalizedMetadataTests));
+            Assert.IsTrue(attribute.AllowAiInvocation);
+
+            attribute.AllowAiInvocation = false;
+            Assert.IsFalse(attribute.AllowAiInvocation);
+        }
     }
 }

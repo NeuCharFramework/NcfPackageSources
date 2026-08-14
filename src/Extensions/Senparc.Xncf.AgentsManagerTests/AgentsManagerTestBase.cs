@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.UnitTestExtension;
@@ -13,7 +14,9 @@ using Senparc.Xncf.AIKernel.Models;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using System.Net.Http;
 using System.Reflection;
+using System.Text;
 
 namespace Senparc.Xncf.AgentsManagerTests
 {
@@ -212,6 +215,50 @@ namespace Senparc.Xncf.AgentsManagerTests
         }
 
         [TestMethod]
+        public void RemoteA2AHttpClient_RemovesGlobalResilienceTimeoutRegardlessOfRegistrationOrder()
+        {
+            var services = new ServiceCollection();
+            services.AddHttpClient(RemoteA2AAgentFactory.HttpClientName);
+            services.AddHttpClient("unrelated-client");
+
+            var filterType = typeof(RemoteA2AAgentFactory).Assembly.GetType(
+                "Senparc.Xncf.AgentsManager.Domain.Services.RemoteA2AHttpMessageHandlerBuilderFilter",
+                throwOnError: true);
+            var filter = Activator.CreateInstance(filterType!) as IHttpMessageHandlerBuilderFilter;
+            Assert.IsNotNull(filter);
+            services.AddSingleton(filter);
+
+            // 模拟 NCF Host 的实际顺序：XNCF 先注册，Aspire ServiceDefaults 后注册。
+            services.ConfigureHttpClientDefaults(builder => builder.AddHttpMessageHandler(
+                () => new Microsoft.Extensions.Http.Resilience.ResilienceHandler()));
+
+            using var provider = services.BuildServiceProvider();
+            var handlerFactory = provider.GetRequiredService<IHttpMessageHandlerFactory>();
+            var a2aHandlerNames = GetHandlerTypeNames(
+                handlerFactory.CreateHandler(RemoteA2AAgentFactory.HttpClientName));
+            var unrelatedHandlerNames = GetHandlerTypeNames(
+                handlerFactory.CreateHandler("unrelated-client"));
+
+            Assert.IsFalse(a2aHandlerNames.Contains(
+                "Microsoft.Extensions.Http.Resilience.ResilienceHandler"));
+            Assert.IsTrue(unrelatedHandlerNames.Contains(
+                "Microsoft.Extensions.Http.Resilience.ResilienceHandler"));
+        }
+
+        private static IReadOnlyList<string> GetHandlerTypeNames(HttpMessageHandler handler)
+        {
+            var names = new List<string>();
+            var current = handler;
+            while (current != null)
+            {
+                names.Add(current.GetType().FullName ?? current.GetType().Name);
+                current = (current as DelegatingHandler)?.InnerHandler;
+            }
+
+            return names;
+        }
+
+        [TestMethod]
         public void PublishedA2AAgent_UpstreamServiceFailure_IsNotPublishedAsAResponse()
         {
             var containsFailureMethod = typeof(PublishedA2AAgentFactory).GetMethod(
@@ -231,26 +278,52 @@ namespace Senparc.Xncf.AgentsManagerTests
         }
 
         [TestMethod]
-        public void PublishedA2AAgent_UsesLocalChatGroupCompatibleExecutionProfile()
+        public void PublishedA2AAgent_UsesLocalAgentExecutionProfileAndPromptParameters()
         {
             var local = AgentTemplateRunRequest.ForLocalWorkflow(5013, "workflow-run", null);
             var a2aWithoutTools = AgentTemplateRunRequest.ForPublishedA2A(5013, "agent-5013", false);
             var a2aWithExplicitTools = AgentTemplateRunRequest.ForPublishedA2A(5013, "agent-5013", true);
 
             Assert.AreEqual(AgentTemplateRunRequest.LocalWorkflowCompatibleProfile, local.ProfileName);
-            Assert.AreEqual(AgentTemplateRunRequest.LocalChatGroupCompatibleProfile, a2aWithoutTools.ProfileName);
-            Assert.AreEqual(2000, a2aWithoutTools.MaxOutputTokens);
-            Assert.AreEqual(0.3f, a2aWithoutTools.Temperature);
-            Assert.AreEqual(0.3f, a2aWithoutTools.TopP);
+            Assert.AreEqual(local.ProfileName, a2aWithoutTools.ProfileName);
+            Assert.IsTrue(local.UseTemplateModelSettings);
+            Assert.IsTrue(local.UseTemplatePromptParameters);
+            Assert.IsTrue(a2aWithoutTools.UseTemplateModelSettings);
+            Assert.IsTrue(a2aWithoutTools.UseTemplatePromptParameters);
             Assert.IsTrue(local.UseFreshAgentSession);
             Assert.AreEqual(local.UseFreshAgentSession, a2aWithoutTools.UseFreshAgentSession);
             Assert.IsFalse(local.AllowFunctionCalls);
             Assert.IsFalse(a2aWithoutTools.AllowFunctionCalls);
             Assert.IsTrue(a2aWithExplicitTools.AllowFunctionCalls);
-            Assert.IsTrue(a2aWithoutTools.AllowDeploymentNameModelIdFallback);
+            Assert.IsFalse(a2aWithoutTools.AllowDeploymentNameModelIdFallback);
+            Assert.IsFalse(a2aWithoutTools.EnableModelTransportDiagnostics);
             Assert.IsFalse(local.AllowDeploymentNameModelIdFallback);
             Assert.AreEqual(a2aWithoutTools.MaxOutputTokens, a2aWithExplicitTools.MaxOutputTokens);
             Assert.AreEqual(a2aWithoutTools.Temperature, a2aWithExplicitTools.Temperature);
+        }
+
+        [TestMethod]
+        public async Task PublishedA2AAgent_Build_InheritsPromptExecutionParameters()
+        {
+            var templateService = _serviceProvider.GetRequiredService<AgentsTemplateService>();
+            var template = await templateService.GetObjectAsync(z => z.Name == "产品经理机器人");
+            Assert.IsNotNull(template);
+
+            var runner = _serviceProvider.GetRequiredService<AgentTemplateRunner>();
+            var build = await runner.BuildAsync(
+                template,
+                "test input",
+                AgentTemplateRunRequest.ForPublishedA2A(template.Id, "test-agent", false));
+
+            Assert.IsTrue(build.Success, build.ErrorMessage);
+            Assert.AreEqual(2000, build.AgentOptions.ChatOptions.MaxOutputTokens);
+            Assert.AreEqual(0.7f, build.AgentOptions.ChatOptions.Temperature);
+            Assert.AreEqual(0.95f, build.AgentOptions.ChatOptions.TopP);
+            Assert.AreEqual(0f, build.AgentOptions.ChatOptions.FrequencyPenalty);
+            Assert.AreEqual(0f, build.AgentOptions.ChatOptions.PresencePenalty);
+            Assert.AreEqual(0, build.AgentOptions.ChatOptions.StopSequences.Count);
+            StringAssert.Contains(build.Diagnostics.ExecutionParameters, "source=prompt:");
+            StringAssert.Contains(build.Diagnostics.ExecutionParameters, "maxOutputTokens=2000");
         }
 
         [TestMethod]
@@ -296,6 +369,240 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsNotNull(typeof(PublishedA2AAgentFactory).GetMethod(
                 "LogExecutionFailure",
                 BindingFlags.NonPublic | BindingFlags.Instance));
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_UsesStrictNonStreamingModelExecution()
+        {
+            // Published A2A may stream its protocol events, but it must not force a provider-side
+            // streaming request. Some Azure-compatible gateways authorise ordinary Chat requests
+            // while rejecting streaming routes; this must stay aligned with local Agent execution.
+            Assert.IsNotNull(typeof(AgentTemplateRunner).GetMethod(
+                "ExecuteBuiltResponseRunnerAsync",
+                BindingFlags.NonPublic | BindingFlags.Static));
+            Assert.IsNull(typeof(AgentTemplateRunner).GetMethod(
+                "ExecuteBuiltStreamingRunnerAsync",
+                BindingFlags.NonPublic | BindingFlags.Static));
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_ConfiguredApiVersionFallback_ReplacesOnlyApiVersion()
+        {
+            var transportType = typeof(AgentTemplateRunner).Assembly.GetType(
+                "Senparc.Xncf.AgentsManager.Domain.Services.PublishedA2AModelTransport",
+                throwOnError: true);
+            var handlerType = transportType.GetNestedType(
+                "PublishedA2AModelHttpMessageHandler",
+                BindingFlags.NonPublic);
+            Assert.IsNotNull(handlerType);
+            var replaceMethod = handlerType.GetMethod(
+                "ReplaceApiVersion",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(replaceMethod);
+
+            var result = replaceMethod.Invoke(
+                null,
+                new object[]
+                {
+                    new Uri("https://example.invalid/team/openai/deployments/deepseek-chat/chat/completions?api-version=2025-04-01-preview&trace=1"),
+                    "2022-12-01"
+                }) as Uri;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual("/team/openai/deployments/deepseek-chat/chat/completions", result.AbsolutePath);
+            Assert.AreEqual("api-version=2022-12-01&trace=1", result.Query.TrimStart('?'));
+        }
+
+        [TestMethod]
+        public async Task PublishedA2AAgent_ProviderDiagnostics_DoNotIncludePromptOrCredentials()
+        {
+            var transportType = typeof(AgentTemplateRunner).Assembly.GetType(
+                "Senparc.Xncf.AgentsManager.Domain.Services.PublishedA2AModelTransport",
+                throwOnError: true);
+            var handlerType = transportType.GetNestedType(
+                "PublishedA2AModelHttpMessageHandler",
+                BindingFlags.NonPublic);
+            Assert.IsNotNull(handlerType);
+
+            var requestSummaryMethod = handlerType.GetMethod(
+                "BuildRequestSummaryAsync",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(requestSummaryMethod);
+            using var request = new HttpRequestMessage(HttpMethod.Post, "https://example.invalid/chat")
+            {
+                Content = new StringContent(
+                    "{\"messages\":[{\"role\":\"system\",\"content\":\"PRIVATE-PROMPT\"},{\"role\":\"user\",\"content\":\"PRIVATE-INPUT\"}],\"tools\":[{}],\"stream\":false,\"max_tokens\":2000,\"temperature\":0.3,\"top_p\":0.3}",
+                    Encoding.UTF8,
+                    "application/json")
+            };
+            var summaryTask = requestSummaryMethod.Invoke(
+                null,
+                new object[] { request, CancellationToken.None }) as Task<string>;
+            Assert.IsNotNull(summaryTask);
+            var summary = await summaryTask;
+
+            StringAssert.Contains(summary, "messages=2");
+            StringAssert.Contains(summary, "roles=system,user");
+            StringAssert.Contains(summary, "tools=1");
+            StringAssert.Contains(summary, "stream=False");
+            Assert.IsFalse(summary.Contains("PRIVATE-PROMPT", StringComparison.Ordinal));
+            Assert.IsFalse(summary.Contains("PRIVATE-INPUT", StringComparison.Ordinal));
+
+            var extractProviderErrorMethod = handlerType.GetMethod(
+                "ExtractProviderError",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(extractProviderErrorMethod);
+            var providerError = extractProviderErrorMethod.Invoke(
+                null,
+                new object[]
+                {
+                    "{\"error\":{\"code\":\"Forbidden\",\"type\":\"gateway_policy\",\"message\":\"Authorization: Bearer super-secret-token at https://private.example/path\"},\"echoed_prompt\":\"PRIVATE-PROMPT\"}"
+                }) as string;
+
+            StringAssert.Contains(providerError, "code=Forbidden");
+            StringAssert.Contains(providerError, "type=gateway_policy");
+            Assert.IsFalse(providerError.Contains("super-secret-token", StringComparison.Ordinal));
+            Assert.IsFalse(providerError.Contains("private.example", StringComparison.Ordinal));
+            Assert.IsFalse(providerError.Contains("PRIVATE-PROMPT", StringComparison.Ordinal));
+
+            var readProviderErrorMethod = handlerType.GetMethod(
+                "ReadAndRestoreProviderErrorAsync",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(readProviderErrorMethod);
+            const string providerPayload = "{\"error\":{\"code\":\"Forbidden\",\"message\":\"Policy denied\"}}";
+            using var response = new HttpResponseMessage(System.Net.HttpStatusCode.Forbidden)
+            {
+                Content = new StringContent(providerPayload, Encoding.UTF8, "application/json")
+            };
+            var providerErrorTask = readProviderErrorMethod.Invoke(
+                null,
+                new object[] { response, CancellationToken.None }) as Task<string>;
+            Assert.IsNotNull(providerErrorTask);
+            var restoredProviderError = await providerErrorTask;
+            var replayedPayload = await response.Content.ReadAsStringAsync();
+
+            StringAssert.Contains(restoredProviderError, "code=Forbidden");
+            Assert.AreEqual(providerPayload, replayedPayload);
+
+            var terminalFailureMethod = handlerType.GetMethod(
+                "IsTerminalConfigurationFailure",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(terminalFailureMethod);
+            Assert.IsTrue((bool)terminalFailureMethod.Invoke(
+                null,
+                new object[] { "message=AI 应用不可用或已暂时停用" })!);
+            Assert.IsFalse((bool)terminalFailureMethod.Invoke(
+                null,
+                new object[] { "message=temporary gateway timeout" })!);
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_TerminalProviderFailure_ReturnsActionableMessage()
+        {
+            var messageMethod = typeof(PublishedA2AAgentFactory).GetMethod(
+                "BuildProviderConfigurationFailureMessage",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(messageMethod);
+
+            var message = messageMethod.Invoke(
+                null,
+                new object[]
+                {
+                    "AI 应用不可用或已暂时停用。请更新当前 AIModel。",
+                    "diagnostic-123"
+                }) as string;
+
+            StringAssert.Contains(message, "AI 应用不可用或已暂时停用");
+            StringAssert.Contains(message, "diagnostic-123");
+        }
+
+        [TestMethod]
+        public void AIModelService_ModelRunner_UsesRequestedSettingInsteadOfSystemDefault()
+        {
+            var createHandlerMethod = typeof(AIModelService).GetMethod(
+                "CreateModelAgentHandler",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(createHandlerMethod);
+
+            var requestedSetting = new Senparc.AI.AgentKernel.SenparcAiSetting();
+            var handler = createHandlerMethod.Invoke(null, new object[] { requestedSetting })
+                as Senparc.AI.AgentKernel.AgentAiHandler;
+
+            Assert.IsNotNull(handler);
+            Assert.AreSame(requestedSetting, handler.AgentKernelHelper.AiSetting);
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_StandardTransportFallback_PreservesModelBoundary()
+        {
+            var source = AgentTemplateRunRequest.ForPublishedA2A(
+                5013,
+                "agent-5013",
+                allowFunctionCalls: true,
+                diagnosticId: "diagnostic-id");
+
+            var fallback = source.WithStandardModelTransportFallback();
+
+            Assert.IsFalse(fallback.EnableModelTransportDiagnostics);
+            Assert.IsFalse(fallback.AllowDeploymentNameModelIdFallback);
+            Assert.AreEqual(source.AiModelId, fallback.AiModelId);
+            Assert.AreEqual(source.DefaultSetting, fallback.DefaultSetting);
+            Assert.AreEqual(source.UseTemplateModelSettings, fallback.UseTemplateModelSettings);
+            Assert.AreEqual(source.UseTemplatePromptParameters, fallback.UseTemplatePromptParameters);
+            Assert.AreEqual(source.AllowFunctionCalls, fallback.AllowFunctionCalls);
+            Assert.AreEqual(source.MaxOutputTokens, fallback.MaxOutputTokens);
+            Assert.AreEqual(source.Temperature, fallback.Temperature);
+            Assert.AreEqual(source.TopP, fallback.TopP);
+            Assert.AreEqual(source.DiagnosticId, fallback.DiagnosticId);
+            StringAssert.Contains(fallback.ProfileName, "standard-transport-fallback");
+        }
+
+        [TestMethod]
+        public void PublishedA2AAgent_NeuCharLegacyApiVersionFallback_IsAvailableWhenSdkVersionIsConfigured()
+        {
+            var candidatesMethod = typeof(AgentTemplateRunner).GetMethod(
+                "GetApiVersionCompatibilityFallbacks",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(candidatesMethod);
+
+            var candidates = candidatesMethod.Invoke(
+                null,
+                new object[]
+                {
+                    new AIModelDto
+                    {
+                        AiPlatform = Senparc.AI.AiPlatform.NeuCharAI,
+                        Endpoint = "https://www.neuchar.com/developer/",
+                        ApiVersion = "2025-04-01-preview"
+                    },
+                    null!
+                }) as System.Collections.IEnumerable;
+
+            Assert.IsNotNull(candidates);
+            var hasLegacyDefault = false;
+            foreach (var candidate in candidates)
+            {
+                var apiVersion = candidate.GetType().GetProperty("ApiVersion")?.GetValue(candidate) as string;
+                var source = candidate.GetType().GetProperty("Source")?.GetValue(candidate) as string;
+                if (apiVersion == "2022-12-01" && source == "NeuCharLegacyDefault")
+                {
+                    hasLegacyDefault = true;
+                    break;
+                }
+            }
+
+            Assert.IsTrue(hasLegacyDefault);
+        }
+
+        [TestMethod]
+        public void AIModelService_EmptyApiVersion_UsesLegacyCompatibleDefault()
+        {
+            var getApiVersionOrDefault = typeof(AIModelService).GetMethod(
+                "GetApiVersionOrDefault",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(getApiVersionOrDefault);
+            Assert.AreEqual("2022-12-01", getApiVersionOrDefault.Invoke(null, new object[] { null! }) as string);
+            Assert.AreEqual("2024-10-21", getApiVersionOrDefault.Invoke(null, new object[] { " 2024-10-21 " }) as string);
         }
 
         [TestMethod]
@@ -361,5 +668,16 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.AreEqual(2, members.Count);
             #endregion
         }
+    }
+}
+
+namespace Microsoft.Extensions.Http.Resilience
+{
+    /// <summary>
+    /// 仅用于验证 AgentsManager 按 Handler 完整类名移除宿主默认弹性管道。
+    /// 测试项目不增加 Microsoft.Extensions.Http.Resilience 的直接包引用。
+    /// </summary>
+    internal sealed class ResilienceHandler : DelegatingHandler
+    {
     }
 }

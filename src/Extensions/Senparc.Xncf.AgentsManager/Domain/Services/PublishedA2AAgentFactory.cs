@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+
 ----------------------------------------------------------------*/
 
 using A2A;
@@ -60,19 +63,20 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                     A2AErrorCode.InvalidParams);
             }
 
-            // ChatGroup 将同一类本地 Agent 直接交给 ChatClientAgent 的流式执行器。
-            // 已发布 A2A 必须走同一入口，不能经 IWantToRun.RunChatAsync 的兼容包装层，
-            // 否则相同模板在群组与对外 A2A 中可能形成不同的上游模型请求。
+            // 发布型 A2A 只负责协议与授权边界；模板解析、Prompt 参数、模型配置、
+            // AgentKernel 构建和响应执行全部复用本地独立 Agent 的 RunAsync 入口。
+            // 不在正常路径替换 HttpClient、API Version、Deployment 或模型。
             AgentTemplateRunResult execution;
             try
             {
-                execution = await _agentTemplateRunner.RunWithChatClientAgentAsync(
+                execution = await _agentTemplateRunner.RunAsync(
                     template,
                     userText,
                     AgentTemplateRunRequest.ForPublishedA2A(
                         template.Id,
                         publishedAgent.PublicAgentKey,
-                        publishedAgent.AllowFunctionCalls),
+                        publishedAgent.AllowFunctionCalls,
+                        diagnosticId),
                     diagnostics => LogExecutionModel(diagnosticId, publishedAgent, diagnostics),
                     cancellationToken).ConfigureAwait(false);
             }
@@ -80,12 +84,23 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             {
                 throw;
             }
+            catch (PublishedA2AModelProviderException ex)
+            {
+                LogExecutionFailure(diagnosticId, publishedAgent, ex);
+                throw new A2AException(
+                    BuildProviderConfigurationFailureMessage(ex.Message, diagnosticId),
+                    A2AErrorCode.InternalError);
+            }
             catch (Exception ex)
             {
                 LogExecutionFailure(diagnosticId, publishedAgent, ex);
                 throw new A2AException(
                     $"The published A2A agent failed while processing the model response. DiagnosticId: {diagnosticId}. Check server diagnostics.",
                     A2AErrorCode.InternalError);
+            }
+            finally
+            {
+                PublishedA2AModelTransport.ClearFailure(diagnosticId);
             }
             if (!execution.Success)
             {
@@ -115,6 +130,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
 
             return output;
+        }
+
+        private static string BuildProviderConfigurationFailureMessage(string providerMessage, string diagnosticId)
+        {
+            return $"远程 A2A Agent 的模型配置当前不可用：{providerMessage} DiagnosticId: {diagnosticId}。";
         }
 
         public async Task<(PublishedA2AAgent PublishedAgent, AgentTemplate Template)> GetActiveAgentAsync(string publicAgentKey)
@@ -184,7 +204,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             // Diagnostics deliberately contain only model metadata and counts. Prompt、密钥、完整端点、工具定义
             // 都不会写入日志，便于安全地将 A2A 路径与本地 Agent 执行配置比对。
             _logger.LogInformation(
-                "Published A2A run {DiagnosticId} for agent {AgentKey} (template {TemplateId}) uses {ExecutionProfile}; {ModelDescription}; credential={CredentialState}; session={SessionStrategy}; functions={FunctionCallsEnabled}; toolCount={ToolCount}",
+                "Published A2A run {DiagnosticId} for agent {AgentKey} (template {TemplateId}) uses {ExecutionProfile}; {ModelDescription}; credential={CredentialState}; session={SessionStrategy}; modelTransport=local-standard; modelRequest=strict-non-streaming; {ExecutionParameters}; functions={FunctionCallsEnabled}; toolCount={ToolCount}",
                 diagnosticId,
                 publishedAgent.PublicAgentKey,
                 diagnostics.TemplateId,
@@ -192,13 +212,15 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 diagnostics.ModelDescription,
                 diagnostics.CredentialState,
                 diagnostics.SessionStrategy,
+                diagnostics.ExecutionParameters,
                 diagnostics.FunctionCallsEnabled,
                 diagnostics.ToolCount);
             SenparcTrace.SendCustomLog(
                 "AgentsManager.A2A.ExecutionModel",
                 $"DiagnosticId={diagnosticId}; Agent={publishedAgent.PublicAgentKey}; TemplateId={diagnostics.TemplateId}; " +
                 $"profile={diagnostics.ExecutionProfile}; {diagnostics.ModelDescription}; " +
-                $"credential={diagnostics.CredentialState}; session={diagnostics.SessionStrategy}; " +
+                $"credential={diagnostics.CredentialState}; session={diagnostics.SessionStrategy}; modelTransport=local-standard; " +
+                $"modelRequest=strict-non-streaming; {diagnostics.ExecutionParameters}; " +
                 $"functionCalls={diagnostics.FunctionCallsEnabled}; toolCount={diagnostics.ToolCount}");
         }
 

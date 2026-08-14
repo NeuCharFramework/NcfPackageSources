@@ -25,6 +25,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.41.0-preview11 增强隔离开发任务与 Sandbox 预览流程
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -407,7 +410,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             return $"{request.OrgName}.Xncf.{request.XncfName}";
         }
 
-        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Generate.Name", "Function.XncfBuilder.Generate.Description", typeof(Register))]
+        // Legacy direct generation writes into the selected solution immediately. Keep it for
+        // an administrator using the Builder page, but never make it an AI chat tool. The
+        // isolated development-job workflow is the only AI-capable creation path.
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Generate.Name", "Function.XncfBuilder.Generate.Description", typeof(Register), AllowAiInvocation = false)]
         public async Task<StringAppResponse> Build(BuildXncf_BuildRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

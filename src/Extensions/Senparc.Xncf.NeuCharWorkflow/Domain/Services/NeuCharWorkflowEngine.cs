@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.2.0-preview2 增强工作流并行与运行控制
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -101,12 +104,33 @@ public sealed class NeuCharWorkflowEngine
     private static readonly HashSet<string> AllowedNodeTypes = new(StringComparer.OrdinalIgnoreCase)
     {
         "manual-trigger", "interval-trigger", "webhook-trigger", "function", "delay", "condition", "agent", "agent-group", "a2a",
-        "aggregate", "merge", "parallel", "loop", "sub-workflow", "code", "console", "neubell", "end"
+        "aggregate", "merge", "parallel", "loop", "loop-end", "sub-workflow", "code", "console", "neubell", "end"
     };
 
     private sealed record ResolvedFunctionReference(
         NeuCharFunctionDescriptor Descriptor,
         string DefaultParametersJson);
+
+    /// <summary>
+    /// Runtime state for one explicit loop body. The graph remains acyclic: each iteration
+    /// travels from the loop node to its loop-end marker, and only the final marker completion
+    /// releases the continuation after the loop.
+    /// </summary>
+    private sealed class LoopExecutionState
+    {
+        public LoopExecutionState(string loopNodeId, string boundaryNodeId, int iterationCount)
+        {
+            LoopNodeId = loopNodeId;
+            BoundaryNodeId = boundaryNodeId;
+            IterationCount = iterationCount;
+        }
+
+        public string LoopNodeId { get; }
+        public string BoundaryNodeId { get; }
+        public int IterationCount { get; }
+        public int CompletedIterations { get; set; }
+        public JsonNode LastOutput { get; set; }
+    }
 
     private readonly NeuCharWorkflowService _workflowService;
     private readonly IServiceScopeFactory _scopeFactory;
@@ -181,8 +205,8 @@ public sealed class NeuCharWorkflowEngine
             {
                 node.Config["printTemplate"] = "{{input}}";
             }
-            // Loop 是有限次数的 For，不支持 while 或图上的回连。给旧图/导入图补上
-            // 明确默认值，避免缺省配置被当成无上限循环。
+            // Loop 是有限次数的 For，不支持 while 或图上的回连。显式的 loop-end 节点
+            // 用于标记循环体边界；没有该节点的旧图继续使用兼容的“重复全部下游”语义。
             if (node.Type.Equals("loop", StringComparison.OrdinalIgnoreCase) &&
                 !node.Config.ContainsKey("count"))
             {
@@ -252,6 +276,16 @@ public sealed class NeuCharWorkflowEngine
         }
 
         EnsureAcyclic(graph);
+        foreach (var loop in graph.Nodes.Where(node =>
+                     node.Type.Equals("loop", StringComparison.OrdinalIgnoreCase)))
+        {
+            var loopBoundaryError = ValidateLoopBoundary(graph, loop);
+            if (loopBoundaryError != null)
+            {
+                throw new InvalidOperationException(loopBoundaryError);
+            }
+        }
+
         foreach (var node in graph.Nodes)
         {
             var outgoing = graph.Edges.Where(z => z.Source == node.Id).ToList();
@@ -687,23 +721,20 @@ public sealed class NeuCharWorkflowEngine
                 }
             }
 
-            // Nodes run in dependency waves. A parallel node contributes all of its direct
-            // successors to the following wave, so independent branches are truly awaited
-            // together. Aggregate nodes are deliberately held until every active branch has
-            // settled. Tracking the active edges (rather than only source nodes) also makes a
-            // skipped condition branch harmless instead of causing a duplicate input or wait.
-            //
-            // A merge node starts a stream: each input is subsequently carried through its
-            // downstream chain as an independent activation. Stream activations are executed
-            // one by one in graph/edge scheduling order, which keeps side-effecting Functions
-            // deterministic and replayable instead of racing them by completion time.
-            var ready = new List<(NeuCharWorkflowNode node, JsonNode value, bool isStream)>
+            // Schedule activations by completion rather than dependency waves. A parallel node
+            // therefore lets each branch enqueue its own successor as soon as that branch
+            // completes; a slow sibling no longer blocks the next node on a fast branch.
+            // Aggregate nodes remain joins and are held until all currently active work has
+            // settled. A merge node starts a stream: every input is carried through its
+            // downstream chain as an independent activation. Stream activations are kept
+            // serial for deterministic side effects and replay ordering.
+            var ready = new List<(NeuCharWorkflowNode node, JsonNode value, bool isStream, LoopExecutionState loopState)>
             {
-                (trigger, triggerInput, false)
+                (trigger, triggerInput, false, null)
             };
             var scheduled = new HashSet<string>(StringComparer.Ordinal) { trigger.Id };
             var waitingAggregateEdges = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
-            var outputs = new Dictionary<string, JsonNode>(StringComparer.Ordinal);
+            var outputs = new ConcurrentDictionary<string, JsonNode>(StringComparer.Ordinal);
             var streamActivationCount = 0;
             // Only Selection values are retained for bindings; do not retain unrelated input
             // parameters such as passwords in the runtime source cache.
@@ -714,217 +745,279 @@ public sealed class NeuCharWorkflowEngine
                 outputs,
                 functionSelectionInputs);
             JsonNode finalOutput = JsonValue.Create(input ?? string.Empty);
-            while (ready.Count > 0 || waitingAggregateEdges.Count > 0)
+            var activeExecutions = new List<Task<(
+                NeuCharWorkflowNode node,
+                bool isStream,
+                LoopExecutionState loopState,
+                string replayInputText,
+                (bool success, JsonNode output, bool? condition, string error) execution)>>();
+            var streamActivationRunning = false;
+
+            async Task<(
+                NeuCharWorkflowNode node,
+                bool isStream,
+                LoopExecutionState loopState,
+                string replayInputText,
+                (bool success, JsonNode output, bool? condition, string error) execution)> ExecuteActivationAsync(
+                (NeuCharWorkflowNode node, JsonNode value, bool isStream, LoopExecutionState loopState) item)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                var replayInputText = await BuildReplayInputTextAsync(
+                        item.node,
+                        item.value,
+                        outputs,
+                        functionSelectionInputs,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+                Report(progress, item.node, "running", "开始执行节点。", null, input: replayInputText);
+                var execution = await ExecuteNodeAsync(
+                        workflow,
+                        item.node,
+                        item.value,
+                        outputs,
+                        functionSelectionInputs,
+                        correlationId,
+                        cancellationToken,
+                        workflowPath)
+                    .ConfigureAwait(false);
+                return (item.node, item.isStream, item.loopState, replayInputText, execution);
+            }
 
-                if (ready.Count == 0)
+            void ProcessCompletedExecution((
+                NeuCharWorkflowNode node,
+                bool isStream,
+                LoopExecutionState loopState,
+                string replayInputText,
+                (bool success, JsonNode output, bool? condition, string error) execution) completed)
+            {
+                var (node, isStream, loopState, replayInputText, execution) = completed;
+                trace.Add($"{node.Name ?? node.Type}: {(execution.success ? "OK" : "FAILED")}");
+                if (!execution.success)
                 {
-                    // All non-aggregate work that can feed these joins has completed. The
-                    // graph is acyclic, so only now is every selected upstream input known.
-                    ready = waitingAggregateEdges
-                        .Select(pair => (node: nodes[pair.Key], activeEdgeIds: pair.Value))
-                        .OrderBy(item => graph.Nodes.FindIndex(node => node.Id == item.node.Id))
-                        .Select(item => (item.node, value: (JsonNode)BuildAggregateInput(
-                            graph, item.node, item.activeEdgeIds, outputs), isStream: false))
-                        .ToList();
-                    waitingAggregateEdges.Clear();
+                    Report(progress, node, "failed", execution.error, null, input: replayInputText);
+                    throw new InvalidOperationException(execution.error);
                 }
 
-                var wave = ready;
-                ready = new List<(NeuCharWorkflowNode node, JsonNode value, bool isStream)>();
-                var ordinaryWave = wave.Where(item => !item.isStream).ToList();
-                var streamWave = wave.Where(item => item.isStream).ToList();
-                var executions = new List<(NeuCharWorkflowNode node, bool isStream, string replayInputText,
-                    (bool success, JsonNode output, bool? condition, string error) execution)>();
-                // A code node changes the run-local vars object. Execute those state barriers
-                // first and in canvas order; all other independent nodes may still run together.
-                var orderedOrdinaryWave = ordinaryWave
-                    .OrderBy(item => item.node.Type.Equals("code", StringComparison.OrdinalIgnoreCase) ? 0 : 1)
-                    .ThenBy(item => graph.Nodes.FindIndex(node => node.Id == item.node.Id))
-                    .ToList();
-                var ordinaryExecutions = new List<(NeuCharWorkflowNode node, bool isStream, string replayInputText,
-                    (bool success, JsonNode output, bool? condition, string error) execution)>();
-                foreach (var item in orderedOrdinaryWave.Where(item => item.node.Type.Equals("code", StringComparison.OrdinalIgnoreCase)))
+                finalOutput = execution.output ?? JsonNode.Parse("null");
+                outputs[node.Id] = finalOutput.DeepClone();
+                var outputText = NodeToText(finalOutput);
+                var outputSchema = NeuCharWorkflowObservedOutputSchemaBuilder.Build(node, finalOutput);
+                Report(progress, node, "success", "节点执行完成。", outputText,
+                    JsonSerializer.Serialize(outputSchema, JsonOptions),
+                    replayInputText);
+                if (node.Type.Equals("console", StringComparison.OrdinalIgnoreCase))
                 {
-                    var replayInputText = await BuildReplayInputTextAsync(
-                            item.node,
-                            item.value,
-                            outputs,
-                            functionSelectionInputs,
-                            cancellationToken)
-                        .ConfigureAwait(false);
-                    Report(progress, item.node, "running", "开始执行节点。", null, input: replayInputText);
-                    var execution = await ExecuteNodeAsync(
-                            workflow,
-                            item.node,
-                            item.value,
-                            outputs,
-                            functionSelectionInputs,
-                            correlationId,
-                            cancellationToken,
-                            workflowPath)
-                        .ConfigureAwait(false);
-                    if (!execution.success)
-                    {
-                        Report(progress, item.node, "failed", execution.error, null, input: replayInputText);
-                        throw new InvalidOperationException(execution.error);
-                    }
-                    ordinaryExecutions.Add((item.node, item.isStream, replayInputText, execution));
-                }
-                var parallelOrdinaryExecutions = await Task.WhenAll(orderedOrdinaryWave
-                    .Where(item => !item.node.Type.Equals("code", StringComparison.OrdinalIgnoreCase))
-                    .Select(async item =>
-                    {
-                        var replayInputText = await BuildReplayInputTextAsync(
-                                item.node,
-                                item.value,
-                                outputs,
-                                functionSelectionInputs,
-                                cancellationToken)
-                            .ConfigureAwait(false);
-                        Report(progress, item.node, "running", "开始执行节点。", null, input: replayInputText);
-                        var execution = await ExecuteNodeAsync(
-                                workflow,
-                                item.node,
-                                item.value,
-                                outputs,
-                                functionSelectionInputs,
-                                correlationId,
-                                cancellationToken,
-                                workflowPath)
-                            .ConfigureAwait(false);
-                        return (item.node, item.isStream, replayInputText, execution);
-                    })).ConfigureAwait(false);
-                ordinaryExecutions.AddRange(parallelOrdinaryExecutions);
-                executions.AddRange(ordinaryExecutions);
-
-                foreach (var item in streamWave)
-                {
-                    var replayInputText = await BuildReplayInputTextAsync(
-                            item.node,
-                            item.value,
-                            outputs,
-                            functionSelectionInputs,
-                            cancellationToken)
-                        .ConfigureAwait(false);
-                    Report(progress, item.node, "running", "开始执行节点。", null, input: replayInputText);
-                    var execution = await ExecuteNodeAsync(
-                            workflow,
-                            item.node,
-                            item.value,
-                            outputs,
-                            functionSelectionInputs,
-                            correlationId,
-                            cancellationToken,
-                            workflowPath)
-                        .ConfigureAwait(false);
-                    executions.Add((item.node, true, replayInputText, execution));
+                    var printOutput = ResolveConsolePrintOutput(
+                        node.Config,
+                        finalOutput,
+                        outputs,
+                        functionSelectionInputs);
+                    Report(progress, node, "console", "Console 输出", NodeToText(printOutput));
                 }
 
-                foreach (var (node, isStream, replayInputText, execution) in executions)
+                var outgoing = graph.Edges.Where(z => z.Source == node.Id);
+                if (node.Type.Equals("condition", StringComparison.OrdinalIgnoreCase))
                 {
-                    trace.Add($"{node.Name ?? node.Type}: {(execution.success ? "OK" : "FAILED")}");
-                    if (!execution.success)
-                    {
-                        Report(progress, node, "failed", execution.error, null, input: replayInputText);
-                        throw new InvalidOperationException(execution.error);
-                    }
-
-                    finalOutput = execution.output ?? JsonNode.Parse("null");
-                    outputs[node.Id] = finalOutput.DeepClone();
-                    var outputText = NodeToText(finalOutput);
-                    var outputSchema = NeuCharWorkflowObservedOutputSchemaBuilder.Build(node, finalOutput);
-                    Report(progress, node, "success", "节点执行完成。", outputText,
-                        JsonSerializer.Serialize(outputSchema, JsonOptions),
-                        replayInputText);
-                    if (node.Type.Equals("console", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var printOutput = ResolveConsolePrintOutput(
+                    var branch = execution.condition == true ? "true" : "false";
+                    trace.Add($"{node.Name ?? node.Type}: branch={branch}");
+                    Report(progress, node, "branch", $"选择{(branch == "true" ? "真" : "假")}分支。", branch);
+                    outgoing = outgoing.Where(z =>
+                        string.Equals(z.SourceHandle, branch, StringComparison.OrdinalIgnoreCase));
+                }
+                if (node.Type.Equals("loop", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (!TryResolveLoopCount(
                             node.Config,
                             finalOutput,
                             outputs,
-                            functionSelectionInputs);
-                        Report(progress, node, "console", "Console 输出", NodeToText(printOutput));
+                            functionSelectionInputs,
+                            out var loopCount,
+                            out var loopError))
+                    {
+                        throw new InvalidOperationException(loopError);
                     }
 
-                    var outgoing = graph.Edges.Where(z => z.Source == node.Id);
-                    if (node.Type.Equals("condition", StringComparison.OrdinalIgnoreCase))
-                    {
-                        var branch = execution.condition == true ? "true" : "false";
-                        trace.Add($"{node.Name ?? node.Type}: branch={branch}");
-                        Report(progress, node, "branch", $"选择{(branch == "true" ? "真" : "假")}分支。", branch);
-                        outgoing = outgoing.Where(z =>
-                            string.Equals(z.SourceHandle, branch, StringComparison.OrdinalIgnoreCase));
-                    }
-                    if (node.Type.Equals("loop", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (!TryResolveLoopCount(
-                                node.Config,
-                                finalOutput,
-                                outputs,
-                                functionSelectionInputs,
-                                out var loopCount,
-                                out var loopError))
-                        {
-                            throw new InvalidOperationException(loopError);
-                        }
-
-                        trace.Add($"{node.Name ?? node.Type}: loop={loopCount}");
-                        Report(progress, node, "loop", $"For 循环将按顺序执行下游 {loopCount} 次。", loopCount.ToString(CultureInfo.InvariantCulture));
-                        foreach (var edge in outgoing)
-                        {
-                            var target = nodes[edge.Target];
-                            for (var iteration = 0; iteration < loopCount; iteration++)
-                            {
-                                // Loop/merge share one global guard, including nested loops and
-                                // long stream chains. This makes a dynamic upstream count safe.
-                                if (++streamActivationCount > MaxStreamActivations)
-                                {
-                                    throw new InvalidOperationException($"循环或逐项合流产生的执行次数超过 {MaxStreamActivations} 次；请缩小次数、分支或拆分工作流。");
-                                }
-                                ready.Add((target, finalOutput.DeepClone(), true));
-                            }
-                        }
-                        continue;
-                    }
+                    trace.Add($"{node.Name ?? node.Type}: loop={loopCount}");
+                    Report(progress, node, "loop", $"For 循环将按顺序执行下游 {loopCount} 次。", loopCount.ToString(CultureInfo.InvariantCulture));
+                    var boundaryNodeId = FindLoopBoundaryNodeId(graph, node.Id);
+                    var newLoopState = boundaryNodeId == null
+                        ? null
+                        : new LoopExecutionState(node.Id, boundaryNodeId, loopCount);
                     foreach (var edge in outgoing)
                     {
                         var target = nodes[edge.Target];
-                        if (target.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase))
+                        for (var iteration = 0; iteration < loopCount; iteration++)
                         {
-                            if (!waitingAggregateEdges.TryGetValue(target.Id, out var activeEdgeIds))
-                            {
-                                activeEdgeIds = new HashSet<string>(StringComparer.Ordinal);
-                                waitingAggregateEdges[target.Id] = activeEdgeIds;
-                            }
-                            activeEdgeIds.Add(edge.Id);
-                        }
-                        else if (target.Type.Equals("merge", StringComparison.OrdinalIgnoreCase))
-                        {
-                            // Each incoming edge activates a merge independently; no join or
-                            // de-duplication is applied here.
+                            // Loop/merge share one global guard, including nested loops and
+                            // long stream chains. This makes a dynamic upstream count safe.
                             if (++streamActivationCount > MaxStreamActivations)
                             {
-                                throw new InvalidOperationException($"逐项合流产生的执行次数超过 {MaxStreamActivations} 次；请缩小分支或拆分工作流。");
+                                throw new InvalidOperationException($"循环或逐项合流产生的执行次数超过 {MaxStreamActivations} 次；请缩小次数、分支或拆分工作流。");
                             }
-                            ready.Add((target, finalOutput.DeepClone(), true));
-                        }
-                        else if (isStream || node.Type.Equals("merge", StringComparison.OrdinalIgnoreCase))
-                        {
-                            // Keep every item in a merge stream alive through all downstream
-                            // nodes. The next loop executes this queue serially.
-                            if (++streamActivationCount > MaxStreamActivations)
-                            {
-                                throw new InvalidOperationException($"逐项合流产生的执行次数超过 {MaxStreamActivations} 次；请缩小分支或拆分工作流。");
-                            }
-                            ready.Add((target, finalOutput.DeepClone(), true));
-                        }
-                        else if (scheduled.Add(target.Id))
-                        {
-                            ready.Add((target, finalOutput.DeepClone(), false));
+                            ready.Add((target, finalOutput.DeepClone(), true, newLoopState));
                         }
                     }
+                    return;
+                }
+
+                if (loopState != null &&
+                    node.Id.Equals(loopState.BoundaryNodeId, StringComparison.Ordinal))
+                {
+                    loopState.CompletedIterations++;
+                    loopState.LastOutput = finalOutput.DeepClone();
+                    trace.Add($"{node.Name ?? node.Type}: loop={loopState.CompletedIterations}/{loopState.IterationCount}");
+                    Report(progress, node, "loop-end",
+                        $"循环体第 {loopState.CompletedIterations} / {loopState.IterationCount} 轮完成。",
+                        NodeToText(finalOutput));
+                    if (loopState.CompletedIterations < loopState.IterationCount)
+                    {
+                        // Do not release the continuation after every iteration. The next
+                        // iteration remains in the serial stream and the node after loop-end
+                        // starts only once the complete body has run the requested number of times.
+                        return;
+                    }
+
+                    finalOutput = loopState.LastOutput ?? JsonValue.Create(string.Empty);
+                    isStream = false;
+                    loopState = null;
+                }
+                foreach (var edge in outgoing)
+                {
+                    var target = nodes[edge.Target];
+                    if (target.Type.Equals("aggregate", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (!waitingAggregateEdges.TryGetValue(target.Id, out var activeEdgeIds))
+                        {
+                            activeEdgeIds = new HashSet<string>(StringComparer.Ordinal);
+                            waitingAggregateEdges[target.Id] = activeEdgeIds;
+                        }
+                        activeEdgeIds.Add(edge.Id);
+                    }
+                    else if (target.Type.Equals("merge", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Each incoming edge activates a merge independently; no join or
+                        // de-duplication is applied here.
+                        if (++streamActivationCount > MaxStreamActivations)
+                        {
+                            throw new InvalidOperationException($"逐项合流产生的执行次数超过 {MaxStreamActivations} 次；请缩小分支或拆分工作流。");
+                        }
+                        ready.Add((target, finalOutput.DeepClone(), true, null));
+                    }
+                    else if (isStream || node.Type.Equals("merge", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Keep every item in a merge stream alive through all downstream
+                        // nodes. The scheduler executes these stream activations serially.
+                        if (++streamActivationCount > MaxStreamActivations)
+                        {
+                            throw new InvalidOperationException($"逐项合流产生的执行次数超过 {MaxStreamActivations} 次；请缩小分支或拆分工作流。");
+                        }
+                        ready.Add((target, finalOutput.DeepClone(), true, loopState));
+                    }
+                    else if (scheduled.Add(target.Id))
+                    {
+                        ready.Add((target, finalOutput.DeepClone(), false, null));
+                    }
+                }
+            }
+
+            try
+            {
+                while (ready.Count > 0 || activeExecutions.Count > 0 || waitingAggregateEdges.Count > 0)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    if (ready.Count == 0 && activeExecutions.Count == 0 && waitingAggregateEdges.Count > 0)
+                    {
+                        // All non-aggregate work that can feed these joins has completed. The
+                        // graph is acyclic, so only now is every selected upstream input known.
+                        ready.AddRange(waitingAggregateEdges
+                            .Select(pair => (node: nodes[pair.Key], activeEdgeIds: pair.Value))
+                            .OrderBy(item => graph.Nodes.FindIndex(node => node.Id == item.node.Id))
+                            .Select(item => (item.node, value: (JsonNode)BuildAggregateInput(
+                                graph, item.node, item.activeEdgeIds, outputs), isStream: false, loopState: (LoopExecutionState)null)));
+                        waitingAggregateEdges.Clear();
+                    }
+
+                    if (ready.Count > 0)
+                    {
+                        var codeIndex = ready.FindIndex(item =>
+                            item.node.Type.Equals("code", StringComparison.OrdinalIgnoreCase));
+                        if (codeIndex >= 0 && activeExecutions.Count == 0)
+                        {
+                            // Code mutates run-local variables. Keep it as an exclusive state
+                            // barrier, while ordinary branches continue independently otherwise.
+                            var codeActivation = ready[codeIndex];
+                            ready.RemoveAt(codeIndex);
+                            if (codeActivation.isStream)
+                            {
+                                streamActivationRunning = true;
+                            }
+                            var completedCode = await ExecuteActivationAsync(codeActivation).ConfigureAwait(false);
+                            if (completedCode.isStream)
+                            {
+                                streamActivationRunning = false;
+                            }
+                            ProcessCompletedExecution(completedCode);
+                            continue;
+                        }
+
+                        // Start every ready non-code activation. If a code barrier is waiting while
+                        // other branches are still running, those branches may continue and finish;
+                        // the code node starts only after they have drained.
+                        for (var index = ready.Count - 1; index >= 0; index--)
+                        {
+                            var activation = ready[index];
+                            if (activation.node.Type.Equals("code", StringComparison.OrdinalIgnoreCase))
+                            {
+                                continue;
+                            }
+                            if (activation.isStream && streamActivationRunning)
+                            {
+                                continue;
+                            }
+                            ready.RemoveAt(index);
+                            if (activation.isStream)
+                            {
+                                streamActivationRunning = true;
+                            }
+                            activeExecutions.Add(ExecuteActivationAsync(activation));
+                        }
+                    }
+
+                    if (activeExecutions.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    var completedTask = await Task.WhenAny(activeExecutions).ConfigureAwait(false);
+                    activeExecutions.Remove(completedTask);
+                    var completed = await completedTask.ConfigureAwait(false);
+                    if (completed.isStream)
+                    {
+                        streamActivationRunning = false;
+                    }
+                    ProcessCompletedExecution(completed);
+                }
+            }
+            finally
+            {
+                // Do not dispose the run/child scope while a branch still owns a provider,
+                // function, Agent or A2A scope. All of them receive the same cancellation
+                // token, so this is cooperative cleanup for stop/failure paths.
+                if (activeExecutions.Count > 0)
+                {
+                    try
+                    {
+                        await Task.WhenAll(activeExecutions).ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // The outer RunAsync cancellation handler records the final result.
+                    }
+                    catch (Exception)
+                    {
+                        // Preserve the original execution failure.
+                    }
+                    activeExecutions.Clear();
                 }
             }
 
@@ -1112,6 +1205,7 @@ public sealed class NeuCharWorkflowEngine
             case "merge":
             case "parallel":
             case "console":
+            case "loop-end":
             case "end":
                 return (true, input, null, null);
             default:
@@ -1150,7 +1244,7 @@ public sealed class NeuCharWorkflowEngine
             resolvedParameters,
             reference.Descriptor.Parameters);
         var parameterJson = resolvedParameters.ToJsonString();
-        // Function services and their repositories are scoped. A workflow wave may execute
+        // Function services and their repositories are scoped. Independent workflow branches may execute
         // independent Function nodes concurrently, so never reuse the engine's request scope
         // for the actual invocation; each node gets its own DbContext graph.
         var result = await ExecuteInFunctionScopeAsync(functionService => functionService.ExecuteAsync(
@@ -1229,7 +1323,20 @@ public sealed class NeuCharWorkflowEngine
             return (false, null, null, "工作流对象 Provider 不可用，请确认对应模块已安装并开启。");
         }
 
-        var objects = await provider.GetObjectsAsync(cancellationToken).ConfigureAwait(false);
+        // Providers are scoped because their services/repositories hold scoped EF Core
+        // DbContexts. A parallel node must not reuse the provider instance captured by the
+        // engine's request scope; resolve and execute the provider inside a private scope for
+        // this one node instead.
+        using var scope = _scopeFactory.CreateScope();
+        var executionProvider = scope.ServiceProvider
+            .GetServices<IWorkflowObjectProvider>()
+            .FirstOrDefault(z => string.Equals(z.ProviderId, providerId, StringComparison.OrdinalIgnoreCase));
+        if (executionProvider == null)
+        {
+            return (false, null, null, "工作流对象 Provider 不可用，请确认对应模块已安装并开启。");
+        }
+
+        var objects = await executionProvider.GetObjectsAsync(cancellationToken).ConfigureAwait(false);
         var descriptor = objects.FirstOrDefault(z => z.ObjectId == objectId);
         if (descriptor == null || !descriptor.Enabled)
         {
@@ -1242,7 +1349,7 @@ public sealed class NeuCharWorkflowEngine
             outputs,
             functionSelectionInputs);
         var prompt = NodeToText(promptValue);
-        var result = await provider.ExecuteAsync(
+        var result = await executionProvider.ExecuteAsync(
             new WorkflowObjectExecutionRequest(
                 objectId,
                 prompt,
@@ -1273,7 +1380,10 @@ public sealed class NeuCharWorkflowEngine
             return (false, null, null, "调用工作流会形成循环引用，已拒绝执行。");
         }
 
-        var childWorkflow = await _workflowService.GetObjectAsync(item =>
+        using var scope = _scopeFactory.CreateScope();
+        var workflowService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowService>();
+        var childEngine = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowEngine>();
+        var childWorkflow = await workflowService.GetObjectAsync(item =>
                 item.Id == workflowId && item.AdminUserId == parentWorkflow.AdminUserId)
             .ConfigureAwait(false);
         if (childWorkflow == null)
@@ -1290,7 +1400,7 @@ public sealed class NeuCharWorkflowEngine
             input,
             outputs,
             functionSelectionInputs);
-        var result = await RunAsync(
+        var result = await childEngine.RunAsync(
                 childWorkflow,
                 NodeToText(promptValue),
                 cancellationToken,
@@ -1299,6 +1409,10 @@ public sealed class NeuCharWorkflowEngine
                 cancellationResult: null,
                 ancestorWorkflowIds: workflowPath)
             .ConfigureAwait(false);
+        // A child RunAsync records its own cancellation result for replay. The parent still
+        // needs the cancellation exception so sibling branches and external resources receive
+        // the same stop signal instead of treating cancellation as an ordinary node failure.
+        cancellationToken.ThrowIfCancellationRequested();
         return result.Success
             ? (true, JsonValue.Create(result.Output ?? string.Empty), null, null)
             : (false, null, null, result.ErrorMessage ?? "子工作流执行失败。");
@@ -2209,6 +2323,134 @@ public sealed class NeuCharWorkflowEngine
             .Where(node => node.Type.Equals("sub-workflow", StringComparison.OrdinalIgnoreCase))
             .Select(node => GetInt(node.Config, "workflowId", 0));
 
+    /// <summary>
+    /// Validates the optional explicit loop body. Legacy loops without a loop-end marker are
+    /// accepted and retain their historical semantics for compatibility. Once a marker exists,
+    /// the body is deliberately a single linear chain so an iteration has exactly one boundary
+    /// completion and cannot accidentally release the continuation multiple times.
+    /// </summary>
+    private static string ValidateLoopBoundary(NeuCharWorkflowGraph graph, NeuCharWorkflowNode loop)
+    {
+        var nodeMap = graph.Nodes.ToDictionary(node => node.Id, StringComparer.Ordinal);
+        var outgoing = graph.Edges.Where(edge => edge.Source == loop.Id).ToList();
+        if (outgoing.Count == 0)
+        {
+            return null;
+        }
+
+        var reachable = new HashSet<string>(StringComparer.Ordinal);
+        var queue = new Queue<string>(outgoing.Select(edge => edge.Target));
+        var boundaryIds = new HashSet<string>(StringComparer.Ordinal);
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            if (!reachable.Add(current))
+            {
+                continue;
+            }
+
+            var currentNode = nodeMap[current];
+            if (currentNode.Type.Equals("loop-end", StringComparison.OrdinalIgnoreCase))
+            {
+                boundaryIds.Add(current);
+                continue;
+            }
+
+            foreach (var edge in graph.Edges.Where(edge => edge.Source == current))
+            {
+                queue.Enqueue(edge.Target);
+            }
+        }
+
+        // No explicit boundary means this is an old workflow. Preserve it until the author
+        // inserts a loop-end node to opt into bounded body semantics.
+        if (boundaryIds.Count == 0)
+        {
+            return null;
+        }
+        if (boundaryIds.Count > 1)
+        {
+            return $"循环节点“{loop.Name ?? loop.Id}”的循环体只能有一个“循环结束”节点。";
+        }
+
+        var boundaryId = boundaryIds.Single();
+        var currentId = outgoing[0].Target;
+        var previousId = loop.Id;
+        var bodyVisited = new HashSet<string>(StringComparer.Ordinal);
+        while (!string.Equals(currentId, boundaryId, StringComparison.Ordinal))
+        {
+            if (!bodyVisited.Add(currentId))
+            {
+                return $"循环节点“{loop.Name ?? loop.Id}”的循环体存在重复路径，无法确定循环结束位置。";
+            }
+
+            var currentNode = nodeMap[currentId];
+            if (currentNode.Type is "condition" or "parallel" or "aggregate" or "merge" or "loop" or "end")
+            {
+                return $"循环节点“{loop.Name ?? loop.Id}”当前只支持由普通节点组成的单一路径；节点“{currentNode.Name ?? currentNode.Id}”不能放在循环体中。";
+            }
+
+            var incoming = graph.Edges.Where(edge => edge.Target == currentId).ToList();
+            if (incoming.Count != 1 || !string.Equals(incoming[0].Source, previousId, StringComparison.Ordinal))
+            {
+                return $"循环节点“{loop.Name ?? loop.Id}”的循环体节点“{currentNode.Name ?? currentNode.Id}”不能被循环外路径共享。";
+            }
+
+            var next = graph.Edges.Where(edge => edge.Source == currentId).ToList();
+            if (next.Count != 1)
+            {
+                return $"循环节点“{loop.Name ?? loop.Id}”的循环体必须是一条连接到“循环结束”的单一路径。";
+            }
+
+            previousId = currentId;
+            currentId = next[0].Target;
+        }
+
+        var boundaryIncoming = graph.Edges.Where(edge => edge.Target == boundaryId).ToList();
+        if (boundaryIncoming.Count != 1 || !string.Equals(boundaryIncoming[0].Source, previousId, StringComparison.Ordinal))
+        {
+            return $"循环结束节点必须是循环体的唯一最后节点，且不能被循环外路径共享。";
+        }
+
+        return null;
+    }
+
+    private static string FindLoopBoundaryNodeId(NeuCharWorkflowGraph graph, string loopNodeId)
+    {
+        var reachable = new HashSet<string>(StringComparer.Ordinal);
+        var boundaryIds = new HashSet<string>(StringComparer.Ordinal);
+        var queue = new Queue<string>(graph.Edges
+            .Where(edge => edge.Source == loopNodeId)
+            .Select(edge => edge.Target));
+        while (queue.Count > 0)
+        {
+            var current = queue.Dequeue();
+            if (!reachable.Add(current))
+            {
+                continue;
+            }
+
+            var node = graph.Nodes.FirstOrDefault(item => item.Id == current);
+            if (node?.Type.Equals("loop-end", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                boundaryIds.Add(current);
+                continue;
+            }
+
+            foreach (var edge in graph.Edges.Where(edge => edge.Source == current))
+            {
+                queue.Enqueue(edge.Target);
+            }
+        }
+
+        return boundaryIds.Count switch
+        {
+            0 => null,
+            1 => boundaryIds.Single(),
+            _ => throw new InvalidOperationException($"循环节点“{loopNodeId}”的循环体只能有一个“循环结束”节点。")
+        };
+    }
+
     private static string ValidateLoopCountConfiguration(JsonObject config)
     {
         var count = config?["count"];
@@ -2577,7 +2819,7 @@ public sealed class NeuCharWorkflowEngine
                     ? fields
                     : new[] { new NeuCharFunctionOutputFieldDescriptor("$", "Webhook 输入", "object", false, false) });
         }
-        if (node.Type is "delay" or "condition" or "loop" or "code" or "console" or "end")
+        if (node.Type is "delay" or "condition" or "loop" or "loop-end" or "code" or "console" or "end")
         {
             var incoming = graph.Edges.FirstOrDefault(z =>
                 string.Equals(z.Target, node.Id, StringComparison.Ordinal));

@@ -31,6 +31,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.36.0 集成工作流模块与 A2A 发布配置并修复认证持久化
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.36.1 适配工作流、A2A 与预览模块宿主配置
+
 ----------------------------------------------------------------*/
 
 //以下数据库模块的命名空间根据需要添加或删除
@@ -87,6 +90,21 @@ ReportDatabaseUpgradeProgress("应用宿主创建完成，正在注册 XNCF 模�
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+}
+
+// A Sandbox NCF preview is exposed through /sandbox-preview/{sessionId}. The value is supplied
+// only by the fixed Sandbox container workload; normal sites have no path-base at all. Applying
+// it before NCF/static/routing middleware keeps links, redirects and WebSocket endpoints inside
+// the authenticated reverse-proxy prefix instead of leaking to the main host root.
+var xncfPreviewPathBase = Environment.GetEnvironmentVariable("NCF_XNCF_PREVIEW_PATH_BASE");
+if (!string.IsNullOrWhiteSpace(xncfPreviewPathBase)
+    && xncfPreviewPathBase.StartsWith('/')
+    && !xncfPreviewPathBase.Contains("..", StringComparison.Ordinal)
+    && !xncfPreviewPathBase.Contains('\\')
+    && !xncfPreviewPathBase.Contains('\r')
+    && !xncfPreviewPathBase.Contains('\n'))
+{
+    app.UsePathBase(xncfPreviewPathBase);
 }
 
 // Configure request localization (cookie first, then query/header providers)

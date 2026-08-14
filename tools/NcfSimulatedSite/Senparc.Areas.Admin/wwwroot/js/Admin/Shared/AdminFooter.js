@@ -562,7 +562,8 @@
                 }));
                 this.neuBellProviders = nextProviders;
                 this.syncNeuBellNotifications(previousProviders, nextProviders, showNewNotifications === true);
-                // 服务端只返回已安装且开放的 Provider；空集合即代表应隐藏功能并停止通讯。
+                // 服务端只返回已安装且开放的 Provider；空集合时保留 Footer 入口，
+                // 但不建立实时通讯，抽屉内会明确提示当前没有可用 Provider。
                 this.footerAvailabilityKnown = true;
                 this.neuBellAvailable = this.neuBellProviders.length > 0;
                 if (this.neuBellAvailable && !document.hidden) {

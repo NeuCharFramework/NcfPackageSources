@@ -1,12 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.0-preview1</Version>
+    <Version>0.2.0-preview2</Version>
     <PackageReleaseNotes>
       [2026-08-13] v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
       1、支持版本与自动保存、Webhook 触发、并行节点和执行回放
       2、增强模板绑定、输出 schema、表达式评估与 NeuBell 任务管理
       3、完善 ChatGroup 集成、任务布局及管理页面交互
+      [2026-08-15] v0.2.0-preview2 增强工作流并行与运行控制
+      1、按节点完成及时调度并行分支，减少慢分支对独立节点的阻塞并保持聚合节点语义
+      2、完善取消令牌、运行状态保存和 AI 调用选项传递，保持执行回放与副作用顺序稳定
     </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>

@@ -80,6 +80,11 @@ var app = new Vue({
             props: { multiple: true },
             // 表格数据
             tableData: [],
+            navigationTarget: {
+                knowledgeBaseId: 0,
+                focus: '',
+                handled: false
+            },
             uid: '',
             fileList: [],
             sizeForm: {
@@ -181,6 +186,7 @@ var app = new Vue({
     },
     created: function () {
         let that = this
+        that.initializeKnowledgeBaseNavigation()
         that.getList();
         that.getEmbeddingModelList();
         that.getVectorDBList();
@@ -221,6 +227,43 @@ var app = new Vue({
     },
     methods:
     {
+        initializeKnowledgeBaseNavigation() {
+            const query = new URLSearchParams(window.location.search || '')
+            const knowledgeBaseId = Number(query.get('knowledgeBaseId') || 0)
+            if (!Number.isInteger(knowledgeBaseId) || knowledgeBaseId <= 0) {
+                return
+            }
+
+            this.navigationTarget = {
+                knowledgeBaseId: knowledgeBaseId,
+                focus: query.get('focus') === 'materials' ? 'materials' : 'edit',
+                handled: false
+            }
+            this.listQuery.pageIndex = 1
+        },
+        applyKnowledgeBaseNavigation(rows) {
+            const target = this.navigationTarget || {}
+            const knowledgeBaseId = Number(target.knowledgeBaseId || 0)
+            if (target.handled || !Number.isInteger(knowledgeBaseId) || knowledgeBaseId <= 0) {
+                return
+            }
+
+            target.handled = true
+            const knowledgeBase = (rows || []).find(item => Number(item.id) === knowledgeBaseId)
+            if (!knowledgeBase) {
+                this.$message.warning('未找到要打开的知识库，可能已删除或当前账号没有权限。')
+                return
+            }
+
+            this.$nextTick(() => {
+                this.$refs.multipleTable?.setCurrentRow(knowledgeBase)
+                if (target.focus === 'materials') {
+                    this.handleElVisibleOpenBtn('drawerGroup', knowledgeBase)
+                } else {
+                    this.handleEdit(0, knowledgeBase, 'edit')
+                }
+            })
+        },
         handleChange(value) {
             console.log(value);
         },
@@ -435,8 +478,9 @@ var app = new Vue({
             if (that.keyword != '' && that.keyword != undefined) {
                 keyword = that.keyword;
             }
+            const knowledgeBaseId = Number(that.navigationTarget?.knowledgeBaseId || 0)
 
-            await service.get(`/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${keyword}&orderField=${orderField}`).then(res => {// 使用 map 转换为目标格式的对象数组
+            await service.get(`/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${encodeURIComponent(keyword || '')}&orderField=${encodeURIComponent(orderField || '')}&knowledgeBaseId=${knowledgeBaseId > 0 ? knowledgeBaseId : ''}`).then(res => {// 使用 map 转换为目标格式的对象数组
                 that.filterTableHeader.embeddingModelId = res.data.data.list.map(z => ({
                     text: z.embeddingModelId,
                     value: z.embeddingModelId
@@ -460,6 +504,7 @@ var app = new Vue({
 
                 that.tableData = res.data.data.list;
                 that.paginationQuery.total = res.data.data.totalCount;
+                that.applyKnowledgeBaseNavigation(that.tableData)
             });
         },
         async getCategoryList() {
