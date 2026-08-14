@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：SandboxRuntimeModels.cs
+    文件功能描述：沙箱模板、运行时请求和配额模型
+
+
+    创建标识：Senparc - 20260808
+
+    修改标识：Senparc - 20260815
+    修改描述：v0.2.0-preview3 增加 NCF 预览沙箱工作负载
+
+----------------------------------------------------------------*/
+
 using Senparc.Xncf.Sandbox.Abstractions;
 
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;

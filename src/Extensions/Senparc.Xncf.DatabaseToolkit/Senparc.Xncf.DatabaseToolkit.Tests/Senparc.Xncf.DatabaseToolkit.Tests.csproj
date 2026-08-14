@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <Version>0.0.6</Version>
+    <Version>0.0.7</Version>
     <PackageReleaseNotes>
       [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
       1、Dependency update from Senparc.Xncf.DatabaseToolkit to 0.26.0-preview2
@@ -13,6 +13,7 @@
       [2026-08-04] v0.0.4 Dependency update from Senparc.Xncf.DatabaseToolkit to 0.27.2-preview5
       [2026-08-08] v0.0.5 Dependency update from Senparc.Xncf.DatabaseToolkit to 0.27.3-preview6
       [2026-08-13] v0.0.6 Dependency update from Senparc.Xncf.DatabaseToolkit to 0.27.4-preview7
+      [2026-08-15] v0.0.7 Dependency update from Senparc.Xncf.DatabaseToolkit to 0.27.5-preview8
 </PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>

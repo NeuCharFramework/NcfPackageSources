@@ -5,6 +5,10 @@
     文件功能描述：发布型 A2A 模型请求的安全诊断与 API Version 兼容传输
 
     创建标识：Senparc - 20260813
+
+    修改标识：Senparc - 20260815
+    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Trace;

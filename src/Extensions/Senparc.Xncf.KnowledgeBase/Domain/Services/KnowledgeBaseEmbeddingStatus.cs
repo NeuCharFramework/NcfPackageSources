@@ -4,6 +4,9 @@
     文件名：KnowledgeBaseEmbeddingStatus.cs
     文件功能描述：知识库向量发布状态
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.7.0-preview9 增强知识库向量发布状态识别
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.KnowledgeBase.Domain.Services

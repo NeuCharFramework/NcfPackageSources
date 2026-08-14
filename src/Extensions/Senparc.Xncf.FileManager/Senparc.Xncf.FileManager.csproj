@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.6.0-preview1</Version>
+    <Version>0.6.1-preview2</Version>
     <AssemblyName>Senparc.Xncf.FileManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.FileManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -50,6 +50,7 @@
       2、站点资源默认私有，显式发布后提供带 SHA-256 指纹的公开 URL 和长期缓存
       3、补齐 MIME、完整性指纹、流式下载、目录编辑删除与静态资源发布管理
       4、同步当前窗口中的资源边界模型、服务与管理页兼容性调整
+      [2026-08-15] v0.6.1-preview2 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8; Senparc.Ncf.Service to 0.23.8-preview8
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

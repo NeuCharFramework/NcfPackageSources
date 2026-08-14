@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：IXncfSandboxPreviewService.cs
+    文件功能描述：跨模块 NCF 预览沙箱启动、停止与状态契约
+
+
+    创建标识：Senparc - 20260814
+
+    修改标识：Senparc - 20260815
+    修改描述：v0.2.0-preview2 增加 NCF 预览沙箱跨模块契约
+
+----------------------------------------------------------------*/
+
 namespace Senparc.Xncf.Sandbox.Abstractions;
 
 /// <summary>

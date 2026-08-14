@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.0-preview1</Version>
+    <Version>0.2.0-preview2</Version>
     <AssemblyName>Senparc.Xncf.Sandbox.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox.Abstractions</RootNamespace>
     <Nullable>enable</Nullable>
@@ -20,6 +20,9 @@
       [2026-08-13] v0.1.0-preview1 发布沙箱契约包，供宿主与 Sandbox 模块共享 Session/Runtime 抽象
       1、提供 SandboxSessionInfo、RuntimeKind、SessionStatus 与模板键契约
       2、作为 Senparc.Xncf.Sandbox 的 NuGet 依赖独立发布，避免消费者还原失败
+      [2026-08-15] v0.2.0-preview2 增加 NCF 预览沙箱跨模块契约
+      1、提供预览启动/停止请求、状态信息和安全配置抽象，支持 XncfBuilder 与 Sandbox 解耦协作
+      2、新增固定模板键和受控依赖恢复网络约束，避免将预览能力暴露为任意 Shell 执行
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -141,6 +141,9 @@
 		[2026-08-14] v0.15.0-preview20 修正 ChatGroup 远程 A2A 超时边界
 		1、防止 Aspire 默认 Polly 管道的 30 秒 AttemptTimeout 覆盖 RemoteAgent.TimeoutSeconds
 		2、远程 A2A 请求统一使用可配置的 5-600 秒整体超时，并避免对可能已开始执行的 POST 进行隐式重试
+		3、AgentTemplate 与 ChatGroup 执行入口传递取消令牌，完善手动 Prompt 与远程请求的可取消边界
+		4、补充知识库向量发布状态与管理界面反馈，并保持本地 Agent 与发布型 A2A 的执行配置一致
+		5、完善手动 Prompt 判定回归测试，避免自然语言被错误当作 PromptRange 版本查询
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

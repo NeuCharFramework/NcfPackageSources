@@ -534,8 +534,13 @@ new Vue({
                 },
                 loop: {
                     title: '循环（For）',
-                    description: '将同一输入按指定次数依次交给下游处理。仅支持有限次数，不提供 while 或画布回连。',
-                    rows: [{ label: '重复次数', value: '固定 1–100 次，或引用上游单值' }, { label: '执行方式', value: '每轮按顺序执行，下游收到相同输入' }]
+                    description: '将同一输入按指定次数交给循环体处理。请在循环体末尾放置“循环结束”，之后的节点只执行一次。',
+                    rows: [{ label: '重复次数', value: '固定 1–100 次，或引用上游单值' }, { label: '执行方式', value: '循环 → 循环体 → 循环结束 → 后续节点' }]
+                },
+                'loop-end': {
+                    title: '循环结束',
+                    description: '标记当前 For 循环的最后一个循环体节点；它后面的节点会在所有循环轮次完成后继续执行一次。',
+                    rows: [{ label: '位置', value: '必须放在循环体末尾' }, { label: '限制', value: '循环体当前支持一条普通节点链' }]
                 },
                 'sub-workflow': {
                     title: '调用工作流',
@@ -1713,39 +1718,251 @@ new Vue({
                 : 'vertical';
             graph.layout.direction = layoutDirection;
             const nodes = graph.nodes;
+            const nodeById = new Map(nodes.map(node => [String(node.id), node]));
+            const nodeIndex = new Map(nodes.map((node, index) => [String(node.id), index]));
             const trigger = nodes.find(node => String(node.type).endsWith('trigger')) || nodes[0];
-            const level = { [trigger.id]: 0 };
-            const queue = [trigger.id];
-            while (queue.length) {
-                const current = queue.shift();
-                this.form.graph.edges.filter(edge => edge.source === current).forEach(edge => {
-                    if (typeof level[edge.target] === 'undefined') {
-                        level[edge.target] = (level[current] || 0) + 1;
-                        queue.push(edge.target);
-                    }
+            const triggerId = String(trigger.id);
+            const edges = (graph.edges || [])
+                .map((edge, index) => ({
+                    ...edge,
+                    sourceId: String(edge.source),
+                    targetId: String(edge.target),
+                    index
+                }))
+                .filter(edge => nodeById.has(edge.sourceId) && nodeById.has(edge.targetId) &&
+                    edge.sourceId !== edge.targetId);
+            const outgoing = new Map(nodes.map(node => [String(node.id), []]));
+            const incoming = new Map(nodes.map(node => [String(node.id), []]));
+            edges.forEach(edge => {
+                outgoing.get(edge.sourceId).push(edge);
+                incoming.get(edge.targetId).push(edge);
+            });
+            const edgeOrder = edge => {
+                const source = nodeById.get(edge.sourceId);
+                if (source && source.type === 'condition') {
+                    if (edge.sourceHandle === 'true') return 0;
+                    if (edge.sourceHandle === 'false') return 1;
+                }
+                return 0;
+            };
+            const compareEdges = (left, right) => edgeOrder(left) - edgeOrder(right) ||
+                left.index - right.index ||
+                (nodeIndex.get(left.targetId) || 0) - (nodeIndex.get(right.targetId) || 0);
+            outgoing.forEach(list => list.sort(compareEdges));
+
+            // Keep the trigger-reachable graph in reading order. Condition branches are
+            // deliberately visited true -> false so their semantic order remains visible.
+            const preferredOrder = new Map();
+            const visited = new Set();
+            let preferredIndex = 0;
+            const visit = nodeId => {
+                if (visited.has(nodeId)) return;
+                visited.add(nodeId);
+                preferredOrder.set(nodeId, preferredIndex++);
+                outgoing.get(nodeId).forEach(edge => visit(edge.targetId));
+            };
+            visit(triggerId);
+            nodes.forEach(node => visit(String(node.id)));
+
+            const reachable = new Set();
+            const reachabilityQueue = [triggerId];
+            while (reachabilityQueue.length) {
+                const current = reachabilityQueue.shift();
+                if (reachable.has(current)) continue;
+                reachable.add(current);
+                outgoing.get(current).forEach(edge => {
+                    if (!reachable.has(edge.targetId)) reachabilityQueue.push(edge.targetId);
                 });
             }
-            let disconnectedLevel = Math.max(0, ...Object.values(level)) + 1;
-            nodes.forEach(node => { if (typeof level[node.id] === 'undefined') level[node.id] = disconnectedLevel++; });
-            const groups = {};
-            nodes.forEach(node => { const key = level[node.id]; if (!groups[key]) groups[key] = []; groups[key].push(node); });
-            Object.keys(groups).sort((a, b) => Number(a) - Number(b)).forEach(levelKey => {
-                const group = groups[levelKey];
-                if (layoutDirection === 'horizontal') {
-                    const spacing = 142;
-                    const totalHeight = (group.length - 1) * spacing;
-                    group.forEach((node, index) => {
-                        node.x = 60 + Number(levelKey) * 300;
-                        node.y = Math.max(60, 360 - totalHeight / 2 + index * spacing);
-                    });
-                } else {
-                    const spacing = 270;
-                    const totalWidth = (group.length - 1) * spacing;
-                    group.forEach((node, index) => {
-                        node.x = Math.max(40, 500 - totalWidth / 2 + index * spacing);
-                        node.y = 60 + Number(levelKey) * 165;
+
+            // Use longest-path levels for a DAG. BFS puts a merge at the first available
+            // level, which creates long diagonal edges and needless crossings. Legacy malformed
+            // cycles fall back to the old bounded BFS behavior so auto layout always terminates.
+            const level = new Map([[triggerId, 0]]);
+            const indegree = new Map([...reachable].map(nodeId => [nodeId, 0]));
+            edges.forEach(edge => {
+                if (reachable.has(edge.sourceId) && reachable.has(edge.targetId)) {
+                    indegree.set(edge.targetId, indegree.get(edge.targetId) + 1);
+                }
+            });
+            const topologicalQueue = [...reachable].filter(nodeId => indegree.get(nodeId) === 0)
+                .sort((left, right) => preferredOrder.get(left) - preferredOrder.get(right));
+            const topologicalOrder = [];
+            while (topologicalQueue.length) {
+                const current = topologicalQueue.shift();
+                topologicalOrder.push(current);
+                outgoing.get(current).forEach(edge => {
+                    if (!reachable.has(edge.targetId)) return;
+                    const nextIndegree = indegree.get(edge.targetId) - 1;
+                    indegree.set(edge.targetId, nextIndegree);
+                    if (nextIndegree === 0) topologicalQueue.push(edge.targetId);
+                });
+            }
+            if (topologicalOrder.length === reachable.size) {
+                topologicalOrder.forEach(nodeId => {
+                    if (nodeId === triggerId) return;
+                    const predecessorLevels = incoming.get(nodeId)
+                        .filter(edge => level.has(edge.sourceId))
+                        .map(edge => level.get(edge.sourceId) + 1);
+                    level.set(nodeId, predecessorLevels.length ? Math.max(...predecessorLevels) : 0);
+                });
+            } else {
+                const boundedQueue = [triggerId];
+                while (boundedQueue.length) {
+                    const current = boundedQueue.shift();
+                    outgoing.get(current).forEach(edge => {
+                        if (!level.has(edge.targetId)) {
+                            level.set(edge.targetId, level.get(current) + 1);
+                            boundedQueue.push(edge.targetId);
+                        }
                     });
                 }
+            }
+
+            let disconnectedLevel = Math.max(0, ...level.values()) + 1;
+            nodes.forEach(node => {
+                const nodeId = String(node.id);
+                if (!level.has(nodeId)) level.set(nodeId, disconnectedLevel++);
+            });
+
+            const layers = [];
+            [...new Set(level.values())].sort((left, right) => left - right).forEach(layerNumber => {
+                const layer = nodes.filter(node => level.get(String(node.id)) === layerNumber)
+                    .map(node => String(node.id))
+                    .sort((left, right) => preferredOrder.get(left) - preferredOrder.get(right) ||
+                        (nodeIndex.get(left) || 0) - (nodeIndex.get(right) || 0));
+                layers.push(layer);
+            });
+            const positions = new Map();
+            const refreshPositions = () => {
+                layers.forEach(layer => layer.forEach((nodeId, index) => positions.set(nodeId, index)));
+            };
+            refreshPositions();
+
+            // Long edges are treated as virtual nodes during ordering: interpolate their
+            // position at each crossed layer. This gives a direct edge to a later merge a
+            // routing position without actually adding anything to the saved graph.
+            const edgePositionAtLayer = (edge, layerNumber) => {
+                const sourceLayer = level.get(edge.sourceId);
+                const targetLayer = level.get(edge.targetId);
+                if (sourceLayer >= targetLayer || layerNumber < sourceLayer || layerNumber > targetLayer) return null;
+                const sourcePosition = positions.get(edge.sourceId);
+                const targetPosition = positions.get(edge.targetId);
+                if (typeof sourcePosition !== 'number' || typeof targetPosition !== 'number') return null;
+                const ratio = (layerNumber - sourceLayer) / Math.max(1, targetLayer - sourceLayer);
+                return sourcePosition + (targetPosition - sourcePosition) * ratio;
+            };
+            const median = values => {
+                if (!values.length) return null;
+                const sorted = values.slice().sort((left, right) => left - right);
+                const middle = Math.floor(sorted.length / 2);
+                return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+            };
+            const reorderLayer = (layerIndex, direction) => {
+                const layer = layers[layerIndex];
+                const ordered = layer.map((nodeId, stableIndex) => {
+                    const referenceLayer = direction === 'down' ? layerIndex - 1 : layerIndex + 1;
+                    const relatedEdges = direction === 'down' ? incoming.get(nodeId) : outgoing.get(nodeId);
+                    const relatedPositions = relatedEdges
+                        .map(edge => edgePositionAtLayer(edge, referenceLayer))
+                        .filter(position => typeof position === 'number');
+                    return {
+                        nodeId,
+                        stableIndex,
+                        targetPosition: median(relatedPositions)
+                    };
+                });
+                ordered.sort((left, right) => {
+                    const leftPosition = left.targetPosition == null ? left.stableIndex : left.targetPosition;
+                    const rightPosition = right.targetPosition == null ? right.stableIndex : right.targetPosition;
+                    return leftPosition - rightPosition || left.stableIndex - right.stableIndex;
+                });
+                layers[layerIndex] = ordered.map(item => item.nodeId);
+                refreshPositions();
+            };
+
+            // Barycenter sweeps reduce crossings between neighboring layers. A few passes are
+            // enough for the small editor graphs and keep the operation responsive for large
+            // imported workflows.
+            for (let pass = 0; pass < 4; pass++) {
+                for (let layerIndex = 1; layerIndex < layers.length; layerIndex++) {
+                    reorderLayer(layerIndex, 'down');
+                }
+                for (let layerIndex = layers.length - 2; layerIndex > 0; layerIndex--) {
+                    reorderLayer(layerIndex, 'up');
+                }
+            }
+
+            const crossingScore = () => {
+                let score = 0;
+                for (let boundary = 0; boundary < layers.length - 1; boundary++) {
+                    const activeEdges = edges.filter(edge => {
+                        const sourceLayer = level.get(edge.sourceId);
+                        const targetLayer = level.get(edge.targetId);
+                        return sourceLayer <= boundary && targetLayer > boundary;
+                    });
+                    for (let leftIndex = 0; leftIndex < activeEdges.length; leftIndex++) {
+                        const left = activeEdges[leftIndex];
+                        const leftStart = edgePositionAtLayer(left, boundary);
+                        const leftEnd = edgePositionAtLayer(left, boundary + 1);
+                        if (leftStart == null || leftEnd == null) continue;
+                        for (let rightIndex = leftIndex + 1; rightIndex < activeEdges.length; rightIndex++) {
+                            const right = activeEdges[rightIndex];
+                            const rightStart = edgePositionAtLayer(right, boundary);
+                            const rightEnd = edgePositionAtLayer(right, boundary + 1);
+                            if (rightStart == null || rightEnd == null) continue;
+                            if ((leftStart - rightStart) * (leftEnd - rightEnd) < 0) score++;
+                        }
+                    }
+                }
+                return score;
+            };
+
+            // Resolve remaining local inversions by adjacent transposition. Unlike a global
+            // sort this preserves the semantic branch order whenever swapping would not help.
+            let optimizationBudget = Math.max(24, Math.min(180, nodes.length * 3));
+            for (let layerIndex = 1; layerIndex < layers.length; layerIndex++) {
+                if (optimizationBudget <= 0) break;
+                let improved = true;
+                let attempts = 0;
+                while (improved && attempts++ < 3 && optimizationBudget > 0) {
+                    improved = false;
+                    for (let index = 0; index < layers[layerIndex].length - 1; index++) {
+                        if (optimizationBudget-- <= 0) break;
+                        const before = crossingScore();
+                        [layers[layerIndex][index], layers[layerIndex][index + 1]] =
+                            [layers[layerIndex][index + 1], layers[layerIndex][index]];
+                        refreshPositions();
+                        const after = crossingScore();
+                        if (after < before) {
+                            improved = true;
+                        } else {
+                            [layers[layerIndex][index], layers[layerIndex][index + 1]] =
+                                [layers[layerIndex][index + 1], layers[layerIndex][index]];
+                            refreshPositions();
+                        }
+                    }
+                }
+            }
+
+            const crossSpacing = layoutDirection === 'horizontal' ? 142 : 270;
+            const layerSpacing = layoutDirection === 'horizontal' ? 300 : 165;
+            const maximumLayerSize = Math.max(1, ...layers.map(layer => layer.length));
+            const crossCenter = layoutDirection === 'horizontal'
+                ? Math.max(360, 60 + (maximumLayerSize - 1) * crossSpacing / 2)
+                : Math.max(500, 80 + (maximumLayerSize - 1) * crossSpacing / 2);
+            layers.forEach((layer, layerIndex) => {
+                const totalCrossSize = (layer.length - 1) * crossSpacing;
+                layer.forEach((nodeId, index) => {
+                    const node = nodeById.get(nodeId);
+                    if (layoutDirection === 'horizontal') {
+                        node.x = 60 + layerIndex * layerSpacing;
+                        node.y = Math.max(60, crossCenter - totalCrossSize / 2 + index * crossSpacing);
+                    } else {
+                        node.x = Math.max(40, crossCenter - totalCrossSize / 2 + index * crossSpacing);
+                        node.y = 60 + layerIndex * layerSpacing;
+                    }
+                });
             });
             this.updateCanvasSize();
         },
@@ -1911,6 +2128,7 @@ new Vue({
             if (node.type === 'loop') return this.isBinding(node.config?.count)
                 ? '从上游读取次数（最多 100 次）'
                 : `顺序重复 ${node.config?.count || 3} 次`;
+            if (node.type === 'loop-end') return '循环体结束后再继续向下执行';
             if (node.type === 'sub-workflow') {
                 const workflow = (this.workflows || []).find(item => Number(item.id) === Number(node.config?.workflowId || 0));
                 return workflow ? '调用：' + workflow.name : '请选择目标工作流';
@@ -2498,6 +2716,62 @@ new Vue({
             const value = node && node.config[key];
             return this.isBinding(value) ? [value.$source.nodeId, value.$source.path || '$'] : [];
         },
+        loopBoundaryNodes(loop) {
+            if (!loop || !this.form?.graph) return [];
+            const nodes = this.form.graph.nodes || [];
+            const edges = this.form.graph.edges || [];
+            const byId = new Map(nodes.map(node => [node.id, node]));
+            const queue = edges.filter(edge => edge.source === loop.id).map(edge => edge.target);
+            const visited = new Set();
+            const boundaries = [];
+            while (queue.length) {
+                const current = queue.shift();
+                if (visited.has(current)) continue;
+                visited.add(current);
+                const node = byId.get(current);
+                if (!node) continue;
+                if (node.type === 'loop-end') {
+                    boundaries.push(node);
+                    continue;
+                }
+                edges.filter(edge => edge.source === current).forEach(edge => queue.push(edge.target));
+            }
+            return boundaries;
+        },
+        loopBoundaryValidationError(loop) {
+            const graph = this.form?.graph;
+            const boundaries = this.loopBoundaryNodes(loop);
+            if (!boundaries.length) return '';
+            if (boundaries.length > 1) return `循环节点“${loop.name}”的循环体只能有一个“循环结束”节点。`;
+            const boundary = boundaries[0];
+            const byId = new Map((graph.nodes || []).map(node => [node.id, node]));
+            const outgoing = (graph.edges || []).filter(edge => edge.source === loop.id);
+            if (outgoing.length !== 1) return `循环节点“${loop.name}”必须连接一个循环体入口。`;
+            let currentId = outgoing[0].target;
+            let previousId = loop.id;
+            const visited = new Set();
+            while (currentId !== boundary.id) {
+                if (visited.has(currentId)) return `循环节点“${loop.name}”的循环体路径无效。`;
+                visited.add(currentId);
+                const current = byId.get(currentId);
+                if (!current) return '循环体引用了不存在的节点。';
+                if (['condition', 'parallel', 'aggregate', 'merge', 'loop', 'end'].includes(current.type)) {
+                    return `循环节点“${loop.name}”当前只支持普通节点组成的单一路径。`;
+                }
+                const incoming = (graph.edges || []).filter(edge => edge.target === currentId);
+                if (incoming.length !== 1 || incoming[0].source !== previousId) {
+                    return `循环体节点“${current.name}”不能被循环外路径共享。`;
+                }
+                const next = (graph.edges || []).filter(edge => edge.source === currentId);
+                if (next.length !== 1) return `循环节点“${loop.name}”的循环体必须是一条单一路径。`;
+                previousId = currentId;
+                currentId = next[0].target;
+            }
+            const boundaryIncoming = (graph.edges || []).filter(edge => edge.target === boundary.id);
+            return boundaryIncoming.length !== 1 || boundaryIncoming[0].source !== previousId
+                ? '循环结束节点必须是循环体的唯一最后节点。'
+                : '';
+        },
         loopCountOutputOptions() {
             return this.upstreamNodes(this.selectedNode).map(node => ({
                 value: node.id,
@@ -2605,11 +2879,17 @@ new Vue({
                 if (String(node.config.outputTemplate).length > 8000) return `聚合节点“${node.name}”的输出内容不能超过 8000 个字符。`;
             }
             for (const node of this.form.graph.nodes.filter(item => item.type === 'loop')) {
-                if (this.isBinding(node.config?.count)) continue;
+                if (this.isBinding(node.config?.count)) {
+                    const loopBoundaryError = this.loopBoundaryValidationError(node);
+                    if (loopBoundaryError) return loopBoundaryError;
+                    continue;
+                }
                 const count = Number(node.config?.count);
                 if (!Number.isInteger(count) || count < 1 || count > 100) {
                     return `循环节点“${node.name}”的次数必须为 1 到 100 的整数，或引用上游单值。`;
                 }
+                const loopBoundaryError = this.loopBoundaryValidationError(node);
+                if (loopBoundaryError) return loopBoundaryError;
             }
             for (const node of this.form.graph.nodes.filter(item => item.type === 'code')) {
                 const assignments = Array.isArray(node.config?.assignments) ? node.config.assignments : [];

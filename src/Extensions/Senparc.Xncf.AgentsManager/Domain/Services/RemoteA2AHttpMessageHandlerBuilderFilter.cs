@@ -7,6 +7,9 @@
 
     创建标识：Senparc - 20260814
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Http;

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260724
     修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.5.1 优化管理端 AI 插件与知识库交互
+
 ----------------------------------------------------------------*/
 using Microsoft.SemanticKernel;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;

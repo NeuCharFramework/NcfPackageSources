@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.FunctionRenders;

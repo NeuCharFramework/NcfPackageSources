@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>0.4.1-preview5</Version>
+    <Version>0.4.2-preview6</Version>
     <AssemblyName>Senparc.Xncf.DesktopBridge</AssemblyName>
     <RootNamespace>Senparc.Xncf.DesktopBridge</RootNamespace>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
@@ -49,6 +49,7 @@
       2、扩展 DesktopBridge API 与活动消息，覆盖换票发起、确认与兑换流程
       3、完善模块注册以接入管理员令牌签发协作
       [2026-08-13] v0.4.1-preview5 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.Shared.Abstractions to 0.6.0-preview5; Senparc.Ncf.XncfBase to 0.25.0-preview7
+      [2026-08-15] v0.4.2-preview6 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
 </PackageReleaseNotes>
   </PropertyGroup>
 

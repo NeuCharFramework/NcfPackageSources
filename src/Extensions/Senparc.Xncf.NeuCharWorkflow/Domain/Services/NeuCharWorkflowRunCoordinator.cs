@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.2.0-preview2 增强工作流并行与运行控制
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

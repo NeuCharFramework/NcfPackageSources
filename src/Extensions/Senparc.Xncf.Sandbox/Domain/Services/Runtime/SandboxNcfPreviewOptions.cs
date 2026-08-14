@@ -6,6 +6,9 @@
 
     创建标识：Senparc - 20260814
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.2.0-preview3 增加 NCF 预览沙箱工作负载
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;

@@ -96,6 +96,7 @@
 		[2026-08-14] v0.15.3-preview12 修复 AIModel 指定模型测试的配置穿透
 		1、RunModelsync 使用调用方传入的 SenparcAiSetting 创建 AgentKernel，不再误用系统默认模型
 		2、避免默认模型成功被误判为数据库目标模型可用
+		3、统一指定模型在 NeuCharAI 与 AzureOpenAI 初始化时的兼容 API Version 默认值，并保证 RunModelsync 使用传入模型配置
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>

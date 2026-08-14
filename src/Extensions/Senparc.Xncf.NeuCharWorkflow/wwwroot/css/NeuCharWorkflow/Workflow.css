@@ -258,6 +258,7 @@
 .workflow-node-picker .node-picker-merge { border-left-color: #d97917; }
 .workflow-node-picker .node-picker-parallel { border-left-color: #7957d5; }
 .workflow-node-picker .node-picker-loop { border-left-color: #2f855a; }
+.workflow-node-picker .node-picker-loop-end { border-left-color: #208a8a; }
 .workflow-node-picker .node-picker-sub-workflow { border-left-color: #1976a8; }
 .workflow-node-picker .node-picker-code { border-left-color: #5b5bd6; }
 .workflow-node-picker .node-picker-console { border-left-color: #34495e; }
@@ -588,6 +589,7 @@
 .workflow-node.node-merge { border-left-color: #d97917; }
 .workflow-node.node-parallel { border-left-color: #7957d5; }
 .workflow-node.node-loop { border-left-color: #2f855a; }
+.workflow-node.node-loop-end { border-left-color: #208a8a; }
 .workflow-node.node-sub-workflow { border-left-color: #1976a8; }
 .workflow-node.node-code { border-left-color: #5b5bd6; }
 .workflow-node.node-console { border-left-color: #34495e; }

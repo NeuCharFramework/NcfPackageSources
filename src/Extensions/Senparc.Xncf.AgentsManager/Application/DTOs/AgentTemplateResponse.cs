@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
 
+    修改标识：Senparc - 20260815
+    修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
