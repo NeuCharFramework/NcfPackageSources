@@ -19,6 +19,73 @@ namespace Senparc.Areas.Admin.Tests.Domain.Services;
 public class NeuCharWorkflowEngineTests
 {
     [TestMethod]
+    public void ParseAndValidateGraph_HumanInputNode_ShouldNormalizeExternalResumeSettings()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "human", "type": "human-input", "name": "补充信息", "config": { "externalResumeEnabled": true, "externalResumeKey": "resume-key" } }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "human" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+        var node = graph.Nodes.Single(z => z.Id == "human");
+
+        Assert.AreEqual("Workflow 等待人工输入", node.Config["title"]!.GetValue<string>());
+        Assert.AreEqual("请补充必要信息：{{input}}", node.Config["prompt"]!.GetValue<string>());
+        Assert.IsTrue(node.Config["externalResumeEnabled"]!.GetValue<bool>());
+        Assert.AreEqual("resume-key", node.Config["externalResumeKey"]!.GetValue<string>());
+    }
+
+    [TestMethod]
+    public async Task ValidateReferencesAsync_HumanInputNodeWithoutExternalKey_ShouldBeRejected()
+    {
+        var engine = CreateEngine();
+        var graph = engine.ParseAndValidateGraph(
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"human", "type":"human-input", "config":{ "externalResumeEnabled":true } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"human" }] }""");
+
+        var error = await engine.ValidateReferencesAsync(graph);
+
+        StringAssert.Contains(error, "未设置恢复密钥");
+    }
+
+    [TestMethod]
+    public async Task HumanInputService_ExternalResolution_ShouldRequireKeyAndCompleteRequest()
+    {
+        var service = new NeuCharWorkflowHumanInputService();
+        var pending = service.Create(
+            7,
+            "workflow-7-run-42",
+            13,
+            "human-node",
+            "人工补充",
+            "请提供工单号",
+            true,
+            "resume-key");
+
+        Assert.AreEqual(0, service.GetExternalPending(7, "incorrect-key").Count);
+        Assert.AreEqual(pending.RequestId, service.GetExternalPending(7, "resume-key").Single().RequestId);
+
+        var rejected = await service.ResolveFromExternalAsync(pending.RequestId, "incorrect-key", true, "T-100");
+        Assert.IsFalse(rejected.Success);
+
+        var resolved = await service.ResolveFromExternalAsync(pending.RequestId, "resume-key", true, "T-100");
+        var decision = await pending.Completion;
+
+        Assert.IsTrue(resolved.Success);
+        Assert.IsTrue(decision.Approved);
+        Assert.AreEqual("T-100", decision.Input);
+        Assert.AreEqual(0, service.GetExternalPending(7, "resume-key").Count);
+    }
+
+    [TestMethod]
     public void ParseAndValidateGraph_ValidLinearGraph_ShouldNormalizeConfig()
     {
         var engine = CreateEngine();

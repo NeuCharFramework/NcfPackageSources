@@ -35,6 +35,7 @@ if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
                     { type: 'parallel', name: '并行', label: '并行', icon: 'el-icon-share' },
                     { type: 'console', name: 'Console 打印', label: 'Console', icon: 'el-icon-monitor' },
                     { type: 'neubell', name: '发送纽铃', label: '发送纽铃', icon: 'el-icon-bell' },
+                    { type: 'human-input', name: '等待人工输入', label: '人工输入', icon: 'el-icon-user-solid' },
                     { type: 'end', name: '结束', label: '结束', icon: 'el-icon-circle-check' }
                 ]
             };
@@ -708,6 +709,11 @@ new Vue({
                     description: '向订阅者发送 NeuBell 提醒，并可设定点击后的消费方式。',
                     rows: [{ label: '可配置项', value: '订阅、标题、内容、消费方式' }, { label: '可选消费', value: '当前提醒 / 当前订阅全部 / 仅查看' }]
                 },
+                'human-input': {
+                    title: '等待人工输入',
+                    description: '创建一条 NeuBell 提醒并暂停当前分支，直到后台用户或持有恢复密钥的外部程序提交文本。',
+                    rows: [{ label: '输出', value: '人工提交的文本' }, { label: '外部恢复', value: '启用后可使用一次请求 ID 与节点恢复密钥调用内部 WebAPI' }]
+                },
                 end: {
                     title: '结束',
                     description: '标记工作流的结束位置；不能插入到已有连线中。',
@@ -961,8 +967,22 @@ new Vue({
                     : type === 'console' ? { printTemplate: '{{input}}' }
                     : type === 'neubell'
                         ? { title: 'Workflow 提醒', summary: '{{input}}', consumeMode: 'item' }
+                        : type === 'human-input'
+                            ? { title: 'Workflow 等待人工输入', prompt: '请补充必要信息：{{input}}', externalResumeEnabled: false, externalResumeKey: '' }
                         : {};
             return { id: this.makeId(type), type, name, x: 80, y: 80, config };
+        },
+        generateHumanInputExternalKey(node) {
+            if (this.editingLocked || !node || node.type !== 'human-input') return;
+            const cryptoApi = window.crypto;
+            if (!cryptoApi || typeof cryptoApi.getRandomValues !== 'function') {
+                this.$message.error('当前浏览器无法安全生成恢复密钥，请手动填写高强度随机密钥。');
+                return;
+            }
+            const bytes = new Uint8Array(32);
+            cryptoApi.getRandomValues(bytes);
+            node.config.externalResumeKey = Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+            this.$message.success('已生成新的外部恢复密钥；保存后请交给可信的外部调用方。');
         },
         createFunctionNode(fn) {
             return {
@@ -2307,6 +2327,7 @@ new Vue({
                 return mode === 'provider' ? '点击后消费本订阅全部提醒'
                     : mode === 'item' ? '点击后消费当前提醒' : '点击后仅查看任务';
             }
+            if (node.type === 'human-input') return node.config?.externalResumeEnabled ? '等待人工输入或外部 API 恢复' : '等待人工输入';
             if (node.type === 'end') return '流程在此结束';
             return node.type === 'agent-group' ? 'Agent 组' : node.type === 'agent' ? '独立 Agent' : node.type === 'a2a' ? '远程 A2A Agent' : node.type;
         },
@@ -2550,7 +2571,7 @@ new Vue({
                     ? parameters.filter(parameter => String(parameter.name || '').trim()).map(parameter => ({ path: `$.${String(parameter.name).trim()}`, label: parameter.name, typeName: 'any', isArray: false, requiresIndex: false }))
                     : [{ path: '$', label: 'Webhook 输入', typeName: 'object', isArray: false, requiresIndex: false }];
             }
-            if (['manual-trigger', 'interval-trigger', 'webhook-trigger', 'agent', 'agent-group', 'a2a', 'sub-workflow'].includes(node.type)) return [{ path: '$', label: '文本输出', typeName: 'string', isArray: false, requiresIndex: false }];
+            if (['manual-trigger', 'interval-trigger', 'webhook-trigger', 'agent', 'agent-group', 'a2a', 'sub-workflow', 'human-input'].includes(node.type)) return [{ path: '$', label: '文本输出', typeName: 'string', isArray: false, requiresIndex: false }];
             const incoming = this.form.graph.edges.find(edge => edge.target === node.id);
             const source = incoming && this.form.graph.nodes.find(item => item.id === incoming.source);
             return source ? this.nodeOutputFields(source, visited) : [{ path: '$', label: '节点输出', typeName: 'any', isArray: false, requiresIndex: false }];
@@ -3511,14 +3532,17 @@ new Vue({
         openHumanInteraction(request) {
             if (!request) return;
             this.run.humanReplyRequest = request;
-            this.run.humanReplyInput = request.requestType === 'humanTurn' ? '' : (request.prompt || '');
+            this.run.humanReplyInput = this.requiresHumanTextInput(request) ? '' : (request.prompt || '');
             this.run.humanReplyVisible = true;
+        },
+        requiresHumanTextInput(request) {
+            return ['humanTurn', 'workflowInput'].includes(String(request?.requestType || ''));
         },
         async resolveHumanInteraction(approved) {
             const request = this.run.humanReplyRequest;
             if (!request || this.run.humanReplySubmitting || !this.run.runId) return;
-            const isHumanTurn = request.requestType === 'humanTurn';
-            if (isHumanTurn && !String(this.run.humanReplyInput || '').trim()) {
+            const requiresTextInput = this.requiresHumanTextInput(request);
+            if (requiresTextInput && !String(this.run.humanReplyInput || '').trim()) {
                 this.$notify({ title: '需要 Human 输入', message: '请输入文本后再继续 Workflow。', type: 'warning' });
                 return;
             }
@@ -3528,7 +3552,7 @@ new Vue({
                     runId: this.run.runId,
                     requestId: request.requestId,
                     approved: !!approved,
-                    input: isHumanTurn ? String(this.run.humanReplyInput || '').trim() : '',
+                    input: requiresTextInput ? String(this.run.humanReplyInput || '').trim() : '',
                     reason: isHumanTurn ? 'Workflow 快速输入' : 'Workflow 快速审批'
                 }, { customAlert: true });
                 this.run.humanInteractions = this.run.humanInteractions.filter(item => item.requestId !== request.requestId);

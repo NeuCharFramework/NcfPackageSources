@@ -50,6 +50,7 @@ public sealed class NeuCharWorkflowAppService
     private readonly WorkflowEventPublisher _eventPublisher;
     private readonly XncfModuleService _xncfModuleService;
     private readonly IWorkflowHumanInteractionBridge _humanInteractionBridge;
+    private readonly NeuCharWorkflowHumanInputService _humanInputService;
 
     public NeuCharWorkflowAppService(
         NeuCharWorkflowService workflowService,
@@ -60,7 +61,8 @@ public sealed class NeuCharWorkflowAppService
         NeuCharWorkflowRunCoordinator runCoordinator,
         WorkflowEventPublisher eventPublisher,
         XncfModuleService xncfModuleService,
-        IWorkflowHumanInteractionBridge humanInteractionBridge)
+        IWorkflowHumanInteractionBridge humanInteractionBridge,
+        NeuCharWorkflowHumanInputService humanInputService)
     {
         _workflowService = workflowService;
         _workflowVersionService = workflowVersionService;
@@ -71,6 +73,7 @@ public sealed class NeuCharWorkflowAppService
         _eventPublisher = eventPublisher;
         _xncfModuleService = xncfModuleService;
         _humanInteractionBridge = humanInteractionBridge;
+        _humanInputService = humanInputService;
     }
 
     public async Task<IReadOnlyList<WorkflowListItem>> GetListAsync(int adminUserId, CancellationToken cancellationToken = default)
@@ -300,10 +303,18 @@ public sealed class NeuCharWorkflowAppService
             return null;
         }
 
-        var interactions = await _humanInteractionBridge.GetPendingAsync(
-            BuildRunCorrelationId(snapshot.WorkflowId, runId),
+        var correlationId = BuildRunCorrelationId(snapshot.WorkflowId, runId);
+        var nativeInteractions = _humanInputService.GetPendingInteractions(
+            correlationId,
+            adminUserId.ToString());
+        var agentInteractions = await _humanInteractionBridge.GetPendingAsync(
+            correlationId,
             adminUserId.ToString(),
             cancellationToken).ConfigureAwait(false);
+        var interactions = nativeInteractions
+            .Concat(agentInteractions)
+            .OrderBy(interaction => interaction.CreatedAt)
+            .ToList();
         return snapshot with { HumanInteractions = interactions };
     }
 
@@ -330,8 +341,27 @@ public sealed class NeuCharWorkflowAppService
             return new WorkflowHumanInteractionResult(false, false, null, null, "Workflow 运行不存在或不属于当前账号。");
         }
 
+        var correlationId = BuildRunCorrelationId(snapshot.WorkflowId, runId);
+        var nativeResolution = await _humanInputService.ResolveForAdminAsync(
+            correlationId,
+            adminUserId.ToString(),
+            requestId,
+            approved,
+            input,
+            reason,
+            cancellationToken).ConfigureAwait(false);
+        if (nativeResolution.Handled)
+        {
+            return new WorkflowHumanInteractionResult(
+                nativeResolution.Success,
+                nativeResolution.Approved,
+                nativeResolution.Input,
+                nativeResolution.Reason,
+                nativeResolution.Message);
+        }
+
         return await _humanInteractionBridge.ResolveAsync(
-            BuildRunCorrelationId(snapshot.WorkflowId, runId),
+            correlationId,
             adminUserId.ToString(),
             requestId,
             approved,

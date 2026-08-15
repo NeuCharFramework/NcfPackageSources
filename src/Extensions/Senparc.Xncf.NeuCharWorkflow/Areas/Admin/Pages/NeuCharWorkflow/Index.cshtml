@@ -922,6 +922,61 @@
                                             <p class="node-config-help">用于有明确查看即已读场景；例如 DesktopBridge 等需要业务审核的提醒应选择“只查看”。</p>
                                         </el-form-item>
                                     </template>
+                                    <template v-if="selectedNode.type==='human-input'">
+                                        <el-form-item label="提醒标题">
+                                            <workflow-rich-text-input v-model="selectedNode.config.title"
+                                                                      :disabled="editingLocked"
+                                                                      :maxlength="200"
+                                                                      :show-word-limit="true"
+                                                                      :help-text="'创建等待项时会发送 NeuBell；标题支持 {{input}}、受限公式和上游变量。'"
+                                                                      placeholder="例如：请补充审批意见"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'title',{fieldLabel:'人工输入提醒标题'})"></workflow-rich-text-input>
+                                        </el-form-item>
+                                        <el-form-item label="人工输入提示">
+                                            <workflow-rich-text-input v-model="selectedNode.config.prompt"
+                                                                      multiline
+                                                                      :rows="4"
+                                                                      :disabled="editingLocked"
+                                                                      :maxlength="4000"
+                                                                      :show-word-limit="true"
+                                                                      :help-text="'提示会显示在 Workflow 快速处理面板，并随 NeuBell 提醒发送；支持 {{input}}、受限公式和上游变量。'"
+                                                                      placeholder="例如：请说明审批结论和下一步处理方式"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'人工输入提示'})"></workflow-rich-text-input>
+                                        </el-form-item>
+                                        <el-form-item label="允许外部恢复">
+                                            <el-switch v-model="selectedNode.config.externalResumeEnabled"
+                                                       :disabled="editingLocked"
+                                                       active-text="允许持有密钥的外部程序提交输入"
+                                                       inactive-text="仅允许后台用户处理"></el-switch>
+                                        </el-form-item>
+                                        <template v-if="selectedNode.config.externalResumeEnabled">
+                                            <el-form-item label="外部恢复密钥">
+                                                <el-input v-model="selectedNode.config.externalResumeKey"
+                                                          type="password"
+                                                          show-password
+                                                          :disabled="editingLocked"
+                                                          maxlength="512"
+                                                          autocomplete="new-password"
+                                                          placeholder="保存后不会再返回；留空将保留已保存密钥"></el-input>
+                                                <el-button size="mini"
+                                                           icon="el-icon-key"
+                                                           :disabled="editingLocked"
+                                                           @@click="generateHumanInputExternalKey(selectedNode)">生成新密钥</el-button>
+                                                <p class="node-config-help">外部接口仅接受此节点密钥；密钥会加密保存，重新打开编辑器时不会显示。更换密钥后，正在等待的旧请求仍使用启动该次运行时的密钥。</p>
+                                            </el-form-item>
+                                            <el-alert title="内部 WebAPI（无需后台登录）"
+                                                      type="warning"
+                                                      :closable="false"
+                                                      show-icon>
+                                                <p v-pre>GET /api/Senparc.Xncf.NeuCharWorkflow/neuchar-workflow/human-input/pending/{workflowId}</p>
+                                                <p v-pre>POST /api/Senparc.Xncf.NeuCharWorkflow/neuchar-workflow/human-input/{requestId}</p>
+                                                <p>请求头使用 <code>X-NeuChar-Workflow-Resume-Key</code>；POST JSON 至少提供 <code>{"input":"人工文本"}</code>。</p>
+                                            </el-alert>
+                                        </template>
+                                        <el-alert title="运行到此节点会创建一条 NeuBell，并暂停当前分支；后台快速处理或已启用的外部 API 都会恢复同一个运行。Agent/Group 自身触发的 HIL 会继续复用下方同一 Workflow HIL 面板。"
+                                                  type="info"
+                                                  :closable="false"></el-alert>
+                                    </template>
                                     <template v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group' || selectedNode.type==='a2a'">
                                         <div class="workflow-object-card">
                                             <div class="workflow-object-card-header">
@@ -1126,7 +1181,7 @@
                                append-to-body
                                @@close="closeHumanInteractionDialog">
                         <template v-if="run.humanReplyRequest">
-                            <el-alert v-if="run.humanReplyRequest.requestType==='humanTurn'"
+                            <el-alert v-if="requiresHumanTextInput(run.humanReplyRequest)"
                                       title="当前轮次需要 Human 输入，提交后 Workflow 会继续等待或向下执行。"
                                       type="info"
                                       :closable="false"
@@ -1138,7 +1193,7 @@
                                       show-icon></el-alert>
                             <p class="workflow-human-prompt">{{run.humanReplyRequest.prompt}}</p>
                             <pre v-if="run.humanReplyRequest.toolArguments" class="workflow-human-tool-arguments">{{run.humanReplyRequest.toolArguments}}</pre>
-                            <el-input v-if="run.humanReplyRequest.requestType==='humanTurn'"
+                            <el-input v-if="requiresHumanTextInput(run.humanReplyRequest)"
                                       v-model="run.humanReplyInput"
                                       type="textarea"
                                       :rows="5"
@@ -1148,14 +1203,14 @@
                         </template>
                         <span slot="footer" class="dialog-footer">
                             <el-button @@click="closeHumanInteractionDialog">稍后处理</el-button>
-                            <el-button v-if="run.humanReplyRequest && run.humanReplyRequest.requestType!=='humanTurn'"
+                            <el-button v-if="run.humanReplyRequest && !requiresHumanTextInput(run.humanReplyRequest)"
                                        type="danger"
                                        plain
                                        :loading="run.humanReplySubmitting"
                                        @@click="resolveHumanInteraction(false)">拒绝</el-button>
                             <el-button type="primary"
                                        :loading="run.humanReplySubmitting"
-                                       @@click="resolveHumanInteraction(true)">{{run.humanReplyRequest && run.humanReplyRequest.requestType==='humanTurn'?'提交并继续':'同意并继续'}}</el-button>
+                                       @@click="resolveHumanInteraction(true)">{{run.humanReplyRequest && requiresHumanTextInput(run.humanReplyRequest)?'提交并继续':'同意并继续'}}</el-button>
                         </span>
                     </el-dialog>
                     <div v-show="run.consoleOpen" class="workflow-console">

@@ -56,6 +56,10 @@ assert.ok(workflowPageMarkup.includes('调用工作流') || workflowScript.inclu
     'The picker and node inspector must expose the sub-workflow node.');
 assert.ok(workflowPageMarkup.includes('安全代码'),
     'The picker and node inspector must expose the constrained Safe Code node.');
+assert.ok(workflowScript.includes("type: 'human-input'") && workflowPageMarkup.includes("selectedNode.type==='human-input'"),
+    'The picker and node inspector must expose the native human-input system node.');
+assert.ok(workflowPageMarkup.includes('X-NeuChar-Workflow-Resume-Key'),
+    'The human-input inspector must document the key-protected external resume contract.');
 assert.ok(workflowPageMarkup.includes('A2A'),
     'Remote A2A objects must be visually distinguishable in the picker.');
 assert.ok(workflowPageMarkup.includes('node-input-continue') && workflowPageMarkup.includes('node-input-break'),
@@ -152,6 +156,8 @@ assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('openSubWorkflow(workflow
     'The sub-workflow selector must support opening a target workflow in a separate tab.');
 assert.ok(fs.readFileSync(stylePath, 'utf8').includes('node-a2a'),
     'The canvas must assign remote A2A nodes their own visual style.');
+assert.ok(fs.readFileSync(stylePath, 'utf8').includes('node-human-input'),
+    'The canvas must assign human-input nodes their own visual style.');
 
 let previewEvent = null;
 const nodePickerMethods = registeredVueComponents['workflow-node-picker'].methods;
@@ -175,6 +181,8 @@ assert.strictEqual(nodePicker.computed.filteredObjects.call(Object.assign({}, no
     'The shared node search should match remote A2A objects by protocol/type text.');
 assert.strictEqual(nodePicker.computed.filteredSystemNodes.call(Object.assign({}, nodePickerContext, { keyword: '循环' })).length, 2,
     'The shared node search should include system nodes by their visible names.');
+assert.strictEqual(nodePicker.computed.filteredSystemNodes.call(Object.assign({}, nodePickerContext, { keyword: '人工输入' })).length, 1,
+    'The shared node search should surface the human-input system node.');
 assert.strictEqual(nodePicker.computed.filteredFunctions.call(Object.assign({}, nodePickerContext, { keyword: '摘要' })).length, 1,
     'The shared node search should retain Function name matching.');
 nodePickerMethods.previewNode.call({

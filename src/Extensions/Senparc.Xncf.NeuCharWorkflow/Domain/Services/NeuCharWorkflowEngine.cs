@@ -106,10 +106,11 @@ public sealed class NeuCharWorkflowEngine
     private const int MaxWorkflowVariables = 30;
     private const string WorkflowVariablesOutputKey = "__workflow_variables__";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly string[] HumanInputSecretNames = { "externalResumeKey" };
     private static readonly HashSet<string> AllowedNodeTypes = new(StringComparer.OrdinalIgnoreCase)
     {
         "manual-trigger", "interval-trigger", "webhook-trigger", "function", "delay", "condition", "agent", "agent-group", "a2a",
-        "aggregate", "merge", "parallel", "loop", "loop-end", "sub-workflow", "code", "console", "neubell", "end"
+        "aggregate", "merge", "parallel", "loop", "loop-end", "sub-workflow", "code", "console", "neubell", "human-input", "end"
     };
 
     private sealed record ResolvedFunctionReference(
@@ -153,6 +154,7 @@ public sealed class NeuCharWorkflowEngine
     private readonly IReadOnlyDictionary<string, IWorkflowObjectProvider> _objectProviders;
     private readonly NeuCharWorkflowNeuBellProvider? _neuBellProvider;
     private readonly INeuBellPublisher? _neuBellPublisher;
+    private readonly NeuCharWorkflowHumanInputService? _humanInputService;
 
     public NeuCharWorkflowEngine(
         NeuCharWorkflowService workflowService,
@@ -161,7 +163,8 @@ public sealed class NeuCharWorkflowEngine
         NeuCharWorkflowParameterProtector parameterProtector,
         IEnumerable<IWorkflowObjectProvider> objectProviders,
         NeuCharWorkflowNeuBellProvider? neuBellProvider = null,
-        INeuBellPublisher? neuBellPublisher = null)
+        INeuBellPublisher? neuBellPublisher = null,
+        NeuCharWorkflowHumanInputService? humanInputService = null)
     {
         _workflowService = workflowService;
         _scopeFactory = scopeFactory;
@@ -172,6 +175,7 @@ public sealed class NeuCharWorkflowEngine
             .ToDictionary(z => z.Key, z => z.First(), StringComparer.OrdinalIgnoreCase);
         _neuBellProvider = neuBellProvider;
         _neuBellPublisher = neuBellPublisher;
+        _humanInputService = humanInputService;
     }
 
     /// <summary>
@@ -235,6 +239,13 @@ public sealed class NeuCharWorkflowEngine
                 !node.Config.ContainsKey("breakOn"))
             {
                 node.Config["breakOn"] = string.Empty;
+            }
+            if (node.Type.Equals("human-input", StringComparison.OrdinalIgnoreCase))
+            {
+                node.Config["title"] ??= "Workflow 等待人工输入";
+                node.Config["prompt"] ??= "请补充必要信息：{{input}}";
+                node.Config["externalResumeEnabled"] ??= false;
+                node.Config["externalResumeKey"] ??= string.Empty;
             }
             // Code is deliberately an assignment list rather than arbitrary JavaScript. This
             // keeps a workflow's state changes inspectable, bounded and safe to replay.
@@ -496,6 +507,18 @@ public sealed class NeuCharWorkflowEngine
                     return $"节点“{node.Name ?? node.Id}”的纽铃标题或内容超过允许长度。";
                 }
             }
+            else if (node.Type.Equals("human-input", StringComparison.OrdinalIgnoreCase))
+            {
+                if (GetRuntimeText(node.Config, "title")?.Length > 200 || GetRuntimeText(node.Config, "prompt")?.Length > 4_000)
+                {
+                    return $"节点“{node.Name ?? node.Id}”的人工输入标题或提示内容超过允许长度。";
+                }
+                if (GetBool(node.Config, "externalResumeEnabled") &&
+                    string.IsNullOrWhiteSpace(GetString(node.Config, "externalResumeKey")))
+                {
+                    return $"节点“{node.Name ?? node.Id}”已启用外部恢复，但未设置恢复密钥。";
+                }
+            }
             else if (node.Type.Equals("agent", StringComparison.OrdinalIgnoreCase) ||
                      node.Type.Equals("agent-group", StringComparison.OrdinalIgnoreCase) ||
                      node.Type.Equals("a2a", StringComparison.OrdinalIgnoreCase))
@@ -632,6 +655,20 @@ public sealed class NeuCharWorkflowEngine
                 secretNames);
             node.Config["parameters"] = JsonNode.Parse(mergedJson);
         }
+
+        foreach (var node in graph.Nodes.Where(z =>
+                     z.Type.Equals("human-input", StringComparison.OrdinalIgnoreCase)))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var existingNode = existingGraph?.Nodes.FirstOrDefault(z =>
+                string.Equals(z.Id, node.Id, StringComparison.Ordinal) &&
+                z.Type.Equals("human-input", StringComparison.OrdinalIgnoreCase));
+            var mergedJson = _parameterProtector.MergeWithExisting(
+                node.Config?.ToJsonString() ?? "{}",
+                existingNode?.Config?.ToJsonString(),
+                HumanInputSecretNames);
+            node.Config = JsonNode.Parse(mergedJson) as JsonObject ?? new JsonObject();
+        }
     }
 
     public async Task ProtectSecretsAsync(
@@ -658,6 +695,16 @@ public sealed class NeuCharWorkflowEngine
                 secretNames);
             node.Config["parameters"] = JsonNode.Parse(protectedJson);
         }
+
+        foreach (var node in graph.Nodes.Where(z =>
+                     z.Type.Equals("human-input", StringComparison.OrdinalIgnoreCase)))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var protectedJson = _parameterProtector.Protect(
+                node.Config?.ToJsonString() ?? "{}",
+                HumanInputSecretNames);
+            node.Config = JsonNode.Parse(protectedJson) as JsonObject ?? new JsonObject();
+        }
     }
 
     public async Task<string> BuildEditableGraphJsonAsync(
@@ -682,6 +729,15 @@ public sealed class NeuCharWorkflowEngine
                     .Where(z => z.ParameterType == Senparc.Ncf.XncfBase.ParameterType.Password)
                     .Select(z => z.Name));
             node.Config["parameters"] = JsonNode.Parse(maskedJson);
+        }
+        foreach (var node in graph.Nodes.Where(z =>
+                     z.Type.Equals("human-input", StringComparison.OrdinalIgnoreCase)))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var maskedJson = _parameterProtector.MaskForClient(
+                node.Config?.ToJsonString() ?? "{}",
+                HumanInputSecretNames);
+            node.Config = JsonNode.Parse(maskedJson) as JsonObject ?? new JsonObject();
         }
         return JsonSerializer.Serialize(graph, JsonOptions);
     }
@@ -1290,6 +1346,16 @@ public sealed class NeuCharWorkflowEngine
                         correlationId,
                         cancellationToken)
                     .ConfigureAwait(false);
+            case "human-input":
+                return await ExecuteHumanInputNodeAsync(
+                        workflow,
+                        node,
+                        input,
+                        outputs,
+                        functionSelectionInputs,
+                        correlationId,
+                        cancellationToken)
+                    .ConfigureAwait(false);
             case "aggregate":
                 return (true, ResolveAggregateOutput(node.Config, input, outputs, functionSelectionInputs), null, null);
             case "merge":
@@ -1395,6 +1461,97 @@ public sealed class NeuCharWorkflowEngine
             ["consumeMode"] = consumeMode,
             ["workflowId"] = workflow.Id
         }, null, null);
+    }
+
+    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteHumanInputNodeAsync(
+        WorkflowEntity workflow,
+        NeuCharWorkflowNode node,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs,
+        string correlationId,
+        CancellationToken cancellationToken)
+    {
+        if (_humanInputService == null || _neuBellProvider == null)
+        {
+            return (false, null, null, "人工输入节点服务或 NeuBell 提醒服务当前不可用，请确认 NeuChar Workflow 模块已正确加载。");
+        }
+
+        JsonObject config;
+        try
+        {
+            config = JsonNode.Parse(_parameterProtector.Unprotect(node.Config?.ToJsonString() ?? "{}")) as JsonObject
+                     ?? new JsonObject();
+        }
+        catch (Exception ex)
+        {
+            return (false, null, null, $"人工输入节点无法读取外部恢复密钥：{ex.Message}");
+        }
+
+        var title = NodeToText(ResolveRuntimeValue(
+            config["title"]?.DeepClone() ?? JsonValue.Create("Workflow 等待人工输入"),
+            input,
+            outputs,
+            functionSelectionInputs));
+        var prompt = NodeToText(ResolveRuntimeValue(
+            config["prompt"]?.DeepClone() ?? JsonValue.Create("请补充必要信息：{{input}}"),
+            input,
+            outputs,
+            functionSelectionInputs));
+        var externalResumeEnabled = GetBool(config, "externalResumeEnabled");
+        var externalResumeKey = GetString(config, "externalResumeKey");
+        NeuCharWorkflowHumanInputService.PendingRequest? pending = null;
+        try
+        {
+            pending = _humanInputService.Create(
+                workflow.Id,
+                correlationId,
+                workflow.AdminUserId,
+                node.Id,
+                node.Name,
+                prompt,
+                externalResumeEnabled,
+                externalResumeKey);
+            var notificationId = _neuBellProvider.Send(
+                workflow.AdminUserId,
+                workflow.Id,
+                workflow.Name,
+                TryGetWorkflowRunId(correlationId),
+                node.Id,
+                title,
+                prompt,
+                NeuCharWorkflowNeuBellConsumption.Item);
+            pending.SetNeuBellItemId(notificationId);
+            if (_neuBellPublisher != null)
+            {
+                await _neuBellPublisher.NotifyChangedAsync(
+                    NeuCharWorkflowNeuBellProvider.ProviderIdValue,
+                    cancellationToken).ConfigureAwait(false);
+            }
+
+            var decision = await pending.Completion.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return decision.Approved
+                ? (true, JsonValue.Create(decision.Input ?? string.Empty), null, null)
+                : (false, null, null, string.IsNullOrWhiteSpace(decision.Reason)
+                    ? "人工输入被拒绝，Workflow 已停止当前分支。"
+                    : decision.Reason);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            if (pending != null)
+            {
+                _humanInputService.Cancel(pending.RequestId);
+            }
+            throw;
+        }
+        catch (Exception ex)
+        {
+            if (pending != null)
+            {
+                _humanInputService.Cancel(pending.RequestId);
+            }
+            return (false, null, null, ex.Message);
+        }
     }
 
     private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteWorkflowObjectNodeAsync(
@@ -2121,6 +2278,12 @@ public sealed class NeuCharWorkflowEngine
         catch { return fallback; }
     }
 
+    private static bool GetBool(JsonObject config, string name)
+    {
+        try { return config?[name]?.GetValue<bool>() ?? false; }
+        catch { return false; }
+    }
+
     private static string GetString(JsonObject config, string name)
     {
         try { return config?[name]?.GetValue<string>(); }
@@ -2144,6 +2307,7 @@ public sealed class NeuCharWorkflowEngine
             "condition" => new[] { "left", "right" },
             "agent" or "agent-group" or "a2a" or "sub-workflow" => new[] { "prompt" },
             "neubell" => new[] { "title", "summary" },
+            "human-input" => new[] { "title", "prompt" },
             "aggregate" => new[] { "outputTemplate" },
             "console" => new[] { "printTemplate" },
             _ => Array.Empty<string>()
@@ -3050,7 +3214,7 @@ public sealed class NeuCharWorkflowEngine
                     visited).ConfigureAwait(false);
             }
         }
-        var typeName = node.Type is "manual-trigger" or "interval-trigger" or "agent" or "agent-group" or "a2a" or "sub-workflow"
+        var typeName = node.Type is "manual-trigger" or "interval-trigger" or "agent" or "agent-group" or "a2a" or "sub-workflow" or "human-input"
             ? "string"
             : "any";
         return new NeuCharFunctionOutputDescriptor(

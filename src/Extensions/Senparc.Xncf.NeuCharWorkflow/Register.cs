@@ -88,6 +88,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         services.AddSingleton<NeuCharWorkflowNeuBellProvider>();
         services.AddSingleton<INeuBellProvider>(serviceProvider =>
             serviceProvider.GetRequiredService<NeuCharWorkflowNeuBellProvider>());
+        services.AddSingleton<NeuCharWorkflowHumanInputService>();
         services.AddScoped<NeuCharWorkflowEngine>();
         services.AddSingleton<NeuCharWorkflowRunCoordinator>();
         services.AddSingleton<IWorkflowHumanInteractionBridge, NullWorkflowHumanInteractionBridge>();

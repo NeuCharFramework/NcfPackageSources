@@ -254,6 +254,7 @@
 .workflow-node-picker .node-picker-delay,
 .workflow-node-picker .node-picker-neubell,
 .workflow-node-picker .node-picker-function { border-left-color: #409eff; }
+.workflow-node-picker .node-picker-human-input { border-left-color: #8e5ad7; }
 .workflow-node-picker .node-picker-aggregate { border-left-color: #00a6a6; }
 .workflow-node-picker .node-picker-merge { border-left-color: #d97917; }
 .workflow-node-picker .node-picker-parallel { border-left-color: #7957d5; }
@@ -485,6 +486,7 @@
 .canvas-minimap-node.node-manual-trigger, .canvas-minimap-node.node-interval-trigger, .canvas-minimap-node.node-webhook-trigger { background: #67c23a; box-shadow: inset 3px 0 0 #67c23a; }
 .canvas-minimap-node.node-condition { background: #e6a23c; box-shadow: inset 3px 0 0 #e6a23c; }
 .canvas-minimap-node.node-agent, .canvas-minimap-node.node-agent-group { background: #8e5ad7; box-shadow: inset 3px 0 0 #8e5ad7; }
+.canvas-minimap-node.node-human-input { background: #a56ce3; box-shadow: inset 3px 0 0 #a56ce3; }
 .canvas-minimap-node.node-a2a { background: #df8b1d; box-shadow: inset 3px 0 0 #df8b1d; }
 .canvas-minimap-node.node-aggregate { background: #00a6a6; box-shadow: inset 3px 0 0 #00a6a6; }
 .canvas-minimap-node.node-merge { background: #d97917; box-shadow: inset 3px 0 0 #d97917; }
@@ -586,6 +588,7 @@
 .workflow-node.node-manual-trigger, .workflow-node.node-interval-trigger, .workflow-node.node-webhook-trigger { border-left-color: #67c23a; }
 .workflow-node.node-condition { border-left-color: #e6a23c; }
 .workflow-node.node-agent, .workflow-node.node-agent-group { border-left-color: #8e5ad7; }
+.workflow-node.node-human-input { border-left-color: #a56ce3; }
 .workflow-node.node-a2a { border-left-color: #df8b1d; }
 .workflow-node.node-aggregate { border-left-color: #00a6a6; }
 .workflow-node.node-merge { border-left-color: #d97917; }
