@@ -744,6 +744,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
+                if (request == null)
+                {
+                    throw new NcfExceptionBase("未提供聊天组启动请求。");
+                }
+
                 request.HumanRecipientUserId ??= GetCurrentAdminUserId();
                 List<Task> tasks = new List<Task>();
 

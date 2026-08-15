@@ -20,27 +20,73 @@ if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
             edgeInsert: { type: Boolean, default: false }
         },
         data() {
-            return { keyword: '', module: '' };
+            return {
+                keyword: '',
+                module: '',
+                systemNodes: [
+                    { type: 'condition', name: '条件判断', label: '条件', icon: 'el-icon-s-operation' },
+                    { type: 'delay', name: '等待', label: '等待', icon: 'el-icon-time' },
+                    { type: 'loop', name: '循环（For）', label: '循环', icon: 'el-icon-refresh' },
+                    { type: 'loop-end', name: '循环结束', label: '循环结束', icon: 'el-icon-circle-check' },
+                    { type: 'sub-workflow', name: '调用工作流', label: '调用流程', icon: 'el-icon-document' },
+                    { type: 'code', name: '安全代码', label: '安全代码', icon: 'el-icon-edit-outline' },
+                    { type: 'aggregate', name: '聚合', label: '聚合', icon: 'el-icon-collection' },
+                    { type: 'merge', name: '逐项合流', label: '逐项合流', icon: 'el-icon-sort' },
+                    { type: 'parallel', name: '并行', label: '并行', icon: 'el-icon-share' },
+                    { type: 'console', name: 'Console 打印', label: 'Console', icon: 'el-icon-monitor' },
+                    { type: 'neubell', name: '发送纽铃', label: '发送纽铃', icon: 'el-icon-bell' },
+                    { type: 'end', name: '结束', label: '结束', icon: 'el-icon-circle-check' }
+                ]
+            };
         },
         computed: {
             moduleNames() {
                 return [...new Set(this.functions.map(fn => fn.moduleName).filter(Boolean))].sort();
             },
+            filteredSystemNodes() {
+                return this.systemNodes.filter(node => this.matchesKeyword([
+                    '系统节点',
+                    node.type,
+                    node.name,
+                    node.label
+                ]));
+            },
             filteredFunctions() {
-                const keyword = this.keyword.trim().toLowerCase();
                 return this.functions.filter(fn => {
                     const moduleMatched = !this.module || fn.moduleName === this.module;
-                    const keywordMatched = !keyword || [fn.functionName, fn.moduleName, fn.description, fn.functionKey]
-                        .some(value => String(value || '').toLowerCase().includes(keyword));
+                    const keywordMatched = this.matchesKeyword([
+                        fn.functionName,
+                        fn.moduleName,
+                        fn.description,
+                        fn.functionKey
+                    ]);
                     return moduleMatched && keywordMatched;
                 }).sort((left, right) => {
                     const pinDiff = Number(this.isPinned(right)) - Number(this.isPinned(left));
                     return pinDiff || String(left.moduleName).localeCompare(String(right.moduleName), 'zh-CN') ||
                         String(left.functionName).localeCompare(String(right.functionName), 'zh-CN');
                 });
+            },
+            filteredObjects() {
+                return this.objects.filter(object => this.matchesKeyword([
+                    object.providerId,
+                    object.objectId,
+                    object.kind,
+                    this.objectKindLabel(object),
+                    object.name,
+                    object.description,
+                    ...Object.values(object.metadata || {})
+                ]));
             }
         },
         methods: {
+            matchesKeyword(values) {
+                const keyword = this.keyword.trim().toLowerCase();
+                return !keyword || values.some(value => String(value || '').toLowerCase().includes(keyword));
+            },
+            objectKindLabel(object) {
+                return object?.kind === 'a2a' ? '远程 A2A Agent' : object?.kind === 'agent-group' ? 'Agent 组' : '独立 Agent';
+            },
             functionIdentity(fn) { return `${String(fn.moduleUid).toLowerCase()}|${String(fn.functionKey).toLowerCase()}`; },
             isPinned(fn) { return this.pinnedFunctionKeys.includes(this.functionIdentity(fn)); },
             nodePreviewKey(kind, payload) {
@@ -77,10 +123,10 @@ if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
             hideNodePreview(kind, payload) {
                 this.$emit('hide-preview-node', this.nodePreviewKey(kind, payload || {}));
             },
-            previewSystem(type, name, mode, event) { this.previewNode('system', { type, name }, mode, event); },
-            hideSystemPreview(type, name) { this.hideNodePreview('system', { type, name }); },
-            selectSystem(type, name) {
-                if (!this.locked && !(this.edgeInsert && type === 'end')) this.$emit('select-system', type, name);
+            previewSystem(node, mode, event) { this.previewNode('system', node, mode, event); },
+            hideSystemPreview(node) { this.hideNodePreview('system', node); },
+            selectSystem(node) {
+                if (!this.locked && !(this.edgeInsert && node.type === 'end')) this.$emit('select-system', node.type, node.name);
             },
             selectFunction(fn) {
                 if (!this.locked && fn && fn.moduleAvailable) this.$emit('select-function', fn);
@@ -101,7 +147,7 @@ if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
                 this.$emit('hide-preview-node');
                 this.$emit('drag-node', kind, payload);
             },
-            startSystemDrag(event, type, name) { this.startDrag(event, 'system', { type, name }); },
+            startSystemDrag(event, node) { this.startDrag(event, 'system', node); },
             startFunctionDrag(event, fn) { this.startDrag(event, 'function', fn); },
             startObjectDrag(event, object) { this.startDrag(event, 'object', object); },
             finishDrag() { this.$emit('drag-end'); }

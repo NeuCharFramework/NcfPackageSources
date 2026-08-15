@@ -2690,6 +2690,35 @@ var app = new Vue({
         this.taskArchiveSavingId = 0
       }
     },
+    getGroupStartChatGroupId(serviceForm = {}) {
+      const candidates = [
+        serviceForm?.chatGroupId,
+        serviceForm?.chatGroupDto?.id,
+        serviceForm?.groupId,
+        this.groupStartForm?.chatGroupId,
+        this.groupTaskDetails?.chatGroupId,
+        this.groupDetails?.chatGroupDto?.id,
+        this.scrollbarGroupIndex,
+        this.groupTaskQueryList?.chatGroupId,
+        this.agentDetailsGroupDetailsTaskDetails?.chatGroupId,
+        this.agentDetailsGroupDetails?.chatGroupDto?.id,
+        this.agentDetailsGroupTaskQueryList?.chatGroupId,
+        this.agentDetailsTaskDetails?.chatGroupId,
+        this.taskDetails?.chatGroupId,
+        typeof window !== 'undefined'
+          ? window.location.hash.match(/(?:#|&)groupId=(\d+)/)?.[1]
+          : ''
+      ]
+
+      for (const candidate of candidates) {
+        const id = Number(candidate)
+        if (Number.isInteger(id) && id > 0) {
+          return id
+        }
+      }
+
+      return 0
+    },
     // 保存 submitForm 数据
     async saveSubmitFormData(saveType, serviceForm = {}) {
       //debugger
@@ -2725,6 +2754,19 @@ var app = new Vue({
       }
       // 组启动（运行任务） ['drawerGroupStart', 'drawerTaskStart'].includes(btnType)
       if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
+        const chatGroupId = this.getGroupStartChatGroupId(serviceForm)
+        if (!chatGroupId) {
+          app.$message({
+            message: '未找到有效的聊天组，请重新从聊天组或任务详情打开启动窗口。',
+            type: 'error',
+            duration: 5 * 1000
+          })
+          return
+        }
+
+        // 启动窗口可能由任务详情打开；此时表单对象只携带了部分字段，
+        // 统一把当前上下文解析出的 Group ID 写回请求，避免后台收到 0。
+        serviceForm.chatGroupId = chatGroupId
         if (serviceForm.requireHumanApproval && Number(serviceForm.humanInTheLoopLevel || 0) === 0) {
           serviceForm.humanInTheLoopLevel = 2
         }
@@ -3749,9 +3791,10 @@ var app = new Vue({
       if (btnType === 'drawerGroupStart') {
         // 详情: formData.chatGroupDto 列表: formData
         const chatGroup = formData?.chatGroupDto || formData || {}
+        const chatGroupId = chatGroup.id || chatGroup.chatGroupId || formData?.chatGroupId || ''
         this.groupStartForm.groupName = chatGroup.name || ''
         this.groupStartForm.name = chatGroup.name ? `${chatGroup.name}1` : ''
-        this.groupStartForm.chatGroupId = chatGroup.id || ''
+        this.groupStartForm.chatGroupId = chatGroupId
         this.groupStartParticipants = this.buildGroupStartParticipants(formData)
         this.groupStartForm.includeHumanParticipant = this.groupStartParticipants.some(participant => participant.agentKind === 'Human')
         this.groupStartPromptCaretStart = 0
@@ -3763,6 +3806,13 @@ var app = new Vue({
       }
       if (btnType === 'drawerTaskStart') {
         visibleKey = 'drawerGroupStart'
+        const chatGroupId = this.getGroupStartChatGroupId(this.groupStartForm)
+        if (!this.groupStartForm.groupName && chatGroupId) {
+          const groupDetail = this.groupDetails?.chatGroupDto
+            || this.agentDetailsGroupDetails?.chatGroupDto
+            || {}
+          this.groupStartForm.groupName = groupDetail.name || ''
+        }
       }
       let initialSnapshotLoader = null
       if (btnType === 'drawerGroup') {
@@ -4821,6 +4871,10 @@ var app = new Vue({
     // 再次执行 (即再次启动)
     handleTaskAgain(optype, item = {}) {
       let startData = item ?? {}
+      const chatGroupId = this.getGroupStartChatGroupId(startData)
+      if (chatGroupId) {
+        startData = Object.assign({}, startData, { chatGroupId })
+      }
       // this.groupStartForm.groupName = item.name
       this.handleEditDrawerOpenBtn('drawerTaskStart', startData)
     },

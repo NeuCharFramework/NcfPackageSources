@@ -1191,29 +1191,22 @@
     <script type="text/x-template" id="workflow-node-picker-template">
         <div class="workflow-node-picker" :class="{'is-edge-insert':edgeInsert}">
             <div class="workflow-node-picker-filters">
-                <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" placeholder="搜索 Function 或模块"></el-input>
+                <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" placeholder="搜索节点、Function、模块或对象"></el-input>
                 <el-select v-model="module" size="small" clearable filterable placeholder="全部模块">
                     <el-option v-for="name in moduleNames" :key="name" :label="name" :value="name"></el-option>
                 </el-select>
             </div>
 
-            <div class="palette-system-grid">
-                <el-button plain icon="el-icon-s-operation" :class="['node-picker-system-button','node-picker-condition']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'condition','条件判断')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('condition','条件判断','hover',$event)" @@mouseleave.native="hideSystemPreview('condition','条件判断')" @@click="previewSystem('condition','条件判断','click',$event)" @@dblclick.native="selectSystem('condition','条件判断')">条件</el-button>
-                <el-button plain icon="el-icon-time" :class="['node-picker-system-button','node-picker-delay']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'delay','等待')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('delay','等待','hover',$event)" @@mouseleave.native="hideSystemPreview('delay','等待')" @@click="previewSystem('delay','等待','click',$event)" @@dblclick.native="selectSystem('delay','等待')">等待</el-button>
-                <el-button plain icon="el-icon-refresh" :class="['node-picker-system-button','node-picker-loop']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'loop','循环（For）')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('loop','循环（For）','hover',$event)" @@mouseleave.native="hideSystemPreview('loop','循环（For）')" @@click="previewSystem('loop','循环（For）','click',$event)" @@dblclick.native="selectSystem('loop','循环（For）')">循环</el-button>
-                <el-button plain icon="el-icon-circle-check" :class="['node-picker-system-button','node-picker-loop-end']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'loop-end','循环结束')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('loop-end','循环结束','hover',$event)" @@mouseleave.native="hideSystemPreview('loop-end','循环结束')" @@click="previewSystem('loop-end','循环结束','click',$event)" @@dblclick.native="selectSystem('loop-end','循环结束')">循环结束</el-button>
-                <el-button plain icon="el-icon-document" :class="['node-picker-system-button','node-picker-sub-workflow']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'sub-workflow','调用工作流')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('sub-workflow','调用工作流','hover',$event)" @@mouseleave.native="hideSystemPreview('sub-workflow','调用工作流')" @@click="previewSystem('sub-workflow','调用工作流','click',$event)" @@dblclick.native="selectSystem('sub-workflow','调用工作流')">调用流程</el-button>
-                <el-button plain icon="el-icon-edit-outline" :class="['node-picker-system-button','node-picker-code']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'code','安全代码')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('code','安全代码','hover',$event)" @@mouseleave.native="hideSystemPreview('code','安全代码')" @@click="previewSystem('code','安全代码','click',$event)" @@dblclick.native="selectSystem('code','安全代码')">安全代码</el-button>
-                <el-button plain icon="el-icon-collection" :class="['node-picker-system-button','node-picker-aggregate']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'aggregate','聚合')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('aggregate','聚合','hover',$event)" @@mouseleave.native="hideSystemPreview('aggregate','聚合')" @@click="previewSystem('aggregate','聚合','click',$event)" @@dblclick.native="selectSystem('aggregate','聚合')">聚合</el-button>
-                <el-button plain icon="el-icon-sort" :class="['node-picker-system-button','node-picker-merge']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'merge','逐项合流')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('merge','逐项合流','hover',$event)" @@mouseleave.native="hideSystemPreview('merge','逐项合流')" @@click="previewSystem('merge','逐项合流','click',$event)" @@dblclick.native="selectSystem('merge','逐项合流')">逐项合流</el-button>
-                <el-button plain icon="el-icon-share" :class="['node-picker-system-button','node-picker-parallel']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'parallel','并行')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('parallel','并行','hover',$event)" @@mouseleave.native="hideSystemPreview('parallel','并行')" @@click="previewSystem('parallel','并行','click',$event)" @@dblclick.native="selectSystem('parallel','并行')">并行</el-button>
-                <el-button plain icon="el-icon-monitor" :class="['node-picker-system-button','node-picker-console']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'console','Console 打印')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('console','Console 打印','hover',$event)" @@mouseleave.native="hideSystemPreview('console','Console 打印')" @@click="previewSystem('console','Console 打印','click',$event)" @@dblclick.native="selectSystem('console','Console 打印')">Console</el-button>
-                <el-button plain icon="el-icon-bell" :class="['node-picker-system-button','node-picker-neubell']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'neubell','发送纽铃')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('neubell','发送纽铃','hover',$event)" @@mouseleave.native="hideSystemPreview('neubell','发送纽铃')" @@click="previewSystem('neubell','发送纽铃','click',$event)" @@dblclick.native="selectSystem('neubell','发送纽铃')">发送纽铃</el-button>
-                <el-button plain icon="el-icon-circle-check" :class="['node-picker-system-button','node-picker-end']" :disabled="locked || edgeInsert" :title="edgeInsert?'结束节点不能插入到连线中':''" draggable="true" @@dragstart.native="startSystemDrag($event,'end','结束')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('end','结束','hover',$event)" @@mouseleave.native="hideSystemPreview('end','结束')" @@click="previewSystem('end','结束','click',$event)" @@dblclick.native="selectSystem('end','结束')">结束</el-button>
-            </div>
+            <template v-if="filteredSystemNodes.length">
+                <el-divider>系统节点</el-divider>
+                <div class="palette-system-grid">
+                    <el-button v-for="node in filteredSystemNodes" :key="node.type" plain :icon="node.icon" :class="['node-picker-system-button','node-picker-'+node.type]" :disabled="locked || (edgeInsert && node.type === 'end')" :title="edgeInsert && node.type === 'end'?'结束节点不能插入到连线中':''" draggable="true" @@dragstart.native="startSystemDrag($event,node)" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem(node,'hover',$event)" @@mouseleave.native="hideSystemPreview(node)" @@click="previewSystem(node,'click',$event)" @@dblclick.native="selectSystem(node)">{{node.label}}</el-button>
+                </div>
+            </template>
 
-            <el-divider>NeuCharPivot Function</el-divider>
-            <div v-if="filteredFunctions.length" class="palette-functions">
+            <template v-if="filteredFunctions.length">
+                <el-divider>NeuCharPivot Function</el-divider>
+                <div class="palette-functions">
                 <button v-for="fn in filteredFunctions"
                         :key="functionIdentity(fn)"
                         :class="['palette-item','node-picker-function',{'is-unavailable':!fn.moduleAvailable}]"
@@ -1237,12 +1230,12 @@
                         <i :class="isPinned(fn)?'el-icon-star-on':'el-icon-star-off'"></i>
                     </span>
                 </button>
-            </div>
-            <div v-else class="palette-empty">没有匹配的 Function</div>
+                </div>
+            </template>
 
-            <template v-if="objects.length">
+            <template v-if="filteredObjects.length">
                 <el-divider>AgentsManager / A2A</el-divider>
-                <button v-for="object in objects"
+                <button v-for="object in filteredObjects"
                         :key="object.providerId+object.objectId"
                         :class="['palette-item','node-picker-'+object.kind,{'is-a2a-object':object.kind==='a2a','is-unavailable':!object.enabled}]"
                         :disabled="locked"
@@ -1255,11 +1248,12 @@
                         @@dblclick="selectObject(object)">
                     <span class="palette-item-copy">
                         <strong>{{object.name}}</strong>
-                        <small>{{object.kind==='a2a'?'远程 A2A Agent':object.kind==='agent-group'?'Agent 组':'独立 Agent'}} · {{object.enabled?'可用':'不可用'}}</small>
+                        <small>{{objectKindLabel(object)}} · {{object.enabled?'可用':'不可用'}}</small>
                     </span>
                     <el-tag v-if="object.kind==='a2a'" size="mini" type="warning" effect="plain">A2A</el-tag>
                 </button>
             </template>
+            <div v-if="!filteredSystemNodes.length && !filteredFunctions.length && !filteredObjects.length" class="palette-empty">没有匹配的节点</div>
         </div>
     </script>
     <script src="~/js/NeuCharWorkflow/common.js"></script>

@@ -156,6 +156,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     /// </summary>
     public Task RunChatGroupInThread(ChatGroup_RunGroupRequest request)
     {
+        ValidateRunRequest(request);
         var task = RunChatGroupExecutionCoreAsync(request);
 
         lock (TaskList)
@@ -177,6 +178,29 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }, TaskScheduler.Default);
 
         return Task.CompletedTask;
+    }
+
+    private static void ValidateRunRequest(ChatGroup_RunGroupRequest request)
+    {
+        if (request == null)
+        {
+            throw new NcfExceptionBase("未提供聊天组启动请求。");
+        }
+
+        if (request.ChatGroupId <= 0)
+        {
+            throw new NcfExceptionBase("未选择有效的聊天组。");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Name))
+        {
+            throw new NcfExceptionBase("未填写任务标题。");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.PromptCommand))
+        {
+            throw new NcfExceptionBase("未填写任务描述。");
+        }
     }
 
     /// <summary>

@@ -25,6 +25,7 @@ const replayPagePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Areas/Admin/Pages/NeuCharWorkflow/Replay.cshtml');
 const replayStylePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/wwwroot/css/NeuCharWorkflow/Replay.css');
+const workflowScript = fs.readFileSync(scriptPath, 'utf8');
 const workflowAppServicePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Application/AppServices/NeuCharWorkflowAppService.cs');
 const runCoordinatorPath = path.resolve(__dirname,
@@ -51,7 +52,7 @@ assert.match(workflowPageMarkup, /:data-node-id="node\.id"/,
     'Each Workflow node must expose its id so validation focus can target it.');
 assert.ok(workflowPageMarkup.includes('工作流变量'),
     'Workflow settings must expose declared workflow variables.');
-assert.ok(workflowPageMarkup.includes('调用工作流'),
+assert.ok(workflowPageMarkup.includes('调用工作流') || workflowScript.includes('调用工作流'),
     'The picker and node inspector must expose the sub-workflow node.');
 assert.ok(workflowPageMarkup.includes('安全代码'),
     'The picker and node inspector must expose the constrained Safe Code node.');
@@ -154,6 +155,28 @@ assert.ok(fs.readFileSync(stylePath, 'utf8').includes('node-a2a'),
 
 let previewEvent = null;
 const nodePickerMethods = registeredVueComponents['workflow-node-picker'].methods;
+const nodePicker = registeredVueComponents['workflow-node-picker'];
+const nodePickerContext = Object.assign({
+    functions: [
+        { functionName: '摘要', moduleName: 'PromptRange', description: '生成摘要', functionKey: 'summary', moduleUid: 'prompt-range' }
+    ],
+    objects: [
+        { providerId: 'agents-manager', objectId: 'agent:1', kind: 'agent', name: '客服 Agent', description: '处理客服问题', metadata: { type: '独立 Agent' } },
+        { providerId: 'agents-manager', objectId: 'group:2', kind: 'agent-group', name: '销售 Group', description: '销售协作组', metadata: { type: 'Agent 组' } },
+        { providerId: 'agents-manager', objectId: 'a2a:3', kind: 'a2a', name: '远程助手', description: 'Remote A2A endpoint', metadata: { type: '远程 A2A Agent' } }
+    ],
+    pinnedFunctionKeys: [],
+    module: '',
+    keyword: ''
+}, nodePicker.data(), nodePickerMethods);
+assert.strictEqual(nodePicker.computed.filteredObjects.call(Object.assign({}, nodePickerContext, { keyword: 'group' })).length, 1,
+    'The shared node search should match Agent groups by their name and kind metadata.');
+assert.strictEqual(nodePicker.computed.filteredObjects.call(Object.assign({}, nodePickerContext, { keyword: 'a2a' })).length, 1,
+    'The shared node search should match remote A2A objects by protocol/type text.');
+assert.strictEqual(nodePicker.computed.filteredSystemNodes.call(Object.assign({}, nodePickerContext, { keyword: '循环' })).length, 2,
+    'The shared node search should include system nodes by their visible names.');
+assert.strictEqual(nodePicker.computed.filteredFunctions.call(Object.assign({}, nodePickerContext, { keyword: '摘要' })).length, 1,
+    'The shared node search should retain Function name matching.');
 nodePickerMethods.previewNode.call({
     functionIdentity: nodePickerMethods.functionIdentity,
     nodePreviewKey: nodePickerMethods.nodePreviewKey,
@@ -1245,14 +1268,14 @@ assert.ok(page.includes('@@drag-node="beginPaletteNodeDrag"') && page.includes('
     'Node-picker blocks should be draggable onto the canvas and handled by one insertion drop path.');
 assert.ok(page.includes('@@preview-node="showNodePreview"') && page.includes('@@dblclick="selectFunction(fn)"') && page.includes('nodePreviewDetails.actionText'),
     'Node picker blocks should preview on the first interaction and reserve double-click for adding a node.');
-assert.ok(page.includes("selectSystem('condition','条件判断')"), 'The shared picker should expose condition nodes.');
-assert.ok(page.includes("selectSystem('loop','循环（For）')") && page.includes('重复次数（For）') && page.includes('loopCountOutputOptions()'),
+assert.ok(page.includes('filteredSystemNodes') && workflowScript.includes("type: 'condition', name: '条件判断'"), 'The shared picker should expose condition nodes.');
+assert.ok(workflowScript.includes("type: 'loop', name: '循环（For）'") && page.includes('重复次数（For）') && page.includes('loopCountOutputOptions()'),
     'The shared picker should expose a novice-friendly bounded For loop with a selectable upstream count.');
-assert.ok(page.includes("selectSystem('aggregate','聚合')"), 'The shared picker should expose multi-input aggregate nodes.');
-assert.ok(page.includes("selectSystem('parallel','并行')"), 'The shared picker should expose a parallel fan-out node.');
-assert.ok(page.includes("selectSystem('console','Console 打印')"), 'The shared picker should expose console output nodes.');
-assert.ok(page.includes("selectSystem('neubell','发送纽铃')"), 'The shared picker should expose a NeuBell notification node.');
-assert.ok(page.includes("selectSystem('end','结束')"), 'The shared picker should expose end nodes.');
+assert.ok(workflowScript.includes("type: 'aggregate', name: '聚合'"), 'The shared picker should expose multi-input aggregate nodes.');
+assert.ok(workflowScript.includes("type: 'parallel', name: '并行'"), 'The shared picker should expose a parallel fan-out node.');
+assert.ok(workflowScript.includes("type: 'console', name: 'Console 打印'"), 'The shared picker should expose console output nodes.');
+assert.ok(workflowScript.includes("type: 'neubell', name: '发送纽铃'"), 'The shared picker should expose a NeuBell notification node.');
+assert.ok(workflowScript.includes("type: 'end', name: '结束'"), 'The shared picker should expose end nodes.');
 assert.ok(page.includes('class="edge-delete"'), 'Every edge should expose a midpoint delete control.');
 assert.ok(page.includes('class="edge-insert"') && page.includes('workflow-edge-insert-menu'),
     'Every edge should expose a plus action that opens an inline insertion picker.');
@@ -1502,7 +1525,7 @@ assert.ok(tasksScript.includes("neuBellProvider") && tasksScript.includes("servi
 assert.ok(sourceIncludesFitOnLoad(), 'Editing an existing workflow should fit all nodes after its canvas has rendered.');
 assert.ok(page.includes('自动保存'), 'Workflow settings should expose the auto-save interval.');
 assert.ok(page.includes(':precision="0"'), 'The auto-save editor must only accept whole minutes so a fractional interval cannot create a rapid save loop.');
-assert.ok(page.includes("selectSystem('loop-end','循环结束')") && page.includes('循环体边界'),
+assert.ok(workflowScript.includes("type: 'loop-end', name: '循环结束'") && page.includes('循环体边界'),
     'The designer should expose an explicit loop-end node and explain its continuation semantics.');
 assert.ok(page.includes('Command/Ctrl + S'), 'Workflow save should advertise the system save shortcut.');
 assert.ok(!page.includes(':visible.sync="runDialogVisible"'),
@@ -1621,9 +1644,9 @@ assert.ok(runCoordinator.includes('GetActiveRuns') && runCoordinator.includes('N
     'The task list should use the coordinator for currently running node-level task state.');
 assert.ok(runCoordinator.includes('TryAbort') && runCoordinator.includes('手动中止') && workflowAppService.includes('AbortRun'),
     'Manual aborts should be authorized by run ID and persisted as an explicit failed result.');
-assert.ok(page.includes("'merge','逐项合流'") && page.includes('汇总输出内容') &&
-    fs.readFileSync(scriptPath, 'utf8').includes("['aggregate', 'merge', 'function', 'loop-end']") &&
-    fs.readFileSync(scriptPath, 'utf8').includes('outputTemplate'),
+assert.ok(workflowScript.includes("type: 'merge', name: '逐项合流'") && page.includes('汇总输出内容') &&
+    workflowScript.includes("['aggregate', 'merge', 'function', 'loop-end']") &&
+    workflowScript.includes('outputTemplate'),
     'The designer should distinguish once-only aggregation from per-item merge and expose aggregate output content.');
 assert.ok(page.includes('Console 打印内容') && page.includes('仅影响 Console 展示，不改变下游输入') &&
     fs.readFileSync(scriptPath, 'utf8').includes("printTemplate: '{{input}}'") &&
