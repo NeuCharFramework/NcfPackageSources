@@ -1847,7 +1847,66 @@ async function verifyUnsavedChangeGuards() {
         'The compact overflow menu should retain the fit-canvas action.');
 }
 
-verifyUnsavedChangeGuards()
+async function verifyWorkflowHumanInteractionSubmission() {
+    const submittedRequests = [];
+    sandbox.service.post = async (url, body, options) => {
+        submittedRequests.push({ url, body, options });
+        return { data: { success: true } };
+    };
+
+    const humanTurnContext = {
+        run: {
+            runId: 'a08b0f18-1e76-42d4-aa1b-d0aaee5a9071',
+            humanReplyRequest: { requestId: 'human-turn-1', requestType: 'humanTurn' },
+            humanReplyInput: '  补充给 Group 的 Human 输入  ',
+            humanReplySubmitting: false,
+            humanInteractions: [{ requestId: 'human-turn-1', requestType: 'humanTurn' }],
+            humanReplyVisible: true
+        },
+        requiresHumanTextInput: vueOptions.methods.requiresHumanTextInput,
+        errorMessage(error) { return error.message; },
+        $notify() { }
+    };
+
+    await vueOptions.methods.resolveHumanInteraction.call(humanTurnContext, true);
+    assert.strictEqual(submittedRequests.length, 1,
+        'Submitting a Human turn should issue one workflow resolution request.');
+    assert.strictEqual(submittedRequests[0].url, '/Admin/NeuCharWorkflow/Index?handler=ResolveHuman');
+    assert.deepStrictEqual(JSON.parse(JSON.stringify(submittedRequests[0].body)), {
+        runId: 'a08b0f18-1e76-42d4-aa1b-d0aaee5a9071',
+        requestId: 'human-turn-1',
+        approved: true,
+        input: '补充给 Group 的 Human 输入',
+        reason: 'Workflow 快速输入'
+    }, 'Human turns should submit trimmed input and the workflow-input reason without referencing an undefined variable.');
+
+    const approvalContext = {
+        run: {
+            runId: 'a08b0f18-1e76-42d4-aa1b-d0aaee5a9071',
+            humanReplyRequest: { requestId: 'tool-approval-1', requestType: 'toolApproval', prompt: '允许调用工具' },
+            humanReplyInput: '不应发送为工具审批输入',
+            humanReplySubmitting: false,
+            humanInteractions: [{ requestId: 'tool-approval-1', requestType: 'toolApproval' }],
+            humanReplyVisible: true
+        },
+        requiresHumanTextInput: vueOptions.methods.requiresHumanTextInput,
+        errorMessage(error) { return error.message; },
+        $notify() { }
+    };
+
+    await vueOptions.methods.resolveHumanInteraction.call(approvalContext, false);
+    assert.strictEqual(submittedRequests.length, 2,
+        'Rejecting a tool approval should issue a separate workflow resolution request.');
+    assert.deepStrictEqual(JSON.parse(JSON.stringify(submittedRequests[1].body)), {
+        runId: 'a08b0f18-1e76-42d4-aa1b-d0aaee5a9071',
+        requestId: 'tool-approval-1',
+        approved: false,
+        input: '',
+        reason: 'Workflow 快速审批'
+    }, 'Tool approvals should keep the approval reason and omit Human text input.');
+}
+
+Promise.all([verifyUnsavedChangeGuards(), verifyWorkflowHumanInteractionSubmission()])
     .then(() => console.log('NeuChar Workflow designer tests passed.'))
     .catch(error => {
         console.error(error);

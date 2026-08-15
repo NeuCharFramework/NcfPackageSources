@@ -737,16 +737,27 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         /// <summary>
         /// 运行智能体
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">任务正文。</param>
+        /// <param name="chatGroupId">由启动页显式传入的聊天组 ID。保留正文中的同名字段以兼容既有调用。</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<string>> RunGroup(ChatGroup_RunGroupRequest request)
+        public async Task<AppResponseBase<string>> RunGroup(
+            [FromBody] ChatGroup_RunGroupRequest request,
+            [FromQuery] int chatGroupId = 0)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 if (request == null)
                 {
                     throw new NcfExceptionBase("未提供聊天组启动请求。");
+                }
+
+                // 动态 ApiBind 控制器会对复杂正文参数和查询参数分别绑定。启动页把 Group ID
+                // 同时写入两处；此处优先采用显式查询参数，避免某些宿主/缓存脚本将正文属性
+                // 绑定为默认值 0 后误判为“未选择有效的聊天组”。
+                if (chatGroupId > 0)
+                {
+                    request.ChatGroupId = chatGroupId;
                 }
 
                 request.HumanRecipientUserId ??= GetCurrentAdminUserId();

@@ -2771,6 +2771,9 @@ var app = new Vue({
           serviceForm.humanInTheLoopLevel = 2
         }
         serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.RunGroup'
+        // RunGroup 将聊天组 ID 同时作为查询参数和正文属性提交。查询参数由动态 ApiBind
+        // 控制器显式绑定，即使旧脚本或宿主环境异常处理了正文属性，后台仍能可靠取得 Group ID。
+        serviceURL += `?${getInterfaceQueryStr({ chatGroupId })}`
       }
       if (saveType === 'dialogTaskEvaluation') {
         serviceURL = ''

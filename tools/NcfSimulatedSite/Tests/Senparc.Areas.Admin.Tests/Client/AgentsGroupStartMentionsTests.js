@@ -23,6 +23,7 @@ const responseSource = fs.readFileSync(responsePath, 'utf8');
 const serviceSource = fs.readFileSync(servicePath, 'utf8');
 
 let capturedOptions = null;
+let capturedStartRequest = null;
 
 function Vue(options) {
     capturedOptions = options;
@@ -31,10 +32,18 @@ function Vue(options) {
 Vue.component = function () { };
 Vue.directive = function () { };
 
+const serviceAM = {
+    async post(url, body) {
+        capturedStartRequest = { url, body };
+        return { data: { success: true } };
+    }
+};
+
 const context = vm.createContext({
     Vue,
+    serviceAM,
     console: { log() { }, warn() { }, error() { } },
-    window: {},
+    window: { location: { hash: '' } },
     document: {},
     setTimeout() { },
     clearTimeout() { },
@@ -111,5 +120,32 @@ assert.ok(page.includes('ref="groupStartPromptCommand"'), 'The task description 
 assert.ok(responseSource.includes('RoleAgentTemplateDtoList'), 'The group detail contract should return role members separately.');
 assert.ok(serviceSource.includes('RoleName = "群主"') && serviceSource.includes('RoleName = "对接人"'),
     'The group detail service should supply both group roles.');
+
+viewModel.$refs.groupStartELForm = { resetFields() { } };
+viewModel.tabsActiveName = 'third';
+viewModel.gettaskListData = async () => { };
+const startRequest = {
+    name: '从群组详情启动',
+    chatGroupId: 5010,
+    aiModelId: 1,
+    promptCommand: '验证 Group ID 双通道提交'
+};
+
+viewModel.saveSubmitFormData('drawerGroupStart', startRequest).then(() => {
+    assert.strictEqual(
+        capturedStartRequest.url,
+        '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.RunGroup?chatGroupId=5010',
+        'Group start must submit the selected ID as an explicit query parameter.');
+    assert.strictEqual(capturedStartRequest.body.chatGroupId, 5010,
+        'Group start must retain the selected ID in the request body for compatibility.');
+    assert.ok(serviceSource.includes('[FromBody] ChatGroup_RunGroupRequest request'),
+        'RunGroup should explicitly bind its task payload from the request body.');
+    assert.ok(serviceSource.includes('[FromQuery] int chatGroupId = 0'),
+        'RunGroup should explicitly bind the fallback Group ID from the query string.');
+    console.log('Agents group-start request binding tests passed.');
+}).catch(error => {
+    console.error(error);
+    process.exitCode = 1;
+});
 
 console.log('Agents group-start mention tests passed.');

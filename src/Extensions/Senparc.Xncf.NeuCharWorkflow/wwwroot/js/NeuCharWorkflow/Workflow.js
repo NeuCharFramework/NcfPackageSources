@@ -3553,7 +3553,7 @@ new Vue({
                     requestId: request.requestId,
                     approved: !!approved,
                     input: requiresTextInput ? String(this.run.humanReplyInput || '').trim() : '',
-                    reason: isHumanTurn ? 'Workflow 快速输入' : 'Workflow 快速审批'
+                    reason: requiresTextInput ? 'Workflow 快速输入' : 'Workflow 快速审批'
                 }, { customAlert: true });
                 this.run.humanInteractions = this.run.humanInteractions.filter(item => item.requestId !== request.requestId);
                 this.run.humanReplyVisible = false;
