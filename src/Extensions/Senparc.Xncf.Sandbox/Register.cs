@@ -66,6 +66,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
     public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
     {
         services.Configure<SandboxImageOptions>(configuration.GetSection(SandboxImageOptions.SectionName));
+        services.Configure<SandboxDockerOptions>(configuration.GetSection(SandboxDockerOptions.SectionName));
         services.Configure<SandboxNcfPreviewOptions>(configuration.GetSection(SandboxNcfPreviewOptions.SectionName));
         services.AddSingleton<ISandboxImageResolver, SandboxImageResolver>();
         services.AddSingleton(new SandboxQuotaPolicy());

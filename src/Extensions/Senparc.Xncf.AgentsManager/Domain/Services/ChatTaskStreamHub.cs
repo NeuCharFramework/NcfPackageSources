@@ -208,6 +208,14 @@ public sealed class ChatTaskStreamEvent
     public string FromParticipantKind { get; set; }
     public string FromAgentName { get; set; }
     public string ResponseId { get; set; }
+    public string HumanRequestId { get; set; }
+    public string HumanRequestType { get; set; }
+    public string HumanToolName { get; set; }
+    public string HumanToolArguments { get; set; }
+    public string HumanParticipantKey { get; set; }
+    public string HumanNeuBellItemId { get; set; }
+    public bool? HumanApproved { get; set; }
+    public string HumanReason { get; set; }
     public string Text { get; set; }
     public bool IsFinal { get; set; }
     public int PromptTokens { get; set; }

@@ -83,6 +83,9 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
         public int? KnowledgeBaseId { get; set; }
 
+        /// <summary>是否为系统保留的 Human 参与者。</summary>
+        public bool IsHuman { get; set; }
+
         public string KnowledgeBaseName { get; set; }
 
         public int CompletedConversationRounds { get; set; }

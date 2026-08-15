@@ -46,7 +46,8 @@ public sealed record NeuCharWorkflowRunSnapshot(
     bool? Succeeded,
     string ErrorMessage,
     string FinalOutput,
-    IReadOnlyList<NeuCharWorkflowRunEvent> Events);
+    IReadOnlyList<NeuCharWorkflowRunEvent> Events,
+    IReadOnlyList<Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow.WorkflowHumanInteraction> HumanInteractions = null);
 
 /// <summary>
 /// 供任务列表使用的轻量实时运行状态。不返回原始输入和完整输出，避免在列表页意外暴露敏感数据。
@@ -63,6 +64,8 @@ public sealed record NeuCharWorkflowActiveRun(
 
 public sealed class NeuCharWorkflowRunCoordinator
 {
+    private const int MaxLiveRunEvents = 5_000;
+
     private sealed class RunState
     {
         private readonly object _gate = new();
@@ -144,9 +147,9 @@ public sealed class NeuCharWorkflowRunCoordinator
                     Limit(progress.Output, 20_000),
                     progress.Timestamp,
                     Limit(progress.OutputSchema, 20_000)));
-                if (_events.Count > 500)
+                if (_events.Count > MaxLiveRunEvents)
                 {
-                    _events.RemoveRange(0, _events.Count - 500);
+                    _events.RemoveRange(0, _events.Count - MaxLiveRunEvents);
                 }
             }
         }

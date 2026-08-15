@@ -55,6 +55,19 @@ public static class SandboxTemplateCatalog
                 DefaultMemoryMb = 1024,
                 DefaultTtl = TimeSpan.FromMinutes(45)
             },
+            [SandboxTemplateKeys.JupyterCsharp] = new SandboxTemplateDefinition
+            {
+                Key = SandboxTemplateKeys.JupyterCsharp,
+                DisplayName = "JupyterLab (C#)",
+                PreferredRuntime = SandboxRuntimeKind.Docker,
+                Interactive = true,
+                // Build tools/SandboxImages/JupyterDotnet or override this image in appsettings.
+                Image = "ncf-jupyter-dotnet:10.0",
+                ContainerPort = 8888,
+                DefaultCpuLimit = 1,
+                DefaultMemoryMb = 1536,
+                DefaultTtl = TimeSpan.FromMinutes(45)
+            },
             [SandboxTemplateKeys.NcfPreview] = new SandboxTemplateDefinition
             {
                 Key = SandboxTemplateKeys.NcfPreview,

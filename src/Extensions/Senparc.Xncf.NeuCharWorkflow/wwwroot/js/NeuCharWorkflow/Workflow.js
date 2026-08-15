@@ -1,6 +1,7 @@
 // The page body is rendered inside the shared #app Vue root. Vue deliberately
 // removes <script> tags while compiling that root, so resolve this template
 // before mounting the root instead of using the deferred "#id" form.
+const MaxWorkflowConsoleEvents = 5000;
 const workflowNodePickerTemplateElement = typeof document !== 'undefined'
     ? document.getElementById('workflow-node-picker-template')
     : null;
@@ -47,14 +48,36 @@ if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
                 if (kind === 'function') return `function:${this.functionIdentity(payload || {})}`;
                 return `object:${String(payload?.providerId || '').toLowerCase()}:${String(payload?.objectId || '')}`;
             },
-            previewNode(kind, payload, mode) {
+            previewAnchor(event) {
+                const target = event && (event.currentTarget || event.target);
+                if (!target || typeof target.getBoundingClientRect !== 'function') return null;
+                const rect = target.getBoundingClientRect();
+                const left = Number(rect.left);
+                const top = Number(rect.top);
+                const right = Number(rect.right);
+                const bottom = Number(rect.bottom);
+                return {
+                    left: Number.isFinite(left) ? left : 0,
+                    top: Number.isFinite(top) ? top : 0,
+                    right: Number.isFinite(right) ? right : left,
+                    bottom: Number.isFinite(bottom) ? bottom : top,
+                    width: Number.isFinite(Number(rect.width)) ? Number(rect.width) : Math.max(0, right - left),
+                    height: Number.isFinite(Number(rect.height)) ? Number(rect.height) : Math.max(0, bottom - top)
+                };
+            },
+            previewNode(kind, payload, mode, event) {
                 if (!payload) return;
-                this.$emit('preview-node', { kind, payload, key: this.nodePreviewKey(kind, payload) }, mode === 'click' ? 'click' : 'hover');
+                this.$emit('preview-node', {
+                    kind,
+                    payload,
+                    key: this.nodePreviewKey(kind, payload),
+                    anchor: this.previewAnchor(event)
+                }, mode === 'click' ? 'click' : 'hover');
             },
             hideNodePreview(kind, payload) {
                 this.$emit('hide-preview-node', this.nodePreviewKey(kind, payload || {}));
             },
-            previewSystem(type, name, mode) { this.previewNode('system', { type, name }, mode); },
+            previewSystem(type, name, mode, event) { this.previewNode('system', { type, name }, mode, event); },
             hideSystemPreview(type, name) { this.hideNodePreview('system', { type, name }); },
             selectSystem(type, name) {
                 if (!this.locked && !(this.edgeInsert && type === 'end')) this.$emit('select-system', type, name);
@@ -163,6 +186,13 @@ new Vue({
                 bindings: [],
                 pendingSelection: []
             },
+            loopHighlight: {
+                nodeIds: [],
+                labelNodeIds: [],
+                edgeIds: []
+            },
+            loopHighlightTimer: null,
+            loopHighlightSequence: 0,
             selectedNodeId: '',
             selectedNodeIds: [],
             selectionBox: { active: false, startX: 0, startY: 0, endX: 0, endY: 0, additive: false },
@@ -175,7 +205,7 @@ new Vue({
             edgeInsertMenu: { visible: false, edge: null, x: 0, y: 0 },
             canvasNodeInsertMenu: { visible: false, x: 0, y: 0, point: null },
             paletteDrag: { active: false, kind: '', payload: null, hoverEdgeId: '' },
-            nodePreview: { visible: false, kind: '', payload: null, key: '', mode: 'hover' },
+            nodePreview: { visible: false, kind: '', payload: null, key: '', mode: 'hover', anchor: null },
             nodePreviewTimer: null,
             canvasSize: { width: 1200, height: 760 },
             canvasSafeInsets: { left: 0, right: 0 },
@@ -205,7 +235,12 @@ new Vue({
                 finalOutput: '',
                 error: '',
                 pollTimer: null,
-                consoleOpen: false
+                consoleOpen: false,
+                humanInteractions: [],
+                humanReplyVisible: false,
+                humanReplyRequest: null,
+                humanReplyInput: '',
+                humanReplySubmitting: false
             }
         };
     },
@@ -253,6 +288,54 @@ new Vue({
         },
         nodePreviewDetails() {
             return this.describeNodePreview(this.nodePreview);
+        },
+        nodePreviewStyle() {
+            const anchor = this.nodePreview && this.nodePreview.anchor;
+            if (!anchor) return { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' };
+
+            const root = typeof document !== 'undefined' ? document.documentElement : null;
+            const viewportWidth = Number((typeof window !== 'undefined' && window.innerWidth) || (root && root.clientWidth) || 1280);
+            const viewportHeight = Number((typeof window !== 'undefined' && window.innerHeight) || (root && root.clientHeight) || 800);
+            const margin = 16;
+            const gap = 12;
+            const popupWidth = Math.min(420, Math.max(280, viewportWidth * 0.26));
+            const popupHeight = Math.min(360, Math.max(220, viewportHeight * 0.36));
+            const left = Number(anchor.left) || 0;
+            const top = Number(anchor.top) || 0;
+            const right = Number(anchor.right) || left;
+            const bottom = Number(anchor.bottom) || top;
+            const width = Number(anchor.width) || Math.max(0, right - left);
+            const height = Number(anchor.height) || Math.max(0, bottom - top);
+            const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(value, Math.max(minimum, maximum)));
+            const clampLeft = value => clamp(value, margin, viewportWidth - popupWidth - margin);
+            const clampTop = value => clamp(value, margin, viewportHeight - popupHeight - margin);
+            const centeredTop = clampTop(top + (height - popupHeight) / 2);
+            const centeredLeft = clampLeft(left + (width - popupWidth) / 2);
+            const anchored = (x, y) => ({ left: `${x}px`, top: `${y}px`, transform: 'translate(0, 0)' });
+
+            // Keep the source button outside the popup horizontally whenever possible.
+            if (right + gap + popupWidth <= viewportWidth - margin) {
+                return anchored(right + gap, centeredTop);
+            }
+            if (left - gap - popupWidth >= margin) {
+                return anchored(left - gap - popupWidth, centeredTop);
+            }
+
+            // If neither side has enough room, use the vertical space around the button.
+            const below = bottom + gap;
+            if (below + popupHeight <= viewportHeight - margin) {
+                return anchored(centeredLeft, below);
+            }
+            const above = top - gap - popupHeight;
+            if (above >= margin) {
+                return anchored(centeredLeft, above);
+            }
+
+            // Very small viewports may not have a complete side or vertical slot;
+            // clamp the best side to the viewport while keeping the anchor visible as much as possible.
+            const rightRoom = viewportWidth - right;
+            const leftRoom = left;
+            return anchored(clampLeft(rightRoom >= leftRoom ? right + gap : left - gap - popupWidth), centeredTop);
         },
         selectionBoxStyle() {
             const selection = this.selectionBox;
@@ -311,6 +394,7 @@ new Vue({
         runStatusText() {
             if (this.run.validating) return '正在校验参数和节点引用';
             if (this.run.aborting) return '正在中止工作流，等待当前节点响应取消';
+            if (this.run.running && this.run.humanInteractions.length) return '等待 Human 输入或审批，Workflow 已暂停';
             if (this.run.running) return '工作流运行中，编辑已锁定';
             if (this.run.status === 'success') return '最近一次测试运行成功';
             if (this.run.status === 'failed') return '最近一次测试运行失败';
@@ -461,6 +545,7 @@ new Vue({
             window.clearInterval(this.workflowClockTimer);
         }
         this.dismissNodePreview();
+        this.clearLoopHighlight();
         this.clearAutoSaveTimer();
         this.clearRunPoll();
     },
@@ -524,8 +609,8 @@ new Vue({
             const definitions = {
                 condition: {
                     title: '条件判断',
-                    description: '根据左值、比较符和右值决定后续执行“真”或“假”分支。',
-                    rows: [{ label: '可配置项', value: '左值、比较符、右值' }, { label: '输出分支', value: '真 / 假' }]
+                    description: '根据左值、比较符和右值决定后续执行“真”或“假”分支；在循环体内还可以用 break 输出立即跳出当前循环。',
+                    rows: [{ label: '可配置项', value: '左值、比较符、右值、循环控制' }, { label: '输出分支', value: '真 / 假 / break' }]
                 },
                 delay: {
                     title: '等待',
@@ -539,8 +624,8 @@ new Vue({
                 },
                 'loop-end': {
                     title: '循环结束',
-                    description: '标记当前 For 循环的最后一个循环体节点；它后面的节点会在所有循环轮次完成后继续执行一次。',
-                    rows: [{ label: '位置', value: '必须放在循环体末尾' }, { label: '限制', value: '循环体当前支持一条普通节点链' }]
+                    description: '标记当前 For 循环的边界；continue 输入完成一轮，break 输入立即结束循环，之后的节点只执行一次。',
+                    rows: [{ label: '输入端', value: 'continue / break' }, { label: '输出', value: '全部轮次完成或 break 后继续向下' }]
                 },
                 'sub-workflow': {
                     title: '调用工作流',
@@ -651,7 +736,8 @@ new Vue({
                 kind: descriptor.kind,
                 payload: descriptor.payload,
                 key: descriptor.key || `${descriptor.kind}:${Date.now()}`,
-                mode: previewMode
+                mode: previewMode,
+                anchor: descriptor.anchor || null
             };
             if (previewMode === 'click') {
                 this.nodePreviewTimer = window.setTimeout(() => this.dismissNodePreview(), 15000);
@@ -659,7 +745,7 @@ new Vue({
         },
         dismissNodePreview() {
             this.clearNodePreviewTimer();
-            this.nodePreview = { visible: false, kind: '', payload: null, key: '', mode: 'hover' };
+            this.nodePreview = { visible: false, kind: '', payload: null, key: '', mode: 'hover', anchor: null };
         },
         hideHoveredNodePreview(key) {
             if (this.nodePreview.visible && this.nodePreview.mode === 'hover' && (!key || key === this.nodePreview.key)) {
@@ -750,8 +836,12 @@ new Vue({
                 });
                 graph.edges.forEach(edge => {
                     const source = graph.nodes.find(node => node.id === edge.source);
+                    const target = graph.nodes.find(node => node.id === edge.target);
                     edge.sourceHandle = source && source.type === 'condition'
-                        ? (edge.sourceHandle === 'false' ? 'false' : 'true')
+                        ? (['false', 'break'].includes(edge.sourceHandle) ? edge.sourceHandle : 'true')
+                        : 'default';
+                    edge.targetHandle = target && target.type === 'loop-end'
+                        ? (edge.targetHandle === 'break' ? 'break' : 'continue')
                         : 'default';
                 });
                 const trigger = NeuCharWorkflowUi.parseJson(item.triggerConfigJson, {});
@@ -815,9 +905,10 @@ new Vue({
         },
         createSimpleNode(type, name) {
             const config = type === 'condition'
-                ? { left: '{{input}}', operator: 'equals', right: '' }
+                ? { left: '{{input}}', operator: 'equals', right: '', breakOn: '' }
                 : type === 'delay' ? { seconds: 1 }
                     : type === 'loop' ? { count: 3 }
+                    : type === 'loop-end' ? { loopId: '' }
                     : type === 'sub-workflow' ? { workflowId: 0, prompt: '{{input}}' }
                     : type === 'code' ? { assignments: [] }
                     : type === 'aggregate' ? { outputTemplate: '' }
@@ -947,12 +1038,14 @@ new Vue({
             }
 
             const sourceHandle = source.type === 'condition'
-                ? (liveEdge.sourceHandle === 'false' ? 'false' : 'true')
+                ? (['false', 'break'].includes(liveEdge.sourceHandle) ? liveEdge.sourceHandle : 'true')
                 : 'default';
             const insertedHandle = node.type === 'condition' ? 'true' : 'default';
+            const originalTargetHandle = liveEdge.targetHandle || 'default';
             const originalEdges = this.form.graph.edges;
             this.form.graph.edges = originalEdges.filter(item => item.id !== liveEdge.id);
-            const valid = this.canConnect(source, node, sourceHandle) && this.canConnect(node, target, insertedHandle);
+            const valid = this.canConnect(source, node, sourceHandle, this.targetHandleFor(source, node, sourceHandle)) &&
+                this.canConnect(node, target, insertedHandle, originalTargetHandle);
             if (!valid) {
                 this.form.graph.edges = originalEdges;
                 this.$notify({ title: '无法插入节点', message: '该节点无法同时连接原连线的上下游，请选择其他节点。', type: 'warning' });
@@ -964,8 +1057,8 @@ new Vue({
             node.y = position.y;
             if (!existingNode) this.form.graph.nodes.push(node);
             this.form.graph.edges.push(
-                { id: this.makeId('edge'), source: source.id, target: node.id, sourceHandle },
-                { id: this.makeId('edge'), source: node.id, target: target.id, sourceHandle: insertedHandle });
+                { id: this.makeId('edge'), source: source.id, target: node.id, sourceHandle, targetHandle: this.targetHandleFor(source, node, sourceHandle) },
+                { id: this.makeId('edge'), source: node.id, target: target.id, sourceHandle: insertedHandle, targetHandle: originalTargetHandle });
             this.setSelectedNodes([node]);
             this.cancelConnection();
             this.closeEdgeInsertMenu();
@@ -1227,8 +1320,9 @@ new Vue({
             }
             const nodes = this.form.graph.nodes.filter(item => next.includes(item.id));
             this.setSelectedNodes(nodes);
+            this.highlightLoopContext(node);
         },
-        supportsMultipleInputs(node) { return node && ['aggregate', 'merge', 'function'].includes(node.type); },
+        supportsMultipleInputs(node) { return node && ['aggregate', 'merge', 'function', 'loop-end'].includes(node.type); },
         supportsMultipleOutputs(node) { return node && ['condition', 'parallel'].includes(node.type); },
         targetFor(node, sourceHandle) {
             const edge = this.form.graph.edges.find(item => item.source === node.id && item.sourceHandle === sourceHandle);
@@ -1236,20 +1330,29 @@ new Vue({
         },
         incomingEdges(nodeId) { return this.form.graph.edges.filter(edge => edge.target === nodeId); },
         outgoingEdges(nodeId) { return this.form.graph.edges.filter(edge => edge.source === nodeId); },
+        targetHandleFor(source, target, sourceHandle) {
+            if (target?.type !== 'loop-end') return 'default';
+            return source?.type === 'condition' && sourceHandle === 'break' ? 'break' : 'continue';
+        },
         availableTargets(node, sourceHandle) {
             const handle = node.type === 'condition' ? sourceHandle : 'default';
             return this.form.graph.nodes.filter(target =>
                 this.form.graph.edges.some(edge => edge.source === node.id && edge.target === target.id && edge.sourceHandle === handle) ||
-                this.canConnect(node, target, handle));
+                this.canConnect(node, target, handle, this.targetHandleFor(node, target, handle)));
         },
-        canConnect(source, target, sourceHandle) {
+        canConnect(source, target, sourceHandle, targetHandle) {
             if (!source || !target || source.id === target.id || source.type === 'end' || String(target.type).endsWith('trigger')) return false;
             if (this.wouldCreateCycle(source.id, target.id)) return false;
             const handle = source.type === 'condition' ? sourceHandle : 'default';
-            if (this.form.graph.edges.some(edge => edge.source === source.id && edge.target === target.id && edge.sourceHandle === handle)) return false;
+            const targetHandleValue = targetHandle || this.targetHandleFor(source, target, handle);
+            if (this.form.graph.edges.some(edge => edge.source === source.id && edge.target === target.id && edge.sourceHandle === handle && edge.targetHandle === targetHandleValue)) return false;
             const incoming = this.incomingEdges(target.id).filter(edge =>
-                !(edge.source === source.id && edge.sourceHandle === handle));
+                !(edge.source === source.id && edge.sourceHandle === handle && edge.targetHandle === targetHandleValue));
             if (incoming.length && !this.supportsMultipleInputs(target)) return false;
+            if (target.type === 'loop-end' && incoming.some(edge => edge.targetHandle === targetHandleValue)) return false;
+            if (source.type === 'condition' && handle === 'break' && target.type !== 'loop-end') return false;
+            if (target.type === 'loop-end' && targetHandleValue === 'break' &&
+                !(source.type === 'condition' && handle === 'break')) return false;
             return true;
         },
         wouldCreateCycle(sourceId, targetId) {
@@ -1264,13 +1367,14 @@ new Vue({
             }
             return false;
         },
-        setTarget(node, sourceHandle, targetId, silent) {
+        setTarget(node, sourceHandle, targetId, silent, targetHandle) {
             if (this.editingLocked) return false;
             const handle = node.type === 'condition' ? sourceHandle : 'default';
             const target = this.form.graph.nodes.find(item => item.id === targetId);
+            const targetHandleValue = targetHandle || this.targetHandleFor(node, target, handle);
             if (targetId && this.form.graph.edges.some(edge =>
-                edge.source === node.id && edge.target === targetId && edge.sourceHandle === handle)) return true;
-            if (targetId && !this.canConnect(node, target, handle)) {
+                edge.source === node.id && edge.target === targetId && edge.sourceHandle === handle && edge.targetHandle === targetHandleValue)) return true;
+            if (targetId && !this.canConnect(node, target, handle, targetHandleValue)) {
                 if (!silent) this.$notify({ title: '无法连接', message: '目标已有上游、连接会形成循环，或节点不支持该连接方式。多对一目标可使用 Function、聚合或逐项合流节点。', type: 'warning' });
                 return false;
             }
@@ -1279,7 +1383,7 @@ new Vue({
                     !(edge.source === node.id && edge.sourceHandle === handle));
             }
             if (targetId) {
-                this.form.graph.edges.push({ id: this.makeId('edge'), source: node.id, target: targetId, sourceHandle: handle });
+                this.form.graph.edges.push({ id: this.makeId('edge'), source: node.id, target: targetId, sourceHandle: handle, targetHandle: targetHandleValue });
             }
             return true;
         },
@@ -1294,10 +1398,10 @@ new Vue({
             };
             event.preventDefault();
         },
-        completeConnection(node) {
+        completeConnection(node, targetHandle) {
             if (!this.connectionDraft.sourceId || this.editingLocked) return;
             const source = this.form.graph.nodes.find(item => item.id === this.connectionDraft.sourceId);
-            this.setTarget(source, this.connectionDraft.sourceHandle, node.id, false);
+            this.setTarget(source, this.connectionDraft.sourceHandle, node.id, false, targetHandle);
             this.cancelConnection();
         },
         cancelConnection() { this.connectionDraft = { sourceId: '', sourceHandle: '', x: 0, y: 0 }; },
@@ -1673,14 +1777,24 @@ new Vue({
             const source = this.form.graph.nodes.find(node => node.id === edge.source);
             if (!source) return { x: 0, y: 0 };
             if (this.isHorizontalLayout()) {
-                const offset = source.type === 'condition' ? (edge.sourceHandle === 'false' ? 66 : 26) : 46;
+                const offset = source.type === 'condition'
+                    ? (edge.sourceHandle === 'false' ? 46 : edge.sourceHandle === 'break' ? 79 : 13)
+                    : 46;
                 return { x: Number(source.x) + 220, y: Number(source.y) + offset };
             }
-            const offset = source.type === 'condition' ? (edge.sourceHandle === 'false' ? 145 : 75) : 110;
+            const offset = source.type === 'condition'
+                ? (edge.sourceHandle === 'false' ? 110 : edge.sourceHandle === 'break' ? 177 : 43)
+                : 110;
             return { x: Number(source.x) + offset, y: Number(source.y) + 92 };
         },
         edgeEnd(edge) {
             const target = this.form.graph.nodes.find(node => node.id === edge.target);
+            if (target && target.type === 'loop-end') {
+                if (this.isHorizontalLayout()) {
+                    return { x: Number(target.x), y: Number(target.y) + (edge.targetHandle === 'break' ? 68 : 24) };
+                }
+                return { x: Number(target.x) + (edge.targetHandle === 'break' ? 149 : 71), y: Number(target.y) };
+            }
             if (target && this.isHorizontalLayout()) return { x: Number(target.x), y: Number(target.y) + 46 };
             return target ? { x: Number(target.x) + 110, y: Number(target.y) } : { x: 0, y: 0 };
         },
@@ -1742,6 +1856,7 @@ new Vue({
                 if (source && source.type === 'condition') {
                     if (edge.sourceHandle === 'true') return 0;
                     if (edge.sourceHandle === 'false') return 1;
+                    if (edge.sourceHandle === 'break') return 2;
                 }
                 return 0;
             };
@@ -2125,10 +2240,12 @@ new Vue({
             if (node.type === 'webhook-trigger') return '等待外部 Webhook 请求';
             if (node.type === 'manual-trigger') return '由用户手动运行';
             if (node.type === 'delay') return `${node.config.seconds || 0} 秒`;
-            if (node.type === 'loop') return this.isBinding(node.config?.count)
+            if (node.type === 'loop') return this.isTemplateValue(node.config?.count)
+                ? `按语法动态计算次数`
+                : this.isBinding(node.config?.count)
                 ? '从上游读取次数（最多 100 次）'
                 : `顺序重复 ${node.config?.count || 3} 次`;
-            if (node.type === 'loop-end') return '循环体结束后再继续向下执行';
+            if (node.type === 'loop-end') return 'continue / break 后再继续向下执行';
             if (node.type === 'sub-workflow') {
                 const workflow = (this.workflows || []).find(item => Number(item.id) === Number(node.config?.workflowId || 0));
                 return workflow ? '调用：' + workflow.name : '请选择目标工作流';
@@ -2716,6 +2833,85 @@ new Vue({
             const value = node && node.config[key];
             return this.isBinding(value) ? [value.$source.nodeId, value.$source.path || '$'] : [];
         },
+        loopScopeNodeIds(loop) {
+            if (!loop || !this.form?.graph) return [];
+            const edges = this.form.graph.edges || [];
+            const nodes = new Map((this.form.graph.nodes || []).map(node => [node.id, node]));
+            const ids = new Set([loop.id]);
+            const visited = new Set();
+            const queue = edges.filter(edge => edge.source === loop.id).map(edge => edge.target);
+            while (queue.length) {
+                const currentId = queue.shift();
+                if (visited.has(currentId)) continue;
+                visited.add(currentId);
+                const current = nodes.get(currentId);
+                if (!current) continue;
+                ids.add(currentId);
+                // An explicitly owned loop-end closes this scope. A nested loop-end is
+                // transparent to the parent scope so the parent still includes the child.
+                if (current.type === 'loop-end' &&
+                    (!current.config?.loopId || current.config.loopId === loop.id)) continue;
+                edges.filter(edge => edge.source === currentId).forEach(edge => queue.push(edge.target));
+            }
+            return [...ids];
+        },
+        loopScopeLabelNodeIds(loop) {
+            if (!loop) return [];
+            const ids = new Set([loop.id]);
+            this.loopBoundaryNodes(loop).forEach(node => ids.add(node.id));
+            return [...ids];
+        },
+        loopsAffectingNode(node) {
+            if (!node || !this.form?.graph) return [];
+            const loops = this.form.graph.nodes.filter(item => item.type === 'loop');
+            return loops.filter(loop => this.loopScopeNodeIds(loop).includes(node.id));
+        },
+        isLoopScopeHighlighted(node) {
+            return !!node && (this.loopHighlight.nodeIds || []).includes(node.id);
+        },
+        isLoopLabelHighlighted(node) {
+            return !!node && (this.loopHighlight.labelNodeIds || []).includes(node.id);
+        },
+        isLoopScopeEdgeHighlighted(edge) {
+            return !!edge && (this.loopHighlight.edgeIds || []).includes(edge.id);
+        },
+        clearLoopHighlight() {
+            if (this.loopHighlightTimer !== null && this.loopHighlightTimer !== undefined && typeof window !== 'undefined') {
+                window.clearTimeout(this.loopHighlightTimer);
+            }
+            this.loopHighlightTimer = null;
+            this.loopHighlightSequence += 1;
+            this.loopHighlight.nodeIds = [];
+            this.loopHighlight.labelNodeIds = [];
+            this.loopHighlight.edgeIds = [];
+        },
+        highlightLoopContext(node) {
+            this.clearLoopHighlight();
+            const loops = this.loopsAffectingNode(node);
+            if (!loops.length) return;
+
+            const nodeIds = new Set();
+            const labelNodeIds = new Set();
+            const edgeIds = new Set();
+            const edges = this.form.graph.edges || [];
+            loops.forEach(loop => {
+                this.loopScopeNodeIds(loop).forEach(nodeId => nodeIds.add(nodeId));
+                this.loopScopeLabelNodeIds(loop).forEach(nodeId => labelNodeIds.add(nodeId));
+                const scope = new Set(this.loopScopeNodeIds(loop));
+                edges.filter(edge => scope.has(edge.source) && scope.has(edge.target))
+                    .forEach(edge => edgeIds.add(edge.id));
+            });
+            this.loopHighlight.nodeIds = [...nodeIds];
+            this.loopHighlight.labelNodeIds = [...labelNodeIds];
+            this.loopHighlight.edgeIds = [...edgeIds];
+
+            const sequence = this.loopHighlightSequence;
+            if (typeof window !== 'undefined' && typeof window.setTimeout === 'function') {
+                this.loopHighlightTimer = window.setTimeout(() => {
+                    if (this.loopHighlightSequence === sequence) this.clearLoopHighlight();
+                }, 3500);
+            }
+        },
         loopBoundaryNodes(loop) {
             if (!loop || !this.form?.graph) return [];
             const nodes = this.form.graph.nodes || [];
@@ -2731,12 +2927,20 @@ new Vue({
                 const node = byId.get(current);
                 if (!node) continue;
                 if (node.type === 'loop-end') {
-                    boundaries.push(node);
-                    continue;
+                    const owner = String(node.config?.loopId || '');
+                    if (!owner || owner === String(loop.id)) {
+                        boundaries.push(node);
+                        continue;
+                    }
                 }
                 edges.filter(edge => edge.source === current).forEach(edge => queue.push(edge.target));
             }
             return boundaries;
+        },
+        loopOwnerOptions(loopEnd) {
+            if (!loopEnd || !this.form?.graph) return [];
+            return (this.form.graph.nodes || []).filter(loop =>
+                loop.type === 'loop' && this.loopBoundaryNodes(loop).some(node => node.id === loopEnd.id));
         },
         loopBoundaryValidationError(loop) {
             const graph = this.form?.graph;
@@ -2747,30 +2951,41 @@ new Vue({
             const byId = new Map((graph.nodes || []).map(node => [node.id, node]));
             const outgoing = (graph.edges || []).filter(edge => edge.source === loop.id);
             if (outgoing.length !== 1) return `循环节点“${loop.name}”必须连接一个循环体入口。`;
-            let currentId = outgoing[0].target;
-            let previousId = loop.id;
-            const visited = new Set();
-            while (currentId !== boundary.id) {
+            const walk = (currentId, visited) => {
+                if (currentId === boundary.id) return '';
                 if (visited.has(currentId)) return `循环节点“${loop.name}”的循环体路径无效。`;
                 visited.add(currentId);
                 const current = byId.get(currentId);
                 if (!current) return '循环体引用了不存在的节点。';
-                if (['condition', 'parallel', 'aggregate', 'merge', 'loop', 'end'].includes(current.type)) {
-                    return `循环节点“${loop.name}”当前只支持普通节点组成的单一路径。`;
+                if (current.type === 'end' || ['parallel', 'aggregate', 'merge'].includes(current.type)) {
+                    return `循环节点“${loop.name}”的循环体不支持结束、并行、聚合或逐项合流节点。`;
                 }
-                const incoming = (graph.edges || []).filter(edge => edge.target === currentId);
-                if (incoming.length !== 1 || incoming[0].source !== previousId) {
-                    return `循环体节点“${current.name}”不能被循环外路径共享。`;
+                if (current.type === 'loop-end') {
+                    const next = (graph.edges || []).filter(edge => edge.source === currentId);
+                    return next.length === 1 ? walk(next[0].target, new Set(visited)) : '嵌套循环结束后必须连接一个后续节点。';
+                }
+                if (current.type === 'loop') {
+                    const nested = this.loopBoundaryNodes(current);
+                    if (nested.length !== 1) return `嵌套循环“${current.name}”必须明确配置唯一的循环结束节点。`;
+                    const next = (graph.edges || []).filter(edge => edge.source === nested[0].id);
+                    return next.length === 1 ? walk(next[0].target, new Set(visited)) : `嵌套循环“${current.name}”结束后必须连接一个后续节点。`;
                 }
                 const next = (graph.edges || []).filter(edge => edge.source === currentId);
-                if (next.length !== 1) return `循环节点“${loop.name}”的循环体必须是一条单一路径。`;
-                previousId = currentId;
-                currentId = next[0].target;
-            }
-            const boundaryIncoming = (graph.edges || []).filter(edge => edge.target === boundary.id);
-            return boundaryIncoming.length !== 1 || boundaryIncoming[0].source !== previousId
-                ? '循环结束节点必须是循环体的唯一最后节点。'
-                : '';
+                if (current.type === 'condition') {
+                    for (const edge of next) {
+                        if (edge.sourceHandle === 'break' && (edge.target !== boundary.id || edge.targetHandle !== 'break')) {
+                            return `条件节点“${current.name}”的 break 输出必须连接当前循环的 break 输入端。`;
+                        }
+                        if (edge.sourceHandle !== 'break') {
+                            const error = walk(edge.target, new Set(visited));
+                            if (error) return error;
+                        }
+                    }
+                    return next.some(edge => edge.sourceHandle === 'true' || edge.sourceHandle === 'false') ? '' : `循环体内的条件节点“${current.name}”必须连接真/假分支。`;
+                }
+                return next.length === 1 ? walk(next[0].target, visited) : `循环节点“${loop.name}”的循环体必须是一条单一路径。`;
+            };
+            return walk(outgoing[0].target, new Set());
         },
         loopCountOutputOptions() {
             return this.upstreamNodes(this.selectedNode).map(node => ({
@@ -2787,6 +3002,17 @@ new Vue({
         loopCountSourceLabel(node) {
             const binding = node?.config?.count?.$source;
             return binding ? this.templateBindingLabel(binding) : '已失效的上游来源';
+        },
+        loopCountFormulaValidationError(node) {
+            const value = node?.config?.count;
+            if (!this.isTemplateValue(value)) return '';
+            const template = this.templateFor(value);
+            const text = String(template?.text || '').trim();
+            if (!text) return `循环节点“${node.name}”的次数语法不能为空。`;
+            if (!text.includes('{{=') && !(Array.isArray(template?.bindings) && template.bindings.length)) {
+                return `循环节点“${node.name}”的次数语法必须是数值公式或上游数值引用。`;
+            }
+            return '';
         },
         setLoopCountBinding(node, selection) {
             if (!selection || selection.length < 2) {
@@ -2879,6 +3105,10 @@ new Vue({
                 if (String(node.config.outputTemplate).length > 8000) return `聚合节点“${node.name}”的输出内容不能超过 8000 个字符。`;
             }
             for (const node of this.form.graph.nodes.filter(item => item.type === 'loop')) {
+                const loopFormulaError = typeof this.loopCountFormulaValidationError === 'function'
+                    ? this.loopCountFormulaValidationError(node)
+                    : '';
+                if (loopFormulaError) return loopFormulaError;
                 if (this.isBinding(node.config?.count)) {
                     const loopBoundaryError = this.loopBoundaryValidationError(node);
                     if (loopBoundaryError) return loopBoundaryError;
@@ -3166,6 +3396,10 @@ new Vue({
             this.run.finalOutput = '';
             this.run.events = [];
             this.run.nodeStates = {};
+            this.run.humanInteractions = [];
+            this.run.humanReplyVisible = false;
+            this.run.humanReplyRequest = null;
+            this.run.humanReplyInput = '';
             this.appendConsole('validation', '正在保存并校验当前工作流……', 'running');
             try {
                 const saved = await this.saveWorkflow({ silent: true });
@@ -3196,6 +3430,10 @@ new Vue({
                     this.run.lastSequence = Math.max(this.run.lastSequence, Number(event.sequence || 0));
                     this.applyRunEvent(event);
                 });
+                this.run.humanInteractions = Array.isArray(snapshot.humanInteractions)
+                    ? snapshot.humanInteractions
+                    : [];
+                this.syncHumanInteractionDialog();
                 if (snapshot.running) {
                     this.run.pollTimer = window.setTimeout(this.pollRun, 450);
                     return;
@@ -3211,6 +3449,55 @@ new Vue({
                 this.run.error = this.errorMessage(error, '读取运行状态失败。');
                 this.appendConsole('workflow', this.run.error, 'failed');
             }
+        },
+        syncHumanInteractionDialog() {
+            const pending = this.run.humanInteractions || [];
+            const currentId = this.run.humanReplyRequest && this.run.humanReplyRequest.requestId;
+            if (currentId && !pending.some(item => item.requestId === currentId)) {
+                this.run.humanReplyVisible = false;
+                this.run.humanReplyRequest = null;
+                this.run.humanReplyInput = '';
+            }
+            if (!this.run.humanReplyRequest && pending.length) {
+                this.openHumanInteraction(pending[0]);
+            }
+        },
+        openHumanInteraction(request) {
+            if (!request) return;
+            this.run.humanReplyRequest = request;
+            this.run.humanReplyInput = request.requestType === 'humanTurn' ? '' : (request.prompt || '');
+            this.run.humanReplyVisible = true;
+        },
+        async resolveHumanInteraction(approved) {
+            const request = this.run.humanReplyRequest;
+            if (!request || this.run.humanReplySubmitting || !this.run.runId) return;
+            const isHumanTurn = request.requestType === 'humanTurn';
+            if (isHumanTurn && !String(this.run.humanReplyInput || '').trim()) {
+                this.$notify({ title: '需要 Human 输入', message: '请输入文本后再继续 Workflow。', type: 'warning' });
+                return;
+            }
+            this.run.humanReplySubmitting = true;
+            try {
+                await service.post('/Admin/NeuCharWorkflow/Index?handler=ResolveHuman', {
+                    runId: this.run.runId,
+                    requestId: request.requestId,
+                    approved: !!approved,
+                    input: isHumanTurn ? String(this.run.humanReplyInput || '').trim() : '',
+                    reason: isHumanTurn ? 'Workflow 快速输入' : 'Workflow 快速审批'
+                }, { customAlert: true });
+                this.run.humanInteractions = this.run.humanInteractions.filter(item => item.requestId !== request.requestId);
+                this.run.humanReplyVisible = false;
+                this.run.humanReplyRequest = null;
+                this.run.humanReplyInput = '';
+                this.$notify({ title: 'Workflow', message: approved ? 'Human 处理已提交，流程继续等待/执行。' : '已拒绝本次工具调用，流程继续处理。', type: approved ? 'success' : 'warning' });
+            } catch (error) {
+                this.$notify({ title: 'Human 处理失败', message: this.errorMessage(error, '请求可能已由另一入口处理。'), type: 'error' });
+            } finally {
+                this.run.humanReplySubmitting = false;
+            }
+        },
+        closeHumanInteractionDialog() {
+            this.run.humanReplyVisible = false;
         },
         async abortWorkflow() {
             if (!this.run.running || this.run.aborting || !this.run.runId) return;
@@ -3249,7 +3536,9 @@ new Vue({
             }
             if (event.nodeId && ['running', 'success', 'failed'].includes(event.status)) this.$set(this.run.nodeStates, event.nodeId, event.status);
             this.run.events.push(event);
-            if (this.run.events.length > 500) this.run.events.splice(0, this.run.events.length - 500);
+            if (this.run.events.length > MaxWorkflowConsoleEvents) {
+                this.run.events.splice(0, this.run.events.length - MaxWorkflowConsoleEvents);
+            }
             this.$nextTick(() => { const el = this.$refs.consoleLog; if (el) el.scrollTop = el.scrollHeight; });
         },
         appendConsole(nodeName, message, status, output) {
@@ -3261,6 +3550,8 @@ new Vue({
             this.clearRunPoll();
             this.run.running = false; this.run.validating = false; this.run.aborting = false; this.run.runId = ''; this.run.status = 'idle';
             this.run.events = []; this.run.lastSequence = 0; this.run.nodeStates = {}; this.run.finalOutput = ''; this.run.error = '';
+            this.run.humanInteractions = []; this.run.humanReplyVisible = false; this.run.humanReplyRequest = null;
+            this.run.humanReplyInput = ''; this.run.humanReplySubmitting = false;
         },
         errorMessage(error, fallback) {
             return this.validationIssueFromError(error, fallback).message;

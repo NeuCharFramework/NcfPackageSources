@@ -42,7 +42,11 @@
                 <el-table-column prop="sessionId" label="SessionId" min-width="220"></el-table-column>
                 <el-table-column prop="templateKey" label="模板" width="140"></el-table-column>
                 <el-table-column prop="runtimeKind" label="运行时" width="100"></el-table-column>
-                <el-table-column prop="status" label="状态" width="100"></el-table-column>
+                <el-table-column prop="status" label="状态" width="110">
+                    <template slot-scope="scope">
+                        <el-tag :type="statusTagType(scope.row.status)" size="mini">{{ statusText(scope.row.status) }}</el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="hostPort" label="本机端口" width="90"></el-table-column>
                 <el-table-column label="访问" min-width="220">
                     <template slot-scope="scope">
@@ -84,6 +88,42 @@
                 };
             },
             methods: {
+                statusText(status) {
+                    // SandboxSessionStatus: Creating=0, Running=1, Stopping=2, Stopped=3, Failed=4, Expired=5
+                    const map = {
+                        0: '创建中',
+                        1: '运行中',
+                        2: '停止中',
+                        3: '已停止',
+                        4: '失败',
+                        5: '已过期',
+                        Creating: '创建中',
+                        Running: '运行中',
+                        Stopping: '停止中',
+                        Stopped: '已停止',
+                        Failed: '失败',
+                        Expired: '已过期'
+                    };
+                    return map[status] ?? ('未知(' + status + ')');
+                },
+                statusTagType(status) {
+                    const key = (typeof status === 'string') ? status : String(status);
+                    const map = {
+                        '0': 'info',
+                        '1': 'success',
+                        '2': 'warning',
+                        '3': 'info',
+                        '4': 'danger',
+                        '5': 'info',
+                        Creating: 'info',
+                        Running: 'success',
+                        Stopping: 'warning',
+                        Stopped: 'info',
+                        Failed: 'danger',
+                        Expired: 'info'
+                    };
+                    return map[key] || 'info';
+                },
                 openDocs() {
                     window.open(this.docsUrl, '_blank', 'noopener');
                 },

@@ -37,7 +37,8 @@ public sealed record WorkflowObjectExecutionRequest(
     string Input,
     int AiModelId,
     string CorrelationId,
-    IReadOnlyDictionary<string, string> Parameters = null);
+    IReadOnlyDictionary<string, string> Parameters = null,
+    int? AdminUserId = null);
 
 public sealed record WorkflowObjectExecutionResult(
     bool Success,

@@ -18,6 +18,7 @@
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.NeuCharWorkflow.Application.Events;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 using WorkflowEntity = Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflow;
@@ -48,6 +49,7 @@ public sealed class NeuCharWorkflowAppService
     private readonly NeuCharWorkflowRunCoordinator _runCoordinator;
     private readonly WorkflowEventPublisher _eventPublisher;
     private readonly XncfModuleService _xncfModuleService;
+    private readonly IWorkflowHumanInteractionBridge _humanInteractionBridge;
 
     public NeuCharWorkflowAppService(
         NeuCharWorkflowService workflowService,
@@ -57,7 +59,8 @@ public sealed class NeuCharWorkflowAppService
         NeuCharWorkflowFunctionService functionService,
         NeuCharWorkflowRunCoordinator runCoordinator,
         WorkflowEventPublisher eventPublisher,
-        XncfModuleService xncfModuleService)
+        XncfModuleService xncfModuleService,
+        IWorkflowHumanInteractionBridge humanInteractionBridge)
     {
         _workflowService = workflowService;
         _workflowVersionService = workflowVersionService;
@@ -67,6 +70,7 @@ public sealed class NeuCharWorkflowAppService
         _runCoordinator = runCoordinator;
         _eventPublisher = eventPublisher;
         _xncfModuleService = xncfModuleService;
+        _humanInteractionBridge = humanInteractionBridge;
     }
 
     public async Task<IReadOnlyList<WorkflowListItem>> GetListAsync(int adminUserId, CancellationToken cancellationToken = default)
@@ -279,8 +283,65 @@ public sealed class NeuCharWorkflowAppService
         return runId;
     }
 
+    public async Task<NeuCharWorkflowRunSnapshot?> GetRunStatusAsync(
+        Guid runId,
+        int adminUserId,
+        long afterSequence,
+        CancellationToken cancellationToken = default)
+    {
+        if (runId == Guid.Empty)
+        {
+            return null;
+        }
+
+        var snapshot = _runCoordinator.GetSnapshot(runId, adminUserId, afterSequence);
+        if (snapshot == null)
+        {
+            return null;
+        }
+
+        var interactions = await _humanInteractionBridge.GetPendingAsync(
+            BuildRunCorrelationId(snapshot.WorkflowId, runId),
+            adminUserId.ToString(),
+            cancellationToken).ConfigureAwait(false);
+        return snapshot with { HumanInteractions = interactions };
+    }
+
     public NeuCharWorkflowRunSnapshot? GetRunStatus(Guid runId, int adminUserId, long afterSequence) =>
         runId == Guid.Empty ? null : _runCoordinator.GetSnapshot(runId, adminUserId, afterSequence);
+
+    public async Task<WorkflowHumanInteractionResult> ResolveHumanInteractionAsync(
+        Guid runId,
+        int adminUserId,
+        string requestId,
+        bool approved,
+        string input = null,
+        string reason = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (runId == Guid.Empty)
+        {
+            return new WorkflowHumanInteractionResult(false, false, null, null, "缺少有效的 Workflow 运行 ID。");
+        }
+
+        var snapshot = _runCoordinator.GetSnapshot(runId, adminUserId, 0);
+        if (snapshot == null)
+        {
+            return new WorkflowHumanInteractionResult(false, false, null, null, "Workflow 运行不存在或不属于当前账号。");
+        }
+
+        return await _humanInteractionBridge.ResolveAsync(
+            BuildRunCorrelationId(snapshot.WorkflowId, runId),
+            adminUserId.ToString(),
+            requestId,
+            approved,
+            input,
+            reason,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    public static string BuildRunCorrelationId(int workflowId, Guid runId)
+        => $"workflow-{workflowId}-run-{runId:N}";
 
     public void AbortRun(Guid runId, int adminUserId)
     {

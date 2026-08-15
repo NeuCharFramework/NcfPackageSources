@@ -18,6 +18,7 @@
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
+using Senparc.Xncf.AgentsManager.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -87,6 +88,10 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         /// 绑定的 KnowledgeBase ID。跨 XNCF 数据库上下文，不建立数据库外键。
         /// </summary>
         public int? KnowledgeBaseId { get; private set; }
+
+        /// <summary>是否为系统保留的 Human 参与者。该属性不落库。</summary>
+        [NotMapped]
+        public bool IsHuman => HumanParticipantConstants.IsHuman(PromptCode);
 
         /// <summary>
         /// 获取McpEndpoints的JSON对象

@@ -386,7 +386,8 @@ var app = new Vue({
         description: '', // 说明
         contextSharingMode: null, // null 时本地群沿用旧行为，远程成员默认最小化共享
         adminAgentTemplateId: '', // 群主即agent
-        enterAgentTemplateId: '' // 对接人即agent
+        enterAgentTemplateId: '', // 对接人即agent
+        includeHumanParticipant: false // 是否加入 Human 文本参与者
       },
       groupFormRules: {
         name: [
@@ -413,6 +414,11 @@ var app = new Vue({
         aiModelId: '', // 模型 id
         promptCommand: '', // 任务描述
         personality: true, // 是否采用个性化
+        requireHumanApproval: false, // 工具调用是否需要人工批准
+        humanInTheLoopLevel: 0, // 0 自动，1 风险分层，2 工具审批，3 Human 参与者
+        pluginToolPermission: 0, // 0 继承，1 自动，2 审批，3 禁止
+        mcpToolPermission: 0,
+        includeHumanParticipant: false,
         description: ''
       },
       groupStartParticipants: [],
@@ -455,6 +461,11 @@ var app = new Vue({
       historyStream: {},
       historyStreamSilentTimer: {},
       historyStreamingDrafts: {},
+      humanApprovalRequests: {},
+      humanReplyDialogVisible: false,
+      humanReplyRequest: null,
+      humanReplyText: '',
+      humanReplySubmitting: false,
       usageAnalyticsVisible: false,
       usageAnalyticsLoading: false,
       usageAnalyticsTaskId: null,
@@ -2704,14 +2715,19 @@ var app = new Vue({
       // 组 新增|编辑
       if (saveType === 'drawerGroup') {
         serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.SetChatGroup'
-        const memberAgentTemplateIds = (serviceForm.members || []).map(item => item.id)
+        const memberAgentTemplateIds = (serviceForm.members || [])
+          .filter(item => item && item.isHuman !== true)
+          .map(item => item.id)
         const remoteAgentIds = (serviceForm.remoteMembers || []).map(item => item.id)
         serviceForm.memberAgentTemplateIds = memberAgentTemplateIds
         serviceForm.remoteAgentIds = remoteAgentIds
-        serviceURL += `?${getInterfaceQueryStr({ memberAgentTemplateIds, remoteAgentIds })}`
+        serviceURL += `?${getInterfaceQueryStr({ memberAgentTemplateIds, remoteAgentIds, includeHumanParticipant: !!serviceForm.includeHumanParticipant })}`
       }
       // 组启动（运行任务） ['drawerGroupStart', 'drawerTaskStart'].includes(btnType)
       if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
+        if (serviceForm.requireHumanApproval && Number(serviceForm.humanInTheLoopLevel || 0) === 0) {
+          serviceForm.humanInTheLoopLevel = 2
+        }
         serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.RunGroup'
       }
       if (saveType === 'dialogTaskEvaluation') {
@@ -3058,6 +3074,7 @@ var app = new Vue({
       const streamUrl = `/api/Senparc.Xncf.AgentsManager/ChatTaskStream/Subscribe?chatTaskId=${chatTaskId}&replayBuffered=false&_ts=${Date.now()}`
       const source = new EventSource(streamUrl, { withCredentials: true })
       this.historyStream[listType] = source
+      this.loadPendingHumanRequests(chatTaskId)
       this.resetTaskHistoryStreamSilentTimer(listType, chatTaskId)
 
       const rearmSilentTimer = () => {
@@ -3120,9 +3137,21 @@ var app = new Vue({
         rearmSilentTimer()
       }
 
+      const onHumanRequest = (event) => {
+        if (this.historyStream[listType] !== source) return
+        this.clearTaskHistoryStreamSilentTimer(listType)
+        const payload = this.safeParseStreamEvent(event)
+        if (payload) {
+          this.setCurrentTaskStatusByType(listType, chatTaskId, 2)
+          this.handleHumanApprovalRequest(payload)
+        }
+        rearmSilentTimer()
+      }
+
       source.addEventListener('chunk', onChunk)
       source.addEventListener('message', onMessage)
       source.addEventListener('status', onStatus)
+      source.addEventListener('humanRequest', onHumanRequest)
 
       source.onerror = () => {
         if (this.historyStream[listType] !== source) return
@@ -3131,6 +3160,92 @@ var app = new Vue({
         this.clearTaskGeneratingPlaceholder(listType)
         this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
         this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
+      }
+    },
+    async handleHumanApprovalRequest(payload) {
+      const requestId = String(payload?.humanRequestId || '')
+      if (!requestId || this.humanApprovalRequests[requestId]) {
+        return
+      }
+
+      this.$set(this.humanApprovalRequests, requestId, true)
+      if (String(payload?.humanRequestType || payload?.requestType || '').toLowerCase() === 'humanturn') {
+        this.humanReplyRequest = payload
+        this.humanReplyText = ''
+        this.humanReplyDialogVisible = true
+        return
+      }
+
+      const toolName = payload.humanToolName || payload.toolName || '工具调用'
+      const toolArguments = String(payload.humanToolArguments || payload.toolArguments || '').slice(0, 1600)
+      const prompt = `${payload.text || payload.prompt || '智能体请求人工确认。'}\n\n工具：${toolName}${toolArguments ? `\n参数：${toolArguments}` : ''}\n\n点击“确定”批准，点击“取消”拒绝。`
+      const approved = typeof window !== 'undefined' && window.confirm(prompt)
+      const reason = approved ? '用户确认' : '用户拒绝'
+
+      try {
+        const query = getInterfaceQueryStr({ requestId, approved, reason })
+        const response = await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ResolveHumanRequest?${query}`)
+        const data = response?.data ?? {}
+        if (!data.success) {
+          this.$message.error(data.errorMessage || data.data || '人工审批提交失败')
+        }
+      } catch (error) {
+        this.$message.error(error?.message || '人工审批提交失败')
+      } finally {
+        this.$delete(this.humanApprovalRequests, requestId)
+      }
+    },
+    async submitHumanReply() {
+      const requestId = String(this.humanReplyRequest?.humanRequestId || this.humanReplyRequest?.requestId || '')
+      const input = String(this.humanReplyText || '').trim()
+      if (!requestId || !input) {
+        this.$message.warning('请输入 Human 回复')
+        return
+      }
+
+      this.humanReplySubmitting = true
+      try {
+        const response = await serviceAM.post(
+          '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.SendHumanMessage',
+          { requestId, input })
+        const data = response?.data ?? {}
+        if (!data.success) {
+          this.$message.error(data.errorMessage || data.data || 'Human 回复提交失败')
+          return
+        }
+
+        const submittedRequestId = requestId
+        this.humanReplyDialogVisible = false
+        this.humanReplyRequest = null
+        this.humanReplyText = ''
+        this.$delete(this.humanApprovalRequests, submittedRequestId)
+        this.$message.success('Human 回复已提交')
+      } catch (error) {
+        this.$message.error(error?.message || 'Human 回复提交失败')
+      } finally {
+        this.humanReplySubmitting = false
+      }
+    },
+    closeHumanReplyDialog() {
+      const requestId = String(this.humanReplyRequest?.humanRequestId || this.humanReplyRequest?.requestId || '')
+      this.humanReplyDialogVisible = false
+      this.humanReplyRequest = null
+      this.humanReplyText = ''
+      if (requestId) {
+        this.$delete(this.humanApprovalRequests, requestId)
+      }
+    },
+    async loadPendingHumanRequests(chatTaskId) {
+      if (!chatTaskId) return
+      try {
+        const response = await serviceAM.get(
+          `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetHumanRequests?chatTaskId=${encodeURIComponent(chatTaskId)}`,
+          { customAlert: true }
+        )
+        const pendingRequests = response?.data?.data || []
+        pendingRequests.forEach(request => this.handleHumanApprovalRequest(request))
+      } catch (error) {
+        console.warn('load pending human approval requests failed', chatTaskId, error)
       }
     },
     clearTaskHistoryStreamSilentTimer(listType) {
@@ -3376,6 +3491,8 @@ var app = new Vue({
                   Object.assign(this[formName], {
                     ...groupDetail.chatGroupDto,
                     members: groupDetail.agentTemplateDtoList || groupDetail.chatGroupMembers || [],
+                    includeHumanParticipant: (groupDetail.agentTemplateDtoList || groupDetail.chatGroupMembers || [])
+                      .some(member => member && member.isHuman === true),
                     remoteMembers: (groupDetail.remoteMemberDtoList || []).map(member => member.remoteAgentDto || member)
                   })
                 }
@@ -3636,6 +3753,7 @@ var app = new Vue({
         this.groupStartForm.name = chatGroup.name ? `${chatGroup.name}1` : ''
         this.groupStartForm.chatGroupId = chatGroup.id || ''
         this.groupStartParticipants = this.buildGroupStartParticipants(formData)
+        this.groupStartForm.includeHumanParticipant = this.groupStartParticipants.some(participant => participant.agentKind === 'Human')
         this.groupStartPromptCaretStart = 0
         this.groupStartPromptCaretEnd = 0
         this.visible[visibleKey] = true
@@ -5093,8 +5211,8 @@ var app = new Vue({
       const localParticipantMap = new Map()
       const localParticipants = localAgents.map(agent => {
         const participant = Object.assign({}, agent, {
-          participantKey: `local:${agent.id}`,
-          agentKind: 'Local',
+          participantKey: agent.isHuman ? `human:${agent.id}` : `local:${agent.id}`,
+          agentKind: agent.isHuman ? 'Human' : 'Local',
           roles: []
         })
         localParticipantMap.set(agent.id, participant)

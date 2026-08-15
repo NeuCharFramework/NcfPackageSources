@@ -47,13 +47,17 @@ ISandboxRuntime
 |---|---|---|
 | `python-exec` | 短任务 Python | 否（登记会话；Exec 时 `docker run --rm`） |
 | `csharp-exec` | 短任务 C#（**.NET 10** file-based：`dotnet run --file main.cs`） | 否（同上） |
-| `jupyter-python` | JupyterLab 交互（更耗内存） | **是**（Destroy / TTL 停容器） |
+| `jupyter-python` | JupyterLab 交互（Python；更耗内存） | **是**（Destroy / TTL 停容器） |
+| `jupyter-csharp` | JupyterLab 交互（C#；需配置独立镜像） | **是**（Destroy / TTL 停容器） |
 
 「销毁」始终清理会话登记与配额；若存在真实容器（Jupyter 或将来的常驻 Exec worker）则一并删除。
 
 默认镜像（与 Docs 对齐）：`mcr.microsoft.com/dotnet/sdk:10.0`。更新 tag 时优先改 Docs，再同步代码模板。  
 C# 代码可用顶层语句，例如：`Console.WriteLine("hello");`（无需手写完整 Program/csproj）。  
 Exec 容器无外网：自动注入离线 `nuget.config` + `PublishAot=false`（避免默认 AOT 去拉 NuGet）。
+
+`jupyter-csharp` 使用 `tools/SandboxImages/JupyterDotnet` 构建的独立镜像，内含 .NET SDK、.NET Interactive
+Jupyter Kernel 和构建时预热的常用 NuGet 包；镜像构建完成后需通过 `Images:Overrides:jupyter-csharp` 配置。
 
 ### 安全与资源默认
 
@@ -112,9 +116,17 @@ dotnet run -- --database-upgrade
 
 ```json
 "SenparcXncfSandbox": {
+  "Docker": {
+    // docker run 在本地没有镜像时会同步下载；默认 900 秒，可按需调整为 60-3600
+    "InteractiveCreateTimeoutSeconds": 900
+  },
   "Images": {
     "RegistryPrefix": "",
-    "Overrides": { }
+    "Overrides": {
+      // 国内网络临时代理示例（第三方地址，稳定性不保证；不是清华 TUNA 官方镜像）
+      // "jupyter-python": "quay.dockerproxy.net/jupyter/minimal-notebook:latest",
+      // "jupyter-csharp": "ncf-jupyter-dotnet:10.0"
+    }
   }
 }
 ```

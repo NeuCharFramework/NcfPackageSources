@@ -156,10 +156,27 @@ public class IndexModel(
         }
     }
 
-    public IActionResult OnGetRunStatus(Guid runId, long afterSequence = 0)
+    public async Task<IActionResult> OnGetRunStatusAsync(Guid runId, long afterSequence = 0)
     {
-        var snapshot = workflowAppService.GetRunStatus(runId, CurrentAdminUserId, afterSequence);
+        var snapshot = await workflowAppService.GetRunStatusAsync(
+            runId,
+            CurrentAdminUserId,
+            afterSequence,
+            HttpContext.RequestAborted).ConfigureAwait(false);
         return snapshot == null ? NotFound() : Ok(snapshot);
+    }
+
+    public async Task<IActionResult> OnPostResolveHumanAsync([FromBody] ResolveHumanWorkflowRequest request)
+    {
+        var result = await workflowAppService.ResolveHumanInteractionAsync(
+            request?.RunId ?? Guid.Empty,
+            CurrentAdminUserId,
+            request?.RequestId,
+            request?.Approved ?? false,
+            request?.Input,
+            request?.Reason,
+            HttpContext.RequestAborted).ConfigureAwait(false);
+        return result.Success ? Ok(result) : StatusCode(409, result.Message);
     }
 
     public IActionResult OnPostAbortRun([FromBody] AbortWorkflowRunRequest request)
@@ -213,6 +230,15 @@ public class IndexModel(
     {
         public int Id { get; set; }
         public string? Input { get; set; }
+    }
+
+    public sealed class ResolveHumanWorkflowRequest
+    {
+        public Guid RunId { get; set; }
+        public string? RequestId { get; set; }
+        public bool Approved { get; set; }
+        public string? Input { get; set; }
+        public string? Reason { get; set; }
     }
 
     public sealed class DeleteWorkflowRequest

@@ -16,6 +16,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Domain.Services;
 
@@ -29,11 +30,16 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
     public const string SandboxLabel = "ncf.sandbox=1";
     private readonly ILogger<DockerSandboxRuntime> _logger;
     private readonly ISandboxImageResolver _imageResolver;
+    private readonly SandboxDockerOptions _dockerOptions;
 
-    public DockerSandboxRuntime(ILogger<DockerSandboxRuntime> logger, ISandboxImageResolver imageResolver)
+    public DockerSandboxRuntime(
+        ILogger<DockerSandboxRuntime> logger,
+        ISandboxImageResolver imageResolver,
+        IOptions<SandboxDockerOptions>? dockerOptions = null)
     {
         _logger = logger;
         _imageResolver = imageResolver ?? new SandboxImageResolver(new SandboxImageOptions());
+        _dockerOptions = dockerOptions?.Value ?? new SandboxDockerOptions();
     }
 
     public SandboxRuntimeKind Kind => SandboxRuntimeKind.Docker;
@@ -97,7 +103,12 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             "--ServerApp.root_dir=/home/jovyan/work"
         };
 
-        var run = await RunDockerAsync(args, null, TimeSpan.FromMinutes(3), cancellationToken).ConfigureAwait(false);
+        var createTimeout = _dockerOptions.GetInteractiveCreateTimeout();
+        _logger.LogInformation(
+            "Sandbox interactive container creating: session={SessionId} timeoutSeconds={TimeoutSeconds}",
+            request.SessionId,
+            createTimeout.TotalSeconds);
+        var run = await RunDockerAsync(args, null, createTimeout, cancellationToken).ConfigureAwait(false);
         if (run.ExitCode != 0)
         {
             throw new InvalidOperationException($"Docker 启动失败: {run.StdErr}\n{run.StdOut}");

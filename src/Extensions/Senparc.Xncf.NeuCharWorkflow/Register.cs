@@ -29,6 +29,7 @@ using Senparc.Xncf.NeuCharWorkflow.Application.Events;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 using Senparc.Xncf.NeuCharWorkflow.Models;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -89,6 +90,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
             serviceProvider.GetRequiredService<NeuCharWorkflowNeuBellProvider>());
         services.AddScoped<NeuCharWorkflowEngine>();
         services.AddSingleton<NeuCharWorkflowRunCoordinator>();
+        services.AddSingleton<IWorkflowHumanInteractionBridge, NullWorkflowHumanInteractionBridge>();
         services.AddScoped<WorkflowEventPublisher>();
         services.AddScoped<NeuCharWorkflowAppService>();
         services.AddSingleton<LegacyWorkflowMigrationService>();

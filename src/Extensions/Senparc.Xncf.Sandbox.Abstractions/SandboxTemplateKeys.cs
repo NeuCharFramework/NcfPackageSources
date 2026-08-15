@@ -22,6 +22,7 @@ public static class SandboxTemplateKeys
     public const string PythonExec = "python-exec";
     public const string CsharpExec = "csharp-exec";
     public const string JupyterPython = "jupyter-python";
+    public const string JupyterCsharp = "jupyter-csharp";
     /// <summary>
     /// Dedicated NCF/XNCF preview workload. It is not a generic shell and has a fixed build and
     /// launch sequence.

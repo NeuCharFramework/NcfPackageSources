@@ -25,7 +25,8 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
     {
         new SelectionItem(SandboxTemplateKeys.PythonExec, "Python Exec", "短任务执行 Python（Docker）", true),
         new SelectionItem(SandboxTemplateKeys.CsharpExec, "C# Exec", "短任务执行 C#（Docker SDK 镜像）"),
-        new SelectionItem(SandboxTemplateKeys.JupyterPython, "JupyterLab Python", "交互式 Notebook（较耗内存）")
+        new SelectionItem(SandboxTemplateKeys.JupyterPython, "JupyterLab Python", "交互式 Python Notebook（较耗内存）"),
+        new SelectionItem(SandboxTemplateKeys.JupyterCsharp, "JupyterLab C#", "交互式 C# Notebook（需先构建/配置镜像）")
     });
 
     [Description("运行时||一期请选 Docker；Wasm 尚未可用")]

@@ -165,6 +165,7 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 Personality = false,
                 HookPlatform = HookPlatform.None,
                 CorrelationId = request.CorrelationId,
+                HumanRecipientUserId = request.AdminUserId?.ToString(),
                 CancellationToken = cancellationToken
             }).ConfigureAwait(false);
             return new WorkflowObjectExecutionResult(true, $"Agent 组“{group.Name}”已完成本轮任务。");

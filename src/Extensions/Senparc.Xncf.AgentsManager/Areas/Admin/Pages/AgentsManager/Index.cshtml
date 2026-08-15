@@ -1810,6 +1810,10 @@
                     <el-checkbox v-model="groupForm.enable">启用该组</el-checkbox>
                     <div class="form-help-text">新建组默认启用。停用后不会创建新任务，也不会作为 Workflow 节点使用。</div>
                 </el-form-item>
+                <el-form-item label="Human 参与者">
+                    <el-checkbox v-model="groupForm.includeHumanParticipant">加入 Human 文本参与者</el-checkbox>
+                    <div class="form-help-text">运行轮次到达 Human 时任务会暂停，窗口提供文本输入；回复成功后继续 MAF 工作流。</div>
+                </el-form-item>
                 <el-form-item label="本地成员" prop="members">
                     <div class="groupFMB">
                         <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
@@ -1951,6 +1955,18 @@
                 </el-form-item>
                 <el-form-item label="个性化智能体" prop="personality">
                     <el-checkbox v-model="groupStartForm.personality">采用个性化参数运行智能体</el-checkbox>
+                </el-form-item>
+                <el-form-item label="工具调用审批" prop="requireHumanApproval">
+                    <el-checkbox v-model="groupStartForm.requireHumanApproval">工具调用前暂停并请求人工批准</el-checkbox>
+                </el-form-item>
+                <el-form-item label="HIL 等级" prop="humanInTheLoopLevel">
+                    <el-select v-model="groupStartForm.humanInTheLoopLevel" style="width:100%;">
+                        <el-option label="L0 全自动（插件/MCP 自动执行）" :value="0"></el-option>
+                        <el-option label="L1 风险分层（MCP 默认审批）" :value="1"></el-option>
+                        <el-option label="L2 工具审批（所有工具先确认）" :value="2"></el-option>
+                        <el-option label="L3 Human 参与者 + 工具审批" :value="3"></el-option>
+                    </el-select>
+                    <div class="form-help-text">Group 已配置 Human 成员时，会在轮到 Human 时暂停等待文本回复。</div>
                 </el-form-item>
                 <el-form-item label="可提及的组员">
                     <div class="groupStartMentions" v-loading="groupStartParticipantLoading">
@@ -2390,6 +2406,21 @@
     </div>
     <div class="dialog-footer" slot="footer">
         <el-button type="primary" @@click="visible.dialogMcpTools = false">关闭</el-button>
+    </div>
+</el-dialog>
+@* Dialog Human 文本回合：NeuBell 点击只导航，提交成功后由业务路径消费提醒 *@
+<el-dialog title="Human 回合" :visible.sync="humanReplyDialogVisible" width="680px"
+    :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
+    <el-alert type="warning" :closable="false" show-icon
+        title="当前 Group 已轮到 Human，任务正在等待文本回复。"></el-alert>
+    <div style="margin:16px 0 10px; white-space:pre-wrap; color:#4a5568;">
+        {{ humanReplyRequest ? (humanReplyRequest.text || humanReplyRequest.prompt || '请输入本轮 Human 回复。') : '' }}
+    </div>
+    <el-input v-model="humanReplyText" type="textarea" :rows="7" maxlength="10000" show-word-limit
+        placeholder="请输入文本，提交后任务将继续执行"></el-input>
+    <div slot="footer" class="dialog-footer">
+        <el-button @@click="closeHumanReplyDialog" :disabled="humanReplySubmitting">稍后回复</el-button>
+        <el-button type="primary" @@click="submitHumanReply" :loading="humanReplySubmitting">提交 Human 回复</el-button>
     </div>
 </el-dialog>
 @* Dialog 将本地 Agent 发布为标准 A2A 服务 *@

@@ -90,6 +90,15 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     : requestedPrompt;
                 var promptTemplate = promptCode;
 
+                var existingAgent = request.Id > 0
+                    ? await _agentsTemplateService.GetObjectAsync(z => z.Id == request.Id)
+                    : null;
+                if ((existingAgent?.IsHuman ?? false)
+                    || HumanParticipantConstants.IsHuman(promptCode))
+                {
+                    return "Human 是系统保留的特殊参与者，不能通过普通 Agent 接口创建或修改。";
+                }
+
                 if (AgentTemplateRunner.IsPromptRangeReference(promptCode))
                 {
                     try
@@ -138,6 +147,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 if (string.IsNullOrEmpty(request.Name))
                 {
                     return "请输入智能体名称";
+                }
+
+                if (HumanParticipantConstants.IsHuman(promptCode))
+                {
+                    return "Human 是系统保留的特殊参与者，不能通过普通 Agent 接口创建。";
                 }
 
                 // 检查是否已有使用该 PromptCode 前缀的智能体
@@ -409,6 +423,17 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
 
             return await this.GetResponseAsync<AgentTemplateDto>(async (response, logger) =>
             {
+                var existingAgent = agentTemplateDto.Id > 0
+                    ? await _agentsTemplateService.GetObjectAsync(z => z.Id == agentTemplateDto.Id)
+                    : null;
+                if ((existingAgent?.IsHuman ?? false)
+                    || HumanParticipantConstants.IsHuman(agentTemplateDto.PromptCode))
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Human 是系统保留的特殊参与者，不能通过普通 Agent 接口创建或修改。";
+                    return null;
+                }
+
                 await ValidateKnowledgeBaseBindingAsync(agentTemplateDto.KnowledgeBaseId);
                 var newDto = await this._agentsTemplateService.UpdateAgentTemplateAsync(agentTemplateDto.Id, agentTemplateDto);
                 await PopulateAgentMetadataAsync(new[] { newDto });
@@ -502,6 +527,13 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             return await this.GetResponseAsync<string>(async (response, logger) =>
             {
                 var agent = await this._agentsTemplateService.GetAgentTemplateAsync(id);
+                if (agent.IsHuman)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Human 是系统保留的特殊参与者，不能停用或启用。";
+                    return null;
+                }
+
                 if (enable)
                 {
                     agent.EnableAgent();
@@ -822,6 +854,13 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 if (agent == null)
                 {
                     missing++;
+                    continue;
+                }
+
+                if (agent.IsHuman)
+                {
+                    blocked++;
+                    logger.Append($"✗ 阻止删除 Agent【{agent.Name}】：Human 是系统保留的特殊参与者");
                     continue;
                 }
 

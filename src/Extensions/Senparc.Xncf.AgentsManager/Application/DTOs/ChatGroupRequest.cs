@@ -102,10 +102,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
             //Agent
             var agentTemplateService = serviceProvider.GetService<AgentsTemplateService>();
             var agentsTemplates = await agentTemplateService.GetFullListAsync(z => z.Enable, z => z.Name, Ncf.Core.Enums.OrderingType.Ascending);
+            var roleAgents = agentsTemplates.Where(z => !z.IsHuman).ToList();
 
             MembersOptions.Items = agentsTemplates.Select(z => new SelectionItem(z.Id.ToString(), z.Name, z.Description)).ToList();
-            AdminOptions.Items = agentsTemplates.Select(z => new SelectionItem(z.Id.ToString(), z.Name, z.Description)).ToList();
-            EnterAgentOptions.Items = agentsTemplates.Select(z => new SelectionItem(z.Id.ToString(), z.Name, z.Description)).ToList();
+            AdminOptions.Items = roleAgents.Select(z => new SelectionItem(z.Id.ToString(), z.Name, z.Description)).ToList();
+            EnterAgentOptions.Items = roleAgents.Select(z => new SelectionItem(z.Id.ToString(), z.Name, z.Description)).ToList();
 
             var admin = AdminOptions.Items.FirstOrDefault(z => z.Text == "群主");
             if (admin != null)
@@ -139,6 +140,20 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Individuation")]
         [FunctionParameterUi(ParameterType.CheckBoxList, nameof(IndividuationOptions))]
         public bool Individuation { get; set; } = true;
+
+        /// <summary>
+        /// 是否要求工具调用先取得人工批准。
+        /// </summary>
+        public bool RequireHumanApproval { get; set; }
+
+        /// <summary>HIL 等级：0 自动，1 风险分层，2 工具审批，3 Human 参与者。</summary>
+        public HumanInTheLoopLevel HumanInTheLoopLevel { get; set; } = HumanInTheLoopLevel.Automatic;
+
+        public ToolPermissionMode PluginToolPermission { get; set; } = ToolPermissionMode.Inherit;
+
+        public ToolPermissionMode McpToolPermission { get; set; } = ToolPermissionMode.Inherit;
+
+        public bool IncludeHumanParticipant { get; set; }
 
         [JsonIgnore]
         public SelectionList IndividuationOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>
@@ -216,6 +231,28 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         /// 可选：业务关联 ID（例如 Prompt 优化的 RequestId），用于在执行上下文中关联工具调用
         /// </summary>
         public string CorrelationId { get; set; }
+
+        /// <summary>
+        /// 是否要求工具调用先取得人工批准。默认关闭；启用后任务会在工具调用处暂停，
+        /// 由 Human-in-the-Loop API/SSE 完成批准或拒绝后继续执行。
+        /// </summary>
+        public bool RequireHumanApproval { get; set; }
+
+        /// <summary>HIL 等级：0 自动，1 风险分层，2 工具审批，3 Human 参与者。</summary>
+        public HumanInTheLoopLevel HumanInTheLoopLevel { get; set; } = HumanInTheLoopLevel.Automatic;
+
+        /// <summary>插件工具权限覆盖；Inherit 表示按 HIL 等级计算。</summary>
+        public ToolPermissionMode PluginToolPermission { get; set; } = ToolPermissionMode.Inherit;
+
+        /// <summary>MCP 工具权限覆盖；Inherit 表示按 HIL 等级计算。</summary>
+        public ToolPermissionMode McpToolPermission { get; set; } = ToolPermissionMode.Inherit;
+
+        /// <summary>是否在本次 Group 执行中包含 Human 参与者。</summary>
+        public bool IncludeHumanParticipant { get; set; }
+
+        /// <summary>启动任务时捕获的提醒接收人，不参与 HTTP 模型绑定。</summary>
+        [JsonIgnore]
+        public string HumanRecipientUserId { get; set; }
 
         /// <summary>
         /// 可选：由 Workflow 或宿主传入的取消信号。该属性不参与 HTTP 模型绑定，

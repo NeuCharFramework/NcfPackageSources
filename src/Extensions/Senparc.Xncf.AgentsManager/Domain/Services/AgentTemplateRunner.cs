@@ -355,8 +355,13 @@ public sealed class AgentTemplateRunner
         var handler = request.EnableModelTransportDiagnostics
             ? new AgentAiHandler(configuration.Setting, httpClient: PublishedA2AModelTransport.SharedClient)
             : new AgentAiHandler(configuration.Setting);
+        var toolPolicy = HumanInTheLoopPolicyResolver.Resolve(
+            request.HumanInTheLoopLevel,
+            request.PluginToolPermission,
+            request.McpToolPermission,
+            request.RequireHumanApproval);
         var tools = request.AllowFunctionCalls
-            ? await BuildAgentToolsAsync(handler, template, cancellationToken).ConfigureAwait(false)
+            ? await BuildAgentToolsAsync(handler, template, toolPolicy.PluginTools, toolPolicy.McpTools, cancellationToken).ConfigureAwait(false)
             : new List<AITool>();
 
         var promptParameters = request.UseTemplatePromptParameters
@@ -580,6 +585,8 @@ public sealed class AgentTemplateRunner
     private async Task<List<AITool>> BuildAgentToolsAsync(
         AgentAiHandler agentHandler,
         AgentTemplate template,
+        ToolPermissionMode pluginToolPermission,
+        ToolPermissionMode mcpToolPermission,
         CancellationToken cancellationToken)
     {
         var tools = new List<AITool>();
@@ -594,13 +601,23 @@ public sealed class AgentTemplateRunner
         foreach (var functionCall in functionCallNames)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            if (pluginToolPermission == ToolPermissionMode.Deny)
+            {
+                continue;
+            }
+
             try
             {
                 var functionCallType = AIPluginHub.Instance.GetPluginType(functionCall, true);
                 var plugin = functionCallType == null ? null : _serviceProvider.GetService(functionCallType);
                 if (plugin != null)
                 {
-                    tools.AddRange(agentHandler.GetAITools(plugin));
+                    foreach (var tool in agentHandler.GetAITools(plugin))
+                    {
+                        tools.Add(pluginToolPermission == ToolPermissionMode.RequireApproval && tool is AIFunction function
+                            ? new ApprovalRequiredAIFunction(function)
+                            : tool);
+                    }
                 }
             }
             catch (Exception ex)
@@ -611,6 +628,14 @@ public sealed class AgentTemplateRunner
 
         if (!string.IsNullOrWhiteSpace(template.McpEndpoints))
         {
+            if (mcpToolPermission == ToolPermissionMode.Deny)
+            {
+                return tools
+                    .GroupBy(z => z.Name, StringComparer.OrdinalIgnoreCase)
+                    .Select(z => z.First())
+                    .ToList();
+            }
+
             try
             {
                 var endpoints = JsonSerializer.Deserialize<Dictionary<string, McpEndpoint>>(template.McpEndpoints)
@@ -622,7 +647,9 @@ public sealed class AgentTemplateRunner
                     cancellationToken.ThrowIfCancellationRequested();
                     tools.Add(new HostedMcpServerTool(endpoint.Key, endpoint.Value.url)
                     {
-                        ApprovalMode = HostedMcpServerToolApprovalMode.NeverRequire
+                        ApprovalMode = mcpToolPermission == ToolPermissionMode.RequireApproval
+                            ? HostedMcpServerToolApprovalMode.AlwaysRequire
+                            : HostedMcpServerToolApprovalMode.NeverRequire
                     });
                 }
             }
@@ -791,6 +818,16 @@ public sealed class AgentTemplateRunRequest
     public string ProfileName { get; init; } = LocalWorkflowCompatibleProfile;
     public int? AiModelId { get; init; }
     public bool AllowFunctionCalls { get; init; }
+    /// <summary>
+    /// 将可执行工具标记为需要人工确认。默认关闭，以保持现有 AgentsManager 对话行为。
+    /// </summary>
+    public bool RequireHumanApproval { get; init; }
+    /// <summary>HIL 主等级。旧调用方只设置 RequireHumanApproval 时仍保持旧语义。</summary>
+    public HumanInTheLoopLevel HumanInTheLoopLevel { get; init; } = HumanInTheLoopLevel.Automatic;
+    /// <summary>插件工具权限；Inherit 时由 HIL 等级计算。</summary>
+    public ToolPermissionMode PluginToolPermission { get; init; } = ToolPermissionMode.Inherit;
+    /// <summary>MCP 工具权限；Inherit 时由 HIL 等级计算。</summary>
+    public ToolPermissionMode McpToolPermission { get; init; } = ToolPermissionMode.Inherit;
     /// <summary>
     /// 调用方已经解析好的默认模型。ChatGroup 在关闭个性化参数时使用该模型。
     /// </summary>

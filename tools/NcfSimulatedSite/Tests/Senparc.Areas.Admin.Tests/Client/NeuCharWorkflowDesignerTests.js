@@ -57,6 +57,10 @@ assert.ok(workflowPageMarkup.includes('安全代码'),
     'The picker and node inspector must expose the constrained Safe Code node.');
 assert.ok(workflowPageMarkup.includes('A2A'),
     'Remote A2A objects must be visually distinguishable in the picker.');
+assert.ok(workflowPageMarkup.includes('node-input-continue') && workflowPageMarkup.includes('node-input-break'),
+    'Loop-end nodes must expose separate continue and break input ports.');
+assert.ok(workflowPageMarkup.includes('node-output-break') && workflowPageMarkup.includes('breakOn'),
+    'Condition nodes must expose a break output and an explicit break condition.');
 
 const axiosInterceptors = {};
 const axiosSandbox = {
@@ -147,6 +151,24 @@ assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('openSubWorkflow(workflow
     'The sub-workflow selector must support opening a target workflow in a separate tab.');
 assert.ok(fs.readFileSync(stylePath, 'utf8').includes('node-a2a'),
     'The canvas must assign remote A2A nodes their own visual style.');
+
+let previewEvent = null;
+const nodePickerMethods = registeredVueComponents['workflow-node-picker'].methods;
+nodePickerMethods.previewNode.call({
+    functionIdentity: nodePickerMethods.functionIdentity,
+    nodePreviewKey: nodePickerMethods.nodePreviewKey,
+    previewAnchor: nodePickerMethods.previewAnchor,
+    $emit(...args) { previewEvent = args; }
+}, 'function', { moduleUid: 'module-1', functionKey: 'sample' }, 'hover', {
+    currentTarget: {
+        getBoundingClientRect() {
+            return { left: 120, top: 80, right: 260, bottom: 124, width: 140, height: 44 };
+        }
+    }
+});
+assert.strictEqual(JSON.stringify(previewEvent[1].anchor), JSON.stringify({
+    left: 120, top: 80, right: 260, bottom: 124, width: 140, height: 44
+}), 'Node previews should retain the hovered palette button bounds for collision-aware placement.');
 
 const scheduledWorkflow = { triggerType: 'interval', enabled: true, nextRunAt: '2026-08-12T12:15:00Z' };
 const workflowScheduleContext = {
@@ -447,6 +469,7 @@ const connectionContext = {
     makeId() { return 'new-edge'; },
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    targetHandleFor: vueOptions.methods.targetHandleFor,
     wouldCreateCycle: vueOptions.methods.wouldCreateCycle
 };
 connectionContext.canConnect = (...args) => vueOptions.methods.canConnect.call(connectionContext, ...args);
@@ -463,6 +486,7 @@ const parallelContext = {
     makeId(prefix) { return `${prefix}-${this.form.graph.edges.length + 1}`; },
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    targetHandleFor: vueOptions.methods.targetHandleFor,
     wouldCreateCycle: vueOptions.methods.wouldCreateCycle
 };
 parallelContext.canConnect = (...args) => vueOptions.methods.canConnect.call(parallelContext, ...args);
@@ -483,8 +507,15 @@ assert.match(vueOptions.methods.systemNodePreview.call({}, 'loop', '循环（For
 const loopEndNode = vueOptions.methods.createSimpleNode.call({ makeId(type) { return `${type}-1`; } }, 'loop-end', '循环结束');
 assert.strictEqual(loopEndNode.type, 'loop-end',
     'The designer should provide an explicit loop-end boundary node.');
-assert.match(vueOptions.methods.systemNodePreview.call({}, 'loop-end', '循环结束').description, /最后一个循环体节点/,
-    'The loop-end preview should explain that the following nodes run after all iterations.');
+assert.strictEqual(loopEndNode.config.loopId, '',
+    'A new loop-end node should start without an owner so single-layer loops can be auto-detected.');
+assert.match(vueOptions.methods.systemNodePreview.call({}, 'loop-end', '循环结束').description, /continue.*break/,
+    'The loop-end preview should explain its continue and break inputs.');
+const conditionNode = vueOptions.methods.createSimpleNode.call({ makeId(type) { return `${type}-1`; } }, 'condition', '条件判断');
+assert.strictEqual(conditionNode.config.breakOn, '',
+    'A new condition node should leave loop breaking disabled until configured.');
+assert.match(vueOptions.methods.systemNodePreview.call({}, 'condition', '条件判断').description, /真.*假.*break/,
+    'The condition preview should explain its true, false and break outputs.');
 const loopValidationContext = {
     form: {
         name: '循环测试',
@@ -532,22 +563,143 @@ const boundedLoopValidationContext = {
 assert.strictEqual(vueOptions.methods.validate.call(boundedLoopValidationContext, { requireRunnable: true }), '',
     'A loop with a linear body and explicit loop-end should pass designer validation.');
 
+const breakLoopValidationContext = {
+    form: {
+        name: '条件跳出循环测试',
+        triggerType: 'manual',
+        graph: {
+            nodes: [
+                { id: 'trigger', type: 'manual-trigger' },
+                { id: 'loop', type: 'loop', name: '循环', config: { count: 5 } },
+                { id: 'condition', type: 'condition', name: '条件', config: { breakOn: 'true' } },
+                { id: 'body', type: 'delay', name: '循环体' },
+                { id: 'loop-end', type: 'loop-end', name: '循环结束', config: { loopId: 'loop' } },
+                { id: 'after', type: 'console', name: '循环后' }
+            ],
+            edges: [
+                { id: 'edge-1', source: 'trigger', target: 'loop' },
+                { id: 'edge-2', source: 'loop', target: 'condition' },
+                { id: 'edge-3', source: 'condition', target: 'body', sourceHandle: 'false' },
+                { id: 'edge-4', source: 'condition', target: 'loop-end', sourceHandle: 'break', targetHandle: 'break' },
+                { id: 'edge-5', source: 'body', target: 'loop-end', targetHandle: 'continue' },
+                { id: 'edge-6', source: 'loop-end', target: 'after' }
+            ]
+        }
+    },
+    getDisconnectedNodes() { return []; },
+    incomingEdges: vueOptions.methods.incomingEdges,
+    supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    isBinding: vueOptions.methods.isBinding,
+    loopBoundaryNodes: vueOptions.methods.loopBoundaryNodes,
+    loopBoundaryValidationError: vueOptions.methods.loopBoundaryValidationError
+};
+assert.strictEqual(vueOptions.methods.validate.call(breakLoopValidationContext, { requireRunnable: true }), '',
+    'A condition break routed to the current loop-end break input should pass designer validation.');
+
+const loopScopeGraph = {
+    nodes: [
+        { id: 'trigger', type: 'manual-trigger' },
+        { id: 'outer-loop', type: 'loop', name: '外层循环' },
+        { id: 'inner-loop', type: 'loop', name: '内层循环' },
+        { id: 'inner-body', type: 'delay' },
+        { id: 'inner-end', type: 'loop-end', config: { loopId: 'inner-loop' } },
+        { id: 'outer-body', type: 'console' },
+        { id: 'outer-end', type: 'loop-end', config: { loopId: 'outer-loop' } },
+        { id: 'after', type: 'end' }
+    ],
+    edges: [
+        { source: 'trigger', target: 'outer-loop' },
+        { source: 'outer-loop', target: 'inner-loop' },
+        { source: 'inner-loop', target: 'inner-body' },
+        { source: 'inner-body', target: 'inner-end', targetHandle: 'continue' },
+        { source: 'inner-end', target: 'outer-body' },
+        { source: 'outer-body', target: 'outer-end', targetHandle: 'continue' },
+        { source: 'outer-end', target: 'after' }
+    ]
+};
+const loopScopeContext = {
+    form: { graph: loopScopeGraph },
+    loopBoundaryNodes: vueOptions.methods.loopBoundaryNodes,
+    loopScopeNodeIds: vueOptions.methods.loopScopeNodeIds
+};
+const outerLoop = loopScopeGraph.nodes.find(node => node.id === 'outer-loop');
+const innerLoop = loopScopeGraph.nodes.find(node => node.id === 'inner-loop');
+const outerScopeIds = vueOptions.methods.loopScopeNodeIds.call(loopScopeContext, outerLoop);
+const innerScopeIds = vueOptions.methods.loopScopeNodeIds.call(loopScopeContext, innerLoop);
+assert.ok(outerScopeIds.includes('inner-body') && outerScopeIds.includes('outer-end') && !outerScopeIds.includes('after'),
+    'An outer loop scope should include a nested loop body through the inner boundary but stop at its own boundary.');
+assert.ok(innerScopeIds.includes('inner-body') && innerScopeIds.includes('inner-end') && !innerScopeIds.includes('outer-body'),
+    'An inner loop scope should stop at its explicitly owned loop-end.');
+const affectingContext = {
+    ...loopScopeContext,
+    loopsAffectingNode: vueOptions.methods.loopsAffectingNode
+};
+assert.deepStrictEqual(
+    vueOptions.methods.loopsAffectingNode.call(affectingContext, loopScopeGraph.nodes.find(node => node.id === 'inner-body')).map(node => node.id),
+    ['outer-loop', 'inner-loop'],
+    'Selecting a node inside a nested loop should identify every enclosing loop label.');
+
+let highlightTimer = null;
+const previousHighlightTimeout = sandbox.window.setTimeout;
+sandbox.window.setTimeout = (callback, delay) => {
+    highlightTimer = { callback, delay };
+    return highlightTimer;
+};
+const highlightContext = {
+    ...affectingContext,
+    loopHighlight: { nodeIds: [], labelNodeIds: [], edgeIds: [] },
+    loopHighlightTimer: null,
+    loopHighlightSequence: 0,
+    clearLoopHighlight: vueOptions.methods.clearLoopHighlight,
+    highlightLoopContext: vueOptions.methods.highlightLoopContext,
+    loopScopeLabelNodeIds: vueOptions.methods.loopScopeLabelNodeIds,
+    isLoopScopeHighlighted: vueOptions.methods.isLoopScopeHighlighted,
+    isLoopLabelHighlighted: vueOptions.methods.isLoopLabelHighlighted
+};
+vueOptions.methods.highlightLoopContext.call(highlightContext, loopScopeGraph.nodes.find(node => node.id === 'inner-body'));
+assert.ok(highlightContext.loopHighlight.labelNodeIds.includes('outer-loop') &&
+    highlightContext.loopHighlight.labelNodeIds.includes('outer-end') &&
+    highlightContext.loopHighlight.labelNodeIds.includes('inner-loop') &&
+    highlightContext.loopHighlight.labelNodeIds.includes('inner-end'),
+    'Selecting a nested loop node should temporarily highlight both its own and all enclosing loop labels.');
+assert.strictEqual(highlightTimer.delay, 3500,
+    'Loop scope highlighting should automatically disappear after a short hint interval.');
+highlightTimer.callback();
+assert.strictEqual(highlightContext.loopHighlight.nodeIds.length, 0,
+    'The loop scope highlight should clear when its hint interval expires.');
+sandbox.window.setTimeout = previousHighlightTimeout;
+
 const branchSource = { id: 'condition', type: 'condition' };
 const branchTarget = { id: 'target', type: 'delay' };
 const branchContext = {
     form: { graph: { nodes: [branchSource, branchTarget], edges: [{ source: 'condition', target: 'target', sourceHandle: 'true' }] } },
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    targetHandleFor: vueOptions.methods.targetHandleFor,
     wouldCreateCycle: vueOptions.methods.wouldCreateCycle
 };
 assert.strictEqual(vueOptions.methods.canConnect.call(branchContext, branchSource, branchTarget, 'false'), false,
     'A second condition branch must not create two inputs on an ordinary node.');
+
+const loopEndTarget = { id: 'loop-end-target', type: 'loop-end' };
+const breakConnectionContext = {
+    form: { graph: { nodes: [branchSource, loopEndTarget], edges: [] } },
+    incomingEdges: vueOptions.methods.incomingEdges,
+    supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    targetHandleFor: vueOptions.methods.targetHandleFor,
+    wouldCreateCycle: vueOptions.methods.wouldCreateCycle
+};
+assert.strictEqual(vueOptions.methods.canConnect.call(breakConnectionContext, branchSource, loopEndTarget, 'break'), true,
+    'A condition break output should be able to target a loop-end break input.');
+assert.strictEqual(vueOptions.methods.canConnect.call(breakConnectionContext, { id: 'body', type: 'delay' }, loopEndTarget, 'default', 'break'), false,
+    'An ordinary loop-body node must not be able to target the loop-end break input.');
 
 const functionTarget = { id: 'function-target', type: 'function' };
 const functionBranchContext = {
     form: { graph: { nodes: [branchSource, functionTarget], edges: [{ source: 'condition', target: 'function-target', sourceHandle: 'true' }] } },
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    targetHandleFor: vueOptions.methods.targetHandleFor,
     wouldCreateCycle: vueOptions.methods.wouldCreateCycle
 };
 assert.strictEqual(vueOptions.methods.canConnect.call(functionBranchContext, branchSource, functionTarget, 'false'), true,
@@ -567,6 +719,7 @@ const insertionContext = {
     makeId(prefix) { generatedEdgeNumber += 1; return `${prefix}-${generatedEdgeNumber}`; },
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    targetHandleFor: vueOptions.methods.targetHandleFor,
     wouldCreateCycle: vueOptions.methods.wouldCreateCycle,
     isHorizontalLayout() { return false; },
     closeEdgeInsertMenu: vueOptions.methods.closeEdgeInsertMenu,
@@ -671,6 +824,28 @@ vueOptions.methods.showNodePreview.call(nodePreviewContext, {
 vueOptions.methods.hideHoveredNodePreview.call(nodePreviewContext, 'system:delay');
 assert.strictEqual(nodePreviewContext.nodePreview.visible, false, 'A hover-only node detail preview should close when leaving that block.');
 sandbox.window.setTimeout = originalSetTimeout;
+
+const originalViewport = { width: sandbox.window.innerWidth, height: sandbox.window.innerHeight };
+sandbox.window.innerWidth = 1000;
+sandbox.window.innerHeight = 700;
+const previewStyleFor = anchor => vueOptions.computed.nodePreviewStyle.call({ nodePreview: { anchor } });
+const rightPreviewStyle = previewStyleFor({ left: 100, top: 100, right: 220, bottom: 140, width: 120, height: 40 });
+assert.ok(Number.parseFloat(rightPreviewStyle.left) > 220 && rightPreviewStyle.transform === 'translate(0, 0)',
+    'A node preview should prefer the available space to the right of its palette button.');
+const leftPreviewStyle = previewStyleFor({ left: 760, top: 100, right: 900, bottom: 140, width: 140, height: 40 });
+assert.ok(Number.parseFloat(leftPreviewStyle.left) < 760,
+    'A node preview should move to the left when the right side cannot fit the popup.');
+sandbox.window.innerWidth = 600;
+const belowPreviewStyle = previewStyleFor({ left: 220, top: 100, right: 340, bottom: 140, width: 120, height: 40 });
+assert.strictEqual(belowPreviewStyle.top, '152px',
+    'When neither side has room, a node preview should use the available space below the button.');
+const abovePreviewStyle = previewStyleFor({ left: 220, top: 500, right: 340, bottom: 540, width: 120, height: 40 });
+assert.ok(Number.parseFloat(abovePreviewStyle.top) < 500,
+    'When below the button cannot fit, a node preview should use the available space above it.');
+if (originalViewport.width === undefined) delete sandbox.window.innerWidth;
+else sandbox.window.innerWidth = originalViewport.width;
+if (originalViewport.height === undefined) delete sandbox.window.innerHeight;
+else sandbox.window.innerHeight = originalViewport.height;
 
 const duplicateNode = { id: 'node-1', type: 'delay', name: '等待', x: 80, y: 120, config: { seconds: 3 } };
 const duplicateContext = {
@@ -1083,8 +1258,9 @@ assert.ok(page.includes('class="edge-insert"') && page.includes('workflow-edge-i
     'Every edge should expose a plus action that opens an inline insertion picker.');
 assert.ok(styles.includes('.workflow-edge-insert-menu') && styles.includes('.edge-insert'),
     'The inline picker and plus action should receive dedicated canvas styles.');
-assert.ok(styles.includes('.workflow-node-preview') && styles.includes('rgba(28, 42, 59, .80)'),
-    'Node detail previews should use the centered translucent overlay treatment.');
+assert.ok(page.includes(':style="nodePreviewStyle"') && fs.readFileSync(scriptPath, 'utf8').includes('getBoundingClientRect') &&
+    styles.includes('.workflow-node-preview') && styles.includes('rgba(28, 42, 59, .80)'),
+    'Node detail previews should anchor near the hovered button and use the translucent overlay treatment.');
 assert.ok(page.includes("'is-hover-preview':nodePreview.mode==='hover'") &&
     /\.workflow-node-preview\.is-hover-preview\s*\{[^}]*pointer-events:\s*none;/s.test(styles),
     'Hover-only node previews must not intercept the pointer, so covered palette buttons remain clickable without flicker.');
@@ -1446,7 +1622,7 @@ assert.ok(runCoordinator.includes('GetActiveRuns') && runCoordinator.includes('N
 assert.ok(runCoordinator.includes('TryAbort') && runCoordinator.includes('手动中止') && workflowAppService.includes('AbortRun'),
     'Manual aborts should be authorized by run ID and persisted as an explicit failed result.');
 assert.ok(page.includes("'merge','逐项合流'") && page.includes('汇总输出内容') &&
-    fs.readFileSync(scriptPath, 'utf8').includes("['aggregate', 'merge', 'function']") &&
+    fs.readFileSync(scriptPath, 'utf8').includes("['aggregate', 'merge', 'function', 'loop-end']") &&
     fs.readFileSync(scriptPath, 'utf8').includes('outputTemplate'),
     'The designer should distinguish once-only aggregation from per-item merge and expose aggregate output content.');
 assert.ok(page.includes('Console 打印内容') && page.includes('仅影响 Console 展示，不改变下游输入') &&
@@ -1454,9 +1630,14 @@ assert.ok(page.includes('Console 打印内容') && page.includes('仅影响 Cons
     workflowEngine.includes('ResolveConsolePrintOutput') && workflowEngine.includes('"printTemplate"'),
     'The Console node should expose a configurable print template while preserving its raw downstream input.');
 assert.ok(workflowEngine.includes('"merge"') && workflowEngine.includes('MaxStreamActivations') &&
+    workflowEngine.includes('MaxReplayEvents') && workflowEngine.includes('5_000') &&
     workflowEngine.includes('ResolveAggregateOutput') && workflowEngine.includes('ValidateAggregateOutputTemplate') &&
     workflowEngine.includes('不能位于逐项合流节点之后'),
-    'The engine should serially propagate merge activations, validate aggregate output templates, and reject ambiguous merge-to-aggregate chains.');
+    'The engine should serially propagate merge activations, retain at least 5000 replay events, validate aggregate output templates, and reject ambiguous merge-to-aggregate chains.');
+assert.ok(runCoordinator.includes('MaxLiveRunEvents') &&
+    fs.readFileSync(scriptPath, 'utf8').includes('MaxWorkflowConsoleEvents') &&
+    fs.readFileSync(scriptPath, 'utf8').includes('const MaxWorkflowConsoleEvents = 5000'),
+    'Live Workflow Console and server-side run snapshots should retain at least 5000 events.');
 assert.ok(workflowEngine.includes('MaxLoopIterations') && workflowEngine.includes('TryResolveLoopCount') &&
     workflowEngine.includes('循环或逐项合流产生的执行次数超过') &&
     workflowEngine.includes('不能位于循环节点之后'),

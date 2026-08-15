@@ -368,6 +368,78 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public void ParseAndValidateGraph_ConditionBreak_ShouldUseLoopEndBreakInput()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "loop", "type": "loop", "config": { "count": 5 } },
+                { "id": "condition", "type": "condition", "config": { "breakOn": "true" } },
+                { "id": "body", "type": "delay" },
+                { "id": "loop-end", "type": "loop-end", "config": { "loopId": "loop" } },
+                { "id": "after", "type": "console" },
+                { "id": "end", "type": "end" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "loop" },
+                { "id": "edge-2", "source": "loop", "target": "condition" },
+                { "id": "edge-3", "source": "condition", "target": "body", "sourceHandle": "false" },
+                { "id": "edge-4", "source": "condition", "target": "loop-end", "sourceHandle": "break", "targetHandle": "break" },
+                { "id": "edge-5", "source": "body", "target": "loop-end", "targetHandle": "continue" },
+                { "id": "edge-6", "source": "loop-end", "target": "after" },
+                { "id": "edge-7", "source": "after", "target": "end" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+
+        Assert.AreEqual("break", graph.Edges.Single(edge => edge.Id == "edge-4").SourceHandle);
+        Assert.AreEqual("break", graph.Edges.Single(edge => edge.Id == "edge-4").TargetHandle);
+        Assert.AreEqual("continue", graph.Edges.Single(edge => edge.Id == "edge-5").TargetHandle);
+    }
+
+    [TestMethod]
+    public void ParseAndValidateGraph_NestedLoops_ShouldValidateEachExplicitBoundary()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "outer-loop", "type": "loop", "config": { "count": 2 } },
+                { "id": "inner-loop", "type": "loop", "config": { "count": 3 } },
+                { "id": "inner-body", "type": "delay" },
+                { "id": "inner-end", "type": "loop-end", "config": { "loopId": "inner-loop" } },
+                { "id": "outer-body", "type": "console" },
+                { "id": "outer-end", "type": "loop-end", "config": { "loopId": "outer-loop" } },
+                { "id": "after", "type": "console" },
+                { "id": "end", "type": "end" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "outer-loop" },
+                { "id": "edge-2", "source": "outer-loop", "target": "inner-loop" },
+                { "id": "edge-3", "source": "inner-loop", "target": "inner-body" },
+                { "id": "edge-4", "source": "inner-body", "target": "inner-end", "targetHandle": "continue" },
+                { "id": "edge-5", "source": "inner-end", "target": "outer-body" },
+                { "id": "edge-6", "source": "outer-body", "target": "outer-end", "targetHandle": "continue" },
+                { "id": "edge-7", "source": "outer-end", "target": "after" },
+                { "id": "edge-8", "source": "after", "target": "end" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+
+        Assert.AreEqual("inner-loop", graph.Nodes.Single(node => node.Id == "inner-end").Config["loopId"]!.GetValue<string>());
+        Assert.AreEqual("outer-loop", graph.Nodes.Single(node => node.Id == "outer-end").Config["loopId"]!.GetValue<string>());
+    }
+
+    [TestMethod]
     public void ParseAndValidateGraph_LoopBoundaryWithBranch_ShouldBeRejected()
     {
         var engine = CreateEngine();
@@ -453,6 +525,34 @@ public class NeuCharWorkflowEngineTests
             },
             JsonValue.Create("input"),
             new Dictionary<string, JsonNode> { ["source"] = JsonValue.Create("4")! },
+            new Dictionary<string, JsonNode>(),
+            0,
+            null
+        };
+
+        var success = (bool)method.Invoke(null, arguments)!;
+
+        Assert.IsTrue(success);
+        Assert.AreEqual(4, (int)arguments[4]!);
+    }
+
+    [TestMethod]
+    public async Task LoopCount_ShouldResolveFormulaRuntimeValue()
+    {
+        var engine = CreateEngine();
+        var graph = engine.ParseAndValidateGraph(
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"loop", "type":"loop", "name":"循环", "config":{ "count":{ "$template":{ "text":"{{= toInt(input) }}", "bindings":[] } } } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"loop" }] }""");
+
+        Assert.IsNull(await engine.ValidateReferencesAsync(graph));
+
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "TryResolveLoopCount",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        object?[] arguments =
+        {
+            graph.Nodes.Single(node => node.Id == "loop").Config,
+            JsonValue.Create("4"),
+            new Dictionary<string, JsonNode>(),
             new Dictionary<string, JsonNode>(),
             0,
             null
@@ -1209,6 +1309,40 @@ public class NeuCharWorkflowEngineTests
         Assert.AreEqual(false, snapshot.Succeeded);
         Assert.AreEqual("手动中止", snapshot.FinalOutput);
         Assert.AreEqual("手动中止", snapshot.ErrorMessage);
+    }
+
+    [TestMethod]
+    public void RunCoordinator_ShouldRetainLatest5000LiveEvents()
+    {
+        var runStateType = typeof(NeuCharWorkflowRunCoordinator).GetNestedType(
+            "RunState",
+            BindingFlags.NonPublic)!;
+        var constructor = runStateType.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Single();
+        var state = constructor.Invoke(new object[] { Guid.NewGuid(), 12, 34, string.Empty, "manual" });
+        var add = runStateType.GetMethod("Add", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!;
+        var timestamp = DateTimeOffset.UtcNow;
+
+        for (var index = 1; index <= 5_001; index++)
+        {
+            add.Invoke(state, new object[]
+            {
+                new NeuCharWorkflowProgress(
+                    $"node-{index}",
+                    "循环节点",
+                    "success",
+                    $"第 {index} 条",
+                    string.Empty,
+                    timestamp.AddTicks(index))
+            });
+        }
+
+        var snapshot = (NeuCharWorkflowRunSnapshot)runStateType.GetMethod("Snapshot")!
+            .Invoke(state, new object[] { 0L })!;
+
+        Assert.AreEqual(5_000, snapshot.Events.Count);
+        Assert.AreEqual(2L, snapshot.Events[0].Sequence);
+        Assert.AreEqual(5_001L, snapshot.Events[^1].Sequence);
+        Assert.AreEqual("第 2 条", snapshot.Events[0].Message);
     }
 
     private static Task<AppResponseBase<List<SampleOutput>>> ListOutputFunction() => null!;

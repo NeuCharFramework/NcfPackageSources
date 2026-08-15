@@ -52,6 +52,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
 using Senparc.Ncf.Shared.Abstractions.ChatAgent;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -141,6 +142,12 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<PromptOptimizationKernelFallbackService>();
             services.AddScoped<PromptOptimizationService>(); // 注册 PromptOptimizationService
             services.AddSingleton<ChatTaskStreamHub>();
+            services.AddSingleton<HumanInTheLoopRequestStore>();
+            services.AddSingleton<AgentsManagerNeuBellProvider>();
+            services.AddSingleton<AgentsManagerHumanInteractionService>();
+            services.AddSingleton<IWorkflowHumanInteractionBridge, AgentsManagerWorkflowHumanInteractionBridge>();
+            services.AddSingleton<INeuBellProvider>(serviceProvider =>
+                serviceProvider.GetRequiredService<AgentsManagerNeuBellProvider>());
             services.AddScoped<ChatGroupService>();
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();

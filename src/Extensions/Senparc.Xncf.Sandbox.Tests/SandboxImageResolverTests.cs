@@ -8,6 +8,25 @@ namespace Senparc.Xncf.Sandbox.Tests;
 public class SandboxImageResolverTests
 {
     [TestMethod]
+    public void InteractiveCreateTimeout_UsesConfiguredSecondsWithinRange()
+    {
+        var options = new SandboxDockerOptions { InteractiveCreateTimeoutSeconds = 1200 };
+
+        Assert.AreEqual(TimeSpan.FromSeconds(1200), options.GetInteractiveCreateTimeout());
+    }
+
+    [TestMethod]
+    public void InteractiveCreateTimeout_ClampsInvalidValues()
+    {
+        Assert.AreEqual(
+            TimeSpan.FromSeconds(60),
+            new SandboxDockerOptions { InteractiveCreateTimeoutSeconds = 1 }.GetInteractiveCreateTimeout());
+        Assert.AreEqual(
+            TimeSpan.FromHours(1),
+            new SandboxDockerOptions { InteractiveCreateTimeoutSeconds = 7200 }.GetInteractiveCreateTimeout());
+    }
+
+    [TestMethod]
     public void Resolve_WithoutPrefix_ReturnsDefault()
     {
         var resolver = new SandboxImageResolver(new SandboxImageOptions());

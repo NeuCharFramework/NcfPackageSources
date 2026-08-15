@@ -26,7 +26,7 @@ public sealed class SandboxImageOptions
 
     /// <summary>
     /// 按模板键完全覆盖镜像引用（优先于 RegistryPrefix）。
-    /// 键为 python-exec / csharp-exec / jupyter-python。
+    /// 键为 python-exec / csharp-exec / jupyter-python / jupyter-csharp。
     /// </summary>
     public Dictionary<string, string> Overrides { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }

@@ -29,6 +29,7 @@ using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Utility;
+using Senparc.Ncf.Core.WorkContext.Provider;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
@@ -385,6 +386,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         PromptCommand = request.Command,
                         Description = "由 FunctionRender 启动",
                         Personality = request.Individuation,
+                        RequireHumanApproval = request.RequireHumanApproval,
+                        HumanInTheLoopLevel = request.HumanInTheLoopLevel,
+                        PluginToolPermission = request.PluginToolPermission,
+                        McpToolPermission = request.McpToolPermission,
+                        IncludeHumanParticipant = request.IncludeHumanParticipant,
+                        HumanRecipientUserId = GetCurrentAdminUserId(),
                         HookPlatform = HookPlatform.None,
                         HookParameter = string.Empty,
                         ChatMaxRound = ChatGroupService.ChatMaxRound
@@ -407,7 +414,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         public async Task<AppResponseBase<ChatGroup_SetGroupChatResponse>> SetChatGroup(
             ChatGroupDto chatGroupDto,
             List<int> memberAgentTemplateIds,
-            List<int> remoteAgentIds = null)
+            List<int> remoteAgentIds = null,
+            bool includeHumanParticipant = false)
         {
             return await this.GetResponseAsync<ChatGroup_SetGroupChatResponse>(async (response, logger) =>
             {
@@ -422,6 +430,33 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 remoteAgentIds ??= new List<int>();
                 memberAgentTemplateIds = memberAgentTemplateIds.Distinct().ToList();
                 remoteAgentIds = remoteAgentIds.Distinct().ToList();
+
+                var humanTemplate = await _agentsTemplateService.GetObjectAsync(
+                    z => z.PromptCode == HumanParticipantConstants.PromptCode);
+                if (humanTemplate != null
+                    && (chatGroupDto.AdminAgentTemplateId == humanTemplate.Id
+                        || chatGroupDto.EnterAgentTemplateId == humanTemplate.Id))
+                {
+                    throw new NcfExceptionBase("Human 只能作为普通参与者，不能担任群主或对接人。");
+                }
+
+                if (includeHumanParticipant)
+                {
+                    humanTemplate ??= await EnsureHumanParticipantAsync();
+                    if (chatGroupDto.AdminAgentTemplateId == humanTemplate.Id
+                        || chatGroupDto.EnterAgentTemplateId == humanTemplate.Id)
+                    {
+                        throw new NcfExceptionBase("Human 只能作为普通参与者，不能担任群主或对接人。");
+                    }
+
+                    memberAgentTemplateIds.Add(humanTemplate.Id);
+                }
+                else if (humanTemplate != null)
+                {
+                    // 编辑既有 Group 时，复用前端回传列表也不能绕过关闭 Human 的选择。
+                    memberAgentTemplateIds.RemoveAll(z => z == humanTemplate.Id);
+                }
+                memberAgentTemplateIds = memberAgentTemplateIds.Distinct().ToList();
 
                 var isNew = false;
                 var memberList = new List<ChatGroupMember>();
@@ -527,6 +562,45 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     ChatGroupDto = this._chatGroupService.Mapping<ChatGroupDto>(chatGroup)
                 };
             });
+        }
+
+        private async Task<AgentTemplate> EnsureHumanParticipantAsync()
+        {
+            var existing = await _agentsTemplateService.GetObjectAsync(
+                z => z.PromptCode == HumanParticipantConstants.PromptCode);
+            if (existing != null)
+            {
+                if (!existing.Enable)
+                {
+                    existing.EnableAgent();
+                    await _agentsTemplateService.SaveObjectAsync(existing);
+                }
+                return existing;
+            }
+
+            var human = new AgentTemplate(
+                HumanParticipantConstants.Name,
+                "这是一个由当前登录用户输入文本的 Human 参与者，不调用模型或工具。",
+                true,
+                "系统保留的 Human-in-the-Loop 文本参与者",
+                HumanParticipantConstants.PromptCode,
+                HookRobotType.None,
+                string.Empty);
+            await _agentsTemplateService.SaveObjectAsync(human);
+            return human;
+        }
+
+        private string GetCurrentAdminUserId()
+        {
+            try
+            {
+                var context = base.GetService<IAdminWorkContextProvider>()?.GetAdminWorkContext();
+                return context?.AdminUserId > 0 ? context.AdminUserId.ToString() : null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -670,6 +744,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
+                request.HumanRecipientUserId ??= GetCurrentAdminUserId();
                 List<Task> tasks = new List<Task>();
 
                 //TODO: 使用线程进行维护
