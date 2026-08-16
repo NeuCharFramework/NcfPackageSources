@@ -1,8 +1,12 @@
-﻿@page
+@page
 @model Senparc.Xncf.Sandbox.Areas.Sandbox.Pages.Index
 @{
     ViewData["Title"] = $"{Model.XncfRegister.MenuName}";
     Layout = "_Layout_Vue";
+}
+
+@section Style{
+    <link href="~/css/Sandbox/index.css" rel="stylesheet" />
 }
 
 @section breadcrumbs{
@@ -11,62 +15,185 @@
     <el-breadcrumb-item>面板</el-breadcrumb-item>
 }
 
-<div>
-    <el-container>
-        <el-header class="module-header">
-            <span class="start-title"><i class="fa fa-cube"></i>&nbsp;<span class="module-header-v">沙箱面板</span></span>
-        </el-header>
-        <el-main>
-            @Html.AntiForgeryToken()
-            <el-alert
-                title="首次使用请先完成「环境准备」。镜像版本与内部仓库说明以官方文档为准，模块内不固化 tag。"
-                type="info"
-                :closable="false"
-                show-icon>
-            </el-alert>
-            <el-alert
-                style="margin-top:8px;"
-                title="会话说明：python-exec / csharp-exec 创建后只是登记（占配额与 TTL），执行代码时才临时起容器；jupyter-python 才会常驻容器。「销毁」释放登记，并在有容器时停止/删除容器。"
-                type="warning"
-                :closable="false"
-                show-icon>
-            </el-alert>
-            <div style="margin:12px 0;">
-                <a class="el-button el-button--primary el-button--small" href="/Admin/Sandbox/Setup?uid=@Model.XncfModuleUid">
-                    <i class="fa fa-wrench"></i> 环境准备
-                </a>
-                <el-button type="text" size="small" @@click="openDocs">打开文档 doc.ncf.pub</el-button>
-                <el-button type="default" size="small" icon="el-icon-refresh" @@click="reload">刷新列表</el-button>
+<div class="sandboxPage" v-cloak>
+    @Html.AntiForgeryToken()
+
+    <section class="sandboxHero" aria-labelledby="sandbox-page-title">
+        <div class="sandboxHeroCopy">
+            <div class="sandboxEyebrow"><i class="fa fa-cube"></i> Sandbox Runtime</div>
+            <h1 id="sandbox-page-title">沙箱面板</h1>
+            <p>集中查看会话状态，并通过模块 Function 创建、执行和清理隔离运行环境。</p>
+            <div class="sandboxHeroActions">
+                <el-button type="primary" icon="el-icon-plus" @@click="openFunction('Create')">创建沙箱</el-button>
+                <el-button icon="el-icon-setting" @@click="openSetup">环境准备</el-button>
             </div>
-            <el-table :data="sessions" border stripe v-loading="loading">
-                <el-table-column prop="sessionId" label="SessionId" min-width="220"></el-table-column>
-                <el-table-column prop="templateKey" label="模板" width="140"></el-table-column>
-                <el-table-column prop="runtimeKind" label="运行时" width="100"></el-table-column>
-                <el-table-column prop="status" label="状态" width="110">
+        </div>
+        <div class="sandboxRuntimeSummary" aria-label="沙箱运行概览">
+            <div class="runtimeSummaryIcon"><i class="fa fa-cubes"></i></div>
+            <div class="runtimeSummaryMetrics">
+                <div>
+                    <span>已登记会话</span>
+                    <strong>{{ sessionStats.total }}</strong>
+                </div>
+                <div>
+                    <span>运行中</span>
+                    <strong>{{ sessionStats.running }}</strong>
+                </div>
+                <div>
+                    <span>交互式会话</span>
+                    <strong>{{ sessionStats.interactive }}</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="sandboxToolRow">
+        <div class="sandboxToolMeta">状态更新于 {{ formatDateTime(lastUpdatedAt) }}</div>
+        <div class="sandboxToolActions">
+            <el-button size="mini" icon="el-icon-refresh" :loading="loading" @@click="reload">刷新</el-button>
+            <el-button size="mini" icon="el-icon-menu" @@click="openFunction()">全部 Function</el-button>
+            <el-button size="mini" icon="el-icon-document" @@click="openDocs">环境文档</el-button>
+        </div>
+    </div>
+
+    <section class="sandboxOverviewGrid" aria-label="会话概览">
+        <div class="sandboxOverviewCard">
+            <div class="overviewIcon iconBlue"><i class="fa fa-cubes"></i></div>
+            <div>
+                <div class="overviewLabel">全部会话</div>
+                <div class="overviewValue">{{ sessionStats.total }}</div>
+                <div class="overviewHint">已登记</div>
+            </div>
+        </div>
+        <div class="sandboxOverviewCard">
+            <div class="overviewIcon iconGreen"><i class="fa fa-play"></i></div>
+            <div>
+                <div class="overviewLabel">运行中</div>
+                <div class="overviewValue">{{ sessionStats.running }}</div>
+                <div class="overviewHint">当前可用</div>
+            </div>
+        </div>
+        <div class="sandboxOverviewCard">
+            <div class="overviewIcon iconTeal"><i class="fa fa-desktop"></i></div>
+            <div>
+                <div class="overviewLabel">交互式会话</div>
+                <div class="overviewValue">{{ sessionStats.interactive }}</div>
+                <div class="overviewHint">Notebook / 预览</div>
+            </div>
+        </div>
+        <div class="sandboxOverviewCard">
+            <div class="overviewIcon iconAmber"><i class="fa fa-exclamation-triangle"></i></div>
+            <div>
+                <div class="overviewLabel">待处理</div>
+                <div class="overviewValue">{{ sessionStats.attention }}</div>
+                <div class="overviewHint">失败或已过期</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sandboxBoardGrid">
+        <section class="sandboxBoardCard sandboxQuickActions" aria-labelledby="sandbox-function-title">
+            <div class="sandboxBoardTitleRow">
+                <div>
+                    <h2 id="sandbox-function-title">Function 快捷操作</h2>
+                    <p>使用模块已注册的执行入口，参数校验和结果日志保持与模块 Function 页面一致。</p>
+                </div>
+                <el-button size="mini" icon="el-icon-right" @@click="openFunction()">打开模块 Function</el-button>
+            </div>
+            <div class="sandboxShortcutList">
+                <div class="sandboxShortcut">
+                    <div class="shortcutIcon shortcutCreate"><i class="el-icon-plus"></i></div>
+                    <div class="shortcutContent">
+                        <h3>创建沙箱</h3>
+                        <p>选择运行模板与运行时，创建独立会话。</p>
+                    </div>
+                    <el-button type="primary" size="mini" icon="el-icon-plus" @@click="openFunction('Create')">创建</el-button>
+                </div>
+                <div class="sandboxShortcut">
+                    <div class="shortcutIcon shortcutExec"><i class="el-icon-caret-right"></i></div>
+                    <div class="shortcutContent">
+                        <h3>执行代码</h3>
+                        <p>在 Exec 模板会话中提交短任务代码。</p>
+                    </div>
+                    <el-button type="success" size="mini" icon="el-icon-caret-right" @@click="openFunction('Exec')">执行</el-button>
+                </div>
+                <div class="sandboxShortcut">
+                    <div class="shortcutIcon shortcutDestroy"><i class="el-icon-delete"></i></div>
+                    <div class="shortcutContent">
+                        <h3>销毁沙箱</h3>
+                        <p>输入 SessionId，停止并清理指定会话。</p>
+                    </div>
+                    <el-button type="danger" size="mini" icon="el-icon-delete" @@click="openFunction('Destroy')">销毁</el-button>
+                </div>
+            </div>
+        </section>
+
+        <section class="sandboxBoardCard sandboxEnvironment" aria-labelledby="sandbox-environment-title">
+            <div class="sandboxBoardTitleRow">
+                <div>
+                    <h2 id="sandbox-environment-title">运行环境</h2>
+                    <p>Docker 可用性、镜像前缀和部署说明统一在环境准备页检查。</p>
+                </div>
+            </div>
+            <div class="sandboxEnvironmentRows">
+                <div>
+                    <span><i class="fa fa-code"></i> Exec</span>
+                    <strong>Python / C#</strong>
+                </div>
+                <div>
+                    <span><i class="fa fa-book"></i> Notebook</span>
+                    <strong>JupyterLab</strong>
+                </div>
+                <div>
+                    <span><i class="fa fa-shield"></i> 生命周期</span>
+                    <strong>TTL 自动回收</strong>
+                </div>
+            </div>
+            <el-button class="sandboxEnvironmentButton" type="primary" plain icon="el-icon-setting" @@click="openSetup">检查环境</el-button>
+        </section>
+
+        <section class="sandboxBoardCard sandboxSessions" aria-labelledby="sandbox-sessions-title" v-loading="loading">
+            <div class="sandboxBoardTitleRow">
+                <div>
+                    <h2 id="sandbox-sessions-title">沙箱会话</h2>
+                    <p>通过站点反向代理访问交互式会话，访问链接不暴露容器 token。</p>
+                </div>
+                <el-tag size="mini" type="info">{{ sessionStats.total }} 个会话</el-tag>
+            </div>
+            <el-table :data="sessions" class="sandboxSessionTable" empty-text="暂无沙箱会话">
+                <el-table-column prop="sessionId" label="SessionId" min-width="190" show-overflow-tooltip></el-table-column>
+                <el-table-column label="模板" min-width="150">
+                    <template slot-scope="scope">
+                        <span class="templateName">{{ templateName(scope.row.templateKey) }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="runtimeKind" label="运行时" width="94"></el-table-column>
+                <el-table-column label="状态" width="108">
                     <template slot-scope="scope">
                         <el-tag :type="statusTagType(scope.row.status)" size="mini">{{ statusText(scope.row.status) }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="hostPort" label="本机端口" width="90"></el-table-column>
-                <el-table-column label="访问" min-width="220">
+                <el-table-column prop="hostPort" label="端口" width="80">
+                    <template slot-scope="scope">{{ scope.row.hostPort || '-' }}</template>
+                </el-table-column>
+                <el-table-column label="访问" width="104">
                     <template slot-scope="scope">
-                        <a v-if="scope.row.accessUrl" :href="scope.row.accessUrl" target="_blank" rel="noopener">打开 Notebook</a>
-                        <span v-else>-</span>
+                        <el-tooltip v-if="scope.row.accessUrl" content="打开交互式会话" placement="top">
+                            <el-button type="text" size="mini" icon="el-icon-top-right" @@click="openAccessUrl(scope.row.accessUrl)">打开</el-button>
+                        </el-tooltip>
+                        <span v-else class="sessionMuted">-</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="120">
+                <el-table-column label="操作" width="70" align="center">
                     <template slot-scope="scope">
-                        <el-button type="danger" size="mini" @@click="destroySession(scope.row.sessionId)">销毁</el-button>
+                        <el-tooltip content="销毁会话" placement="top">
+                            <el-button type="danger" size="mini" circle icon="el-icon-delete" @@click="destroySession(scope.row.sessionId)"></el-button>
+                        </el-tooltip>
                     </template>
                 </el-table-column>
             </el-table>
-            <p style="margin-top:16px;color:#888;">
-                Jupyter 通过站点反向代理 <code>/sandbox-jupyter/&#123;sessionId&#125;/</code> 访问（需管理员登录；token 不出现在链接中）。
-                也可通过模块 Function「创建沙箱 / 执行代码 / 销毁沙箱」操作。完整环境步骤：
-                <a href="@Model.DocsUrl" target="_blank" rel="noopener">@Model.DocsUrl</a>
-            </p>
-        </el-main>
-    </el-container>
+        </section>
+    </section>
 </div>
 
 @section scripts{
@@ -83,11 +210,27 @@
                 return {
                     loading: false,
                     docsUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DocsUrl)),
+                    moduleUid: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.XncfModuleUid)),
+                    lastUpdatedAt: new Date(),
                     // 须 camelCase：与 axios/?handler=State 及 el-table prop 一致（首屏默认 PascalCase 会导致列空白）
                     sessions: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Sessions, jsonCamel))
                 };
             },
+            computed: {
+                sessionStats() {
+                    const rows = this.sessions || [];
+                    return {
+                        total: rows.length,
+                        running: rows.filter(row => this.statusKey(row.status) === '1' || this.statusKey(row.status) === 'running').length,
+                        interactive: rows.filter(row => !!row.accessUrl).length,
+                        attention: rows.filter(row => ['4', '5', 'failed', 'expired'].includes(this.statusKey(row.status))).length
+                    };
+                }
+            },
             methods: {
+                statusKey(status) {
+                    return String(status === null || typeof status === 'undefined' ? '' : status).toLowerCase();
+                },
                 statusText(status) {
                     // SandboxSessionStatus: Creating=0, Running=1, Stopping=2, Stopped=3, Failed=4, Expired=5
                     const map = {
@@ -97,53 +240,115 @@
                         3: '已停止',
                         4: '失败',
                         5: '已过期',
-                        Creating: '创建中',
-                        Running: '运行中',
-                        Stopping: '停止中',
-                        Stopped: '已停止',
-                        Failed: '失败',
-                        Expired: '已过期'
+                        creating: '创建中',
+                        running: '运行中',
+                        stopping: '停止中',
+                        stopped: '已停止',
+                        failed: '失败',
+                        expired: '已过期'
                     };
-                    return map[status] ?? ('未知(' + status + ')');
+                    return map[this.statusKey(status)] || ('未知(' + status + ')');
                 },
                 statusTagType(status) {
-                    const key = (typeof status === 'string') ? status : String(status);
                     const map = {
                         '0': 'info',
                         '1': 'success',
                         '2': 'warning',
                         '3': 'info',
                         '4': 'danger',
-                        '5': 'info',
-                        Creating: 'info',
-                        Running: 'success',
-                        Stopping: 'warning',
-                        Stopped: 'info',
-                        Failed: 'danger',
-                        Expired: 'info'
+                        '5': 'warning',
+                        creating: 'info',
+                        running: 'success',
+                        stopping: 'warning',
+                        stopped: 'info',
+                        failed: 'danger',
+                        expired: 'warning'
                     };
-                    return map[key] || 'info';
+                    return map[this.statusKey(status)] || 'info';
+                },
+                templateName(templateKey) {
+                    const names = {
+                        'python-exec': 'Python Exec',
+                        'csharp-exec': 'C# Exec',
+                        'jupyter-python': 'JupyterLab Python',
+                        'jupyter-csharp': 'JupyterLab C#',
+                        'ncf-preview': 'NCF/XNCF Preview'
+                    };
+                    return names[templateKey] || templateKey || '-';
+                },
+                formatDateTime(value) {
+                    const date = value instanceof Date ? value : new Date(value);
+                    if (Number.isNaN(date.getTime())) {
+                        return '-';
+                    }
+
+                    return new Intl.DateTimeFormat('zh-CN', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    }).format(date);
+                },
+                getFunctionUrl(functionKey, action) {
+                    const search = new URLSearchParams({ uid: this.moduleUid });
+                    if (functionKey) {
+                        search.set('functionKey', functionKey);
+                        search.set('action', action || 'run');
+                    }
+
+                    const anchor = functionKey ? '#function-' + encodeURIComponent(functionKey) : '';
+                    return '/Admin/XncfModule/Start/?' + search.toString() + anchor;
+                },
+                openFunction(functionKey) {
+                    window.location.assign(this.getFunctionUrl(functionKey, functionKey ? 'run' : 'settings'));
+                },
+                openSetup() {
+                    window.location.assign('/Admin/Sandbox/Setup?uid=' + encodeURIComponent(this.moduleUid));
                 },
                 openDocs() {
                     window.open(this.docsUrl, '_blank', 'noopener');
+                },
+                openAccessUrl(accessUrl) {
+                    window.open(accessUrl, '_blank', 'noopener');
                 },
                 async reload() {
                     this.loading = true;
                     try {
                         const res = await axios.get('?handler=State');
                         this.sessions = (res.data && res.data.sessions) || [];
+                        this.lastUpdatedAt = new Date();
+                    } catch (error) {
+                        this.$message.error('刷新沙箱会话失败，请检查服务状态。');
                     } finally {
                         this.loading = false;
                     }
                 },
                 async destroySession(sessionId) {
+                    if (!sessionId) {
+                        return;
+                    }
+
+                    if (this.$confirm) {
+                        try {
+                            await this.$confirm('销毁后将停止并删除对应运行环境，是否继续？', '销毁沙箱', {
+                                confirmButtonText: '销毁',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            });
+                        } catch {
+                            return;
+                        }
+                    }
+
                     const form = new FormData();
                     form.append('sessionId', sessionId);
                     form.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]')?.value || '');
                     this.loading = true;
                     try {
                         await axios.post('?handler=Destroy', form);
+                        this.$message.success('沙箱会话已销毁。');
                         await this.reload();
+                    } catch (error) {
+                        this.$message.error('销毁沙箱会话失败，请检查服务日志。');
                     } finally {
                         this.loading = false;
                     }

@@ -84,6 +84,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         private const int DefaultTextToImageHeight = 1024;
         private const int DefaultEmbeddingSearchTopK = 3;
         private const int MaxEmbeddingSearchTopK = 20;
+        private const int MinimumOllamaThinkingTokenBudget = 512;
         private static long _embeddingSourceCounter = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         private static readonly JsonSerializerOptions PromptResultJsonSerializerOptions = new(JsonSerializerDefaults.Web);
 
@@ -216,12 +217,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     return;
                 }
 
-                if (!string.IsNullOrEmpty(update.Text) && onStreamEvent != null)
+                var streamedText = GetAgentResponseUpdateText(update);
+                if (!string.IsNullOrEmpty(streamedText) && onStreamEvent != null)
                 {
                     onStreamEvent(new PromptResultStreamEvent
                     {
                         EventType = "chunk",
-                        Text = update.Text,
+                        Text = streamedText,
                         IsFinal = false
                     });
                 }
@@ -1069,13 +1071,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                     return;
                 }
 
-                if (!string.IsNullOrEmpty(update.Text) && onStreamEvent != null)
+                var streamedText = GetAgentResponseUpdateText(update);
+                if (!string.IsNullOrEmpty(streamedText) && onStreamEvent != null)
                 {
                     onStreamEvent(new PromptResultStreamEvent
                     {
                         EventType = "chunk",
                         PromptResultId = promptResultId,
-                        Text = update.Text,
+                        Text = streamedText,
                         IsFinal = false
                     });
                 }
@@ -1519,12 +1522,14 @@ Apple
         {
             var chatModel = EnsureChatCompatibleModel(model, scene);
             var aiSettings = overrideSetting ?? _aiModelService.Value.BuildSenparcAiSetting(chatModel);
+            var effectiveChatOptions = CloneChatOptions(chatOptions);
+            ApplyOllamaLowTokenCompatibility(effectiveChatOptions, chatModel, scene);
             SenparcTrace.SendCustomLog(
                 "PromptRange.AI.Attempt",
                 $"{scene} 开始请求。Runner={runnerName}, Stream={(inStreamItemProceessing != null)}, HistoryCount={history?.Count ?? 0}, Model={BuildModelDiagnosticInfo(chatModel)}");
             var iWantToRun = await new AgentAiHandler(aiSettings)
                 .IWantTo(aiSettings)
-                .ConfigChatModel(runnerName, BuildChatClientAgentOptions(CloneChatOptions(chatOptions)))
+                .ConfigChatModel(runnerName, BuildChatClientAgentOptions(effectiveChatOptions))
                 .BuildKernelWithAgentSessionAsync();
 
             var agentSession = iWantToRun.Kernel.AgentSession
@@ -1539,6 +1544,7 @@ Apple
                 scene,
                 inStreamItemProceessing);
             var usage = PromptUsageHelper.ResolveUsage(result.Usage);
+            EnsureChatOutputPresent(result.Output, usage, effectiveChatOptions.MaxOutputTokens, chatModel, scene);
             SenparcTrace.SendCustomLog(
                 "PromptRange.AI.Attempt",
                 $"{scene} 请求成功。Runner={runnerName}, PromptTokens={usage.PromptTokens}, CompletionTokens={usage.CompletionTokens}, TotalTokens={usage.TotalTokens}");
@@ -1552,7 +1558,7 @@ Apple
                 return new ChatOptions();
             }
 
-            return new ChatOptions
+            var cloned = new ChatOptions
             {
                 Instructions = chatOptions.Instructions,
                 MaxOutputTokens = chatOptions.MaxOutputTokens,
@@ -1561,8 +1567,67 @@ Apple
                 FrequencyPenalty = chatOptions.FrequencyPenalty,
                 PresencePenalty = chatOptions.PresencePenalty,
                 StopSequences = chatOptions.StopSequences?.ToList() ?? new List<string>(),
-                Tools = chatOptions.Tools?.ToList()
+                Tools = chatOptions.Tools?.ToList(),
             };
+
+            if (chatOptions.AdditionalProperties == null)
+            {
+                return cloned;
+            }
+
+            cloned.AdditionalProperties ??= new AdditionalPropertiesDictionary();
+            foreach (var additionalProperty in chatOptions.AdditionalProperties)
+            {
+                cloned.AdditionalProperties[additionalProperty.Key] = additionalProperty.Value;
+            }
+            return cloned;
+        }
+
+        private static void ApplyOllamaLowTokenCompatibility(
+            ChatOptions chatOptions,
+            AIModelDto model,
+            string scene)
+        {
+            if (chatOptions == null
+                || model?.AiPlatform != AiPlatform.Ollama
+                || !chatOptions.MaxOutputTokens.HasValue
+                || chatOptions.MaxOutputTokens.Value <= 0
+                || chatOptions.MaxOutputTokens.Value >= MinimumOllamaThinkingTokenBudget)
+            {
+                return;
+            }
+
+            chatOptions.AdditionalProperties ??= new AdditionalPropertiesDictionary();
+            chatOptions.AdditionalProperties["think"] = false;
+            SenparcTrace.SendCustomLog(
+                "PromptRange.AI.OllamaThinking",
+                $"{scene} 检测到 Ollama 低输出 Token 预算（MaxToken={chatOptions.MaxOutputTokens}），已设置 think=false，避免思考过程耗尽预算而未生成可显示正文。Model={BuildModelDiagnosticInfo(model)}");
+        }
+
+        private static void EnsureChatOutputPresent(
+            string output,
+            PromptUsageInfo usage,
+            int? maxOutputTokens,
+            AIModelDto model,
+            string scene)
+        {
+            if (!string.IsNullOrWhiteSpace(output))
+            {
+                return;
+            }
+
+            var completionTokens = usage?.CompletionTokens ?? 0;
+            if (maxOutputTokens.HasValue
+                && maxOutputTokens.Value > 0
+                && completionTokens >= maxOutputTokens.Value)
+            {
+                throw new NcfExceptionBase(
+                    $"AI 调用未返回可显示正文（{scene}）：模型已使用 {completionTokens} 个输出 Token，达到 MaxToken={maxOutputTokens.Value}。" +
+                    $"思考型模型可能在生成最终回答前耗尽预算。请将 MaxToken 提高到至少 {MinimumOllamaThinkingTokenBudget}，或关闭模型思考模式。模型：{BuildModelDiagnosticInfo(model)}");
+            }
+
+            throw new NcfExceptionBase(
+                $"AI 调用未返回可显示正文（{scene}）。模型：{BuildModelDiagnosticInfo(model)}");
         }
 
         private static bool CanUseDefaultChatFallback(SenparcAiSetting defaultSetting)
@@ -1744,10 +1809,22 @@ Apple
                 return await RunChatDirectAsync(iWantToRun, prompt, agentSession, model, scene);
             }
 
+            var streamedText = new StringBuilder();
+            void HandleStreamUpdate(AgentResponseUpdate update)
+            {
+                var text = GetAgentResponseUpdateText(update);
+                if (!string.IsNullOrEmpty(text))
+                {
+                    streamedText.Append(text);
+                }
+
+                inStreamItemProceessing(update);
+            }
+
             SenparcKernelAiResult<string> aiResult;
             try
             {
-                aiResult = await iWantToRun.RunChatAsync(prompt, agentSession, inStreamItemProceessing);
+                aiResult = await iWantToRun.RunChatAsync(prompt, agentSession, HandleStreamUpdate);
             }
             catch (NcfExceptionBase)
             {
@@ -1760,8 +1837,9 @@ Apple
                 {
                     try
                     {
+                        streamedText.Clear();
                         SenparcTrace.SendCustomLog("PromptRange.AI.Retry", $"{scene} 流式调用失败，尝试移除 AgentSession 后重试。");
-                        aiResult = await iWantToRun.RunChatAsync(prompt, null, inStreamItemProceessing);
+                        aiResult = await iWantToRun.RunChatAsync(prompt, null, HandleStreamUpdate);
                     }
                     catch (Exception retryEx)
                     {
@@ -1788,7 +1866,36 @@ Apple
             }
 
             EnsureRunChatSucceeded(aiResult, model, scene);
-            return (aiResult.OutputString ?? string.Empty, aiResult.Result?.Usage);
+            var output = ResolveChatOutput(aiResult.OutputString, streamedText.ToString());
+            if (string.IsNullOrWhiteSpace(aiResult.OutputString) && !string.IsNullOrWhiteSpace(output))
+            {
+                SenparcTrace.SendCustomLog(
+                    "PromptRange.AI.StreamOutputFallback",
+                    $"{scene} AgentKernel 返回空文本，已使用流式文本保存。Model={BuildModelDiagnosticInfo(model)}");
+            }
+
+            return (output, aiResult.Result?.Usage);
+        }
+
+        private static string GetAgentResponseUpdateText(AgentResponseUpdate update)
+        {
+            if (!string.IsNullOrEmpty(update?.Text))
+            {
+                return update.Text;
+            }
+
+            return string.Concat(update?.Contents?
+                .OfType<TextContent>()
+                .Select(content => content.Text)
+                .Where(text => !string.IsNullOrEmpty(text))
+                ?? Enumerable.Empty<string>());
+        }
+
+        private static string ResolveChatOutput(string output, string streamedText)
+        {
+            return string.IsNullOrWhiteSpace(output) && !string.IsNullOrWhiteSpace(streamedText)
+                ? streamedText
+                : output ?? string.Empty;
         }
 
         private static async Task<(string Output, UsageDetails Usage)> RunChatDirectAsync(

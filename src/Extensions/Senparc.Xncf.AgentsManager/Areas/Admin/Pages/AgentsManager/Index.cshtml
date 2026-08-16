@@ -1989,9 +1989,10 @@
                               label="Human 参与者"
                               prop="includeHumanParticipant">
                     <el-switch v-model="groupStartForm.includeHumanParticipant"
+                               :disabled="true"
                                @@change="markGroupStartHumanParticipantTouched"
-                               active-text="本次运行包含 Human"
-                               inactive-text="本次运行跳过 Human"></el-switch>
+                               active-text="Group 已配置，本次任务将包含 Human"
+                               inactive-text="正在加载 Group 配置"></el-switch>
                 </el-form-item>
                 <el-form-item label="最大对话轮数" prop="chatMaxRound">
                     <el-input-number v-model="groupStartForm.chatMaxRound"

@@ -269,6 +269,16 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 throw new NcfExceptionBase($"聊天组“{chatGroup.Name}”已停用，不能创建新的执行任务。");
             }
 
+            var groupMembers = await chatGroupMemberService.GetFullListAsync(
+                z => z.ChatGroupId == groupId,
+                includes: "AgentTemplate");
+            if (groupMembers.Any(member => member.AgentTemplate?.IsHuman == true)
+                && !effectiveHumanPolicy.IncludeHumanParticipant)
+            {
+                effectiveHumanPolicy = effectiveHumanPolicy with { IncludeHumanParticipant = true };
+                logger.AppendLine("Group 已配置 Human 参与者，本次任务将自动包含 Human。");
+            }
+
             // 默认模型继承规则：未显式指定模型时，优先继承当前群主使用的 Prompt 模型。
             if (aiModelId <= 0)
             {
@@ -374,7 +384,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             #region 收集成员（确保包含 Admin + Enter）
 
             var memberCollection = new List<(int AgentTemplateId, string Uid)>();
-            var groupMembers = await chatGroupMemberService.GetFullListAsync(z => z.ChatGroupId == groupId, includes: "AgentTemplate");
 
             foreach (var member in groupMembers)
             {
@@ -841,6 +850,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     }
 
                     var hadEventsInCurrentSuperStep = false;
+                    var workflowRequestReceived = false;
 
                     await foreach (var workflowEvent in run.WatchStreamAsync(cancellationToken))
                     {
@@ -1120,6 +1130,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                     await chatTaskService.SetStatus(ChatTask_Status.Paused, chatTask);
                                     PublishStatusEvent(chatTask.Id, ChatTask_Status.Paused);
                                     PublishHumanRequestEvent(chatTask.Id, pending.ToDto(), roundIndex + 1);
+                                    workflowRequestReceived = true;
                                     break;
                                 }
                             case WorkflowErrorEvent workflowError:
@@ -1154,7 +1165,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                 break;
                         }
 
-                        if (shouldExit)
+                        if (shouldExit || workflowRequestReceived)
                         {
                             break;
                         }
@@ -1166,29 +1177,23 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     }
 
                     var runStatus = await run.GetStatusAsync();
-                    if (runStatus == RunStatus.Ended)
+                    if (workflowPendingRequests.Count > 0)
                     {
-                        break;
-                    }
-
-                    if (runStatus == RunStatus.PendingRequests)
-                    {
-                        if (workflowPendingRequests.Count == 0)
-                        {
-                            workflowFailed = true;
-                            workflowFailureReason = "多智能体工作流等待了未登记的外部响应。";
-                            logger.AppendLine($"[{chatGroup.Name}] {workflowFailureReason}");
-                            shouldExit = true;
-                            break;
-                        }
-
                         var externalResponses = new List<ExternalResponse>();
                         foreach (var pending in workflowPendingRequests)
                         {
+                            SenparcTrace.SendCustomLog(
+                                "AgentsManager.HIL.ToolApproval.WaitingForDecision",
+                                $"Group={chatGroup.Id}; Task={chatTask.Id}; Request={pending.RequestId}; Tool={pending.ToolName}");
                             var decision = await pending.Completion.WaitAsync(cancellationToken);
                             if (pending.ResolvedResponse is ExternalResponse externalResponse)
                             {
                                 externalResponses.Add(externalResponse);
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException(
+                                    $"工具审批“{pending.ToolName}”已处理，但未生成 MAF 外部响应。");
                             }
 
                             PublishHumanResolvedEvent(chatTask.Id, pending.RequestId, decision);
@@ -1199,10 +1204,27 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         {
                             await run.SendResponseAsync(externalResponse);
                         }
+                        SenparcTrace.SendCustomLog(
+                            "AgentsManager.HIL.ToolApproval.ResponseDispatched",
+                            $"Group={chatGroup.Id}; Task={chatTask.Id}; Responses={externalResponses.Count}");
 
                         await chatTaskService.SetStatus(ChatTask_Status.Chatting, chatTask);
                         PublishStatusEvent(chatTask.Id, ChatTask_Status.Chatting);
                         continue;
+                    }
+
+                    if (runStatus == RunStatus.Ended)
+                    {
+                        break;
+                    }
+
+                    if (runStatus == RunStatus.PendingRequests)
+                    {
+                        workflowFailed = true;
+                        workflowFailureReason = "多智能体工作流等待了未登记的外部响应。";
+                        logger.AppendLine($"[{chatGroup.Name}] {workflowFailureReason}");
+                        shouldExit = true;
+                        break;
                     }
 
                     if (hadEventsInCurrentSuperStep)
