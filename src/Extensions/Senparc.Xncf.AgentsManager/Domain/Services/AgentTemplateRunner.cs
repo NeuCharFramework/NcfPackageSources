@@ -361,7 +361,13 @@ public sealed class AgentTemplateRunner
             request.McpToolPermission,
             request.RequireHumanApproval);
         var tools = request.AllowFunctionCalls
-            ? await BuildAgentToolsAsync(handler, template, toolPolicy.PluginTools, toolPolicy.McpTools, cancellationToken).ConfigureAwait(false)
+            ? await BuildAgentToolsAsync(
+                handler,
+                template,
+                toolPolicy.PluginTools,
+                toolPolicy.McpTools,
+                request.DiagnosticId,
+                cancellationToken).ConfigureAwait(false)
             : new List<AITool>();
 
         var promptParameters = request.UseTemplatePromptParameters
@@ -587,6 +593,7 @@ public sealed class AgentTemplateRunner
         AgentTemplate template,
         ToolPermissionMode pluginToolPermission,
         ToolPermissionMode mcpToolPermission,
+        string correlationId,
         CancellationToken cancellationToken)
     {
         var tools = new List<AITool>();
@@ -614,9 +621,20 @@ public sealed class AgentTemplateRunner
                 {
                     foreach (var tool in agentHandler.GetAITools(plugin))
                     {
-                        tools.Add(pluginToolPermission == ToolPermissionMode.RequireApproval && tool is AIFunction function
-                            ? new ApprovalRequiredAIFunction(function)
-                            : tool);
+                        if (tool is not AIFunction function)
+                        {
+                            tools.Add(tool);
+                            continue;
+                        }
+
+                        AIFunction diagnosticFunction = new DiagnosticAIFunction(
+                            function,
+                            template.Id,
+                            template.Name,
+                            correlationId);
+                        tools.Add(pluginToolPermission == ToolPermissionMode.RequireApproval
+                            ? new ApprovalRequiredAIFunction(diagnosticFunction)
+                            : diagnosticFunction);
                     }
                 }
             }
@@ -864,13 +882,24 @@ public sealed class AgentTemplateRunRequest
     public float Temperature { get; init; } = 0.5f;
     public float? TopP { get; init; }
 
-    public static AgentTemplateRunRequest ForLocalWorkflow(int agentTemplateId, string correlationId, int? aiModelId)
+    public static AgentTemplateRunRequest ForLocalWorkflow(
+        int agentTemplateId,
+        string correlationId,
+        int? aiModelId,
+        bool allowFunctionCalls = false,
+        HumanInTheLoopLevel humanInTheLoopLevel = HumanInTheLoopLevel.Automatic,
+        ToolPermissionMode pluginToolPermission = ToolPermissionMode.Inherit,
+        ToolPermissionMode mcpToolPermission = ToolPermissionMode.Inherit)
     {
         return new AgentTemplateRunRequest
         {
             AiModelId = aiModelId,
             RunnerName = $"WorkflowAgent-{agentTemplateId}-{correlationId}",
-            AllowFunctionCalls = false
+            AllowFunctionCalls = allowFunctionCalls,
+            HumanInTheLoopLevel = humanInTheLoopLevel,
+            PluginToolPermission = pluginToolPermission,
+            McpToolPermission = mcpToolPermission,
+            DiagnosticId = correlationId
         };
     }
 
@@ -902,6 +931,10 @@ public sealed class AgentTemplateRunRequest
         {
             ProfileName = $"{ProfileName}-deployment-model-id-fallback",
             AllowFunctionCalls = AllowFunctionCalls,
+            RequireHumanApproval = RequireHumanApproval,
+            HumanInTheLoopLevel = HumanInTheLoopLevel,
+            PluginToolPermission = PluginToolPermission,
+            McpToolPermission = McpToolPermission,
             DefaultSetting = setting,
             // DefaultSetting is deliberately the alternate form of the same resolved model. Do not
             // re-apply the Prompt-bound model configuration during the compatibility retry.
@@ -925,6 +958,10 @@ public sealed class AgentTemplateRunRequest
             ProfileName = $"{ProfileName}-standard-transport-fallback",
             AiModelId = AiModelId,
             AllowFunctionCalls = AllowFunctionCalls,
+            RequireHumanApproval = RequireHumanApproval,
+            HumanInTheLoopLevel = HumanInTheLoopLevel,
+            PluginToolPermission = PluginToolPermission,
+            McpToolPermission = McpToolPermission,
             DefaultSetting = DefaultSetting,
             UseTemplateModelSettings = UseTemplateModelSettings,
             UseTemplatePromptParameters = UseTemplatePromptParameters,
@@ -949,6 +986,10 @@ public sealed class AgentTemplateRunRequest
             ProfileName = $"{ProfileName}-configured-api-version-fallback",
             AiModelId = AiModelId,
             AllowFunctionCalls = AllowFunctionCalls,
+            RequireHumanApproval = RequireHumanApproval,
+            HumanInTheLoopLevel = HumanInTheLoopLevel,
+            PluginToolPermission = PluginToolPermission,
+            McpToolPermission = McpToolPermission,
             DefaultSetting = DefaultSetting,
             UseTemplateModelSettings = UseTemplateModelSettings,
             UseTemplatePromptParameters = UseTemplatePromptParameters,

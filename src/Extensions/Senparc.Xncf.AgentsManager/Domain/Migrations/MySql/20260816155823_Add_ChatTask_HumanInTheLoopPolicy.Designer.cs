@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.AgentsManager.Models;
 
@@ -11,9 +12,11 @@ using Senparc.Xncf.AgentsManager.Models;
 namespace Senparc.Xncf.AgentsManager.Domain.Migrations.MySql
 {
     [DbContext(typeof(AgentsManagerSenparcEntities_MySql))]
-    partial class AgentsManagerSenparcEntities_MySqlModelSnapshot : ModelSnapshot
+    [Migration("20260816155823_Add_ChatTask_HumanInTheLoopPolicy")]
+    partial class Add_ChatTask_HumanInTheLoopPolicy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

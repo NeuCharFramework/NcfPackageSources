@@ -1027,6 +1027,64 @@
                                                                   @@edit-template="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'Prompt'})"></workflow-rich-text-input>
                                         <el-cascader :value="configBindingSelection(selectedNode,'prompt')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable placeholder="关联上游 Output" @@change="setConfigBinding(selectedNode,'prompt',$event)"></el-cascader>
                                     </el-form-item>
+                                    <template v-if="(selectedNode.type==='agent' || selectedNode.type==='agent-group') && selectedWorkflowObject && String(selectedWorkflowObject.metadata && selectedWorkflowObject.metadata.supportsHumanInTheLoop).toLowerCase()==='true'">
+                                        <el-divider content-position="left">Human-in-the-Loop</el-divider>
+                                        <el-form-item v-if="selectedNode.type==='agent'" label="Agent 工具">
+                                            <el-switch v-model="selectedNode.config.allowFunctionCalls"
+                                                       :disabled="editingLocked"
+                                                       active-text="允许使用已配置的插件与 MCP 工具"
+                                                       inactive-text="不向模型暴露工具"></el-switch>
+                                        </el-form-item>
+                                        <el-form-item label="HIL 等级">
+                                            <el-select v-model="selectedNode.config.humanInTheLoopLevel"
+                                                       :disabled="editingLocked"
+                                                       style="width:100%;">
+                                                <el-option label="L0 全自动" :value="0"></el-option>
+                                                <el-option label="L1 风险分层（MCP 默认审批）" :value="1"></el-option>
+                                                <el-option label="L2 所有工具调用前审批" :value="2"></el-option>
+                                                <el-option v-if="selectedNode.type==='agent-group'" label="L3 Human 参与者 + 工具审批" :value="3"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item label="插件工具权限">
+                                            <el-select v-model="selectedNode.config.pluginToolPermission"
+                                                       :disabled="editingLocked"
+                                                       style="width:100%;">
+                                                <el-option label="继承 HIL 等级" :value="0"></el-option>
+                                                <el-option label="自动执行" :value="1"></el-option>
+                                                <el-option label="执行前审批" :value="2"></el-option>
+                                                <el-option label="禁止使用" :value="3"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item label="MCP 工具权限">
+                                            <el-select v-model="selectedNode.config.mcpToolPermission"
+                                                       :disabled="editingLocked"
+                                                       style="width:100%;">
+                                                <el-option label="继承 HIL 等级" :value="0"></el-option>
+                                                <el-option label="自动执行" :value="1"></el-option>
+                                                <el-option label="执行前审批" :value="2"></el-option>
+                                                <el-option label="禁止使用" :value="3"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectedNode.type==='agent-group' && String(selectedWorkflowObject.metadata && selectedWorkflowObject.metadata.supportsHumanParticipant).toLowerCase()==='true'"
+                                                      label="Human 参与者">
+                                            <el-switch v-model="selectedNode.config.includeHumanParticipant"
+                                                       :disabled="editingLocked"
+                                                       active-text="允许 Group 中已配置的 Human 参与本次运行"
+                                                       inactive-text="本次运行跳过 Human 成员"></el-switch>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectedNode.type==='agent-group'" label="最大对话轮数">
+                                            <el-input-number v-model="selectedNode.config.chatMaxRound"
+                                                             :disabled="editingLocked"
+                                                             :min="1"
+                                                             :max="50"
+                                                             :step="1"
+                                                             controls-position="right"></el-input-number>
+                                        </el-form-item>
+                                        <el-alert v-if="selectedNode.type==='agent' && !selectedNode.config.allowFunctionCalls"
+                                                  title="当前未向独立 Agent 暴露工具，工具权限和审批等级会保留但不会触发。"
+                                                  type="info"
+                                                  :closable="false"></el-alert>
+                                    </template>
                                     <template v-if="selectedNode.type==='sub-workflow'">
                                         <el-form-item label="要调用的工作流" required>
                                             <el-select v-model="selectedNode.config.workflowId"

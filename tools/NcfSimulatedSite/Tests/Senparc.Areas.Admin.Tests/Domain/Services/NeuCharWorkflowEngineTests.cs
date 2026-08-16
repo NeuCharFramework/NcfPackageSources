@@ -918,6 +918,64 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public async Task AgentGroupExecution_ShouldPassHilPolicyThroughProviderParameters()
+    {
+        var provider = new CapturingWorkflowObjectProvider();
+        var services = new ServiceCollection();
+        services.AddSingleton<IWorkflowObjectProvider>(provider);
+        using var serviceProvider = services.BuildServiceProvider();
+        var engine = new NeuCharWorkflowEngine(
+            null!,
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            null!,
+            null!,
+            new[] { provider });
+        var workflow = new Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflow(
+            "HIL 参数测试",
+            37);
+        var node = new NeuCharWorkflowNode
+        {
+            Id = "group-node",
+            Type = "agent-group",
+            Name = "审批组",
+            Config = new JsonObject
+            {
+                ["providerId"] = provider.ProviderId,
+                ["objectId"] = "group:42",
+                ["prompt"] = "{{input}}",
+                [WorkflowObjectExecutionParameters.HumanInTheLoopLevel] = 3,
+                [WorkflowObjectExecutionParameters.PluginToolPermission] = 2,
+                [WorkflowObjectExecutionParameters.McpToolPermission] = 3,
+                [WorkflowObjectExecutionParameters.IncludeHumanParticipant] = true,
+                [WorkflowObjectExecutionParameters.ChatMaxRound] = 2
+            }
+        };
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "ExecuteWorkflowObjectNodeAsync",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+        var invocation = (Task)method.Invoke(engine, new object[]
+        {
+            workflow,
+            node,
+            JsonValue.Create("继续处理")!,
+            new Dictionary<string, JsonNode>(),
+            new Dictionary<string, JsonNode>(),
+            "workflow-17-run-4f33d29e185c4f43b67c890af104674e",
+            CancellationToken.None
+        })!;
+
+        await invocation;
+
+        Assert.IsNotNull(provider.LastRequest);
+        Assert.AreEqual("3", provider.LastRequest.Parameters![WorkflowObjectExecutionParameters.HumanInTheLoopLevel]);
+        Assert.AreEqual("2", provider.LastRequest.Parameters[WorkflowObjectExecutionParameters.PluginToolPermission]);
+        Assert.AreEqual("3", provider.LastRequest.Parameters[WorkflowObjectExecutionParameters.McpToolPermission]);
+        Assert.AreEqual("True", provider.LastRequest.Parameters[WorkflowObjectExecutionParameters.IncludeHumanParticipant]);
+        Assert.AreEqual("2", provider.LastRequest.Parameters[WorkflowObjectExecutionParameters.ChatMaxRound]);
+        Assert.AreEqual(37, provider.LastRequest.AdminUserId);
+    }
+
+    [TestMethod]
     public void ExecutionLog_ReplaySnapshotAndEvents_ShouldBeStoredSeparately()
     {
         var executionLog = new Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflowExecutionLog(
@@ -1418,6 +1476,34 @@ public class NeuCharWorkflowEngineTests
     {
         public string Name { get; set; } = string.Empty;
         public List<string> Tags { get; set; } = new();
+    }
+
+    private sealed class CapturingWorkflowObjectProvider : IWorkflowObjectProvider
+    {
+        public string ProviderId => "test-provider";
+        public WorkflowObjectExecutionRequest? LastRequest { get; private set; }
+
+        public ValueTask<IReadOnlyList<WorkflowObjectDescriptor>> GetObjectsAsync(
+            CancellationToken cancellationToken = default)
+            => ValueTask.FromResult<IReadOnlyList<WorkflowObjectDescriptor>>(
+                new[]
+                {
+                    new WorkflowObjectDescriptor(
+                        ProviderId,
+                        "group:42",
+                        "agent-group",
+                        "审批组",
+                        string.Empty,
+                        true)
+                });
+
+        public ValueTask<WorkflowObjectExecutionResult> ExecuteAsync(
+            WorkflowObjectExecutionRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            LastRequest = request;
+            return ValueTask.FromResult(new WorkflowObjectExecutionResult(true, "完成"));
+        }
     }
 
     private static NeuCharWorkflowEngine CreateEngine() =>

@@ -419,10 +419,12 @@ var app = new Vue({
         pluginToolPermission: 0, // 0 继承，1 自动，2 审批，3 禁止
         mcpToolPermission: 0,
         includeHumanParticipant: false,
+        chatMaxRound: 20,
         description: ''
       },
       groupStartParticipants: [],
       groupStartParticipantLoading: false,
+      groupStartHumanParticipantTouched: false,
       groupStartPromptCaretStart: 0,
       groupStartPromptCaretEnd: 0,
       groupStartFormRules: {
@@ -462,6 +464,11 @@ var app = new Vue({
       historyStreamSilentTimer: {},
       historyStreamingDrafts: {},
       humanApprovalRequests: {},
+      toolApprovalDialogVisible: false,
+      toolApprovalRequest: null,
+      toolApprovalArgumentText: '',
+      toolApprovalQueue: [],
+      toolApprovalSubmitting: false,
       humanReplyDialogVisible: false,
       humanReplyRequest: null,
       humanReplyText: '',
@@ -493,6 +500,7 @@ var app = new Vue({
       agentParameterList: [],
       // 描述内容
       describeContent: '',
+      taskDescriptionDetails: null,
       functionCallInputVisible: false,
       functionCallInputValue: '',
       functionCallTags: [], // 用于编辑时临时存储标签
@@ -3192,11 +3200,21 @@ var app = new Vue({
         }
         rearmSilentTimer()
       }
+      const onHumanResolved = (event) => {
+        if (this.historyStream[listType] !== source) return
+        const payload = this.safeParseStreamEvent(event)
+        const requestId = this.getHumanRequestId(payload)
+        if (requestId) {
+          this.removeResolvedHumanRequest(requestId)
+        }
+        rearmSilentTimer()
+      }
 
       source.addEventListener('chunk', onChunk)
       source.addEventListener('message', onMessage)
       source.addEventListener('status', onStatus)
       source.addEventListener('humanRequest', onHumanRequest)
+      source.addEventListener('humanResolved', onHumanResolved)
 
       source.onerror = () => {
         if (this.historyStream[listType] !== source) return
@@ -3207,8 +3225,45 @@ var app = new Vue({
         this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
       }
     },
+    getHumanRequestId(payload) {
+      return String(payload?.humanRequestId || payload?.requestId || '')
+    },
+    formatToolApprovalArguments(rawArguments) {
+      let value = rawArguments
+      if (value === undefined || value === null || String(value).trim() === '') {
+        return '（未提供参数）'
+      }
+
+      for (let index = 0; index < 2 && typeof value === 'string'; index++) {
+        const text = value.trim()
+        if (!text || !['{', '[', '"'].includes(text[0])) break
+        try {
+          value = JSON.parse(text)
+        } catch (_) {
+          break
+        }
+      }
+
+      if (typeof value === 'string') {
+        return value
+      }
+
+      try {
+        return JSON.stringify(value, null, 2)
+      } catch (_) {
+        return String(value)
+      }
+    },
+    showNextToolApproval() {
+      if (this.toolApprovalRequest || this.toolApprovalQueue.length === 0) return
+      const request = this.toolApprovalQueue.shift()
+      this.toolApprovalRequest = request
+      this.toolApprovalArgumentText = this.formatToolApprovalArguments(
+        request?.humanToolArguments ?? request?.toolArguments)
+      this.toolApprovalDialogVisible = true
+    },
     async handleHumanApprovalRequest(payload) {
-      const requestId = String(payload?.humanRequestId || '')
+      const requestId = this.getHumanRequestId(payload)
       if (!requestId || this.humanApprovalRequests[requestId]) {
         return
       }
@@ -3221,24 +3276,60 @@ var app = new Vue({
         return
       }
 
-      const toolName = payload.humanToolName || payload.toolName || '工具调用'
-      const toolArguments = String(payload.humanToolArguments || payload.toolArguments || '').slice(0, 1600)
-      const prompt = `${payload.text || payload.prompt || '智能体请求人工确认。'}\n\n工具：${toolName}${toolArguments ? `\n参数：${toolArguments}` : ''}\n\n点击“确定”批准，点击“取消”拒绝。`
-      const approved = typeof window !== 'undefined' && window.confirm(prompt)
-      const reason = approved ? '用户确认' : '用户拒绝'
+      this.toolApprovalQueue.push({
+        ...payload,
+        requestId
+      })
+      this.showNextToolApproval()
+    },
+    async resolveToolApproval(approved) {
+      const request = this.toolApprovalRequest
+      const requestId = this.getHumanRequestId(request)
+      if (!requestId || this.toolApprovalSubmitting) return
 
+      this.toolApprovalSubmitting = true
       try {
+        const reason = approved ? '用户确认' : '用户拒绝'
         const query = getInterfaceQueryStr({ requestId, approved, reason })
         const response = await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ResolveHumanRequest?${query}`)
         const data = response?.data ?? {}
         if (!data.success) {
           this.$message.error(data.errorMessage || data.data || '人工审批提交失败')
+          return
         }
+        this.$message.success(approved ? '已批准工具调用，任务继续执行' : '已拒绝工具调用，任务继续处理')
+        this.toolApprovalDialogVisible = false
+        this.toolApprovalRequest = null
+        this.toolApprovalArgumentText = ''
+        this.$delete(this.humanApprovalRequests, requestId)
+        this.$nextTick(() => this.showNextToolApproval())
       } catch (error) {
         this.$message.error(error?.message || '人工审批提交失败')
       } finally {
+        this.toolApprovalSubmitting = false
+      }
+    },
+    deferToolApproval() {
+      const requestId = this.getHumanRequestId(this.toolApprovalRequest)
+      this.toolApprovalDialogVisible = false
+      this.toolApprovalRequest = null
+      this.toolApprovalArgumentText = ''
+      if (requestId) {
         this.$delete(this.humanApprovalRequests, requestId)
       }
+      this.$nextTick(() => this.showNextToolApproval())
+    },
+    removeResolvedHumanRequest(requestId) {
+      if (!requestId) return
+      this.toolApprovalQueue = this.toolApprovalQueue
+        .filter(item => this.getHumanRequestId(item) !== requestId)
+      if (this.getHumanRequestId(this.toolApprovalRequest) === requestId) {
+        this.toolApprovalDialogVisible = false
+        this.toolApprovalRequest = null
+        this.toolApprovalArgumentText = ''
+        this.$nextTick(() => this.showNextToolApproval())
+      }
+      this.$delete(this.humanApprovalRequests, requestId)
     },
     async submitHumanReply() {
       const requestId = String(this.humanReplyRequest?.humanRequestId || this.humanReplyRequest?.requestId || '')
@@ -3626,6 +3717,10 @@ var app = new Vue({
         }
         if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
           this.groupStartParticipants = this.buildGroupStartParticipants(data.data || {})
+          if (!this.groupStartHumanParticipantTouched) {
+            this.groupStartForm.includeHumanParticipant = this.groupStartParticipants
+              .some(participant => participant.agentKind === 'Human')
+          }
           await this.autoTestRemoteParticipants(this.groupStartParticipants)
         }
       } catch (error) {
@@ -3638,6 +3733,9 @@ var app = new Vue({
           this.groupStartParticipantLoading = false
         }
       }
+    },
+    markGroupStartHumanParticipantTouched() {
+      this.groupStartHumanParticipantTouched = true
     },
     getGroupStartPromptTextarea() {
       const input = this.$refs?.groupStartPromptCommand
@@ -3761,6 +3859,7 @@ var app = new Vue({
         refName = 'groupStartELForm'
         this.groupStartParticipants = []
         this.groupStartParticipantLoading = false
+        this.groupStartHumanParticipantTouched = false
         this.groupStartPromptCaretStart = 0
         this.groupStartPromptCaretEnd = 0
       }
@@ -3799,6 +3898,7 @@ var app = new Vue({
         this.groupStartForm.name = chatGroup.name ? `${chatGroup.name}1` : ''
         this.groupStartForm.chatGroupId = chatGroupId
         this.groupStartParticipants = this.buildGroupStartParticipants(formData)
+        this.groupStartHumanParticipantTouched = false
         this.groupStartForm.includeHumanParticipant = this.groupStartParticipants.some(participant => participant.agentKind === 'Human')
         this.groupStartPromptCaretStart = 0
         this.groupStartPromptCaretEnd = 0
@@ -3843,6 +3943,7 @@ var app = new Vue({
       } else if (btnType === 'dialogTaskDescription') {
         // 清空数据
         this.describeContent = ''
+        this.taskDescriptionDetails = null
         this.$nextTick(() => {
           this.visible[btnType] = false
         })
@@ -5156,12 +5257,54 @@ var app = new Vue({
     // 查看任务描述
     viewTaskDescription(item) {
       this.describeContent = item?.promptCommand ?? ''
+      this.taskDescriptionDetails = item || null
       this.visible.dialogTaskDescription = true
+    },
+    taskHumanInTheLoopLevelText(value) {
+      return {
+        0: 'L0 全自动',
+        1: 'L1 风险分层',
+        2: 'L2 工具审批',
+        3: 'L3 Human 参与者 + 工具审批'
+      }[Number(value)] || `未知（${value}）`
+    },
+    taskToolPermissionText(value) {
+      return {
+        0: '继承 HIL 等级',
+        1: '自动执行',
+        2: '执行前审批',
+        3: '禁止使用'
+      }[Number(value)] || `未知（${value}）`
+    },
+    taskHumanParticipantStatusText(task) {
+      if (!task?.executionPolicyCaptured) {
+        return '历史任务未记录'
+      }
+      return task.includeHumanParticipant ? '已加入本任务' : '本任务未启用'
+    },
+    taskDescriptionCopyText() {
+      const detail = this.taskDescriptionDetails || {}
+      if (!detail.executionPolicyCaptured) {
+        return this.describeContent
+      }
+
+      return [
+        this.describeContent,
+        '',
+        '--- 执行策略 ---',
+        `HIL 等级：${this.taskHumanInTheLoopLevelText(detail.humanInTheLoopLevel)}`,
+        `插件工具权限：${this.taskToolPermissionText(detail.pluginToolPermission)}`,
+        `MCP 工具权限：${this.taskToolPermissionText(detail.mcpToolPermission)}`,
+        `Human 参与者：${detail.includeHumanParticipant ? '包含' : '跳过'}`,
+        `最大对话轮数：${Number(detail.chatMaxRound || 0)}`,
+        `个性化参数：${detail.isPersonality ? '启用' : '关闭'}`,
+        `兼容强制审批：${detail.requireHumanApproval ? '启用' : '关闭'}`
+      ].join('\n')
     },
     // 任务描述复制
     taskDescriptionCopy() {
       // 复制文本
-      this.copyText('4', this.describeContent).then(() => {
+      this.copyText('4', this.taskDescriptionCopyText()).then(() => {
         this.handleElVisibleClose('dialogTaskDescription')
       })
     },
@@ -6140,6 +6283,8 @@ function getInterfaceQueryStr(queryObj) {
       } else if (typeof value === 'object' && value instanceof Array) {
         return value.length > 0
       } else if (typeof value === 'number') {
+        return true
+      } else if (typeof value === 'boolean') {
         return true
       } else {
         // if(typeof value === 'undefined')

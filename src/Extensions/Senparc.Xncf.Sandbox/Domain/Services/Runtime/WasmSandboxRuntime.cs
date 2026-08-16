@@ -56,4 +56,9 @@ public sealed class WasmSandboxRuntime : ISandboxRuntime
     {
         return Task.FromResult<IReadOnlyList<string>>(Array.Empty<string>());
     }
+
+    public Task<IReadOnlyList<string>> ListRunningHandlesAsync(CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult<IReadOnlyList<string>>(Array.Empty<string>());
+    }
 }

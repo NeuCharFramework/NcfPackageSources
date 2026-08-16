@@ -91,7 +91,13 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         services.AddSingleton<NeuCharWorkflowHumanInputService>();
         services.AddScoped<NeuCharWorkflowEngine>();
         services.AddSingleton<NeuCharWorkflowRunCoordinator>();
-        services.AddSingleton<IWorkflowHumanInteractionBridge, NullWorkflowHumanInteractionBridge>();
+        // 仅在没有外部执行模块提供桥接时注册空实现。AgentsManager 无论先于或后于
+        // Workflow 注册，都应成为最终的 HIL 实现。
+        if (!services.Any(descriptor =>
+                descriptor.ServiceType == typeof(IWorkflowHumanInteractionBridge)))
+        {
+            services.AddSingleton<IWorkflowHumanInteractionBridge, NullWorkflowHumanInteractionBridge>();
+        }
         services.AddScoped<WorkflowEventPublisher>();
         services.AddScoped<NeuCharWorkflowAppService>();
         services.AddSingleton<LegacyWorkflowMigrationService>();

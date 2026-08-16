@@ -13,6 +13,7 @@
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AgentsManager.Domain.Services;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -38,6 +39,27 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
 
         [Required]
         public bool IsPersonality { get; private set; }
+
+        [Required]
+        public bool ExecutionPolicyCaptured { get; private set; }
+
+        [Required]
+        public bool RequireHumanApproval { get; private set; }
+
+        [Required]
+        public HumanInTheLoopLevel HumanInTheLoopLevel { get; private set; }
+
+        [Required]
+        public ToolPermissionMode PluginToolPermission { get; private set; }
+
+        [Required]
+        public ToolPermissionMode McpToolPermission { get; private set; }
+
+        [Required]
+        public bool IncludeHumanParticipant { get; private set; }
+
+        [Required]
+        public int ChatMaxRound { get; private set; }
 
         public bool Score { get; private set; }
 
@@ -98,6 +120,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             PromptCommand = chatTaskDto.PromptCommand;
             Description = chatTaskDto.Description;
             IsPersonality = chatTaskDto.IsPersonality;
+            ExecutionPolicyCaptured = chatTaskDto.ExecutionPolicyCaptured;
+            RequireHumanApproval = chatTaskDto.RequireHumanApproval;
+            HumanInTheLoopLevel = chatTaskDto.HumanInTheLoopLevel;
+            PluginToolPermission = chatTaskDto.PluginToolPermission;
+            McpToolPermission = chatTaskDto.McpToolPermission;
+            IncludeHumanParticipant = chatTaskDto.IncludeHumanParticipant;
+            ChatMaxRound = chatTaskDto.ChatMaxRound;
             Score = chatTaskDto.Score;
             StartTime = chatTaskDto.StartTime;
             EndTime = chatTaskDto.EndTime;
@@ -110,7 +139,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         public void ChangeStatus(ChatTask_Status status)
         {
             Status = status;
-            if (status == ChatTask_Status.Cancelled || status == ChatTask_Status.Finished)
+            if (status == ChatTask_Status.Cancelled
+                || status == ChatTask_Status.Finished
+                || status == ChatTask_Status.Failed)
             {
                 EndTime = DateTime.Now;
             }
@@ -130,6 +161,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         Paused = 2,
         Finished = 3,
         Cancelled = 4,
+        Failed = 5,
     }
 
     public enum HookPlatform

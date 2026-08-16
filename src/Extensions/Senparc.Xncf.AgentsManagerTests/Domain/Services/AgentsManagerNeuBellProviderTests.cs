@@ -21,4 +21,23 @@ public class AgentsManagerNeuBellProviderTests
         Assert.AreEqual(1, await provider.ConsumeItemAsync(context, itemId));
         Assert.AreEqual(0, (await provider.GetSnapshotAsync(context)).Items.Count);
     }
+
+    [TestMethod]
+    public async Task WorkflowToolApprovalReminderReturnsToTheSpecificRun()
+    {
+        var provider = new AgentsManagerNeuBellProvider();
+        var runId = Guid.Parse("4f33d29e-185c-4f43-b67c-890af104674e");
+
+        provider.SendWorkflowToolApproval(
+            $"workflow-17-run-{runId:N}",
+            "user-1",
+            "资料 Agent",
+            "Search");
+
+        var snapshot = await provider.GetSnapshotAsync(new NeuBellRequestContext("user-1"));
+        Assert.AreEqual(1, snapshot.Items.Count);
+        Assert.AreEqual(
+            $"/Admin/NeuCharWorkflow/Index?workflowId=17&runId={runId:N}",
+            snapshot.Items[0].DetailUrl);
+    }
 }

@@ -114,6 +114,9 @@ public class SandboxSession : EntityBase<int>
         Status = SandboxSessionStatus.Stopped;
         StatusMessage = message;
         RuntimeHandle = null;
+        HostPort = null;
+        AccessUrl = null;
+        AccessToken = null;
         Touch();
     }
 
@@ -122,6 +125,9 @@ public class SandboxSession : EntityBase<int>
         Status = SandboxSessionStatus.Expired;
         StatusMessage = message ?? "TTL expired";
         RuntimeHandle = null;
+        HostPort = null;
+        AccessUrl = null;
+        AccessToken = null;
         Touch();
     }
 

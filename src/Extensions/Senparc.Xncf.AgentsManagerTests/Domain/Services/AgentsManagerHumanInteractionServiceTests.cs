@@ -1,3 +1,4 @@
+using Microsoft.Extensions.AI;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 
@@ -74,5 +75,55 @@ public class AgentsManagerHumanInteractionServiceTests
         Assert.IsFalse(wrongCorrelation.Success);
         Assert.IsFalse(wrongRecipient.Success);
         Assert.AreEqual(1, store.GetPendingByCorrelationId("workflow-7-run-abc").Count);
+    }
+
+    [TestMethod]
+    public async Task WorkflowCanResolveAgentGroupToolApprovalAndConsumeReminder()
+    {
+        var store = new HumanInTheLoopRequestStore();
+        var provider = new AgentsManagerNeuBellProvider();
+        var service = new AgentsManagerHumanInteractionService(store, provider);
+        var correlationId = "workflow-17-run-4f33d29e185c4f43b67c890af104674e";
+        var approval = new ToolApprovalRequestContent(
+            "approval-1",
+            new FunctionCallContent(
+                "call-1",
+                "Translate",
+                new Dictionary<string, object?>
+                {
+                    ["text"] = "香港理工大学"
+                }));
+        var pending = store.RegisterToolApproval(
+            18229,
+            "翻译 Agent",
+            approval,
+            decision => approval.CreateResponse(decision.Approved, decision.Reason),
+            correlationId,
+            "user-1");
+        pending.SetNeuBellItemId(provider.SendWorkflowToolApproval(
+            correlationId,
+            "user-1",
+            "翻译 Agent",
+            "Translate"));
+
+        var interactions = await service.GetWorkflowPendingAsync(
+            correlationId,
+            "user-1");
+        Assert.AreEqual(pending.RequestId, interactions.Single().RequestId);
+
+        var result = await service.ResolveWorkflowAsync(
+            correlationId,
+            "user-1",
+            pending.RequestId,
+            true,
+            reason: "Workflow 快速审批");
+        var decision = await pending.Completion;
+
+        Assert.IsTrue(result.Success);
+        Assert.IsTrue(decision.Approved);
+        Assert.IsInstanceOfType<ToolApprovalResponseContent>(pending.ResolvedResponse);
+        Assert.AreEqual(
+            0,
+            (await provider.GetSnapshotAsync(new NeuBellRequestContext("user-1"))).Items.Count);
     }
 }

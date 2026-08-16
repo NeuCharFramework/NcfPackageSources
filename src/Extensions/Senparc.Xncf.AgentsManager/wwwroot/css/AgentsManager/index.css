@@ -2039,9 +2039,10 @@ height:100%;
 }
 
 .taskmain-members-title {
-    height: 30px;
-    font-size: 16px;
+    min-height: 30px;
+    font-size: 14px;
     color: rgba(130, 133, 137);
+    line-height: 1.45;
     margin-bottom: 10px;
 }
 
@@ -2374,6 +2375,86 @@ height:100%;
 
 .agentParameters-head>.headavatar>.namebox {
     flex-shrink: 0;
+}
+
+.task-policy-summary {
+    margin-top: 18px;
+    border-top: 1px solid #ebeef5;
+    padding-top: 16px;
+}
+
+.task-policy-summary__title {
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #303133;
+}
+
+.task-policy-summary dl {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr);
+    margin: 0;
+    border: 1px solid #ebeef5;
+}
+
+.task-policy-summary dt,
+.task-policy-summary dd {
+    margin: 0;
+    padding: 9px 12px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.task-policy-summary dt {
+    background: #f5f7fa;
+    color: #606266;
+}
+
+.task-policy-summary dd {
+    color: #303133;
+}
+
+.task-policy-summary dt:nth-last-of-type(1),
+.task-policy-summary dd:nth-last-of-type(1) {
+    border-bottom: 0;
+}
+
+.tool-approval-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0 10px;
+}
+
+.tool-approval-summary__label {
+    color: #909399;
+}
+
+.tool-approval-summary__agent {
+    margin-left: auto;
+    color: #606266;
+}
+
+.tool-approval-arguments {
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    background: #f7f9fc;
+}
+
+.tool-approval-arguments__title {
+    padding: 9px 12px;
+    border-bottom: 1px solid #e4e7ed;
+    color: #606266;
+    font-weight: 600;
+}
+
+.tool-approval-arguments pre {
+    max-height: 420px;
+    margin: 0;
+    padding: 14px;
+    overflow: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 13px/1.65 SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    color: #303133;
 }
 
 .agentParameters-head>.headavatar>.agentParameters-head-actions {

@@ -22,4 +22,6 @@ public interface ISandboxRuntime
     Task DestroyAsync(string runtimeHandle, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<string>> ListOrphanHandlesAsync(CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<string>> ListRunningHandlesAsync(CancellationToken cancellationToken = default);
 }

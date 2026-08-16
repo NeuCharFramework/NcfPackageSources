@@ -247,6 +247,17 @@ public sealed class NeuCharWorkflowEngine
                 node.Config["externalResumeEnabled"] ??= false;
                 node.Config["externalResumeKey"] ??= string.Empty;
             }
+            if (node.Type.Equals("agent", StringComparison.OrdinalIgnoreCase) ||
+                node.Type.Equals("agent-group", StringComparison.OrdinalIgnoreCase))
+            {
+                node.Config[WorkflowObjectExecutionParameters.AllowFunctionCalls] ??=
+                    node.Type.Equals("agent-group", StringComparison.OrdinalIgnoreCase);
+                node.Config[WorkflowObjectExecutionParameters.HumanInTheLoopLevel] ??= 0;
+                node.Config[WorkflowObjectExecutionParameters.PluginToolPermission] ??= 0;
+                node.Config[WorkflowObjectExecutionParameters.McpToolPermission] ??= 0;
+                node.Config[WorkflowObjectExecutionParameters.IncludeHumanParticipant] ??= false;
+                node.Config[WorkflowObjectExecutionParameters.ChatMaxRound] ??= 20;
+            }
             // Code is deliberately an assignment list rather than arbitrary JavaScript. This
             // keeps a workflow's state changes inspectable, bounded and safe to replay.
             if (node.Type.Equals("code", StringComparison.OrdinalIgnoreCase) &&
@@ -523,6 +534,30 @@ public sealed class NeuCharWorkflowEngine
                      node.Type.Equals("agent-group", StringComparison.OrdinalIgnoreCase) ||
                      node.Type.Equals("a2a", StringComparison.OrdinalIgnoreCase))
             {
+                var humanLevel = GetInt(
+                    node.Config,
+                    WorkflowObjectExecutionParameters.HumanInTheLoopLevel,
+                    0);
+                var pluginPermission = GetInt(
+                    node.Config,
+                    WorkflowObjectExecutionParameters.PluginToolPermission,
+                    0);
+                var mcpPermission = GetInt(
+                    node.Config,
+                    WorkflowObjectExecutionParameters.McpToolPermission,
+                    0);
+                if (humanLevel is < 0 or > 3
+                    || pluginPermission is < 0 or > 3
+                    || mcpPermission is < 0 or > 3)
+                {
+                    return $"节点“{node.Name ?? node.Id}”的 HIL 或工具权限配置无效。";
+                }
+                if (node.Type.Equals("agent", StringComparison.OrdinalIgnoreCase)
+                    && humanLevel == 3)
+                {
+                    return $"节点“{node.Name ?? node.Id}”是独立 Agent，不能使用 L3 Human 参与者模式。";
+                }
+
                 var providerId = GetString(node.Config, "providerId");
                 var objectId = GetString(node.Config, "objectId");
                 if (string.IsNullOrWhiteSpace(providerId) ||
@@ -1597,12 +1632,31 @@ public sealed class NeuCharWorkflowEngine
             outputs,
             functionSelectionInputs);
         var prompt = NodeToText(promptValue);
+        var executionParameters = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            [WorkflowObjectExecutionParameters.AllowFunctionCalls] =
+                GetBool(node.Config, WorkflowObjectExecutionParameters.AllowFunctionCalls).ToString(),
+            [WorkflowObjectExecutionParameters.HumanInTheLoopLevel] =
+                GetInt(node.Config, WorkflowObjectExecutionParameters.HumanInTheLoopLevel, 0).ToString(),
+            [WorkflowObjectExecutionParameters.PluginToolPermission] =
+                GetInt(node.Config, WorkflowObjectExecutionParameters.PluginToolPermission, 0).ToString(),
+            [WorkflowObjectExecutionParameters.McpToolPermission] =
+                GetInt(node.Config, WorkflowObjectExecutionParameters.McpToolPermission, 0).ToString(),
+            [WorkflowObjectExecutionParameters.IncludeHumanParticipant] =
+                GetBool(node.Config, WorkflowObjectExecutionParameters.IncludeHumanParticipant).ToString(),
+            [WorkflowObjectExecutionParameters.ChatMaxRound] =
+                Math.Clamp(
+                    GetInt(node.Config, WorkflowObjectExecutionParameters.ChatMaxRound, 20),
+                    1,
+                    50).ToString()
+        };
         var result = await executionProvider.ExecuteAsync(
             new WorkflowObjectExecutionRequest(
                 objectId,
                 prompt,
                 GetInt(node.Config, "aiModelId", 0),
                 correlationId,
+                executionParameters,
                 AdminUserId: workflow.AdminUserId),
             cancellationToken).ConfigureAwait(false);
         return result.Success

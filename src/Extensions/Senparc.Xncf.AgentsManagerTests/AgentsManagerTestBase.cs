@@ -293,6 +293,18 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsTrue(local.UseFreshAgentSession);
             Assert.AreEqual(local.UseFreshAgentSession, a2aWithoutTools.UseFreshAgentSession);
             Assert.IsFalse(local.AllowFunctionCalls);
+            var localWithApproval = AgentTemplateRunRequest.ForLocalWorkflow(
+                5013,
+                "workflow-run",
+                null,
+                true,
+                HumanInTheLoopLevel.ToolApproval,
+                ToolPermissionMode.RequireApproval,
+                ToolPermissionMode.Deny);
+            Assert.IsTrue(localWithApproval.AllowFunctionCalls);
+            Assert.AreEqual(HumanInTheLoopLevel.ToolApproval, localWithApproval.HumanInTheLoopLevel);
+            Assert.AreEqual(ToolPermissionMode.RequireApproval, localWithApproval.PluginToolPermission);
+            Assert.AreEqual(ToolPermissionMode.Deny, localWithApproval.McpToolPermission);
             Assert.IsFalse(a2aWithoutTools.AllowFunctionCalls);
             Assert.IsTrue(a2aWithExplicitTools.AllowFunctionCalls);
             Assert.IsFalse(a2aWithoutTools.AllowDeploymentNameModelIdFallback);

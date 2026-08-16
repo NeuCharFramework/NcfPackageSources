@@ -145,7 +145,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 if (_humanInTheLoopRequestStore.TryGet(requestId, out var pending)
                     && string.Equals(pending.RequestType, "humanTurn", StringComparison.Ordinal))
                 {
-                    return "Human 回合必须通过文本回复接口提交，不能使用工具审批接口。";
+                    response.Success = false;
+                    response.ErrorMessage = "Human 回合必须通过文本回复接口提交，不能使用工具审批接口。";
+                    return null;
                 }
 
                 var resolution = await _humanInteractionService.ResolveAsync(
@@ -154,7 +156,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     new HumanInTheLoopDecision(approved, reason, input));
                 if (!resolution.Success)
                 {
-                    return resolution.Message;
+                    response.Success = false;
+                    response.ErrorMessage = resolution.Message;
+                    return null;
                 }
 
                 return approved ? "人工审批已批准" : "人工审批已拒绝";
@@ -168,13 +172,17 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             {
                 if (request == null || string.IsNullOrWhiteSpace(request.Input))
                 {
-                    return "Human 回复不能为空";
+                    response.Success = false;
+                    response.ErrorMessage = "Human 回复不能为空";
+                    return null;
                 }
 
                 if (!_humanInTheLoopRequestStore.TryGet(request.RequestId, out var pending)
                     || !string.Equals(pending.RequestType, "humanTurn", StringComparison.Ordinal))
                 {
-                    return "Human 回合不存在、已处理或已失效";
+                    response.Success = false;
+                    response.ErrorMessage = "Human 回合不存在、已处理或已失效";
+                    return null;
                 }
 
                 var resolution = await _humanInteractionService.ResolveAsync(
@@ -183,7 +191,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     new HumanInTheLoopDecision(true, "Human 文本回复", request.Input.Trim()));
                 if (!resolution.Success)
                 {
-                    return resolution.Message;
+                    response.Success = false;
+                    response.ErrorMessage = resolution.Message;
+                    return null;
                 }
 
                 return "Human 回复已提交，任务继续执行";
@@ -266,6 +276,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         PromptCommand = task.PromptCommand,
                         Description = task.Description,
                         Personality = task.IsPersonality,
+                        RequireHumanApproval = task.RequireHumanApproval,
+                        HumanInTheLoopLevel = task.HumanInTheLoopLevel,
+                        PluginToolPermission = task.PluginToolPermission,
+                        McpToolPermission = task.McpToolPermission,
+                        IncludeHumanParticipant = task.IncludeHumanParticipant,
+                        ChatMaxRound = task.ChatMaxRound,
                         HumanRecipientUserId = GetCurrentAdminUserId(),
                         HookPlatform = task.HookPlatform,
                         HookParameter = task.HookPlatformParameter
@@ -295,7 +311,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
             foreach (var task in taskList)
             {
-                if (task.Status == ChatTask_Status.Finished || task.Status == ChatTask_Status.Cancelled)
+                if (task.Status == ChatTask_Status.Finished
+                    || task.Status == ChatTask_Status.Cancelled
+                    || task.Status == ChatTask_Status.Failed)
                 {
                     skipped++;
                     continue;

@@ -161,10 +161,13 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                         cancellationToken)
                     .ConfigureAwait(false);
 
-                // 对外只暴露代理路径；HostPort/Token 仅服务端代理使用。
+                // 列表链接直接使用 Docker 为该容器分配的本机端口；NCF 预览仍通过站点代理访问。
                 var accessUrl = string.Equals(template.Key, SandboxTemplateKeys.NcfPreview, StringComparison.OrdinalIgnoreCase)
                     ? SandboxNcfPreviewPaths.GetEntryUrl(sessionId)
-                    : SandboxJupyterPaths.GetLabEntryUrl(sessionId);
+                    : SandboxJupyterPaths.GetDirectLabEntryUrl(
+                        sessionId,
+                        created.HostPort ?? throw new InvalidOperationException("Jupyter 容器未返回本机端口。"),
+                        created.AccessToken ?? throw new InvalidOperationException("Jupyter 容器未返回访问令牌。"));
                 entity.MarkRunning(created.RuntimeHandle, created.HostPort, accessUrl, created.AccessToken, created.Message);
                 await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
                 _logger.LogInformation(
@@ -239,7 +242,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                 z => z.AddTime,
                 Senparc.Ncf.Core.Enums.OrderingType.Descending)
             .ConfigureAwait(false);
-        return list.Select(z => z.ToInfo()).ToArray();
+        return list.Select(ToInfo).ToArray();
     }
 
     public async Task<SandboxSessionInfo?> GetAsync(string sessionId, CancellationToken cancellationToken = default)
@@ -247,7 +250,37 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         using var scope = _scopeFactory.CreateScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var entity = await sessionService.GetBySessionIdAsync(sessionId).ConfigureAwait(false);
-        return entity?.ToInfo();
+        return entity == null ? null : ToInfo(entity);
+    }
+
+    private static SandboxSessionInfo ToInfo(SandboxSession entity)
+    {
+        var info = entity.ToInfo();
+        if (info.Status == SandboxSessionStatus.Running
+            && (string.Equals(entity.TemplateKey, SandboxTemplateKeys.JupyterPython, StringComparison.OrdinalIgnoreCase)
+            || string.Equals(entity.TemplateKey, SandboxTemplateKeys.JupyterCsharp, StringComparison.OrdinalIgnoreCase))
+            )
+        {
+            if (entity.HostPort is > 0 and <= 65535 && !string.IsNullOrWhiteSpace(entity.AccessToken))
+            {
+                return new SandboxSessionInfo
+                {
+                    SessionId = info.SessionId,
+                    OwnerUserId = info.OwnerUserId,
+                    TemplateKey = info.TemplateKey,
+                    RuntimeKind = info.RuntimeKind,
+                    Status = info.Status,
+                    AccessUrl = SandboxJupyterPaths.GetDirectLabEntryUrl(entity.SessionId, entity.HostPort.Value, entity.AccessToken),
+                    StatusMessage = info.StatusMessage,
+                    HostPort = info.HostPort,
+                    CreatedAtUtc = info.CreatedAtUtc,
+                    ExpiresAtUtc = info.ExpiresAtUtc,
+                    LastActivityAtUtc = info.LastActivityAtUtc
+                };
+            }
+        }
+
+        return info;
     }
 
     /// <summary>
@@ -439,14 +472,46 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                 using var scope = _scopeFactory.CreateScope();
                 var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
                 var active = await sessionService.GetActiveSessionsAsync().ConfigureAwait(false);
-                var known = new HashSet<string>(
-                    active.Select(z => z.RuntimeHandle).Where(z => !string.IsNullOrWhiteSpace(z))!,
-                    StringComparer.OrdinalIgnoreCase);
-
                 var handles = await runtime.ListOrphanHandlesAsync(cancellationToken).ConfigureAwait(false);
+                var allHandles = new HashSet<string>(
+                    handles,
+                    StringComparer.OrdinalIgnoreCase);
+                var runningHandles = new HashSet<string>(
+                    await runtime.ListRunningHandlesAsync(cancellationToken).ConfigureAwait(false),
+                    StringComparer.OrdinalIgnoreCase);
+                var known = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (var entity in active.Where(z => z.RuntimeKind == runtime.Kind))
+                {
+                    var handle = entity.RuntimeHandle;
+                    if (string.IsNullOrWhiteSpace(handle)
+                        || handle.StartsWith("exec-placeholder:", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    if (ContainsRuntimeHandle(runningHandles, handle))
+                    {
+                        known.Add(handle);
+                        continue;
+                    }
+
+                    var reason = allHandles.Contains(handle)
+                        ? "Sandbox 容器已停止，应用启动时已同步为已停止。"
+                        : "Sandbox 容器已不存在，应用启动时已同步为已停止。";
+                    entity.MarkStopped(reason);
+                    TryDeleteWorkspace(entity.SessionId);
+                    await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
+                    _logger.LogWarning(
+                        "Sandbox session {SessionId} runtime handle {Handle} is {State}; marked stopped.",
+                        entity.SessionId,
+                        handle,
+                        allHandles.Contains(handle) ? "stopped" : "missing");
+                }
+
                 foreach (var handle in handles)
                 {
-                    if (known.Contains(handle))
+                    if (ContainsRuntimeHandle(known, handle))
                     {
                         continue;
                     }
@@ -460,6 +525,23 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                 _logger.LogDebug(ex, "Orphan reconcile skipped for {Kind}", runtime.Kind);
             }
         }
+    }
+
+    private static bool ContainsRuntimeHandle(IEnumerable<string> handles, string handle)
+    {
+        var normalizedHandle = handle.Trim();
+        if (normalizedHandle.Length == 0)
+        {
+            return false;
+        }
+
+        return handles.Any(candidate =>
+        {
+            var normalizedCandidate = candidate.Trim();
+            return normalizedCandidate.Equals(normalizedHandle, StringComparison.OrdinalIgnoreCase)
+                   || normalizedCandidate.StartsWith(normalizedHandle, StringComparison.OrdinalIgnoreCase)
+                   || normalizedHandle.StartsWith(normalizedCandidate, StringComparison.OrdinalIgnoreCase);
+        });
     }
 
     private void TryDeleteWorkspace(string sessionId)

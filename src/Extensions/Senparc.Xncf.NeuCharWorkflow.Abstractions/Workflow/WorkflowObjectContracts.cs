@@ -40,6 +40,20 @@ public sealed record WorkflowObjectExecutionRequest(
     IReadOnlyDictionary<string, string> Parameters = null,
     int? AdminUserId = null);
 
+/// <summary>
+/// Workflow 向对象 Provider 传递的通用执行策略键。具体枚举和值域由 Provider 校验，
+/// Workflow 不依赖实现模块的领域类型。
+/// </summary>
+public static class WorkflowObjectExecutionParameters
+{
+    public const string AllowFunctionCalls = "allowFunctionCalls";
+    public const string HumanInTheLoopLevel = "humanInTheLoopLevel";
+    public const string PluginToolPermission = "pluginToolPermission";
+    public const string McpToolPermission = "mcpToolPermission";
+    public const string IncludeHumanParticipant = "includeHumanParticipant";
+    public const string ChatMaxRound = "chatMaxRound";
+}
+
 public sealed record WorkflowObjectExecutionResult(
     bool Success,
     string Output,

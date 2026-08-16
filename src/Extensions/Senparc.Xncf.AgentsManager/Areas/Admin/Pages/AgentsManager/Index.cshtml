@@ -611,7 +611,7 @@
                                                 </div>
                                                 <el-input v-model="agentGroupTaskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'agentGroupTask')"></el-input>
                                                 <div class="taskmain-members-title">
-                                                    机器人·{{ agentDetailsGroupTaskMemberList.length }}
+                                                    Human 参与者：{{ taskHumanParticipantStatusText(agentDetailsGroupDetailsTaskDetails) }} · 机器人·{{ agentDetailsGroupTaskMemberList.length }}
                                                 </div>
                                                 <el-scrollbar class="sidebar-taskmembers-container"
                                                     wrap-class="scrollbar-wrapper">
@@ -1112,7 +1112,7 @@
                                 </div>
                                 <el-input v-model="groupTaskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'groupTask')"></el-input>
                                 <div class="taskmain-members-title">
-                                    机器人·{{ groupTaskMemberList.length }}
+                                    Human 参与者：{{ taskHumanParticipantStatusText(groupTaskDetails) }} · 机器人·{{ groupTaskMemberList.length }}
                                 </div>
                                 <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                     <div class="df-wn flex-dc taskmain-members-listWrap">
@@ -1380,7 +1380,7 @@
                             </div>
                             <el-input v-model="taskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'task')"></el-input>
                             <div class="taskmain-members-title">
-                                机器人·{{ taskMemberList ? taskMemberList.length : 0 }}
+                                Human 参与者：{{ taskHumanParticipantStatusText(taskDetails) }} · 机器人·{{ taskMemberList ? taskMemberList.length : 0 }}
                             </div>
                             <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskmain-members-listWrap">
@@ -1957,7 +1957,8 @@
                     <el-checkbox v-model="groupStartForm.personality">采用个性化参数运行智能体</el-checkbox>
                 </el-form-item>
                 <el-form-item label="工具调用审批" prop="requireHumanApproval">
-                    <el-checkbox v-model="groupStartForm.requireHumanApproval">工具调用前暂停并请求人工批准</el-checkbox>
+                    <el-checkbox v-model="groupStartForm.requireHumanApproval">兼容总开关：强制所有工具调用前审批</el-checkbox>
+                    <div class="form-help-text">开启后会覆盖下方较宽松的工具权限；新配置建议直接使用 HIL 等级和分类权限。</div>
                 </el-form-item>
                 <el-form-item label="HIL 等级" prop="humanInTheLoopLevel">
                     <el-select v-model="groupStartForm.humanInTheLoopLevel" style="width:100%;">
@@ -1967,6 +1968,37 @@
                         <el-option label="L3 Human 参与者 + 工具审批" :value="3"></el-option>
                     </el-select>
                     <div class="form-help-text">Group 已配置 Human 成员时，会在轮到 Human 时暂停等待文本回复。</div>
+                </el-form-item>
+                <el-form-item label="插件工具权限" prop="pluginToolPermission">
+                    <el-select v-model="groupStartForm.pluginToolPermission" style="width:100%;">
+                        <el-option label="继承 HIL 等级" :value="0"></el-option>
+                        <el-option label="自动执行" :value="1"></el-option>
+                        <el-option label="执行前审批" :value="2"></el-option>
+                        <el-option label="禁止使用" :value="3"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="MCP 工具权限" prop="mcpToolPermission">
+                    <el-select v-model="groupStartForm.mcpToolPermission" style="width:100%;">
+                        <el-option label="继承 HIL 等级" :value="0"></el-option>
+                        <el-option label="自动执行" :value="1"></el-option>
+                        <el-option label="执行前审批" :value="2"></el-option>
+                        <el-option label="禁止使用" :value="3"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-if="groupStartParticipants.some(participant => participant.agentKind === 'Human')"
+                              label="Human 参与者"
+                              prop="includeHumanParticipant">
+                    <el-switch v-model="groupStartForm.includeHumanParticipant"
+                               @@change="markGroupStartHumanParticipantTouched"
+                               active-text="本次运行包含 Human"
+                               inactive-text="本次运行跳过 Human"></el-switch>
+                </el-form-item>
+                <el-form-item label="最大对话轮数" prop="chatMaxRound">
+                    <el-input-number v-model="groupStartForm.chatMaxRound"
+                                     :min="1"
+                                     :max="50"
+                                     :step="1"
+                                     controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item label="可提及的组员">
                     <div class="groupStartMentions" v-loading="groupStartParticipantLoading">
@@ -2350,11 +2382,34 @@
     </div>
 </el-dialog>
 @* Dialog 任务描述 *@
-<el-dialog title="任务描述" :visible.sync="visible.dialogTaskDescription" :show-close="false" :close-on-click-modal="false"
-    :close-on-press-escape="false">
+<el-dialog title="任务描述与执行策略" :visible.sync="visible.dialogTaskDescription" :show-close="false" :close-on-click-modal="false"
+    :close-on-press-escape="false" width="720px">
     <div class="dialog-describeContent">
         {{ describeContent }}
     </div>
+    <div v-if="taskDescriptionDetails && taskDescriptionDetails.executionPolicyCaptured"
+        class="task-policy-summary">
+        <div class="task-policy-summary__title">本次运行策略</div>
+        <dl>
+            <dt>HIL 等级</dt>
+            <dd>{{taskHumanInTheLoopLevelText(taskDescriptionDetails.humanInTheLoopLevel)}}</dd>
+            <dt>插件工具权限</dt>
+            <dd>{{taskToolPermissionText(taskDescriptionDetails.pluginToolPermission)}}</dd>
+            <dt>MCP 工具权限</dt>
+            <dd>{{taskToolPermissionText(taskDescriptionDetails.mcpToolPermission)}}</dd>
+            <dt>Human 参与者</dt>
+            <dd>{{taskDescriptionDetails.includeHumanParticipant ? '包含' : '跳过'}}</dd>
+            <dt>最大对话轮数</dt>
+            <dd>{{taskDescriptionDetails.chatMaxRound}}</dd>
+            <dt>个性化参数</dt>
+            <dd>{{taskDescriptionDetails.isPersonality ? '启用' : '关闭'}}</dd>
+            <dt>兼容强制审批</dt>
+            <dd>{{taskDescriptionDetails.requireHumanApproval ? '启用' : '关闭'}}</dd>
+        </dl>
+    </div>
+    <el-alert v-else-if="taskDescriptionDetails"
+        title="此任务创建于策略记录功能启用之前，无法还原当时的 HIL 与工具权限。"
+        type="info" :closable="false" show-icon style="margin-top:16px;"></el-alert>
     <div slot="footer" class="dialog-footer">
         <el-button type="text" @@click="taskDescriptionCopy">
             <i class="far fa-clone"></i>
@@ -2409,6 +2464,30 @@
     </div>
 </el-dialog>
 @* Dialog Human 文本回合：NeuBell 点击只导航，提交成功后由业务路径消费提醒 *@
+<el-dialog title="工具调用审批" :visible.sync="toolApprovalDialogVisible" width="760px"
+    :before-close="deferToolApproval" :close-on-click-modal="false" :close-on-press-escape="false">
+    <template v-if="toolApprovalRequest">
+        <el-alert type="warning" :closable="false" show-icon
+            :title="toolApprovalRequest.text || toolApprovalRequest.prompt || '智能体请求人工确认后执行工具。'"></el-alert>
+        <div class="tool-approval-summary">
+            <span class="tool-approval-summary__label">工具</span>
+            <strong>{{toolApprovalRequest.humanToolName || toolApprovalRequest.toolName || '工具调用'}}</strong>
+            <span v-if="toolApprovalRequest.fromAgentName || toolApprovalRequest.agentName"
+                class="tool-approval-summary__agent">
+                Agent：{{toolApprovalRequest.fromAgentName || toolApprovalRequest.agentName}}
+            </span>
+        </div>
+        <div class="tool-approval-arguments">
+            <div class="tool-approval-arguments__title">完整参数</div>
+            <pre>{{toolApprovalArgumentText}}</pre>
+        </div>
+    </template>
+    <div slot="footer" class="dialog-footer">
+        <el-button @@click="deferToolApproval" :disabled="toolApprovalSubmitting">稍后处理</el-button>
+        <el-button @@click="resolveToolApproval(false)" :loading="toolApprovalSubmitting">拒绝</el-button>
+        <el-button type="primary" @@click="resolveToolApproval(true)" :loading="toolApprovalSubmitting">批准</el-button>
+    </div>
+</el-dialog>
 <el-dialog title="Human 回合" :visible.sync="humanReplyDialogVisible" width="680px"
     :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
     <el-alert type="warning" :closable="false" show-icon

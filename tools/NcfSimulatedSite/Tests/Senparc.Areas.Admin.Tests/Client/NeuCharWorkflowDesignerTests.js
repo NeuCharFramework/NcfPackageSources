@@ -1347,6 +1347,41 @@ assert.ok(page.includes('@@command="handleWorkflowAction"') && page.includes('�
 assert.ok(page.includes('selectedWorkflowObject'), 'Agent nodes should show the selected workflow object details.');
 assert.ok(page.includes('openWorkflowObjectEditor'), 'Agent nodes should expose an edit action.');
 assert.ok(page.includes('workflow-object-card'), 'Agent nodes should render a compact basic information card.');
+assert.ok(page.includes('selectedNode.config.humanInTheLoopLevel') &&
+    page.includes('selectedNode.config.pluginToolPermission') &&
+    page.includes('selectedNode.config.mcpToolPermission') &&
+    page.includes('selectedNode.config.includeHumanParticipant'),
+    'Local Agent and Group nodes should expose the same HIL and tool permission controls as AgentsManager.');
+const workflowAgentNode = vueOptions.methods.createObjectNode.call({
+    makeId() { return 'agent-node'; }
+}, {
+    providerId: 'agents-manager',
+    objectId: 'agent:42',
+    kind: 'agent',
+    name: '审批 Agent',
+    metadata: { supportsHumanInTheLoop: 'true', supportsHumanParticipant: 'false' }
+});
+assert.deepStrictEqual(JSON.parse(JSON.stringify(workflowAgentNode.config)), {
+    providerId: 'agents-manager',
+    objectId: 'agent:42',
+    prompt: '处理以下输入：{{input}}',
+    allowFunctionCalls: false,
+    humanInTheLoopLevel: 0,
+    pluginToolPermission: 0,
+    mcpToolPermission: 0,
+    includeHumanParticipant: false,
+    chatMaxRound: 20
+}, 'New independent Agent nodes should preserve the legacy no-tools default while retaining explicit HIL policy fields.');
+const legacyGroupNode = { type: 'agent-group', config: {} };
+vueOptions.methods.ensureWorkflowObjectPolicyConfig.call({
+    $set(target, key, value) { target[key] = value; }
+}, legacyGroupNode);
+assert.strictEqual(legacyGroupNode.config.allowFunctionCalls, true);
+assert.strictEqual(legacyGroupNode.config.humanInTheLoopLevel, 0);
+assert.strictEqual(legacyGroupNode.config.includeHumanParticipant, false,
+    'Legacy Group nodes should receive stable automatic HIL defaults without enabling Human turns unexpectedly.');
+assert.strictEqual(legacyGroupNode.config.chatMaxRound, 20,
+    'Legacy Group nodes should retain the existing 20-round runtime default.');
 assert.ok(vueOptions.methods.workflowObjectEditUrl, 'Workflow objects should expose a safe editor URL resolver.');
 assert.strictEqual(vueOptions.methods.workflowObjectEditUrl.call({}, { editUrl: 'https://example.invalid' }), '',
     'Workflow object edit links must not open arbitrary external URLs.');

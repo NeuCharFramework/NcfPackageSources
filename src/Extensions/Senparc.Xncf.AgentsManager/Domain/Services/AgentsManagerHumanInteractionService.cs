@@ -10,6 +10,7 @@
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;
+using Senparc.CO2NET.Trace;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
@@ -100,6 +101,15 @@ public sealed class AgentsManagerHumanInteractionService
         if (!_requestStore.TryResolve(requestId, decision, out var resolvedPending))
         {
             return Failure("人工请求不存在、已被其他入口处理或已失效。");
+        }
+
+        if (string.Equals(resolvedPending.RequestType, "toolApproval", StringComparison.Ordinal))
+        {
+            SenparcTrace.SendCustomLog(
+                "AgentsManager.HIL.ToolApproval.Resolved",
+                $"Task={resolvedPending.ChatTaskId}; Correlation={resolvedPending.CorrelationId}; " +
+                $"Request={resolvedPending.RequestId}; Tool={resolvedPending.ToolName}; " +
+                $"Approved={decision.Approved}; Reason={decision.Reason}");
         }
 
         if (!string.IsNullOrWhiteSpace(resolvedPending.NeuBellItemId))

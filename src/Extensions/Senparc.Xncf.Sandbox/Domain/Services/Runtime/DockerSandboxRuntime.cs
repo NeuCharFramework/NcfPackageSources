@@ -79,7 +79,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         var image = _imageResolver.Resolve(request.Template.Key, request.Template.Image);
         _logger.LogInformation("Sandbox interactive image resolved: template={Template} image={Image}", request.Template.Key, image);
 
-        // base_url 与站点反向代理路径一致；token 仅存库并在服务端注入，不出现在对外 AccessUrl。
+        // base_url 与 Jupyter 路径一致；列表链接使用本机映射端口和 token 直达容器。
         var baseUrl = SandboxJupyterPaths.GetBaseUrl(request.SessionId);
         var args = new List<string>
         {
@@ -126,9 +126,9 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         {
             RuntimeHandle = containerId,
             HostPort = hostPort,
-            AccessUrl = SandboxJupyterPaths.GetLabEntryUrl(request.SessionId),
+            AccessUrl = SandboxJupyterPaths.GetDirectLabEntryUrl(request.SessionId, hostPort, token),
             AccessToken = token,
-            Message = "JupyterLab 已启动；请通过站点反向代理访问（需管理员登录）。"
+            Message = "JupyterLab 已启动；请使用本机映射端口打开。"
         };
     }
 
@@ -338,15 +338,27 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
 
     public async Task<IReadOnlyList<string>> ListOrphanHandlesAsync(CancellationToken cancellationToken = default)
     {
+        return await ListHandlesAsync(all: true, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<string>> ListRunningHandlesAsync(CancellationToken cancellationToken = default)
+    {
+        return await ListHandlesAsync(all: false, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<IReadOnlyList<string>> ListHandlesAsync(bool all, CancellationToken cancellationToken)
+    {
         var result = await RunDockerAsync(
-                new[] { "ps", "-aq", "--filter", "label=ncf.sandbox=1" },
+                all
+                    ? new[] { "ps", "-aq", "--no-trunc", "--filter", "label=ncf.sandbox=1" }
+                    : new[] { "ps", "-q", "--no-trunc", "--filter", "label=ncf.sandbox=1" },
                 null,
                 TimeSpan.FromSeconds(20),
                 cancellationToken)
             .ConfigureAwait(false);
         if (result.ExitCode != 0)
         {
-            return Array.Empty<string>();
+            throw new InvalidOperationException($"Docker 查询沙箱容器失败：{result.StdErr}");
         }
 
         return result.StdOut

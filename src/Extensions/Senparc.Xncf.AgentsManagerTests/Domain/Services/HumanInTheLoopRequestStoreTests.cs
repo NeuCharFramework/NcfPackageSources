@@ -16,11 +16,16 @@ public class HumanInTheLoopRequestStoreTests
             new Dictionary<string, object?> { ["path"] = "/tmp/example.txt" });
         var request = new ToolApprovalRequestContent("approval-1", toolCall);
 
+        var responseFactoryCalls = 0;
         var pending = store.RegisterToolApproval(
             42,
             "审核智能体",
             request,
-            decision => request.CreateResponse(decision.Approved, decision.Reason));
+            decision =>
+            {
+                responseFactoryCalls++;
+                return request.CreateResponse(decision.Approved, decision.Reason);
+            });
 
         Assert.AreEqual(1, store.GetPending(42).Count);
         Assert.IsTrue(store.TryResolve(
@@ -32,7 +37,36 @@ public class HumanInTheLoopRequestStoreTests
         var decision = await pending.Completion;
         Assert.IsFalse(decision.Approved);
         Assert.AreEqual("用户拒绝", decision.Reason);
-        Assert.IsInstanceOfType<ToolApprovalResponseContent>(pending.CreateResponseFor(decision));
+        Assert.IsInstanceOfType<ToolApprovalResponseContent>(pending.ResolvedResponse);
+        Assert.AreEqual(1, responseFactoryCalls);
         Assert.AreEqual(0, store.GetPending(42).Count);
+    }
+
+    [TestMethod]
+    public void ToolApprovalDtoKeepsReadableUnicodeAndLargeArguments()
+    {
+        var store = new HumanInTheLoopRequestStore();
+        var largeText = string.Concat(Enumerable.Repeat("长参数", 2500));
+        var request = new ToolApprovalRequestContent(
+            "approval-unicode",
+            new FunctionCallContent(
+                "call-unicode",
+                "Translate",
+                new Dictionary<string, object?>
+                {
+                    ["text"] = "香港理工大学",
+                    ["content"] = largeText
+                }));
+
+        var pending = store.RegisterToolApproval(
+            43,
+            "翻译 Agent",
+            request,
+            decision => request.CreateResponse(decision.Approved, decision.Reason));
+        var dto = pending.ToDto();
+
+        StringAssert.Contains(dto.ToolArguments, "香港理工大学");
+        Assert.IsFalse(dto.ToolArguments.Contains("\\u9999", StringComparison.OrdinalIgnoreCase));
+        Assert.IsTrue(dto.ToolArguments.Length > 5000);
     }
 }

@@ -215,6 +215,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.OllamaKeys = new OllamaKeys()
                     {
                         Endpoint = normalizedEndpoint,
+                        ModelName = modelName,
                     };
                     break;
                 case AiPlatform.DeepSeek:

@@ -25,7 +25,7 @@ NCF 独立沙箱编排模块：为用户快速创建/销毁隔离实验环境（
 | NcfDocs 环境准备文档 | ✅ [线上文档](https://doc.ncf.pub/zh/NcfPackageSources/xncf/sandbox-environment.html) |
 | 镜像仓库映射配置 | ✅ `SenparcXncfSandbox:Images`（RegistryPrefix / Overrides） |
 | 单元测试（ImageResolver） | ✅ |
-| Jupyter 反向代理 / 鉴权 | ✅ `/sandbox-jupyter/{sessionId}/`（Admin Cookie + 服务端注入 token） |
+| Jupyter 访问 / 反向代理 | ✅ 列表使用容器本机映射端口；仍支持 `/sandbox-jupyter/{sessionId}/` 代理 |
 | csharp-exec .NET 10 file-based | ✅ `sdk:10.0` + `dotnet run --file main.cs` |
 | Wasmtime 实装 | ⏳ |
 
@@ -66,12 +66,13 @@ Jupyter Kernel 和构建时预热的常用 NuGet 包；镜像构建完成后需�
 - TTL 强制回收
 - **无 Docker 时不降级裸进程**
 - JupyterLab：BSD-3-Clause（勿用商标背书）
-- Jupyter 访问：站点反向代理 `/sandbox-jupyter/{sessionId}/lab`（需管理员登录）；容器只绑 `127.0.0.1`；token 不下发到浏览器链接
+- Jupyter 列表链接使用 Docker 分配的本机映射端口和 token 直达容器；容器只绑定 `127.0.0.1`
+- Jupyter 反向代理仍可通过 `/sandbox-jupyter/{sessionId}/lab` 访问（需管理员登录）；该入口由服务端注入 token
 
 ## 后台入口
 
 1. **环境准备** `/Admin/Sandbox/Setup`：Docker 检测 + 文档链接  
-2. **沙箱面板** `/Admin/Sandbox/Index`：会话列表 / 打开 Notebook（代理）/ 销毁  
+2. **沙箱面板** `/Admin/Sandbox/Index`：会话列表 / 打开 Notebook（本机映射端口）/ 销毁
 3. Function：创建沙箱 / 列表 / Exec / 销毁  
 
 ### Jupyter 代理调试
@@ -79,6 +80,7 @@ Jupyter Kernel 和构建时预热的常用 NuGet 包；镜像构建完成后需�
 - 中间件：`SandboxJupyterProxyMiddleware`（HTTP + WebSocket）
 - 容器启动参数：`ServerApp.base_url=/sandbox-jupyter/{sessionId}/`
 - 未登录访问代理路径会跳转 `/Admin/Login?returnUrl=...`  
+- 应用关闭时不会主动删除交互式容器；应用启动会按 Docker 完整容器 ID 校准运行中、已停止和已删除的会话，并清理无对应会话的孤儿容器
 
 
 ## 调试信息

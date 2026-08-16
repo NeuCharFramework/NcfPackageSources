@@ -885,6 +885,7 @@ new Vue({
                     node.x = Number.isFinite(Number(node.x)) ? Number(node.x) : 80;
                     node.y = Number.isFinite(Number(node.y)) ? Number(node.y) : 80;
                     if (node.type === 'function') node.config.parameters = node.config.parameters || {};
+                    this.ensureWorkflowObjectPolicyConfig(node);
                 });
                 graph.edges.forEach(edge => {
                     const source = graph.nodes.find(node => node.id === edge.source);
@@ -1000,14 +1001,43 @@ new Vue({
             };
         },
         createObjectNode(object) {
+            const supportsHumanInTheLoop = String(object?.metadata?.supportsHumanInTheLoop || '').toLowerCase() === 'true';
+            const supportsHumanParticipant = String(object?.metadata?.supportsHumanParticipant || '').toLowerCase() === 'true';
             return {
                 id: this.makeId(object.kind),
                 type: object.kind,
                 name: object.name,
                 x: 80,
                 y: 80,
-                config: { providerId: object.providerId, objectId: object.objectId, prompt: '处理以下输入：{{input}}' }
+                config: {
+                    providerId: object.providerId,
+                    objectId: object.objectId,
+                    prompt: '处理以下输入：{{input}}',
+                    allowFunctionCalls: object.kind === 'agent' ? false : supportsHumanInTheLoop,
+                    humanInTheLoopLevel: 0,
+                    pluginToolPermission: 0,
+                    mcpToolPermission: 0,
+                    includeHumanParticipant: false,
+                    chatMaxRound: 20
+                }
             };
+        },
+        ensureWorkflowObjectPolicyConfig(node) {
+            if (!node || !['agent', 'agent-group'].includes(node.type)) return;
+            node.config = node.config || {};
+            const defaults = {
+                allowFunctionCalls: node.type === 'agent' ? false : true,
+                humanInTheLoopLevel: 0,
+                pluginToolPermission: 0,
+                mcpToolPermission: 0,
+                includeHumanParticipant: false,
+                chatMaxRound: 20
+            };
+            Object.entries(defaults).forEach(([key, value]) => {
+                if (node.config[key] === undefined || node.config[key] === null) {
+                    this.$set(node.config, key, value);
+                }
+            });
         },
         addSimpleNode(type, name, insertionEdge) {
             if (this.editingLocked) return;

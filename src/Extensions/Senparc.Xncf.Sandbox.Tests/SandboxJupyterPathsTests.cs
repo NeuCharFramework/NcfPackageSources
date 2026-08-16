@@ -15,6 +15,16 @@ public class SandboxJupyterPathsTests
     }
 
     [TestMethod]
+    public void GetDirectLabEntryUrl_UsesContainerHostPortAndEscapedToken()
+    {
+        var url = SandboxJupyterPaths.GetDirectLabEntryUrl("AbC123", 49152, "token+/=");
+
+        Assert.AreEqual(
+            "http://127.0.0.1:49152/sandbox-jupyter/abc123/lab?token=token%2B%2F%3D",
+            url);
+    }
+
+    [TestMethod]
     public void TryParse_ExtractsSessionAndRemaining()
     {
         var ok = SandboxJupyterPaths.TryParse("/sandbox-jupyter/deadbeef/lab/tree", out var sessionId, out var remaining);

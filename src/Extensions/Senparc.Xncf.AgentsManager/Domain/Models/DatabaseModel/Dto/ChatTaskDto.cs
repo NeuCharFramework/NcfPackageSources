@@ -20,6 +20,7 @@
 
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
+using Senparc.Xncf.AgentsManager.Domain.Services;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -42,6 +43,20 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
 
         [Required]
         public bool IsPersonality { get; set; }
+
+        public bool ExecutionPolicyCaptured { get; set; }
+
+        public bool RequireHumanApproval { get; set; }
+
+        public HumanInTheLoopLevel HumanInTheLoopLevel { get; set; }
+
+        public ToolPermissionMode PluginToolPermission { get; set; }
+
+        public ToolPermissionMode McpToolPermission { get; set; }
+
+        public bool IncludeHumanParticipant { get; set; }
+
+        public int ChatMaxRound { get; set; } = ChatGroupService.ChatMaxRound;
 
 
         public bool Score { get; set; }
@@ -111,6 +126,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             PromptCommand = chatTask.PromptCommand;
             Description = chatTask.Description;
             IsPersonality = chatTask.IsPersonality;
+            ExecutionPolicyCaptured = chatTask.ExecutionPolicyCaptured;
+            RequireHumanApproval = chatTask.RequireHumanApproval;
+            HumanInTheLoopLevel = chatTask.HumanInTheLoopLevel;
+            PluginToolPermission = chatTask.PluginToolPermission;
+            McpToolPermission = chatTask.McpToolPermission;
+            IncludeHumanParticipant = chatTask.IncludeHumanParticipant;
+            ChatMaxRound = chatTask.ChatMaxRound;
             Score = chatTask.Score;
             IsArchived = chatTask.IsArchived;
             StartTime = chatTask.StartTime;

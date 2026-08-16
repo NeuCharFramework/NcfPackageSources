@@ -32,6 +32,7 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
         string AgentName,
         string Title,
         string Summary,
+        string DetailUrl,
         DateTimeOffset CreatedAt);
 
     public string ProviderId => ProviderIdValue;
@@ -39,13 +40,61 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
 
     public string Send(int chatTaskId, string recipientUserId, string agentName)
     {
+        return Add(
+            chatTaskId,
+            recipientUserId,
+            agentName,
+            "AgentsManager 等待人工回复",
+            $"任务 #{chatTaskId} 正在等待 {Limit(agentName, 120, HumanParticipantConstants.Name)} 输入文本。",
+            $"/Admin/AgentsManager/Index#tab=third&taskId={chatTaskId}");
+    }
+
+    public string SendToolApproval(
+        int chatTaskId,
+        string recipientUserId,
+        string agentName,
+        string toolName)
+    {
+        return Add(
+            chatTaskId,
+            recipientUserId,
+            agentName,
+            "AgentsManager 等待工具审批",
+            $"任务 #{chatTaskId} 的 {Limit(agentName, 120, "Agent")} 请求调用 {Limit(toolName, 120, "工具")}。",
+            $"/Admin/AgentsManager/Index#tab=third&taskId={chatTaskId}");
+    }
+
+    public string SendWorkflowToolApproval(
+        string correlationId,
+        string recipientUserId,
+        string agentName,
+        string toolName)
+    {
+        return Add(
+            0,
+            recipientUserId,
+            agentName,
+            "Workflow 等待工具审批",
+            $"{Limit(agentName, 120, "Agent")} 请求调用 {Limit(toolName, 120, "工具")}。",
+            BuildWorkflowRunUrl(correlationId));
+    }
+
+    private string Add(
+        int chatTaskId,
+        string recipientUserId,
+        string agentName,
+        string title,
+        string summary,
+        string detailUrl)
+    {
         var notification = new Notification(
             Guid.NewGuid().ToString("N"),
             NormalizeRecipient(recipientUserId),
             chatTaskId,
             Limit(agentName, 120, HumanParticipantConstants.Name),
-            "AgentsManager 等待人工回复",
-            $"任务 #{chatTaskId} 正在等待 {Limit(agentName, 120, HumanParticipantConstants.Name)} 输入文本。",
+            title,
+            summary,
+            detailUrl,
             DateTimeOffset.UtcNow);
 
         lock (_syncRoot)
@@ -138,8 +187,25 @@ public sealed class AgentsManagerNeuBellProvider : INeuBellProvider, INeuBellCon
 
     private static string BuildTaskDetailUrl(Notification item)
     {
-        // AgentsManager 使用 hash 路由；点击只定位任务，不把“查看”当作业务消费。
-        return $"/Admin/AgentsManager/Index#tab=third&taskId={item.ChatTaskId}";
+        return item.DetailUrl;
+    }
+
+    private static string BuildWorkflowRunUrl(string correlationId)
+    {
+        const string prefix = "workflow-";
+        const string separator = "-run-";
+        var normalized = correlationId?.Trim() ?? string.Empty;
+        var separatorIndex = normalized.IndexOf(separator, prefix.Length, StringComparison.Ordinal);
+        if (!normalized.StartsWith(prefix, StringComparison.Ordinal)
+            || separatorIndex <= prefix.Length
+            || !int.TryParse(normalized[prefix.Length..separatorIndex], out var workflowId)
+            || workflowId <= 0
+            || !Guid.TryParseExact(normalized[(separatorIndex + separator.Length)..], "N", out var runId))
+        {
+            return "/Admin/NeuCharWorkflow/Tasks";
+        }
+
+        return $"/Admin/NeuCharWorkflow/Index?workflowId={workflowId}&runId={runId:N}";
     }
 
     private static string NormalizeRecipient(string recipient)

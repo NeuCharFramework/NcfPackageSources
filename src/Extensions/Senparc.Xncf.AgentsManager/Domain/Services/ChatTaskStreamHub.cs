@@ -141,6 +141,10 @@ public sealed class ChatTaskStreamHub
 
         if (group.IsComplete)
         {
+            foreach (var pair in group.Subscribers)
+            {
+                pair.Value.Writer.TryComplete();
+            }
             CleanupStreamIfFinished(item.ChatTaskId, group);
         }
     }

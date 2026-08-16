@@ -243,12 +243,17 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 request.McpToolPermission,
                 request.RequireHumanApproval,
                 request.IncludeHumanParticipant);
+            var effectiveWorkflowTurns = Math.Clamp(
+                request.ChatMaxRound > 0 ? request.ChatMaxRound : ChatMaxRound,
+                2,
+                50);
 
             var chatGroupMemberService = services.GetRequiredService<ChatGroupMemberService>();
             var chatGroupRemoteMemberService = services.GetRequiredService<ChatGroupRemoteMemberService>();
             var agentTemplateService = services.GetRequiredService<AgentsTemplateService>();
             var remoteA2AAgentFactory = services.GetRequiredService<RemoteA2AAgentFactory>();
             var promptItemService = services.GetRequiredService<PromptItemService>();
+            var aiModelService = services.GetRequiredService<AIModelService>();
             chatTaskService = services.GetRequiredService<ChatTaskService>();
             var chatGroupHistoryService = services.GetRequiredService<ChatGroupHistoryService>();
             var chatGroupService = services.GetRequiredService<ChatGroupService>();
@@ -285,6 +290,24 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 }
             }
 
+            if (aiModelId <= 0 && !HasConfiguredChatModel(Senparc.AI.Config.SenparcAiSetting))
+            {
+                var fallbackChatModel = await aiModelService.GetObjectAsync(z =>
+                    z.ConfigModelType == ConfigModelType.Chat
+                    && z.ModelId != null
+                    && z.ModelId != string.Empty);
+                if (fallbackChatModel == null)
+                {
+                    throw new NcfExceptionBase(
+                        "当前系统默认 AI 配置没有 Chat 模型名称，AIKernel 中也没有可用的 Chat 模型。" +
+                        "请在 AIKernel 模型配置中填写 ModelId，或在启动任务时选择有效模型。");
+                }
+
+                aiModelId = fallbackChatModel.Id;
+                logger.AppendLine(
+                    $"系统默认 AI 配置缺少 Chat 模型名称，已改用 AIKernel 模型：{fallbackChatModel.Alias}（ID：{fallbackChatModel.Id}）。");
+            }
+
             var chatGroupDto = chatGroupService.Mapping<ChatGroupDto>(chatGroup);
             var chatTaskDto = new ChatTaskDto(
                 request.Name,
@@ -299,7 +322,16 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 false,
                 DateTime.Now,
                 DateTime.Now,
-                null);
+                null)
+            {
+                ExecutionPolicyCaptured = true,
+                RequireHumanApproval = request.RequireHumanApproval,
+                HumanInTheLoopLevel = effectiveHumanPolicy.Level,
+                PluginToolPermission = effectiveHumanPolicy.PluginTools,
+                McpToolPermission = effectiveHumanPolicy.McpTools,
+                IncludeHumanParticipant = effectiveHumanPolicy.IncludeHumanParticipant,
+                ChatMaxRound = effectiveWorkflowTurns
+            };
 
             chatTask = await chatTaskService.CreateTask(chatTaskDto);
             chatTaskDto = chatTaskService.Mapping<ChatTaskDto>(chatTask);
@@ -315,7 +347,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             #region 确定 AiSetting
 
             var senparcAiSetting = Senparc.AI.Config.SenparcAiSetting;
-            var aiModelService = services.GetRequiredService<AIModelService>();
 
             if (aiModelId != 0)
             {
@@ -366,6 +397,16 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 memberCollection.Add((chatGroup.EnterAgentTemplateId, "Enter"));
             }
 
+            if (effectiveHumanPolicy.IncludeHumanParticipant)
+            {
+                var humanTemplate = await EnsureHumanParticipantAsync(agentTemplateService);
+                if (memberCollection.All(z => z.AgentTemplateId != humanTemplate.Id))
+                {
+                    memberCollection.Add((humanTemplate.Id, "Human"));
+                    logger.AppendLine("本次运行已按 HIL 策略加入 Human 参与者。");
+                }
+            }
+
             memberCollection = memberCollection
                 .GroupBy(m => m.AgentTemplateId)
                 .Select(g => g.First())
@@ -388,6 +429,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var templateDto = agentTemplateService.Mapper.Map<AgentTemplateDto>(template);
                 if (template.IsHuman)
                 {
+                    if (!effectiveHumanPolicy.IncludeHumanParticipant)
+                    {
+                        continue;
+                    }
+
                     var currentHumanRoundIndex = humanRoundIndex;
                     var humanAgent = new HumanParticipantAgent(
                         _humanInTheLoopRequestStore,
@@ -439,7 +485,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         UseTemplatePromptParameters = personality,
                         MaxOutputTokens = 2000,
                         Temperature = 0.3f,
-                        TopP = 0.3f
+                        TopP = 0.3f,
+                        DiagnosticId = $"chat-task-{chatTask.Id}"
                     },
                     onExecutionInfo: message => logger.AppendLine(message));
                 if (!build.Success)
@@ -541,8 +588,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 return;
             }
 
-            var maxWorkflowTurns = request.ChatMaxRound > 0 ? request.ChatMaxRound : ChatMaxRound;
-            var effectiveWorkflowTurns = Math.Max(2, maxWorkflowTurns);
             var multiAgentContexts = runtimeContexts
                 .OrderByDescending(z => z.ParticipantKey == adminContext.ParticipantKey)
                 .ThenByDescending(z => z.ParticipantKey == enterContext.ParticipantKey)
@@ -609,6 +654,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var workflowPendingRequests = new List<PendingHumanRequest>();
             var workflowFailed = false;
             var workflowFailureReason = string.Empty;
+            var toolInvocationFailed = false;
+            var toolFailureExecutorId = string.Empty;
+            var pendingToolNamesByCallId = new Dictionary<string, string>(StringComparer.Ordinal);
 
             async Task PersistAgentResponseAsync(
                 string responseKey,
@@ -724,6 +772,35 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 activeResponseStartedAt = null;
             }
 
+            bool TryCaptureToolInvocationFailure(
+                IEnumerable<AIContent> contents,
+                string executorId)
+            {
+                var failure = contents?
+                    .OfType<FunctionResultContent>()
+                    .FirstOrDefault(z => z.Exception != null);
+                if (failure?.Exception == null)
+                {
+                    return false;
+                }
+
+                var root = failure.Exception.GetBaseException();
+                var toolName = pendingToolNamesByCallId.TryGetValue(failure.CallId ?? string.Empty, out var knownToolName)
+                    ? knownToolName
+                    : "Function";
+                toolInvocationFailed = true;
+                workflowFailed = true;
+                toolFailureExecutorId = executorId ?? string.Empty;
+                workflowFailureReason =
+                    $"工具“{toolName}”执行失败：{root.GetType().Name}: {root.Message}";
+                logger.AppendLine($"[{chatGroup.Name}] {workflowFailureReason}");
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.ToolInvocation.WorkflowFailed",
+                    $"Group={chatGroup.Id}; Task={chatTask.Id}; Executor={executorId}; " +
+                    $"CallId={failure.CallId}; Tool={toolName}; Error={root.GetType().Name}: {root.Message}");
+                return true;
+            }
+
             StreamingRun run = null;
             try
             {
@@ -783,6 +860,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         {
                             case AgentResponseUpdateEvent updateEvent:
                                 {
+                                    if (TryCaptureToolInvocationFailure(
+                                            updateEvent.Update.Contents,
+                                            updateEvent.ExecutorId))
+                                    {
+                                        shouldExit = true;
+                                        break;
+                                    }
+
                                     var responseId = updateEvent.Update.ResponseId
                                                      ?? updateEvent.Update.MessageId;
 
@@ -840,6 +925,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                     {
                                         break;
                                     }
+                                    if (TryCaptureToolInvocationFailure(
+                                            response.Messages.SelectMany(z => z.Contents),
+                                            executorId))
+                                    {
+                                        shouldExit = true;
+                                        break;
+                                    }
 
                                     var responseId = response.ResponseId;
                                     if (string.IsNullOrWhiteSpace(responseId))
@@ -890,6 +982,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                     {
                                         case AgentResponse outputResponse:
                                             {
+                                                if (TryCaptureToolInvocationFailure(
+                                                    outputResponse.Messages.SelectMany(z => z.Contents),
+                                                    executorId))
+                                                {
+                                                    shouldExit = true;
+                                                    break;
+                                                }
+
                                                 var outputResponseId = outputResponse.ResponseId;
                                                 if (string.IsNullOrWhiteSpace(outputResponseId))
                                                 {
@@ -907,6 +1007,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                             }
                                         case AgentResponseUpdate outputUpdate:
                                             {
+                                                if (TryCaptureToolInvocationFailure(
+                                                    outputUpdate.Contents,
+                                                    executorId))
+                                                {
+                                                    shouldExit = true;
+                                                    break;
+                                                }
+
                                                 var responseId = outputUpdate.ResponseId
                                                                  ?? outputUpdate.MessageId;
 
@@ -994,6 +1102,20 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                         approvalRequest,
                                         request.CorrelationId,
                                         request.HumanRecipientUserId);
+                                    if (approvalRequest.ToolCall is FunctionCallContent functionCall
+                                        && !string.IsNullOrWhiteSpace(functionCall.CallId))
+                                    {
+                                        pendingToolNamesByCallId[functionCall.CallId] =
+                                            functionCall.Name ?? pending.ToolName;
+                                    }
+                                    SenparcTrace.SendCustomLog(
+                                        "AgentsManager.HIL.ToolApproval.Requested",
+                                        $"Group={chatGroup.Id}; Task={chatTask.Id}; Request={pending.RequestId}; " +
+                                        $"Tool={pending.ToolName}; Arguments={pending.ToolArguments}");
+                                    await AttachToolApprovalNotificationAsync(
+                                        pending,
+                                        chatTask.Id,
+                                        request.HumanRecipientUserId).ConfigureAwait(false);
                                     workflowPendingRequests.Add(pending);
                                     await chatTaskService.SetStatus(ChatTask_Status.Paused, chatTask);
                                     PublishStatusEvent(chatTask.Id, ChatTask_Status.Paused);
@@ -1064,7 +1186,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         foreach (var pending in workflowPendingRequests)
                         {
                             var decision = await pending.Completion.WaitAsync(cancellationToken);
-                            if (pending.CreateResponseFor(decision) is ExternalResponse externalResponse)
+                            if (pending.ResolvedResponse is ExternalResponse externalResponse)
                             {
                                 externalResponses.Add(externalResponse);
                             }
@@ -1123,6 +1245,27 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 }
 
                 await FlushActiveResponseAsync();
+            }
+
+            if (toolInvocationFailed)
+            {
+                var failureNotice = $"系统提示：{workflowFailureReason}";
+                await PersistAgentResponseAsync(
+                    Guid.NewGuid().ToString("n"),
+                    string.IsNullOrWhiteSpace(toolFailureExecutorId)
+                        ? enterContext.Agent.Name
+                        : toolFailureExecutorId,
+                    failureNotice,
+                    null,
+                    DateTime.Now);
+                _humanInTheLoopRequestStore.CancelForTask(chatTask.Id);
+                await chatTaskService.SetStatus(ChatTask_Status.Failed, chatTask);
+                await _cache.RemoveFromCacheAsync(runningKey);
+                PublishStatusEvent(chatTask.Id, ChatTask_Status.Failed);
+                SenparcTrace.SendCustomLog(
+                    $"Agents 运行失败（组：{chatGroup.Name}）",
+                    logger.ToString());
+                return;
             }
 
             if (roundIndex == 0 || workflowFailed)
@@ -1429,6 +1572,46 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return normalized.Equals("exit", StringComparison.OrdinalIgnoreCase)
                || normalized.Equals("结束", StringComparison.OrdinalIgnoreCase)
                || normalized.Equals("退出", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool HasConfiguredChatModel(ISenparcAiSetting setting)
+    {
+        try
+        {
+            return !string.IsNullOrWhiteSpace(setting?.ModelName?.Chat);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static async Task<AgentTemplate> EnsureHumanParticipantAsync(
+        AgentsTemplateService agentTemplateService)
+    {
+        var existing = await agentTemplateService.GetObjectAsync(
+            z => z.PromptCode == HumanParticipantConstants.PromptCode);
+        if (existing != null)
+        {
+            if (!existing.Enable)
+            {
+                existing.EnableAgent();
+                await agentTemplateService.SaveObjectAsync(existing);
+            }
+
+            return existing;
+        }
+
+        var human = new AgentTemplate(
+            HumanParticipantConstants.Name,
+            "这是一个由当前登录用户输入文本的 Human 参与者，不调用模型或工具。",
+            true,
+            "系统保留的 Human-in-the-Loop 文本参与者",
+            HumanParticipantConstants.PromptCode,
+            HookRobotType.None,
+            string.Empty);
+        await agentTemplateService.SaveObjectAsync(human);
+        return human;
     }
 
     private static List<AgentRuntimeContext> BuildFallbackRoundRobinSequence(
@@ -1907,6 +2090,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     recipientUserId))
                 .ToList();
 
+            foreach (var pending in pendingRequests)
+            {
+                await AttachToolApprovalNotificationAsync(
+                    pending,
+                    chatTask.Id,
+                    recipientUserId).ConfigureAwait(false);
+            }
+
             await chatTaskService.SetStatus(ChatTask_Status.Paused, chatTask);
             PublishStatusEvent(chatTask.Id, ChatTask_Status.Paused);
             foreach (var pending in pendingRequests)
@@ -1918,7 +2109,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             foreach (var pending in pendingRequests)
             {
                 var decision = await pending.Completion.WaitAsync(cancellationToken);
-                var response = pending.CreateResponseFor(decision);
+                var response = pending.ResolvedResponse;
                 if (response is ToolApprovalResponseContent approvalResponse)
                 {
                     responses.Add(new ChatMessage(ChatRole.User, new[] { approvalResponse }));
@@ -2405,6 +2596,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             return "系统提示：AI 服务认证失败（401），请检查 API Key / Endpoint 配置。";
         }
 
+        if (normalized.Contains("model is required", StringComparison.OrdinalIgnoreCase))
+        {
+            return "系统提示：Ollama 未配置模型名称。请在 AIKernel 模型配置中填写 ModelId，" +
+                   "或在启动任务时选择有效模型。";
+        }
+
         return $"系统提示：AI 服务调用失败，任务已中断。原因：{normalized}";
     }
 
@@ -2732,7 +2929,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             ChatTaskId = chatTaskId,
             Text = status.ToString(),
             IsFinal = status == ChatTask_Status.Finished
-                      || status == ChatTask_Status.Cancelled,
+                      || status == ChatTask_Status.Cancelled
+                      || status == ChatTask_Status.Failed,
             Timestamp = DateTimeOffset.Now
         });
     }
@@ -2759,6 +2957,25 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         await chatTaskService.SetStatus(ChatTask_Status.Paused, chatTask).ConfigureAwait(false);
         PublishStatusEvent(chatTask.Id, ChatTask_Status.Paused);
         PublishHumanRequestEvent(chatTask.Id, pending.ToDto(), roundIndex);
+    }
+
+    private async Task AttachToolApprovalNotificationAsync(
+        PendingHumanRequest pending,
+        int chatTaskId,
+        string recipientUserId)
+    {
+        if (pending == null || !string.IsNullOrWhiteSpace(pending.NeuBellItemId))
+        {
+            return;
+        }
+
+        var itemId = _agentsManagerNeuBellProvider.SendToolApproval(
+            chatTaskId,
+            recipientUserId,
+            pending.AgentName,
+            pending.ToolName);
+        pending.SetNeuBellItemId(itemId);
+        await NotifyNeuBellChangedAsync().ConfigureAwait(false);
     }
 
     private async Task HandleHumanRequestResolvedAsync(

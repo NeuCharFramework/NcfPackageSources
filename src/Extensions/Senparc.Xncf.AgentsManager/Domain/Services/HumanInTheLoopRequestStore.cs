@@ -15,6 +15,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -127,6 +128,18 @@ public sealed class HumanInTheLoopRequestStore
             && _pending.TryGetValue(requestId.Trim(), out pending);
     }
 
+    public bool TryCancel(string requestId)
+    {
+        if (string.IsNullOrWhiteSpace(requestId)
+            || !_pending.TryRemove(requestId.Trim(), out var pending))
+        {
+            return false;
+        }
+
+        pending.TrySetCanceled();
+        return true;
+    }
+
     public IReadOnlyList<HumanInTheLoopRequestDto> GetPending(int chatTaskId)
         => _pending.Values
             .Where(z => z.ChatTaskId == chatTaskId)
@@ -176,6 +189,11 @@ public sealed record HumanInTheLoopDecision(bool Approved, string Reason = null,
 
 public sealed class PendingHumanRequest
 {
+    private static readonly JsonSerializerOptions ToolArgumentsJsonOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
+
     private readonly TaskCompletionSource<HumanInTheLoopDecision> _completion =
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -220,8 +238,7 @@ public sealed class PendingHumanRequest
     public Task<HumanInTheLoopDecision> Completion => _completion.Task;
     internal Func<HumanInTheLoopDecision, object> CreateResponse { get; }
 
-    public object CreateResponseFor(HumanInTheLoopDecision decision)
-        => CreateResponse(decision);
+    public object ResolvedResponse { get; private set; }
 
     public static PendingHumanRequest FromToolApproval(
         int chatTaskId,
@@ -234,7 +251,7 @@ public sealed class PendingHumanRequest
         var functionCall = request.ToolCall as FunctionCallContent;
         var arguments = functionCall?.Arguments == null
             ? string.Empty
-            : JsonSerializer.Serialize(functionCall.Arguments);
+            : JsonSerializer.Serialize(functionCall.Arguments, ToolArgumentsJsonOptions);
 
         return new PendingHumanRequest(
             chatTaskId,
@@ -276,7 +293,10 @@ public sealed class PendingHumanRequest
     }
 
     internal void TrySetResult(HumanInTheLoopDecision decision, object response)
-        => _completion.TrySetResult(decision);
+    {
+        ResolvedResponse = response;
+        _completion.TrySetResult(decision);
+    }
 
     internal void TrySetException(Exception exception)
         => _completion.TrySetException(exception);
