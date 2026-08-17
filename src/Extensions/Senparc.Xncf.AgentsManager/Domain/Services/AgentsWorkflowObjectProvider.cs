@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260815
     修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0-preview21 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -176,7 +179,10 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 PromptCommand = request.Input,
                 Name = $"Workflow · {group.Name}",
                 Description = $"NeuChar Workflow {request.CorrelationId}",
-                Personality = false,
+                Personality = GetBooleanParameter(
+                    request,
+                    WorkflowObjectExecutionParameters.Personality,
+                    fallback: true),
                 HookPlatform = HookPlatform.None,
                 CorrelationId = request.CorrelationId,
                 HumanRecipientUserId = request.AdminUserId?.ToString(),
@@ -248,6 +254,10 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             request,
             WorkflowObjectExecutionParameters.McpToolPermission,
             ToolPermissionMode.Inherit);
+        var personality = GetBooleanParameter(
+            request,
+            WorkflowObjectExecutionParameters.Personality,
+            fallback: true);
         var runRequest = AgentTemplateRunRequest.ForLocalWorkflow(
             agentId,
             request.CorrelationId,
@@ -255,7 +265,8 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             allowFunctionCalls,
             humanInTheLoopLevel,
             pluginToolPermission,
-            mcpToolPermission);
+            mcpToolPermission,
+            useTemplateModelSettings: personality);
         var effectivePolicy = HumanInTheLoopPolicyResolver.Resolve(
             humanInTheLoopLevel,
             pluginToolPermission,

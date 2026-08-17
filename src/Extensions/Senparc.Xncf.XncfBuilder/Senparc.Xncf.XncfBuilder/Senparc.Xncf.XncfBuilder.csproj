@@ -126,6 +126,8 @@
 			1、新增 XncfDevelopmentJob 创建、状态存储、后台服务和管理监控页面
 			2、接入可选 Sandbox 预览契约，限制源码快照和人工合入边界，未配置预览能力时安全失败
 			3、完善工作区文件服务、数据库迁移与模板生成流程
+			4、Dependency update from Senparc.Xncf.AIKernel to 0.15.4-preview13
+			5、Dependency update from Senparc.Xncf.MCP to 0.5.1-preview9
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

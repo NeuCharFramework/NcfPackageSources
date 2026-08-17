@@ -22,6 +22,7 @@
 2、补充线程取消、参数归一化与管理认证场景测试
 [2026-08-15] v0.0.8 补充工作流模型行为回归测试
 1、覆盖工作流执行和管理端集成场景
+2、补充 NeuCharWorkflow 引擎与设计器相关回归测试，覆盖人工交互场景
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

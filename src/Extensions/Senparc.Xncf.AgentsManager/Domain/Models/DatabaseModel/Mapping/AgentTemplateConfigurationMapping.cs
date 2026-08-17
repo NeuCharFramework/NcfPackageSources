@@ -35,6 +35,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Mapping
 
             base.Configure(builder);
             builder.HasIndex(z => z.KnowledgeBaseId);
+            builder.HasIndex(z => z.AiModelId);
         }
     }
 }

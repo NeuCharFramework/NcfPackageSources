@@ -59,6 +59,8 @@
       14、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
       [2026-08-13] v0.0.8 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7; Senparc.Xncf.AIAgentsHub to 0.13.5-preview8; Senparc.Xncf.XncfBuilder to 0.40.0-preview10
       [2026-08-15] v0.0.9 Dependency update from Senparc.Ncf.Core.Tests to 0.0.7; Senparc.Ncf.Core to 0.29.0-preview8; Senparc.Xncf.XncfBuilder to 0.41.0-preview11
+      1、Dependency update from Senparc.Xncf.AIAgentsHub to 0.13.6-preview9
+      2、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0-preview11
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

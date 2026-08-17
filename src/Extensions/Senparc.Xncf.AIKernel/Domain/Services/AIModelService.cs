@@ -31,6 +31,9 @@
     修改标识：Senparc - 20260815
     修改描述：v0.15.3-preview12 修复指定 AI 模型配置穿透并保留兼容 API Version
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.15.4-preview13 Ollama 配置补齐 ModelName
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;

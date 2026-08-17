@@ -10,7 +10,10 @@
       [2026-08-15] v0.2.0-preview2 增强工作流并行与运行控制
       1、按节点完成及时调度并行分支，减少慢分支对独立节点的阻塞并保持聚合节点语义
       2、完善取消令牌、运行状态保存和 AI 调用选项传递，保持执行回放与副作用顺序稳定
-    </PackageReleaseNotes>
+      3、新增 Human Input 节点：用户提示、外部恢复与外部键校验
+      4、完善人工交互服务、运行协调器与管理端/脚本交互，保证人工节点可暂停与恢复
+      5、Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.2.0-preview2
+</PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

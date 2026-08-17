@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0-preview2 支持 Human Input 人工节点暂停与外部恢复
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;

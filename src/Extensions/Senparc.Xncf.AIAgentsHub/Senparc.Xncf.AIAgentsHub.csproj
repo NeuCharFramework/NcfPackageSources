@@ -99,6 +99,7 @@
 			16、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
 			[2026-08-13] v0.13.5-preview8 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7
 			[2026-08-15] v0.13.6-preview9 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8; Senparc.Xncf.AIKernel to 0.15.3-preview12
+			1、Dependency update from Senparc.Xncf.AIKernel to 0.15.4-preview13
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

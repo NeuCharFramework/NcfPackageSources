@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：ChatGroupAppService.cs
@@ -18,6 +18,9 @@
 
     修改标识：Senparc - 20260815
     修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0-preview21 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
 
 ----------------------------------------------------------------*/
 
@@ -585,7 +588,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 "系统保留的 Human-in-the-Loop 文本参与者",
                 HumanParticipantConstants.PromptCode,
                 HookRobotType.None,
-                string.Empty);
+                string.Empty,
+                modelBinding: AgentModelBindingMode.FollowGroupTask);
             await _agentsTemplateService.SaveObjectAsync(human);
             return human;
         }

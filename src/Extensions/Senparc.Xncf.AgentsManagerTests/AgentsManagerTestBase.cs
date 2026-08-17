@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core;

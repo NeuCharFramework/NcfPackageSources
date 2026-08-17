@@ -1,3 +1,15 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：SandboxRequests.cs
+    文件功能描述：SandboxRequests.cs 功能实现
+    
+    
+    创建标识：Senparc - 20260808
+    
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0-preview3 增强 jupyter-csharp 模板与沙箱会话管理
+----------------------------------------------------------------*/
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;

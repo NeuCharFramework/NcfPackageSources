@@ -9,6 +9,9 @@
     修改标识：Senparc - 20260815
     修改描述：v0.2.0-preview3 增加 NCF 预览沙箱工作负载
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0-preview3 增强 jupyter-csharp 模板与沙箱会话管理
+
 ----------------------------------------------------------------*/
 
 using System.Diagnostics;

@@ -24,6 +24,7 @@
     3、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
     [2026-08-13] v0.0.9 Dependency update from Senparc.Ncf.Core.Tests to 0.0.6; Senparc.Ncf.UnitTestExtension to 0.3.20-preview.7; Senparc.Xncf.PromptRange to 0.19.2-preview10
     [2026-08-15] v0.0.10 Dependency update from Senparc.Ncf.Core.Tests to 0.0.7
+    1、补充 PromptResult 流式输出回归测试
 </PackageReleaseNotes>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>

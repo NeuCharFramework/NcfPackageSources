@@ -1492,32 +1492,39 @@
     <div class="drawerRtl">
         @* 内容中的头（包括标题和关闭图标） *@
         <div class="drawerRtl__header">
-            <div class="drawerRtl__header__title">{{ agentForm.id ? '编辑智能体' : '新增智能体' }}</div>
+            <div class="drawerRtl__header__title">{{ agentForm.id ? (agentForm.isSystemAgent ? '编辑系统 Agent' : '编辑智能体') : '新增智能体' }}</div>
             <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerAgent')">&times;</div>
         </div>
         @* 内容中的主体内容 *@
         <div class="drawerRtl__body">
             <el-form v-if="visible.drawerAgent" ref="agentELForm" :model="agentForm" :rules="agentFormRules"
                 :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
+                <el-alert v-if="agentForm.isSystemAgent"
+                          :title="'系统 Agent：' + (agentForm.systemAgentKind || agentForm.name)"
+                          :description="agentForm.isHuman ? 'Human 由当前登录用户输入文本，不调用模型或工具。可调整模型绑定策略，但不能修改系统身份或 Prompt。' : '系统 Agent 由模块自动创建或维护（例如 PromptCatalyzer）。修改模型绑定前请确认相关自动化任务的运行要求。'"
+                          type="info"
+                          :closable="false"
+                          show-icon
+                          style="margin-bottom:16px;"></el-alert>
                 <el-form-item label="智能体名称" prop="name">
                     <div class="agentNameFormField">
-                        <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
-                        <el-button v-if="agentForm.id" size="small" type="danger" plain icon="el-icon-delete"
+                        <el-input v-model="agentForm.name" placeholder="请填写" :disabled="agentForm.isHuman"></el-input>
+                        <el-button v-if="agentForm.id && !agentForm.isHuman" size="small" type="danger" plain icon="el-icon-delete"
                             @@click="handleAgentDelete(agentForm, { closeEditor: true })">删除智能体</el-button>
                     </div>
                 </el-form-item>
-                <el-form-item label="SystemMessage" required>
+                <el-form-item v-if="!agentForm.isHuman" label="SystemMessage" required>
                     <el-radio-group v-model="agentForm.systemMessageType" @@change="handleSystemMessageTypeChange">
                         <el-radio label="1" border>自选</el-radio>
                         <el-radio label="2" border>手动</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item v-show="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
+                <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
                     @* @change="handleChange($event,'')" *@
                     <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage"
                         direction="vertical" placeholder="请选择" @@options-loaded="handleSystemMessageOptionsLoaded" />
                 </el-form-item>
-                <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
+                <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
                     <el-input  
                        type="textarea"  
                        v-model="agentForm.systemMessage"  
@@ -1806,7 +1813,20 @@
                 <el-form-item label="组名称" prop="name">
                     <el-input v-model="groupForm.name" placeholder="请填写"></el-input>
                 </el-form-item>
-                <el-form-item label="是否启用" prop="enable">
+                <el-form-item label="绑定模型" prop="modelBinding">
+                    <el-radio-group v-model="agentForm.modelBinding" @@change="handleAgentModelBindingChange">
+                        <el-radio :label="0" border :disabled="agentForm.isHuman">从 PromptRange 继承</el-radio>
+                        <el-radio :label="1" border>跟随组任务</el-radio>
+                        <el-radio :label="2" border>手动选择 AIModel</el-radio>
+                    </el-radio-group>
+                    <div v-if="agentForm.modelBinding === 2" style="margin-top:10px;">
+                        <load-more-select v-model="agentForm.aiModelId" service-type="model" :chat-only="true"
+                                          direction="vertical" placeholder="请选择 Chat 模型" />
+                    </div>
+                    <div class="form-help-text" v-if="agentForm.systemMessageType === '2' && !agentForm.isHuman">手动 Prompt 没有 PromptRange 模型可继承，必须手动选择一个 Chat 类型 AIModel。</div>
+                    <div class="form-help-text" v-else-if="agentForm.isHuman">Human 不调用模型；该绑定用于保留其系统 Agent 的任务策略配置，默认跟随组任务。</div>
+                </el-form-item>
+                <el-form-item v-if="!agentForm.isHuman" label="是否启用" prop="enable">
                     <el-checkbox v-model="groupForm.enable">启用该组</el-checkbox>
                     <div class="form-help-text">新建组默认启用。停用后不会创建新任务，也不会作为 Workflow 节点使用。</div>
                 </el-form-item>
@@ -1950,7 +1970,7 @@
                 </el-form-item>
                 <el-form-item label="选择模型" prop="aiModelId">
                     @* @change="handleChange($event,'')" *@
-                    <load-more-select v-model="groupStartForm.aiModelId" service-type="model" direction="vertical"
+                    <load-more-select v-model="groupStartForm.aiModelId" service-type="model" :chat-only="true" direction="vertical"
                         placeholder="请选择" />
                 </el-form-item>
                 <el-form-item label="个性化智能体" prop="personality">
@@ -2053,27 +2073,46 @@
     </div>
 </el-drawer>
 @* Dialog 智能体 新增 *@
-<el-dialog :title="agentForm.id ? '编辑智能体' : '新增智能体'" :visible.sync="visible.dialogGroupAgent" :show-close="false"
+<el-dialog :title="agentForm.id ? (agentForm.isSystemAgent ? '编辑系统 Agent' : '编辑智能体') : '新增智能体'" :visible.sync="visible.dialogGroupAgent" :show-close="false"
     :close-on-click-modal="false" :close-on-press-escape="false">
     <el-form v-if="visible.dialogGroupAgent" ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize"
         label-position="left" label-width="130px" class="drawerForm-container">
+        <el-alert v-if="agentForm.isSystemAgent"
+                  :title="'系统 Agent：' + (agentForm.systemAgentKind || agentForm.name)"
+                  :description="agentForm.isHuman ? 'Human 由当前登录用户输入文本，不调用模型或工具。可调整模型绑定策略，但不能修改系统身份或 Prompt。' : '系统 Agent 由模块自动创建或维护（例如 PromptCatalyzer）。'"
+                  type="info"
+                  :closable="false"
+                  show-icon
+                  style="margin-bottom:16px;"></el-alert>
         <el-form-item label="智能体名称" prop="name">
-            <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
+            <el-input v-model="agentForm.name" placeholder="请填写" :disabled="agentForm.isHuman"></el-input>
         </el-form-item>
-        <el-form-item label="SystemMessage" required>
+        <el-form-item v-if="!agentForm.isHuman" label="SystemMessage" required>
             <el-radio-group v-model="agentForm.systemMessageType" @@change="handleSystemMessageTypeChange">
                 <el-radio label="1" border>自选</el-radio>
                 <el-radio label="2" border>手动</el-radio>
             </el-radio-group>
         </el-form-item>
-        <el-form-item v-show="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
+        <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
             <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage" direction="vertical"
                 placeholder="请选择" @@options-loaded="handleSystemMessageOptionsLoaded" />
         </el-form-item>
-        <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
+        <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
             <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>
         </el-form-item>
-        <el-form-item label="是否启用" prop="enable">
+        <el-form-item label="绑定模型" prop="modelBinding">
+            <el-radio-group v-model="agentForm.modelBinding" @@change="handleAgentModelBindingChange">
+                <el-radio :label="0" border :disabled="agentForm.isHuman">从 PromptRange 继承</el-radio>
+                <el-radio :label="1" border>跟随组任务</el-radio>
+                <el-radio :label="2" border>手动选择 AIModel</el-radio>
+            </el-radio-group>
+            <div v-if="agentForm.modelBinding === 2" style="margin-top:10px;">
+                <load-more-select v-model="agentForm.aiModelId" service-type="model" :chat-only="true"
+                                  direction="vertical" placeholder="请选择 Chat 模型" />
+            </div>
+            <div class="form-help-text" v-if="agentForm.systemMessageType === '2' && !agentForm.isHuman">手动 Prompt 必须手动选择一个 Chat 类型 AIModel。</div>
+        </el-form-item>
+        <el-form-item v-if="!agentForm.isHuman" label="是否启用" prop="enable">
             <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
         </el-form-item>
         <el-form-item label="绑定知识库" prop="knowledgeBaseId">

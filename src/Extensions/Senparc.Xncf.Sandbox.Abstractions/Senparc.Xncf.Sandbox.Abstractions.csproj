@@ -23,7 +23,8 @@
       [2026-08-15] v0.2.0-preview2 增加 NCF 预览沙箱跨模块契约
       1、提供预览启动/停止请求、状态信息和安全配置抽象，支持 XncfBuilder 与 Sandbox 解耦协作
       2、新增固定模板键和受控依赖恢复网络约束，避免将预览能力暴露为任意 Shell 执行
-    </PackageReleaseNotes>
+      3、新增 JupyterCsharp 模板键，支持 C# Jupyter 沙箱跨模块识别
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

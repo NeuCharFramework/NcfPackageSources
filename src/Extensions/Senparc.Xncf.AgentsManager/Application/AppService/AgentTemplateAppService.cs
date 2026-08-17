@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：AgentTemplateAppService.cs
@@ -28,6 +28,9 @@
     修改标识：Senparc - 20260815
     修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0-preview21 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;
@@ -46,6 +49,7 @@ using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AIKernel.Domain.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AreaBase.Admin.Filters;
@@ -426,14 +430,25 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 var existingAgent = agentTemplateDto.Id > 0
                     ? await _agentsTemplateService.GetObjectAsync(z => z.Id == agentTemplateDto.Id)
                     : null;
-                if ((existingAgent?.IsHuman ?? false)
-                    || HumanParticipantConstants.IsHuman(agentTemplateDto.PromptCode))
+                if (existingAgent?.IsHuman ?? false)
+                {
+                    await ValidateAgentModelBindingAsync(agentTemplateDto, isHumanParticipant: true);
+                    existingAgent.UpdateModelBinding(agentTemplateDto.ModelBinding, agentTemplateDto.AiModelId);
+                    await _agentsTemplateService.SaveObjectAsync(existingAgent);
+
+                    var humanDto = _agentsTemplateService.Mapping<AgentTemplateDto>(existingAgent);
+                    await PopulateAgentMetadataAsync(new[] { humanDto });
+                    return humanDto;
+                }
+
+                if (HumanParticipantConstants.IsHuman(agentTemplateDto.PromptCode))
                 {
                     response.Success = false;
-                    response.ErrorMessage = "Human 是系统保留的特殊参与者，不能通过普通 Agent 接口创建或修改。";
+                    response.ErrorMessage = "Human 是系统保留的特殊参与者，不能通过普通 Agent 接口创建。";
                     return null;
                 }
 
+                await ValidateAgentModelBindingAsync(agentTemplateDto);
                 await ValidateKnowledgeBaseBindingAsync(agentTemplateDto.KnowledgeBaseId);
                 var newDto = await this._agentsTemplateService.UpdateAgentTemplateAsync(agentTemplateDto.Id, agentTemplateDto);
                 await PopulateAgentMetadataAsync(new[] { newDto });
@@ -483,11 +498,18 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 PromptItemDto promptItemDto = null;
                 PromptRangeDto promptRangeDto = null;
                 AIModelDto aiModelDto = null;
+                var aiModelService = base.GetService<AIModelService>();
 
                 // PromptCode 兼容两种数据：PromptRange 版本号，或用户手动输入的 SystemMessage。
                 // 手动 Prompt 没有关联 PromptItem，不能直接交给 GetBestPromptAsync，否则会被当作
                 // RangeName 查询并返回“找不到对应的靶场”。
-                if (AgentTemplateRunner.IsPromptRangeReference(promptCode))
+                if (agentTemplateDto.ModelBinding == AgentModelBindingMode.ManualAiModel
+                    && agentTemplateDto.AiModelId > 0)
+                {
+                    var aiModel = await aiModelService.GetObjectAsync(z => z.Id == agentTemplateDto.AiModelId.Value);
+                    aiModelDto = aiModelService.Mapping<AIModelDto>(aiModel);
+                }
+                else if (AgentTemplateRunner.IsPromptRangeReference(promptCode))
                 {
                     var promptItem = await this._promptItemService.GetBestPromptAsync(promptCode.Trim(), true);
                     promptItemDto = this._promptItemService.Mapping<PromptItemDto>(promptItem);
@@ -495,7 +517,6 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     promptRangeDto = await _promptRangeService.GetAsync(promptItem.RangeId);
                     promptItemDto.PromptRange = promptRangeDto;
 
-                    var aiModelService = base.GetService<AIModelService>();
                     var aiModel = await aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
                     aiModelDto = aiModelService.Mapping<AIModelDto>(aiModel);
                 }
@@ -642,6 +663,75 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 }
 
                 throw new InvalidOperationException($"知识库“{knowledgeBase.Name}”尚未完成向量化，暂不能绑定到 Agent。");
+            }
+        }
+
+        private async Task ValidateAgentModelBindingAsync(
+            AgentTemplateDto agentTemplateDto,
+            bool isHumanParticipant = false)
+        {
+            if (!Enum.IsDefined(agentTemplateDto.ModelBinding))
+            {
+                throw new InvalidOperationException("模型绑定方式无效。");
+            }
+
+            if (isHumanParticipant)
+            {
+                if (agentTemplateDto.ModelBinding != AgentModelBindingMode.ManualAiModel)
+                {
+                    agentTemplateDto.AiModelId = null;
+                    return;
+                }
+
+                if (agentTemplateDto.AiModelId is not > 0)
+                {
+                    throw new InvalidOperationException("手动选择 AIModel 时必须选择一个 Chat 类型模型。");
+                }
+
+                // Human 本身不会调用模型；仍保存选择，使其在系统 Agent 管理页面中的
+                // 任务策略保持可见且可调整，并与其他系统 Agent 使用同一数据契约。
+                var humanModelService = base.GetService<AIModelService>()
+                    ?? throw new InvalidOperationException("AIKernel 模块服务未启用，无法绑定 AIModel。");
+                var humanModel = await humanModelService.GetObjectAsync(z => z.Id == agentTemplateDto.AiModelId.Value)
+                    ?? throw new InvalidOperationException($"绑定的 AIModel 不存在：{agentTemplateDto.AiModelId.Value}");
+                if (humanModel.ConfigModelType != ConfigModelType.Chat)
+                {
+                    throw new InvalidOperationException(
+                        $"AIModel“{humanModel.Alias}”不是 Chat 类型，不能绑定给 Agent。");
+                }
+                return;
+            }
+
+            var promptCode = string.IsNullOrWhiteSpace(agentTemplateDto.SystemMessage)
+                ? agentTemplateDto.PromptCode
+                : agentTemplateDto.SystemMessage;
+            var isPromptRangeReference = AgentTemplateRunner.IsPromptRangeReference(promptCode);
+            if (!isPromptRangeReference
+                && agentTemplateDto.ModelBinding != AgentModelBindingMode.ManualAiModel)
+            {
+                throw new InvalidOperationException(
+                    "手动 Prompt 没有 PromptRange 模型可继承，请选择“手动选择 AIModel”。");
+            }
+
+            if (agentTemplateDto.ModelBinding != AgentModelBindingMode.ManualAiModel)
+            {
+                agentTemplateDto.AiModelId = null;
+                return;
+            }
+
+            if (agentTemplateDto.AiModelId is not > 0)
+            {
+                throw new InvalidOperationException("手动选择 AIModel 时必须选择一个 Chat 类型模型。");
+            }
+
+            var aiModelService = base.GetService<AIModelService>()
+                ?? throw new InvalidOperationException("AIKernel 模块服务未启用，无法绑定 AIModel。");
+            var aiModel = await aiModelService.GetObjectAsync(z => z.Id == agentTemplateDto.AiModelId.Value)
+                ?? throw new InvalidOperationException($"绑定的 AIModel 不存在：{agentTemplateDto.AiModelId.Value}");
+            if (aiModel.ConfigModelType != ConfigModelType.Chat)
+            {
+                throw new InvalidOperationException(
+                    $"AIModel“{aiModel.Alias}”不是 Chat 类型，不能绑定给 Agent。");
             }
         }
 

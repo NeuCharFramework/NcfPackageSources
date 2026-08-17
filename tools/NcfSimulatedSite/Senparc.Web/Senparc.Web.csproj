@@ -44,6 +44,7 @@
 			2、增加 A2A 发布配置并持久化数据保护密钥，改善管理员登录恢复
 			[2026-08-15] v0.36.1 适配工作流、A2A 与预览模块宿主配置
 			1、更新模拟站点模块注册和运行配置，支持当前 AgentsManager、NeuCharWorkflow、Sandbox 与 XncfBuilder 组合
+			2、更新 NCF Desktop 发布清单至 0.10.1-build10066，同步各平台安装包链接与体积
 </PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>

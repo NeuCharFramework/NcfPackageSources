@@ -351,6 +351,8 @@ var app = new Vue({
         functionCallNames: '', // Function Call 名称，逗号分隔
         mcpEndpoints: '', // MCP Endpoints
         knowledgeBaseId: null, // 绑定的知识库
+        modelBinding: 0, // 0 PromptRange，1 跟随组任务，2 手动 AIModel
+        aiModelId: null,
       },
       // 编辑现有智能体时，等待 PromptRange 候选项返回后再确定“自选”或“手动”。
       agentSystemMessageTypeDetectionPending: false,
@@ -3986,6 +3988,10 @@ var app = new Vue({
         formName = 'evaluationForm'
       }
       if (!refName) return
+      if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)
+        && !this.validateAgentModelBindingForm()) {
+        return
+      }
       this.$refs[refName].validate(async (valid) => {
         if (valid) {
           const submitForm = this[formName] ?? {}
@@ -4024,9 +4030,33 @@ var app = new Vue({
       console.log('识别事件', e);
     },
 
-    handleSystemMessageTypeChange() {
+    handleSystemMessageTypeChange(type) {
       // 用户显式切换时，应以用户的选择为准，不再让异步加载结果覆盖它。
       this.agentSystemMessageTypeDetectionPending = false
+      if (String(type) === '2') {
+        this.$set(this.agentForm, 'modelBinding', 2)
+      }
+    },
+
+    handleAgentModelBindingChange(value) {
+      if (Number(value) !== 2) {
+        this.$set(this.agentForm, 'aiModelId', null)
+      }
+    },
+
+    validateAgentModelBindingForm() {
+      const isManualPrompt = String(this.agentForm?.systemMessageType || '') === '2'
+      const binding = Number(this.agentForm?.modelBinding ?? 0)
+      const aiModelId = Number(this.agentForm?.aiModelId || 0)
+      if (isManualPrompt && binding !== 2) {
+        this.$message.error('手动 Prompt 没有 PromptRange 模型可继承，请选择“手动选择 AIModel”。')
+        return false
+      }
+      if (binding === 2 && !aiModelId) {
+        this.$message.error('手动选择 AIModel 时必须选择一个 Chat 类型模型。')
+        return false
+      }
+      return true
     },
 
     handleSystemMessageOptionsLoaded(options) {
@@ -6533,7 +6563,17 @@ Vue.component('load-more-select', {
   // v-el-select-loadmore="interestsLoadmore" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" @focus="remoteMethod('',true)" @visible-change="reverseArrow"
   template: `<div :class="[direction === 'horizontal' ? 'df-wn flex-ac flex-js' : '']" style="width:100%;gap:10px;">
         <el-select ref="elSelectLoadMore" v-model="selectVal"  :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" filterable :multiple="multipleChoice" clearable style="width:100%" @change="handleChange">
-    <el-option v-for="(item,index) in interestsOptions" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
+    <el-option v-for="(item,index) in interestsOptions" :key="item.value" :label="item.label" :value="item.value">
+      <template v-if="serviceType === 'model'">
+        <span>{{item.label}}</span>
+        <span style="float:right;display:flex;gap:4px;">
+          <el-tag size="mini" effect="plain">{{modelTypeLabel(item.configModelType)}}</el-tag>
+          <el-tag size="mini" type="info" effect="plain">{{modelPlatformLabel(item.aiPlatform)}}</el-tag>
+          <el-tag v-if="item.deploymentName || item.modelId" size="mini" type="warning" effect="plain">{{item.deploymentName || item.modelId}}</el-tag>
+        </span>
+      </template>
+      <template v-else>{{item.label}}</template>
+    </el-option></el-select>
     <template v-if="direction==='horizontal'">
         <i class="cursorPointer fas fa-redo" title="刷新" @click="refreshManagementList" />
     </template>
@@ -6573,6 +6613,10 @@ Vue.component('load-more-select', {
     direction: {
       type: String,
       default: 'horizontal' // 横向/竖向  horizontal/vertical
+    },
+    chatOnly: {
+      type: Boolean,
+      default: false
     }
   },
   data: function () {
@@ -6625,6 +6669,13 @@ Vue.component('load-more-select', {
     this.refreshManagementList()
   },
   methods: {
+    modelTypeLabel(type) {
+      return Number(type) === 2 ? 'Chat' : `类型 ${type ?? '未知'}`
+    },
+    modelPlatformLabel(platform) {
+      const labels = { 1: 'OpenAI', 2: 'Azure OpenAI', 3: 'Hugging Face', 4: 'NeuCharAI' }
+      return labels[Number(platform)] || `平台 ${platform ?? '未知'}`
+    },
     jumpPromptRange(urlType) {
       let url = ''
       if (urlType === 'promptRange') {
@@ -6733,7 +6784,8 @@ Vue.component('load-more-select', {
           const data = res?.data ?? {}
           if (data.success) {
             //console.log('getModelOptData:', res.data)
-            const modelData = data?.data ?? []
+            const modelData = (data?.data ?? [])
+              .filter(item => !this.chatOnly || Number(item.configModelType) === 2)
             const listData = modelData.map(item => {
               return {
                 ...item,

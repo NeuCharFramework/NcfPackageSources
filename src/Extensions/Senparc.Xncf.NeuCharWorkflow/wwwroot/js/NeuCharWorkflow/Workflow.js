@@ -207,6 +207,7 @@ new Vue({
             workflows: [],
             functions: [],
             workflowObjects: [],
+            chatModels: [],
             observedOutputSchemas: [],
             keyword: '',
             workflowClock: Date.now(),
@@ -813,14 +814,21 @@ new Vue({
         async loadAll() {
             this.loading = true;
             try {
-                const [listResponse, dataResponse] = await Promise.all([
+                const [listResponse, dataResponse, modelResponse] = await Promise.all([
                     service.get('/Admin/NeuCharWorkflow/Index?handler=List'),
-                    service.get('/Admin/NeuCharWorkflow/Index?handler=DesignerData')
+                    service.get('/Admin/NeuCharWorkflow/Index?handler=DesignerData'),
+                    service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync', {
+                        page: 0,
+                        size: 0,
+                        order: 'Alias asc'
+                    })
                 ]);
                 this.workflows = NeuCharWorkflowUi.unwrap(listResponse) || [];
                 const data = NeuCharWorkflowUi.unwrap(dataResponse) || {};
                 this.functions = data.functions || [];
                 this.workflowObjects = data.objects || [];
+                this.chatModels = (NeuCharWorkflowUi.unwrap(modelResponse) || [])
+                    .filter(model => Number(model.configModelType) === 2);
             } finally { this.loading = false; }
         },
         async openTaskRoute() {
@@ -1013,6 +1021,8 @@ new Vue({
                     providerId: object.providerId,
                     objectId: object.objectId,
                     prompt: '处理以下输入：{{input}}',
+                    aiModelId: null,
+                    personality: true,
                     allowFunctionCalls: object.kind === 'agent' ? false : supportsHumanInTheLoop,
                     humanInTheLoopLevel: 0,
                     pluginToolPermission: 0,
@@ -1027,6 +1037,10 @@ new Vue({
             node.config = node.config || {};
             const defaults = {
                 allowFunctionCalls: node.type === 'agent' ? false : true,
+                aiModelId: 0,
+                // Existing Workflow definitions used the task/default model for every Agent.
+                // Keep those persisted graphs behaviorally stable; newly inserted nodes opt in.
+                personality: false,
                 humanInTheLoopLevel: 0,
                 pluginToolPermission: 0,
                 mcpToolPermission: 0,
@@ -2506,6 +2520,21 @@ new Vue({
             if (metadata.knowledgeBaseId) rows.push({ label: '知识库 ID', value: metadata.knowledgeBaseId });
             if (metadata.state) rows.push({ label: '组状态', value: metadata.state });
             return rows;
+        },
+        workflowModelLabel(model) {
+            if (!model) return '';
+            const alias = String(model.alias || model.modelId || `AIModel #${model.id}`);
+            const deployment = String(model.deploymentName || model.modelId || '');
+            return deployment && deployment !== alias ? `${alias} (${deployment})` : alias;
+        },
+        workflowModelPlatformLabel(model) {
+            const platforms = {
+                1: 'OpenAI',
+                2: 'Azure OpenAI',
+                3: 'Hugging Face',
+                4: 'NeuCharAI'
+            };
+            return platforms[Number(model?.aiPlatform)] || `平台 ${model?.aiPlatform ?? '未知'}`;
         },
         openWorkflowObjectEditor(object) {
             const url = this.workflowObjectEditUrl(object);

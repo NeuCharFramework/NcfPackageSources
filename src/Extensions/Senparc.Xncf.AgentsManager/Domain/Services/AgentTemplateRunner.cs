@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260815
     修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0-preview21 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -430,6 +433,9 @@ public sealed class AgentTemplateRunner
         PromptItemDto resolvedPromptItem = null;
         AIModelDto resolvedModel = null;
         var modelSource = request.DefaultSetting == null ? "system-default" : "caller-default";
+        var modelBinding = Enum.IsDefined(template.ModelBinding)
+            ? template.ModelBinding
+            : AgentModelBindingMode.InheritPromptRange;
 
         if (!string.IsNullOrWhiteSpace(template.PromptCode))
         {
@@ -442,7 +448,8 @@ public sealed class AgentTemplateRunner
                 {
                     resolvedPromptItem = promptResult.PromptItem;
                     promptContent = promptResult.PromptItem.Content ?? string.Empty;
-                    if (request.UseTemplateModelSettings)
+                    if (request.UseTemplateModelSettings
+                        && modelBinding == AgentModelBindingMode.InheritPromptRange)
                     {
                         resolvedModel = promptResult.PromptItem.AIModelDto;
                         setting = promptResult.SenparcAiSetting ?? setting;
@@ -474,7 +481,24 @@ public sealed class AgentTemplateRunner
             }
         }
 
-        if (request.AiModelId > 0)
+        if (request.UseTemplateModelSettings
+            && modelBinding == AgentModelBindingMode.ManualAiModel
+            && template.AiModelId > 0)
+        {
+            var aiModel = await _aiModelService
+                .GetObjectAsync(z => z.Id == template.AiModelId.Value)
+                .ConfigureAwait(false);
+            if (aiModel != null)
+            {
+                resolvedModel = new AIModelDto(aiModel);
+                setting = _aiModelService.BuildSenparcAiSetting(resolvedModel);
+                modelSource = $"agent:{template.Id}:manual";
+            }
+        }
+
+        if ((!request.UseTemplateModelSettings
+                || modelBinding == AgentModelBindingMode.FollowGroupTask)
+            && request.AiModelId > 0)
         {
             var aiModel = await _aiModelService
                 .GetObjectAsync(z => z.Id == request.AiModelId.Value)
@@ -483,7 +507,7 @@ public sealed class AgentTemplateRunner
             {
                 resolvedModel = new AIModelDto(aiModel);
                 setting = _aiModelService.BuildSenparcAiSetting(resolvedModel);
-                modelSource = "workflow-override";
+                modelSource = "task-model";
             }
         }
 
@@ -834,6 +858,10 @@ public sealed class AgentTemplateRunRequest
     public const string LocalWorkflowCompatibleProfile = "local-workflow-compatible";
     public const string LocalChatGroupCompatibleProfile = "local-chat-group-compatible";
     public string ProfileName { get; init; } = LocalWorkflowCompatibleProfile;
+    /// <summary>
+    /// Workflow 或 Group 本次任务选择的模型。关闭个性化时它覆盖所有 Agent；
+    /// 启用个性化时仅被“跟随组任务”的 Agent 使用。
+    /// </summary>
     public int? AiModelId { get; init; }
     public bool AllowFunctionCalls { get; init; }
     /// <summary>
@@ -889,12 +917,15 @@ public sealed class AgentTemplateRunRequest
         bool allowFunctionCalls = false,
         HumanInTheLoopLevel humanInTheLoopLevel = HumanInTheLoopLevel.Automatic,
         ToolPermissionMode pluginToolPermission = ToolPermissionMode.Inherit,
-        ToolPermissionMode mcpToolPermission = ToolPermissionMode.Inherit)
+        ToolPermissionMode mcpToolPermission = ToolPermissionMode.Inherit,
+        bool useTemplateModelSettings = true)
     {
         return new AgentTemplateRunRequest
         {
             AiModelId = aiModelId,
             RunnerName = $"WorkflowAgent-{agentTemplateId}-{correlationId}",
+            UseTemplateModelSettings = useTemplateModelSettings,
+            UseTemplatePromptParameters = useTemplateModelSettings,
             AllowFunctionCalls = allowFunctionCalls,
             HumanInTheLoopLevel = humanInTheLoopLevel,
             PluginToolPermission = pluginToolPermission,

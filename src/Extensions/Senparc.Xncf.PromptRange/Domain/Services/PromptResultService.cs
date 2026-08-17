@@ -22,6 +22,9 @@
     修改标识：Senparc - 20260715
     修改描述：v0.16.5-preview4 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.19.3-preview11 改进流式输出提取与 Ollama Token 兼容
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;

@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260815
     修改描述：v0.2.0-preview2 增强工作流并行与运行控制
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0-preview2 支持 Human Input 人工节点暂停与外部恢复
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -1648,7 +1651,9 @@ public sealed class NeuCharWorkflowEngine
                 Math.Clamp(
                     GetInt(node.Config, WorkflowObjectExecutionParameters.ChatMaxRound, 20),
                     1,
-                    50).ToString()
+                    50).ToString(),
+            [WorkflowObjectExecutionParameters.Personality] =
+                GetBool(node.Config, WorkflowObjectExecutionParameters.Personality, true).ToString()
         };
         var result = await executionProvider.ExecuteAsync(
             new WorkflowObjectExecutionRequest(

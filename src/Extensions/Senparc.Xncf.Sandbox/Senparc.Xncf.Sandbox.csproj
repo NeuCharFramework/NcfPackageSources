@@ -24,7 +24,9 @@
       [2026-08-15] v0.2.0-preview3 增加 NCF 预览沙箱工作负载
       1、增加固定 NCF/XNCF 预览模板、Docker 运行参数、启动超时和受控依赖恢复网络
       2、提供隔离预览工作区、状态访问和反向代理链路，未配置固定镜像摘要时安全失败
-    </PackageReleaseNotes>
+      3、新增 jupyter-csharp 模板与镜像解析，完善 Docker/Wasm 运行参数与会话状态管理
+      4、优化管理端沙箱会话交互与 Jupyter 路径约束，改善创建/回收体验
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <Nullable>enable</Nullable>

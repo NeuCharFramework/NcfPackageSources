@@ -6,6 +6,9 @@
 
     创建标识：Senparc - 20260808
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0-preview3 增强 jupyter-csharp 模板与沙箱会话管理
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;

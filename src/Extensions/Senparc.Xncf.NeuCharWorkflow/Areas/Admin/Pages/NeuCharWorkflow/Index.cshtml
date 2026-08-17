@@ -1027,6 +1027,34 @@
                                                                   @@edit-template="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'Prompt'})"></workflow-rich-text-input>
                                         <el-cascader :value="configBindingSelection(selectedNode,'prompt')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable placeholder="关联上游 Output" @@change="setConfigBinding(selectedNode,'prompt',$event)"></el-cascader>
                                     </el-form-item>
+                                    <template v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group'">
+                                        <el-divider content-position="left">模型</el-divider>
+                                        <el-form-item label="任务模型">
+                                            <el-select v-model="selectedNode.config.aiModelId"
+                                                       :disabled="editingLocked"
+                                                       clearable
+                                                       filterable
+                                                       placeholder="未选择时使用群组默认模型">
+                                                <el-option v-for="model in chatModels"
+                                                           :key="model.id"
+                                                           :label="workflowModelLabel(model)"
+                                                           :value="model.id">
+                                                    <span>{{workflowModelLabel(model)}}</span>
+                                                    <span style="float:right;display:flex;gap:4px;">
+                                                        <el-tag size="mini" effect="plain">Chat</el-tag>
+                                                        <el-tag size="mini" type="info" effect="plain">{{workflowModelPlatformLabel(model)}}</el-tag>
+                                                    </span>
+                                                </el-option>
+                                            </el-select>
+                                            <p class="node-config-help">未选择时，AgentGroup 先继承群主的 PromptRange 模型；没有可用模型时才回退系统默认 Chat 模型。</p>
+                                        </el-form-item>
+                                        <el-form-item label="个性化智能体模型">
+                                            <el-switch v-model="selectedNode.config.personality"
+                                                       :disabled="editingLocked"
+                                                       active-text="按每个 Agent 的模型绑定策略运行"
+                                                       inactive-text="所有 Agent 使用本次任务模型"></el-switch>
+                                        </el-form-item>
+                                    </template>
                                     <template v-if="(selectedNode.type==='agent' || selectedNode.type==='agent-group') && selectedWorkflowObject && String(selectedWorkflowObject.metadata && selectedWorkflowObject.metadata.supportsHumanInTheLoop).toLowerCase()==='true'">
                                         <el-divider content-position="left">Human-in-the-Loop</el-divider>
                                         <el-form-item v-if="selectedNode.type==='agent'" label="Agent 工具">

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 扩展工作流模块的对象与事件契约
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0-preview2 扩展 Human Input 与工作流对象契约
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;
@@ -52,6 +55,7 @@ public static class WorkflowObjectExecutionParameters
     public const string McpToolPermission = "mcpToolPermission";
     public const string IncludeHumanParticipant = "includeHumanParticipant";
     public const string ChatMaxRound = "chatMaxRound";
+    public const string Personality = "personality";
 }
 
 public sealed record WorkflowObjectExecutionResult(

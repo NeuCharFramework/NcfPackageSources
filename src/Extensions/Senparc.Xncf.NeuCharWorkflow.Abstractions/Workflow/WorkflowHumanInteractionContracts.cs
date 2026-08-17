@@ -7,6 +7,9 @@
     创建标识：Senparc - 20260815
     修改描述：Workflow 运行可读取并提交由 AgentsManager 托管的 Human 请求
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0-preview2 扩展 Human Input 与工作流对象契约
+
 ----------------------------------------------------------------*/
 
 using System;

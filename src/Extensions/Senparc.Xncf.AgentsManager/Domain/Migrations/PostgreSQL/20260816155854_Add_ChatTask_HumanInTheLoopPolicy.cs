@@ -1,4 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：20260816155854_Add_ChatTask_HumanInTheLoopPolicy.cs
+    文件功能描述：20260816155854_Add_ChatTask_HumanInTheLoopPolicy.cs 功能实现
+    
+    
+    创建标识：Senparc - 20260817
+    
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0-preview21 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+----------------------------------------------------------------*/
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 

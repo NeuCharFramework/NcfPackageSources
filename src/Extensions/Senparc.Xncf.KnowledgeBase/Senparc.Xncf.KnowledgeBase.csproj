@@ -59,6 +59,7 @@
 		[2026-08-15] v0.7.0-preview9 增强知识库向量发布状态识别
 		1、区分已发布的隔离向量集合、待处理和旧版切片向量状态
 		2、在知识库管理页展示可供 Agent 绑定的真实发布状态，避免将旧版向量数据误报为已发布
+		3、Dependency update from Senparc.Xncf.AIKernel to 0.15.4-preview13
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

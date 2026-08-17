@@ -37,6 +37,7 @@
         4、Dependency update from Senparc.Xncf.Installer to 0.5.1
         [2026-08-13] v0.0.10 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Web to 0.36.0
         [2026-08-15] v0.0.11 Dependency update from Senparc.Web to 0.36.1
+        1、Dependency update from Senparc.Xncf.Installer to 0.5.3
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
