@@ -623,6 +623,7 @@
                                                             :participant="mitem"
                                                             :quick-info="getParticipantQuickInfo('agentGroupTask', mitem)"
                                                             :testing="isRemoteAgentTesting(mitem.id)"
+                                                            @@edit-agent="openParticipantAgentEditor(mitem)"
                                                             @@test-remote="testTaskRemoteAgent(mitem)">
                                                         </participant-quick-action>
                                                     </div>
@@ -758,6 +759,7 @@
                                                     :participant="mitem"
                                                     :quick-info="getParticipantQuickInfo('agentTask', mitem)"
                                                     :testing="isRemoteAgentTesting(mitem.id)"
+                                                    @@edit-agent="openParticipantAgentEditor(mitem)"
                                                     @@test-remote="testTaskRemoteAgent(mitem)">
                                                 </participant-quick-action>
                                             </div>
@@ -1123,6 +1125,7 @@
                                             :participant="mitem"
                                             :quick-info="getParticipantQuickInfo('groupTask', mitem)"
                                             :testing="isRemoteAgentTesting(mitem.id)"
+                                            @@edit-agent="openParticipantAgentEditor(mitem)"
                                             @@test-remote="testTaskRemoteAgent(mitem)">
                                         </participant-quick-action>
                                     </div>
@@ -1391,6 +1394,7 @@
                                         :participant="mitem"
                                         :quick-info="getParticipantQuickInfo('task', mitem)"
                                         :testing="isRemoteAgentTesting(mitem.id)"
+                                        @@edit-agent="openParticipantAgentEditor(mitem)"
                                         @@test-remote="testTaskRemoteAgent(mitem)">
                                     </participant-quick-action>
                                 </div>

@@ -3503,6 +3503,9 @@ var app = new Vue({
         const mergedFinal = {
           ...existedFinal,
           fromAgentTemplateId: payload.fromAgentTemplateId || existedFinal.fromAgentTemplateId || 0,
+          fromParticipantKey: payload.fromParticipantKey || existedFinal.fromParticipantKey || '',
+          fromParticipantKind: payload.fromParticipantKind || existedFinal.fromParticipantKind || '',
+          fromParticipantName: payload.fromAgentName || existedFinal.fromParticipantName || '',
           addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : (existedFinal.addTime || new Date().toISOString()),
           message: message || existedFinal.message || '',
           messageHtml: this.renderSafeMarkdown(message || existedFinal.message || ''),
@@ -3524,6 +3527,9 @@ var app = new Vue({
       const finalItem = {
         id: payload.historyId || `${draftKey || 'msg'}:${Date.now()}`,
         fromAgentTemplateId: payload.fromAgentTemplateId || 0,
+        fromParticipantKey: payload.fromParticipantKey || '',
+        fromParticipantKind: payload.fromParticipantKind || '',
+        fromParticipantName: payload.fromAgentName || '',
         addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : new Date().toISOString(),
         message,
         messageHtml: this.renderSafeMarkdown(message),
@@ -5398,6 +5404,9 @@ var app = new Vue({
       const relatedHistory = this.getTaskHistoryListForParticipantInfo(taskType)
         .filter(item => this.getParticipantKey(item) === participantKey)
       const usage = this.buildTaskHistoryUsageSummary(relatedHistory)
+      const isHuman = participant?.isHuman === true
+        || participant?.agentKind === 'Human'
+        || participantKey.startsWith('human:')
       const hasReportedTokenUsage = relatedHistory.some(item => {
         return ['promptTokens', 'completionTokens', 'totalTokens']
           .some(field => item?.[field] !== null && item?.[field] !== undefined)
@@ -5410,28 +5419,69 @@ var app = new Vue({
       const statusType = isRemote
         ? this.remoteParticipantAvailabilityType(participant)
         : (enabled ? 'success' : 'info')
-      const currentUsageText = usage.messageCount === 0
-        ? '尚无已完成回复'
-        : (hasReportedTokenUsage
-          ? `${this.formatUsageCount(usage.messageCount)} 条回复 · ${this.formatUsageCount(usage.totalTokens)} Token`
-          : `${this.formatUsageCount(usage.messageCount)} 条回复 · Token 未由远端反馈`)
+      const currentUsageText = isHuman
+        ? (usage.messageCount === 0
+          ? '尚无已提交输入'
+          : `已输入 ${this.formatUsageCount(usage.messageCount)} 条文本`)
+        : (usage.messageCount === 0
+          ? '尚无已完成回复'
+          : (hasReportedTokenUsage
+            ? `${this.formatUsageCount(usage.messageCount)} 条回复 · ${this.formatUsageCount(usage.totalTokens)} Token`
+            : `${this.formatUsageCount(usage.messageCount)} 条回复 · Token 未由远端反馈`))
       const totalTokens = Number(participant?.totalTokens || 0)
 
       return {
-        kindText: isRemote ? '远程 A2A' : '本地 Agent',
-        kindType: isRemote ? 'warning' : 'primary',
+        kindText: isHuman ? 'Human 参与者' : (isRemote ? '远程 A2A' : '本地 Agent'),
+        kindType: isHuman ? 'info' : (isRemote ? 'warning' : 'primary'),
         statusText,
         statusType,
         description: participant?.description || '暂无简介',
         currentUsageText,
-        responseTimeText: this.formatResponseMilliseconds(usage.averageResponseMilliseconds, '暂无响应时长'),
-        totalUsageText: totalTokens > 0
-          ? `${this.formatUsageCount(totalTokens)} Token`
-          : '暂无累计数据',
+        responseTimeText: isHuman
+          ? '不适用'
+          : this.formatResponseMilliseconds(usage.averageResponseMilliseconds, '暂无响应时长'),
+        totalUsageText: isHuman
+          ? '不产生模型 Token'
+          : (totalTokens > 0
+            ? `${this.formatUsageCount(totalTokens)} Token`
+            : '暂无累计数据'),
         activityText: this.formatActivityTime(participant?.lastActiveTime || participant?.lastHealthCheckAt),
         healthMessage: isRemote ? (participant?.lastHealthCheckMessage || '尚未执行连接检测') : '',
         isRemote,
+        canOpenEditor: !isHuman && Number.isInteger(Number(participant?.id)) && Number(participant.id) > 0,
       }
+    },
+
+    buildParticipantEditorUrl(participant) {
+      const id = Number(participant?.id || 0)
+      if (!Number.isInteger(id) || id <= 0 || participant?.isHuman === true || participant?.agentKind === 'Human') {
+        return ''
+      }
+
+      if (participant?.agentKind === 'RemoteA2A') {
+        return `/Admin/AgentsManager/Index#tab=remoteA2A&view=edit&remoteAgentId=${id}`
+      }
+
+      return `/Admin/AgentsManager/Index#tab=first&view=edit&agentId=${id}`
+    },
+
+    openParticipantAgentEditor(participant) {
+      const url = this.buildParticipantEditorUrl(participant)
+      if (!url) {
+        return
+      }
+
+      const participantType = participant?.agentKind === 'RemoteA2A' ? 'RemoteA2A' : 'Local'
+      const targetName = `NcfAgentsManager_${participantType}_${participant.id}`
+      const openedWindow = typeof window.open === 'function'
+        ? window.open(url, targetName)
+        : null
+      if (openedWindow) {
+        openedWindow.focus?.()
+        return
+      }
+
+      window.location?.assign?.(url)
     },
 
     getGroupParticipantList(groupDetail) {
@@ -6476,6 +6526,9 @@ Vue.component('participant-quick-action', {
     },
     testRemote() {
       this.$emit('test-remote')
+    },
+    editAgent() {
+      this.$emit('edit-agent')
     }
   },
   template: `
@@ -6504,6 +6557,7 @@ Vue.component('participant-quick-action', {
         </div>
         <div class="participant-quick-info__footer">
           <span>用量仅统计当前任务中已加载的记录</span>
+          <el-button v-if="quickInfo.canOpenEditor" type="text" size="mini" icon="el-icon-top-right" title="在新窗口中编辑 Agent" @click.stop="editAgent">编辑</el-button>
           <el-button v-if="quickInfo.isRemote" type="text" size="mini" :loading="testing" @click.stop="testRemote">测试连接</el-button>
         </div>
       </section>

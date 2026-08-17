@@ -117,6 +117,15 @@
 		<ProjectReference Include="..\Senparc.Xncf.Installer\Senparc.Xncf.Installer.csproj" />
 		<ProjectReference Include="..\Template_OrgName.Xncf.Template_XncfName\Template_OrgName.Xncf.Template_XncfName.csproj" />
 	</ItemGroup>
+	<!-- 开发环境配置不随发布输出，避免把本机密钥/连接串带到生产包 -->
+	<ItemGroup>
+		<Content Update="appsettings.Development.json">
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</Content>
+		<Content Update="App_Data\Database\SenparcConfig.Development.config">
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='ModifyPublish'">
 		<Content Update="App_Data\**\*.*">
 			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
