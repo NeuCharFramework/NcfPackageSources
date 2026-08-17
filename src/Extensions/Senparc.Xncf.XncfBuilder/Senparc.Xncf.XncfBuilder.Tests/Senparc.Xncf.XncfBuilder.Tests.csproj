@@ -32,7 +32,7 @@
     1、覆盖预览状态恢复、初始化和生命周期行为
     [2026-08-15] v0.0.10 增加 XncfBuilder 开发工作区回归测试
     1、覆盖开发任务状态、工作区隔离和预览服务交互
-    2、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0-preview11
+    2、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0
 </PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>

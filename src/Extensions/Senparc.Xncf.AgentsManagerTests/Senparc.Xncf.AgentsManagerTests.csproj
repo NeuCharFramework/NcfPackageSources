@@ -32,7 +32,7 @@
         [2026-08-15] v0.0.11 补充 AgentTemplate 与远程 A2A 回归测试
         1、覆盖手动 Prompt、取消令牌和远程执行边界
         2、补充 Human-in-the-Loop 策略、人工交互、请求存储与人类参与者配置回归测试
-        3、Dependency update from Senparc.Xncf.AgentsManager to 0.16.0-preview21
+        3、Dependency update from Senparc.Xncf.AgentsManager to 0.16.0
 </PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>

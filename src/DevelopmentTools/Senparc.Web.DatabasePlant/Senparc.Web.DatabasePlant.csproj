@@ -21,7 +21,7 @@
 		  [2026-08-08] v0.0.9 Dependency update from Senparc.Xncf.AgentsManager to 0.14.1-preview10
 		  [2026-08-13] v0.0.10 Dependency update from Senparc.Xncf.AgentsManager to 0.15.0-preview11
 		  [2026-08-15] v0.0.11 Dependency update from Senparc.Xncf.AgentsManager to 0.15.0-preview20
-		  1、Dependency update from Senparc.Xncf.AgentsManager to 0.16.0-preview21
+		  1、Dependency update from Senparc.Xncf.AgentsManager to 0.16.0
 </PackageReleaseNotes>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>

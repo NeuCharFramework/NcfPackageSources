@@ -1365,6 +1365,8 @@ assert.deepStrictEqual(JSON.parse(JSON.stringify(workflowAgentNode.config)), {
     providerId: 'agents-manager',
     objectId: 'agent:42',
     prompt: '处理以下输入：{{input}}',
+    aiModelId: null,
+    personality: true,
     allowFunctionCalls: false,
     humanInTheLoopLevel: 0,
     pluginToolPermission: 0,
@@ -1377,11 +1379,26 @@ vueOptions.methods.ensureWorkflowObjectPolicyConfig.call({
     $set(target, key, value) { target[key] = value; }
 }, legacyGroupNode);
 assert.strictEqual(legacyGroupNode.config.allowFunctionCalls, true);
+assert.strictEqual(legacyGroupNode.config.aiModelId, 0);
+assert.strictEqual(legacyGroupNode.config.personality, false,
+    'Existing Group nodes should keep their original task-model execution behavior until explicitly changed.');
 assert.strictEqual(legacyGroupNode.config.humanInTheLoopLevel, 0);
 assert.strictEqual(legacyGroupNode.config.includeHumanParticipant, false,
     'Legacy Group nodes should receive stable automatic HIL defaults without enabling Human turns unexpectedly.');
 assert.strictEqual(legacyGroupNode.config.chatMaxRound, 20,
     'Legacy Group nodes should retain the existing 20-round runtime default.');
+assert.ok(page.includes('selectedNode.config.aiModelId') && page.includes('selectedNode.config.personality'),
+    'Workflow Agent and Group nodes should expose a task model plus the per-Agent model binding switch.');
+const agentManagerPage = fs.readFileSync(
+    path.resolve(__dirname,
+        '../../../../../src/Extensions/Senparc.Xncf.AgentsManager/Areas/Admin/Pages/AgentsManager/Index.cshtml'),
+    'utf8');
+const groupDrawerStart = agentManagerPage.indexOf('<el-drawer :visible.sync="visible.drawerGroup"');
+const groupDrawerEnd = agentManagerPage.indexOf('</el-drawer>', groupDrawerStart);
+assert.ok(groupDrawerStart >= 0 && groupDrawerEnd > groupDrawerStart,
+    'AgentsManager Group editor should retain a distinct drawer boundary.');
+assert.ok(!agentManagerPage.slice(groupDrawerStart, groupDrawerEnd).includes('agentForm.modelBinding'),
+    'Agent model binding controls must not be rendered inside the Group editor.');
 assert.ok(vueOptions.methods.workflowObjectEditUrl, 'Workflow objects should expose a safe editor URL resolver.');
 assert.strictEqual(vueOptions.methods.workflowObjectEditUrl.call({}, { editUrl: 'https://example.invalid' }), '',
     'Workflow object edit links must not open arbitrary external URLs.');

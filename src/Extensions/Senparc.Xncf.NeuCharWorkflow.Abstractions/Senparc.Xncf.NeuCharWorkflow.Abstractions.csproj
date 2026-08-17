@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.0-preview2</Version>
+    <Version>0.2.0</Version>
     <PackageReleaseNotes>
       [2026-08-13] v0.1.0-preview1 扩展工作流模块的对象与事件契约
       1、新增工作流对象编辑地址、元数据及模块事件契约，支持宿主集成
-      [2026-08-17] v0.2.0-preview2 扩展工作流人工交互契约
+      [2026-08-17] v0.2.0 扩展工作流人工交互契约
       1、新增 Human Input 相关请求、恢复与外部键校验契约
       2、完善工作流对象契约以支持人工节点配置与跨模块协作
 </PackageReleaseNotes>

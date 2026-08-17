@@ -19,9 +19,9 @@
       2、Dependency update from Senparc.Xncf.Swagger to 0.20.0-preview4
       [2026-08-08] v0.0.7 Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
       [2026-08-13] v0.0.8 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Xncf.AgentsManager to 0.15.0-preview11; Senparc.Xncf.XncfBuilder to 0.40.0-preview10; Senparc.Areas.Admin to 0.5.0
-      [2026-08-15] v0.0.9 Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0-preview11
-      1、Dependency update from Senparc.Xncf.AgentsManager to 0.16.0-preview21
-      2、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0-preview11
+      [2026-08-15] v0.0.9 Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0
+      1、Dependency update from Senparc.Xncf.AgentsManager to 0.16.0
+      2、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0
 </PackageReleaseNotes>
     <Configurations>Debug;Release;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
   </PropertyGroup>

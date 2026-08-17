@@ -315,6 +315,45 @@ namespace Senparc.Xncf.AgentsManagerTests
         }
 
         [TestMethod]
+        public void AgentTemplate_ModelBinding_PersistsOnlyManualModelAndWorkflowCanDisableIndividualSettings()
+        {
+            var template = new AgentTemplate(
+                "模型绑定回归 Agent",
+                "测试 SystemMessage",
+                true,
+                "测试",
+                "测试 SystemMessage",
+                HookRobotType.None,
+                string.Empty,
+                modelBinding: AgentModelBindingMode.ManualAiModel,
+                aiModelId: 42);
+
+            Assert.AreEqual(AgentModelBindingMode.ManualAiModel, template.ModelBinding);
+            Assert.AreEqual(42, template.AiModelId);
+
+            template.UpdateModelBinding(AgentModelBindingMode.FollowGroupTask, 42);
+            Assert.AreEqual(AgentModelBindingMode.FollowGroupTask, template.ModelBinding);
+            Assert.IsNull(template.AiModelId);
+
+            var individualWorkflowRequest = AgentTemplateRunRequest.ForLocalWorkflow(
+                5013,
+                "workflow-run",
+                42,
+                useTemplateModelSettings: true);
+            var taskWorkflowRequest = AgentTemplateRunRequest.ForLocalWorkflow(
+                5013,
+                "workflow-run",
+                42,
+                useTemplateModelSettings: false);
+
+            Assert.IsTrue(individualWorkflowRequest.UseTemplateModelSettings);
+            Assert.IsTrue(individualWorkflowRequest.UseTemplatePromptParameters);
+            Assert.IsFalse(taskWorkflowRequest.UseTemplateModelSettings);
+            Assert.IsFalse(taskWorkflowRequest.UseTemplatePromptParameters);
+            Assert.AreEqual(42, taskWorkflowRequest.AiModelId);
+        }
+
+        [TestMethod]
         public async Task PublishedA2AAgent_Build_InheritsPromptExecutionParameters()
         {
             var templateService = _serviceProvider.GetRequiredService<AgentsTemplateService>();

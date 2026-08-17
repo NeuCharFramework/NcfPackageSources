@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.41.0-preview11</Version>
+    <Version>0.41.0</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -122,12 +122,12 @@
 			[2026-08-13] v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
 			1、新增预览状态持久化服务和托管初始化流程
 			2、提升 Agent 模板预览在重启及并发场景下的稳定性
-			[2026-08-15] v0.41.0-preview11 增强隔离开发任务与 Sandbox 预览流程
+			[2026-08-15] v0.41.0 增强隔离开发任务与 Sandbox 预览流程
 			1、新增 XncfDevelopmentJob 创建、状态存储、后台服务和管理监控页面
 			2、接入可选 Sandbox 预览契约，限制源码快照和人工合入边界，未配置预览能力时安全失败
 			3、完善工作区文件服务、数据库迁移与模板生成流程
-			4、Dependency update from Senparc.Xncf.AIKernel to 0.15.4-preview13
-			5、Dependency update from Senparc.Xncf.MCP to 0.5.1-preview9
+			4、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
+			5、Dependency update from Senparc.Xncf.MCP to 0.5.1
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

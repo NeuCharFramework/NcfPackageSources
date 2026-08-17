@@ -1525,19 +1525,32 @@
                         direction="vertical" placeholder="请选择" @@options-loaded="handleSystemMessageOptionsLoaded" />
                 </el-form-item>
                 <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
-                    <el-input  
-                       type="textarea"  
+                    <el-input
+                       type="textarea"
                        v-model="agentForm.systemMessage"  
                        @@change="handleIdentify"  
                        placeholder="请填写"  
                        :rows="4">  
                     </el-input>
-                    
+
                 </el-form-item>
-                <el-form-item label="是否启用" prop="enable">
+                <el-form-item label="绑定模型" prop="modelBinding">
+                    <el-radio-group v-model="agentForm.modelBinding" @@change="handleAgentModelBindingChange">
+                        <el-radio :label="0" border :disabled="agentForm.isHuman">从 PromptRange 继承</el-radio>
+                        <el-radio :label="1" border>跟随组任务</el-radio>
+                        <el-radio :label="2" border>手动选择 AIModel</el-radio>
+                    </el-radio-group>
+                    <div v-if="agentForm.modelBinding === 2" style="margin-top:10px;">
+                        <load-more-select v-model="agentForm.aiModelId" service-type="model" :chat-only="true"
+                                          direction="vertical" placeholder="请选择 Chat 模型" />
+                    </div>
+                    <div class="form-help-text" v-if="agentForm.systemMessageType === '2' && !agentForm.isHuman">手动 Prompt 没有 PromptRange 模型可继承，必须手动选择一个 Chat 类型 AIModel。</div>
+                    <div class="form-help-text" v-else-if="agentForm.isHuman">Human 不调用模型；该绑定用于保留其系统 Agent 的任务策略配置，默认跟随组任务。</div>
+                </el-form-item>
+                <el-form-item v-if="!agentForm.isHuman" label="是否启用" prop="enable">
                     <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
                 </el-form-item>
-                <el-form-item v-if="agentForm.id" label="A2A 对外服务">
+                <el-form-item v-if="agentForm.id && !agentForm.isHuman" label="A2A 对外服务">
                     <el-button size="small" type="warning" plain icon="el-icon-connection" @@click="openPublishedA2AEditor(agentForm)">配置 / 发布为 A2A Agent</el-button>
                     <div class="form-help-text">发布后将生成标准 Agent Card，供任意兼容 A2A 的系统发现和调用。</div>
                 </el-form-item>
@@ -1813,20 +1826,7 @@
                 <el-form-item label="组名称" prop="name">
                     <el-input v-model="groupForm.name" placeholder="请填写"></el-input>
                 </el-form-item>
-                <el-form-item label="绑定模型" prop="modelBinding">
-                    <el-radio-group v-model="agentForm.modelBinding" @@change="handleAgentModelBindingChange">
-                        <el-radio :label="0" border :disabled="agentForm.isHuman">从 PromptRange 继承</el-radio>
-                        <el-radio :label="1" border>跟随组任务</el-radio>
-                        <el-radio :label="2" border>手动选择 AIModel</el-radio>
-                    </el-radio-group>
-                    <div v-if="agentForm.modelBinding === 2" style="margin-top:10px;">
-                        <load-more-select v-model="agentForm.aiModelId" service-type="model" :chat-only="true"
-                                          direction="vertical" placeholder="请选择 Chat 模型" />
-                    </div>
-                    <div class="form-help-text" v-if="agentForm.systemMessageType === '2' && !agentForm.isHuman">手动 Prompt 没有 PromptRange 模型可继承，必须手动选择一个 Chat 类型 AIModel。</div>
-                    <div class="form-help-text" v-else-if="agentForm.isHuman">Human 不调用模型；该绑定用于保留其系统 Agent 的任务策略配置，默认跟随组任务。</div>
-                </el-form-item>
-                <el-form-item v-if="!agentForm.isHuman" label="是否启用" prop="enable">
+                <el-form-item label="是否启用" prop="enable">
                     <el-checkbox v-model="groupForm.enable">启用该组</el-checkbox>
                     <div class="form-help-text">新建组默认启用。停用后不会创建新任务，也不会作为 Workflow 节点使用。</div>
                 </el-form-item>

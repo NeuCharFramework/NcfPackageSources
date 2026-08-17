@@ -22,7 +22,7 @@
 2、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
 3、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.19-preview.6
 [2026-08-13] v0.0.7 Dependency update from Senparc.Ncf.Service to 0.23.7-preview7; Senparc.Ncf.UnitTestExtension to 0.3.20-preview.7; Senparc.Xncf.PromptRange to 0.19.2-preview10
-[2026-08-15] v0.0.8 Dependency update from Senparc.Ncf.Service to 0.23.8-preview8; Senparc.Ncf.UnitTestExtension to 0.3.21-preview.8; Senparc.Xncf.PromptRange to 0.19.3-preview11
+[2026-08-15] v0.0.8 Dependency update from Senparc.Ncf.Service to 0.23.8-preview8; Senparc.Ncf.UnitTestExtension to 0.3.21-preview.8; Senparc.Xncf.PromptRange to 0.19.3
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
