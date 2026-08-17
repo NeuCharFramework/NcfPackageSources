@@ -54,6 +54,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services;
 /// </summary>
 public sealed class AgentTemplateRunner
 {
+    private const int MinimumOllamaThinkingTokenBudget = 512;
+
     private readonly IServiceProvider _serviceProvider;
     private readonly PromptItemService _promptItemService;
     private readonly AIModelService _aiModelService;
@@ -327,10 +329,78 @@ public sealed class AgentTemplateRunner
         }
 
         var output = response?.Text?.Trim();
+        if (ShouldUseStreamingFallback(output, request))
+        {
+            try
+            {
+                var streamedOutput = await ExecuteEmptyResponseStreamingFallbackAsync(
+                        build,
+                        input,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+                if (!string.IsNullOrWhiteSpace(streamedOutput))
+                {
+                    output = streamedOutput;
+                    SenparcTrace.SendCustomLog(
+                        "AgentsManager.AgentTemplateRunner.StreamOutputFallback",
+                        $"Agent={build.Diagnostics.TemplateId}; non-streaming response was empty; " +
+                        $"used stateless streaming text. {build.Diagnostics.ModelDescription}; " +
+                        build.Diagnostics.ExecutionParameters);
+                }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.AgentTemplateRunner.StreamOutputFallback",
+                    $"Agent={build.Diagnostics.TemplateId}; streaming fallback failed with " +
+                    $"{ex.GetType().Name}: {ex.Message}");
+            }
+        }
 
-        return string.IsNullOrWhiteSpace(output)
-            ? AgentTemplateRunResult.Failed("独立 Agent 没有返回有效内容。", build.Diagnostics)
-            : AgentTemplateRunResult.Succeeded(output, build.Diagnostics);
+        if (!string.IsNullOrWhiteSpace(output))
+        {
+            return AgentTemplateRunResult.Succeeded(output, build.Diagnostics);
+        }
+
+        SenparcTrace.SendCustomLog(
+            "AgentsManager.AgentTemplateRunner.EmptyResponse",
+            $"Agent={build.Diagnostics.TemplateId}; responseMessages={response?.Messages?.Count ?? 0}; " +
+            $"hasUsage={response?.Usage != null}; functionCallsEnabled={request.AllowFunctionCalls}; " +
+            $"streamingFallbackAttempted={ShouldUseStreamingFallback(output, request)}; " +
+            $"{build.Diagnostics.ModelDescription}; {build.Diagnostics.ExecutionParameters}");
+        return AgentTemplateRunResult.Failed("独立 Agent 没有返回有效内容。", build.Diagnostics);
+    }
+
+    private static bool ShouldUseStreamingFallback(string output, AgentTemplateRunRequest request)
+        => string.IsNullOrWhiteSpace(output) && request?.AllowFunctionCalls != true;
+
+    private static async Task<string> ExecuteEmptyResponseStreamingFallbackAsync(
+        AgentTemplateRunnerBuildResult build,
+        string input,
+        CancellationToken cancellationToken)
+    {
+        var output = new StringBuilder();
+        var messages = new List<ChatMessage>
+        {
+            new(ChatRole.User, input)
+        };
+
+        await foreach (var update in build.Runner.Kernel.ChatClientAgent.RunStreamingAsync(
+                           messages,
+                           session: null,
+                           cancellationToken: cancellationToken))
+        {
+            if (!string.IsNullOrWhiteSpace(update?.Text))
+            {
+                output.Append(update.Text);
+            }
+        }
+
+        return output.ToString().Trim();
     }
 
     /// <summary>
@@ -390,6 +460,11 @@ public sealed class AgentTemplateRunner
             AllowMultipleToolCalls = tools.Count > 0,
             Tools = tools.Count > 0 ? tools.Cast<AITool>().ToList() : null
         };
+        ApplyOllamaLowTokenCompatibility(
+            chatOptions,
+            configuration.ResolvedModel?.AiPlatform ?? configuration.Setting.AiPlatform,
+            template.Id,
+            configuration.ResolvedModel?.ModelId);
         var diagnostics = configuration.Diagnostics with
         {
             FunctionCallsEnabled = request.AllowFunctionCalls,
@@ -558,12 +633,40 @@ public sealed class AgentTemplateRunner
 
     private static string DescribeExecutionParameters(string source, ChatOptions options)
     {
+        var thinking = options?.AdditionalProperties != null
+                      && options.AdditionalProperties.TryGetValue("think", out var thinkValue)
+            ? thinkValue?.ToString() ?? "null"
+            : "provider-default";
         return $"source={source}; maxOutputTokens={options?.MaxOutputTokens?.ToString() ?? "unset"}; " +
                $"temperature={options?.Temperature?.ToString() ?? "unset"}; " +
                $"topP={options?.TopP?.ToString() ?? "unset"}; " +
                $"frequencyPenalty={options?.FrequencyPenalty?.ToString() ?? "unset"}; " +
                $"presencePenalty={options?.PresencePenalty?.ToString() ?? "unset"}; " +
-               $"stopSequences={options?.StopSequences?.Count ?? 0}";
+               $"stopSequences={options?.StopSequences?.Count ?? 0}; think={thinking}";
+    }
+
+    private static void ApplyOllamaLowTokenCompatibility(
+        ChatOptions chatOptions,
+        AiPlatform platform,
+        int agentTemplateId,
+        string modelId)
+    {
+        if (chatOptions == null
+            || platform != AiPlatform.Ollama
+            || !chatOptions.MaxOutputTokens.HasValue
+            || chatOptions.MaxOutputTokens.Value <= 0
+            || chatOptions.MaxOutputTokens.Value >= MinimumOllamaThinkingTokenBudget)
+        {
+            return;
+        }
+
+        chatOptions.AdditionalProperties ??= new AdditionalPropertiesDictionary();
+        chatOptions.AdditionalProperties["think"] = false;
+        SenparcTrace.SendCustomLog(
+            "AgentsManager.AgentTemplateRunner.OllamaThinking",
+            $"Agent={agentTemplateId}; Model={modelId ?? "unset"}; " +
+            $"MaxOutputTokens={chatOptions.MaxOutputTokens}; think=false. " +
+            "低预算下关闭 Ollama 思考模式，避免思考过程耗尽预算而未生成可显示正文。");
     }
 
     private async Task<string> AppendKnowledgeBaseContextAsync(

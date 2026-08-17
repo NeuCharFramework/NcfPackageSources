@@ -10,16 +10,16 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.21.8-preview8 多库扫描日志改为 Register×Database 矩阵，并单独输出当前 DbContext 绑定
+
 ----------------------------------------------------------------*/
 
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Database;
 using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System;
 using System.Collections.Generic;
@@ -82,16 +82,12 @@ namespace Senparc.Ncf.Database
         public static Type UnitTestPillarDbContext { get; set; } = null;
 
         /// <summary>
-        /// 添加配置
+        /// 添加配置（扫描阶段仅登记，日志请在扫描结束后调用 <see cref="BuildSupportMatrixLog"/>）
         /// </summary>
         /// <param name="multiDbContextAttr"></param>
-        /// <param name="xncfDatabaseDbContextType">实现了 IXncfDatabase 接口的类型</param>
-        /// <param name="logColumnWidth">输出日志表格的宽度</param>
-        /// <returns></returns>
-        public string TryAdd(MultipleMigrationDbContextAttribute multiDbContextAttr, Type xncfDatabaseDbContextType, int[] logColumnWidth)
+        /// <param name="xncfDatabaseDbContextType">实现了多数据库 DbContext 的类型</param>
+        public void TryAdd(MultipleMigrationDbContextAttribute multiDbContextAttr, Type xncfDatabaseDbContextType)
         {
-            var msg = $"| {multiDbContextAttr.XncfDatabaseRegisterType.FullName.PadRight(logColumnWidth[0])}| {xncfDatabaseDbContextType.Name.PadRight(logColumnWidth[1])}| {multiDbContextAttr.MultipleDatabaseType.ToString().PadRight(logColumnWidth[2])}";
-
             //查看是否已经包含 MultipleDatabaseType 
             if (!this.ContainsKey(multiDbContextAttr.MultipleDatabaseType))
             {
@@ -104,8 +100,139 @@ namespace Senparc.Ncf.Database
 
             //同步添加到 XncfDatabaseDbContextPool
             XncfDatabaseDbContextPool.Instance.TryAdd(multiDbContextAttr, xncfDatabaseDbContextType);
+        }
 
-            return msg;
+        /// <summary>
+        /// 生成多数据库支持矩阵日志：行为 Register，列为数据库类型；并单独列出当前库的 DbContext 绑定。
+        /// </summary>
+        /// <param name="currentDatabaseType">当前正在使用的数据库（可为空；为空时不标记 * / 不输出当前绑定表）</param>
+        /// <returns>多行文本日志（不含时间戳前缀）</returns>
+        public string BuildSupportMatrixLog(MultipleDatabaseType? currentDatabaseType = null)
+        {
+            return BuildSupportMatrixLog(XncfDatabaseDbContextPool.Instance, currentDatabaseType);
+        }
+
+        /// <summary>
+        /// 生成多数据库支持矩阵日志（可注入 map，便于单测）
+        /// </summary>
+        public static string BuildSupportMatrixLog(
+            IDictionary<Type, Dictionary<MultipleDatabaseType, Type>> registerDbMap,
+            MultipleDatabaseType? currentDatabaseType = null)
+        {
+            var sb = new StringBuilder();
+
+            if (registerDbMap == null || registerDbMap.Count == 0)
+            {
+                sb.AppendLine(" === Multiple databases support matrix ===");
+                sb.AppendLine(" (no MultipleMigrationDbContext found)");
+                return sb.ToString().TrimEnd();
+            }
+
+            // 列：已出现的库类型 + 当前配置库（若有）；排除 Other
+            var dbColumns = registerDbMap.Values
+                .SelectMany(z => z.Keys)
+                .Concat(currentDatabaseType.HasValue ? new[] { currentDatabaseType.Value } : Array.Empty<MultipleDatabaseType>())
+                .Where(z => z != MultipleDatabaseType.Other)
+                .Distinct()
+                .OrderBy(z => (int)z)
+                .ToList();
+
+            var registers = registerDbMap.Keys
+                .OrderBy(z => z.FullName, StringComparer.Ordinal)
+                .ToList();
+
+            const string registerHeader = "Register";
+            var registerWidth = Math.Max(registerHeader.Length, registers.Max(z => (z.FullName ?? z.Name).Length));
+            var colWidths = dbColumns.ToDictionary(
+                db => db,
+                db => Math.Max(db.ToString().Length, 3));
+
+            sb.AppendLine(" === Multiple databases support matrix ===");
+            sb.AppendLine(" Legend: [Y]=supported  [-]=unsupported  [*]=IN USE (current)");
+            sb.AppendLine(currentDatabaseType.HasValue
+                ? $" Current Database: {currentDatabaseType.Value}"
+                : " Current Database: (unknown at scan time)");
+
+            // header
+            sb.Append("| ").Append(registerHeader.PadRight(registerWidth));
+            foreach (var db in dbColumns)
+            {
+                sb.Append(" | ").Append(db.ToString().PadRight(colWidths[db]));
+            }
+            sb.AppendLine(" |");
+
+            // separator
+            sb.Append("| ").Append(new string('-', registerWidth));
+            foreach (var db in dbColumns)
+            {
+                sb.Append(" | ").Append(new string('-', colWidths[db]));
+            }
+            sb.AppendLine(" |");
+
+            // rows
+            foreach (var registerType in registers)
+            {
+                var registerName = registerType.FullName ?? registerType.Name;
+                var dbMap = registerDbMap[registerType];
+                sb.Append("| ").Append(registerName.PadRight(registerWidth));
+                foreach (var db in dbColumns)
+                {
+                    string cell;
+                    if (currentDatabaseType.HasValue && db == currentDatabaseType.Value && dbMap.ContainsKey(db))
+                    {
+                        cell = "*";
+                    }
+                    else if (dbMap.ContainsKey(db))
+                    {
+                        cell = "Y";
+                    }
+                    else
+                    {
+                        cell = "-";
+                    }
+                    sb.Append(" | ").Append(cell.PadRight(colWidths[db]));
+                }
+                sb.AppendLine(" |");
+            }
+
+            // 当前库 DbContext 明细
+            sb.AppendLine();
+            if (currentDatabaseType.HasValue)
+            {
+                var currentDb = currentDatabaseType.Value;
+                sb.AppendLine($" === Current DbContext bindings ({currentDb}) ===");
+                const string dbContextHeader = "DbContext Type";
+                var bindingRows = registers
+                    .Select(r =>
+                    {
+                        registerDbMap[r].TryGetValue(currentDb, out var dbContextType);
+                        return (Register: r.FullName ?? r.Name, DbContext: dbContextType?.Name);
+                    })
+                    .ToList();
+
+                var dbContextWidth = Math.Max(
+                    dbContextHeader.Length,
+                    bindingRows.Max(z => (z.DbContext ?? "(not supported)").Length));
+
+                sb.Append("| ").Append(registerHeader.PadRight(registerWidth))
+                    .Append(" | ").Append(dbContextHeader.PadRight(dbContextWidth)).AppendLine(" |");
+                sb.Append("| ").Append(new string('-', registerWidth))
+                    .Append(" | ").Append(new string('-', dbContextWidth)).AppendLine(" |");
+
+                foreach (var row in bindingRows)
+                {
+                    var dbContextName = row.DbContext ?? "(not supported)";
+                    sb.Append("| ").Append(row.Register.PadRight(registerWidth))
+                        .Append(" | ").Append(dbContextName.PadRight(dbContextWidth)).AppendLine(" |");
+                }
+            }
+            else
+            {
+                sb.AppendLine(" === Current DbContext bindings ===");
+                sb.AppendLine(" (skipped: current database type not available during StartNcfEngine scan)");
+            }
+
+            return sb.ToString().TrimEnd();
         }
 
         /// <summary>

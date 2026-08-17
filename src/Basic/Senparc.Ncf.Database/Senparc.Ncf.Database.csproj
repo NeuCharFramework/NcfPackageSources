@@ -33,7 +33,9 @@
 				[2026-08-04] v0.21.5-preview5 Dependency update from Senparc.Ncf.Core to 0.28.0-preview5
 				[2026-08-08] v0.21.6-preview6 Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
 				[2026-08-13] v0.21.7-preview7 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7
-				[2026-08-15] v0.21.8-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
+				[2026-08-15] v0.21.8-preview8 升级 Core 依赖并优化多库扫描日志矩阵输出
+				1、Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
+				2、多库扫描日志改为 Register×Database 支持矩阵，并单独输出当前库 DbContext 绑定
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

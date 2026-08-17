@@ -425,15 +425,75 @@ namespace Senparc.Xncf.AgentsManagerTests
         [TestMethod]
         public void PublishedA2AAgent_UsesStrictNonStreamingModelExecution()
         {
-            // Published A2A may stream its protocol events, but it must not force a provider-side
-            // streaming request. Some Azure-compatible gateways authorise ordinary Chat requests
-            // while rejecting streaming routes; this must stay aligned with local Agent execution.
+            // Published A2A starts with the strict non-streaming path. A stateless streaming retry
+            // is available only after a successful empty response and never when tools are enabled.
             Assert.IsNotNull(typeof(AgentTemplateRunner).GetMethod(
                 "ExecuteBuiltResponseRunnerAsync",
                 BindingFlags.NonPublic | BindingFlags.Static));
-            Assert.IsNull(typeof(AgentTemplateRunner).GetMethod(
-                "ExecuteBuiltStreamingRunnerAsync",
+            Assert.IsNotNull(typeof(AgentTemplateRunner).GetMethod(
+                "ExecuteEmptyResponseStreamingFallbackAsync",
                 BindingFlags.NonPublic | BindingFlags.Static));
+        }
+
+        [TestMethod]
+        public void AgentTemplateRunner_EmptyNonStreamingResponse_UsesStreamingFallbackOnlyWithoutTools()
+        {
+            var shouldUseFallbackMethod = typeof(AgentTemplateRunner).GetMethod(
+                "ShouldUseStreamingFallback",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(shouldUseFallbackMethod);
+
+            var noTools = AgentTemplateRunRequest.ForPublishedA2A(5013, "agent-5013", false);
+            var withTools = AgentTemplateRunRequest.ForPublishedA2A(5013, "agent-5013", true);
+
+            Assert.IsTrue((bool)shouldUseFallbackMethod.Invoke(null, new object[] { string.Empty, noTools })!);
+            Assert.IsFalse((bool)shouldUseFallbackMethod.Invoke(null, new object[] { "normal output", noTools })!);
+            Assert.IsFalse((bool)shouldUseFallbackMethod.Invoke(null, new object[] { string.Empty, withTools })!);
+        }
+
+        [TestMethod]
+        public void AgentTemplateRunner_OllamaLowTokenBudget_DisablesThinkingOnlyForOllama()
+        {
+            var compatibilityMethod = typeof(AgentTemplateRunner).GetMethod(
+                "ApplyOllamaLowTokenCompatibility",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(compatibilityMethod);
+
+            var lowBudgetOllama = new Microsoft.Extensions.AI.ChatOptions { MaxOutputTokens = 100 };
+            compatibilityMethod.Invoke(null, new object[]
+            {
+                lowBudgetOllama,
+                Senparc.AI.AiPlatform.Ollama,
+                5013,
+                "qwen3.8:27b"
+            });
+
+            Assert.IsNotNull(lowBudgetOllama.AdditionalProperties);
+            Assert.AreEqual(false, lowBudgetOllama.AdditionalProperties["think"]);
+
+            var adequateBudgetOllama = new Microsoft.Extensions.AI.ChatOptions { MaxOutputTokens = 512 };
+            compatibilityMethod.Invoke(null, new object[]
+            {
+                adequateBudgetOllama,
+                Senparc.AI.AiPlatform.Ollama,
+                5013,
+                "qwen3.8:27b"
+            });
+
+            Assert.IsTrue(adequateBudgetOllama.AdditionalProperties == null
+                          || !adequateBudgetOllama.AdditionalProperties.ContainsKey("think"));
+
+            var lowBudgetOpenAi = new Microsoft.Extensions.AI.ChatOptions { MaxOutputTokens = 100 };
+            compatibilityMethod.Invoke(null, new object[]
+            {
+                lowBudgetOpenAi,
+                Senparc.AI.AiPlatform.OpenAI,
+                5013,
+                "gpt-test"
+            });
+
+            Assert.IsTrue(lowBudgetOpenAi.AdditionalProperties == null
+                          || !lowBudgetOpenAi.AdditionalProperties.ContainsKey("think"));
         }
 
         [TestMethod]

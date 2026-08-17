@@ -77,7 +77,9 @@
 			[2026-08-13] v0.25.0-preview7 增强线程生命周期控制与函数参数数值类型解析
 			1、为线程停止流程引入取消令牌并改善异常回退
 			2、支持 decimal、double、float 及可空数值 JSON 参数解析
-			[2026-08-15] v0.25.1-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
+			[2026-08-15] v0.25.1-preview8 升级 Core 依赖并优化启动扫描多库日志
+			1、Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
+			2、启动扫描多库日志改为矩阵表输出，并保留 GetAssembiles 预加载说明
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

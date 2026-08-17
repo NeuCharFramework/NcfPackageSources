@@ -35,6 +35,8 @@
 		  8、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
 		  [2026-08-13] v0.0.6 Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.7-preview7; Senparc.Ncf.Database.MySql to 0.20.7-preview7; Senparc.Ncf.Database.Oracle to 0.10.7-preview7; Senparc.Ncf.Database.PostgreSQL to 0.13.7-preview7; Senparc.Ncf.Database.SqlServer to 0.20.7-preview7; Senparc.Ncf.Database.Sqlite to 0.20.7-preview7; Senparc.Ncf.Database to 0.21.7-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7
 		  [2026-08-15] v0.0.7 Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.8-preview8; Senparc.Ncf.Database.MySql to 0.20.8-preview8; Senparc.Ncf.Database.Oracle to 0.10.8-preview8; Senparc.Ncf.Database.PostgreSQL to 0.13.8-preview8; Senparc.Ncf.Database.SqlServer to 0.20.8-preview8; Senparc.Ncf.Database.Sqlite to 0.20.8-preview8; Senparc.Ncf.Database to 0.21.8-preview8; Senparc.Ncf.DatabasePlant to 0.21.8-preview8
+		  1、Dependency update from Senparc.Ncf.Database 及相关数据库项目到 preview8
+		  2、补充多库支持矩阵日志 BuildSupportMatrixLog 单测
 </PackageReleaseNotes>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
