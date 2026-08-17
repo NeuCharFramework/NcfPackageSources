@@ -180,6 +180,11 @@
     <Folder Include="OHS\Local\" />
   </ItemGroup>
   <ItemGroup>
+    <!-- 宿主站点使用 App_Data/Database；模块内配置仅本地开发用，避免 publish 冲突 -->
+    <Content Remove="App_Data\Database\SenparcConfig.config" />
+    <None Include="App_Data\Database\SenparcConfig.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Database.PostgreSQL\Senparc.Ncf.Database.PostgreSQL.csproj" />

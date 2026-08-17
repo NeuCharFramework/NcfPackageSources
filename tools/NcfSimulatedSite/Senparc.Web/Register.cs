@@ -116,10 +116,6 @@ namespace Senparc.Web
             
             Console.WriteLine($"EventBus 已注册，共扫描了 {assembliesToScan.Length} 个程序集");
 
-            Console.WriteLine("============ logMsg =============");
-            Console.WriteLine(logMsg);
-            Console.WriteLine("============ logMsg END =============");
-
             #region 仅在完全删除 Senparc.Xncf.Swagger 时启用以下代码！
 
             // 如果项目中不引用 Senparc.Xncf.Swagger，需要使用下方代码手动启用 DynamicAPI。更多示例参考：

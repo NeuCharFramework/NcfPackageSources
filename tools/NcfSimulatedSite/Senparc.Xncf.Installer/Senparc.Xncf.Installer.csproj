@@ -123,6 +123,8 @@
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
+	  <!-- 宿主 Senparc.Web 提供正式配置；此处仅保留本地开发副本，避免 publish 重复复制 -->
+	  <Content Remove="App_Data\Database\SenparcConfig.config" />
 	  <None Include="App_Data\Database\SenparcConfig.config" />
 	</ItemGroup>
 	<ItemGroup>

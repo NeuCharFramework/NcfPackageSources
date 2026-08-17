@@ -102,6 +102,10 @@ const validationResponseError = {
 const interceptedValidationError = axiosInterceptors.failure(validationResponseError);
 assert.strictEqual(interceptedValidationError.rejected, validationResponseError,
     'A customAlert validation request must bypass the legacy global app message handler and reach Workflow unchanged.');
+assert.ok(workflowScript.includes('AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync') &&
+    workflowScript.includes('{ customAlert: true }') &&
+    workflowScript.includes('模型列表暂不可用'),
+    'Optional Workflow model loading must bypass the legacy global alert and leave the designer usable on failure.');
 
 let vueOptions = null;
 function Vue(options) { vueOptions = options; }

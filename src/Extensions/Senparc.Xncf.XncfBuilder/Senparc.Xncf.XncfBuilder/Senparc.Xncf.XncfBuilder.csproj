@@ -173,6 +173,11 @@
   <ItemGroup>
     <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- 宿主站点使用 App_Data/Database；模块内配置仅本地开发用，避免 publish 冲突 -->
+    <Content Remove="App_Data\Database\SenparcConfig.config" />
+    <None Include="App_Data\Database\SenparcConfig.config" />
+  </ItemGroup>
   <!--<ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>

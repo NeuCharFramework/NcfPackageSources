@@ -814,21 +814,36 @@ new Vue({
         async loadAll() {
             this.loading = true;
             try {
-                const [listResponse, dataResponse, modelResponse] = await Promise.all([
-                    service.get('/Admin/NeuCharWorkflow/Index?handler=List'),
-                    service.get('/Admin/NeuCharWorkflow/Index?handler=DesignerData'),
-                    service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync', {
+                const modelRequest = service.post(
+                    '/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',
+                    {
                         page: 0,
                         size: 0,
                         order: 'Alias asc'
-                    })
+                    },
+                    { customAlert: true })
+                    .then(response => ({ response }))
+                    .catch(error => ({ error }));
+                const [listResponse, dataResponse, modelResponse] = await Promise.all([
+                    service.get('/Admin/NeuCharWorkflow/Index?handler=List'),
+                    service.get('/Admin/NeuCharWorkflow/Index?handler=DesignerData'),
+                    modelRequest
                 ]);
                 this.workflows = NeuCharWorkflowUi.unwrap(listResponse) || [];
                 const data = NeuCharWorkflowUi.unwrap(dataResponse) || {};
                 this.functions = data.functions || [];
                 this.workflowObjects = data.objects || [];
-                this.chatModels = (NeuCharWorkflowUi.unwrap(modelResponse) || [])
-                    .filter(model => Number(model.configModelType) === 2);
+                if (modelResponse.error) {
+                    this.chatModels = [];
+                    this.$notify({
+                        title: '模型列表暂不可用',
+                        message: this.errorMessage(modelResponse.error, '请确认 AIKernel 模块及当前账号的访问权限。'),
+                        type: 'warning'
+                    });
+                } else {
+                    this.chatModels = (NeuCharWorkflowUi.unwrap(modelResponse.response) || [])
+                        .filter(model => Number(model.configModelType) === 2);
+                }
             } finally { this.loading = false; }
         },
         async openTaskRoute() {
