@@ -4,7 +4,6 @@
     文件名：AgentTemplateDto.cs
     文件功能描述：AgentTemplateDto 相关实现
 
-
     创建标识：Senparc - 20240616
 
     修改标识：Senparc - 20260704
@@ -18,6 +17,9 @@
 
     修改标识：Senparc - 20260817
     修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
 
 ----------------------------------------------------------------*/
 

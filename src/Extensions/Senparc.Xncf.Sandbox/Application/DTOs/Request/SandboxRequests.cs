@@ -9,7 +9,13 @@
     
     修改标识：Senparc - 20260817
     修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+-
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 增加 TTL 与永久保持请求参数
+
 ----------------------------------------------------------------*/
+
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
@@ -52,6 +58,12 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
         new SelectionItem(nameof(SandboxRuntimeKind.Docker), "Docker", "需要本机 Docker", true),
         new SelectionItem(nameof(SandboxRuntimeKind.Wasm), "Wasm (Stub)", "一期占位，尚未可用")
     });
+
+    [Description("TTL（分钟）||留空时保持模板当前默认值；正整数最多 240 分钟")]
+    public int? TtlMinutes { get; set; }
+
+    [Description("永久保持||勾选后不自动过期；须由管理员手动销毁")]
+    public bool KeepAlive { get; set; }
 }
 
 public class Sandbox_SessionIdRequest : FunctionAppRequestBase
@@ -74,4 +86,17 @@ public class Sandbox_ExecRequest : FunctionAppRequestBase
 
 public class Sandbox_ListRequest : FunctionAppRequestBase
 {
+}
+
+public class Sandbox_UpdateTtlRequest : FunctionAppRequestBase
+{
+    [Required]
+    [Description("SessionId")]
+    public string SessionId { get; set; } = string.Empty;
+
+    [Description("TTL（分钟）||从当前时刻重新计算；正整数最多 240 分钟")]
+    public int? TtlMinutes { get; set; }
+
+    [Description("永久保持||勾选后不自动过期；须由管理员手动销毁")]
+    public bool KeepAlive { get; set; }
 }

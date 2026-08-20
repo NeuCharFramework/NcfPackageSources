@@ -184,8 +184,18 @@
                         <span v-else class="sessionMuted">-</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="70" align="center">
+                <el-table-column label="TTL" min-width="160">
                     <template slot-scope="scope">
+                        <span :class="{ sessionMuted: !canUpdateTtl(scope.row), ttlUnlimited: scope.row.isTtlUnlimited }">
+                            {{ ttlDisplay(scope.row) }}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="110" align="center">
+                    <template slot-scope="scope">
+                        <el-tooltip v-if="canUpdateTtl(scope.row)" content="延长或修改 TTL" placement="top">
+                            <el-button type="primary" size="mini" circle icon="el-icon-time" @@click="openTtlDialog(scope.row)"></el-button>
+                        </el-tooltip>
                         <el-tooltip content="销毁会话" placement="top">
                             <el-button type="danger" size="mini" circle icon="el-icon-delete" @@click="destroySession(scope.row.sessionId)"></el-button>
                         </el-tooltip>
@@ -194,6 +204,33 @@
             </el-table>
         </section>
     </section>
+
+    <el-dialog title="修改 TTL" :visible.sync="ttlDialog.visible" width="420px" :close-on-click-modal="false">
+        <div v-if="ttlDialog.session" class="ttlDialog">
+            <div class="ttlSessionId">{{ ttlDialog.session.sessionId }}</div>
+            <el-radio-group v-model="ttlDialog.keepAlive">
+                <el-radio :label="false">定时回收</el-radio>
+                <el-radio :label="true">永久保持</el-radio>
+            </el-radio-group>
+            <el-input-number
+                v-if="!ttlDialog.keepAlive"
+                v-model="ttlDialog.minutes"
+                :min="1"
+                :max="240"
+                :step="5"
+                controls-position="right"
+                class="ttlMinutesInput">
+            </el-input-number>
+            <div class="ttlDialogHint">
+                <template v-if="ttlDialog.keepAlive">该会话不会被 TTL 扫描自动销毁，须由管理员手动销毁。</template>
+                <template v-else>保存后从当前时刻重新计算，到期由后台自动销毁。</template>
+            </div>
+        </div>
+        <span slot="footer">
+            <el-button @@click="ttlDialog.visible = false">取消</el-button>
+            <el-button type="primary" :loading="ttlDialog.saving" @@click="saveTtl">保存</el-button>
+        </span>
+    </el-dialog>
 </div>
 
 @section scripts{
@@ -212,9 +249,31 @@
                     docsUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DocsUrl)),
                     moduleUid: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.XncfModuleUid)),
                     lastUpdatedAt: new Date(),
+                    nowTick: Date.now(),
+                    countdownTimer: null,
+                    stateRefreshTimer: null,
+                    ttlDialog: {
+                        visible: false,
+                        saving: false,
+                        session: null,
+                        minutes: 45,
+                        keepAlive: false
+                    },
                     // 须 camelCase：与 axios/?handler=State 及 el-table prop 一致（首屏默认 PascalCase 会导致列空白）
                     sessions: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Sessions, jsonCamel))
                 };
+            },
+            created() {
+                this.countdownTimer = window.setInterval(() => {
+                    this.nowTick = Date.now();
+                }, 1000);
+                this.stateRefreshTimer = window.setInterval(() => {
+                    this.refreshState().catch(() => {});
+                }, 30000);
+            },
+            beforeDestroy() {
+                window.clearInterval(this.countdownTimer);
+                window.clearInterval(this.stateRefreshTimer);
             },
             computed: {
                 sessionStats() {
@@ -288,6 +347,52 @@
                         second: '2-digit'
                     }).format(date);
                 },
+                isRunning(status) {
+                    const key = this.statusKey(status);
+                    return key === '0' || key === '1' || key === 'creating' || key === 'running';
+                },
+                canUpdateTtl(row) {
+                    return !!row && this.isRunning(row.status);
+                },
+                ttlDisplay(row) {
+                    if (!row) {
+                        return '-';
+                    }
+
+                    if (row.isTtlUnlimited) {
+                        return '永久保持';
+                    }
+
+                    if (!this.isRunning(row.status)) {
+                        return this.statusText(row.status);
+                    }
+
+                    const expiresAt = new Date(row.expiresAtUtc).getTime();
+                    if (Number.isNaN(expiresAt)) {
+                        return '-';
+                    }
+
+                    const remaining = expiresAt - this.nowTick;
+                    if (remaining <= 0) {
+                        return '等待回收';
+                    }
+
+                    const totalSeconds = Math.floor(remaining / 1000);
+                    const hours = Math.floor(totalSeconds / 3600);
+                    const minutes = Math.floor((totalSeconds % 3600) / 60);
+                    const seconds = totalSeconds % 60;
+                    const prefix = hours > 0 ? String(hours).padStart(2, '0') + ':' : '';
+                    return prefix + String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+                },
+                ttlMinutesFromNow(row) {
+                    if (!row || row.isTtlUnlimited) {
+                        return 45;
+                    }
+
+                    const expiresAt = new Date(row.expiresAtUtc).getTime();
+                    const remainingMinutes = Math.ceil((expiresAt - Date.now()) / 60000);
+                    return Math.min(240, Math.max(1, Number.isNaN(remainingMinutes) ? 45 : remainingMinutes));
+                },
                 getFunctionUrl(functionKey, action) {
                     const search = new URLSearchParams({ uid: this.moduleUid });
                     if (functionKey) {
@@ -313,13 +418,52 @@
                 async reload() {
                     this.loading = true;
                     try {
-                        const res = await axios.get('?handler=State');
-                        this.sessions = (res.data && res.data.sessions) || [];
-                        this.lastUpdatedAt = new Date();
+                        await this.refreshState();
                     } catch (error) {
                         this.$message.error('刷新沙箱会话失败，请检查服务状态。');
                     } finally {
                         this.loading = false;
+                    }
+                },
+                async refreshState() {
+                    const res = await axios.get('?handler=State');
+                    this.sessions = (res.data && res.data.sessions) || [];
+                    this.lastUpdatedAt = new Date();
+                },
+                openTtlDialog(row) {
+                    if (!this.canUpdateTtl(row)) {
+                        return;
+                    }
+
+                    this.ttlDialog.session = row;
+                    this.ttlDialog.keepAlive = !!row.isTtlUnlimited;
+                    this.ttlDialog.minutes = this.ttlMinutesFromNow(row);
+                    this.ttlDialog.visible = true;
+                },
+                async saveTtl() {
+                    const dialog = this.ttlDialog;
+                    if (!dialog.session) {
+                        return;
+                    }
+
+                    const form = new FormData();
+                    form.append('sessionId', dialog.session.sessionId);
+                    form.append('keepAlive', String(dialog.keepAlive));
+                    if (!dialog.keepAlive) {
+                        form.append('ttlMinutes', String(dialog.minutes));
+                    }
+                    form.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]')?.value || '');
+
+                    dialog.saving = true;
+                    try {
+                        await axios.post('?handler=UpdateTtl', form);
+                        dialog.visible = false;
+                        this.$message.success(dialog.keepAlive ? '已设为永久保持。' : 'TTL 已更新。');
+                        await this.reload();
+                    } catch (error) {
+                        this.$message.error('更新 TTL 失败，请检查会话状态和 TTL 设置。');
+                    } finally {
+                        dialog.saving = false;
                     }
                 },
                 async destroySession(sessionId) {

@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Domain.Models.DatabaseModel;
+using Senparc.Xncf.Sandbox.Domain.Services;
 
 namespace Senparc.Xncf.Sandbox.Tests;
 
@@ -28,5 +29,22 @@ public class SandboxSessionStateTests
         Assert.IsNull(session.AccessUrl);
         Assert.IsNull(session.AccessToken);
         Assert.AreEqual("container missing", session.StatusMessage);
+    }
+
+    [TestMethod]
+    public void SetExpiresAtUtc_Unlimited_TagsSessionInfoAsUnlimited()
+    {
+        var session = new SandboxSession(
+            "session-2",
+            1,
+            SandboxTemplateKeys.JupyterPython,
+            SandboxRuntimeKind.Docker,
+            0.5,
+            512,
+            DateTime.UtcNow.AddHours(1));
+
+        session.SetExpiresAtUtc(SandboxTtlPolicy.UnlimitedExpiresAtUtc);
+
+        Assert.IsTrue(session.ToInfo().IsTtlUnlimited);
     }
 }

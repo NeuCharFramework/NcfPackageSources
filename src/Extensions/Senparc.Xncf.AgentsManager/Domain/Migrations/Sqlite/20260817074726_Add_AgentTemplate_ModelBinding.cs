@@ -1,4 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：20260817074726_Add_AgentTemplate_ModelBinding.cs
+    文件功能描述：AgentTemplate 模型绑定数据库迁移
+    
+    
+    创建标识：Senparc - 20260817
+    
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 补充 AgentTemplate.AiModelId 多数据库迁移
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 

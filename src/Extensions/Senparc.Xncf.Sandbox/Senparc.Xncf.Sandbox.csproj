@@ -26,6 +26,8 @@
       2、提供隔离预览工作区、状态访问和反向代理链路，未配置固定镜像摘要时安全失败
       3、新增 jupyter-csharp 模板与镜像解析，完善 Docker/Wasm 运行参数与会话状态管理
       4、优化管理端沙箱会话交互与 Jupyter 路径约束，改善创建/回收体验
+      5、支持创建与更新会话 TTL，并可选择永久保持（需手动销毁）
+      6、管理端展示无限 TTL 状态，并提供会话生命周期调整入口
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -7,6 +7,8 @@
       [2026-08-15] v0.0.2 增加 Sandbox 预览路径回归测试
       1、覆盖隔离预览路径和基路径约束
       2、补充镜像解析、Jupyter 路径、会话状态与模板目录回归测试
+      3、补充会话 TTL/永久保持策略与状态回归测试
+      4、Dependency update from Senparc.Xncf.Sandbox to 0.2.0
 </PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>

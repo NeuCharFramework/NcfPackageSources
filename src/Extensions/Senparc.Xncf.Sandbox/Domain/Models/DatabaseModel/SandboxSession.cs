@@ -9,12 +9,16 @@
     修改标识：Senparc - 20260817
     修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 支持更新过期时间与无限 TTL 标记
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.Sandbox.Abstractions;
+using Senparc.Xncf.Sandbox.Domain.Services;
 
 namespace Senparc.Xncf.Sandbox.Domain.Models.DatabaseModel;
 
@@ -134,7 +138,7 @@ public class SandboxSession : EntityBase<int>
         Touch();
     }
 
-    public void Extend(DateTime newExpiresAtUtc)
+    public void SetExpiresAtUtc(DateTime newExpiresAtUtc)
     {
         ExpiresAtUtc = newExpiresAtUtc;
         Touch();
@@ -160,6 +164,7 @@ public class SandboxSession : EntityBase<int>
             HostPort = HostPort,
             CreatedAtUtc = new DateTimeOffset(AddTime.ToUniversalTime()),
             ExpiresAtUtc = new DateTimeOffset(ExpiresAtUtc, TimeSpan.Zero),
+            IsTtlUnlimited = SandboxTtlPolicy.IsUnlimited(ExpiresAtUtc),
             LastActivityAtUtc = new DateTimeOffset(LastActivityAtUtc, TimeSpan.Zero)
         };
     }

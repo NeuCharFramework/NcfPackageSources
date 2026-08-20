@@ -4,7 +4,6 @@
     文件名：ChatGroupService.cs
     文件功能描述：聊天组运行与多智能体协作编排服务
 
-
     创建标识：Senparc - 20240616
 
     修改标识：Senparc - 20260701
@@ -36,6 +35,9 @@
 
     修改标识：Senparc - 20260817
     修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
 
 ----------------------------------------------------------------*/
 
@@ -80,6 +82,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Threading;
 using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
@@ -93,6 +96,11 @@ public class McpEndpoint
 
 public class ChatGroupService : ServiceBase<ChatGroup>
 {
+    // Keep this aligned with Microsoft.Agents.AI.Workflows.AIAgentExtensions.GetDescriptiveId().
+    // GroupChat events use this executor ID instead of the raw AIAgent.Id.
+    private static readonly Regex WorkflowExecutorIdInvalidNameChars =
+        new("[^0-9A-Za-z]+", RegexOptions.CultureInvariant);
+
     private sealed class AgentRuntimeContext
     {
         public required string ParticipantKey { get; init; }
@@ -660,6 +668,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             DateTime? activeResponseStartedAt = null;
             var roundIndex = 0;
             var shouldExit = false;
+            var roundLimitReached = false;
             var finalizedResponseKeys = new HashSet<string>(StringComparer.Ordinal);
             var streamedResponseKeys = new HashSet<string>(StringComparer.Ordinal);
             var observedWorkflowEventTypes = new HashSet<string>(StringComparer.Ordinal);
@@ -670,6 +679,24 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var toolFailureExecutorId = string.Empty;
             var pendingToolNamesByCallId = new Dictionary<string, string>(StringComparer.Ordinal);
 
+            bool CanAcceptNextAgentResponse()
+            {
+                if (CanPersistNextChatRound(roundIndex, effectiveWorkflowTurns))
+                {
+                    return true;
+                }
+
+                if (!roundLimitReached)
+                {
+                    logger.AppendLine(
+                        $"[{chatGroup.Name}] 已达到最大对话轮数（{effectiveWorkflowTurns}），不再记录后续 Agent 输出。");
+                    roundLimitReached = true;
+                }
+
+                shouldExit = true;
+                return false;
+            }
+
             async Task PersistAgentResponseAsync(
                 string responseKey,
                 string executorId,
@@ -679,6 +706,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             {
                 var normalizedText = (messageText ?? string.Empty).Trim();
                 if (normalizedText.Length == 0 || string.IsNullOrWhiteSpace(executorId))
+                {
+                    return;
+                }
+
+                if (!CanAcceptNextAgentResponse())
                 {
                     return;
                 }
@@ -881,6 +913,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                         break;
                                     }
 
+                                    if (!CanAcceptNextAgentResponse())
+                                    {
+                                        break;
+                                    }
+
                                     var responseId = updateEvent.Update.ResponseId
                                                      ?? updateEvent.Update.MessageId;
 
@@ -946,6 +983,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                         break;
                                     }
 
+                                    if (!CanAcceptNextAgentResponse())
+                                    {
+                                        break;
+                                    }
+
                                     var responseId = response.ResponseId;
                                     if (string.IsNullOrWhiteSpace(responseId))
                                     {
@@ -1003,6 +1045,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                                     break;
                                                 }
 
+                                                if (!CanAcceptNextAgentResponse())
+                                                {
+                                                    break;
+                                                }
+
                                                 var outputResponseId = outputResponse.ResponseId;
                                                 if (string.IsNullOrWhiteSpace(outputResponseId))
                                                 {
@@ -1025,6 +1072,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                                     executorId))
                                                 {
                                                     shouldExit = true;
+                                                    break;
+                                                }
+
+                                                if (!CanAcceptNextAgentResponse())
+                                                {
                                                     break;
                                                 }
 
@@ -1075,6 +1127,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                             }
                                             break;
                                         case ChatMessage outputMessage:
+                                            if (!CanAcceptNextAgentResponse())
+                                            {
+                                                break;
+                                            }
+
                                             await FlushActiveResponseAsync();
                                             await PersistAgentResponseAsync(
                                                 Guid.NewGuid().ToString("n"),
@@ -1084,6 +1141,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                                 DateTime.Now);
                                             break;
                                         case string outputText:
+                                            if (!CanAcceptNextAgentResponse())
+                                            {
+                                                break;
+                                            }
+
                                             await FlushActiveResponseAsync();
                                             await PersistAgentResponseAsync(
                                                 Guid.NewGuid().ToString("n"),
@@ -1488,6 +1550,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             TryAdd(index, context.Agent.Id, context);
             TryAdd(index, context.Agent.Name, context);
             TryAdd(index, context.ParticipantKey, context);
+            TryAdd(
+                index,
+                BuildWorkflowExecutorId(context.Agent.Name, context.Agent.Id),
+                context);
             if (context.Template != null)
             {
                 TryAdd(index, context.Template.Name, context);
@@ -1499,6 +1565,21 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
 
         return index;
+    }
+
+    private static string BuildWorkflowExecutorId(string agentName, string agentId)
+    {
+        var source = string.IsNullOrEmpty(agentName)
+            ? agentId
+            : $"{agentName}_{agentId}";
+        return WorkflowExecutorIdInvalidNameChars.Replace(source ?? string.Empty, "_");
+    }
+
+    private static bool CanPersistNextChatRound(int completedRoundCount, int maximumRoundCount)
+    {
+        return completedRoundCount >= 0
+            && maximumRoundCount > 0
+            && completedRoundCount < maximumRoundCount;
     }
 
     private static bool TryResolveRuntimeContext(

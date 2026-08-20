@@ -12,6 +12,9 @@
     修改标识：Senparc - 20260817
     修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 支持创建与更新会话 TTL/永久保持策略
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -87,6 +90,8 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         SandboxRuntimeKind? preferredRuntime = null,
         Func<string, CancellationToken, Task>? initializeWorkspace = null,
         SandboxNcfPreviewRuntimeOptions? ncfPreview = null,
+        int? ttlMinutes = null,
+        bool keepAlive = false,
         CancellationToken cancellationToken = default)
     {
         if (!SandboxTemplateCatalog.TryGet(templateKey, out var template))
@@ -122,10 +127,15 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             }
 
             var sessionId = Guid.NewGuid().ToString("N");
-            var ttl = template.DefaultTtl > _quota.MaxTtl ? _quota.MaxTtl : template.DefaultTtl;
             var cpu = Math.Min(template.DefaultCpuLimit, 2d);
             var memory = Math.Min(template.DefaultMemoryMb, 2048);
-            var expires = DateTime.UtcNow.Add(ttl);
+            var expires = SandboxTtlPolicy.ResolveExpiresAtUtc(
+                DateTime.UtcNow,
+                template.DefaultTtl,
+                _quota.MaxTtl,
+                ttlMinutes,
+                keepAlive);
+            var ttlMessage = FormatTtlMessage(expires);
 
             var entity = new SandboxSession(sessionId, ownerUserId, template.Key, runtime.Kind, cpu, memory, expires);
             await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
@@ -141,7 +151,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                         hostPort: null,
                         accessUrl: null,
                         accessToken: null,
-                        message: "Exec 模板已登记。请调用 Exec 运行代码；空闲将按 TTL 回收登记。");
+                        message: $"Exec 模板已登记。请调用 Exec 运行代码；{ttlMessage}");
                     await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
                     return entity.ToInfo();
                 }
@@ -171,7 +181,12 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                         sessionId,
                         created.HostPort ?? throw new InvalidOperationException("Jupyter 容器未返回本机端口。"),
                         created.AccessToken ?? throw new InvalidOperationException("Jupyter 容器未返回访问令牌。"));
-                entity.MarkRunning(created.RuntimeHandle, created.HostPort, accessUrl, created.AccessToken, created.Message);
+                entity.MarkRunning(
+                    created.RuntimeHandle,
+                    created.HostPort,
+                    accessUrl,
+                    created.AccessToken,
+                    $"{created.Message} {ttlMessage}".Trim());
                 await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
                 _logger.LogInformation(
                     "Sandbox interactive session ready: SessionId={SessionId} AccessUrl={AccessUrl} HostPort={HostPort}",
@@ -186,6 +201,57 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                 await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
                 throw;
             }
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+    public async Task<SandboxSessionInfo> UpdateTtlAsync(
+        string sessionId,
+        int? ttlMinutes,
+        bool keepAlive,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(sessionId))
+        {
+            throw new InvalidOperationException("SessionId 不能为空。");
+        }
+
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
+            var entity = await sessionService.GetBySessionIdAsync(sessionId.Trim()).ConfigureAwait(false)
+                         ?? throw new InvalidOperationException("会话不存在。");
+
+            if (entity.Status is not (SandboxSessionStatus.Creating or SandboxSessionStatus.Running))
+            {
+                throw new InvalidOperationException("只有创建中或运行中的会话可以修改 TTL。");
+            }
+
+            if (!SandboxTemplateCatalog.TryGet(entity.TemplateKey, out var template))
+            {
+                throw new InvalidOperationException($"会话模板不存在：{entity.TemplateKey}");
+            }
+
+            var expiresAtUtc = SandboxTtlPolicy.ResolveExpiresAtUtc(
+                DateTime.UtcNow,
+                template.DefaultTtl,
+                _quota.MaxTtl,
+                ttlMinutes,
+                keepAlive);
+            entity.SetExpiresAtUtc(expiresAtUtc);
+            await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
+
+            _logger.LogInformation(
+                "Sandbox session TTL updated: SessionId={SessionId} Unlimited={Unlimited} ExpiresAtUtc={ExpiresAtUtc}",
+                entity.SessionId,
+                keepAlive,
+                expiresAtUtc);
+            return ToInfo(entity);
         }
         finally
         {
@@ -278,6 +344,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                     HostPort = info.HostPort,
                     CreatedAtUtc = info.CreatedAtUtc,
                     ExpiresAtUtc = info.ExpiresAtUtc,
+                    IsTtlUnlimited = info.IsTtlUnlimited,
                     LastActivityAtUtc = info.LastActivityAtUtc
                 };
             }
@@ -414,29 +481,37 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
 
     private async Task SweepExpiredAsync(CancellationToken cancellationToken)
     {
-        using var scope = _scopeFactory.CreateScope();
-        var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
-        List<SandboxSession> expired;
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            expired = await sessionService.GetExpiredRunningAsync(DateTime.UtcNow).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogDebug(ex, "Sandbox persistence not ready for TTL sweep.");
-            return;
-        }
-
-        foreach (var entity in expired)
-        {
+            using var scope = _scopeFactory.CreateScope();
+            var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
+            List<SandboxSession> expired;
             try
             {
-                await DestroyExpiredCoreAsync(sessionService, entity, cancellationToken).ConfigureAwait(false);
+                expired = await sessionService.GetExpiredRunningAsync(DateTime.UtcNow).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Failed to expire sandbox session {SessionId}", entity.SessionId);
+                _logger.LogDebug(ex, "Sandbox persistence not ready for TTL sweep.");
+                return;
             }
+
+            foreach (var entity in expired)
+            {
+                try
+                {
+                    await DestroyExpiredCoreAsync(sessionService, entity, cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to expire sandbox session {SessionId}", entity.SessionId);
+                }
+            }
+        }
+        finally
+        {
+            _gate.Release();
         }
     }
 
@@ -545,6 +620,13 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                    || normalizedCandidate.StartsWith(normalizedHandle, StringComparison.OrdinalIgnoreCase)
                    || normalizedHandle.StartsWith(normalizedCandidate, StringComparison.OrdinalIgnoreCase);
         });
+    }
+
+    private static string FormatTtlMessage(DateTime expiresAtUtc)
+    {
+        return SandboxTtlPolicy.IsUnlimited(expiresAtUtc)
+            ? "TTL 已设为永久保持，须由管理员手动销毁。"
+            : $"TTL 到期时间（UTC）：{expiresAtUtc:u}。";
     }
 
     private void TryDeleteWorkspace(string sessionId)

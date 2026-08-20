@@ -122,14 +122,21 @@ namespace Senparc.Areas.Admin.Domain.Services
             var agentAiHandler = new AgentAiHandler(setting);
 
 
+            var functionInvocationEnabled = generationOptions?.AllowFunctionInvocation != false;
             var modulePlugin = new ModuleAssistantPlugin(modules);
-            var aiFunctions = agentAiHandler.GetAITools(modulePlugin);
+            var aiFunctions = functionInvocationEnabled
+                ? agentAiHandler.GetAITools(modulePlugin)
+                : new List<AIFunction>();
 
-            var importedPluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "ModuleAssistant" };
+            var importedPluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (functionInvocationEnabled)
+            {
+                importedPluginNames.Add("ModuleAssistant");
+            }
 
             // 自动加载会话关联模块中的 FunctionRender（[#sym:FunctionRender]）插件对象
             var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
-            var functionRenderBags = generationOptions?.AllowFunctionInvocation != false
+            var functionRenderBags = functionInvocationEnabled
                 ? moduleUids
                     .SelectMany(uid => Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.GetByModuleUid(uid))
                     // FunctionRender is also used by the normal Admin UI. AI exposure is an
@@ -177,10 +184,10 @@ namespace Senparc.Areas.Admin.Domain.Services
                             var kernelFunction = KernelFunctionFactory.CreateFromMethod(functionBag.MethodInfo, plugin, options);
                             kernelFunctions.Add(kernelFunction);
 
-                            aiFunctions.Add(AIFunctionFactory.Create(
+                            aiFunctions.Add(AdminChatFunctionToolFactory.Create(
                                 method: functionBag.MethodInfo,
-                                target: null,
-                                name: options.FunctionName,
+                                target: plugin,
+                                name: BuildFunctionToolName(pluginName, options.FunctionName),
                                 description: options.Description));
                         }
                         catch (Exception ex)
@@ -221,7 +228,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                     MaxOutputTokens = Math.Clamp(generationOptions?.MaxOutputTokens ?? 2000, 256, 8000),
                     TopP = 0.9f,
                     Temperature = Math.Clamp(generationOptions?.Temperature ?? 0.6f, 0f, 1.5f),
-                    Tools = aiFunctions.Select(z => z as AITool).ToList()
+                    AllowMultipleToolCalls = aiFunctions.Count > 0,
+                    Tools = aiFunctions.Count > 0 ? aiFunctions.Cast<AITool>().ToList() : null
                 },
                 ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
                 {
@@ -402,6 +410,23 @@ namespace Senparc.Areas.Admin.Domain.Services
             var prefix = normalized.Length > prefixMaxLength ? normalized.Substring(0, prefixMaxLength) : normalized;
 
             return $"Xncf_{prefix}_{hash}";
+        }
+
+        private static string BuildFunctionToolName(string pluginName, string methodName)
+        {
+            var normalizedPluginName = string.IsNullOrWhiteSpace(pluginName) ? "FunctionPlugin" : pluginName;
+            var normalizedMethodName = string.IsNullOrWhiteSpace(methodName) ? "Invoke" : methodName;
+            var candidate = $"{normalizedPluginName}_{normalizedMethodName}";
+            const int maxFunctionNameLength = 64;
+            if (candidate.Length <= maxFunctionNameLength)
+            {
+                return candidate;
+            }
+
+            const int hashLength = 8;
+            var hash = ComputeShortHash(candidate, hashLength);
+            var prefixLength = maxFunctionNameLength - hashLength - 1;
+            return $"{candidate.Substring(0, prefixLength)}_{hash}";
         }
 
         private static string ComputeShortHash(string input, int length)

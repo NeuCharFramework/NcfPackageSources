@@ -40,7 +40,10 @@ const moduleFunctionScriptPath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/wwwroot/js/Admin/Pages/XncfModule/start.js');
 const moduleFunctionStylePath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/wwwroot/css/Admin/XncfModule/XncfModule.css');
+const adminLayoutPath = path.resolve(__dirname,
+    '../../../Senparc.Areas.Admin/Areas/Admin/Pages/Shared/_Layout_Vue.cshtml');
 const workflowPageMarkup = fs.readFileSync(pagePath, 'utf8');
+const adminLayoutMarkup = fs.readFileSync(adminLayoutPath, 'utf8');
 const nodePickerTemplateOffset = workflowPageMarkup.indexOf('id="workflow-node-picker-template"');
 const workflowRootEndOffset = workflowPageMarkup.lastIndexOf('</div>\n\n@section scripts');
 
@@ -90,7 +93,7 @@ const axiosSandbox = {
         reject(value) { return { rejected: value }; },
         resolve(value) { return { resolved: value }; }
     },
-    console: { log() {} }
+    console: { log() {}, error() {} }
 };
 vm.createContext(axiosSandbox);
 vm.runInContext(fs.readFileSync(adminAxiosPath, 'utf8'), axiosSandbox, { filename: adminAxiosPath });
@@ -102,6 +105,16 @@ const validationResponseError = {
 const interceptedValidationError = axiosInterceptors.failure(validationResponseError);
 assert.strictEqual(interceptedValidationError.rejected, validationResponseError,
     'A customAlert validation request must bypass the legacy global app message handler and reach Workflow unchanged.');
+const ordinaryResponseError = {
+    message: 'Request failed with status code 500',
+    config: {},
+    response: { status: 500, data: 'AIModel is unavailable.' }
+};
+const interceptedOrdinaryError = axiosInterceptors.failure(ordinaryResponseError);
+assert.strictEqual(interceptedOrdinaryError.rejected, ordinaryResponseError,
+    'A shared Axios error must remain the original request error when no global app message API is available.');
+assert.match(adminLayoutMarkup, /src="~\/js\/Admin\/axios\.js"\s+asp-append-version="true"/,
+    'The shared Axios script must use a versioned URL so browsers do not retain an old interceptor after deployment.');
 assert.ok(workflowScript.includes('AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync') &&
     workflowScript.includes('{ customAlert: true }') &&
     workflowScript.includes('模型列表暂不可用'),

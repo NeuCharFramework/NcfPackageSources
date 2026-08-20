@@ -5,6 +5,8 @@
     文件功能描述：沙箱 Function / OHS 入口
 
     创建标识：Senparc - 20260808
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 支持创建与更新沙箱会话 TTL/永久保持
 
 ----------------------------------------------------------------*/
 
@@ -37,8 +39,15 @@ public class SandboxAppService : AppServiceBase
                 : SandboxRuntimeKind.Docker;
 
             logger.Append($"创建沙箱 Template={request.TemplateKey}, Runtime={runtime}");
-            var info = await _orchestrator.CreateAsync(ownerUserId: 0, request.TemplateKey, runtime).ConfigureAwait(false);
+            var info = await _orchestrator.CreateAsync(
+                    ownerUserId: 0,
+                    templateKey: request.TemplateKey,
+                    preferredRuntime: runtime,
+                    ttlMinutes: request.TtlMinutes,
+                    keepAlive: request.KeepAlive)
+                .ConfigureAwait(false);
             logger.Append($"SessionId={info.SessionId}, Status={info.Status}");
+            logger.Append(FormatTtl(info));
             if (!string.IsNullOrWhiteSpace(info.AccessUrl))
             {
                 logger.Append($"AccessUrl={info.AccessUrl}");
@@ -110,6 +119,22 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    [FunctionRender("修改 TTL", "延长、缩短或设为永久保持", typeof(Register))]
+    public async Task<StringAppResponse> UpdateTtl(Sandbox_UpdateTtlRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            var info = await _orchestrator.UpdateTtlAsync(
+                    request.SessionId,
+                    request.TtlMinutes,
+                    request.KeepAlive)
+                .ConfigureAwait(false);
+            logger.Append($"已更新 {info.SessionId} 的 {FormatTtl(info)}");
+            response.Data = FormatSession(info);
+            return null;
+        });
+    }
+
     private static string FormatSession(SandboxSessionInfo info)
     {
         return
@@ -119,7 +144,14 @@ public class SandboxAppService : AppServiceBase
             $"Status: {info.Status}<br/>" +
             $"HostPort(loopback): {info.HostPort?.ToString() ?? "-"}<br/>" +
             $"Url(proxy): {WebUtility.HtmlEncode(info.AccessUrl ?? "-")}<br/>" +
-            $"Expires(UTC): {info.ExpiresAtUtc:u}<br/>" +
+            $"{FormatTtl(info)}<br/>" +
             $"Message: {WebUtility.HtmlEncode(info.StatusMessage ?? "-")}";
+    }
+
+    private static string FormatTtl(SandboxSessionInfo info)
+    {
+        return info.IsTtlUnlimited
+            ? "TTL: 永久保持（仅管理员销毁）"
+            : $"Expires(UTC): {info.ExpiresAtUtc:u}";
     }
 }

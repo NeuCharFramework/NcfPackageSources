@@ -33,6 +33,7 @@
         1、覆盖手动 Prompt、取消令牌和远程执行边界
         2、补充 Human-in-the-Loop 策略、人工交互、请求存储与人类参与者配置回归测试
         3、Dependency update from Senparc.Xncf.AgentsManager to 0.16.0
+        4、补充空输出 Token 重试与 Agent 执行策略相关回归测试
 </PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>

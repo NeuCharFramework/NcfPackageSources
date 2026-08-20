@@ -383,6 +383,36 @@
     color: #9ba8b5;
 }
 
+.ttlUnlimited {
+    color: #218a57;
+    font-weight: 600;
+}
+
+.ttlDialog {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.ttlSessionId {
+    overflow: hidden;
+    color: #66798f;
+    font-family: monospace;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ttlMinutesInput {
+    width: 180px;
+}
+
+.ttlDialogHint {
+    color: #718297;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
 @media (max-width: 1280px) {
     .sandboxHero {
         grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);

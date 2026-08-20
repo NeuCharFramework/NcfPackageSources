@@ -128,6 +128,7 @@
 			3、完善工作区文件服务、数据库迁移与模板生成流程
 			4、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
 			5、Dependency update from Senparc.Xncf.MCP to 0.5.1
+			6、Dependency update from Senparc.Xncf.Sandbox.Abstractions to 0.2.0
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

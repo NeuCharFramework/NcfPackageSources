@@ -1,5 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Index.cshtml.cs
+    文件功能描述：沙箱管理页模型
+    
+    
+    创建标识：Senparc - 20260808
+    
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 支持会话 TTL 调整与永久保持展示
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.Sandbox.Application.DTOs.Request;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Domain.Services;
 using System.Globalization;
@@ -38,7 +53,8 @@ public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
                 z.DisplayName,
                 z.Interactive,
                 runtime = z.PreferredRuntime.ToString(),
-                z.DefaultMemoryMb
+                z.DefaultMemoryMb,
+                defaultTtlMinutes = (int)z.DefaultTtl.TotalMinutes
             }),
             sessions
         });
@@ -52,5 +68,16 @@ public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
         }
 
         return new JsonResult(new { success = true });
+    }
+
+    public async Task<IActionResult> OnPostUpdateTtlAsync([FromForm] Sandbox_UpdateTtlRequest request)
+    {
+        var session = await _orchestrator.UpdateTtlAsync(
+                request.SessionId,
+                request.TtlMinutes,
+                request.KeepAlive)
+            .ConfigureAwait(false);
+
+        return new JsonResult(new { success = true, session });
     }
 }

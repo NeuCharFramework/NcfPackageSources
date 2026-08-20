@@ -378,6 +378,27 @@ namespace Senparc.Xncf.AgentsManagerTests
         }
 
         [TestMethod]
+        public async Task AgentTemplateRunner_EmptyOutputRetry_OverridesPromptMaxTokenOnce()
+        {
+            var templateService = _serviceProvider.GetRequiredService<AgentsTemplateService>();
+            var template = await templateService.GetObjectAsync(z => z.Name == "产品经理机器人");
+            Assert.IsNotNull(template);
+
+            var source = AgentTemplateRunRequest.ForPublishedA2A(template.Id, "test-agent", false);
+            var retry = source.WithMinimumOutputTokenBudgetRetry(512);
+            var runner = _serviceProvider.GetRequiredService<AgentTemplateRunner>();
+            var build = await runner.BuildAsync(template, "test input", retry);
+
+            Assert.IsTrue(build.Success, build.ErrorMessage);
+            Assert.AreEqual(3000, source.MaxOutputTokens);
+            Assert.IsNull(source.MaxOutputTokensOverride);
+            Assert.AreEqual(512, retry.MaxOutputTokensOverride);
+            Assert.IsTrue(retry.EmptyOutputTokenBudgetRetryAttempted);
+            Assert.AreEqual(512, build.AgentOptions.ChatOptions.MaxOutputTokens);
+            StringAssert.Contains(build.Diagnostics.ExecutionParameters, "maxOutputTokens=512");
+        }
+
+        [TestMethod]
         public void PublishedA2AAgent_DeploymentNameFallback_KeepsTheSameModelBoundary()
         {
             var fallbackMethod = typeof(AgentTemplateRunner).GetMethod(
