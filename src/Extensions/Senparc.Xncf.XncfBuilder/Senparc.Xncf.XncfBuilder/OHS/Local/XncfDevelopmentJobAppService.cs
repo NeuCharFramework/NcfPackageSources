@@ -40,7 +40,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
             _adminWorkContextProvider = adminWorkContextProvider;
         }
 
-        [FunctionRender("创建隔离 XNCF 开发任务", "创建源码快照；新模块仅在隔离工作区由本机已安装模板生成，现有模块仅复制后修改。不会写入目标源码。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Create.Name", "Function.XncfBuilder.Development.Create.Description", typeof(Register))]
         public Task<StringAppResponse> CreateIsolatedDevelopmentJob(XncfDevelopmentStartRequest request) =>
             ExecuteAsync(async service =>
             {
@@ -67,11 +67,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 return result;
             });
 
-        [FunctionRender("读取隔离 XNCF 文件", "读取隔离工作区中指定模块的文本文件和 SHA-256；不能读取目标源码或工作区外的文件。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Read.Name", "Function.XncfBuilder.Development.Read.Description", typeof(Register))]
         public Task<StringAppResponse> ReadIsolatedDevelopmentFile(XncfDevelopmentReadFileRequest request) =>
             ExecuteAsync(service => service.ReadFileAsync(request.JobId, request.RelativeFilePath, CancellationToken));
 
-        [FunctionRender("写入隔离 XNCF 文件", "原子写入隔离工作区内的代码文件。项目、NuGet、MSBuild 和应用配置文件不可修改，建议传回读取时的 SHA-256。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Write.Name", "Function.XncfBuilder.Development.Write.Description", typeof(Register))]
         public Task<StringAppResponse> WriteIsolatedDevelopmentFile(XncfDevelopmentWriteFileRequest request) =>
             ExecuteAsync(service => service.WriteFileAsync(
                 request.JobId,
@@ -80,23 +80,23 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 request.ExpectedSha256,
                 CancellationToken));
 
-        [FunctionRender("校验隔离 XNCF 开发任务", "校验隔离工作区的模块路径和 Senparc.Web 对源码项目的直接引用，并生成受控差异摘要。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Validate.Name", "Function.XncfBuilder.Development.Validate.Description", typeof(Register))]
         public Task<StringAppResponse> ValidateIsolatedDevelopmentJob(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync(service => service.ValidateAsync(request.JobId, CancellationToken));
 
-        [FunctionRender("启动 Sandbox XNCF 预览", "把已清洗的隔离工作区副本交给 Sandbox 构建和运行；Sandbox 不可用时会安全失败，绝不回退到主站进程。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Preview.Name", "Function.XncfBuilder.Development.Preview.Description", typeof(Register))]
         public Task<StringAppResponse> StartSandboxDevelopmentPreview(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync(service => service.StartSandboxPreviewAsync(request.JobId, cancellationToken: CancellationToken));
 
-        [FunctionRender("获取隔离 XNCF 开发任务状态", "返回隔离工作区、差异、校验、Sandbox 预览和人工审批状态。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Status.Name", "Function.XncfBuilder.Development.Status.Description", typeof(Register))]
         public Task<StringAppResponse> GetIsolatedDevelopmentJob(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync(service => service.GetAsync(request.JobId, CancellationToken));
 
-        [FunctionRender("请求人工合入 XNCF 任务", "冻结当前隔离工作区差异并请求管理员审批。此操作不会写入目标源码。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.RequestApproval.Name", "Function.XncfBuilder.Development.RequestApproval.Description", typeof(Register))]
         public Task<StringAppResponse> RequestIsolatedDevelopmentMergeApproval(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync(service => service.RequestMergeApprovalAsync(request.JobId, CancellationToken));
 
-        [FunctionRender("丢弃隔离 XNCF 开发任务", "停止对应 Sandbox 预览并回收隔离工作区；不会修改目标源码。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.Development.Discard.Name", "Function.XncfBuilder.Development.Discard.Description", typeof(Register))]
         public Task<StringAppResponse> DiscardIsolatedDevelopmentJob(XncfDevelopmentJobIdRequest request) =>
             ExecuteAsync(service => service.DiscardAsync(request.JobId, CancellationToken));
 

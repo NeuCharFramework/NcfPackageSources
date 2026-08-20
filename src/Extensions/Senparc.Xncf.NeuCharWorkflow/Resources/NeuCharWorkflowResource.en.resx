@@ -15,4 +15,582 @@
   <data name="Designer.Introduction" xml:space="preserve"><value>Compose Functions, system nodes, and Agents. Parameters, types, connections, and module state are checked before save and run.</value></data>
   <data name="Action.Refresh" xml:space="preserve"><value>Refresh</value></data>
   <data name="Action.NewWorkflow" xml:space="preserve"><value>New workflow</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Workflow 任务||Workflow Tasks</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>首次仅加载最新 30 条运行记录；滚动到底部会继续加载历史，正在运行的任务会自动更新。||The latest 30 runs are loaded initially. Scroll to the bottom to load more history. Running tasks update automatically.</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>搜索工作流或状态||Search workflows or statuses</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>快速清理||Quick Cleanup</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>刷新||Refresh</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>任务统计||Task statistics</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>全部任务||All tasks</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>正在运行||Running</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>运行成功||Succeeded</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>运行失败||Failed</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>工作流||Workflow</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>状态||Status</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>开始时间||Start time</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>完成时间||Completion time</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>当前进度 / 结果||Current progress / result</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>操作||Actions</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>中止||Abort</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>运行中||Running</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>回看运行||Replay Run</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>暂无快照||No snapshot</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>没有匹配的任务||No matching tasks</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>还没有运行记录||No run history yet</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>调整搜索关键词或状态筛选后再试。||Adjust the search terms or status filters and try again.</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>从工作流画布运行、Webhook 或定时触发后，任务会显示在这里。运行结束后可进入只读回看。||Tasks appear here after a run is started from the workflow canvas, a webhook, or a schedule. Completed runs can be opened in read-only replay.</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>正在加载更多记录…||Loading more runs…</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>继续向下滚动以加载更多记录||Scroll down to load more runs</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>没有更多记录||No more runs</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>读取 Workflow 任务列表失败。||Failed to load the workflow task list.</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>刷新 Workflow 任务列表失败。||Failed to refresh the workflow task list.</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>加载更多 Workflow 任务失败。||Failed to load more workflow tasks.</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>成功||Success</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>失败||Failed</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>未知||Unknown</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>手动运行||Manual run</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>定时触发||Scheduled trigger</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>历史记录||History</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>运行记录||Run history</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>正在准备执行…||Preparing to run…</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>没有可显示的结果摘要。||No result summary is available.</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>该工作流仍在运行，请在运行结束后再启动回看。||This workflow is still running. Start the replay after it finishes.</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>该任务没有可用的运行快照，可能产生于回看功能启用前。||This task has no run snapshot. It may have been created before replay was enabled.</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>将中止“{0}”的运行。||Abort the run of “{0}”.</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>当前工作流||current workflow</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>确认中止运行||Confirm Abort</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>继续运行||Continue Running</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>已请求手动中止，任务将标记为失败。||Abort requested. The task will be marked as failed.</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>中止 Workflow 任务失败。||Failed to abort the workflow task.</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>没有可清理的已完成任务记录；运行中的任务会始终保留。||There are no completed task records to clean up. Running tasks are always retained.</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>将永久删除 {0} 条已完成任务记录（成功 {1} 条，失败 {2} 条）。运行中的任务、工作流定义和版本不会受影响，删除后无法恢复。||Permanently delete {0} completed task records ({1} succeeded and {2} failed). Running tasks, workflow definitions, and versions are not affected. This cannot be undone.</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>确认快速清理||Confirm Quick Cleanup</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>清理 {0} 条||Clean Up {0}</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>取消||Cancel</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>已清理 {0} 条已完成任务记录。||Cleaned up {0} completed task records.</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>快速清理 Workflow 任务失败。||Failed to clean up workflow tasks.</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>已消费当前订阅下 {0} 条纽铃提醒。||Consumed {0} NeuBell notifications for the current subscription.</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>已消费当前这一条纽铃提醒。||Consumed this NeuBell notification.</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>该纽铃提醒已被消费，或不再属于当前账号。||This NeuBell notification was already consumed or no longer belongs to the current account.</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>纽铃提醒无法自动消费；已保留业务状态，请在对应页面处理。||The NeuBell notification could not be consumed automatically. Its business state was preserved; handle it on the corresponding page.</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>只读运行回看 · #{0}||Read-only Run Replay · #{0}</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>运行于 {0}，{1}。画布为当时的运行快照，不会影响最新工作流。||Ran at {0}; {1}. This canvas is the run snapshot and does not affect the latest workflow.</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>返回任务列表||Back to Tasks</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>复制当前工作流并编辑||Copy This Workflow and Edit</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>查看最新工作流||View Latest Workflow</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>运行回放控制||Run playback controls</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>共 {0} 个节点事件||{0} node events</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>该运行没有节点事件||This run has no node events</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>开头||Start</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>上一步||Previous</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>暂停||Pause</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>播放||Play</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>下一步||Next</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>结尾||End</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>执行步骤||Execution Steps</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>开始||Start</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>加载运行快照||Load run snapshot</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>当前步骤||Current Step</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>运行概览||Run Overview</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>节点状态已更新。||Node status updated.</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>输入参数||Input Parameters</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>该历史步骤未保存输入记录。||No input was saved for this historical step.</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>输出结果||Output</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>运行完成。||Run completed.</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>运行失败。||Run failed.</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>点击左侧步骤，或使用播放控件逐步还原节点执行状态。||Select a step on the left or use the playback controls to reconstruct node execution.</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>正在读取运行记录…||Loading the run record…</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>运行开始前||Before the run</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>步骤 {0} / {1}||Step {0} / {1}</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>缺少需要回看的任务标识。||The task identifier required for replay is missing.</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>未找到任务回看数据。||No task replay data was found.</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>无法读取任务回看。运行中的任务需要等待结束，旧任务可能尚未保存快照。||Unable to load the task replay. Wait for running tasks to finish; older tasks may not have saved snapshots.</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>执行中||Running</value></data>
+  <data name="Frontend.092" xml:space="preserve"><value>执行完成||Completed</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>执行失败||Failed</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>选择分支||Branch selected</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>Console 输出||Console output</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>状态更新||Status updated</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>运行完成||Run completed</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>手动触发||Manual trigger</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>等待||Delay</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>条件判断||Condition</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>Agent 组||Agent Group</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>聚合||Aggregate</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>发送纽铃||Send NeuBell</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>结束||End</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>复制工作流失败。||Failed to copy the workflow.</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>无法从当前回看创建工作流草稿。||Unable to create a workflow draft from this replay.</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>参数 {0}||Parameter {0}</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。||Function parameter metadata is missing a field name. You can save a draft, but the workflow cannot run until the module is fixed or updated.</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>关闭节点详情||Close node details</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>点击其它位置关闭，或 15 秒后自动关闭||Click elsewhere to close, or wait 15 seconds</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>移开节点后关闭||Move away from the node to close</value></data>
+  <data name="Frontend.112" xml:space="preserve"><value>刷新工作流列表||Refresh workflow list</value></data>
+  <data name="Frontend.113" xml:space="preserve"><value>新建工作流||New Workflow</value></data>
+  <data name="Frontend.114" xml:space="preserve"><value>展开工作流列表||Expand workflow list</value></data>
+  <data name="Frontend.115" xml:space="preserve"><value>折叠工作流列表||Collapse workflow list</value></data>
+  <data name="Frontend.116" xml:space="preserve"><value>搜索工作流||Search workflows</value></data>
+  <data name="Frontend.117" xml:space="preserve"><value>启用||Enabled</value></data>
+  <data name="Frontend.118" xml:space="preserve"><value>草稿||Draft</value></data>
+  <data name="Frontend.119" xml:space="preserve"><value>暂无工作流||No workflows</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>工作流名称||Workflow name</value></data>
+  <data name="Frontend.121" xml:space="preserve"><value>间隔触发||Interval trigger</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>手动触发||Manual trigger</value></data>
+  <data name="Frontend.123" xml:space="preserve"><value>工作流快捷操作||Workflow shortcuts</value></data>
+  <data name="Frontend.124" xml:space="preserve"><value>保存（Command/Ctrl + S）||Save (Command/Ctrl + S)</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>保存||Save</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>请先连接所有草稿节点后再测试运行||Connect all draft nodes before running a test</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>保存并测试运行||Save and run test</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>运行||Run</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>打开添加节点面板||Open the add-node panel</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>添加节点||Add Node</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>更多工作流操作||More workflow actions</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>工作流设置||Workflow Settings</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>按设置自动排版||Auto-layout Using Settings</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>就近网格对齐||Align to Nearest Grid</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>适应画布||Fit Canvas</value></data>
+  <data name="Frontend.136" xml:space="preserve"><value>任务列表||Task List</value></data>
+  <data name="Frontend.137" xml:space="preserve"><value>删除工作流||Delete Workflow</value></data>
+  <data name="Frontend.138" xml:space="preserve"><value>节点检查失败||Node validation failed</value></data>
+  <data name="Frontend.139" xml:space="preserve"><value>清除提示||Clear message</value></data>
+  <data name="Frontend.140" xml:space="preserve"><value>说明||Description</value></data>
+  <data name="Frontend.141" xml:space="preserve"><value>用一句话说明这个工作流||Describe this workflow in one sentence</value></data>
+  <data name="Frontend.142" xml:space="preserve"><value>触发方式||Trigger</value></data>
+  <data name="Frontend.143" xml:space="preserve"><value>间隔秒数||Interval (seconds)</value></data>
+  <data name="Frontend.144" xml:space="preserve"><value>运行状态||Run status</value></data>
+  <data name="Frontend.145" xml:space="preserve"><value>自动保存||Auto-save</value></data>
+  <data name="Frontend.146" xml:space="preserve"><value>只在当前页面打开且内容有变化时执行||Runs only while this page is open and content has changed</value></data>
+  <data name="Frontend.147" xml:space="preserve"><value>分钟||minutes</value></data>
+  <data name="Frontend.148" xml:space="preserve"><value>自动排列方向||Auto-layout direction</value></data>
+  <data name="Frontend.149" xml:space="preserve"><value>影响“按设置自动排版”的层级阅读方向；默认纵向||Controls the reading direction for auto-layout; vertical by default</value></data>
+  <data name="Frontend.150" xml:space="preserve"><value>纵向||Vertical</value></data>
+  <data name="Frontend.151" xml:space="preserve"><value>横向||Horizontal</value></data>
+  <data name="Frontend.152" xml:space="preserve"><value>画布对齐||Canvas alignment</value></data>
+  <data name="Frontend.153" xml:space="preserve"><value>按方向重新排列||Rearrange by direction</value></data>
+  <data name="Frontend.154" xml:space="preserve"><value>就近网格对齐只做有限距离吸附和防重叠；会优先保留当前阅读顺序，并避免把连线拉得更长。||Nearest-grid alignment uses limited snapping and overlap prevention. It preserves the current reading order where possible and avoids lengthening connections.</value></data>
+  <data name="Frontend.155" xml:space="preserve"><value>工作流变量||Workflow Variables</value></data>
+  <data name="Frontend.156" xml:space="preserve"><value>在这里声明默认值，后续受限公式用||Declare default values here. Restricted formulas can read them with</value></data>
+  <data name="Frontend.157" xml:space="preserve"><value>读取；安全代码节点可在本次运行中重新赋值。||; safe-code nodes can assign new values during the current run.</value></data>
+  <data name="Frontend.158" xml:space="preserve"><value>添加变量||Add Variable</value></data>
+  <data name="Frontend.159" xml:space="preserve"><value>变量名只能使用字母、数字、下划线，且以字母或下划线开头。默认值可使用受限公式；不会执行 JavaScript。||Variable names may contain letters, numbers, and underscores and must begin with a letter or underscore. Default values may use restricted formulas; JavaScript is not executed.</value></data>
+  <data name="Frontend.160" xml:space="preserve"><value>变量名，例如 customerName||Variable name, for example customerName</value></data>
+  <data name="Frontend.161" xml:space="preserve"><value>默认值支持受限公式，例如 {{= now() }} 或 {{= upper(vars.customerName) }}。||Default values support restricted formulas, such as {{= now() }} or {{= upper(vars.customerName) }}.</value></data>
+  <data name="Frontend.162" xml:space="preserve"><value>删除||Delete</value></data>
+  <data name="Frontend.163" xml:space="preserve"><value>尚未声明变量。先添加变量，才能在“安全代码”节点中对它赋值。||No variables are declared. Add a variable before assigning it in a Safe Code node.</value></data>
+  <data name="Frontend.164" xml:space="preserve"><value>Webhook 触发配置||Webhook Trigger Configuration</value></data>
+  <data name="Frontend.165" xml:space="preserve"><value>使用说明||Instructions</value></data>
+  <data name="Frontend.166" xml:space="preserve"><value>请求方法||Request method</value></data>
+  <data name="Frontend.167" xml:space="preserve"><value>不限定（GET/POST及其他）||Any method (GET, POST, or other)</value></data>
+  <data name="Frontend.168" xml:space="preserve"><value>访问密钥||Access token</value></data>
+  <data name="Frontend.169" xml:space="preserve"><value>保存后自动生成||Generated after saving</value></data>
+  <data name="Frontend.170" xml:space="preserve"><value>复制访问密钥||Copy access token</value></data>
+  <data name="Frontend.171" xml:space="preserve"><value>复制 URL||Copy URL</value></data>
+  <data name="Frontend.172" xml:space="preserve"><value>参数（{0}/50）||Parameters ({0}/50)</value></data>
+  <data name="Frontend.173" xml:space="preserve"><value>添加参数||Add Parameter</value></data>
+  <data name="Frontend.174" xml:space="preserve"><value>参数名，例如 userId||Parameter name, for example userId</value></data>
+  <data name="Frontend.175" xml:space="preserve"><value>必填||Required</value></data>
+  <data name="Frontend.176" xml:space="preserve"><value>说明（可选）||Description (optional)</value></data>
+  <data name="Frontend.177" xml:space="preserve"><value>未配置参数：接收全部 Query、Form 与 JSON 字段。||No parameters configured: all Query, Form, and JSON fields are accepted.</value></data>
+  <data name="Frontend.178" xml:space="preserve"><value>关闭||Close</value></data>
+  <data name="Frontend.179" xml:space="preserve"><value>Webhook 使用说明||Webhook Instructions</value></data>
+  <data name="Frontend.180" xml:space="preserve"><value>先保存工作流以生成调用地址和访问密钥。外部请求必须携带该密钥。||Save the workflow to generate its URL and access token. External requests must include this token.</value></data>
+  <data name="Frontend.181" xml:space="preserve"><value>调用地址：{0}||URL: {0}</value></data>
+  <data name="Frontend.182" xml:space="preserve"><value>推荐使用请求头||Use the request header</value></data>
+  <data name="Frontend.183" xml:space="preserve"><value>传递访问密钥；也兼容 query 参数||to pass the access token. The query parameter</value></data>
+  <data name="Frontend.185" xml:space="preserve"><value>已定义的参数可从 Query、Form 或 JSON 请求体读取；未定义参数时，整个请求数据都会作为工作流输入。||Defined parameters are read from Query, Form, or a JSON request body. If no parameters are defined, all request data becomes workflow input.</value></data>
+  <data name="Frontend.186" xml:space="preserve"><value>先输入固定文字，再从下方选择上游输出或“预载输入选择”。系统会插入一个可见的占位符；同一文本可插入多个变量。||Enter fixed text, then select an upstream output or preloaded input selection below. The system inserts a visible placeholder, and multiple variables may be inserted in the same text.</value></data>
+  <data name="Frontend.187" xml:space="preserve"><value>插入上游值||Insert Upstream Value</value></data>
+  <data name="Frontend.188" xml:space="preserve"><value>选择节点、输出或预载输入选择||Select a node, output, or preloaded input selection</value></data>
+  <data name="Frontend.189" xml:space="preserve"><value>列表索引||List index</value></data>
+  <data name="Frontend.190" xml:space="preserve"><value>应用||Apply</value></data>
+  <data name="Frontend.191" xml:space="preserve"><value>展开添加节点||Expand add-node panel</value></data>
+  <data name="Frontend.192" xml:space="preserve"><value>折叠添加节点||Collapse add-node panel</value></data>
+  <data name="Frontend.193" xml:space="preserve"><value>真||True</value></data>
+  <data name="Frontend.194" xml:space="preserve"><value>假||False</value></data>
+  <data name="Frontend.195" xml:space="preserve"><value>删除连线||Delete connection</value></data>
+  <data name="Frontend.196" xml:space="preserve"><value>在线中插入节点||Insert Node into Connection</value></data>
+  <data name="Frontend.197" xml:space="preserve"><value>原连线会替换为“上游 → 新节点 → 下游”。||The original connection will be replaced with upstream → new node → downstream.</value></data>
+  <data name="Frontend.198" xml:space="preserve"><value>在此处新增节点||Add Node Here</value></data>
+  <data name="Frontend.199" xml:space="preserve"><value>双击节点添加到右键所选位置；也可直接拖放到画布。||Double-click a node to add it at the selected location, or drag it directly onto the canvas.</value></data>
+  <data name="Frontend.200" xml:space="preserve"><value>拖到此处完成连接||Drag here to connect</value></data>
+  <data name="Frontend.201" xml:space="preserve"><value>拖动真分支||Drag the true branch</value></data>
+  <data name="Frontend.202" xml:space="preserve"><value>拖动假分支||Drag the false branch</value></data>
+  <data name="Frontend.203" xml:space="preserve"><value>拖动连接后续节点||Drag to connect the next node</value></data>
+  <data name="Frontend.204" xml:space="preserve"><value>从“{0}”拖到目标节点{1}端口；松开到空白处可取消。||Drag from “{0}” to the target node's {1} port. Release over empty space to cancel.</value></data>
+  <data name="Frontend.205" xml:space="preserve"><value>左侧||left</value></data>
+  <data name="Frontend.206" xml:space="preserve"><value>顶部||top</value></data>
+  <data name="Frontend.207" xml:space="preserve"><value>缩小||Zoom out</value></data>
+  <data name="Frontend.208" xml:space="preserve"><value>缩小画布||Zoom out</value></data>
+  <data name="Frontend.209" xml:space="preserve"><value>放大||Zoom in</value></data>
+  <data name="Frontend.210" xml:space="preserve"><value>放大画布||Zoom in</value></data>
+  <data name="Frontend.211" xml:space="preserve"><value>恢复 100%||Reset to 100%</value></data>
+  <data name="Frontend.212" xml:space="preserve"><value>点击定位画布||Click to locate on canvas</value></data>
+  <data name="Frontend.213" xml:space="preserve"><value>已选择 {0} 个节点||{0} nodes selected</value></data>
+  <data name="Frontend.214" xml:space="preserve"><value>复制||Duplicate</value></data>
+  <data name="Frontend.215" xml:space="preserve"><value>新增节点||Add Node</value></data>
+  <data name="Frontend.216" xml:space="preserve"><value>节点设置||Node Settings</value></data>
+  <data name="Frontend.217" xml:space="preserve"><value>展开节点设置||Expand node settings</value></data>
+  <data name="Frontend.218" xml:space="preserve"><value>折叠节点设置||Collapse node settings</value></data>
+  <data name="Frontend.219" xml:space="preserve"><value>名称||Name</value></data>
+  <data name="Frontend.220" xml:space="preserve"><value>条件为真时||When condition is true</value></data>
+  <data name="Frontend.221" xml:space="preserve"><value>条件为假时||When condition is false</value></data>
+  <data name="Frontend.222" xml:space="preserve"><value>也可直接拖拽连线||You can also drag a connection directly</value></data>
+  <data name="Frontend.223" xml:space="preserve"><value>并行分支||Parallel branches</value></data>
+  <data name="Frontend.224" xml:space="preserve"><value>{0} 个后续分支||{0} downstream branches</value></data>
+  <data name="Frontend.225" xml:space="preserve"><value>请从节点右侧输出端依次拖拽到每个要同时运行的节点。||Drag from the node's right output port to each node that should run concurrently.</value></data>
+  <data name="Frontend.226" xml:space="preserve"><value>后续节点||Next node</value></data>
+  <data name="Frontend.227" xml:space="preserve"><value>模块未安装或未开启，节点不可执行||The module is not installed or enabled, so this node cannot run</value></data>
+  <data name="Frontend.228" xml:space="preserve"><value>Function 参数元数据读取异常，请检查模块日志||Function parameter metadata could not be read. Check the module logs.</value></data>
+  <data name="Frontend.229" xml:space="preserve"><value>此 Function 有多个上游；任一有效来源到达都可以触发，单次工作流运行中该节点最多执行一次。||This Function has multiple upstream nodes. Any valid arrival can trigger it, but it runs at most once per workflow run.</value></data>
+  <data name="Frontend.230" xml:space="preserve"><value>设置||Settings</value></data>
+  <data name="Frontend.231" xml:space="preserve"><value>执行||Run</value></data>
+  <data name="Frontend.232" xml:space="preserve"><value>参数说明||Parameter description</value></data>
+  <data name="Frontend.233" xml:space="preserve"><value>参数元数据异常||Invalid parameter metadata</value></data>
+  <data name="Frontend.234" xml:space="preserve"><value>编辑文本与变量||Edit text and variables</value></data>
+  <data name="Frontend.235" xml:space="preserve"><value>改为手动输入||Switch to manual input</value></data>
+  <data name="Frontend.236" xml:space="preserve"><value>手动输入或使用公式||Enter manually or use a formula</value></data>
+  <data name="Frontend.237" xml:space="preserve"><value>手动输入||Manual input</value></data>
+  <data name="Frontend.238" xml:space="preserve"><value>数组索引||Array index</value></data>
+  <data name="Frontend.239" xml:space="preserve"><value>或完整关联上游输出 / Function 预载输入选择||Or bind the complete upstream output / Function preloaded input selection</value></data>
+  <data name="Frontend.240" xml:space="preserve"><value>左值||Left value</value></data>
+  <data name="Frontend.241" xml:space="preserve"><value>可使用 {{input}} 或受限公式，也可以插入上游输出作为文本片段。||Use {{input}} or a restricted formula, or insert an upstream output as a text segment.</value></data>
+  <data name="Frontend.242" xml:space="preserve"><value>手动输入、公式或插入变量||Enter text, a formula, or an inserted variable</value></data>
+  <data name="Frontend.243" xml:space="preserve"><value>关联上游 Output||Bind upstream output</value></data>
+  <data name="Frontend.244" xml:space="preserve"><value>判断||Comparison</value></data>
+  <data name="Frontend.245" xml:space="preserve"><value>等于||Equals</value></data>
+  <data name="Frontend.246" xml:space="preserve"><value>包含||Contains</value></data>
+  <data name="Frontend.247" xml:space="preserve"><value>不等于||Does not equal</value></data>
+  <data name="Frontend.248" xml:space="preserve"><value>开头是||Starts with</value></data>
+  <data name="Frontend.249" xml:space="preserve"><value>结尾是||Ends with</value></data>
+  <data name="Frontend.250" xml:space="preserve"><value>右值||Right value</value></data>
+  <data name="Frontend.251" xml:space="preserve"><value>等待秒数（单节点最多 30 秒）||Delay in seconds (maximum 30 seconds per node)</value></data>
+  <data name="Frontend.252" xml:space="preserve"><value>重复次数（For）||Repeat count (For)</value></data>
+  <data name="Frontend.253" xml:space="preserve"><value>引用上游：{0}||Upstream reference: {0}</value></data>
+  <data name="Frontend.254" xml:space="preserve"><value>运行时读取，必须是 1–100 的整数。||Read at runtime; must be an integer from 1 to 100.</value></data>
+  <data name="Frontend.255" xml:space="preserve"><value>改为固定次数||Use a fixed count</value></data>
+  <data name="Frontend.256" xml:space="preserve"><value>或引用上游次数（1–100）||Or reference an upstream count (1–100)</value></data>
+  <data name="Frontend.257" xml:space="preserve"><value>如需限制循环范围，请将“循环结束”放在循环体最后；其后的节点会在全部轮次完成后只执行一次。||To delimit the loop body, place Loop End last. Nodes after it run once after all iterations finish.</value></data>
+  <data name="Frontend.258" xml:space="preserve"><value>安全上限：单个循环最多 100 次；循环与逐项合流的下游激活合计最多 500 次。||Safety limits: up to 100 iterations per loop and up to 500 total downstream activations from loops and item-by-item merges.</value></data>
+  <data name="Frontend.259" xml:space="preserve"><value>循环体边界||Loop body boundary</value></data>
+  <data name="Frontend.260" xml:space="preserve"><value>请把此节点连接在循环体最后；它后面的节点会等待所有轮次完成后再执行一次。||Connect this node at the end of the loop body. Nodes after it wait for all iterations and then run once.</value></data>
+  <data name="Frontend.261" xml:space="preserve"><value>提醒标题||Notification title</value></data>
+  <data name="Frontend.262" xml:space="preserve"><value>编辑公式文本||Edit formula text</value></data>
+  <data name="Frontend.263" xml:space="preserve"><value>提醒标题支持 {{input}}、受限公式和上游变量，运行时会先解析再创建纽铃。||The notification title supports {{input}}, restricted formulas, and upstream variables. It is resolved before the NeuBell notification is created.</value></data>
+  <data name="Frontend.264" xml:space="preserve"><value>例如：工作流需要处理||For example: Workflow requires attention</value></data>
+  <data name="Frontend.265" xml:space="preserve"><value>提醒内容||Notification content</value></data>
+  <data name="Frontend.266" xml:space="preserve"><value>提醒内容支持 {{input}}、受限公式和上游变量，运行时会先解析再创建纽铃。||The notification content supports {{input}}, restricted formulas, and upstream variables. It is resolved before the NeuBell notification is created.</value></data>
+  <data name="Frontend.267" xml:space="preserve"><value>可使用 {{input}} 插入当前节点输入||Use {{input}} to insert the current node input</value></data>
+  <data name="Frontend.268" xml:space="preserve"><value>打开任务后的消费方式||Consumption after opening the task</value></data>
+  <data name="Frontend.269" xml:space="preserve"><value>只查看任务，不自动消费||View the task without consuming automatically</value></data>
+  <data name="Frontend.270" xml:space="preserve"><value>消费当前这一条提醒||Consume this notification</value></data>
+  <data name="Frontend.271" xml:space="preserve"><value>消费这个订阅下全部提醒||Consume all notifications in this subscription</value></data>
+  <data name="Frontend.272" xml:space="preserve"><value>用于有明确查看即已读场景；例如 DesktopBridge 等需要业务审核的提醒应选择“只查看”。||Use this when opening clearly means the item was read. Notifications that require business review, such as DesktopBridge items, should use View Only.</value></data>
+  <data name="Frontend.273" xml:space="preserve"><value>远程 A2A Agent||Remote A2A Agent</value></data>
+  <data name="Frontend.274" xml:space="preserve"><value>独立 Agent||Standalone Agent</value></data>
+  <data name="Frontend.275" xml:space="preserve"><value>对象不可用||Object unavailable</value></data>
+  <data name="Frontend.276" xml:space="preserve"><value>编辑||Edit</value></data>
+  <data name="Frontend.277" xml:space="preserve"><value>Agent 或 A2A 连接不存在、所属模块未开启或已被移除||The Agent or A2A connection does not exist, its module is disabled, or it was removed</value></data>
+  <data name="Frontend.278" xml:space="preserve"><value>Prompt 支持 {{input}}、受限公式和上游变量，运行时会先解析再提交给 Agent。||The prompt supports {{input}}, restricted formulas, and upstream variables. It is resolved before being sent to the Agent.</value></data>
+  <data name="Frontend.279" xml:space="preserve"><value>可使用输入占位符、公式或插入变量||Use an input placeholder, formula, or inserted variable</value></data>
+  <data name="Frontend.280" xml:space="preserve"><value>要调用的工作流||Workflow to call</value></data>
+  <data name="Frontend.281" xml:space="preserve"><value>选择已保存的工作流||Select a saved workflow</value></data>
+  <data name="Frontend.282" xml:space="preserve"><value>（未启用）|| (disabled)</value></data>
+  <data name="Frontend.283" xml:space="preserve"><value>快速查看||Quick View</value></data>
+  <data name="Frontend.284" xml:space="preserve"><value>只显示当前用户已保存的工作流。保存和运行前会完整检查多层引用，禁止直接或间接调用回自身。||Only workflows saved by the current user are shown. Nested references are fully checked before saving and running; direct and indirect self-calls are prohibited.</value></data>
+  <data name="Frontend.285" xml:space="preserve"><value>传入子工作流的输入||Input for the child workflow</value></data>
+  <data name="Frontend.286" xml:space="preserve"><value>支持 {{input}}、受限公式和上游变量；子工作流完成后，它的最终输出会作为本节点输出。||Supports {{input}}, restricted formulas, and upstream variables. The child workflow's final output becomes this node's output.</value></data>
+  <data name="Frontend.287" xml:space="preserve"><value>默认：{{input}}||Default: {{input}}</value></data>
+  <data name="Frontend.288" xml:space="preserve"><value>子工作流会以独立执行记录运行；父流程只接收其最终输出。最多嵌套 8 层，目标必须属于当前用户且已启用。||A child workflow runs as a separate execution record; the parent receives only its final output. Nesting is limited to 8 levels, and the target must belong to the current user and be enabled.</value></data>
+  <data name="Frontend.289" xml:space="preserve"><value>安全代码：变量赋值||Safe Code: Variable Assignments</value></data>
+  <data name="Frontend.290" xml:space="preserve"><value>这不是任意 JavaScript：每一行都是一次受限赋值。可用||This is not arbitrary JavaScript. Each row is a restricted assignment. You can use</value></data>
+  <data name="Frontend.291" xml:space="preserve"><value>和全部公式函数；赋值只影响本次运行。||and all formula functions. Assignments affect only the current run.</value></data>
+  <data name="Frontend.292" xml:space="preserve"><value>选择工作流变量||Select a workflow variable</value></data>
+  <data name="Frontend.293" xml:space="preserve"><value>（未命名变量）||(unnamed variable)</value></data>
+  <data name="Frontend.294" xml:space="preserve"><value>例如：{{= upper(input) }}；使用 vars.变量名 读取当前变量值。||For example: {{= upper(input) }}. Use vars.variableName to read the current value.</value></data>
+  <data name="Frontend.295" xml:space="preserve"><value>尚未设置赋值。请至少添加一条。||No assignments are configured. Add at least one.</value></data>
+  <data name="Frontend.296" xml:space="preserve"><value>添加赋值||Add Assignment</value></data>
+  <data name="Frontend.297" xml:space="preserve"><value>安全代码节点总会透传原始输入；它只修改 vars 中已声明的变量。相同执行波次内会先按画布顺序执行安全代码，再启动其他独立节点。||Safe Code nodes always pass through the original input and modify only declared vars. Within the same execution wave, Safe Code runs in canvas order before other independent nodes start.</value></data>
+  <data name="Frontend.298" xml:space="preserve"><value>汇总输出内容||Aggregate output</value></data>
+  <data name="Frontend.299" xml:space="preserve"><value>支持 {{input}} 保留聚合数组，也支持 {{= length(input) }}、{{= join(input, '，') }} 等受限公式；不执行任意 JavaScript。||Use {{input}} to preserve the aggregate array, or restricted formulas such as {{= length(input) }} and {{= join(input, ',') }}. Arbitrary JavaScript is not executed.</value></data>
+  <data name="Frontend.300" xml:space="preserve"><value>编辑公式||Edit Formula</value></data>
+  <data name="Frontend.301" xml:space="preserve"><value>例如：共 {{= length(input) }} 项：{{= join(input, '，') }}||For example: {{= length(input) }} items: {{= join(input, ',') }}</value></data>
+  <data name="Frontend.302" xml:space="preserve"><value>必须设置。||Required.</value></data>
+  <data name="Frontend.303" xml:space="preserve"><value>保留聚合数组；||preserves the aggregate array;</value></data>
+  <data name="Frontend.304" xml:space="preserve"><value>等为受限表达式，不执行任意 JavaScript。||are restricted expressions and do not execute arbitrary JavaScript.</value></data>
+  <data name="Frontend.305" xml:space="preserve"><value>聚合会等待所有已激活的上游分支结束，再按连线顺序汇总，并只向下游输出一次。||Aggregate waits for all activated upstream branches, combines them in connection order, and emits one downstream output.</value></data>
+  <data name="Frontend.306" xml:space="preserve"><value>逐项合流不会等待全部输入：每条输入都会独立向下游发出一次。下游按稳定的执行计划顺序串行运行，单次工作流最多处理 500 次逐项激活。||Item-by-item merge does not wait for all inputs. Each input is emitted downstream independently. Downstream work runs serially in stable plan order, with at most 500 item activations per workflow run.</value></data>
+  <data name="Frontend.307" xml:space="preserve"><value>并行节点将同一输入同时分发到所有后续分支；各分支独立运行。||A Parallel node sends the same input to all downstream branches, which run independently.</value></data>
+  <data name="Frontend.308" xml:space="preserve"><value>Console 打印内容||Console output content</value></data>
+  <data name="Frontend.309" xml:space="preserve"><value>默认 {{input}} 会打印当前输入；也支持受限公式和上游变量。仅影响 Console 展示，不改变下游输入。||By default, {{input}} prints the current input. Restricted formulas and upstream variables are also supported. This affects only Console display and does not change downstream input.</value></data>
+  <data name="Frontend.310" xml:space="preserve"><value>默认||By default,</value></data>
+  <data name="Frontend.311" xml:space="preserve"><value>打印当前输入。此配置仅影响 Console 展示，节点仍向下游透传原始输入。||prints the current input. This setting affects only Console display; the node still passes the original input downstream.</value></data>
+  <data name="Frontend.312" xml:space="preserve"><value>运行到此节点时，会按上述模板在页面底部 Console 打印内容；原始输入会继续向下游传递。||When this node runs, the resolved template is printed in the Console at the bottom of the page. The original input continues downstream.</value></data>
+  <data name="Frontend.313" xml:space="preserve"><value>运行时会创建一条 Workflow 纽铃提醒；从 Footer 点击提醒会进入任务列表并按上方设置进行消费。||A workflow run creates a NeuBell notification. Selecting it in the footer opens the task list and consumes it according to the setting above.</value></data>
+  <data name="Frontend.314" xml:space="preserve"><value>选择画布中的节点进行设置||Select a canvas node to configure it</value></data>
+  <data name="Frontend.315" xml:space="preserve"><value>测试输入（传入触发器）||Test input (passed to the trigger)</value></data>
+  <data name="Frontend.316" xml:space="preserve"><value>校验并运行||Validate and Run</value></data>
+  <data name="Frontend.317" xml:space="preserve"><value>执行 Console · {0} 条||Execution Console · {0}</value></data>
+  <data name="Frontend.318" xml:space="preserve"><value>清空||Clear</value></data>
+  <data name="Frontend.319" xml:space="preserve"><value>运行后，这里会显示校验结果、当前节点、执行状态和 Console 节点输出。||After a run starts, validation results, the current node, execution status, and Console node output appear here.</value></data>
+  <data name="Frontend.320" xml:space="preserve"><value>选择或创建一个工作流||Select or Create a Workflow</value></data>
+  <data name="Frontend.321" xml:space="preserve"><value>从触发器开始添加节点；节点支持拖动排版、拖拽端口连线以及上游 Output 参数关联。||Add nodes starting from the trigger. Nodes support drag layout, port-to-port connections, and upstream Output parameter bindings.</value></data>
+  <data name="Frontend.322" xml:space="preserve"><value>搜索 Function 或模块||Search Functions or modules</value></data>
+  <data name="Frontend.323" xml:space="preserve"><value>全部模块||All modules</value></data>
+  <data name="Frontend.324" xml:space="preserve"><value>条件||Condition</value></data>
+  <data name="Frontend.325" xml:space="preserve"><value>循环（For）||Loop (For)</value></data>
+  <data name="Frontend.326" xml:space="preserve"><value>循环||Loop</value></data>
+  <data name="Frontend.327" xml:space="preserve"><value>循环结束||Loop End</value></data>
+  <data name="Frontend.328" xml:space="preserve"><value>调用工作流||Call Workflow</value></data>
+  <data name="Frontend.329" xml:space="preserve"><value>调用流程||Call Workflow</value></data>
+  <data name="Frontend.330" xml:space="preserve"><value>安全代码||Safe Code</value></data>
+  <data name="Frontend.331" xml:space="preserve"><value>逐项合流||Item-by-item Merge</value></data>
+  <data name="Frontend.332" xml:space="preserve"><value>并行||Parallel</value></data>
+  <data name="Frontend.333" xml:space="preserve"><value>Console 打印||Console Print</value></data>
+  <data name="Frontend.334" xml:space="preserve"><value>结束节点不能插入到连线中||End nodes cannot be inserted into a connection</value></data>
+  <data name="Frontend.335" xml:space="preserve"><value>模块未安装或未开启||Module not installed or enabled</value></data>
+  <data name="Frontend.336" xml:space="preserve"><value>参数元数据读取失败，已保留 Function||Parameter metadata failed to load; the Function is retained</value></data>
+  <data name="Frontend.337" xml:space="preserve"><value>取消置顶||Unpin</value></data>
+  <data name="Frontend.338" xml:space="preserve"><value>置顶||Pin</value></data>
+  <data name="Frontend.339" xml:space="preserve"><value>没有匹配的 Function||No matching Functions</value></data>
+  <data name="Frontend.340" xml:space="preserve"><value>可用||Available</value></data>
+  <data name="Frontend.341" xml:space="preserve"><value>不可用||Unavailable</value></data>
+  <data name="Frontend.342" xml:space="preserve"><value>变量/公式||Variable / Formula</value></data>
+  <data name="Frontend.343" xml:space="preserve"><value>支持公式文本||Formula text supported</value></data>
+  <data name="Frontend.344" xml:space="preserve"><value>公式文本说明||Formula text help</value></data>
+  <data name="Frontend.345" xml:space="preserve"><value>例如：请根据 {{value_1}} 生成一段摘要||For example: Create a summary from {{value_1}}</value></data>
+  <data name="Frontend.346" xml:space="preserve"><value>删除一个变量标签时，它在文本中的对应占位符也会一并删除。所有公式文本都可以使用 {{input}} 引用当前输入；带“支持公式文本”标记的字段还可以插入上游输出。||Removing a variable tag also removes its placeholder from the text. All formula text can use {{input}} for the current input. Fields marked Formula Text Supported can also insert upstream outputs.</value></data>
+  <data name="Frontend.347" xml:space="preserve"><value>表达式写法：{{= if(contains(value_1, &quot;VIP&quot;), upper(value_1), &quot;普通&quot;) }}。支持 if、contains、substring、length、trim、lower、upper、first、last、at、join、toNumber/toInt/toLong/toDecimal/toBool/toString、now、formatDate、split、replace、sort/orderBy、reverse、take、skip、sum、min、max、unique、比较和判断。非字符串参数请只填写完整公式，例如 {{= toInt(value_1) }}；加入前后文本后结果始终是字符串。工作流变量须写为 {{= vars.变量名 }}；不执行 JavaScript。||Expression example: {{= if(contains(value_1, &quot;VIP&quot;), upper(value_1), &quot;standard&quot;) }}. Supported functions include if, contains, substring, length, trim, lower, upper, first, last, at, join, toNumber/toInt/toLong/toDecimal/toBool/toString, now, formatDate, split, replace, sort/orderBy, reverse, take, skip, sum, min, max, unique, comparisons, and conditions. For non-string parameters, enter only a complete formula such as {{= toInt(value_1) }}; surrounding text always produces a string. Refer to workflow variables as {{= vars.variableName }}. JavaScript is not executed.</value></data>
+  <data name="Frontend.348" xml:space="preserve"><value>正在保存…||Saving…</value></data>
+  <data name="Frontend.349" xml:space="preserve"><value>保存失败||Save failed</value></data>
+  <data name="Frontend.350" xml:space="preserve"><value>有尚未保存的更改||Unsaved changes</value></data>
+  <data name="Frontend.351" xml:space="preserve"><value>草稿：{0} 个未连接节点||Draft: {0} disconnected nodes</value></data>
+  <data name="Frontend.352" xml:space="preserve"><value>已保存 {0}||Saved {0}</value></data>
+  <data name="Frontend.353" xml:space="preserve"><value>已保存||Saved</value></data>
+  <data name="Frontend.354" xml:space="preserve"><value>尚未保存||Not saved</value></data>
+  <data name="Frontend.355" xml:space="preserve"><value>正在校验参数和节点引用||Validating parameters and node references</value></data>
+  <data name="Frontend.356" xml:space="preserve"><value>正在中止工作流，等待当前节点响应取消||Aborting workflow; waiting for the current node to respond</value></data>
+  <data name="Frontend.357" xml:space="preserve"><value>工作流运行中，编辑已锁定||Workflow is running; editing is locked</value></data>
+  <data name="Frontend.358" xml:space="preserve"><value>最近一次测试运行成功||Latest test run succeeded</value></data>
+  <data name="Frontend.359" xml:space="preserve"><value>最近一次测试运行失败||Latest test run failed</value></data>
+  <data name="Frontend.360" xml:space="preserve"><value>测试运行就绪||Ready for test run</value></data>
+  <data name="Frontend.361" xml:space="preserve"><value>编辑{0}||Edit {0}</value></data>
+  <data name="Frontend.362" xml:space="preserve"><value>编辑文本与插入变量||Edit text and insert variables</value></data>
+  <data name="Frontend.363" xml:space="preserve"><value>此字段只支持当前输入和受限公式；表达式不会执行任意 JavaScript。||This field supports only current input and restricted formulas. Expressions do not execute arbitrary JavaScript.</value></data>
+  <data name="Frontend.364" xml:space="preserve"><value>定时||Scheduled</value></data>
+  <data name="Frontend.365" xml:space="preserve"><value>手动||Manual</value></data>
+  <data name="Frontend.366" xml:space="preserve"><value>定时已暂停||Schedule paused</value></data>
+  <data name="Frontend.367" xml:space="preserve"><value>等待下次排程||Waiting for next schedule</value></data>
+  <data name="Frontend.368" xml:space="preserve"><value>即将运行||Starting soon</value></data>
+  <data name="Frontend.369" xml:space="preserve"><value>不足 1 分钟后运行||Runs in less than 1 minute</value></data>
+  <data name="Frontend.370" xml:space="preserve"><value>{0} 分钟后运行||Runs in {0} minutes</value></data>
+  <data name="Frontend.371" xml:space="preserve"><value>{0} 小时后运行||Runs in {0} hours</value></data>
+  <data name="Frontend.372" xml:space="preserve"><value>{0} 天后运行||Runs in {0} days</value></data>
+  <data name="Frontend.373" xml:space="preserve"><value>定时工作流当前未启用||Scheduled workflow is disabled</value></data>
+  <data name="Frontend.374" xml:space="preserve"><value>已启用，正在等待调度器写入下次执行时间||Enabled; waiting for the scheduler to set the next run time</value></data>
+  <data name="Frontend.375" xml:space="preserve"><value>下次执行：{0}||Next run: {0}</value></data>
+  <data name="Frontend.376" xml:space="preserve"><value>根据左值、比较符和右值决定后续执行“真”或“假”分支。||Use a left value, operator, and right value to choose the True or False branch.</value></data>
+  <data name="Frontend.377" xml:space="preserve"><value>可配置项||Configuration</value></data>
+  <data name="Frontend.378" xml:space="preserve"><value>左值、比较符、右值||Left value, operator, right value</value></data>
+  <data name="Frontend.379" xml:space="preserve"><value>输出分支||Output branches</value></data>
+  <data name="Frontend.380" xml:space="preserve"><value>真 / 假||True / False</value></data>
+  <data name="Frontend.381" xml:space="preserve"><value>在继续执行下游节点前等待指定的秒数。||Wait the specified number of seconds before continuing downstream.</value></data>
+  <data name="Frontend.382" xml:space="preserve"><value>等待秒数||Delay seconds</value></data>
+  <data name="Frontend.383" xml:space="preserve"><value>将同一输入按指定次数交给循环体处理。请在循环体末尾放置“循环结束”，之后的节点只执行一次。||Pass the same input through the loop body the configured number of times. Place Loop End at the end of the body; nodes after it run once.</value></data>
+  <data name="Frontend.384" xml:space="preserve"><value>重复次数||Repeat count</value></data>
+  <data name="Frontend.385" xml:space="preserve"><value>固定 1–100 次，或引用上游单值||Fixed 1–100, or an upstream scalar</value></data>
+  <data name="Frontend.386" xml:space="preserve"><value>执行方式||Execution</value></data>
+  <data name="Frontend.387" xml:space="preserve"><value>循环 → 循环体 → 循环结束 → 后续节点||Loop → body → Loop End → next node</value></data>
+  <data name="Frontend.388" xml:space="preserve"><value>标记当前 For 循环的最后一个循环体节点；它后面的节点会在所有循环轮次完成后继续执行一次。||Marks the final body node of the current For loop. Nodes after it continue once after all iterations.</value></data>
+  <data name="Frontend.389" xml:space="preserve"><value>位置||Position</value></data>
+  <data name="Frontend.390" xml:space="preserve"><value>必须放在循环体末尾||Must be at the end of the loop body</value></data>
+  <data name="Frontend.391" xml:space="preserve"><value>限制||Limit</value></data>
+  <data name="Frontend.392" xml:space="preserve"><value>循环体当前支持一条普通节点链||The loop body currently supports one ordinary node chain</value></data>
+  <data name="Frontend.393" xml:space="preserve"><value>把当前输入传给另一个已启用的工作流，并把其最终输出交回本节点的下游。保存和运行前都会阻止循环引用。||Pass the current input to another enabled workflow and return its final output downstream. Circular references are blocked before saving and running.</value></data>
+  <data name="Frontend.394" xml:space="preserve"><value>目标工作流、传入输入||Target workflow and input</value></data>
+  <data name="Frontend.395" xml:space="preserve"><value>仅可调用自己的已启用工作流，最多嵌套 8 层||Only your enabled workflows may be called; maximum depth is 8</value></data>
+  <data name="Frontend.396" xml:space="preserve"><value>按顺序为预先声明的工作流变量赋值。只允许受限公式，不运行 JavaScript、网络、文件或循环。||Assign values to declared workflow variables in order. Only restricted formulas are allowed; no JavaScript, network, file, or loop execution.</value></data>
+  <data name="Frontend.397" xml:space="preserve"><value>变量赋值、受限公式||Variable assignments and restricted formulas</value></data>
+  <data name="Frontend.398" xml:space="preserve"><value>输出||Output</value></data>
+  <data name="Frontend.399" xml:space="preserve"><value>原始输入继续向下游传递||Original input continues downstream</value></data>
+  <data name="Frontend.400" xml:space="preserve"><value>等待全部已激活的上游分支完成，再按连线顺序汇总，并只向下游输出一次。||Wait for all activated upstream branches, combine them in connection order, and emit one downstream output.</value></data>
+  <data name="Frontend.401" xml:space="preserve"><value>多个上游输入、输出内容||Multiple upstream inputs and output content</value></data>
+  <data name="Frontend.402" xml:space="preserve"><value>一次汇总结果||One aggregate result</value></data>
+  <data name="Frontend.403" xml:space="preserve"><value>每条上游输入到达后都独立向下游发出一次；下游按稳定的执行计划顺序串行处理。||Emit each arriving upstream input independently. Downstream work is processed serially in stable plan order.</value></data>
+  <data name="Frontend.404" xml:space="preserve"><value>多个上游输入绑定||Multiple upstream input bindings</value></data>
+  <data name="Frontend.405" xml:space="preserve"><value>每个输入各输出一次||One output per input</value></data>
+  <data name="Frontend.406" xml:space="preserve"><value>把同一输入同时发送到任意多个下游节点，让这些独立分支并发执行。||Send the same input to any number of downstream nodes so independent branches run concurrently.</value></data>
+  <data name="Frontend.407" xml:space="preserve"><value>从输出端连接任意多个分支||Connect any number of branches from the output port</value></data>
+  <data name="Frontend.408" xml:space="preserve"><value>原始输入分发至每个分支||Original input is sent to every branch</value></data>
+  <data name="Frontend.409" xml:space="preserve"><value>将指定模板解析后的内容输出到本页底部的执行 Console，便于调试；不会改变下游输入。||Print the resolved template to the execution Console for debugging without changing downstream input.</value></data>
+  <data name="Frontend.410" xml:space="preserve"><value>打印内容（默认 {{input}}）||Print content (default: {{input}})</value></data>
+  <data name="Frontend.411" xml:space="preserve"><value>向订阅者发送 NeuBell 提醒，并可设定点击后的消费方式。||Send a NeuBell notification to subscribers and configure consumption after selection.</value></data>
+  <data name="Frontend.412" xml:space="preserve"><value>订阅、标题、内容、消费方式||Subscription, title, content, and consumption mode</value></data>
+  <data name="Frontend.413" xml:space="preserve"><value>可选消费||Consumption options</value></data>
+  <data name="Frontend.414" xml:space="preserve"><value>当前提醒 / 当前订阅全部 / 仅查看||Current notification / all in subscription / view only</value></data>
+  <data name="Frontend.415" xml:space="preserve"><value>标记工作流的结束位置；不能插入到已有连线中。||Mark the end of the workflow. This node cannot be inserted into an existing connection.</value></data>
+  <data name="Frontend.416" xml:space="preserve"><value>无后续节点，不能在线中插入||No downstream nodes; cannot be inserted into a connection</value></data>
+  <data name="Frontend.417" xml:space="preserve"><value>系统节点||System Node</value></data>
+  <data name="Frontend.418" xml:space="preserve"><value>工作流内置节点。||Built-in workflow node.</value></data>
+  <data name="Frontend.419" xml:space="preserve"><value>工作流系统节点||Workflow System Node</value></data>
+  <data name="Frontend.420" xml:space="preserve"><value>可拖到画布添加；不能插入连线||Drag to the canvas to add; cannot be inserted into a connection</value></data>
+  <data name="Frontend.421" xml:space="preserve"><value>双击或拖到画布以添加||Double-click or drag to the canvas to add</value></data>
+  <data name="Frontend.422" xml:space="preserve"><value>所属模块||Module</value></data>
+  <data name="Frontend.423" xml:space="preserve"><value>未标注模块||Unspecified module</value></data>
+  <data name="Frontend.424" xml:space="preserve"><value>Function 标识||Function identifier</value></data>
+  <data name="Frontend.425" xml:space="preserve"><value>未标注||Unspecified</value></data>
+  <data name="Frontend.426" xml:space="preserve"><value>参数 · {0}||Parameter · {0}</value></data>
+  <data name="Frontend.427" xml:space="preserve"><value>必填参数||Required parameter</value></data>
+  <data name="Frontend.428" xml:space="preserve"><value>可选参数||Optional parameter</value></data>
+  <data name="Frontend.429" xml:space="preserve"><value>更多参数||More parameters</value></data>
+  <data name="Frontend.430" xml:space="preserve"><value>另有 {0} 个参数可在节点设置中配置||{0} more parameters can be configured in Node Settings</value></data>
+  <data name="Frontend.431" xml:space="preserve"><value>未命名 Function||Unnamed Function</value></data>
+  <data name="Frontend.432" xml:space="preserve"><value>暂无 Function 说明。||No Function description.</value></data>
+  <data name="Frontend.433" xml:space="preserve"><value>模块未开启，暂不能添加||Module is disabled; cannot add this node</value></data>
+  <data name="Frontend.434" xml:space="preserve"><value>{0} 节点会在工作流中处理上游输入。||The {0} node processes upstream input in the workflow.</value></data>
+  <data name="Frontend.435" xml:space="preserve"><value>A2A 远程连接||A2A Remote Connection</value></data>
+  <data name="Frontend.436" xml:space="preserve"><value>节点类型||Node type</value></data>
+  <data name="Frontend.437" xml:space="preserve"><value>当前对象不可用，暂不能添加||The current object is unavailable and cannot be added</value></data>
+  <data name="Frontend.438" xml:space="preserve"><value>节点详情||Node Details</value></data>
+  <data name="Frontend.439" xml:space="preserve"><value>无法打开任务||Unable to Open Task</value></data>
+  <data name="Frontend.440" xml:space="preserve"><value>任务或工作流已不存在。||The task or workflow no longer exists.</value></data>
+  <data name="Frontend.441" xml:space="preserve"><value>切换工作流||Switch Workflow</value></data>
+  <data name="Frontend.442" xml:space="preserve"><value>Workflow 提醒||Workflow Notification</value></data>
+  <data name="Frontend.443" xml:space="preserve"><value>处理以下输入：{{input}}||Process the following input: {{input}}</value></data>
+  <data name="Frontend.444" xml:space="preserve"><value>无法插入节点||Unable to Insert Node</value></data>
+  <data name="Frontend.445" xml:space="preserve"><value>结束或触发器节点不能插入到已有连线中。||End and trigger nodes cannot be inserted into an existing connection.</value></data>
+  <data name="Frontend.446" xml:space="preserve"><value>原连线已变化，请重新打开插入菜单。||The original connection changed. Reopen the insert menu.</value></data>
+  <data name="Frontend.447" xml:space="preserve"><value>该节点无法同时连接原连线的上下游，请选择其他节点。||This node cannot connect both ends of the original connection. Select another node.</value></data>
+  <data name="Frontend.448" xml:space="preserve"><value>请先断开节点||Disconnect the Node First</value></data>
+  <data name="Frontend.449" xml:space="preserve"><value>为避免静默改变已有流程，只能将尚未连接的节点拖入连线。||To avoid silently changing the existing flow, only disconnected nodes can be dragged into a connection.</value></data>
+  <data name="Frontend.450" xml:space="preserve"><value>节点||Node</value></data>
+  <data name="Frontend.451" xml:space="preserve"><value>（副本）|| (copy)</value></data>
+  <data name="Frontend.452" xml:space="preserve"><value>无法连接||Unable to Connect</value></data>
+  <data name="Frontend.453" xml:space="preserve"><value>目标已有上游、连接会形成循环，或节点不支持该连接方式。多对一目标可使用 Function、聚合或逐项合流节点。||The target already has an upstream node, the connection would create a cycle, or the node does not support this connection. For many-to-one targets, use a Function, Aggregate, or Item-by-item Merge node.</value></data>
+  <data name="Frontend.454" xml:space="preserve"><value>Function 已失效||Function unavailable</value></data>
+  <data name="Frontend.455" xml:space="preserve"><value>每 {0} 秒||Every {0} seconds</value></data>
+  <data name="Frontend.456" xml:space="preserve"><value>等待外部 Webhook 请求||Waiting for an external Webhook request</value></data>
+  <data name="Frontend.457" xml:space="preserve"><value>由用户手动运行||Run manually by the user</value></data>
+  <data name="Frontend.458" xml:space="preserve"><value>{0} 秒||{0} seconds</value></data>
+  <data name="Frontend.459" xml:space="preserve"><value>从上游读取次数（最多 100 次）||Read the count from upstream (maximum 100)</value></data>
+  <data name="Frontend.460" xml:space="preserve"><value>顺序重复 {0} 次||Repeat sequentially {0} times</value></data>
+  <data name="Frontend.461" xml:space="preserve"><value>循环体结束后再继续向下执行||Continue downstream after the loop body</value></data>
+  <data name="Frontend.462" xml:space="preserve"><value>调用：{0}||Call: {0}</value></data>
+  <data name="Frontend.463" xml:space="preserve"><value>请选择目标工作流||Select a target workflow</value></data>
+  <data name="Frontend.464" xml:space="preserve"><value>设置 {0} 个工作流变量||Set {0} workflow variables</value></data>
+  <data name="Frontend.465" xml:space="preserve"><value>汇总全部输入后只输出一次||Aggregate all inputs and emit once</value></data>
+  <data name="Frontend.466" xml:space="preserve"><value>请设置汇总输出内容||Configure the aggregate output</value></data>
+  <data name="Frontend.467" xml:space="preserve"><value>每个上游输入独立向下游发送一次||Send each upstream input downstream independently</value></data>
+  <data name="Frontend.468" xml:space="preserve"><value>同时分发到所有下游分支||Send to all downstream branches concurrently</value></data>
+  <data name="Frontend.469" xml:space="preserve"><value>按模板输出到下方 Console||Print the template to the Console below</value></data>
+  <data name="Frontend.470" xml:space="preserve"><value>输出到下方 Console||Print to the Console below</value></data>
+  <data name="Frontend.471" xml:space="preserve"><value>点击后消费本订阅全部提醒||Consume all notifications in this subscription when selected</value></data>
+  <data name="Frontend.472" xml:space="preserve"><value>点击后消费当前提醒||Consume this notification when selected</value></data>
+  <data name="Frontend.473" xml:space="preserve"><value>点击后仅查看任务||View the task without consuming when selected</value></data>
+  <data name="Frontend.474" xml:space="preserve"><value>流程在此结束||Workflow ends here</value></data>
+  <data name="Frontend.475" xml:space="preserve"><value>节点检查失败。||Node validation failed.</value></data>
+  <data name="Frontend.476" xml:space="preserve"><value>类型||Type</value></data>
+  <data name="Frontend.477" xml:space="preserve"><value>可用 / 已启用||Available / Enabled</value></data>
+  <data name="Frontend.478" xml:space="preserve"><value>不可用 / 已停用||Unavailable / Disabled</value></data>
+  <data name="Frontend.479" xml:space="preserve"><value>知识库 ID||Knowledge Base ID</value></data>
+  <data name="Frontend.480" xml:space="preserve"><value>组状态||Group status</value></data>
+  <data name="Frontend.481" xml:space="preserve"><value>节点输出||Node output</value></data>
+  <data name="Frontend.482" xml:space="preserve"><value>完整输出||Complete output</value></data>
+  <data name="Frontend.483" xml:space="preserve"><value>聚合数组||Aggregate array</value></data>
+  <data name="Frontend.484" xml:space="preserve"><value>聚合输出||Aggregate output</value></data>
+  <data name="Frontend.485" xml:space="preserve"><value>当前输入项||Current input item</value></data>
+  <data name="Frontend.486" xml:space="preserve"><value>Webhook 输入||Webhook input</value></data>
+  <data name="Frontend.487" xml:space="preserve"><value>文本输出||Text output</value></data>
+  <data name="Frontend.488" xml:space="preserve"><value>；选项元数据暂不可用||; option metadata is unavailable</value></data>
+  <data name="Frontend.489" xml:space="preserve"><value>预载输入选择 · {0}（{1}{2}）||Preloaded input selection · {0} ({1}{2})</value></data>
+  <data name="Frontend.490" xml:space="preserve"><value>多选||multiple</value></data>
+  <data name="Frontend.491" xml:space="preserve"><value>单选||single</value></data>
+  <data name="Frontend.492" xml:space="preserve"><value>运行观察||runtime observation</value></data>
+  <data name="Frontend.493" xml:space="preserve"><value>目标参数需要 {0}；类型转换公式必须独占整个输入，例如 {1}||The target parameter requires {0}. A type-conversion formula must be the entire input, for example {1}</value></data>
+  <data name="Frontend.494" xml:space="preserve"><value>纯公式结果为 {0}，但目标参数需要 {1}||The formula result is {0}, but the target parameter requires {1}</value></data>
+  <data name="Frontend.495" xml:space="preserve"><value>纯公式模式：运行时结果会保留类型；目标参数需要 {0}||Formula-only mode preserves the runtime type; the target parameter requires {0}</value></data>
+  <data name="Frontend.496" xml:space="preserve"><value>纯公式结果：{0} → 目标参数 {1}||Formula result: {0} → target parameter {1}</value></data>
+  <data name="Frontend.497" xml:space="preserve"><value>可使用 {{input}} 引用当前输入；也可以打开编辑器插入上游输出。||Use {{input}} for the current input, or open the editor to insert an upstream output.</value></data>
+  <data name="Frontend.498" xml:space="preserve"><value>{0} 组合前后文本时结果为字符串。||{0} Adding surrounding text produces a string.</value></data>
+  <data name="Frontend.499" xml:space="preserve"><value>{0} 目标参数需要 {1}：只填写完整公式（例如 {2}）会保留其类型；加入前后文本后结果会变成字符串。||{0} The target parameter requires {1}. A complete formula such as {2} preserves its type; surrounding text converts the result to a string.</value></data>
+  <data name="Frontend.500" xml:space="preserve"><value>已失效的上游来源||Unavailable upstream source</value></data>
+  <data name="Frontend.501" xml:space="preserve"><value>{0}文本||{0} text</value></data>
+  <data name="Frontend.502" xml:space="preserve"><value>（空文本）||(empty text)</value></data>
+  <data name="Frontend.503" xml:space="preserve"><value>此参数不支持在文本中嵌入变量||This parameter does not support embedded variables</value></data>
+  <data name="Frontend.504" xml:space="preserve"><value>文本中的变量来源已失效，或缺少上游列表索引||A variable source is unavailable or its upstream list index is missing</value></data>
+  <data name="Frontend.505" xml:space="preserve"><value>文本中嵌入 {0} 个上游值||{0} upstream values embedded in text</value></data>
+  <data name="Frontend.506" xml:space="preserve"><value>关联节点已不是有效上游节点||The bound node is no longer a valid upstream node</value></data>
+  <data name="Frontend.507" xml:space="preserve"><value>关联的 Function 选择参数已在模块更新后删除或不可用||The bound Function selection parameter was removed or became unavailable after a module update</value></data>
+  <data name="Frontend.508" xml:space="preserve"><value>关联的输出字段已不存在||The bound output field no longer exists</value></data>
+  <data name="Frontend.509" xml:space="preserve"><value>关联字段类型已在模块更新后发生变化，请重新选择来源||The bound field type changed after a module update. Select the source again.</value></data>
+  <data name="Frontend.510" xml:space="preserve"><value>上游是对象列表，请选择列表索引||The upstream value is an object list. Select a list index.</value></data>
+  <data name="Frontend.511" xml:space="preserve"><value>类型不匹配：请选择数组索引后再传入单值||Type mismatch: select an array index before passing a scalar</value></data>
+  <data name="Frontend.512" xml:space="preserve"><value>类型不匹配：目标参数要求数组||Type mismatch: the target parameter requires an array</value></data>
+  <data name="Frontend.513" xml:space="preserve"><value>类型不匹配：需要 {0}，当前为 {1}||Type mismatch: expected {0}, currently {1}</value></data>
+  <data name="Frontend.514" xml:space="preserve"><value>已关联 {0}{1}||Bound to {0}{1}</value></data>
+  <data name="Frontend.515" xml:space="preserve"><value>循环节点“{0}”的循环体只能有一个“循环结束”节点。||The body of loop “{0}” may contain only one Loop End node.</value></data>
+  <data name="Frontend.516" xml:space="preserve"><value>循环节点“{0}”必须连接一个循环体入口。||Loop “{0}” must connect to one loop-body entry.</value></data>
+  <data name="Frontend.517" xml:space="preserve"><value>循环节点“{0}”的循环体路径无效。||Loop “{0}” has an invalid body path.</value></data>
+  <data name="Frontend.518" xml:space="preserve"><value>循环体引用了不存在的节点。||The loop body references a missing node.</value></data>
+  <data name="Frontend.519" xml:space="preserve"><value>循环节点“{0}”当前只支持普通节点组成的单一路径。||Loop “{0}” currently supports only one path of ordinary nodes.</value></data>
+  <data name="Frontend.520" xml:space="preserve"><value>循环体节点“{0}”不能被循环外路径共享。||Loop-body node “{0}” cannot be shared by a path outside the loop.</value></data>
+  <data name="Frontend.521" xml:space="preserve"><value>循环节点“{0}”的循环体必须是一条单一路径。||The body of loop “{0}” must be a single path.</value></data>
+  <data name="Frontend.522" xml:space="preserve"><value>循环结束节点必须是循环体的唯一最后节点。||Loop End must be the only final node in the loop body.</value></data>
+  <data name="Frontend.523" xml:space="preserve"><value>{0} · 运行时必须为 1–100 的整数{1}||{0} · must be an integer from 1 to 100 at runtime{1}</value></data>
+  <data name="Frontend.524" xml:space="preserve"><value>关联：{0}||Bound: {0}</value></data>
+  <data name="Frontend.525" xml:space="preserve"><value>请输入工作流名称。||Enter a workflow name.</value></data>
+  <data name="Frontend.526" xml:space="preserve"><value>单个工作流最多允许 30 个变量。||A workflow may have at most 30 variables.</value></data>
+  <data name="Frontend.527" xml:space="preserve"><value>工作流变量名必须唯一，以字母或下划线开头，仅包含字母、数字、下划线；不能使用 input 或 vars。||Workflow variable names must be unique, begin with a letter or underscore, and contain only letters, numbers, and underscores. input and vars are reserved.</value></data>
+  <data name="Frontend.528" xml:space="preserve"><value>工作流变量“{0}”重复。||Workflow variable “{0}” is duplicated.</value></data>
+  <data name="Frontend.529" xml:space="preserve"><value>工作流变量“{0}”的值不能超过 8000 个字符。||The value of workflow variable “{0}” cannot exceed 8,000 characters.</value></data>
+  <data name="Frontend.530" xml:space="preserve"><value>工作流必须且只能包含一个触发器。||A workflow must contain exactly one trigger.</value></data>
+  <data name="Frontend.531" xml:space="preserve"><value>触发器节点类型无效。||The trigger node type is invalid.</value></data>
+  <data name="Frontend.532" xml:space="preserve"><value>Webhook 请求方法无效。||The Webhook request method is invalid.</value></data>
+  <data name="Frontend.533" xml:space="preserve"><value>Webhook 参数名格式无效。||The Webhook parameter name is invalid.</value></data>
+  <data name="Frontend.534" xml:space="preserve"><value>Webhook 参数“{0}”重复。||Webhook parameter “{0}” is duplicated.</value></data>
+  <data name="Frontend.535" xml:space="preserve"><value>Webhook 参数“{0}”的说明不能超过 500 个字符。||The description of Webhook parameter “{0}” cannot exceed 500 characters.</value></data>
+  <data name="Frontend.536" xml:space="preserve"><value>画布中仍有未连接到触发器的节点。||The canvas still has nodes that are not connected to the trigger.</value></data>
+  <data name="Frontend.537" xml:space="preserve"><value>节点“{0}”只允许一个上游；多对一目标请使用 Function、聚合或逐项合流节点。||Node “{0}” allows only one upstream node. For many-to-one targets, use a Function, Aggregate, or Item-by-item Merge node.</value></data>
+  <data name="Frontend.538" xml:space="preserve"><value>聚合节点“{0}”必须设置输出内容。||Aggregate node “{0}” must define output content.</value></data>
+  <data name="Frontend.539" xml:space="preserve"><value>聚合节点“{0}”的输出内容不能超过 8000 个字符。||The output content of Aggregate node “{0}” cannot exceed 8,000 characters.</value></data>
+  <data name="Frontend.540" xml:space="preserve"><value>循环节点“{0}”的次数必须为 1 到 100 的整数，或引用上游单值。||The count for Loop node “{0}” must be an integer from 1 to 100 or an upstream scalar.</value></data>
+  <data name="Frontend.541" xml:space="preserve"><value>安全代码节点“{0}”必须设置 1 到 30 条变量赋值。||Safe Code node “{0}” must define 1 to 30 variable assignments.</value></data>
+  <data name="Frontend.542" xml:space="preserve"><value>安全代码节点“{0}”只能给已定义的工作流变量赋值。||Safe Code node “{0}” may assign only defined workflow variables.</value></data>
+  <data name="Frontend.543" xml:space="preserve"><value>安全代码节点“{0}”的赋值不能超过 8000 个字符。||An assignment in Safe Code node “{0}” cannot exceed 8,000 characters.</value></data>
+  <data name="Frontend.544" xml:space="preserve"><value>调用工作流节点“{0}”必须选择一个已保存的目标工作流。||Call Workflow node “{0}” must select a saved target workflow.</value></data>
+  <data name="Frontend.545" xml:space="preserve"><value>调用工作流节点“{0}”的目标工作流尚未启用。||The target of Call Workflow node “{0}” is not enabled.</value></data>
+  <data name="Frontend.546" xml:space="preserve"><value>调用工作流节点“{0}”不能调用当前工作流。||Call Workflow node “{0}” cannot call the current workflow.</value></data>
+  <data name="Frontend.547" xml:space="preserve"><value>节点“{0}”引用的模块未开启或 Function 已移除。||The module referenced by node “{0}” is disabled or the Function was removed.</value></data>
+  <data name="Frontend.548" xml:space="preserve"><value>节点“{0}”缺少必填参数“{1}”。||Node “{0}” is missing required parameter “{1}”.</value></data>
+  <data name="Frontend.549" xml:space="preserve"><value>节点“{0}”参数“{1}”缺少原始字段名，当前仅可保存草稿；请修复或更新对应 XNCF 模块。||Parameter “{1}” on node “{0}” lacks its source field name. Only a draft can be saved; fix or update the corresponding XNCF module.</value></data>
+  <data name="Frontend.550" xml:space="preserve"><value>节点“{0}”参数“{1}”：{2}||Node “{0}” parameter “{1}”: {2}</value></data>
+  <data name="Frontend.551" xml:space="preserve"><value>节点“{0}”引用的 Agent 或 A2A 连接不可用。||The Agent or A2A connection referenced by node “{0}” is unavailable.</value></data>
+  <data name="Frontend.552" xml:space="preserve"><value>已复制到剪贴板。||Copied to the clipboard.</value></data>
+  <data name="Frontend.553" xml:space="preserve"><value>复制失败，请手动复制。||Copy failed. Copy it manually.</value></data>
+  <data name="Frontend.554" xml:space="preserve"><value>当前工作流有未保存的更改。离开后这些更改将丢失。||The current workflow has unsaved changes. They will be lost if you leave.</value></data>
+  <data name="Frontend.555" xml:space="preserve"><value>确认离开当前工作流？||Leave the current workflow?</value></data>
+  <data name="Frontend.556" xml:space="preserve"><value>放弃更改||Discard Changes</value></data>
+  <data name="Frontend.557" xml:space="preserve"><value>继续编辑||Continue Editing</value></data>
+  <data name="Frontend.558" xml:space="preserve"><value>当前没有需要保存的更改。||There are no changes to save.</value></data>
+  <data name="Frontend.559" xml:space="preserve"><value>请检查节点配置。||Check the node configuration.</value></data>
+  <data name="Frontend.560" xml:space="preserve"><value>无法保存||Unable to Save</value></data>
+  <data name="Frontend.561" xml:space="preserve"><value>草稿已保存。{0} 个未连接节点会阻止运行；已自动停用工作流，请连接完成后重新启用。||Draft saved. {0} disconnected nodes prevent running, so the workflow was disabled automatically. Connect them and enable the workflow again.</value></data>
+  <data name="Frontend.562" xml:space="preserve"><value>已使用快捷键保存。||Saved with the keyboard shortcut.</value></data>
+  <data name="Frontend.563" xml:space="preserve"><value>工作流已保存。||Workflow saved.</value></data>
+  <data name="Frontend.564" xml:space="preserve"><value>自动保存已暂停||Auto-save Paused</value></data>
+  <data name="Frontend.565" xml:space="preserve"><value>{0}。请修正后手动保存。||{0}. Fix the issue and save manually.</value></data>
+  <data name="Frontend.566" xml:space="preserve"><value>运行前校验失败。||Pre-run validation failed.</value></data>
+  <data name="Frontend.567" xml:space="preserve"><value>运行前校验失败||Pre-run Validation Failed</value></data>
+  <data name="Frontend.568" xml:space="preserve"><value>正在保存并校验当前工作流……||Saving and validating the current workflow…</value></data>
+  <data name="Frontend.569" xml:space="preserve"><value>参数、引用和类型校验通过。||Parameter, reference, and type validation passed.</value></data>
+  <data name="Frontend.570" xml:space="preserve"><value>无法运行||Unable to Run</value></data>
+  <data name="Frontend.571" xml:space="preserve"><value>工作流运行完成。||Workflow run completed.</value></data>
+  <data name="Frontend.572" xml:space="preserve"><value>工作流运行失败。||Workflow run failed.</value></data>
+  <data name="Frontend.573" xml:space="preserve"><value>读取运行状态失败。||Failed to read the run status.</value></data>
+  <data name="Frontend.574" xml:space="preserve"><value>将停止当前工作流。已启动的外部调用可能需要等待其自身响应取消。||Stop the current workflow. External calls that already started may need time to respond to cancellation.</value></data>
+  <data name="Frontend.575" xml:space="preserve"><value>已请求手动中止，正在等待当前节点响应取消。||Abort requested. Waiting for the current node to respond to cancellation.</value></data>
+  <data name="Frontend.576" xml:space="preserve"><value>中止工作流失败。||Failed to abort the workflow.</value></data>
+  <data name="Frontend.577" xml:space="preserve"><value>无法中止||Unable to Abort</value></data>
+  <data name="Frontend.578" xml:space="preserve"><value>进入任务列表||Open Task List</value></data>
+  <data name="Frontend.579" xml:space="preserve"><value>确认删除工作流“{0}”？此操作无法恢复。||Delete workflow “{0}”? This cannot be undone.</value></data>
 </root>

@@ -625,13 +625,13 @@
     <value>MCP Endpoints||MCP Endpoints</value>
   </data>
   <data name="Frontend.267" xml:space="preserve">
-    <value>Endpoint 名称 (例如: mcp-server-NCF-7)||Endpoint 名称 (例如: mcp-server-NCF-7)</value>
+    <value>Endpoint 名称 (例如: mcp-server-NCF-7)||Endpoint name (for example: mcp-server-NCF-7)</value>
   </data>
   <data name="Frontend.268" xml:space="preserve">
-    <value>Endpoint URL (例如: http://localhost:5000/mcp/sse)||Endpoint URL (例如: http://localhost:5000/mcp/sse)</value>
+    <value>Endpoint URL (例如: http://localhost:5000/mcp/sse)||Endpoint URL (for example: http://localhost:5000/mcp/sse)</value>
   </data>
   <data name="Frontend.269" xml:space="preserve">
-    <value>MCP 工具列表||MCP 工具列表</value>
+    <value>MCP 工具列表||MCP tool list</value>
   </data>
   <data name="Frontend.270" xml:space="preserve">
     <value>Top_p:||Top_p:</value>

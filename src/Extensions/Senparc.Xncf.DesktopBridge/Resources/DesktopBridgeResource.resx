@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.MenuName" xml:space="preserve"><value>DesktopBridge 桌面桥接</value></data>
+  <data name="Module.Description" xml:space="preserve"><value>为 NCF 桌面机器人提供受保护的本机或远程状态、设备配对和 EventBus 活动流。</value></data>
+  <data name="Page.Title" xml:space="preserve"><value>DesktopBridge 设备配对与会话</value></data>
+  <data name="Page.Extensions" xml:space="preserve"><value>扩展模块</value></data>
+  <data name="Page.Devices" xml:space="preserve"><value>设备配对与会话</value></data>
+  <data name="Page.PairingInfo.Title" xml:space="preserve"><value>安全配对说明</value></data>
+  <data name="Page.PairingInfo.Description" xml:space="preserve"><value>桌面端留空令牌后会生成 5 分钟有效的配对码。请核对配对码和来源地址后批准；会话令牌有效 24 小时、不会在后台显示，并可随时撤销。</value></data>
+  <data name="Page.Refresh" xml:space="preserve"><value>刷新状态</value></data>
+  <data name="Page.PendingCount" xml:space="preserve"><value>待审批 {0}</value></data>
+  <data name="Page.ActiveCount" xml:space="preserve"><value>活动会话 {0}</value></data>
+  <data name="Page.PendingRequests" xml:space="preserve"><value>待审批请求</value></data>
+  <data name="Page.EmptyPending" xml:space="preserve"><value>当前没有待审批的配对请求</value></data>
+  <data name="Page.PairingCode" xml:space="preserve"><value>配对码</value></data>
+  <data name="Page.DesktopClient" xml:space="preserve"><value>桌面端</value></data>
+  <data name="Page.SourceAddress" xml:space="preserve"><value>来源地址</value></data>
+  <data name="Page.RequestedAt" xml:space="preserve"><value>发起时间</value></data>
+  <data name="Page.ExpiresAt" xml:space="preserve"><value>过期时间</value></data>
+  <data name="Page.Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Page.Approve" xml:space="preserve"><value>批准</value></data>
+  <data name="Page.Deny" xml:space="preserve"><value>拒绝</value></data>
+  <data name="Page.ActiveSessions" xml:space="preserve"><value>活动会话</value></data>
+  <data name="Page.EmptySessions" xml:space="preserve"><value>当前没有通过配对签发的活动会话</value></data>
+  <data name="Page.ApprovedBy" xml:space="preserve"><value>批准人</value></data>
+  <data name="Page.ApprovedAt" xml:space="preserve"><value>批准时间</value></data>
+  <data name="Page.LastUsed" xml:space="preserve"><value>最近使用</value></data>
+  <data name="Page.NotUsed" xml:space="preserve"><value>尚未使用</value></data>
+  <data name="Page.Status" xml:space="preserve"><value>状态</value></data>
+  <data name="Page.Authorized" xml:space="preserve"><value>已授权</value></data>
+  <data name="Page.Revoke" xml:space="preserve"><value>撤销</value></data>
+  <data name="Page.LegacyTokenNotice" xml:space="preserve"><value>环境变量令牌属于兼容通道，不会在活动会话列表中显示，也不能从此页面撤销。</value></data>
+  <data name="Message.Approve.Success" xml:space="preserve"><value>已批准配对。会话令牌仅会交付给发起请求的桌面端。</value></data>
+  <data name="Message.Approve.Failed" xml:space="preserve"><value>配对请求已过期、已处理，或活动会话已达到上限。</value></data>
+  <data name="Message.Deny.Success" xml:space="preserve"><value>已拒绝配对请求。</value></data>
+  <data name="Message.Deny.Failed" xml:space="preserve"><value>配对请求已过期或已处理。</value></data>
+  <data name="Message.Revoke.Success" xml:space="preserve"><value>会话已撤销，桌面端已收到断开信号并将退出当前网站状态，应用保持打开。</value></data>
+  <data name="Message.Revoke.Failed" xml:space="preserve"><value>会话不存在或已经失效。</value></data>
+  <data name="Auth.Title" xml:space="preserve"><value>正在授权桌面 AdminChat</value></data>
+  <data name="Auth.Heading" xml:space="preserve"><value>授权桌面 AdminChat</value></data>
+  <data name="Auth.Description" xml:space="preserve"><value>确认后，当前 GUI 将以此管理员身份使用 AdminChat。只传递一次性授权结果，不会读取或复制浏览器 Cookie。</value></data>
+  <data name="Auth.Warning" xml:space="preserve"><value>仅当此页面由你正在使用的 NCF GUI 自动打开时继续。</value></data>
+  <data name="Auth.Submit" xml:space="preserve"><value>授权此 GUI</value></data>
+  <data name="Auth.FailedHeading" xml:space="preserve"><value>未能授权桌面 AdminChat</value></data>
+  <data name="Auth.Error.RequestExpired" xml:space="preserve"><value>桌面授权请求不存在或已过期，请返回 GUI 后重试。</value></data>
+  <data name="Auth.Error.LoginExpired" xml:space="preserve"><value>WebView 管理员登录已失效，请重新登录。</value></data>
+  <data name="Auth.Error.MultiTenantDenied" xml:space="preserve"><value>多租户管理员暂不支持 WebView 自动授权，请使用显式登录。</value></data>
+  <data name="Auth.Error.MultiTenantRetry" xml:space="preserve"><value>多租户管理员暂不支持 WebView 自动授权，请返回 GUI 使用显式登录。</value></data>
+  <data name="Auth.Error.LoginExpiring" xml:space="preserve"><value>WebView 管理员登录即将过期，请重新登录。</value></data>
+  <data name="Auth.Error.RequestInvalid" xml:space="preserve"><value>桌面授权请求已失效，请返回 GUI 后重试。</value></data>
+  <data name="NeuBell.Title" xml:space="preserve"><value>DesktopBridge 远程连接审核</value></data>
+  <data name="NeuBell.Pending" xml:space="preserve"><value>有 {0} 个设备配对请求等待处理。</value></data>
+  <data name="NeuBell.Empty" xml:space="preserve"><value>当前没有待处理的设备配对请求。</value></data>
+  <data name="Pairing.UnknownAddress" xml:space="preserve"><value>未知地址</value></data>
+  <data name="Pairing.DefaultAdministrator" xml:space="preserve"><value>NCF 管理员</value></data>
+  <data name="Pairing.Expired" xml:space="preserve"><value>配对请求已过期，请重新发起。</value></data>
+  <data name="Pairing.Denied" xml:space="preserve"><value>管理员已拒绝本次配对请求。</value></data>
+  <data name="Pairing.RateLimit.Message" xml:space="preserve"><value>配对请求过于频繁，请稍后重试。</value></data>
+  <data name="Pairing.RateLimit.Title" xml:space="preserve"><value>配对请求过于频繁</value></data>
+  <data name="Pairing.Invalid.Title" xml:space="preserve"><value>配对凭据无效</value></data>
+  <data name="Pairing.Invalid.Detail" xml:space="preserve"><value>配对请求不存在或领取凭据不正确。</value></data>
+  <data name="Pairing.Transport.Title" xml:space="preserve"><value>DesktopBridge 配对要求安全传输</value></data>
+  <data name="Pairing.Transport.Detail" xml:space="preserve"><value>远程配对必须使用 HTTPS；HTTP 仅允许 localhost 或本机 SSH 隧道。</value></data>
+  <data name="Auth.Error.InvalidDesktopSession" xml:space="preserve"><value>桌面会话无效。</value></data>
+  <data name="Auth.Error.InvalidPkce" xml:space="preserve"><value>PKCE challenge 无效。</value></data>
+  <data name="Auth.Error.WebViewDenied" xml:space="preserve"><value>WebView 登录不能用于桌面授权。</value></data>
+  <data name="Auth.Error.RateLimit.Message" xml:space="preserve"><value>桌面登录授权请求过于频繁，请稍后重试。</value></data>
+  <data name="Auth.Error.RateLimit.Title" xml:space="preserve"><value>桌面登录授权请求过于频繁</value></data>
+  <data name="Auth.Error.Invalid.Title" xml:space="preserve"><value>桌面登录授权请求无效</value></data>
+  <data name="Auth.Error.Invalid.Detail" xml:space="preserve"><value>请重新发起 WebView 管理员授权。</value></data>
+  <data name="Auth.Error.OneTimeExpired" xml:space="preserve"><value>一次性授权无效或已过期。</value></data>
+  <data name="Auth.Error.AdministratorDenied" xml:space="preserve"><value>管理员身份不能用于桌面授权。</value></data>
+  <data name="Auth.Transport.Title" xml:space="preserve"><value>桌面登录授权要求安全传输</value></data>
+  <data name="Auth.Transport.Detail" xml:space="preserve"><value>远程换票必须使用 HTTPS；HTTP 仅允许 localhost 或本机 SSH 隧道。</value></data>
+</root>

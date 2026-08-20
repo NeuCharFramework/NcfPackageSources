@@ -131,7 +131,7 @@ public sealed class DesktopBridgeController : ControllerBase
                 StatusCodes.Status429TooManyRequests,
                 new ProblemDetails
                 {
-                    Title = "桌面登录授权请求过于频繁",
+                    Title = DesktopBridgeResource.Get("Auth.Error.RateLimit.Title"),
                     Detail = ex.Message,
                     Status = StatusCodes.Status429TooManyRequests
                 });
@@ -140,8 +140,8 @@ public sealed class DesktopBridgeController : ControllerBase
         {
             return BadRequest(new ProblemDetails
             {
-                Title = "桌面登录授权请求无效",
-                Detail = "请重新发起 WebView 管理员授权。",
+                Title = DesktopBridgeResource.Get("Auth.Error.Invalid.Title"),
+                Detail = DesktopBridgeResource.Get("Auth.Error.Invalid.Detail"),
                 Status = StatusCodes.Status400BadRequest
             });
         }
@@ -191,7 +191,7 @@ public sealed class DesktopBridgeController : ControllerBase
                 StatusCodes.Status403Forbidden,
                 new DesktopAdminAuthHandoffRedeemResponse(
                     "denied",
-                    Message: handoff.Message ?? "WebView 登录不能用于桌面授权。"));
+                    Message: handoff.Message ?? DesktopBridgeResource.Get("Auth.Error.WebViewDenied")));
         }
 
         if (!string.Equals(handoff.Status, "approved", StringComparison.Ordinal) ||
@@ -200,7 +200,7 @@ public sealed class DesktopBridgeController : ControllerBase
         {
             return BadRequest(new DesktopAdminAuthHandoffRedeemResponse(
                 "invalid",
-                Message: "一次性授权无效或已过期。"));
+                Message: DesktopBridgeResource.Get("Auth.Error.OneTimeExpired")));
         }
 
         var token = await _adminAuthTokenIssuer
@@ -213,7 +213,7 @@ public sealed class DesktopBridgeController : ControllerBase
                 StatusCodes.Status403Forbidden,
                 new DesktopAdminAuthHandoffRedeemResponse(
                     "denied",
-                    Message: token.ErrorMessage ?? "管理员身份不能用于桌面授权。"));
+                    Message: token.ErrorMessage ?? DesktopBridgeResource.Get("Auth.Error.AdministratorDenied")));
         }
 
         return Ok(new DesktopAdminAuthHandoffRedeemResponse(
@@ -380,8 +380,8 @@ public sealed class DesktopBridgeController : ControllerBase
             StatusCodes.Status403Forbidden,
             new ProblemDetails
             {
-                Title = "桌面登录授权要求安全传输",
-                Detail = "远程换票必须使用 HTTPS；HTTP 仅允许 localhost 或本机 SSH 隧道。",
+                Title = DesktopBridgeResource.Get("Auth.Transport.Title"),
+                Detail = DesktopBridgeResource.Get("Auth.Transport.Detail"),
                 Status = StatusCodes.Status403Forbidden
             });
     }

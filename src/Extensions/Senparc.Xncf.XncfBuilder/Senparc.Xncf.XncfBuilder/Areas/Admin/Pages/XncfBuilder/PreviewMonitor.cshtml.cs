@@ -75,7 +75,7 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
                 developmentStatus = new
                 {
                     IsAvailable = false,
-                    StatusMessage = "隔离开发任务表尚未就绪；请执行 XncfBuilder 最新数据库 Migration。",
+                    StatusMessage = XncfBuilderResource.Get("XncfBuilder.PreviewMonitor.DevelopmentPersistenceUnavailable"),
                     ErrorMessage = ex.Message
                 };
             }
@@ -97,7 +97,7 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
         {
             var session = _previewService.GetSession(sessionId, includeOutput: true);
             return session == null
-                ? NotFound(new { Message = "预览会话不存在或历史记录已过期。" })
+                ? NotFound(new { Message = XncfBuilderResource.Get("XncfBuilder.PreviewMonitor.SessionNotFound") })
                 : new JsonResult(new
                 {
                     session.SessionId,
@@ -110,7 +110,7 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
         {
             if (string.IsNullOrWhiteSpace(sessionId))
             {
-                return BadRequest(new { Message = "必须提供预览会话 ID。" });
+                return BadRequest(new { Message = XncfBuilderResource.Get("XncfBuilder.PreviewMonitor.SessionRequired") });
             }
 
             var stopped = await _previewService.StopAsync(sessionId, cancellationToken: HttpContext.RequestAborted)
@@ -118,7 +118,9 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
             return new JsonResult(new
             {
                 Success = stopped,
-                Message = stopped ? "停止请求已完成。" : "会话不存在、已停止或已经结束。"
+                Message = stopped
+                    ? XncfBuilderResource.Get("XncfBuilder.PreviewMonitor.StopSucceeded")
+                    : XncfBuilderResource.Get("XncfBuilder.PreviewMonitor.StopFailed")
             });
         }
 
@@ -126,7 +128,7 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
         {
             if (string.IsNullOrWhiteSpace(jobId) || string.IsNullOrWhiteSpace(confirmationPhrase))
             {
-                return BadRequest(new { Message = "必须提供任务 ID 和确认短语。" });
+                return BadRequest(new { Message = XncfBuilderResource.Get("XncfBuilder.PreviewMonitor.ApprovalRequired") });
             }
 
             try
@@ -146,7 +148,7 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
         {
             if (string.IsNullOrWhiteSpace(jobId))
             {
-                return BadRequest(new { Message = "必须提供开发任务 ID。" });
+                return BadRequest(new { Message = XncfBuilderResource.Get("XncfBuilder.PreviewMonitor.DevelopmentJobRequired") });
             }
 
             try

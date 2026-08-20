@@ -1,7 +1,7 @@
 @page
 @model Senparc.Xncf.Sandbox.Areas.Sandbox.Pages.Setup
 @{
-    ViewData["Title"] = $"{Model.XncfRegister.MenuName} - 环境准备";
+    ViewData["Title"] = $"{Model.XncfRegister.MenuName} - {XR["Area.Menu.Setup"]}";
     Layout = "_Layout_Vue";
 }
 
@@ -59,6 +59,7 @@
 </div>
 
 @section scripts{
+    @await Html.PartialAsync("_LocalizationScripts")
     <script>
         new Vue({
             el: "#app",

@@ -49,7 +49,7 @@ public sealed class AuthHandoff : PageModel
         CanSubmit = RequestId != Guid.Empty && _handoffStore.IsPending(RequestId);
         if (!CanSubmit)
         {
-            ErrorMessage = "桌面授权请求不存在或已过期，请返回 GUI 后重试。";
+            ErrorMessage = DesktopBridgeResource.Get("Auth.Error.RequestExpired");
         }
     }
 
@@ -58,7 +58,7 @@ public sealed class AuthHandoff : PageModel
         ApplySecurityHeaders();
         if (RequestId == Guid.Empty || !_handoffStore.IsPending(RequestId))
         {
-            ErrorMessage = "桌面授权请求不存在或已过期，请返回 GUI 后重试。";
+            ErrorMessage = DesktopBridgeResource.Get("Auth.Error.RequestExpired");
             return Page();
         }
 
@@ -70,30 +70,32 @@ public sealed class AuthHandoff : PageModel
             !int.TryParse(principal.FindFirstValue(ClaimTypes.NameIdentifier), out var adminUserId) ||
             adminUserId <= 0)
         {
-            _handoffStore.Deny(RequestId, "WebView 管理员登录已失效，请重新登录。");
-            ErrorMessage = "WebView 管理员登录已失效，请重新登录。";
+            var errorMessage = DesktopBridgeResource.Get("Auth.Error.LoginExpired");
+            _handoffStore.Deny(RequestId, errorMessage);
+            ErrorMessage = errorMessage;
             return Page();
         }
 
         if (!string.IsNullOrWhiteSpace(principal.FindFirstValue("TenantKey")))
         {
-            _handoffStore.Deny(RequestId, "多租户管理员暂不支持 WebView 自动授权，请使用显式登录。");
-            ErrorMessage = "多租户管理员暂不支持 WebView 自动授权，请返回 GUI 使用显式登录。";
+            _handoffStore.Deny(RequestId, DesktopBridgeResource.Get("Auth.Error.MultiTenantDenied"));
+            ErrorMessage = DesktopBridgeResource.Get("Auth.Error.MultiTenantRetry");
             return Page();
         }
 
         if (cookieAuthentication.Properties?.ExpiresUtc is not { } cookieExpiresUtc ||
             cookieExpiresUtc <= DateTimeOffset.UtcNow.AddSeconds(10))
         {
-            _handoffStore.Deny(RequestId, "WebView 管理员登录即将过期，请重新登录。");
-            ErrorMessage = "WebView 管理员登录即将过期，请重新登录。";
+            var errorMessage = DesktopBridgeResource.Get("Auth.Error.LoginExpiring");
+            _handoffStore.Deny(RequestId, errorMessage);
+            ErrorMessage = errorMessage;
             return Page();
         }
 
         var userName = principal.Identity.Name ?? string.Empty;
         if (!_handoffStore.Approve(RequestId, adminUserId, userName, cookieExpiresUtc))
         {
-            ErrorMessage = "桌面授权请求已失效，请返回 GUI 后重试。";
+            ErrorMessage = DesktopBridgeResource.Get("Auth.Error.RequestInvalid");
             return Page();
         }
 

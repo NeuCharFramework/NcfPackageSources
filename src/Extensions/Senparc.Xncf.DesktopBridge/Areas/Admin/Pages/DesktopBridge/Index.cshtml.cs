@@ -39,24 +39,24 @@ public sealed class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelB
     {
         var approvedBy = User.Identity?.Name;
         TempData["DesktopBridgeMessage"] = _credentialStore.Approve(requestId, approvedBy)
-            ? "已批准配对。会话令牌仅会交付给发起请求的桌面端。"
-            : "配对请求已过期、已处理，或活动会话已达到上限。";
+            ? DesktopBridgeResource.Get("Message.Approve.Success")
+            : DesktopBridgeResource.Get("Message.Approve.Failed");
         return RedirectToPage("./Index", new { uid = Uid });
     }
 
     public IActionResult OnPostDeny(Guid requestId)
     {
         TempData["DesktopBridgeMessage"] = _credentialStore.Deny(requestId)
-            ? "已拒绝配对请求。"
-            : "配对请求已过期或已处理。";
+            ? DesktopBridgeResource.Get("Message.Deny.Success")
+            : DesktopBridgeResource.Get("Message.Deny.Failed");
         return RedirectToPage("./Index", new { uid = Uid });
     }
 
     public IActionResult OnPostRevoke(Guid sessionId)
     {
         TempData["DesktopBridgeMessage"] = _credentialStore.Revoke(sessionId)
-            ? "会话已撤销，桌面端已收到断开信号并将退出当前网站状态，应用保持打开。"
-            : "会话不存在或已经失效。";
+            ? DesktopBridgeResource.Get("Message.Revoke.Success")
+            : DesktopBridgeResource.Get("Message.Revoke.Failed");
         return RedirectToPage("./Index", new { uid = Uid });
     }
 

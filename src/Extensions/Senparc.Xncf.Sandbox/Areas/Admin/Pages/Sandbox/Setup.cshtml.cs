@@ -60,7 +60,7 @@ public class Setup : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
         if (docker == null)
         {
             DockerAvailable = false;
-            DockerStatusMessage = "未注册 Docker 运行时。";
+            DockerStatusMessage = SandboxResource.Get("Setup.DockerRuntimeNotRegistered", "未注册 Docker 运行时。");
             return;
         }
 
@@ -68,13 +68,13 @@ public class Setup : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
         {
             DockerAvailable = await docker.IsAvailableAsync().ConfigureAwait(false);
             DockerStatusMessage = DockerAvailable
-                ? "已检测到可用的 Docker（或兼容 CLI）daemon。"
-                : "未检测到可用的 Docker。请按官方文档手动安装并启动后重试检测。";
+                ? SandboxResource.Get("Setup.DockerAvailable", "已检测到可用的 Docker（或兼容 CLI）daemon。")
+                : SandboxResource.Get("Setup.DockerUnavailable", "未检测到可用的 Docker。请按官方文档手动安装并启动后重试检测。");
         }
         catch (Exception ex)
         {
             DockerAvailable = false;
-            DockerStatusMessage = "Docker 检测异常：" + ex.Message;
+            DockerStatusMessage = SandboxResource.Format("Setup.DockerCheckFailed", "Docker 检测异常：{0}", ex.Message);
         }
     }
 }

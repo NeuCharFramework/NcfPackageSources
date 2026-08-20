@@ -102,4 +102,65 @@
   <data name="Page.Random" xml:space="preserve">
     <value>随机</value>
   </data>
-</root>
+  <data name="Setup.DockerRuntimeNotRegistered" xml:space="preserve"><value>未注册 Docker 运行时。</value></data>
+  <data name="Setup.DockerAvailable" xml:space="preserve"><value>已检测到可用的 Docker（或兼容 CLI）daemon。</value></data>
+  <data name="Setup.DockerUnavailable" xml:space="preserve"><value>未检测到可用的 Docker。请按官方文档手动安装并启动后重试检测。</value></data>
+  <data name="Setup.DockerCheckFailed" xml:space="preserve"><value>Docker 检测异常：{0}</value></data>
+  <data name="Function.Sandbox.Create.Name" xml:space="preserve"><value>创建沙箱</value></data>
+  <data name="Function.Sandbox.Create.Description" xml:space="preserve"><value>按模板创建独立沙箱会话（Docker / Wasm Stub）</value></data>
+  <data name="Function.Sandbox.List.Name" xml:space="preserve"><value>沙箱列表</value></data>
+  <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>查看最近沙箱会话</value></data>
+  <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>沙箱状态</value></data>
+  <data name="Function.Sandbox.Status.Description" xml:space="preserve"><value>按 SessionId 查询</value></data>
+  <data name="Function.Sandbox.Execute.Name" xml:space="preserve"><value>执行代码</value></data>
+  <data name="Function.Sandbox.Execute.Description" xml:space="preserve"><value>在 Exec 模板会话中运行代码片段</value></data>
+  <data name="Function.Sandbox.Destroy.Name" xml:space="preserve"><value>销毁沙箱</value></data>
+  <data name="Function.Sandbox.Destroy.Description" xml:space="preserve"><value>停止并清理指定会话</value></data>
+  <data name="Parameter.Sandbox.Template" xml:space="preserve"><value>模板||选择沙箱模板（下拉一项即可）</value></data>
+  <data name="Parameter.Sandbox.Runtime" xml:space="preserve"><value>运行时||一期请选 Docker；Wasm 尚未可用</value></data>
+  <data name="Parameter.Sandbox.Code" xml:space="preserve"><value>代码||短任务源码。Python 示例：print('hello from NCF Sandbox')；C# 示例：Console.WriteLine(&quot;hello from NCF Sandbox&quot;);（C# 字符串须用双引号）</value></data>
+  <data name="Selection.Sandbox.PythonExec" xml:space="preserve"><value>短任务执行 Python（Docker）</value></data>
+  <data name="Selection.Sandbox.CsharpExec" xml:space="preserve"><value>短任务执行 C#（Docker SDK 镜像）</value></data>
+  <data name="Selection.Sandbox.JupyterPython" xml:space="preserve"><value>交互式 Notebook（较耗内存）</value></data>
+  <data name="Selection.Sandbox.Docker" xml:space="preserve"><value>需要本机 Docker</value></data>
+  <data name="Selection.Sandbox.Wasm" xml:space="preserve"><value>一期占位，尚未可用</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>扩展模块||Extension modules</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>环境准备||Environment setup</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Docker 检测通过，可以继续创建沙箱。||Docker is available. You can create a sandbox.</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Docker 尚未就绪：请先按文档完成手动安装与镜像预拉。||Docker is not ready. Complete the manual installation and pre-pull the images as described in the documentation.</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>本机检测||Local system check</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>重新检测||Check again</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>状态：||Status:</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>可用||Available</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>不可用||Unavailable</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>镜像仓库前缀：||Image registry prefix:</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>未配置（使用公开默认镜像；详见文档）||Not configured (using the default public images; see the documentation)</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>手动配置清单（摘要）||Manual configuration checklist (summary)</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>在运行 NCF 的同一台机器上安装并启动 Docker（或兼容 CLI）。模块||Install and start Docker (or a compatible CLI) on the same machine that runs NCF. The module</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>不会||does not</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>自动安装 Docker。||install Docker automatically.</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>按官方文档预拉所需镜像；具体镜像名称与版本以文档为准。||Pre-pull the required images as described in the official documentation. Refer to the documentation for image names and versions.</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>如需内网仓库，可在宿主||For a private registry, configure the prefix or overrides in the host</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>中配置前缀或覆盖项（说明见文档）。||file (see the documentation for details).</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>检测通过后，打开模块 Function「创建沙箱」，在模板下拉中选择 Python Exec，执行即可；无需在命令行输入模板名。||After the check passes, open the module's Create Sandbox function, select Python Exec from the template list, and run it. You do not need to enter the template name on the command line.</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>打开完整文档（doc.ncf.pub）||Open the full documentation (doc.ncf.pub)</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>进入沙箱面板||Open the sandbox panel</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>文档链接：||Documentation:</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>面板||Panel</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>沙箱面板||Sandbox panel</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>首次使用请先完成「环境准备」。镜像版本与内部仓库说明以官方文档为准，模块内不固化 tag。||Complete Environment Setup before first use. Refer to the official documentation for image versions and private registry details; image tags are not fixed in the module.</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>会话说明：python-exec / csharp-exec 创建后只是登记（占配额与 TTL），执行代码时才临时起容器；jupyter-python 才会常驻容器。「销毁」释放登记，并在有容器时停止/删除容器。||Session behavior: python-exec and csharp-exec sessions are registered when created (using quota and TTL) and start temporary containers only when code runs. jupyter-python keeps a container running. Destroy releases the registration and stops and removes any container.</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>打开文档 doc.ncf.pub||Open documentation at doc.ncf.pub</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>刷新列表||Refresh list</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>模板||Template</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>运行时||Runtime</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>状态||Status</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>本机端口||Host port</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>访问||Access</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>打开 Notebook||Open Notebook</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>操作||Actions</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>销毁||Destroy</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Jupyter 通过站点反向代理||Access Jupyter through the site reverse proxy</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>访问（需管理员登录；token 不出现在链接中）。|| (administrator login required; the token is not included in the link).</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>也可通过模块 Function「创建沙箱 / 执行代码 / 销毁沙箱」操作。完整环境步骤：||You can also use the module functions Create Sandbox, Execute Code, and Destroy Sandbox. Full environment setup instructions:</value></data>
+  </root>

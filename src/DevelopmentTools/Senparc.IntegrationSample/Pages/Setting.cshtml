@@ -1,28 +1,28 @@
 ﻿@page
 @model Senparc.IntegrationSample.Pages.SettingModel
 @{
-    ViewData["Title"] = "系统配置";
+    ViewData["Title"] = "System Configuration";
 }
 
-<h2>SenparcCoreSetting 系统配置</h2>
+<h2>SenparcCoreSetting Configuration</h2>
 <p>@Model.SenparcCoreSetting.ToJson(true)</p>
 
-<h2>当前数据库配置</h2>
+<h2>Current Database Configuration</h2>
 <p>@Senparc.Ncf.Core.Models.DatabaseConfigurationFactory.Instance.Current.GetType().FullName</p>
 
-<h2>模块载入状态监测</h2>
-<p>所有 AddXncfModule 已应用：@(Model.NcfCoreState.AllAddXncfModuleApplied ? "是" : "否")</p>
-<p>任意 DatabaseXncf Register 已应用：@(Model.NcfCoreState.AynDatabaseXncfLoaded ? "是" : "否")</p>
-<p>所有 DatabaseXncf Register 已应用：@(Model.NcfCoreState.AllDatabaseXncfLoaded ? "是" : "否")</p>
-<p>任意 AddXncfDatabaseModule 已应用：@(Model.NcfCoreState.AnyAddXncfDatabaseModuleApplied ? "是" : "否")</p>
-<p>所有 AuthorizeConfig 已应用：@(Model.NcfCoreState.AllAuthorizeConfigApplied ? "是" : "否")</p>
-<p>所有 UseXncfModule 已应用：@(Model.NcfCoreState.AllUseXncfModuleApplied ? "是" : "否")</p>
-<p>任意 ThreadXncf Register 已应用（在 UseXncfModule 之后执行） ：@(Model.NcfCoreState.AnyThreadXncfLoaded ? "是" : "否")</p>
-<p>所有 ThreadXncf Register 已应用（在 UseXncfModule 之后执行） ：@(Model.NcfCoreState.AllThreadXncfLoaded ? "是" : "否")</p>
-<p>DLL 自定义附加 Patter（DllFilePatterns） ：
+<h2>Module Loading Status</h2>
+<p>All AddXncfModule calls applied: @(Model.NcfCoreState.AllAddXncfModuleApplied ? "Yes" : "No")</p>
+<p>Any DatabaseXncf Register applied: @(Model.NcfCoreState.AynDatabaseXncfLoaded ? "Yes" : "No")</p>
+<p>All DatabaseXncf Registers applied: @(Model.NcfCoreState.AllDatabaseXncfLoaded ? "Yes" : "No")</p>
+<p>Any AddXncfDatabaseModule call applied: @(Model.NcfCoreState.AnyAddXncfDatabaseModuleApplied ? "Yes" : "No")</p>
+<p>All AuthorizeConfig calls applied: @(Model.NcfCoreState.AllAuthorizeConfigApplied ? "Yes" : "No")</p>
+<p>All UseXncfModule calls applied: @(Model.NcfCoreState.AllUseXncfModuleApplied ? "Yes" : "No")</p>
+<p>Any ThreadXncf Register applied (after UseXncfModule): @(Model.NcfCoreState.AnyThreadXncfLoaded ? "Yes" : "No")</p>
+<p>All ThreadXncf Registers applied (after UseXncfModule): @(Model.NcfCoreState.AllThreadXncfLoaded ? "Yes" : "No")</p>
+<p>Custom DLL file patterns (DllFilePatterns):
     @if(Model.NcfCoreState.DllFilePatterns == null)
     {
-        <span>未设置</span>
+        <span>Not set</span>
     }
     else
     {
@@ -35,7 +35,7 @@
     }
 </p>
 <p>
-    所有加载程序集：
+    All loaded assemblies:
     <ol>
         @foreach (var item in Model.XncfAssemblies)
         {

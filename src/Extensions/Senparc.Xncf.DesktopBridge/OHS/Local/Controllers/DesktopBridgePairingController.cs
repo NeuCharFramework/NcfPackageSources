@@ -54,7 +54,7 @@ public sealed class DesktopBridgePairingController : ControllerBase
                 StatusCodes.Status429TooManyRequests,
                 new ProblemDetails
                 {
-                    Title = "配对请求过于频繁",
+                    Title = DesktopBridgeResource.Get("Pairing.RateLimit.Title"),
                     Detail = ex.Message,
                     Status = StatusCodes.Status429TooManyRequests
                 });
@@ -77,8 +77,8 @@ public sealed class DesktopBridgePairingController : ControllerBase
         {
             return Unauthorized(new ProblemDetails
             {
-                Title = "配对凭据无效",
-                Detail = "配对请求不存在或领取凭据不正确。",
+                Title = DesktopBridgeResource.Get("Pairing.Invalid.Title"),
+                Detail = DesktopBridgeResource.Get("Pairing.Invalid.Detail"),
                 Status = StatusCodes.Status401Unauthorized
             });
         }
@@ -102,8 +102,8 @@ public sealed class DesktopBridgePairingController : ControllerBase
             StatusCodes.Status403Forbidden,
             new ProblemDetails
             {
-                Title = "DesktopBridge 配对要求安全传输",
-                Detail = "远程配对必须使用 HTTPS；HTTP 仅允许 localhost 或本机 SSH 隧道。",
+                Title = DesktopBridgeResource.Get("Pairing.Transport.Title"),
+                Detail = DesktopBridgeResource.Get("Pairing.Transport.Detail"),
                 Status = StatusCodes.Status403Forbidden
             });
     }

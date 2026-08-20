@@ -66,6 +66,7 @@
 </div>
 
 @section scripts{
+    @await Html.PartialAsync("_LocalizationScripts")
     @{
         var jsonCamel = new System.Text.Json.JsonSerializerOptions
         {

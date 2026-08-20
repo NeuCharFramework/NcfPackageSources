@@ -27,7 +27,7 @@ public class SandboxAppService : AppServiceBase
         _orchestrator = orchestrator;
     }
 
-    [FunctionRender("创建沙箱", "按模板创建独立沙箱会话（Docker / Wasm Stub）", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Create.Name", "Function.Sandbox.Create.Description", typeof(Register))]
     public async Task<StringAppResponse> Create(Sandbox_CreateRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -49,7 +49,7 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("沙箱列表", "查看最近沙箱会话", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.List.Name", "Function.Sandbox.List.Description", typeof(Register))]
     public async Task<StringAppResponse> List(Sandbox_ListRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -67,7 +67,7 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("沙箱状态", "按 SessionId 查询", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Status.Name", "Function.Sandbox.Status.Description", typeof(Register))]
     public async Task<StringAppResponse> Status(Sandbox_SessionIdRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -85,7 +85,7 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("执行代码", "在 Exec 模板会话中运行代码片段", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Execute.Name", "Function.Sandbox.Execute.Description", typeof(Register))]
     public async Task<StringAppResponse> Exec(Sandbox_ExecRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -98,7 +98,7 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("销毁沙箱", "停止并清理指定会话", typeof(Register))]
+    [FunctionRender(typeof(SandboxResource), "Function.Sandbox.Destroy.Name", "Function.Sandbox.Destroy.Description", typeof(Register))]
     public async Task<StringAppResponse> Destroy(Sandbox_SessionIdRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>

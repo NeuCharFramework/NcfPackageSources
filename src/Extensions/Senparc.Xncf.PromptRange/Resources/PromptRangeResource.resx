@@ -925,31 +925,31 @@
     <value>Function Calls||Function Calls</value>
   </data>
   <data name="Frontend.539" xml:space="preserve">
-    <value>Function Call 名称，多个用逗号分隔（可选）||Function Call 名称，多个用逗号分隔（可选）</value>
+    <value>Function Call 名称，多个用逗号分隔（可选）||Function Call names, separated by commas (optional)</value>
   </data>
   <data name="Frontend.540" xml:space="preserve">
     <value>API Version||API Version</value>
   </data>
   <data name="Frontend.541" xml:space="preserve">
-    <value>请输入API Version||请输入API Version</value>
+    <value>请输入API Version||Enter the API version</value>
   </data>
   <data name="Frontend.542" xml:space="preserve">
     <value>API key||API key</value>
   </data>
   <data name="Frontend.543" xml:space="preserve">
-    <value>请输入API key||请输入API key</value>
+    <value>请输入API key||Enter the API key</value>
   </data>
   <data name="Frontend.544" xml:space="preserve">
     <value>End Point||End Point</value>
   </data>
   <data name="Frontend.545" xml:space="preserve">
-    <value>请输入End Point||请输入End Point</value>
+    <value>请输入End Point||Enter the endpoint</value>
   </data>
   <data name="Frontend.546" xml:space="preserve">
     <value>Organization Id||Organization Id</value>
   </data>
   <data name="Frontend.547" xml:space="preserve">
-    <value>请输入Organization Id||请输入Organization Id</value>
+    <value>请输入Organization Id||Enter the organization ID</value>
   </data>
   <data name="Frontend.548" xml:space="preserve">
     <value>Temperature||Temperature</value>

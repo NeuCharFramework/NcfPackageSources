@@ -21,7 +21,7 @@ public sealed partial class Register : IAreaRegister, IXncfRazorRuntimeCompilati
 
     public List<AreaPageMenuItem> AreaPageMenuItems =>
     [
-        new AreaPageMenuItem(GetAreaHomeUrl(), "设备配对与会话", "fa fa-desktop")
+        new AreaPageMenuItem(GetAreaHomeUrl(), DesktopBridgeResource.Get("Page.Devices"), "fa fa-desktop")
     ];
 
     public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

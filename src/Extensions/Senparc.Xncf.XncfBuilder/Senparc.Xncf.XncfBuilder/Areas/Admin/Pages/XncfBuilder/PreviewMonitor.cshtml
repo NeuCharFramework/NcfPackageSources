@@ -252,6 +252,7 @@
 </div>
 
 @section scripts {
+    @await Html.PartialAsync("_LocalizationScripts")
     <script>
         new Vue({
             el: "#app",

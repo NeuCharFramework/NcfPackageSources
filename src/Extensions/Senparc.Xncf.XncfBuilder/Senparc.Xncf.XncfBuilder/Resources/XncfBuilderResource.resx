@@ -412,4 +412,27 @@
   <data name="XncfBuilder.Preview.HostStatus.Replaced" xml:space="preserve"><value>已替换</value></data>
   <data name="XncfBuilder.Preview.HostStatus.Failed" xml:space="preserve"><value>失败</value></data>
   <data name="XncfBuilder.Preview.HostStatus.Interrupted" xml:space="preserve"><value>已中断</value></data>
+  <data name="XncfBuilder.PreviewMonitor.DevelopmentPersistenceUnavailable" xml:space="preserve"><value>隔离开发任务表尚未就绪；请执行 XncfBuilder 最新数据库 Migration。</value></data>
+  <data name="XncfBuilder.PreviewMonitor.SessionNotFound" xml:space="preserve"><value>预览会话不存在或历史记录已过期。</value></data>
+  <data name="XncfBuilder.PreviewMonitor.SessionRequired" xml:space="preserve"><value>必须提供预览会话 ID。</value></data>
+  <data name="XncfBuilder.PreviewMonitor.StopSucceeded" xml:space="preserve"><value>停止请求已完成。</value></data>
+  <data name="XncfBuilder.PreviewMonitor.StopFailed" xml:space="preserve"><value>会话不存在、已停止或已经结束。</value></data>
+  <data name="XncfBuilder.PreviewMonitor.ApprovalRequired" xml:space="preserve"><value>必须提供任务 ID 和确认短语。</value></data>
+  <data name="XncfBuilder.PreviewMonitor.DevelopmentJobRequired" xml:space="preserve"><value>必须提供开发任务 ID。</value></data>
+  <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>创建隔离 XNCF 开发任务</value></data>
+  <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>创建源码快照；新模块仅在隔离工作区由本机已安装模板生成，现有模块仅复制后修改。不会写入目标源码。</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>读取隔离 XNCF 文件</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>读取隔离工作区中指定模块的文本文件和 SHA-256；不能读取目标源码或工作区外的文件。</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Name" xml:space="preserve"><value>写入隔离 XNCF 文件</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Description" xml:space="preserve"><value>原子写入隔离工作区内的代码文件。项目、NuGet、MSBuild 和应用配置文件不可修改，建议传回读取时的 SHA-256。</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Name" xml:space="preserve"><value>校验隔离 XNCF 开发任务</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Description" xml:space="preserve"><value>校验隔离工作区的模块路径和 Senparc.Web 对源码项目的直接引用，并生成受控差异摘要。</value></data>
+  <data name="Function.XncfBuilder.Development.Preview.Name" xml:space="preserve"><value>启动 Sandbox XNCF 预览</value></data>
+  <data name="Function.XncfBuilder.Development.Preview.Description" xml:space="preserve"><value>把已清洗的隔离工作区副本交给 Sandbox 构建和运行；Sandbox 不可用时会安全失败，绝不回退到主站进程。</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Name" xml:space="preserve"><value>获取隔离 XNCF 开发任务状态</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Description" xml:space="preserve"><value>返回隔离工作区、差异、校验、Sandbox 预览和人工审批状态。</value></data>
+  <data name="Function.XncfBuilder.Development.RequestApproval.Name" xml:space="preserve"><value>请求人工合入 XNCF 任务</value></data>
+  <data name="Function.XncfBuilder.Development.RequestApproval.Description" xml:space="preserve"><value>冻结当前隔离工作区差异并请求管理员审批。此操作不会写入目标源码。</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Name" xml:space="preserve"><value>丢弃隔离 XNCF 开发任务</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Description" xml:space="preserve"><value>停止对应 Sandbox 预览并回收隔离工作区；不会修改目标源码。</value></data>
 </root>

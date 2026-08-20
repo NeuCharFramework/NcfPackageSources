@@ -102,4 +102,26 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Random</value>
   </data>
+  <data name="Setup.DockerRuntimeNotRegistered" xml:space="preserve"><value>No Docker runtime is registered.</value></data>
+  <data name="Setup.DockerAvailable" xml:space="preserve"><value>An available Docker daemon (or compatible CLI) was detected.</value></data>
+  <data name="Setup.DockerUnavailable" xml:space="preserve"><value>No available Docker daemon was detected. Install and start Docker as described in the official documentation, then check again.</value></data>
+  <data name="Setup.DockerCheckFailed" xml:space="preserve"><value>Docker check failed: {0}</value></data>
+  <data name="Function.Sandbox.Create.Name" xml:space="preserve"><value>Create Sandbox</value></data>
+  <data name="Function.Sandbox.Create.Description" xml:space="preserve"><value>Create an isolated sandbox session from a template (Docker / Wasm Stub)</value></data>
+  <data name="Function.Sandbox.List.Name" xml:space="preserve"><value>List Sandboxes</value></data>
+  <data name="Function.Sandbox.List.Description" xml:space="preserve"><value>View recent sandbox sessions</value></data>
+  <data name="Function.Sandbox.Status.Name" xml:space="preserve"><value>Sandbox Status</value></data>
+  <data name="Function.Sandbox.Status.Description" xml:space="preserve"><value>Look up a session by SessionId</value></data>
+  <data name="Function.Sandbox.Execute.Name" xml:space="preserve"><value>Execute Code</value></data>
+  <data name="Function.Sandbox.Execute.Description" xml:space="preserve"><value>Run a code snippet in an Exec template session</value></data>
+  <data name="Function.Sandbox.Destroy.Name" xml:space="preserve"><value>Destroy Sandbox</value></data>
+  <data name="Function.Sandbox.Destroy.Description" xml:space="preserve"><value>Stop and clean up a session</value></data>
+  <data name="Parameter.Sandbox.Template" xml:space="preserve"><value>Template||Select one sandbox template</value></data>
+  <data name="Parameter.Sandbox.Runtime" xml:space="preserve"><value>Runtime||Select Docker for this release; Wasm is not available yet</value></data>
+  <data name="Parameter.Sandbox.Code" xml:space="preserve"><value>Code||Source code for a short task. Python example: print('hello from NCF Sandbox'); C# example: Console.WriteLine(&quot;hello from NCF Sandbox&quot;); (C# strings must use double quotes)</value></data>
+  <data name="Selection.Sandbox.PythonExec" xml:space="preserve"><value>Run short Python tasks with Docker</value></data>
+  <data name="Selection.Sandbox.CsharpExec" xml:space="preserve"><value>Run short C# tasks with the Docker SDK image</value></data>
+  <data name="Selection.Sandbox.JupyterPython" xml:space="preserve"><value>Interactive notebook (uses more memory)</value></data>
+  <data name="Selection.Sandbox.Docker" xml:space="preserve"><value>Requires Docker on the host</value></data>
+  <data name="Selection.Sandbox.Wasm" xml:space="preserve"><value>Placeholder for this release; not available yet</value></data>
 </root>

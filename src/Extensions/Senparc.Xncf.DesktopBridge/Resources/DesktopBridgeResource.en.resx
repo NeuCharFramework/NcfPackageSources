@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Module.MenuName" xml:space="preserve"><value>DesktopBridge</value></data>
+  <data name="Module.Description" xml:space="preserve"><value>Provides protected local or remote status, device pairing, and EventBus activity streams for NCF desktop clients.</value></data>
+  <data name="Page.Title" xml:space="preserve"><value>DesktopBridge Device Pairing and Sessions</value></data>
+  <data name="Page.Extensions" xml:space="preserve"><value>Extensions</value></data>
+  <data name="Page.Devices" xml:space="preserve"><value>Device Pairing and Sessions</value></data>
+  <data name="Page.PairingInfo.Title" xml:space="preserve"><value>Secure pairing</value></data>
+  <data name="Page.PairingInfo.Description" xml:space="preserve"><value>When the desktop token is left blank, a pairing code valid for 5 minutes is generated. Verify the pairing code and source address before approving it. Session tokens are valid for 24 hours, are never displayed in Admin, and can be revoked at any time.</value></data>
+  <data name="Page.Refresh" xml:space="preserve"><value>Refresh status</value></data>
+  <data name="Page.PendingCount" xml:space="preserve"><value>Pending: {0}</value></data>
+  <data name="Page.ActiveCount" xml:space="preserve"><value>Active sessions: {0}</value></data>
+  <data name="Page.PendingRequests" xml:space="preserve"><value>Pending requests</value></data>
+  <data name="Page.EmptyPending" xml:space="preserve"><value>There are no pairing requests awaiting approval.</value></data>
+  <data name="Page.PairingCode" xml:space="preserve"><value>Pairing code</value></data>
+  <data name="Page.DesktopClient" xml:space="preserve"><value>Desktop client</value></data>
+  <data name="Page.SourceAddress" xml:space="preserve"><value>Source address</value></data>
+  <data name="Page.RequestedAt" xml:space="preserve"><value>Requested</value></data>
+  <data name="Page.ExpiresAt" xml:space="preserve"><value>Expires</value></data>
+  <data name="Page.Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="Page.Approve" xml:space="preserve"><value>Approve</value></data>
+  <data name="Page.Deny" xml:space="preserve"><value>Deny</value></data>
+  <data name="Page.ActiveSessions" xml:space="preserve"><value>Active sessions</value></data>
+  <data name="Page.EmptySessions" xml:space="preserve"><value>There are no active sessions issued through pairing.</value></data>
+  <data name="Page.ApprovedBy" xml:space="preserve"><value>Approved by</value></data>
+  <data name="Page.ApprovedAt" xml:space="preserve"><value>Approved</value></data>
+  <data name="Page.LastUsed" xml:space="preserve"><value>Last used</value></data>
+  <data name="Page.NotUsed" xml:space="preserve"><value>Not used</value></data>
+  <data name="Page.Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Page.Authorized" xml:space="preserve"><value>Authorized</value></data>
+  <data name="Page.Revoke" xml:space="preserve"><value>Revoke</value></data>
+  <data name="Page.LegacyTokenNotice" xml:space="preserve"><value>Environment-variable tokens are a compatibility channel. They do not appear in the active sessions list and cannot be revoked from this page.</value></data>
+  <data name="Message.Approve.Success" xml:space="preserve"><value>Pairing approved. The session token will be delivered only to the desktop client that initiated the request.</value></data>
+  <data name="Message.Approve.Failed" xml:space="preserve"><value>The pairing request has expired, was already handled, or the active-session limit has been reached.</value></data>
+  <data name="Message.Deny.Success" xml:space="preserve"><value>Pairing request denied.</value></data>
+  <data name="Message.Deny.Failed" xml:space="preserve"><value>The pairing request has expired or was already handled.</value></data>
+  <data name="Message.Revoke.Success" xml:space="preserve"><value>The session was revoked. The desktop client was notified, will leave the current site state, and will remain open.</value></data>
+  <data name="Message.Revoke.Failed" xml:space="preserve"><value>The session does not exist or is no longer valid.</value></data>
+  <data name="Auth.Title" xml:space="preserve"><value>Authorizing Desktop AdminChat</value></data>
+  <data name="Auth.Heading" xml:space="preserve"><value>Authorize Desktop AdminChat</value></data>
+  <data name="Auth.Description" xml:space="preserve"><value>After confirmation, the current GUI will use AdminChat as this administrator. Only a one-time authorization result is transferred; browser cookies are never read or copied.</value></data>
+  <data name="Auth.Warning" xml:space="preserve"><value>Continue only if the NCF GUI you are using opened this page automatically.</value></data>
+  <data name="Auth.Submit" xml:space="preserve"><value>Authorize this GUI</value></data>
+  <data name="Auth.FailedHeading" xml:space="preserve"><value>Desktop AdminChat authorization failed</value></data>
+  <data name="Auth.Error.RequestExpired" xml:space="preserve"><value>The desktop authorization request does not exist or has expired. Return to the GUI and try again.</value></data>
+  <data name="Auth.Error.LoginExpired" xml:space="preserve"><value>The WebView administrator session has expired. Sign in again.</value></data>
+  <data name="Auth.Error.MultiTenantDenied" xml:space="preserve"><value>Automatic WebView authorization is not currently supported for tenant administrators. Use explicit sign-in.</value></data>
+  <data name="Auth.Error.MultiTenantRetry" xml:space="preserve"><value>Automatic WebView authorization is not currently supported for tenant administrators. Return to the GUI and use explicit sign-in.</value></data>
+  <data name="Auth.Error.LoginExpiring" xml:space="preserve"><value>The WebView administrator session is about to expire. Sign in again.</value></data>
+  <data name="Auth.Error.RequestInvalid" xml:space="preserve"><value>The desktop authorization request is no longer valid. Return to the GUI and try again.</value></data>
+  <data name="NeuBell.Title" xml:space="preserve"><value>DesktopBridge remote connection review</value></data>
+  <data name="NeuBell.Pending" xml:space="preserve"><value>Device pairing requests awaiting review: {0}.</value></data>
+  <data name="NeuBell.Empty" xml:space="preserve"><value>There are no device pairing requests awaiting review.</value></data>
+  <data name="Pairing.UnknownAddress" xml:space="preserve"><value>Unknown address</value></data>
+  <data name="Pairing.DefaultAdministrator" xml:space="preserve"><value>NCF administrator</value></data>
+  <data name="Pairing.Expired" xml:space="preserve"><value>The pairing request has expired. Start a new request.</value></data>
+  <data name="Pairing.Denied" xml:space="preserve"><value>An administrator denied this pairing request.</value></data>
+  <data name="Pairing.RateLimit.Message" xml:space="preserve"><value>Too many pairing requests. Try again later.</value></data>
+  <data name="Pairing.RateLimit.Title" xml:space="preserve"><value>Too many pairing requests</value></data>
+  <data name="Pairing.Invalid.Title" xml:space="preserve"><value>Invalid pairing credentials</value></data>
+  <data name="Pairing.Invalid.Detail" xml:space="preserve"><value>The pairing request does not exist or the retrieval credentials are incorrect.</value></data>
+  <data name="Pairing.Transport.Title" xml:space="preserve"><value>DesktopBridge pairing requires a secure connection</value></data>
+  <data name="Pairing.Transport.Detail" xml:space="preserve"><value>Remote pairing requires HTTPS. HTTP is allowed only for localhost or a local SSH tunnel.</value></data>
+  <data name="Auth.Error.InvalidDesktopSession" xml:space="preserve"><value>The desktop session is invalid.</value></data>
+  <data name="Auth.Error.InvalidPkce" xml:space="preserve"><value>The PKCE challenge is invalid.</value></data>
+  <data name="Auth.Error.WebViewDenied" xml:space="preserve"><value>The WebView session cannot be used for desktop authorization.</value></data>
+  <data name="Auth.Error.RateLimit.Message" xml:space="preserve"><value>Too many desktop authorization requests. Try again later.</value></data>
+  <data name="Auth.Error.RateLimit.Title" xml:space="preserve"><value>Too many desktop authorization requests</value></data>
+  <data name="Auth.Error.Invalid.Title" xml:space="preserve"><value>Invalid desktop authorization request</value></data>
+  <data name="Auth.Error.Invalid.Detail" xml:space="preserve"><value>Start the WebView administrator authorization again.</value></data>
+  <data name="Auth.Error.OneTimeExpired" xml:space="preserve"><value>The one-time authorization is invalid or has expired.</value></data>
+  <data name="Auth.Error.AdministratorDenied" xml:space="preserve"><value>This administrator identity cannot be used for desktop authorization.</value></data>
+  <data name="Auth.Transport.Title" xml:space="preserve"><value>Desktop authorization requires a secure connection</value></data>
+  <data name="Auth.Transport.Detail" xml:space="preserve"><value>Remote token exchange requires HTTPS. HTTP is allowed only for localhost or a local SSH tunnel.</value></data>
+</root>

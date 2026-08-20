@@ -412,4 +412,162 @@
   <data name="XncfBuilder.Preview.HostStatus.Replaced" xml:space="preserve"><value>Replaced</value></data>
   <data name="XncfBuilder.Preview.HostStatus.Failed" xml:space="preserve"><value>Failed</value></data>
   <data name="XncfBuilder.Preview.HostStatus.Interrupted" xml:space="preserve"><value>Interrupted</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>扩展模块||Extensions</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>预览监控||Preview Monitor</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>XNCF 预览监控||XNCF Preview Monitor</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>预览状态数据库持久化尚未就绪||Preview-state database persistence is not ready</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>隔离开发任务数据库持久化尚未就绪||Isolated-development task persistence is not ready</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>{0} 原因：{1}||{0} Reason: {1}</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>隔离预览流水线||Isolated preview pipeline</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>每个任务依次执行宿主引用校验、隔离构建、启动新预览、健康检查和原子替换。新预览通过检查前，当前可用的旧预览不会停止。||Each task validates host references, builds in isolation, starts a new preview, performs a health check, and replaces the active preview atomically. The current healthy preview remains running until the new preview passes its checks.</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>运行中||Running</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>处理中 / 排队||Processing / Queued</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>失败 / 中断||Failed / Interrupted</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>会话总数||Total Sessions</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>刷新状态||Refresh Status</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>自动刷新：2 秒||Auto-refresh: 2 seconds</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>最近更新：{0}||Last updated: {0}</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>模块预览会话||Module Preview Sessions</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>当前没有预览会话||There are no preview sessions.</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>会话 ID：||Session ID: </value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>环境：||Environment: </value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Host 启动 / 健康：||Host Started / Healthy: </value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Host 停止 / ExitCode：||Host Stopped / Exit Code: </value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>源码 SHA-256：||Source SHA-256: </value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>模块 DLL SHA-256：||Module DLL SHA-256: </value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>本次构建源码解决方案：||Source Solution for This Build: </value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>预览部署（publish）目录：||Preview Deployment (publish) Directory: </value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>尚未计算||Not calculated</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>尚未生成||Not generated</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>尚未创建或已回收||Not created or already cleaned up</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>最近输出（最多 300 行）||Recent Output (up to 300 lines)</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>模块||Module</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>当前阶段||Current Stage</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>流水线进度||Pipeline Progress</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>进程||Process</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>开始 / 更新||Started / Updated</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>操作||Actions</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>打开||Open</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>停止||Stop</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>隔离开发 / Sandbox 预览任务||Isolated Development / Sandbox Preview Tasks</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>AI 只能写隔离工作区；合入必须由管理员输入确认短语。||AI can write only to the isolated workspace. Applying changes requires an administrator to enter the confirmation phrase.</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>当前没有隔离开发任务||There are no isolated-development tasks.</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>模式 / 阶段||Mode / Stage</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>状态与差异||Status and Diff</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>尚未生成差异摘要||No diff summary has been generated.</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>路径 / Sandbox||Paths / Sandbox</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>目标：{0}||Target: {0}</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>隔离：{0}||Isolated: {0}</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>Sandbox：{0}||Sandbox: {0}</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>打开 Sandbox 预览||Open Sandbox Preview</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>人工合入||Apply Manually</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>丢弃||Discard</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>源码生成或修改完成后，调用“启动 XNCF 隔离预览”才会进入此监控队列；源码指纹用于证明本次构建对应的确切源码快照。||After source generation or modification is complete, call “Start Isolated XNCF Preview” to add it to this monitoring queue. The source fingerprint identifies the exact source snapshot used for the build.</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>状态读取失败。||Failed to read status.</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>暂无输出。||No output is available.</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>日志读取失败。||Failed to read the log.</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>确定停止 {0} 的此预览任务吗？||Are you sure you want to stop this preview task for {0}?</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>停止预览||Stop Preview</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>取消||Cancel</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>停止预览失败。||Failed to stop the preview.</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>请先确认隔离工作区、差异和 Sandbox 预览。输入 {0} 才会将受控差异写入目标源码。||Review the isolated workspace, diff, and Sandbox preview first. Enter {0} to apply the controlled changes to the target source.</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>人工合入 XNCF 模块||Apply XNCF Module Manually</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>合入||Apply</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>确认短语必须完全匹配：{0}||The confirmation phrase must match exactly: {0}</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>合入失败。||Failed to apply the changes.</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>将停止对应 Sandbox 预览并删除隔离工作区，目标源码不会改变。确定丢弃 {0} 吗？||This will stop the associated Sandbox preview and delete the isolated workspace. The target source will not change. Are you sure you want to discard {0}?</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>丢弃隔离开发任务||Discard Isolated-Development Task</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>丢弃失败。||Failed to discard the task.</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>新建模块||New Module</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>修改现有模块||Modify Existing Module</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>快照中||Creating Snapshot</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>可编写||Ready for Editing</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>校验中||Validating</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>Sandbox 预览中||Previewing in Sandbox</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>待审阅||Awaiting Review</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>等待人工合入||Awaiting Manual Apply</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>已合入||Applied</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>已丢弃||Discarded</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>失败||Failed</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>未知||Unknown</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>未创建||Not Created</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>正在读取最近输出…||Loading recent output…</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>隔离开发任务数据库持久化可用。||Isolated-development task database persistence is available.</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>隔离开发任务表不可用；已暂缓状态查询，等待数据库迁移完成后重试。||The isolated-development task table is unavailable. Status queries are paused until the database migration is complete.</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>正在创建不含密钥与构建产物的源码快照。||Creating a source snapshot without secrets or build artifacts.</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>模块模板已在隔离工作区生成；可由 AI 或开发者仅修改模块代码文件。||The module template was generated in the isolated workspace. AI or a developer may modify module code files only.</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>现有模块已复制到隔离工作区；可由 AI 或开发者仅修改模块代码文件。||The existing module was copied to the isolated workspace. AI or a developer may modify module code files only.</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>隔离工作区代码已更新；请执行校验并在 Sandbox 中预览。||The isolated-workspace code was updated. Validate it and preview it in Sandbox.</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>正在校验隔离工作区布局、模块路径和宿主源码引用。||Validating the isolated-workspace layout, module path, and host source reference.</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>结构校验通过：隔离 Senparc.Web 直接引用当前模块源码。完整还原、编译和运行将仅在受控 Sandbox 预览中执行。||Structure validation passed: the isolated Senparc.Web directly references the current module source. Full restore, compilation, and execution occur only in the controlled Sandbox preview.</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>结构校验完成，已可启动 Sandbox 预览或查看差异。||Structure validation is complete. You can start a Sandbox preview or review the diff.</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>未安装或未启动 Senparc.Xncf.Sandbox；为避免在主站执行未审查代码，隔离开发不会回退到本机进程预览。||Senparc.Xncf.Sandbox is not installed or running. Isolated development will not fall back to a local-process preview because that could execute unreviewed code in the main site.</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>正在将已清洗的工作区副本交给 Sandbox 构建并启动预览。||Sending a sanitized workspace copy to Sandbox to build and start the preview.</value></data>
+  <data name="Frontend.092" xml:space="preserve"><value>Sandbox 已接受隔离工作区并完成受控预览启动。||Sandbox accepted the isolated workspace and started the controlled preview.</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>Sandbox 预览已启动；请在代理地址中验证模块功能。||The Sandbox preview is running. Verify the module through the proxy address.</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>等待管理员在预览监控页查看差异并输入确认短语后合入目标源码。||Waiting for an administrator to review the diff on the Preview Monitor page and enter the confirmation phrase before applying it to target source.</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>管理员确认后已将受控模块差异合入目标源码；请在正常开发流程中审查并提交版本控制。||After administrator confirmation, the controlled module diff was applied to target source. Review and commit it through the normal development workflow.</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>隔离工作区和对应 Sandbox 预览已请求回收；目标源码未被修改。||Cleanup was requested for the isolated workspace and its Sandbox preview. Target source was not modified.</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>隔离开发任务失败；目标源码未被该失败步骤直接修改。||The isolated-development task failed. The failed step did not directly modify target source.</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>新模块快照：{0} 个受控文件，模块 SHA-256：{1}||New-module snapshot: {0} controlled files, module SHA-256: {1}</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>模块差异：新增 {0}，修改 {1}，删除 {2}（隔离工具不提供删除操作），模块 SHA-256：{3}||Module diff: {0} added, {1} modified, {2} deleted (the isolation tool does not provide delete operations), module SHA-256: {3}</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>未配置预览状态数据库存储，当前仅使用内存状态。||Preview-state database storage is not configured; state is currently held in memory only.</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>正在初始化预览状态数据库存储。||Initializing preview-state database storage.</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>预览状态表尚未就绪，主站将继续运行，当前预览状态仅保存在内存中。应用 migration 后请重启主站。||The preview-state table is not ready. The main site will continue running and current preview state will be kept in memory only. Restart the main site after applying the migration.</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>预览任务与 Host 状态数据库持久化已就绪。||Preview-task and host-status database persistence is ready.</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>预览状态数据库写入失败，主站和预览任务将继续运行，后续状态暂存于内存。恢复数据库后请重启主站。||Writing to the preview-state database failed. The main site and preview tasks will continue running, and subsequent state will be held in memory. Restart the main site after the database recovers.</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>主站重新启动，之前未完成的预览任务已中断。||The main site restarted, so the previous unfinished preview task was interrupted.</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>主站重新启动，无法安全重新绑定之前的预览进程。||The main site restarted and could not safely reattach to the previous preview process.</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>预览任务已进入队列。||The preview task is queued.</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>正在解析模块目录并锁定待构建源码快照。||Resolving the module directory and locking the source snapshot to build.</value></data>
+  <data name="Frontend.109" xml:space="preserve"><value>源码快照已锁定，正在校验 Senparc.Web 的项目引用。||The source snapshot is locked. Validating the Senparc.Web project reference.</value></data>
+  <data name="Frontend.110" xml:space="preserve"><value>检测到新项目或包引用变化，正在执行必要的 dotnet restore。||New project or package-reference changes were detected. Running the required dotnet restore.</value></data>
+  <data name="Frontend.111" xml:space="preserve"><value>正在隔离发布预览宿主。||Publishing the preview host in isolation.</value></data>
+  <data name="Frontend.112" xml:space="preserve"><value>正在校验发布产物与源码一致性。||Verifying that published artifacts match the source.</value></data>
+  <data name="Frontend.113" xml:space="preserve"><value>XNCF 源码在预览构建过程中发生变化，已拒绝启动不确定的构建结果；请在代码写入完成后重新预览。||The XNCF source changed during the preview build, so the indeterminate build was not started. Preview again after all code writes are complete.</value></data>
+  <data name="Frontend.114" xml:space="preserve"><value>正在启动新的隔离预览进程。||Starting a new isolated preview process.</value></data>
+  <data name="Frontend.115" xml:space="preserve"><value>进程 {0} 已启动，正在执行健康检查。||Process {0} started. Running the health check.</value></data>
+  <data name="Frontend.116" xml:space="preserve"><value>XNCF 源码在预览启动过程中发生变化，已停止本次预览；请完成代码写入后重新执行。||The XNCF source changed while the preview was starting, so this preview was stopped. Run it again after all code writes are complete.</value></data>
+  <data name="Frontend.117" xml:space="preserve"><value>新预览已通过健康检查，正在原子替换同模块旧预览。||The new preview passed its health check and is atomically replacing the previous preview for the same module.</value></data>
+  <data name="Frontend.118" xml:space="preserve"><value>已由新预览 {0} 替换，正在停止旧进程。||Replaced by new preview {0}. Stopping the old process.</value></data>
+  <data name="Frontend.119" xml:space="preserve"><value>已由新预览 {0} 替换。||Replaced by new preview {0}.</value></data>
+  <data name="Frontend.120" xml:space="preserve"><value>XNCF 预览已就绪：{0}||XNCF preview ready: {0}</value></data>
+  <data name="Frontend.121" xml:space="preserve"><value>预览任务已取消。||The preview task was canceled.</value></data>
+  <data name="Frontend.122" xml:space="preserve"><value>预览任务执行失败。||The preview task failed.</value></data>
+  <data name="Frontend.123" xml:space="preserve"><value>正在停止预览进程。||Stopping the preview process.</value></data>
+  <data name="Frontend.124" xml:space="preserve"><value>预览已由用户停止。||The preview was stopped by the user.</value></data>
+  <data name="Frontend.125" xml:space="preserve"><value>预览进程意外退出。||The preview process exited unexpectedly.</value></data>
+  <data name="Frontend.126" xml:space="preserve"><value>主站正在关闭预览进程。||The main site is shutting down the preview process.</value></data>
+  <data name="Frontend.127" xml:space="preserve"><value>预览进程已随主站停止。||The preview process stopped with the main site.</value></data>
+  <data name="Frontend.128" xml:space="preserve"><value>预览宿主还原失败（退出码：{0}）。{1}||Preview-host restore failed (exit code: {0}). {1}</value></data>
+  <data name="Frontend.129" xml:space="preserve"><value>预览宿主发布失败（退出码：{0}）。{1}||Preview-host publish failed (exit code: {0}). {1}</value></data>
+  <data name="Frontend.130" xml:space="preserve"><value>预览发布结果中没有找到 {0}.dll。请确认 Senparc.Web 已引用该 XNCF 项目。||{0}.dll was not found in the preview publish output. Confirm that Senparc.Web references the XNCF project.</value></data>
+  <data name="Frontend.131" xml:space="preserve"><value>预览进程在健康检查完成前退出（ExitCode：{0}）。{1}||The preview process exited before the health check completed (exit code: {0}). {1}</value></data>
+  <data name="Frontend.132" xml:space="preserve"><value>预览进程未在 {0} 秒内通过健康检查。{1}||The preview process did not pass its health check within {0} seconds. {1}</value></data>
+  <data name="Frontend.133" xml:space="preserve"><value>预览端口 {0} 已被占用。||Preview port {0} is already in use.</value></data>
+  <data name="Frontend.134" xml:space="preserve"><value>确认短语不匹配。请输入：{0}||The confirmation phrase does not match. Enter: {0}</value></data>
+  <data name="Frontend.135" xml:space="preserve"><value>开发任务不存在，或任务记录已过期。||The development task does not exist or its record has expired.</value></data>
+  <data name="XncfBuilder.PreviewMonitor.DevelopmentPersistenceUnavailable" xml:space="preserve"><value>The isolated-development task table is not ready. Apply the latest XncfBuilder database migration.</value></data>
+  <data name="XncfBuilder.PreviewMonitor.SessionNotFound" xml:space="preserve"><value>The preview session does not exist or its history has expired.</value></data>
+  <data name="XncfBuilder.PreviewMonitor.SessionRequired" xml:space="preserve"><value>A preview session ID is required.</value></data>
+  <data name="XncfBuilder.PreviewMonitor.StopSucceeded" xml:space="preserve"><value>The stop request completed.</value></data>
+  <data name="XncfBuilder.PreviewMonitor.StopFailed" xml:space="preserve"><value>The session does not exist, has stopped, or has already ended.</value></data>
+  <data name="XncfBuilder.PreviewMonitor.ApprovalRequired" xml:space="preserve"><value>A task ID and confirmation phrase are required.</value></data>
+  <data name="XncfBuilder.PreviewMonitor.DevelopmentJobRequired" xml:space="preserve"><value>A development task ID is required.</value></data>
+  <data name="Function.XncfBuilder.Development.Create.Name" xml:space="preserve"><value>Create an isolated XNCF development task</value></data>
+  <data name="Function.XncfBuilder.Development.Create.Description" xml:space="preserve"><value>Create a source snapshot. New modules are generated from locally installed templates only inside the isolated workspace; existing modules are copied before editing. Target source is not modified.</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Name" xml:space="preserve"><value>Read an isolated XNCF file</value></data>
+  <data name="Function.XncfBuilder.Development.Read.Description" xml:space="preserve"><value>Read a text file and its SHA-256 from the specified module in the isolated workspace. Target source and files outside the workspace cannot be read.</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Name" xml:space="preserve"><value>Write an isolated XNCF file</value></data>
+  <data name="Function.XncfBuilder.Development.Write.Description" xml:space="preserve"><value>Atomically write code files inside the isolated workspace. Project, NuGet, MSBuild, and application configuration files cannot be modified. Send back the SHA-256 from the read operation when possible.</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Name" xml:space="preserve"><value>Validate an isolated XNCF development task</value></data>
+  <data name="Function.XncfBuilder.Development.Validate.Description" xml:space="preserve"><value>Validate the module path in the isolated workspace and the direct Senparc.Web reference to the source project, then generate a controlled diff summary.</value></data>
+  <data name="Function.XncfBuilder.Development.Preview.Name" xml:space="preserve"><value>Start a Sandbox XNCF preview</value></data>
+  <data name="Function.XncfBuilder.Development.Preview.Description" xml:space="preserve"><value>Send a sanitized copy of the isolated workspace to Sandbox for building and execution. If Sandbox is unavailable, the operation fails safely and never falls back to the main-site process.</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Name" xml:space="preserve"><value>Get isolated XNCF development task status</value></data>
+  <data name="Function.XncfBuilder.Development.Status.Description" xml:space="preserve"><value>Return isolated-workspace, diff, validation, Sandbox-preview, and manual-approval status.</value></data>
+  <data name="Function.XncfBuilder.Development.RequestApproval.Name" xml:space="preserve"><value>Request manual approval for an XNCF task</value></data>
+  <data name="Function.XncfBuilder.Development.RequestApproval.Description" xml:space="preserve"><value>Freeze the current isolated-workspace diff and request administrator approval. This operation does not modify target source.</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Name" xml:space="preserve"><value>Discard an isolated XNCF development task</value></data>
+  <data name="Function.XncfBuilder.Development.Discard.Description" xml:space="preserve"><value>Stop the associated Sandbox preview and reclaim the isolated workspace without modifying target source.</value></data>
 </root>

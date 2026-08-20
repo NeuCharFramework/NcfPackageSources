@@ -43,11 +43,11 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Version => "0.2.1-preview2";
 
-    public override string MenuName => "DesktopBridge 桌面桥接";
+    public override string MenuName => DesktopBridgeResource.Get("Module.MenuName");
 
     public override string Icon => "fa fa-desktop";
 
-    public override string Description => "为 NCF 桌面机器人提供受保护的本机或远程状态、设备配对和 EventBus 活动流。";
+    public override string Description => DesktopBridgeResource.Get("Module.Description");
 
     public override Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
     {
