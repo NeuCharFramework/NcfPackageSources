@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.20.12-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.22.6-preview8</Version>
     <AssemblyName>Senparc.Xncf.Terminal</AssemblyName>
     <RootNamespace>Senparc.Xncf.Terminal</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -13,18 +13,29 @@
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>XNCF 终端命令模块</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			[2024-09-10] v0.19.4-preview1 升级缓存基础库
-			[2025-01-25] v0.20.5-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.20.7-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.20.8-preview1 Update Installation
-			[2025-06-20] v0.20.9-preview1 Add MCP functions in XncfRegisterBase class
-
+				v0.1.0 创世
+				[2024-09-10] v0.19.4-preview1 升级缓存基础库
+				[2025-01-25] v0.20.5-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.20.7-preview1 Update CO2NET and AIKernel
+				[2025-05-18] v0.20.8-preview1 Update Installation
+				[2025-06-20] v0.20.9-preview1 Add MCP functions in XncfRegisterBase class
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-17] v0.22.0-preview2 为 Terminal 模块接入统一资源本地化并优化功能文案
+				1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+				2、更新 FunctionRender 与请求模型文案的资源化解析
+				3、统一模块注册信息、菜单名称与功能描述的本地化输出
+				4、补充并统一多语言资源键及资源文件
+				[2026-07-29] v0.22.1-preview3 收紧终端模块的命令执行说明和默认行为
+				1、终端模块描述明确标示命令执行功能当前已禁用，避免误导管理员
+				[2026-07-31] v0.22.2-preview4 Dependency update from Senparc.Ncf.XncfBase to 0.23.5-preview4
+				[2026-08-04] v0.22.3-preview5 Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
+				[2026-08-08] v0.22.4-preview6 Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+				[2026-08-13] v0.22.5-preview7 Dependency update from Senparc.Ncf.XncfBase to 0.25.0-preview7
+				[2026-08-15] v0.22.6-preview8 Dependency update from Senparc.Ncf.XncfBase to 0.25.1-preview8
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

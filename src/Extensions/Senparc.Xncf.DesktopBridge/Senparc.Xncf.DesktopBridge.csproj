@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <Version>0.4.2-preview6</Version>
+    <AssemblyName>Senparc.Xncf.DesktopBridge</AssemblyName>
+    <RootNamespace>Senparc.Xncf.DesktopBridge</RootNamespace>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'TemplateRelease'">true</GeneratePackageOnBuild>
+    <Description>为 NCF 桌面应用提供安全的本机状态发现和事件流桥接。</Description>
+    <Title>NCF DesktopBridge 桌面状态桥接模块</Title>
+    <Authors>NeuCharFramework</Authors>
+    <Owners>NeuCharFramework</Owners>
+    <Copyright>NeuCharFramework</Copyright>
+    <PackageTags>NeuCharFramework,NCF,XNCF,DesktopBridge,SSE</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+    <PackageReleaseNotes>
+      [2026-07-25] v0.1.0-preview1 新增 NCF 桌面状态桥接能力
+      1、使用逆变事件处理器的闭合服务映射旁路观察 EventBus，不改变原事件消费行为
+      2、避免开放泛型实现被 NCF 扫描为无效 DI 描述符，确保站点容器可正常构建
+      3、提供带会话令牌保护的能力探测、活动快照和 SSE 实时事件接口
+      4、在未由桌面应用启动时默认关闭桥接接口，避免暴露进程内状态
+      [2026-07-26] v0.1.0-preview2 新增受管理员身份隔离的资源同步通知
+      1、仅同步资源标识和变更类型，不通过 EventBus 或 SSE 传输聊天正文、密码或令牌
+      2、同步流同时要求桌面会话令牌、Bearer_Backend JWT 和 AdminOnly 策略
+      3、按管理员账号隔离通知，为桌面 Admin Chat 和后续受权模块提供通用扩展点
+      [2026-07-29] v0.1.1-preview3 复用 NCF 标准 AdminOnly 策略名称
+      1、桌面桥接控制器改用 Core 统一授权策略常量，避免策略字符串漂移
+      [2026-07-31] v0.1.2-preview4 补充 DesktopBridge 远程部署安全说明
+      1、明确 HTTP/SSE 桥接边界、HTTPS 与网络访问控制要求
+      2、补充独立工作区连接、JWT 与 EventBus 进程边界说明
+      [2026-08-01] v0.2.0-preview1 新增管理员审批的设备配对
+      1、桌面端可使用短期配对码申请独立的 24 小时会话令牌，无需重启站点
+      2、管理后台可批准、拒绝和撤销会话，且不显示令牌原文
+      3、保留 NCF_DESKTOP_BRIDGE_TOKEN 兼容现有自动化，并要求远程配对使用 HTTPS
+      [2026-08-01] v0.2.1-preview2 优化后台样式和撤销响应
+      1、管理页面改用后台现有 Element UI 组件，不再维护模块私有样式
+      2、会话撤销直接取消现有 SSE，使桌面端无需轮询即可立即感知
+      [2026-08-04] v0.3.0-preview3 新增桌面端纽铃提供程序并统一品牌命名
+      1、新增 DesktopBridgeNeuBellProvider 以接入统一纽铃目录
+      2、完善桌面凭据存储与模块注册逻辑
+      3、将通知发布器、DI 注册和技术标识迁移到 NeuBell/纽铃命名
+      [2026-08-08] v0.4.0-preview4 新增桌面管理员 PKCE 一次性换票交接
+      1、新增 AuthHandoff 页面与换票状态存储，支持 WebView Cookie 到桌面 Admin JWT 的安全交接
+      2、扩展 DesktopBridge API 与活动消息，覆盖换票发起、确认与兑换流程
+      3、完善模块注册以接入管理员令牌签发协作
+      [2026-08-13] v0.4.1-preview5 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.Shared.Abstractions to 0.6.0-preview5; Senparc.Ncf.XncfBase to 0.25.0-preview7
+      [2026-08-15] v0.4.2-preview6 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
+</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+  </ItemGroup>
+
+</Project>

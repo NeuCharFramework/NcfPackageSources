@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.SenMapic.MenuName" xml:space="preserve">
+    <value>SenMapic</value>
+  </data>
+  <data name="Module.SenMapic.Description" xml:space="preserve">
+    <value>SenMapic 网页爬虫模块</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>首页</value>
+  </data>
+  <data name="Area.DatabaseSample" xml:space="preserve">
+    <value>数据库操作示例</value>
+  </data>
+  <data name="Parameter.Sample.Name" xml:space="preserve">
+    <value>名称||双竖线前为参数名称，双竖线后为参数说明</value>
+  </data>
+  <data name="Parameter.Sample.Number1" xml:space="preserve">
+    <value>数字||数字 1</value>
+  </data>
+  <data name="Parameter.Sample.Number2" xml:space="preserve">
+    <value>数字||数字 2</value>
+  </data>
+  <data name="Parameter.Sample.Operator" xml:space="preserve">
+    <value>运算符||</value>
+  </data>
+  <data name="Parameter.Sample.OperatorRestricted" xml:space="preserve">
+    <value>运算符||只能选择以下选项：+、-、×、÷</value>
+  </data>
+  <data name="Parameter.Sample.Power" xml:space="preserve">
+    <value>幂运算||</value>
+  </data>
+  <data name="Parameter.Sample.PowerRestricted" xml:space="preserve">
+    <value>幂运算||如果传入，只能选择：2、3</value>
+  </data>
+  <data name="Parameter.Operator.Add" xml:space="preserve">
+    <value>加法</value>
+  </data>
+  <data name="Parameter.Operator.Add.Help" xml:space="preserve">
+    <value>数字 1 + 数字 2</value>
+  </data>
+  <data name="Parameter.Operator.Subtract" xml:space="preserve">
+    <value>减法</value>
+  </data>
+  <data name="Parameter.Operator.Subtract.Help" xml:space="preserve">
+    <value>数字 1 - 数字 2</value>
+  </data>
+  <data name="Parameter.Operator.Multiply" xml:space="preserve">
+    <value>乘法</value>
+  </data>
+  <data name="Parameter.Operator.Multiply.Help" xml:space="preserve">
+    <value>数字 1 × 数字 2</value>
+  </data>
+  <data name="Parameter.Operator.Divide" xml:space="preserve">
+    <value>除法</value>
+  </data>
+  <data name="Parameter.Operator.Divide.Help" xml:space="preserve">
+    <value>数字 1 ÷ 数字 2</value>
+  </data>
+  <data name="Parameter.Power.Square" xml:space="preserve">
+    <value>平方</value>
+  </data>
+  <data name="Parameter.Power.Square.Help" xml:space="preserve">
+    <value>对上述结果计算平方</value>
+  </data>
+  <data name="Parameter.Power.Cube" xml:space="preserve">
+    <value>三次方</value>
+  </data>
+  <data name="Parameter.Power.Cube.Help" xml:space="preserve">
+    <value>对上述结果计算三次方</value>
+  </data>
+  <data name="Parameter.SenMapic.Url" xml:space="preserve">
+    <value>网址||请输入要爬取的网址</value>
+  </data>
+  <data name="Parameter.SenMapic.Depth" xml:space="preserve">
+    <value>深度||请输入最大爬取深度</value>
+  </data>
+  <data name="Parameter.SenMapic.PageCount" xml:space="preserve">
+    <value>网页数量||请输入最大爬取页数</value>
+  </data>
+  <data name="Area.Extensions" xml:space="preserve">
+    <value>扩展模块</value>
+  </data>
+  <data name="Page.InstalledAt" xml:space="preserve">
+    <value>安装时间：</value>
+  </data>
+  <data name="Page.CurrentDatabase" xml:space="preserve">
+    <value>当前数据库类型：</value>
+  </data>
+  <data name="Page.Brighten" xml:space="preserve">
+    <value>变亮</value>
+  </data>
+  <data name="Page.Darken" xml:space="preserve">
+    <value>变暗</value>
+  </data>
+  <data name="Page.Random" xml:space="preserve">
+    <value>随机</value>
+  </data>
+  <data name="Task.Management" xml:space="preserve">
+    <value>爬虫任务管理</value>
+  </data>
+  <data name="Task.Create" xml:space="preserve">
+    <value>新建任务</value>
+  </data>
+  <data name="Task.Name" xml:space="preserve">
+    <value>任务名称</value>
+  </data>
+  <data name="Task.StartUrl" xml:space="preserve">
+    <value>起始URL</value>
+  </data>
+  <data name="Task.MaxThreads" xml:space="preserve">
+    <value>最大线程数</value>
+  </data>
+  <data name="Task.MaxCrawlMinutes" xml:space="preserve">
+    <value>最大爬取时间（分钟）</value>
+  </data>
+  <data name="Task.MaxDepth" xml:space="preserve">
+    <value>最大深度</value>
+  </data>
+  <data name="Task.MaxPages" xml:space="preserve">
+    <value>最大页面数</value>
+  </data>
+  <data name="Task.MaxCrawlTime" xml:space="preserve">
+    <value>最大爬取时间</value>
+  </data>
+  <data name="Task.RunImmediately" xml:space="preserve">
+    <value>立即执行</value>
+  </data>
+  <data name="Task.Detail" xml:space="preserve">
+    <value>爬虫任务详情</value>
+  </data>
+  <data name="Task.Information" xml:space="preserve">
+    <value>任务信息</value>
+  </data>
+  <data name="Task.StartTime" xml:space="preserve">
+    <value>开始时间</value>
+  </data>
+  <data name="Task.EndTime" xml:space="preserve">
+    <value>结束时间</value>
+  </data>
+  <data name="Task.CrawledPages" xml:space="preserve">
+    <value>已爬取页面数</value>
+  </data>
+  <data name="Task.ErrorMessage" xml:space="preserve">
+    <value>错误信息</value>
+  </data>
+  <data name="Task.UrlStatistics" xml:space="preserve">
+    <value>URL统计</value>
+  </data>
+  <data name="Task.TotalUrls" xml:space="preserve">
+    <value>总URL数</value>
+  </data>
+  <data name="Task.SuccessCount" xml:space="preserve">
+    <value>成功数</value>
+  </data>
+  <data name="Task.FailureCount" xml:space="preserve">
+    <value>失败数</value>
+  </data>
+  <data name="Task.ParentUrl" xml:space="preserve">
+    <value>父URL</value>
+  </data>
+  <data name="Task.Depth" xml:space="preserve">
+    <value>深度</value>
+  </data>
+  <data name="Task.CrawlTime" xml:space="preserve">
+    <value>爬取时间</value>
+  </data>
+  <data name="Task.PageSize" xml:space="preserve">
+    <value>页面大小</value>
+  </data>
+  <data name="Task.StatusCode" xml:space="preserve">
+    <value>状态码</value>
+  </data>
+  <data name="Common.Status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="Common.Actions" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="Common.Start" xml:space="preserve">
+    <value>开始</value>
+  </data>
+  <data name="Common.Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Common.Confirm" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="Common.Title" xml:space="preserve">
+    <value>标题</value>
+  </data>
+  <data name="Common.Prompt" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="Validation.EnterTaskName" xml:space="preserve">
+    <value>请输入任务名称</value>
+  </data>
+  <data name="Validation.EnterStartUrl" xml:space="preserve">
+    <value>请输入起始URL</value>
+  </data>
+  <data name="Status.Error" xml:space="preserve">
+    <value>出错</value>
+  </data>
+  <data name="Status.Waiting" xml:space="preserve">
+    <value>等待开始</value>
+  </data>
+  <data name="Status.Running" xml:space="preserve">
+    <value>进行中</value>
+  </data>
+  <data name="Status.Completed" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="Status.Unknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="Message.LoadTasksFailed" xml:space="preserve">
+    <value>获取任务列表失败</value>
+  </data>
+  <data name="Message.CreateSucceeded" xml:space="preserve">
+    <value>创建成功</value>
+  </data>
+  <data name="Message.CreateFailed" xml:space="preserve">
+    <value>创建失败</value>
+  </data>
+  <data name="Message.TaskStarted" xml:space="preserve">
+    <value>任务已启动</value>
+  </data>
+  <data name="Message.StartFailed" xml:space="preserve">
+    <value>启动失败</value>
+  </data>
+  <data name="Message.ConfirmDeleteTask" xml:space="preserve">
+    <value>确认删除该任务？</value>
+  </data>
+  <data name="Message.DeleteSucceeded" xml:space="preserve">
+    <value>删除成功</value>
+  </data>
+  <data name="Message.DeleteFailed" xml:space="preserve">
+    <value>删除失败</value>
+  </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>抛出异常测试，传输参数：{0} {1}||抛出异常测试，传输参数：{0} {1}</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>被除数不能为0！||被除数不能为0！</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>未知的运算符：{0}||未知的运算符：{0}</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>未知操作符||未知操作符</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>请提供正确的网址！||请提供正确的网址！</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>目标主机解析为非公网地址，已拒绝连接。||目标主机解析为非公网地址，已拒绝连接。</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>无法连接到已通过公网地址校验的目标主机。||无法连接到已通过公网地址校验的目标主机。</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>目标 URL 不允许访问。||目标 URL 不允许访问。</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>重定向目标 URL 不允许访问。||重定向目标 URL 不允许访问。</value>
+  </data>
+</root>

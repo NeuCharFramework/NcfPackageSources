@@ -1,3 +1,25 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AdminChatAppService.cs
+    文件功能描述：后台 AI 对话应用服务
+    
+    
+    创建标识：Senparc - 20260325
+    
+    修改标识：Senparc - 20260724
+    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+
+    修改标识：Senparc - 20260726
+    修改描述：v0.1.0 增加后台 Admin Chat 同步服务以支持桌面管理交互
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+
+    修改标识：Senparc - 20260808
+    修改描述：v0.4.0 适配桌面管理员换票相关的后台对话安全上下文
+
+----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto;
@@ -5,11 +27,16 @@ using Senparc.Areas.Admin.Domain.Services;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Authorization;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.Xncf.AIKernel.Domain.Services;
+using Senparc.Ncf.Shared.Abstractions.Events;
+using Senparc.Areas.Admin.OHS.Local.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +48,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     /// AdminChatAppService：管理后台聊天功能 API 服务
     /// 支持 Cookie 和 JWT 两种认证方式
     /// </summary>
-    [AdminOrJwtAuthorize("AdminOnly")]
+    [AdminOrJwtAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class AdminChatAppService : LocalAppServiceBase
     {
         private readonly AdminChatSessionService _sessionService;
@@ -29,6 +56,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly AdminChatSessionModuleService _sessionModuleService;
         private readonly AdminChatAiService _chatAiService;
         private readonly IStringLocalizer<AdminResource> _localizer;
+        private readonly IEventBus _eventBus;
 
         public AdminChatAppService(
             IServiceProvider serviceProvider,
@@ -43,6 +71,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             _sessionModuleService = sessionModuleService;
             _chatAiService = chatAiService;
             _localizer = localizer;
+            _eventBus = serviceProvider.GetService<IEventBus>();
         }
 
         #region 会话管理
@@ -94,7 +123,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                         ChatMessageRoleType.User,
                         request.InitialMessage);
 
-                    var (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(session.Id, userId, request.InitialMessage);
+                    var (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(session.Id, userId, request.InitialMessage, request.AiModelId);
                     await _messageService.AddMessageAsync(
                         session.Id,
                         ChatMessageRoleType.Assistant,
@@ -103,6 +132,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 }
 
                 logger.Append($"创建会话: SessionId={session.Id}, UserId={userId}");
+                await PublishSyncEventAsync(userId, session.Id, "session-created");
 
                 return new CreateSessionResponse
                 {
@@ -191,6 +221,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 }
 
                 logger.Append($"删除会话: SessionId={sessionId}, UserId={userId}");
+                await PublishSyncEventAsync(userId, sessionId, "session-deleted");
                 return _localizer["AdminChat.DeleteSessionSuccess"];
             });
         }
@@ -226,7 +257,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 await _sessionService.UpdateLastMessageTimeAsync(request.SessionId);
 
-                var (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(request.SessionId, userId, request.Content);
+                var (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(request.SessionId, userId, request.Content, request.AiModelId);
 
                 var assistantMessage = await _messageService.AddMessageAsync(
                     request.SessionId,
@@ -235,6 +266,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     modelIdentifier);
 
                 logger.Append($"发送消息: SessionId={request.SessionId}, MessageId={userMessage.Id}");
+                await PublishSyncEventAsync(userId, request.SessionId, "messages-changed");
 
                 return new SendMessageResponse
                 {
@@ -327,6 +359,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 var deletedCount = await _messageService.DeleteMessagesAsync(sessionId, parsedMessageIds);
                 logger.Append($"批量删除消息: SessionId={sessionId}, DeletedCount={deletedCount}");
+                await PublishSyncEventAsync(userId, sessionId, "messages-changed");
                 return _localizer["AdminChat.DeleteMessagesSuccess", deletedCount];
             });
         }
@@ -355,10 +388,91 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
                 }
 
-                var modules = request.Modules.Select(m => (m.Uid, m.Name, m.Version ?? "")).ToList();
+                var modules = (request.Modules ?? new List<ModuleInfo>())
+                    .Where(m => m != null && !string.IsNullOrWhiteSpace(m.Uid))
+                    .GroupBy(m => m.Uid, StringComparer.OrdinalIgnoreCase)
+                    .Select(group => group.First())
+                    .Select(m => (m.Uid, m.Name, m.Version ?? ""))
+                    .ToList();
+                if (!modules.Any())
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.SelectAtLeastOneModule"]);
+                }
+
                 await _sessionModuleService.AddModulesToSessionAsync(request.SessionId, modules);
 
                 logger.Append($"添加模块: SessionId={request.SessionId}, Count={modules.Count}");
+                await PublishSyncEventAsync(userId, request.SessionId, "modules-changed");
+                return _localizer["AdminChat.AddModulesSuccess"];
+            });
+        }
+
+        /// <summary>
+        /// 将会话的模块关联更新为指定集合；系统模块管理器始终保留。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<StringAppResponse> SetSessionModulesAsync([FromBody] AddModulesRequest request)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            {
+                var userId = GetCurrentAdminUserInfoId();
+                if (userId <= 0)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
+                }
+
+                var session = await _sessionService.GetSessionByIdAsync(request.SessionId, userId);
+                if (session == null)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
+                }
+
+                var requestedUids = (request.Modules ?? new List<ModuleInfo>())
+                    .Where(module => module != null && !string.IsNullOrWhiteSpace(module.Uid))
+                    .Select(module => module.Uid)
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+                requestedUids.Add(SiteConfig.SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID);
+
+                var registers = XncfRegisterManager.RegisterList
+                    .Where(register => register != null && requestedUids.Contains(register.Uid))
+                    .GroupBy(register => register.Uid, StringComparer.OrdinalIgnoreCase)
+                    .Select(group => group.First())
+                    .ToArray();
+                var availabilityService = ServiceProvider.GetRequiredService<INeuBellModuleAvailabilityService>();
+                var openModuleUids = await availabilityService.GetOpenModuleUidsAsync(registers.Select(register => register.Uid));
+                openModuleUids = openModuleUids
+                    .Append(SiteConfig.SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID)
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+                var desiredModules = registers
+                    .Where(register => openModuleUids.Contains(register.Uid))
+                    .Select(register => (register.Uid, register.Name, register.Version ?? string.Empty))
+                    .ToList();
+                if (desiredModules.All(module => !string.Equals(
+                        module.Uid,
+                        SiteConfig.SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID,
+                        StringComparison.OrdinalIgnoreCase)))
+                {
+                    desiredModules.Add((
+                        SiteConfig.SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID,
+                        SiteConfig.SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID,
+                        string.Empty));
+                }
+
+                var desiredUidSet = desiredModules
+                    .Select(module => module.Uid)
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+                var existingModules = await _sessionModuleService.GetSessionModulesAsync(request.SessionId);
+                // 先幂等添加目标集合，再移除多余关联；若中途失败，最多暂时保留旧关联，
+                // 不会先删掉用户原有的可用模块。
+                await _sessionModuleService.AddModulesToSessionAsync(request.SessionId, desiredModules);
+                foreach (var existingModule in existingModules.Where(module => !desiredUidSet.Contains(module.XncfModuleUid)))
+                {
+                    await _sessionModuleService.RemoveModuleFromSessionAsync(request.SessionId, existingModule.XncfModuleUid);
+                }
+
+                logger.Append($"更新模块关联: SessionId={request.SessionId}, Count={desiredModules.Count}");
+                await PublishSyncEventAsync(userId, request.SessionId, "modules-changed");
                 return _localizer["AdminChat.AddModulesSuccess"];
             });
         }
@@ -388,6 +502,109 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 return new GetSessionModulesResponse
                 {
                     Modules = modules.Select(z => MapModuleDtoWithRegisterInfo(AdminChatSessionModuleDto.CreateFromEntity(z))).ToList()
+                };
+            });
+        }
+
+        /// <summary>
+        /// 获取当前已安装并开放、可关联到 Admin Chat 会话的 XNCF 模块。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<GetAvailableModulesResponse>> GetAvailableModulesAsync()
+        {
+            return await this.GetResponseAsync<AppResponseBase<GetAvailableModulesResponse>, GetAvailableModulesResponse>(async (response, logger) =>
+            {
+                var registers = XncfRegisterManager.RegisterList
+                    .Where(register => register != null && !string.IsNullOrWhiteSpace(register.Uid))
+                    .GroupBy(register => register.Uid, StringComparer.OrdinalIgnoreCase)
+                    .Select(group => group.First())
+                    .ToArray();
+                var availabilityService = ServiceProvider.GetRequiredService<INeuBellModuleAvailabilityService>();
+                var openModuleUids = await availabilityService.GetOpenModuleUidsAsync(registers.Select(register => register.Uid));
+
+                var modules = registers
+                    .Where(register => openModuleUids.Contains(register.Uid))
+                    .Select(register => new AvailableModuleDto
+                    {
+                        Uid = register.Uid,
+                        Name = register.Name,
+                        DisplayName = string.IsNullOrWhiteSpace(register.MenuName) ? register.Name : register.MenuName,
+                        Version = register.Version ?? string.Empty,
+                        Description = register.Description ?? string.Empty,
+                        Icon = register.Icon ?? string.Empty,
+                        IsRequired = string.Equals(
+                            register.Uid,
+                            SiteConfig.SYSTEM_XNCF_MODULE_XNCF_MODULE_MANAGER_UID,
+                            StringComparison.OrdinalIgnoreCase)
+                    })
+                    .OrderBy(module => module.DisplayName)
+                    .ToList();
+
+                return new GetAvailableModulesResponse
+                {
+                    Modules = modules
+                };
+            });
+        }
+
+        /// <summary>
+        /// 获取 Chat 可选 AI 模型列表。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<GetAiModelOptionsResponse>> GetAiModelOptionsAsync()
+        {
+            return await this.GetResponseAsync<AppResponseBase<GetAiModelOptionsResponse>, GetAiModelOptionsResponse>(async (response, logger) =>
+            {
+                var optionList = new List<AiModelOptionDto>
+                {
+                    new AiModelOptionDto
+                    {
+                        Id = 0,
+                        Name = _localizer["AdminChat.FallbackModelName"].Value,
+                        Description = _localizer["AdminChat.FallbackModelDescription"].Value,
+                        IsDefault = true
+                    }
+                };
+
+                var aiKernelRegister = XncfRegisterManager.RegisterList.FirstOrDefault(z =>
+                    string.Equals(z.Name, "Senparc.Xncf.AIKernel", StringComparison.OrdinalIgnoreCase));
+
+                var aiKernelAvailable = false;
+                if (aiKernelRegister != null)
+                {
+                    var registerManager = new XncfRegisterManager(ServiceProvider);
+                    aiKernelAvailable = await registerManager.CheckXncfAvailable(aiKernelRegister);
+                }
+
+                if (aiKernelAvailable)
+                {
+                    var aiModelService = ServiceProvider.GetService(typeof(AIModelService)) as AIModelService;
+                    if (aiModelService != null)
+                    {
+                        var aiModels = await aiModelService.GetFullListAsync(z =>
+                            z.Show && z.ConfigModelType == Senparc.Xncf.AIKernel.Domain.Models.ConfigModelType.Chat);
+
+                        optionList.AddRange(aiModels
+                            .OrderByDescending(z => z.Show)
+                            .ThenBy(z => z.Alias)
+                            .Select(z => new AiModelOptionDto
+                            {
+                                Id = z.Id,
+                                Name = !string.IsNullOrWhiteSpace(z.Alias)
+                                    ? $"{z.Alias} ({z.ModelId})"
+                                    : $"{z.DeploymentName} ({z.ModelId})",
+                                Description = string.IsNullOrWhiteSpace(z.Note)
+                                    ? $"{z.AiPlatform} | {z.Endpoint}"
+                                    : z.Note,
+                                IsDefault = false
+                            }));
+                    }
+                }
+
+                return new GetAiModelOptionsResponse
+                {
+                    AiKernelAvailable = aiKernelAvailable,
+                    Models = optionList
                 };
             });
         }
@@ -422,6 +639,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         #region 私有辅助方法
 
         #endregion
+
+        private ValueTask PublishSyncEventAsync(int userId, int sessionId, string action)
+        {
+            return _eventBus?.PublishAsync(new AdminChatSyncEvent(userId, sessionId, action))
+                   ?? ValueTask.CompletedTask;
+        }
     }
 
     #region 请求和响应模型
@@ -495,6 +718,48 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     public class GetSessionModulesResponse
     {
         public List<AdminChatSessionModuleDto> Modules { get; set; }
+    }
+
+    /// <summary>
+    /// 获取可关联模块列表响应。
+    /// </summary>
+    public class GetAvailableModulesResponse
+    {
+        public List<AvailableModuleDto> Modules { get; set; }
+    }
+
+    /// <summary>
+    /// 可关联到 Admin Chat 会话的开放模块。
+    /// </summary>
+    public class AvailableModuleDto
+    {
+        public string Uid { get; set; }
+        public string Name { get; set; }
+        public string DisplayName { get; set; }
+        public string Version { get; set; }
+        public string Description { get; set; }
+        public string Icon { get; set; }
+        public bool IsRequired { get; set; }
+    }
+
+    /// <summary>
+    /// 获取 AI 模型选项响应
+    /// </summary>
+    public class GetAiModelOptionsResponse
+    {
+        public bool AiKernelAvailable { get; set; }
+        public List<AiModelOptionDto> Models { get; set; }
+    }
+
+    /// <summary>
+    /// AI 模型选项
+    /// </summary>
+    public class AiModelOptionDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public bool IsDefault { get; set; }
     }
 
     #endregion

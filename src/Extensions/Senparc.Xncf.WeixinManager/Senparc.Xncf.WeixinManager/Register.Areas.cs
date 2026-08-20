@@ -1,4 +1,24 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.Areas.cs
+    文件功能描述：Register.Areas 相关实现
+    
+    
+    创建标识：Senparc - 20250712
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.23.0-preview3 为 WeixinManager 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.23.1-preview4 限制微信管理模块的敏感日志和外部接口暴露
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,10 +37,10 @@ namespace Senparc.Xncf.WeixinManager
         public string HomeUrl => "/Admin/WeixinManager/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/Index"),"首页","fa fa-laptop"),
-             new AreaPageMenuItem(GetAreaUrl("/swagger"),"Web Api Swagger","fa fa-file-code-o"),
-             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/MpAccount"),"公众号管理","fa fa-comments"),
-             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/WeixinUser"),"用户管理","fa fa-users"),
+             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/Index"), WeixinManagerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+             new AreaPageMenuItem(GetAreaUrl("/swagger"), WeixinManagerResource.Get("Area.ApiDocumentation", "Web API Swagger"),"fa fa-file-code-o"),
+             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/MpAccount"), WeixinManagerResource.Get("Area.WeixinManager.OfficialAccounts", "公众号管理"),"fa fa-comments"),
+             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/WeixinUser"), WeixinManagerResource.Get("Area.WeixinManager.Users", "用户管理"),"fa fa-users"),
         };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)
@@ -36,9 +56,14 @@ namespace Senparc.Xncf.WeixinManager
                 options.BaseApiControllerType = null;
                 options.CopyCustomAttributes = true;
                 options.TaskCount = Environment.ProcessorCount * 4;
-                options.ShowDetailApiLog = true;
+                // Detailed API logging can capture request parameters such as
+                // app secrets and access tokens. Restrict it to development.
+                options.ShowDetailApiLog = env.IsDevelopment();
                 options.AdditionalAttributeFunc = null;
-                options.ForbiddenExternalAccess = false;
+                // The generated SDK endpoints are not a public, authenticated API
+                // surface. Keep them local-only unless a deployment explicitly
+                // introduces a separate authentication and allow-list boundary.
+                options.ForbiddenExternalAccess = true;
                 options.UseLowerCaseApiName = Senparc.CO2NET.Config.SenparcSetting.UseLowerCaseApiName ?? false;
             });
 

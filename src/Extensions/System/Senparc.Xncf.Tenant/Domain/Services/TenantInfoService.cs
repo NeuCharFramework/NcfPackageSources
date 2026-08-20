@@ -1,4 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：TenantInfoService.cs
+    文件功能描述：TenantInfoService 相关实现
+    
+    
+    创建标识：Senparc - 20260704
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Senparc.CO2NET.Extensions;

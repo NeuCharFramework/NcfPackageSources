@@ -1,7 +1,37 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：MyFuctionAppService.cs
+    文件功能描述：MyFuctionAppService 服务逻辑
+
+
+    创建标识：Senparc - 20211031
+
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.5.0-preview8 补充 A2A 发布管理所需 MCP 功能与多语言资源
+
+----------------------------------------------------------------*/
+
+#pragma warning disable OPENAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+using Azure.AI.OpenAI;
+using Azure.Core;
+using Microsoft.Agents.AI;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 using ModelContextProtocol.Client;
 using ModelContextProtocol.Server;
-using Senparc.AI.Kernel.Handlers;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
+using Senparc.AI.Entities;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
@@ -15,16 +45,6 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ModelContextProtocol.SemanticKernel;
-using ModelContextProtocol.SemanticKernel.Extensions;
-using Microsoft.SemanticKernel;
-using Senparc.AI.Kernel;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
-using Microsoft.Extensions.DependencyInjection;
-using Azure.AI.OpenAI;
-using Azure.Core;
-using Microsoft.Extensions.AI;
-using Senparc.AI.Entities;
 
 
 namespace Senparc.Xncf.MCP.OHS.Local.AppService
@@ -33,7 +53,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     public class DoFuncReq
     {
         [Required]
-        [Description("传入字符串")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Tool.Input")]
         public string Str { get; set; }
     }
 
@@ -41,14 +61,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     [McpServerToolType()]
     public static class NcfMcpTools
     {
-        [McpServerTool, Description("处理字符串")]
+        [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.Echo.Description")]
         public static string Echo(string message)
         {
             Console.WriteLine("Echo 收到来自 MCP的 请求，Message:" + message);
-            return $"hello {message}";
+            return McpResource.Format("MCP.Tool.Echo.Result", "你好，{0}", message);
         }
 
-        [McpServerTool, Description("获取当前时间")]
+        [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.Now.Description")]
         public static string Now(string message)
         {
             Console.WriteLine("Now tool 收到请求(messag)：" + message);
@@ -63,12 +83,35 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         //}
 
         //自动增加小时数
-        [McpServerTool, Description("自动增加小时数")]
+        [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.AddHours.Description")]
         public static string AddHours(int hours)
         {
             return $"{DateTime.Now.AddHours(hours)}";
         }
 
+
+     [McpServerTool,Description("Bob's Lab")]
+    public static async Task<string> BobLab(string input)
+    {
+        var handler = new AgentAiHandler(Senparc.AI.Config.SenparcAiSetting);
+
+        var iWantToRun = await handler.IWantTo()
+            .ConfigChatModel("Bob", new ChatClientAgentOptions(){
+            ChatOptions = new ChatOptions()
+            {
+                Instructions = McpResource.Get("MCP.BobLab.Instructions")
+            }
+        }).BuildKernelWithAgentSessionAsync();
+
+        var startTime = DateTime.Now;
+        var result = await iWantToRun.RunChatAsync(input);
+        return result.OutputString + McpResource.Format(
+            "MCP.BobLab.Footer",
+            "[Bob's Lab] - {0} / {1}，耗时：{2} 毫秒",
+            input,
+            DateTime.Now,
+            SystemTime.DiffTotalMS(startTime));
+    }
 
     }
 
@@ -76,14 +119,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     public class MyFuctionAppService : AppServiceBase
     {
         private ColorService _colorService;
-        private IMcpClient McpClient { get; set; }
+        //private IMcpClient McpClient { get; set; }
 
         public MyFuctionAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
         {
             _colorService = colorService;
         }
 
-        [FunctionRender("执行 MCP", "执行 MCP（如选择模块，默认地址为 http://localhost:5000/{Module Name}/sse）", typeof(Register))]
+        [FunctionRender(typeof(McpResource), "Function.MCP.Execute.Name", "Function.MCP.Execute.Description", typeof(Register))]
         public async Task<StringAppResponse> GetMcpResult(MyFunction_MCPCallRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -99,14 +142,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 //var clientTransport = new StdioClientTransport(new StdioClientTransportOptions
                 //{
                 //    Name = "NCF-Server",
-                //    Command = "curl http://localhost:5000/sse/sse",
+                //    Command = "curl http://localhost:5080/sse/sse",
                 //    // Arguments = ["-y", "@modelcontextprotocol/server-everything"],
                 //});
 
                 // 根据 MCP 服务器选择来确定端点
                 string endpoint;
-                var selectedMcpServer = request.McpServerSelection.SelectedValues.FirstOrDefault();
-                
+                var selectedMcpServer = request.McpServerSelection;
+
                 if (!string.IsNullOrEmpty(selectedMcpServer) && selectedMcpServer != "Manual")
                 {
                     // 如果选中了非"手动输入"的 MCP 服务器，从注册列表中获取真实地址
@@ -115,154 +158,86 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     {
                         var xncfName = serverParts[0];
                         var mcpRoute = serverParts[1];
-                        
+
                         // 从 XncfRegisterManager 中查找对应的服务器信息
                         var mcpServerInfo = Senparc.Ncf.XncfBase.XncfRegisterManager.McpServerInfoCollection.Values
                             .FirstOrDefault(s => s.XncfName == xncfName && s.McpRoute == mcpRoute);
-                        
+
                         if (mcpServerInfo != null)
                         {
                             // 构建完整的服务器地址
-                            endpoint = $"http://localhost:5000/{mcpServerInfo.McpRoute}/sse";
+                            // 默认端口避开 macOS AirPlay 占用的 5000
+                            endpoint = $"http://localhost:5080/{mcpServerInfo.McpRoute}/sse";
                             Console.WriteLine($"使用选中的 MCP 服务器: {mcpServerInfo.XncfName}，路由: {mcpServerInfo.McpRoute}/sse");
                         }
                         else
                         {
                             // 如果找不到对应的服务器信息，回退到默认地址
-                            endpoint = "http://localhost:5000/mcp-senparc-xncf-mcp/sse";
+                            endpoint = "http://localhost:5080/mcp-senparc-xncf-mcp/sse";
                             Console.WriteLine($"警告：找不到选中的 MCP 服务器信息，使用默认端点");
                         }
                     }
                     else
                     {
                         // 如果解析失败，回退到默认地址
-                        endpoint = "http://localhost:5000/mcp-senparc-xncf-mcp/sse";
+                        endpoint = "http://localhost:5080/mcp-senparc-xncf-mcp/sse";
                         Console.WriteLine($"警告：无法解析选中的 MCP 服务器标识: {selectedMcpServer}，使用默认端点");
                     }
                 }
                 else
                 {
                     // 如果选中了"手动输入"或没有选择，使用手动输入的端点
-                    endpoint = request.Endpoint.IsNullOrEmpty() ? "http://localhost:5000/mcp-senparc-xncf-mcp/sse" : request.Endpoint;
+                    endpoint = request.Endpoint.IsNullOrEmpty() ? "http://localhost:5080/mcp-senparc-xncf-mcp/sse" : request.Endpoint;
                     Console.WriteLine("使用手动输入的端点");
                 }
 
                 Console.WriteLine("MCP Request Endpoint:" + endpoint);
 
-                var clientTransport = new SseClientTransport(new SseClientTransportOptions()
+                var ncfServerTool = new HostedMcpServerTool("NCF-Server", new Uri(endpoint))
                 {
-                    Endpoint = new Uri(endpoint),
-                    Name = "NCF-Server"
-                });
-
-                var client = await McpClientFactory.CreateAsync(clientTransport);
-                var tools = await client.ListToolsAsync();
-                // Print the list of tools available from the server.
-                foreach (var tool in tools)
-                {
-                    Console.WriteLine($"{tool.Name} ({tool.Description})");
-                }
-
-                // // Execute a tool (this would normally be driven by LLM tool invocations).
-                // var result = await client.CallToolAsync(
-                //     "Echo",
-                //     new Dictionary<string, object?>() { ["message"] = "Hello MCP!" }//,
-                //     /*System.Threading.CancellationToken.None*/);
-
-                // Console.WriteLine("MCP 收到结果：" + response.ToJson(true));
-
-
-
-
-                //return result.ToJson(true);
-
-
-
-                /*
-                var builder = Kernel.CreateBuilder();
-                //builder.Services.AddLogging(c => c.AddDebug().SetMinimumLevel(LogLevel.Trace));
-
-
-                var certs = Senparc.AI.Config.SenparcAiSetting.AzureOpenAIKeys;
-
-                builder.Services.AddAzureOpenAIChatCompletion("gpt-4o",new AzureOpenAIClient(new Uri(certs.AzureEndpoint),new System.ClientModel.ApiKeyCredential(certs.ApiKey)));
-
-
-                var kernel = builder.Build();
-                await kernel.Plugins.AddMcpFunctionsFromSseServerAsync("NCF-MCP"+SystemTime.NowTicks, "http://localhost:5000/sse/sse");
-
-                var executionSettings = new OpenAIPromptExecutionSettings
-                {
-                    Temperature = 0,
-                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+                    ApprovalMode = HostedMcpServerToolApprovalMode.NeverRequire
                 };
 
-                var prompt = request.RequestPrompt;
-                var result = await kernel.InvokePromptAsync(prompt, new(executionSettings)).ConfigureAwait(false);
-                Console.WriteLine($"\n\n{prompt}\n{result}");
+                //var clientTransport = new SseClientTransport(new SseClientTransportOptions()
+                //{
+                //    Endpoint = new Uri(endpoint),
+                //    Name = "NCF-Server"
+                //});
 
-                return result.ToJson(true);
-
-                */
-
-                var client2 = await McpClientFactory.CreateAsync(clientTransport);
-                var tools2 = await client2.ListToolsAsync();
+                //var client = await McpClientFactory.CreateAsync(clientTransport);
+                //var tools = await client.ListToolsAsync();
                 // Print the list of tools available from the server.
-                foreach (var tool in tools2)
-                {
-                    Console.WriteLine($"{tool.Name} ({tool.Description})");
-                    //var kf = tool.AsKernelFunction();
 
 
-                }
 
                 var aiSetting = Senparc.AI.Config.SenparcAiSetting;
-                var semanticAiHandler = new SemanticAiHandler(aiSetting);
+                var agentAiHandler = new AgentAiHandler(aiSetting);
 
-                var parameter = new PromptConfigParameter()
-                {
-                    MaxTokens = 2000,
-                    Temperature = 0.7,
-                    TopP = 0.5,
-                };
+                var iWantToConfig = agentAiHandler.IWantTo();
+                var chatOptions = iWantToConfig.CreateChatClientAgentOptions(
+                    "Jeffrey", McpResource.Get("MCP.Agent.SystemPrompt"),
+                    new ChatOptions()
+                    {
+                        Instructions = McpResource.Get("MCP.Agent.SystemPrompt"),
+                        TopP = 0.7f,
+                        Temperature = 0.7f,
+                        MaxOutputTokens = 2000,
+                        Tools = new List<AITool> { ncfServerTool },
+                    });
 
-                var iWantToRun = semanticAiHandler.ChatConfig(parameter,
-                  userId: "Jeffrey",
-                  maxHistoryStore: 10,
-                  chatSystemMessage: "你是一位智能助手，负责帮助我完成任务",
-                  senparcAiSetting: aiSetting,
-                  kernelBuilderAction: kh =>
-                  {
+                var iWantToRun = await iWantToConfig
+                        .ConfigChatModel("Jeffrey", chatOptions)
+                        .BuildKernelAsync();
 
-                      // kh.Plugins.AddMcpFunctionsFromSseServerAsync("NCF-Server", "http://localhost:5000/sse/sse");
-
-#pragma warning disable SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
-                      kh.Plugins.AddFromFunctions("SenparcMcpPlugin", tools2.Select(z => z.AsKernelFunction()));
-#pragma warning restore SKEXP0001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
-                  }
-                      );
-                var executionSettings2 = new OpenAIPromptExecutionSettings
-                {
-                    Temperature = 0,
-                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()// FunctionChoiceBehavior.Auto()
-                };
-                var ka = new KernelArguments(executionSettings2) { };
-
-                ////输出结果
-                //SenparcAiResult ret = await semanticAiHandler.ChatAsync(iWantToRun, request.RequestPrompt/*, streamItemProceessing*/);
-
-                //////////var resultRaw = await iWantToRun.Kernel.InvokePromptAsync(request.RequestPrompt, ka);
-
-
-                var resultRaw = await iWantToRun.Kernel.InvokePromptAsync(request.RequestPrompt, ka);
+                var resultRaw = await iWantToRun.RunChatAsync(request.RequestPrompt);
                 //return resultRaw.ToJson(true);
-                return resultRaw.ToString();
+                return resultRaw.OutputString;
             });
         }
 
 
 
-        [FunctionRender("我的函数", "我的函数的注释", typeof(Register))]
+        [FunctionRender(typeof(McpResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -278,7 +253,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                   */
 
                 double calcResult = request.Number1;
-                var theOperator = request.Operator.SelectedValues.FirstOrDefault();
+                var theOperator = request.Operator;
                 switch (theOperator)
                 {
                     case "+":
@@ -294,41 +269,41 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                         if (request.Number2 == 0)
                         {
                             response.Success = false;
-                            response.ErrorMessage = "被除数不能为0！";
+                            response.ErrorMessage = McpResource.Get("MCP.Calculate.DivideByZero");
                             return null;
                         }
                         calcResult = calcResult / request.Number2;
                         break;
                     default:
                         response.Success = false;
-                        response.ErrorMessage = $"未知的运算符：{theOperator}";
+                        response.ErrorMessage = McpResource.Format("MCP.Calculate.UnknownOperator", "未知的运算符：{0}", theOperator);
                         return null;
                 }
 
-                logger.Append($"进行运算：{request.Number1} {theOperator} {request.Number2} = {calcResult}");
+                logger.Append(McpResource.Format("MCP.Calculate.OperationLog", "进行运算：{0} {1} {2} = {3}", request.Number1, theOperator, request.Number2, calcResult));
 
                 Action<int> raisePower = power =>
                 {
-                    if (request.Power.SelectedValues.Contains(power.ToString()))
+                    if ((request.Power ?? Array.Empty<string>()).Contains(power.ToString()))
                     {
                         var oldValue = calcResult;
                         calcResult = Math.Pow(calcResult, power);
-                        logger.Append($"进行{power}次方运算：{oldValue}{(power == 2 ? "²" : "³")} = {calcResult}");
+                        logger.Append(McpResource.Format("MCP.Calculate.PowerLog", "进行 {0} 次方运算：{1}{2} = {3}", power, oldValue, power == 2 ? "²" : "³", calcResult));
                     }
                 };
 
                 raisePower(2);
                 raisePower(3);
 
-                response.Data = $"【{request.Name}】计算结果：{calcResult}。计算过程请看日志";
+                response.Data = McpResource.Format("MCP.Calculate.Result", "【{0}】计算结果：{1}。计算过程请查看日志", request.Name, calcResult);
                 return null;
             });
         }
 
 
-        [McpServerTool, Description("计算器工具，负责处理加减乘除计算")]
+        [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.Calculator.Description")]
         public async Task<string> Calculator(
-            int number1, int number2, int power, [Description("Number1 和 Number2 之间的运算符，可选：+ - × ÷")] string operatorMark
+            int number1, int number2, int power, [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Tool.Operator")] string operatorMark
             //RequestType request
             )
         {
@@ -368,14 +343,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     {
                         //response.Success = false;
                         //response.ErrorMessage = "被除数不能为0！";
-                        return "被除数不能为0！";
+                        return McpResource.Get("MCP.Calculate.DivideByZero");
                     }
                     calcResult = calcResult / request.Number2;
                     break;
                 default:
                     //response.Success = false;
                     //response.ErrorMessage = $"未知的运算符：{theOperator}";
-                    return $"未知的运算符：{request.TheOperator}";
+                    return McpResource.Format("MCP.Calculate.UnknownOperator", "未知的运算符：{0}", request.TheOperator);
             }
 
             //logger.Append($"进行运算：{number1} {theOperator} {number2} = {calcResult}");
@@ -397,7 +372,7 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             raisePower(3);
 
             // response.Data = $"【{theOperator}】计算结果：{calcResult}。计算过程请看日志";
-            return $"【{request.TheOperator}】计算结果：{calcResult}。计算过程请看日志";
+            return McpResource.Format("MCP.Calculate.Result", "【{0}】计算结果：{1}。计算过程请查看日志", request.TheOperator, calcResult);
             // });
         }
     }
@@ -418,8 +393,9 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
 
         [Required]
         [DefaultValue("+")]
-        [Description("Number1 和 Number2 之间的运算符，可选：+ - × ÷")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Tool.Operator")]
         public string TheOperator { get; set; }
 
     }
 }
+#pragma warning restore OPENAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。

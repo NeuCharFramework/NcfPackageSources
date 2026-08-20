@@ -1,7 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.0.11</Version>
+    <PackageReleaseNotes>
+        [2026-07-01] v0.0.1 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
+        [2026-07-02] v0.0.1 新增 PromptRange 与 AgentsManager 使用记录能力，升级并适配 net10.0 框架
+        1、新增 PromptRange 与 AgentsManager 使用记录能力
+        2、升级并适配 net10.0 框架
+        3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+        [2026-07-05] v0.0.2 Dependency update from Senparc.Xncf.AgentsManager to 0.11.1-preview3
+        [2026-07-05] v0.0.3 Dependency update from Senparc.Xncf.AgentsManager to 0.11.2-preview4
+        [2026-07-07] v0.0.4 Dependency updates from upstream modules
+        1、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+        [2026-07-17] v0.0.5 同步上游项目版本并适配统一本地化能力
+        1、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.15-preview.2
+        2、Dependency update from Senparc.Xncf.AgentsManager to 0.12.0-preview6
+        3、Dependency update from Senparc.Xncf.PromptRange to 0.17.0-preview5
+        4、同步 AgentsManager 0.12.0-preview6 的剪贴板兼容性改进
+        [2026-07-29] v0.0.6 Dependency update from Senparc.Xncf.AgentsManager to 0.12.1-preview7
+        [2026-07-31] v0.0.7 Dependency update from Senparc.Xncf.AgentsManager to 0.13.0-preview8
+        [2026-08-04] v0.0.8 补充 Agent 模板知识库集成测试
+        1、验证 AgentTemplate 与 KnowledgeBase 的关联和服务调用行为
+        [2026-08-08] v0.0.9 Dependency updates from upstream projects
+        1、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.19-preview.6
+        2、Dependency update from Senparc.Xncf.AgentsManager to 0.14.1-preview10
+        3、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
+        [2026-08-13] v0.0.10 补充 AgentsManager A2A、线程和参数解析测试覆盖
+        1、覆盖远程与发布 A2A 管理流程及 AgentTemplateRunner
+        2、补充文件资源边界、线程停止和数值参数归一化测试
+        [2026-08-15] v0.0.11 补充 AgentTemplate 与远程 A2A 回归测试
+        1、覆盖手动 Prompt、取消令牌和远程执行边界
+</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

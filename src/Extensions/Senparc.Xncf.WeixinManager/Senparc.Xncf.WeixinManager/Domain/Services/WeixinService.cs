@@ -1,4 +1,21 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：WeixinService.cs
+    文件功能描述：WeixinService 相关实现
+    
+    
+    创建标识：Senparc - 20250712
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260731
+    修改描述：v0.24.0-preview5 将图片上传失败提示接入模块多语言资源
+
+----------------------------------------------------------------*/
+
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
@@ -84,7 +101,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services
 
                 if (!downloadTemplateImage)
                 {
-                    throw new Exception("图片上传错误（01）！");
+                    throw new Exception(WeixinManagerResource.Get("Error.ImageUpload01", "Image upload failed (01)."));
                 }
                 return true;
             }

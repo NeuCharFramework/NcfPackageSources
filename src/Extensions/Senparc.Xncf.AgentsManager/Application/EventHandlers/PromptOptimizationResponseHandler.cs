@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptOptimizationResponseHandler.cs
+    文件功能描述：PromptOptimizationResponseHandler 相关实现
+    
+    
+    创建标识：Senparc - 20260306
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.EventBus;
 using Senparc.Ncf.Shared.Abstractions.Events;
 using Senparc.Xncf.AgentsManager.Domain.Services;

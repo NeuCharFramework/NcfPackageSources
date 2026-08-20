@@ -1,6 +1,24 @@
-﻿using System.Text;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：CustomBindingHelperExtentions.cs
+    文件功能描述：CustomBindingHelperExtentions 相关实现
+    
+    
+    创建标识：Senparc - 20200724
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260731
+    修改描述：v0.22.0-preview4 将上下移动作提示接入核心多语言资源
+
+----------------------------------------------------------------*/
+
+using System.Text;
 using System.Collections.Specialized;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Senparc.Ncf.Core;
 
 namespace System.Web.Mvc
 {
@@ -62,7 +80,7 @@ namespace System.Web.Mvc
                 result.AppendFormat("{0}\" onclick=\"{1}\" >", upClassEnable, upFunction);
                 result.AppendFormat("<img src=\"/Images/up_en.gif\" />");
             }
-            result.Append("上移</span>");
+            result.Append(NcfCoreResource.Get("Pager.MoveUp", "上移")).Append("</span>");
 
             result.Append(" <span class=\"");
             if (currentIndex >= listCount)
@@ -76,7 +94,7 @@ namespace System.Web.Mvc
                 result.AppendFormat("{0}\" onclick=\"{1}\" >", downClassEnable, downFunction);
                 result.AppendFormat("<img src=\"/Images/down_en.gif\" />");
             }
-            result.Append("下移</span>");
+            result.Append(NcfCoreResource.Get("Pager.MoveDown", "下移")).Append("</span>");
 
             return result.ToString();
         }

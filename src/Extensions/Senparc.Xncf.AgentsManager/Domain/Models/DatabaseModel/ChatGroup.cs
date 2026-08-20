@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ChatGroup.cs
+    文件功能描述：ChatGroup 相关实现
+
+
+    创建标识：Senparc - 20240616
+
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using System;
@@ -36,6 +53,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
         /// 描述
         /// </summary>
         public string Description { get; private set; }
+
+        /// <summary>
+        /// 群组向参与者分发上下文的策略。null 表示沿用升级前的完整历史行为。
+        /// </summary>
+        public ChatGroupContextSharingMode? ContextSharingMode { get; private set; }
 
         /// <summary>
         /// 管理员代理模板Id
@@ -82,8 +104,25 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models
             Enable = chatGroupDto.Enable;
             State = chatGroupDto.State;
             Description = chatGroupDto.Description;
+            ContextSharingMode = chatGroupDto.ContextSharingMode;
             AdminAgentTemplateId = chatGroupDto.AdminAgentTemplateId;
             EnterAgentTemplateId = chatGroupDto.EnterAgentTemplateId;
+        }
+
+        /// <summary>
+        /// 启用群组，使其可以接收新的执行任务。
+        /// </summary>
+        public void EnableGroup()
+        {
+            Enable = true;
+        }
+
+        /// <summary>
+        /// 停用群组。不会中断已经创建的任务，但会阻止新的执行请求。
+        /// </summary>
+        public void DisableGroup()
+        {
+            Enable = false;
         }
 
         public void Start()

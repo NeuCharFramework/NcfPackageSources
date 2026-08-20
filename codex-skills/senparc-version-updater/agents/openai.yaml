@@ -1,0 +1,4 @@
+interface:
+  display_name: "Senparc Version Updater"
+  short_description: "Bump Senparc versions and release notes"
+  default_prompt: "Use $senparc-version-updater to update Senparc project versions, C# changelog headers, PackageReleaseNotes, and recursive dependency version bumps."

@@ -1,4 +1,4 @@
-new Vue({
+var app = new Vue({
     el: "#app",
     data() {
         var validateCode = (rule, value, callback) => {
@@ -80,6 +80,11 @@ new Vue({
             props: { multiple: true },
             // 表格数据
             tableData: [],
+            navigationTarget: {
+                knowledgeBaseId: 0,
+                focus: '',
+                handled: false
+            },
             uid: '',
             fileList: [],
             sizeForm: {
@@ -181,6 +186,7 @@ new Vue({
     },
     created: function () {
         let that = this
+        that.initializeKnowledgeBaseNavigation()
         that.getList();
         that.getEmbeddingModelList();
         that.getVectorDBList();
@@ -221,6 +227,43 @@ new Vue({
     },
     methods:
     {
+        initializeKnowledgeBaseNavigation() {
+            const query = new URLSearchParams(window.location.search || '')
+            const knowledgeBaseId = Number(query.get('knowledgeBaseId') || 0)
+            if (!Number.isInteger(knowledgeBaseId) || knowledgeBaseId <= 0) {
+                return
+            }
+
+            this.navigationTarget = {
+                knowledgeBaseId: knowledgeBaseId,
+                focus: query.get('focus') === 'materials' ? 'materials' : 'edit',
+                handled: false
+            }
+            this.listQuery.pageIndex = 1
+        },
+        applyKnowledgeBaseNavigation(rows) {
+            const target = this.navigationTarget || {}
+            const knowledgeBaseId = Number(target.knowledgeBaseId || 0)
+            if (target.handled || !Number.isInteger(knowledgeBaseId) || knowledgeBaseId <= 0) {
+                return
+            }
+
+            target.handled = true
+            const knowledgeBase = (rows || []).find(item => Number(item.id) === knowledgeBaseId)
+            if (!knowledgeBase) {
+                this.$message.warning('未找到要打开的知识库，可能已删除或当前账号没有权限。')
+                return
+            }
+
+            this.$nextTick(() => {
+                this.$refs.multipleTable?.setCurrentRow(knowledgeBase)
+                if (target.focus === 'materials') {
+                    this.handleElVisibleOpenBtn('drawerGroup', knowledgeBase)
+                } else {
+                    this.handleEdit(0, knowledgeBase, 'edit')
+                }
+            })
+        },
         handleChange(value) {
             console.log(value);
         },
@@ -268,14 +311,16 @@ new Vue({
                 const id = typeof fileId === 'number' ? fileId : parseInt(fileId, 10);
                 if (!isNaN(id)) {
                     that.groupForm.files = that.groupForm.files || [];
-                    that.groupForm.files.push({ id: id, name: file.name || file.fileName || '' });
+                    if (!that.groupForm.files.some(item => Number(item.id) === id)) {
+                        that.groupForm.files.push({ id: id, name: file.name || file.fileName || '' });
+                    }
                 }
                 await that.getFileListData('file');
                 that.$nextTick(() => {
                     const row = that.fileList.find(i => i.id === id);
                     if (row) that.toggleSelection(that.groupForm.files.map(f => that.fileList.find(i => i.id === f.id)).filter(Boolean));
                 });
-                that.$notify({ title: '成功', message: '文件已上传至文件管理', type: 'success' });
+                that.$notify({ title: '成功', message: '资料已上传并勾选，请点击“确认”保存关联', type: 'success' });
             } else {
                 that.$notify.error({ title: '失败', message: (res && res.errorMessage) || '上传失败，请重试' });
             }
@@ -379,37 +424,41 @@ new Vue({
                 that.getFileListData('file')
                 return
             }
-            const url = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseItemAppService/Xncf.KnowledgeBase_KnowledgeBaseItemAppService.GetListByKnowledgeBaseId'
+            const url = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseItemAppService/Xncf.KnowledgeBase_KnowledgeBaseItemAppService.GetConfigurationByKnowledgeBaseId'
             try {
                 const res = await axios.get(`${url}?knowledgeBaseId=${knowledgeBaseId}`)
                 const data = res?.data ?? {}
                 const list = (data.success && data.data) ? (Array.isArray(data.data) ? data.data : []) : []
+                const inlineContent = list
+                    .filter(i => i.contentType === 0)
+                    .map(i => i.content)
+                    .filter(Boolean)
+                    .join('\n\n')
+                that.groupForm.content = inlineContent || ''
                 if (list.length === 0) {
+                    that.groupForm.contentType = 2
+                    that.groupForm.files = []
                     that.getFileListData('file')
                     return
                 }
                 const hasFileType = list.some(i => i.contentType === 100 || i.contentType === 200 || i.contentType === 300 || i.contentType === 400)
                 if (hasFileType) {
-                    const fileNames = [...new Set(list.filter(i => i.fileName).map(i => i.fileName))]
+                    const fileIds = [...new Set(list.filter(i => i.ncfFileId).map(i => Number(i.ncfFileId)))]
+                    const fileNameById = new Map()
+                    list.filter(i => i.ncfFileId).forEach(i => {
+                        const id = Number(i.ncfFileId)
+                        if (!fileNameById.has(id)) fileNameById.set(id, i.fileName || `File #${id}`)
+                    })
                     that.groupForm.contentType = 2
-                    that.groupForm.files = []
-                    that.fileNamesToSelect = fileNames
-                    that.fileQueryList.pageSize = 9999
-                    that.fileQueryList.pageIndex = 1
+                    that.groupForm.files = fileIds.map(id => ({ id: id, name: fileNameById.get(id) || `File #${id}` }))
                     await that.getFileListData('file')
                     that.$nextTick(() => {
-                        if (that.fileNamesToSelect.length && that.fileList.length) {
-                            const matched = that.fileList.filter(f => that.fileNamesToSelect.includes(f.fileName))
-                            that.groupForm.files = matched.map(f => ({ id: f.id, name: f.fileName }))
-                            that.toggleSelection(matched)
-                        }
+                        const matched = that.fileList.filter(f => fileIds.includes(Number(f.id)))
+                        that.toggleSelection(matched)
                         that.fileNamesToSelect = []
-                        that.fileQueryList.pageSize = 10
-                        that.getFileListData('file')
                     })
                 } else {
-                    that.groupForm.contentType = (list.length && list[0].contentType === 0) ? 1 : 1
-                    that.groupForm.content = list.map(i => i.content).filter(Boolean).join('\n\n') || ''
+                    that.groupForm.contentType = 1
                     that.groupForm.files = []
                     that.getFileListData('file')
                 }
@@ -429,8 +478,9 @@ new Vue({
             if (that.keyword != '' && that.keyword != undefined) {
                 keyword = that.keyword;
             }
+            const knowledgeBaseId = Number(that.navigationTarget?.knowledgeBaseId || 0)
 
-            await service.get(`/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${keyword}&orderField=${orderField}`).then(res => {// 使用 map 转换为目标格式的对象数组
+            await service.get(`/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=${pageIndex}&pageSize=${pageSize}&keyword=${encodeURIComponent(keyword || '')}&orderField=${encodeURIComponent(orderField || '')}&knowledgeBaseId=${knowledgeBaseId > 0 ? knowledgeBaseId : ''}`).then(res => {// 使用 map 转换为目标格式的对象数组
                 that.filterTableHeader.embeddingModelId = res.data.data.list.map(z => ({
                     text: z.embeddingModelId,
                     value: z.embeddingModelId
@@ -454,6 +504,7 @@ new Vue({
 
                 that.tableData = res.data.data.list;
                 that.paginationQuery.total = res.data.data.totalCount;
+                that.applyKnowledgeBaseNavigation(that.tableData)
             });
         },
         async getCategoryList() {
@@ -540,14 +591,9 @@ new Vue({
                 const isFileType = contentType === 2; // 2=文件
 
                 if (isFileType) {
-                    const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.ImportFilesToKnowledgeBase';
+                    const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.SyncFilesToKnowledgeBase';
                     const selectedFiles = serviceForm.files || [];
                     const fileIds = selectedFiles.map(f => (typeof f.id === 'number' ? f.id : parseInt(f.id, 10))).filter(id => !isNaN(id));
-
-                    if (fileIds.length === 0) {
-                        that.$notify({ title: '提示', message: '请至少选择一个文件后再保存', type: 'warning', duration: 2000 });
-                        return;
-                    }
 
                     const requestData = {
                         knowledgeBaseId: parseInt(serviceForm.knowledgeBasesId, 10),
@@ -558,7 +604,7 @@ new Vue({
                         const res = await service.post(serviceURL, requestData);
                         const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
                         if (success) {
-                            that.$notify({ title: '成功', message: '文件已关联到知识库并写入条目', type: 'success', duration: 2000 });
+                            that.$notify({ title: '成功', message: `已保存 ${fileIds.length} 份资料关联；请点击“向量化”使召回结果更新。`, type: 'success', duration: 3500 });
                             that.visible.drawerGroup = false;
                             that.getList();
                         } else {
@@ -568,10 +614,30 @@ new Vue({
                         console.error('Request Error:', err);
                         that.$notify({ title: '错误', message: '文件导入失败: ' + (err.message || err), type: 'error', duration: 3000 });
                     }
+                } else if (contentType === 1) {
+                    const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.SetKnowledgeBaseDetail';
+                    const requestData = {
+                        knowledgeBasesId: parseInt(serviceForm.knowledgeBasesId, 10),
+                        contentType: 0,
+                        content: serviceForm.content || ''
+                    };
+                    try {
+                        const res = await service.post(serviceURL, requestData);
+                        const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
+                        if (!success) throw new Error((res && res.message) || '内容保存失败');
+                        that.$notify({ title: '成功', message: '知识库文本内容已同步', type: 'success', duration: 2000 });
+                        that.visible.drawerGroup = false;
+                        that.getList();
+                    } catch (err) {
+                        that.$notify({ title: '错误', message: '内容保存失败: ' + (err.message || err), type: 'error', duration: 3000 });
+                    }
                 } else {
-                    // 内容类型为「输入」或「采集外部数据」时，不校验文件，直接关闭
-                    that.$notify({ title: '成功', message: '已保存', type: 'success', duration: 2000 });
-                    that.visible.drawerGroup = false;
+                    that.$notify({
+                        title: '尚未支持',
+                        message: '外部数据采集需要单独配置抓取、权限与清洗策略，本版本不会伪造保存成功。',
+                        type: 'warning',
+                        duration: 4000
+                    });
                 }
             }
         },
@@ -615,7 +681,7 @@ new Vue({
                         chatModelId: parseInt(that.dialog.data.chatModelId) || 0,
                         name: that.dialog.data.name,
                         content: that.dialog.data.content || '',
-                        NcfFileIds: []
+                        NcfFileIds: null
                     };
                     console.log('保存知识库数据：' + JSON.stringify(data));
                     service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
@@ -682,10 +748,14 @@ new Vue({
         },
         // 配置抽屉内「文件列表」表格勾选变化：同步到 groupForm.files，保存时用于关联知识库
         handleConfigFileSelectionChange(val) {
-            this.groupForm.files = (val || []).map(r => ({
+            const currentPageIds = new Set((this.fileList || []).map(r => Number(r.id)))
+            const preserved = (this.groupForm.files || []).filter(f => !currentPageIds.has(Number(f.id)))
+            const current = (val || []).map(r => ({
                 id: r.id,
                 name: r.fileName != null ? r.fileName : (r.name || '')
-            }));
+            }))
+            const merged = [...preserved, ...current]
+            this.groupForm.files = [...new Map(merged.map(f => [Number(f.id), f])).values()]
         },
         handleDbClick(row, column, event) {
             let that = this
@@ -713,63 +783,25 @@ new Vue({
             this.fileQueryList.pageIndex = 1
             this.getFileListData('file')
         },
-        // 配置页文件列表：删除文件（删除数据库与物理文件，并刷新列表与已选）
-        handleConfigFileDelete(row) {
-            const that = this
-            that.$confirm(`确认删除文件「${row.fileName || row.name}」吗？删除后数据库与物理文件均会移除。`, '删除确认', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                that.doDeleteFileById(row.id).then(ok => {
-                    if (ok) {
-                        that.groupForm.files = (that.groupForm.files || []).filter(f => f.id !== row.id)
-                        that.getFileListData('file')
-                    }
-                })
-            }).catch(() => {})
+        // 配置抽屉只管理“关联”。删除文件会影响其他知识库和物理资源，必须回文件资源管理页单独执行。
+        removeConfigFileSelection(row) {
+            this.groupForm.files = (this.groupForm.files || []).filter(f => Number(f.id) !== Number(row.id))
+            this.$nextTick(() => {
+                const table = this.$refs.groupAgentTable
+                if (table) table.toggleRowSelection(row, false)
+            })
         },
-        // 配置页文件列表：批量删除（删除当前选中的多行，并同步数据库与物理文件）
-        handleConfigFileBatchDelete() {
-            const that = this
-            const selected = (that.groupForm.files || []).slice()
-            if (selected.length === 0) {
-                that.$message.warning('请先勾选需要删除的文件')
+        clearConfigFileSelection() {
+            if (!(this.groupForm.files || []).length) {
+                this.$message.info('当前没有已选择的资料')
                 return
             }
-            that.$confirm(`确认删除已选中的 ${selected.length} 个文件吗？删除后数据库与物理文件均会移除。`, '批量删除确认', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
+            this.$confirm('仅取消当前知识库的待保存关联，不会删除文件。确认继续吗？', '清空选择', {
+                confirmButtonText: '清空', cancelButtonText: '取消', type: 'warning'
             }).then(() => {
-                const deleteUrl = '/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.DeleteFile'
-                const promises = selected.map(f => service.post(deleteUrl, { id: f.id }).then(res => {
-                    const ok = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)))
-                    return !!ok
-                }).catch(() => false))
-                Promise.all(promises).then(results => {
-                    const successCount = results.filter(Boolean).length
-                    that.groupForm.files = []
-                    that.getFileListData('file')
-                    that.$notify({
-                        title: successCount === selected.length ? '成功' : '部分完成',
-                        message: `已删除 ${successCount}/${selected.length} 个文件`,
-                        type: successCount === selected.length ? 'success' : 'warning'
-                    })
-                })
+                this.groupForm.files = []
+                this.$nextTick(() => this.$refs.groupAgentTable?.clearSelection())
             }).catch(() => {})
-        },
-        doDeleteFileById(id) {
-            const url = '/api/Senparc.Xncf.FileManager/FileTemplateAppService/Xncf.FileManager_FileTemplateAppService.DeleteFile'
-            return service.post(url, { id: id }).then(res => {
-                const ok = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)))
-                if (ok) this.$notify({ title: '成功', message: '文件已删除', type: 'success' })
-                else this.$notify({ title: '失败', message: (res && res.data && res.data.errorMessage) || '删除失败', type: 'error' })
-                return ok
-            }).catch(err => {
-                this.$notify({ title: '错误', message: '删除失败: ' + (err.message || err), type: 'error' })
-                return false
-            })
         },
         getCurrentRow(row) {
             let that = this
@@ -907,10 +939,16 @@ new Vue({
             let visibleKey = btnType
             if (btnType === 'drawerGroup') {
                 visibleKey = 'drawerGroup'
-                that.groupForm.knowledgeBasesId = item?.id ?? ''
+                that.groupForm = {
+                    contentType: 2,
+                    files: [],
+                    content: '',
+                    knowledgeBasesId: item?.id ?? ''
+                }
                 that.fileQueryList.pageIndex = 1
                 that.fileNamesToSelect = []
                 that.visible[visibleKey] = true
+                that.$nextTick(() => that.$refs.groupAgentTable?.clearSelection())
                 that.loadConfigKnowledgeBaseItems(item?.id)
                 return
             }
@@ -1058,7 +1096,7 @@ new Vue({
         toggleSelection(rows) {
             if (rows) {
                 rows.forEach(row => {
-                    this.$refs?.groupAgentTable?.toggleRowSelection(row);
+                    this.$refs?.groupAgentTable?.toggleRowSelection(row, true);
                 });
             } else {
                 this.$refs?.groupAgentTable?.clearSelection();

@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.2.0-preview3</Version>
+    <AssemblyName>Senparc.Xncf.Sandbox</AssemblyName>
+    <RootNamespace>Senparc.Xncf.Sandbox</RootNamespace>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <Description>NCF 独立沙箱编排：Docker/Wasm 快速创建与销毁实验环境</Description>
+    <Copyright>Senparc</Copyright>
+    <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.Sandbox</PackageTags>
+    <Authors>Senparc</Authors>
+    <Owners>Senparc</Owners>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>沙箱环境</Title>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <PackageReleaseNotes>
+      v0.1.0-preview1 创世：独立沙箱模块骨架
+      1、引入 ISandboxRuntime 抽象（Docker + Wasm Stub）
+      2、Session 生命周期、配额与 TTL 回收
+      3、Function/Admin 管理入口与 Jupyter/Exec 模板占位
+      [2026-08-13] v0.1.1-preview2 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7
+      [2026-08-15] v0.2.0-preview3 增加 NCF 预览沙箱工作负载
+      1、增加固定 NCF/XNCF 预览模板、Docker 运行参数、启动超时和受控依赖恢复网络
+      2、提供隔离预览工作区、状态访问和反向代理链路，未配置固定镜像摘要时安全失败
+    </PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
+    <EmbeddedResource Include="wwwroot\**\*" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+    <ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.Sandbox.Abstractions\Senparc.Xncf.Sandbox.Abstractions.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="8.23.60" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    <PackageReference Include="DM.Microsoft.EntityFrameworkCore" Version="8.0.0.28188" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Data\SenparcTraceLog\*" />
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="App_Data\Database\SenparcConfig.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Data\Database\SenparcConfig.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Senparc.Xncf.Sandbox.Tests" />
+  </ItemGroup>
+</Project>

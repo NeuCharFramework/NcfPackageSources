@@ -2,9 +2,7 @@
 @model Senparc.Xncf.AIKernel.Areas.AIKernel.Pages.Index
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
-    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
-    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
-    ViewData["Title"] = AR["AIKernel.DashboardTitle"];
+    ViewData["Title"] = XR["Dashboard.Title"];
     Layout = "_Layout_Vue";
 }
 
@@ -277,9 +275,9 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["AIKernel.ModuleName"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@CR["Common.Dashboard"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.AIKernel"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Dashboard.Name"]</el-breadcrumb-item>
 }
 
 
@@ -288,7 +286,7 @@
 <div id="home-header">
     <el-container>
         <el-header class="module-header">
-            <span class="start-title"><span class="module-header-v">@AR["AIKernel.DashboardTitle"]</span></span>
+            <span class="start-title"><span class="module-header-v">@XR["Dashboard.Title"]</span></span>
         </el-header>
         <el-main>
             <el-row :gutter="20">
@@ -303,7 +301,7 @@
                                     <div class="icon">
                                         <i class="fa fa-bar-chart"></i>
                                     </div>
-                                    <p class="tit">@AR["AIKernel.CallableModelCount"]</p>
+                                    <p class="tit">@XR["Dashboard.AvailableModels"]</p>
                                 </div>
                             </a>
                         </el-col>
@@ -314,7 +312,7 @@
                                     <div class="icon">
                                         <i class="fa fa-area-chart"></i>
                                     </div>
-                                    <p class="tit">@AR["AIKernel.VectorDBCount"]</p>
+                                    <p class="tit">@XR["Dashboard.VectorDatabases"]</p>
                                 </div>
                             </a>
                         </el-col>
@@ -325,7 +323,7 @@
                                     <div class="icon">
                                         <i class="fa fa-comments-o"></i>
                                     </div>
-                                    <p class="tit">@AR["AIKernel.AgentCount"]</p>
+                                    <p class="tit">@XR["Dashboard.Agents"]</p>
                                 </div>
                             </a>
                         </el-col>
@@ -336,7 +334,7 @@
                                     <div class="icon">
                                         <i class="fa fa-star-half-o"></i>
                                     </div>
-                                    <p class="tit">@AR["AIKernel.FeedbackCount"]</p>
+                                    <p class="tit">@XR["Dashboard.UserFeedback"]</p>
                                 </div>
                             </a>
                         </el-col>
@@ -391,6 +389,7 @@
 </div>
 
 @section scripts {
+    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
     <script src="~/lib/echarts/dist/echarts.js"></script>
     <script src="~/js/Admin/Dashboard/index.js"></script>
 }

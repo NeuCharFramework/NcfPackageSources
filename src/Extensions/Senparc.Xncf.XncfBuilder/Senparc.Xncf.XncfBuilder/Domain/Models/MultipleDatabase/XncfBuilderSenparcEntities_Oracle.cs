@@ -21,6 +21,15 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
         public XncfBuilderSenparcEntities_Oracle(DbContextOptions<XncfBuilderSenparcEntities_Oracle> dbContextOptions) : base(dbContextOptions)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // 预览输出最多保存 64 KiB，Oracle 默认的 NVARCHAR2(2000) 不足以承载。
+            modelBuilder.Entity<XncfPreviewTask>().Property(task => task.ErrorMessage).HasColumnType("NCLOB");
+            modelBuilder.Entity<XncfPreviewTask>().Property(task => task.RecentOutput).HasColumnType("NCLOB");
+        }
     }
 
     /// <summary>
@@ -37,10 +46,7 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
         };
 
         public SenparcDbContextFactory_Oracle()
-            : base(
-                 /* Debug模式下项目根目录
-                 /* 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息 */
-                 Path.Combine(AppContext.BaseDirectory, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}"))
+            : base(SenparcDbContextFactoryConfig.RootDictionaryPath)
         {
 
         }

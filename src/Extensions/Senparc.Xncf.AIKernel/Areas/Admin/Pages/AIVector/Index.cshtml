@@ -2,9 +2,7 @@
 @model Senparc.Xncf.AIKernel.Areas.AIVector.Pages.Index
 @inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
-    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
-    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
-    ViewData["Title"] = AR["AIVector.HomeTitle"];
+    ViewData["Title"] = XR["Title.Vector"];
     Layout = "_Layout_Vue";
 }
 
@@ -13,22 +11,22 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["AIKernel.ModuleName"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@CR["Common.Home"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Module.AIKernel.MenuName"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.Home"]</el-breadcrumb-item>
 }
 
 <div>
     <div class="filter-container">
-        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addVector">@CR["Common.Add"]</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="small" @@click="addVector">@XR["Vector.Add"]</el-button>
     </div>
 
     <el-table :data="tableData" v-loading="tableLoading" border>
         @* alias *@
-        <el-table-column prop="alias" label="@CR["Common.Alias"]" width="auto"></el-table-column>
-        <el-table-column prop="name" label="@AR["AIKernel.DeploymentName"]" width="auto"></el-table-column>
-        <el-table-column prop="connectionString" label="Endpoint" width="auto"></el-table-column>
-        <el-table-column prop="vectorDBType" label="@AR["AIVector.VectorDBType"]" width="auto">
+        <el-table-column prop="alias" label="@XR["Vector.Alias"]" width="auto"></el-table-column>
+        <el-table-column prop="name" label="@XR["Vector.DeploymentName"]" width="auto"></el-table-column>
+        <el-table-column prop="connectionString" label="@XR["Vector.Endpoint"]" width="auto"></el-table-column>
+        <el-table-column prop="vectorDBType" label="@XR["Vector.DatabaseType"]" width="auto">
             <template slot-scope="scope">
                 <span v-if="scope.row.vectorDBType===0">Memory</span>
                 <span v-else-if="scope.row.vectorDBType===1">HardDisk</span>
@@ -51,17 +49,17 @@
                 <span v-else-if="scope.row.vectorDBType===18">Weaviate</span> *@
             </template>
         </el-table-column>
-        <el-table-column prop="note" label="@CR["Common.Remark"]" width="auto"></el-table-column>
-        <el-table-column prop="addTime" label="@CR["Common.AddTime"]" width="auto">
+        <el-table-column prop="note" label="@XR["Vector.Note"]" width="auto"></el-table-column>
+        <el-table-column prop="addTime" label="@XR["Vector.AddTime"]" width="auto">
             <template slot-scope="scope">
                 {{ dateformatter(scope.row.addTime) }}
             </template>
         </el-table-column>
         @* 操作 *@
-        <el-table-column label="@CR["Common.Action"]" width="auto">
+        <el-table-column label="@XR["Vector.Actions"]" width="auto">
             <template slot-scope="scope">
-                <el-button type="primary" size="mini" @@click="editModel(scope.row)">@CR["Common.Edit"]</el-button>
-                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">@CR["Common.Delete"]</el-button>
+                <el-button type="primary" size="mini" @@click="editModel(scope.row)">@XR["Vector.Edit"]</el-button>
+                <el-button type="danger" size="mini" @@click="deleteModel(scope.row)">@XR["Vector.Delete"]</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -80,13 +78,13 @@
 
 
     @* dialog for 添加向量数据库 *@
-    <el-dialog title="@AR["AIVector.AddVectorDB"]" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
+    <el-dialog title="@XR["Vector.AddTitle"]" :visible.sync="addFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="addForm" label-width="120px" :rules="addRules" ref="addForm">
-            <el-form-item label="@CR["Common.Alias"]" prop="alias">
+            <el-form-item label="@XR["Vector.Alias"]" prop="alias">
                 <el-input v-model="addForm.alias"></el-input>
             </el-form-item>
-            <el-form-item label="@AR["AIVector.VectorDBType"]" prop="vectorDBType">
-                <el-select v-model="addForm.vectorDBType" placeholder="@CR["Common.PleaseSelect"]">
+            <el-form-item label="@XR["Vector.DatabaseType"]" prop="vectorDBType">
+                <el-select v-model="addForm.vectorDBType" placeholder="@XR["Vector.SelectPlaceholder"]">
                     <el-option label="Memory" value="0"></el-option>
                     <el-option label="HardDisk" value="1"></el-option>
                     <el-option label="Redis" value="2"></el-option>
@@ -108,29 +106,29 @@
                     <el-option label="Weaviate" value="18"></el-option> *@
                 </el-select>
             </el-form-item>
-            <el-form-item label="@CR["Common.Name"]" prop="name">
+            <el-form-item label="@XR["Vector.Name"]" prop="name">
                 <el-input v-model="addForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="@AR["AIVector.ConnectionString"]" prop="connectionString">
-                <el-input v-model="addForm.connectionString"></el-input>
+            <el-form-item label="@XR["Vector.ConnectionString"]" prop="connectionString">
+                <el-input v-model="addForm.connectionString" :placeholder="isInMemoryVectorType(addForm.vectorDBType) ? ncfT('AIKernel.Vector.MemoryLeaveEmpty') : ncfT('AIKernel.Vector.ConnectionPlaceholder')"></el-input>
             </el-form-item>
-            <el-form-item label="@CR["Common.Remark"]" prop="note">
+            <el-form-item label="@XR["Vector.Note"]" prop="note">
                 <el-input v-model="addForm.note"></el-input>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="addFormDialogVisible = false">@CR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="addModelSubmit">@CR["Common.Confirm"]</el-button>
+            <el-button @@click="addFormDialogVisible = false">@XR["Vector.Cancel"]</el-button>
+            <el-button type="primary" @@click="addModelSubmit">@XR["Vector.Confirm"]</el-button>
         </span>
     </el-dialog>
     @* dialog for 编辑向量数据库 *@
-    <el-dialog title="@AR["AIVector.EditVectorDB"]" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
+    <el-dialog title="@XR["Vector.EditTitle"]" :visible.sync="editFormDialogVisible" width="50%" :close-on-click-modal="false">
         <el-form :model="editForm" label-width="120px" :rules="editRules" ref="editForm">
-            <el-form-item label="@CR["Common.Alias"]" prop="alias">
+            <el-form-item label="@XR["Vector.Alias"]" prop="alias">
                 <el-input v-model="editForm.alias"></el-input>
             </el-form-item>
-            <el-form-item label="@AR["AIVector.VectorDBType"]" prop="vectorDBType">
-                <el-select v-model="editForm.vectorDBType" placeholder="@CR["Common.PleaseSelect"]">
+            <el-form-item label="@XR["Vector.DatabaseType"]" prop="vectorDBType">
+                <el-select v-model="editForm.vectorDBType" placeholder="@XR["Vector.SelectPlaceholder"]">
                     <el-option label="Memory" value="0"></el-option>
                     <el-option label="HardDisk" value="1"></el-option>
                     <el-option label="Redis" value="2"></el-option>
@@ -153,28 +151,29 @@
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="@CR["Common.Name"]" prop="name">
+            <el-form-item label="@XR["Vector.Name"]" prop="name">
                 <el-input v-model="editForm.name"></el-input>
             </el-form-item>
-            <el-form-item label="@AR["AIVector.ConnectionString"]" prop="connectionString">
-                <el-input v-model="editForm.connectionString"></el-input>
+            <el-form-item label="@XR["Vector.ConnectionString"]" prop="connectionString">
+                <el-input v-model="editForm.connectionString" :placeholder="isInMemoryVectorType(editForm.vectorDBType) ? ncfT('AIKernel.Vector.MemoryLeaveEmpty') : ncfT('AIKernel.Vector.ConnectionPlaceholder')"></el-input>
             </el-form-item>
-            <el-form-item label="@CR["Common.Remark"]" prop="note">
+            <el-form-item label="@XR["Vector.Note"]" prop="note">
                 <el-input v-model="editForm.note"></el-input>
             </el-form-item>
-            <el-form-item label="@CR["Common.Show"]" prop="show">
+            <el-form-item label="@XR["Vector.Display"]" prop="show">
                 @* use switch *@
                 <el-switch v-model="editForm.show"></el-switch>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="editFormDialogVisible = false">@CR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="editModelSubmit">@CR["Common.Confirm"]</el-button>
+            <el-button @@click="editFormDialogVisible = false">@XR["Vector.Cancel"]</el-button>
+            <el-button type="primary" @@click="editModelSubmit">@XR["Vector.Confirm"]</el-button>
         </span>
     </el-dialog>
 
 </div>
 
 @section scripts {
+    @await Html.PartialAsync("_LocalizationScripts")
     <script src="~/js/Admin/AIVector/index.js"></script>
 }

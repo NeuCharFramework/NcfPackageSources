@@ -8,6 +8,19 @@ var app = new Vue({
             },
             tableLoading: true,
             tableData: [],
+            neuCharAiModelList: [
+                "text-davinci-003",
+                "gpt-4",
+                "text-embedding-ada-002",
+                "gpt-35-turbo",
+                "gpt-35-turbo-instruct",
+                "dall-e-3",
+                "DeepSeek-R1"
+            ],
+            deepSeekModelList: [
+                "deepseek-chat",
+                "deepseek-coder"
+            ],
             addFormDialogVisible: false,
             neuCharFormDialogVisible: false, // 新增的对话框可见性  
             addForm: {
@@ -45,62 +58,62 @@ var app = new Vue({
             total: 0,
             addRules: {
                 alias: [
-                    { required: true, message: '请输入别名', trigger: 'change' }
+                    { required: true, message: ncfT('AIKernel.Vector.AliasRequired'), trigger: 'change' }
                 ],
                 aiPlatform: [
-                    { required: true, message: '请选择平台类型', trigger: 'change' }
+                    { required: true, message: ncfT('AIKernel.Model.PlatformRequired'), trigger: 'change' }
                 ],
                 configModelType: [
-                    { required: true, message: '请选择模型类型', trigger: 'change' }
+                    { required: true, message: ncfT('AIKernel.Model.TypeRequired'), trigger: 'change' }
                 ],
                 modelId: [
-                    { required: true, message: '请输入模型名称', trigger: 'blur' }
+                    { required: true, message: ncfT('AIKernel.Vector.ModelNameRequired'), trigger: 'blur' }
                 ],
                 deploymentName: [
-                    { required: true, message: '请输入模型部署名称', trigger: 'blur' }
+                    { required: true, message: ncfT('AIKernel.Model.DeploymentRequired'), trigger: 'blur' }
                 ],
                 apiVersion: [
-                    { required: true, message: '请输入API Version', trigger: 'blur' }
+                    { required: true, message: ncfT('AIKernel.Model.ApiVersionRequired'), trigger: 'blur' }
                 ],
                 apiKey: [
-                    { required: true, message: '请输入API key', trigger: 'blur' }
+                    { required: true, message: ncfT('AIKernel.Model.ApiKeyRequired'), trigger: 'blur' }
                 ],
                 endpoint: [
-                    { required: true, message: '请输入End Point', trigger: 'blur' }
+                    { required: true, message: ncfT('AIKernel.Model.EndpointRequired'), trigger: 'blur' }
                 ],
                 organizationId: [
-                    { required: true, message: '请输入Organization Id', trigger: 'blur' }
+                    { required: true, message: ncfT('AIKernel.Model.OrganizationRequired'), trigger: 'blur' }
                 ]
             },
             neuCharRules: { // 新增的验证规则  
                 developerId: [
-                    { required: true, message: '请输入 DeveloperId', trigger: 'blur' }
+                    { required: true, message: ncfT('AIKernel.Model.DeveloperIdRequired'), trigger: 'blur' }
                 ],
                 apiKey: [
-                    { required: true, message: '请输入 ApiKey', trigger: 'blur' }
+                    { required: true, message: ncfT('AIKernel.Model.ApiKeyRequired'), trigger: 'blur' }
                 ]
             },
             editRules: {
                 alias: [
-                    { required: true, message: '请输入别名', trigger: 'change' }
+                    { required: true, message: ncfT('AIKernel.Vector.AliasRequired'), trigger: 'change' }
                 ],
                 aiPlatform: [
-                    { required: true, message: '请选择平台类型', trigger: 'change' }
+                    { required: true, message: ncfT('AIKernel.Model.PlatformRequired'), trigger: 'change' }
                 ],
                 configModelType: [
-                    { required: true, message: '请选择模型类型', trigger: 'change' }
+                    { required: true, message: ncfT('AIKernel.Model.TypeRequired'), trigger: 'change' }
                 ],
                 modelId: [
-                    { required: true, message: '请输入模型名称', trigger: 'blur' }
+                    { required: true, message: ncfT('AIKernel.Vector.ModelNameRequired'), trigger: 'blur' }
                 ],
                 deploymentName: [
-                    { required: true, message: '请输入模型部署名称', trigger: 'blur' }
+                    { required: true, message: ncfT('AIKernel.Model.DeploymentRequired'), trigger: 'blur' }
                 ],
                 apiVersion: [
-                    { required: true, message: '请输入API Version', trigger: 'blur' }
+                    { required: true, message: ncfT('AIKernel.Model.ApiVersionRequired'), trigger: 'blur' }
                 ],
                 endpoint: [
-                    { required: true, message: '请输入End Point', trigger: 'blur' }
+                    { required: true, message: ncfT('AIKernel.Model.EndpointRequired'), trigger: 'blur' }
                 ]
             }
         }
@@ -112,6 +125,13 @@ var app = new Vue({
         }, 100)
     },
     methods: {
+        getSelectableModelList(defaultModelList, currentModelId) {
+            const modelList = [...defaultModelList];
+            if (currentModelId && !modelList.includes(currentModelId)) {
+                modelList.unshift(currentModelId);
+            }
+            return modelList;
+        },
         async init() {
             await this.getDataList();
         },
@@ -142,18 +162,37 @@ var app = new Vue({
         addNeuCharModel() {
             this.neuCharFormDialogVisible = true; // 显示对话框  
         },
-        copyInfo(key) {
-            // 把结果复制到剪切板  
-            const input = document.createElement('input')
-            input.setAttribute('readonly', 'readonly')
-            input.setAttribute('value', key)
-            document.body.appendChild(input)
-            input.select()
-            input.setSelectionRange(0, 9999)
-            if (document.execCommand('copy')) {
-                document.execCommand('copy')
-                //提示时展示'******'+key的后4位  
-                this.$message.success(`已复制【******${key.slice(-4)}】！`)
+        async copyInfo(key) {
+            let copied = false
+            try {
+                if (window.isSecureContext && navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(key)
+                    copied = true
+                }
+            } catch (error) {
+                console.warn('Clipboard API is unavailable, using the compatibility fallback.', error)
+            }
+
+            if (!copied) {
+                const input = document.createElement('textarea')
+                input.setAttribute('readonly', 'readonly')
+                input.value = key
+                input.style.position = 'fixed'
+                input.style.opacity = '0'
+                document.body.appendChild(input)
+                input.select()
+                input.setSelectionRange(0, key.length)
+                try {
+                    copied = document.execCommand('copy')
+                } finally {
+                    input.remove()
+                }
+            }
+
+            if (copied) {
+                this.$message.success(ncfT('AIKernel.Vector.CopySuccess', key.slice(-4)))
+            } else {
+                this.$message.error(ncfT('AIKernel.Vector.CopyFailed'))
             }
         },
         async addModelSubmit() {
@@ -168,7 +207,7 @@ var app = new Vue({
                     ).then(res => {
                         this.$message({
                             type: res.data.success ? 'success' : 'error',
-                            message: res.data.success ? '添加成功!' : '添加失败'
+                            message: res.data.success ? ncfT('AIKernel.Vector.AddSuccess') : ncfT('AIKernel.Vector.AddFailed')
                         });
                         if (res.data.success) {
                             this.getDataList()
@@ -266,7 +305,7 @@ var app = new Vue({
                     }).then(res => {
                         this.$message({
                             type: res.data.success ? 'success' : 'error',
-                            message: res.data.success ? '编辑成功!' : '编辑失败'
+                            message: res.data.success ? ncfT('AIKernel.Vector.EditSuccess') : ncfT('AIKernel.Vector.EditFailed')
                         });
                         if (res.data.success) {
                             this.clearEditForm()
@@ -291,9 +330,9 @@ var app = new Vue({
             };
         },
         deleteModel(row) {
-            this.$confirm(`此操作将永久删除【${row.alias}】模型, 是否继续?`, '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            this.$confirm(ncfT('AIKernel.Vector.DeleteConfirm', row.alias), ncfT('AIKernel.Vector.DeleteConfirmTitle'), {
+                confirmButtonText: ncfT('AIKernel.Vector.Confirm'),
+                cancelButtonText: ncfT('AIKernel.Vector.Cancel'),
                 type: 'warning'
             }).then(async () => {
                 await service.delete('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.DeleteAsync', {
@@ -303,7 +342,7 @@ var app = new Vue({
                 }).then(async res => {
                     this.$message({
                         type: res.data.success ? 'success' : 'error',
-                        message: res.data.success ? '删除成功!' : '删除失败'
+                        message: res.data.success ? ncfT('AIKernel.Vector.DeleteSuccess') : ncfT('AIKernel.Vector.DeleteFailed')
                     });
                     await this.getDataList().then(() => {
                         if (this.tableData.length === 0 && this.page.page > 1) {
@@ -315,7 +354,7 @@ var app = new Vue({
             }).catch(() => {
                 this.$message({
                     type: 'info',
-                    message: '已取消删除'
+                    message: ncfT('AIKernel.Vector.CancelDelete')
                 });
             });
         },

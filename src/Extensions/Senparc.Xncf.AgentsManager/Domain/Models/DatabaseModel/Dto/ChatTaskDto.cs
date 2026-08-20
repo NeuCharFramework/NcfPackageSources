@@ -1,4 +1,25 @@
-﻿using Senparc.Ncf.Core.Models;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ChatTaskDto.cs
+    文件功能描述：ChatTaskDto 数据传输对象定义
+    
+    
+    创建标识：Senparc - 20241016
+    
+    修改标识：Senparc - 20260701
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260704
+    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -25,6 +46,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
 
         public bool Score { get; set; }
 
+        public bool IsArchived { get; set; }
+
         [Required]
         public DateTime StartTime { get; set; }
         [Required]
@@ -47,6 +70,18 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public string HookPlatformParameter { get; set; }
 
+        public int TotalPromptTokens { get; set; }
+
+        public int TotalCompletionTokens { get; set; }
+
+        public int TotalTokens { get; set; }
+
+        public int TotalRounds { get; set; }
+
+        public double AverageResponseMilliseconds { get; set; }
+
+        public int MaxResponseMilliseconds { get; set; }
+
         public ChatTaskDto() { }
 
         public ChatTaskDto(string name, int chatGroupId, int aiModelId, ChatTask_Status status, string promptCommand, string description, bool isPersonality, HookPlatform hookPlatform, string hookPlatformParameter, bool score, DateTime startTime, DateTime endTime, string resultComment)
@@ -59,6 +94,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             Description = description;
             IsPersonality = isPersonality;
             Score = score;
+            IsArchived = false;
             StartTime = startTime;
             EndTime = endTime;
             ResultComment = resultComment;
@@ -76,11 +112,20 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             Description = chatTask.Description;
             IsPersonality = chatTask.IsPersonality;
             Score = chatTask.Score;
+            IsArchived = chatTask.IsArchived;
             StartTime = chatTask.StartTime;
             EndTime = chatTask.EndTime;
             ResultComment = chatTask.ResultComment;
             HookPlatform = chatTask.HookPlatform;
             HookPlatformParameter = chatTask.HookPlatformParameter;
+
+            var aggregate = ChatUsageRemarkCodec.DecodeAggregateOrDefault(chatTask.AdminRemark);
+            TotalPromptTokens = aggregate.PromptTokens;
+            TotalCompletionTokens = aggregate.CompletionTokens;
+            TotalTokens = aggregate.TotalTokens;
+            TotalRounds = aggregate.MessageCount;
+            AverageResponseMilliseconds = aggregate.AverageResponseMilliseconds;
+            MaxResponseMilliseconds = aggregate.MaxResponseMilliseconds;
         }
     }
 

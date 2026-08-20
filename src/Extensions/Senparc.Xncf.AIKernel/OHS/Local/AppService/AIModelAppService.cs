@@ -1,3 +1,17 @@
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AIModelAppService.cs
+    文件功能描述：AIModelAppService 相关实现
+    
+    
+    创建标识：Senparc - 20231229
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,11 +38,12 @@ using Senparc.Ncf.Core.Cache;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xncf.AIKernel.Domain.Models.Extensions;
 using Senparc.NeuChar.App.AppStore;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 
 namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 {
-    //[BackendJwtAuthorize]
+    [ApiAuthorize]
     //TODO: 需要权限验证
     public class AIModelAppService : AppServiceBase
     {

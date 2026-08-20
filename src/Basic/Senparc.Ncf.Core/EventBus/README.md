@@ -237,49 +237,55 @@ PromptRange ──调用──> AgentsManager (使用 Agent 优化)
 
 ## 请求-响应模式实现
 
-对于需要等待响应的场景，使用 `TaskCompletionSource`：
+对于需要等待响应的场景，使用公共的 `IEventBusRequestClient`。客户端会在发布前登记请求，
+并在成功、超时或取消后清理等待项；调用方不需要自行维护静态 `TaskCompletionSource` 字典。
 
 ```csharp
-public class PromptOptimizationService
+public sealed record HealthRequest : IntegrationRequest<HealthResponse>;
+
+public sealed record HealthResponse(Guid RequestId, DateTime HandledAtUtc)
+    : IntegrationResponse(RequestId);
+
+public class HealthRequestHandler : IIntegrationEventHandler<HealthRequest>
 {
     private readonly IEventBus _eventBus;
-    private static readonly ConcurrentDictionary<string, TaskCompletionSource<PromptOptimizationResponseEvent>> 
-        _pendingRequests = new();
 
-    public async Task<PromptOptimizationResponseEvent> OptimizePromptAsync(string promptCode, string requirement)
+    public HealthRequestHandler(IEventBus eventBus)
     {
-        var requestId = Guid.NewGuid().ToString();
-        var tcs = new TaskCompletionSource<PromptOptimizationResponseEvent>(
-            TaskCreationOptions.RunContinuationsAsynchronously);
-
-        _pendingRequests.TryAdd(requestId, tcs);
-
-        // 发布请求
-        await _eventBus.PublishAsync(new PromptOptimizationRequestEvent(requestId, promptCode, requirement));
-
-        // 等待响应（带超时）
-        var timeoutTask = Task.Delay(TimeSpan.FromMinutes(5));
-        var completedTask = await Task.WhenAny(tcs.Task, timeoutTask);
-
-        if (completedTask == timeoutTask)
-        {
-            _pendingRequests.TryRemove(requestId, out _);
-            throw new TimeoutException("Prompt 优化请求超时");
-        }
-
-        return await tcs.Task;
+        _eventBus = eventBus;
     }
 
-    // 响应 Handler 调用此方法完成请求
-    public void CompleteRequest(string requestId, PromptOptimizationResponseEvent response)
+    public async Task Handle(HealthRequest @event, CancellationToken cancellationToken)
     {
-        if (_pendingRequests.TryRemove(requestId, out var tcs))
-        {
-            tcs.TrySetResult(response);
-        }
+        await _eventBus.PublishDerivedAsync(
+            new HealthResponse(@event.RequestId, DateTime.UtcNow),
+            @event,
+            cancellationToken);
+    }
+}
+
+public class HealthService
+{
+    private readonly IEventBusRequestClient _requestClient;
+
+    public HealthService(IEventBusRequestClient requestClient)
+    {
+        _requestClient = requestClient;
+    }
+
+    public Task<HealthResponse> CheckAsync(CancellationToken cancellationToken)
+    {
+        return _requestClient.RequestAsync<HealthResponse>(
+            new HealthRequest(),
+            TimeSpan.FromSeconds(5),
+            cancellationToken);
     }
 }
 ```
+
+安全约束：必须显式提供大于零的有限超时，且不能超过
+`EventBusOptions.MaxRequestTimeout`；重复等待同一 `RequestId` 会被拒绝，错误响应类型不会完成请求。
+这是同一 EventBus 内的关联机制，不提供跨进程持久化或模块安全隔离。
 
 ## 性能监控
 

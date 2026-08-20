@@ -1,9 +1,28 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptOptimizationController.cs
+    文件功能描述：PromptOptimizationController 相关实现
+    
+    
+    创建标识：Senparc - 20260324
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.12.1-preview7 加强 AgentsManager 接口授权与 Markdown/HTML 安全渲染
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.Authorization;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.PromptRange.Abstractions.Events;
 
@@ -14,6 +33,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Remote.Controllers
     /// </summary>
     [ApiController]
     [Route("api/Senparc.Xncf.AgentsManager/PromptOptimizationAppService")]
+    [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class PromptOptimizationController : ControllerBase
     {
         private readonly PromptOptimizationService _promptOptimizationService;

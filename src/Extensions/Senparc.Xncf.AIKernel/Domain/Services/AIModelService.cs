@@ -1,23 +1,61 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AIModelService.cs
+    文件功能描述：AIModelService 服务逻辑
+    
+    
+    创建标识：Senparc - 20231229
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.13.4-preview3 修复 AI 模型类型展示顺序
+
+    修改标识：Senparc - 20260707
+    修改描述：v0.13.5-preview4 统一模型名称构建并补齐 Embedding 维度兼容处理
+
+    修改标识：Senparc - 20260715
+    修改描述：v0.13.5-preview4 升级 Senparc.AI 至 0.27.3 与 Senparc.AI.AgentKernel 至 0.1.10
+
+    修改标识：Senparc - 20260718
+    修改描述：同步 NeuChar 算力模型类型
+
+    修改标识：Senparc - 20260722
+    修改描述：同步 NeuChar 算力模型 API 版本
+
+    修改标识：Senparc - 20260724
+    修改描述：v0.14.0-preview5 同步 NeuChar 模型 API 版本并优化模型信息复制交互
+
+    修改标识：Senparc - 20260815
+    修改描述：v0.15.3-preview12 修复指定 AI 模型配置穿透并保留兼容 API Version
+
+----------------------------------------------------------------*/
+
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.AI;
+using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Handlers;
+using Senparc.AI.Entities;
+using Senparc.AI.Entities.Keys;
+using Senparc.AI.Exceptions;
+using Senparc.CO2NET.Extensions;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.AIKernel.Domain.Models;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Models.Extensions;
+using Senparc.Xncf.AIKernel.Models;
+using Senparc.Xncf.AIKernel.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Senparc.Ncf.Core.Exceptions;
-using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
-using Senparc.Xncf.AIKernel.Models;
-using Senparc.Xncf.AIKernel.OHS.Local.PL;
-using Senparc.AI.Kernel;
-using Senparc.AI;
-using Microsoft.Extensions.DependencyInjection;
-using Senparc.AI.Kernel.Handlers;
-using Senparc.AI.Entities;
-using Senparc.AI.Exceptions;
-using Senparc.AI.Entities.Keys;
-using Senparc.Xncf.AIKernel.Domain.Models.Extensions;
-using Senparc.CO2NET.Extensions;
 
 namespace Senparc.Xncf.AIKernel.Domain.Services
 {
@@ -81,6 +119,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             {
                 AiPlatform = aiModel.AiPlatform
             };
+            var normalizedEndpoint = NormalizeEndpoint(aiModel.AiPlatform, aiModel.Endpoint);
 
             #region AI Model
 
@@ -102,12 +141,20 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                         modelName.TextToImage = aiModel.ModelId;
                         break;
                     case Models.ConfigModelType.ImageToText:
+                        modelName.ImageToText = aiModel.ModelId;
+                        break;
                     case Models.ConfigModelType.TextToSpeech:
+                        modelName.TextToSpeech = aiModel.ModelId;
+                        break;
                     case Models.ConfigModelType.SpeechToText:
                     case Models.ConfigModelType.SpeechRecognition:
+                        modelName.SpeechToText = aiModel.ModelId;
+                        break;
                     default:
                         throw new Exception($"尚未支持：{aiModel.ConfigModelType} 模型在 BuildSenparcAiSetting 中的处理");
                 }
+
+                ApplyEmbeddingModelMetadata(aiModel, modelName);
                 return modelName;
             };
 
@@ -119,15 +166,15 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        NeuCharAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        NeuCharEndpoint = aiModel.Endpoint,
+                        NeuCharAIApiVersion = GetApiVersionOrDefault(aiModel.ApiVersion),
+                        NeuCharEndpoint = normalizedEndpoint,
                         ModelName = modelName,
                     };
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = aiModel.Endpoint,
+                        AzureOpenAIApiVersion = GetApiVersionOrDefault(aiModel.ApiVersion),
+                        AzureEndpoint = normalizedEndpoint,
                         ModelName = modelName,
                         DeploymentName = aiModel.DeploymentName
                     };
@@ -136,8 +183,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        AzureOpenAIApiVersion = aiModel.ApiVersion, // SK中实际上没有用ApiVersion
-                        AzureEndpoint = aiModel.Endpoint,
+                        AzureOpenAIApiVersion = GetApiVersionOrDefault(aiModel.ApiVersion),
+                        AzureEndpoint = normalizedEndpoint,
                         ModelName = modelName,
                         DeploymentName = aiModel.DeploymentName
                     };
@@ -145,7 +192,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 case AiPlatform.HuggingFace:
                     aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
                     {
-                        Endpoint = aiModel.Endpoint,
+                        Endpoint = normalizedEndpoint,
                         ModelName = modelName,
                     };
                     break;
@@ -161,20 +208,20 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.FastAPIKeys = new FastAPIKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        Endpoint = aiModel.Endpoint,
+                        Endpoint = normalizedEndpoint,
                     };
                     break;
                 case AiPlatform.Ollama:
                     aiSettings.OllamaKeys = new OllamaKeys()
                     {
-                        Endpoint = aiModel.Endpoint,
+                        Endpoint = normalizedEndpoint,
                     };
                     break;
                 case AiPlatform.DeepSeek:
                     aiSettings.DeepSeekKeys = new DeepSeekKeys()
                     {
                         ApiKey = aiModel.ApiKey,
-                        Endpoint = aiModel.Endpoint,
+                        Endpoint = normalizedEndpoint,
                         ModelName = modelName,
                     };
                     break;
@@ -203,7 +250,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="senparcAiSetting"></param>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate, PromptConfigParameter promptConfigParameter = null)
+        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate, PromptConfigParameter promptConfigParameter = null, AgentSession agentSession = null)
         {
             if (senparcAiSetting == null)
             {
@@ -217,15 +264,35 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 TopP = 0.5,
             };
 
-            var semanticAiHandler = base._serviceProvider.GetService<SemanticAiHandler>();
-            var chatConfig = semanticAiHandler.ChatConfig(promptConfigParameter, userId: "Jeffrey",
-                 chatSystemMessage: systemMessage, promptTemplate: promptTemplate,
-                 maxHistoryStore: 20, senparcAiSetting: senparcAiSetting);
-            var iWantToRun = chatConfig;
+            // The requested model must own the AgentKernel pipeline. Resolving the scoped
+            // AgentAiHandler from DI here uses the system-default SenparcAiSetting and can make a
+            // failed database model appear healthy when the default model succeeds.
+            var agentAiHandler = CreateModelAgentHandler(senparcAiSetting);
+            var chatOptions = new ChatClientAgentOptions()
+            {
+                ChatOptions = new Microsoft.Extensions.AI.ChatOptions()
+                {
+                    Instructions = systemMessage,
+                    MaxOutputTokens = promptConfigParameter.MaxTokens,
+                    Temperature = (float?)promptConfigParameter.Temperature,
+                    TopP = (float?)promptConfigParameter.TopP,
+                    StopSequences = promptConfigParameter.StopSequences ?? new List<string>()
+                },
+                ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions())
+            };
 
-            var request = iWantToRun.CreateRequest(prompt);
-            var aiResult = await iWantToRun.RunAsync(request);
+            var iWantToRun = await agentAiHandler.IWantTo(senparcAiSetting)
+                .ConfigChatModel("SenparcNCF", chatOptions)
+                .BuildKernelWithAgentSessionAsync();
+
+            //var request = iWantToRun.CreateRequest(prompt);
+            var aiResult = await iWantToRun.RunChatAsync(prompt, agentSession);
             return aiResult;
+        }
+
+        private static AgentAiHandler CreateModelAgentHandler(SenparcAiSetting senparcAiSetting)
+        {
+            return new AgentAiHandler(senparcAiSetting);
         }
 
         public async Task<string> UpdateModelsFromNeuCharAsync(NeuCharGetModelJsonResult modelResult, int developerId, string apiKey)
@@ -248,21 +315,23 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     Alias = $"NeuChar-{neucharModel.Name}",
                     DeploymentName = neucharModel.Name,
                     ModelId = neucharModel.Name,
-                    ApiVersion = model?.AiPlatform == AiPlatform.AzureOpenAI || model?.AiPlatform == AiPlatform.OpenAI
-                                    ? "2024-05-13"
-                                    : "",
-                    Endpoint = $"https://www.neuchar.com/{developerId}",
-                    ConfigModelType = Models.ConfigModelType.Chat,
+                    ApiVersion = neucharModel.ApiVersion,
+                    Endpoint = $"https://www.neuchar.com/{developerId}/",
+                    ConfigModelType = neucharModel.ModelType is ConfigModel.Unknown or ConfigModel.Other
+                                        ? Models.ConfigModelType.Chat
+                                        : (Models.ConfigModelType)neucharModel.ModelType,
                     Note = $"从 NeuChar AI 导入（DevId:{developerId}）",
                     Show = true
                 };
 
-                //TODO: 远程不提供，临时本地判断
-                if (neucharModel.Name.Contains("embedding"))
+                //兼容尚未返回 ModelType 的旧接口数据
+                if ((neucharModel.ModelType is ConfigModel.Unknown or ConfigModel.Other) &&
+                    neucharModel.Name.Contains("embedding", StringComparison.OrdinalIgnoreCase))
                 {
                     dto.ConfigModelType = Models.ConfigModelType.TextEmbedding;
                 }
-                else if (neucharModel.Name.Contains("text-davinci"))
+                else if ((neucharModel.ModelType is ConfigModel.Unknown or ConfigModel.Other) &&
+                         neucharModel.Name.Contains("text-davinci", StringComparison.OrdinalIgnoreCase))
                 {
                     dto.ConfigModelType = Models.ConfigModelType.TextCompletion;
                 }
@@ -288,6 +357,260 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 await base.SaveObjectAsync(model);
             }
             return $"已成功添加 {addCount} 个模型，更新 {updateCount} 个模型信息。";
+        }
+
+        /// <summary>
+        /// 构造 SenparcAiSetting, 在两个地方使用
+        /// </summary>
+        /// <param name="llModel"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public SenparcAiSetting BuildSenparcAiSetting(AIModelDto llModel)
+        {
+            var aiSettings = new SenparcAiSetting
+            {
+                AiPlatform = llModel.AiPlatform
+            };
+            var normalizedEndpoint = NormalizeEndpoint(llModel.AiPlatform, llModel.Endpoint);
+            var modelName = BuildUnifiedModelName(llModel);
+
+            switch (aiSettings.AiPlatform)
+            {
+                case AiPlatform.NeuCharAI:
+                    aiSettings.NeuCharAIKeys = new NeuCharAIKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        NeuCharAIApiVersion = GetApiVersionOrDefault(llModel.ApiVersion),
+                        NeuCharEndpoint = normalizedEndpoint,
+                        ModelName = modelName
+                    };
+                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        AzureOpenAIApiVersion = GetApiVersionOrDefault(llModel.ApiVersion),
+                        AzureEndpoint = normalizedEndpoint,
+                        DeploymentName = llModel.DeploymentName,
+                        ModelName = modelName
+                    };
+                    break;
+                case AiPlatform.AzureOpenAI:
+                    aiSettings.AzureOpenAIKeys = new AzureOpenAIKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        AzureOpenAIApiVersion = GetApiVersionOrDefault(llModel.ApiVersion),
+                        AzureEndpoint = normalizedEndpoint,
+                        DeploymentName = llModel.DeploymentName,
+                        ModelName = modelName
+                    };
+                    break;
+                case AiPlatform.HuggingFace:
+                    aiSettings.HuggingFaceKeys = new HuggingFaceKeys()
+                    {
+                        Endpoint = normalizedEndpoint,
+                        ModelName = modelName
+                    };
+                    break;
+                case AiPlatform.OpenAI:
+                    aiSettings.OpenAIKeys = new OpenAIKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        OrganizationId = llModel.OrganizationId,
+                        ModelName = modelName
+                    };
+                    break;
+                case AiPlatform.FastAPI:
+                    aiSettings.FastAPIKeys = new FastAPIKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        Endpoint = normalizedEndpoint,
+                        //OrganizationId = aiModel.OrganizationId
+                        ModelName = modelName
+                    };
+                    break;
+                case AiPlatform.Ollama:
+                    aiSettings.OllamaKeys = new OllamaKeys()
+                    {
+                        Endpoint = normalizedEndpoint,
+                        //OrganizationId = aiModel.OrganizationId
+                        ModelName = modelName
+                    };
+                    break;
+                case AiPlatform.DeepSeek:
+                    aiSettings.DeepSeekKeys = new DeepSeekKeys()
+                    {
+                        ApiKey = llModel.ApiKey,
+                        Endpoint = normalizedEndpoint,
+                        ModelName = modelName
+                    };
+                    break;
+                default:
+                    throw new NcfExceptionBase($"PromptRange 暂时不支持 {aiSettings.AiPlatform} 类型");
+            }
+
+
+            return aiSettings;
+        }
+
+        private static ModelName BuildUnifiedModelName(AIModelDto aiModel)
+        {
+            var modelName = new ModelName()
+            {
+                Chat = aiModel.ModelId,
+                TextCompletion = aiModel.ModelId,
+                Embedding = aiModel.ModelId,
+                ImageToText = aiModel.ModelId,
+                TextToImage = aiModel.ModelId,
+                TextToSpeech = aiModel.ModelId,
+                SpeechToText = aiModel.ModelId
+            };
+
+            ApplyEmbeddingModelMetadata(aiModel, modelName);
+            return modelName;
+        }
+
+        private static void ApplyEmbeddingModelMetadata(AIModelDto aiModel, ModelName modelName)
+        {
+            if (aiModel == null || modelName == null || string.IsNullOrWhiteSpace(modelName.Embedding))
+            {
+                return;
+            }
+
+            var embeddingDimensions = ResolveEmbeddingDimensions(aiModel);
+            if (embeddingDimensions > 0)
+            {
+                modelName.EmbeddingDimensions = embeddingDimensions;
+            }
+        }
+
+        private static int ResolveEmbeddingDimensions(AIModelDto aiModel)
+        {
+            if (aiModel == null)
+            {
+                return 0;
+            }
+
+            if (TryParseEmbeddingDimensionsFromNote(aiModel.Note, out var noteDimensions))
+            {
+                return noteDimensions;
+            }
+
+            var hints = new[]
+            {
+                aiModel.ModelId,
+                aiModel.DeploymentName,
+                aiModel.Alias
+            };
+
+            foreach (var hint in hints)
+            {
+                if (string.IsNullOrWhiteSpace(hint))
+                {
+                    continue;
+                }
+
+                var normalized = hint.Trim().ToLowerInvariant();
+
+                if (normalized.Contains("text-embedding-3-large"))
+                {
+                    return 3072;
+                }
+
+                if (normalized.Contains("text-embedding-3-small") || normalized.Contains("text-embedding-ada-002"))
+                {
+                    return 1536;
+                }
+
+                if (normalized.Contains("nomic-embed-text"))
+                {
+                    return 768;
+                }
+
+                if (normalized.Contains("mxbai-embed-large"))
+                {
+                    return 1024;
+                }
+            }
+
+            // TextEmbedding 模型兜底，避免 AgentKernel 在创建 EmbeddingGenerator 时抛异常。
+            return aiModel.ConfigModelType == ConfigModelType.TextEmbedding ? 1536 : 0;
+        }
+
+        private static bool TryParseEmbeddingDimensionsFromNote(string note, out int dimensions)
+        {
+            dimensions = 0;
+            if (string.IsNullOrWhiteSpace(note))
+            {
+                return false;
+            }
+
+            var match = Regex.Match(note, @"(?i)\bembedding\s*dimensions?\s*[:=]\s*(\d{2,5})\b");
+            if (!match.Success)
+            {
+                match = Regex.Match(note, @"(?i)\bdimensions?\s*[:=]\s*(\d{2,5})\b");
+            }
+
+            return match.Success
+                   && int.TryParse(match.Groups[1].Value, out dimensions)
+                   && dimensions > 0;
+        }
+
+        private static string NormalizeEndpoint(AiPlatform platform, string endpoint)
+        {
+            if (endpoint.IsNullOrWhiteSpace())
+            {
+                return endpoint;
+            }
+
+            var normalized = endpoint.Trim();
+
+            // NeuChar endpoint usually contains a developer-id path segment.
+            // Keep the segment by forcing a trailing slash (e.g. .../2/).
+            if (platform == AiPlatform.NeuCharAI && !normalized.EndsWith("/", StringComparison.Ordinal))
+            {
+                normalized += "/";
+            }
+
+            return normalized;
+        }
+
+        private static string GetApiVersionOrDefault(string apiVersion)
+        {
+            // AzureOpenAIKeys / NeuCharAIKeys both define 2022-12-01 as the legacy-compatible
+            // default. Do not replace it with null when an imported or manually created AIModel
+            // does not specify ApiVersion; downstream AgentKernel execution needs the value.
+            return string.IsNullOrWhiteSpace(apiVersion) ? "2022-12-01" : apiVersion.Trim();
+        }
+
+        /// <summary>
+        /// 获取可用的 Chat 模型，如果当前 <see cref="AIModelDto"/> 对象可用，则保留
+        /// </summary>
+        /// <param name="currentModelDto"></param>
+        /// <returns></returns>
+        /// <exception cref="NcfExceptionBase"></exception>
+        public async Task<(SenparcAiSetting AiSetting,AIModelDto FinalAiModelDto, bool ModelChanged)> GetValiableChatModel(AIModelDto currentModelDto)
+        {
+            // 获取模型
+            AIModelDto aiModelDto;
+            var modelChanged = false;
+            //如果当前模型不是 Chat 类型，则需要找一个 Chat 模型
+            if (currentModelDto.ConfigModelType != ConfigModelType.Chat)
+            {
+                var chatModel = await base.GetObjectAsync(z => z.ConfigModelType == ConfigModelType.Chat);
+                if (chatModel == null)
+                {
+                    throw new NcfExceptionBase("必须至少设置一个 Chat 类型的模型才能自动打分（在 AIKernel 模块中）");
+                }
+                aiModelDto = base.Mapping<AIModelDto>(chatModel);
+                modelChanged = true;
+            }
+            else
+            {
+                aiModelDto = currentModelDto;
+            }
+
+            // build aiSettings by model
+            var aiSettings = this.BuildSenparcAiSetting(aiModelDto);
+            return (aiSettings, aiModelDto, modelChanged);
         }
     }
 }

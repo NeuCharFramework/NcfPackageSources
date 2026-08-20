@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.Terminal.MenuName" xml:space="preserve">
+    <value>终端模块</value>
+  </data>
+  <data name="Module.Terminal.Description" xml:space="preserve">
+    <value>允许开发者直接使用终端命令控制系统。</value>
+  </data>
+  <data name="Module.Terminal.AvailableCommands" xml:space="preserve">
+    <value>目前可以使用的命令如下：</value>
+  </data>
+  <data name="Function.Terminal.Command.Name" xml:space="preserve">
+    <value>命令提示符</value>
+  </data>
+  <data name="Function.Terminal.Command.Description" xml:space="preserve">
+    <value>执行服务器终端命令并返回结果。请注意：命令将在服务器系统中执行！</value>
+  </data>
+  <data name="Parameter.Terminal.Command" xml:space="preserve">
+    <value>&gt; 命令||命令行，例如：dir /?</value>
+  </data>
+</root>

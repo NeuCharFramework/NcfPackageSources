@@ -1,9 +1,31 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：DatabaseConfigAppService.cs
+    文件功能描述：DatabaseConfigAppService 相关实现
+    
+    
+    创建标识：Senparc - 20211012
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.27.0-preview3 增加数据库分页筛选执行能力并限制请求范围
+
+----------------------------------------------------------------*/
+
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Authorization;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +35,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 {
+    [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class DatabaseConfigAppService : AppServiceBase
     {
         public DatabaseConfigAppService(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -26,12 +49,12 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         {
             [Required]
             [MaxLength(300)]
-            [Description("自动备份周期（分钟）||0 则为不自动备份")]
+            [LocalizedDescription(typeof(DatabaseToolkitResource), "Parameter.Database.Config.Cycle")]
             public int BackupCycleMinutes { get; set; }
 
             [Required]
             [MaxLength(300)]
-            [Description("备份路径||本地物理路径，如：E:\\Senparc\\Ncf\\NCF.bak")]
+            [LocalizedDescription(typeof(DatabaseToolkitResource), "Parameter.Database.Config.Path")]
             public string BackupPath { get; set; }
 
             public override async Task LoadData(IServiceProvider serviceProvider)
@@ -46,7 +69,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             }
         }
 
-        [FunctionRender("设置参数", "设置备份间隔时间、备份文件路径等参数", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Settings.Name", "Function.Database.Settings.Description", typeof(Register))]
         public async Task<StringAppResponse> SetConfig(SetConfigFunctionAppRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -64,15 +87,15 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
                 }
                 configService.SaveObject(config);
 
-                var msg = $"设置间隔分钟：{request.BackupCycleMinutes}，路径：{request.BackupPath}";
+                var msg = DatabaseToolkitResource.Format("Database.Config.SavedValues", "设置间隔分钟：{0}，路径：{1}", request.BackupCycleMinutes, request.BackupPath);
                 logger.Append(msg);
                 return msg;
             }, afterFunc: (response, logger) =>
             {
-                logger.Append($"设置已保存！");
+                logger.Append(DatabaseToolkitResource.Get("Database.Config.Saved"));
             },
             saveLogAfterFinished: true,
-            saveLogName:"设置数据库信息", 
+            saveLogName: DatabaseToolkitResource.Get("Database.Config.SaveLogName"), 
             exceptionHandler: async (ex,response, logger) => { 
             
             
@@ -84,14 +107,14 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
 
 
         [ApiBind]
-        [FunctionRender("查看数据库配置类型", "查看实现 IDatabaseConfiguration 接口的数据库配置类型", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.ConfigTypes.Name", "Function.Database.ConfigTypes.Description", typeof(Register))]
         public async Task<StringAppResponse> ShowDatabaseConfiguration()
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 var databaseConfigurationFactory = DatabaseConfigurationFactory.Instance;
                 var currentDatabaseConfiguration = databaseConfigurationFactory.Current;
-                return logger.Append($"当前 DatabaseConfiguration：{currentDatabaseConfiguration.GetType().Name}，数据库类型：{currentDatabaseConfiguration.MultipleDatabaseType}");
+                return logger.Append(DatabaseToolkitResource.Format("Database.Config.Current", "当前 DatabaseConfiguration：{0}，数据库类型：{1}", currentDatabaseConfiguration.GetType().Name, currentDatabaseConfiguration.MultipleDatabaseType));
             });
         }
     }

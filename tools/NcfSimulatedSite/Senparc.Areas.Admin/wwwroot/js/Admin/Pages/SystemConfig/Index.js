@@ -14,20 +14,24 @@
             tableData: [],
             tenantData: {},
             dialog: {
-                title: '编辑系统信息',
+                title: ncfT('SystemConfig.Title'),
                 visible: false,
                 data: {
                     id: 0,
                     systemName: '',
+                    footerContent: '',
                 },
                 rules: {
                     systemName: [
-                        { required: true, message: "用户名为必填项", trigger: "blur" }
+                        { required: true, message: ncfT('SystemConfig.NameRequired'), trigger: "blur" }
+                    ],
+                    footerContent: [
+                        { required: true, message: 'Footer 内容不能为空', trigger: "blur" },
+                        { max: 2000, message: 'Footer 内容不能超过 2000 个字符', trigger: "blur" }
                     ]
-                }
-            },
-            updateLoading: false,
-            updateLoadingSet: false, // 确认loading按钮
+                },
+                updateLoading: false
+            }
         };
     },
     created: function () {
@@ -41,10 +45,13 @@
             if (!val) {
                 this.dialog.data = {
                     id: 0,
-                    systemName: ''
+                    systemName: '',
+                    footerContent: ''
                 };
                 this.dialog.updateLoading = false;
-                this.$refs['dataForm'].resetFields();
+                if (this.$refs['dataForm']) {
+                    this.$refs['dataForm'].resetFields();
+                }
             }
         }
     },
@@ -52,7 +59,7 @@
         // 获取数据
         getList() {
             let { pageIndex, pageSize } = this.listQuery;
-            service.get(`/Admin/SystemConfig/index?handler=List&&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
+            service.get(`/Admin/SystemConfig?handler=List&pageIndex=${pageIndex}&pageSize=${pageSize}`).then(res => {
                 this.tableData = res.data.data.list;
                 this.paginationQuery.total = res.data.data.totalCount;
             });
@@ -62,9 +69,9 @@
             this.dialog.visible = true;
             if (row) {
                 // 编辑
-                let { systemName, id } = row;
+                let { systemName, footerContent, id } = row;
                 this.dialog.data = {
-                    systemName, id
+                    systemName, footerContent, id
                 };
                 this.dialog = Object.assign({}, this.dialog);
             }
@@ -78,13 +85,14 @@
                     let data = {
                         Id: this.dialog.data.id,
                         SystemName: this.dialog.data.systemName,
+                        FooterContent: this.dialog.data.footerContent,
                     };
-                    service.post("/Admin/SystemConfig/Edit?handler=Save", data).then(res => {
+                    service.post("/Admin/SystemConfig?handler=Edit", data).then(res => {
                         if (res.data.success) {
                             this.getList();
                             this.$notify({
-                                title: "Success",
-                                message: "更新成功！",
+                                title: ncfT('AdminUserInfo.Success'),
+                                message: ncfT('SystemConfig.Updated'),
                                 type: "success",
                                 duration: 2000
                             });
@@ -92,9 +100,9 @@
                             this.dialog.updateLoading = false;
                         } else {
                             this.$notify({
-                                title: "Faild",
-                                message: "更新失败：" + res.data.msg,
-                                type: "success",
+                                title: ncfT('Admin.Common.Error'),
+                                message: ncfT('SystemConfig.UpdateFailed') + res.data.msg,
+                                type: "error",
                                 duration: 2000
                             });
                         }

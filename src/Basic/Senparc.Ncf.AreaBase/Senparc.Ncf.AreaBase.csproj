@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.20.14-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.23.4-preview8</Version>
     <AssemblyName>Senparc.Ncf.AreaBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.AreaBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -13,22 +13,50 @@
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>Senparc.Ncf.AreaBase</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世，从 NCF 模板项目提炼移植
-			[2024-09-10] v0.18.4-preview1 升级缓存基础库
-			[2024-10-16] v0.18.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-			[2024-11-15] v0.19.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-			[2024-11-21] v0.20.2-preview1 更新 CO2NET 及缓存基础库
-			[2024-11-28] v0.20.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-			[2025-01-25] v0.20.7-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.20.9-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.20.10-preview1 Update Installation
-			[2025-06-20] v0.20.11-preview1 Add MCP functions in XncfRegisterBase class
-
+				v0.1.0 创世，从 NCF 模板项目提炼移植
+				[2024-09-10] v0.18.4-preview1 升级缓存基础库
+				[2024-10-16] v0.18.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+				[2024-11-15] v0.19.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+				[2024-11-21] v0.20.2-preview1 更新 CO2NET 及缓存基础库
+				[2024-11-28] v0.20.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+				[2025-01-25] v0.20.7-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.20.9-preview1 Update CO2NET and AIKernel
+				[2025-05-18] v0.20.10-preview1 Update Installation
+				[2025-06-20] v0.20.11-preview1 Add MCP functions in XncfRegisterBase class
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-02] v0.21.2-preview1 升级 Senparc.AI.AgentKernel 并完成兼容性适配，升级并适配 net10.0 框架
+				1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
+				2、升级并适配 net10.0 框架
+				[2026-07-17] v0.21.3-preview2 同步上游项目版本并适配统一本地化能力
+				1、Dependency update from Senparc.Ncf.Mvc.UI to 0.21.2-preview2
+				2、Dependency update from Senparc.Ncf.SMS to 0.20.2-preview2
+				3、Dependency update from Senparc.Ncf.Service to 0.23.2-preview2
+				4、Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
+				5、Dependency update from Senparc.Ncf.XncfBase to 0.23.3-preview2
+				[2026-07-29] v0.22.0-preview3 统一 AdminOnly 授权策略命名并提供宿主注册扩展
+				1、在 Core 统一 AdminOnly、AdminMember 策略名称，避免跨模块硬编码
+				2、提供 NCF Admin 授权策略注册扩展并保留宿主自定义策略兼容
+				[2026-07-31] v0.23.0-preview4 扩展后台授权错误的多语言输出
+				1、将 Ajax 无权限与 Handler 缺失提示接入 NcfCoreResource
+				2、保留原有回退文案与 HTTP 状态行为
+				[2026-08-04] v0.23.1-preview5 Dependency updates from upstream projects
+				1、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.1-preview5
+				2、Dependency update from Senparc.Ncf.SMS to 0.20.5-preview5
+				3、Dependency update from Senparc.Ncf.Service to 0.23.5-preview5
+				4、Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
+				[2026-08-08] v0.23.2-preview6 Dependency updates from upstream projects
+				1、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.2-preview6
+				2、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
+				3、Dependency update from Senparc.Ncf.SMS to 0.20.6-preview6
+				4、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+				[2026-08-13] v0.23.3-preview7 修复后台会话失效时的登录跳转并持久化数据保护密钥
+				1、无效管理员会话自动跳转登录页并统一 Cookie 方案
+				2、持久化数据保护密钥，降低认证状态丢失导致的 403
+				[2026-08-15] v0.23.4-preview8 Dependency update from Senparc.Ncf.Mvc.UI to 0.22.4-preview8; Senparc.Ncf.SMS to 0.20.8-preview8; Senparc.Ncf.Service to 0.23.8-preview8; Senparc.Ncf.XncfBase to 0.25.1-preview8
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

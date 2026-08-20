@@ -1,4 +1,21 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：XncfStateRequest.cs
+    文件功能描述：XncfStateRequest 相关实现
+    
+    
+    创建标识：Senparc - 20240423
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.15.0-preview2 为 XncfModuleManager 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,14 +24,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
+using Senparc.Ncf.XncfBase.Functions.Parameters;
 using Senparc.Xncf.XncfModuleManager.Domain.Services;
+using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.XncfModuleManager.OHS.Local.PL
 {
     public class XncfState_ShowFunctionsRequest : FunctionAppRequestBase
     {
-        [Description("XNCF 模块||查看具体 XNCF 模块的 Function 情况")]
-        public SelectionList XncfModule { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
+        [LocalizedDescription(typeof(XncfModuleManagerResource), "Parameter.XncfManager.ShowFunctions.Module")]
+        [FunctionParameterUi(ParameterType.DropDownList, nameof(XncfModuleOptions))]
+        public string XncfModule { get; set; }
+
+        [JsonIgnore]
+        public SelectionList XncfModuleOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
         public override Task LoadData(IServiceProvider serviceProvider)
         {
@@ -23,7 +46,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.PL
                                      .ToList();
             foreach (var item in registers)
             {
-                XncfModule.Items.Add(new SelectionItem(item.Uid, item.Name));
+                XncfModuleOptions.Items.Add(new SelectionItem(item.Uid, item.Name));
             }
 
             return base.LoadData(serviceProvider);
@@ -32,8 +55,12 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.PL
 
     public class XncfState_InstallAndOpenModuleRequest : FunctionAppRequestBase
     {
-        [Description("XNCF 模块||选择需要安装并开放的模块")]
-        public SelectionList XncfModule { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
+        [LocalizedDescription(typeof(XncfModuleManagerResource), "Parameter.XncfManager.Install.Module")]
+        [FunctionParameterUi(ParameterType.DropDownList, nameof(XncfModuleOptions))]
+        public string XncfModule { get; set; }
+
+        [JsonIgnore]
+        public SelectionList XncfModuleOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
@@ -47,15 +74,15 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.PL
 
                 foreach (var register in canInstallRegisters)
                 {
-                    XncfModule.Items.Add(new SelectionItem(register.Uid, $"{register.MenuName} ({register.Name})"));
+                    XncfModuleOptions.Items.Add(new SelectionItem(register.Uid, $"{register.MenuName} ({register.Name})"));
                 }
             }
 
-            if (XncfModule.Items.Count == 0)
+            if (XncfModuleOptions.Items.Count == 0)
             {
                 foreach (var register in XncfRegisterManager.RegisterList.Where(z => !z.IgnoreInstall).OrderBy(z => z.MenuName))
                 {
-                    XncfModule.Items.Add(new SelectionItem(register.Uid, $"{register.MenuName} ({register.Name})"));
+                    XncfModuleOptions.Items.Add(new SelectionItem(register.Uid, $"{register.MenuName} ({register.Name})"));
                 }
             }
 

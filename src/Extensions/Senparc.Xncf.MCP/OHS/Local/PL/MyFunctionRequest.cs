@@ -1,4 +1,22 @@
-﻿using Senparc.Ncf.XncfBase.FunctionRenders;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：MyFunctionRequest.cs
+    文件功能描述：MyFunctionRequest 相关实现
+    
+    
+    创建标识：Senparc - 20250325
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -7,38 +25,54 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
-using Senparc.Ncf.XncfBase;
+using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.MCP.OHS.Local.PL
 {
     public class MyFunction_MCPCallRequest : FunctionAppRequestBase
     {
-        [Description("MCP 服务器选择||选择已注册的 MCP 服务器，或选择 手动输入 自定义服务器地址")]
-        public SelectionList McpServerSelection { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.ServerSelection")]
+        [FunctionParameterUi(ParameterType.DropDownList, nameof(McpServerSelectionOptions))]
+        public string McpServerSelection { get; set; }
 
-        [Description("MCP 服务器地址||MCP 服务器地址，当选择 手动输入 时需要填写，默认为 http://localhost:5000/mcp-senparc-xncf-mcp/sse")]
+        [JsonIgnore]
+        public SelectionList McpServerSelectionOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
+
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint")]
         public string Endpoint { get; set; }
 
         [Required]
-        [Description("请求||提出对 MCP 服务器的请求")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Request")]
         public string RequestPrompt { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
         {
             // 添加手动输入选项
-            McpServerSelection.Items.Add(new SelectionItem("Manual", "手动输入", "手动输入 MCP 服务器地址", true));
+            McpServerSelectionOptions.Items.Add(new SelectionItem(
+                "Manual",
+                McpResource.Get("Parameter.MCP.Manual"),
+                McpResource.Get("Parameter.MCP.Manual.Help"),
+                true));
 
             // 从 XncfRegisterManager 获取已注册的 MCP 服务器
             var mcpServers = XncfRegisterManager.McpServerInfoCollection.Values.ToList();
             
             foreach (var mcpServer in mcpServers)
             {
-                var displayText = $"{mcpServer.XncfName}（{mcpServer.McpRoute}）";
-                var description = $"服务器：{mcpServer.ServerName}，路由：{mcpServer.McpRoute}";
+                var displayText = McpResource.Format(
+                    "Parameter.MCP.Server.Display",
+                    "{0}（{1}）",
+                    mcpServer.XncfName,
+                    mcpServer.McpRoute);
+                var description = McpResource.Format(
+                    "Parameter.MCP.Server.Help",
+                    "服务器：{0}，路由：{1}",
+                    mcpServer.ServerName,
+                    mcpServer.McpRoute);
                 // 使用服务器的唯一标识作为 Value，而不是路由
                 var serverKey = $"{mcpServer.XncfName}|{mcpServer.McpRoute}";
                 
-                McpServerSelection.Items.Add(new SelectionItem(serverKey, displayText, description));
+                McpServerSelectionOptions.Items.Add(new SelectionItem(serverKey, displayText, description));
             }
 
             await base.LoadData(serviceProvider);
@@ -48,30 +82,38 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
     {
         [Required]
         [MaxLength(50)]
-        [Description("名称||双竖线之前为参数名称，双竖线之后为参数注释")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Name")]
         public string Name { get; set; }
 
         [Required]
-        [Description("数字||数字1")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Number1")]
         public int Number1 { get; set; }
 
 
         [Required]
-        [Description("数字||数字2")]
+        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Number2")]
         public int Number2 { get; set; }
 
-        [Description("运算符||")]//下拉列表
-        public SelectionList Operator { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("+","加法","数字1 + 数字2",false),
-                 new SelectionItem("-","减法","数字1 - 数字2",true),
-                 new SelectionItem("×","乘法","数字1 × 数字2",false),
-                 new SelectionItem("÷","除法","数字1 ÷ 数字2",false)
+        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Operator")]//下拉列表
+           [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
+           public string Operator { get; set; }
+
+           [JsonIgnore]
+           public SelectionList OperatorOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
+                 new SelectionItem("+", McpResource.Get("Parameter.Operator.Add"), McpResource.Get("Parameter.Operator.Add.Help"), false),
+                 new SelectionItem("-", McpResource.Get("Parameter.Operator.Subtract"), McpResource.Get("Parameter.Operator.Subtract.Help"), true),
+                 new SelectionItem("×", McpResource.Get("Parameter.Operator.Multiply"), McpResource.Get("Parameter.Operator.Multiply.Help"), false),
+                 new SelectionItem("÷", McpResource.Get("Parameter.Operator.Divide"), McpResource.Get("Parameter.Operator.Divide.Help"), false)
             });
 
-        [Description("计算平方||")]//多选框
-        public SelectionList Power { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("2","平方","计算上述结果之后再计算平方",false),
-                 new SelectionItem("3","三次方","计算上述结果之后再计算三次方",false)
+        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Power")]//多选框
+           [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
+           public string[] Power { get; set; }
+
+           [JsonIgnore]
+           public SelectionList PowerOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
+                 new SelectionItem("2", McpResource.Get("Parameter.Power.Square"), McpResource.Get("Parameter.Power.Square.Help"), false),
+                 new SelectionItem("3", McpResource.Get("Parameter.Power.Cube"), McpResource.Get("Parameter.Power.Cube.Help"), false)
             });
     }
 }

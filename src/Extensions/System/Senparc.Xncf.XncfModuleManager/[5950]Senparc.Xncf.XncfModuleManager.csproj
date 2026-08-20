@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.13.16-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.15.6-preview8</Version>
     <AssemblyName>Senparc.Xncf.XncfModuleManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfModuleManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -13,34 +13,56 @@
     <Owners>NeuCharFramework</Owners>
     <!-- <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression> -->
     <Title>菜单管理</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		v0.1.0 创世
-		v0.2 重新分离 DDD 架构，重构数据库
-		v0.3.3.1 添加 Oracle 数据库迁移代码
-		v0.5.2 更改菜单名称：XNCF 模块管理 &gt; XNCF 模块管理核心
-		v0.5.3 fix bug：模块菜单名更新后，无法更新到数据库中的菜单信息
-		v0.6.0 解决模块安装后直接授权菜单问题
-		v0.8.0 添加 XncfStateAppService
-		[2024-09-10] v0.11.4-preview1 升级缓存基础库
-		[2024-10-09] v0.11.6-preview1 升级基础库
-		[2024-10-09] v0.11.7-preview1 升级基础库
-		[2024-10-16] v0.11.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-		[2024-11-08] v0.11.10-preview1 升级 Senparc.AI
-		[2024-11-08] v0.11.11-preview1 升级 Senparc.AI
-		[2024-11-15] v0.12.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-		[2024-11-21] v0.13.2-preview1 更新 CO2NET 及缓存基础库
-		[2024-11-28] v0.13.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-		[2024-12-27] v0.13.4-preview1 Add exception log for UseXncfModules() auto progress
-		[2025-01-08] v0.13.6-preview1 Deal with DaMeng(DM) database column type
-			[2025-01-25] v0.13.9-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.13.11-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.13.12-preview1 Update Installation
-			[2025-06-20] v0.13.13-preview1 Add MCP functions in XncfRegisterBase class
-
-				[2025-11-01] update basic libraries, including Senparc.AI
+      v0.1.0 创世
+      v0.2 重新分离 DDD 架构，重构数据库
+      v0.3.3.1 添加 Oracle 数据库迁移代码
+      v0.5.2 更改菜单名称：XNCF 模块管理 &gt; XNCF 模块管理核心
+      v0.5.3 fix bug：模块菜单名更新后，无法更新到数据库中的菜单信息
+      v0.6.0 解决模块安装后直接授权菜单问题
+      v0.8.0 添加 XncfStateAppService
+      [2024-09-10] v0.11.4-preview1 升级缓存基础库
+      [2024-10-09] v0.11.6-preview1 升级基础库
+      [2024-10-09] v0.11.7-preview1 升级基础库
+      [2024-10-16] v0.11.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+      [2024-11-08] v0.11.10-preview1 升级 Senparc.AI
+      [2024-11-08] v0.11.11-preview1 升级 Senparc.AI
+      [2024-11-15] v0.12.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+      [2024-11-21] v0.13.2-preview1 更新 CO2NET 及缓存基础库
+      [2024-11-28] v0.13.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+      [2024-12-27] v0.13.4-preview1 Add exception log for UseXncfModules() auto progress
+      [2025-01-08] v0.13.6-preview1 Deal with DaMeng(DM) database column type
+      [2025-01-25] v0.13.9-preview1 Update Agents functions, support for function calling
+      [2025-04-29] v0.13.11-preview1 Update CO2NET and AIKernel
+      [2025-05-18] v0.13.12-preview1 Update Installation
+      [2025-06-20] v0.13.13-preview1 Add MCP functions in XncfRegisterBase class
+      [2025-11-01] update basic libraries, including Senparc.AI
+      [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+      [2026-07-17] v0.15.0-preview2 为 XncfModuleManager 模块接入统一资源本地化并优化功能文案
+      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+      2、更新 FunctionRender 与请求模型文案的资源化解析
+      3、统一模块注册信息、菜单名称与功能描述的本地化输出
+      4、补充并统一多语言资源键及资源文件
+      [2026-07-29] v0.15.1-preview3 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
+      [2026-07-31] v0.15.2-preview4 升级 CO2NET WebApi 兼容依赖
+      1、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview 以适配 CO2NET 4.2.0
+      [2026-08-04] v0.15.3-preview5 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.1-preview5
+      2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
+      3、Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
+      4、Dependency update from Senparc.Xncf.AreasBase to 0.13.3-preview5
+      5、Dependency update from Senparc.Xncf.SystemCore to 0.14.3-preview5
+      [2026-08-08] v0.15.4-preview6 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+      2、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+      3、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+      4、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+      5、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+      [2026-08-13] v0.15.5-preview7 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7; [5955]Senparc.Xncf.AreasBase to 0.13.5-preview7; [5980]Senparc.Xncf.SystemCore to 0.14.5-preview7
+      [2026-08-15] v0.15.6-preview8 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8; Senparc.Ncf.XncfBase to 0.25.1-preview8
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -66,7 +88,7 @@
   <ItemGroup>
     <!--<ProjectReference Condition=" '$(Configuration)' != 'Release' " Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />-->
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>

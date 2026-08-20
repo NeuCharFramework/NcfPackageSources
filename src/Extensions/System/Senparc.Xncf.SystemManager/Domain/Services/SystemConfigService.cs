@@ -1,4 +1,21 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：SystemConfigService.cs
+    文件功能描述：SystemConfigService 相关实现
+    
+    
+    创建标识：Senparc - 20211128
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.15.3-preview6 补齐 SystemConfig.FooterContent 数据库迁移
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
@@ -86,7 +103,16 @@ namespace Senparc.Xncf.SystemManager.Domain.Service
             string appSecret = null;
             systemName ??= "NCF - Template Project";
 
-            systemConfig = new SystemConfig(systemName, null, null, null, false, developerId, appKey, appSecret);
+            systemConfig = new SystemConfig(
+                systemName,
+                null,
+                null,
+                null,
+                false,
+                developerId,
+                appKey,
+                appSecret,
+                SystemConfig.CreateDefaultFooterContent());
             SaveObject(systemConfig);
 
             return systemConfig;

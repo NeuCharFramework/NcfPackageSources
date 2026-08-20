@@ -1,5 +1,39 @@
-﻿using Senparc.Areas.Admin.Domain.Dto;
-using Microsoft.Extensions.Localization;
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：SystemInfoAppService.cs
+    文件功能描述：SystemInfoAppService 相关功能实现
+
+
+    创建标识：Senparc - 20241028
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
+
+    修改标识：Senparc - 20260724
+    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0 新增纽铃内部触发测试 Function
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.3.0 将后台同步功能统一更名为 NeuBell/纽铃
+
+    修改标识：Senparc - 20260808
+    修改描述：v0.4.0 完善系统信息接口以支持 Host 指标与纽铃测试
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+
+----------------------------------------------------------------*/
+
+using Senparc.Areas.Admin.Domain.Dto;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
@@ -9,7 +43,12 @@ using Senparc.Ncf.Core.Cache.Extensions;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Utility;
+using Senparc.Areas.Admin.Domain.Services;
+using Senparc.Areas.Admin.OHS.PL;
+using Senparc.Areas.Admin;
+using Microsoft.Extensions.Localization;
 using Senparc.Xncf.SystemManager.Domain.Service;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices.Protocols;
@@ -20,26 +59,31 @@ using System.Threading.Tasks;
 
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
-    [BackendJwtAuthorize]
+    [BackendJwtAuthorize(BackendJwtAuthorizeAttribute.SuperAdminPolicyName)]
     public class SystemInfoAppService : LocalAppServiceBase
     {
         private readonly SystemConfigService _systemConfigService;
-        private readonly FullSystemConfigCache _fullSystemConfigCache;
+        private readonly AdminAuthConfigService _adminAuthConfigService;
         private readonly IBaseObjectCacheStrategy _cacheStrategy;
         private readonly IStringLocalizer<AdminResource> _localizer;
+        private readonly NeuBellTestProvider _neuBellTestProvider;
+        private readonly INeuBellPublisher _neuBellPublisher;
 
-        public SystemInfoAppService(IServiceProvider serviceProvider, SystemConfigService systemConfigService, FullSystemConfigCache fullSystemConfigCache, IBaseObjectCacheStrategy cacheStrategy, IStringLocalizer<AdminResource> localizer) : base(serviceProvider)
+        public SystemInfoAppService(
+            IServiceProvider serviceProvider,
+            SystemConfigService systemConfigService,
+            AdminAuthConfigService adminAuthConfigService,
+            IBaseObjectCacheStrategy cacheStrategy,
+            IStringLocalizer<AdminResource> localizer,
+            NeuBellTestProvider neuBellTestProvider,
+            INeuBellPublisher neuBellPublisher) : base(serviceProvider)
         {
             _systemConfigService = systemConfigService;
-            _fullSystemConfigCache = fullSystemConfigCache;
+            _adminAuthConfigService = adminAuthConfigService;
             this._cacheStrategy = cacheStrategy;
             _localizer = localizer;
-        }
-
-        private string L(string key, string fallback, params object[] args)
-        {
-            var value = _localizer[key, args];
-            return value.ResourceNotFound ? string.Format(fallback, args) : value.Value;
+            _neuBellTestProvider = neuBellTestProvider;
+            _neuBellPublisher = neuBellPublisher;
         }
 
 
@@ -77,7 +121,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (systemConfig == null)
                 {
-                    throw new NcfExceptionBase(L("SystemConfig.NotFound", "System configuration does not exist."));
+                    throw new NcfExceptionBase(_localizer["SystemConfig.ConfigNotFound"].Value);
                 }
 
                 systemConfig.Update(request.SystemName, request.MchId, request.MchKey, request.TenPayAppId, systemConfig.HideModuleManager);
@@ -113,7 +157,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (systemConfig == null)
                 {
-                    throw new NcfExceptionBase(L("SystemConfig.NotFound", "System configuration does not exist."));
+                    throw new NcfExceptionBase(_localizer["SystemConfig.ConfigNotFound"].Value);
                 }
 
                 systemConfig.Update(systemConfig.SystemName, systemConfig.MchId, systemConfig.MchKey, systemConfig.TenPayAppId, hide);
@@ -127,7 +171,82 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return response;
         }
 
-        [FunctionRender("Cache Test", "Test current cache type and distributed lock", typeof(Register))]
+        [FunctionRender("查看登录过期配置", "查看 Admin 模块中的网页登录过期与 JWT 过期配置", typeof(Register))]
+        public async Task<StringAppResponse> GetAuthExpireSettings()
+        {
+            var response = await this.GetStringResponseAsync(async (_, logger) =>
+            {
+                var settings = _adminAuthConfigService.GetEffectiveExpireSettings();
+                logger.Append($"网页登录持续时间：{settings.AdminWebLoginExpireMinutes} 分钟");
+                logger.Append($"JWT 过期时间：{settings.BackendJwtExpireMinutes} 分钟");
+                logger.Append($"配置来源：{settings.Source}");
+                logger.Append(settings.UsingDefault
+                    ? "当前使用默认值（可能是配置记录不存在，或配置表尚未完成数据库升级）。"
+                    : "当前使用数据库配置值。");
+
+                await Task.CompletedTask;
+                return logger.GetLogs();
+            }, saveLogAfterFinished: true, saveLogName: "查看登录过期配置");
+
+            return response;
+        }
+
+        [FunctionRender("设置登录过期配置", "设置网页登录持续时间与 JWT 过期时间（分钟）", typeof(Register))]
+        public async Task<StringAppResponse> SetAuthExpireSettings(AdminAuthConfig_SetExpireSettingsRequest request)
+        {
+            var response = await this.GetStringResponseAsync(async (_, logger) =>
+            {
+                var result = await _adminAuthConfigService.TrySaveExpireSettingsAsync(
+                    request.AdminWebLoginExpireMinutes,
+                    request.BackendJwtExpireMinutes).ConfigureAwait(false);
+
+                logger.Append(result.Message);
+                logger.Append($"当前生效：网页登录持续时间={result.Settings.AdminWebLoginExpireMinutes} 分钟，JWT 过期时间={result.Settings.BackendJwtExpireMinutes} 分钟。");
+                logger.Append(result.Settings.UsingDefault
+                    ? "当前仍为默认值回退。"
+                    : "当前已写入数据库配置。");
+
+                return logger.GetLogs();
+            }, saveLogAfterFinished: true, saveLogName: "设置登录过期配置");
+
+            return response;
+        }
+
+        [FunctionRender("纽铃可见提醒测试", "发送或消费可在 Admin Footer 弹窗与徽标中看到的纽铃测试提醒", typeof(Register))]
+        public async Task<StringAppResponse> TriggerNeuBellTest(NeuBellTest_Request request)
+        {
+            return await this.GetStringResponseAsync(async (_, logger) =>
+            {
+                if (string.Equals(request?.Action, NeuBellTest_Request.SendAction, StringComparison.OrdinalIgnoreCase))
+                {
+                    var pendingCount = _neuBellTestProvider.Send();
+                    await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
+                    logger.Append($"已发送 NeuBell 测试提醒，当前待消费数量：{pendingCount}。请观察 Admin Footer 的弹窗和徽标。");
+                }
+                else if (string.Equals(request?.Action, NeuBellTest_Request.ConsumeOneAction, StringComparison.OrdinalIgnoreCase))
+                {
+                    var consumedCount = _neuBellTestProvider.ConsumeLatest();
+                    await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
+                    logger.Append(consumedCount > 0
+                        ? "已消费最新 1 条 NeuBell 测试提醒，Footer 徽标将减少。"
+                        : "当前没有可消费的 NeuBell 测试提醒。" );
+                }
+                else if (string.Equals(request?.Action, NeuBellTest_Request.ConsumeAllAction, StringComparison.OrdinalIgnoreCase))
+                {
+                    var consumedCount = _neuBellTestProvider.ConsumeAll();
+                    await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
+                    logger.Append($"已消费 {consumedCount} 条 NeuBell 测试提醒，Footer 弹窗和徽标将被清除。");
+                }
+                else
+                {
+                    logger.Append("不支持的操作，请选择“发送提醒”、“消费最新一条”或“消费全部提醒”。");
+                }
+
+                return logger.GetLogs();
+            }, saveLogAfterFinished: true, saveLogName: "纽铃可见提醒测试");
+        }
+
+        [FunctionRender("缓存测试", "测试当前缓存类型及分布式锁", typeof(Register))]
         public async Task<StringAppResponse> CacheTest()
         {
             var response = await this.GetStringResponseAsync(async (response, logger) =>

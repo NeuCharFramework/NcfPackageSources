@@ -1,4 +1,21 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.Area.cs
+    文件功能描述：Register.Area 相关实现
+    
+    
+    创建标识：Senparc - 20250325
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.Trace;
@@ -19,8 +36,8 @@ namespace Senparc.Xncf.MCP
         public string HomeUrl => "/Admin/MCP/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-                          new AreaPageMenuItem(GetAreaUrl($"/Admin/MCP/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
+                         new AreaPageMenuItem(GetAreaHomeUrl(), McpResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+                          new AreaPageMenuItem(GetAreaUrl($"/Admin/MCP/DatabaseSample"), McpResource.Get("Area.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
                      };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

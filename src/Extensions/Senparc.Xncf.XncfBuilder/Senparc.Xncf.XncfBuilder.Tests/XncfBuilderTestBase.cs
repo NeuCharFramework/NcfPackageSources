@@ -1,9 +1,23 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：XncfBuilderTestBase.cs
+    文件功能描述：XncfBuilderTestBase 相关实现
+    
+    
+    创建标识：Senparc - 20231001
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.AI;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.Tests;
 using Senparc.Xncf.PromptRange.Domain.Services;
@@ -26,7 +40,7 @@ namespace Senparc.Xncf.PromptRange.Tests
         {
             base.RegisterServiceCollectionFinished(services);
 
-            _senparcAiSetting = new Senparc.AI.Kernel.SenparcAiSetting();
+            _senparcAiSetting = new Senparc.AI.AgentKernel.SenparcAiSetting();
             base.Configuration.GetSection("SenparcAiSetting").Bind(_senparcAiSetting);
 
             //_senparcAiSetting = new  SenparcAiSetting() { IsDebug = true };
@@ -37,7 +51,7 @@ namespace Senparc.Xncf.PromptRange.Tests
             services.AddScoped<PromptService>();
             services.AddScoped<PromptBuilderService>();
 
-            services.AddScoped<IAiHandler, SemanticAiHandler>();
+            services.AddScoped<IAiHandler, AgentAiHandler>();
         }
 
         public XncfBuilderTestBase() : base()

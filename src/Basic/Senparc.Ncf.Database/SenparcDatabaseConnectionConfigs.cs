@@ -1,4 +1,18 @@
-﻿using Senparc.CO2NET.Cache;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：SenparcDatabaseConnectionConfigs.cs
+    文件功能描述：SenparcDatabaseConnectionConfigs 相关实现
+    
+    
+    创建标识：Senparc - 20260704
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
+using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Exceptions;

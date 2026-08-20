@@ -1,4 +1,17 @@
-﻿using Microsoft.Extensions.Logging;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Program.cs
+    文件功能描述：模拟站点同步工具入口
+    
+    
+    创建标识：Senparc - 20250321
+    
+    修改标识：Senparc - 20260726
+    修改描述：v0.0.1 完善外部与托管 NCF 目标解析的同步工具能力
+
+----------------------------------------------------------------*/
+using Microsoft.Extensions.Logging;
 
 class Program
 {
@@ -37,11 +50,15 @@ class Program
     {
         try
         {
+            bool templateOnly = args.Any(z =>
+                z.Equals("--template-only", StringComparison.OrdinalIgnoreCase));
             string sourceDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..","..", "..", "..", "..", "NcfSimulatedSite"));
             string targetDir = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..","..", "..", "..", "..", "..", "..", "NCF", "src", "back-end"));
 
             Console.WriteLine($"Source directory: {sourceDir}");
-            Console.WriteLine($"Target directory: {targetDir}");
+            Console.WriteLine(templateOnly
+                ? "Mode: template-only (skip NcfSimulatedSite -> NCF back-end synchronization)"
+                : $"Target directory: {targetDir}");
 
             // 检查源目录和目标目录
             bool hasError = false;
@@ -53,7 +70,7 @@ class Program
                 hasError = true;
             }
 
-            if (!Directory.Exists(targetDir))
+            if (!templateOnly && !Directory.Exists(targetDir))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"错误：目标目录不存在：{targetDir}");
@@ -86,6 +103,14 @@ class Program
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Template directory synchronization completed.");
                 Console.ResetColor();
+            }
+
+            if (templateOnly)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Template-only synchronization completed successfully.");
+                Console.ResetColor();
+                return;
             }
 
             await SyncDirectoriesAsync(sourceDir, targetDir);
@@ -207,8 +232,8 @@ class Program
         }
 
         bool shouldCopy = true;
-        string sourceContent = null;
-        string processedContent = null;
+        string? sourceContent = null;
+        string? processedContent = null;
 
         // 对 Register.cs 文件进行特殊处理
         if (Path.GetFileName(sourceFile).Equals("Register.cs", StringComparison.OrdinalIgnoreCase))

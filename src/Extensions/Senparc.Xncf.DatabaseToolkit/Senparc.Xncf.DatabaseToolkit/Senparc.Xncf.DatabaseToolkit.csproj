@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net8.0</TargetFrameworks>-->
     <!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-    <Version>0.24.13-preview.1</Version>
+    <Version>0.27.5-preview8</Version>
     <AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -16,33 +16,52 @@
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>XNCF 数据库工具包模块</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			v0.1.101 添加 Migrate 数据库功能
-			v0.1.102 添加备份数据库功能
-			v0.1.103 添加检查数据库功能
-			v0.1.106 添加导出数据库功能
-			v0.5.0 添加可配置备份路径、周期，及自动备份功能
-			v0.11.0 重构 DDD 文件结构
-			v0.12 升级到 FunctionRender
-			v0.16.5.1 添加 Oracle 数据库迁移代码
-			v0.16.8 备份文件重名自动删除
-			v0.23.0 更新 DatabaseToolkitSenparcEntities 命名
-			[2024-09-07] v0.23.3-preview1 优化数据库模块的数据库自动备份提示，不再标记为异常，同时向控制台输出警告信息
-			[2024-09-10] v0.23.4-preview1 升级缓存基础库
-			[2024-09-13] v0.23.7-preview1 优化当未安装或启用 DatabaseToolkit 模块时的跳过和提示操作
-			[2024-10-09] v0.23.9-preview1 升级基础库
-			[2024-11-08] v0.23.11-preview1 升级 Senparc.AI
-			[2024-12-27] v0.24.2-preview1 Add exception log for UseXncfModules() auto progress
-			[2025-01-25] v0.24.6-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.24.8-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.24.9-preview1 Update Installation
-			[2025-06-20] v0.24.10-preview1 Add MCP functions in XncfRegisterBase class
-
-				[2025-11-01] update basic libraries, including Senparc.AI
+      v0.1.0 创世
+      v0.1.101 添加 Migrate 数据库功能
+      v0.1.102 添加备份数据库功能
+      v0.1.103 添加检查数据库功能
+      v0.1.106 添加导出数据库功能
+      v0.5.0 添加可配置备份路径、周期，及自动备份功能
+      v0.11.0 重构 DDD 文件结构
+      v0.12 升级到 FunctionRender
+      v0.16.5.1 添加 Oracle 数据库迁移代码
+      v0.16.8 备份文件重名自动删除
+      v0.23.0 更新 DatabaseToolkitSenparcEntities 命名
+      [2024-09-07] v0.23.3-preview1 优化数据库模块的数据库自动备份提示，不再标记为异常，同时向控制台输出警告信息
+      [2024-09-10] v0.23.4-preview1 升级缓存基础库
+      [2024-09-13] v0.23.7-preview1 优化当未安装或启用 DatabaseToolkit 模块时的跳过和提示操作
+      [2024-10-09] v0.23.9-preview1 升级基础库
+      [2024-11-08] v0.23.11-preview1 升级 Senparc.AI
+      [2024-12-27] v0.24.2-preview1 Add exception log for UseXncfModules() auto progress
+      [2025-01-25] v0.24.6-preview1 Update Agents functions, support for function calling
+      [2025-04-29] v0.24.8-preview1 Update CO2NET and AIKernel
+      [2025-05-18] v0.24.9-preview1 Update Installation
+      [2025-06-20] v0.24.10-preview1 Add MCP functions in XncfRegisterBase class
+      [2025-11-01] update basic libraries, including Senparc.AI
+      [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+      [2026-07-17] v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
+      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+      2、更新 FunctionRender 与请求模型文案的资源化解析
+      3、统一模块注册信息、菜单名称与功能描述的本地化输出
+      4、补充并统一多语言资源键及资源文件
+      [2026-07-29] v0.27.0-preview3 增加数据库分页筛选执行能力并限制请求范围
+      1、使用仓储分页查询返回数据库侧分页结果和总数，避免全量加载
+      2、规范页码页大小并支持按实体字符串属性进行筛选
+      [2026-07-31] v0.27.1-preview4 升级 CO2NET WebApi 兼容依赖
+      1、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview 以适配 CO2NET 4.2.0
+      [2026-08-04] v0.27.2-preview5 统一 DatabaseToolkit 多数据库设计时配置
+      1、为 Dm、MySql、Oracle、PostgreSQL、SqlServer 与 Sqlite 统一设计时 DbContext 配置
+      [2026-08-08] v0.27.3-preview6 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+      2、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+      3、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+      4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+      [2026-08-13] v0.27.4-preview7 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7
+      [2026-08-15] v0.27.5-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -80,7 +99,8 @@
     <!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />-->
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
+    <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
   </ItemGroup>
@@ -93,7 +113,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net10.0'">
     <PackageReference Include="Oracle.EntityFrameworkCore" Version="8.23.60" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.9.10-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.10.8-preview8</Version>
     <AssemblyName>Senparc.Xncf.Tenant.Interface</AssemblyName>
     <RootNamespace>Senparc.Xncf.Tenant.Interface</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -13,16 +13,23 @@
     <Owners>NeuCharFramework</Owners>
     <!-- <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl> -->
     <Title>租户管理-接口</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			[2024-09-10] v0.8.4-preview1 升级缓存基础库
-			[2025-01-25] v0.9.5-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.9.7-preview1 Update CO2NET and AIKernel
-
+				v0.1.0 创世
+				[2024-09-10] v0.8.4-preview1 升级缓存基础库
+				[2025-01-25] v0.9.5-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.9.7-preview1 Update CO2NET and AIKernel
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-17] v0.10.2-preview2 同步上游项目版本并适配统一本地化能力
+				1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
+				[2026-07-29] v0.10.3-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
+				[2026-07-31] v0.10.4-preview4 Dependency update from Senparc.Ncf.Core to 0.27.0-preview4
+				[2026-08-04] v0.10.5-preview5 Dependency update from Senparc.Ncf.Core to 0.28.0-preview5
+				[2026-08-08] v0.10.6-preview6 Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+				[2026-08-13] v0.10.7-preview7 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7
+				[2026-08-15] v0.10.8-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

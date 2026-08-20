@@ -1,4 +1,21 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：SiteConfig.Core.cs
+    文件功能描述：SiteConfig.Core 相关实现
+    
+    
+    创建标识：Senparc - 20200724
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.26.0-preview3 修复安装状态写入并统一授权策略名称
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Senparc.CO2NET;
@@ -142,7 +159,7 @@ namespace Senparc.Ncf.Core.Config
             }
             set
             {
-                _isInstalling = false;
+                _isInstalling = value;
             }
         }
 

@@ -1,7 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.0.8</Version>
+    <PackageReleaseNotes>
+[2026-07-07] v0.0.1 Dependency updates from upstream modules
+1、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+[2026-07-17] v0.0.2 同步上游项目版本并适配统一本地化能力
+1、Dependency update from Senparc.Ncf.Service to 0.23.2-preview2
+2、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.15-preview.2
+3、Dependency update from Senparc.Xncf.PromptRange to 0.17.0-preview5
+4、同步 PromptRange 0.17.0-preview5 的剪贴板与内嵌 WebView 兼容性改进
+[2026-07-29] v0.0.3 Dependency update from Senparc.Xncf.PromptRange to 0.17.1-preview6
+[2026-07-31] v0.0.4 Dependency update from Senparc.Xncf.PromptRange to 0.18.0-preview7
+[2026-08-04] v0.0.5 Dependency updates from upstream projects
+1、Dependency update from Senparc.Ncf.Service to 0.23.5-preview5
+2、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.18-preview.5
+3、Dependency update from Senparc.Xncf.PromptRange to 0.19.0-preview8
+[2026-08-08] v0.0.6 Dependency updates from upstream projects
+1、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
+2、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
+3、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.19-preview.6
+[2026-08-13] v0.0.7 Dependency update from Senparc.Ncf.Service to 0.23.7-preview7; Senparc.Ncf.UnitTestExtension to 0.3.20-preview.7; Senparc.Xncf.PromptRange to 0.19.2-preview10
+[2026-08-15] v0.0.8 Dependency update from Senparc.Ncf.Service to 0.23.8-preview8; Senparc.Ncf.UnitTestExtension to 0.3.21-preview.8; Senparc.Xncf.PromptRange to 0.19.3-preview11
+</PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 

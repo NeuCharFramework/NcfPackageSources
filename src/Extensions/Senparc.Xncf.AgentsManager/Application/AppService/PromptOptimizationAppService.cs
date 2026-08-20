@@ -1,3 +1,17 @@
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptOptimizationAppService.cs
+    文件功能描述：PromptOptimizationAppService 相关实现
+    
+    
+    创建标识：Senparc - 20260306
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +22,7 @@ using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.PromptRange.Abstractions.Events;
 using Microsoft.Extensions.Logging;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 {
@@ -15,7 +30,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
     /// Prompt 优化 AppService
     /// TODO: 需要权限验证
     /// </summary>
-    //[ApiAuthorize("AdminOnly")]
+    [ApiAuthorize]
     public class PromptOptimizationAppService : AppServiceBase
     {
         private readonly PromptOptimizationService _promptOptimizationService;

@@ -1,4 +1,21 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：XncfStateAppService.cs
+    文件功能描述：XncfStateAppService 相关实现
+    
+    
+    创建标识：Senparc - 20240423
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.15.0-preview2 为 XncfModuleManager 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,12 +46,12 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
         }
 
         //[ApiBind]
-        [FunctionRender("查看 XNCF 模型的 Function 状态", "查看当前 XNCF 的 Function 载入情况", typeof(Register))]
+        [FunctionRender(typeof(XncfModuleManagerResource), "Function.XncfManager.ViewFunctionStatus.Name", "Function.XncfManager.ViewFunctionStatus.Description", typeof(Register))]
         public async Task<StringAppResponse> ShowFunctions(XncfState_ShowFunctionsRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                var selectedRegisterUid = request.XncfModule.SelectedValues.FirstOrDefault();
+                var selectedRegisterUid = request.XncfModule;
                 var register = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == selectedRegisterUid);
                 if (register == null)
                 {
@@ -84,12 +101,12 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
             });
         }
 
-        [FunctionRender("安装并开放 XNCF 模块", "安装指定 XNCF 模块，并将模块状态切换为【开放】", typeof(Register))]
+        [FunctionRender(typeof(XncfModuleManagerResource), "Function.XncfManager.InstallAndEnable.Name", "Function.XncfManager.InstallAndEnable.Description", typeof(Register))]
         public async Task<StringAppResponse> InstallAndOpenModule(XncfState_InstallAndOpenModuleRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                var selectedRegisterUid = request.XncfModule.SelectedValues.FirstOrDefault();
+                var selectedRegisterUid = request.XncfModule;
                 if (string.IsNullOrWhiteSpace(selectedRegisterUid))
                 {
                     response.Data = logger.Append("请先选择需要安装的 XNCF 模块。");
@@ -108,7 +125,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
             });
         }
 
-        [FunctionRender("安装并开放 XNCF 模块（AI兼容）", "AI 直接传入模块 UID 或名称关键字即可安装并开放模块，无需 SelectionList 结构", typeof(Register))]
+        [FunctionRender(typeof(XncfModuleManagerResource), "Function.XncfManager.InstallAndEnableAi.Name", "Function.XncfManager.InstallAndEnableAi.Description", typeof(Register))]
         public async Task<StringAppResponse> InstallAndOpenModuleForAi(string moduleUidOrName)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -196,7 +213,7 @@ namespace Senparc.Xncf.XncfModuleManager.OHS.Local.AppService
             return sb.ToString();
         }
 
-        [FunctionRender("获取全部 XNCF 模块信息", "获取系统中全部 XNCF 模块名称和描述（含状态）", typeof(Register))]
+        [FunctionRender(typeof(XncfModuleManagerResource), "Function.XncfManager.GetAllModules.Name", "Function.XncfManager.GetAllModules.Description", typeof(Register))]
         public async Task<StringAppResponse> GetAllXncfModules()
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

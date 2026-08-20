@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：DatabaseSchemaMetadataProvider.cs
+    文件功能描述：DatabaseSchemaMetadataProvider 相关实现
+    
+    
+    创建标识：Senparc - 20260327
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.DatabaseToolkit.OHS.Local.Models;
 using System;

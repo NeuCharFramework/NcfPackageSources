@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.AgentsManager.MenuName" xml:space="preserve">
+    <value>Agents Manager</value>
+  </data>
+  <data name="Module.AgentsManager.Description" xml:space="preserve">
+    <value>Manages AI agents and their configuration</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Function.Agents.TemplateManagement.Name" xml:space="preserve">
+    <value>Agent template management</value>
+  </data>
+  <data name="Function.Agents.TemplateManagement.Description" xml:space="preserve">
+    <value>Manage Agent templates</value>
+  </data>
+  <data name="Function.Agents.CreateFromPromptCode.Name" xml:space="preserve">
+    <value>Create an agent from PromptCode</value>
+  </data>
+  <data name="Function.Agents.CreateFromPromptCode.Description" xml:space="preserve">
+    <value>Create an agent from a PromptCode at range, tactic, or full-location level</value>
+  </data>
+  <data name="Function.Agents.SearchTemplate.Name" xml:space="preserve">
+    <value>Search Agent templates and return IDs</value>
+  </data>
+  <data name="Function.Agents.SearchTemplate.Description" xml:space="preserve">
+    <value>Find the best AgentTemplate by name or PromptCode and return selectable IDs; supports multiple keywords</value>
+  </data>
+  <data name="Function.Agents.ManageChatGroup.Name" xml:space="preserve">
+    <value>Manage ChatGroup</value>
+  </data>
+  <data name="Function.Agents.ManageChatGroup.Description" xml:space="preserve">
+    <value>Manage ChatGroup</value>
+  </data>
+  <data name="Function.Agents.StartChatGroup.Name" xml:space="preserve">
+    <value>Start ChatGroup</value>
+  </data>
+  <data name="Function.Agents.StartChatGroup.Description" xml:space="preserve">
+    <value>Start ChatGroup</value>
+  </data>
+  <data name="Function.Agents.DeleteConversation.Name" xml:space="preserve">
+    <value>Delete conversation</value>
+  </data>
+  <data name="Function.Agents.DeleteConversation.Description" xml:space="preserve">
+    <value>Delete the entire conversation and all associated data</value>
+  </data>
+  <data name="Parameter.Agents.Template.Name" xml:space="preserve">
+    <value>Name||Agent template name</value>
+  </data>
+  <data name="Parameter.Agents.Template.Id" xml:space="preserve">
+    <value>ID||Use 0 to create a template</value>
+  </data>
+  <data name="Parameter.Agents.Template.SystemMessage" xml:space="preserve">
+    <value>SystemMessage||PromptRangeCode for the system message; supports search, selection, and manual entry</value>
+  </data>
+  <data name="Parameter.Agents.Template.Description" xml:space="preserve">
+    <value>Description||Template description; does not affect model behavior</value>
+  </data>
+  <data name="Parameter.Agents.Template.Platform" xml:space="preserve">
+    <value>External platform||Platform to which messages are published</value>
+  </data>
+  <data name="Parameter.Agents.Template.PlatformParameter" xml:space="preserve">
+    <value>Platform parameter||Connection parameter such as a key</value>
+  </data>
+  <data name="Parameter.Agents.Template.FunctionCalls" xml:space="preserve">
+    <value>Function Calls||Comma-separated Function Call names</value>
+  </data>
+  <data name="Parameter.Agents.Create.Name" xml:space="preserve">
+    <value>Agent name||Name of the new agent</value>
+  </data>
+  <data name="Parameter.Agents.Create.ManualPromptCode" xml:space="preserve">
+    <value>Manual PromptCode||Range name, tactic prefix, or full version; required when SystemMessage is entered manually</value>
+  </data>
+  <data name="Parameter.Agents.Create.Description" xml:space="preserve">
+    <value>Description||Optional description of the new agent</value>
+  </data>
+  <data name="Parameter.Agents.Create.FunctionCalls" xml:space="preserve">
+    <value>Function Calls||Optional comma-separated Function Call names</value>
+  </data>
+  <data name="Parameter.Agents.Search.Query" xml:space="preserve">
+    <value>Search terms||Names, PromptCodes, or keywords; separate multiple values with commas, semicolons, or new lines</value>
+  </data>
+  <data name="Parameter.Agents.Search.TopN" xml:space="preserve">
+    <value>Maximum results||Maximum candidates per search term; default 5</value>
+  </data>
+  <data name="Parameter.Agents.Chat.SelectManage" xml:space="preserve">
+    <value>Select group||Select a group to manage or create a new one</value>
+  </data>
+  <data name="Agents.Chat.NewGroup" xml:space="preserve">
+    <value>New group</value>
+  </data>
+  <data name="Agents.Chat.NewGroup.Help" xml:space="preserve">
+    <value>Create a new group</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Name" xml:space="preserve">
+    <value>Group name||Name of the group</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Members" xml:space="preserve">
+    <value>Members||Optional; you may use manual member entry instead</value>
+  </data>
+  <data name="Parameter.Agents.Chat.MembersManual" xml:space="preserve">
+    <value>Members (manual)||Optional names, IDs, or PromptCodes; separate values with commas, semicolons, or new lines</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Admin" xml:space="preserve">
+    <value>Group owner||Uses the highest-rated host agent automatically; manual entry is retained for compatibility</value>
+  </data>
+  <data name="Parameter.Agents.Chat.AdminManual" xml:space="preserve">
+    <value>Group owner (manual)||Optional name, ID, or PromptCode</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Contact" xml:space="preserve">
+    <value>Contact agent||Uses the highest-rated host agent automatically; manual entry is retained for compatibility</value>
+  </data>
+  <data name="Parameter.Agents.Chat.ContactManual" xml:space="preserve">
+    <value>Contact agent (manual)||Optional name, ID, or PromptCode</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Description" xml:space="preserve">
+    <value>Description||Group description</value>
+  </data>
+  <data name="Parameter.Agents.Chat.SelectRun" xml:space="preserve">
+    <value>Select groups||Select groups to run</value>
+  </data>
+  <data name="Parameter.Agents.Chat.AIModel" xml:space="preserve">
+    <value>AI model||Select the external AI model for this task</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Individuation" xml:space="preserve">
+    <value>Personalized agents||</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Agents.Chat.Individuation.Help" xml:space="preserve">
+    <value>Run agents with personalized AI parameters</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Command" xml:space="preserve">
+    <value>How can I help?||Describe the work the agents should complete</value>
+  </data>
+  <data name="Parameter.Agents.Chat.SelectDelete" xml:space="preserve">
+    <value>Select conversations to delete||Delete selected conversations and all their messages and tasks</value>
+  </data>
+  <data name="Parameter.Agents.Chat.ConfirmDelete" xml:space="preserve">
+    <value>Confirm deletion||Confirm deletion of the selected conversations and all data</value>
+  </data>
+  <data name="Agents.Chat.CreatedAt" xml:space="preserve">
+    <value>{0} (created {1:g})</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Description" xml:space="preserve">
+    <value>Crawl web pages and return relevant content</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Url" xml:space="preserve">
+    <value>URL to crawl</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Depth" xml:space="preserve">
+    <value>Maximum crawl depth</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.PageCount" xml:space="preserve">
+    <value>Maximum page count</value>
+  </data>
+  <data name="Agents.Plugin.Crawl.Question" xml:space="preserve">
+    <value>Question</value>
+  </data>
+  <data name="Agents.Plugin.TextLength.Description" xml:space="preserve">
+    <value>Get the character count of text</value>
+  </data>
+  <data name="Agents.Plugin.OriginalText" xml:space="preserve">
+    <value>Source text</value>
+  </data>
+  <data name="Agents.Plugin.Translate.Description" xml:space="preserve">
+    <value>Translate text</value>
+  </data>
+  <data name="Agents.Plugin.TargetLanguage" xml:space="preserve">
+    <value>Target language</value>
+  </data>
+  <data name="Agents.Plugin.Translate.Instructions" xml:space="preserve">
+    <value>You are a professional translator fluent in {0}. Translate the user's text accurately and output only the translation.</value>
+  </data>
+</root>

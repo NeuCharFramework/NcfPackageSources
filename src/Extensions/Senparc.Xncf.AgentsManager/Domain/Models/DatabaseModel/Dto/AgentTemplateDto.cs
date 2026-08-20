@@ -1,3 +1,23 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AgentTemplateDto.cs
+    文件功能描述：AgentTemplateDto 相关实现
+
+
+    创建标识：Senparc - 20240616
+
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+
+----------------------------------------------------------------*/
+
 using Microsoft.Identity.Client;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
@@ -61,9 +81,27 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// </summary>
         public string McpEndpoints { get; set; }
 
+        public int? KnowledgeBaseId { get; set; }
+
+        public string KnowledgeBaseName { get; set; }
+
+        public int CompletedConversationRounds { get; set; }
+
+        public int CompletedTaskCount { get; set; }
+
+        public long PromptTokens { get; set; }
+
+        public long CompletionTokens { get; set; }
+
+        public long TotalTokens { get; set; }
+
+        public double AverageResponseMilliseconds { get; set; }
+
+        public DateTime? LastActiveTime { get; set; }
+
         public AgentTemplateDto() { }
 
-        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null, string functionCallNames = null, string mcpEndpoints = null)
+        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null, string functionCallNames = null, string mcpEndpoints = null, int? knowledgeBaseId = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -75,6 +113,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             Avastar = avastar;
             FunctionCallNames = functionCallNames;
             McpEndpoints = mcpEndpoints;
+            KnowledgeBaseId = knowledgeBaseId;
         }
     }
 
@@ -86,6 +125,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
     {
         public int ChattingCount { get; set; }
         public float Score { get; set; }
+        public bool HasPublishedA2A { get; set; }
+        public bool PublishedA2AEnabled { get; set; }
     }
 
     public class AgentTemplateStatusDto

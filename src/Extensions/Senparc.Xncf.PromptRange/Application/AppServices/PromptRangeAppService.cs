@@ -1,3 +1,23 @@
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptRangeAppService.cs
+    文件功能描述：PromptRangeAppService 相关实现
+    
+    
+    创建标识：Senparc - 20260704
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,9 +26,14 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.Domain.Models.Entities;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.CO2NET.Extensions;
+using Senparc.Xncf.AreaBase.Admin.Filters;
+using Senparc.Ncf.Core.Authorization;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 
@@ -16,7 +41,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 /// PromptRange 管理 AppService
 /// TODO: 需要权限验证
 /// </summary>
-//[ApiAuthorize("AdminOnly")]
+[ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
 public class PromptRangeAppService : AppServiceBase
 {
     private readonly PromptRangeService _promptRangeService;
@@ -122,5 +147,40 @@ public class PromptRangeAppService : AppServiceBase
                 throw new NcfExceptionBase("删除失败");
             }
         );
+    }
+
+    //[ApiBind]
+    /// <summary>
+    /// FunctionRender：查看靶场 PromptCode 列表（用于创建智能体）
+    /// </summary>
+    [FunctionRender(typeof(PromptRangeResource), "Function.PromptRange.ViewCodes.Name", "Function.PromptRange.ViewCodes.Description", typeof(Register))]
+    public async Task<StringAppResponse> ViewPromptCodeList(PromptRange_ViewPromptCodeRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            var promptItemService = base.GetService<PromptItemService>();
+            var filterRangeName = request?.FilterRangeName?.Trim();
+            var tree = await promptItemService.GetPromptRangeTreeList(true, true, filterRangeName);
+
+            logger.Append("=== PromptCode 列表（可用于在 AgentsManager 中创建智能体）===");
+            logger.Append("");
+            logger.Append($"筛选条件：{(filterRangeName.IsNullOrEmpty() ? "全部靶场" : filterRangeName)}");
+            logger.Append("");
+            logger.Append("覆盖范围说明：");
+            logger.Append("  靶场级别（Range）：使用靶场名称作为 PromptCode，匹配该靶场下的最优 Prompt");
+            logger.Append("  靶道级别（Tactic）：使用「靶场名称-T战术编号」，匹配该战术下的最优 Prompt");
+            logger.Append("  完整定位（Full）：使用完整版本号，精确匹配指定 Prompt");
+            logger.Append("");
+
+            foreach (var item in tree)
+            {
+                logger.Append($"[{item.Level}] {item.Text}  →  PromptCode: {item.Value}");
+            }
+
+            logger.Append("");
+            logger.Append("提示：在 AgentsManager 模块中，使用[从 PromptCode 快速创建智能体]功能可基于以上 PromptCode 快速创建智能体。");
+
+            return logger.ToString();
+        });
     }
 }

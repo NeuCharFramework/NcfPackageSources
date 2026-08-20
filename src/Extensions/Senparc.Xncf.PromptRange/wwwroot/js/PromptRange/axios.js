@@ -6,6 +6,19 @@
 var servicePR = axios.create({
     timeout: 100000 // request timeout
 });
+
+function buildPromptRangeErrorMessage(data) {
+    if (!data) {
+        return 'Error';
+    }
+
+    const baseMessage = data.errorMessage || data.data || 'Error';
+    if (!data.requestTempId) {
+        return baseMessage;
+    }
+
+    return `${baseMessage}\nRequestTempId: ${data.requestTempId}`;
+}
 // 请求拦截
 servicePR.interceptors.request.use(
     config => {
@@ -55,7 +68,7 @@ servicePR.interceptors.response.use(
                 }
                 if (!response.config.customAlert){
                     app.$message({
-                        message: response.data.errorMessage || response.data.data || 'Error',
+                        message: buildPromptRangeErrorMessage(response.data),
                         type: 'error',
                         duration: 5 * 1000
                     });
@@ -64,7 +77,7 @@ servicePR.interceptors.response.use(
             }
         } else {
             app.$message({
-                message: response.data.errorMessage || response.data.data || 'Error',
+                message: buildPromptRangeErrorMessage(response.data),
                 type: 'error',
                 duration: 5 * 1000
             });
@@ -75,7 +88,7 @@ servicePR.interceptors.response.use(
         console.log('err' + error);
         if (error.message.includes('401')) {
             app.$message({
-                message: '登陆过期，即将跳转到登录页面',
+                message: ncfT('Auth.SessionExpired'),
                 type: 'error',
                 duration: 3 * 1000,
                 onClose: function () {
@@ -85,7 +98,7 @@ servicePR.interceptors.response.use(
             return Promise.reject(error);
         } if (error.message.includes('403')) {
             app.$message({
-                message: '您没有访问权限~',
+                message: ncfT('Auth.AccessDenied'),
                 type: 'error',
                 duration: 3 * 1000
             });

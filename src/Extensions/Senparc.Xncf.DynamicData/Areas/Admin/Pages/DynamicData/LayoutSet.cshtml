@@ -2,11 +2,8 @@
 @model Senparc.Xncf.DynamicData.Areas.Admin.Pages.DynamicData.LayoutSetModel
 
 
-@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
-    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
-    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
-    ViewData["Title"] = AR["DynamicData.LayoutTitle"];
+    ViewData["Title"] = "DynamicData 布局创建";
     Layout = "_Layout_Vue";
 }
 
@@ -16,33 +13,33 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["DynamicData.ModuleName"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["DynamicData.DataSheetSetTitle"]</el-breadcrumb-item>
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>动态数据基础模块</el-breadcrumb-item>
+    <el-breadcrumb-item>数据表设置</el-breadcrumb-item>
 }
 
 <el-container style="height: 100%;flex-direction:column;flex-wrap: nowrap;">
     <div class="layoutSet-nav df-wn flex-ac">
         <div class="nav-titlebox df-wn flex-ac flex-jc">
             <template v-if="isEditLayoutName">
-                <el-input ref="inputLayoutName" v-model.trim="layoutName" :size="elSize" placeholder="@AR["DynamicData.PleaseInputLayoutName"]"
+                <el-input ref="inputLayoutName" v-model.trim="layoutName" :size="elSize" placeholder="请输入布局名称"
                     style="width:310px" @@blur="handleBlurLayoutName"></el-input>
             </template>
             <template v-else>
-                <span class="title-text" :class="{'title-text_value':!!layoutName}">{{ layoutName || '@AR["DynamicData.PleaseInputLayoutName"]' }}</span>
+                <span class="title-text" :class="{'title-text_value':!!layoutName}">{{ layoutName || '请输入布局名称' }}</span>
                 <i class="el-icon-edit editLayoutName-btn" @@click="handleEditLayoutName"></i>
             </template>
         </div>
         <div class="nav-btnbox df-wn flex-ac flex-je">
-            <el-button type="primary" :size="elSize" @@click="handleCodeView">@AR["DynamicData.CodeView"]</el-button>
+            <el-button type="primary" :size="elSize" @@click="handleCodeView">代码查看</el-button>
             <el-button type="primary" :size="elSize" icon="el-icon-caret-right" @@click="handlePreview"></el-button>
-            <el-button type="primary" :size="elSize" icon="el-icon-s-promotion" @@click="handleRelease">@CR["Common.Publish"]</el-button>
+            <el-button type="primary" :size="elSize" icon="el-icon-s-promotion" @@click="handleRelease">发布</el-button>
         </div>
     </div>
-    @* Detail Content *@
+    @* 详情内容 *@
     <el-container style="flex-wrap: nowrap;">
         <div class="layoutSet-main">
-            @* Menu *@
+            @* 菜单 *@
             <div class="main_header df-wn flex-ac">
                 <div class="menu-area">
                     <div class="menu-list df-wn flex-ac">
@@ -50,7 +47,7 @@
                             @@click.self="handleSwitchMenu(index)">
                             <template v-if="item.isEditName">
                                 <el-input ref="inputMenuName" v-model.trim="item.name" :size="elSize"
-                                    placeholder="@AR["DynamicData.PleaseInputMenuName"]" style="width:100px"
+                                    placeholder="请输入菜单名称" style="width:100px"
                                     @@blur="handleBlurMenuName(item)"></el-input>
                             </template>
                             <template v-else>
@@ -62,16 +59,16 @@
                     </div>
                 </div>
                 <div class="menu-newbtn" @@click="handleAddMenu">
-                    <i class="el-icon-plus"></i>@AR["Auto.UI.ba750e6e3022"]
+                    <i class="el-icon-plus"></i>新增菜单
                 </div>
             </div>
-            @* Main Operation Area *@
+            @* 主体操作区域 *@
             <div class="main_content">
-                @* Global Buttons *@
+                @* 全局按钮 *@
                 <template>
                     <div class="globalButton-area"></div>
                 </template>
-                @* Component Area *@
+                @* 组件区域 *@
                 <div v-for="(item,index) in layoutComponentsList" :key="index" class="component-area"
                     :class="{activeComponentArea:index === layoutComponentActive}" :draggable="true"
                     @@dragstart="handleDragstart(index)" @@dragenter="handleDragenter($event, index, 'layoutComponent')"
@@ -94,7 +91,7 @@
                                 <el-table-column v-for="(col, index) in item.columnData" :key="index"
                                     :column-key="col.columnkey" :prop="col.field" :label="col.name"
                                     :width="col.columnWidth" :render-header="renderHeader">
-                                    @* Custom Column Buttons *@
+                                    @* 自定义列 按钮 *@
                                     <div v-if="col.property === 'customColumn'"
                                         class="df flex-as table_customColumn_btnBox">
                                         <span v-for="(btn,bindex) in col.btnList" class="table_customColumn_btn"
@@ -118,31 +115,31 @@
                         <el-form v-if="item.columnData&&item.columnData.length" :label-position="item.formConfig ? item.formConfig.labelPosition : 'left'" label-width="100px" class="demo-ruleForm">
                             <el-form-item v-for="(fItem,fIndex) in item.columnData" :key="fIndex" :label="fItem.name"
                                 :prop="fItem.field" @@click.native.stop="handleFormItemMouseDown(index,fIndex)">
-                                @* Input *@
+                                @* 输入框 *@
                                 <el-input v-if="fItem.formItemType === 'input'" :type="fItem.type" v-model="fItem.value" :placeholder="fItem.placeholder"></el-input>
-                                @* Switch *@
+                                @* 开关 *@
                                 <el-switch v-if="fItem.formItemType === 'switch'" v-model="fItem.value"></el-switch>
-                                @* Dropdown *@
+                                @* 下拉选择 *@
                                 <el-select v-if="fItem.formItemType === 'select'" v-model="fItem.value"
                                     :placeholder="fItem.placeholder">
                                     <el-option v-for="(optItem,optIndex) in fItem.optionData" :key="optIndex"
                                         :label="optItem.label" :value="optItem.value"></el-option>
                                 </el-select>
-                                @* Fixed Time Point *@
+                                @* 固定时间点 *@
                                 <el-time-select v-if="fItem.formItemType === 'timeSelect'" v-model="fItem.value" :picker-options="fItem.pickerOptions" :placeholder="fItem.placeholder">
                                 </el-time-select>
-                                @* Any Time Point *@
+                                @* 任意时间点 *@
                                 <el-time-picker v-if="fItem.formItemType === 'timePicker'" v-model="fItem.value" :placeholder="fItem.placeholder"></el-time-picker>
-                                @* Date and Time *@
+                                @* 日期 时间 *@
                                 <el-date-picker v-if="fItem.formItemType === 'date'" :type="fItem.type" v-model="fItem.value" :placeholder="fItem.placeholder"></el-date-picker>
-                                @* Checkbox *@
+                                @* 复选框 *@
                                 <el-checkbox-group v-if="fItem.formItemType === 'checkbox'" v-model="fItem.value">
                                     <el-checkbox v-for="(checkItem,checkIndex) in fItem.optionData"
                                         :label="checkItem.value" :key="checkIndex">
                                         {{ checkItem.label }}
                                     </el-checkbox>
                                 </el-checkbox-group>
-                                @* Radio *@
+                                @* 单选框 *@
                                 <el-radio-group v-if="fItem.formItemType === 'radio'" v-model="fItem.value">
                                     <el-radio v-for="(radioItem,radioIndex) in fItem.optionData"
                                         :label="radioItem.value" :key="radioIndex">
@@ -151,98 +148,98 @@
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item>
-                            <el-button type="primary" @@click.stop="handleSubmitBtnEdit(item)">@CR["Common.Submit"]</el-button>
-                            @* <el-button @@click="resetForm('ruleForm')">@CR["Common.Reset"]</el-button> *@
+                            <el-button type="primary" @@click.stop="handleSubmitBtnEdit(item)">提交</el-button>
+                            @* <el-button @@click="resetForm('ruleForm')">重置</el-button> *@
                             </el-form-item>
                         </el-form>
                     </template>
-                    @* Component Placeholder *@
+                    @* 组件占位 *@
                     <div v-if="componentOccupantShow(item)" class="occupant-area df-wn flex-ac flex-jc">
                         <img src="/image/DynamicData/icon-select_active.png" alt="" class="icon-select" />
-                        <span style="user-select:none;">@AR["DynamicData.ClickToAddAttribute"]</span>
+                        <span style="user-select:none;">点击右侧添加属性</span>
                     </div>
-                    @* Move Up/Down *@
+                    @* 上下移动 *@
                     @* <i class="el-icon-circle-plus upper_add-Component" @@click="handleAddComponent(index)"></i>
                     <i class="el-icon-circle-plus down_add-Component" @@click="handleAddComponent(index+1)"></i> *@
                 </div>
 
-                @* Add Component Tip *@
+                @* 添加组件提示 *@
                 <div class="add-Component_Tips df-wn flex-ac flex-jc" @@click="handleAddComponent()">
                     <img src="/image/DynamicData/icon-select.png" alt="" class="icon-select" />
-                    <span style="user-select:none;">@AR["DynamicData.ClickToAddComponent"]</span>
+                    <span style="user-select:none;">点击右侧添加组件</span>
                 </div>
             </div>
         </div>
-        @* Sidebar *@
+        @* 侧边栏 *@
         <div class="layoutSet-aside">
             <el-tabs v-model="tabsOverallActiveName" :before-leave="handleTabsLeave"
                 @@tab-click="handleTabsClickOverall">
-                <el-tab-pane label="@CR["Common.Add"]" name="first">
+                <el-tab-pane label="添加" name="first">
                     <div class="tabpane">
-                        <div class="operation-title">@AR["Auto.UI.bb79667f3703"]</div>
+                        <div class="operation-title">组件</div>
                         <div class="operation-area df flex-ac">
                             <div class="assembBtn df-wn flex-ac flex-jc"
                                 :class="{'btnDisabled':addAssembBtnDisabled('table')}"
                                 @@click="handleAddComponent('table')">
                                 <img src="/image/DynamicData/icon-table.png" alt="" class="btn-iconImg" />
-                                <span>@AR["DynamicData.DataTable"]</span>
+                                <span>数据表格</span>
                             </div>
                             <div class="assembBtn df-wn flex-ac flex-jc"
                                 :class="{'btnDisabled':addAssembBtnDisabled('form')}"
                                 @@click="handleAddComponent('form')">
                                 <img src="/image/DynamicData/icon-form.png" alt="" class="btn-iconImg" />
-                                <span>@AR["DynamicData.DataDetail"]</span>
+                                <span>数据详情</span>
                             </div>
                             <div class="assembBtn df-wn flex-ac flex-jc"
                                 :class="{'btnDisabled':addAssembBtnDisabled('btn')}"
                                 @@click="handleAddComponent('btn')">
-                                <span>@AR["DynamicData.CustomButton"]</span>
+                                <span>自定义按钮</span>
                             </div>
                         </div>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="@AR["Auto.UI.e366ccf1556c"]" name="second">
-                    @* Table Settings Management *@
+                <el-tab-pane label="设置" name="second">
+                    @* 表格设置管理 *@
                     <div class="tabpane">
                         <div class="subsection-container df-wn flex-ac flex-jc">
                             <div class="subsection-item" :class="{'subsection-item_avtive':setUpActiveName === 'first'}"
-                                @@click="handleSubsectionUpdate('setUpActiveName','first')">@AR["Auto.UI.24d67862f87f"]</div>
+                                @@click="handleSubsectionUpdate('setUpActiveName','first')">属性</div>
                             <div class="subsection-item"
                                 :class="{'subsection-item_avtive':setUpActiveName === 'second'}"
-                                @@click="handleSubsectionUpdate('setUpActiveName','second')">@AR["Auto.UI.39003734d1d7"]</div>
+                                @@click="handleSubsectionUpdate('setUpActiveName','second')">样式</div>
                         </div>
-                        @* Property Settings *@
+                        @* 属性设置 *@
                         <template v-if="setUpActiveName === 'first'">
-                            @* Table/Form Table and Column Settings *@
+                            @* 表格|表单 表和列属性 设置 *@
                             <template v-if="['table','form'].includes(layoutComponentActiveType)">
-                                @* Table Tip *@
+                                @* 表格提示 *@
                                 <div v-if="!columnForm.dataSheet" class="tips-container df-wn flex-ac">
                                     <i class="el-icon-warning-outline"></i>
                                     <span class="tipsText">
-                                        @AR["Auto.UI.920a57a2d11b"]
+                                        请先选择数据表才能对表字段进行设置
                                     </span>
                                 </div>
-                                @* Column Management *@
-                                <div class="operation-title" style="margin-top:20px;">@AR["DynamicData.ColumnManagement"]</div>
+                                @* 列管理 *@
+                                <div class="operation-title" style="margin-top:20px;">列管理</div>
                                 <el-form :model="columnForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    <el-form-item label="@AR["DynamicData.SelectDataSheet"]" prop="dataSheet">
+                                    <el-form-item label="数据表选择" prop="dataSheet">
                                         <el-select v-model="columnForm.dataSheet" style="width:100%"
-                                            placeholder="@AR["DynamicData.PleaseSelectDataSheet"]">
-                                            <el-option label="@AR["DynamicData.DataSheetText"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["Auto.UI.8a2d99eb1619"]" value="beijing"></el-option>
+                                            placeholder="请选择数据表">
+                                            <el-option label="数据表文本" value="shanghai"></el-option>
+                                            <el-option label="数据表文本1" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.SelectColumn"]" prop="columnData">
+                                    <el-form-item label="列选择" prop="columnData">
                                         <table class="table-container">
                                             <thead class="table-head">
                                                 <tr>
                                                     <th style="width:150px">
                                                         <el-checkbox v-model="columnForm.allChecked"
                                                             :disabled="!columnForm.columnData.length"
-                                                            @@change="handleColumnAllCheckedChange">@AR["Auto.UI.9caecd931b95"]</el-checkbox>
+                                                            @@change="handleColumnAllCheckedChange">字段</el-checkbox>
                                                     </th>
                                                     <th>
-                                                        @AR["Auto.UI.185f7bf64751"]
+                                                        数据类型
                                                     </th>
                                                     <th style="width:30px"></th>
                                                 </tr>
@@ -281,153 +278,153 @@
                                                         <el-popover placement="left" width="400" trigger="click"
                                                             v-model="addColumnVisible">
                                                             <div class="popover-bodyBox">
-                                                                <div class="popover-title">@AR["Auto.UI.49198f84cea6"]</div>
+                                                                <div class="popover-title">添加列</div>
                                                                 <el-form :model="addColumnForm" :size="elSize"
                                                                     label-position="top" label-width="80px"
                                                                     class="form-container">
                                                                     <template
                                                                         v-if="layoutComponentActiveType === 'table'">
-                                                                        <el-form-item label="@AR["DynamicData.ColumnProperty"]">
+                                                                        <el-form-item label="列属性">
                                                                             <el-select v-model="addColumnForm.property"
-                                                                                style="width:100%" placeholder="@CR["Common.PleaseSelect"]">
-                                                                                <el-option label="@AR["DynamicData.NormalColumn"]"
+                                                                                style="width:100%" placeholder="请选择">
+                                                                                <el-option label="普通列"
                                                                                     value="normalColumn"></el-option>
-                                                                                <el-option label="@AR["DynamicData.ActionColumn"]"
+                                                                                <el-option label="操作列"
                                                                                     value="customColumn"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.ColumnTitle"]">
+                                                                        <el-form-item label="列标题">
                                                                             <el-input v-model.trim="addColumnForm.name"
                                                                                 :size="elSize"
-                                                                                placeholder="@AR["DynamicData.PleaseInputColumnTitle"]"></el-input>
+                                                                                placeholder="请输入列标题"></el-input>
                                                                         </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.BindField"]">
+                                                                        <el-form-item label="绑定字段">
                                                                             <el-select v-model="addColumnForm.field"
                                                                                 style="width:100%"
-                                                                                placeholder="@AR["DynamicData.PleaseSelectBindField"]">
+                                                                                placeholder="请选择绑定字段">
                                                                                 <el-option label="name"
                                                                                     value="name"></el-option>
                                                                                 <el-option label="age"
                                                                                     value="age"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.DisplayContent"]">
+                                                                        <el-form-item label="展示内容">
                                                                             <el-select
                                                                                 v-model="addColumnForm.displayContent"
                                                                                 style="width:100%"
-                                                                                placeholder="@AR["DynamicData.PleaseSelectDisplayContent"]">
-                                                                                <el-option label="@AR["Auto.UI.60d0458ac6eb"]"
+                                                                                placeholder="请选择展示内容">
+                                                                                <el-option label="姓名"
                                                                                     value="姓名"></el-option>
-                                                                                <el-option label="@AR["Auto.UI.a01a9963238d"]"
+                                                                                <el-option label="年龄"
                                                                                     value="年龄"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.DataFormat"]">
+                                                                        <el-form-item label="数据格式">
                                                                             <el-select v-model="addColumnForm.dataType"
                                                                                 style="width:100%"
-                                                                                placeholder="@AR["DynamicData.PleaseSelectDataFormat"]">
+                                                                                placeholder="请选择数据格式">
                                                                                 <el-option label="number"
                                                                                     value="number"></el-option>
                                                                                 <el-option label="string"
                                                                                     value="string"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.ColumnWidth"]">
+                                                                        <el-form-item label="列宽">
                                                                             <el-input
                                                                                 v-model.trim="addColumnForm.columnWidth"
                                                                                 :size="elSize"
-                                                                                placeholder="@AR["DynamicData.PleaseInputColumnWidth"]"></el-input>
+                                                                                placeholder="请输入列宽"></el-input>
                                                                             @* <el-select
                                                                             v-model="addColumnForm.columnWidth"
-                                                                            style="width:100%" placeholder="@AR["Auto.UI.5ab94c2807db"]">
-                                                                            <el-option label="@AR["DynamicData.DataSheetText"]"
+                                                                            style="width:100%" placeholder="请选择列宽">
+                                                                            <el-option label="数据表文本"
                                                                             value="shanghai"></el-option>
-                                                                            <el-option label="@AR["Auto.UI.8a2d99eb1619"]"
+                                                                            <el-option label="数据表文本1"
                                                                             value="beijing"></el-option>
                                                                             </el-select> *@
                                                                         </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.Alignment"]">
+                                                                        <el-form-item label="对齐方式">
                                                                             <el-select v-model="addColumnForm.alignment"
                                                                                 style="width:100%"
-                                                                                placeholder="@AR["DynamicData.PleaseSelectAlignment"]">
-                                                                                <el-option label="@AR["DynamicData.AlignLeft"]"
+                                                                                placeholder="请选择对齐方式">
+                                                                                <el-option label="左对齐"
                                                                                     value="left"></el-option>
-                                                                                <el-option label="@AR["DynamicData.AlignRight"]"
+                                                                                <el-option label="右对齐"
                                                                                     value="right"></el-option>
-                                                                                <el-option label="@AR["Auto.UI.b7b6bfcba91b"]"
+                                                                                <el-option label="中间对齐1"
                                                                                     value="center"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
                                                                         <el-form-item>
                                                                             <el-checkbox
-                                                                                v-model="addColumnForm.isSort">@AR["DynamicData.AllowSort"]</el-checkbox>
+                                                                                v-model="addColumnForm.isSort">允许排序</el-checkbox>
                                                                             <el-checkbox
-                                                                                v-model="addColumnForm.isExport">@AR["DynamicData.AllowExport"]</el-checkbox>
+                                                                                v-model="addColumnForm.isExport">允许导出</el-checkbox>
                                                                             <el-checkbox
-                                                                                v-model="addColumnForm.isEdit">@AR["DynamicData.AllowEdit"]</el-checkbox>
+                                                                                v-model="addColumnForm.isEdit">允许编辑</el-checkbox>
                                                                             <el-checkbox
-                                                                                v-model="addColumnForm.isDelete">@AR["DynamicData.AllowDelete"]</el-checkbox>
+                                                                                v-model="addColumnForm.isDelete">允许删除</el-checkbox>
                                                                         </el-form-item>
                                                                     </template>
                                                                     <template v-if="layoutComponentActiveType === 'form'">
-                                                                        <el-form-item label="@AR["DynamicData.BindField"]">
+                                                                        <el-form-item label="绑定字段">
                                                                             <el-select v-model="addColumnForm.field"
                                                                                 style="width:100%"
-                                                                                placeholder="@AR["DynamicData.PleaseSelectBindField"]">
+                                                                                placeholder="请选择绑定字段">
                                                                                 <el-option label="name"
                                                                                     value="name"></el-option>
                                                                                 <el-option label="age"
                                                                                     value="age"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.SelectComponent"]">
+                                                                        <el-form-item label="选择组件">
                                                                             <el-select v-model="addColumnForm.formItemType"
                                                                                 style="width:100%"
-                                                                                placeholder="@AR["DynamicData.PleaseSelectComponent"]" @@change="handleFormItemTypeChange">
+                                                                                placeholder="请选择组件" @@change="handleFormItemTypeChange">
                                                                                 <el-option v-for="(fitItem,fitIndex) in formItemOpt" :key="fitIndex" :label="fitItem.label" :value="fitItem.value" />
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item v-if="formItemTypeOptChildren.length" label="@AR["DynamicData.ComponentType"]">
+                                                                        <el-form-item v-if="formItemTypeOptChildren.length" label="组件类型">
                                                                             <el-select v-model="addColumnForm.type"
                                                                                 style="width:100%"
-                                                                                placeholder="@AR["DynamicData.PleaseSelectComponentType"]">
+                                                                                placeholder="请选择组件类型">
                                                                                 <el-option v-for="(fitItem,fitIndex) in formItemTypeOptChildren" :key="fitIndex" :label="fitItem.label" :value="fitItem.value" />
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.FieldName"]">
+                                                                        <el-form-item label="字段名称">
                                                                             <el-input v-model.trim="addColumnForm.name"
                                                                                 :size="elSize"
-                                                                                placeholder="@AR["DynamicData.PleaseInputFieldName"]"></el-input>
+                                                                                placeholder="请输入字段名称"></el-input>
                                                                         </el-form-item>
-                                                                        @* Options *@
-                                                                        <el-form-item v-if="['checkbox', 'radio', 'select'].includes(addColumnForm.formItemType)" label="@AR["DynamicData.Option"]">
+                                                                        @* 选择项 *@
+                                                                        <el-form-item v-if="['checkbox', 'radio', 'select'].includes(addColumnForm.formItemType)" label="选项">
                                         <el-select v-model="addColumnForm.optionDataType"
-                                            style="width:100%;margin-bottom:10px" placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["DynamicData.DataSet"]" value="dataSheet"></el-option>
-                                            <el-option label="@AR["Auto.UI.f1d4ff50f382"]" value="customData"></el-option>
+                                            style="width:100%;margin-bottom:10px" placeholder="请选择">
+                                            <el-option label="数据集" value="dataSheet"></el-option>
+                                            <el-option label="自定义" value="customData"></el-option>
                                         </el-select>
-                                        <el-form-item v-if="addColumnForm.optionDataType === 'dataSheet'" label="@AR["DynamicData.SelectDataSheet"]">
+                                        <el-form-item v-if="addColumnForm.optionDataType === 'dataSheet'" label="数据表选择">
                                             <el-select v-model="addColumnForm.dataSheet" style="width:100%"
-                                                placeholder="@AR["DynamicData.PleaseSelectDataSheet"]">
-                                                <el-option label="@AR["DynamicData.DataSheetText"]" value="shujubiao"></el-option>
-                                                <el-option label="@AR["Auto.UI.8a2d99eb1619"]" value="shujubiao1"></el-option>
+                                                placeholder="请选择数据表">
+                                                <el-option label="数据表文本" value="shujubiao"></el-option>
+                                                <el-option label="数据表文本1" value="shujubiao1"></el-option>
                                             </el-select>
                                         </el-form-item>
                                         <template v-if="addColumnForm.optionDataType === 'customData'">
                                             <el-popover v-for="(item,index) in addColumnForm.optionData" :key="index"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">@AR["DynamicData.OptionSettings"]</div>
+                                                <div class="popover-title">选项设置</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">@AR["Auto.UI.7a391b31caf7"]</div>
+                                                        <div class="line-label">选项 label</div>
                                                         <el-input v-model="item.label"
-                                                            placeholder="@CR["Common.PleaseInputContent"]"></el-input>
+                                                            placeholder="请输入内容"></el-input>
                                                     </div>
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">@AR["Auto.UI.1abfae8ea5cd"]</div>
+                                                        <div class="line-label">选项 value</div>
                                                         <el-input v-model="item.value"
-                                                            placeholder="@CR["Common.PleaseInputContent"]"></el-input>
+                                                            placeholder="请输入内容"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -435,7 +432,7 @@
                                                 <div class="sortitem-box df-wn flex-ac">
                                                     <img src="/image/DynamicData/icon-move.png" alt=""
                                                         class="moveIcon" />
-                                                    <div class="sortitemtext">{{ item.label&&item.value ? `${item.label}` : 'Please add an option' }}</div>
+                                                    <div class="sortitemtext">{{ item.label&&item.value ? `${item.label}` : '请添加选项' }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteOptionData(index)"></i>
@@ -445,33 +442,33 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddOptionData">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                @AR["Auto.UI.e8755fb1e985"]
+                                                添加选项
                                             </span>
                                         </div>
                                         </template>
                                     </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.HintText"]">
+                                                                        <el-form-item label="提示文字">
                                                                             <el-input v-model.trim="addColumnForm.displayContent"
                                                                                 :size="elSize"
-                                                                                placeholder="@AR["Auto.UI.86b157654003"]"></el-input>
+                                                                                placeholder="请输入提示文字"></el-input>
                                                                         </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.ColumnWidth"]">
+                                                                        <el-form-item label="列宽">
                                                                             <el-slider :size="elSize" :min="20" v-model="addColumnForm.columnWidth" :step="10" show-stops></el-slider>
                                                                             @* <el-input
                                                                                 v-model.trim="addColumnForm.columnWidth"
                                                                                 :size="elSize"
-                                                                                placeholder="@AR["DynamicData.PleaseInputColumnWidth"]"></el-input> *@
+                                                                                placeholder="请输入列宽"></el-input> *@
                                                                         </el-form-item>
                                                                     </template>
                                                                     <el-form-item>
                                                                         <el-button :size="elSize" type="primary"
-                                                                            @@click="onConfirmAddColumn">@CR["Common.Confirm"]</el-button>
+                                                                            @@click="onConfirmAddColumn">确定</el-button>
                                                                     </el-form-item>
                                                                 </el-form>
                                                             </div>
                                                             <span slot="reference">
                                                                 <i class="el-icon-circle-plus-outline"></i>
-                                                                @AR["Auto.UI.49198f84cea6"]
+                                                                添加列
                                                             </span>
                                                         </el-popover>
                                                     </td>
@@ -482,34 +479,34 @@
                                     </el-form-item>
                                 </el-form>
                             </template>
-                            @* Table Data Settings *@
+                            @* 表格 数据 设置 *@
                             <template v-if="layoutComponentActiveType === 'table'">
                                 <div class="operation-title" style="margin-top:20px;">
-                                    @AR["Auto.UI.e7af71fb102c"]
+                                    数据设置
                                 </div>
                                 <el-form :model="dataSetForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    <el-form-item label="@AR["Auto.UI.450f5ae51cc1"]" prop="filterCriteriaLen">
+                                    <el-form-item label="数据筛选" prop="filterCriteriaLen">
                                         <el-popover placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">@AR["Auto.UI.db348f9cbd07"]</div>
+                                                <div class="popover-title">筛选条件设置</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div v-for="(item,index) in dataSetForm.filterCriteria" :key="index"
                                                         class="popover-list-item df-wn flex-ac">
-                                                        <el-select v-model="item.field" placeholder="@CR["Common.PleaseSelect"]">
+                                                        <el-select v-model="item.field" placeholder="请选择">
                                                             <el-option v-for="citem in columnForm.columnData"
                                                                 :key="citem.field" :label="citem.name"
                                                                 :value="citem.field">
                                                             </el-option>
                                                         </el-select>
-                                                        <el-select v-model="item.symbol" placeholder="@CR["Common.PleaseSelect"]">
-                                                            <el-option label="@AR["Auto.UI.4c35bf2e4880"]" value="等于">
+                                                        <el-select v-model="item.symbol" placeholder="请选择">
+                                                            <el-option label="等于" value="等于">
                                                             </el-option>
-                                                            <el-option label="@AR["Auto.UI.2791dca39c83"]" value="大于">
+                                                            <el-option label="大于" value="大于">
                                                             </el-option>
-                                                            <el-option label="@AR["Auto.UI.f09dc0d1d60a"]" value="小于">
+                                                            <el-option label="小于" value="小于">
                                                             </el-option>
                                                         </el-select>
-                                                        <el-input v-model="item.condition" placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></el-input>
+                                                        <el-input v-model="item.condition" placeholder="请输入"></el-input>
                                                         <i class="el-icon-close cursorPointer"
                                                             @@click="handleDeleteFilterCondition(index)"></i>
                                                     </div>
@@ -517,25 +514,25 @@
                                                 <div class="popover-addbox" @@click="handleAddFilterCondition">
                                                     <i class="el-icon-circle-plus-outline"></i>
                                                     <span class="tipsText">
-                                                        @AR["Auto.UI.0df68e577fd3"]
+                                                        添加筛选条件
                                                     </span>
                                                 </div>
                                             </div>
                                             <div slot="reference" class="filterCriteria-box df-wn flex-ac">
-                                                <div class="showText">{{ dataSetForm.filterCriteriaLen }} condition(s)</div>
+                                                <div class="showText">{{ dataSetForm.filterCriteriaLen }}个条件</div>
                                                 <i class="el-icon-more cursorPointer"></i>
                                             </div>
                                         </el-popover>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.c360e994dbcf"]" prop="columnData">
+                                    <el-form-item label="排序" prop="columnData">
                                         <el-popover v-for="(item,index) in dataSetForm.sortingRules" :key="index"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">@AR["Auto.UI.fc5e44ae7f73"]</div>
+                                                <div class="popover-title">排序设置</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">@AR["Auto.UI.6c8001b841f8"]</div>
-                                                        <el-select v-model="item.field" placeholder="@CR["Common.PleaseSelect"]">
+                                                        <div class="line-label">排序字段</div>
+                                                        <el-select v-model="item.field" placeholder="请选择">
                                                             <el-option v-for="citem in columnForm.columnData"
                                                                 :key="citem.field" :label="citem.name"
                                                                 :value="citem.field">
@@ -543,11 +540,11 @@
                                                         </el-select>
                                                     </div>
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">@AR["Auto.UI.a2946a1a42ab"]</div>
-                                                        <el-select v-model="item.sort" placeholder="@CR["Common.PleaseSelect"]">
-                                                            <el-option label="@AR["Auto.UI.a4ac7e752536"]" value="升序">
+                                                        <div class="line-label">排序方式</div>
+                                                        <el-select v-model="item.sort" placeholder="请选择">
+                                                            <el-option label="升序" value="升序">
                                                             </el-option>
-                                                            <el-option label="@AR["Auto.UI.d05d8e31229f"]" value="降序">
+                                                            <el-option label="降序" value="降序">
                                                             </el-option>
                                                         </el-select>
                                                     </div>
@@ -563,7 +560,7 @@
                                                         class="moveIcon" />
                                                     <div class="sortitemtext">{{ item.field ?
                                                         `${item.field}-${item.sort}` :
-                                                        'Please select a sort field' }}</div>
+                                                        '请选择排序字段' }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteSortingRules(index)"></i>
@@ -573,24 +570,24 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddSortingRules">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                @AR["Auto.UI.fcd184cff3ce"]
+                                                添加排序规则
                                             </span>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.4a3cd6b7e503"]" prop="columnData">
+                                    <el-form-item label="筛选器" prop="columnData">
                                         <el-popover placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">@AR["Auto.UI.af70a3b6fe25"]</div>
+                                                <div class="popover-title">筛选器设置</div>
                                                 <table class="table-container" style="margin-top:20px;">
                                                     <thead class="table-head">
                                                         <tr>
                                                             <th style="width:150px">
                                                                 <el-checkbox v-model="columnForm.allChecked"
                                                                     :disabled="!dataSetForm.filterFieldList.length"
-                                                                    @@change="handleFilterAllCheckedChange">@AR["Auto.UI.9caecd931b95"]</el-checkbox>
+                                                                    @@change="handleFilterAllCheckedChange">字段</el-checkbox>
                                                             </th>
                                                             <th>
-                                                                @AR["Auto.UI.185f7bf64751"]
+                                                                数据类型
                                                             </th>
                                                             <th style="width:30px"></th>
                                                         </tr>
@@ -625,111 +622,111 @@
                                                 </table>
                                             </div>
                                             <div slot="reference" class="filterCriteria-box df-wn flex-ac">
-                                                <div class="showText">@AR["Auto.UI.25b3cea9269c"]</div>
+                                                <div class="showText">0个字段</div>
                                                 <i class="el-icon-more cursorPointer"></i>
                                             </div>
                                         </el-popover>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.fc923e38a24c"]" prop="columnData">
+                                    <el-form-item label="字段查询范围" prop="columnData">
                                         <el-select v-model="dataSetForm.queryScope" style="width:100%"
-                                            placeholder="@AR["Auto.UI.86ec5fbbff20"]">
-                                            <el-option label="@AR["Auto.UI.9f460ee100df"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["Auto.UI.2c1375d54730"]" value="beijing"></el-option>
+                                            placeholder="请选择数据类型">
+                                            <el-option label="全部字段" value="shanghai"></el-option>
+                                            <el-option label="表格列字段" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
                                 </el-form>
                             </template>
-                            @* Table Normal Column Settings *@
+                            @* 表格 普通列属性 设置 *@
                             <template v-if="layoutComponentActiveType === 'normalColumn'">
                                 <div class="operation-title" style="margin-top:20px;">
-                                    @AR["Auto.UI.5ed318802ba5"]
+                                    列属性设置
                                 </div>
                                 <el-form :model="addColumnForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    <el-form-item label="@AR["DynamicData.ColumnTitle"]">
+                                    <el-form-item label="列标题">
                                         <el-input v-model.trim="addColumnForm.name" :size="elSize"
-                                            placeholder="@AR["DynamicData.PleaseInputColumnTitle"]"></el-input>
+                                            placeholder="请输入列标题"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.BindField"]">
+                                    <el-form-item label="绑定字段">
                                         <el-select v-model="addColumnForm.field" style="width:100%"
-                                            placeholder="@AR["DynamicData.PleaseSelectBindField"]">
-                                            <el-option label="@AR["Auto.UI.f2402066c99f"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["Auto.UI.4cd404be5a8c"]" value="beijing"></el-option>
+                                            placeholder="请选择绑定字段">
+                                            <el-option label="绑定字段文本" value="shanghai"></el-option>
+                                            <el-option label="绑定字段文本1" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.DisplayContent"]">
+                                    <el-form-item label="展示内容">
                                         <el-select v-model="addColumnForm.displayContent" style="width:100%"
-                                            placeholder="@AR["DynamicData.PleaseSelectDisplayContent"]">
-                                            <el-option label="@AR["Auto.UI.739f1d888488"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["Auto.UI.1ca0c125ffba"]" value="beijing"></el-option>
+                                            placeholder="请选择展示内容">
+                                            <el-option label="展示内容文本" value="shanghai"></el-option>
+                                            <el-option label="展示内容文本1" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.DataFormat"]">
+                                    <el-form-item label="数据格式">
                                         <el-select v-model="addColumnForm.dataType" style="width:100%"
-                                            placeholder="@AR["DynamicData.PleaseSelectDataFormat"]">
-                                            <el-option label="@AR["Auto.UI.7d2f6768a637"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["Auto.UI.fe5427929be9"]" value="beijing"></el-option>
+                                            placeholder="请选择数据格式">
+                                            <el-option label="数据格式文本" value="shanghai"></el-option>
+                                            <el-option label="数据格式文本1" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.ColumnWidth"]">
+                                    <el-form-item label="列宽">
                                         <el-input v-model.trim="addColumnForm.columnWidth" :size="elSize"
-                                            placeholder="@AR["DynamicData.PleaseInputColumnWidth"]"></el-input>
+                                            placeholder="请输入列宽"></el-input>
                                         @* <el-select v-model="addColumnForm.columnWidth"
-                                        style="width:100%" placeholder="@AR["Auto.UI.5ab94c2807db"]">
-                                        <el-option label="@AR["DynamicData.DataSheetText"]"
+                                        style="width:100%" placeholder="请选择列宽">
+                                        <el-option label="数据表文本"
                                         value="shanghai"></el-option>
-                                        <el-option label="@AR["Auto.UI.8a2d99eb1619"]"
+                                        <el-option label="数据表文本1"
                                         value="beijing"></el-option>
                                         </el-select> *@
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.Alignment"]">
+                                    <el-form-item label="对齐方式">
                                         <el-select v-model="addColumnForm.alignment" style="width:100%"
-                                            placeholder="@AR["DynamicData.PleaseSelectAlignment"]">
-                                            <el-option label="@AR["DynamicData.AlignLeft"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["DynamicData.AlignRight"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.b7b6bfcba91b"]" value="beijing"></el-option>
+                                            placeholder="请选择对齐方式">
+                                            <el-option label="左对齐" value="shanghai"></el-option>
+                                            <el-option label="右对齐" value="beijing"></el-option>
+                                            <el-option label="中间对齐1" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="addColumnForm.isSort">@AR["DynamicData.AllowSort"]</el-checkbox>
-                                        <el-checkbox v-model="addColumnForm.isExport">@AR["DynamicData.AllowExport"]</el-checkbox>
-                                        <el-checkbox v-model="addColumnForm.isEdit">@AR["DynamicData.AllowEdit"]</el-checkbox>
-                                        <el-checkbox v-model="addColumnForm.isDelete">@AR["DynamicData.AllowDelete"]</el-checkbox>
+                                        <el-checkbox v-model="addColumnForm.isSort">允许排序</el-checkbox>
+                                        <el-checkbox v-model="addColumnForm.isExport">允许导出</el-checkbox>
+                                        <el-checkbox v-model="addColumnForm.isEdit">允许编辑</el-checkbox>
+                                        <el-checkbox v-model="addColumnForm.isDelete">允许删除</el-checkbox>
                                     </el-form-item>
                                 </el-form>
                             </template>
-                            @* Table Custom Column Settings *@
+                            @* 表格 自定义列属性 设置 *@
                             <template v-if="layoutComponentActiveType === 'customColumn'">
-                                <div class="operation-title" style="margin-top:20px;">@AR["Auto.UI.f9a677969a98"]</div>
+                                <div class="operation-title" style="margin-top:20px;">自定义列设置</div>
                                 <el-form :model="addColumnForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    @* <el-form-item label="@AR["DynamicData.ColumnProperty"]">
-                                    <el-select v-model="addColumnForm.property" style="width:100%" placeholder="@CR["Common.PleaseSelect"]">
-                                    <el-option label="@AR["DynamicData.NormalColumn"]" value="normalColumn"></el-option>
-                                    <el-option label="@AR["DynamicData.ActionColumn"]" value="customColumn"></el-option>
+                                    @* <el-form-item label="列属性">
+                                    <el-select v-model="addColumnForm.property" style="width:100%" placeholder="请选择">
+                                    <el-option label="普通列" value="normalColumn"></el-option>
+                                    <el-option label="操作列" value="customColumn"></el-option>
                                     </el-select>
                                     </el-form-item> *@
-                                    <el-form-item label="@AR["DynamicData.ColumnTitle"]">
+                                    <el-form-item label="列标题">
                                         <el-input v-model.trim="addColumnForm.name" :size="elSize"
-                                            placeholder="@AR["DynamicData.PleaseInputColumnTitle"]"></el-input>
+                                            placeholder="请输入列标题"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.fa966345577b"]">
+                                    <el-form-item label="按钮">
                                         <el-popover v-for="(bitem,bindex) in addColumnForm.btnList" :key="bindex"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">@AR["DynamicData.ButtonSettings"]</div>
+                                                <div class="popover-title">按钮设置</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">@AR["Auto.UI.cf6e87cb9edf"]</div>
+                                                        <div class="line-label">按钮名称</div>
                                                         <el-input v-model.trim="bitem.name" :size="elSize"
-                                                            placeholder="@AR["Auto.UI.67890548ee31"]"></el-input>
+                                                            placeholder="请输入按钮名称"></el-input>
                                                     </div>
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">@AR["Auto.UI.f3f75f023a47"]</div>
+                                                        <div class="line-label">按钮属性</div>
                                                         <el-select v-model="bitem.property" :size="elSize"
-                                                            placeholder="@AR["Auto.UI.f6cede746a97"]">
-                                                            <el-option label="@CR["Common.Edit"]" value="edit"></el-option>
-                                                            <el-option label="@CR["Common.Delete"]" value="delete"></el-option>
-                                                            <el-option label="@AR["Auto.UI.f26225bde6a2"]" value="details"></el-option>
-                                                            <el-option label="@CR["Common.Add"]" value="new"></el-option>
+                                                            placeholder="请选择按钮属性">
+                                                            <el-option label="编辑" value="edit"></el-option>
+                                                            <el-option label="删除" value="delete"></el-option>
+                                                            <el-option label="详情" value="details"></el-option>
+                                                            <el-option label="新增" value="new"></el-option>
                                                         </el-select>
                                                     </div>
                                                 </div>
@@ -743,7 +740,7 @@
                                                     <img src="/image/DynamicData/icon-move.png" alt=""
                                                         class="moveIcon" />
                                                     <div class="sortitemtext">
-                                                        {{ bitem.name || 'Please enter a name' }}</div>
+                                                        {{ bitem.name || '请命名' }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteCustomColumnBtn(bindex)"></i>
@@ -753,206 +750,206 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddCustomColumnBtn">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                @AR["Auto.UI.c641fe0ae06e"]
+                                                添加按钮
                                             </span>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.ColumnWidth"]">
+                                    <el-form-item label="列宽">
                                         <el-input v-model.trim="addColumnForm.columnWidth" :size="elSize"
-                                            placeholder="@AR["DynamicData.PleaseInputColumnWidth"]"></el-input>
+                                            placeholder="请输入列宽"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.Alignment"]">
+                                    <el-form-item label="对齐方式">
                                         <el-select v-model="addColumnForm.alignment" style="width:100%"
-                                            placeholder="@AR["DynamicData.PleaseSelectAlignment"]">
-                                            <el-option label="@AR["DynamicData.AlignLeft"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["DynamicData.AlignRight"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.b7b6bfcba91b"]" value="beijing"></el-option>
+                                            placeholder="请选择对齐方式">
+                                            <el-option label="左对齐" value="shanghai"></el-option>
+                                            <el-option label="右对齐" value="beijing"></el-option>
+                                            <el-option label="中间对齐1" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     @* <el-form-item>
-                                    <el-checkbox v-model="addColumnForm.isSort">@AR["Auto.UI.fe4b363d6ca0"]</el-checkbox>
+                                    <el-checkbox v-model="addColumnForm.isSort">显示列</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                    <el-checkbox v-model="addColumnForm.isSort">@AR["Auto.UI.7fda172a8681"]</el-checkbox>
+                                    <el-checkbox v-model="addColumnForm.isSort">固定列</el-checkbox>
                                     </el-form-item> *@
                                 </el-form>
                             </template>
-                            @* Table Custom Column Button Settings *@
+                            @* 表格 自定义列按钮属性 设置 *@
                             <template v-if="layoutComponentActiveType === 'columnEditBtn'">
-                                <div class="operation-title" style="margin-top:20px;">@AR["DynamicData.ButtonSettings"]</div>
+                                <div class="operation-title" style="margin-top:20px;">按钮设置</div>
                                 <el-form :model="customColumnBtnForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
-                                    <el-form-item label="@AR["Auto.UI.cf6e87cb9edf"]">
+                                    <el-form-item label="按钮名称">
                                         <el-input v-model.trim="customColumnBtnForm.name" :size="elSize"
-                                            placeholder="@AR["Auto.UI.67890548ee31"]"></el-input>
+                                            placeholder="请输入按钮名称"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.f3f75f023a47"]">
+                                    <el-form-item label="按钮属性">
                                         <el-select v-model="customColumnBtnForm.property" style="width:100%"
-                                            placeholder="@AR["Auto.UI.f6cede746a97"]">
-                                            <el-option label="@CR["Common.Edit"]" value="edit"></el-option>
-                                            <el-option label="@CR["Common.Delete"]" value="delete"></el-option>
-                                            <el-option label="@AR["Auto.UI.f26225bde6a2"]" value="details"></el-option>
-                                            <el-option label="@CR["Common.Add"]" value="new"></el-option>
+                                            placeholder="请选择按钮属性">
+                                            <el-option label="编辑" value="edit"></el-option>
+                                            <el-option label="删除" value="delete"></el-option>
+                                            <el-option label="详情" value="details"></el-option>
+                                            <el-option label="新增" value="new"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.3ee6ef6f2ee1"]">
+                                    <el-form-item label="按钮类型">
                                         <el-select v-model="customColumnBtnForm.type" style="width:100%"
-                                            placeholder="@AR["Auto.UI.200f346e2b3e"]">
-                                            <el-option label="@AR["Auto.UI.756e44b36d4d"]" value="fill"></el-option>
-                                            <el-option label="@AR["Auto.UI.61fba05e8a3b"]" value="stroke"></el-option>
-                                            <el-option label="@AR["Auto.UI.ca746b1ff101"]" value="text"></el-option>
-                                            <el-option label="@AR["Auto.UI.bfe68d5844f8"]" value="link"></el-option>
+                                            placeholder="请选择按钮类型">
+                                            <el-option label="填充" value="fill"></el-option>
+                                            <el-option label="描边" value="stroke"></el-option>
+                                            <el-option label="文字" value="text"></el-option>
+                                            <el-option label="链接" value="link"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="customColumnBtnForm.disable">@AR["Auto.UI.710ad08b1141"]</el-checkbox>
+                                        <el-checkbox v-model="customColumnBtnForm.disable">禁用</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="customColumnBtnForm.enterID">@AR["Auto.UI.217f47fcd0e5"]</el-checkbox>
+                                        <el-checkbox v-model="customColumnBtnForm.enterID">带入id</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="customColumnBtnForm.customIDName">@AR["Auto.UI.5892ac8b88f1"]</el-checkbox>
+                                        <el-checkbox v-model="customColumnBtnForm.customIDName">自定义ID名称</el-checkbox>
                                     </el-form-item>
                                 </el-form>
-                                @* Custom Column Button Events *@
-                                <div class="operation-title" style="margin-top:20px;">@AR["Auto.UI.2e50d99973df"]</div>
+                                @* 自定义列按钮事件 *@
+                                <div class="operation-title" style="margin-top:20px;">事件设置</div>
                                 <el-form :model="customColumnBtnForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
-                                    <el-form-item label="@AR["Auto.UI.a62356186dba"]">
+                                    <el-form-item label="按钮事件">
                                         <el-select v-model="customColumnBtnForm.btnEvent" style="width:100%"
-                                            placeholder="@AR["Auto.UI.fe239bf9ccea"]">
-                                            <el-option label="@AR["Auto.UI.4363c17ebb34"]" value="edit"></el-option>
-                                            <el-option label="@AR["Auto.UI.efb486ca1c40"]" value="delete"></el-option>
+                                            placeholder="请选择按钮事件">
+                                            <el-option label="点击" value="edit"></el-option>
+                                            <el-option label="双击" value="delete"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.4c1fe14b904a"]">
+                                    <el-form-item label="选择交互">
                                         <el-select v-model="customColumnBtnForm.interactive" style="width:100%"
-                                            placeholder="@AR["Auto.UI.7518d3ee4e6f"]">
-                                            <el-option label="@AR["Auto.UI.fd5fb471ecce"]" value="openPage"></el-option>
-                                            <el-option label="@AR["Auto.UI.dec2eb7145e1"]" value="jumpLink"></el-option>
-                                            <el-option label="@AR["Auto.UI.b8f98a658fef"]" value="openPopUpBox"></el-option>
+                                            placeholder="请选择交互">
+                                            <el-option label="打开页面" value="openPage"></el-option>
+                                            <el-option label="跳转链接" value="jumpLink"></el-option>
+                                            <el-option label="打开弹框" value="openPopUpBox"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.3791ba5c2962"]">
+                                    <el-form-item label="组件名称">
                                         <el-select v-model="customColumnBtnForm.componentType" style="width:100%"
-                                            placeholder="@AR["Auto.UI.2b63b8ec34de"]">
-                                            <el-option label="@AR["Auto.UI.b339aa871047"]" value="table"></el-option>
-                                            <el-option label="@AR["Auto.UI.eee1e2258d7e"]" value="form"></el-option>
+                                            placeholder="请选择组件名称">
+                                            <el-option label="表格" value="table"></el-option>
+                                            <el-option label="表单" value="form"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.03889214b8f5"]">
+                                    <el-form-item label="执行方法">
                                         <el-select v-model="customColumnBtnForm.executionMethod" style="width:100%"
-                                            placeholder="@AR["Auto.UI.2b63b8ec34de"]">
-                                            <el-option label="@AR["Auto.UI.ba94de747337"]" value="deleteSingleBar"></el-option>
+                                            placeholder="请选择组件名称">
+                                            <el-option label="删除单条" value="deleteSingleBar"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.a4895ee2e87d"]">
+                                    <el-form-item label="选择页面">
                                         <el-select v-model="customColumnBtnForm.page" style="width:100%"
-                                            placeholder="@AR["Auto.UI.4ef9f65ac2b7"]">
-                                            <el-option label="@AR["Auto.UI.49bcb8aa03b0"]" value="visitorEditPage"></el-option>
-                                            <el-option label="@AR["Auto.UI.0024d3be1566"]" value="userEdit"></el-option>
+                                            placeholder="请选择页面">
+                                            <el-option label="编辑页面" value="visitorEditPage"></el-option>
+                                            <el-option label="新增页面" value="userEdit"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.9714f186a702"]">
+                                    <el-form-item label="弹框设置">
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">@AR["DynamicData.TitleText"]</span>
+                                            <span class="formitem-labelText">标题文字</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupTitleText" :size="elSize"
-                                                placeholder="@AR["Auto.UI.e8d1401c5db6"]"></el-input>
+                                                placeholder="请输入标题文字"></el-input>
                                         </div>
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">@AR["DynamicData.CancelButtonText"]</span>
+                                            <span class="formitem-labelText">取消按钮文字</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupCancelText" :size="elSize"
-                                                placeholder="@AR["Auto.UI.071413cda0f7"]"></el-input>
+                                                placeholder="请输入取消按钮文字"></el-input>
                                         </div>
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">@AR["DynamicData.ConfirmButtonText"]</span>
+                                            <span class="formitem-labelText">确认按钮文字</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupConfirmText" :size="elSize"
-                                                placeholder="@AR["Auto.UI.624f7c0430f6"]"></el-input>
+                                                placeholder="请输入确认按钮文字"></el-input>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.d53dc9b9bdab"]">
+                                    <el-form-item label="确认操作设置">
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">@AR["DynamicData.HintContent"]</span>
+                                            <span class="formitem-labelText">提示内容</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupPromptContent"
-                                                :size="elSize" placeholder="@AR["Auto.UI.942ce31194f7"]"></el-input>
+                                                :size="elSize" placeholder="请输入提示内容"></el-input>
                                         </div>
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">@AR["Auto.UI.7b1d053d9d52"]</span>
+                                            <span class="formitem-labelText">提示时常</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupPromptOften" :size="elSize"
-                                                placeholder="@AR["Auto.UI.4de9666b29e6"]"></el-input>
+                                                placeholder="请输入提示时常"></el-input>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.ac3bd28b7f10"]">
+                                    <el-form-item label="取消操作设置">
                                         <div :span="12" class="df-wn flex-ac flex-as">
-                                            <span class="formitem-labelText">@AR["Auto.UI.0d3bbd764cc4"]</span>
+                                            <span class="formitem-labelText">关闭页面</span>
                                             <el-input v-model.trim="customColumnBtnForm.popupClosePage" :size="elSize"
-                                                placeholder="@AR["Auto.UI.4891cbde29bf"]"></el-input>
+                                                placeholder="请输入关闭页面"></el-input>
                                         </div>
                                     </el-form-item>
                                 </el-form>
                             </template>
-                            @* Form Single Component Settings *@
+                            @* 表单 单个组件属性 设置 *@
                             <template v-if="layoutComponentActiveType === 'formItem'">
-                                <div class="operation-title" style="margin-top:20px;">@AR["Auto.UI.a3adf0614cad"]</div>
+                                <div class="operation-title" style="margin-top:20px;">表单属性设置</div>
                                 <el-form :model="addColumnForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                        <el-form-item label="@AR["DynamicData.BindField"]">
+                                        <el-form-item label="绑定字段">
                                                                             <el-select v-model="addColumnForm.field"
                                                                                 style="width:100%"
-                                                                                placeholder="@AR["DynamicData.PleaseSelectBindField"]">
+                                                                                placeholder="请选择绑定字段">
                                                                                 <el-option label="name"
                                                                                     value="name"></el-option>
                                                                                 <el-option label="age"
                                                                                     value="age"></el-option>
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.SelectComponent"]">
+                                                                        <el-form-item label="选择组件">
                                                                             <el-select v-model="addColumnForm.formItemType"
                                                                                 style="width:100%"
-                                                                                placeholder="@AR["DynamicData.PleaseSelectComponent"]" @@change="handleFormItemTypeChange">
+                                                                                placeholder="请选择组件" @@change="handleFormItemTypeChange">
                                                                                 <el-option v-for="(fitItem,fitIndex) in formItemOpt" :key="fitIndex" :label="fitItem.label" :value="fitItem.value" />
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item v-if="formItemTypeOptChildren.length" label="@AR["DynamicData.ComponentType"]">
+                                                                        <el-form-item v-if="formItemTypeOptChildren.length" label="组件类型">
                                                                             <el-select v-model="addColumnForm.type"
                                                                                 style="width:100%"
-                                                                                placeholder="@AR["DynamicData.PleaseSelectComponentType"]">
+                                                                                placeholder="请选择组件类型">
                                                                                 <el-option v-for="(fitItem,fitIndex) in formItemTypeOptChildren" :key="fitIndex" :label="fitItem.label" :value="fitItem.value" />
                                                                             </el-select>
                                                                         </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.FieldName"]">
+                                                                        <el-form-item label="字段名称">
                                                                             <el-input v-model.trim="addColumnForm.name"
                                                                                 :size="elSize"
-                                                                                placeholder="@AR["DynamicData.PleaseInputFieldName"]"></el-input>
+                                                                                placeholder="请输入字段名称"></el-input>
                                                                         </el-form-item>
-                                                                        @* Options *@
-                                                                        <el-form-item v-if="['checkbox', 'radio', 'select'].includes(addColumnForm.formItemType)" label="@AR["DynamicData.Option"]">
+                                                                        @* 选择项 *@
+                                                                        <el-form-item v-if="['checkbox', 'radio', 'select'].includes(addColumnForm.formItemType)" label="选项">
                                         <el-select v-model="addColumnForm.optionDataType"
-                                            style="width:100%;margin-bottom:10px" placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["DynamicData.DataSet"]" value="dataSheet"></el-option>
-                                            <el-option label="@AR["Auto.UI.f1d4ff50f382"]" value="customData"></el-option>
+                                            style="width:100%;margin-bottom:10px" placeholder="请选择">
+                                            <el-option label="数据集" value="dataSheet"></el-option>
+                                            <el-option label="自定义" value="customData"></el-option>
                                         </el-select>
-                                        <el-form-item v-if="addColumnForm.optionDataType === 'dataSheet'" label="@AR["DynamicData.SelectDataSheet"]">
+                                        <el-form-item v-if="addColumnForm.optionDataType === 'dataSheet'" label="数据表选择">
                                             <el-select v-model="addColumnForm.dataSheet" style="width:100%"
-                                                placeholder="@AR["DynamicData.PleaseSelectDataSheet"]">
-                                                <el-option label="@AR["DynamicData.DataSheetText"]" value="shujubiao"></el-option>
-                                                <el-option label="@AR["Auto.UI.8a2d99eb1619"]" value="shujubiao1"></el-option>
+                                                placeholder="请选择数据表">
+                                                <el-option label="数据表文本" value="shujubiao"></el-option>
+                                                <el-option label="数据表文本1" value="shujubiao1"></el-option>
                                             </el-select>
                                         </el-form-item>
                                         <template v-if="addColumnForm.optionDataType === 'customData'">
                                             <el-popover v-for="(item,index) in addColumnForm.optionData" :key="index"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">@AR["DynamicData.OptionSettings"]</div>
+                                                <div class="popover-title">选项设置</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">@AR["Auto.UI.7a391b31caf7"]</div>
+                                                        <div class="line-label">选项 label</div>
                                                         <el-input v-model="item.label"
-                                                            placeholder="@CR["Common.PleaseInputContent"]"></el-input>
+                                                            placeholder="请输入内容"></el-input>
                                                     </div>
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">@AR["Auto.UI.1abfae8ea5cd"]</div>
+                                                        <div class="line-label">选项 value</div>
                                                         <el-input v-model="item.value"
-                                                            placeholder="@CR["Common.PleaseInputContent"]"></el-input>
+                                                            placeholder="请输入内容"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -960,7 +957,7 @@
                                                 <div class="sortitem-box df-wn flex-ac">
                                                     <img src="/image/DynamicData/icon-move.png" alt=""
                                                         class="moveIcon" />
-                                                    <div class="sortitemtext">{{ item.label&&item.value ? `${item.label}` : 'Please add an option' }}</div>
+                                                    <div class="sortitemtext">{{ item.label&&item.value ? `${item.label}` : '请添加选项' }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteOptionData(index)"></i>
@@ -970,76 +967,76 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddOptionData">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                @AR["Auto.UI.e8755fb1e985"]
+                                                添加选项
                                             </span>
                                         </div>
                                         </template>
                                     </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.HintText"]">
+                                                                        <el-form-item label="提示文字">
                                                                             <el-input v-model.trim="addColumnForm.displayContent"
                                                                                 :size="elSize"
-                                                                                placeholder="@AR["Auto.UI.86b157654003"]"></el-input>
+                                                                                placeholder="请输入提示文字"></el-input>
                                                                         </el-form-item>
-                                                                        <el-form-item label="@AR["DynamicData.ColumnWidth"]">
+                                                                        <el-form-item label="列宽">
                                                                             <el-slider :size="elSize" :min="20" v-model="addColumnForm.columnWidth" :step="10" show-stops></el-slider>
                                                                             @* <el-input
                                                                                 v-model.trim="addColumnForm.columnWidth"
                                                                                 :size="elSize"
-                                                                                placeholder="@AR["DynamicData.PleaseInputColumnWidth"]"></el-input> *@
+                                                                                placeholder="请输入列宽"></el-input> *@
                                                                         </el-form-item>
                                         </el-form>
                                 @* <el-form v-model="sheetSettingForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    <el-form-item label="@AR["DynamicData.BindField"]">
+                                    <el-form-item label="绑定字段">
                                         <el-select v-model="sheetSettingForm.boundField" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.9b6425cd2d49"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["Auto.UI.4ff1e74e43a3"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.787b5677e325"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.bfe68d5844f8"]" value="beijing"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="输入框" value="shanghai"></el-option>
+                                            <el-option label="日期" value="beijing"></el-option>
+                                            <el-option label="性别" value="beijing"></el-option>
+                                            <el-option label="链接" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.SelectComponent"]">
+                                    <el-form-item label="选择组件">
                                         <el-select v-model="sheetSettingForm.selectComponent" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.9b6425cd2d49"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["Auto.UI.a55d501e08cd"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.934ec96afab5"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.8b0e1ec5ca02"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.2a2aa71e84a3"]" value="beijing"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="输入框" value="shanghai"></el-option>
+                                            <el-option label="日期选择器" value="beijing"></el-option>
+                                            <el-option label="单选组件" value="beijing"></el-option>
+                                            <el-option label="多选组件" value="beijing"></el-option>
+                                            <el-option label="下拉选择" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.FieldName"]">
-                                        <el-input v-model="sheetSettingForm.fieldName" placeholder="@CR["Common.PleaseInputContent"]"></el-input>
+                                    <el-form-item label="字段名称">
+                                        <el-input v-model="sheetSettingForm.fieldName" placeholder="请输入内容"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.HintText"]">
-                                        <el-input v-model="sheetSettingForm.tipText" placeholder="@CR["Common.PleaseInputContent"]"></el-input>
+                                    <el-form-item label="提示文字">
+                                        <el-input v-model="sheetSettingForm.tipText" placeholder="请输入内容"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.b6456e634675"]">
+                                    <el-form-item label="显示方式">
                                         <el-select v-model="sheetSettingForm.displayUsage" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.cef80d2d9b52"]" value="shanghai"></el-option>
-                                            <el-option label="@CR["Common.Delete"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.f26225bde6a2"]" value="beijing"></el-option>
-                                            <el-option label="@CR["Common.Add"]" value="beijing"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="下拉菜单/平铺" value="shanghai"></el-option>
+                                            <el-option label="删除" value="beijing"></el-option>
+                                            <el-option label="详情" value="beijing"></el-option>
+                                            <el-option label="新增" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.Option"]">
+                                    <el-form-item label="选项">
                                         <el-select v-model="sheetSettingForm.customData"
-                                            style="width:100%;margin-bottom:10px" placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.4ec9022938d3"]" value="shanghai"></el-option>
-                                            <el-option label="@CR["Common.Delete"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.f26225bde6a2"]" value="beijing"></el-option>
-                                            <el-option label="@CR["Common.Add"]" value="beijing"></el-option>
+                                            style="width:100%;margin-bottom:10px" placeholder="请选择">
+                                            <el-option label="自定义/数据集" value="shanghai"></el-option>
+                                            <el-option label="删除" value="beijing"></el-option>
+                                            <el-option label="详情" value="beijing"></el-option>
+                                            <el-option label="新增" value="beijing"></el-option>
                                         </el-select>
                                         <el-popover v-for="(item,index) in sheetSettingForm.optionData" :key="index"
                                             placement="left" width="400" trigger="click">
                                             <div class="popover-bodyBox">
-                                                <div class="popover-title">@AR["DynamicData.OptionSettings"]</div>
+                                                <div class="popover-title">选项设置</div>
                                                 <div class="popover-list df-wn flex-dc">
                                                     <div class="popover-list-item df-wn flex-ac">
-                                                        <div class="line-label">@AR["Auto.UI.fb7ea2b05ca7"]</div>
+                                                        <div class="line-label">选项字段</div>
                                                         <el-input v-model="item.optionName"
-                                                            placeholder="@CR["Common.PleaseInputContent"]"></el-input>
+                                                            placeholder="请输入内容"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1049,7 +1046,7 @@
                                                         class="moveIcon" />
                                                     <div class="sortitemtext">{{ item.optionName ? `${item.optionName}`
                                                         :
-                                                        'Please add an option' }}</div>
+                                                        '请添加选项' }}</div>
                                                     <i class="el-icon-remove-outline"
                                                         style="cursor:pointer;color:#a6a6a6;"
                                                         @@click.stop="handleDeleteOptionData(index)"></i>
@@ -1059,39 +1056,39 @@
                                         <div class="addsort-box df-wn flex-ac" @@click="handleAddOptionData">
                                             <i class="el-icon-circle-plus-outline"></i>
                                             <span class="tipsText">
-                                                @AR["Auto.UI.e8755fb1e985"]
+                                                添加选项
                                             </span>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.225f3ed00750"]">
+                                    <el-form-item label="默认值">
                                         <el-select v-model="sheetSettingForm.defaultValue" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.bdb3fd49a3d4"]" value="shanghai"></el-option>
-                                            <el-option label="@CR["Common.Delete"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.f26225bde6a2"]" value="beijing"></el-option>
-                                            <el-option label="@CR["Common.Add"]" value="beijing"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="默认值1" value="shanghai"></el-option>
+                                            <el-option label="删除" value="beijing"></el-option>
+                                            <el-option label="详情" value="beijing"></el-option>
+                                            <el-option label="新增" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@CR["Common.FileType"]">
-                                        <el-radio v-model="sheetSettingForm.formType" label="1">@AR["Auto.UI.8afea7afdf99"]</el-radio>
-                                        <el-radio v-model="sheetSettingForm.formType" label="2">@AR["Auto.UI.d25928577e92"]</el-radio>
+                                    <el-form-item label="类型">
+                                        <el-radio v-model="sheetSettingForm.formType" label="1">单行</el-radio>
+                                        <el-radio v-model="sheetSettingForm.formType" label="2">多行</el-radio>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.cd8992b644e6"]">
-                                        <el-checkbox v-model="sheetSettingForm.mustFillin">@AR["Auto.UI.537b39a8b56f"]</el-checkbox>
-                                        <el-checkbox v-model="sheetSettingForm.notReuse">@AR["Auto.UI.8d0472a188d8"]</el-checkbox>
-                                        <el-checkbox v-model="sheetSettingForm.finiteWord">@AR["Auto.UI.9b6952e950f6"]</el-checkbox>
+                                    <el-form-item label="验证">
+                                        <el-checkbox v-model="sheetSettingForm.mustFillin">必填</el-checkbox>
+                                        <el-checkbox v-model="sheetSettingForm.notReuse">不允许重复输入</el-checkbox>
+                                        <el-checkbox v-model="sheetSettingForm.finiteWord">限定字数</el-checkbox>
                                         <div style="display:flex;flex-direction:row;">
                                             <div>
                                                 <el-input style="width:125px" v-model="sheetSettingForm.miniWord"
-                                                    type="number" placeholder="@AR["Auto.UI.5e02aac448e1"]">
+                                                    type="number" placeholder="最小">
                                             </div>-<div>
                                                 <el-input style="width:125px" v-model="sheetSettingForm.maxWord"
-                                                    placeholder="@AR["Auto.UI.f98b9af13a74"]">
+                                                    placeholder="最大">
                                             </div>
                                         </div>
-                                        <el-checkbox v-model="sheetSettingForm.finiteFormat">@AR["Auto.UI.794417868536"]</el-checkbox>
+                                        <el-checkbox v-model="sheetSettingForm.finiteFormat">限定输入格式</el-checkbox>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.d5d885add255"]">
+                                    <el-form-item label="宽度占比">
                                         <div class="subsection-container df-wn flex-ac flex-jc">
                                             <div class="subsection-item"
                                                 :class="{'subsection-item_avtive':sheetSettingForm.size === '1/4'}"
@@ -1110,185 +1107,185 @@
                                                 @@click="handleSwitchSubformstyle('size','1')">1</div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.16084784a0f1"]">
-                                        <el-radio v-model="sheetSettingForm.dateType" label="1">@AR["Auto.UI.4ff1e74e43a3"]</el-radio>
-                                        <el-radio v-model="sheetSettingForm.dateType" label="2">@AR["Auto.UI.0c3bf4fce505"]</el-radio>
+                                    <el-form-item label="日期类型">
+                                        <el-radio v-model="sheetSettingForm.dateType" label="1">日期</el-radio>
+                                        <el-radio v-model="sheetSettingForm.dateType" label="2">日期时间</el-radio>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.7f0308d4f2bf"]">
+                                    <el-form-item label="时间类型">
                                         <el-select v-model="sheetSettingForm.timeType" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.bab4d1763ab8"]" value="shanghai"></el-option>
-                                            <el-option label="@CR["Common.Delete"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.f26225bde6a2"]" value="beijing"></el-option>
-                                            <el-option label="@CR["Common.Add"]" value="beijing"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="年-月-日 时:分" value="shanghai"></el-option>
+                                            <el-option label="删除" value="beijing"></el-option>
+                                            <el-option label="详情" value="beijing"></el-option>
+                                            <el-option label="新增" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.398e51caf9e8"]">
+                                    <el-form-item label="日期格式">
                                         <el-select v-model="sheetSettingForm.dateFormat" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
+                                            placeholder="请选择">
                                             <el-option label="2024-9-20" value="shanghai"></el-option>
-                                            <el-option label="@CR["Common.Delete"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.f26225bde6a2"]" value="beijing"></el-option>
-                                            <el-option label="@CR["Common.Add"]" value="beijing"></el-option>
+                                            <el-option label="删除" value="beijing"></el-option>
+                                            <el-option label="详情" value="beijing"></el-option>
+                                            <el-option label="新增" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.f223d0cecf0a"]">
+                                    <el-form-item label="字段属性">
                                         <div>
-                                            <el-checkbox v-model="sheetSettingForm.readOnly">@AR["Auto.UI.85541bd9f7f3"]</el-checkbox><i
+                                            <el-checkbox v-model="sheetSettingForm.readOnly">只读</el-checkbox><i
                                                 class="el-icon-question"></i>
                                         </div>
                                         <div>
-                                            <el-checkbox v-model="sheetSettingForm.conCeal">@AR["Auto.UI.dce5379cb978"]</el-checkbox><i
+                                            <el-checkbox v-model="sheetSettingForm.conCeal">隐藏</el-checkbox><i
                                                 class="el-icon-question"></i>
                                         </div>
                                     </el-form-item>
                                 </el-form> *@
                             </template>
-                            @* Form Submit Button Settings *@
+                            @* 表单 提交按钮属性 设置 *@
                             <template v-if="layoutComponentActiveType === 'formSubmitBtn'">
-                                <div class="operation-title" style="margin-top:20px;">@AR["DynamicData.ButtonSettings"]</div>
+                                <div class="operation-title" style="margin-top:20px;">按钮设置</div>
                                 <el-form v-model="formSubmitBtnForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
-                                    <el-form-item label="@AR["Auto.UI.cf6e87cb9edf"]">
-                                        <el-input v-model="formSubmitBtnForm.buttonName" placeholder="@CR["Common.PleaseInputContent"]"></el-input>
+                                    <el-form-item label="按钮名称">
+                                        <el-input v-model="formSubmitBtnForm.buttonName" placeholder="请输入内容"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.f3f75f023a47"]">
+                                    <el-form-item label="按钮属性">
                                         <el-select v-model="formSubmitBtnForm.buttonAttribute" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@CR["Common.Edit"]" value="shanghai"></el-option>
-                                            <el-option label="@CR["Common.Delete"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.f26225bde6a2"]" value="beijing"></el-option>
-                                            <el-option label="@CR["Common.Add"]" value="beijing"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="编辑" value="shanghai"></el-option>
+                                            <el-option label="删除" value="beijing"></el-option>
+                                            <el-option label="详情" value="beijing"></el-option>
+                                            <el-option label="新增" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.3ee6ef6f2ee1"]">
+                                    <el-form-item label="按钮类型">
                                         <el-select v-model="formSubmitBtnForm.buttonType" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.756e44b36d4d"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["Auto.UI.61fba05e8a3b"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.ca746b1ff101"]" value="beijing"></el-option>
-                                            <el-option label="@AR["Auto.UI.bfe68d5844f8"]" value="beijing"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="填充" value="shanghai"></el-option>
+                                            <el-option label="描边" value="beijing"></el-option>
+                                            <el-option label="文字" value="beijing"></el-option>
+                                            <el-option label="链接" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="formSubmitBtnForm.disableId">@AR["Auto.UI.710ad08b1141"]</el-checkbox>
-                                        <el-checkbox v-model="formSubmitBtnForm.bringinId">@AR["Auto.UI.217f47fcd0e5"]</el-checkbox>
-                                        <el-checkbox v-model="formSubmitBtnForm.customIdname">@AR["Auto.UI.5892ac8b88f1"]</el-checkbox>
+                                        <el-checkbox v-model="formSubmitBtnForm.disableId">禁用</el-checkbox>
+                                        <el-checkbox v-model="formSubmitBtnForm.bringinId">带入id</el-checkbox>
+                                        <el-checkbox v-model="formSubmitBtnForm.customIdname">自定义ID名称</el-checkbox>
                                     </el-form-item>
                                 </el-form>
-                                @* Event Settings *@
-                                <div class="operation-title" style="margin-top:20px;">@AR["Auto.UI.2e50d99973df"]</div>
+                                @* 事件设置 *@
+                                <div class="operation-title" style="margin-top:20px;">事件设置</div>
                                 <el-form v-model="eventSettingForm" :size="elSize" label-position="top"
                                     label-width="80px" class="form-container">
-                                    <el-form-item label="@AR["Auto.UI.a62356186dba"]">
+                                    <el-form-item label="按钮事件">
                                         <el-select v-model="eventSettingForm.buttonEvent" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.4363c17ebb34"]" value="shanghai"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="点击" value="shanghai"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.3791ba5c2962"]">
+                                    <el-form-item label="组件名称">
                                         <el-select v-model="eventSettingForm.moduleName" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.b339aa871047"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["Auto.UI.eee1e2258d7e"]" value="beijing"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="表格" value="shanghai"></el-option>
+                                            <el-option label="表单" value="beijing"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.03889214b8f5"]">
+                                    <el-form-item label="执行方法">
                                         <el-select v-model="eventSettingForm.mannerExecution" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.66277f18afe1"]" value="shanghai"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="删除单条数据" value="shanghai"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.4c1fe14b904a"]">
+                                    <el-form-item label="选择交互">
                                         <el-select v-model="eventSettingForm.selectInteraction" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.fd5fb471ecce"]" value="shanghai"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="打开页面" value="shanghai"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.a4895ee2e87d"]">
+                                    <el-form-item label="选择页面">
                                         <el-select v-model="eventSettingForm.selectPage" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.6cff4b6d794c"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["Auto.UI.5b71d756a8f8"]" value="shanghai"></el-option>
-                                            <el-option label="@AR["Auto.UI.bd9c34f9c5d9"]" value="shanghai"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="弹窗" value="shanghai"></el-option>
+                                            <el-option label="访客编辑页面" value="shanghai"></el-option>
+                                            <el-option label="新增界面" value="shanghai"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.22002b6748e0"]">
+                                    <el-form-item label="调用数据源方法">
                                         <el-select v-model="eventSettingForm.calldataMethod" style="width:100%"
-                                            placeholder="@CR["Common.PleaseSelect"]">
-                                            <el-option label="@AR["Auto.UI.f94cdde379a6"]" value="shanghai"></el-option>
+                                            placeholder="请选择">
+                                            <el-option label="创建单条" value="shanghai"></el-option>
                                         </el-select>
                                         <div class="Popupset" style="margin-top:10px;">
-                                            <div class="popuptxet">@AR["Auto.UI.c6b523e6158d"]<el-input style="width:160px;margin-left:25px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></div>
-                                            <div class="popuptxet">@AR["Auto.UI.bd30be2274cd"]<el-input style="width:160px;margin-left:25px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></div>
+                                            <div class="popuptxet">入参<el-input style="width:160px;margin-left:25px"
+                                                    placeholder="请输入"></div>
+                                            <div class="popuptxet">出参<el-input style="width:160px;margin-left:25px"
+                                                    placeholder="请输入"></div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.3360cf67b539"]">
+                                    <el-form-item label="弹窗设置">
                                         <div class="Popupset">
 
-                                            <div>@AR["Auto.UI.0561589c26e7"]</div>
+                                            <div>打开弹窗</div>
                                             <div class="popuptxet">
-                                                @AR["Auto.UI.eded9ed93a45"]<el-input style="width: 160px;margin-left:53px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></el-input>
+                                                标题文字<el-input style="width: 160px;margin-left:53px"
+                                                    placeholder="请输入"></el-input>
                                             </div>
-                                            <div class="popuptxet">@AR["DynamicData.CancelButtonText"]<el-input style="width:160px;margin-left:25px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></div>
-                                            <div class="popuptxet">@AR["DynamicData.ConfirmButtonText"]<el-input style="width:160px;margin-left:25px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></div>
+                                            <div class="popuptxet">取消按钮文字<el-input style="width:160px;margin-left:25px"
+                                                    placeholder="请输入"></div>
+                                            <div class="popuptxet">确认按钮文字<el-input style="width:160px;margin-left:25px"
+                                                    placeholder="请输入"></div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.d53dc9b9bdab"]">
+                                    <el-form-item label="确认操作设置">
                                         <div class="Popupset">
 
-                                            <div>@AR["Auto.UI.fa44f243a4f6"]</div>
+                                            <div>显示消息提示</div>
                                             <div class="popuptxet">
-                                                @AR["Auto.UI.6f2b01db04cb"]<el-input style="width: 160px;margin-left:53px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></el-input>
+                                                提示内容<el-input style="width: 160px;margin-left:53px"
+                                                    placeholder="请输入"></el-input>
                                             </div>
-                                            <div class="popuptxet">@AR["Auto.UI.8ea1d1ed122b"]<el-input style="width:160px;margin-left:53px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></div>
+                                            <div class="popuptxet">提示时长<el-input style="width:160px;margin-left:53px"
+                                                    placeholder="请输入"></div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.ac3bd28b7f10"]">
+                                    <el-form-item label="取消操作设置">
                                         <div class="Popupset">
                                             <div class="popuptxet">
-                                                @AR["Auto.UI.0d3bbd764cc4"]<el-input style="width: 160px;margin-left:53px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></el-input>
+                                                关闭页面<el-input style="width: 160px;margin-left:53px"
+                                                    placeholder="请输入"></el-input>
                                             </div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.fc8f5a86a6ac"]">
+                                    <el-form-item label="提交成功状态设置">
                                         <div class="Popupset">
-                                            <div class="popuptxet">@AR["Auto.UI.2dd806507268"]<el-input style="width:160px;margin-left:25px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></div>
-                                            <div>@AR["Auto.UI.fa44f243a4f6"]</div>
+                                            <div class="popuptxet">表单执行方法<el-input style="width:160px;margin-left:25px"
+                                                    placeholder="请输入"></div>
+                                            <div>显示消息提示</div>
                                             <div class="popuptxet">
-                                                @AR["Auto.UI.6f2b01db04cb"]<el-input style="width: 160px;margin-left:53px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></el-input>
+                                                提示内容<el-input style="width: 160px;margin-left:53px"
+                                                    placeholder="请输入"></el-input>
                                             </div>
-                                            <div class="popuptxet">@AR["Auto.UI.8ea1d1ed122b"]<el-input style="width:160px;margin-left:53px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></div>
+                                            <div class="popuptxet">提示时长<el-input style="width:160px;margin-left:53px"
+                                                    placeholder="请输入"></div>
                                         </div>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.7dfd264ad8fc"]">
+                                    <el-form-item label="提交失败状态设置">
                                         <div class="Popupset">
-                                            <div class="popuptxet">@AR["Auto.UI.2dd806507268"]<el-input style="width:160px;margin-left:25px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></div>
-                                            <div>@AR["Auto.UI.0561589c26e7"]</div>
+                                            <div class="popuptxet">表单执行方法<el-input style="width:160px;margin-left:25px"
+                                                    placeholder="请输入"></div>
+                                            <div>打开弹窗</div>
                                             <div class="popuptxet">
-                                                @AR["Auto.UI.eded9ed93a45"]<el-input style="width: 160px;margin-left:53px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></el-input>
+                                                标题文字<el-input style="width: 160px;margin-left:53px"
+                                                    placeholder="请输入"></el-input>
                                             </div>
                                             <div class="popuptxet">
-                                                @AR["Auto.UI.43ab9af06e1e"]<el-input style="width: 160px;margin-left:53px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></el-input>
+                                                标题内容<el-input style="width: 160px;margin-left:53px"
+                                                    placeholder="请输入"></el-input>
                                             </div>
-                                            <div class="popuptxet">@AR["DynamicData.CancelButtonText"]<el-input style="width:160px;margin-left:25px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></div>
-                                            <div class="popuptxet">@AR["DynamicData.ConfirmButtonText"]<el-input style="width:160px;margin-left:25px"
-                                                    placeholder="@AR["Auto.UI.02cc4f8f5a9a"]"></div>
+                                            <div class="popuptxet">取消按钮文字<el-input style="width:160px;margin-left:25px"
+                                                    placeholder="请输入"></div>
+                                            <div class="popuptxet">确认按钮文字<el-input style="width:160px;margin-left:25px"
+                                                    placeholder="请输入"></div>
                                         </div>
                                     </el-form-item>
                                 </el-form>
@@ -1296,13 +1293,13 @@
                         </template>
 
 
-                        @* Style Settings *@
+                        @* 样式 设置 *@
                         <template v-if="setUpActiveName === 'second'">
-                            @* Table Overall Style Settings *@
+                            @* 表格 整体样式 设置 *@
                             <template v-if="layoutComponentActiveType === 'table'">
-                                <div class="operation-title" style="margin-top:20px;">@AR["Auto.UI.d039d7587bdc"]</div>
+                                <div class="operation-title" style="margin-top:20px;">表格样式设置</div>
                                 <el-form :model="tableStyleForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    <el-form-item label="@AR["Auto.UI.1a249d880743"]">
+                                    <el-form-item label="表格尺寸">
                                         <div class="subsection-container df-wn flex-ac flex-jc">
                                             <div class="subsection-item"
                                                 :class="{'subsection-item_avtive':tableStyleForm.size === 'medium'}"
@@ -1319,23 +1316,23 @@
                                         </div>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="tableStyleForm.showHeader">@AR["Auto.UI.4e3cd1a7b193"]</el-checkbox>
+                                        <el-checkbox v-model="tableStyleForm.showHeader">显示表头</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="tableStyleForm.stripe">@AR["Auto.UI.da087fda7e98"]</el-checkbox>
+                                        <el-checkbox v-model="tableStyleForm.stripe">显示斑马纹</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="tableStyleForm.border">@AR["Auto.UI.8a42ded5c9d5"]</el-checkbox>
+                                        <el-checkbox v-model="tableStyleForm.border">显示边框</el-checkbox>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.7fda172a8681"]">
+                                    <el-form-item label="固定列">
                                         <table class="table-container">
                                             <thead class="table-head">
                                                 <tr>
                                                     <th style="width:150px">
-                                                        @AR["Auto.UI.8f98291c9fa8"]
+                                                        列名
                                                     </th>
                                                     <th>
-                                                        @AR["Auto.UI.2fe0c4556a6c"]
+                                                        固定方向
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -1348,8 +1345,8 @@
                                                     </td>
                                                     <td>
                                                         <el-radio-group v-model="tbody_td.fixed">
-                                                            <el-radio label="left">@AR["Auto.UI.39a2cb79c6d9"]</el-radio>
-                                                            <el-radio label="right">@AR["Auto.UI.de2a774bf989"]</el-radio>
+                                                            <el-radio label="left">左侧</el-radio>
+                                                            <el-radio label="right">右侧</el-radio>
                                                         </el-radio-group>
                                                     </td>
                                                 </tr>
@@ -1357,28 +1354,28 @@
                                         </table>
                                     </el-form-item>
                                 </el-form>
-                                @* Pagination Settings *@
-                                <div class="operation-title" style="margin-top:20px;">@AR["Auto.UI.e821ce185e41"]</div>
+                                @* 分页设置 *@
+                                <div class="operation-title" style="margin-top:20px;">分页设置</div>
                                 <el-form :model="paginationForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
                                     <el-form-item>
-                                        <el-checkbox v-model="paginationForm.enable">@AR["Auto.UI.90fd9a48b374"]</el-checkbox>
+                                        <el-checkbox v-model="paginationForm.enable">启用分页</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="paginationForm.small">@AR["Auto.UI.c2394b52ff1f"]</el-checkbox>
+                                        <el-checkbox v-model="paginationForm.small">是否使用小型分页</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="paginationForm.background">@AR["Auto.UI.7ccd61253701"]</el-checkbox>
+                                        <el-checkbox v-model="paginationForm.background">是否为分页按钮添加背景色</el-checkbox>
                                     </el-form-item>
                                     <el-form-item>
-                                        <el-checkbox v-model="paginationForm.hideOnSinglePage">@AR["Auto.UI.155c667ecd07"]</el-checkbox>
+                                        <el-checkbox v-model="paginationForm.hideOnSinglePage">只有一页时隐藏</el-checkbox>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.1951814805cf"]">
+                                    <el-form-item label="子组件启用&布局">
                                         <table class="table-container">
                                             <thead class="table-head">
                                                 <tr>
                                                     <th>
                                                         <el-checkbox v-model="paginationForm.allChecked"
-                                                            @@change="handlePaginationAllCheckedChange">@AR["Auto.UI.e2db534d91ab"]</el-checkbox>
+                                                            @@change="handlePaginationAllCheckedChange">子组件</el-checkbox>
                                                     </th>
                                                     <th style="width:30px"></th>
                                                 </tr>
@@ -1399,19 +1396,19 @@
                                             </tbody>
                                         </table>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.aaec8375dc50"]">
-                                        <el-input v-model="paginationForm.pagerCount" placeholder="@AR["Auto.UI.aaec8375dc50"]"></el-input>
+                                    <el-form-item label="最大页码按钮数">
+                                        <el-input v-model="paginationForm.pagerCount" placeholder="最大页码按钮数"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.dd92c9ea08f2"]">
+                                    <el-form-item label="每页显示个数">
                                         <el-select v-model="paginationForm.pageSizes" multiple filterable allow-create
-                                            default-first-option placeholder="@AR["Auto.UI.1645ddcfe562"]">
+                                            default-first-option placeholder="请选择每页显示个数">
                                             <el-option v-for="item in pageSizesOpt" :key="item" :label="item"
                                                 :value="item">
                                             </el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.d4d2a66820d3"]">
-                                        <el-select v-model="paginationForm.position" filterable placeholder="@AR["Auto.UI.b2280aee1bc1"]">
+                                    <el-form-item label="位置">
+                                        <el-select v-model="paginationForm.position" filterable placeholder="请选择位置">
                                             <el-option v-for="item in pageSizesPositionOpt" :key="item" :label="item"
                                                 :value="item">
                                             </el-option>
@@ -1419,33 +1416,45 @@
                                     </el-form-item>
                                 </el-form>
                             </template>
-                            @* Form Overall Style Settings *@
+                            @* 表单 整体样式 设置 *@
                             <template v-if="layoutComponentActiveType === 'form'">
-                                <div class="operation-title" style="margin-top:20px;">@AR["Auto.UI.4bd8b8ae1746"]</div>
+                                <div class="operation-title" style="margin-top:20px;">样式设置</div>
                                 <el-form :model="formStyleForm" :size="elSize" label-position="top" label-width="80px" class="form-container">
-                                    @* <el-form-item label="@AR["Auto.UI.94086df69ba9"]">
-                                        <el-input v-model="formStyleForm.lableFontSize" placeholder="@AR["Auto.UI.4442a76279e6"]"></el-input>
+                                    @* <el-form-item label="lable字体大小">
+                                        <el-input v-model="formStyleForm.lableFontSize" placeholder="请输入字体大小"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="@AR["Auto.UI.ccef41e175b3"]">
-                                        <el-input v-model="formStyleForm.labelWidth" placeholder="@AR["Auto.UI.6a6cc4168841"]"></el-input>
+                                    <el-form-item label="lable宽度">
+                                        <el-input v-model="formStyleForm.labelWidth" placeholder="请输入lable宽度"></el-input>
                                     </el-form-item> *@
-                                    <el-form-item label="@AR["Auto.UI.513c78ddfae8"]">
+                                    <el-form-item label="lable字体颜色">
                                         <el-color-picker v-model="formStyleForm.lableColor"></el-color-picker>
                                     </el-form-item>
-                                    <el-form-item label="@AR["DynamicData.Alignment"]">
+                                    <el-form-item label="对齐方式">
                                         <el-radio-group v-model="formStyleForm.labelPosition">
-                                            <el-radio-button label="left">@AR["DynamicData.AlignLeft"]</el-radio-button>
-                                            <el-radio-button label="right">@AR["DynamicData.AlignRight"]</el-radio-button>
-                                            <el-radio-button label="top">@AR["Auto.UI.2a6ad292447e"]</el-radio-button>
+                                            <el-radio-button label="left">左对齐</el-radio-button>
+                                            <el-radio-button label="right">右对齐</el-radio-button>
+                                            <el-radio-button label="top">顶部对齐</el-radio-button>
                                         </el-radio-group>
                                     </el-form-item>
                                 </el-form>
                             </template>
-                            @* Table Normal Column Style Settings *@
-                            @* <template v-if="setUpActiveName === 'second'"></template> @AR["Auto.UI.512e8df6efd7"] <template v-if="setUpActiveName === 'second'"></template> @AR["Auto.UI.512e8df6efd7"] <template v-if="setUpActiveName === 'second'"></template> @AR["Auto.UI.739cbc67cb9c"] <template v-if="setUpActiveName === 'second'"></template> @AR["Auto.UI.144f56ce4bb4"] <template v-if="setUpActiveName === 'second'"></template> *@
+                            @* 表格 普通列样式 设置 *@
+                            @* <template v-if="setUpActiveName === 'second'"></template> *@
+
+                            @* 表格 自定义列样式 设置 *@
+                            @* <template v-if="setUpActiveName === 'second'"></template> *@
+
+                            @* 表格 自定义列样式 设置 *@
+                            @* <template v-if="setUpActiveName === 'second'"></template> *@
+
+                            @* 表单 单个组件样式 设置 *@
+                            @* <template v-if="setUpActiveName === 'second'"></template> *@
+
+                            @* 表单 按钮样式 设置 *@
+                            @* <template v-if="setUpActiveName === 'second'"></template> *@
                         </template>
                     </div>
-                    @* Global Button Settings Management *@
+                    @* 全局 按钮设置管理 *@
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -1453,6 +1462,7 @@
 </el-container>
 
 @section scripts {
+    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
     <script src="~/js/DynamicData/lib/axios.min.js"></script>
     <script src="~/js/DynamicData/axios.js"></script>
     <script src="~/js/DynamicData/layoutSet.js"></script>

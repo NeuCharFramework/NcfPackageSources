@@ -1,4 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：FileManagerSenparcEntities.cs
+    文件功能描述：FileManagerSenparcEntities 相关实现
+
+
+    创建标识：Senparc - 20250105
+
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
@@ -18,6 +35,30 @@ namespace Senparc.Xncf.FileManager.Models
         public DbSet<NcfFile> NcfFiles { get; set; }
 
         public DbSet<NcfFolder> NcfFolders { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Existing FileManager records predate the resource boundary. Keep
+            // them private KnowledgeBase sources during migration so no historic
+            // upload is accidentally exposed through the public asset endpoint.
+            modelBuilder.Entity<NcfFile>(entity =>
+            {
+                entity.Property(file => file.ResourceScope)
+                    .HasDefaultValue(NcfFileResourceScope.KnowledgeBase);
+                entity.Property(file => file.AccessLevel)
+                    .HasDefaultValue(NcfFileAccessLevel.Private);
+                entity.HasIndex(file => new { file.ResourceScope, file.FolderId });
+            });
+
+            modelBuilder.Entity<NcfFolder>(entity =>
+            {
+                entity.Property(folder => folder.ResourceScope)
+                    .HasDefaultValue(NcfFileResourceScope.KnowledgeBase);
+                entity.HasIndex(folder => new { folder.ResourceScope, folder.ParentId });
+            });
+        }
 
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }

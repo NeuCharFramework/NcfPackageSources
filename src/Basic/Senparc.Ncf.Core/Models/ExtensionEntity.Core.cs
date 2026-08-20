@@ -1,4 +1,21 @@
-﻿using Senparc.CO2NET.Extensions;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ExtensionEntity.Core.cs
+    文件功能描述：ExtensionEntity.Core 相关实现
+    
+    
+    创建标识：Senparc - 20200724
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+
+----------------------------------------------------------------*/
+
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.Core.Utility;
@@ -242,6 +259,9 @@ namespace Senparc.Ncf.Core.Models
 
         [AutoSetCache]
         public string NeuCharAppSecret { get; set; }
+
+        [AutoSetCache]
+        public string FooterContent { get; set; }
 
         public override void CreateEntity(SystemConfig entity)
         {

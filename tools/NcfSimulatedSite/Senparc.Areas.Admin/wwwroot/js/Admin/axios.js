@@ -12,6 +12,9 @@ service.interceptors.request.use(
         if (config.method.toUpperCase() === 'POST') {
             config.headers['RequestVerificationToken'] = window.document.getElementsByName('__RequestVerificationToken')[0].value;
         }
+        if (window.ncfJwtToken) {
+            config.headers['Authorization'] = 'Bearer ' + window.ncfJwtToken;
+        }
         config.headers['x-requested-with'] = 'XMLHttpRequest';
         return config;
     },
@@ -52,9 +55,15 @@ service.interceptors.response.use(
     },
     error => {
         console.log('err' + error);
+        // Workflow uses customAlert to render a 400 validation failure in its
+        // own node-aware panel. Do not call the legacy global `app` here: this
+        // page deliberately has no globally named Vue instance.
+        if (error && error.config && error.config.customAlert) {
+            return Promise.reject(error);
+        }
         if (error.message.includes('401')) {
             app.$message({
-                message: '登陆过期，即将跳转到登录页面',
+                message: ncfT('Admin.Session.ExpiredRedirect'),
                 type: 'error',
                 duration: 3 * 1000,
                 onClose: function () {
@@ -64,7 +73,7 @@ service.interceptors.response.use(
             return Promise.reject(error);
         } if (error.message.includes('403')) {
             app.$message({
-                message: '您没有访问权限~',
+                message: ncfT('Admin.Session.AccessDenied'),
                 type: 'error',
                 duration: 3 * 1000
             });

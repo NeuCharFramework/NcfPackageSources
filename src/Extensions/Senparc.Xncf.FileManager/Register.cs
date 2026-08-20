@@ -1,3 +1,23 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.cs
+    文件功能描述：Register 相关实现
+
+
+    创建标识：Senparc - 20250105
+
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.3.0-preview2 为 FileManager 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
 using System;
@@ -32,13 +52,13 @@ namespace Senparc.Xncf.FileManager
 
         public override string Uid => "BC7769FE-E094-4EAF-9B1F-D82670D1D691";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.2.5";//必须填写版本号
+        public override string Version => "0.6.0";//必须填写版本号
 
-        public override string MenuName => "文件管理";
+        public override string MenuName => FileManagerResource.Get("Module.FileManager.MenuName", "文件管理");
 
         public override string Icon => "fa fa-database";
 
-        public override string Description => "文件管理";
+        public override string Description => FileManagerResource.Get("Module.FileManager.Description", "文件管理");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

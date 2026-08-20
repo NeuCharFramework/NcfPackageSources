@@ -1,4 +1,18 @@
-﻿using Senparc.Ncf.Core.Models;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Color.cs
+    文件功能描述：Color 相关实现
+    
+    
+    创建标识：Senparc - 20250105
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;

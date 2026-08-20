@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Linq;
 
 namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
 {
@@ -21,18 +21,36 @@ namespace Senparc.Xncf.SystemManager.Domain.DatabaseModel
             {
                 if (_rootDictionaryPath == null)
                 {
-                    var projectPath = Path.GetFullPath("..\\..\\..\\", AppContext.BaseDirectory);//项目根目录
+                    var projectPath = Path.GetFullPath(
+                        Path.Combine(AppContext.BaseDirectory, "..", "..", ".."));
 
-                    var webPath = Path.GetFullPath("..\\Senparc.Web",/*找到 Web目录，以获取统一的数据库连接字符串配置*/
-                                                   projectPath);
-                    if (Directory.Exists(webPath))
+                    // 源码仓库、传统相邻项目和发布目录的结构不同。设计时只选择
+                    // 真正包含数据库配置的目录，避免在 macOS/Linux 上因反斜杠路径失效。
+                    var candidates = new List<string>
                     {
-                        _rootDictionaryPath = webPath;//优先使用Web统一配置
+                        Path.GetFullPath(Path.Combine(projectPath, "..", "Senparc.Web")),
+                        projectPath
+                    };
+
+                    for (var directory = new DirectoryInfo(projectPath); directory != null; directory = directory.Parent)
+                    {
+                        candidates.Add(Path.Combine(directory.FullName, "tools", "NcfSimulatedSite", "Senparc.Web"));
+                        candidates.Add(Path.Combine(directory.FullName, "src", "back-end", "Senparc.Web"));
                     }
-                    _rootDictionaryPath = projectPath;
+
+                    _rootDictionaryPath = candidates.FirstOrDefault(HasDatabaseConfiguration) ?? projectPath;
                 }
                 return _rootDictionaryPath;
             }
+        }
+
+        private static bool HasDatabaseConfiguration(string rootDirectoryPath)
+        {
+            return File.Exists(Path.Combine(
+                rootDirectoryPath,
+                "App_Data",
+                "Database",
+                "SenparcConfig.config"));
         }
     }
 }

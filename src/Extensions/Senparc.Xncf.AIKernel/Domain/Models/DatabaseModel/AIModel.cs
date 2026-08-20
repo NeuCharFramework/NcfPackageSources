@@ -1,3 +1,22 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AIModel.cs
+    文件功能描述：AIModel 相关实现
+    
+    
+    创建标识：Senparc - 20231220
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.13.3-preview2 修复 AI 模型类型展示顺序
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.13.4-preview3 修复 AI 模型类型展示顺序
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using System;
@@ -139,6 +158,7 @@ namespace Senparc.Xncf.AIKernel.Models
         public AIModel Update(AIModel_CreateOrEditRequest request)
         {
             ModelId = request.ModelId;
+            ConfigModelType = request.ConfigModelType;
             DeploymentName = request.DeploymentName;
             Endpoint = request.Endpoint;
             AiPlatform = request.AiPlatform;

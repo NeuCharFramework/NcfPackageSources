@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.AIKernel.MenuName" xml:space="preserve">
+    <value>AI カーネル</value>
+  </data>
+  <data name="Module.AIKernel.Description" xml:space="preserve">
+    <value>Senparc.AI を基盤として、すべての AI プロジェクトに基本機能を提供します</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>ホーム</value>
+  </data>
+  <data name="Area.AIKernel.VectorDatabase" xml:space="preserve">
+    <value>ベクトルデータベース</value>
+  </data>
+  <data name="Area.AIKernel.Dashboard" xml:space="preserve">
+    <value>ダッシュボード</value>
+  </data>
+  <data name="Parameter.Sample.Name" xml:space="preserve">
+    <value>名前||二重縦線の前はパラメーター名、後ろは説明です</value>
+  </data>
+  <data name="Parameter.Sample.Number1" xml:space="preserve">
+    <value>数値||数値 1</value>
+  </data>
+  <data name="Parameter.Sample.Number2" xml:space="preserve">
+    <value>数値||数値 2</value>
+  </data>
+  <data name="Parameter.Sample.Operator" xml:space="preserve">
+    <value>演算子||</value>
+  </data>
+  <data name="Parameter.Sample.Power" xml:space="preserve">
+    <value>べき乗||</value>
+  </data>
+  <data name="Parameter.Operator.Add" xml:space="preserve">
+    <value>加算</value>
+  </data>
+  <data name="Parameter.Operator.Add.Help" xml:space="preserve">
+    <value>数値 1 + 数値 2</value>
+  </data>
+  <data name="Parameter.Operator.Subtract" xml:space="preserve">
+    <value>減算</value>
+  </data>
+  <data name="Parameter.Operator.Subtract.Help" xml:space="preserve">
+    <value>数値 1 - 数値 2</value>
+  </data>
+  <data name="Parameter.Operator.Multiply" xml:space="preserve">
+    <value>乗算</value>
+  </data>
+  <data name="Parameter.Operator.Multiply.Help" xml:space="preserve">
+    <value>数値 1 × 数値 2</value>
+  </data>
+  <data name="Parameter.Operator.Divide" xml:space="preserve">
+    <value>除算</value>
+  </data>
+  <data name="Parameter.Operator.Divide.Help" xml:space="preserve">
+    <value>数値 1 ÷ 数値 2</value>
+  </data>
+  <data name="Parameter.Power.Square" xml:space="preserve">
+    <value>2 乗</value>
+  </data>
+  <data name="Parameter.Power.Square.Help" xml:space="preserve">
+    <value>上の結果を 2 乗します</value>
+  </data>
+  <data name="Parameter.Power.Cube" xml:space="preserve">
+    <value>3 乗</value>
+  </data>
+  <data name="Parameter.Power.Cube.Help" xml:space="preserve">
+    <value>上の結果を 3 乗します</value>
+  </data>
+  <data name="Parameter.AI.Model" xml:space="preserve">
+    <value>モデルを選択||</value>
+  </data>
+  <data name="Parameter.AI.Prompt" xml:space="preserve">
+    <value>プロンプト||</value>
+  </data>
+  <data name="Parameter.AI.Source.Database" xml:space="preserve">
+    <value>AIKernel モジュールデータベース</value>
+  </data>
+  <data name="Parameter.AI.Source" xml:space="preserve">
+    <value>ソース：{0}</value>
+  </data>
+  <data name="Area.ExtensionModules" xml:space="preserve"><value>拡張モジュール</value></data>
+  <data name="Area.AIKernel" xml:space="preserve"><value>AI コアモジュール</value></data>
+  <data name="Title.Vector" xml:space="preserve"><value>AIVector ホーム</value></data>
+  <data name="Vector.Add" xml:space="preserve"><value>追加</value></data>
+  <data name="Vector.Alias" xml:space="preserve"><value>別名</value></data>
+  <data name="Vector.DeploymentName" xml:space="preserve"><value>デプロイ名</value></data>
+  <data name="Vector.Endpoint" xml:space="preserve"><value>Endpoint</value></data>
+  <data name="Vector.DatabaseType" xml:space="preserve"><value>ベクトルデータベースの種類</value></data>
+  <data name="Vector.Note" xml:space="preserve"><value>メモ</value></data>
+  <data name="Vector.AddTime" xml:space="preserve"><value>追加日時</value></data>
+  <data name="Vector.Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Vector.Edit" xml:space="preserve"><value>編集</value></data>
+  <data name="Vector.Delete" xml:space="preserve"><value>削除</value></data>
+  <data name="Vector.AddTitle" xml:space="preserve"><value>ベクトルデータベースを追加</value></data>
+  <data name="Vector.EditTitle" xml:space="preserve"><value>ベクトルデータベースを編集</value></data>
+  <data name="Vector.Name" xml:space="preserve"><value>名前</value></data>
+  <data name="Vector.ConnectionString" xml:space="preserve"><value>接続文字列</value></data>
+  <data name="Vector.Display" xml:space="preserve"><value>表示</value></data>
+  <data name="Vector.SelectPlaceholder" xml:space="preserve"><value>選択してください</value></data>
+  <data name="Vector.MemoryLeaveEmpty" xml:space="preserve"><value>Memory タイプは空欄にできます</value></data>
+  <data name="Vector.ConnectionPlaceholder" xml:space="preserve"><value>接続文字列を入力</value></data>
+  <data name="Vector.Cancel" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="Vector.Confirm" xml:space="preserve"><value>確定</value></data>
+  <data name="Vector.AliasRequired" xml:space="preserve"><value>別名を入力してください</value></data>
+  <data name="Vector.TypeRequired" xml:space="preserve"><value>ベクトルデータベースの種類を選択してください</value></data>
+  <data name="Vector.ModelNameRequired" xml:space="preserve"><value>モデル名を入力してください</value></data>
+  <data name="Vector.NameRequired" xml:space="preserve"><value>ベクトルデータベース名を入力してください</value></data>
+  <data name="Vector.ConnectionRequired" xml:space="preserve"><value>このベクトルデータベースには接続文字列が必要です</value></data>
+  <data name="Vector.CopySuccess" xml:space="preserve"><value>【******{0}】をコピーしました！</value></data>
+  <data name="Vector.CopyFailed" xml:space="preserve"><value>コピーに失敗しました。手動でコピーしてください。</value></data>
+  <data name="Vector.AddSuccess" xml:space="preserve"><value>追加しました！</value></data>
+  <data name="Vector.AddFailed" xml:space="preserve"><value>追加に失敗しました</value></data>
+  <data name="Vector.EditSuccess" xml:space="preserve"><value>編集しました！</value></data>
+  <data name="Vector.EditFailed" xml:space="preserve"><value>編集に失敗しました</value></data>
+  <data name="Vector.DeleteConfirm" xml:space="preserve"><value>この操作でモデル【{0}】を完全に削除します。続行しますか？</value></data>
+  <data name="Vector.DeleteConfirmTitle" xml:space="preserve"><value>通知</value></data>
+  <data name="Vector.DeleteSuccess" xml:space="preserve"><value>削除しました！</value></data>
+  <data name="Vector.DeleteFailed" xml:space="preserve"><value>削除に失敗しました</value></data>
+  <data name="Vector.CancelDelete" xml:space="preserve"><value>削除をキャンセルしました</value></data>
+  <data name="Area.DatabaseSample" xml:space="preserve"><value>データベース操作例</value></data>
+  <data name="Title.Home" xml:space="preserve"><value>AIKernel ホーム</value></data>
+  <data name="Model.AddTitle" xml:space="preserve"><value>モデルを追加</value></data>
+  <data name="Model.EditTitle" xml:space="preserve"><value>モデルを編集</value></data>
+  <data name="Model.ImportNeuChar" xml:space="preserve"><value>NeuCharAI クラウドモデル能力をインポート</value></data>
+  <data name="Model.Name" xml:space="preserve"><value>モデル名</value></data>
+  <data name="Model.Platform" xml:space="preserve"><value>プラットフォーム</value></data>
+  <data name="Model.Type" xml:space="preserve"><value>モデル種類</value></data>
+  <data name="Model.Unknown" xml:space="preserve"><value>不明</value></data>
+  <data name="Model.OrganizationId" xml:space="preserve"><value>組織 ID</value></data>
+  <data name="Model.NeuCharImportHelp" xml:space="preserve"><value>次のページで「ApiKey を表示」をクリックして DeveloperId と ApiKey を確認してください。複数ある場合は分けてインポートできます：</value></data>
+  <data name="Model.PlatformRequired" xml:space="preserve"><value>プラットフォーム種類を選択してください</value></data>
+  <data name="Model.TypeRequired" xml:space="preserve"><value>モデル種類を選択してください</value></data>
+  <data name="Model.DeploymentRequired" xml:space="preserve"><value>モデルのデプロイ名を入力してください</value></data>
+  <data name="Model.ApiVersionRequired" xml:space="preserve"><value>API バージョンを入力してください</value></data>
+  <data name="Model.ApiKeyRequired" xml:space="preserve"><value>API キーを入力してください</value></data>
+  <data name="Model.EndpointRequired" xml:space="preserve"><value>エンドポイントを入力してください</value></data>
+  <data name="Model.OrganizationRequired" xml:space="preserve"><value>組織 ID を入力してください</value></data>
+  <data name="Model.DeveloperIdRequired" xml:space="preserve"><value>DeveloperId を入力してください</value></data>
+  <data name="Dashboard.Name" xml:space="preserve"><value>ダッシュボード</value></data>
+  <data name="Dashboard.Title" xml:space="preserve"><value>AIKernel ダッシュボード</value></data>
+  <data name="Dashboard.AvailableModels" xml:space="preserve"><value>利用可能なモデル数</value></data>
+  <data name="Dashboard.VectorDatabases" xml:space="preserve"><value>ベクトルデータベース数</value></data>
+  <data name="Dashboard.Agents" xml:space="preserve"><value>エージェント数</value></data>
+  <data name="Dashboard.UserFeedback" xml:space="preserve"><value>ユーザーフィードバック数</value></data>
+  <data name="Dashboard.TotalSessions" xml:space="preserve"><value>全セッション数</value></data>
+  <data name="Dashboard.LastSevenDays" xml:space="preserve"><value>過去 7 日間</value></data>
+  <data name="Dashboard.TimesUnit" xml:space="preserve"><value>回</value></data>
+  <data name="Dashboard.ActiveUsers" xml:space="preserve"><value>アクティブユーザー数</value></data>
+  <data name="Dashboard.PeopleUnit" xml:space="preserve"><value>人</value></data>
+  <data name="Dashboard.AverageInteractions" xml:space="preserve"><value>平均セッション対話数</value></data>
+  <data name="Dashboard.TokenSpeedWithUnit" xml:space="preserve"><value>Token 出力速度（Token/秒）</value></data>
+  <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Token 出力速度</value></data>
+  <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>ユーザー満足度</value></data>
+  <data name="Dashboard.TotalMessages" xml:space="preserve"><value>全メッセージ数</value></data>
+</root>

@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.cs
+    文件功能描述：模块注册与初始化逻辑
+    
+    
+    创建标识：Senparc - 20200818
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
 using System;
@@ -11,7 +28,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Domain.Services;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
 using Microsoft.Extensions.FileProviders;
@@ -34,11 +51,11 @@ namespace Senparc.Xncf.PromptRange
 
         public override string Version => "0.15.2"; //必须填写版本号
 
-        public override string MenuName => "提示词靶场";
+        public override string MenuName => PromptRangeResource.Get("Module.PromptRange.MenuName", "提示词靶场");
 
         public override string Icon => "fa fa-dot-circle-o";
 
-        public override string Description => "你的提示词（Prompt）训练场";
+        public override string Description => PromptRangeResource.Get("Module.PromptRange.Description", "你的提示词（Prompt）训练场");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider,
             InstallOrUpdate installOrUpdate)
@@ -108,6 +125,7 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptResultService>();
             services.AddScoped<PromptResultChatService>();
             services.AddScoped<LlModelService>();
+            services.AddSingleton<PromptResultStreamHub>();
 
             services.AddAutoMapper(z =>
             {

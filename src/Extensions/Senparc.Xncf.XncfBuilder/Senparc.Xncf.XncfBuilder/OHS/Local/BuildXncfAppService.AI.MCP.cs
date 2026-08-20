@@ -1,4 +1,24 @@
-﻿using ModelContextProtocol.Server;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：BuildXncfAppService.AI.MCP.cs
+    文件功能描述：BuildXncfAppService.AI.MCP 相关实现
+    
+    
+    创建标识：Senparc - 20250524
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+
+----------------------------------------------------------------*/
+
+using ModelContextProtocol.Server;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
 using System;
@@ -11,9 +31,7 @@ using System.Threading.Tasks;
 using Senparc.CO2NET.Extensions;
 using System.IO;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
-using Senparc.AI.Entities.Keys;
-
+using Senparc.Xncf.XncfBuilder.Domain.Services.Workspace;
 namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     /// <summary>
@@ -21,20 +39,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
     /// </summary>
     public partial class BuildXncfAppService
     {
-        private string GetFilePath(string moduleName, string filePath)
+        private string GetModuleDirectory(string moduleName)
         {
             BuildXncf_BuildRequest request = new BuildXncf_BuildRequest();
             var slnPath = request.GetSlnFilePath();
-            var modulePath = Directory.GetDirectories(Path.GetDirectoryName(slnPath), moduleName, SearchOption.AllDirectories)
-                                    .FirstOrDefault();
-
-            if (string.IsNullOrEmpty(modulePath))
-            {
-                throw new Exception($"未找到模块 {moduleName} 的目录，请检查模块名称是否完整，必须完全匹配，如：Senparc.Xncf.XncfBuilder。");
-            }
-
-            var fullFilePath = Path.Combine(modulePath, filePath);
-            return fullFilePath;
+            return XncfWorkspaceFileService.ResolveModuleDirectory(slnPath, moduleName);
         }
 
 
@@ -45,17 +54,17 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         public async Task<StringAppResponse> Build(
             // [Required,Description("解决方案文件路径")]
             // string slnFilePath, 
-            [Description("组织名称，默认为 Senparc")]
+            [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Organization")]
             string orgName,
-            [Required, Description("模块名称")]
+            [Required, LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.ModuleName")]
             string xncfName,
-            [Required, Description("版本号，默认为 1.0.0")]
+            [Required, LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Version")]
             string version,
-            [Required, Description("菜单显示名称")]
+            [Required, LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.MenuName")]
             string menuName,
-            [Required, Description("图标，支持 Font Awesome 图标集")]
+            [Required, LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Icon")]
             string icon,
-            [Description("模块说明")]
+            [LocalizedDescription(typeof(XncfBuilderResource), "Parameter.XncfBuilder.Description")]
             string description)
         {
             Console.WriteLine("XNCF Builder: Receive MCP Call");
@@ -69,35 +78,20 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 MenuName = menuName,
                 Icon = icon,
                 Description = description,
-                UseSammple = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
-                new Ncf.XncfBase.Functions.SelectionItem("1","使用示例","使用示例",true),
-              }),
-                UseModule = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
-                new Ncf.XncfBase.Functions.SelectionItem("database","数据库","使用数据库",true),
-              }),
+                                UseSammple = true,
+                                UseModule = new[] { "database" },
                 //   UseWeb = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
                 //     new Ncf.XncfBase.Functions.SelectionItem("1","使用Web","使用Web",true),
                 //   }),
                 //   UseWebApi = new Ncf.XncfBase.Functions.SelectionList( Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
                 //     new Ncf.XncfBase.Functions.SelectionItem("1","使用WebApi","使用WebApi",true),
                 //   }),
-                NewSlnFile = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.CheckBoxList, new[] {
-                new Ncf.XncfBase.Functions.SelectionItem("backup","备份 .sln 文件（推荐）","如果使用覆盖现有 .sln 文件，对当前文件进行备份",true),
-              }),
-                TemplatePackage = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.DropDownList, new[] {
-                new Ncf.XncfBase.Functions.SelectionItem("no","已安装，不需要安装新版本","请确保已经在本地安装过版本（无论新旧），否则将自动从在线获取",true),
-              }),
-                FrameworkVersion = new Ncf.XncfBase.Functions.SelectionList(Ncf.XncfBase.Functions.SelectionType.DropDownList, new[] {
-                new Ncf.XncfBase.Functions.SelectionItem("net8.0","net8.0","使用 .NET 8.0",false),
-              })
+                                NewSlnFile = new[] { "backup" },
+                                TemplatePackage = "no",
+                                FrameworkVersion = "net8.0"
             };
 
             request.SlnFilePath = request.GetSlnFilePath();
-            request.UseSammple.SelectedValues = new[] { "1" };
-            request.UseModule.SelectedValues = new[] { "database" };
-            request.NewSlnFile.SelectedValues = new[] { "backup" };
-            request.TemplatePackage.SelectedValues = new[] { "no" };
-            request.FrameworkVersion.SelectedValues = new[] { "net8.0" };
 
             Console.WriteLine("XNCF Builder parameters:" + request.ToJson(true));
 
@@ -107,38 +101,37 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         #endregion
 
         //[McpServerTool, Description("获取前端代码模板示例")]
-        public async Task<string> GetFrontEndCodeTemplate()
+        public Task<string> GetFrontEndCodeTemplate()
         {
-            var template = BuildXncfAppService.FrontendTemplate;
-            return template;
-
+            return Task.FromResult(FrontendTemplate);
         }
 
         //[McpServerTool, Description("获取后端代码模板示例")]
-        public async Task<string> GetBackEndCodeTemplate()
+        public Task<string> GetBackEndCodeTemplate()
         {
-            var template = BuildXncfAppService.BackendTemplate;
-
-            return template;
+            return Task.FromResult(BackendTemplate);
         }
 
         //[McpServerTool, Description("获取文件内容")]
-        public async Task<BuildXncf_GetFileResponse> GetFile([Description("完整模块名，如 Senparc.Xncf.XncfBuilder")] string moduleName, [Description("在模块内的路径+文件名")] string filePath)
+        public async Task<BuildXncf_GetFileResponse> GetFile(
+            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.ModuleFullName")] string moduleName,
+            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.FilePath")] string filePath)
         {
             var response = new BuildXncf_GetFileResponse();
 
-            string fullFilePath = null;
-            string fileContent = null;
             try
             {
-                fullFilePath = this.GetFilePath(moduleName, filePath);
+                var moduleDirectory = GetModuleDirectory(moduleName);
+                var result = await XncfWorkspaceFileService.ReadTextAsync(
+                    moduleDirectory,
+                    filePath,
+                    this.CancellationToken).ConfigureAwait(false);
 
-                if (!File.Exists(fullFilePath))
-                {
-                    throw new Exception("文件不存在：" + filePath);
-                }
-
-                fileContent = await File.ReadAllTextAsync(fullFilePath);
+                response.Success = true;
+                response.FileName = Path.GetFileName(result.FullFilePath);
+                response.FilePath = filePath;
+                response.FileContent = result.Content;
+                response.Sha256 = result.Sha256;
             }
             catch (Exception ex)
             {
@@ -146,38 +139,34 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 response.Message = ex.Message;
                 return response;
             }
-
-            response.Success = true;
-            response.FileName = Path.GetFileName(fullFilePath);
-            response.FilePath = filePath;
-            response.FileContent = fileContent;
             return response;
         }
 
         //[McpServerTool, Description("创建或更新文件内容，文件不存在时会自动创建")]
-        public async Task<BuildXncf_CreateOrUpdateFileResponse> CreateOrUpdateFile([Description("完整模块名，如 Senparc.Xncf.XncfBuilder")] string moduleName,
-           [Description("在模块内的路径+文件名")] string filePath,
-           [Description("完整文件内容")] string fullFileContent)
+        public async Task<BuildXncf_CreateOrUpdateFileResponse> CreateOrUpdateFile(
+           [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.ModuleFullName")] string moduleName,
+           [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.FilePath")] string filePath,
+           [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.MCP.FileContent")] string fullFileContent,
+           string expectedSha256 = null)
         {
             var response = new BuildXncf_CreateOrUpdateFileResponse();
 
-            string fullFilePath = null;
-            string fileContent = fullFileContent;
             try
             {
-                fullFilePath = this.GetFilePath(moduleName, filePath);
+                var moduleDirectory = GetModuleDirectory(moduleName);
+                var result = await XncfWorkspaceFileService.WriteTextAtomicAsync(
+                    moduleDirectory,
+                    filePath,
+                    fullFileContent,
+                    expectedSha256,
+                    this.CancellationToken).ConfigureAwait(false);
 
-                if (!File.Exists(fullFilePath))
-                {
-                    string directoryPath = Path.GetDirectoryName(fullFilePath);
-                    Senparc.CO2NET.Helpers.FileHelper.TryCreateDirectory(directoryPath);
-                    response.IsNewFile = true;
-                }
-
-                //TODO: 使用 SHA1 验证指纹，把旧文件内容进行缓存或差量备份
-                await File.WriteAllTextAsync(fullFilePath, fileContent);
                 response.Success = true;
-                response.FileName = Path.GetFileName(fullFilePath);
+                response.FileName = Path.GetFileName(result.FullFilePath);
+                response.FilePath = filePath;
+                response.IsNewFile = result.IsNewFile;
+                response.PreviousSha256 = result.PreviousSha256;
+                response.Sha256 = result.Sha256;
             }
             catch (Exception ex)
             {

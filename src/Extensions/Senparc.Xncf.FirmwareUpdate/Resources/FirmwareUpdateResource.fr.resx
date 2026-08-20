@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.FirmwareUpdate.MenuName" xml:space="preserve">
+    <value>Miroir des paquets NCF</value>
+  </data>
+  <data name="Module.FirmwareUpdate.Description" xml:space="preserve">
+    <value>Synchronise les paquets NCF Host et NcfDesktop depuis GitHub dans des dossiers et manifestes host/desktop séparés.</value>
+  </data>
+  <data name="Function.FirmwareUpdate.Settings.Name" xml:space="preserve">
+    <value>Paramètres du miroir</value>
+  </data>
+  <data name="Function.FirmwareUpdate.Settings.Description" xml:space="preserve">
+    <value>Active la synchronisation NCF Host et NcfDesktop depuis GitHub et définit un intervalle de 1 à 24 heures</value>
+  </data>
+  <data name="Function.FirmwareUpdate.Sync.Name" xml:space="preserve">
+    <value>Synchroniser maintenant</value>
+  </data>
+  <data name="Function.FirmwareUpdate.Sync.Description" xml:space="preserve">
+    <value>Récupère les dernières Releases NCF Host et NcfDesktop et met à jour leurs paquets et manifestes locaux</value>
+  </data>
+  <data name="Parameter.FirmwareUpdate.AutoMirror" xml:space="preserve">
+    <value>Activer le miroir automatique||Synchroniser NCF Host et NcfDesktop vers ~/wwwroot/NcfPackages/host et desktop</value>
+  </data>
+  <data name="Parameter.FirmwareUpdate.Interval" xml:space="preserve">
+    <value>Intervalle de vérification (heures)||De 1 à 24 heures</value>
+  </data>
+  <data name="Parameter.FirmwareUpdate.Interval.Option" xml:space="preserve">
+    <value>{0} heures</value>
+  </data>
+  <data name="Parameter.FirmwareUpdate.Interval.Help" xml:space="preserve">
+    <value>Vérifier toutes les {0} heures</value>
+  </data>
+</root>

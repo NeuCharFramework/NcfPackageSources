@@ -1,4 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：MyFuctionAppService.cs
+    文件功能描述：MyFuctionAppService 相关实现
+    
+    
+    创建标识：Senparc - 20250105
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.3.0-preview3 为 KnowledgeBase 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
@@ -21,7 +38,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
             _colorService = colorService;
         }
 
-        [FunctionRender("我的函数", "我的函数的注释", typeof(Register))]
+        [FunctionRender(typeof(KnowledgeBaseResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
         public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -37,7 +54,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                   */
 
                 double calcResult = request.Number1;
-                var theOperator = request.Operator.SelectedValues.FirstOrDefault();
+                var theOperator = request.Operator;
                 switch (theOperator)
                 {
                     case "+":
@@ -68,7 +85,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
 
                 Action<int> raisePower = power =>
                 {
-                    if (request.Power.SelectedValues.Contains(power.ToString()))
+                    if ((request.Power ?? Array.Empty<string>()).Contains(power.ToString()))
                     {
                         var oldValue = calcResult;
                         calcResult = Math.Pow(calcResult, power);

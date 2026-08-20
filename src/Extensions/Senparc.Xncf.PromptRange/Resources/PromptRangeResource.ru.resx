@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.PromptRange.MenuName" xml:space="preserve">
+    <value>Лаборатория промптов</value>
+  </data>
+  <data name="Module.PromptRange.Description" xml:space="preserve">
+    <value>Обучает и оценивает промпты</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>Главная</value>
+  </data>
+  <data name="Function.PromptRange.ViewCodes.Name" xml:space="preserve">
+    <value>Показать список PromptCode</value>
+  </data>
+  <data name="Function.PromptRange.ViewCodes.Description" xml:space="preserve">
+    <value>Показывает PromptCode всех диапазонов и тактик для быстрого создания агентов</value>
+  </data>
+  <data name="Parameter.PromptRange.FilterRange" xml:space="preserve">
+    <value>Фильтр имени полигона||Введите ключевое слово; оставьте пустым, чтобы показать все полигоны</value>
+  </data>
+  <data name="Area.ExtensionModules" xml:space="preserve"><value>Модули расширения</value></data>
+  <data name="Area.PromptRange" xml:space="preserve"><value>Полигон промптов</value></data>
+  <data name="Area.Model" xml:space="preserve"><value>Модели</value></data>
+  <data name="Title.Home" xml:space="preserve"><value>Главная Prompt Range</value></data>
+  <data name="Title.Model" xml:space="preserve"><value>Модели Prompt Range</value></data>
+  <data name="Title.Prompt" xml:space="preserve"><value>Промпт Prompt Range</value></data>
+  <data name="Dashboard.AddModel" xml:space="preserve"><value>Добавить модель</value></data>
+  <data name="Dashboard.DataUpdated" xml:space="preserve"><value>Данные обновлены:</value></data>
+  <data name="Dashboard.Refresh" xml:space="preserve"><value>Обновить панель</value></data>
+  <data name="Dashboard.Workbench" xml:space="preserve"><value>Открыть рабочую область Prompt</value></data>
+  <data name="Dashboard.Trend" xml:space="preserve"><value>Тренд запусков (последние {0} дней)</value></data>
+  <data name="Dashboard.TrendSubtitle" xml:space="preserve"><value>Вызовы / средняя оценка</value></data>
+  <data name="Dashboard.ModelDistribution" xml:space="preserve"><value>Распределение использования моделей</value></data>
+  <data name="Dashboard.TopModels" xml:space="preserve"><value>Топ-{0}</value></data>
+  <data name="Dashboard.TopPrompts" xml:space="preserve"><value>Популярные Prompt</value></data>
+  <data name="Dashboard.PromptPage" xml:space="preserve"><value>Перейти на страницу Prompt</value></data>
+  <data name="Dashboard.Range" xml:space="preserve"><value>Полигон</value></data>
+  <data name="Dashboard.Calls" xml:space="preserve"><value>Вызовы</value></data>
+  <data name="Dashboard.AverageScore" xml:space="preserve"><value>Средняя оценка</value></data>
+  <data name="Dashboard.LastRun" xml:space="preserve"><value>Последний запуск</value></data>
+  <data name="Dashboard.Draft" xml:space="preserve"><value>Черновик</value></data>
+  <data name="Dashboard.Health" xml:space="preserve"><value>Состояние полигона</value></data>
+  <data name="Dashboard.HealthSubtitle" xml:space="preserve"><value>Оценка + активность + доля черновиков</value></data>
+  <data name="Dashboard.Active" xml:space="preserve"><value>Активных</value></data>
+  <data name="Dashboard.Risk" xml:space="preserve"><value>Риски и Prompt для улучшения</value></data>
+  <data name="Dashboard.RiskSubtitle" xml:space="preserve"><value>Сначала обработайте низкие оценки и нетестированные элементы</value></data>
+  <data name="Dashboard.Priority" xml:space="preserve"><value>Приоритет</value></data>
+  <data name="Dashboard.Insight" xml:space="preserve"><value>Инсайты</value></data>
+  <data name="Dashboard.InsightSubtitle" xml:space="preserve"><value>На основе реальных запусков и оценок</value></data>
+  <data name="Dashboard.EmptyPrompt" xml:space="preserve"><value>Нет данных Prompt</value></data>
+  <data name="Dashboard.EmptyRange" xml:space="preserve"><value>Нет данных полигонов</value></data>
+  <data name="Dashboard.EmptyRisk" xml:space="preserve"><value>Нет рисков</value></data>
+  <data name="Dashboard.EmptyInsight" xml:space="preserve"><value>Нет данных инсайтов</value></data>
+  <data name="Dashboard.ScoreUnit" xml:space="preserve"><value>баллов</value></data>
+  <data name="Dashboard.RangeTotal" xml:space="preserve"><value>Всего полигонов</value></data>
+  <data name="Dashboard.ActiveRange" xml:space="preserve"><value>Активные полигоны за 7 дней: {0}</value></data>
+  <data name="Dashboard.PromptTotal" xml:space="preserve"><value>Всего Prompt</value></data>
+  <data name="Dashboard.DraftCount" xml:space="preserve"><value>Черновики {0} ({1}%)</value></data>
+  <data name="Dashboard.ResultTotal" xml:space="preserve"><value>Всего запусков</value></data>
+  <data name="Dashboard.TodayLast7" xml:space="preserve"><value>Сегодня {0} / последние 7 дней {1}</value></data>
+  <data name="Dashboard.AverageFinalScore" xml:space="preserve"><value>Средняя итоговая оценка</value></data>
+  <data name="Dashboard.Coverage" xml:space="preserve"><value>Охват оценками {0}</value></data>
+  <data name="Dashboard.TokenCost" xml:space="preserve"><value>Всего токенов</value></data>
+  <data name="Dashboard.ActivePrompt" xml:space="preserve"><value>Активные Prompt за 7 дней: {0}</value></data>
+  <data name="Dashboard.AverageLatency" xml:space="preserve"><value>Среднее время ответа</value></data>
+  <data name="Dashboard.AllResults" xml:space="preserve"><value>Статистика всех запусков</value></data>
+  <data name="Dashboard.UnknownModel" xml:space="preserve"><value>Неизвестно</value></data>
+  <data name="Dashboard.ModelPrefix" xml:space="preserve"><value>Модель №{0}</value></data>
+  <data name="Dashboard.Refreshed" xml:space="preserve"><value>Панель обновлена</value></data>
+  <data name="Auth.SessionExpired" xml:space="preserve"><value>Срок действия сеанса истёк. Войдите снова.</value></data>
+  <data name="Auth.AccessDenied" xml:space="preserve"><value>У вас нет разрешения на доступ к этой функции.</value></data>
+  <data name="Model.SearchPlaceholder" xml:space="preserve"><value>Введите текст</value></data>
+  <data name="Model.Add" xml:space="preserve"><value>Добавить</value></data>
+  <data name="Model.BatchDelete" xml:space="preserve"><value>Удалить выбранные</value></data>
+  <data name="Model.Index" xml:space="preserve"><value>№</value></data>
+  <data name="Model.Name" xml:space="preserve"><value>Имя модели</value></data>
+  <data name="Model.Developer" xml:space="preserve"><value>Разработчик</value></data>
+  <data name="Model.Public" xml:space="preserve"><value>Публичная</value></data>
+  <data name="Model.Actions" xml:space="preserve"><value>Действия</value></data>
+  <data name="Model.Edit" xml:space="preserve"><value>Изменить</value></data>
+  <data name="Model.Delete" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Model.Type" xml:space="preserve"><value>Тип модели</value></data>
+  <data name="Model.TypePlaceholder" xml:space="preserve"><value>Выберите тип модели</value></data>
+  <data name="Model.NamePlaceholder" xml:space="preserve"><value>Введите имя модели</value></data>
+  <data name="Model.Endpoint" xml:space="preserve"><value>Конечная точка модели</value></data>
+  <data name="Model.EndpointPlaceholder" xml:space="preserve"><value>Введите конечную точку модели</value></data>
+  <data name="Model.ApiKeyPlaceholder" xml:space="preserve"><value>Введите API key</value></data>
+  <data name="Model.Cancel" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Model.Confirm" xml:space="preserve"><value>Подтвердить</value></data>
+  <data name="Model.NewTitle" xml:space="preserve"><value>Добавить модель</value></data>
+  <data name="Model.EditTitle" xml:space="preserve"><value>Изменить модель</value></data>
+  <data name="Model.AddSuccess" xml:space="preserve"><value>Успешно добавлено!</value></data>
+  <data name="Model.AddFailed" xml:space="preserve"><value>Ошибка добавления</value></data>
+  <data name="Model.ModifyFailed" xml:space="preserve"><value>Ошибка изменения</value></data>
+  <data name="Model.DeleteFailed" xml:space="preserve"><value>Ошибка удаления</value></data>
+  <data name="Model.SelectType" xml:space="preserve"><value>Выберите тип модели</value></data>
+  <data name="Model.EnterName" xml:space="preserve"><value>Введите имя модели</value></data>
+  <data name="Model.EnterApi" xml:space="preserve"><value>Введите API модели</value></data>
+  <data name="Model.EnterApiKey" xml:space="preserve"><value>Введите API key модели</value></data>
+  <data name="Area.DatabaseSample" xml:space="preserve"><value>Пример работы с базой данных</value></data>
+ </root>

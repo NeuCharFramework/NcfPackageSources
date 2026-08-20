@@ -1,4 +1,17 @@
-﻿using Senparc.Ncf.Core.Models;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ChatTask.cs
+    文件功能描述：ChatTask 相关实现
+    
+    
+    创建标识：Senparc - 20241016
+    
+    修改标识：Senparc - 20260704
+    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+
+----------------------------------------------------------------*/
+using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -27,6 +40,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
         public bool IsPersonality { get; private set; }
 
         public bool Score { get; private set; }
+
+        /// <summary>
+        /// 是否已归档
+        /// </summary>
+        [Required]
+        public bool IsArchived { get; private set; }
 
         [Required]
         public DateTime StartTime { get; private set; }
@@ -67,7 +86,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             ResultComment = resultComment;
             HookPlatform = hookPlatform;
             HookPlatformParameter = hookPlatformParameter;
-                  }
+            IsArchived = false;
+        }
 
         public ChatTask(ChatTaskDto chatTaskDto)
         {
@@ -84,6 +104,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             ResultComment = chatTaskDto.ResultComment;
             HookPlatform = chatTaskDto.HookPlatform;
             HookPlatformParameter = chatTaskDto.HookPlatformParameter;
+            IsArchived = chatTaskDto.IsArchived;
         }
 
         public void ChangeStatus(ChatTask_Status status)
@@ -93,6 +114,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel
             {
                 EndTime = DateTime.Now;
             }
+        }
+
+        public void SetArchived(bool isArchived)
+        {
+            IsArchived = isArchived;
         }
 
     }

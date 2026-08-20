@@ -1,3 +1,23 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.cs
+    文件功能描述：Register 相关实现
+
+
+    创建标识：Senparc - 20250105
+
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.3.0-preview3 为 KnowledgeBase 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
 using System;
@@ -30,11 +50,11 @@ namespace Senparc.Xncf.KnowledgeBase
 
         public override string Version => "0.1.10";//必须填写版本号
 
-        public override string MenuName => "AI 知识库";
+        public override string MenuName => KnowledgeBaseResource.Get("Module.KnowledgeBase.MenuName", "AI 知识库");
 
         public override string Icon => "fa fa-lightbulb-o";
 
-        public override string Description => "AI 知识库";
+        public override string Description => KnowledgeBaseResource.Get("Module.KnowledgeBase.Description", "AI 知识库");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
@@ -81,6 +101,7 @@ namespace Senparc.Xncf.KnowledgeBase
         {
             services.AddScoped<ColorAppService>();
             services.AddScoped<Domain.Services.KnowledgeBaseService>();
+            services.AddScoped<Senparc.Xncf.FileManager.Domain.Services.INcfFileDeletionGuard, Domain.Services.KnowledgeBaseFileDeletionGuard>();
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();

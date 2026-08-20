@@ -1,4 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：DatabaseUpdateAppService.cs
+    文件功能描述：DatabaseUpdateAppService 相关实现
+    
+    
+    创建标识：Senparc - 20211014
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
 using System;
@@ -19,7 +36,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
         /// 显示当前的数据库配置类型
         /// </summary>
         /// <returns></returns>
-        [FunctionRender("检测数据库是否需要更新", "使用 Entity Framework Core 的 Code First 模式中的 Migration 功能，检测系统当前数据库是否有未被更新的版本，如果有，请使用“Merge EF Core”方法进行更新。", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.CheckUpdate.Name", "Function.Database.CheckUpdate.Description", typeof(Register))]
         public async Task<StringAppResponse> ShowDatabaseConfiguration(/*BaseAppRequest request*/)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -52,7 +69,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.AppService
             });
         }
 
-        [FunctionRender("Merge EF Core", "使用 Entity Framework Core 的 Code First 模式对数据库进行更新，使数据库和当前运行版本匹配。", typeof(Register))]
+        [FunctionRender(typeof(DatabaseToolkitResource), "Function.Database.Merge.Name", "Function.Database.Merge.Description", typeof(Register))]
         public async Task<StringAppResponse> UpdateDatabase()
         {
             return await this.GetStringResponseAsync(async (response, logger) =>

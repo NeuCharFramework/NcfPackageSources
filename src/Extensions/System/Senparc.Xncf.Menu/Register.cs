@@ -1,4 +1,21 @@
-﻿using Senparc.Ncf.Core.Enums;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.cs
+    文件功能描述：Register 相关实现
+    
+    
+    创建标识：Senparc - 20211128
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.14.0-preview2 为 Menu 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
@@ -24,11 +41,11 @@ namespace Senparc.Xncf.Menu
 
         public override string Version => "0.1";//必须填写版本号
 
-        public override string MenuName => "菜单管理";
+        public override string MenuName => MenuResource.Get("Module.Menu.MenuName", "菜单管理");
 
         public override string Icon => "fa fa-bars";
 
-        public override string Description => "系统菜单管理";
+        public override string Description => MenuResource.Get("Module.Menu.Description", "系统菜单管理");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

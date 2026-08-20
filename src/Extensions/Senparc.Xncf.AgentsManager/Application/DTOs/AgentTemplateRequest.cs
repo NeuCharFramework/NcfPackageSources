@@ -1,8 +1,29 @@
-﻿using log4net.Core;
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AgentTemplateRequest.cs
+    文件功能描述：AgentTemplateRequest 相关实现
+    
+    
+    创建标识：Senparc - 20260704
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+
+----------------------------------------------------------------*/
+
+using log4net.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Extensions;
+using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
@@ -16,6 +37,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,49 +47,52 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     {
         [Required]
         [MaxLength(30)]
-        [Description("名称||Agent 模板名称")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.Name")]
         public string Name { get; set; }
 
         [Required]
-        [Description("Id||如果为 0 则新增")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.Id")]
         public int Id { get; set; }
 
         [Required]
-        [Description("SystemMessage||SystemMessage 的 PromptRangeCode（支持自选模式）")]
-        public SelectionList SystemMessagePromptCodeSelection { get; set; } = new SelectionList(SelectionType.DropDownList);
-
-        [Description("手动输入 SystemMessage||SystemMessage 的 PromptRangeCode（支持自选模式），当 SystemMessage 选择“手动输入 SystemMessage”时必须在此处输入")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.SystemMessage")]
+        [FunctionParameterUi(ParameterType.DropDownList, nameof(SystemMessagePromptCodeOptions), Filterable = true, AllowCreate = true)]
         public string SystemMessagePromptCode { get; set; }
 
+        [JsonIgnore]
+        public SelectionList SystemMessagePromptCodeOptions { get; set; } = new SelectionList(SelectionType.DropDownList);
 
 
-        [Description("说明||对 Agent Template 进行说明，此信息不会对模型效果产生影响")]
+
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.Description")]
         public string Description { get; set; }
 
         [Required]
-        [Description("外接平台||需要对外发布消息的平台")]
-        public SelectionList HookRobotType { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.Platform")]
+        [FunctionParameterUi(ParameterType.DropDownList, nameof(HookRobotTypeOptions))]
+        public string HookRobotType { get; set; }
+
+        [JsonIgnore]
+        public SelectionList HookRobotTypeOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new List<SelectionItem>());
         //TODO:可以选择多个通道
 
 
-        [Description("外界平台参数||通常为 Key 之类的参数")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.PlatformParameter")]
         public string HookRobotParameter { get; set; }
 
-        [Description("Function Calls||Function Calls 名称列表，多个用逗号分隔")]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Template.FunctionCalls")]
         public string FunctionCallNames { get; set; }
+
+        public int? KnowledgeBaseId { get; set; }
+
+        public string GetSystemMessagePromptCode()
+        {
+            return SystemMessagePromptCode?.Trim();
+        }
 
         public string GetySystemMessagePromptCode()
         {
-            var selectionValue = SystemMessagePromptCodeSelection.SelectedValues.FirstOrDefault();
-            if (selectionValue != "0")
-            {
-                return selectionValue;
-            }
-            else
-            {
-                return SystemMessagePromptCode;
-            }
-
+            return GetSystemMessagePromptCode();
         }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
@@ -78,12 +103,65 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
             var hookRobotTypeItems = Enum.GetValues<HookRobotType>();
             foreach (var item in hookRobotTypeItems)
             {
-                HookRobotType.Items.Add(new SelectionItem(((int)item).ToString(), item.ToString(), item.ToString(), false));
+                HookRobotTypeOptions.Items.Add(new SelectionItem(((int)item).ToString(), item.ToString(), item.ToString(), item == Models.DatabaseModel.HookRobotType.None));
             }
 
-            await PromptRangeItemHelper.LoadPromptRangeItemSelection(serviceProvider, SystemMessagePromptCodeSelection);
+            await PromptRangeItemHelper.LoadPromptRangeItemSelection(serviceProvider, SystemMessagePromptCodeOptions);
         }
 
 
+    }
+
+    /// <summary>
+    /// 从 PromptCode 快速创建智能体的请求
+    /// </summary>
+    public class AgentTemplate_CreateFromPromptCodeRequest : FunctionAppRequestBase
+    {
+        [Required]
+        [MaxLength(50)]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.Name")]
+        public string Name { get; set; }
+
+        // [Required]
+        // [Description("PromptCode 作用范围||选择覆盖范围：靶场名称（Range级别）：Range、靶道前缀（Tactic级别）：Tactic、或完整版本号（精确定位）：PromptCode，只能严格从 Range、Tactic、PromptCode 中选择")]
+        // public string ScopeSelection { get; set; } 
+
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.ManualPromptCode")]
+        public string ManualPromptCode { get; set; }
+
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.Description")]
+        public string Description { get; set; }
+
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Create.FunctionCalls")]
+        public string FunctionCallNames { get; set; }
+
+        public string GetPromptCode()
+        {
+            // if (!string.IsNullOrEmpty(ScopeSelection))
+            // {
+            //     return ScopeSelection;
+            // }
+            return ManualPromptCode;
+        }
+
+        // public override async Task LoadData(IServiceProvider serviceProvider)
+        // {
+        //     await base.LoadData(serviceProvider);
+
+        //     await PromptRangeItemHelper.LoadPromptRangeItemSelection(serviceProvider, ScopeSelection);
+        // }
+    }
+
+    /// <summary>
+    /// 搜索 AgentTemplate 并返回可用 ID 的请求
+    /// </summary>
+    public class AgentTemplate_FindByNameRequest : FunctionAppRequestBase
+    {
+        [Required]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Search.Query")]
+        public string Query { get; set; }
+
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Search.TopN")]
+        public int TopN { get; set; } = 5;
     }
 }

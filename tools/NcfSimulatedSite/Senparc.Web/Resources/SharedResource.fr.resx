@@ -117,4 +117,113 @@
   <data name="Footer.Copyright" xml:space="preserve">
     <value>Senparc Network Technology Co., Ltd. Tous droits réservés</value>
   </data>
+  <data name="Site.MetaDescription" xml:space="preserve"><value>Framework .NET pour créer des projets de base avec DDD et une conception hautement modulaire</value></data>
+  <data name="Nav.Brand" xml:space="preserve"><value>Démo NeuCharFramework</value></data>
+  <data name="Nav.ToggleNavigation" xml:space="preserve"><value>Afficher ou masquer la navigation</value></data>
+  <data name="Nav.Documentation" xml:space="preserve"><value>Documentation</value></data>
+  <data name="Nav.Community" xml:space="preserve"><value>Communauté</value></data>
+  <data name="Nav.AdminLogin" xml:space="preserve"><value>Connexion administrateur</value></data>
+  <data name="Nav.GitHub" xml:space="preserve"><value>GitHub</value></data>
+  <data name="Footer.Community" xml:space="preserve"><value>Communauté</value></data>
+  <data name="Footer.Events" xml:space="preserve"><value>Événements</value></data>
+  <data name="Footer.Contribute" xml:space="preserve"><value>Contribuer</value></data>
+  <data name="Footer.Documentation" xml:space="preserve"><value>Documentation</value></data>
+  <data name="Footer.StartDevelopment" xml:space="preserve"><value>Commencer à développer</value></data>
+  <data name="Footer.Glossary" xml:space="preserve"><value>Glossaire</value></data>
+  <data name="Footer.Faq" xml:space="preserve"><value>FAQ</value></data>
+  <data name="Footer.ReleaseNotes" xml:space="preserve"><value>Notes de version</value></data>
+  <data name="Footer.ContactUs" xml:space="preserve"><value>Nous contacter</value></data>
+  <data name="Home.Tagline" xml:space="preserve"><value>Simple · Flexible · Extensible</value></data>
+  <data name="Home.Introduction.Line1" xml:space="preserve"><value>NCF (NeuCharFramework) est un framework .NET polyvalent de niveau entreprise pour créer des projets de base.</value></data>
+  <data name="Home.Introduction.Line2" xml:space="preserve"><value>Il applique rigoureusement le DDD et intègre cache, bases de données, modèles, validation et interface d’administration.</value></data>
+  <data name="Home.Introduction.Line3" xml:space="preserve"><value>Sa conception hautement modulaire offre une grande extensibilité et une excellente robustesse.</value></data>
+  <data name="Home.Notice.Framework" xml:space="preserve"><value>NCF prend entièrement en charge .NET 8.0.</value></data>
+  <data name="Home.Notice.Databases" xml:space="preserve"><value>SQLite, SQL Server, MySQL, PostgreSQL, Oracle et DM (Dameng) sont actuellement pris en charge.</value></data>
+  <data name="Home.Notice.Feedback" xml:space="preserve"><value>D’autres bases de données seront ajoutées. Faites-nous part de vos besoins !</value></data>
+  <data name="Home.CurrentTenant" xml:space="preserve"><value>Locataire actuel :</value></data>
+  <data name="Home.TenantUnavailable" xml:space="preserve"><value>Non activé ou aucun locataire correspondant</value></data>
+  <data name="Home.StartNow" xml:space="preserve"><value>Commencer</value></data>
+  <data name="Home.Features.QuickStart.Title" xml:space="preserve"><value>Mise en place rapide</value></data>
+  <data name="Home.Features.QuickStart.Description" xml:space="preserve"><value>Installez le modèle de framework en un clic.</value></data>
+  <data name="Home.Features.AiNative.Title" xml:space="preserve"><value>Framework natif pour l’IA</value></data>
+  <data name="Home.Features.AiNative.Description" xml:space="preserve"><value>Créez des systèmes avec l’IA pour une expérience de développement intelligente et développez facilement des applications d’IA grâce aux fonctions intégrées.</value></data>
+  <data name="Home.Features.Modular.Title" xml:space="preserve"><value>Conception modulaire</value></data>
+  <data name="Home.Features.Modular.Description" xml:space="preserve"><value>Combinez et étendez librement les modules. Chaque fonction peut être développée, testée, intégrée et déployée séparément.</value></data>
+  <data name="Home.Features.Databases.Title" xml:space="preserve"><value>Plusieurs bases de données</value></data>
+  <data name="Home.Features.Databases.Description" xml:space="preserve"><value>Prend en charge SQL Server, MySQL, SQLite, PostgreSQL, Oracle, DM (Dameng) et d’autres bases facilement extensibles.</value></data>
+  <data name="Home.Features.Performance.Title" xml:space="preserve"><value>Haute performance</value></data>
+  <data name="Home.Features.Performance.Description" xml:space="preserve"><value>Plus de 10 ans d’optimisation des systèmes d’entreprise assurent performance et disponibilité, y compris pour des systèmes dépassant 5 millions de pages vues par jour.</value></data>
+  <data name="Home.Features.Ddd.Title" xml:space="preserve"><value>Architecture DDD</value></data>
+  <data name="Home.Features.Ddd.Description" xml:space="preserve"><value>Une conception pilotée par le domaine rigoureuse pour s’adapter avec souplesse aux changements.</value></data>
+  <data name="Home.Features.Dapr.Title" xml:space="preserve"><value>Prise en charge de Dapr</value></data>
+  <data name="Home.Features.Dapr.Description" xml:space="preserve"><value>Prend en charge Dapr pour créer rapidement des microservices.</value></data>
+  <data name="Home.Features.Compatibility.Title" xml:space="preserve"><value>Rétrocompatibilité</value></data>
+  <data name="Home.Features.Compatibility.Description" xml:space="preserve"><value>Outre les microservices et les systèmes distribués, NCF prend en charge le développement classique et le déploiement autonome sans apprentissage supplémentaire. Son architecture modulaire permet des mises à niveau transparentes.</value></data>
+  <data name="Home.Features.Community.Title" xml:space="preserve"><value>Soutien communautaire</value></data>
+  <data name="Home.Features.Community.Description" xml:space="preserve"><value>Maintenance et mises à niveau continues assurées par l’équipe principale de la communauté de développeurs Senparc.</value></data>
+  <data name="Home.ComingSoon" xml:space="preserve"><value>Cette section n’est pas encore disponible. Merci de patienter.</value></data>
+  <data name="Home.InstallDocsConfirm" xml:space="preserve"><value>Le module de documentation hors ligne n’est pas installé. L’installer maintenant ?</value></data>
+  <data name="Home.OpenDocsConfirm" xml:space="preserve"><value>{0} Actualisez cette page pour afficher l’accès à la documentation. L’ouvrir maintenant ?</value></data>
+  <data name="Home.RequestFailed" xml:space="preserve"><value>La requête a échoué. Veuillez réessayer plus tard.</value></data>
+  <data name="Home.InstallRequired.Title" xml:space="preserve"><value>Initialisation de NeuCharFramework</value></data>
+  <data name="Home.InstallRequired.Message" xml:space="preserve"><value>NeuCharFramework n’est pas encore initialisé. La page d’initialisation va s’ouvrir dans un instant...</value></data>
+  <data name="Home.InstallRequired.Link" xml:space="preserve"><value>Cliquez ici si la page ne s’ouvre pas automatiquement</value></data>
+  <data name="Error.Title" xml:space="preserve"><value>Erreur</value></data>
+  <data name="Error.RequestFailed" xml:space="preserve"><value>Une erreur s’est produite lors du traitement de votre demande.</value></data>
+  <data name="Error.RequestId" xml:space="preserve"><value>ID de la demande</value></data>
+  <data name="Error.DevelopmentMode" xml:space="preserve"><value>Mode développement</value></data>
+  <data name="Error.DevelopmentDetails" xml:space="preserve"><value>Le passage à l’environnement Development affiche les détails de cette erreur.</value></data>
+  <data name="Error.DevelopmentWarning" xml:space="preserve"><value>L’environnement Development ne doit pas être activé pour les applications déployées.</value></data>
+  <data name="Error.DevelopmentInstructions" xml:space="preserve"><value>Il peut exposer des informations sensibles sur les exceptions. Pour le débogage local, définissez ASPNETCORE_ENVIRONMENT sur Development puis redémarrez l’application.</value></data>
+  <data name="Privacy.Title" xml:space="preserve"><value>Politique de confidentialité</value></data>
+  <data name="Privacy.Description" xml:space="preserve"><value>Utilisez cette page pour décrire la politique de confidentialité de votre site.</value></data>
+  <data name="Cookie.Summary" xml:space="preserve"><value>Nous utilisons des cookies pour améliorer votre expérience. Consultez la politique de confidentialité pour plus de détails.</value></data>
+  <data name="Cookie.LearnMore" xml:space="preserve"><value>En savoir plus</value></data>
+  <data name="Cookie.Accept" xml:space="preserve"><value>Accepter</value></data>
+  <!-- ===== Download Page ===== -->
+  <data name="Nav.Download" xml:space="preserve"><value>Télécharger</value></data>
+  <data name="Download.PageTitle" xml:space="preserve"><value>Télécharger NCF</value></data>
+  <data name="Download.Hero.Eyebrow" xml:space="preserve"><value>AI NATIVE · AI READY</value></data>
+  <data name="Download.Hero.Title" xml:space="preserve"><value>Prêt à démarrer. Prêt pour votre prochain projet.</value></data>
+  <data name="Download.Hero.Description" xml:space="preserve"><value>Lancez un système NCF complet en quelques minutes avec NCF Desktop, ou utilisez NCF comme base AI Native et AI Ready pour créer tout type de système métier et intelligent.</value></data>
+  <data name="Download.Hero.Helper" xml:space="preserve"><value>Le miroir local le plus récent est privilégié. Si l’architecture ne peut pas être identifiée, choisissez un paquet ci-dessous.</value></data>
+  <data name="Download.Action.Download" xml:space="preserve"><value>Télécharger</value></data>
+  <data name="Download.Action.AllReleases" xml:space="preserve"><value>Voir toutes les versions</value></data>
+  <data name="Download.Action.ViewReleases" xml:space="preserve"><value>Voir les versions</value></data>
+  <data name="Download.Status.Device" xml:space="preserve"><value>Votre appareil</value></data>
+  <data name="Download.Status.Version" xml:space="preserve"><value>Dernière version</value></data>
+  <data name="Download.Status.Source" xml:space="preserve"><value>Source</value></data>
+  <data name="Download.Status.Loading" xml:space="preserve"><value>Recherche du meilleur paquet…</value></data>
+  <data name="Download.Status.LocalSource" xml:space="preserve"><value>Miroir local rapide</value></data>
+  <data name="Download.Status.GitHubSource" xml:space="preserve"><value>GitHub Releases</value></data>
+  <data name="Download.Status.Unavailable" xml:space="preserve"><value>Temporairement indisponible</value></data>
+  <data name="Download.Status.Detected" xml:space="preserve"><value>Détecté</value></data>
+  <data name="Download.Status.Estimated" xml:space="preserve"><value>estimé</value></data>
+  <data name="Download.Path.Eyebrow" xml:space="preserve"><value>UN FRAMEWORK · DEUX DÉPARTS</value></data>
+  <data name="Download.Path.Title" xml:space="preserve"><value>Du prêt à l’emploi au sur-mesure</value></data>
+  <data name="Download.Path.Description" xml:space="preserve"><value>Pour un système immédiat ou un produit destiné à évoluer, NCF offre un point de départ clair et fiable.</value></data>
+  <data name="Download.Path.Run.Title" xml:space="preserve"><value>Prêt à l’emploi</value></data>
+  <data name="Download.Path.Run.Description" xml:space="preserve"><value>Avec NCF Desktop, lancez rapidement l’environnement, l’administration, les modules et l’espace IA, puis concentrez-vous sur votre métier.</value></data>
+  <data name="Download.Path.Run.Tag" xml:space="preserve"><value>TÉLÉCHARGER &amp; EXÉCUTER</value></data>
+  <data name="Download.Path.Build.Title" xml:space="preserve"><value>Construire sur NCF</value></data>
+  <data name="Download.Path.Build.Description" xml:space="preserve"><value>Étendez les modules XNCF sur une base DDD modulaire et complète pour créer des systèmes AI Native et AI Ready.</value></data>
+  <data name="Download.Path.Build.Tag" xml:space="preserve"><value>CRÉER &amp; ÉTENDRE</value></data>
+  <data name="Download.Platform.Eyebrow" xml:space="preserve"><value>TOUTES LES PLATEFORMES</value></data>
+  <data name="Download.Platform.Title" xml:space="preserve"><value>Choisissez NCF Desktop pour votre appareil</value></data>
+  <data name="Download.Platform.Description" xml:space="preserve"><value>Des paquets autonomes x64 et ARM64 sont disponibles pour Windows, macOS et Linux.</value></data>
+  <data name="Download.Platform.Recommended" xml:space="preserve"><value>Recommandé</value></data>
+  <data name="Download.Platform.Note" xml:space="preserve"><value>Tous les paquets proviennent des versions officielles NeuCharFramework/NcfDesktop. Consultez les notes sur GitHub.</value></data>
+  <data name="Download.Resources.Eyebrow" xml:space="preserve"><value>POURSUIVRE</value></data>
+  <data name="Download.Resources.Title" xml:space="preserve"><value>De l’utilisation à la création</value></data>
+  <data name="Download.Resources.Description" xml:space="preserve"><value>Parcourez le code source, lisez la documentation ou démarrez avec le modèle de projet officiel NCF.</value></data>
+  <data name="Download.Resources.Source.Title" xml:space="preserve"><value>Code source NCF</value></data>
+  <data name="Download.Resources.Source.Description" xml:space="preserve"><value>Explorez le cœur, les modules XNCF et l’implémentation. Signalez un problème, discutez ou contribuez.</value></data>
+  <data name="Download.Resources.Source.Link" xml:space="preserve"><value>Voir le code sur GitHub</value></data>
+  <data name="Download.Resources.Docs.Title" xml:space="preserve"><value>Documentation NCF</value></data>
+  <data name="Download.Resources.Docs.Description" xml:space="preserve"><value>Maîtrisez NCF grâce aux guides sur l’installation, la configuration, les modules et le déploiement.</value></data>
+  <data name="Download.Resources.Template.Description" xml:space="preserve"><value>Générez une solution NCF complète avec le modèle .NET officiel et commencez immédiatement à la personnaliser.</value></data>
+  <data name="Download.Cta.Eyebrow" xml:space="preserve"><value>PRÊT ?</value></data>
+  <data name="Download.Cta.Title" xml:space="preserve"><value>Faites de NCF la base fiable de votre prochain système</value></data>
+  <data name="Download.Cta.Description" xml:space="preserve"><value>Exécutez-le d’abord, approfondissez ensuite. Partez d’un système fonctionnel vers votre application IA native.</value></data>
+  <data name="Download.Cta.Action" xml:space="preserve"><value>Lire le démarrage rapide</value></data>
 </root>

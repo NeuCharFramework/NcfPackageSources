@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.3</Version>
+		<TargetFramework>net10.0</TargetFramework>
+		<Version>0.5.3</Version>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -14,12 +14,52 @@
 		<Owners>Senparc</Owners>
 		<!-- <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl> -->
 		<Title>NCF 安装程序</Title>
-		<!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+		<!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
 		<PackageReleaseNotes>
 			v0.3 创世
-		</PackageReleaseNotes>
+			[2026-07-02] v0.3.1 增强多智能体群聊流程、容错与任务调度能力，优化 AgentsManager 前端界面与历史消息展示效果
+			1、增强多智能体群聊流程、容错与任务调度能力
+			2、优化 AgentsManager 前端界面与历史消息展示效果
+			3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+			[2026-07-07] v0.3.2 Dependency updates from upstream modules
+			1、Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
+			2、Dependency update from Senparc.Areas.Admin to 0.0.5
+			3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+			[2026-07-17] v0.4.0 为安装流程接入多语言资源与界面文案本地化
+			1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+			2、统一模块注册信息、菜单名称与功能描述的本地化输出
+			3、同步管理页面与前端交互文案的多语言显示
+			4、补充并统一多语言资源键及资源文件
+			5、为核心模块提供默认勾选配置，简化首次安装选择
+			6、增加安装确认对话框并补齐多语言提示资源
+			[2026-07-29] v0.4.1 加强安装状态校验并收紧安装辅助路由
+			1、区分未初始化数据库与真实数据库故障，避免错误开放安装入口
+			2、安装请求增加防伪校验、重复安装保护，并仅在开发环境暴露测试路由
+			[2026-07-31] v0.4.2 升级安装模块的 Senparc.AI 兼容依赖
+			1、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0 二进制接口
+			[2026-08-04] v0.5.0 适配数据库升级维护流程
+			1、安装页面接入数据库升级状态判断并引导进入维护流程
+			[2026-08-08] v0.5.1 Dependency updates from upstream projects
+			1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+			2、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+			3、Dependency update from Senparc.Xncf.Swagger to 0.20.2-preview6
+			4、Dependency update from Senparc.Xncf.Terminal to 0.22.4-preview6
+			5、Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
+			6、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+			7、Dependency update from Senparc.Xncf.Menu to 0.14.4-preview6
+			8、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+			9、Dependency update from Senparc.Xncf.SystemManager to 0.15.4-preview7
+			10、Dependency update from Senparc.Xncf.SystemPermission to 0.15.4-preview6
+			11、Dependency update from Senparc.Xncf.Tenant.Interface to 0.10.6-preview6
+			12、Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
+			13、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
+			14、Dependency update from Senparc.Areas.Admin to 0.4.0
+			15、Dependency update from Senparc.Xncf.Installer.Interface to 0.1.5
+			[2026-08-13] v0.5.2 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7; Senparc.Xncf.Swagger to 0.20.3-preview7; Senparc.Xncf.Terminal to 0.22.5-preview7; Senparc.Xncf.XncfBuilder to 0.40.0-preview10; [5955]Senparc.Xncf.AreasBase to 0.13.5-preview7; [5940]Senparc.Xncf.Menu to 0.14.5-preview7; [5980]Senparc.Xncf.SystemCore to 0.14.5-preview7; [5970]Senparc.Xncf.SystemManager to 0.15.5-preview8; [5960]Senparc.Xncf.SystemPermission to 0.15.5-preview7; [5990]Senparc.Xncf.Tenant to 0.15.5-preview7; [5950]Senparc.Xncf.XncfModuleManager to 0.15.5-preview7; Senparc.Areas.Admin to 0.5.0
+			[2026-08-15] v0.5.3 Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0-preview11; Senparc.Areas.Admin to 0.5.1
+</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
 		<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
@@ -51,6 +91,7 @@
 		<!--<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />-->
 
 		<ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
+		<ProjectReference Include="..\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Installer.Interface\Senparc.Xncf.Installer.Interface.csproj" />
 
 		<None Include="App_Data\SenparcTraceLog\*" />
@@ -96,4 +137,5 @@
 	  <Folder Include="Domain\Models\DatabaseModel\" />
 	  <Folder Include="Domain\Models\MultipleDatabase\" />
 	</ItemGroup>
+	<Import Project="$(MSBuildThisFileDirectory)..\..\..\src\Senparc.AI.AgentKernel.props" />
 </Project>

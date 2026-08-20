@@ -14,7 +14,7 @@ var app = new Vue({
         "vectorId": "",
         "name": "",
         "connectionString": "",
-        "vectorDBType": '1',
+        "vectorDBType": '0',
         "note": "",
       },
       editFormDialogVisible: false,
@@ -23,44 +23,40 @@ var app = new Vue({
         "vectorId": "",
         "name": "",
         "connectionString": "",
-        "vectorDBType": '1',
+        "vectorDBType": '0',
         "note": "",
         "show": true
       },
       total: 0,
       addRules: {
         alias: [
-          { required: true, message: '请输入别名', trigger: 'change' }
+          { required: true, message: ncfT('AIKernel.Vector.AliasRequired'), trigger: 'change' }
         ],
         vectorDBType: [
-          { required: true, message: '请选择向量数据库的类型', trigger: 'change' }
+          { required: true, message: ncfT('AIKernel.Vector.TypeRequired'), trigger: 'change' }
         ],
         vectorId: [
-          { required: true, message: '请输入模型名称', trigger: 'blur' }
+          { required: true, message: ncfT('AIKernel.Vector.ModelNameRequired'), trigger: 'blur' }
         ],
         name: [
-          { required: true, message: '请输入向量数据库名称', trigger: 'blur' }
+          { required: true, message: ncfT('AIKernel.Vector.NameRequired'), trigger: 'blur' }
         ],
-        connectionString: [
-          { required: true, message: '请输入连接字符串', trigger: 'blur' }
-        ]
+        connectionString: []
       },
       editRules: {
         alias: [
-          { required: true, message: '请输入别名', trigger: 'change' }
+          { required: true, message: ncfT('AIKernel.Vector.AliasRequired'), trigger: 'change' }
         ],
         vectorDBType: [
-          { required: true, message: '请选择向量数据库的类型', trigger: 'change' }
+          { required: true, message: ncfT('AIKernel.Vector.TypeRequired'), trigger: 'change' }
         ],
         vectorId: [
-          { required: true, message: '请输入模型名称', trigger: 'blur' }
+          { required: true, message: ncfT('AIKernel.Vector.ModelNameRequired'), trigger: 'blur' }
         ],
         name: [
-          { required: true, message: '请输入向量数据库名称', trigger: 'blur' }
+          { required: true, message: ncfT('AIKernel.Vector.NameRequired'), trigger: 'blur' }
         ],
-        connectionString: [
-          { required: true, message: '请输入连接字符串', trigger: 'blur' }
-        ]
+        connectionString: []
       }
     }
   },
@@ -71,6 +67,28 @@ var app = new Vue({
     }, 100)
   },
   methods: {
+    isInMemoryVectorType(vectorTypeRaw) {
+      const code = Number(vectorTypeRaw);
+      return code === 0 || code === 17;
+    },
+    ensureConnectionStringRequirement(formData) {
+      if (!formData) {
+        return false;
+      }
+
+      const connectionString = (formData.connectionString || '').trim();
+      formData.connectionString = connectionString;
+
+      if (this.isInMemoryVectorType(formData.vectorDBType)) {
+        return true;
+      }
+
+      if (!connectionString) {
+        this.$message.warning(ncfT('AIKernel.Vector.ConnectionRequired'));
+        return false;
+      }
+      return true;
+    },
     async init() {
       await this.getDataList();
     },
@@ -101,31 +119,53 @@ var app = new Vue({
     addNeuCharModel() {
       this.neuCharFormDialogVisible = true; // 显示对话框  
     },
-    copyInfo(key) {
-      // 把结果复制到剪切板  
-      const input = document.createElement('input')
-      input.setAttribute('readonly', 'readonly')
-      input.setAttribute('value', key)
-      document.body.appendChild(input)
-      input.select()
-      input.setSelectionRange(0, 9999)
-      if (document.execCommand('copy')) {
-        document.execCommand('copy')
-        //提示时展示'******'+key的后4位  
-        this.$message.success(`已复制【******${key.slice(-4)}】！`)
+    async copyInfo(key) {
+      let copied = false
+      try {
+        if (window.isSecureContext && navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(key)
+          copied = true
+        }
+      } catch (error) {
+        console.warn('Clipboard API is unavailable, using the compatibility fallback.', error)
+      }
+
+      if (!copied) {
+        const input = document.createElement('textarea')
+        input.setAttribute('readonly', 'readonly')
+        input.value = key
+        input.style.position = 'fixed'
+        input.style.opacity = '0'
+        document.body.appendChild(input)
+        input.select()
+        input.setSelectionRange(0, key.length)
+        try {
+          copied = document.execCommand('copy')
+        } finally {
+          input.remove()
+        }
+      }
+
+      if (copied) {
+        this.$message.success(ncfT('AIKernel.Vector.CopySuccess', key.slice(-4)))
+      } else {
+        this.$message.error(ncfT('AIKernel.Vector.CopyFailed'))
       }
     },
     async addModelSubmit() {
       this.$refs.addForm.validate(async (valid) => {
         if (valid) {
           this.addForm.vectorDBType = parseInt(this.addForm.vectorDBType)
+          if (!this.ensureConnectionStringRequirement(this.addForm)) {
+            return false;
+          }
           await service.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.CreateAsync', {
             ...this.addForm
           }
           ).then(res => {
             this.$message({
               type: res.data.success ? 'success' : 'error',
-              message: res.data.success ? '添加成功!' : '添加失败'
+              message: res.data.success ? ncfT('AIKernel.Vector.AddSuccess') : ncfT('AIKernel.Vector.AddFailed')
             });
             if (res.data.success) {
               this.getDataList()
@@ -144,7 +184,7 @@ var app = new Vue({
         "vectorId": "",
         "name": "",
         "connectionString": "",
-        "vectorDBType": '1',
+        "vectorDBType": '0',
         "note": "",
       }
     },
@@ -154,7 +194,7 @@ var app = new Vue({
         "vectorId": "",
         "name": "",
         "connectionString": "",
-        "vectorDBType": '1',
+        "vectorDBType": '0',
         "note": "",
         "show": true
       }
@@ -163,6 +203,9 @@ var app = new Vue({
       this.$refs.editForm.validate(async (valid) => {
         if (valid) {
           this.editForm.vectorDBType = parseInt(this.editForm.vectorDBType)
+          if (!this.ensureConnectionStringRequirement(this.editForm)) {
+            return false;
+          }
           // clear empty value  
           for (const key in this.editForm) {
             if (this.editForm.hasOwnProperty(key)) {
@@ -178,7 +221,7 @@ var app = new Vue({
           }).then(res => {
             this.$message({
               type: res.data.success ? 'success' : 'error',
-              message: res.data.success ? '编辑成功!' : '编辑失败'
+              message: res.data.success ? ncfT('AIKernel.Vector.EditSuccess') : ncfT('AIKernel.Vector.EditFailed')
             });
             if (res.data.success) {
               this.clearEditForm()
@@ -202,9 +245,9 @@ var app = new Vue({
       };
     },
     deleteModel(row) {
-      this.$confirm(`此操作将永久删除【${row.alias}】模型, 是否继续?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(ncfT('AIKernel.Vector.DeleteConfirm', row.alias), ncfT('AIKernel.Vector.DeleteConfirmTitle'), {
+        confirmButtonText: ncfT('AIKernel.Vector.Confirm'),
+        cancelButtonText: ncfT('AIKernel.Vector.Cancel'),
         type: 'warning'
       }).then(async () => {
         await service.delete('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.DeleteAsync', {
@@ -214,7 +257,7 @@ var app = new Vue({
         }).then(async res => {
           this.$message({
             type: res.data.success ? 'success' : 'error',
-            message: res.data.success ? '删除成功!' : '删除失败'
+            message: res.data.success ? ncfT('AIKernel.Vector.DeleteSuccess') : ncfT('AIKernel.Vector.DeleteFailed')
           });
           await this.getDataList().then(() => {
             if (this.tableData.length === 0 && this.page.page > 1) {
@@ -226,7 +269,7 @@ var app = new Vue({
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消删除'
+          message: ncfT('AIKernel.Vector.CancelDelete')
         });
       });
     },

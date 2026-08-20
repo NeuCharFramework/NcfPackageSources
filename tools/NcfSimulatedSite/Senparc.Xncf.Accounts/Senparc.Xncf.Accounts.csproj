@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<Version>0.1</Version>
+		<TargetFramework>net10.0</TargetFramework>
+		<Version>0.3.6</Version>
 		<AssemblyName>Senparc.Xncf.Accounts</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Accounts</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -13,12 +13,34 @@
 		<Owners>Senparc</Owners>
 		 <PackageLicenseUrl>https://github.com/NeuCharFramework/NcfPackageSources/blob/master/LICENSE</PackageLicenseUrl>
 		<Title>用户管理</Title>
-		<!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+		<!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
 		<PackageReleaseNotes>
 			v0.1 创世
-		</PackageReleaseNotes>
+			[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+			[2026-07-02] v0.2.1 增强多智能体群聊流程、容错与任务调度能力，优化 AgentsManager 前端界面与历史消息展示效果
+			1、增强多智能体群聊流程、容错与任务调度能力
+			2、优化 AgentsManager 前端界面与历史消息展示效果
+			[2026-07-17] v0.3.0 为账户模块接入多语言资源与功能文案本地化
+			1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+			2、更新 FunctionRender 与请求模型文案的资源化解析
+			3、统一模块注册信息、菜单名称与功能描述的本地化输出
+			4、补充并统一多语言资源键及资源文件
+			5、统一账户缓存、积分、队列及功能参数的资源化文案
+			[2026-07-29] v0.3.1 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.3-preview3
+			[2026-07-31] v0.3.2 Dependency update from Senparc.Xncf.AreasBase to 0.13.2-preview4
+			[2026-08-04] v0.3.3 Dependency updates from upstream projects
+			1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
+			2、Dependency update from Senparc.Xncf.AreasBase to 0.13.3-preview5
+			3、Dependency update from Senparc.Xncf.SystemCore to 0.14.3-preview5
+			[2026-08-08] v0.3.4 Dependency updates from upstream projects
+			1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+			2、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+			3、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+			[2026-08-13] v0.3.5 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.7-preview7; [5955]Senparc.Xncf.AreasBase to 0.13.5-preview7; [5980]Senparc.Xncf.SystemCore to 0.14.5-preview7
+			[2026-08-15] v0.3.6 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8
+</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
 		<UserSecretsId>09f08471-c710-42f1-9f6b-936794838320</UserSecretsId>
@@ -42,8 +64,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Dapr.AspNetCore" Version="1.17.0-rc01" />
-		<PackageReference Include="Senparc.CO2NET.AspNet" Version="2.1.1" />
-		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+		<PackageReference Include="Senparc.CO2NET.AspNet" Version="2.1.4" />
+		<PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
 	</ItemGroup>
 
@@ -75,8 +97,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
 	  <ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
 	  <ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+	  <ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

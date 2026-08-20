@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：EventBusHostedService.cs
+    文件功能描述：EventBusHostedService 相关实现
+    
+    
+    创建标识：Senparc - 20260215
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260726
+    修改描述：v0.25.0-preview2 增加 EventBus 请求-响应能力，支持超时、取消与请求关联清理
+
+----------------------------------------------------------------*/
+
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
@@ -151,6 +168,10 @@ namespace Senparc.Ncf.Core.EventBus
         private async Task ProcessEventAsync(IIntegrationEvent @event, CancellationToken ct)
         {
             var startTime = DateTime.UtcNow;
+
+            // 响应关联由唯一的 EventBus 消费者完成，不能另建 ChannelReader 与消息泵竞争。
+            // 完成等待任务后仍继续分发，让业务 Handler 可以同时观察响应事件。
+            var completedPendingRequest = _eventBus.TryCompleteRequest(@event);
             
             // 创建 Scope 以支持 Scoped 服务注入（如 DbContext, Repository）
             using var scope = _serviceProvider.CreateScope();
@@ -161,11 +182,22 @@ namespace Senparc.Ncf.Core.EventBus
 
             if (!handlers.Any())
             {
-                _logger.LogWarning(
-                    "No handler found for event {EventType} (Id: {EventId}, Depth: {Depth})", 
-                    @event.GetType().Name, 
-                    @event.Id,
-                    @event.Depth);
+                if (completedPendingRequest)
+                {
+                    _logger.LogDebug(
+                        "EventBus response {EventType} completed a pending request without additional handlers (Id: {EventId}, Depth: {Depth})",
+                        @event.GetType().Name,
+                        @event.Id,
+                        @event.Depth);
+                }
+                else
+                {
+                    _logger.LogWarning(
+                        "No handler found for event {EventType} (Id: {EventId}, Depth: {Depth})",
+                        @event.GetType().Name,
+                        @event.Id,
+                        @event.Depth);
+                }
                 return;
             }
 
@@ -301,5 +333,11 @@ namespace Senparc.Ncf.Core.EventBus
         /// 是否启用循环引用检测（检测事件类型链中的循环模式）
         /// </summary>
         public bool EnableCircularReferenceDetection { get; set; } = true;
+
+        /// <summary>
+        /// 单次 EventBus 请求-响应允许等待的最长时间。
+        /// 调用方仍必须为每个请求显式提供不超过此值的有限超时。
+        /// </summary>
+        public TimeSpan MaxRequestTimeout { get; set; } = TimeSpan.FromMinutes(5);
     }
 }

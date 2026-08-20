@@ -1,4 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AdminPageModelBase.cs
+    文件功能描述：AdminPageModelBase 相关实现
+    
+    
+    创建标识：Senparc - 20200724
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.22.0-preview3 统一 AdminOnly 授权策略命名并提供宿主注册扩展
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
+using Senparc.Ncf.Core.Authorization;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.Models.VD;
@@ -23,7 +41,7 @@ namespace Senparc.Ncf.AreaBase.Admin//  Senparc.Areas.Admin
 
     //暂时取消权限验证
     //[ServiceFilter(typeof(AuthenticationAsyncPageFilterAttribute))]
-    [AdminAuthorize("AdminOnly")]
+    [AdminAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class AdminPageModelBase : PageModelBase, IAdminPageModelBase
     {
         /// <summary>

@@ -5,7 +5,7 @@ Vue.prototype.loginout = function () {
 
 // 格式化添加时间等 2020 - 06 - 19T09: 41: 51.1905692
 function formaTableTime(value) {
-    return value ? value.replace('T', '  ').substr(0, 17) : '暂无时间';
+    return value ? value.replace('T', '  ').substr(0, 17) : ncfT('Admin.Common.NoTime');
 }
 
 /**
@@ -16,7 +16,7 @@ function formaTableTime(value) {
 function copyToClipboard(value, toastText) {
     $('#clipboardContainer').val(value);
     $('#clipboardContainer').select();
-    toastText = toastText || '复制成功！请使用 Ctrl+V 组合键进行粘贴操作。';
+    toastText = toastText || ncfT('Admin.Common.CopySuccess');
     try {
         document.execCommand("copy"); // 执行浏览器复制命令
         base.swal.toast(toastText);
@@ -61,3 +61,185 @@ function formatCurrency(num) {
         num = num.substring(0, num.length - (4 * i + 3)) + ',' + num.substring(num.length - (4 * i + 3));
     return ((sign ? '' : '-') + num + '.' + cents);
 }
+
+(function () {
+    var started = false;
+    var promptVisible = false;
+    var checkTimer = null;
+    var remindTimer = null;
+    var currentExpiresAtMs = 0;
+
+    function getConfig() {
+        var cfg = window.NCF_SESSION_CONFIG || {};
+        return {
+            webLoginExpireMinutes: Number(cfg.webLoginExpireMinutes) > 0 ? Number(cfg.webLoginExpireMinutes) : 120,
+            jwtExpireMinutes: Number(cfg.jwtExpireMinutes) > 0 ? Number(cfg.jwtExpireMinutes) : 9000,
+            remindBeforeMinutes: Number(cfg.remindBeforeMinutes) > 0 ? Number(cfg.remindBeforeMinutes) : 5
+        };
+    }
+
+    function getI18n() {
+        return window.NCF_SESSION_I18N || {
+            title: ncfT('Admin.Session.Title'),
+            message: ncfT('Admin.Session.Message'),
+            keepLogin: ncfT('Admin.Session.KeepLogin'),
+            logoutNow: ncfT('Admin.Session.LogoutNow'),
+            keepLoginSuccess: ncfT('Admin.Session.KeepLoginSuccess')
+        };
+    }
+
+    function parseUtcToMs(utcValue) {
+        if (!utcValue) {
+            return 0;
+        }
+        var ms = new Date(utcValue).getTime();
+        return Number.isNaN(ms) ? 0 : ms;
+    }
+
+    function doLogout() {
+        if (typeof Vue !== 'undefined' && Vue.prototype && typeof Vue.prototype.loginout === 'function') {
+            Vue.prototype.loginout();
+        } else {
+            window.location.href = '/Admin/Login?url=' + escape(window.location.pathname + window.location.search);
+        }
+    }
+
+    function scheduleReminder() {
+        if (remindTimer) {
+            clearTimeout(remindTimer);
+            remindTimer = null;
+        }
+
+        if (!currentExpiresAtMs) {
+            return;
+        }
+
+        var remindMs = getConfig().remindBeforeMinutes * 60 * 1000;
+        var delayMs = currentExpiresAtMs - Date.now() - remindMs;
+        if (delayMs <= 0) {
+            showReminderDialog();
+            return;
+        }
+
+        remindTimer = setTimeout(function () {
+            showReminderDialog();
+        }, delayMs);
+    }
+
+    function applySessionStatus(statusData) {
+        if (!statusData) {
+            return;
+        }
+
+        if (statusData.token) {
+            window.ncfJwtToken = statusData.token;
+        }
+
+        currentExpiresAtMs = parseUtcToMs(statusData.expiresUtc);
+        scheduleReminder();
+    }
+
+    function fetchSessionStatus() {
+        if (!window.service) {
+            return Promise.resolve();
+        }
+
+        return service.get('/Admin/Session?handler=Status', { customAlert: true })
+            .then(function (res) {
+                if (res && res.data && res.data.success) {
+                    applySessionStatus(res.data.data);
+                    return;
+                }
+
+                currentExpiresAtMs = 0;
+            });
+    }
+
+    function keepAliveSession() {
+        if (!window.service) {
+            return Promise.reject(new Error('service not ready'));
+        }
+
+        return service.get('/Admin/Session?handler=KeepAlive', { customAlert: true })
+            .then(function (res) {
+                if (!(res && res.data && res.data.success)) {
+                    return Promise.reject(new Error('keep alive failed'));
+                }
+
+                applySessionStatus(res.data.data);
+                var i18n = getI18n();
+                if (typeof app !== 'undefined' && app.$message) {
+                    app.$message({
+                        message: i18n.keepLoginSuccess || ncfT('Admin.Session.KeepLoginSuccess'),
+                        type: 'success',
+                        duration: 1500
+                    });
+                }
+            });
+    }
+
+    function showReminderDialog() {
+        if (promptVisible) {
+            return;
+        }
+
+        if (!currentExpiresAtMs || currentExpiresAtMs <= Date.now()) {
+            return;
+        }
+
+        if (typeof app === 'undefined' || !app.$confirm) {
+            return;
+        }
+
+        promptVisible = true;
+        var i18n = getI18n();
+
+        app.$confirm(
+            i18n.message || ncfT('Admin.Session.Message'),
+            i18n.title || ncfT('Admin.Session.Title'),
+            {
+                confirmButtonText: i18n.keepLogin || ncfT('Admin.Session.KeepLogin'),
+                cancelButtonText: i18n.logoutNow || ncfT('Admin.Session.LogoutNow'),
+                type: 'warning',
+                closeOnClickModal: false,
+                showClose: false,
+                distinguishCancelAndClose: true
+            })
+            .then(function () {
+                return keepAliveSession();
+            })
+            .catch(function () {
+                doLogout();
+            })
+            .finally(function () {
+                promptVisible = false;
+            });
+    }
+
+    function startMonitorWhenReady() {
+        if (started) {
+            return;
+        }
+
+        if (window.location.pathname.toLowerCase().indexOf('/admin/login') === 0) {
+            return;
+        }
+
+        var waitAndStart = function () {
+            if (!window.service || typeof app === 'undefined') {
+                setTimeout(waitAndStart, 800);
+                return;
+            }
+
+            started = true;
+            fetchSessionStatus().catch(function () { });
+            checkTimer = setInterval(function () {
+                fetchSessionStatus().catch(function () { });
+            }, 60 * 1000);
+        };
+
+        waitAndStart();
+    }
+
+    window.ncfStartSessionMonitor = startMonitorWhenReady;
+})();

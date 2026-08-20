@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.15.4-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.19.3-preview11</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <DocumentationFile>../Senparc.Web/App_Data/ApiDocXML/Senparc.Xncf.PromptRange.XML</DocumentationFile>
+    <DocumentationFile>..\..\BuildOutPut\Senparc.Xncf.PromptRange.XML</DocumentationFile>
     <AssemblyName>Senparc.Xncf.PromptRange</AssemblyName>
     <RootNamespace>Senparc.Xncf.PromptRange</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -78,6 +78,49 @@
       [2025-12-14] v0.15.1-preview.1 Optimize Prompt score 3D chart and conversation mode for Brust Shotting mode
       [2025-12-16] v0.15.2-preview.1 Optimize Prompt score 3D chart
       [2025-12-17] v0.15.3-preview.1 Optimize Prompt score 3D chart, support SystemMessage storage for Chat Shooting mode
+      [2026-07-02] v0.16.2-preview1 优化 PromptRange 提示处理流程与会话模式控制，支持流式输出并优化交互体验
+      1、优化 PromptRange 提示处理流程与会话模式控制
+      2、支持流式输出并优化交互体验
+      [2026-07-05] v0.16.3-preview2 增强文生图重试机制并兼容 TLS1.2/TLS1.3，重构系统配置初始化与更新流程并统一模型处理
+      1、增强文生图重试机制并兼容 TLS1.2/TLS1.3
+      2、重构系统配置初始化与更新流程并统一模型处理
+      [2026-07-05] v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3，重构系统配置初始化与更新流程并统一模型处理
+      1、增强文生图重试机制并兼容 TLS1.2/TLS1.3
+      2、重构系统配置初始化与更新流程并统一模型处理
+      3、支持 Continue Chat 待确认消息的追加、确认与移除，提升对话状态管理能力
+      4、优化 PromptRange 页面间距与响应式布局，改善不同屏高下的展示一致性
+      5、新增 Prompt 执行选项模型并补齐文本向量检索请求/响应结构，统一接口参数约定
+      [2026-07-07] v0.16.5-preview4 增强 Embedding 请求兼容处理并优化向量检索稳定性
+      1、新增 embedding 请求兼容逻辑，针对不支持 dimensions 参数的模型自动降级处理
+      2、优化向量集合命名与来源 ID 生成策略，降低并发检索场景下的数据冲突风险
+      3、调整嵌入检索卡片样式，避免右侧浮层遮挡操作按钮
+      4、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+      [2026-07-17] v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
+      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+      2、更新 FunctionRender 与请求模型文案的资源化解析
+      3、统一模块注册信息、菜单名称与功能描述的本地化输出
+      4、同步管理页面与前端交互文案的多语言显示
+      5、统一提示词页面复制工具和剪贴板回退，改善内嵌 WebView 兼容性
+      [2026-07-29] v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+      1、为提示词、音频、图片和流式接口统一增加 AdminOnly 授权保护
+      2、限制插件压缩包大小、条目数、解压体积和路径穿越，并安全渲染结果内容
+      [2026-07-31] v0.18.0-preview7 扩展 PromptRange 管理界面的多语言能力
+      1、补齐提示词、模型、菜单、复制与日期显示的多语言资源
+      2、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0
+      [2026-08-04] v0.19.0-preview8 完善 PromptRange 管理页多语言体验
+      1、为 Prompt、Model 与 Index 页面接入统一本地化脚本
+      2、补充中文、英文、日文、法文、西班牙文与俄文资源
+      [2026-08-08] v0.19.1-preview9 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+      2、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+      3、Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
+      4、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+      5、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+      6、Dependency update from Senparc.Xncf.SystemManager to 0.15.4-preview7
+      7、Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
+      8、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.2.4-preview4
+      [2026-08-13] v0.19.2-preview10 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7; Senparc.Xncf.AIKernel to 0.15.3-preview10
+      [2026-08-15] v0.19.3-preview11 Dependency update from Senparc.Xncf.AIKernel to 0.15.3-preview12
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
@@ -142,4 +185,5 @@
     <ProjectReference Include="..\System\Senparc.Xncf.Tenant\[5990]Senparc.Xncf.Tenant.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />
   </ItemGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
 </Project>

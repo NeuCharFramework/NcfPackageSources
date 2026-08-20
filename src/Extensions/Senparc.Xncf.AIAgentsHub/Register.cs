@@ -1,4 +1,21 @@
-﻿using Senparc.Ncf.Core.Enums;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.cs
+    文件功能描述：Register 相关实现
+    
+    
+    创建标识：Senparc - 20240311
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.13.0-preview3 为 AIAgentsHub 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
@@ -28,11 +45,11 @@ namespace Senparc.Xncf.AIAgentsHub
 
         public override string Version => "0.1.0";//必须填写版本号
 
-        public override string MenuName => "AI Agent Hub";
+        public override string MenuName => AIAgentsHubResource.Get("Module.AIAgentsHub.MenuName", "AI Agent Hub");
 
         public override string Icon => "fa fa-robot";
 
-        public override string Description => "人工智能代理枢纽模块";
+        public override string Description => AIAgentsHubResource.Get("Module.AIAgentsHub.Description", "人工智能代理枢纽模块");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

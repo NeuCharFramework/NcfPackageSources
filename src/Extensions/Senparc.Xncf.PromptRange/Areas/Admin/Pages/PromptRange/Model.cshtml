@@ -1,17 +1,14 @@
 ﻿@page
 @model Senparc.Xncf.PromptRange.Areas.Admin.Pages.PromptRange.ModelModel
-@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
-@{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
-    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
-
-    ViewData["Title"] = AR["Auto.UI.129fa12eec5a"];
+@{
+    ViewData["Title"] = XR["Title.Model"];
     Layout = "_Layout_Vue";
 }
 
 @section breadcrumbs{
-    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["PromptRange.ModuleName"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["Auto.UI.8000f187a5d4"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.PromptRange"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.Model"]</el-breadcrumb-item>
 }
 @section Style{
     <link href="~/css/PromptRange/model.css" rel="stylesheet" />
@@ -20,33 +17,33 @@
 <div class="modelPage">
     <div class="filterRow">
         <div class="leftBox">
-            <el-input placeholder="@CR["Common.PleaseInputContent"]" v-model="queryList.modelName">
+            <el-input placeholder="@XR["Model.SearchPlaceholder"]" v-model="queryList.modelName">
                 <el-button slot="append" icon="el-icon-search" @@click="app.clickSearch()"></el-button>
             </el-input>
         </div>
         <div class="rightBox">
-            <el-button type="primary" @@click="app.createBtnFrom()">@CR["Common.Add"]</el-button>
-            <el-button @@click="app.btnBatchdelete()">@CR["Common.BatchDelete"]</el-button>
+            <el-button type="primary" @@click="app.createBtnFrom">@XR["Model.Add"]</el-button>
+            <el-button @@click="app.btnBatchdelete">@XR["Model.BatchDelete"]</el-button>
         </div>
     </div>
 
     <el-table ref="ModelTable" :data="tableData" class="tableArea" @@selection-change="app.handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column type="index" :index="app.indexMethod" label="@AR["Auto.UI.faaadc447b1c"]" width="50"></el-table-column>
-        <el-table-column prop="name" label="@AR["AIKernel.ModelName"]" min-width="120"></el-table-column>
-        <el-table-column prop="developer" label="@AR["Auto.UI.c2e48855203e"]" min-width="120"></el-table-column>
-        <el-table-column label="@AR["Auto.UI.d442cb8ab310"]" min-width="120">
+        <el-table-column type="index" :index="app.indexMethod" label="@XR["Model.Index"]" width="50"></el-table-column>
+        <el-table-column prop="name" label="@XR["Model.Name"]" min-width="120"></el-table-column>
+        <el-table-column prop="developer" label="@XR["Model.Developer"]" min-width="120"></el-table-column>
+        <el-table-column label="@XR["Model.Public"]" min-width="120">
             <template slot-scope="scope">
                 @*active-color="#13ce66" inactive-color="#ff4949"*@
                 <el-switch v-model="scope.row.show" @@change="app.changeStatue(scope.row,scope.row.show)" />
             </template>
         </el-table-column>
-        <el-table-column label="@CR["Common.Action"]" width="240">
+        <el-table-column label="@XR["Model.Actions"]" width="240">
             <template slot-scope="scope">
-           @*      <el-button type="text" @@click="clickDetails(scope.row)">@AR["Auto.UI.f26225bde6a2"]</el-button>
-                <el-button type="text" @@click="clickMaintenance(scope.row)">@AR["Auto.UI.107baa8ea765"]</el-button> *@
-                <el-button type="text" @@click="editBtnFrom(scope.row)">@CR["Common.Edit"]</el-button>
-                <el-button type="text" @@click="deleteHandle(scope.row)">@CR["Common.Delete"]</el-button>
+           @*      <el-button type="text" @@click="clickDetails(scope.row)">详情</el-button>
+                <el-button type="text" @@click="clickMaintenance(scope.row)">维护</el-button> *@
+                <el-button type="text" @@click="editBtnFrom(scope.row)">@XR["Model.Edit"]</el-button>
+                <el-button type="text" @@click="deleteHandle(scope.row)">@XR["Model.Delete"]</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -65,29 +62,30 @@
 
     <el-dialog :title="app.dialogFormTitle" :visible.sync="app.dialogFormVisible" center @@close="closeDialog">
         <el-form :model="newModelForm" :rules="rules" ref="newDialogModelForm">
-            <el-form-item label="@AR["AIKernel.ModelType"]" prop="modelType" label-width="120px">
-                <el-select v-model="app.newModelForm.modelType" placeholder="@AR["Auto.UI.0f749a96beac"]">
+            <el-form-item label="@XR["Model.Type"]" prop="modelType" label-width="120px">
+                <el-select v-model="app.newModelForm.modelType" placeholder="@XR["Model.TypePlaceholder"]">
                     <el-option v-for="(item,index) in options" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="@AR["AIKernel.ModelName"]" prop="modelName" label-width="120px">
-                <el-input  v-model="app.newModelForm.modelName" autocomplete="off" placeholder="@AR["Auto.UI.6bb5addf3736"]"></el-input>
+            <el-form-item label="@XR["Model.Name"]" prop="modelName" label-width="120px">
+                <el-input  v-model="app.newModelForm.modelName" autocomplete="off" placeholder="@XR["Model.NamePlaceholder"]"></el-input>
             </el-form-item>
-            <el-form-item label="@AR["Auto.UI.ea6265621b87"]" prop="modelAPI" label-width="120px" v-if="app.editModelName">
-                <el-input v-model="app.newModelForm.modelAPI" autocomplete="off" placeholder="@AR["Auto.UI.8f94133cb8e7"]"></el-input>
+            <el-form-item label="@XR["Model.Endpoint"]" prop="modelAPI" label-width="120px" v-if="app.editModelName">
+                <el-input v-model="app.newModelForm.modelAPI" autocomplete="off" placeholder="@XR["Model.EndpointPlaceholder"]"></el-input>
             </el-form-item>
             <el-form-item label="API key" prop="modelAPIkey" label-width="120px" v-if="app.editModelName">
-                <el-input v-model="app.newModelForm.modelAPIkey" autocomplete="off" placeholder="@AR["Auto.UI.0816fb6de358"]"></el-input>
+                <el-input v-model="app.newModelForm.modelAPIkey" autocomplete="off" placeholder="@XR["Model.ApiKeyPlaceholder"]"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @@click="dialogFormVisible = false">@CR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="submitForm">@CR["Common.Confirm"]</el-button>
+            <el-button @@click="dialogFormVisible = false">@XR["Model.Cancel"]</el-button>
+            <el-button type="primary" @@click="submitForm">@XR["Model.Confirm"]</el-button>
         </div>
     </el-dialog>
 </div>
 
 
 @section scripts{
+    @await Html.PartialAsync("_PromptRangeLocalizationScripts")
     <script src="~/js/PromptRange/model.js"></script>
 }

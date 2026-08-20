@@ -1,6 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ModuleAppService.cs
+    文件功能描述：XNCF 模块管理应用服务
+    
+    
+    创建标识：Senparc - 20241028
+    
+    修改标识：Senparc - 20260724
+    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.2.0 增强后台管理员交互与桌面 Admin Chat 安全同步
+
+----------------------------------------------------------------*/
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Senparc.Areas.Admin.Areas.Admin.Pages;
 using Senparc.Areas.Admin.Domain.Dto;
 using Senparc.Areas.Admin.Domain.Services;
@@ -30,12 +46,13 @@ using static Senparc.Areas.Admin.OHS.Local.PL.Module_GetItemResponse.Response_Xn
 
 namespace Senparc.Areas.Admin.OHS.Local.AppService
 {
-    [BackendJwtAuthorize]
+    [BackendJwtAuthorize(BackendJwtAuthorizeAttribute.SuperAdminPolicyName)]
     public class ModuleAppService : LocalAppServiceBase
     {
         private readonly XncfModuleServiceExtension _xncfModuleServiceEx;
 
         private readonly XncfModuleService _xncfModuleService;
+
         private readonly IStringLocalizer<AdminResource> _localizer;
 
         public ModuleAppService(IServiceProvider serviceProvider, XncfModuleServiceExtension xncfModuleServiceEx, XncfModuleService xncfModuleService, IStringLocalizer<AdminResource> localizer) : base(serviceProvider)
@@ -43,12 +60,6 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             _xncfModuleServiceEx = xncfModuleServiceEx;
             _xncfModuleService = xncfModuleService;
             _localizer = localizer;
-        }
-
-        private string L(string key, string fallback, params object[] args)
-        {
-            var value = _localizer[key, args];
-            return value.ResourceNotFound ? string.Format(fallback, args) : value.Value;
         }
 
         /// <summary>
@@ -169,7 +180,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 bool mustUpdate = false;
                 if (uid.IsNullOrEmpty())
                 {
-                    throw new Exception(L("Xncf.ModuleIdNotProvided", "Module identifier was not provided."));
+                    throw new Exception(_localizer["Xncf.ModuleIdNotProvided"].Value);
                 }
 
 
@@ -177,7 +188,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (xncfModule == null)
                 {
-                    throw new Exception(L("Xncf.ModuleNotAdded", "The module has not been added."));
+                    throw new Exception(_localizer["Xncf.ModuleNotAdded"].Value);
                 }
 
                 IEnumerable<string> xncfModuleUpdateLog = new List<string>();
@@ -191,7 +202,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 IXncfRegister xncfRegister = XncfRegisterManager.RegisterList.FirstOrDefault(z => z.Uid == uid);
                 if (xncfRegister == null)
                 {
-                    throw new Exception(L("Xncf.ModuleMissingOrNotLoaded", "Module is missing or not loaded ({0}).", XncfRegisterManager.RegisterList.Count));
+                    throw new Exception(_localizer["Xncf.ModuleMissingOrNotLoaded", XncfRegisterManager.RegisterList.Count].Value);
                 }
 
                 IDictionary<(string key, string name, string description), List<FunctionParameterInfo>> functionParameterInfoCollection = new Dictionary<(string key, string name, string description), List<FunctionParameterInfo>>();
@@ -213,7 +224,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                             catch (Exception ex)
                             {
                                 SenparcTrace.BaseExceptionLog(ex);
-                                throw new Exception(L("Xncf.FunctionLoadError", "Error loading {0}. Please check logs. If you just added a database migration, complete the module upgrade first.", functionBag.Key));
+                                throw new Exception(_localizer["Xncf.FunctionLoadError", functionBag.Key].Value);
                             }
                         }
                     }
@@ -224,7 +235,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 请尝试更新此模块后刷新页面！\r\n{ex.Message}\r\n{ex.StackTrace}");
                     mustUpdate = true;
 
-                    throw new Exception(L("Xncf.ModuleReadFailedRefresh", "Module loading failed. Try upgrading this module and refreshing the page. Module: {0} / {1} / {2}", xncfModule.Name, xncfModule.MenuName, xncfModule.Uid));
+                    throw new Exception(_localizer["Xncf.ModuleReadFailed", $"{xncfModule.Name} / {xncfModule.MenuName} / {xncfModule.Uid}"].Value);
                 }
 
                 IEnumerable<KeyValuePair<ThreadInfo, Thread>> registeredThreadInfo = xncfRegister.RegisteredThreadInfo;
@@ -291,7 +302,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (module == null)
                 {
-                    throw new Exception(L("Xncf.ModuleNotAdded", "The module has not been added."));
+                    throw new Exception(_localizer["Xncf.ModuleNotAdded"].Value);
                 }
 
                 module.UpdateState(toState);
@@ -338,7 +349,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 if (module == null)
                 {
-                    throw new Exception(L("Xncf.ModuleNotAdded", "The module has not been added."));
+                    throw new Exception(_localizer["Xncf.ModuleNotAdded"].Value);
                 }
 
                 //删除菜单
@@ -394,7 +405,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 if (xncfRegister == null)
                 {
                     response.Success = false;
-                    response.ErrorMessage = L("Xncf.ModuleNotRegistered", "The module is not registered.");
+                    response.ErrorMessage = _localizer["Xncf.ModuleNotRegistered"].Value;
                     return null;
                 }
 
@@ -402,14 +413,14 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 if (xncfModule == null)
                 {
                     response.Success = false;
-                    response.ErrorMessage = L("Xncf.ModuleNotInstalled", "The current module is not installed.");
+                    response.ErrorMessage = _localizer["Xncf.ModuleNotInstalled"].Value;
                     return null;
                 }
 
                 if (xncfModule.State != XncfModules_State.开放)
                 {
                     response.Success = false;
-                    response.ErrorMessage = L("Xncf.InvalidModuleState", "Current module state is [{0}]. Only modules in [Open] state can execute this action.\r\nIf forced, the system will still execute unverified assemblies because your previously installed version may already have been overwritten by a newer build.", xncfModule.State);
+                    response.ErrorMessage = string.Format(_localizer["Xncf.InvalidModuleState"].Value, xncfModule.State);
                     return null;
                 }
 
@@ -432,7 +443,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 if (rightFunctionBag == null)
                 {
                     response.Success = false;
-                    response.ErrorMessage = L("Xncf.FunctionNotMatched", "No matching method was found.");
+                    response.ErrorMessage = _localizer["Xncf.FunctionNotMatched"].Value;
                     return null;
                 }
 
@@ -447,7 +458,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 switch (paramCount)
                 {
                     case 1:
-                        var requestPara = SerializerHelper.GetObject(executeFuncParamDto2.XncfFunctionParams, functionParameterType) as IAppRequest;
+                        var normalizedJson = FunctionRequestParameterNormalizer.NormalizeJson(executeFuncParamDto2.XncfFunctionParams, functionParameterType);
+                        var requestPara = SerializerHelper.GetObject(normalizedJson, functionParameterType) as IAppRequest;
                         paras = new[] { requestPara };
                         break;
                     case 0:
@@ -456,7 +468,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     default:
                         {
                             response.Success = false;
-                            response.ErrorMessage = L("Xncf.FunctionSingleParameterOnly", "FunctionRender methods can declare only one input parameter.");
+                            response.ErrorMessage = _localizer["Xncf.FunctionSingleParameterOnly"].Value;
                             return null;
                         }
                 }

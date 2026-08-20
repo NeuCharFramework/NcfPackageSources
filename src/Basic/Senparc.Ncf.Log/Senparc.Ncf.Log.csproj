@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.19.8-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.20.1-preview1</Version>
     <AssemblyName>Senparc.Ncf.Log</AssemblyName>
     <RootNamespace>Senparc.Ncf.Log</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -13,7 +13,7 @@
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>Senparc.Ncf.Log</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>

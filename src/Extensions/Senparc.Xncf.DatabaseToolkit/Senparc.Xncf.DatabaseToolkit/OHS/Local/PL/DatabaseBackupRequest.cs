@@ -1,5 +1,23 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：DatabaseBackupRequest.cs
+    文件功能描述：DatabaseBackupRequest 相关实现
+    
+    
+    创建标识：Senparc - 20211014
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.26.0-preview2 为 DatabaseToolkit 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Service;
+using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using System;
@@ -8,6 +26,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.PL
 {
@@ -21,14 +40,18 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.PL
     {
         [Required]
         [MaxLength(300)]
-        [Description("路径||本地物理路径，如：E:\\Senparc\\Database-Backup\\NCF.bak，必须包含文件名。请确保此路径有网站程序访问权限！")]
+        [LocalizedDescription(typeof(DatabaseToolkitResource), "Parameter.DatabaseBackup.Path")]
         public string Path { get; set; }
 
-        [Description("选项||备份数据库选项")]
-        public SelectionList Options { get; set; } = new SelectionList(SelectionType.CheckBoxList,
+        [LocalizedDescription(typeof(DatabaseToolkitResource), "Parameter.DatabaseBackup.Options")]
+        [FunctionParameterUi(ParameterType.CheckBoxList, nameof(OptionsList))]
+        public string[] Options { get; set; }
+
+        [JsonIgnore]
+        public SelectionList OptionsList { get; set; } = new SelectionList(SelectionType.CheckBoxList,
             new[] {
-                    new SelectionItem($"{(int)BackupDatabaseOptions.如果文件存在则不覆盖}","如果文件存在，则不覆盖","文件已存在的情况下，不会执行备份操作"),
-                    new SelectionItem($"{(int)BackupDatabaseOptions.校验备份成功}","备份完成后校验.bak文件是否更新成功","此操作只能检查文件是否被更新，无法检测文件内部内容",true),
+                    new SelectionItem($"{(int)BackupDatabaseOptions.如果文件存在则不覆盖}", DatabaseToolkitResource.Get("Parameter.DatabaseBackup.NoOverwrite"), DatabaseToolkitResource.Get("Parameter.DatabaseBackup.NoOverwrite.Help")),
+                    new SelectionItem($"{(int)BackupDatabaseOptions.校验备份成功}", DatabaseToolkitResource.Get("Parameter.DatabaseBackup.Verify"), DatabaseToolkitResource.Get("Parameter.DatabaseBackup.Verify.Help"), true),
             });
 
         public override async Task LoadData(IServiceProvider serviceProvider)

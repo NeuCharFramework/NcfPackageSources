@@ -1,4 +1,21 @@
-﻿using Senparc.CO2NET.Extensions;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：LaunchApp.cs
+    文件功能描述：LaunchApp 相关实现
+    
+    
+    创建标识：Senparc - 20200724
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.1.0 为 Application 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Functions;
 using System;
@@ -38,14 +55,14 @@ namespace Senparc.Xncf.Application.Functions
 
             [Required]
             [MaxLength(300)]
-            [Description("自定义路径||文件名")]
+            [LocalizedDescription(typeof(ApplicationResource), "Parameter.Application.FilePath")]
             public string FilePath { get; set; }
         }
 
         //注意：Name 必须在单个 Xncf 模块中唯一！
-        public override string Name => "应用程序";
+        public override string Name => ApplicationResource.Get("Function.Application.Launch.Name");
 
-        public override string Description => "启动所有的程序";
+        public override string Description => ApplicationResource.Get("Function.Application.Launch.Description");
 
         public override Type FunctionParameterType => typeof(LaunchApp_Parameters);
 
@@ -68,7 +85,7 @@ namespace Senparc.Xncf.Application.Functions
             };
 
             StringBuilder sb = new StringBuilder();
-            base.RecordLog(sb, "开始运行 LaunchApp");
+            base.RecordLog(sb, ApplicationResource.Get("Function.Application.Launch.StartLog"));
 
             StartApp(typeParam.FilePath);
 
@@ -76,7 +93,7 @@ namespace Senparc.Xncf.Application.Functions
             sb.AppendLine($"FilePath{typeParam.FilePath}");
 
             result.Log = sb.ToString();
-            result.Message = "操作成功！";
+            result.Message = ApplicationResource.Get("Common.OperationSucceeded");
             return result;
         }
 

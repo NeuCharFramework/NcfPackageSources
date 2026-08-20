@@ -1,0 +1,17 @@
+@using System.Text.Json
+@using Microsoft.Extensions.Localization
+@using Senparc.Xncf.SenMapic
+@inject IStringLocalizer<SenMapicResource> XR
+@{
+    var translations = XR.GetAllStrings(true).ToDictionary(item => $"SenMapic.{item.Name}", item => item.Value);
+    var sourceTranslations = XR.GetAllStrings(true).Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal))
+        .Select(item => item.Value.Split(new[] { "||" }, 2, StringSplitOptions.None)).Where(item => item.Length == 2)
+        .GroupBy(item => item[0]).ToDictionary(item => item.Key, item => item.First()[1]);
+}
+<script>
+    window.ncfI18n = Object.assign(window.ncfI18n || {}, @Html.Raw(JsonSerializer.Serialize(translations)));
+    window.ncfT = window.ncfT || function (key, fallback) {
+        return Object.prototype.hasOwnProperty.call(window.ncfI18n, key) ? window.ncfI18n[key] : (fallback || key);
+    };
+    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)));
+</script>

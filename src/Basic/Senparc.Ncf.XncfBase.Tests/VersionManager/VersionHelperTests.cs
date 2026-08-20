@@ -1,4 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：VersionHelperTests.cs
+    文件功能描述：VersionHelperTests 相关实现
+    
+    
+    创建标识：Senparc - 20231104
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Ncf.XncfBase.VersionManager;
 using System;
 using System.Collections.Generic;
@@ -86,7 +100,7 @@ using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using Senparc.Ncf.XncfBase.Database;
 using Microsoft.Extensions.Hosting;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -135,7 +149,7 @@ namespace Senparc.Xncf.XncfBuilder
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             //services.AddScoped<PromptRange.Domain.Services.PromptService>();
-            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new SemanticAiHandler());
+            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new AgentAiHandler());
 
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();
@@ -160,7 +174,7 @@ using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using Senparc.Ncf.XncfBase.Database;
 using Microsoft.Extensions.Hosting;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
     
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -209,7 +223,7 @@ namespace Senparc.Xncf.XncfBuilder
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             //services.AddScoped<PromptRange.Domain.Services.PromptService>();
-            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new SemanticAiHandler());
+            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new AgentAiHandler());
     
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();

@@ -1,9 +1,27 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Validator.cs
+    文件功能描述：Validator 相关实现
+    
+    
+    创建标识：Senparc - 20200724
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260731
+    修改描述：v0.27.0-preview4 将通用验证错误提示接入核心多语言资源
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Ncf.Core.Utility;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.Localization;
 
 namespace Senparc.Ncf.Core.Validator
 {
@@ -109,7 +127,7 @@ namespace Senparc.Ncf.Core.Validator
 
             if (container.ValidatorObject == null || string.IsNullOrEmpty(container.ValidatorObject.ToString().Trim()))
             {
-                string errorMessage = string.Format("提示： {0}!", container.ValueName);
+                string errorMessage = string.Format(NcfCoreResource.Get("Validator.Required", "提示： {0}!"), container.ValueName);
                 //container.ErrorList.Add(errorMessage);
                 container.AddError(errorMessage);
 
@@ -224,7 +242,7 @@ namespace Senparc.Ncf.Core.Validator
             Regex emailExpression = new Regex(@"[-|;|,|\/|\(|\)|\[|\]|\}|\{|%|@|\*|!|\']", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);
             if (emailExpression.IsMatch((container.ValidatorObject.ToString())))
             {
-                string errorMessage = string.Format("{0}中存在非法字符！", container.ValueName);
+                string errorMessage = string.Format(NcfCoreResource.Get("Validator.InvalidCharacters", "{0}中存在非法字符！"), container.ValueName);
                 container.AddError(errorMessage);
                 if (stopWhileFail)
                 {
@@ -251,7 +269,7 @@ namespace Senparc.Ncf.Core.Validator
             Regex emailExpression = new Regex(@"^\s*$|^c:\\con\\con$|[%,\*" + "\"" + @"\s\t\<\>\&]|游客|管理员|^Guest|admin", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase);
             if (emailExpression.IsMatch((container.ValidatorObject.ToString())))
             {
-                string errorMessage = string.Format("{0}中存在非法字符！", container.ValueName);
+                string errorMessage = string.Format(NcfCoreResource.Get("Validator.InvalidCharacters", "{0}中存在非法字符！"), container.ValueName);
                 container.AddError(errorMessage);
                 if (stopWhileFail)
                 {
@@ -270,7 +288,7 @@ namespace Senparc.Ncf.Core.Validator
             string userName = container.ValidatorObject.ToString();
             if (userName.IndexOf("　") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1 || userName.IndexOf("") != -1)
             {
-                container.AddError("用户名中不允许包含全角空格符");
+                container.AddError(NcfCoreResource.Get("Validator.FullWidthSpace", "用户名中不允许包含全角空格符"));
                 if (stopWhileFail)
                 {
                     return null;
@@ -278,7 +296,7 @@ namespace Senparc.Ncf.Core.Validator
             }
             if (userName.IndexOf(" ") != -1)
             {
-                container.AddError("用户名中不允许包含空格");
+                container.AddError(NcfCoreResource.Get("Validator.Space", "用户名中不允许包含空格"));
                 if (stopWhileFail)
                 {
                     return null;
@@ -286,7 +304,7 @@ namespace Senparc.Ncf.Core.Validator
             }
             if (userName.IndexOf(":") != -1)
             {
-                container.AddError("用户名中不允许包含冒号");
+                container.AddError(NcfCoreResource.Get("Validator.Colon", "用户名中不允许包含冒号"));
                 if (stopWhileFail)
                 {
                     return null;
@@ -298,7 +316,7 @@ namespace Senparc.Ncf.Core.Validator
             {
                 if (userName.Contains(item))
                 {
-                    container.AddError("用户名中可以使用中文、英文或数字及下划线_，但不允许包含特殊符号：" + invalidateUserName);
+                    container.AddError(string.Format(NcfCoreResource.Get("Validator.UsernameSpecial", "用户名中可以使用中文、英文或数字及下划线_，但不允许包含特殊符号：{0}"), invalidateUserName));
                     if (stopWhileFail)
                     {
                         return null;
@@ -317,7 +335,7 @@ namespace Senparc.Ncf.Core.Validator
         {
             return Regex(container,
                 @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$",
-                "请在{0}中填写正确的Email地址！", stopWhileFail);
+                NcfCoreResource.Get("Validator.Email", "请在{0}中填写正确的Email地址！"), stopWhileFail);
         }
 
         public static ValidatorContainer<T> IsMobile<T>(this ValidatorContainer<T> container, bool stopWhileFail)
@@ -327,7 +345,7 @@ namespace Senparc.Ncf.Core.Validator
 
             //电信手机号码正则        string dianxin = @"^1[3578][01379]\d{8}$";        Regex dReg = new Regex(dianxin);        //联通手机号正则        string liantong = @"^1[34578][01256]\d{8}$";        Regex tReg = new Regex(liantong);        //移动手机号正则        string yidong = @"^(134[012345678]\d{7}|1[34578][012356789]\d{8})$";        Regex yReg = new Regex(yidong);
 
-            return Regex(container, @"^(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$", "请填写正确的电话号码！", stopWhileFail);
+            return Regex(container, @"^(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$", NcfCoreResource.Get("Validator.Phone", "请填写正确的电话号码！"), stopWhileFail);
         }
 
         public static ValidatorContainer<T> IsIPAddress<T>(this ValidatorContainer<T> container)
@@ -339,12 +357,12 @@ namespace Senparc.Ncf.Core.Validator
         {
             return Regex<T>(container,
                 @"(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])",
-                "请在{0}中填写正确的IP地址！", stopWhileFail);
+                NcfCoreResource.Get("Validator.Ip", "请在{0}中填写正确的IP地址！"), stopWhileFail);
         }
 
         public static ValidatorContainer<T> IsAvailableUrl<T>(this ValidatorContainer<T> container, bool stopWhileFail)
         {
-            return Regex(container, @"HTTP(S)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?", "请在{0}中填写正确的Url地址！", stopWhileFail);
+            return Regex(container, @"HTTP(S)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?", NcfCoreResource.Get("Validator.Url", "请在{0}中填写正确的Url地址！"), stopWhileFail);
         }
 
 
@@ -361,7 +379,7 @@ namespace Senparc.Ncf.Core.Validator
 
             if (System.Text.Encoding.Default.GetByteCount(container.ValidatorObject.ToString()) > maxByte)
             {
-                string errorMessage = string.Format("{0}中最多只能输入{1}字节的内容（对应{2}汉字）", container.ValueName, maxByte, Convert.ToInt32(maxByte / 2));
+                string errorMessage = string.Format(NcfCoreResource.Get("Validator.MaxBytes", "{0}中最多只能输入{1}字节的内容（对应{2}汉字）"), container.ValueName, maxByte, Convert.ToInt32(maxByte / 2));
                 container.AddError(errorMessage);
                 if (stopWhileFail)
                 {
@@ -384,7 +402,7 @@ namespace Senparc.Ncf.Core.Validator
 
             if (container.ValidatorObject.ToString().Length > maxLength)
             {
-                string errorMessage = string.Format("{0}中最多只能输入{1}个字符", container.ValueName, maxLength);
+                string errorMessage = string.Format(NcfCoreResource.Get("Validator.MaxLength", "{0}中最多只能输入{1}个字符"), container.ValueName, maxLength);
                 container.AddError(errorMessage);
                 if (stopWhileFail)
                 {

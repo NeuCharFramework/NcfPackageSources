@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.11.12-preview.1</Version>
+    <Version>0.12.8-preview8</Version>
     <AssemblyName>Senparc.Xncf.OfficeExtension</AssemblyName>
     <RootNamespace>Senparc.Xncf.OfficeExtension</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -16,14 +16,21 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>-->
     <PackageReleaseNotes>
-			v0.1 创世
-			[2024-09-10] v0.10.4-preview1 升级缓存基础库
-			[2025-01-25] v0.11.5-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.11.7-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.11.8-preview1 Update Installation
-			[2025-06-20] v0.11.9-preview1 Add MCP functions in XncfRegisterBase class
-
+				v0.1 创世
+				[2024-09-10] v0.10.4-preview1 升级缓存基础库
+				[2025-01-25] v0.11.5-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.11.7-preview1 Update CO2NET and AIKernel
+				[2025-05-18] v0.11.8-preview1 Update Installation
+				[2025-06-20] v0.11.9-preview1 Add MCP functions in XncfRegisterBase class
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-17] v0.12.2-preview2 同步上游项目版本并适配统一本地化能力
+				1、Dependency update from Senparc.Ncf.XncfBase to 0.23.3-preview2
+				[2026-07-29] v0.12.3-preview3 Dependency update from Senparc.Ncf.XncfBase to 0.23.4-preview3
+				[2026-07-31] v0.12.4-preview4 Dependency update from Senparc.Ncf.XncfBase to 0.23.5-preview4
+				[2026-08-04] v0.12.5-preview5 Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
+				[2026-08-08] v0.12.6-preview6 Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+				[2026-08-13] v0.12.7-preview7 Dependency update from Senparc.Ncf.XncfBase to 0.25.0-preview7
+				[2026-08-15] v0.12.8-preview8 Dependency update from Senparc.Ncf.XncfBase to 0.25.1-preview8
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

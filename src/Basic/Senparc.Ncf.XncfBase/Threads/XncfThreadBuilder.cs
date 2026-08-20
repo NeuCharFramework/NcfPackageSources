@@ -1,4 +1,23 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：XncfThreadBuilder.cs
+    文件功能描述：XncfThreadBuilder 相关实现
+
+
+    创建标识：Senparc - 20260704
+
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.25.0-preview7 增强线程生命周期控制与函数参数数值类型解析
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.Trace;
 using System;
 using System.Collections.Generic;
@@ -42,36 +61,68 @@ namespace Senparc.Ncf.XncfBase.Threads
                 try
                 {
                     i++;
+                    var initialDelay = TimeSpan.FromSeconds(i);
+                    var applicationLifetime = app.ApplicationServices.GetService<IHostApplicationLifetime>();
+                    var stoppingToken = applicationLifetime?.ApplicationStopping ?? CancellationToken.None;
+                    threadInfo.StoppingToken = stoppingToken;
+
                     //定义线程
                     Thread thread = new Thread(async () =>
                     {
-                        SenparcTrace.SendCustomLog("启动线程", $"{register.Name}-{threadInfo.Name}");
-                        await Task.Delay(TimeSpan.FromSeconds(i));
-                        while (true)
+                        try
                         {
-                            try
+                            SenparcTrace.SendCustomLog("启动线程", $"{register.Name}-{threadInfo.Name}");
+                            await Task.Delay(initialDelay, stoppingToken).ConfigureAwait(false);
+                            while (!stoppingToken.IsCancellationRequested)
                             {
-                                await threadInfo.Task.Invoke(app, threadInfo);
-                                // 建议开发者自己在内部做好线程内的异常处理
+                                try
+                                {
+                                    await threadInfo.Task.Invoke(app, threadInfo).ConfigureAwait(false);
+                                    // 建议开发者自己在内部做好线程内的异常处理
+                                }
+                                catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+                                {
+                                    break;
+                                }
+                                catch (Exception ex)
+                                {
+                                    if (threadInfo.ExceptionHandler != null)
+                                    {
+                                        await threadInfo.ExceptionHandler.Invoke(ex).ConfigureAwait(false);
+                                    }
+                                    else
+                                    {
+                                        SenparcTrace.BaseExceptionLog(ex);
+                                    }
+                                }
+                                finally
+                                {
+                                    //进行延迟
+                                    if (!stoppingToken.IsCancellationRequested)
+                                    {
+                                        await Task.Delay(threadInfo.IntervalTime, stoppingToken).ConfigureAwait(false);
+                                    }
+                                }
                             }
-                            catch (Exception ex)
+                        }
+                        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+                        {
+                            // 应用停止时取消初始/轮询等待是预期行为，无需记录为线程异常。
+                        }
+                        catch (Exception ex)
+                        {
+                            if (threadInfo.ExceptionHandler != null)
                             {
-                                if (threadInfo.ExceptionHandler != null)
-                                {
-                                    await threadInfo.ExceptionHandler.Invoke(ex);
-                                }
-                                else
-                                {
-                                    SenparcTrace.BaseExceptionLog(ex);
-                                }
+                                await threadInfo.ExceptionHandler.Invoke(ex).ConfigureAwait(false);
                             }
-                            finally {
-                                //进行延迟
-                                await Task.Delay(threadInfo.IntervalTime);
+                            else
+                            {
+                                SenparcTrace.BaseExceptionLog(ex);
                             }
                         }
                     });
                     thread.Name = $"{register.Uid}-{threadInfo.Name ?? Guid.NewGuid().ToString()}";
+                    thread.IsBackground = true;
                     thread.Start();//启动
                     Register.ThreadCollection[threadInfo] = thread;
                 }

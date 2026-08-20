@@ -1,4 +1,18 @@
-﻿using Senparc.Ncf.Core.Config;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：EmailXmlConfig.cs
+    文件功能描述：EmailXmlConfig 相关实现
+    
+    
+    创建标识：Senparc - 20211221
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Xncf.EmailExtension.Domain.Models;
 using System;

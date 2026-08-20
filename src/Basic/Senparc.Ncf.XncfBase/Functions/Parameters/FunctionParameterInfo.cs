@@ -1,4 +1,18 @@
-﻿using Senparc.Ncf.XncfBase.Functions;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：FunctionParameterInfo.cs
+    文件功能描述：FunctionParameterInfo 相关实现
+    
+    
+    创建标识：Senparc - 20200724
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.XncfBase.Functions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +29,10 @@ namespace Senparc.Ncf.XncfBase
         DropDownList = 1,
         CheckBoxList = 2,
         Password = 3,
+        /// <summary>
+        /// 单个布尔，对应 <c>bool</c> / <c>bool?</c>，前端渲染为单个复选框。
+        /// </summary>
+        CheckBox = 4,
     }
 
     /// <summary>
@@ -61,12 +79,23 @@ namespace Senparc.Ncf.XncfBase
         /// </summary>
         public SelectionList SelectionList { get; set; }
 
+        /// <summary>
+        /// 下拉框是否允许搜索
+        /// </summary>
+        public bool Filterable { get; set; }
+
+        /// <summary>
+        /// 下拉框是否允许创建自定义值
+        /// </summary>
+        public bool AllowCreate { get; set; }
+
         public FunctionParameterInfo()
         {
         }
 
         public FunctionParameterInfo(string name, string title, string description,
-            bool isRequired, string systemType, ParameterType parameterType, SelectionList selectionList, object value, int maxLength)
+            bool isRequired, string systemType, ParameterType parameterType, SelectionList selectionList, object value, int maxLength,
+            bool filterable = false, bool allowCreate = false)
         {
             Name = name;
             Title = title;
@@ -77,6 +106,8 @@ namespace Senparc.Ncf.XncfBase
             ParameterType = parameterType;
             Value = value;
             MaxLength = maxLength;
+            Filterable = filterable;
+            AllowCreate = allowCreate;
         }
     }
 }

@@ -78,6 +78,11 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         public int SessionId { get; set; }
 
         /// <summary>
+        /// 选中的 AIModelId，0 表示系统级 SenparcAiSetting
+        /// </summary>
+        public int AiModelId { get; set; }
+
+        /// <summary>
         /// 消息内容
         /// </summary>
         [Required]

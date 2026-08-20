@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.XncfBuilder.MenuName" xml:space="preserve">
+    <value>XNCF Module Generator</value>
+  </data>
+  <data name="Module.XncfBuilder.Description" xml:space="preserve">
+    <value>Quickly generates XNCF module foundations and samples that can be extended into applications</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve">
+    <value>Add-Migration command</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve">
+    <value>Run add-migration visually for multiple databases; processing may take 30–60 seconds</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve">
+    <value>Generate XNCF</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
+    <value>Generate an XNCF module from the configuration</value>
+  </data>
+  <data name="Function.XncfBuilder.Preview.Name" xml:space="preserve">
+    <value>Start or update an isolated XNCF preview</value>
+  </data>
+  <data name="Function.XncfBuilder.Preview.Description" xml:space="preserve">
+    <value>Validate and publish the current XNCF source, then start an isolated preview without restarting the current site</value>
+  </data>
+  <data name="Function.XncfBuilder.PreviewStatus.Name" xml:space="preserve">
+    <value>View XNCF preview status</value>
+  </data>
+  <data name="Function.XncfBuilder.PreviewStatus.Description" xml:space="preserve">
+    <value>View isolated XNCF preview processes managed by this site</value>
+  </data>
+  <data name="Function.XncfBuilder.StopPreview.Name" xml:space="preserve">
+    <value>Stop an isolated XNCF preview</value>
+  </data>
+  <data name="Function.XncfBuilder.StopPreview.Description" xml:space="preserve">
+    <value>Stop the selected preview process and clean its temporary publish directory</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
+    <value>[AI] Generate database entities</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve">
+    <value>Generate DDD-compliant entities and methods. Use only in development and back up code first.</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve">
+    <value>Generate AppService interface code</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve">
+    <value>Generate interface code for a specified module's AppService</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve">
+    <value>Initialize prompts</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve">
+    <value>Initialize all prompts required for AI code generation</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Common.Use" xml:space="preserve">
+    <value>Use</value>
+  </data>
+  <data name="Parameter.XncfBuilder.SolutionPath" xml:space="preserve">
+    <value>Solution (.sln) path||Full physical path to the NCF solution; the module folder is created alongside it</value>
+  </data>
+  <data name="Parameter.XncfBuilder.SolutionOptions" xml:space="preserve">
+    <value>Solution file options||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.TemplatePackage" xml:space="preserve">
+    <value>Install template||Reinstallation takes about 30–40 seconds; choose Installed when a local template already exists</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Framework" xml:space="preserve">
+    <value>Target framework||Project TFM (Target Framework Moniker)</value>
+  </data>
+  <data name="Parameter.XncfBuilder.OtherFramework" xml:space="preserve">
+    <value>Custom target framework||Overrides the selected target framework when provided</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Organization" xml:space="preserve">
+    <value>Organization||Prefix for the module namespace and name</value>
+  </data>
+  <data name="Parameter.XncfBuilder.ModuleName" xml:space="preserve">
+    <value>Module name||Also used as a class name; use letters and digits and do not start with a digit</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Version" xml:space="preserve">
+    <value>Version||For example 1.0.0 or 2.0.100-beta1</value>
+  </data>
+  <data name="Parameter.XncfBuilder.MenuName" xml:space="preserve">
+    <value>Menu name||For example “NCF Builder”</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Icon" xml:space="preserve">
+    <value>Icon||Font Awesome icon, for example fa fa-star</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Description" xml:space="preserve">
+    <value>Description||Module description</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Features" xml:space="preserve">
+    <value>Features||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.InstallSample" xml:space="preserve">
+    <value>Install sample||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.StartAfterBuild" xml:space="preserve">
+    <value>Start isolated preview after generation||The main site stays running; the preview uses a separate process and publish directory</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.ModuleProjectName" xml:space="preserve">
+    <value>XNCF project to validate and preview||Use the project name without .csproj, for example Senparc.Xncf.Sample; this is not the temporary site name</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Port" xml:space="preserve">
+    <value>Preview port||Use 0 to allocate a loopback port automatically; custom ports must be between 1024 and 65535</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Timeout" xml:space="preserve">
+    <value>Startup timeout in seconds||Maximum wait for the preview site's HTTP health check</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.Environment" xml:space="preserve">
+    <value>Preview environment||The default XncfPreview environment forces local SQLite and local cache inside the preview directory</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.IncludeOutput" xml:space="preserve">
+    <value>Show preview logs||Include recent process output in the status result</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Preview.SessionId" xml:space="preserve">
+    <value>Preview session||Select the XNCF preview instance to stop</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.StartAfterBuild" xml:space="preserve">
+    <value>Start immediately after generation</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.StartAfterBuild.Help" xml:space="preserve">
+    <value>Use when no further code changes are needed; if AI will edit the module, start or update the isolated preview after all writes complete</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.IncludeOutput" xml:space="preserve">
+    <value>Include recent logs</value>
+  </data>
+  <data name="XncfBuilder.Option.Preview.IncludeOutput.Help" xml:space="preserve">
+    <value>Show up to the latest 300 output lines for each preview process</value>
+  </data>
+  <data name="XncfBuilder.Preview.Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stopped" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
+  <data name="XncfBuilder.Preview.RequestMissing" xml:space="preserve">
+    <value>Preview startup failed: no preview options were supplied.</value>
+  </data>
+  <data name="XncfBuilder.Preview.NoSessions" xml:space="preserve">
+    <value>There are no isolated XNCF preview sessions.</value>
+  </data>
+  <data name="XncfBuilder.Preview.SessionRequired" xml:space="preserve">
+    <value>Select a preview session to stop.</value>
+  </data>
+  <data name="XncfBuilder.Preview.StartSucceeded" xml:space="preserve">
+    <value>The isolated XNCF preview is running; the current Senparc.Web process was not restarted.</value>
+  </data>
+  <data name="XncfBuilder.Preview.StopSucceeded" xml:space="preserve">
+    <value>The isolated XNCF preview was stopped and its temporary publish directory was cleaned.</value>
+  </data>
+  <data name="XncfBuilder.Preview.SessionNotFound" xml:space="preserve">
+    <value>The preview session was not found; it may already have stopped.</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.Backup" xml:space="preserve">
+    <value>Back up the .sln file (recommended)</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.Backup.Help" xml:space="preserve">
+    <value>Create a backup before overwriting the current .sln file</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.New" xml:space="preserve">
+    <value>Generate a new .sln file</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.New.Help" xml:space="preserve">
+    <value>Otherwise overwrite the current file; a running solution may trigger a service restart</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Online" xml:space="preserve">
+    <value>Get the latest template online</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Online.Help" xml:space="preserve">
+    <value>Download from NuGet.org or another online source; this takes longer</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Local" xml:space="preserve">
+    <value>Install from a local package</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Local.Help" xml:space="preserve">
+    <value>Install Senparc.Xncf.XncfBuilder.Template.*.nupkg beside the .sln file</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Installed" xml:space="preserve">
+    <value>Already installed; no update</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Installed.Help" xml:space="preserve">
+    <value>Ensure a local template is installed or it will be downloaded automatically</value>
+  </data>
+  <data name="XncfBuilder.Option.Framework.Net8" xml:space="preserve">
+    <value>Use .NET 8.0</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Function" xml:space="preserve">
+    <value>Add Function support</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Function.Help" xml:space="preserve">
+    <value>Include the Function module</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Database" xml:space="preserve">
+    <value>Add database support</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Database.Help" xml:space="preserve">
+    <value>Include the database module and an empty database</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.WebApi" xml:space="preserve">
+    <value>Add Web API support</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.WebApi.Help" xml:space="preserve">
+    <value>Include the Web API module</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Web" xml:space="preserve">
+    <value>Add Web (Area) pages</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Web.Help" xml:space="preserve">
+    <value>Include the Web pages module</value>
+  </data>
+  <data name="XncfBuilder.Option.InstallSample.Help" xml:space="preserve">
+    <value>Install the database sample and enable database and Web page features</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel" xml:space="preserve">
+    <value>System default (AiPlatform: {0}; Endpoint: {1})</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel.Help" xml:space="preserve">
+    <value>Use the fixed AI model from the system default configuration</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel.Unconfigured" xml:space="preserve">
+    <value>System default (AiPlatform: {0}; no Endpoint detected—configure the model in appsettings.json first)</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Requirement" xml:space="preserve">
+    <value>Entity requirements||Describe the requirements fully; include desired properties and types</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Domain" xml:space="preserve">
+    <value>Domain||Domain in which to generate the entity</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Actions" xml:space="preserve">
+    <value>Follow-up actions||Actions to run after entity generation</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.UsePromptRange" xml:space="preserve">
+    <value>Use PromptRange||Automatically install PromptRange and initialize prompts; otherwise provide XncfBuilderPlugin files</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.AIModel" xml:space="preserve">
+    <value>AI model||Model used for code generation when PromptRange is disabled</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Prompt.Override" xml:space="preserve">
+    <value>Overwrite||Delete the existing XncfBuilderPlugin range and rebuild it from the official version</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Prompt.AIModel" xml:space="preserve">
+    <value>AI model||Model used by every tactic in the new range</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Dto" xml:space="preserve">
+    <value>Create DTO</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Dto.Help" xml:space="preserve">
+    <value>Create DTO objects (always generated)</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Migration" xml:space="preserve">
+    <value>Generate database migration</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Migration.Help" xml:space="preserve">
+    <value>Generate an EF Core migration; review it before applying</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Repository" xml:space="preserve">
+    <value>Create Repository</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Repository.Help" xml:space="preserve">
+    <value>Create a Repository for the entity</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Service" xml:space="preserve">
+    <value>Create Service</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Service.Help" xml:space="preserve">
+    <value>Create a Service for the entity</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.AppService" xml:space="preserve">
+    <value>Create AppService</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.AppService.Help" xml:space="preserve">
+    <value>Create an AppService for the entity</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DatabasePlantPath" xml:space="preserve">
+    <value>Senparc.Web.DatabasePlant project path||Physical path of the migration host project; it must reference the target XNCF project</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.ProjectPath" xml:space="preserve">
+    <value>XNCF project path||Full physical path to the XNCF project root</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.CustomProjectPath" xml:space="preserve">
+    <value>Custom XNCF project path||Used only when Custom path is selected</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DatabaseTypes" xml:space="preserve">
+    <value>Database types||Database types for which migrations will be generated</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DbContext" xml:space="preserve">
+    <value>Custom DbContext name||Exclude the database-type suffix; enter [Default] for automatic detection</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.Name" xml:space="preserve">
+    <value>Migration name||Use letters, digits, and underscores only, for example Add_Config</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.UpdateVersion" xml:space="preserve">
+    <value>Update version automatically||Update the version in Register.cs</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.Verbose" xml:space="preserve">
+    <value>Verbose output||Use the add-migration -v option</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.None" xml:space="preserve">
+    <value>Do not update</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Major" xml:space="preserve">
+    <value>Major version + 1</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Minor" xml:space="preserve">
+    <value>Minor version + 1</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Patch" xml:space="preserve">
+    <value>Patch version + 1</value>
+  </data>
+  <data name="XncfBuilder.Option.CustomPath" xml:space="preserve">
+    <value>Custom path</value>
+  </data>
+  <data name="XncfBuilder.Validation.CustomProjectPathRequired" xml:space="preserve">
+    <value>Enter the custom XNCF project path.</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.TargetPath" xml:space="preserve">
+    <value>Target project path||Project to scan and generate interfaces from</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.Namespace" xml:space="preserve">
+    <value>Namespace prefix||Namespace prefix for generated classes</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.ClassPattern" xml:space="preserve">
+    <value>Class-name regex||Regular expression for matching class names</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.MethodPattern" xml:space="preserve">
+    <value>Method-name regex||Regular expression for matching method names</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.DestinationPath" xml:space="preserve">
+    <value>Destination project path||Project that will receive the generated interface code</value>
+  </data>
+  <data name="XncfBuilder.MCP.ModuleDirectoryNotFound" xml:space="preserve">
+    <value>Directory for module {0} was not found. Use the full exact name, such as Senparc.Xncf.XncfBuilder.</value>
+  </data>
+  <data name="XncfBuilder.MCP.ModuleFullName" xml:space="preserve">
+    <value>Full module name, such as Senparc.Xncf.XncfBuilder</value>
+  </data>
+  <data name="XncfBuilder.MCP.FilePath" xml:space="preserve">
+    <value>Path and file name within the module</value>
+  </data>
+  <data name="XncfBuilder.MCP.FileNotFound" xml:space="preserve">
+    <value>File not found: {0}</value>
+  </data>
+  <data name="XncfBuilder.MCP.FileContent" xml:space="preserve">
+    <value>Complete file content</value>
+  </data>
+  <data name="XncfBuilder.Plugin.CreateEntity" xml:space="preserve">
+    <value>Create an entity class file</value>
+  </data>
+  <data name="XncfBuilder.Plugin.FilePath" xml:space="preserve">
+    <value>File path</value>
+  </data>
+  <data name="XncfBuilder.Plugin.GeneratedContent" xml:space="preserve">
+    <value>File content generated by AI</value>
+  </data>
+  <data name="XncfBuilder.Plugin.FileSaved" xml:space="preserve">
+    <value>Saved file: {0}</value>
+  </data>
+  <data name="XncfBuilder.Plugin.ReadDbContext" xml:space="preserve">
+    <value>Read and update the database context</value>
+  </data>
+  <data name="XncfBuilder.Plugin.ProjectPath" xml:space="preserve">
+    <value>Project path</value>
+  </data>
+  <data name="XncfBuilder.Plugin.EntityName" xml:space="preserve">
+    <value>New entity name</value>
+  </data>
+  <data name="XncfBuilder.Plugin.PluralEntityName" xml:space="preserve">
+    <value>Plural form of the new entity name</value>
+  </data>
+  <data name="XncfBuilder.Preview.Monitor" xml:space="preserve">
+    <value>XNCF Preview Monitor</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Queued" xml:space="preserve"><value>Queued</value></data>
+  <data name="XncfBuilder.Preview.Stage.PreparingSource" xml:space="preserve"><value>Lock source snapshot</value></data>
+  <data name="XncfBuilder.Preview.Stage.Validating" xml:space="preserve"><value>Validate host references</value></data>
+  <data name="XncfBuilder.Preview.Stage.Restoring" xml:space="preserve"><value>Restore dependencies</value></data>
+  <data name="XncfBuilder.Preview.Stage.Building" xml:space="preserve"><value>Isolated build</value></data>
+  <data name="XncfBuilder.Preview.Stage.Verifying" xml:space="preserve"><value>Verify artifacts</value></data>
+  <data name="XncfBuilder.Preview.Stage.Starting" xml:space="preserve"><value>Start new preview</value></data>
+  <data name="XncfBuilder.Preview.Stage.HealthChecking" xml:space="preserve"><value>Health check</value></data>
+  <data name="XncfBuilder.Preview.Stage.Replacing" xml:space="preserve"><value>Atomic replacement</value></data>
+  <data name="XncfBuilder.Preview.Stage.Running" xml:space="preserve"><value>Running</value></data>
+  <data name="XncfBuilder.Preview.Stage.Stopping" xml:space="preserve"><value>Stopping</value></data>
+  <data name="XncfBuilder.Preview.Stage.Stopped" xml:space="preserve"><value>Stopped</value></data>
+  <data name="XncfBuilder.Preview.Stage.Replaced" xml:space="preserve"><value>Replaced</value></data>
+  <data name="XncfBuilder.Preview.Stage.Failed" xml:space="preserve"><value>Failed</value></data>
+  <data name="XncfBuilder.Preview.Stage.Cancelled" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="XncfBuilder.Preview.Stage.Interrupted" xml:space="preserve"><value>Interrupted</value></data>
+  <data name="XncfBuilder.Preview.HostStatus.NotCreated" xml:space="preserve"><value>Not created</value></data>
+  <data name="XncfBuilder.Preview.HostStatus.Starting" xml:space="preserve"><value>Starting</value></data>
+  <data name="XncfBuilder.Preview.HostStatus.HealthChecking" xml:space="preserve"><value>Health checking</value></data>
+  <data name="XncfBuilder.Preview.HostStatus.Healthy" xml:space="preserve"><value>Healthy</value></data>
+  <data name="XncfBuilder.Preview.HostStatus.Stopping" xml:space="preserve"><value>Stopping</value></data>
+  <data name="XncfBuilder.Preview.HostStatus.Stopped" xml:space="preserve"><value>Stopped</value></data>
+  <data name="XncfBuilder.Preview.HostStatus.Replaced" xml:space="preserve"><value>Replaced</value></data>
+  <data name="XncfBuilder.Preview.HostStatus.Failed" xml:space="preserve"><value>Failed</value></data>
+  <data name="XncfBuilder.Preview.HostStatus.Interrupted" xml:space="preserve"><value>Interrupted</value></data>
+</root>

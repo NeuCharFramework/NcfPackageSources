@@ -3,6 +3,8 @@
 // Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.
 // </auto-generated>
 
+#nullable enable annotations
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,7 +91,28 @@ Code:
         /// 请求类代码
         /// 类型: code
         /// </summary>
-        public const string RequestCode = @"using System;
+        public const string RequestCode = @"/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Request.cs
+    文件功能描述：Request 相关实现
+    
+    
+    创建标识：Senparc - 20250624
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.36.3-preview2 重构系统配置初始化与更新流程并统一模型处理
+
+    修改标识：Senparc - 20260705
+    修改描述：v0.36.4-preview3 重构系统配置初始化与更新流程并统一模型处理
+----------------------------------------------------------------*/
+
+#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -534,8 +557,10 @@ namespace Template_OrgName.Xncf.Template_XncfName.Domain.Services
 </div>
 
 @section scripts{
+    @await Html.PartialAsync(""_LocalizationScripts"")
     <script src=""~/js/Admin/Template_XncfName/databaseSampleIndex.js""></script>
-} ";
+}
+";
 
         /// <summary>
         /// 数据库示例索引页面代码后置模板
@@ -1477,14 +1502,14 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         public static readonly TemplateFileInfo[] AllTemplateFiles = new TemplateFileInfo[]
         {
             new TemplateFileInfo("RequestCode", "请求类代码", "code", "Request.cs", RequestCode),
-            new TemplateFileInfo("SenparcEntitiesTemplate", "Senparc实体类模板", "backend_template", "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs", SenparcEntitiesTemplate),
-            new TemplateFileInfo("ColorModelTemplate", "颜色模型模板", "backend_template", "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Color.cs", ColorModelTemplate),
-            new TemplateFileInfo("ColorDtoTemplate", "颜色DTO模板", "backend_template", "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Models/DatabaseModel/Dto/ColorDto.cs", ColorDtoTemplate),
-            new TemplateFileInfo("ColorServiceTemplate", "颜色服务模板", "backend_template", "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Domain/Services/ColorService.cs", ColorServiceTemplate),
-            new TemplateFileInfo("DatabaseSampleIndexViewTemplate", "数据库示例索引页面视图模板", "frontend_template", "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml", DatabaseSampleIndexViewTemplate),
-            new TemplateFileInfo("DatabaseSampleIndexCodeBehindTemplate", "数据库示例索引页面代码后置模板", "frontend_template", "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs", DatabaseSampleIndexCodeBehindTemplate),
-            new TemplateFileInfo("DatabaseSampleIndexJsTemplate", "数据库示例索引页面JavaScript模板", "frontend_script", "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js", DatabaseSampleIndexJsTemplate),
-            new TemplateFileInfo("DatabaseSampleIndexCssTemplate", "数据库示例索引页面CSS模板", "frontend_style", "../../../../tools/NcfSimulatedSite/Template_OrgName.Xncf.Template_XncfName/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css", DatabaseSampleIndexCssTemplate),
+            new TemplateFileInfo("SenparcEntitiesTemplate", "Senparc实体类模板", "backend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Template_XncfNameSenparcEntities.cs", SenparcEntitiesTemplate),
+            new TemplateFileInfo("ColorModelTemplate", "颜色模型模板", "backend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Color.cs", ColorModelTemplate),
+            new TemplateFileInfo("ColorDtoTemplate", "颜色DTO模板", "backend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Models/DatabaseModel/Dto/ColorDto.cs", ColorDtoTemplate),
+            new TemplateFileInfo("ColorServiceTemplate", "颜色服务模板", "backend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Domain/Services/ColorService.cs", ColorServiceTemplate),
+            new TemplateFileInfo("DatabaseSampleIndexViewTemplate", "数据库示例索引页面视图模板", "frontend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml", DatabaseSampleIndexViewTemplate),
+            new TemplateFileInfo("DatabaseSampleIndexCodeBehindTemplate", "数据库示例索引页面代码后置模板", "frontend_template", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs", DatabaseSampleIndexCodeBehindTemplate),
+            new TemplateFileInfo("DatabaseSampleIndexJsTemplate", "数据库示例索引页面JavaScript模板", "frontend_script", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js", DatabaseSampleIndexJsTemplate),
+            new TemplateFileInfo("DatabaseSampleIndexCssTemplate", "数据库示例索引页面CSS模板", "frontend_style", "../Senparc.Xncf.XncfBuilder.Template/templates/template1/wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css", DatabaseSampleIndexCssTemplate),
         };
 
         /// <summary>
@@ -1507,9 +1532,9 @@ namespace Template_OrgName.Xncf.Template_XncfName.Areas.Template_XncfName.Pages
         /// <summary>
         /// 根据名称获取模板内容
         /// </summary>
-        public static string? GetTemplateContent(string templateName)
+        public static string GetTemplateContent(string templateName)
         {
-            return AllTemplateFiles.FirstOrDefault(f => f.Name == templateName)?.Content;
+            return AllTemplateFiles.FirstOrDefault(f => f.Name == templateName)?.Content ?? string.Empty;
         }
 
         /// <summary>

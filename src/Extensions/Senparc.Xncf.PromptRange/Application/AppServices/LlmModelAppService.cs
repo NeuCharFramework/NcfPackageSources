@@ -1,3 +1,20 @@
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：LlmModelAppService.cs
+    文件功能描述：LlmModelAppService 相关实现
+    
+    
+    创建标识：Senparc - 20260704
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+
+----------------------------------------------------------------*/
+
 using AutoMapper;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
@@ -16,6 +33,8 @@ using System.Threading.Tasks;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
+using Senparc.Xncf.AreaBase.Admin.Filters;
+using Senparc.Ncf.Core.Authorization;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
 {
@@ -23,7 +42,7 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
     /// LLM 模型管理 AppService
     /// TODO: 需要权限验证
     /// </summary>
-    //[ApiAuthorize("AdminOnly")]
+    [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class LlmModelAppService : AppServiceBase
     {
         private readonly LlModelService _llModelService;

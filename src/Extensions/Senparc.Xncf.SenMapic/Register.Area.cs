@@ -1,4 +1,21 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.Area.cs
+    文件功能描述：Register.Area 相关实现
+    
+    
+    创建标识：Senparc - 20250113
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.3.0-preview2 为 SenMapic 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Areas;
@@ -19,9 +36,9 @@ namespace Senparc.Xncf.SenMapic
         public string HomeUrl => "/Admin/SenMapic/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
+                         new AreaPageMenuItem(GetAreaHomeUrl(), SenMapicResource.Get("Area.Home", "首页"),"fa fa-laptop"),
                          new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/Index"),"SenMapic","fa fa-file"),
-			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
+			 			 new AreaPageMenuItem(GetAreaUrl($"/Admin/SenMapic/DatabaseSample"), SenMapicResource.Get("Area.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
 			 		};
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

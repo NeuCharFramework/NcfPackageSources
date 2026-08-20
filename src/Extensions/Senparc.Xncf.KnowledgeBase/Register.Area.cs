@@ -1,4 +1,24 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.Area.cs
+    文件功能描述：Register.Area 相关实现
+
+
+    创建标识：Senparc - 20250105
+
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.3.0-preview3 为 KnowledgeBase 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -25,9 +45,9 @@ namespace Senparc.Xncf.KnowledgeBase
         public string HomeUrl => "/Admin/KnowledgeBase/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-            new AreaPageMenuItem(GetAreaHomeUrl(),"首页","fa fa-laptop"),
-            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/Index"),"知识库管理","fa fa-bookmark-o"),
-            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/RecallTest"),"召回测试","fa fa-bookmark-o"),
+            // HomeUrl 与知识库管理页相同，保留一个真实入口即可。
+            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/Index"), KnowledgeBaseResource.Get("Area.KnowledgeBase.Management", "知识库管理"),"fa fa-bookmark-o"),
+            new AreaPageMenuItem(GetAreaUrl($"/Admin/KnowledgeBase/RecallTest"), KnowledgeBaseResource.Get("Area.KnowledgeBase.RecallTest", "召回测试"),"fa fa-bookmark-o"),
         };
 
         public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IHostEnvironment env)

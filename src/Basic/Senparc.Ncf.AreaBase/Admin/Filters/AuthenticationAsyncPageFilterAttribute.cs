@@ -1,4 +1,21 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AuthenticationAsyncPageFilterAttribute.cs
+    文件功能描述：AuthenticationAsyncPageFilterAttribute 相关实现
+    
+    
+    创建标识：Senparc - 20200724
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260731
+    修改描述：v0.23.0-preview4 将 Ajax 无权限提示接入核心多语言资源
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -61,7 +78,7 @@ namespace Senparc.Ncf.AreaBase.Admin.Filters
                     {
                         if (strings.Contains("XMLHttpRequest"))
                         {
-                            actionResult = new JsonResult(new AjaxReturnModel() { Success = false, Msg = "您没有权限访问" }) { StatusCode = 401 };
+                            actionResult = new JsonResult(new AjaxReturnModel() { Success = false, Msg = NcfCoreResource.Get("Auth.Forbidden", "您没有权限访问") }) { StatusCode = 401 };
                         }
                     }
                     context.Result = actionResult;

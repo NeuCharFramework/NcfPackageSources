@@ -1,30 +1,53 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AIModelStudioRequest.cs
+    文件功能描述：AIModelStudioRequest 相关实现
+    
+    
+    创建标识：Senparc - 20240131
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.14.0-preview5 为 AIKernel 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI.Interfaces;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
+using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.AIKernel.OHS.Local.PL
 {
     public class AIModelStudioRequest_RunModelAsync : FunctionAppRequestBase
     {
         [Required]
-        [Description("选择模型||")]//下拉列表
-        public SelectionList Model { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
+        [LocalizedDescription(typeof(AIKernelResource), "Parameter.AI.Model")]//下拉列表
+        [FunctionParameterUi(ParameterType.CheckBoxList, nameof(ModelOptions))]
+        public string[] Model { get; set; }
+
+        [JsonIgnore]
+        public SelectionList ModelOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new List<SelectionItem>());
 
         //TODO: 更多 AI 参数
 
         [Required]
         [MaxLength(1000)]
-        [Description("提示词||")]
+        [LocalizedDescription(typeof(AIKernelResource), "Parameter.AI.Prompt")]
         public string Prompt { get; set; }
 
         public override async Task LoadData(IServiceProvider serviceProvider)
@@ -52,7 +75,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
             foreach (var aiModel in aiModels)
             {
                 var setting = aiModelService.BuildSenparcAiSetting(aiModelService.Mapper.Map<AIModelDto>(aiModel));
-                settings.Add(new(aiModel.Alias, setting, "AIKernel 模块数据库"));
+                settings.Add(new(aiModel.Alias, setting, AIKernelResource.Get("Parameter.AI.Source.Database")));
             }
 
             //集成模型参数
@@ -60,7 +83,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.PL
             {
                 var value = z.ModelAlias;
                 var text = z.DisplayText;
-                Model.Items.Add(new SelectionItem(value, text, $"来自：{z.From}", false) { BindData = z.SenparcAiSetting });
+                ModelOptions.Items.Add(new SelectionItem(
+                    value,
+                    text,
+                    AIKernelResource.Format("Parameter.AI.Source", "来源：{0}", z.From),
+                    false)
+                { BindData = z.SenparcAiSetting });
             });
 
             await base.LoadData(serviceProvider);

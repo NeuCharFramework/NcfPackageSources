@@ -1,3 +1,22 @@
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptItemAppService.cs
+    文件功能描述：PromptItemAppService 服务逻辑
+    
+    
+    创建标识：Senparc - 20231021
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260705
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
+
+    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,9 +26,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET;
+using Senparc.CO2NET.Trace;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.AreaBase.Admin.Filters;
+using Senparc.Ncf.Core.Authorization;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
@@ -24,20 +46,23 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
     /// PromptItem 管理 AppService
     /// TODO: 需要权限验证
     /// </summary>
-    //[ApiAuthorize("AdminOnly")]
+    [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class PromptItemAppService : AppServiceBase
     {
         // private readonly RepositoryBase<PromptItem> _promptItemRepository;
         private readonly PromptItemService _promptItemService;
         private readonly PromptResultService _promptResultService;
+        private readonly PromptResultStreamHub _promptResultStreamHub;
 
         /// <inheritdoc />
         public PromptItemAppService(IServiceProvider serviceProvider,
             PromptItemService promptItemService,
-            PromptResultService promptResultService) : base(serviceProvider)
+            PromptResultService promptResultService,
+            PromptResultStreamHub promptResultStreamHub) : base(serviceProvider)
         {
             _promptItemService = promptItemService;
             _promptResultService = promptResultService;
+            _promptResultStreamHub = promptResultStreamHub;
         }
 
         /// <summary>
@@ -52,6 +77,8 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return await this.GetResponseAsync<PromptItem_AddResponse>(
                 async (response, logger) =>
                 {
+                    try
+                    {
                     // 新增promptItem
                     var savedPromptItem = await _promptItemService.AddPromptItemAsync(request);
                     // ?? throw new NcfExceptionBase("新增失败");
@@ -81,6 +108,19 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                     ResultMode? firstResultMode = null;
                     string firstUserMessage = request.UserMessage;
                     List<Domain.Services.ChatMessageDto> firstChatHistory = chatHistory;
+                    Action<PromptResultStreamEvent> streamCallback = null;
+                    if (!string.IsNullOrWhiteSpace(request.StreamId))
+                    {
+                        streamCallback = streamEvent =>
+                        {
+                            if (streamEvent == null)
+                            {
+                                return;
+                            }
+                            streamEvent.StreamId = request.StreamId;
+                            _promptResultStreamHub.Publish(streamEvent);
+                        };
+                    }
                     
                     for (var i = 0; i < request.NumsOfResults; i++)
                     {
@@ -105,7 +145,12 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         // 如果第一个结果是 Single 模式，后续也使用 Single 模式（currentUserMessage 为 null）
                         
                         // 分别生成结果
-                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(savedPromptItem, currentUserMessage, currentChatHistory);
+                        PromptResultDto promptResult = await _promptResultService.SenparcGenerateResultAsync(
+                            savedPromptItem,
+                            currentUserMessage,
+                            currentChatHistory,
+                            streamCallback,
+                            request.ExecutionOptions);
                         
                         // 记录第一个结果的模式
                         if (i == 0)
@@ -117,9 +162,24 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
                         promptItemResponseDto.PromptResultList.Add(promptResult);
                     }
 
+                    if (!string.IsNullOrWhiteSpace(request.StreamId))
+                    {
+                        _promptResultStreamHub.Publish(new PromptResultStreamEvent
+                        {
+                            StreamId = request.StreamId,
+                            EventType = "complete",
+                            IsFinal = true
+                        });
+                    }
+
                     await _promptResultService.UpdateEvalScoreAsync(savedPromptItem.Id);
 
                     return promptItemResponseDto;
+                    }catch(Exception ex)
+                    {
+                        SenparcTrace.BaseExceptionLog(ex);
+                        throw;
+                    }
                 }
             );
         }

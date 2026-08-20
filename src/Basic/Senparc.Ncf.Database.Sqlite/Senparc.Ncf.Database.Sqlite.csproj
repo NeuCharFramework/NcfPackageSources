@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.19.11-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.20.8-preview8</Version>
     <AssemblyName>Senparc.Ncf.Database.Sqlite</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.Sqlite</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -13,18 +13,32 @@
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>Senparc.Ncf.Database.Sqlite</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		v0.1.0 创世
-		[2024-09-10] v0.18.4-preview1 升级缓存基础库
-		[2024-10-27] v0.18.7-preview1 优化 MacOS 路径处理
-			[2025-01-25] v0.19.5-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.19.7-preview1 Update CO2NET and AIKernel
-			[2025-04-29] v0.19.8-preview1 Update CO2NET and AIKernel
-
+				v0.1.0 创世
+				[2024-09-10] v0.18.4-preview1 升级缓存基础库
+				[2024-10-27] v0.18.7-preview1 优化 MacOS 路径处理
+				[2025-01-25] v0.19.5-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.19.7-preview1 Update CO2NET and AIKernel
+				[2025-04-29] v0.19.8-preview1 Update CO2NET and AIKernel
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-17] v0.20.2-preview2 同步上游项目版本并适配统一本地化能力
+				1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
+				2、Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
+				3、Dependency update from Senparc.Ncf.Utility to 0.21.0-preview2
+				[2026-07-29] v0.20.3-preview3 Dependency update from Senparc.Ncf.Core to 0.26.0-preview3
+				[2026-07-31] v0.20.4-preview4 升级 CO2NET 4.2.0 基础依赖
+				1、升级 Senparc.CO2NET 至 4.2.0 并保持现有项目行为兼容
+				[2026-08-04] v0.20.5-preview5 Dependency updates from upstream projects
+				1、Dependency update from Senparc.Ncf.Core to 0.28.0-preview5
+				2、Dependency update from Senparc.Ncf.Database to 0.21.5-preview5
+				[2026-08-08] v0.20.6-preview6 Dependency updates from upstream projects
+				1、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+				2、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
+				[2026-08-13] v0.20.7-preview7 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.Database to 0.21.7-preview7
+				[2026-08-15] v0.20.8-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -42,7 +56,7 @@
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.CO2NET" Version="3.1.5" />
+    <PackageReference Include="Senparc.CO2NET" Version="4.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />

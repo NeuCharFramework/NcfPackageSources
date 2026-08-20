@@ -1,3 +1,23 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：FileTemplateAppService.cs
+    文件功能描述：FileTemplateAppService 相关实现
+
+
+    创建标识：Senparc - 20250710
+
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.5.0-preview5 新增文件文本提取与文件管理服务
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
+
+----------------------------------------------------------------*/
+
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
@@ -10,12 +30,16 @@ using System;
 using System.Threading.Tasks;
 using Senparc.Xncf.FileManager.Domain;
 using Senparc.Xncf.FileManager.Domain.Services;
+using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
 using System.Linq;
+using Senparc.Ncf.Core.Authorization;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 
 namespace Senparc.Xncf.FileManager.OHS.Local.AppService
 {
+    [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class FileTemplateAppService : AppServiceBase
     {
         private readonly NcfFileService fileService;
@@ -83,6 +107,7 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
             return await this.GetResponseAsync<FileTemplate_GetListResponse>(async (response, logger) =>
             {
                 var seh = new SenparcExpressionHelper<Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.NcfFile>();
+                seh.ValueCompare.AndAlso(true, _ => _.ResourceScope == NcfFileResourceScope.KnowledgeBase);
                 seh.ValueCompare.AndAlso(!string.IsNullOrEmpty(filter), _ => _.FileName.Contains(filter));
                 var where = seh.BuildWhereExpression();
                 var list = await this.fileService.GetObjectListAsync(pageIndex, pageSize, where, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);

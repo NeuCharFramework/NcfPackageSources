@@ -1,4 +1,25 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ChatGroupHistoryDto.cs
+    文件功能描述：ChatGroupHistoryDto 数据传输对象定义
+
+
+    创建标识：Senparc - 20240616
+
+    修改标识：Senparc - 20260701
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,6 +44,16 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
         public AgentTemplate ToAgentTemplate { get; set; }
 
+        public string FromParticipantKey { get; set; }
+
+        public string FromParticipantKind { get; set; }
+
+        public string FromParticipantName { get; set; }
+
+        public string RemoteContextId { get; set; }
+
+        public string RemoteTaskId { get; set; }
+
         //public int? FromChatGroupMemberId { get; set; }
 
         //public ChatGroupMember FromChatGroupMember { get; set; }
@@ -36,6 +67,18 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public MessageType MessageType { get; set; }
 
         public Status Status { get; set; }
+
+        public int PromptTokens { get; set; }
+
+        public int CompletionTokens { get; set; }
+
+        public int TotalTokens { get; set; }
+
+        public int ResponseMilliseconds { get; set; }
+
+        public int RoundIndex { get; set; }
+
+        public string ResponseId { get; set; }
 
         public ChatGroupHistoryDto() { }
 
@@ -55,6 +98,16 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             Message = message;
             MessageType = messageType;
             Status = status;
+
+            if (ChatUsageRemarkCodec.TryDecodeMessage(AdminRemark, out var usage))
+            {
+                PromptTokens = usage.PromptTokens;
+                CompletionTokens = usage.CompletionTokens;
+                TotalTokens = usage.TotalTokens;
+                ResponseMilliseconds = usage.ResponseMilliseconds;
+                RoundIndex = usage.RoundIndex;
+                ResponseId = usage.ResponseId;
+            }
         }
 
         public ChatGroupHistoryDto(ChatGroupHistory chatGroupHistory)
@@ -66,6 +119,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             FromAgentTemplate = chatGroupHistory.FromAgentTemplate;
             ToAgentTemplateId = chatGroupHistory.ToAgentTemplateId;
             ToAgentTemplate = chatGroupHistory.ToAgentTemplate;
+            FromParticipantKey = chatGroupHistory.FromParticipantKey;
+            FromParticipantKind = chatGroupHistory.FromParticipantKind;
+            FromParticipantName = chatGroupHistory.FromParticipantName;
+            RemoteContextId = chatGroupHistory.RemoteContextId;
+            RemoteTaskId = chatGroupHistory.RemoteTaskId;
             //FromChatGroupMemberId = chatGroupHistory.FromChatGroupMemberId;
             //FromChatGroupMember = chatGroupHistory.FromChatGroupMember;
             //ToChatGroupMemberId = chatGroupHistory.ToChatGroupMemberId;
@@ -73,6 +131,16 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             Message = chatGroupHistory.Message;
             MessageType = chatGroupHistory.MessageType;
             Status = chatGroupHistory.Status;
+
+            if (ChatUsageRemarkCodec.TryDecodeMessage(chatGroupHistory.AdminRemark, out var usage))
+            {
+                PromptTokens = usage.PromptTokens;
+                CompletionTokens = usage.CompletionTokens;
+                TotalTokens = usage.TotalTokens;
+                ResponseMilliseconds = usage.ResponseMilliseconds;
+                RoundIndex = usage.RoundIndex;
+                ResponseId = usage.ResponseId;
+            }
         }
     }
 }

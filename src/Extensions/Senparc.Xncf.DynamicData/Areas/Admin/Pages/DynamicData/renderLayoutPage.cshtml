@@ -1,10 +1,7 @@
 ﻿@page
 @model Senparc.Xncf.DynamicData.Areas.Admin.Pages.DynamicData.renderLayoutPageModel
-@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
-@{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
-    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
-
-    ViewData["Title"] = AR["Auto.UI.ea1127fe472d"];
+@{
+    ViewData["Title"] = "DynamicData 渲染布局页面";
     Layout = "_Layout_Vue";
 }
 
@@ -14,9 +11,9 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["DynamicData.ModuleName"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["Auto.UI.9f79dbb48478"]</el-breadcrumb-item>
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>动态数据基础模块</el-breadcrumb-item>
+    <el-breadcrumb-item>渲染布局页面</el-breadcrumb-item>
 }
 
 <el-container>
@@ -31,7 +28,7 @@
             </div>
         </div>
         @* <div class="menu-newbtn" @@click="handleAddMenu">
-        <i class="el-icon-plus"></i>@AR["Auto.UI.ba750e6e3022"]
+        <i class="el-icon-plus"></i>新增菜单
         </div> *@
     </div>
     @* 主体操作区域 *@
@@ -120,8 +117,8 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @@click="handleSubmitBtnEdit(item)">@CR["Common.Submit"]</el-button>
-                        @* <el-button @@click="resetForm('ruleForm')">@CR["Common.Reset"]</el-button> *@
+                        <el-button type="primary" @@click="handleSubmitBtnEdit(item)">提交</el-button>
+                        @* <el-button @@click="resetForm('ruleForm')">重置</el-button> *@
                     </el-form-item>
                 </el-form>
             </template>
@@ -130,6 +127,7 @@
 </el-container>
 
 @section scripts {
+    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
     <script src="~/js/DynamicData/lib/axios.min.js"></script>
     <script src="~/js/DynamicData/axios.js"></script>
     <script src="~/js/DynamicData/renderLayoutPage.js"></script>

@@ -17,10 +17,10 @@ new Vue({
             },
             rules: {
                 name: [
-                    { required: true, message: '请输入任务名称', trigger: 'blur' }
+                    { required: true, message: ncfT('SenMapic.Validation.EnterTaskName'), trigger: 'blur' }
                 ],
                 startUrl: [
-                    { required: true, message: '请输入起始URL', trigger: 'blur' }
+                    { required: true, message: ncfT('SenMapic.Validation.EnterStartUrl'), trigger: 'blur' }
                 ]
             }
         }
@@ -40,10 +40,10 @@ new Vue({
         },
         getStatusText(status) {
             const statusMap = {
-                '-1': '出错',
-                '0': '等待开始',
-                '1': '进行中',
-                '2': '已完成'
+                '-1': ncfT('SenMapic.Status.Error'),
+                '0': ncfT('SenMapic.Status.Waiting'),
+                '1': ncfT('SenMapic.Status.Running'),
+                '2': ncfT('SenMapic.Status.Completed')
             }
             return statusMap[status]
         },
@@ -53,12 +53,12 @@ new Vue({
                 const res = await axios.get('/Admin/SenMapic/Task/List')
                 this.tableData = res.data
             } catch (error) {
-                this.$message.error('获取任务列表失败')
+                this.$message.error(ncfT('SenMapic.Message.LoadTasksFailed'))
             }
             this.loading = false
         },
         handleAdd() {
-            this.dialogTitle = '新建任务'
+            this.dialogTitle = ncfT('SenMapic.Task.Create')
             this.dialogVisible = true
             this.form = {
                 name: '',
@@ -75,11 +75,11 @@ new Vue({
                 if (valid) {
                     try {
                         await axios.post('/Admin/SenMapic/Task/Create', this.form)
-                        this.$message.success('创建成功')
+                        this.$message.success(ncfT('SenMapic.Message.CreateSucceeded'))
                         this.dialogVisible = false
                         this.getList()
                     } catch (error) {
-                        this.$message.error('创建失败')
+                        this.$message.error(ncfT('SenMapic.Message.CreateFailed'))
                     }
                 }
             })
@@ -87,25 +87,25 @@ new Vue({
         async handleStart(row) {
             try {
                 await axios.post(`/Admin/SenMapic/Task/Start/${row.id}`)
-                this.$message.success('任务已启动')
+                this.$message.success(ncfT('SenMapic.Message.TaskStarted'))
                 this.getList()
             } catch (error) {
-                this.$message.error('启动失败')
+                this.$message.error(ncfT('SenMapic.Message.StartFailed'))
             }
         },
         async handleDelete(row) {
             try {
-                await this.$confirm('确认删除该任务?', '提示', {
+                await this.$confirm(ncfT('SenMapic.Message.ConfirmDeleteTask'), ncfT('SenMapic.Common.Prompt'), {
                     type: 'warning'
                 })
                 await axios.delete(`/Admin/SenMapic/Task/Delete/${row.id}`)
-                this.$message.success('删除成功')
+                this.$message.success(ncfT('SenMapic.Message.DeleteSucceeded'))
                 this.getList()
             } catch (error) {
                 if (error !== 'cancel') {
-                    this.$message.error('删除失败')
+                    this.$message.error(ncfT('SenMapic.Message.DeleteFailed'))
                 }
             }
         }
     }
-}) 
+})

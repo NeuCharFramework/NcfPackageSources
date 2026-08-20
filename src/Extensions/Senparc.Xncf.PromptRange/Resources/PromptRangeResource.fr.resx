@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.PromptRange.MenuName" xml:space="preserve">
+    <value>Atelier de prompts</value>
+  </data>
+  <data name="Module.PromptRange.Description" xml:space="preserve">
+    <value>Entraîne et évalue les prompts</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>Accueil</value>
+  </data>
+  <data name="Function.PromptRange.ViewCodes.Name" xml:space="preserve">
+    <value>Afficher la liste PromptCode</value>
+  </data>
+  <data name="Function.PromptRange.ViewCodes.Description" xml:space="preserve">
+    <value>Affiche les PromptCodes de toutes les plages et tactiques pour créer rapidement des agents</value>
+  </data>
+  <data name="Parameter.PromptRange.FilterRange" xml:space="preserve">
+    <value>Filtrer le nom du champ||Saisissez un mot-clé ; laissez vide pour afficher tous les champs</value>
+  </data>
+  <data name="Area.ExtensionModules" xml:space="preserve"><value>Modules d’extension</value></data>
+  <data name="Area.PromptRange" xml:space="preserve"><value>Banc de prompts</value></data>
+  <data name="Area.Model" xml:space="preserve"><value>Modèles</value></data>
+  <data name="Title.Home" xml:space="preserve"><value>Accueil Prompt Range</value></data>
+  <data name="Title.Model" xml:space="preserve"><value>Modèles Prompt Range</value></data>
+  <data name="Title.Prompt" xml:space="preserve"><value>Prompt Prompt Range</value></data>
+  <data name="Dashboard.AddModel" xml:space="preserve"><value>Ajouter un modèle</value></data>
+  <data name="Dashboard.DataUpdated" xml:space="preserve"><value>Données mises à jour :</value></data>
+  <data name="Dashboard.Refresh" xml:space="preserve"><value>Actualiser le tableau de bord</value></data>
+  <data name="Dashboard.Workbench" xml:space="preserve"><value>Ouvrir l’espace Prompt</value></data>
+  <data name="Dashboard.Trend" xml:space="preserve"><value>Tendance des exécutions ({0} derniers jours)</value></data>
+  <data name="Dashboard.TrendSubtitle" xml:space="preserve"><value>Appels / score moyen</value></data>
+  <data name="Dashboard.ModelDistribution" xml:space="preserve"><value>Répartition de l’utilisation des modèles</value></data>
+  <data name="Dashboard.TopModels" xml:space="preserve"><value>Top {0}</value></data>
+  <data name="Dashboard.TopPrompts" xml:space="preserve"><value>Classement des Prompts fréquents</value></data>
+  <data name="Dashboard.PromptPage" xml:space="preserve"><value>Accéder à la page Prompt</value></data>
+  <data name="Dashboard.Range" xml:space="preserve"><value>Banc</value></data>
+  <data name="Dashboard.Calls" xml:space="preserve"><value>Appels</value></data>
+  <data name="Dashboard.AverageScore" xml:space="preserve"><value>Score moyen</value></data>
+  <data name="Dashboard.LastRun" xml:space="preserve"><value>Dernière exécution</value></data>
+  <data name="Dashboard.Draft" xml:space="preserve"><value>Brouillon</value></data>
+  <data name="Dashboard.Health" xml:space="preserve"><value>Santé du banc</value></data>
+  <data name="Dashboard.HealthSubtitle" xml:space="preserve"><value>Score + activité + ratio de brouillons</value></data>
+  <data name="Dashboard.Active" xml:space="preserve"><value>Actif</value></data>
+  <data name="Dashboard.Risk" xml:space="preserve"><value>Risques et Prompts à optimiser</value></data>
+  <data name="Dashboard.RiskSubtitle" xml:space="preserve"><value>Prioriser les scores faibles et les éléments non testés</value></data>
+  <data name="Dashboard.Priority" xml:space="preserve"><value>Priorité</value></data>
+  <data name="Dashboard.Insight" xml:space="preserve"><value>Analyses</value></data>
+  <data name="Dashboard.InsightSubtitle" xml:space="preserve"><value>Basé sur les exécutions et scores réels</value></data>
+  <data name="Dashboard.EmptyPrompt" xml:space="preserve"><value>Aucune donnée Prompt</value></data>
+  <data name="Dashboard.EmptyRange" xml:space="preserve"><value>Aucune donnée de banc</value></data>
+  <data name="Dashboard.EmptyRisk" xml:space="preserve"><value>Aucun risque</value></data>
+  <data name="Dashboard.EmptyInsight" xml:space="preserve"><value>Aucune analyse</value></data>
+  <data name="Dashboard.ScoreUnit" xml:space="preserve"><value>points</value></data>
+  <data name="Dashboard.RangeTotal" xml:space="preserve"><value>Nombre de bancs</value></data>
+  <data name="Dashboard.ActiveRange" xml:space="preserve"><value>Bancs actifs ces 7 derniers jours : {0}</value></data>
+  <data name="Dashboard.PromptTotal" xml:space="preserve"><value>Nombre total de Prompts</value></data>
+  <data name="Dashboard.DraftCount" xml:space="preserve"><value>Brouillons {0} ({1} %)</value></data>
+  <data name="Dashboard.ResultTotal" xml:space="preserve"><value>Nombre total d’exécutions</value></data>
+  <data name="Dashboard.TodayLast7" xml:space="preserve"><value>Aujourd’hui {0} / 7 derniers jours {1}</value></data>
+  <data name="Dashboard.AverageFinalScore" xml:space="preserve"><value>Score final moyen</value></data>
+  <data name="Dashboard.Coverage" xml:space="preserve"><value>Couverture des scores {0}</value></data>
+  <data name="Dashboard.TokenCost" xml:space="preserve"><value>Coût total en tokens</value></data>
+  <data name="Dashboard.ActivePrompt" xml:space="preserve"><value>Prompts actifs ces 7 derniers jours : {0}</value></data>
+  <data name="Dashboard.AverageLatency" xml:space="preserve"><value>Latence moyenne</value></data>
+  <data name="Dashboard.AllResults" xml:space="preserve"><value>Statistiques de toutes les exécutions</value></data>
+  <data name="Dashboard.UnknownModel" xml:space="preserve"><value>Inconnu</value></data>
+  <data name="Dashboard.ModelPrefix" xml:space="preserve"><value>Modèle n°{0}</value></data>
+  <data name="Dashboard.Refreshed" xml:space="preserve"><value>Tableau de bord actualisé</value></data>
+  <data name="Auth.SessionExpired" xml:space="preserve"><value>Votre session a expiré. Veuillez vous reconnecter.</value></data>
+  <data name="Auth.AccessDenied" xml:space="preserve"><value>Vous n’avez pas l’autorisation d’accéder à cette fonctionnalité.</value></data>
+  <data name="Model.SearchPlaceholder" xml:space="preserve"><value>Saisissez du contenu</value></data>
+  <data name="Model.Add" xml:space="preserve"><value>Ajouter</value></data>
+  <data name="Model.BatchDelete" xml:space="preserve"><value>Supprimer la sélection</value></data>
+  <data name="Model.Index" xml:space="preserve"><value>N°</value></data>
+  <data name="Model.Name" xml:space="preserve"><value>Nom du modèle</value></data>
+  <data name="Model.Developer" xml:space="preserve"><value>Développeur</value></data>
+  <data name="Model.Public" xml:space="preserve"><value>Public</value></data>
+  <data name="Model.Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="Model.Edit" xml:space="preserve"><value>Modifier</value></data>
+  <data name="Model.Delete" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="Model.Type" xml:space="preserve"><value>Type de modèle</value></data>
+  <data name="Model.TypePlaceholder" xml:space="preserve"><value>Sélectionnez un type de modèle</value></data>
+  <data name="Model.NamePlaceholder" xml:space="preserve"><value>Saisissez le nom du modèle</value></data>
+  <data name="Model.Endpoint" xml:space="preserve"><value>Point de terminaison du modèle</value></data>
+  <data name="Model.EndpointPlaceholder" xml:space="preserve"><value>Saisissez le point de terminaison</value></data>
+  <data name="Model.ApiKeyPlaceholder" xml:space="preserve"><value>Saisissez la clé API</value></data>
+  <data name="Model.Cancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Model.Confirm" xml:space="preserve"><value>Confirmer</value></data>
+  <data name="Model.NewTitle" xml:space="preserve"><value>Ajouter un modèle</value></data>
+  <data name="Model.EditTitle" xml:space="preserve"><value>Modifier le modèle</value></data>
+  <data name="Model.AddSuccess" xml:space="preserve"><value>Ajouté avec succès !</value></data>
+  <data name="Model.AddFailed" xml:space="preserve"><value>Échec de l’ajout</value></data>
+  <data name="Model.ModifyFailed" xml:space="preserve"><value>Échec de la modification</value></data>
+  <data name="Model.DeleteFailed" xml:space="preserve"><value>Échec de la suppression</value></data>
+  <data name="Model.SelectType" xml:space="preserve"><value>Sélectionnez un type de modèle</value></data>
+  <data name="Model.EnterName" xml:space="preserve"><value>Saisissez le nom du modèle</value></data>
+  <data name="Model.EnterApi" xml:space="preserve"><value>Saisissez l’API du modèle</value></data>
+  <data name="Model.EnterApiKey" xml:space="preserve"><value>Saisissez la clé API du modèle</value></data>
+  <data name="Area.DatabaseSample" xml:space="preserve"><value>Exemple d’opérations de base de données</value></data>
+ </root>

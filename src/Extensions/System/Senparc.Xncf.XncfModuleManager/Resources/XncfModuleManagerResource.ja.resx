@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.XncfModuleManager.MenuName" xml:space="preserve">
+    <value>XNCF モジュール管理コア</value>
+  </data>
+  <data name="Module.XncfModuleManager.Description" xml:space="preserve">
+    <value>XNCF モジュールのインストール、更新、管理を行うコアコンポーネント</value>
+  </data>
+  <data name="Function.XncfManager.GetAllModules.Name" xml:space="preserve">
+    <value>全 XNCF モジュール情報を取得</value>
+  </data>
+  <data name="Function.XncfManager.GetAllModules.Description" xml:space="preserve">
+    <value>全 XNCF モジュールの名前、説明、状態を取得します</value>
+  </data>
+  <data name="Function.XncfManager.InstallAndEnable.Name" xml:space="preserve">
+    <value>XNCF モジュールをインストールして有効化</value>
+  </data>
+  <data name="Function.XncfManager.InstallAndEnable.Description" xml:space="preserve">
+    <value>指定モジュールをインストールし、有効状態へ切り替えます</value>
+  </data>
+  <data name="Function.XncfManager.InstallAndEnableAi.Name" xml:space="preserve">
+    <value>XNCF をインストールして有効化（AI 対応）</value>
+  </data>
+  <data name="Function.XncfManager.InstallAndEnableAi.Description" xml:space="preserve">
+    <value>SelectionList なしで UID または名前から直接インストールして有効化します</value>
+  </data>
+  <data name="Function.XncfManager.ViewFunctionStatus.Name" xml:space="preserve">
+    <value>XNCF Function 状態を表示</value>
+  </data>
+  <data name="Function.XncfManager.ViewFunctionStatus.Description" xml:space="preserve">
+    <value>現在の XNCF モジュールの Function 読み込み状態を表示します</value>
+  </data>
+  <data name="Parameter.XncfManager.ShowFunctions.Module" xml:space="preserve">
+    <value>XNCF モジュール||指定モジュールの Function 状態を表示します</value>
+  </data>
+  <data name="Parameter.XncfManager.Install.Module" xml:space="preserve">
+    <value>XNCF モジュール||インストールして有効化するモジュールを選択します</value>
+  </data>
+</root>

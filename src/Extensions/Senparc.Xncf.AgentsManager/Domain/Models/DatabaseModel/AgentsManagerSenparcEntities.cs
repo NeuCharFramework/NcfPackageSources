@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AgentsManagerSenparcEntities.cs
+    文件功能描述：AgentsManagerSenparcEntities 相关实现
+
+
+    创建标识：Senparc - 20240616
+
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+
+----------------------------------------------------------------*/
+
 using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
@@ -20,6 +37,21 @@ namespace Senparc.Xncf.AgentsManager.Models
         public DbSet<ChatGroup> ChatGroups { get; set; }
 
         public DbSet<ChatGroupMember> ChatGroupMembers { get; set; }
+
+        /// <summary>
+        /// 通过 A2A 协议接入的远程智能体。
+        /// </summary>
+        public DbSet<RemoteAgent> RemoteAgents { get; set; }
+
+        /// <summary>
+        /// ChatGroup 的远程智能体成员。保留 ChatGroupMember 作为本地 Agent 的兼容表。
+        /// </summary>
+        public DbSet<ChatGroupRemoteMember> ChatGroupRemoteMembers { get; set; }
+
+        /// <summary>
+        /// 将本地 AgentTemplate 发布为标准 A2A 服务的附加配置。
+        /// </summary>
+        public DbSet<PublishedA2AAgent> PublishedA2AAgents { get; set; }
 
         public DbSet<ChatGroupHistory> ChatGroupHistories { get; set; }
 

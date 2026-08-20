@@ -1,8 +1,50 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
-		<Version>0.21.4</Version>
+		<Version>0.36.1</Version>
+		<PackageReleaseNotes>
+			[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
+			[2026-07-02] v0.21.5 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
+			1、支持流式输出并优化交互体验
+			2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
+			3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+			[2026-07-05] v0.21.6 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
+			1、重构系统配置初始化与更新流程并统一模型处理
+			2、补充配置与工程实现细节
+			[2026-07-05] v0.21.7 重构系统配置初始化与更新流程并统一模型处理，补充配置与工程实现细节
+			1、重构系统配置初始化与更新流程并统一模型处理
+			2、补充配置与工程实现细节
+			[2026-07-07] v0.21.8 Dependency updates from upstream modules
+			1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
+			2、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+			3、Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
+			4、Dependency update from Senparc.Areas.Admin to 0.0.5
+			5、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+			[2026-07-17] v0.22.0 完善站点页面、语言切换与共享脚本本地化
+			1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+			2、同步管理页面与前端交互文案的多语言显示
+			3、补充并统一多语言资源键及资源文件
+			[2026-07-21] v0.34.0 完善站点页面、语言切换与共享脚本本地化
+			1、增强语言切换、共享页面及前端资源的多语言显示
+			2、改进剪贴板与外部链接导航处理，兼容桌面内嵌 WebView
+			[2026-07-29] v0.34.1 完善站点初始化状态、浏览器导航与多语言提示
+			1、补充初始化状态和本地化提示资源，改善安装完成后的站点跳转
+			2、优化桌面内嵌 WebView 的剪贴板、外部链接和不完整安装状态处理
+			[2026-07-31] v0.34.2 升级宿主的 Senparc.AI 兼容依赖
+			1、升级 Senparc.AI 组件版本以适配 CO2NET 4.2.0 二进制接口
+			[2026-08-04] v0.35.0 新增数据库升级维护流程与多平台下载入口
+			1、新增数据库升级命令行选项、协调器、运行状态、中间件与维护页面
+			2、新增 NCF Runtime 与 NcfDesktop 下载页及发布元数据
+			[2026-08-08] v0.35.1 优化数据库升级维护页响应头并同步桌面发布元数据
+			1、数据库升级维护页改为返回无缓存与 noindex 响应头，避免维护态被缓存或收录
+			2、同步 latest-desktop-release 发布元数据
+			[2026-08-13] v0.36.0 集成工作流模块与 A2A 发布配置并修复认证持久化
+			1、注册 NeuCharWorkflow 模块及数据库服务，支持工作流运行能力
+			2、增加 A2A 发布配置并持久化数据保护密钥，改善管理员登录恢复
+			[2026-08-15] v0.36.1 适配工作流、A2A 与预览模块宿主配置
+			1、更新模拟站点模块注册和运行配置，支持当前 AgentsManager、NeuCharWorkflow、Sandbox 与 XncfBuilder 组合
+</PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>
 		<UserSecretsId>d2144151-af7a-4d50-896d-4a306e594f7b</UserSecretsId>
@@ -14,12 +56,16 @@
 		<DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">$(DefineConstants);DEBUG</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
+		<!-- FirmwareUpdate writes downloads atomically as *.tmp; never fingerprint or publish an incomplete package. -->
+		<Content Remove="wwwroot\NcfPackages\**\*.tmp*" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
 		<!--<PackageReference Include="Dapr.AspNetCore" Version="1.12.0" />
 		<PackageReference Include="Dapr.Client" Version="1.12.0" />-->
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
-		<PackageReference Include="Senparc.CO2NET.AspNet" Version="2.1.1" />
-		<PackageReference Include="Senparc.CO2NET" Version="3.1.5" />
+		<PackageReference Include="Senparc.CO2NET.AspNet" Version="2.1.4" />
+		<PackageReference Include="Senparc.CO2NET" Version="4.2.0" />
 		<!--<PackageReference Include="Senparc.Ncf.Database.Sqlite" Version="0.18.7.4-preview1" />
 		<PackageReference Include="Senparc.Ncf.Database.SqlServer" Version="0.18.6-preview1" />-->
 		<!--<PackageReference Include="Senparc.Xncf.AreasBase" Version="0.9.9.2-preview1" />
@@ -46,10 +92,14 @@
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.DynamicData\Senparc.Xncf.DynamicData.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.DesktopBridge\Senparc.Xncf.DesktopBridge.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.FileManager\Senparc.Xncf.FileManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.KnowledgeBase\Senparc.Xncf.KnowledgeBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.NeuCharWorkflow\Senparc.Xncf.NeuCharWorkflow.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.FirmwareUpdate\Senparc.Xncf.FirmwareUpdate.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Sandbox\Senparc.Xncf.Sandbox.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Swagger\Senparc.Xncf.Swagger.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Terminal\Senparc.Xncf.Terminal.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager.csproj" />
@@ -61,6 +111,7 @@
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.SystemPermission\[5960]Senparc.Xncf.SystemPermission.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.XncfModuleManager\[5950]Senparc.Xncf.XncfModuleManager.csproj" />
 		<ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
+		<ProjectReference Include="..\Senparc.Aspire.ServiceDefaults\Senparc.Aspire.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Accounts\Senparc.Xncf.Accounts.csproj" />
 		<ProjectReference Include="..\Senparc.Xncf.Installer\Senparc.Xncf.Installer.csproj" />
 		<ProjectReference Include="..\Template_OrgName.Xncf.Template_XncfName\Template_OrgName.Xncf.Template_XncfName.csproj" />
@@ -92,4 +143,5 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>-->
+	<Import Project="$(MSBuildThisFileDirectory)..\..\..\src\Senparc.AI.AgentKernel.props" />
 </Project>

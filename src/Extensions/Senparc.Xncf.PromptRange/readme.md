@@ -1,17 +1,27 @@
-﻿## XncfBuild Prompt 备忘
+# Senparc.Xncf.PromptRange
 
-## Senparc.Xncf.PromptRange.csproj 文件说明
+`Senparc.Xncf.PromptRange` is an NCF module for organizing prompts, model configurations, prompt results, chat history, scoring, and prompt usage insights.
 
-1. 当在 [NcfPackageSources](https://github.com/NeuCharFramework/NcfPackageSources/) 中引用时,`依赖包直接引用源码项目`，用于生成 Nuget 包和单元测试。
-2. 当在	[NeuCharFarmework(NCF)](https://github.com/NeuCharFramework/NCF/) 中引用，并使用编译条件 `NcfDebugForPromptRange` 时，`依赖包使用 Nuget 包引用`，用于放在 NCF 项目中直接用源码进行调试。此时请将 NCF 和 NcfPackageSources 两个开源项目放在同一目录下。例如：
+## Features
 
-| 项目名称 | 项目路径 |
-| :--- | :--- |
-| NCF | D:\Senparc\NCF\NeuCharFarmework |
-| NcfPackageSources | D:\Senparc\NCF\NcfPackageSources |
+- Manages prompt ranges, prompt items, model records, and generated results.
+- Supports prompt tree/list operations, import/export, score feedback, chat continuation, and history views.
+- Provides text embedding search request/response models and multimodal execution options for text, images, audio, speech-to-text, and text-to-speech.
+- Emits prompt initialization and optimization events through the companion abstractions package.
 
-### PromptResult 实体类所使用的 Prompt
+## Installation
 
-```bash
-生成类PromptResult，包含属性：PromptGroupId（并添加PromptGroup类作为属性），LlmModelId（并添加LlmModel类作为属性），ResultString（结果字符串），CostTime（花费时间，单位：毫秒），RobotScore（机器人打分，0-100分），HumanScore（人类打分，0-100分），RobotTestExceptedResult，IsRobotTestExactlyEquat，TestType（测试类型，枚举中包含：文字、图形、声音）、PromptCostToken、ResultCostToken、TotalCostToken。请根据英文字面意思和括号内的说明生成对象并自动判断类型，同时加上可读性最高的注释。
+```xml
+<PackageReference Include="Senparc.Xncf.PromptRange" Version="0.26.0-preview3" />
 ```
+
+## Key API
+
+- `PromptRangeService`/`PromptRangeAppService` manage prompt ranges and dashboard data.
+- `PromptItemService`/`PromptItemAppService` manage prompt trees, versions, import/export, and range-name responses.
+- `LlmModelService`/`LlmModelAppService` manage available language-model metadata.
+- `PromptResultService`/`PromptResultAppService` manage generated results, robot/human scores, chat continuation, and feedback.
+- `PromptTextEmbeddingExecutionOptions`, `PromptImageController`, `PromptAudioController`, and `PromptStreamController` expose execution integration points.
+- `PromptResult_TextEmbeddingSearchRequest` and `PromptResult_TextEmbeddingSearchResponse` model vector-search calls.
+
+The module records prompts, model usage, scores, and generated output. Apply tenant isolation, data retention, PII redaction, provider quotas, and authorization at the host boundary.

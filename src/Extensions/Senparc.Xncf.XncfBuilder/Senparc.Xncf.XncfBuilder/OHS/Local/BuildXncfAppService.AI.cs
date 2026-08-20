@@ -1,4 +1,21 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：BuildXncfAppService.AI.cs
+    文件功能描述：BuildXncfAppService.AI 服务逻辑
+    
+    
+    创建标识：Senparc - 20240514
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,6 +41,10 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 {
     public partial class BuildXncfAppService
     {
+        /* 升级 Senparc.AI.AgentKernel，暂时停用此方法，未来改用 SKILL */
+
+        /*
+         * 
         /// <summary>
         /// AI 生成数据库实体
         /// </summary>
@@ -31,17 +52,17 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         /// <exception cref="NcfExceptionBase"></exception>
-        [FunctionRender("[AI] 生成数据库实体", "生成符合 DDD 约束的数据库实体及其包含的方法。注意：1、请在开发环境中使用此方法，系统将自动检测。2、请做好代码备份，建议切换一个干净的分支。", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.GenerateEntity.Name", "Function.XncfBuilder.GenerateEntity.Description", typeof(Register))]
         public async Task<StringAppResponse> CreateDatabaseEntity(BuildXncf_CreateDatabaseEntityRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 var promptBuilderService = base.ServiceProvider.GetRequiredService<PromptBuilderService>();
-                var aiModelSelected = request.AIModel.SelectedValues.FirstOrDefault();
+                var aiModelSelected = request.AIModel;
                 ISenparcAiSetting aiSetting = null;
 
                 #region PromptRange 是否已经初始化
-                if (request.UseDatabasePrompt.IsSelected("1"))
+                if (request.UseDatabasePrompt)
                 {
                     var promptRangeRegister = new Xncf.PromptRange.Register();
                     var promptRangeModule = this._xncfModuleService.GetObject(z => z.Uid == promptRangeRegister.Uid);
@@ -96,7 +117,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 var input = request.Requirement;
 
-                var projectPath = request.InjectDomain.SelectedValues.FirstOrDefault();
+                var projectPath = request.InjectDomain;
 
                 if (projectPath.IsNullOrEmpty() || projectPath == "N/A")
                 {
@@ -122,7 +143,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
                 #region 生成实体 DTO
 
-                if (request.MoreActions.IsSelected("BuildDto"))
+                if ((request.MoreActions ?? Array.Empty<string>()).Contains("BuildDto"))
                 {
                     var entityDtoResult = await promptBuilderService.RunPromptAsync(aiSetting, Domain.PromptBuildType.EntityDtoClass, fileContent, className, null, projectPath, @namespace);
                     logger.Append("生成实体 DTO：");
@@ -140,7 +161,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 #endregion
 
                 #region 进行 Migration
-                if (request.MoreActions.IsSelected("BuildMigration"))
+                if ((request.MoreActions ?? Array.Empty<string>()).Contains("BuildMigration"))
                 {
                     await Console.Out.WriteLineAsync("进入 Migration，可能耗时较长，请等待");
                     logger.Append();
@@ -199,11 +220,11 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                     await requestObj.LoadData(this.ServiceProvider);
 
                     //指定项目路径
-                    requestObj.ProjectPath.SelectedValues = new[] { projectPath };
+                    requestObj.ProjectPath = projectPath;
                     //选中所有数据库
-                    requestObj.DatabaseTypes.SelectedValues = requestObj.DatabaseTypes.Items.Select(z => z.Value).ToArray();
+                    requestObj.DatabaseTypes = requestObj.DatabaseTypeOptions.Items.Select(z => z.Value).ToArray();
                     //选中输出详情
-                    requestObj.OutputVerbose.SelectedValues = new[] { requestObj.OutputVerbose.Items.First().Value };
+                    requestObj.OutputVerbose = true;
 
                     var databaseMigrationsAppService = base.ServiceProvider.GetRequiredService<DatabaseMigrationsAppService>();
                     var migrationResult = await databaseMigrationsAppService.AddMigration(requestObj);
@@ -236,13 +257,13 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
         //初始化 PromptRange 方法（需要先确保已经安装）
 
 
-        [FunctionRender("初始化 Prompt", "初始化所有 AI 代码生成需要的 Prompt", typeof(Register))]
+        [FunctionRender(typeof(XncfBuilderResource), "Function.XncfBuilder.InitPrompt.Name", "Function.XncfBuilder.InitPrompt.Description", typeof(Register))]
         public async Task<StringAppResponse> InitPrompt(BuildXncf_InitPromptRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
-                var needOverride = request.Override.SelectedValues.Contains("1");
-                var aiModel = request.AIModel.SelectedValues.FirstOrDefault();
+                var needOverride = request.Override;
+                var aiModel = request.AIModel;
 
                 var promptBuilderService = base.ServiceProvider.GetRequiredService<PromptBuilderService>();
                 var log = await promptBuilderService.InitPromptAsync("XncfBuilderPlugin", needOverride, aiModel);
@@ -253,6 +274,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 return log;
             });
         }
+
+        */
 
         //[FunctionRender("[AI] 生成 AppService", "使用 AI 指令生成 AppService", typeof(Register))]
         //public async Task<StringAppResponse> CreateAppService()

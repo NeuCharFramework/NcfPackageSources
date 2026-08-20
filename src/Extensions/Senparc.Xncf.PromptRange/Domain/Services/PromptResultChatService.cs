@@ -1,7 +1,22 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptResultChatService.cs
+    文件功能描述：PromptResultChatService 服务逻辑
+    
+    
+    创建标识：Senparc - 20251213
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.AI;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
@@ -166,6 +181,27 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
         {
             var chatList = await this.GetFullListAsync(c => c.PromptResultId == promptResultId);
             await this.DeleteAllAsync(chatList);
+        }
+
+
+        /// <summary>
+        /// 从 <see cref="PromptResultChatDto"/> 列表转到 <see cref="ChatMessage"/> 列表
+        /// </summary>
+        /// <param name="promptResultDtos"></param>
+        /// <returns></returns>
+        public List<ChatMessage> GetChatMessageList(List<PromptResultChatDto> promptResultDtos)
+        {
+            if (promptResultDtos == null || promptResultDtos.Count == 0)
+            {
+                return new List<ChatMessage>();
+            }
+
+            var list = promptResultDtos.Select(z =>
+                new ChatMessage(
+                    z.RoleType == ChatRoleType.User ? ChatRole.User : ChatRole.Assistant,
+                    z.Content ?? string.Empty)
+            ).ToList();
+            return list;
         }
     }
 

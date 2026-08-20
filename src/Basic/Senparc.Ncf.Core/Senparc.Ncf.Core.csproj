@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
-    <Version>0.23.17-preview.1</Version>
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <Version>0.29.0-preview8</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -14,42 +14,65 @@
     <Owners>NeuCharFramework</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>Senparc.Ncf.Core</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			v0.1.1 完善自动部署模块 Xncf
-			v0.3.101 丰富 XncfModule 的数据库属性
-			v0.7.3 AppServiceHelper.GetResponseAsync() 增加统一请求日志缓存功能
-			v0.9.4.4 完善出错日志输出
-			v0.11.5.2 完善系统启动自检信息输出
-			v0.11.6 添加 SenparcCoreSetting.PasswordSaltToken 参数
-			v0.14.0 支持根据运行环境，自动启用 SenparcConfig.Development.config
-			v0.14.1 ConvertXmlToEntity 中加入 TimeOnly 和 DateOnly 类型
-			v0.16.4 重构 EntityBase 属性
-			v0.16.7 添加 MultipleDatabaseType.Dm 枚举类型
-			[2024-08-11] v0.19.2.0-preview1 新增 DtoBase&lt;T&gt; 类型
-		[2024-08-22] v0.20.0-preview1 为MethodCache 添加异步方法
-		[2024-08-26] v0.20.1 修改 SystemConfig，添加 NeuCharAppKey 等云端账户信息
-		[2024-08-27] v0.20.2 修改 FullSystemConfig，添加 NeuCharAppKey 等云端账户信息
-		[2024-08-28] v0.20.3 系统启动自检时已载入的 XNCF 模块显示版本号
-		[2024-09-10] v0.20.4-preview1 升级缓存基础库
-		[2024-10-16] v0.20.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-		[2024-10-16] v0.21.0 优化 AppServiceBase，提供依赖注入快捷方法
-		[2024-10-26] v0.21.2 更新启动标志信息
-		[2024-11-15] v0.22.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-		[2024-11-16] v0.22.2-preview1 启动日志的版本号提供外部自定义
-		[2024-11-19] v0.23.1-preview1 升级基础库，支持 Aspire 提供对 的支持和优化
-		[2024-11-20] v0.23.2-preview1 新增发方法：获取 Aspire 使用的统一默认 XNCF 名称
-		[2024-11-21] v0.23.3-preview1 更新 CO2NET 及缓存基础库
-		[2024-11-28] v0.23.5-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-		[2025-01-12] v0.23.8-preview1 add LoginLockException
-			[2025-01-25] v0.23.10-preview1 Update Agents functions, support for function calling
-			[2025-04-29] v0.23.12-preview1 Update CO2NET and AIKernel
-			[2025-04-29] v0.23.13-preview1 Update CO2NET and AIKernel
-
+				v0.1.0 创世
+				v0.1.1 完善自动部署模块 Xncf
+				v0.3.101 丰富 XncfModule 的数据库属性
+				v0.7.3 AppServiceHelper.GetResponseAsync() 增加统一请求日志缓存功能
+				v0.9.4.4 完善出错日志输出
+				v0.11.5.2 完善系统启动自检信息输出
+				v0.11.6 添加 SenparcCoreSetting.PasswordSaltToken 参数
+				v0.14.0 支持根据运行环境，自动启用 SenparcConfig.Development.config
+				v0.14.1 ConvertXmlToEntity 中加入 TimeOnly 和 DateOnly 类型
+				v0.16.4 重构 EntityBase 属性
+				v0.16.7 添加 MultipleDatabaseType.Dm 枚举类型
+				[2024-08-11] v0.19.2.0-preview1 新增 DtoBase&lt;T&gt; 类型
+				[2024-08-22] v0.20.0-preview1 为MethodCache 添加异步方法
+				[2024-08-26] v0.20.1 修改 SystemConfig，添加 NeuCharAppKey 等云端账户信息
+				[2024-08-27] v0.20.2 修改 FullSystemConfig，添加 NeuCharAppKey 等云端账户信息
+				[2024-08-28] v0.20.3 系统启动自检时已载入的 XNCF 模块显示版本号
+				[2024-09-10] v0.20.4-preview1 升级缓存基础库
+				[2024-10-16] v0.20.6-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+				[2024-10-16] v0.21.0 优化 AppServiceBase，提供依赖注入快捷方法
+				[2024-10-26] v0.21.2 更新启动标志信息
+				[2024-11-15] v0.22.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+				[2024-11-16] v0.22.2-preview1 启动日志的版本号提供外部自定义
+				[2024-11-19] v0.23.1-preview1 升级基础库，支持 Aspire 提供对 的支持和优化
+				[2024-11-20] v0.23.2-preview1 新增发方法：获取 Aspire 使用的统一默认 XNCF 名称
+				[2024-11-21] v0.23.3-preview1 更新 CO2NET 及缓存基础库
+				[2024-11-28] v0.23.5-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+				[2025-01-12] v0.23.8-preview1 add LoginLockException
+				[2025-01-25] v0.23.10-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.23.12-preview1 Update CO2NET and AIKernel
+				[2025-04-29] v0.23.13-preview1 Update CO2NET and AIKernel
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-02] v0.24.2-preview1 新增 PromptRange 与 AgentsManager 使用记录能力，升级 Senparc.AI.AgentKernel 并完成兼容性适配
+				1、新增 PromptRange 与 AgentsManager 使用记录能力
+				2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
+				[2026-07-17] v0.25.0-preview2 新增统一资源本地化基础设施并支持 FunctionRender 动态文案
+				1、扩展 FunctionRenderAttribute 与本地化特性，支持资源键动态解析
+				2、新增统一资源定位、文化回退与本地化服务基础能力
+				3、为模块功能描述和请求参数提供一致的多语言输出机制
+				4、增加请求客户端、请求事件和处理器回环机制
+				5、支持超时、取消、类型检查及请求关联清理
+				[2026-07-29] v0.26.0-preview3 修复安装状态写入并统一授权策略名称
+				1、修复 SiteConfig 安装状态属性未保存赋值的问题
+				2、新增跨模块共享的 NCF 授权策略名称定义
+				[2026-07-31] v0.27.0-preview4 新增核心验证与授权消息的共享本地化资源
+				1、新增 NcfCoreResource 及多语言资源，统一核心验证和授权提示
+				2、将通用验证错误接入文化回退机制
+				3、升级 Senparc.CO2NET 4.2.0 与 Senparc.CO2NET.WebApi 2.1.9-preview
+				[2026-08-04] v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+				1、新增数据库安装与升级状态检测、升级异常及 Razor 维护流程支持
+				2、扩展 SystemConfig.FooterContent、缓存与页脚内容安全清理能力
+				[2026-08-08] v0.28.1-preview6 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.5.0-preview4
+				[2026-08-13] v0.28.2-preview7 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.6.0-preview5
+				[2026-08-15] v0.29.0-preview8 新增 FunctionRender 的 AI 自动调用控制
+				1、为 FunctionRenderAttribute 增加 AllowAiInvocation 开关，允许模块声明是否自动暴露给 AI 对话工具
+				2、保持原有 FunctionRender 页面和显式 AppService 调用行为不变，区分 AI 自动调用与人工触发路径
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -78,9 +101,9 @@
   <ItemGroup>
     <!--<PackageReference Include="AutoMapper" Version="7.0.1" />-->
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageReference Include="Senparc.CO2NET" Version="3.1.5" />
-    <PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.3.1" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+    <PackageReference Include="Senparc.CO2NET" Version="4.2.0" />
+    <PackageReference Include="Senparc.CO2NET.Cache.CsRedis" Version="2.3.3" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Ncf.Log\Senparc.Ncf.Log.csproj" />

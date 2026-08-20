@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Version>0.11.8-preview.1</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
@@ -18,7 +18,7 @@
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>提示词靶场</Title>
-    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <DocumentationFile>../../../../NCF/src/back-end/Senparc.Web/App_Data/ApiDocXml/Senparc.Xncf.PromptRange.XML</DocumentationFile>
     <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)\ncf_obj\</BaseIntermediateOutputPath>

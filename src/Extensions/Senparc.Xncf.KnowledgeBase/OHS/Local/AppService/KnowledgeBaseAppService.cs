@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：KnowledgeBaseAppService.cs
+    文件功能描述：KnowledgeBaseAppService 相关实现
+    
+    
+    创建标识：Senparc - 20260704
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+
+----------------------------------------------------------------*/
+
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Repository;
@@ -17,9 +34,12 @@ using Senparc.Xncf.KnowledgeBase.Services;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel;
 using Senparc.Ncf.Utility;
 using plRequest = Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request;
+using Senparc.Ncf.Core.Authorization;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 
 namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
 {
+    [ApiAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class KnowledgeBaseAppService : AppServiceBase
     {
         private readonly KnowledgeBaseService knowledgeBasesService;
@@ -48,10 +68,13 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
             {
                 KnowledgeBase_InsertDto dto = new KnowledgeBase_InsertDto()
                 {
+                    Id = request.Id,
                     EmbeddingModelId = request.EmbeddingModelId,
                     VectorDBId = request.VectorDBId,
                     ChatModelId = request.ChatModelId,
                     Name = request.Name,
+                    Content = request.Content,
+                    NcfFileIds = request.NcfFileIds
                 };
                 await knowledgeBasesService.CreateOrUpdateAsync(dto);
                 bool result = true;
@@ -70,20 +93,15 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
         {
             return await this.GetResponseAsync<bool>(async (response, logger) =>
             {
-
-                KnowledgeBaseItemDto knowledgeBasesDetailDto = new KnowledgeBaseItemDto()
+                if (request.ContentType != ContentType.Text)
                 {
-                    KnowledgeBasesId = request.KnowledgeBasesId,
-                    ContentType = request.ContentType,
-                    Content = request.Content
-                };
+                    throw new InvalidOperationException("当前接口仅支持同步手工输入的文本内容。");
+                }
 
-                //TODO:封装到 Service 中
-                await knowledgeBasesDetailService.CreateOrUpdateAsync(knowledgeBasesDetailDto);
-
-                logger.Append($"KnowledgeBasesDetail 新增成功！");
-
-                logger.Append($"KnowledgeBasesDetail 详情添加成功！");
+                await knowledgeBaseService.SyncInlineContentToKnowledgeBaseAsync(
+                    request.KnowledgeBasesId,
+                    request.Content);
+                logger.Append("知识库文本内容已同步。");
 
                 return true;
             });
@@ -147,6 +165,22 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                     logger.Append($"导入失败：{ex.Message}");
                     throw;
                 }
+            });
+        }
+
+        /// <summary>
+        /// 将知识库的 FileManager 关联完整同步为指定集合；空集合表示清空。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<bool>> SyncFilesToKnowledgeBase(plRequest.ImportFilesRequest request)
+        {
+            return await this.GetResponseAsync<bool>(async (response, logger) =>
+            {
+                await knowledgeBaseService.SyncFilesToKnowledgeBaseAsync(
+                    request.knowledgeBaseId,
+                    request.fileIds ?? new List<int>());
+                logger.Append($"知识库文件关联已同步：{request.fileIds?.Distinct().Count() ?? 0} 个文件。");
+                return true;
             });
         }
     }

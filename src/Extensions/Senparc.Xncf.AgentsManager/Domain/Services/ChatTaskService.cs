@@ -1,10 +1,30 @@
-﻿using AutoGen.Core;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ChatTaskService.cs
+    文件功能描述：ChatTaskService 服务逻辑
+    
+    
+    创建标识：Senparc - 20241017
+    
+    修改标识：Senparc - 20260701
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260704
+    修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
+
+----------------------------------------------------------------*/
+
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -47,6 +67,17 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             //TODO 检查是否所有任务已经完成，如果完成则设置 ChatGroup 状态为闲置状态
         }
 
+        public async Task SetArchiveStatus(ChatTask chatTask, bool isArchived)
+        {
+            if (chatTask == null)
+            {
+                return;
+            }
+
+            chatTask.SetArchived(isArchived);
+            await base.SaveObjectAsync(chatTask);
+        }
+
         /// <summary>
         /// 关闭未完成的任务
         /// </summary>
@@ -62,6 +93,19 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 await base.SaveObjectAsync(unfinishedTask);
                 SenparcTrace.SendCustomLog($"处理未完成任务({unfinishedTask.Id})", $"处理完成，当前状态：{unfinishedTask.Status}");
             }
+        }
+
+        public async Task UpdateUsageAggregateAsync(ChatTask chatTask, ChatUsageSnapshot usageSnapshot)
+        {
+            if (chatTask == null || usageSnapshot == null)
+            {
+                return;
+            }
+
+            var aggregate = ChatUsageRemarkCodec.DecodeAggregateOrDefault(chatTask.AdminRemark);
+            aggregate.Merge(usageSnapshot);
+            chatTask.AdminRemark = ChatUsageRemarkCodec.EncodeAggregate(aggregate);
+            await base.SaveObjectAsync(chatTask);
         }
     }
 }

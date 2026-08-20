@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.10-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.6.1-preview2</Version>
     <AssemblyName>Senparc.Xncf.FileManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.FileManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -14,16 +14,43 @@
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>文件管理</Title>
-    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v0.1.0 创世
-			v0.1.3.4 修复文件上传问题
-			[2025-06-20] v0.1.5-preview Add MCP functions in XncfRegisterBase class
-			[2025-07-27] v0.1.6-preview.1 update Knowledge Base
-			[2025-11-01] update basic libraries, including Senparc.AI
-			[2026-01-07] v0.1.9-preview.1 Reset all database migrations
+      v0.1.0 创世
+      v0.1.3.4 修复文件上传问题
+      [2025-06-20] v0.1.5-preview Add MCP functions in XncfRegisterBase class
+      [2025-07-27] v0.1.6-preview.1 update Knowledge Base
+      [2025-11-01] update basic libraries, including Senparc.AI
+      [2026-01-07] v0.1.9-preview.1 Reset all database migrations
+      [2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+      [2026-07-17] v0.3.0-preview2 为 FileManager 模块接入统一资源本地化并优化功能文案
+      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+      2、更新 FunctionRender 与请求模型文案的资源化解析
+      3、统一模块注册信息、菜单名称与功能描述的本地化输出
+      4、同步管理页面与前端交互文案的多语言显示
+      5、调整文件管理页链接导航处理，兼容桌面内嵌 WebView
+      [2026-07-29] v0.3.1-preview3 加强文件上传校验和物理路径安全
+      1、增加防伪校验、文件数量/大小/扩展名限制并规范原始文件名
+      2、通过规范化路径阻止文件读取、删除和下载越界
+      [2026-07-31] v0.4.0-preview4 扩展 FileManager 管理界面的多语言能力
+      1、新增文件管理资源与前端本地化脚本
+      2、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview
+      [2026-08-04] v0.5.0-preview5 新增文件文本提取与文件管理服务
+      1、新增 NcfFileTextExtractor 以支持文件内容提取
+      2、优化文件、目录及模板应用服务的处理流程
+      [2026-08-08] v0.5.1-preview6 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+      2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+      3、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
+      4、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+      [2026-08-13] v0.6.0-preview1 重构文件资源边界
+      1、区分知识库源文件和站点静态资源，按用途隔离文件夹、列表与知识库摄取
+      2、站点资源默认私有，显式发布后提供带 SHA-256 指纹的公开 URL 和长期缓存
+      3、补齐 MIME、完整性指纹、流式下载、目录编辑删除与静态资源发布管理
+      4、同步当前窗口中的资源边界模型、服务与管理页兼容性调整
+      [2026-08-15] v0.6.1-preview2 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8; Senparc.Ncf.Service to 0.23.8-preview8
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -33,8 +60,12 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <EmbeddedResource Include="wwwroot\**\*" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />

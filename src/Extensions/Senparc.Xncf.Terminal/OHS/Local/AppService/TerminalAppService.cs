@@ -1,4 +1,24 @@
-﻿using Senparc.Ncf.Core.AppServices;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：TerminalAppService.cs
+    文件功能描述：TerminalAppService 相关实现
+    
+    
+    创建标识：Senparc - 20211016
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.22.0-preview2 为 Terminal 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.22.1-preview3 收紧终端模块的命令执行说明和默认行为
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.Terminal.OHS.PL;
 using System;
 using System.Collections.Generic;
@@ -14,6 +34,9 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
         {
         }
 
+        // Command execution is intentionally disabled. Keep the former implementation
+        // below for historical reference until a sandboxed, audited runner exists.
+#if false
         #region Run
         private bool CommandFilter(string commandText)
         {
@@ -165,7 +188,7 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
             return strOutput;
         }
 
-        [FunctionRender("命令提示符", "输入Windows命令提示符中的命令,即可返回相应的结果。请注意：命令将在服务器系统中执行！", typeof(Register))]
+        [FunctionRender(typeof(TerminalResource), "Function.Terminal.Command.Name", "Function.Terminal.Command.Description", typeof(Register))]
         public async Task<StringAppResponse> Run(Terminal_RunRequest request)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
@@ -214,6 +237,7 @@ namespace Senparc.Xncf.Terminal.OHS.Local.AppService
         }
 
         #endregion
+#endif
 
     }
 }

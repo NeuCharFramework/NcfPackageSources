@@ -2,7 +2,7 @@
 @addTagHelper *, Senparc.Areas.Admin
 @model Senparc.Areas.Admin.Areas.Admin.Pages.SystemConfig_IndexModel
 @{
-    ViewData["Title"] = AR["SystemConfig.PageTitle"];
+    ViewData["Title"] = AR["SystemConfig.Title"];
     Layout = "_Layout_Vue";
 }
 
@@ -11,8 +11,8 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.SystemManagement"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["SystemConfig.PageTitle"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.系统管理"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["SystemConfig.Title"]</el-breadcrumb-item>
 }
 <div>
     <div class="admin-systemconfig-info">
@@ -28,17 +28,22 @@
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["SystemConfig.ModulePublishMode"]">
+                             label="@AR["SystemConfig.PublishMode"]">
                 <template slot-scope="scope">
                     {{ scope.row.hideModuleManager }}
                 </template>
             </el-table-column>
-            <el-table-column label="@AR["Common.Action"]" align="center">
+            <el-table-column align="center" label="Footer" min-width="240">
+                <template slot-scope="scope">
+                    <span class="system-footer-preview" v-text="scope.row.footerContent"></span>
+                </template>
+            </el-table-column>
+            <el-table-column label="@AR["Common.操作"]" align="center">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
                                v-has="['admin-edit']"
-                               @@click="handleEdit(scope.$index, scope.row)">@AR["Common.Edit"]</el-button>
+                               @@click="handleEdit(scope.$index, scope.row)">@AR["Common.编辑"]</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -56,12 +61,23 @@
                      style="max-width: 400px; margin-left:50px;">
                 @*<p class="username-tip" v-if="dialog.title==='编辑管理员'">不建议修改用户名！</p>*@
                 <el-form-item label="@AR["SystemConfig.SystemName"]" prop="systemName">
-                    <el-input v-model="dialog.data.systemName" clearable placeholder="@AR["SystemConfig.InputSystemName"]" />
+                    <el-input v-model="dialog.data.systemName" clearable placeholder="@AR["SystemConfig.SystemName"]" />
+                </el-form-item>
+                <el-form-item label="Footer" prop="footerContent">
+                    <el-input
+                        v-model="dialog.data.footerContent"
+                        type="textarea"
+                        :rows="4"
+                        maxlength="2000"
+                        show-word-limit
+                        placeholder="© @DateTime.Now.Year Senparc">
+                    </el-input>
+                    <div class="system-footer-help">支持普通文本和绝对 http/https 链接的 &lt;a&gt; 标签；其他 HTML 会被编码。</div>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialog.visible = false">@AR["Common.Cancel"]</el-button>
-                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">@AR["Common.Confirm"]</el-button>
+                <el-button @@click="dialog.visible = false">@AR["Common.取消"]</el-button>
+                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">@AR["Common.确认"]</el-button>
             </div>
         </el-dialog>
     </div>

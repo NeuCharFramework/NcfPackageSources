@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AgentTemplate.cs
+    文件功能描述：AgentTemplate 相关实现
+    
+    
+    创建标识：Senparc - 20240616
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
@@ -65,6 +82,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         /// McpEndpoints，多个用逗号分隔
         /// </summary>
         public string McpEndpoints { get; private set; }
+
+        /// <summary>
+        /// 绑定的 KnowledgeBase ID。跨 XNCF 数据库上下文，不建立数据库外键。
+        /// </summary>
+        public int? KnowledgeBaseId { get; private set; }
 
         /// <summary>
         /// 获取McpEndpoints的JSON对象
@@ -160,7 +182,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
         private AgentTemplate() { }
 
-        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null, string functionCallNames = null, string mcpEndpoints = null)
+        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null, string functionCallNames = null, string mcpEndpoints = null, int? knowledgeBaseId = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -172,6 +194,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             Avastar = avastar;
             FunctionCallNames = functionCallNames;
             McpEndpoints = mcpEndpoints;
+            KnowledgeBaseId = knowledgeBaseId;
         }
 
         public bool EnableAgent()
@@ -198,6 +221,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             FunctionCallNames = agentTemplateDto.FunctionCallNames;
             Avastar = agentTemplateDto.Avastar;
             McpEndpoints = agentTemplateDto.McpEndpoints;
+            KnowledgeBaseId = agentTemplateDto.KnowledgeBaseId;
         }
     }
 

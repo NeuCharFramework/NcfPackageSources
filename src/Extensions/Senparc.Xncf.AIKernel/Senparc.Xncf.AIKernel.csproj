@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.12.24-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.15.3-preview12</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -14,7 +14,7 @@
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>AI 核心模块</Title>
-    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
@@ -49,11 +49,54 @@
 		[2025-02-06] v0.12.11-preview1 update NeuCharAI model update
 		[2025-02-08] v0.12.12-preview1 add optional parameter to RunModelsync
 		[2025-02-22] v0.12.13-preview1 add DeepSeek-R1 model option
-			[2025-04-29] v0.12.16-preview1 Update CO2NET and AIKernel
-			[2025-04-29] v0.12.17-preview1 Update CO2NET and AIKernel
-			[2025-05-18] v0.12.18-preview1 Update Installation
-			[2025-06-20] v0.12.20-preview Add MCP functions in XncfRegisterBase class
-			[2026-03-24] v0.12.24-preview.1 update Senparc.AI.Kernel to v0.28.0
+		[2025-04-29] v0.12.16-preview1 Update CO2NET and AIKernel
+		[2025-04-29] v0.12.17-preview1 Update CO2NET and AIKernel
+		[2025-05-18] v0.12.18-preview1 Update Installation
+		[2025-06-20] v0.12.20-preview Add MCP functions in XncfRegisterBase class
+		[2026-03-24] v0.12.24-preview.1 update Senparc.AI.Kernel to v0.28.0
+		[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+		[2026-07-02] v0.13.2-preview1 支持流式输出并优化交互体验，新增 PromptRange 与 AgentsManager 使用记录能力
+		1、支持流式输出并优化交互体验
+		2、新增 PromptRange 与 AgentsManager 使用记录能力
+		[2026-07-05] v0.13.3-preview2 修复 AI 模型类型展示顺序，重构系统配置初始化与更新流程并统一模型处理
+		1、修复 AI 模型类型展示顺序
+		2、重构系统配置初始化与更新流程并统一模型处理
+		[2026-07-05] v0.13.4-preview3 修复 AI 模型类型展示顺序，重构系统配置初始化与更新流程并统一模型处理
+		1、修复 AI 模型类型展示顺序
+		2、重构系统配置初始化与更新流程并统一模型处理
+		3、统一后台模型配置与模型类型映射处理，增强模型初始化与异常处理一致性
+		[2026-07-07] v0.13.5-preview4 统一模型名称构建并补齐 Embedding 维度兼容处理
+		1、重构 AIModelService 的统一 ModelName 组装逻辑，补齐 TextToSpeech 与 SpeechToText 模型字段
+		2、新增 EmbeddingDimensions 自动解析与兜底策略，提升 embedding 模型兼容性与稳定性
+		3、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+		[2026-07-17] v0.14.0-preview5 为 AIKernel 模块接入统一资源本地化并优化功能文案
+		1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+		2、更新 FunctionRender 与请求模型文案的资源化解析
+		3、统一模块注册信息、菜单名称与功能描述的本地化输出
+		4、同步管理页面与前端交互文案的多语言显示
+		5、同步 NeuChar 模型的 ApiVersion 到本地模型配置，避免模型 API 版本硬编码
+		6、优化管理页模型信息复制交互，提升剪贴板操作兼容性
+		[2026-07-29] v0.14.1-preview6 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
+		[2026-07-31] v0.15.0-preview7 完善 AIKernel 管理页面多语言并升级 AI 基础依赖
+		1、补齐 AIKernel、AIVector 与 Dashboard 页面和脚本的多语言资源
+		2、升级 Senparc.AI 0.27.4、Kernel 0.29.1、Agents 0.7.3 与 AgentKernel 0.1.11
+		3、升级 Senparc.CO2NET.WebApi 2.1.9-preview 以适配 CO2NET 4.2.0
+		[2026-08-04] v0.15.1-preview8 Dependency updates from upstream projects
+		1、Dependency update from Senparc.Ncf.AreaBase to 0.23.1-preview5
+		2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.5-preview5
+		3、Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
+		[2026-08-08] v0.15.2-preview9 Dependency updates from upstream projects
+		1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+		2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+		3、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+		[2026-08-13] v0.15.3-preview10 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7
+		[2026-08-13] v0.15.3-preview11 保留 AIModel API Version 的兼容默认值
+		1、当 NeuCharAI / AzureOpenAI 模型未设置 ApiVersion 时，保留 2022-12-01 默认值而不写入 null
+		2、为 AgentKernel 与历史模型配置提供一致的 Azure-compatible API Version 语义
+		[2026-08-14] v0.15.3-preview12 修复 AIModel 指定模型测试的配置穿透
+		1、RunModelsync 使用调用方传入的 SenparcAiSetting 创建 AgentKernel，不再误用系统默认模型
+		2、避免默认模型成功被误判为数据库目标模型可用
+		3、统一指定模型在 NeuCharAI 与 AzureOpenAI 初始化时的兼容 API Version 默认值，并保证 RunModelsync 使用传入模型配置
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
@@ -62,9 +105,10 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
   <ItemGroup>
-    <PackageReference Include="Senparc.AI.Kernel" Version="0.28.0" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+    <PackageReference Include="Senparc.AI.Kernel" Version="$(SenparcAiKernelVersion)" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />-->
   </ItemGroup>
   <ItemGroup>

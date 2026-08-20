@@ -1,7 +1,22 @@
-﻿using Senparc.CO2NET;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ApiAppService.cs
+    文件功能描述：ApiAppService 相关实现
+    
+    
+    创建标识：Senparc - 20250113
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+----------------------------------------------------------------*/
+
+using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.AreaBase.Admin.Filters;
 using Senparc.Xncf.SenMapic.OHS.Local.PL;
 using System;
 using System.Threading.Tasks;
@@ -9,6 +24,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.SenMapic.OHS.Local.AppService
 {
+    [ApiAuthorize]
     public class ApiAppService : AppServiceBase
     {
         public ApiAppService(IServiceProvider serviceProvider) : base(serviceProvider)

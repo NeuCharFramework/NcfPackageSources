@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.9.18-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.15.0-preview20</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -14,7 +14,7 @@
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>Agents 管理模块</Title>
-    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
@@ -61,8 +61,89 @@
 		[2025-07-27] v0.9.14-preview.1 update Knowledge Base
 		[2025-09-10] v0.9.14.5-preview.1 update MCP tools inject progress
 		[2026-03-24] v0.9.18-preview.1 update Senparc.AI.Agents to v0.7.1
-	
-				[2025-11-01] update basic libraries, including Senparc.AI
+		[2025-11-01] update basic libraries, including Senparc.AI
+		[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+		[2026-07-01] v0.11.0-preview2 Upgrade multi-agent group chat workflow and MAF integration
+		1、优化 ChatGroupService 的任务管理、并发处理与异常回退
+		2、改进 AgentsManager 页面历史记录展示与交互体验
+		[2026-07-02] v0.11.0-preview2 增强多智能体群聊流程、容错与任务调度能力，优化 PromptOptimizationAgentBridge 稳定性与状态恢复能力
+		1、增强多智能体群聊流程、容错与任务调度能力
+		2、优化 PromptOptimizationAgentBridge 稳定性与状态恢复能力
+		3、新增 ChatTask 归档状态（IsArchived）及归档管理能力
+		4、补充 MySql、SqlServer、Oracle、PostgreSQL、Sqlite、Dm 迁移与模型快照，保障归档字段落库
+		5、同步应用服务与流式控制器，完善任务归档流程与状态处理
+		6、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+		[2026-07-05] v0.11.1-preview3 重构系统配置初始化与更新流程并统一模型处理，新增批量启动任务接口并优化任务调度
+		1、重构系统配置初始化与更新流程并统一模型处理
+		2、新增批量启动任务接口并优化任务调度
+		[2026-07-05] v0.11.2-preview4 重构系统配置初始化与更新流程并统一模型处理，新增批量启动任务接口并优化任务调度
+		1、重构系统配置初始化与更新流程并统一模型处理
+		2、新增批量启动任务接口并优化任务调度
+		[2026-07-07] v0.11.3-preview5 Dependency updates from upstream modules
+		1、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
+		2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+		[2026-07-17] v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+		1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+		2、更新 FunctionRender 与请求模型文案的资源化解析
+		3、统一模块注册信息、菜单名称与功能描述的本地化输出
+		4、同步管理页面与前端交互文案的多语言显示
+		5、完善复制操作的兼容性回退与结果反馈，适配内嵌 WebView 场景
+		[2026-07-29] v0.12.1-preview7 加强 AgentsManager 接口授权与 Markdown/HTML 安全渲染
+		1、为 Prompt 初始化和优化接口增加 AdminOnly 授权保护
+		2、限制 Markdown 链接、图片和任务 HTML 的协议与危险标签，降低脚本注入风险
+		[2026-07-31] v0.13.0-preview8 扩展 AgentsManager 管理界面的多语言能力
+		1、新增管理页与前端交互资源，支持界面文案按当前文化显示
+		2、升级 Senparc.AI 组件与 CO2NET WebApi 兼容依赖
+		[2026-08-04] v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+		1、为 AgentTemplate 增加 KnowledgeBaseId 并补齐六类数据库迁移与快照
+		2、扩展应用服务、DTO 与管理页面的知识库选择和统计展示
+		3、优化群聊服务的知识库集成与状态处理
+		[2026-08-08] v0.14.1-preview10 Dependency updates from upstream projects
+		1、Dependency update from Senparc.Xncf.PromptRange to 0.19.1-preview9
+		2、Dependency update from Senparc.Xncf.SenMapic to 0.4.2-preview6
+		3、Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
+		4、Dependency update from Senparc.Xncf.MCP to 0.4.4-preview7
+		5、Dependency update from Senparc.Xncf.KnowledgeBase to 0.5.1-preview7
+		6、Dependency update from Senparc.Xncf.AgentsManager.Abstractions to 0.2.4-preview4
+		7、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.2.4-preview4
+		8、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+		[2026-08-13] v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+		1、新增远程 A2A 智能体接入、发布管理及多数据库迁移
+		2、统一本地与 A2A AgentTemplate 执行、支持群聊启停和取消回退
+		3、优化 AgentsManager 统计、操作按钮、历史记录与响应式布局
+		[2026-08-13] v0.15.0-preview12 修复发布型 A2A 与本地 Agent 的模型执行一致性
+		1、发布型 A2A 复用 IWantToRun 严格流式入口，保留真实上游异常并支持取消请求
+		2、Azure / NeuCharAI 在发生真实 403 时仅回退一次 DeploymentName=ModelId，不切换 Endpoint、Key 或系统默认模型
+		3、依赖 Senparc.AI.AgentKernel 0.1.12，模型 SDK 统一使用 AgentKernel 配置的 HttpClient transport
+		[2026-08-13] v0.15.0-preview13 修复发布型 A2A 与本地 Agent 的请求模式差异
+		1、发布型 A2A 改用 IWantToRun 严格非流式响应入口，A2A 协议流与模型服务流解耦
+		2、保持原始上游异常、会话回退和 403 的受控 DeploymentName 兼容回退
+		3、执行诊断新增 modelRequest=strict-non-streaming，便于与本地 Agent 调用比对
+		[2026-08-13] v0.15.0-preview14 增强发布型 A2A 的 Azure-compatible 403 兼容与诊断
+		1、真实 403 后可按 AIModel 配置的 API Version 受控重试，不改变模型、Endpoint、Key 或系统默认模型
+		2、记录脱敏模型请求路由、API Version、鉴权形态和服务端 request-id，便于定位上游拒绝原因
+		[2026-08-13] v0.15.0-preview15 统一本地与发布型 Agent 的模型错误语义
+		1、本地工作流与发布型 A2A 共用严格响应入口，避免把上游 401/403 伪装为 Agent 正常文本
+		2、补充 AIModel API Version 受控替换回归测试，保证仅修改 api-version 查询参数
+		[2026-08-13] v0.15.0-preview16 修复 NeuCharAI 的 API Version 兼容回退边界
+		1、保留 AIModel 配置的有效 API Version，并在为空或等于 SDK 固定版本时尝试同 Endpoint 的 NeuChar 兼容默认版本
+		2、执行日志显示配置版本和回退来源，便于区分 AIModel 数据与 SDK 默认请求
+		[2026-08-13] v0.15.0-preview17 对齐发布 A2A 与本地 Agent 的模型传输边界
+		1、诊断传输遇到真实 403 后，使用完全相同模型配置通过 AgentKernel 标准本地传输重试，不切换系统默认模型
+		2、安全记录请求结构与上游标准错误字段，保留响应给 SDK 处理且不记录 Prompt、输入或凭证
+		[2026-08-14] v0.15.0-preview18 明确处理发布 A2A 的上游应用停用错误
+		1、识别 NeuChar AI 应用不可用或停用响应并停止无意义的传输、Deployment 与 API Version 重试
+		2、向 Workflow/A2A 返回脱敏且可操作的模型配置错误，并保留 DiagnosticId
+		[2026-08-14] v0.15.0-preview19 发布型 A2A 完整复用本地 Agent 执行配置
+		1、A2A 正常路径复用本地 RunAsync 与 AgentKernel 标准传输，不再替换 HttpClient、Deployment 或 API Version
+		2、沿用 Prompt 版本的 MaxToken、Temperature、TopP、Penalty 与 StopSequences，避免固定参数覆盖 DeepSeek 等模型配置
+		3、执行诊断补充参数来源和脱敏参数摘要，便于核对本地与 A2A 的实际执行配置
+		[2026-08-14] v0.15.0-preview20 修正 ChatGroup 远程 A2A 超时边界
+		1、防止 Aspire 默认 Polly 管道的 30 秒 AttemptTimeout 覆盖 RemoteAgent.TimeoutSeconds
+		2、远程 A2A 请求统一使用可配置的 5-600 秒整体超时，并避免对可能已开始执行的 POST 进行隐式重试
+		3、AgentTemplate 与 ChatGroup 执行入口传递取消令牌，完善手动 Prompt 与远程请求的可取消边界
+		4、补充知识库向量发布状态与管理界面反馈，并保持本地 Agent 与发布型 A2A 的执行配置一致
+		5、完善手动 Prompt 判定回归测试，避免自然语言被错误当作 PromptRange 版本查询
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -70,11 +151,18 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
-    <PackageReference Include="Senparc.AI.Agents" Version="0.7.1" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
-    <PackageReference Include="Senparc.Weixin.Work" Version="3.30.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.8.0" />
+    <PackageReference Include="Microsoft.Agents.AI.A2A" Version="1.8.0-preview.260528.1" />
+    <PackageReference Include="Senparc.AI.Agents" Version="$(SenparcAiAgentsVersion)" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
+    <PackageReference Include="Senparc.Weixin.Work" Version="3.32.1" />
   </ItemGroup>
   <!--<ItemGroup>
 		<PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.15.2-preview1" />
@@ -113,9 +201,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.SenMapic\Senparc.Xncf.SenMapic.csproj" />
-    <ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" AdditionalProperties="UseCheckedInXncfBuilderGeneratedCode=true" />
     <ProjectReference Include="..\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.KnowledgeBase\Senparc.Xncf.KnowledgeBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.AgentsManager.Abstractions\Senparc.Xncf.AgentsManager.Abstractions.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.NeuCharWorkflow.Abstractions\Senparc.Xncf.NeuCharWorkflow.Abstractions.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
   </ItemGroup>

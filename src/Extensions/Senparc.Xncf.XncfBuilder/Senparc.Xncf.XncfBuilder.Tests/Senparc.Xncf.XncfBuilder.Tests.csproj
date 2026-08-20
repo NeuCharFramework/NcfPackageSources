@@ -1,7 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0</TargetFrameworks>
+		<TargetFrameworks>net10.0</TargetFrameworks>
+		<Version>0.0.10</Version>
+		<PackageReleaseNotes>
+    [2026-07-02] v0.0.2 升级 Senparc.AI.AgentKernel 并完成兼容性适配，增强 MCP 工具接入与调用链路兼容能力
+    1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
+    2、增强 MCP 工具接入与调用链路兼容能力
+    3、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+    [2026-07-07] v0.0.3 Dependency updates from upstream modules
+    1、Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.3
+    2、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.5-preview4
+    [2026-07-17] v0.0.4 同步上游项目版本并适配统一本地化能力
+    1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.1
+    2、Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.4
+    3、Dependency update from Senparc.Xncf.XncfBuilder to 0.37.0-preview5
+    4、同步 XncfBuilder 0.37.0-preview5 的模板多语言页面更新
+    5、覆盖无 cmd.exe 依赖的构建命令执行
+    6、验证构建输出和异常结果处理
+    [2026-07-29] v0.0.5 Dependency update from Senparc.Xncf.XncfBuilder to 0.37.1-preview6
+    [2026-07-31] v0.0.6 Dependency update from Senparc.Xncf.XncfBuilder to 0.38.0-preview7
+    [2026-08-04] v0.0.7 补充 XNCF 预览与迁移布局测试
+    1、覆盖预览会话、持久化状态与工作区文件服务
+    2、覆盖多数据库迁移快照布局和 DbSet 键生成
+    3、清理过期 SenparcTrace 测试日志数据
+    [2026-08-08] v0.0.8 Dependency updates from upstream projects
+    1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.5
+    2、Dependency update from Senparc.Xncf.PromptRange.Tests to 0.0.8
+    3、Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
+    [2026-08-13] v0.0.9 补充 XncfBuilder 预览状态持久化测试
+    1、覆盖预览状态恢复、初始化和生命周期行为
+    [2026-08-15] v0.0.10 增加 XncfBuilder 开发工作区回归测试
+    1、覆盖开发任务状态、工作区隔离和预览服务交互
+</PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
@@ -48,9 +79,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.6" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
 		<PackageReference Include="MSTest.TestAdapter" Version="3.6.1" />
 		<PackageReference Include="MSTest.TestFramework" Version="3.6.1" />

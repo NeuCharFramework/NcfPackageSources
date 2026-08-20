@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.KnowledgeBase.MenuName" xml:space="preserve">
+    <value>Base de conocimientos de IA</value>
+  </data>
+  <data name="Module.KnowledgeBase.Description" xml:space="preserve">
+    <value>Crea, administra y busca bases de conocimientos de IA</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="Area.KnowledgeBase.Management" xml:space="preserve">
+    <value>Gestión de bases de conocimientos</value>
+  </data>
+  <data name="Area.KnowledgeBase.RecallTest" xml:space="preserve">
+    <value>Prueba de recuperación</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>Función de ejemplo</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>Demuestra parámetros y valores de retorno de FunctionRender</value>
+  </data>
+  <data name="Parameter.Sample.Name" xml:space="preserve">
+    <value>Nombre||El texto anterior a la doble barra es el nombre del parámetro; el posterior es la ayuda</value>
+  </data>
+  <data name="Parameter.Sample.Number1" xml:space="preserve">
+    <value>Número||Número 1</value>
+  </data>
+  <data name="Parameter.Sample.Number2" xml:space="preserve">
+    <value>Número||Número 2</value>
+  </data>
+  <data name="Parameter.Sample.Operator" xml:space="preserve">
+    <value>Operador||</value>
+  </data>
+  <data name="Parameter.Sample.Power" xml:space="preserve">
+    <value>Potencia||</value>
+  </data>
+  <data name="Parameter.Operator.Add" xml:space="preserve">
+    <value>Sumar</value>
+  </data>
+  <data name="Parameter.Operator.Add.Help" xml:space="preserve">
+    <value>Número 1 + Número 2</value>
+  </data>
+  <data name="Parameter.Operator.Subtract" xml:space="preserve">
+    <value>Restar</value>
+  </data>
+  <data name="Parameter.Operator.Subtract.Help" xml:space="preserve">
+    <value>Número 1 - Número 2</value>
+  </data>
+  <data name="Parameter.Operator.Multiply" xml:space="preserve">
+    <value>Multiplicar</value>
+  </data>
+  <data name="Parameter.Operator.Multiply.Help" xml:space="preserve">
+    <value>Número 1 × Número 2</value>
+  </data>
+  <data name="Parameter.Operator.Divide" xml:space="preserve">
+    <value>Dividir</value>
+  </data>
+  <data name="Parameter.Operator.Divide.Help" xml:space="preserve">
+    <value>Número 1 ÷ Número 2</value>
+  </data>
+  <data name="Parameter.Power.Square" xml:space="preserve">
+    <value>Cuadrado</value>
+  </data>
+  <data name="Parameter.Power.Square.Help" xml:space="preserve">
+    <value>Elevar al cuadrado el resultado anterior</value>
+  </data>
+  <data name="Parameter.Power.Cube" xml:space="preserve">
+    <value>Cubo</value>
+  </data>
+  <data name="Parameter.Power.Cube.Help" xml:space="preserve">
+    <value>Elevar al cubo el resultado anterior</value>
+  </data>
+  <data name="Page.EditKnowledgeBase" xml:space="preserve">
+    <value>Editar base de conocimientos</value>
+  </data>
+  <data name="Page.CreateKnowledgeBase" xml:space="preserve">
+    <value>Crear base de conocimientos</value>
+  </data>
+</root>

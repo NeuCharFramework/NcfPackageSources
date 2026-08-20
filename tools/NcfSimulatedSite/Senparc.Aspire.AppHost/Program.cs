@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Program.cs
+    文件功能描述：Program 相关实现
+    
+    
+    创建标识：Senparc - 20241119
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260724
+    修改描述：v0.0.5 恢复模拟站点的 Aspire 服务编排
+
+----------------------------------------------------------------*/
+
 using Aspire.Hosting;
 using Projects;
 using Senparc.Ncf.Core.WebApi;
@@ -5,25 +22,24 @@ using System.Text;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-//if (builder.ExecutionContext.IsRunMode)
-//{
-var installer = builder.AddProject<Projects.Senparc_Xncf_Installer>(NcfWebApiHelper.GetXncfProjectName<Senparc_Xncf_Installer>())
-         .WithExternalHttpEndpoints();
+var installer = builder.AddProject<Senparc_Xncf_Installer>(
+        NcfWebApiHelper.GetXncfProjectName<Senparc_Xncf_Installer>(),
+        launchProfileName: "https")
+    .WithExternalHttpEndpoints();
 
-// "../Senparc.Xncf.Installer/Senparc.Xncf.Installer.csproj"
+var accounts = builder.AddProject<Senparc_Xncf_Accounts>(
+        NcfWebApiHelper.GetXncfProjectName<Senparc_Xncf_Accounts>(),
+        launchProfileName: "https")
+    .WithExternalHttpEndpoints();
 
-//builder.AddContainer("my-redis", "redis", "5.0.14");
-//}
+var ncfWeb = builder.AddProject<Senparc_Web>(
+        NcfWebApiHelper.GetXncfProjectName<Senparc_Web>(),
+        launchProfileName: "http")
+    .WithReference(installer)
+    .WithReference(accounts)
+    .WithExternalHttpEndpoints();
 
-
-var ncfWeb = builder.AddProject<Projects.Senparc_Web>(NcfWebApiHelper.GetXncfProjectName<Senparc_Web>())
-           .WithReference(installer)
-           .WithExternalHttpEndpoints();
-
-
-//֧�������ַ�
+// Keep legacy code page support used by existing modules.
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-//Console.InputEncoding = Encoding.UTF8;
-//Console.OutputEncoding = Encoding.UTF8;
 
 builder.Build().Run();

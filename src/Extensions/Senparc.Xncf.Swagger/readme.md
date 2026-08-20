@@ -1,11 +1,25 @@
-## Senparc.Xncf.Swagger 项目说明
+# Senparc.Xncf.Swagger
 
-MVC模式设置文档生成，需要：
-1.标注接口访问方法类型，如：[HttpGet]
-2.标注接口所属版本，如：[ApiVersion("1")]
-3.设置接口方法路由，如：[Route("GetTest")]
+`Senparc.Xncf.Swagger` integrates Swagger/OpenAPI document generation with an NCF ASP.NET Core application.
 
-Page模式设置文档生成：
-暂不支持
+## Features
 
-如需设置注释的支持，需要在项目属性-->生成面板的输出模块选中“XML文档文件”
+- Adds an XNCF module boundary for API documentation configuration.
+- Discovers MVC controller actions and their HTTP method, API-version, and route metadata.
+- Uses generated XML documentation when the host enables XML documentation output.
+- Provides a consistent place for NCF applications to extend document filters and API descriptions.
+
+## Installation
+
+```xml
+<PackageReference Include="Senparc.Xncf.Swagger" Version="0.26.0-preview3" />
+```
+
+## Key API and requirements
+
+- Mark actions with `[HttpGet]`, `[HttpPost]`, or another HTTP method attribute.
+- Add API-version metadata such as `[ApiVersion("1")]` where versioning is enabled.
+- Add an explicit `[Route("...")]` so the generated document has a stable path.
+- Enable XML documentation generation in the consuming project for method and model comments.
+
+The current integration targets MVC API actions. Razor Pages are not automatically described as API operations. Protect the Swagger endpoint and avoid publishing secrets, internal routes, or unrestricted schemas in production.

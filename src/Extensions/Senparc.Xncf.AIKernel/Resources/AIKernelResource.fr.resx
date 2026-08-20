@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.AIKernel.MenuName" xml:space="preserve">
+    <value>Noyau IA</value>
+  </data>
+  <data name="Module.AIKernel.Description" xml:space="preserve">
+    <value>Fournit les capacités IA fondamentales à tous les projets grâce à Senparc.AI</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>Accueil</value>
+  </data>
+  <data name="Area.AIKernel.VectorDatabase" xml:space="preserve">
+    <value>Base vectorielle</value>
+  </data>
+  <data name="Area.AIKernel.Dashboard" xml:space="preserve">
+    <value>Tableau de bord</value>
+  </data>
+  <data name="Parameter.Sample.Name" xml:space="preserve">
+    <value>Nom||Le texte avant la double barre est le nom du paramètre ; celui après est l’aide</value>
+  </data>
+  <data name="Parameter.Sample.Number1" xml:space="preserve">
+    <value>Nombre||Nombre 1</value>
+  </data>
+  <data name="Parameter.Sample.Number2" xml:space="preserve">
+    <value>Nombre||Nombre 2</value>
+  </data>
+  <data name="Parameter.Sample.Operator" xml:space="preserve">
+    <value>Opérateur||</value>
+  </data>
+  <data name="Parameter.Sample.Power" xml:space="preserve">
+    <value>Puissance||</value>
+  </data>
+  <data name="Parameter.Operator.Add" xml:space="preserve">
+    <value>Addition</value>
+  </data>
+  <data name="Parameter.Operator.Add.Help" xml:space="preserve">
+    <value>Nombre 1 + Nombre 2</value>
+  </data>
+  <data name="Parameter.Operator.Subtract" xml:space="preserve">
+    <value>Soustraction</value>
+  </data>
+  <data name="Parameter.Operator.Subtract.Help" xml:space="preserve">
+    <value>Nombre 1 - Nombre 2</value>
+  </data>
+  <data name="Parameter.Operator.Multiply" xml:space="preserve">
+    <value>Multiplication</value>
+  </data>
+  <data name="Parameter.Operator.Multiply.Help" xml:space="preserve">
+    <value>Nombre 1 × Nombre 2</value>
+  </data>
+  <data name="Parameter.Operator.Divide" xml:space="preserve">
+    <value>Division</value>
+  </data>
+  <data name="Parameter.Operator.Divide.Help" xml:space="preserve">
+    <value>Nombre 1 ÷ Nombre 2</value>
+  </data>
+  <data name="Parameter.Power.Square" xml:space="preserve">
+    <value>Carré</value>
+  </data>
+  <data name="Parameter.Power.Square.Help" xml:space="preserve">
+    <value>Élever au carré le résultat ci-dessus</value>
+  </data>
+  <data name="Parameter.Power.Cube" xml:space="preserve">
+    <value>Cube</value>
+  </data>
+  <data name="Parameter.Power.Cube.Help" xml:space="preserve">
+    <value>Élever au cube le résultat ci-dessus</value>
+  </data>
+  <data name="Parameter.AI.Model" xml:space="preserve">
+    <value>Sélectionner les modèles||</value>
+  </data>
+  <data name="Parameter.AI.Prompt" xml:space="preserve">
+    <value>Invite||</value>
+  </data>
+  <data name="Parameter.AI.Source.Database" xml:space="preserve">
+    <value>Base de données du module AIKernel</value>
+  </data>
+  <data name="Parameter.AI.Source" xml:space="preserve">
+    <value>Source : {0}</value>
+  </data>
+  <data name="Area.ExtensionModules" xml:space="preserve"><value>Modules d’extension</value></data>
+  <data name="Area.AIKernel" xml:space="preserve"><value>Module cœur AI</value></data>
+  <data name="Title.Vector" xml:space="preserve"><value>Accueil AIVector</value></data>
+  <data name="Vector.Add" xml:space="preserve"><value>Ajouter</value></data>
+  <data name="Vector.Alias" xml:space="preserve"><value>Alias</value></data>
+  <data name="Vector.DeploymentName" xml:space="preserve"><value>Nom du déploiement</value></data>
+  <data name="Vector.Endpoint" xml:space="preserve"><value>Endpoint</value></data>
+  <data name="Vector.DatabaseType" xml:space="preserve"><value>Type de base vectorielle</value></data>
+  <data name="Vector.Note" xml:space="preserve"><value>Notes</value></data>
+  <data name="Vector.AddTime" xml:space="preserve"><value>Date d’ajout</value></data>
+  <data name="Vector.Actions" xml:space="preserve"><value>Actions</value></data>
+  <data name="Vector.Edit" xml:space="preserve"><value>Modifier</value></data>
+  <data name="Vector.Delete" xml:space="preserve"><value>Supprimer</value></data>
+  <data name="Vector.AddTitle" xml:space="preserve"><value>Ajouter une base vectorielle</value></data>
+  <data name="Vector.EditTitle" xml:space="preserve"><value>Modifier la base vectorielle</value></data>
+  <data name="Vector.Name" xml:space="preserve"><value>Nom</value></data>
+  <data name="Vector.ConnectionString" xml:space="preserve"><value>Chaîne de connexion</value></data>
+  <data name="Vector.Display" xml:space="preserve"><value>Visible</value></data>
+  <data name="Vector.SelectPlaceholder" xml:space="preserve"><value>Sélectionnez</value></data>
+  <data name="Vector.MemoryLeaveEmpty" xml:space="preserve"><value>Le type Memory peut rester vide</value></data>
+  <data name="Vector.ConnectionPlaceholder" xml:space="preserve"><value>Saisissez la chaîne de connexion</value></data>
+  <data name="Vector.Cancel" xml:space="preserve"><value>Annuler</value></data>
+  <data name="Vector.Confirm" xml:space="preserve"><value>Confirmer</value></data>
+  <data name="Vector.AliasRequired" xml:space="preserve"><value>Saisissez un alias</value></data>
+  <data name="Vector.TypeRequired" xml:space="preserve"><value>Sélectionnez un type de base vectorielle</value></data>
+  <data name="Vector.ModelNameRequired" xml:space="preserve"><value>Saisissez le nom du modèle</value></data>
+  <data name="Vector.NameRequired" xml:space="preserve"><value>Saisissez le nom de la base vectorielle</value></data>
+  <data name="Vector.ConnectionRequired" xml:space="preserve"><value>Ce type de base vectorielle nécessite une chaîne de connexion</value></data>
+  <data name="Vector.CopySuccess" xml:space="preserve"><value>[******{0}] copié !</value></data>
+  <data name="Vector.CopyFailed" xml:space="preserve"><value>Échec de la copie. Copiez manuellement.</value></data>
+  <data name="Vector.AddSuccess" xml:space="preserve"><value>Ajouté avec succès !</value></data>
+  <data name="Vector.AddFailed" xml:space="preserve"><value>Échec de l’ajout</value></data>
+  <data name="Vector.EditSuccess" xml:space="preserve"><value>Modifié avec succès !</value></data>
+  <data name="Vector.EditFailed" xml:space="preserve"><value>Échec de la modification</value></data>
+  <data name="Vector.DeleteConfirm" xml:space="preserve"><value>Cette action supprimera définitivement le modèle [{0}]. Continuer ?</value></data>
+  <data name="Vector.DeleteConfirmTitle" xml:space="preserve"><value>Information</value></data>
+  <data name="Vector.DeleteSuccess" xml:space="preserve"><value>Supprimé avec succès !</value></data>
+  <data name="Vector.DeleteFailed" xml:space="preserve"><value>Échec de la suppression</value></data>
+  <data name="Vector.CancelDelete" xml:space="preserve"><value>Suppression annulée</value></data>
+  <data name="Area.DatabaseSample" xml:space="preserve"><value>Exemple de base de données</value></data>
+  <data name="Title.Home" xml:space="preserve"><value>Accueil AIKernel</value></data>
+  <data name="Model.AddTitle" xml:space="preserve"><value>Ajouter un modèle</value></data>
+  <data name="Model.EditTitle" xml:space="preserve"><value>Modifier le modèle</value></data>
+  <data name="Model.ImportNeuChar" xml:space="preserve"><value>Importer la capacité de modèle cloud NeuCharAI</value></data>
+  <data name="Model.Name" xml:space="preserve"><value>Nom du modèle</value></data>
+  <data name="Model.Platform" xml:space="preserve"><value>Plateforme</value></data>
+  <data name="Model.Type" xml:space="preserve"><value>Type de modèle</value></data>
+  <data name="Model.Unknown" xml:space="preserve"><value>Inconnu</value></data>
+  <data name="Model.OrganizationId" xml:space="preserve"><value>ID de l’organisation</value></data>
+  <data name="Model.NeuCharImportHelp" xml:space="preserve"><value>Sur la page suivante, cliquez sur « Afficher ApiKey » pour obtenir le DeveloperId et l’ApiKey. Importez les entrées par lots :</value></data>
+  <data name="Model.PlatformRequired" xml:space="preserve"><value>Sélectionnez un type de plateforme</value></data>
+  <data name="Model.TypeRequired" xml:space="preserve"><value>Sélectionnez un type de modèle</value></data>
+  <data name="Model.DeploymentRequired" xml:space="preserve"><value>Saisissez le nom de déploiement du modèle</value></data>
+  <data name="Model.ApiVersionRequired" xml:space="preserve"><value>Saisissez la version de l’API</value></data>
+  <data name="Model.ApiKeyRequired" xml:space="preserve"><value>Saisissez la clé API</value></data>
+  <data name="Model.EndpointRequired" xml:space="preserve"><value>Saisissez le point de terminaison</value></data>
+  <data name="Model.OrganizationRequired" xml:space="preserve"><value>Saisissez l’ID de l’organisation</value></data>
+  <data name="Model.DeveloperIdRequired" xml:space="preserve"><value>Saisissez le DeveloperId</value></data>
+  <data name="Dashboard.Name" xml:space="preserve"><value>Tableau de bord</value></data>
+  <data name="Dashboard.Title" xml:space="preserve"><value>Tableau de bord AIKernel</value></data>
+  <data name="Dashboard.AvailableModels" xml:space="preserve"><value>Modèles disponibles</value></data>
+  <data name="Dashboard.VectorDatabases" xml:space="preserve"><value>Bases vectorielles</value></data>
+  <data name="Dashboard.Agents" xml:space="preserve"><value>Agents</value></data>
+  <data name="Dashboard.UserFeedback" xml:space="preserve"><value>Avis utilisateurs</value></data>
+  <data name="Dashboard.TotalSessions" xml:space="preserve"><value>Nombre total de sessions</value></data>
+  <data name="Dashboard.LastSevenDays" xml:space="preserve"><value>7 derniers jours</value></data>
+  <data name="Dashboard.TimesUnit" xml:space="preserve"><value>fois</value></data>
+  <data name="Dashboard.ActiveUsers" xml:space="preserve"><value>Utilisateurs actifs</value></data>
+  <data name="Dashboard.PeopleUnit" xml:space="preserve"><value>utilisateurs</value></data>
+  <data name="Dashboard.AverageInteractions" xml:space="preserve"><value>Interactions moyennes par session</value></data>
+  <data name="Dashboard.TokenSpeedWithUnit" xml:space="preserve"><value>Vitesse de sortie des tokens (tokens/s)</value></data>
+  <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Vitesse de sortie des tokens</value></data>
+  <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>Satisfaction des utilisateurs</value></data>
+  <data name="Dashboard.TotalMessages" xml:space="preserve"><value>Nombre total de messages</value></data>
+</root>

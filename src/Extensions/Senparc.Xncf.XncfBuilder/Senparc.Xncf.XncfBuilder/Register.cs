@@ -1,4 +1,33 @@
-﻿using Senparc.Ncf.Core.Enums;
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.cs
+    文件功能描述：模块注册与初始化逻辑
+
+
+    创建标识：Senparc - 20200816
+
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.37.1-preview6 默认关闭未受保护的 Builder MCP 路由
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+
+    修改标识：Senparc - 20260813
+    修改描述：v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
+
+    修改标识：Senparc - 20260815
+    修改描述：v0.41.0-preview11 增强隔离开发任务与 Sandbox 预览流程
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase;
 using System;
@@ -6,13 +35,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Xncf.XncfBuilder.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Senparc.Ncf.Database;
 using Senparc.Xncf.XncfBuilder.Domain.Models.Services;
 using Senparc.Ncf.XncfBase.Database;
 using Microsoft.Extensions.Hosting;
 using Senparc.Xncf.XncfBuilder.Domain.Services;
-using Senparc.AI.Kernel;
+using Senparc.AI.AgentKernel;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AIKernel.OHS.Local.AppService;
 using OllamaSharp.Models.Chat;
@@ -21,6 +51,8 @@ using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
 using Microsoft.AspNetCore.Routing;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
+using Senparc.Xncf.XncfBuilder.Domain.Services.Preview;
+using Senparc.Xncf.XncfBuilder.Domain.Services.Development;
 
 namespace Senparc.Xncf.XncfBuilder
 {
@@ -34,15 +66,18 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override string Uid => "C2E1F87F-2DCE-4921-87CE-36923ED0D6EA";//必须确保全局唯一，生成后必须固定
 
-        public override string Version => "0.10.1";//必须填写版本号
+        public override string Version => "0.10.3";//必须填写版本号
 
-        public override string MenuName => "XNCF 模块生成器";
+        public override string MenuName => XncfBuilderResource.Get("Module.XncfBuilder.MenuName", "XNCF 模块生成器");
 
         public override string Icon => "fa fa-plus";
 
-        public override string Description => "快速生成 XNCF 模块基础程序代码，或 Sample 演示，可基于基础代码扩展自己的应用";
+        public override string Description => XncfBuilderResource.Get("Module.XncfBuilder.Description", "快速生成 XNCF 模块基础程序代码或 Sample 演示，可基于基础代码扩展自己的应用");
 
-        public override bool EnableMcpServer => true;
+        // The builder's MCP tool attributes are intentionally disabled. Do not
+        // publish an unauthenticated MCP route until an administrator-only
+        // endpoint policy is applied to the re-enabled tools.
+        public override bool EnableMcpServer => false;
 
         //public override IList<Type> Functions => new Type[] {
         //    typeof(BuildXncf),
@@ -71,11 +106,42 @@ namespace Senparc.Xncf.XncfBuilder
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
+            if (!services.Any(d => d.ServiceType == typeof(IXncfModulesInventoryRequestWaiter)))
+            {
+                services.AddSingleton<IXncfModulesInventoryRequestWaiter, XncfModulesInventoryRequestWaiter>();
+            }
+
             //services.AddScoped<PromptRange.Domain.Services.PromptService>();
-            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new SemanticAiHandler());
+            //services.AddScoped<AI.Interfaces.IAiHandler>(s => new AgentAiHandler());
 
             services.AddScoped<ConfigService>();
             services.AddScoped<PromptBuilderService>();
+
+            if (!services.Any(d => d.ServiceType == typeof(IXncfPreviewStateStore)))
+            {
+                services.AddSingleton<IXncfPreviewStateStore, XncfPreviewStateStore>();
+            }
+
+            // The workflow service owns per-job operation locks; its state store creates short
+            // database scopes so no scoped repository can escape into this singleton.
+            if (!services.Any(d => d.ServiceType == typeof(IXncfDevelopmentJobStateStore)))
+            {
+                services.AddSingleton<IXncfDevelopmentJobStateStore, XncfDevelopmentJobStateStore>();
+            }
+            if (!services.Any(d => d.ServiceType == typeof(IXncfDevelopmentJobService)))
+            {
+                services.AddSingleton<IXncfDevelopmentJobService, XncfDevelopmentJobService>();
+            }
+
+            if (!services.Any(d => d.ServiceType == typeof(XncfPreviewService)))
+            {
+                services.AddSingleton<XncfPreviewService>();
+                services.AddSingleton<IXncfPreviewService>(serviceProvider =>
+                    serviceProvider.GetRequiredService<XncfPreviewService>());
+                services.AddSingleton<IHostedService>(serviceProvider =>
+                    serviceProvider.GetRequiredService<XncfPreviewService>());
+                services.AddSingleton<IHostedService, XncfPreviewPersistenceInitializerHostedService>();
+            }
 
             // Senparc.Xncf.AIKernel 模块
             services.AddScoped<AIModelService>();

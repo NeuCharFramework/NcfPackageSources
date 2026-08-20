@@ -1,31 +1,27 @@
 ﻿@page
 @model Senparc.Xncf.PromptRange.Areas.PromptRange.Pages.Index
-@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
-@{    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
-    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
-
-    ViewData["Title"] = AR["Auto.UI.2ff254e2be7e"];
+@{
+    ViewData["Title"] = XR["Title.Home"];
     Layout = "_Layout_Vue";
 }
 @section Style{
-    <link href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
     <link href="~/css/PromptRange/index.css" rel="stylesheet" />
 }
 @section breadcrumbs{
-    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["PromptRange.ModuleName"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@CR["Common.Home"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.PromptRange"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.Home"]</el-breadcrumb-item>
 }
 
-<div class="indexPage">
+<div class="indexPage" v-cloak>
     <div class="headRow">
         <div class="leftBox">
             <div class="title">
                 <div>PromptRange</div>
-                <div>@AR["PromptRange.ModuleName"]</div>
+                <div>@XR["Area.PromptRange"]</div>
             </div>
-            <div class="btn">
-                @AR["Auto.UI.1cbddef0b578"]
+            <div class="btn" @@click="toAIKernel">
+                @XR["Dashboard.AddModel"]
             </div>
         </div>
         <img src="~/image/PromptRange/index_headBg.png" class="headBg" />
@@ -33,63 +29,149 @@
         <img src="~/image/PromptRange/index_headRight2.png" class="headRightIcon2" />
         <img src="~/image/PromptRange/index_headRight3.png" class="headRightIcon3" />
     </div>
-    <div class="mainBox">
-        <div class="leftBox cardBox"> 
-            <div id="rank">
-                <h1>@AR["Auto.UI.e41eb186a9d6"]</h1>
-                <div class="ranking-container">
-                    <div class="ranking">
-                        <h2>@AR["Auto.UI.54124e5981b3"]</h2>
-                        <ol id="ol">
-                            <li id="li" v-for="(prompt, index) in topPrompts" :key="index">
-                                <span class="rank">{{ index + 1 }}</span>
-                                <span class="content">{{ prompt.text }}</span>
-                                <span class="usage">使用次数: {{ prompt.usageCount }}</span>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="ranking">
-                        <h2>@AR["Auto.UI.e7ce83e39f4f"]</h2>
-                        <ol id="ol">
-                            <li id="li" v-for="(model, index) in topModels" :key="index">
-                                <span class="rank">{{ index + 1 }}</span>
-                                <span class="content">{{ model.name }}</span>
-                                <span class="usage">调用次数: {{ model.usageCount }}</span>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-            <div class="hotMainBox"></div>
+
+    <div class="toolRow">
+        <div class="toolLeft">
+            @XR["Dashboard.DataUpdated"]{{ formatDateTime(dashboard.generatedAt) }}
         </div>
-        <div class="rightBox">
-            <div class="cardBox">
-                @* <div id="chart">
-                    <h1>@AR["Auto.UI.3dfb165b3cdb"]</h1>
-                    <el-date-picker v-model="dateRange"
-                                    type="daterange"
-                                    range-separator="至"
-                                    start-placeholder="@AR["Auto.UI.b44c0f337d2f"]"
-                                    end-placeholder="@AR["Auto.UI.1d468be946f7"]"
-                                    v-on:change="updateChart"
-                                    style="margin-bottom: 20px;" >
-                    </el-date-picker>
-                    <div ref="chart" id="chart2" ></div>
-                </div> *@
-                <div class="usetimes">
-                    <h1 class="title">@AR["Auto.UI.3dfb165b3cdb"]</h1>
-                    <div id="main"></div>
-                    <div class="hotMainBox"></div>
+        <div class="toolRight">
+            <el-button size="mini" type="primary" :loading="loading" @@click="fetchDashboard(true)">@XR["Dashboard.Refresh"]</el-button>
+            <el-button size="mini" @@click="goPromptWorkbench">@XR["Dashboard.Workbench"]</el-button>
+        </div>
+    </div>
+
+    <div class="overviewGrid">
+        <div class="overviewCard" v-for="item in overviewCards" :key="item.key">
+            <div class="label">{{ item.label }}</div>
+            <div class="value">{{ item.value }}</div>
+            <div class="hint">{{ item.hint }}</div>
+        </div>
+    </div>
+
+    <div class="boardGrid" v-loading="loading">
+        <div class="boardCard trendCard">
+            <div class="cardTitleRow">
+                <div class="cardTitle">{{ ncfT('PromptRange.Dashboard.Trend', dashboard.recentDays || 14) }}</div>
+                <div class="cardSubTitle">@XR["Dashboard.TrendSubtitle"]</div>
+            </div>
+            <div id="usageTrendChart" class="chart chartTrend"></div>
+        </div>
+
+        <div class="boardCard modelCard">
+            <div class="cardTitleRow">
+                <div class="cardTitle">@XR["Dashboard.ModelDistribution"]</div>
+                <div class="cardSubTitle">{{ ncfT('PromptRange.Dashboard.TopModels', dashboard.topModels ? dashboard.topModels.length : 0) }}</div>
+            </div>
+            <div id="modelUsageChart" class="chart chartModel"></div>
+        </div>
+
+        <div class="boardCard promptCard">
+            <div class="cardTitleRow">
+                <div class="cardTitle">@XR["Dashboard.TopPrompts"]</div>
+                <a class="cardLink" :href="buildPromptUrl(null, null)">@XR["Dashboard.PromptPage"]</a>
+            </div>
+            <div class="tableWrap" v-if="dashboard.topPrompts && dashboard.topPrompts.length > 0">
+                <table class="insightTable">
+                    <thead>
+                        <tr>
+                            <th>Prompt</th>
+                            <th>@XR["Dashboard.Range"]</th>
+                            <th>@XR["Dashboard.Calls"]</th>
+                            <th>@XR["Dashboard.AverageScore"]</th>
+                            <th>@XR["Dashboard.LastRun"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in dashboard.topPrompts" :key="'prompt-' + item.promptId">
+                            <td>
+                                <a class="linkText" :href="buildPromptUrl(item.rangeId, item.promptId)">
+                                    {{ item.promptName }}
+                                </a>
+                                <div class="subText">
+                                    {{ item.fullVersion }}
+                                    <span class="tagWarning" v-if="item.isDraft">@XR["Dashboard.Draft"]</span>
+                                </div>
+                            </td>
+                            <td>{{ formatRangeName(item.rangeAlias, item.rangeName) }}</td>
+                            <td>{{ item.usageCount }}</td>
+                            <td :class="scoreClass(item.avgScore)">{{ formatScore(item.avgScore) }}</td>
+                            <td>{{ formatDateTime(item.lastRunTime) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <el-empty v-else description="@XR["Dashboard.EmptyPrompt"]"></el-empty>
+        </div>
+
+        <div class="boardCard rangeCard">
+            <div class="cardTitleRow">
+                <div class="cardTitle">@XR["Dashboard.Health"]</div>
+                <div class="cardSubTitle">@XR["Dashboard.HealthSubtitle"]</div>
+            </div>
+            <div class="rangeList" v-if="dashboard.topRanges && dashboard.topRanges.length > 0">
+                <div class="rangeItem" v-for="item in dashboard.topRanges" :key="'range-' + item.rangeId">
+                    <div class="rangeTopRow">
+                        <a class="linkText" :href="buildPromptUrl(item.rangeId, null)">
+                            {{ formatRangeName(item.rangeAlias, item.rangeName) }}
+                        </a>
+                        <span class="healthText">{{ item.healthScore }} @XR["Dashboard.ScoreUnit"]</span>
+                    </div>
+                    <div class="rangeMeta">
+                        Prompt {{ item.promptCount }} / @XR["Dashboard.Active"] {{ item.activePromptCount }} / @XR["Dashboard.Calls"] {{ item.usageCount }} / @XR["Dashboard.Draft"] {{ item.draftPromptCount }}
+                    </div>
+                    <div class="progressBar">
+                        <span :style="{ width: clampPercent(item.healthScore) + '%' }"></span>
+                    </div>
                 </div>
             </div>
+            <el-empty v-else description="@XR["Dashboard.EmptyRange"]"></el-empty>
+        </div>
+
+        <div class="boardCard riskCard">
+            <div class="cardTitleRow">
+                <div class="cardTitle">@XR["Dashboard.Risk"]</div>
+                <div class="cardSubTitle">@XR["Dashboard.RiskSubtitle"]</div>
+            </div>
+            <div class="riskList" v-if="dashboard.riskPrompts && dashboard.riskPrompts.length > 0">
+                <div class="riskItem" v-for="item in dashboard.riskPrompts" :key="'risk-' + item.promptId">
+                    <div class="riskTopRow">
+                        <span class="riskType">{{ item.riskType }}</span>
+                        <a class="linkText" :href="buildPromptUrl(item.rangeId, item.promptId)">
+                            {{ item.promptName }}
+                        </a>
+                    </div>
+                    <div class="riskMeta">
+                        {{ formatRangeName(item.rangeAlias, item.rangeName) }} · {{ item.fullVersion }} · @XR["Dashboard.Calls"] {{ item.usageCount }} · @XR["Dashboard.AverageScore"] {{ formatScore(item.avgScore) }}
+                    </div>
+                    <div class="riskDesc">{{ item.riskMessage }}</div>
+                </div>
+            </div>
+            <el-empty v-else description="@XR["Dashboard.EmptyRisk"]"></el-empty>
+        </div>
+
+        <div class="boardCard insightCard">
+            <div class="cardTitleRow">
+                <div class="cardTitle">@XR["Dashboard.Insight"]</div>
+                <div class="cardSubTitle">@XR["Dashboard.InsightSubtitle"]</div>
+            </div>
+            <div class="insightList" v-if="dashboard.insights && dashboard.insights.length > 0">
+                <div class="insightItem"
+                     v-for="(item, index) in dashboard.insights"
+                     :key="'insight-' + index"
+                     :class="'level-' + (item.level || 'info')">
+                    <div class="insightTitle">{{ item.title }}</div>
+                    <div class="insightDesc">{{ item.description }}</div>
+                </div>
+            </div>
+            <el-empty v-else description="@XR["Dashboard.EmptyInsight"]"></el-empty>
         </div>
     </div>
 </div>
 
 @section scripts{
+    @await Html.PartialAsync("_PromptRangeLocalizationScripts")
+    <script src="~/js/PromptRange/lib/axios.min.js"></script>
     <script src="~/js/PromptRange/echarts/echarts.min.js"></script>
-    <script src="~/js/PromptRange/echarts/echarts-gl.min.js"></script>
+    <script src="~/js/PromptRange/axios.js"></script>
     <script src="~/js/PromptRange/index.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/vue@2"></script>
 }

@@ -2,7 +2,10 @@ window.ChatLauncherMixin = {
   data() {
     return {
       moduleStorageKey: 'ncf.admin.chat.selectedModuleUids',
+      aiModelStorageKey: 'ncf.admin.chat.sessionAiModelMap',
       chatInputText: '',
+      launcherAiModelId: 0,
+      sessionAiModelMap: {},
       selectedModules: [],
       moduleSelectorVisible: false,
       moduleSearchKeyword: '',
@@ -65,6 +68,7 @@ window.ChatLauncherMixin = {
   },
   mounted() {
     this.restoreSelectedModuleUids();
+    this.restoreSessionAiModelMap();
     this.ensureModuleOptionsLoaded(false);
   },
   watch: {
@@ -109,6 +113,57 @@ window.ChatLauncherMixin = {
       }
     },
 
+    normalizeAiModelId(value) {
+      const parsedValue = Number.parseInt(value, 10);
+      return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : 0;
+    },
+
+    persistSessionAiModelMap() {
+      try {
+        localStorage.setItem(this.aiModelStorageKey, JSON.stringify(this.sessionAiModelMap || {}));
+      } catch (error) {
+        console.warn('保存会话 AI 模型失败:', error);
+      }
+    },
+
+    restoreSessionAiModelMap() {
+      try {
+        const raw = localStorage.getItem(this.aiModelStorageKey);
+        if (!raw) {
+          return;
+        }
+
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+          return;
+        }
+
+        this.sessionAiModelMap = Object.keys(parsed).reduce((result, key) => {
+          result[key] = this.normalizeAiModelId(parsed[key]);
+          return result;
+        }, {});
+      } catch (error) {
+        console.warn('读取会话 AI 模型失败:', error);
+      }
+    },
+
+    setSessionAiModelId(sessionId, aiModelId) {
+      if (!sessionId) {
+        return;
+      }
+
+      this.$set(this.sessionAiModelMap, String(sessionId), this.normalizeAiModelId(aiModelId));
+      this.persistSessionAiModelMap();
+    },
+
+    getSessionAiModelId(sessionId) {
+      if (!sessionId) {
+        return 0;
+      }
+
+      return this.normalizeAiModelId(this.sessionAiModelMap[String(sessionId)]);
+    },
+
     syncSelectedModulesFromUids() {
       const uidSet = new Set(this.selectedModuleUids);
       this.selectedModules = this.availableModules.filter((item) => uidSet.has(item.uid));
@@ -140,9 +195,9 @@ window.ChatLauncherMixin = {
     normalizeModuleItem(item) {
       return {
         uid: item.uid,
-        name: item.menuName || item.name || '未命名模块',
+        name: item.menuName || item.name || ncfT('AdminChat.UnknownModule'),
         icon: item.icon || 'fa fa-cube',
-        description: item.description || '暂无描述',
+        description: item.description || ncfT('Admin.Home.NoDescription'),
         version: item.version || '',
         menus: item.menus || [],
         functions: item.functions || []
@@ -163,7 +218,7 @@ window.ChatLauncherMixin = {
         this.ensurePreviewModule();
       } catch (error) {
         console.error('加载模块列表失败:', error);
-        this.$message.error('加载模块列表失败，请稍后重试');
+        this.$message.error(ncfT('AdminChat.LoadModulesFailedRetry'));
       } finally {
         this.loadingModuleOptions = false;
       }
@@ -215,7 +270,7 @@ window.ChatLauncherMixin = {
 
     async startChatSession() {
       if (!this.chatInputText || this.chatInputText.trim().length === 0) {
-        this.$message.warning('请输入对话内容');
+        this.$message.warning(ncfT('AdminChat.InputRequired'));
         return;
       }
 
@@ -223,20 +278,22 @@ window.ChatLauncherMixin = {
       try {
         const requestData = {
           initialMessage: this.chatInputText.trim(),
+          aiModelId: this.normalizeAiModelId(this.launcherAiModelId),
           moduleUids: this.selectedModules.map((item) => item.uid)
         };
 
         const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateSessionAsync', requestData);
         if (response.data && response.data.success && response.data.data) {
           const sessionId = response.data.data.sessionId;
+          this.setSessionAiModelId(sessionId, this.launcherAiModelId);
           window.location.href = '/Admin/AdminChat/Chat?sessionId=' + sessionId;
           return;
         }
 
-        this.$message.error((response.data && response.data.errorMessage) || '创建会话失败');
+        this.$message.error((response.data && response.data.errorMessage) || ncfT('AdminChat.CreateSessionFailed'));
       } catch (error) {
         console.error('创建会话失败:', error);
-        this.$message.error('创建会话失败，请稍后重试');
+        this.$message.error(ncfT('AdminChat.CreateSessionFailedRetry'));
       } finally {
         this.isCreatingSession = false;
       }

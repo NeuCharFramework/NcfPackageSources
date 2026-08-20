@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：DatabaseExecutor.cs
+    文件功能描述：DatabaseExecutor 相关实现
+    
+    
+    创建标识：Senparc - 20260327
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260729
+    修改描述：v0.27.0-preview3 增加数据库分页筛选执行能力并限制请求范围
+
+----------------------------------------------------------------*/
+
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.DatabaseToolkit.OHS.Local.Models;
@@ -40,11 +57,10 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                 return new { total = 0, data = Array.Empty<object>(), message = "entity type not found" };
             }
 
-            var allRows = await GetAllRowsAsync(entityType).ConfigureAwait(false);
-            var total = allRows.Count;
+            pageNumber = Math.Max(1, pageNumber);
+            pageSize = Math.Clamp(pageSize, 1, 100);
 
-            var skip = Math.Max(0, (pageNumber - 1) * pageSize);
-            var pageData = allRows.Skip(skip).Take(Math.Max(1, pageSize)).ToList();
+            var pageResult = await GetPagedRowsAsync(entityType, filter, pageNumber, pageSize).ConfigureAwait(false);
 
             return new
             {
@@ -53,8 +69,8 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
                 filter,
                 pageNumber,
                 pageSize,
-                total,
-                data = pageData
+                total = pageResult.Total,
+                data = pageResult.Rows
             };
         }
 
@@ -90,7 +106,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             };
         }
 
-        private async Task<List<object>> GetAllRowsAsync(Type entityType)
+        private async Task<List<object>> GetAllRowsAsync(Type entityType, string filter = null)
         {
             var serviceType = typeof(ServiceBase<>).MakeGenericType(entityType);
             var serviceInstance = _serviceProvider.GetService(serviceType);
@@ -103,10 +119,7 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             var funcType = typeof(Func<,>).MakeGenericType(entityType, typeof(bool));
             var expressionPredicateType = typeof(Expression<>).MakeGenericType(funcType);
 
-            var alwaysTrueMethod = typeof(DatabaseExecutor)
-                .GetMethod(nameof(AlwaysTrue), BindingFlags.NonPublic | BindingFlags.Static)
-                ?.MakeGenericMethod(entityType);
-            var predicate = alwaysTrueMethod?.Invoke(null, null);
+            var predicate = BuildFilterPredicate(entityType, filter);
 
             // 必须提供全部参数类型（包括可选参数），否则 GetMethod 无法定位到正确重载
             var method = serviceType.GetMethod("GetFullListAsync",
@@ -131,9 +144,84 @@ namespace Senparc.Xncf.DatabaseToolkit.OHS.Local.Services
             return result?.Cast<object>().ToList() ?? new List<object>();
         }
 
+        private async Task<(List<object> Rows, int Total)> GetPagedRowsAsync(
+            Type entityType,
+            string filter,
+            int pageNumber,
+            int pageSize)
+        {
+            var serviceType = typeof(ServiceBase<>).MakeGenericType(entityType);
+            var serviceInstance = _serviceProvider.GetService(serviceType);
+            if (serviceInstance == null)
+            {
+                return (new List<object>(), 0);
+            }
+
+            var funcType = typeof(Func<,>).MakeGenericType(entityType, typeof(bool));
+            var expressionPredicateType = typeof(Expression<>).MakeGenericType(funcType);
+            var predicate = BuildFilterPredicate(entityType, filter);
+
+            // Use the repository's paged overload so filtering, Skip/Take, and
+            // TotalCount are evaluated by the database instead of in memory.
+            var method = serviceType.GetMethod("GetObjectListAsync",
+                new[] { typeof(int), typeof(int), expressionPredicateType, typeof(string), typeof(string[]) });
+            if (method == null)
+            {
+                return (new List<object>(), 0);
+            }
+
+            var task = method.Invoke(serviceInstance,
+                new object[] { pageNumber, pageSize, predicate, "Id desc", Array.Empty<string>() }) as Task;
+            if (task == null)
+            {
+                return (new List<object>(), 0);
+            }
+
+            await task.ConfigureAwait(false);
+
+            var resultProperty = task.GetType().GetProperty("Result");
+            var pagedResult = resultProperty?.GetValue(task);
+            var rows = (pagedResult as IEnumerable)?.Cast<object>().ToList() ?? new List<object>();
+            var totalValue = pagedResult?.GetType().GetProperty("TotalCount")?.GetValue(pagedResult);
+            var total = totalValue is int count ? count : rows.Count;
+            return (rows, total);
+        }
+
         private static Expression<Func<T, bool>> AlwaysTrue<T>()
         {
             return _ => true;
+        }
+
+        private static object BuildFilterPredicate(Type entityType, string filter)
+        {
+            return typeof(DatabaseExecutor)
+                .GetMethod(nameof(BuildFilterPredicateGeneric), BindingFlags.NonPublic | BindingFlags.Static)
+                ?.MakeGenericMethod(entityType)
+                ?.Invoke(null, new object[] { filter });
+        }
+
+        private static Expression<Func<T, bool>> BuildFilterPredicateGeneric<T>(string filter)
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                return _ => true;
+            }
+
+            var parameter = Expression.Parameter(typeof(T), "row");
+            var filterValue = Expression.Constant(filter.Trim(), typeof(string));
+            Expression body = Expression.Constant(false);
+            var containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
+
+            foreach (var property in typeof(T).GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(property => property.CanRead && property.PropertyType == typeof(string)))
+            {
+                var propertyValue = Expression.Property(parameter, property);
+                var hasValue = Expression.NotEqual(propertyValue, Expression.Constant(null, typeof(string)));
+                var contains = Expression.Call(propertyValue, containsMethod, filterValue);
+                body = Expression.OrElse(body, Expression.AndAlso(hasValue, contains));
+            }
+
+            return Expression.Lambda<Func<T, bool>>(body, parameter);
         }
 
         private static Type ResolveType(string fullTypeName)

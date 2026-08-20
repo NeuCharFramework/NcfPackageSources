@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.2.5</Version>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageReleaseNotes>
+      [2026-07-25] v0.1.0 验证 DesktopBridge 事件旁路
+      1、验证 NCF 风格程序集扫描后 DI 容器仍可构建并解析闭合事件观察器
+      2、验证请求事件进入活动快照且终态事件正确移除
+      3、验证授权同步只向对应管理员目标发布
+      4、验证授权同步不会发布到通用活动流
+      [2026-07-29] v0.1.1 Dependency update from Senparc.Xncf.DesktopBridge to 0.1.1-preview3
+      [2026-07-31] v0.1.2 Dependency update from Senparc.Xncf.DesktopBridge to 0.1.2-preview4
+      [2026-08-01] v0.2.0 验证管理员配对和会话生命周期
+      1、覆盖批准、拒绝、领取、授权和撤销流程
+      2、验证旧环境变量令牌兼容以及错误领取凭据不泄露状态
+      [2026-08-01] v0.2.1 验证活动会话撤销信号
+      1、确认撤销会同步取消已建立 SSE 所使用的会话令牌
+      [2026-08-04] v0.2.2 补充桌面纽铃提供程序测试
+      1、覆盖 DesktopBridge 纽铃提供程序的可用性与执行行为
+      2、同步验证 NeuBell 公共契约与通知发布器命名
+      [2026-08-08] v0.2.3 补充桌面管理员换票交接测试
+      1、覆盖 Auth Handoff 发起、确认、兑换与失败路径校验
+      [2026-08-13] v0.2.4 Dependency update from Senparc.Xncf.DesktopBridge to 0.4.1-preview5
+      [2026-08-15] v0.2.5 Dependency update from Senparc.Xncf.DesktopBridge to 0.4.2-preview6
+</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.6.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Senparc.Xncf.DesktopBridge\Senparc.Xncf.DesktopBridge.csproj" />
+  </ItemGroup>
+</Project>

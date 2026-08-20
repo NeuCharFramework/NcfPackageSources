@@ -1,5 +1,22 @@
-﻿using Microsoft.SemanticKernel;
-using Senparc.AI.Kernel.Handlers;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：FilePlugin.cs
+    文件功能描述：FilePlugin 服务逻辑
+    
+    
+    创建标识：Senparc - 20231003
+    
+    修改标识：Senparc - 20260702
+    修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.37.0-preview5 增强 XNCF 构建、数据库迁移与 AI 生成流程的本地化支持
+
+----------------------------------------------------------------*/
+
+using Microsoft.SemanticKernel;
+using Senparc.AI.AgentKernel.Handlers;
 using Senparc.CO2NET.Helpers;
 using System;
 using System.Collections.Generic;
@@ -26,11 +43,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
             this._iWantToRun = iWantToRun;
         }
 
-        [KernelFunction, Description("创建实体类")]
+        [KernelFunction, LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.CreateEntity")]
         public async Task<FileSaveResult> CreateFile(
-             [Description("文件路径")]
+             [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.FilePath")]
             string fileBasePath,
-             [Description("通过 AI 生成的文件内容")]
+             [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.GeneratedContent")]
             string fileGenerateResult
          )
         {
@@ -53,7 +70,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
                     }
                 }
 
-                var logMsg = $"已保存文件：{fullPathFileName}";
+                var logMsg = XncfBuilderResource.Format("XncfBuilder.Plugin.FileSaved", "已保存文件：{0}", fullPathFileName);
                 log.AppendLine(logMsg);
 
                 result.Log += logMsg + "\r\n";
@@ -65,13 +82,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Plugins
 
         //TODO：文件修改（从文件中抽取，然后给到 LLM 进行修改）
 
-        [KernelFunction, Description("读取数据库上下文")]
+        [KernelFunction, LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.ReadDbContext")]
         public async Task<FileSaveResult> UpdateSenparcEntities(
-            [Description("项目路径")]
+            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.ProjectPath")]
             string projectPath,
-            [Description("新实体的名字")]
+            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.EntityName")]
             string entityName,
-            [Description("新实体的名字的复数")]
+            [LocalizedDescription(typeof(XncfBuilderResource), "XncfBuilder.Plugin.PluralEntityName")]
             string pluralEntityName
             )
         {

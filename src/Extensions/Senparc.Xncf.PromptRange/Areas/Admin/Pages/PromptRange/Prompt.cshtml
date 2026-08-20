@@ -45,7 +45,7 @@
                         </div>
                         <el-select v-model="promptField" filterable placeholder="@AR["Auto.UI.1902333eff98"]" :popper-append-to-body="true" class="selectRow" @@change="promptChangeHandel($event,'promptField')">
                             <el-option v-for="item in promptFieldOpt"
-                                       v-key="item.id"
+                                       :key="item.id"
                                        :label="item.label"
                                        :value="item.value"
                                        :disabled="item.disabled">
@@ -76,12 +76,16 @@
                                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; font-weight: bold;">
                                     @AR["Auto.UI.e40c634367e3"]
                                 </el-button>
+                                <el-button type="success" size="mini" icon="el-icon-user" @@click="openCreateAgentDialog" :disabled="!promptid"
+                                    style="font-weight: bold;">
+                                    创建智能体
+                                </el-button>
                                 <i class="el-icon-document-copy" style="font-size: 1.3rem;cursor: pointer" @@click="copyInfo"></i>
                             </div>
                         </div>
                         <el-select v-model="promptid" :disabled="!promptField" :popper-append-to-body="true" :placeholder="@AR["Auto.UI.3c321cef9992"]" class="selectRow" @@change="promptChangeHandel($event,'promptid')">
                             <el-option v-for="item in promptOpt"
-                                       v-key="item.id"
+                                       :key="item.id"
                                        :label="item.label"
                                        :value="item.value"
                                        :disabled="item.disabled">
@@ -114,13 +118,14 @@
                 <div>
                     <el-select v-model="modelid" placeholder="@AR["Auto.UI.0e34a1fe3234"]" :disabled="dodgersLoading" class="selectRow model-select" @@change="promptChangeHandel($event,'modelid',modelid)">
                         <el-option v-for="item in modelOpt"
-                                   v-key="item.id"
-                                   :label="item.displayName || item.alias"
+                                   :key="item.id"
+                                   :label="item.selectLabel || item.displayName || item.alias"
                                    :value="item.value"
                                    :disabled="item.disabled">
                             <div class="model-option-content">
                                 <div class="model-name-row">
-                                    <span class="model-name">{{ item.alias || 'Unnamed model' }}</span>
+                                    <span class="model-name">{{ item.alias || '未命名模型' }}</span>
+                                    <span class="model-type-badge" :class="'model-type-' + (item.configModelTypeName || 'unknown').toLowerCase()">{{ item.configModelTypeName || 'Unknown' }}</span>
                                     <span class="model-version" v-if="item.apiVersion">v{{ item.apiVersion }}</span>
                                 </div>
                                 <div class="model-deployment" v-if="item.deploymentName">（{{ item.deploymentName }}）</div>
@@ -146,8 +151,8 @@
                         <br>@AR["Auto.UI.e0f8cac65800"]
                     </div>
                 </div>
-                @* Model parameter settings *@
-                <div class="configurineAreaItem paramBox" style="padding: 15px">
+                @*模型参数设置*@
+                <div class="configurineAreaItem paramBox" style="padding:0px 15px">
                     <div class="titleRow">
                         <div class="titleRow_leftBox">
                             <i class="requirIcon">*</i>
@@ -160,7 +165,7 @@
                         </div>
                     </div>
                     <div class="paramBox_contentBox" :class="{'paramBox_contentBoxCollapse':parameterViewShow}">
-                        <div v-for="item in parameterViewList" v-key="item.formField" class="paramBox_contentBox_item">
+                        <div v-for="item in parameterViewList" :key="item.formField" class="paramBox_contentBox_item">
                             <div class="lableRow">
                                 <div class="lableBtn">
                                     <span>{{ item.label }}</span>
@@ -184,12 +189,32 @@
                     <el-button type="primary" :disabled=!isAIGrade size="mini" @@click="aiScoreFormOpenDialog">@AR["Auto.UI.6c0c254bfcec"]</el-button>
                     <el-switch active-color="#13ce66" inactive-color="#ff4949" v-model="isAIGrade" active-text="On" inactive-text="Off"></el-switch>
                 </div>
+                <div style="padding-left: 15px; margin-top: 12px; display: flex; align-items: center; gap: 8px;">
+                    <span>{{ getPromptRangeText('streamOptionLabel') }}</span>
+                    <el-switch active-color="#13ce66"
+                               inactive-color="#ff4949"
+                               v-model="useStreamOutput"
+                               :active-text="getPromptRangeText('switchOn')"
+                               :inactive-text="getPromptRangeText('switchOff')"
+                               @@change="handleUseStreamOutputChange"></el-switch>
+                    <el-tooltip class="item" effect="dark" placement="top" :content="getPromptRangeText('streamOptionTooltip')">
+                        <i class="el-icon-warning-outline"></i>
+                    </el-tooltip>
+                </div>
             </div>
         </div>
         <div class="trapezoid" @@click="foldsidebar">
             <i class="el-icon-caret-right icon" style="position: absolute;top: 15px;" :class="{'sidebarview':foldsidebarShow}"></i>
         </div>
 
+        <div v-if="isPromptExecutionLoading" class="promptSectionLoaderMask">
+            <div class="loading">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
        
     </div>
     
@@ -228,17 +253,86 @@
                         <div class="titleRow">
                             <div class="titleRow_leftBox">
                                 <img src="~/image/PromptRange/prompt_inputPrompt.svg" alt="" class="imgIcon" />
-                                <div class="titleContent">@AR["Auto.UI.ee81d7ddd274"]</div>
+                                <div class="titleContent">{{ promptInputTitle }}</div>
                             </div>
                             <div class="titleRow_rightBox">
-                                <el-button size="mini" @@click="resetInputPrompt">@CR["Common.Reset"]</el-button>
-                                <el-button type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">@AR["Auto.UI.527466ff94bd"]</el-button>
+                                <el-button size="mini" @@click="resetInputPrompt">重置</el-button>
+                                <el-button v-if="shouldShowPromptEditor" type="primary" size="mini" :icon="promptParamVisible?'el-icon-s-fold':'el-icon-s-unfold'" @@click="promptParamVisible = !promptParamVisible">请求参数</el-button>
                                 <i class="el-icon-full-screen" style="font-size: 1.3rem;cursor: pointer;" @@click="Amplification('box2')"></i>
                             </div>
                         </div>
                         <div class="promptContentBox">
-                        @* contenteditable editor supporting inline highlighting *@
+                        <div class="modelSpecialPanel stt-upload-panel" v-show="isSpeechToTextModelSelected">
+                            <div class="special-row">
+                                <span class="special-label">音频文件</span>
+                                <div class="special-actions">
+                                    <el-button type="primary" size="mini" @@click="openSpeechFilePicker">上传音频</el-button>
+                                    <el-button size="mini" @@click="clearSpeechInput" :disabled="!sttForm.audioFileName">清空</el-button>
+                                </div>
+                            </div>
+                            <input ref="sttFileInput"
+                                   type="file"
+                                   style="display:none;"
+                                   :accept="sttAcceptedExtensions"
+                                   @@change="handleSpeechFileChange" />
+                            <div class="special-text" v-if="sttForm.audioFileName">
+                                {{ sttForm.audioFileName }}（{{ (sttForm.fileSize / 1024).toFixed(1) }} KB）
+                            </div>
+                            <div class="special-text" v-else>
+                                支持格式：flac / m4a / mp3 / mp4 / mpeg / mpga / oga / ogg / wav / webm
+                            </div>
+                            <div class="special-row compact">
+                                <span class="special-label">识别语言</span>
+                                <el-input v-model="sttForm.language" size="mini" placeholder="可空，例如 zh / en"></el-input>
+                            </div>
+                        </div>
+
+                        <div class="modelSpecialPanel tts-option-panel" v-show="isTextToSpeechModelSelected">
+                            <div class="special-row compact">
+                                <span class="special-label">音色</span>
+                                <el-input v-model="ttsForm.voice" size="mini" placeholder="alloy / ash / onyx ..."></el-input>
+                            </div>
+                            <div class="special-row compact">
+                                <span class="special-label">格式</span>
+                                <el-select v-model="ttsForm.format" size="mini" placeholder="选择输出格式">
+                                    <el-option label="mp3" value="mp3"></el-option>
+                                    <el-option label="opus" value="opus"></el-option>
+                                    <el-option label="aac" value="aac"></el-option>
+                                    <el-option label="flac" value="flac"></el-option>
+                                    <el-option label="wav" value="wav"></el-option>
+                                    <el-option label="pcm" value="pcm"></el-option>
+                                </el-select>
+                            </div>
+                            <div class="special-row compact">
+                                <span class="special-label">语速</span>
+                                <el-input-number v-model="ttsForm.speedRatio" size="mini" :min="0.5" :max="2.0" :step="0.1" :precision="1"></el-input-number>
+                            </div>
+                        </div>
+
+                        <div class="modelSpecialPanel embedding-option-panel" v-show="isTextEmbeddingModelSelected">
+                            <div class="special-row compact">
+                                <span class="special-label">VectorDB</span>
+                                <el-select v-model="embeddingForm.vectorDbId" size="mini" filterable placeholder="请选择向量库" :loading="vectorLoading" @@focus="getVectorOptData()">
+                                    <el-option v-for="item in vectorOpt" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </div>
+                            <div class="special-row compact">
+                                <span class="special-label">Collection</span>
+                                <el-input v-model="embeddingForm.collectionName" size="mini" placeholder="可空，自动生成"></el-input>
+                            </div>
+                            <div class="special-row compact">
+                                <span class="special-label">测试查询</span>
+                                <el-input v-model="embeddingForm.searchQuery" size="mini" placeholder="可空，首次打靶后自动查询"></el-input>
+                            </div>
+                            <div class="special-row compact">
+                                <span class="special-label">TopK</span>
+                                <el-input-number v-model="embeddingForm.searchTopK" size="mini" :min="1" :max="20" :step="1"></el-input-number>
+                            </div>
+                        </div>
+
+                        @* contenteditable编辑器，支持内联高亮 *@
                         <div class="promptInput prompt-rich-editor"
+                             v-show="shouldShowPromptEditor"
                              contenteditable="true"
                              ref="promptEditor"
                              @@input="handleEditorInput"
@@ -247,11 +341,11 @@
                              @@blur="applyHighlight"
                              @@compositionstart="isComposing = true"
                              @@compositionend="isComposing = false"
-                             :data-placeholder="@AR["Auto.UI.5618aab0e92b"]">
+                             :data-placeholder="content ? '' : (isTextToSpeechModelSelected ? '请输入待合成语音的文本' : '请输入Prompt内容')">
                         </div>
                             
-                            @* Variable hint card *@
-                            <div class="prompt-variables-hint" v-if="detectedVariables.length > 0">
+                            @* 变量提示卡片 *@
+                            <div class="prompt-variables-hint" v-show="shouldShowPromptEditor && detectedVariables.length > 0">
                                 <div class="hint-title">
                                     <i class="el-icon-info"></i>
                                     Detected {{ detectedVariables.length }} variable(s)
@@ -304,8 +398,8 @@
                                 </div>
                             </div>
                         </div>
-                        @* Prompt request parameters - moved inside leftItemBox as the lower section *@
-                        <div class="promptParamSection" :class="{'paramSectionHide': !promptParamVisible}">
+                        @* Prompt请求参数 - 移到leftItemBox内部，作为下方区域 *@
+                        <div class="promptParamSection" v-show="shouldShowPromptEditor" :class="{'paramSectionHide': !promptParamVisible}">
                         <div class="titleRow" style="height:28px;">
                             <div class="titleRow_leftBox">
                                 <div class="titleContent">@AR["Auto.UI.826feca4911a"]</div>
@@ -360,7 +454,7 @@
 
                                     </el-table-column>
                                 </el-table>
-                                @* <div v-for="(item,index) in promptParamForm.variableList" v-key="index" class="formItem">
+                                @* <div v-for="(item,index) in promptParamForm.variableList" :key="index" class="formItem">
                                 <el-form-item label="" :prop="'variableList.' + index + '.name'" :rules="rules.variableName" label-width="0px">
                                 <el-input v-model="item.name" autocomplete="off" placeholder="@AR["Auto.UI.86bf87636a0f"]"></el-input>
                                 </el-form-item>
@@ -383,6 +477,14 @@
                 </div>
 
 
+            </div>
+            <div v-if="isPromptExecutionLoading" class="promptSectionLoaderMask">
+                <div class="loading">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
             </div>
     </div>
     
@@ -435,7 +537,13 @@
                 </div>
             </div>
             <div class="outputArea_contentBox" id="resultBox" @@scroll="handleResultScroll">
-                <div v-for="(item,index) in outputList" v-key="item.id" class="contentBoxItem" v-bind:class="{'contentBoxActiveItem':outputActive === index}" @@click="app.outputSelectSwitch(index)" :data-result-index="index">
+                <div v-for="(item,index) in outputList"
+                     :key="item.id"
+                     class="contentBoxItem"
+                     v-bind:class="{'contentBoxActiveItem':outputActive === index, 'contentBoxStreamingItem': isStreamingResultItem(item)}"
+                     @@click="app.outputSelectSwitch(index)"
+                     :data-result-index="index"
+                     :data-result-id="item.id">
                     <div class="promptResult_Item_Title">
                         <div class="promptReultTimeArea">
                             <span>{{item.addTime}} [Elapsed (ms):{{item.costTime}}]</span>
@@ -445,7 +553,69 @@
                             <a href="javascript:void(0);" @@click="copyPromptResult(item,true)" title="@AR["Auto.UI.8ee4f8f7776d"]"><i class="fa fa-copy"></i> @AR["Auto.UI.c1ecedab11bc"]</a>
                         </div>
                     </div>
-                    <div class="contentRow" v-html="item.resultStringHtml">
+                    <div class="contentRow contentRow_tti" v-if="item.resultViewType === 'TextToImage'">
+                        <div class="tti-card">
+                            <div class="tti-image-wrapper" v-if="item.textToImage && item.textToImage.imageUrl">
+                                <img :src="item.textToImage.imageUrl" alt="Generated Image" class="tti-image" />
+                            </div>
+                            <div class="tti-empty" v-else>图片已生成，但未获得可访问地址</div>
+                            <div class="tti-meta">
+                                <div class="tti-meta-row"><span class="tti-meta-label">存储：</span><span>{{ item.textToImage && item.textToImage.storageType ? item.textToImage.storageType : '--' }}</span></div>
+                                <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.imageUrl"><a :href="item.textToImage.imageUrl">查看原图</a></div>
+                                <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.revisedPrompt"><span class="tti-meta-label">Revised：</span><span>{{ item.textToImage.revisedPrompt }}</span></div>
+                                <div class="tti-meta-row" v-if="item.textToImage && item.textToImage.prompt"><span class="tti-meta-label">Prompt：</span><span>{{ item.textToImage.prompt }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contentRow contentRow_audio" v-else-if="item.resultViewType === 'TextToSpeech'">
+                        <div class="audio-card">
+                            <audio v-if="item.textToSpeech && item.textToSpeech.audioUrl" controls :src="item.textToSpeech.audioUrl" class="audio-player"></audio>
+                            <div class="audio-empty" v-else>音频已生成，但未获得可访问地址</div>
+                            <div class="audio-meta">
+                                <div class="audio-meta-row"><span class="audio-meta-label">Voice：</span><span>{{ item.textToSpeech && item.textToSpeech.voice ? item.textToSpeech.voice : '--' }}</span></div>
+                                <div class="audio-meta-row"><span class="audio-meta-label">Format：</span><span>{{ item.textToSpeech && item.textToSpeech.format ? item.textToSpeech.format : '--' }}</span></div>
+                                <div class="audio-meta-row"><span class="audio-meta-label">Speed：</span><span>{{ item.textToSpeech && item.textToSpeech.speedRatio ? item.textToSpeech.speedRatio : '--' }}</span></div>
+                                <div class="audio-meta-row" v-if="item.textToSpeech && item.textToSpeech.text"><span class="audio-meta-label">Text：</span><span>{{ item.textToSpeech.text }}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contentRow contentRow_audio" v-else-if="item.resultViewType === 'SpeechToText'">
+                        <div class="audio-card">
+                            <audio v-if="item.speechToText && item.speechToText.sourceAudioUrl" controls :src="item.speechToText.sourceAudioUrl" class="audio-player"></audio>
+                            <div class="audio-meta">
+                                <div class="audio-meta-row"><span class="audio-meta-label">Language：</span><span>{{ item.speechToText && item.speechToText.language ? item.speechToText.language : '--' }}</span></div>
+                                <div class="audio-meta-row"><span class="audio-meta-label">Duration：</span><span>{{ item.speechToText && item.speechToText.duration ? item.speechToText.duration : '--' }}</span></div>
+                            </div>
+                            <div class="stt-transcript">
+                                {{ item.speechToText && item.speechToText.transcript ? item.speechToText.transcript : '--' }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contentRow contentRow_embedding" v-else-if="item.resultViewType === 'TextEmbedding'">
+                        <div class="embedding-card">
+                            <div class="embedding-meta-row"><span class="embedding-meta-label">VectorDB：</span><span>{{ item.textEmbedding && item.textEmbedding.vectorDbAlias ? item.textEmbedding.vectorDbAlias : '--' }}（{{ item.textEmbedding && item.textEmbedding.vectorDbType ? item.textEmbedding.vectorDbType : '--' }}）</span></div>
+                            <div class="embedding-meta-row"><span class="embedding-meta-label">Collection：</span><span>{{ item.textEmbedding && item.textEmbedding.collectionName ? item.textEmbedding.collectionName : '--' }}</span></div>
+                            <div class="embedding-meta-row"><span class="embedding-meta-label">Dimension：</span><span>{{ item.textEmbedding && item.textEmbedding.embeddingDimension ? item.textEmbedding.embeddingDimension : '--' }}</span></div>
+                            <div class="embedding-meta-row"><span class="embedding-meta-label">Source：</span><span>{{ item.textEmbedding && item.textEmbedding.sourceText ? item.textEmbedding.sourceText : '--' }}</span></div>
+
+                            <div class="embedding-query-panel">
+                                <el-input v-model="item.embeddingQueryText" size="mini" placeholder="输入查询文本进行向量检索"></el-input>
+                                <el-input-number v-model="item.embeddingQueryTopK" size="mini" :min="1" :max="20" :step="1"></el-input-number>
+                                <el-button type="primary" size="mini" :loading="item.embeddingQueryLoading" @@click.stop="runTextEmbeddingQuery(item)">查询</el-button>
+                            </div>
+
+                            <div class="embedding-hit-list" v-if="item.embeddingQueryResults && item.embeddingQueryResults.length > 0">
+                                <div class="embedding-hit-item" v-for="(hit, hitIndex) in item.embeddingQueryResults" :key="`hit-${item.id}-${hitIndex}`">
+                                    <div class="embedding-hit-score">Score: {{ Number(hit.score || 0).toFixed(3) }}</div>
+                                    <div class="embedding-hit-text">{{ hit.text }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contentRow" v-else v-html="item.resultStringHtml">
+                    </div>
+                    <div class="promptResultUsageRow" v-if="item.resultString.length>0">
+                        <span class="promptResultUsageToken">Token: {{item.totalCostToken || 0}}（输入 {{item.promptCostToken || 0}} / 输出 {{item.resultCostToken || 0}}）</span>
                     </div>
                     <div class="operateRow" v-if="item.resultString.length>0">
                         <div class="operateRow_item" @@click="app.showRatingView(index,'1')">
@@ -476,7 +646,7 @@
                             <div v-if="item.scoreType === '2'" class="tabsAreaItem" v-bind:class="{'activeTabsItem':item.scoreType === '2'}">@AR["Auto.UI.bc3b90bd905c"]</div>
                         </div>
                         <div v-if="item.scoreType === '1'" class="alScoreArea">
-                            <div v-for="(elItem,elindex) in item.alResultList" v-key="elindex" class="valFormItem">
+                            <div v-for="(elItem,elindex) in item.alResultList" :key="elindex" class="valFormItem">
                                 <span class="label">{{elItem.label}}</span>
                                 <el-input v-model="elItem.value" clearable placeholder="@AR["Auto.UI.02cc4f8f5a9a"]" class="input" />
                             </div>
@@ -670,7 +840,7 @@
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item v-if="!continueChatMode" label="@AR["Auto.UI.398cd5039352"]" prop="chatMode">
+            <el-form-item v-if="!continueChatMode && supportsChatMode" label="打靶模式" prop="chatMode">
                 <el-radio-group v-model="tacticalForm.chatMode" :disabled="continueChatMode">
                     <el-radio label="@AR["Auto.UI.64af497f6210"]">
                         <div>@AR["Auto.UI.64af497f6210"]</div>
@@ -685,8 +855,15 @@
                     <i class="el-icon-lock"></i> @AR["Auto.UI.9e50f52a2c00"]
                 </div>
             </el-form-item>
-            @* History display in continue-chat mode *@
-            <el-form-item v-if="continueChatMode" label="@AR["Auto.UI.73950d735c1e"]">
+            <el-alert v-if="!continueChatMode && !supportsChatMode"
+                      title="当前模型不支持对话模式，将按直接测试执行"
+                      type="info"
+                      :closable="false"
+                      show-icon
+                      style="margin-bottom: 12px;">
+            </el-alert>
+            @* 继续聊天模式下的历史记录显示 *@
+            <el-form-item v-if="continueChatMode" label="对话历史">
                 <div class="chat-history-container" id="chatHistoryContainer" @@scroll="handleChatHistoryScroll">
                     @* Show System Message at the top of chat history *@
                     <div v-if="continueChatMode" class="system-message-in-chat-history">
@@ -701,11 +878,14 @@
                             </el-collapse-item>
                         </el-collapse>
                     </div>
+                    <div v-if="continueChatMode" style="padding: 8px 12px; margin-bottom: 10px; background: #f5f7fa; border-radius: 6px; color: #606266;">
+                        Token 总量：{{ continueChatUsageSummary.totalCostToken || 0 }}（输入 {{ continueChatUsageSummary.promptCostToken || 0 }} / 输出 {{ continueChatUsageSummary.resultCostToken || 0 }}）
+                    </div>
                     <div v-if="continueChatHistory.length === 0" class="chat-empty-tip">
                         <i class="el-icon-chat-line-round"></i>
                         <span>@AR["Auto.UI.6c7fd749be91"]</span>
                     </div>
-                    <div v-for="(msg, idx) in continueChatHistory" :key="msg.id || `temp-${idx}`" class="chat-message-item" :class="{'chat-message-user': msg.roleType === 1, 'chat-message-assistant': msg.roleType === 2}">
+                    <div v-for="(msg, idx) in continueChatHistory" :key="msg.id || `temp-${idx}`" class="chat-message-item" :class="{'chat-message-user': msg.roleType === 1, 'chat-message-assistant': msg.roleType === 2, 'chat-message-generating': msg._generating}">
                         <div class="chat-message-avatar">
                             <i :class="msg.roleType === 1 ? 'el-icon-user' : 'el-icon-service'"></i>
                         </div>
@@ -747,9 +927,9 @@
                 </div>
             </el-form-item>
             
-            @* Chat input area in conversation mode *@
-            @* Note: do not use prop="chatInput" because this field is conditionally rendered and resetFields may fail *@
-            <el-form-item v-if="tacticalForm.chatMode === '对话模式'" label="@AR["Auto.UI.292687130b90"]">
+            @* 对话模式下的对话输入区域 *@
+            @* 注意：不使用 prop="chatInput"，因为这是条件显示的字段，resetFields 可能会出错 *@
+            <el-form-item v-if="supportsChatMode && tacticalForm.chatMode === '对话模式'" label="对话输入">
                 <el-input 
                     v-model="tacticalChatInput" 
                     type="textarea" 
@@ -778,14 +958,96 @@
         :close-on-click-modal="false"
         center 
         @@close="mapDialogClose">
-        <div id="map3dContainer" style="width: 100%; height: 600px; background: #1a1a1a;"></div>
+        @*工具栏*@
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+            <el-button size="mini" icon="el-icon-refresh" @@click="resetMap3DView">重置视角</el-button>
+            <el-button size="mini" icon="el-icon-full-screen" @@click="toggleMap3DFullscreen">全屏</el-button>
+            <el-button size="mini" icon="el-icon-zoom-in" @@click="fitMap3DView">适应视图</el-button>
+            <el-popover placement="bottom" width="260" trigger="hover" popper-class="map3d-shortcuts-popover">
+                <div slot="content" style="font-size:12px;line-height:1.8;">
+                    <div><strong>🖱️ 鼠标操作</strong></div>
+                    <div>左键拖拽：旋转视角</div>
+                    <div>右键拖拽：平移场景</div>
+                    <div>滚轮：缩放</div>
+                    <div>单击节点：高亮</div>
+                    <div>双击节点：跳转靶道</div>
+                    <div style="margin-top:6px;"><strong>⌨️ 键盘快捷键</strong></div>
+                    <div>W / A / S / D：前后左右平移</div>
+                    <div>Q / E：深度平移（前后）</div>
+                    <div>R：重置视角</div>
+                    <div>F：适应视图</div>
+                    <div>+/-：放大/缩小</div>
+                </div>
+                <el-button slot="reference" size="mini" icon="el-icon-question">快捷键</el-button>
+            </el-popover>
+            <div style="margin-left:auto;font-size:12px;color:#909399;" v-if="map3dNodes && map3dNodes.length > 0">
+                共 {{ map3dNodes.length }} 个节点
+            </div>
+        </div>
+        <div id="map3dContainer" style="width: 100%; height: 580px; background: #1a1a1a;"></div>
+    </el-dialog>
+    @*快速创建智能体 dialog*@
+    <el-dialog 
+        title="从 PromptCode 创建智能体" 
+        :visible.sync="createAgentDialogVisible"
+        width="560px"
+        :close-on-click-modal="false"
+        center>
+        <el-form label-width="110px" size="small">
+            <el-form-item label="智能体名称">
+                <el-input v-model="createAgentForm.name" placeholder="请输入智能体名称" maxlength="50" show-word-limit></el-input>
+            </el-form-item>
+            <el-form-item label="覆盖范围">
+                <el-radio-group v-model="createAgentForm.scopeType" @@change="onCreateAgentScopeChange">
+                    <el-radio label="range">
+                        靶场级别
+                        <el-tooltip content="PromptCode 只包含靶场名称，匹配该靶场下的所有靶道" placement="top">
+                            <i class="el-icon-question" style="color: #909399;"></i>
+                        </el-tooltip>
+                    </el-radio>
+                    <el-radio label="tactic">
+                        靶道级别
+                        <el-tooltip content="PromptCode 包含靶场名称和战术编号，匹配当前战术下所有瞄准版本" placement="top">
+                            <i class="el-icon-question" style="color: #909399;"></i>
+                        </el-tooltip>
+                    </el-radio>
+                    <el-radio label="full">
+                        完整定位
+                        <el-tooltip content="PromptCode 为完整版本号，精确匹配当前靶道" placement="top">
+                            <i class="el-icon-question" style="color: #909399;"></i>
+                        </el-tooltip>
+                    </el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item label="PromptCode">
+                <el-tag type="info" style="font-family: monospace;">{{ createAgentPromptCode }}</el-tag>
+            </el-form-item>
+            <el-form-item label="说明">
+                <el-input v-model="createAgentForm.description" type="textarea" :rows="2" placeholder="对新智能体的说明（可选）"></el-input>
+            </el-form-item>
+            <el-form-item label="Function Calls">
+                <el-input v-model="createAgentForm.functionCallNames" placeholder="Function Call 名称，多个用逗号分隔（可选）"></el-input>
+            </el-form-item>
+        </el-form>
+        @*已有智能体提示*@
+        <el-alert v-if="createAgentExistingList.length > 0"
+                  :title="`当前 PromptCode 下已有 ${createAgentExistingList.length} 个智能体：${createAgentExistingList.map(a => a.name).join('、')}`"
+                  type="warning"
+                  :closable="false"
+                  show-icon
+                  style="margin-top: 10px;">
+        </el-alert>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="small" @@click="createAgentDialogVisible = false">取 消</el-button>
+            <el-button type="primary" size="small" :loading="createAgentLoading" @@click="submitCreateAgent">创 建</el-button>
+        </div>
     </el-dialog>
     @* Add model dialog *@
     <el-dialog title="@AR["Auto.UI.1cbddef0b578"]" :visible.sync="modelFormVisible" center @@close="modelFormCloseDialog">
         <el-form ref="modelForm" :model="modelForm" :rules="rules" label-position="left">
-            <el-form-item label="@AR["AIKernel.ModelType"]" prop="modelType" label-width="130px">
-                <el-select v-model="modelForm.modelType" placeholder="@AR["Auto.UI.0f749a96beac"]">
-                    <el-option v-for="(item,index) in modelTypeOpt" v-key="index" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
+            <el-form-item label="模型类型" prop="modelType" label-width="130px">
+                <el-select v-model="modelForm.modelType" placeholder="请选择模型类型">
+                    <el-option v-for="(item,index) in modelTypeOpt" :key="index" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="@AR["Auto.UI.79ebb5cffe72"]" prop="alias" label-width="130px">
@@ -829,7 +1091,7 @@
     <el-dialog title="@AR["Auto.UI.e8469e8d075a"]" :visible.sync="aiScoreFormVisible" center>
         <el-form ref="aiScoreForm" :model="aiScoreForm" :rules="rules" label-position="left">
 
-            <div v-for="(item,index) in aiScoreForm.resultList" v-key="index" class="targetShootBtnRow">
+            <div v-for="(item,index) in aiScoreForm.resultList" :key="index" class="targetShootBtnRow">
                 @* :rules="rules.aiResultVal" *@
                 <el-form-item :label="`${item.label}${index+1}`" :prop="'resultList.' + index + '.value'" label-width="100px">
                     @* <el-input v-model="item.value" autocomplete="off" placeholder="@AR["Auto.UI.acc6a82af4ec"]"></el-input> *@
@@ -888,7 +1150,7 @@
             <el-select v-model="expectedPluginFoem.rangeId" multiple
             collapse-tags placeholder="@AR["Auto.UI.1902333eff98"]" class="selectRow" @@change="expectedPluginPromptFieldChange">
             <el-option v-for="item in promptFieldOpt"
-            v-key="item.id"
+            :key="item.id"
             :label="item.label"
             :value="item.value"
             :disabled="item.disabled">
@@ -1418,20 +1680,11 @@
             </el-button>
         </span>
     </el-dialog>
-    
-</div>
 
-
-<div v-if="isPageLoading" class="promptLoaderBox">
-    <div class="loading">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
 </div>
 
 @section scripts {
+    <partial name="~/Areas/Admin/Pages/Shared/_PromptRangeLocalizationScripts.cshtml" />
     <script src="~/js/PromptRange/lib/axios.min.js"></script>
     <script src="~/js/PromptRange/lib/jszip.min.js"></script>
     <script src="~/js/PromptRange/lib/fileSave.min.js"></script>

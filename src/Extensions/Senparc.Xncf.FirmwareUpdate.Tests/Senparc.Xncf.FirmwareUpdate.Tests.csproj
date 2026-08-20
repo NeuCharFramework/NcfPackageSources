@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.0.4</Version>
+    <PackageReleaseNotes>
+      [2026-08-04] v0.0.1 新增发布包镜像服务测试
+      1、覆盖 NCF 与 NcfDesktop 包元数据同步及镜像行为
+      [2026-08-08] v0.0.2 Dependency update from Senparc.Xncf.FirmwareUpdate to 0.4.1-preview6
+      [2026-08-13] v0.0.3 补充固件更新线程生命周期测试
+      1、覆盖线程取消与停止期间的异常处理行为
+      [2026-08-15] v0.0.4 Dependency update from Senparc.Xncf.FirmwareUpdate to 0.4.3-preview8
+</PackageReleaseNotes>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.6.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Senparc.Xncf.FirmwareUpdate\Senparc.Xncf.FirmwareUpdate.csproj" />
+  </ItemGroup>
+</Project>

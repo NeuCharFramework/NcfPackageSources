@@ -2,7 +2,7 @@
 @addTagHelper *, Senparc.Areas.Admin
 @model Senparc.Areas.Admin.Areas.Admin.Pages.TenantInfo_IndexModel
 @{
-    ViewData["Title"] = AR["TenantInfo.PageTitle"];
+    ViewData["Title"] = AR["Tenant.Title"];
     Layout = "_Layout_Vue";
 }
 
@@ -11,87 +11,87 @@
 }
 
 @section breadcrumbs {
-    <el-breadcrumb-item>@AR["Common.SystemManagement"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["TenantInfo.PageTitle"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Common.系统管理"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@AR["Tenant.Title"]</el-breadcrumb-item>
 }
 <div>
     <div class="admin-tenant-info">
         <div>
-            <h2 class="tenant-list">@AR["TenantInfo.CurrentTenantInfo"]</h2>
+            <h2 class="tenant-list">@AR["Tenant.CurrentInfo"]</h2>
             <el-row :gutter="20" v-show="!enableMultiTenant">
-                <el-col :span="6"><div class="grid-content bg-purple">@AR["TenantInfo.MultiTenantDisabled"]</div></el-col>
+                <el-col :span="6"><div class="grid-content bg-purple">@AR["Tenant.Disabled"]</div></el-col>
             </el-row>
             <el-row :gutter="20" v-show="enableMultiTenant">
-                <el-col :span="6"><div class="grid-content bg-purple">@AR["TenantInfo.CurrentRule"]<span>{{tenantRule}}</span></div></el-col>
-                <el-col :span="6"><div class="grid-content bg-purple">@AR["TenantInfo.NameLabel"]<span>{{requestTenantInfo.name}} <span class="float-right">(ID:{{requestTenantInfo.id}})</span></span></div></el-col>
-                <el-col :span="6"><div class="grid-content bg-purple">@AR["TenantInfo.MatchKeyword"]<span>{{requestTenantInfo.tenantKey}}</span></div></el-col>
-                <el-col :span="6"><div class="grid-content bg-purple">@AR["TenantInfo.MatchTime"]<span>{{requestTenantInfo.beginTime}}</span></div></el-col>
+                <el-col :span="6"><div class="grid-content bg-purple">@AR["Tenant.MatchRule"]<span>{{tenantRule}}</span></div></el-col>
+                <el-col :span="6"><div class="grid-content bg-purple">@AR["Tenant.Name"]：<span>{{requestTenantInfo.name}} <span class="float-right">(@AR["Tenant.Id"]:{{requestTenantInfo.id}})</span></span></div></el-col>
+                <el-col :span="6"><div class="grid-content bg-purple">@AR["Tenant.MatchKeyword"]：<span>{{requestTenantInfo.tenantKey}}</span></div></el-col>
+                <el-col :span="6"><div class="grid-content bg-purple">@AR["Tenant.MatchTime"]：<span>{{requestTenantInfo.beginTime}}</span></div></el-col>
             </el-row>
 
             @*Id：<span>{{requestTenantInfo.id}}</span>*@
 
         </div>
 
-        <h2 class="current-tenant-info">@AR["TenantInfo.PageTitle"]</h2>
+        <h2 class="current-tenant-info">@AR["Tenant.ListTitle"]</h2>
 
         <div class="operation-bar">
-            <el-button type="primary" v-has="['admin-add']" @@click="handleAdd">@AR["TenantInfo.AddTenant"]</el-button>
+            <el-button type="primary" v-has="['admin-add']" @@click="handleAdd">@AR["Tenant.Add"]</el-button>
         </div>
 
         <el-table :data="tableData"
                   border
                   style="width: 100%">
             <el-table-column align="center"
-                             label="id(TentanId)"
+                             label="@AR["Tenant.Id"]"
                              width="120">
                 <template slot-scope="scope">
                     {{ scope.row.id }}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["TenantInfo.TenantName"]">
+                             label="@AR["Tenant.Name"]">
                 <template slot-scope="scope">
                     {{ scope.row.name }}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["TenantInfo.MatchRule"]">
+                             label="@AR["Tenant.Rule"]">
                 <template slot-scope="scope">
                     {{ scope.row.tenantKey }}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["Common.AddTime"]">
+                             label="@AR["Common.添加时间"]">
                 <template slot-scope="scope">
                     {{formaTableTime(scope.row.addTime) }}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["TenantInfo.AdminRemark"]">
+                             label="@AR["Tenant.AdminNote"]">
                 <template slot-scope="scope">
                     {{ scope.row.adminRemark }}
                 </template>
             </el-table-column>
             <el-table-column align="center"
-                             label="@AR["TenantInfo.Enabled"]"
+                             label="@AR["Tenant.Enabled"]"
                              width="60">
                 <template slot-scope="scope">
                     {{ scope.row.enable }}
                 </template>
             </el-table-column>
-            <el-table-column label="@AR["Common.Action"]" align="center">
+            <el-table-column label="@AR["Tenant.Actions"]" align="center">
                 <template slot-scope="scope">
                     <el-button size="mini"
                                type="primary"
                                v-has="['admin-edit']"
-                               @@click="handleEdit(scope.$index, scope.row)">@AR["Common.Edit"]</el-button>
+                               @@click="handleEdit(scope.$index, scope.row)">@AR["Tenant.Edit"]</el-button>
                     <el-button size="mini"
                                type="warning"
-                               @@click="handleInitialize(scope.row)">@AR["TenantInfo.Initialize"]</el-button>
+                               @@click="handleInitialize(scope.row)">@AR["Tenant.Initialize"]</el-button>
                 </template>
                 <template v-has="['admin-delete']">
-                    <el-popconfirm placement="top" title="@AR["TenantInfo.ConfirmDelete"]" @@on-confirm="handleDelete(scope.$index, scope.row)">
-                        <el-button size="mini" type="danger" slot="reference">@AR["Common.Delete"]</el-button>
+                    <el-popconfirm placement="top" title="@AR["Tenant.DeleteConfirm"]" @@on-confirm="handleDelete(scope.$index, scope.row)">
+                        <el-button size="mini" type="danger" slot="reference">@AR["Tenant.Delete"]</el-button>
                     </el-popconfirm>
                 </template>
             </el-table-column>
@@ -109,67 +109,67 @@
                      label-width="100px"
                      style="max-width: 400px; margin-left:50px;">
                 @*<p class="username-tip" v-if="dialog.title==='编辑管理员'">不建议修改用户名！</p>*@
-                <el-form-item label="@AR["TenantInfo.TenantName"]" :error="dialog.nameError" prop="name">
-                    <el-input v-model="dialog.data.name" clearable placeholder="@AR["TenantInfo.InputTenantName"]" />
+                <el-form-item label="@AR["Tenant.Name"]" :error="dialog.nameError" prop="name">
+                    <el-input v-model="dialog.data.name" clearable placeholder="@AR["Tenant.NamePlaceholder"]" />
                 </el-form-item>
-                <el-form-item label="@AR["TenantInfo.TenantMatchKeyword"]" :error="dialog.tenantKeyError" prop="tenantKey">
-                    <el-input v-model="dialog.data.tenantKey" clearable placeholder="@AR["TenantInfo.InputTenantMatchKeyword"]" />
+                <el-form-item label="@AR["Tenant.MatchKeyword"]" :error="dialog.tenantKeyError" prop="tenantKey">
+                    <el-input v-model="dialog.data.tenantKey" clearable placeholder="@AR["Tenant.KeyPlaceholder"]" />
                 </el-form-item>
-                <el-form-item label="@AR["TenantInfo.AdminRemark"]" prop="adminRemark">
-                    <el-input v-model="dialog.data.adminRemark" clearable placeholder="@AR["TenantInfo.InputAdminRemark"]" />
+                <el-form-item label="@AR["Tenant.AdminNote"]" prop="adminRemark">
+                    <el-input v-model="dialog.data.adminRemark" clearable placeholder="@AR["Tenant.NotePlaceholder"]" />
                 </el-form-item>
-                <el-form-item label="@AR["TenantInfo.EnableSwitch"]">
+                <el-form-item label="@AR["Tenant.EnableQuestion"]">
                     <el-switch v-model="dialog.data.enable"></el-switch>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @@click="dialog.visible = false">@AR["Common.Cancel"]</el-button>
-                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">@AR["Common.Confirm"]</el-button>
+                <el-button @@click="dialog.visible = false">@AR["Common.取消"]</el-button>
+                <el-button :loading="dialog.updateLoading" type="primary" @@click="updateData">@AR["Common.确认"]</el-button>
             </div>
         </el-dialog>
 
         <!--初始化 -->
-        <el-dialog title="@AR["TenantInfo.InitializeDialogTitle"]" :visible.sync="initializeDialog.visible" :close-on-click-modal="false">
+        <el-dialog title="@AR["Tenant.InitializeTitle"]" :visible.sync="initializeDialog.visible" :close-on-click-modal="false">
             <el-form ref="initializeForm"
                      :rules="initializeDialog.rules"
                      :model="initializeDialog.data"
                      label-position="left"
                      label-width="120px"
                      style="max-width: 400px; margin-left:50px;">
-                <el-form-item label="@AR["SystemConfig.SystemName"]" prop="systemName">
-                    <el-input v-model="initializeDialog.data.systemName" clearable placeholder="@AR["SystemConfig.InputSystemName"]" />
+                <el-form-item label="@AR["Tenant.SystemName"]" prop="systemName">
+                    <el-input v-model="initializeDialog.data.systemName" clearable placeholder="@AR["Tenant.SystemNamePlaceholder"]" />
                 </el-form-item>
-                <el-form-item label="@AR["TenantInfo.DefaultAdminAccount"]" prop="adminAccount">
-                    <el-input v-model="initializeDialog.data.adminAccount" clearable placeholder="@AR["TenantInfo.InputDefaultAdminAccount"]" />
+                <el-form-item label="@AR["Tenant.AdminAccount"]" prop="adminAccount">
+                    <el-input v-model="initializeDialog.data.adminAccount" clearable placeholder="@AR["Tenant.AdminAccountPlaceholder"]" />
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @@click="initializeDialog.visible = false">@AR["Common.Cancel"]</el-button>
-                <el-button :loading="initializeDialog.loading" type="primary" @@click="submitInitialize">@AR["Common.Confirm"]</el-button>
+                <el-button @@click="initializeDialog.visible = false">@AR["Common.取消"]</el-button>
+                <el-button :loading="initializeDialog.loading" type="primary" @@click="submitInitialize">@AR["Common.确认"]</el-button>
             </div>
         </el-dialog>
 
         <!--初始化结果 -->
-        <el-dialog title="@AR["TenantInfo.InitializeResult"]" :visible.sync="resultDialog.visible" :close-on-click-modal="false" :show-close="true">
+        <el-dialog title="@AR["Tenant.ResultTitle"]" :visible.sync="resultDialog.visible" :close-on-click-modal="false" :show-close="true">
             <div class="result-content">
                 <div class="warning-message">
                     <i class="el-icon-warning"></i>
-                    <span>@AR["TenantInfo.WarningKeepCredentials"]</span>
+                    <span>@AR["Tenant.KeepSecret"]</span>
                 </div>
                 <div class="info-section">
-                    <h3>@AR["TenantInfo.TenantInfoSection"]</h3>
-                    <p>ID: {{resultDialog.data.tenantInfo.id}}</p>
-                    <p>@AR["TenantInfo.NameLabel"]{{resultDialog.data.tenantInfo.name}}</p>
-                    <p>@AR["TenantInfo.MatchKeyword"]{{resultDialog.data.tenantInfo.tenantKey}}</p>
+                    <h3>@AR["Tenant.TenantInfo"]</h3>
+                    <p>@AR["Tenant.Id"]：{{resultDialog.data.tenantInfo.id}}</p>
+                    <p>@AR["Tenant.Name"]：{{resultDialog.data.tenantInfo.name}}</p>
+                    <p>@AR["Tenant.MatchKeyword"]：{{resultDialog.data.tenantInfo.tenantKey}}</p>
                 </div>
                 <div class="info-section">
-                    <h3>@AR["TenantInfo.AdminAccountSection"]</h3>
-                    <p>@AR["Admin.Login.Username"]: {{resultDialog.data.adminAccount.username}}</p>
-                    <p>@AR["Admin.Login.Password"]: {{resultDialog.data.adminAccount.password}}</p>
+                    <h3>@AR["Tenant.AdminInfo"]</h3>
+                    <p>@AR["Tenant.Username"]：{{resultDialog.data.adminAccount.username}}</p>
+                    <p>@AR["Tenant.Password"]：{{resultDialog.data.adminAccount.password}}</p>
                 </div>
             </div>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @@click="resultDialog.visible = false">@AR["TenantInfo.RecordedAndClose"]</el-button>
+                <el-button type="primary" @@click="resultDialog.visible = false">@AR["Tenant.RecordClose"]</el-button>
             </div>
         </el-dialog>
        

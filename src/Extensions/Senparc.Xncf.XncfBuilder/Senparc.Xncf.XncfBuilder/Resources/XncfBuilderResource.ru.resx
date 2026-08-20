@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.XncfBuilder.MenuName" xml:space="preserve">
+    <value>Генератор модулей XNCF</value>
+  </data>
+  <data name="Module.XncfBuilder.Description" xml:space="preserve">
+    <value>Быстро создаёт основу и примеры модулей XNCF для дальнейшего расширения</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve">
+    <value>Команда Add-Migration</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve">
+    <value>Выполняет add-migration для нескольких баз; операция может занять 30–60 секунд</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve">
+    <value>Создать XNCF</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
+    <value>Создаёт модуль XNCF из конфигурации</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
+    <value>[ИИ] Создать сущности базы</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve">
+    <value>Создаёт сущности и методы по DDD. Используйте только при разработке после резервного копирования.</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve">
+    <value>Создать интерфейсы AppService</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve">
+    <value>Создаёт код интерфейса для AppService указанного модуля</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve">
+    <value>Инициализировать промпты</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve">
+    <value>Инициализирует все промпты для генерации кода ИИ</value>
+  </data>
+  <data name="Common.Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="Common.Use" xml:space="preserve">
+    <value>Использовать</value>
+  </data>
+  <data name="Parameter.XncfBuilder.SolutionPath" xml:space="preserve">
+    <value>Путь к решению (.sln)||Полный физический путь к решению NCF; модуль создаётся рядом</value>
+  </data>
+  <data name="Parameter.XncfBuilder.SolutionOptions" xml:space="preserve">
+    <value>Параметры решения||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.TemplatePackage" xml:space="preserve">
+    <value>Установить шаблон||Повторная установка занимает 30–40 с; выберите «Установлен», если он есть</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Framework" xml:space="preserve">
+    <value>Целевая платформа||TFM проекта</value>
+  </data>
+  <data name="Parameter.XncfBuilder.OtherFramework" xml:space="preserve">
+    <value>Своя платформа||Переопределяет выбранную платформу</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Organization" xml:space="preserve">
+    <value>Организация||Префикс имени и пространства имён</value>
+  </data>
+  <data name="Parameter.XncfBuilder.ModuleName" xml:space="preserve">
+    <value>Имя модуля||Также имя класса; только буквы и цифры, не начинать с цифры</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Version" xml:space="preserve">
+    <value>Версия||Например 1.0.0 или 2.0.100-beta1</value>
+  </data>
+  <data name="Parameter.XncfBuilder.MenuName" xml:space="preserve">
+    <value>Имя меню||Например NCF Builder</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Icon" xml:space="preserve">
+    <value>Значок||Font Awesome, например fa fa-star</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Description" xml:space="preserve">
+    <value>Описание||Описание модуля</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Features" xml:space="preserve">
+    <value>Функции||</value>
+  </data>
+  <data name="Parameter.XncfBuilder.InstallSample" xml:space="preserve">
+    <value>Установить пример||</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.Backup" xml:space="preserve">
+    <value>Сохранить копию .sln (рекомендуется)</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.Backup.Help" xml:space="preserve">
+    <value>Создать копию перед перезаписью .sln</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.New" xml:space="preserve">
+    <value>Создать новый .sln</value>
+  </data>
+  <data name="XncfBuilder.Option.Solution.New.Help" xml:space="preserve">
+    <value>Иначе файл будет перезаписан; активное решение может перезапустить сервис</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Online" xml:space="preserve">
+    <value>Получить последний шаблон онлайн</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Online.Help" xml:space="preserve">
+    <value>Загрузить с NuGet.org; это занимает больше времени</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Local" xml:space="preserve">
+    <value>Установить локальный пакет</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Local.Help" xml:space="preserve">
+    <value>Использовать Template.*.nupkg рядом с .sln</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Installed" xml:space="preserve">
+    <value>Уже установлен</value>
+  </data>
+  <data name="XncfBuilder.Option.Template.Installed.Help" xml:space="preserve">
+    <value>Если шаблона нет локально, он будет загружен автоматически</value>
+  </data>
+  <data name="XncfBuilder.Option.Framework.Net8" xml:space="preserve">
+    <value>Использовать .NET 8.0</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Function" xml:space="preserve">
+    <value>Добавить Function</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Function.Help" xml:space="preserve">
+    <value>Включить модуль Function</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Database" xml:space="preserve">
+    <value>Добавить базу данных</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Database.Help" xml:space="preserve">
+    <value>Включить модуль и пустую БД</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.WebApi" xml:space="preserve">
+    <value>Добавить Web API</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.WebApi.Help" xml:space="preserve">
+    <value>Включить модуль Web API</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Web" xml:space="preserve">
+    <value>Добавить страницы Web (Area)</value>
+  </data>
+  <data name="XncfBuilder.Option.Feature.Web.Help" xml:space="preserve">
+    <value>Включить модуль веб-страниц</value>
+  </data>
+  <data name="XncfBuilder.Option.InstallSample.Help" xml:space="preserve">
+    <value>Установить пример и включить БД и веб-страницы</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel" xml:space="preserve">
+    <value>Системная модель (AiPlatform: {0}; Endpoint: {1})</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel.Help" xml:space="preserve">
+    <value>Использовать системную модель ИИ по умолчанию</value>
+  </data>
+  <data name="XncfBuilder.AI.DefaultModel.Unconfigured" xml:space="preserve">
+    <value>Системная модель (AiPlatform: {0}; Endpoint не задан, настройте appsettings.json)</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Requirement" xml:space="preserve">
+    <value>Требования к сущности||Опишите полностью, включая свойства и типы</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Domain" xml:space="preserve">
+    <value>Домен||Домен для новой сущности</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.Actions" xml:space="preserve">
+    <value>Дальнейшие действия||Действия после генерации</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.UsePromptRange" xml:space="preserve">
+    <value>Использовать PromptRange||Автоустановка и инициализация; иначе предоставьте XncfBuilderPlugin</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Entity.AIModel" xml:space="preserve">
+    <value>Модель ИИ||Модель генерации без PromptRange</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Prompt.Override" xml:space="preserve">
+    <value>Перезаписать||Удалить существующий полигон и создать из официальной версии</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Prompt.AIModel" xml:space="preserve">
+    <value>Модель ИИ||Модель для всех тактик нового полигона</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Dto" xml:space="preserve">
+    <value>Создать DTO</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Dto.Help" xml:space="preserve">
+    <value>Создать DTO (создаётся всегда)</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Migration" xml:space="preserve">
+    <value>Создать миграцию</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Migration.Help" xml:space="preserve">
+    <value>Создать EF Core Migration; проверьте перед применением</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Repository" xml:space="preserve">
+    <value>Создать Repository</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Repository.Help" xml:space="preserve">
+    <value>Создать Repository сущности</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Service" xml:space="preserve">
+    <value>Создать Service</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.Service.Help" xml:space="preserve">
+    <value>Создать Service сущности</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.AppService" xml:space="preserve">
+    <value>Создать AppService</value>
+  </data>
+  <data name="XncfBuilder.Option.Action.AppService.Help" xml:space="preserve">
+    <value>Создать AppService сущности</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DatabasePlantPath" xml:space="preserve">
+    <value>Путь к DatabasePlant||Физический путь хоста миграции; он должен ссылаться на проект XNCF</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.ProjectPath" xml:space="preserve">
+    <value>Путь проекта XNCF||Полный физический путь к корню проекта</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.CustomProjectPath" xml:space="preserve">
+    <value>Свой путь XNCF||Только при выборе «Свой путь»</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DatabaseTypes" xml:space="preserve">
+    <value>Типы БД||Типы, для которых создаются миграции</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.DbContext" xml:space="preserve">
+    <value>Имя DbContext||Без суффикса типа; [Default] для автоопределения</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.Name" xml:space="preserve">
+    <value>Имя миграции||Буквы, цифры и подчёркивания, например Add_Config</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.UpdateVersion" xml:space="preserve">
+    <value>Обновить версию||Обновить версию в Register.cs</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Migration.Verbose" xml:space="preserve">
+    <value>Подробный журнал||Использовать add-migration -v</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.None" xml:space="preserve">
+    <value>Не обновлять</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Major" xml:space="preserve">
+    <value>Основная версия + 1</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Minor" xml:space="preserve">
+    <value>Дополнительная версия + 1</value>
+  </data>
+  <data name="XncfBuilder.Option.Version.Patch" xml:space="preserve">
+    <value>Исправление + 1</value>
+  </data>
+  <data name="XncfBuilder.Option.CustomPath" xml:space="preserve">
+    <value>Свой путь</value>
+  </data>
+  <data name="XncfBuilder.Validation.CustomProjectPathRequired" xml:space="preserve">
+    <value>Введите пользовательский путь к проекту XNCF.</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.TargetPath" xml:space="preserve">
+    <value>Путь целевого проекта||Проект для сканирования и генерации интерфейсов</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.Namespace" xml:space="preserve">
+    <value>Префикс пространства имён||Префикс создаваемых классов</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.ClassPattern" xml:space="preserve">
+    <value>Regex класса||Регулярное выражение для имён классов</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.MethodPattern" xml:space="preserve">
+    <value>Regex метода||Регулярное выражение для имён методов</value>
+  </data>
+  <data name="Parameter.XncfBuilder.Interface.DestinationPath" xml:space="preserve">
+    <value>Проект назначения||Проект для созданного кода интерфейсов</value>
+  </data>
+  <data name="XncfBuilder.MCP.ModuleDirectoryNotFound" xml:space="preserve">
+    <value>Каталог модуля {0} не найден. Укажите полное имя, например Senparc.Xncf.XncfBuilder.</value>
+  </data>
+  <data name="XncfBuilder.MCP.ModuleFullName" xml:space="preserve">
+    <value>Полное имя модуля, например Senparc.Xncf.XncfBuilder</value>
+  </data>
+  <data name="XncfBuilder.MCP.FilePath" xml:space="preserve">
+    <value>Путь и имя файла внутри модуля</value>
+  </data>
+  <data name="XncfBuilder.MCP.FileNotFound" xml:space="preserve">
+    <value>Файл не найден: {0}</value>
+  </data>
+  <data name="XncfBuilder.MCP.FileContent" xml:space="preserve">
+    <value>Полное содержимое файла</value>
+  </data>
+  <data name="XncfBuilder.Plugin.CreateEntity" xml:space="preserve">
+    <value>Создать файл класса сущности</value>
+  </data>
+  <data name="XncfBuilder.Plugin.FilePath" xml:space="preserve">
+    <value>Путь к файлу</value>
+  </data>
+  <data name="XncfBuilder.Plugin.GeneratedContent" xml:space="preserve">
+    <value>Содержимое файла, созданное ИИ</value>
+  </data>
+  <data name="XncfBuilder.Plugin.FileSaved" xml:space="preserve">
+    <value>Файл сохранён: {0}</value>
+  </data>
+  <data name="XncfBuilder.Plugin.ReadDbContext" xml:space="preserve">
+    <value>Прочитать и обновить контекст базы данных</value>
+  </data>
+  <data name="XncfBuilder.Plugin.ProjectPath" xml:space="preserve">
+    <value>Путь проекта</value>
+  </data>
+  <data name="XncfBuilder.Plugin.EntityName" xml:space="preserve">
+    <value>Имя новой сущности</value>
+  </data>
+  <data name="XncfBuilder.Plugin.PluralEntityName" xml:space="preserve">
+    <value>Множественная форма имени сущности</value>
+  </data>
+</root>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.17.1-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.20.4-preview8</Version>
     <!--<LangVersion>lastest</LangVersion>-->
     <LangVersion>preview</LangVersion>
     <AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
@@ -14,30 +14,47 @@
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>接口说明文档</Title>
-    <ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		v0.1.0 创世
-		v0.6.6 添加 Enable 开关选项
-		v0.11.0 加载默认的 appsettings.json
-		[2024-09-10] v0.14.4-preview1 升级缓存基础库
-		[2024-10-09] v0.14.6-preview1 升级基础库
-		[2024-10-09] v0.14.7-preview1 升级基础库
-		[2024-10-16] v0.14.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
-		[2024-11-08] v0.14.11-preview1 升级 Senparc.AI
-		[2024-11-08] v0.14.12-preview1 升级 Senparc.AI
-		[2024-11-15] v0.15.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
-		[2024-11-21] v0.16.2-preview1 更新 CO2NET 及缓存基础库
-		[2024-11-28] v0.16.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
-		[2024-12-04] v0.16.4-preview1 update Swagger Xncf module, fix UseLowerCaseApiName not applied
-		[2025-01-25] v0.16.8-preview1 Update Agents functions, support for function calling
-		[2025-04-29] v0.16.10-preview1 Update CO2NET and AIKernel
-		[2025-05-18] v0.16.11-preview1 Update Installation
-		[2025-06-20] v0.16.12-preview1 Add MCP functions in XncfRegisterBase class
-		[2025-09-27] v0.17.0-preview.1 Add default sort for Swagger version(module name)
-	
+				v0.1.0 创世
+				v0.6.6 添加 Enable 开关选项
+				v0.11.0 加载默认的 appsettings.json
+				[2024-09-10] v0.14.4-preview1 升级缓存基础库
+				[2024-10-09] v0.14.6-preview1 升级基础库
+				[2024-10-09] v0.14.7-preview1 升级基础库
+				[2024-10-16] v0.14.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
+				[2024-11-08] v0.14.11-preview1 升级 Senparc.AI
+				[2024-11-08] v0.14.12-preview1 升级 Senparc.AI
+				[2024-11-15] v0.15.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
+				[2024-11-21] v0.16.2-preview1 更新 CO2NET 及缓存基础库
+				[2024-11-28] v0.16.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
+				[2024-12-04] v0.16.4-preview1 update Swagger Xncf module, fix UseLowerCaseApiName not applied
+				[2025-01-25] v0.16.8-preview1 Update Agents functions, support for function calling
+				[2025-04-29] v0.16.10-preview1 Update CO2NET and AIKernel
+				[2025-05-18] v0.16.11-preview1 Update Installation
+				[2025-06-20] v0.16.12-preview1 Add MCP functions in XncfRegisterBase class
+				[2025-09-27] v0.17.0-preview.1 Add default sort for Swagger version(module name)
 				[2025-11-01] update basic libraries, including Senparc.AI
+				[2026-07-17] v0.19.0-preview2 为 Swagger 模块接入统一资源本地化并优化功能文案
+				1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+				2、统一模块注册信息、菜单名称与功能描述的本地化输出
+				3、补充并统一多语言资源键及资源文件
+				[2026-07-29] v0.19.1-preview3 修正 Swagger 认证中间件的认证方案处理
+				1、按 Admin 和 JWT 认证方案执行认证并将成功主体写回请求上下文
+				2、未通过认证时继续跳转登录页，避免仅依赖请求头字符串判断
+				[2026-07-31] v0.20.0-preview4 扩展 Swagger 管理交互的多语言能力
+				1、将 Swagger 前端交互提示接入本地化资源
+				2、升级 Senparc.CO2NET.WebApi 至 2.1.9-preview
+				[2026-08-04] v0.20.1-preview5 Dependency updates from upstream projects
+				1、Dependency update from Senparc.Ncf.AreaBase to 0.23.1-preview5
+				2、Dependency update from Senparc.Xncf.AreasBase to 0.13.3-preview5
+				[2026-08-08] v0.20.2-preview6 Dependency updates from upstream projects
+				1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+				2、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+				[2026-08-13] v0.20.3-preview7 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7
+				[2026-08-15] v0.20.4-preview8 Dependency update from Senparc.Ncf.AreaBase to 0.23.4-preview8; [5955]Senparc.Xncf.AreasBase to 0.13.6-preview8
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
@@ -64,9 +81,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.6" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.6.128-beta1" />-->
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="10.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.1.0" />

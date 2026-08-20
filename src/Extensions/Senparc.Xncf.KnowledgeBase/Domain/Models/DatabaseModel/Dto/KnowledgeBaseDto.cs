@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：KnowledgeBaseDto.cs
+    文件功能描述：KnowledgeBaseDto 相关实现
+    
+    
+    创建标识：Senparc - 20260704
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+
+----------------------------------------------------------------*/
+
 
 using Senparc.Ncf.Core.Models;
 using System;
@@ -46,10 +63,17 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         /// </summary>
         public string Content { get; set; }
 
+        public string VectorCollectionName { get; set; }
+
+        public DateTime? EmbeddedTime { get; set; }
+
     }
 
     public class KnowledgeBase_InsertDto : KnowledgeBaseDto
     {
-        public List<int> NcfFileIds { get; set; } = new List<int>();
+        /// <summary>
+        /// 要同步的 FileManager 文件 ID。null 表示不修改文件关联，空集合表示清空。
+        /// </summary>
+        public List<int> NcfFileIds { get; set; }
     }
 }

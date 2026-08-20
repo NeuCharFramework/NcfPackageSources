@@ -1,0 +1,91 @@
+@page
+@model Senparc.Xncf.Sandbox.Areas.Sandbox.Pages.Setup
+@{
+    ViewData["Title"] = $"{Model.XncfRegister.MenuName} - 环境准备";
+    Layout = "_Layout_Vue";
+}
+
+@section breadcrumbs{
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>@Model.XncfRegister.MenuName</el-breadcrumb-item>
+    <el-breadcrumb-item>环境准备</el-breadcrumb-item>
+}
+
+<div>
+    <el-container>
+        <el-header class="module-header">
+            <span class="start-title"><i class="fa fa-wrench"></i>&nbsp;<span class="module-header-v">环境准备</span></span>
+        </el-header>
+        <el-main>
+            <el-alert
+                :title="dockerAvailable ? 'Docker 检测通过，可以继续创建沙箱。' : 'Docker 尚未就绪：请先按文档完成手动安装与镜像预拉。'"
+                :type="dockerAvailable ? 'success' : 'warning'"
+                :closable="false"
+                show-icon>
+            </el-alert>
+
+            <el-card shadow="never" style="margin-top:16px;">
+                <div slot="header" class="clearfix">
+                    <span>本机检测</span>
+                    <el-button style="float:right;padding:3px 0" type="text" @@click="probe">重新检测</el-button>
+                </div>
+                <p><strong>状态：</strong>{{ dockerAvailable ? '可用' : '不可用' }}</p>
+                <p style="color:#666;">{{ statusMessage }}</p>
+                <p style="margin-top:8px;">
+                    <strong>镜像仓库前缀：</strong>
+                    <span v-if="hasRegistryPrefix">{{ registryPrefix }}</span>
+                    <span v-else style="color:#888;">未配置（使用公开默认镜像；详见文档）</span>
+                </p>
+            </el-card>
+
+            <el-card shadow="never" style="margin-top:16px;">
+                <div slot="header">手动配置清单（摘要）</div>
+                <ol style="line-height:1.8;padding-left:20px;">
+                    <li>在运行 NCF 的同一台机器上安装并启动 Docker（或兼容 CLI）。模块<strong>不会</strong>自动安装 Docker。</li>
+                    <li>按官方文档预拉所需镜像；具体镜像名称与版本以文档为准。</li>
+                    <li>如需内网仓库，可在宿主 <code>appsettings.json</code> 的 <code>SenparcXncfSandbox:Images</code> 中配置前缀或覆盖项（说明见文档）。</li>
+                    <li>检测通过后，打开模块 Function「创建沙箱」，在模板下拉中选择 Python Exec，执行即可；无需在命令行输入模板名。</li>
+                </ol>
+                <p style="margin-top:12px;">
+                    <el-button type="primary" icon="el-icon-document" @@click="openDocs">打开完整文档（doc.ncf.pub）</el-button>
+                    <a class="el-button el-button--default" href="/Admin/Sandbox/Index?uid=@Model.XncfModuleUid">进入沙箱面板</a>
+                </p>
+                <p style="color:#888;font-size:12px;margin-top:8px;">
+                    文档链接：<a :href="docsUrl" target="_blank" rel="noopener">{{ docsUrl }}</a>
+                </p>
+            </el-card>
+        </el-main>
+    </el-container>
+</div>
+
+@section scripts{
+    <script>
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    dockerAvailable: @(Model.DockerAvailable ? "true" : "false"),
+                    statusMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DockerStatusMessage)),
+                    docsUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DocsUrl)),
+                    hasRegistryPrefix: @(Model.HasRegistryPrefix ? "true" : "false"),
+                    registryPrefix: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RegistryPrefix ?? ""))
+                };
+            },
+            methods: {
+                async probe() {
+                    const res = await axios.get('?handler=Probe');
+                    if (res.data) {
+                        this.dockerAvailable = !!res.data.dockerAvailable;
+                        this.statusMessage = res.data.message || '';
+                        this.docsUrl = res.data.docsUrl || this.docsUrl;
+                        this.hasRegistryPrefix = !!res.data.hasRegistryPrefix;
+                        this.registryPrefix = res.data.registryPrefix || '';
+                    }
+                },
+                openDocs() {
+                    window.open(this.docsUrl, '_blank', 'noopener');
+                }
+            }
+        });
+    </script>
+}

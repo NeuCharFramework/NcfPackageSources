@@ -1,4 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：Register.Database.cs
+    文件功能描述：Register.Database 相关实现
+    
+    
+    创建标识：Senparc - 20200921
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
+
+    修改标识：Senparc - 20260815
+    修改描述：v0.41.0-preview11 增强隔离开发任务与 Sandbox 预览流程
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Models;
@@ -38,6 +58,28 @@ namespace Senparc.Xncf.XncfBuilder
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<XncfPreviewTask>()
+                .HasIndex(task => task.SessionId)
+                .IsUnique();
+            modelBuilder.Entity<XncfPreviewTask>()
+                .HasIndex(task => new { task.ModuleProjectName, task.StartedAtUtc });
+
+            modelBuilder.Entity<XncfPreviewHost>()
+                .HasIndex(host => host.SessionId)
+                .IsUnique();
+            modelBuilder.Entity<XncfPreviewHost>()
+                .HasIndex(host => new { host.Status, host.UpdatedAtUtc });
+
+            modelBuilder.Entity<XncfDevelopmentJob>()
+                .HasIndex(job => job.JobId)
+                .IsUnique();
+            modelBuilder.Entity<XncfDevelopmentJob>()
+                .HasIndex(job => new { job.Stage, job.UpdatedAtUtc });
+            modelBuilder.Entity<XncfDevelopmentJob>()
+                .HasIndex(job => new { job.ModuleProjectName, job.CreatedAtUtc });
+            modelBuilder.Entity<XncfDevelopmentJob>()
+                .HasIndex(job => new { job.OwnerAdminUserId, job.UpdatedAtUtc });
+
             //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
             //modelBuilder.ApplyConfiguration(new DbConfig_WeixinUserConfigurationMapping());
         }

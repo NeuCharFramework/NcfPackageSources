@@ -1,4 +1,21 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：FullSystemConfigCache.cs
+    文件功能描述：FullSystemConfigCache 相关实现
+    
+    
+    创建标识：Senparc - 20200724
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.28.0-preview5 新增数据库升级维护状态与可配置页脚安全处理
+
+----------------------------------------------------------------*/
+
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Senparc.CO2NET;
@@ -8,6 +25,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Core.Utility;
 
 namespace Senparc.Ncf.Core.Cache
 {
@@ -32,12 +50,22 @@ namespace Senparc.Ncf.Core.Cache
             }
             catch (Exception ex)
             {
-                var msg = @$"FullSystemConfigCache 访问数据库异常，推测系统未安装或未正确配置数据库。
+                var msg = @$"FullSystemConfigCache 访问数据库异常，可能是首次安装、架构待升级或数据库连接不可用。
 提示信息：
 {ex.Message}
 {ex.StackTrace}
 ";
-                new NcfUninstallException(msg, null);
+                if (DatabaseInstallState.IsSchemaUpgradeRequired(ex))
+                {
+                    throw new NcfDatabaseUpgradeRequiredException(msg, ex);
+                }
+
+                if (DatabaseInstallState.IsDatabaseUnavailableForInstallation(ex))
+                {
+                    throw new NcfUninstallException(msg, ex);
+                }
+
+                throw new NcfDatabaseException(msg, null, _dataContext.BaseDataContext?.GetType(), ex);
             }
 
             FullSystemConfig fullSystemConfig;

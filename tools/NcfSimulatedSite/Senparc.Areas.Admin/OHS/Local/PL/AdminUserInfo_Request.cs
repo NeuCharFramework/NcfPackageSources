@@ -1,4 +1,19 @@
-﻿using Senparc.Ncf.XncfBase.FunctionRenders;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AdminUserInfo_Request.cs
+    文件功能描述：后台管理员用户请求模型
+    
+    
+    创建标识：Senparc - 20241028
+    
+    修改标识：Senparc - 20260724
+    修改描述：v0.1.0 增强后台模块批量更新并完善多语言管理界面
+
+----------------------------------------------------------------*/
+using Senparc.Ncf.XncfBase.FunctionRenders;
+using Microsoft.Extensions.Localization;
+using Senparc.Areas.Admin;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -100,7 +115,8 @@ namespace Senparc.Areas.Admin.OHS.PL
         {
             if (string.IsNullOrEmpty(Password) && Id == 0)
             {
-                yield return new ValidationResult("Password is required.", new[] { "Password" });
+                var localizer = validationContext.GetService(typeof(IStringLocalizer<AdminResource>)) as IStringLocalizer<AdminResource>;
+                yield return new ValidationResult(localizer?["AdminUserInfo.PasswordRequired"].Value ?? "密码为必填项！", new[] { "Password" });
             }
         }
     }

@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：KnowledgeBaseItem.cs
+    文件功能描述：KnowledgeBaseItem 相关实现
+    
+    
+    创建标识：Senparc - 20260704
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260804
+    修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+
+----------------------------------------------------------------*/
+
 
 using Senparc.Ncf.Core.Models;
 using System;
@@ -29,6 +46,7 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             Content = knowledgeBaseItemDto.Content;
             FileName = knowledgeBaseItemDto.FileName;
             ChunkIndex = knowledgeBaseItemDto.ChunkIndex;
+            NcfFileId = knowledgeBaseItemDto.NcfFileId;
         }
         public void Update(KnowledgeBaseItemDto knowledgeBaseItemDto)
         {
@@ -37,6 +55,8 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
             Content = knowledgeBaseItemDto.Content;
             FileName = knowledgeBaseItemDto.FileName;
             ChunkIndex = knowledgeBaseItemDto.ChunkIndex;
+            NcfFileId = knowledgeBaseItemDto.NcfFileId;
+            ResetEmbedding();
         }
         /// <summary>
         /// 知识库Id
@@ -58,6 +78,11 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
         public string FileName { get; private set; }
 
         /// <summary>
+        /// FileManager 文件 ID。手工文本内容为空。
+        /// </summary>
+        public int? NcfFileId { get; private set; }
+
+        /// <summary>
         /// 文本切片索引总数
         /// </summary>
         public int ChunkIndex { get; private set; }
@@ -76,11 +101,16 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
         /// <summary>
         /// 向量化成功后调用，更新状态和时间戳
         /// </summary>
-        public void EmbeddingSuccessed(int totalChunkIndex)
+        public void EmbeddingSucceeded()
         {
-            this.ChunkIndex = totalChunkIndex;
             this.IsEmbedded = true;
             this.EmbeddedTime = DateTime.Now;
+        }
+
+        public void ResetEmbedding()
+        {
+            IsEmbedded = false;
+            EmbeddedTime = null;
         }
 
 

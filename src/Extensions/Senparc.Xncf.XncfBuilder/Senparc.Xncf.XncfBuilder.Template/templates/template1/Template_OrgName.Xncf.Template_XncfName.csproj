@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>1.0.1-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>1.1.3</Version>
     <AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
     <RootNamespace>Template_OrgName.Xncf.Template_XncfName</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -18,7 +18,23 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			v1.0.0 创世
+      v1.0.0 创世
+      [2026-04-24] Update FunctionRender request templates for simplified values and SelectionList UI metadata compatibility
+      [2026-07-17] v1.1.0 更新示例 XNCF 模块的功能参数与页面本地化能力
+      1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+      2、更新 FunctionRender 与请求模型文案的资源化解析
+      3、同步管理页面与前端交互文案的多语言显示
+      4、补充并统一多语言资源键及资源文件
+      5、补齐模板侧边菜单、页面 ViewImports 与示例页面的多语言资源接入
+      6、按 Application 新架构归置 AppServices 与 DTOs，同步命名空间并精简 OHS 的职责边界
+      7、增加 EventBus 请求-响应回环处理器和示例事件
+      8、同步模板示例的多语言资源与 Application 目录结构
+      [2026-07-26] v1.1.0 补充示例模板 EventBus 请求-响应回环与多语言能力
+      [2026-07-29] v1.1.1 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
+      [2026-07-31] v1.1.2 Dependency update from Senparc.Ncf.AreaBase to 0.23.0-preview4
+      [2026-08-04] v1.1.3 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.AreaBase to 0.23.1-preview5
+      2、Dependency update from Senparc.Xncf.AreasBase to 0.13.3-preview5
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -27,18 +43,19 @@
     <OutputPath>..\..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
+	<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
     <EmbeddedResource Include="wwwroot\**\*" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.20.12-preview.1" />
+    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.21.1-preview1" />
   </ItemGroup>
   <ItemGroup>
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.22.4-preview1" />
     <PackageReference Include="Senparc.Ncf.AreaBase" Version="0.20.5-preview1" />-->
     <ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+
     <None Include="App_Data\SenparcTraceLog\*" />
   </ItemGroup>
   <ItemGroup>

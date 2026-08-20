@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    鏂囦欢鍚嶏細Edit.cshtml.cs
+    鏂囦欢鍔熻兘鎻忚堪锛欵dit.cshtml 鐩稿叧瀹炵幇
+    
+    
+    鍒涘缓鏍囪瘑锛歋enparc - 20250712
+    
+    淇敼鏍囪瘑锛歋enparc - 20260704
+    淇敼鎻忚堪锛歷Next 琛ュ厖鏍囧噯鍖栨枃浠跺ご娉ㄩ噴
+
+    淇敼鏍囪瘑锛歋enparc - 20260731
+    淇敼鎻忚堪锛歷0.24.0-preview5 淇鍏紬鍙疯处鎴锋彁绀轰贡鐮佸苟鎺ュ叆妯″潡澶氳瑷�璧勬簮
+
+----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Service;
@@ -33,7 +50,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
                 var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == id);
                 if (mpAccount == null)
                 {
-                    return RenderError("公众号信息不存在！");
+                    return RenderError(WeixinManagerResource.Get("Account.NotFound", "Account information was not found."));
                 }
 
                 MpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
@@ -53,7 +70,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
                 var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == id);
                 if (mpAccount == null)
                 {
-                    return RenderError("公众号信息不存在！");
+                    return RenderError(WeixinManagerResource.Get("Account.NotFound", "Account information was not found."));
                 }
 
                 mpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
@@ -70,7 +87,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
                 mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == id);
                 if (mpAccount == null)
                 {
-                    return RenderError("公众号信息不存在！");
+                    return RenderError(WeixinManagerResource.Get("Account.NotFound", "Account information was not found."));
                 }
                 _mpAccountService.Mapper.Map(MpAccountDto, mpAccount);
             }
@@ -80,17 +97,17 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
             }
             await _mpAccountService.SaveObjectAsync(mpAccount);
 
-            //重新进行公众号注册
+            //陆泄诤注
             await AccessTokenContainer.RegisterAsync(mpAccount.AppId, mpAccount.AppSecret, $"{mpAccount.Name}-{mpAccount.Id}");
 
             try
             {
-                //立即获取 AccessToken
+                //取 AccessToken
                 await AccessTokenContainer.GetAccessTokenAsync(mpAccount.AppId, true);
             }
             catch (Exception ex)
             {
-                return Ok(new { id = mpAccount.Id, uid = Uid, msg = "账号已经添加，但 AppId 或 Secret 有误，无法正常工作，请检查！" });
+                return Ok(new { id = mpAccount.Id, uid = Uid, msg = WeixinManagerResource.Get("Account.CredentialsUnverified", "Saved, but AppId and AppSecret could not be verified.") });
             }
 
 
@@ -106,7 +123,7 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
                 mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpAccountDto.Id);
                 if (mpAccount == null)
                 {
-                    return RenderError("公众号信息不存在！");
+                    return RenderError(WeixinManagerResource.Get("Account.NotFound", "Account information was not found."));
                 }
 
                 mpAccountDto.AddTime = mpAccount.AddTime;
@@ -119,17 +136,17 @@ namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager
             }
             await _mpAccountService.SaveObjectAsync(mpAccount);
 
-            //重新进行公众号注册
+            //陆泄诤注
             await AccessTokenContainer.RegisterAsync(mpAccount.AppId, mpAccount.AppSecret, $"{mpAccount.Name}-{mpAccount.Id}");
 
             try
             {
-                //立即获取 AccessToken
+                //取 AccessToken
                 await AccessTokenContainer.GetAccessTokenAsync(mpAccount.AppId, true);
             }
             catch (Exception ex)
             {
-                return Ok(new { id = mpAccount.Id, uid = Uid, msg = "账号已经添加，但 AppId 或 Secret 有误，无法正常工作，请检查！" });
+                return Ok(new { id = mpAccount.Id, uid = Uid, msg = WeixinManagerResource.Get("Account.CredentialsUnverified", "Saved, but AppId and AppSecret could not be verified.") });
             }
 
 

@@ -13,13 +13,22 @@ using System.Text;
 namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
 {
     /// <summary>
-    /// 用于生成 SQLServer 数据库 Migration 信息的类，请勿修改
+    /// 用于生成达梦数据库 Migration 信息的类，请勿修改
     /// </summary>
     [MultipleMigrationDbContext(MultipleDatabaseType.Dm, typeof(Register))]
     public class XncfBuilderSenparcEntities_Dm : XncfBuilderSenparcEntities, IMultipleMigrationDbContext
     {
         public XncfBuilderSenparcEntities_Dm(DbContextOptions<XncfBuilderSenparcEntities_Dm> dbContextOptions) : base(dbContextOptions)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // 达梦默认的 NVARCHAR2(32767) 小于预览输出上限，使用 CLOB 避免持久化中断。
+            modelBuilder.Entity<XncfPreviewTask>().Property(task => task.ErrorMessage).HasColumnType("CLOB");
+            modelBuilder.Entity<XncfPreviewTask>().Property(task => task.RecentOutput).HasColumnType("CLOB");
         }
     }
 
@@ -37,10 +46,7 @@ namespace Senparc.Xncf.XncfBuilder.Models.MultipleDatabase
         };
 
         public SenparcDbContextFactory_Dm()
-            : base(
-                 /* Debug模式下项目根目录
-                 /* 用于寻找 App_Data 文件夹，从而找到数据库连接字符串配置信息 */
-                 Path.Combine(AppContext.BaseDirectory, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}"))
+            : base(SenparcDbContextFactoryConfig.RootDictionaryPath)
         {
 
         }

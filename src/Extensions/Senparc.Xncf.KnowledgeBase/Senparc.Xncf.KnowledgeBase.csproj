@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Version>0.1.9-preview.1</Version>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.7.0-preview9</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -14,7 +14,7 @@
     <Owners>Senparc</Owners>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>AI 知识库</Title>
-    <!--<ProjectUrl> https://github.com/NeuCharFramework/NCF</ProjectUrl>
+    <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
@@ -22,6 +22,43 @@
 		[2025-07-27] v0.1.5-preview1s update Knowledge Base
 		[2025-11-01] update basic libraries, including Senparc.AI
 		[2025-01-07] v0.1.8-preview.1 Reset all database migrations
+		[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
+		[2026-07-02] v0.2.2-preview1 新增 PromptRange 与 AgentsManager 使用记录能力，升级 Senparc.AI.AgentKernel 并完成兼容性适配
+		1、新增 PromptRange 与 AgentsManager 使用记录能力
+		2、升级 Senparc.AI.AgentKernel 并完成兼容性适配
+		[2026-07-07] v0.2.3-preview2 Dependency updates from upstream modules
+		1、Dependency update from Senparc.Xncf.AIKernel to 0.13.5-preview4
+		2、升级 Senparc.AI 至 0.27.3、Senparc.AI.AgentKernel 至 0.1.10
+		[2026-07-17] v0.3.0-preview3 为 KnowledgeBase 模块接入统一资源本地化并优化功能文案
+		1、接入统一资源本地化机制，支持模块功能文案按当前文化动态显示
+		2、更新 FunctionRender 与请求模型文案的资源化解析
+		3、统一模块注册信息、菜单名称与功能描述的本地化输出
+		4、同步管理页面与前端交互文案的多语言显示
+		5、同步 AIKernel 0.14.0-preview5 的 NeuChar 模型 API 版本适配
+		[2026-07-29] v0.3.1-preview4 通过文件服务读取知识库文件并限制物理路径
+		1、复用 NcfFileService 读取文件内容，统一文件存储边界校验
+		2、避免篡改数据库路径字段后直接访问站点外部文件
+		[2026-07-31] v0.4.0-preview5 扩展 KnowledgeBase 管理界面的多语言能力
+		1、补齐知识库编辑、检索测试、菜单与交互文案的多语言资源
+		2、升级 Senparc.AI 组件与 CO2NET WebApi 兼容依赖
+		[2026-08-04] v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
+		1、扩展知识库及条目生命周期字段并补齐六类数据库迁移与快照
+		2、完善知识库管理页、应用服务、召回测试与请求响应模型
+		3、支持 AgentsManager 按知识库状态完成关联和调用
+		[2026-08-08] v0.5.1-preview7 Dependency updates from upstream projects
+		1、Dependency update from Senparc.Ncf.AreaBase to 0.23.2-preview6
+		2、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
+		3、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
+		4、Dependency update from Senparc.Xncf.AIKernel to 0.15.2-preview9
+		5、Dependency update from Senparc.Xncf.FileManager to 0.5.1-preview6
+		6、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+		[2026-08-13] v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
+		1、增加知识库文件删除边界保护并同步资源服务策略
+		2、优化知识库列表、召回测试页面及多语言交互反馈
+		3、适配统一 Agent 执行和文件资源边界变更
+		[2026-08-15] v0.7.0-preview9 增强知识库向量发布状态识别
+		1、区分已发布的隔离向量集合、待处理和旧版切片向量状态
+		2、在知识库管理页展示可供 Agent 绑定的真实发布状态，避免将旧版向量数据误报为已发布
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -31,8 +68,12 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <EmbeddedResource Include="wwwroot\**\*" />
-    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.6-preview.1" />
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
@@ -52,4 +93,5 @@
   <ItemGroup>
     <None Include="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
 </Project>

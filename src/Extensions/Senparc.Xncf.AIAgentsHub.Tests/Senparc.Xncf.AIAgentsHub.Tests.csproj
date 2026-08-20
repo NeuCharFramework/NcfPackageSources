@@ -1,7 +1,65 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
+
+    <Version>0.0.9</Version>
+    <PackageReleaseNotes>
+      [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+      1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+      [2026-07-07] v0.0.2 Dependency updates from upstream modules
+      1、Dependency update from Senparc.Xncf.SystemManager to 0.14.2-preview2
+      [2026-07-17] v0.0.3 同步上游项目版本并适配统一本地化能力
+      1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.1
+      2、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
+      3、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.2-preview2
+      4、Dependency update from Senparc.Ncf.Database to 0.21.2-preview2
+      5、Dependency update from Senparc.Ncf.XncfBase to 0.23.3-preview2
+      6、Dependency update from Senparc.Xncf.AIAgentsHub to 0.13.0-preview3
+      7、Dependency update from Senparc.Xncf.XncfBuilder to 0.37.0-preview5
+      8、Dependency update from Senparc.Xncf.AreasBase to 0.13.0-preview2
+      9、Dependency update from Senparc.Xncf.Menu to 0.14.0-preview2
+      10、Dependency update from Senparc.Xncf.SystemCore to 0.14.0-preview2
+      11、Dependency update from Senparc.Xncf.SystemManager to 0.15.0-preview3
+      12、Dependency update from Senparc.Xncf.SystemPermission to 0.15.0-preview2
+      13、Dependency update from Senparc.Xncf.Tenant to 0.15.0-preview2
+      14、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.0-preview2
+      15、同步 AIKernel、AgentsManager 与 PromptRange 当前版本的功能兼容性更新
+      [2026-07-29] v0.0.4 Dependency update from Senparc.Ncf.AreaBase to 0.22.0-preview3
+      [2026-07-31] v0.0.5 Dependency update from Senparc.Ncf.Core to 0.27.0-preview4
+      [2026-08-04] v0.0.6 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.4
+      2、Dependency update from Senparc.Ncf.Core to 0.28.0-preview5
+      3、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.5-preview5
+      4、Dependency update from Senparc.Ncf.Database to 0.21.5-preview5
+      5、Dependency update from Senparc.Ncf.XncfBase to 0.24.0-preview5
+      6、Dependency update from Senparc.Xncf.AIAgentsHub to 0.13.3-preview6
+      7、Dependency update from Senparc.Xncf.XncfBuilder to 0.39.0-preview8
+      8、Dependency update from Senparc.Xncf.AreasBase to 0.13.3-preview5
+      9、Dependency update from Senparc.Xncf.Menu to 0.14.3-preview5
+      10、Dependency update from Senparc.Xncf.SystemCore to 0.14.3-preview5
+      11、Dependency update from Senparc.Xncf.SystemManager to 0.15.3-preview6
+      12、Dependency update from Senparc.Xncf.SystemPermission to 0.15.3-preview5
+      13、Dependency update from Senparc.Xncf.Tenant to 0.15.3-preview5
+      14、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.3-preview5
+      [2026-08-08] v0.0.7 Dependency updates from upstream projects
+      1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.5
+      2、Dependency update from Senparc.Ncf.Core to 0.28.1-preview6
+      3、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.6-preview6
+      4、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
+      5、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
+      6、Dependency update from Senparc.Xncf.AIAgentsHub to 0.13.4-preview7
+      7、Dependency update from Senparc.Xncf.XncfBuilder to 0.39.1-preview9
+      8、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
+      9、Dependency update from Senparc.Xncf.Menu to 0.14.4-preview6
+      10、Dependency update from Senparc.Xncf.SystemCore to 0.14.4-preview6
+      11、Dependency update from Senparc.Xncf.SystemManager to 0.15.4-preview7
+      12、Dependency update from Senparc.Xncf.SystemPermission to 0.15.4-preview6
+      13、Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
+      14、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
+      [2026-08-13] v0.0.8 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7; Senparc.Xncf.AIAgentsHub to 0.13.5-preview8; Senparc.Xncf.XncfBuilder to 0.40.0-preview10
+      [2026-08-15] v0.0.9 Dependency update from Senparc.Ncf.Core.Tests to 0.0.7; Senparc.Ncf.Core to 0.29.0-preview8; Senparc.Xncf.XncfBuilder to 0.41.0-preview11
+</PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 

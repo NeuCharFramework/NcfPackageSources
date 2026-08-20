@@ -1,4 +1,21 @@
-﻿using Senparc.Ncf.Core.AppServices;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：NameSpaceAppService.cs
+    文件功能描述：NameSpaceAppService 相关实现
+    
+    
+    创建标识：Senparc - 20260704
+    
+    修改标识：Senparc - 20260704
+    修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260717
+    修改描述：v0.22.0-preview2 为 ChangeNamespace 模块接入统一资源本地化并优化功能文案
+
+----------------------------------------------------------------*/
+
+using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.ChangeNamespace.OHS.PL;
 using System;
 using System.Collections.Generic;
@@ -25,7 +42,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
         }
 
 
-        [FunctionRender("修改命名空间", "修改所有源码在 .cs, .cshtml 中的命名空间", typeof(Register))]
+        [FunctionRender(typeof(ChangeNamespaceResource), "Function.ChangeNamespace.Change.Name", "Function.ChangeNamespace.Change.Description", typeof(Register))]
         public async Task<StringAppResponse> Change(NameSpace_ChangeRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
@@ -158,7 +175,7 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
 
         #endregion
 
-        [FunctionRender("还原命名空间", "还原所有源码在 .cs, .cshtml 中的命名空间为 NCF 默认（建议在断崖式更新之前进行此操作）。", typeof(Register))]
+        [FunctionRender(typeof(ChangeNamespaceResource), "Function.ChangeNamespace.Restore.Name", "Function.ChangeNamespace.Restore.Description", typeof(Register))]
         public async Task<StringAppResponse> Restore(NameSpace_RestoreRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
@@ -180,12 +197,12 @@ namespace Senparc.Xncf.ChangeNamespace.OHS.Local
         }
 
 
-        [FunctionRender("下载官方 NCF 源码", "修改所有源码在 .cs, .cshtml 中的命名空间。", typeof(Register))]
+        [FunctionRender(typeof(ChangeNamespaceResource), "Function.ChangeNamespace.Download.Name", "Function.ChangeNamespace.Download.Description", typeof(Register))]
         public async Task<StringAppResponse> DownloadSourceCode(NameSpace_DownloadSourceCodeRequest request)
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
-                if (Enum.TryParse<NameSpace_DownloadSourceCodeRequest.Parameters_Site>(request.Site.SelectedValues.FirstOrDefault(), out var siteType))
+                if (Enum.TryParse<NameSpace_DownloadSourceCodeRequest.Parameters_Site>(request.Site, out var siteType))
                 {
                     switch (siteType)
                     {

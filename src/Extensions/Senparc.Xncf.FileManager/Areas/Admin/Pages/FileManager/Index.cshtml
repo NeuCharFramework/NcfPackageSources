@@ -1,104 +1,120 @@
-﻿@page
+@page
 @model Senparc.Xncf.FileManager.Areas.FileManager.Pages.Index
-@inject Microsoft.Extensions.Localization.IStringLocalizerFactory LocalizerFactory
 @{
-    var AR = LocalizerFactory.Create("Senparc.Areas.Admin.Resources.AdminResource", "Senparc.Areas.Admin");
-    var CR = LocalizerFactory.Create("Senparc.Ncf.XncfBase.Resources.CommonResource", "Senparc.Ncf.XncfBase");
-    ViewData["Title"] = AR["FileManager.HomeTitle"];
+    ViewData["Title"] = "文件资源管理";
     Layout = "_Layout_Vue";
 }
 
-@section breadcrumbs{
-    <el-breadcrumb-item>@CR["Common.ExtensionModules"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@AR["FileManager.Management"]</el-breadcrumb-item>
-    <el-breadcrumb-item>@CR["Common.Home"]</el-breadcrumb-item>
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>文件资源管理</el-breadcrumb-item>
 }
 
-@section style{
-    <style>
-        .hidden {display:none;}
-        .layout { display:flex; gap:16px; }
-        .folder-panel { width:260px; }
-        .content-panel { flex:1; }
-        .folder-breadcrumb { margin: 6px 0 12px; }
-    </style>
+@section style {
+    <link rel="stylesheet" href="~/css/Admin/FileManager/index.css" />
 }
 
-<div class="layout">
-    <div class="folder-panel">
+<div class="file-manager-layout">
+    @Html.AntiForgeryToken()
+    <aside class="file-manager-folders">
         <el-card shadow="never">
-            <div slot="header" class="clearfix">
-                <span>@AR["FileManager.Folder"]</span>
-                <el-button style="float: right; padding: 3px 6px" type="text" @@click="showCreateFolderDialog">@CR["Common.New"]</el-button>
+            <div slot="header" class="file-manager-card-header">
+                <span>{{ resourceScopeName }}文件夹</span>
+                <el-button type="text" size="mini" @@click="showCreateFolderDialog">新建</el-button>
             </div>
-
+            <el-button class="file-manager-root-button" :class="{ 'is-active': currentFolderId === null }" type="text" @@click="enterFolder(null)">
+                <i class="el-icon-folder-opened"></i> 根目录
+            </el-button>
             <el-tree
+                :key="folderTreeKey"
                 ref="folderTree"
                 :data="folderTree"
                 :props="folderTreeProps"
                 node-key="id"
                 lazy
-                :load="loadFolderChildren"
                 highlight-current
                 :expand-on-click-node="false"
+                :load="loadFolderChildren"
                 @@node-click="onFolderNodeClick">
-                <span class="custom-tree-node" slot-scope="{ node, data }">
-                    <i class="el-icon-folder"></i>
-                    <span style="margin-left:6px;">{{ data.name }}</span>
+                <span class="file-manager-tree-node" slot-scope="{ node, data }">
+                    <span><i class="el-icon-folder"></i> {{ data.name }}</span>
+                    <span class="file-manager-tree-actions">
+                        <el-button type="text" icon="el-icon-edit" @@click.stop="showEditFolderDialog(data)"></el-button>
+                        <el-button type="text" icon="el-icon-delete" @@click.stop="deleteFolder(data)"></el-button>
+                    </span>
                 </span>
             </el-tree>
         </el-card>
-    </div>
+    </aside>
 
-    <div class="content-panel">
-        <div class="filter-container">
-            <el-button type="primary" icon="el-icon-upload" size="small" @@click="showUploadDialog">@CR["Common.UploadFile"]</el-button>
-            <el-button size="small" @@click="reloadFolderTree">@AR["FileManager.RefreshFolders"]</el-button>
+    <main class="file-manager-content">
+        <div class="filter-container file-manager-toolbar">
+            <el-select v-model="resourceScope" size="small" class="file-manager-scope-select" @@change="changeResourceScope">
+                <el-option :value="100" label="知识库源文件"></el-option>
+                <el-option :value="200" label="站点静态资源"></el-option>
+            </el-select>
+            <el-button type="primary" icon="el-icon-upload" size="small" @@click="showUploadDialog">上传文件</el-button>
+            <el-button size="small" icon="el-icon-refresh" @@click="reloadFolderTree">刷新</el-button>
+            <el-button type="text" size="small" icon="el-icon-question" @@click="guideDialogVisible = true">使用说明</el-button>
         </div>
+
+        <el-alert
+            class="file-manager-scope-hint"
+            type="info"
+            :closable="false"
+            show-icon
+            :title="scopeHint">
+        </el-alert>
 
         <div class="folder-breadcrumb">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item>
-                    <a href="javascript:void(0)" @@click="enterFolder(null)">@AR["FileManager.RootDirectory"]</a>
-                </el-breadcrumb-item>
-                <el-breadcrumb-item v-for="p in folderPath" :key="p.id">
-                    <a href="javascript:void(0)" @@click="enterFolder(p.id)">{{p.name}}</a>
+                <el-breadcrumb-item><a href="javascript:void(0)" @@click="enterFolder(null)">根目录</a></el-breadcrumb-item>
+                <el-breadcrumb-item v-for="item in folderPath" :key="item.id">
+                    <a href="javascript:void(0)" @@click="enterFolder(item.id)">{{ item.name }}</a>
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
 
         <el-table :data="tableData" v-loading="tableLoading" border>
-            <el-table-column prop="id" label="@AR["Auto.UI.34ab8c4e2f10"]" width="auto" class-name="hidden"></el-table-column>
-            <el-table-column prop="fileName" label="@CR["Common.FileName"]" width="auto"></el-table-column>
-            <el-table-column prop="fileSize" label="@CR["Common.FileSize"]" width="120">
+            <template slot="empty">
+                <div class="file-manager-empty">
+                    <i class="el-icon-folder-opened"></i>
+                    <strong>{{ resourceScopeName }}还没有文件</strong>
+                    <span>{{ isSiteAsset ? '先上传资源，确认预览后再公开并复制 URL。' : '先上传可提取资料，再到知识库中关联并向量化。' }}</span>
+                    <el-button type="primary" size="mini" @@click="showUploadDialog">上传第一个文件</el-button>
+                </div>
+            </template>
+            <el-table-column prop="fileName" label="文件名" min-width="190"></el-table-column>
+            <el-table-column prop="fileSize" label="大小" width="110">
+                <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
+            </el-table-column>
+            <el-table-column prop="fileType" label="类型" width="110">
+                <template slot-scope="scope">{{ fileTypeLabel(scope.row.fileType) }}</template>
+            </el-table-column>
+            <el-table-column prop="contentType" label="MIME" min-width="150"></el-table-column>
+            <el-table-column v-if="isSiteAsset" label="发布状态" width="110">
                 <template slot-scope="scope">
-                    {{ formatFileSize(scope.row.fileSize) }}
+                    <el-tag :type="scope.row.accessLevel === 100 ? 'success' : 'info'" size="mini">
+                        {{ scope.row.accessLevel === 100 ? '已公开' : '私有' }}
+                    </el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="fileType" label="@CR["Common.FileType"]" width="100">
+            <el-table-column prop="description" label="备注" min-width="180">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.fileType===1">@AR["FileManager.FileTypeText"]</span>
-                    <span v-else-if="scope.row.fileType===2">Word</span>
-                    <span v-else-if="scope.row.fileType===3">PowerPoint</span>
-                    <span v-else-if="scope.row.fileType===4">Excel</span>
-                    <span v-else-if="scope.row.fileType===5">@AR["FileManager.FileTypeCode"]</span>
-                    <span v-else>@AR["FileManager.FileTypeOther"]</span>
+                    <el-input v-model="scope.row.description" size="small" @@blur="handleNoteChange(scope.row)"></el-input>
                 </template>
             </el-table-column>
-            <el-table-column prop="description" label="@CR["Common.Remark"]" width="auto">
-                <template slot-scope="scope">
-                    <el-input v-model="scope.row.description" @@blur="handleNoteChange(scope.row)" size="small"></el-input>
-                </template>
+            <el-table-column prop="uploadTime" label="上传时间" width="170">
+                <template slot-scope="scope">{{ dateFormatter(scope.row.uploadTime) }}</template>
             </el-table-column>
-            <el-table-column prop="uploadTime" label="@AR["FileManager.UploadTime"]" width="180">
+            <el-table-column label="操作" width="310">
                 <template slot-scope="scope">
-                    {{ dateFormatter(scope.row.uploadTime) }}
-                </template>
-            </el-table-column>
-            <el-table-column label="@CR["Common.Action"]" width="220">
-                <template slot-scope="scope">
-                    <el-button type="primary" size="mini" @@click="downloadFile(scope.row)">@CR["Common.Download"]</el-button>
-                    <el-button type="danger" size="mini" @@click="deleteFile(scope.row)">@CR["Common.Delete"]</el-button>
+                    <el-button type="primary" size="mini" @@click="downloadFile(scope.row)">下载</el-button>
+                    <el-button v-if="isSiteAsset" size="mini" @@click="setPublication(scope.row, scope.row.accessLevel !== 100)">
+                        {{ scope.row.accessLevel === 100 ? '取消公开' : '公开' }}
+                    </el-button>
+                    <el-button v-if="isSiteAsset && scope.row.publicUrl" size="mini" @@click="copyPublicUrl(scope.row)">复制 URL</el-button>
+                    <el-button type="danger" size="mini" @@click="deleteFile(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -110,285 +126,62 @@
                 :current-page="page.page"
                 :page-sizes="[10, 20, 30, 40]"
                 :page-size="page.size"
-                layout="sizes, prev, pager, next"
+                layout="total, sizes, prev, pager, next"
                 :total="total">
             </el-pagination>
         </div>
-    </div>
+    </main>
 
-    <el-dialog title="@CR["Common.UploadFile"]" :visible.sync="uploadDialog.visible" width="500px">
+    <el-dialog title="上传文件" :visible.sync="uploadDialog.visible" width="540px">
         <el-upload
-            class="upload-demo"
             ref="upload"
             action="#"
             :auto-upload="false"
             :multiple="true"
             :show-file-list="true"
-            :on-success="handleUploadSuccess"
-            :on-error="handleUploadError"
             :on-change="handleFileChange"
-            :on-progress="handleProgress"
             :before-upload="beforeUpload"
             :file-list="uploadDialog.fileList">
-            <el-button slot="trigger" size="small" type="primary">@CR["Common.SelectFile"]</el-button>
-            <div slot="tip" class="el-upload__tip">@AR["Auto.UI.be358535f8af"]</div>
+            <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
+            <el-button size="small" icon="el-icon-folder-opened" @@click.stop="chooseUploadFolder">选择文件夹</el-button>
+            <div slot="tip" class="el-upload__tip">{{ uploadExtensionHint }}。选择文件夹后会保留其完整层级结构；每批最多 20 个文件，系统会自动分批上传。</div>
         </el-upload>
-        <div style="margin-top:8px;">
-            <el-alert type="info" show-icon title="@AR["FileManager.UploadTo"]" :description="currentFolderId ? (folderLabel + ' #' + currentFolderId) : rootLabel"></el-alert>
+        <input ref="folderUploadInput" class="file-manager-folder-input" type="file" webkitdirectory directory multiple @@change="handleFolderSelection" />
+        <el-alert v-if="uploadFolderSummary" class="file-manager-folder-upload-summary" type="success" :closable="false" show-icon :title="uploadFolderSummary"></el-alert>
+        <el-alert class="file-manager-upload-target" type="info" show-icon :closable="false" title="上传位置" :description="uploadTargetText"></el-alert>
+        <el-progress v-if="uploadDialog.uploading" :percentage="uploadDialog.progress" :stroke-width="10" status="success"></el-progress>
+        <div v-for="file in uploadDialog.fileList" :key="file.uid" class="file-manager-upload-note">
+            <el-input v-model="file.description" :placeholder="file.name + ' 的备注'" size="small"></el-input>
         </div>
-
-        <div v-for="file in uploadDialog.fileList" :key="file.uid" style="margin-top: 10px;">
-            <el-input v-model="file.description" :placeholder="@AR["Auto.UI.c63da45e7063"]" size="small">
-                <template slot="prepend">{{file.name}}</template>
-            </el-input>
-        </div>
-
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="cancelUpload">@CR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="submitUpload" :loading="uploadDialog.uploading">@CR["Common.Confirm"]</el-button>
+            <el-button @@click="cancelUpload">取消</el-button>
+            <el-button type="primary" @@click="submitUpload" :loading="uploadDialog.uploading">上传</el-button>
         </span>
     </el-dialog>
 
-    <el-dialog title="@AR["FileManager.NewFolder"]" :visible.sync="createFolderDialog.visible" width="420px">
-        <el-form :model="createFolderDialog.form" label-width="80px">
-            <el-form-item label="@CR["Common.Name"]">
-                <el-input v-model="createFolderDialog.form.name" placeholder="@AR["FileManager.PleaseInputFolderName"]"></el-input>
-            </el-form-item>
-            <el-form-item label="@CR["Common.Remark"]">
-                <el-input type="textarea" v-model="createFolderDialog.form.description" placeholder="@CR["Common.RemarkOptional"]" rows="3"></el-input>
-            </el-form-item>
+    <el-dialog :title="folderDialog.editing ? '编辑文件夹' : '新建文件夹'" :visible.sync="folderDialog.visible" width="420px">
+        <el-form :model="folderDialog.form" label-width="80px">
+            <el-form-item label="名称"><el-input v-model="folderDialog.form.name" placeholder="请输入文件夹名称"></el-input></el-form-item>
+            <el-form-item label="备注"><el-input type="textarea" v-model="folderDialog.form.description" placeholder="可选" rows="3"></el-input></el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @@click="createFolderDialog.visible=false">@CR["Common.Cancel"]</el-button>
-            <el-button type="primary" @@click="submitCreateFolder" :loading="createFolderDialog.loading">@CR["Common.Confirm"]</el-button>
+            <el-button @@click="folderDialog.visible=false">取消</el-button>
+            <el-button type="primary" @@click="submitFolder" :loading="folderDialog.loading">确定</el-button>
         </span>
+    </el-dialog>
+
+    <el-dialog title="文件资源管理使用说明" :visible.sync="guideDialogVisible" width="520px">
+        <ol class="file-manager-guide">
+            <li><strong>先选用途：</strong>知识库资料和站点静态资源会物理隔离，不能互相转换。</li>
+            <li><strong>再放位置：</strong>在左侧选择或新建文件夹；刷新页面后，当前用途和文件夹会保留在地址栏中。</li>
+            <li v-if="!isSiteAsset"><strong>知识库资料：</strong>上传后到“知识库管理 → 配置”关联资料，保存后点击“向量化”。</li>
+            <li v-else><strong>站点资源：</strong>上传默认私有；确认无误后点“公开”，再复制生成的 URL 到站点内容中。</li>
+        </ol>
+        <span slot="footer" class="dialog-footer"><el-button type="primary" @@click="guideDialogVisible = false">我知道了</el-button></span>
     </el-dialog>
 </div>
 
-@section scripts{
-    <script>
-        new Vue({
-            el: "#app",
-            data: function () {
-                return {
-                    tableData: [],
-                    tableLoading: false,
-                    page: { page: 1, size: 10 },
-                    total: 0,
-                    currentFolderId: null,
-                    folderPath: [],
-                    folderLabel: '@AR["FileManager.Folder"]',
-                    rootLabel: '@AR["FileManager.RootDirectory"]',
-                    folderTree: [{ id: null, name: '@AR["FileManager.RootDirectory"]', hasChildren: true }],
-                    folderTreeProps: {
-                        label: 'name',
-                        children: 'children',
-                        isLeaf: function (data) { return data && data.hasChildren === false; }
-                    },
-                    uploadDialog: { visible: false, fileList: [], uploading: false },
-                    createFolderDialog: { visible: false, loading: false, form: { name: '', description: '' } }
-                };
-            },
-            created: function () {
-                this.getList();
-            },
-            methods: {
-                dateFormatter: function (date) {
-                    return new Date(date).toLocaleString();
-                },
-                formatFileSize: function (size) {
-                    var units = ['B', 'KB', 'MB', 'GB'];
-                    var index = 0;
-                    while (size >= 1024 && index < units.length - 1) {
-                        size = size / 1024;
-                        index++;
-                    }
-                    return size.toFixed(2) + ' ' + units[index];
-                },
-                getList: async function () {
-                    this.tableLoading = true;
-                    try {
-                        var url = '/Admin/FileManager/Index?handler=List&page=' + this.page.page + '&pageSize=' + this.page.size;
-                        if (this.currentFolderId != null) {
-                            url += '&folderId=' + this.currentFolderId;
-                        }
-                        var res = await axios.get(url);
-                        this.tableData = res.data.data;
-                        this.total = res.data.data.totalCount;
-                    } finally {
-                        this.tableLoading = false;
-                    }
-                },
-                handleCurrentChange: function (val) {
-                    this.page.page = val;
-                    this.getList();
-                },
-                handleSizeChange: function (val) {
-                    this.page.size = val;
-                    this.page.page = 1;
-                    this.getList();
-                },
-                loadFolderChildren: async function (node, resolve) {
-                    try {
-                        var parentId = node.level === 0 ? null : node.data.id;
-                        var url = '/Admin/FileManager/Index?handler=Folders';
-                        if (parentId != null) {
-                            url += '&parentId=' + parentId;
-                        }
-                        var res = await axios.get(url);
-                        var list = (res.data && res.data.data) ? res.data.data : (res.data || []);
-                        resolve((list || []).map(function (f) {
-                            return {
-                                id: f.id,
-                                name: f.name,
-                                description: f.description,
-                                parentId: f.parentId,
-                                hasChildren: true
-                            };
-                        }));
-                    } catch (e) {
-                        console.error(e);
-                        resolve([]);
-                    }
-                },
-                onFolderNodeClick: function (data) {
-                    this.enterFolder(data.id === null ? null : data.id);
-                },
-                enterFolder: async function (id) {
-                    this.currentFolderId = id;
-                    this.page.page = 1;
-                    await this.getList();
-                    await this.buildFolderPath(id);
-                },
-                buildFolderPath: async function (id) {
-                    if (id == null) {
-                        this.folderPath = [];
-                        return;
-                    }
-                    if (!this.$refs.folderTree || typeof this.$refs.folderTree.getNode !== 'function') {
-                        this.folderPath = [];
-                        return;
-                    }
-                    var node = this.$refs.folderTree.getNode(id);
-                    if (!node) {
-                        this.folderPath = [];
-                        return;
-                    }
-                    var path = [];
-                    var cur = node;
-                    while (cur && cur.data && cur.data.id !== null) {
-                        path.unshift({ id: cur.data.id, name: cur.data.name });
-                        cur = cur.parent;
-                    }
-                    this.folderPath = path;
-                },
-                reloadFolderTree: function () {
-                    var self = this;
-                    this.folderTree = [{ id: null, name: this.rootLabel, hasChildren: true }];
-                    this.$nextTick(function () {
-                        if (self.$refs.folderTree && typeof self.$refs.folderTree.setCurrentKey === 'function') {
-                            self.$refs.folderTree.setCurrentKey(self.currentFolderId);
-                        }
-                    });
-                },
-                handleNoteChange: async function (row) {
-                    try {
-                        await axios.post('/Admin/FileManager/Index?handler=EditNote', { id: row.id, note: row.description });
-                        this.$message.success('@AR["Common.UpdateSuccess"]');
-                    } catch {
-                        this.$message.error('@AR["Common.UpdateFailed"]');
-                    }
-                },
-                deleteFile: async function (row) {
-                    try {
-                        await this.$confirm('@AR["Common.ConfirmDeleteFile"]?', '@AR["Auto.UI.390a4d9af6ec"]', { type: 'warning' });
-                        await axios.post('/Admin/FileManager/Index?handler=Delete&id=' + row.id);
-                        this.$message.success('@AR["Common.DeleteSuccess"]');
-                        this.getList();
-                    } catch {
-                        this.$message.error('@AR["Common.DeleteFailed"]');
-                    }
-                },
-                downloadFile: function (row) {
-                    window.open('/Admin/FileManager/Index?handler=Download&id=' + row.id);
-                },
-                showUploadDialog: function () {
-                    this.uploadDialog.visible = true;
-                    this.uploadDialog.fileList = [];
-                },
-                handleFileChange: function (file, fileList) {
-                    if (!file.description) {
-                        this.$set(file, 'description', '');
-                    }
-                    this.uploadDialog.fileList = fileList;
-                },
-                handleProgress: function () { },
-                beforeUpload: function () {
-                    return false;
-                },
-                submitUpload: async function () {
-                    if (this.uploadDialog.fileList.length === 0) {
-                        this.$message.warning('@AR["Common.PleaseSelectFileToUpload"]');
-                        return;
-                    }
-
-                    this.uploadDialog.uploading = true;
-                    try {
-                        var formData = new FormData();
-                        this.uploadDialog.fileList.forEach(function (file) {
-                            formData.append('files', file.raw);
-                            formData.append('descriptions', file.description || '');
-                        });
-                        if (this.currentFolderId != null) {
-                            formData.append('folderId', this.currentFolderId);
-                        }
-
-                        await axios.post('/Admin/FileManager/Index?handler=Upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-
-                        this.$message.success('@AR["Common.UploadSuccess"]');
-                        this.uploadDialog.visible = false;
-                        this.getList();
-                    } catch (error) {
-                        this.$message.error('@AR["Common.UploadFailed"]：' + (error && error.message ? error.message : ''));
-                    } finally {
-                        this.uploadDialog.uploading = false;
-                    }
-                },
-                cancelUpload: function () {
-                    this.uploadDialog.visible = false;
-                },
-                showCreateFolderDialog: function () {
-                    this.createFolderDialog.visible = true;
-                    this.createFolderDialog.form = { name: '', description: '' };
-                },
-                submitCreateFolder: async function () {
-                    if (!this.createFolderDialog.form.name) {
-                        this.$message.warning('@AR["FileManager.PleaseInputFolderName"]');
-                        return;
-                    }
-                    this.createFolderDialog.loading = true;
-                    try {
-                        await axios.post('/Admin/FileManager/Index?handler=CreateFolder', {
-                            name: this.createFolderDialog.form.name,
-                            description: this.createFolderDialog.form.description || '',
-                            parentId: this.currentFolderId
-                        });
-                        this.$message.success('@AR["Common.CreateSuccess"]');
-                        this.createFolderDialog.visible = false;
-                        this.reloadFolderTree();
-                    } catch (e) {
-                        console.error(e);
-                        this.$message.error('@AR["Common.CreateFailed"]');
-                    } finally {
-                        this.createFolderDialog.loading = false;
-                    }
-                },
-                handleUploadSuccess: function () { },
-                handleUploadError: function (err) {
-                    var msg = err && err.message ? err.message : (err ? String(err) : '');
-                    this.$message.error('@AR["Common.UploadFailed"]：' + msg);
-                }
-            }
-        });
-    </script>
+@section scripts {
+    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
+    <script src="~/js/Admin/FileManager/index.js"></script>
 }

@@ -1,0 +1,18 @@
+@using System.Text.Json
+@using Microsoft.Extensions.Localization
+@using Senparc.Xncf.AIKernel
+@inject IStringLocalizer<AIKernelResource> XR
+@{
+    var translations = XR.GetAllStrings(includeParentCultures: true)
+        .ToDictionary(item => $"AIKernel.{item.Name}", item => item.Value);
+    var sourceTranslations = XR.GetAllStrings(includeParentCultures: true)
+        .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal))
+        .Select(item => item.Value.Split(new[] { "||" }, 2, StringSplitOptions.None))
+        .Where(parts => parts.Length == 2)
+        .GroupBy(parts => parts[0])
+        .ToDictionary(group => group.Key, group => group.First()[1]);
+}
+<script>
+    window.ncfI18n = Object.assign(window.ncfI18n || {}, @Html.Raw(JsonSerializer.Serialize(translations)));
+    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)));
+</script>

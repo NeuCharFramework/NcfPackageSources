@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Module.WeixinManager.MenuName" xml:space="preserve">
+    <value>Weixin Management</value>
+  </data>
+  <data name="Module.WeixinManager.Description" xml:space="preserve">
+    <value>Official Senparc Weixin administration module for basic WeChat Official Account and Mini Program management. Built on Senparc.Weixin SDK: https://github.com/JeffreySu/WeiXinMPSDK</value>
+  </data>
+  <data name="Area.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Area.ApiDocumentation" xml:space="preserve">
+    <value>Web API documentation</value>
+  </data>
+  <data name="Area.WeixinManager.OfficialAccounts" xml:space="preserve">
+    <value>Official Account management</value>
+  </data>
+  <data name="Area.WeixinManager.Users" xml:space="preserve">
+    <value>User management</value>
+  </data>
+  <data name="Account.EditTitle" xml:space="preserve">
+    <value>Edit Official Account</value>
+  </data>
+  <data name="Account.CreateTitle" xml:space="preserve">
+    <value>Add Official Account</value>
+  </data>
+  <data name="Account.AdminRemark" xml:space="preserve">
+    <value>Administrative Note</value>
+  </data>
+  <data name="Account.ServerUrl" xml:space="preserve">
+    <value>Server URL configured in WeChat</value>
+  </data>
+  <data name="Account.YourDomain" xml:space="preserve">
+    <value>[Your domain]</value>
+  </data>
+  <data name="Account.RestartNotice" xml:space="preserve">
+    <value>Note: Newly added accounts take effect after the system restarts.</value>
+  </data>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Common.Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>扩展模块||Extension Modules</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>模块管理||Module Management</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>微信管理||WeChat Management</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>公众号控制中心||Official Account Dashboard</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>公众号数量||Official Accounts</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>已经录入系统的公众号||Official accounts added to the system</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>运行账号数量||Active Accounts</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>已经生效并连接微信服务器的账号数量||Accounts active and connected to WeChat servers</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>总微信用户数||Total WeChat Users</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>在当前平台交互过或自动拉取关注的用户数||Users who interacted with or were synchronized to this platform</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>今日新增用户数||New Users Today</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>当天已经同步或添加到平台的用户数量||Users synchronized or added today</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>查看用户||View Users</value>
+  </data>
+  <data name="Frontend.014" xml:space="preserve">
+    <value>查看分组||View Groups</value>
+  </data>
+  <data name="Frontend.015" xml:space="preserve">
+    <value>查看标签||View Tags</value>
+  </data>
+  <data name="Frontend.016" xml:space="preserve">
+    <value>对话||Conversations</value>
+  </data>
+  <data name="Frontend.017" xml:space="preserve">
+    <value>编辑||Edit</value>
+  </data>
+  <data name="Frontend.018" xml:space="preserve">
+    <value>AccessToken 凭证有效期||AccessToken Validity</value>
+  </data>
+  <data name="Frontend.019" xml:space="preserve">
+    <value>AccessToken 凭证状态||AccessToken Status</value>
+  </data>
+  <data name="Frontend.020" xml:space="preserve">
+    <value>公众号管理||Official Account Management</value>
+  </data>
+  <data name="Frontend.021" xml:space="preserve">
+    <value>增加||Add</value>
+  </data>
+  <data name="Frontend.022" xml:space="preserve">
+    <value>删除||Delete</value>
+  </data>
+  <data name="Frontend.023" xml:space="preserve">
+    <value>名称||Name</value>
+  </data>
+  <data name="Frontend.024" xml:space="preserve">
+    <value>备注||Note</value>
+  </data>
+  <data name="Frontend.025" xml:space="preserve">
+    <value>说明||Description</value>
+  </data>
+  <data name="Frontend.026" xml:space="preserve">
+    <value>添加时间||Added At</value>
+  </data>
+  <data name="Frontend.027" xml:space="preserve">
+    <value>消息URL||Message URL</value>
+  </data>
+  <data name="Frontend.028" xml:space="preserve">
+    <value>打开||Open</value>
+  </data>
+  <data name="Frontend.029" xml:space="preserve">
+    <value>操作||Actions</value>
+  </data>
+  <data name="Frontend.030" xml:space="preserve">
+    <value>用户管理||User Management</value>
+  </data>
+  <data name="Frontend.031" xml:space="preserve">
+    <value>公众号名称||Official Account Name</value>
+  </data>
+  <data name="Frontend.032" xml:space="preserve">
+    <value>微信后台配置的服务器地址(URL)||Server URL configured in WeChat</value>
+  </data>
+  <data name="Frontend.033" xml:space="preserve">
+    <value>[您的域名]||[Your domain]</value>
+  </data>
+  <data name="Frontend.034" xml:space="preserve">
+    <value>[你的域名]||[Your domain]</value>
+  </data>
+  <data name="Frontend.035" xml:space="preserve">
+    <value>注意：“公众号名称”必须与所对应的 MessageHandler 所标记的 [MpMessageHandler(name)] 中的 name 对应||Note: The official account name must match the name in [MpMessageHandler(name)] on the corresponding MessageHandler.</value>
+  </data>
+  <data name="Frontend.036" xml:space="preserve">
+    <value>取 消||Cancel</value>
+  </data>
+  <data name="Frontend.037" xml:space="preserve">
+    <value>确 认||Confirm</value>
+  </data>
+  <data name="Frontend.038" xml:space="preserve">
+    <value>请输入公众号名称||Enter the official account name</value>
+  </data>
+  <data name="Frontend.039" xml:space="preserve">
+    <value>请输入AppId||Enter the AppId</value>
+  </data>
+  <data name="Frontend.040" xml:space="preserve">
+    <value>请输入AppSecret||Enter the AppSecret</value>
+  </data>
+  <data name="Frontend.041" xml:space="preserve">
+    <value>请输入Token||Enter the Token</value>
+  </data>
+  <data name="Frontend.042" xml:space="preserve">
+    <value>长度在 1 至 100 之间||Length must be between 1 and 100 characters</value>
+  </data>
+  <data name="Frontend.043" xml:space="preserve">
+    <value>长度在 1 至 500 之间||Length must be between 1 and 500 characters</value>
+  </data>
+  <data name="Frontend.044" xml:space="preserve">
+    <value>新增公众号||Add Official Account</value>
+  </data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>编辑公众号||Edit Official Account</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>新增公众号成功||Official account added successfully</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>编辑公众号成功||Official account updated successfully</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>成功||Success</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>警告||Warning</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>请勾选公众号||Select at least one official account</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>是否删除所都选的项目？||Delete all selected items?</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>已成功删除{0}条||Successfully deleted {0} items</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>追加新增关注||Add New Followers</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>同步所有关注||Synchronize All Followers</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>注意：如果用户数量众多，可能会消耗非常长的时间！||Note: This may take a long time when there are many users.</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>昵称||Nickname</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>头像||Avatar</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>性别||Gender</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>男||Male</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>女||Female</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>未知||Unknown</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>地区||Region</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>分组||Group</value>
+  </data>
+  <data name="Frontend.064" xml:space="preserve">
+    <value>关注时间||Followed At</value>
+  </data>
+  <data name="Frontend.065" xml:space="preserve">
+    <value>关注状态||Follow Status</value>
+  </data>
+  <data name="Frontend.066" xml:space="preserve">
+    <value>已关注||Following</value>
+  </data>
+  <data name="Frontend.067" xml:space="preserve">
+    <value>未关注||Not Following</value>
+  </data>
+  <data name="Frontend.068" xml:space="preserve">
+    <value>关注场景||Follow Source</value>
+  </data>
+  <data name="Frontend.069" xml:space="preserve">
+    <value>标签||Tags</value>
+  </data>
+  <data name="Frontend.070" xml:space="preserve">
+    <value>无||None</value>
+  </data>
+  <data name="Frontend.071" xml:space="preserve">
+    <value>所有用户||All Users</value>
+  </data>
+  <data name="Frontend.072" xml:space="preserve">
+    <value>{0}的用户||{0} Users</value>
+  </data>
+  <data name="User.AccountUsers" xml:space="preserve">
+    <value>{0} Users</value>
+  </data>
+  <data name="User.AllUsers" xml:space="preserve">
+    <value>All Users</value>
+  </data>
+  <data name="Frontend.073" xml:space="preserve">
+    <value>[您的域名]/WeixinMp/{0}||[Your domain]/WeixinMp/{0}</value>
+  </data>
+  <data name="Frontend.074" xml:space="preserve">
+    <value>[你的域名]/WeixinMp/{0}||[Your domain]/WeixinMp/{0}</value>
+  </data>
+  <data name="Public.ToggleNavigation" xml:space="preserve">
+    <value>Toggle navigation</value>
+  </data>
+  <data name="Public.Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Public.Privacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Account.NotFound" xml:space="preserve">
+    <value>Account information was not found.</value>
+  </data>
+  <data name="Account.CredentialsUnverified" xml:space="preserve">
+    <value>Saved, but AppId and AppSecret could not be verified.</value>
+  </data>
+  <data name="Account.ConfigurationNotFound" xml:space="preserve">
+    <value>Official account configuration was not found: {0}</value>
+  </data>
+  <data name="Error.InvalidId" xml:space="preserve">
+    <value>Invalid ID.</value>
+  </data>
+  <data name="Error.UnsupportedPlatformType" xml:space="preserve">
+    <value>Unsupported PlatformType. Title: {0}</value>
+  </data>
+  <data name="Error.ImageUpload01" xml:space="preserve">
+    <value>Image upload failed (01).</value>
+  </data>
+  <data name="Error.MessageHandlerConstructor" xml:space="preserve">
+    <value>{0} must provide a constructor with the following parameter order: (MpAccountDto mpAccountDto, Stream inputStream, PostModel postModel, int maxRecordCount, IServiceProvider serviceProvider)</value>
+  </data>
+</root>
