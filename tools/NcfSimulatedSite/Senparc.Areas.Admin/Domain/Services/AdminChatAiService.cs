@@ -25,6 +25,7 @@
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Senparc.AI;
 using Senparc.AI.Entities;
@@ -51,6 +52,7 @@ using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.AI;
 using Senparc.AI.AgentKernel.IWantToExtensions;
 using Senparc.AI.AgentKernel.Extensions;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
@@ -74,6 +76,7 @@ namespace Senparc.Areas.Admin.Domain.Services
     {
         private readonly AdminChatMessageService _messageService;
         private readonly AdminChatSessionModuleService _sessionModuleService;
+        private readonly AdminChatSessionWorkflowService _sessionWorkflowService;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<AdminChatAiService> _logger;
 
@@ -87,11 +90,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         public AdminChatAiService(
             AdminChatMessageService messageService,
             AdminChatSessionModuleService sessionModuleService,
+            AdminChatSessionWorkflowService sessionWorkflowService,
             IServiceProvider serviceProvider,
             ILogger<AdminChatAiService> logger)
         {
             _messageService = messageService;
             _sessionModuleService = sessionModuleService;
+            _sessionWorkflowService = sessionWorkflowService;
             _serviceProvider = serviceProvider;
             _logger = logger;
         }
@@ -118,6 +123,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
+            var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
 
             var agentAiHandler = new AgentAiHandler(setting);
 
@@ -153,6 +159,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 .ToList();
 
             var importedFunctionCount = 0;
+            var importedWorkflowCount = 0;
             var importedFunctionSignatures = new List<string>();
             var loadedFunctionDebugLines = new List<string>();
 
@@ -218,6 +225,48 @@ namespace Senparc.Areas.Admin.Domain.Services
                 }
             }
 
+            var workflowProvider = functionInvocationEnabled
+                ? _serviceProvider.GetService<IWorkflowFunctionCallingProvider>()
+                : null;
+            if (workflowProvider != null && workflows.Count > 0)
+            {
+                try
+                {
+                    var availableWorkflows = await workflowProvider
+                        .GetAvailableAsync(userId)
+                        .ConfigureAwait(false);
+                    var availableById = availableWorkflows.ToDictionary(workflow => workflow.Id);
+
+                    foreach (var sessionWorkflow in workflows)
+                    {
+                        if (!availableById.TryGetValue(sessionWorkflow.WorkflowId, out var workflow))
+                        {
+                            _logger.LogInformation(
+                                "跳过不可用的 AdminChat Workflow：SessionId={SessionId}, WorkflowId={WorkflowId}",
+                                sessionId,
+                                sessionWorkflow.WorkflowId);
+                            continue;
+                        }
+
+                        var tool = AdminChatWorkflowToolFactory.Create(workflowProvider, userId, workflow);
+                        aiFunctions.Add(tool);
+                        importedWorkflowCount++;
+                        importedFunctionSignatures.Add(
+                            $"{tool.Name}({string.Join(", ", workflow.Parameters.Select(parameter => parameter.Name))})");
+                        loadedFunctionDebugLines.Add(
+                            $"- Workflow: {tool.Name} ({workflow.Name})");
+                        loadedFunctionDebugLines.Add(
+                            $"  Description: {tool.Description}");
+                        loadedFunctionDebugLines.Add(
+                            $"  Schema: {tool.JsonSchema.GetRawText()}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "导入 AdminChat Workflow Function Calling 工具失败：SessionId={SessionId}", sessionId);
+                }
+            }
+
 
 #pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
             var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
@@ -243,11 +292,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             if (importedFunctionCount == 0)
             {
                 _logger.LogWarning(
-                    "AdminChat 未注入任何 FunctionRender 函数：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}",
+                    "AdminChat 未注入任何 FunctionRender 函数：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, SelectedWorkflowCount={WorkflowCount}",
                     sessionId,
                     userId,
                     moduleUids.Count,
-                    string.Join(",", moduleUids));
+                    string.Join(",", moduleUids),
+                    importedWorkflowCount);
             }
             else
             {
@@ -258,13 +308,14 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
 
             _logger.LogInformation(
-                "AdminChat FunctionCalling 插件加载完成：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, Plugins={Plugins}, Functions={Functions}, FunctionList={FunctionList}",
+                "AdminChat FunctionCalling 插件加载完成：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, Plugins={Plugins}, Functions={Functions}, Workflows={Workflows}, FunctionList={FunctionList}",
                 sessionId,
                 userId,
                 moduleUids.Count,
                 string.Join(",", moduleUids),
                 string.Join(",", importedPluginNames),
                 importedFunctionCount,
+                importedWorkflowCount,
                 string.Join(" | ", importedFunctionSignatures));
 
             var prompt = BuildUserPrompt(messages, userMessage);

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Areas.Admin.Domain.Models;
 
@@ -11,9 +12,11 @@ using Senparc.Areas.Admin.Domain.Models;
 namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
 {
     [DbContext(typeof(AdminSenparcEntities_SqlServer))]
-    partial class AdminSenparcEntities_SqlServerModelSnapshot : ModelSnapshot
+    [Migration("20260821133858_Add_AdminChatSessionWorkflows")]
+    partial class Add_AdminChatSessionWorkflows
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

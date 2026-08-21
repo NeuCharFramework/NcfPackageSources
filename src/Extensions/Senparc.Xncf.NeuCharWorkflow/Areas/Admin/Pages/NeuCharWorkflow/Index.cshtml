@@ -822,7 +822,7 @@
                                         <el-form-item label="重复次数（For）">
                                             <div v-if="isTemplateValue(selectedNode.config.count)" class="workflow-loop-count-binding workflow-loop-count-formula">
                                                 <strong>使用语法计算次数：{{parameterTemplateSummary(selectedNode.config.count)}}</strong>
-                                                <span>运行时结果必须是 1–100 的整数；可使用 <code v-pre>{{= toInt(input) }}</code> 或插入上游输出。</span>
+                                                <span>运行时结果必须是 1–100000 的整数；可使用 <code v-pre>{{= toInt(input) }}</code> 或插入上游输出。</span>
                                                 <div class="parameter-template-actions">
                                                     <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'count',{fieldLabel:'循环次数'})">编辑语法</el-button>
                                                     <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'count')">改为固定次数</el-button>
@@ -830,10 +830,10 @@
                                             </div>
                                             <div v-else-if="isBinding(selectedNode.config.count)" class="workflow-loop-count-binding">
                                                 <strong>引用上游：{{loopCountSourceLabel(selectedNode)}}</strong>
-                                                <span>运行时读取，必须是 1–100 的整数。</span>
+                                                <span>运行时读取，必须是 1–100000 的整数。</span>
                                                 <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetLoopCountManual(selectedNode)">改为固定次数</el-button>
                                             </div>
-                                            <el-input-number v-else v-model="selectedNode.config.count" :disabled="editingLocked" :min="1" :max="100" :step="1" :precision="0"></el-input-number>
+                                            <el-input-number v-else v-model="selectedNode.config.count" :disabled="editingLocked" :min="1" :max="100000" :step="1" :precision="0"></el-input-number>
                                             <el-button v-if="!isBinding(selectedNode.config.count) && !isTemplateValue(selectedNode.config.count)"
                                                        class="workflow-loop-count-formula-button"
                                                        size="mini"
@@ -845,11 +845,11 @@
                                                          :disabled="editingLocked || !loopCountOutputOptions().length"
                                                          clearable
                                                          filterable
-                                                         placeholder="或引用上游次数（1–100）"
+                                                         placeholder="或引用上游次数（1–100000）"
                                                          @@change="setLoopCountBinding(selectedNode,$event)"></el-cascader>
-                                            <p class="node-config-help">次数可以固定填写、引用上游单值，或使用受限语法编辑；语法结果必须是 1–100 的整数。循环范围请用“循环结束”标记。</p>
+                                            <p class="node-config-help">次数可以固定填写、引用上游单值，或使用受限语法编辑；语法结果必须是 1–100000 的整数。循环范围请用“循环结束”标记。</p>
                                         </el-form-item>
-                                        <el-alert title="安全上限：单个循环最多 100 次；循环与逐项合流的下游激活合计最多 5000 次。"
+                                        <el-alert title="配置上限：单个循环最多 100000 次；单次运行的循环与逐项合流下游激活合计最多 5000 次。"
                                                   type="info"
                                                   :closable="false"></el-alert>
                                     </template>

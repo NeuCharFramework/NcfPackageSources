@@ -545,11 +545,11 @@ public class NeuCharWorkflowEngineTests
     {
         var engine = CreateEngine();
         var graph = engine.ParseAndValidateGraph(
-            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"loop", "type":"loop", "name":"循环", "config":{ "count":101 } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"loop" }] }""");
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"loop", "type":"loop", "name":"循环", "config":{ "count":100001 } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"loop" }] }""");
 
         var error = await engine.ValidateReferencesAsync(graph);
 
-        StringAssert.Contains(error, "1 到 100");
+        StringAssert.Contains(error, "1 到 100000");
     }
 
     [TestMethod]
@@ -629,6 +629,41 @@ public class NeuCharWorkflowEngineTests
 
         Assert.IsTrue(success);
         Assert.AreEqual(4, (int)arguments[4]!);
+    }
+
+    [TestMethod]
+    public async Task LoopCount_ShouldResolveFormulaUsingWorkflowVariables()
+    {
+        var engine = CreateEngine();
+        var graph = engine.ParseAndValidateGraph(
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"loop", "type":"loop", "name":"循环", "config":{ "count":{ "$template":{ "text":"{{= toInt( toNumber(vars.end) - toNumber(vars.number)) }}", "bindings":[] } } } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"loop" }] }""");
+
+        Assert.IsNull(await engine.ValidateReferencesAsync(graph));
+
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "TryResolveLoopCount",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        object?[] arguments =
+        {
+            graph.Nodes.Single(node => node.Id == "loop").Config,
+            JsonValue.Create("input"),
+            new Dictionary<string, JsonNode>
+            {
+                ["__workflow_variables__"] = new JsonObject
+                {
+                    ["end"] = 9,
+                    ["number"] = 4
+                }
+            },
+            new Dictionary<string, JsonNode>(),
+            0,
+            null
+        };
+
+        var success = (bool)method.Invoke(null, arguments)!;
+
+        Assert.IsTrue(success);
+        Assert.AreEqual(5, (int)arguments[4]!);
     }
 
     [TestMethod]

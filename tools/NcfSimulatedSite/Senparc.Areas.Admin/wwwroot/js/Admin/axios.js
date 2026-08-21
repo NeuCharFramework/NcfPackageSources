@@ -22,8 +22,11 @@ function showErrorMessage(options) {
 // 请求拦截
 service.interceptors.request.use(
     config => {
-        if (config.method.toUpperCase() === 'POST') {
-            config.headers['RequestVerificationToken'] = window.document.getElementsByName('__RequestVerificationToken')[0].value;
+        if ((config.method || '').toUpperCase() === 'POST') {
+            const tokenInput = window.document.getElementsByName('__RequestVerificationToken')[0];
+            if (tokenInput && tokenInput.value) {
+                config.headers['RequestVerificationToken'] = tokenInput.value;
+            }
         }
         if (window.ncfJwtToken) {
             config.headers['Authorization'] = 'Bearer ' + window.ncfJwtToken;

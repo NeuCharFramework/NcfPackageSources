@@ -105,7 +105,7 @@ public sealed class NeuCharWorkflowEngine
     // 执行保护、实时 Console 和持久化回放分别有自己的窗口，但统一至少支持 5000 条。
     private const int MaxStreamActivations = 5_000;
     private const int MaxReplayEvents = 5_000;
-    private const int MaxLoopIterations = 100;
+    private const int MaxLoopIterations = 100_000;
     private const int MaxWorkflowVariables = 30;
     private const string WorkflowVariablesOutputKey = "__workflow_variables__";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
@@ -788,7 +788,8 @@ public sealed class NeuCharWorkflowEngine
         string? runId = null,
         Func<string?>? cancellationResult = null,
         IReadOnlyCollection<int>? ancestorWorkflowIds = null,
-        string? inheritedCorrelationId = null)
+        string? inheritedCorrelationId = null,
+        bool parseInputAsJson = false)
     {
         var graph = ParseAndValidateGraph(workflow.GraphJson);
         var trace = new List<string>();
@@ -851,7 +852,7 @@ public sealed class NeuCharWorkflowEngine
             var trigger = graph.Nodes.Single(z =>
                 z.Type.EndsWith("trigger", StringComparison.OrdinalIgnoreCase));
             var triggerInput = JsonValue.Create(input ?? string.Empty) as JsonNode;
-            if (trigger.Type.Equals("webhook-trigger", StringComparison.OrdinalIgnoreCase) &&
+            if ((parseInputAsJson || trigger.Type.Equals("webhook-trigger", StringComparison.OrdinalIgnoreCase)) &&
                 !string.IsNullOrWhiteSpace(input))
             {
                 try

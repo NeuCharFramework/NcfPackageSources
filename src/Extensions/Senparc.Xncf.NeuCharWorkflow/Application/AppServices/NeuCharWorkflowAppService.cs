@@ -254,8 +254,12 @@ public sealed class NeuCharWorkflowAppService
         return ToDetail(workflow, editableGraphJson);
     }
 
-    public async Task<NeuCharWorkflowRunResult> RunImmediatelyAsync(int workflowId, int adminUserId, string input,
-        CancellationToken cancellationToken = default)
+    public async Task<NeuCharWorkflowRunResult> RunImmediatelyAsync(
+        int workflowId,
+        int adminUserId,
+        string input,
+        CancellationToken cancellationToken = default,
+        bool parseInputAsJson = false)
     {
         await EnsureModuleEnabledAsync().ConfigureAwait(false);
         ValidateRunInput(workflowId, input);
@@ -264,7 +268,11 @@ public sealed class NeuCharWorkflowAppService
         await ValidateWorkflowAsync(workflow, cancellationToken).ConfigureAwait(false);
         workflow.MarkStarted(workflow.NextRunAt);
         await _workflowService.SaveRuntimeStartedAsync(workflow).ConfigureAwait(false);
-        var result = await _workflowEngine.RunAsync(workflow, input, cancellationToken).ConfigureAwait(false);
+        var result = await _workflowEngine.RunAsync(
+            workflow,
+            input,
+            cancellationToken,
+            parseInputAsJson: parseInputAsJson).ConfigureAwait(false);
         workflow.MarkCompleted(result.Success, result.ErrorMessage);
         await _workflowService.SaveRuntimeCompletedAsync(workflow).ConfigureAwait(false);
         return result;

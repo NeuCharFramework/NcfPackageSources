@@ -67,6 +67,11 @@ namespace Senparc.Areas.Admin.Domain.Models
         public DbSet<AdminChatSessionModule> AdminChatSessionModules { get; set; }
 
         /// <summary>
+        /// 管理后台聊天会话-Workflow 关联
+        /// </summary>
+        public DbSet<AdminChatSessionWorkflow> AdminChatSessionWorkflows { get; set; }
+
+        /// <summary>
         /// 系统级 NeuCharPivot 配置
         /// </summary>
         public DbSet<NeuCharPivotConfiguration> NeuCharPivotConfigurations { get; set; }
@@ -111,6 +116,9 @@ namespace Senparc.Areas.Admin.Domain.Models
                 .HasIndex(z => z.CorrelationId);
             modelBuilder.Entity<NeuCharExecutionLog>()
                 .HasIndex(z => new { z.SourceType, z.SourceId });
+            modelBuilder.Entity<AdminChatSessionWorkflow>()
+                .HasIndex(z => new { z.SessionId, z.WorkflowId })
+                .IsUnique();
 
             var providerName = Database.ProviderName ?? string.Empty;
             var largeTextType = providerName.Contains("Oracle", StringComparison.OrdinalIgnoreCase)

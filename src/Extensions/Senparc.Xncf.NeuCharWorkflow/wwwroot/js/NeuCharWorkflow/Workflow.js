@@ -2,6 +2,7 @@
 // removes <script> tags while compiling that root, so resolve this template
 // before mounting the root instead of using the deferred "#id" form.
 const MaxWorkflowConsoleEvents = 5000;
+const MaxWorkflowLoopIterations = 100000;
 const workflowNodePickerTemplateElement = typeof document !== 'undefined'
     ? document.getElementById('workflow-node-picker-template')
     : null;
@@ -668,7 +669,7 @@ new Vue({
                 loop: {
                     title: '循环（For）',
                     description: '将同一输入按指定次数交给循环体处理。请在循环体末尾放置“循环结束”，之后的节点只执行一次。',
-                    rows: [{ label: '重复次数', value: '固定 1–100 次，或引用上游单值' }, { label: '执行方式', value: '循环 → 循环体 → 循环结束 → 后续节点' }]
+                    rows: [{ label: '重复次数', value: '固定 1–100000 次，或引用上游单值' }, { label: '执行方式', value: '循环 → 循环体 → 循环结束 → 后续节点' }]
                 },
                 'loop-end': {
                     title: '循环结束',
@@ -2368,7 +2369,7 @@ new Vue({
             if (node.type === 'loop') return this.isTemplateValue(node.config?.count)
                 ? `按语法动态计算次数`
                 : this.isBinding(node.config?.count)
-                ? '从上游读取次数（最多 100 次）'
+                ? '从上游读取次数（最多 100000 次）'
                 : `顺序重复 ${node.config?.count || 3} 次`;
             if (node.type === 'loop-end') return 'continue / break 后再继续向下执行';
             if (node.type === 'sub-workflow') {
@@ -3136,7 +3137,7 @@ new Vue({
                     .filter(field => !field.isArray && !field.requiresIndex)
                     .map(field => ({
                         value: field.path,
-                        label: `${field.label} · 运行时必须为 1–100 的整数${field.observed ? ' · 运行观察' : ''}`
+                        label: `${field.label} · 运行时必须为 1–100000 的整数${field.observed ? ' · 运行观察' : ''}`
                     }))
             })).filter(option => option.children.length);
         },
@@ -3255,9 +3256,14 @@ new Vue({
                     if (loopBoundaryError) return loopBoundaryError;
                     continue;
                 }
+                if (this.isTemplateValue(node.config?.count)) {
+                    const loopBoundaryError = this.loopBoundaryValidationError(node);
+                    if (loopBoundaryError) return loopBoundaryError;
+                    continue;
+                }
                 const count = Number(node.config?.count);
-                if (!Number.isInteger(count) || count < 1 || count > 100) {
-                    return `循环节点“${node.name}”的次数必须为 1 到 100 的整数，或引用上游单值。`;
+                if (!Number.isInteger(count) || count < 1 || count > MaxWorkflowLoopIterations) {
+                    return `循环节点“${node.name}”的次数必须为 1 到 ${MaxWorkflowLoopIterations} 的整数，或引用上游单值。`;
                 }
                 const loopBoundaryError = this.loopBoundaryValidationError(node);
                 if (loopBoundaryError) return loopBoundaryError;

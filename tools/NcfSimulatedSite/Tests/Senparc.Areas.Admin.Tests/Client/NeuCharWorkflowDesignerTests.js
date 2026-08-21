@@ -76,7 +76,11 @@ const axiosSandbox = {
         create() {
             return {
                 interceptors: {
-                    request: { use() {} },
+                    request: {
+                        use(success) {
+                            axiosInterceptors.request = success;
+                        }
+                    },
                     response: {
                         use(success, failure) {
                             axiosInterceptors.failure = failure;
@@ -113,8 +117,40 @@ const ordinaryResponseError = {
 const interceptedOrdinaryError = axiosInterceptors.failure(ordinaryResponseError);
 assert.strictEqual(interceptedOrdinaryError.rejected, ordinaryResponseError,
     'A shared Axios error must remain the original request error when no global app message API is available.');
+const requestConfig = { method: 'post', headers: {} };
+const requestWithToken = axiosInterceptors.request(requestConfig);
+assert.strictEqual(requestWithToken.headers.RequestVerificationToken, 'token',
+    'The shared Axios request interceptor must attach an available anti-forgery token.');
+const missingTokenSandbox = {
+    ...axiosSandbox,
+    window: { document: { getElementsByName() { return []; } } }
+};
+const missingTokenInterceptors = {};
+missingTokenSandbox.axios = {
+    create() {
+        return {
+            interceptors: {
+                request: {
+                    use(success) {
+                        missingTokenInterceptors.request = success;
+                    }
+                },
+                response: { use() {} }
+            }
+        };
+    }
+};
+vm.createContext(missingTokenSandbox);
+vm.runInContext(fs.readFileSync(adminAxiosPath, 'utf8'), missingTokenSandbox, { filename: adminAxiosPath });
+const requestWithoutToken = missingTokenInterceptors.request({ method: 'post', headers: {} });
+assert.deepStrictEqual(requestWithoutToken.headers, { 'x-requested-with': 'XMLHttpRequest' },
+    'The shared Axios request interceptor must not throw when the page token is not parsed yet.');
 assert.match(adminLayoutMarkup, /src="~\/js\/Admin\/axios\.js"\s+asp-append-version="true"/,
     'The shared Axios script must use a versioned URL so browsers do not retain an old interceptor after deployment.');
+const tokenOffset = adminLayoutMarkup.indexOf('@Html.AntiForgeryToken()');
+const pageScriptsOffset = adminLayoutMarkup.indexOf('@RenderSection("scripts", false)');
+assert.ok(tokenOffset >= 0 && pageScriptsOffset > tokenOffset,
+    'The shared anti-forgery token must be emitted before page scripts can issue an initial POST.');
 assert.ok(workflowScript.includes('AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync') &&
     workflowScript.includes('{ customAlert: true }') &&
     workflowScript.includes('模型列表暂不可用'),
@@ -569,17 +605,48 @@ const loopValidationContext = {
         name: '循环测试',
         triggerType: 'manual',
         graph: {
-            nodes: [{ id: 'trigger', type: 'manual-trigger' }, { id: 'loop', type: 'loop', name: '循环', config: { count: 101 } }],
+            nodes: [{ id: 'trigger', type: 'manual-trigger' }, { id: 'loop', type: 'loop', name: '循环', config: { count: 100001 } }],
             edges: [{ id: 'edge-1', source: 'trigger', target: 'loop' }]
         }
     },
     getDisconnectedNodes() { return []; },
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
-    isBinding: vueOptions.methods.isBinding
+    isBinding: vueOptions.methods.isBinding,
+    isTemplateValue: vueOptions.methods.isTemplateValue
 };
-assert.match(vueOptions.methods.validate.call(loopValidationContext, { requireRunnable: true }), /1 到 100/,
+assert.match(vueOptions.methods.validate.call(loopValidationContext, { requireRunnable: true }), /1 到 100000/,
     'The designer should reject a static loop count outside the safe range before run.');
+const formulaLoopValidationContext = {
+    ...loopValidationContext,
+    form: {
+        ...loopValidationContext.form,
+        graph: {
+            ...loopValidationContext.form.graph,
+            nodes: [
+                { id: 'trigger', type: 'manual-trigger' },
+                {
+                    id: 'loop',
+                    type: 'loop',
+                    name: '循环',
+                    config: {
+                        count: {
+                            $template: {
+                                text: '{{= toInt( toNumber(vars.end) - toNumber(vars.number)) }}',
+                                bindings: []
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    templateFor: vueOptions.methods.templateFor,
+    loopCountFormulaValidationError: vueOptions.methods.loopCountFormulaValidationError,
+    loopBoundaryValidationError() { return ''; }
+};
+assert.strictEqual(vueOptions.methods.validate.call(formulaLoopValidationContext, { requireRunnable: true }), '',
+    'The designer should accept a complete workflow-variable formula as a dynamic loop count.');
 
 const boundedLoopValidationContext = {
     form: {
@@ -605,6 +672,7 @@ const boundedLoopValidationContext = {
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
     isBinding: vueOptions.methods.isBinding,
+    isTemplateValue: vueOptions.methods.isTemplateValue,
     loopBoundaryNodes: vueOptions.methods.loopBoundaryNodes,
     loopBoundaryValidationError: vueOptions.methods.loopBoundaryValidationError
 };
@@ -638,6 +706,7 @@ const breakLoopValidationContext = {
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
     isBinding: vueOptions.methods.isBinding,
+    isTemplateValue: vueOptions.methods.isTemplateValue,
     loopBoundaryNodes: vueOptions.methods.loopBoundaryNodes,
     loopBoundaryValidationError: vueOptions.methods.loopBoundaryValidationError
 };
@@ -1294,7 +1363,8 @@ assert.ok(page.includes('@@drag-node="beginPaletteNodeDrag"') && page.includes('
 assert.ok(page.includes('@@preview-node="showNodePreview"') && page.includes('@@dblclick="selectFunction(fn)"') && page.includes('nodePreviewDetails.actionText'),
     'Node picker blocks should preview on the first interaction and reserve double-click for adding a node.');
 assert.ok(page.includes('filteredSystemNodes') && workflowScript.includes("type: 'condition', name: '条件判断'"), 'The shared picker should expose condition nodes.');
-assert.ok(workflowScript.includes("type: 'loop', name: '循环（For）'") && page.includes('重复次数（For）') && page.includes('loopCountOutputOptions()'),
+assert.ok(workflowScript.includes("type: 'loop', name: '循环（For）'") && page.includes('重复次数（For）') && page.includes('loopCountOutputOptions()') &&
+    page.includes(':max="100000"') && workflowScript.includes('MaxWorkflowLoopIterations = 100000'),
     'The shared picker should expose a novice-friendly bounded For loop with a selectable upstream count.');
 assert.ok(workflowScript.includes("type: 'aggregate', name: '聚合'"), 'The shared picker should expose multi-input aggregate nodes.');
 assert.ok(workflowScript.includes("type: 'parallel', name: '并行'"), 'The shared picker should expose a parallel fan-out node.');
