@@ -55,6 +55,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using Senparc.Xncf.AgentsManager.Abstractions;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
 using Senparc.Ncf.Shared.Abstractions.ChatAgent;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
@@ -172,6 +173,9 @@ namespace Senparc.Xncf.AgentsManager
             services.AddSingleton<PublishedA2ARequestHandler>();
             services.AddScoped<PublishedA2AAgentFactory>();
             services.AddScoped<AgentsWorkflowObjectProvider>();
+            services.AddScoped<AgentWorkflowReferenceValidator>();
+            services.AddScoped<IAgentWorkflowReferenceValidator>(serviceProvider =>
+                serviceProvider.GetRequiredService<AgentWorkflowReferenceValidator>());
             services.AddScoped<IWorkflowObjectProvider>(serviceProvider =>
                 serviceProvider.GetRequiredService<AgentsWorkflowObjectProvider>());
 
@@ -229,7 +233,6 @@ namespace Senparc.Xncf.AgentsManager
         }
     }
 }
-
 
 
 

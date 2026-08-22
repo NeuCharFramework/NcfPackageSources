@@ -328,6 +328,58 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         };
     }
 
+    public async Task<SandboxExecResult> ExecInteractiveAsync(
+        SandboxInteractiveExecRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(request.RuntimeHandle))
+        {
+            throw new InvalidOperationException("交互式 Sandbox 缺少运行时句柄。");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Command))
+        {
+            throw new InvalidOperationException("交互式 Sandbox 命令不能为空。");
+        }
+
+        var timeout = request.Timeout <= TimeSpan.Zero
+            ? TimeSpan.FromSeconds(30)
+            : request.Timeout;
+        var maxOutputCharacters = request.MaxOutputCharacters <= 0
+            ? 32_000
+            : request.MaxOutputCharacters;
+        var args = new[]
+        {
+            "exec",
+            "--workdir", request.WorkingDirectory,
+            request.RuntimeHandle,
+            "/bin/sh",
+            "-lc",
+            request.Command
+        };
+
+        _logger.LogInformation(
+            "Sandbox interactive command starting: session={SessionId} container={RuntimeHandle} workdir={WorkingDirectory}",
+            request.SessionId,
+            request.RuntimeHandle,
+            request.WorkingDirectory);
+
+        var run = await RunDockerAsync(
+                args,
+                null,
+                timeout,
+                cancellationToken,
+                maxOutputCharacters)
+            .ConfigureAwait(false);
+
+        return new SandboxExecResult
+        {
+            ExitCode = run.ExitCode,
+            StdOut = run.StdOut,
+            StdErr = run.StdErr
+        };
+    }
+
     public async Task DestroyAsync(string runtimeHandle, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(runtimeHandle))
@@ -463,7 +515,8 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         IReadOnlyList<string> args,
         string? workingDirectory,
         TimeSpan timeout,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        int maxOutputCharacters = 0)
     {
         var psi = new ProcessStartInfo
         {
@@ -482,8 +535,20 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         using var process = new Process { StartInfo = psi, EnableRaisingEvents = true };
         var stdout = new StringBuilder();
         var stderr = new StringBuilder();
-        process.OutputDataReceived += (_, e) => { if (e.Data != null) stdout.AppendLine(e.Data); };
-        process.ErrorDataReceived += (_, e) => { if (e.Data != null) stderr.AppendLine(e.Data); };
+        process.OutputDataReceived += (_, e) =>
+        {
+            if (e.Data != null)
+            {
+                AppendLimited(stdout, e.Data, maxOutputCharacters);
+            }
+        };
+        process.ErrorDataReceived += (_, e) =>
+        {
+            if (e.Data != null)
+            {
+                AppendLimited(stderr, e.Data, maxOutputCharacters);
+            }
+        };
 
         if (!process.Start())
         {
@@ -506,5 +571,29 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         }
 
         return (process.ExitCode, stdout.ToString(), stderr.ToString());
+    }
+
+    private static void AppendLimited(StringBuilder builder, string line, int maxOutputCharacters)
+    {
+        if (maxOutputCharacters <= 0)
+        {
+            builder.AppendLine(line);
+            return;
+        }
+
+        if (builder.Length >= maxOutputCharacters)
+        {
+            return;
+        }
+
+        var remaining = maxOutputCharacters - builder.Length;
+        if (line.Length + Environment.NewLine.Length <= remaining)
+        {
+            builder.AppendLine(line);
+            return;
+        }
+
+        builder.Append(line.AsSpan(0, Math.Max(0, remaining - Environment.NewLine.Length)));
+        builder.AppendLine();
     }
 }

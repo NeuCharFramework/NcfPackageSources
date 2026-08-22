@@ -12,7 +12,17 @@ public class SandboxTemplateCatalogTests
     {
         Assert.IsTrue(SandboxTemplateCatalog.TryGet(SandboxTemplateKeys.JupyterCsharp, out var template));
         Assert.IsTrue(template.Interactive);
+        Assert.IsTrue(template.SupportsInteractiveControl);
+        Assert.AreEqual("/home/jovyan/work", template.WorkspaceMountPath);
         Assert.AreEqual("ncf-jupyter-dotnet:10.0", template.Image);
         Assert.AreEqual(8888, template.ContainerPort);
+    }
+
+    [TestMethod]
+    public void NcfPreview_DoesNotExposeInteractiveControl()
+    {
+        Assert.IsTrue(SandboxTemplateCatalog.TryGet(SandboxTemplateKeys.NcfPreview, out var template));
+        Assert.IsTrue(template.Interactive);
+        Assert.IsFalse(template.SupportsInteractiveControl);
     }
 }

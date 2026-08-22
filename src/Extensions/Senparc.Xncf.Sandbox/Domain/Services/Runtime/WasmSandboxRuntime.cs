@@ -50,6 +50,13 @@ public sealed class WasmSandboxRuntime : ISandboxRuntime
         throw new NotSupportedException("Wasm Exec Provider 为一期 Stub。计划二期接入 Wasmtime 以降低服务器压力。");
     }
 
+    public Task<SandboxExecResult> ExecInteractiveAsync(
+        SandboxInteractiveExecRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException("Wasm 运行时尚未实现持久化交互会话控制。");
+    }
+
     public Task DestroyAsync(string runtimeHandle, CancellationToken cancellationToken = default)
     {
         return Task.CompletedTask;

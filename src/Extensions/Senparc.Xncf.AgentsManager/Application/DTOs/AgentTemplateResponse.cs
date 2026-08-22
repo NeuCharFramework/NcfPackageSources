@@ -55,4 +55,20 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         public string EmbeddingStatus { get; set; }
         public bool IsEmbedded { get; set; }
     }
+
+    public class AgentFunctionBindingCatalogResponse
+    {
+        public List<AgentFunctionBindingOptionResponse> Functions { get; set; } = new();
+        public List<AgentFunctionBindingOptionResponse> Plugins { get; set; } = new();
+        public List<AgentFunctionBindingOptionResponse> Workflows { get; set; } = new();
+        public List<AgentFunctionBindingDto> CurrentBindings { get; set; } = new();
+    }
+
+    public class AgentFunctionBindingOptionResponse : AgentFunctionBindingDto
+    {
+        public bool Available { get; set; }
+        public string ModuleName { get; set; }
+        public string ModuleVersion { get; set; }
+        public int ParameterCount { get; set; }
+    }
 }

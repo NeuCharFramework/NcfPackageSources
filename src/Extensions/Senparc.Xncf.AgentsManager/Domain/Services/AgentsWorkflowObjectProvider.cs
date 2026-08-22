@@ -221,13 +221,17 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             return groupRun.Status == ChatTask_Status.Finished
                 ? new WorkflowObjectExecutionResult(
                     true,
-                    $"Agent 组“{group.Name}”已完成本轮任务。",
-                    Reference: reference)
+                    $"Agent 组“{group.Name}”已完成本轮任务。")
+                {
+                    Reference = reference
+                }
                 : new WorkflowObjectExecutionResult(
                     false,
                     null,
-                    $"Agent 组“{group.Name}”未正常完成，当前状态：{groupRun.Status}。",
-                    reference);
+                    $"Agent 组“{group.Name}”未正常完成，当前状态：{groupRun.Status}。")
+                {
+                    Reference = reference
+                };
         }
 
         if (request.ObjectId?.StartsWith("agent:", StringComparison.OrdinalIgnoreCase) == true &&
@@ -283,7 +287,8 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             humanInTheLoopLevel,
             pluginToolPermission,
             mcpToolPermission,
-            useTemplateModelSettings: personality);
+            useTemplateModelSettings: personality,
+            adminUserId: request.AdminUserId ?? 0);
         var effectivePolicy = HumanInTheLoopPolicyResolver.Resolve(
             humanInTheLoopLevel,
             pluginToolPermission,

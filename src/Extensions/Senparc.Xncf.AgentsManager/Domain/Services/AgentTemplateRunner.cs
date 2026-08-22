@@ -31,11 +31,17 @@ using Senparc.AI.Interfaces;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core;
+using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
+using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.KnowledgeBase.Domain.Services;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
@@ -63,15 +69,18 @@ public sealed class AgentTemplateRunner
     private readonly IServiceProvider _serviceProvider;
     private readonly PromptItemService _promptItemService;
     private readonly AIModelService _aiModelService;
+    private readonly IWorkflowFunctionCallingProvider _workflowFunctionCallingProvider;
 
     public AgentTemplateRunner(
         IServiceProvider serviceProvider,
         PromptItemService promptItemService,
-        AIModelService aiModelService)
+        AIModelService aiModelService,
+        IEnumerable<IWorkflowFunctionCallingProvider> workflowFunctionCallingProviders)
     {
         _serviceProvider = serviceProvider;
         _promptItemService = promptItemService;
         _aiModelService = aiModelService;
+        _workflowFunctionCallingProvider = workflowFunctionCallingProviders?.FirstOrDefault();
     }
 
     /// <summary>
@@ -501,6 +510,7 @@ public sealed class AgentTemplateRunner
                 toolPolicy.PluginTools,
                 toolPolicy.McpTools,
                 request.DiagnosticId,
+                request.AdminUserId,
                 cancellationToken).ConfigureAwait(false)
             : new List<AITool>();
 
@@ -784,18 +794,19 @@ public sealed class AgentTemplateRunner
         ToolPermissionMode pluginToolPermission,
         ToolPermissionMode mcpToolPermission,
         string correlationId,
+        int adminUserId,
         CancellationToken cancellationToken)
     {
         var tools = new List<AITool>();
-        var functionCallNames = template.FunctionCallNames.IsNullOrEmpty()
-            ? Array.Empty<string>()
-            : template.FunctionCallNames
-                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Where(z => !string.IsNullOrWhiteSpace(z))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToArray();
+        var bindings = AgentFunctionBindingCodec.Parse(template.FunctionCallNames);
+        var pluginBindings = bindings
+            .Where(binding => string.Equals(binding.Kind, "plugin", StringComparison.OrdinalIgnoreCase))
+            .Select(binding => binding.Key)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
 
-        foreach (var functionCall in functionCallNames)
+        foreach (var functionCall in pluginBindings)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (pluginToolPermission == ToolPermissionMode.Deny)
@@ -831,6 +842,114 @@ public sealed class AgentTemplateRunner
             catch (Exception ex)
             {
                 SenparcTrace.SendCustomLog("AgentsManager.AgentTemplateRunner.ImportPlugin", ex.Message);
+            }
+        }
+
+        foreach (var binding in bindings.Where(binding =>
+                     string.Equals(binding.Kind, "function", StringComparison.OrdinalIgnoreCase)))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (pluginToolPermission == ToolPermissionMode.Deny
+                || !TryParseFunctionBinding(binding, out var moduleUid, out var functionKey))
+            {
+                continue;
+            }
+
+            try
+            {
+                var register = XncfRegisterManager.RegisterList.FirstOrDefault(item =>
+                    string.Equals(item.Uid, moduleUid, StringComparison.OrdinalIgnoreCase));
+                var moduleService = _serviceProvider.GetService(typeof(XncfModuleService)) as XncfModuleService;
+                var module = moduleService == null
+                    ? null
+                    : await moduleService.GetObjectAsync(item => item.Uid == moduleUid).ConfigureAwait(false);
+                if (register == null
+                    || module?.State != XncfModules_State.开放
+                || !Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var functionGroup))
+                {
+                    continue;
+                }
+
+                var functionBag = functionGroup.Values.FirstOrDefault(item =>
+                    string.Equals(item.Key, functionKey, StringComparison.OrdinalIgnoreCase)
+                    && item.FunctionRenderAttribute.AllowAiInvocation);
+                var target = functionBag.MethodInfo?.DeclaringType == null
+                    ? null
+                    : _serviceProvider.GetService(functionBag.MethodInfo.DeclaringType);
+                if (functionBag.MethodInfo == null || target == null)
+                {
+                    continue;
+                }
+
+                var function = AIFunctionFactory.Create(
+                    functionBag.MethodInfo,
+                    target,
+                    name: BuildFunctionToolName(
+                        moduleUid,
+                        functionKey,
+                        functionBag.FunctionRenderAttribute.Name),
+                    description: functionBag.FunctionRenderAttribute.Description);
+                AIFunction diagnosticFunction = new DiagnosticAIFunction(
+                    function,
+                    template.Id,
+                    template.Name,
+                    correlationId);
+                tools.Add(pluginToolPermission == ToolPermissionMode.RequireApproval
+                    ? new ApprovalRequiredAIFunction(diagnosticFunction)
+                    : diagnosticFunction);
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.AgentTemplateRunner.ImportFunctionRender",
+                    $"Agent={template.Id}; Binding={binding.Key}; {ex.Message}");
+            }
+        }
+
+        if (_workflowFunctionCallingProvider != null && adminUserId > 0)
+        {
+            try
+            {
+                var availableWorkflows = await _workflowFunctionCallingProvider
+                    .GetAvailableAsync(adminUserId, cancellationToken)
+                    .ConfigureAwait(false);
+                var workflowMap = availableWorkflows
+                    .Where(workflow => workflow != null)
+                    .ToDictionary(workflow => workflow.Id);
+
+                foreach (var binding in bindings.Where(binding =>
+                             string.Equals(binding.Kind, "workflow", StringComparison.OrdinalIgnoreCase)))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var workflowId = binding.WorkflowId > 0
+                        ? binding.WorkflowId.Value
+                        : int.TryParse(binding.Key, out var parsedWorkflowId)
+                            ? parsedWorkflowId
+                            : 0;
+                    if (workflowId <= 0 || !workflowMap.TryGetValue(workflowId, out var workflow))
+                    {
+                        continue;
+                    }
+
+                    AIFunction workflowFunction = new AgentTemplateWorkflowAIFunction(
+                        _workflowFunctionCallingProvider,
+                        adminUserId,
+                        workflow);
+                    AIFunction diagnosticFunction = new DiagnosticAIFunction(
+                        workflowFunction,
+                        template.Id,
+                        template.Name,
+                        correlationId);
+                    tools.Add(pluginToolPermission == ToolPermissionMode.RequireApproval
+                        ? new ApprovalRequiredAIFunction(diagnosticFunction)
+                        : diagnosticFunction);
+                }
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.AgentTemplateRunner.ImportWorkflowFunction",
+                    $"Agent={template.Id}; {ex.GetType().Name}: {ex.Message}");
             }
         }
 
@@ -871,6 +990,57 @@ public sealed class AgentTemplateRunner
             .GroupBy(z => z.Name, StringComparer.OrdinalIgnoreCase)
             .Select(z => z.First())
             .ToList();
+    }
+
+    private static bool TryParseFunctionBinding(
+        AgentFunctionBindingDto binding,
+        out string moduleUid,
+        out string functionKey)
+    {
+        moduleUid = binding?.ModuleUid;
+        functionKey = binding?.FunctionKey;
+        if (!string.IsNullOrWhiteSpace(moduleUid) && !string.IsNullOrWhiteSpace(functionKey))
+        {
+            return true;
+        }
+
+        var separator = binding?.Key?.IndexOf("::", StringComparison.Ordinal) ?? -1;
+        if (separator <= 0 || separator >= binding.Key.Length - 2)
+        {
+            return false;
+        }
+
+        moduleUid = binding.Key[..separator];
+        functionKey = binding.Key[(separator + 2)..];
+        return true;
+    }
+
+    private static string BuildFunctionToolName(
+        string moduleUid,
+        string functionKey,
+        string displayName)
+    {
+        var readable = new string((displayName ?? "Function")
+            .Select(character => character <= 127
+                && (char.IsLetterOrDigit(character) || character == '_' || character == '-')
+                ? character
+                : '_')
+            .ToArray());
+        if (string.IsNullOrWhiteSpace(readable))
+        {
+            readable = "Function";
+        }
+
+        var hash = 17;
+        foreach (var character in $"{moduleUid}|{functionKey}")
+        {
+            hash = unchecked(hash * 31 + character);
+        }
+
+        var suffix = ((uint)hash).ToString("x", System.Globalization.CultureInfo.InvariantCulture);
+        var prefix = $"Function_{readable}";
+        var maxPrefixLength = Math.Max(1, 64 - suffix.Length - 1);
+        return $"{prefix[..Math.Min(prefix.Length, maxPrefixLength)]}_{suffix}";
     }
 
     private static string DescribeModel(string modelSource, AIModelDto model, ISenparcAiSetting setting)
@@ -1029,6 +1199,8 @@ public sealed class AgentTemplateRunRequest
     /// 启用个性化时仅被“跟随组任务”的 Agent 使用。
     /// </summary>
     public int? AiModelId { get; init; }
+    /// <summary>当前管理员 ID，用于按管理员权限解析 Workflow Function Calling 绑定。</summary>
+    public int AdminUserId { get; init; }
     public bool AllowFunctionCalls { get; init; }
     /// <summary>
     /// 将可执行工具标记为需要人工确认。默认关闭，以保持现有 AgentsManager 对话行为。
@@ -1091,11 +1263,13 @@ public sealed class AgentTemplateRunRequest
         HumanInTheLoopLevel humanInTheLoopLevel = HumanInTheLoopLevel.Automatic,
         ToolPermissionMode pluginToolPermission = ToolPermissionMode.Inherit,
         ToolPermissionMode mcpToolPermission = ToolPermissionMode.Inherit,
-        bool useTemplateModelSettings = true)
+        bool useTemplateModelSettings = true,
+        int adminUserId = 0)
     {
         return new AgentTemplateRunRequest
         {
             AiModelId = aiModelId,
+            AdminUserId = adminUserId,
             RunnerName = $"WorkflowAgent-{agentTemplateId}-{correlationId}",
             UseTemplateModelSettings = useTemplateModelSettings,
             UseTemplatePromptParameters = useTemplateModelSettings,
@@ -1134,6 +1308,7 @@ public sealed class AgentTemplateRunRequest
         return new AgentTemplateRunRequest
         {
             ProfileName = $"{ProfileName}-deployment-model-id-fallback",
+            AdminUserId = AdminUserId,
             AllowFunctionCalls = AllowFunctionCalls,
             RequireHumanApproval = RequireHumanApproval,
             HumanInTheLoopLevel = HumanInTheLoopLevel,
@@ -1163,6 +1338,7 @@ public sealed class AgentTemplateRunRequest
         {
             ProfileName = $"{ProfileName}-standard-transport-fallback",
             AiModelId = AiModelId,
+            AdminUserId = AdminUserId,
             AllowFunctionCalls = AllowFunctionCalls,
             RequireHumanApproval = RequireHumanApproval,
             HumanInTheLoopLevel = HumanInTheLoopLevel,
@@ -1193,6 +1369,7 @@ public sealed class AgentTemplateRunRequest
         {
             ProfileName = $"{ProfileName}-configured-api-version-fallback",
             AiModelId = AiModelId,
+            AdminUserId = AdminUserId,
             AllowFunctionCalls = AllowFunctionCalls,
             RequireHumanApproval = RequireHumanApproval,
             HumanInTheLoopLevel = HumanInTheLoopLevel,
@@ -1225,6 +1402,7 @@ public sealed class AgentTemplateRunRequest
         {
             ProfileName = $"{ProfileName}-empty-output-token-retry",
             AiModelId = AiModelId,
+            AdminUserId = AdminUserId,
             AllowFunctionCalls = AllowFunctionCalls,
             RequireHumanApproval = RequireHumanApproval,
             HumanInTheLoopLevel = HumanInTheLoopLevel,

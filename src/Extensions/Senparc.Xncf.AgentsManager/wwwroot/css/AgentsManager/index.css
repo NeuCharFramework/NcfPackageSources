@@ -380,6 +380,82 @@ height:100%;
     border: 1px solid rgba(105, 179, 231, 0.25);
 }
 
+.agent-3d-overview {
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    z-index: 4;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(110px, 1fr));
+    gap: 8px;
+    max-width: calc(100% - 330px);
+}
+
+.agent-3d-overview__item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid rgba(105, 179, 231, 0.25);
+    border-radius: 6px;
+    background: rgba(3, 10, 18, 0.68);
+    color: rgba(226, 242, 255, 0.86);
+}
+
+.agent-3d-overview__item span,
+.agent-3d-overview__item small {
+    overflow: hidden;
+    color: rgba(214, 237, 255, 0.72);
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.agent-3d-overview__item strong {
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.1;
+}
+
+.agent-3d-overview__item.agent strong {
+    color: #8fe7ff;
+}
+
+.agent-3d-overview__item.a2a strong {
+    color: #ffc36e;
+}
+
+.agent-3d-overview__item.group strong {
+    color: #c6d3e1;
+}
+
+.agent-3d-overview__item.task strong {
+    color: #a9e8c0;
+}
+
+.agent-3d-focus {
+    position: absolute;
+    left: 12px;
+    top: 102px;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: calc(100% - 24px);
+    padding: 7px 10px;
+    border: 1px solid rgba(94, 212, 255, 0.5);
+    border-radius: 6px;
+    background: rgba(3, 10, 18, 0.72);
+    color: rgba(226, 242, 255, 0.92);
+    font-size: 12px;
+}
+
+.agent-3d-focus span {
+    color: rgba(214, 237, 255, 0.72);
+}
+
 .agent-3d-legend {
     position: absolute;
     left: 12px;
@@ -473,7 +549,19 @@ height:100%;
     }
 
     .agent-3d-tip {
-        top: 98px;
+        top: 236px;
+    }
+
+    .agent-3d-overview {
+        top: 60px;
+        left: 12px;
+        right: 12px;
+        max-width: none;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .agent-3d-focus {
+        top: 170px;
     }
 
     .agent-3d-debug {
@@ -2809,6 +2897,123 @@ height:100%;
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 10px;
+}
+
+.function-binding-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid #dfe6ef;
+    border-radius: 5px;
+    background: #f8fbff;
+}
+
+.function-binding-summary__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.function-binding-summary__copy strong {
+    color: #303133;
+    font-size: 13px;
+}
+
+.function-binding-summary__copy span,
+.function-binding-footer-summary {
+    color: #909399;
+    font-size: 12px;
+}
+
+.function-binding-chips {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.function-binding-drawer__agent {
+    margin-left: 8px;
+    color: #909399;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.function-binding-tabs {
+    margin-bottom: 2px;
+}
+
+.function-binding-option-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.function-binding-option {
+    padding: 10px 12px;
+    border: 1px solid #e4e7ed;
+    border-radius: 5px;
+    background: #fff;
+}
+
+.function-binding-option.is-unavailable {
+    background: #f5f7fa;
+}
+
+.function-binding-option .el-checkbox {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+}
+
+.function-binding-option .el-checkbox__label {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 3px;
+}
+
+.function-binding-option__name {
+    color: #303133;
+    font-size: 13px;
+    line-height: 1.35;
+    white-space: normal;
+}
+
+.function-binding-option__meta,
+.function-binding-option__description {
+    color: #909399;
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: normal;
+}
+
+.function-binding-option__description {
+    margin: 5px 0 0 24px;
+}
+
+.function-binding-empty {
+    padding: 48px 16px;
+    color: #909399;
+    text-align: center;
+    background: #fafafa;
+    border: 1px dashed #dcdfe6;
+    border-radius: 5px;
+}
+
+@media (max-width: 640px) {
+    .function-binding-summary {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .function-binding-summary .el-button {
+        width: 100%;
+    }
 }
 
 /* MCP Endpoints 相关样式 */

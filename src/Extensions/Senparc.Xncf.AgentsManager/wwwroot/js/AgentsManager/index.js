@@ -27,6 +27,7 @@ var app = new Vue({
         dialogTaskDescription: false, // 任务描述
         dialogTaskEvaluation: false, // 任务评价页面
         dialogMcpTools: false, // MCP工具列表对话框
+        drawerFunctionBindings: false, // FunctionRender / Workflow 绑定
       },
       taskStateText: {
         0: '等待',  // 等待 Waiting stand #3376cd
@@ -349,6 +350,7 @@ var app = new Vue({
         hookRobotParameter: '', // 外接参数
         avastar: '/images/AgentsManager/avatar/avatar1.png', // 头像
         functionCallNames: '', // Function Call 名称，逗号分隔
+        functionBindings: [], // FunctionRender / Workflow / Plugin 结构化绑定
         mcpEndpoints: '', // MCP Endpoints
         knowledgeBaseId: null, // 绑定的知识库
         modelBinding: 0, // 0 PromptRange，1 跟随组任务，2 手动 AIModel
@@ -507,6 +509,16 @@ var app = new Vue({
       functionCallInputValue: '',
       functionCallTags: [], // 用于编辑时临时存储标签
       pluginTypes: [], // 存储所有可用的插件类型
+      functionBindingCatalog: {
+        functions: [],
+        plugins: [],
+        workflows: [],
+        currentBindings: []
+      },
+      functionBindingTab: 'function',
+      functionBindingSearch: '',
+      functionBindingLoading: false,
+      functionBindingSaving: false,
       agentAutoAttachXncf: false, // 是否自动附加所有 XNCF 功能插件
       editorFormInitialSnapshots: {}, // 打开编辑器时的表单快照，用于避免无变更时仍二次确认
       // MCP Endpoints相关
@@ -537,6 +549,10 @@ var app = new Vue({
       agentGraphFilterTaskStatuses: [],
       agentGraphShowOnlyActiveGroup: false,
       agentGraphRequesting: false,
+      agentGraphFocus: {
+        groupId: null,
+        locked: false
+      },
       agentGraphLastSignature: '',
       agentGraphLastRefreshAt: null,
       agentGraphLastRenderAt: null,
@@ -559,6 +575,41 @@ var app = new Vue({
       return this.pluginTypes.filter(type =>
         !currentNames.includes(type)
       );
+    },
+    functionBindingCount() {
+      return Array.isArray(this.agentForm.functionBindings)
+        ? this.agentForm.functionBindings.length
+        : 0
+    },
+    functionBindingSummary() {
+      const bindings = Array.isArray(this.agentForm.functionBindings)
+        ? this.agentForm.functionBindings
+        : []
+      const counts = bindings.reduce((result, item) => {
+        const kind = item?.kind || item?.Kind || 'plugin'
+        result[kind] = (result[kind] || 0) + 1
+        return result
+      }, {})
+      const parts = []
+      if (counts.function) parts.push(`FunctionRender ${counts.function}`)
+      if (counts.workflow) parts.push(`Workflow ${counts.workflow}`)
+      if (counts.plugin) parts.push(`Plugin ${counts.plugin}`)
+      return parts.length ? parts.join(' · ') : '未绑定工具或流程'
+    },
+    filteredFunctionBindingOptions() {
+      const catalog = this.functionBindingCatalog || {}
+      const tab = this.functionBindingTab
+      const options = Array.isArray(catalog[`${tab}s`])
+        ? catalog[`${tab}s`]
+        : []
+      const keyword = String(this.functionBindingSearch || '').trim().toLowerCase()
+      if (!keyword) return options
+      return options.filter(item => [
+        item.name,
+        item.description,
+        item.moduleName,
+        item.key
+      ].some(value => String(value || '').toLowerCase().includes(keyword)))
     },
     // 解析 McpEndpoints JSON 字符串
     parsedMcpEndpoints() {
@@ -629,6 +680,44 @@ var app = new Vue({
         'Refresh: ' + this.formatAgentGraphDebugTime(this.agentGraphLastRefreshAt),
         'Render: ' + this.formatAgentGraphDebugTime(this.agentGraphLastRenderAt)
       ].join('\n')
+    },
+    agentGraphOverview() {
+      const snapshot = this.agentGraphSnapshot || {}
+      const agents = Array.isArray(snapshot.agents) ? snapshot.agents : []
+      const groups = Array.isArray(snapshot.groups) ? snapshot.groups : []
+      const collaborations = Array.isArray(snapshot.collaborations) ? snapshot.collaborations : []
+      const activeKeys = new Set(collaborations.flatMap(item => item.participantKeys || []))
+      const local = agents.filter(item => item.agentKind !== 'RemoteA2A')
+      const remote = agents.filter(item => item.agentKind === 'RemoteA2A')
+      const activeTasks = groups.reduce((sum, group) => {
+        const counts = group.taskStatusCounts || {}
+        return sum + Number(counts[0] || counts['0'] || 0)
+          + Number(counts[1] || counts['1'] || 0)
+          + Number(counts[2] || counts['2'] || 0)
+      }, 0)
+      const chattingTasks = groups.reduce((sum, group) => {
+        const counts = group.taskStatusCounts || {}
+        return sum + Number(counts[1] || counts['1'] || 0)
+      }, 0)
+      return {
+        local: local.length,
+        localEnabled: local.filter(item => item.enable !== false).length,
+        localActive: local.filter(item => activeKeys.has(item.participantKey) || Number(item.chattingCount || 0) > 0).length,
+        remote: remote.length,
+        remoteEnabled: remote.filter(item => item.enable !== false).length,
+        remoteActive: remote.filter(item => activeKeys.has(item.participantKey) || Number(item.chattingCount || 0) > 0).length,
+        published: local.filter(item => item.hasPublishedA2A).length,
+        publishedEnabled: local.filter(item => item.hasPublishedA2A && item.publishedA2AEnabled).length,
+        groups: groups.length,
+        groupsEnabled: groups.filter(item => item.enable !== false).length,
+        groupsActive: groups.filter(item => Number(item.runningTaskCount || 0) > 0).length,
+        activeTasks,
+        chattingTasks
+      }
+    },
+    agentGraphFocusedGroup() {
+      const groupId = Number(this.agentGraphFocus?.groupId || 0)
+      return (this.agentGraphSnapshot.groups || []).find(item => Number(item.id) === groupId) || null
     },
     quickJumpGroupOptions() {
       const map = new Map()
@@ -1021,7 +1110,8 @@ var app = new Vue({
         agents: (snapshot.agents || []).map(item => [item.participantKey || `local:${item.id}`, item.chattingCount, item.score, item.enable, item.agentKind, item.connectionStatus]),
         groups: (snapshot.groups || []).map(item => [item.id, item.enable, item.runningTaskCount, item.state, item.taskStatusCounts]),
         links: (snapshot.links || []).map(item => [item.groupId, item.participantKey || `local:${item.agentId}`]),
-        collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.participantKeys || item.agentIds])
+        collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.participantKeys || item.agentIds]),
+        published: (snapshot.agents || []).map(item => [item.participantKey || `local:${item.id}`, item.hasPublishedA2A, item.publishedA2AEnabled])
       })
     },
     buildFilteredAgentGraphSnapshot(snapshot) {
@@ -1132,6 +1222,12 @@ var app = new Vue({
         this.agentGraph3d = new AgentGraph3D(this.$refs.agent3dContainer, {
           onGroupHover: (groupId) => {
             this.hoveredAgentGroupId = groupId
+          },
+          onGroupLock: (groupId, locked) => {
+            this.$set(this, 'agentGraphFocus', {
+              groupId: groupId || null,
+              locked: !!locked
+            })
           }
         })
         this.agentGraph3d.init()
@@ -2738,8 +2834,13 @@ var app = new Vue({
         // 确保 serviceForm 是正确的对象
         serviceForm = serviceForm || {};
 
-        // 直接将 functionCallTags 数组转换为字符串并赋值
-        serviceForm.functionCallNames = this.functionCallTags.length > 0 ? this.functionCallTags.join(',') : '';
+        serviceForm.functionBindings = (serviceForm.functionBindings || this.agentForm.functionBindings || [])
+          .map(item => this.normalizeFunctionBinding(item))
+          .filter(Boolean)
+        serviceForm.functionCallNames = serviceForm.functionBindings
+          .filter(item => item.kind === 'plugin')
+          .map(item => item.key)
+          .join(',')
 
         // 打印日志以便调试
         console.log('Submitting serviceForm:', serviceForm);
@@ -3613,8 +3714,19 @@ var app = new Vue({
           const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
           console.log('formData', formData);
 
-          // 确保 functionCallNames 被正确初始化
-          this.functionCallTags = formData.functionCallNames ? formData.functionCallNames.split(',').filter(Boolean) : [];
+          // FunctionBindings 是新契约；没有该字段时回退到旧版插件类名列表。
+          const loadedBindings = Array.isArray(formData.functionBindings)
+            ? formData.functionBindings
+            : (formData.functionCallNames
+              ? formData.functionCallNames.split(',').filter(Boolean).map(name => ({
+                kind: 'plugin',
+                key: name,
+                name
+              }))
+              : [])
+          this.$set(this.agentForm, 'functionBindings', loadedBindings.map(item => this.normalizeFunctionBinding(item)).filter(Boolean))
+          this.syncLegacyFunctionCallNames()
+          this.functionCallTags = this.agentForm.functionCallNames ? this.agentForm.functionCallNames.split(',').filter(Boolean) : [];
 
           // 将数据赋值给表单
           Object.assign(this[formName], formData);
@@ -5721,6 +5833,92 @@ var app = new Vue({
       const copied = await copyTextForEmbeddedBrowser(text)
       this.$message[copied ? 'success' : 'error'](copied ? '复制成功' : '复制失败')
       return copied
+    },
+    openFunctionBindingDrawer() {
+      this.visible.drawerFunctionBindings = true
+      this.functionBindingSearch = ''
+      this.functionBindingTab = 'function'
+      this.loadFunctionBindingCatalog()
+    },
+    async loadFunctionBindingCatalog() {
+      this.functionBindingLoading = true
+      try {
+        const agentId = Number(this.agentForm?.id || 0)
+        const response = await serviceAM.get(
+          `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetFunctionBindingCatalog?agentId=${agentId}`)
+        const data = response?.data ?? {}
+        if (!data.success) {
+          this.$message.error(data.errorMessage || '读取 Function 与 Workflow 列表失败')
+          return
+        }
+
+        const catalog = data.data || {}
+        this.$set(this, 'functionBindingCatalog', {
+          functions: Array.isArray(catalog.functions) ? catalog.functions : [],
+          plugins: Array.isArray(catalog.plugins) ? catalog.plugins : [],
+          workflows: Array.isArray(catalog.workflows) ? catalog.workflows : [],
+          currentBindings: Array.isArray(catalog.currentBindings) ? catalog.currentBindings : []
+        })
+        if ((!this.agentForm.functionBindings || this.agentForm.functionBindings.length === 0)
+          && this.functionBindingCatalog.currentBindings.length > 0) {
+          this.$set(this.agentForm, 'functionBindings', this.functionBindingCatalog.currentBindings)
+          this.syncLegacyFunctionCallNames()
+        }
+      } catch (error) {
+        console.error('读取 Function 绑定目录失败:', error)
+        this.$message.error(error?.message || '读取 Function 与 Workflow 列表失败')
+      } finally {
+        this.functionBindingLoading = false
+      }
+    },
+    normalizeFunctionBinding(binding) {
+      if (!binding) return null
+      const kind = String(binding.kind || binding.Kind || 'plugin').toLowerCase()
+      const key = String(binding.key || binding.Key || '').trim()
+      if (!key) return null
+      return {
+        kind,
+        key,
+        name: binding.name || binding.Name || key,
+        description: binding.description || binding.Description || '',
+        moduleUid: binding.moduleUid || binding.ModuleUid || '',
+        functionKey: binding.functionKey || binding.FunctionKey || '',
+        workflowId: binding.workflowId || binding.WorkflowId || (kind === 'workflow' ? Number(key) || null : null)
+      }
+    },
+    isFunctionBindingSelected(option) {
+      const normalized = this.normalizeFunctionBinding(option)
+      if (!normalized) return false
+      return (this.agentForm.functionBindings || []).some(item => {
+        const current = this.normalizeFunctionBinding(item)
+        return current && current.kind === normalized.kind && current.key.toLowerCase() === normalized.key.toLowerCase()
+      })
+    },
+    toggleFunctionBinding(option, selected) {
+      const normalized = this.normalizeFunctionBinding(option)
+      if (!normalized) return
+      const current = (this.agentForm.functionBindings || [])
+        .map(item => this.normalizeFunctionBinding(item))
+        .filter(Boolean)
+      const index = current.findIndex(item => item.kind === normalized.kind
+        && item.key.toLowerCase() === normalized.key.toLowerCase())
+      if (selected && index < 0) {
+        current.push(normalized)
+      } else if (!selected && index >= 0) {
+        current.splice(index, 1)
+      }
+      this.$set(this.agentForm, 'functionBindings', current)
+      this.syncLegacyFunctionCallNames()
+    },
+    removeFunctionBinding(binding) {
+      this.toggleFunctionBinding(binding, false)
+    },
+    syncLegacyFunctionCallNames() {
+      const names = (this.agentForm.functionBindings || [])
+        .map(item => this.normalizeFunctionBinding(item))
+        .filter(item => item?.kind === 'plugin')
+        .map(item => item.key)
+      this.$set(this.agentForm, 'functionCallNames', [...new Set(names)].join(','))
     },
     // 组成员头像堆叠 数量处理
     displayedAvatars(list, limit = 5) {

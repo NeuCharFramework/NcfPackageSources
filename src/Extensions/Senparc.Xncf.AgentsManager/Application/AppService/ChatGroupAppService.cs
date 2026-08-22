@@ -838,6 +838,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     .ToDictionary(g => g.Key, g => g.Count());
 
                 var promptScoreCache = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
+                var publishedA2AByAgentId = agentIds.Count == 0
+                    ? new Dictionary<int, PublishedA2AAgent>()
+                    : (await _publishedA2AAgentService.GetFullListAsync(
+                            item => agentIds.Contains(item.AgentTemplateId)))
+                        .GroupBy(item => item.AgentTemplateId)
+                        .ToDictionary(group => group.Key, group => group.OrderByDescending(item => item.Id).First());
 
                 foreach (var agent in agents)
                 {
@@ -857,7 +863,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         Score = score,
                         ChattingCount = chattingCount,
                         Enable = agent.Enable,
-                        Avastar = agent.Avastar
+                        Avastar = agent.Avastar,
+                        HasPublishedA2A = publishedA2AByAgentId.TryGetValue(agent.Id, out var publishedA2A),
+                        PublishedA2AEnabled = publishedA2A?.Enable == true
                     });
                 }
 
@@ -1315,6 +1323,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         public bool Enable { get; set; }
         public string Avastar { get; set; }
         public int ConnectionStatus { get; set; }
+        public bool HasPublishedA2A { get; set; }
+        public bool PublishedA2AEnabled { get; set; }
     }
 
     public class AgentGraphGroupDto

@@ -29,6 +29,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
@@ -80,6 +81,11 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// 可调用的函数名称列表,以逗号分隔
         /// </summary>
         public string FunctionCallNames { get; set; }
+
+        /// <summary>
+        /// Function Calling 绑定。FunctionCallNames 仍保留为旧版插件类名的兼容字段。
+        /// </summary>
+        public List<AgentFunctionBindingDto> FunctionBindings { get; set; } = new();
 
         /// <summary>
         /// McpEndpoints，多个用逗号分隔
@@ -144,6 +150,23 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
     public class AgentTemplateDto_UpdateOrCreate:AgentTemplateDto {
 
+    }
+
+    public class AgentFunctionBindingDto
+    {
+        /// <summary>plugin、function 或 workflow。</summary>
+        public string Kind { get; set; }
+
+        /// <summary>绑定的稳定键：插件类型、moduleUid::functionKey 或 workflowId。</summary>
+        public string Key { get; set; }
+
+        /// <summary>仅用于管理界面显示，不作为权限依据。</summary>
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+        public string ModuleUid { get; set; }
+        public string FunctionKey { get; set; }
+        public int? WorkflowId { get; set; }
     }
 
     public class AgentTemplateSimpleStatusDto : AgentTemplateDto

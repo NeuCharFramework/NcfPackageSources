@@ -20,6 +20,7 @@
 
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.AgentsManager.Abstractions;
 using Senparc.Xncf.NeuCharWorkflow.Application.Events;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
@@ -55,6 +56,7 @@ public sealed class NeuCharWorkflowAppService
     private readonly XncfModuleService _xncfModuleService;
     private readonly IWorkflowHumanInteractionBridge _humanInteractionBridge;
     private readonly NeuCharWorkflowHumanInputService _humanInputService;
+    private readonly IAgentWorkflowReferenceValidator? _agentWorkflowReferenceValidator;
 
     public NeuCharWorkflowAppService(
         NeuCharWorkflowService workflowService,
@@ -66,7 +68,8 @@ public sealed class NeuCharWorkflowAppService
         WorkflowEventPublisher eventPublisher,
         XncfModuleService xncfModuleService,
         IWorkflowHumanInteractionBridge humanInteractionBridge,
-        NeuCharWorkflowHumanInputService humanInputService)
+        NeuCharWorkflowHumanInputService humanInputService,
+        IEnumerable<IAgentWorkflowReferenceValidator>? agentWorkflowReferenceValidators = null)
     {
         _workflowService = workflowService;
         _workflowVersionService = workflowVersionService;
@@ -78,6 +81,7 @@ public sealed class NeuCharWorkflowAppService
         _xncfModuleService = xncfModuleService;
         _humanInteractionBridge = humanInteractionBridge;
         _humanInputService = humanInputService;
+        _agentWorkflowReferenceValidator = agentWorkflowReferenceValidators?.FirstOrDefault();
     }
 
     public async Task<IReadOnlyList<WorkflowListItem>> GetListAsync(int adminUserId, CancellationToken cancellationToken = default)
@@ -183,6 +187,22 @@ public sealed class NeuCharWorkflowAppService
         if (subWorkflowError != null)
         {
             throw new WorkflowInputException(subWorkflowError);
+        }
+
+        if (_agentWorkflowReferenceValidator != null && workflow?.Id > 0)
+        {
+            var agentReferences = GetAgentWorkflowReferences(graph);
+            var agentReferenceError = await _agentWorkflowReferenceValidator
+                .ValidateWorkflowReferencesAsync(
+                    workflow.Id,
+                    adminUserId,
+                    agentReferences,
+                    cancellationToken)
+                .ConfigureAwait(false);
+            if (agentReferenceError != null)
+            {
+                throw new WorkflowInputException(agentReferenceError);
+            }
         }
         if (enabled)
         {
@@ -518,6 +538,13 @@ public sealed class NeuCharWorkflowAppService
             pageLogs.LastOrDefault()?.Id);
     }
 
+    /// <summary>兼容已编译页面与扩展模块的旧任务列表调用签名。</summary>
+    public Task<WorkflowTaskListPage> GetTaskListAsync(
+        int adminUserId,
+        int? beforeExecutionLogId,
+        CancellationToken cancellationToken) =>
+        GetTaskListAsync(adminUserId, beforeExecutionLogId, null, cancellationToken);
+
     /// <summary>
     /// 预览当前管理员可清理的运行历史。只处理已完成的执行日志，进程内或数据库中仍未完成的任务不会被包含。
     /// </summary>
@@ -601,16 +628,19 @@ public sealed class NeuCharWorkflowAppService
                 executionLog.ReplayEventsJson!,
                 DesignerJsonOptions) ?? new List<NeuCharWorkflowProgress>();
             events = progress.Select((item, index) => new WorkflowReplayEvent(
-                index + 1,
-                item.NodeId,
-                item.NodeName,
-                item.Status,
-                item.Message,
-                item.Output,
-                item.Timestamp,
-                item.OutputSchema,
-                item.Input,
-                item.ObjectReference)).ToList();
+                    index + 1,
+                    item.NodeId,
+                    item.NodeName,
+                    item.Status,
+                    item.Message,
+                    item.Output,
+                    item.Timestamp,
+                    item.OutputSchema,
+                    item.Input)
+                {
+                    ObjectReference = item.ObjectReference
+                })
+                .ToList();
         }
         catch (JsonException ex)
         {
@@ -798,6 +828,51 @@ public sealed class NeuCharWorkflowAppService
 
     private Task<WorkflowEntity?> GetOwnedWorkflowAsync(int workflowId, int adminUserId) =>
         _workflowService.GetObjectAsync(z => z.Id == workflowId && z.AdminUserId == adminUserId);
+
+    private static IReadOnlyList<AgentWorkflowReference> GetAgentWorkflowReferences(
+        NeuCharWorkflowGraph graph)
+    {
+        return (graph?.Nodes ?? new List<NeuCharWorkflowNode>())
+            .Where(node => string.Equals(node.Type, "agent", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(node.Type, "agent-group", StringComparison.OrdinalIgnoreCase))
+            .Select(node => new
+            {
+                ProviderId = ReadNodeString(node.Config, "providerId"),
+                ObjectId = ReadNodeString(node.Config, "objectId")
+            })
+            .Where(node => string.Equals(node.ProviderId, "agents-manager", StringComparison.OrdinalIgnoreCase))
+            .Select(node =>
+            {
+                if (node.ObjectId.StartsWith("agent:", StringComparison.OrdinalIgnoreCase))
+                {
+                    return new AgentWorkflowReference(
+                        "agent",
+                        ParseNodeId(node.ObjectId, "agent:"));
+                }
+
+                if (node.ObjectId.StartsWith("group:", StringComparison.OrdinalIgnoreCase))
+                {
+                    return new AgentWorkflowReference(
+                        "group",
+                        ParseNodeId(node.ObjectId, "group:"));
+                }
+
+                return null;
+            })
+            .Where(reference => reference?.Id > 0)
+            .Distinct()
+            .ToList();
+    }
+
+    private static string ReadNodeString(
+        System.Text.Json.Nodes.JsonObject? config,
+        string key)
+        => config?.TryGetPropertyValue(key, out var value) == true
+            ? value?.ToString() ?? string.Empty
+            : string.Empty;
+
+    private static int ParseNodeId(string value, string prefix)
+        => int.TryParse(value[prefix.Length..], out var id) ? id : 0;
 
     private async Task<List<NeuCharWorkflowExecutionLog>> GetCompletedTaskLogsAsync(
         int adminUserId,
@@ -1065,8 +1140,10 @@ public sealed record WorkflowReplayEvent(
     string? Output,
     DateTimeOffset Timestamp,
     string? OutputSchema = null,
-    string? Input = null,
-    WorkflowObjectExecutionReference? ObjectReference = null);
+    string? Input = null)
+{
+    public WorkflowObjectExecutionReference? ObjectReference { get; init; }
+}
 
 public sealed record WorkflowRunReplay(
     int ExecutionLogId,

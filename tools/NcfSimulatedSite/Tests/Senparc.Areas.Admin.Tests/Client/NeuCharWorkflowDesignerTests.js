@@ -207,6 +207,12 @@ assert.match(registeredVueComponents['workflow-rich-text-input'].template, /@mou
     'Formula editor controls must keep their pointer completion event away from the canvas handler.');
 assert.match(workflowPageMarkup, /@@mouseup\.native\.stop/,
     'Pointer events inside the formula dialog must not reach the global canvas pointer handler.');
+assert.ok(workflowScript.includes("name: 'toArray'") && workflowScript.includes("name: 'flatten'"),
+    'The formula picker should expose the shared array helpers.');
+assert.ok(workflowPageMarkup.includes('template-editor-formulas') &&
+    workflowPageMarkup.includes('insertTemplateFormula(formula)') &&
+    workflowPageMarkup.includes('openCodeAssignmentTemplateEditor'),
+    'Safe Code assignments should reuse the common formula dialog and its quick-insert catalog.');
 assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('subWorkflowTargets()'),
     'The designer must provide valid target workflows to the sub-workflow selector.');
 assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('openSubWorkflow(workflowId)'),
@@ -1048,6 +1054,20 @@ vueOptions.methods.setSelectedNodes.call(unchangedSelectionContext, [selectionNo
 assert.strictEqual(unchangedSelectionContext.selectedNodeIds, unchangedSelectionIds,
     'Selecting the already-selected node must not replace the reactive selection array.');
 
+const editingNode = { id: 'editing-node', type: 'delay' };
+const editingNodeContext = {
+    editing: true,
+    editingLocked: false,
+    inspectorCollapsed: false,
+    selectedNodeId: 'editing-node'
+};
+assert.strictEqual(vueOptions.methods.isNodeBeingEdited.call(editingNodeContext, editingNode), true,
+    'The current inspector target should expose the active editing state on the canvas node.');
+assert.strictEqual(vueOptions.methods.isNodeBeingEdited.call({ ...editingNodeContext, inspectorCollapsed: true }, editingNode), false,
+    'A selected node should not be marked as being edited while the inspector is collapsed.');
+assert.strictEqual(vueOptions.methods.isNodeBeingEdited.call({ ...editingNodeContext, selectedNodeId: 'other-node' }, editingNode), false,
+    'Only the node currently shown in the inspector should expose the active editing state.');
+
 const formulaPointerContext = {
     canvasPan: { active: false, moved: false },
     selectionBox: { active: true, startX: 10, startY: 10, endX: 20, endY: 20, additive: false },
@@ -1074,7 +1094,8 @@ const formulaOpenContext = {
     clearSelectionBox: vueOptions.methods.clearSelectionBox,
     clearCanvasPointerInteraction: vueOptions.methods.clearCanvasPointerInteraction,
     isBinding() { return false; },
-    templateFor() { return null; }
+    templateFor() { return null; },
+    openTemplateEditorForValue: vueOptions.methods.openTemplateEditorForValue
 };
 vueOptions.methods.openNodeTemplateEditor.call(formulaOpenContext, {
     id: 'selection-a',
@@ -1400,11 +1421,15 @@ assert.ok(page.includes('按设置自动排版</button>') && page.includes('就�
     'The canvas shortcut menu should surface the common overflow layout actions.');
 assert.ok(page.includes('onCanvasMouseDown') && page.includes('class="workflow-selection-box"') && page.includes('selectedNodeIds'),
     'The canvas should expose a drag-selection rectangle and a multi-node selection state.');
+assert.ok(page.includes("'is-editing':isNodeBeingEdited(node)") && workflowScript.includes('isNodeBeingEdited(node)'),
+    'The canvas should distinguish the node currently being edited from the rest of the selection.');
 assert.ok(page.includes('openNodeContextMenu'), 'Nodes should expose a context menu on right click.');
 assert.ok(page.includes('class="workflow-context-menu"'), 'The node context menu should be rendered in the workflow page.');
 assert.ok(page.includes('>复制</button>') && page.includes('>删除</button>'), 'The node context menu should expose copy and delete actions.');
 assert.ok(styles.includes('.workflow-selection-box') && styles.includes('.workflow-node.is-multi-selected'),
     'Multi-selection should have a visible marquee and selected-node treatment.');
+assert.ok(styles.includes('.workflow-node.is-editing') && styles.includes('outline-offset: 3px'),
+    'The node currently being edited should have a distinct outer focus treatment.');
 assert.ok(styles.includes('.workflow-canvas-context-menu') && styles.includes('.workflow-canvas-node-insert-menu'),
     'Canvas shortcut commands and the contextual node picker should share dedicated styles.');
 assert.ok(page.includes('value="webhook"'), 'Workflow trigger settings should expose a Webhook mode.');
@@ -1604,6 +1629,59 @@ assert.strictEqual(templateSaveNode.config.parameters.message, '固定文本',
     'A removed placeholder must be saved as ordinary text rather than an invalid template that the server rejects.');
 assert.strictEqual(templateSaveContext.templateEditor.visible, false,
     'Applying a normalized template should still close the explicit variable editor.');
+const formulaInsertContext = {
+    editingLocked: false,
+    templateEditor: { text: 'hello world', selectionStart: 6, selectionEnd: 11 },
+    templateEditorInputElement() { return null; },
+    $nextTick() { }
+};
+vueOptions.methods.insertTemplateFormula.call(formulaInsertContext,
+    { name: 'toArray', arity: 1 });
+assert.strictEqual(formulaInsertContext.templateEditor.text, 'hello {{= toArray(world) }}',
+    'Selecting text before clicking a formula should wrap the selection as the first argument.');
+formulaInsertContext.templateEditor.text = "{{= upper(split(vars.msg, ',')) }}";
+formulaInsertContext.templateEditor.selectionStart = 0;
+formulaInsertContext.templateEditor.selectionEnd = formulaInsertContext.templateEditor.text.length;
+vueOptions.methods.insertTemplateFormula.call(formulaInsertContext,
+    { name: 'toArray', arity: 1 });
+assert.strictEqual(formulaInsertContext.templateEditor.text,
+    "{{= toArray(upper(split(vars.msg, ','))) }}",
+    'Selecting an existing whole formula should remove its old template wrapper before applying the new formula.');
+formulaInsertContext.templateEditor.text = "{{= upper(split(vars.msg, ',')) }}";
+formulaInsertContext.templateEditor.selectionStart = 3;
+formulaInsertContext.templateEditor.selectionEnd = formulaInsertContext.templateEditor.text.length - 3;
+vueOptions.methods.insertTemplateFormula.call(formulaInsertContext,
+    { name: 'toArray', arity: 1 });
+assert.strictEqual(formulaInsertContext.templateEditor.text,
+    "{{= toArray(upper(split(vars.msg, ','))) }}",
+    'Selecting only the expression inside an external formula wrapper should replace the whole wrapper instead of nesting it.');
+formulaInsertContext.templateEditor.text = '';
+formulaInsertContext.templateEditor.selectionStart = 0;
+formulaInsertContext.templateEditor.selectionEnd = 0;
+vueOptions.methods.insertTemplateFormula.call(formulaInsertContext,
+    { name: 'substring', arity: 3 });
+assert.strictEqual(formulaInsertContext.templateEditor.text, '{{= substring(, , ) }}',
+    'Multi-argument formulas should leave editable empty argument positions when no text is selected.');
+const assignmentSaveNode = { id: 'code-node', config: { assignments: [{ name: 'result', value: '' }] } };
+const assignmentSaveContext = {
+    templateEditor: {
+        visible: true,
+        nodeId: 'code-node',
+        configKey: 'assignments',
+        targetType: 'code-assignment',
+        assignmentIndex: 0,
+        text: '{{= toArray(input) }}',
+        bindings: []
+    },
+    form: { graph: { nodes: [assignmentSaveNode] } },
+    normalizeTemplateBindings: vueOptions.methods.normalizeTemplateBindings,
+    templateUsesBindingToken: vueOptions.methods.templateUsesBindingToken,
+    $set(target, key, value) { target[key] = value; }
+};
+vueOptions.methods.saveParameterTemplate.call(assignmentSaveContext);
+assert.strictEqual(assignmentSaveNode.config.assignments[0].value.$template.text,
+    '{{= toArray(input) }}',
+    'Safe Code formula edits should persist through the shared template contract.');
 assert.doesNotThrow(() => vueOptions.methods.setConfigBinding.call({
     form: { graph: { nodes: [] } },
     nodeOutputFields() { return []; },
@@ -1646,6 +1724,16 @@ assert.ok(page.includes("selectedNode.config.title") && page.includes("selectedN
     'NeuBell title/content and Agent Prompt should use the shared formula text input.');
 assert.ok(styles.includes('.workflow-rich-text-input') && styles.includes('.workflow-rich-text-info'),
     'Formula text inputs should have a distinct visual treatment and an info icon.');
+assert.ok(styles.includes('container-type: inline-size') &&
+    styles.includes('@container (max-width: 360px)') &&
+    styles.includes('.workflow-rich-text-input-control { flex-direction: column; }'),
+    'Shared formula inputs should stack their textarea and editor action when the Inspector makes the component narrow.');
+assert.ok(styles.includes('@container (max-width: 560px)') &&
+    styles.includes('.workflow-code-assignment-row { grid-template-columns: minmax(0, 1fr); }'),
+    'Safe Code assignment rows should stack variable, formula input, and delete action in narrow containers.');
+assert.ok(styles.includes('@container (max-width: 440px)') &&
+    styles.includes('.workflow-function-actions { width: 100%; flex-wrap: wrap; }'),
+    'Function and Agent object cards should let action buttons wrap instead of squeezing their titles.');
 assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('$template'),
     'The designer should persist mixed text binding values with an explicit template contract.');
 assert.ok(!page.includes("{{'{{'+item.token+'}}'}}"),

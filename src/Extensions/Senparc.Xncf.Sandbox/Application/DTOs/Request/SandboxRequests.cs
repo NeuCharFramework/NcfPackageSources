@@ -84,6 +84,81 @@ public class Sandbox_ExecRequest : FunctionAppRequestBase
     public string Code { get; set; } = SandboxExecCodeDefaults.PythonHello;
 }
 
+public class Sandbox_LabCommandRequest : FunctionAppRequestBase
+{
+    [Required]
+    [MaxLength(64)]
+    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    public string SessionId { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(8000)]
+    [Description("命令||在 Lab 容器内通过 /bin/sh -lc 执行的命令；工作目录限制在 Lab 工作区")]
+    public string Command { get; set; } = string.Empty;
+
+    [MaxLength(512)]
+    [Description("工作目录||相对于 Lab 工作区的目录，留空表示工作区根目录")]
+    public string WorkingDirectory { get; set; } = string.Empty;
+
+    [Description("超时（秒）||单次命令最长执行时间，默认 30 秒，最多 120 秒")]
+    public int TimeoutSeconds { get; set; } = 30;
+}
+
+public class Sandbox_LabUploadFileRequest : FunctionAppRequestBase
+{
+    [Required]
+    [MaxLength(64)]
+    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    public string SessionId { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(512)]
+    [Description("工作区文件路径||只能填写工作区内的相对路径，例如 data/input.json")]
+    public string RelativePath { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(4_194_304)]
+    [Description("Base64 内容||文件内容经过 Base64 编码，单个文件最多约 3 MB")]
+    public string ContentBase64 { get; set; } = string.Empty;
+
+    [Description("覆盖已有文件||关闭后，目标文件存在时操作失败")]
+    public bool Overwrite { get; set; } = true;
+}
+
+public class Sandbox_LabFileRequest : FunctionAppRequestBase
+{
+    [Required]
+    [MaxLength(64)]
+    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    public string SessionId { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(512)]
+    [Description("工作区文件路径||只能填写工作区内的相对路径")]
+    public string RelativePath { get; set; } = string.Empty;
+
+    [Description("读取上限（字节）||留空或 0 使用系统默认上限")]
+    public long MaxBytes { get; set; }
+}
+
+public class Sandbox_LabListFilesRequest : FunctionAppRequestBase
+{
+    [Required]
+    [MaxLength(64)]
+    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    public string SessionId { get; set; } = string.Empty;
+
+    [MaxLength(512)]
+    [Description("工作区目录||相对于 Lab 工作区的目录，留空表示根目录")]
+    public string RelativeDirectory { get; set; } = string.Empty;
+
+    [Description("递归列举||是否递归列举子目录")]
+    public bool Recursive { get; set; }
+
+    [Description("最多返回数量||留空或 0 使用系统默认上限")]
+    public int MaxItems { get; set; }
+}
+
 public class Sandbox_ListRequest : FunctionAppRequestBase
 {
 }

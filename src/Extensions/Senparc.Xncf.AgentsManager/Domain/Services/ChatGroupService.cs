@@ -521,7 +521,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         MaxOutputTokens = 2000,
                         Temperature = 0.3f,
                         TopP = 0.3f,
-                        DiagnosticId = $"chat-task-{chatTask.Id}"
+                        DiagnosticId = $"chat-task-{chatTask.Id}",
+                        AdminUserId = int.TryParse(request.HumanRecipientUserId, out var adminUserId)
+                            ? adminUserId
+                            : 0
                     },
                     onExecutionInfo: message => logger.AppendLine(message));
                 if (!build.Success)

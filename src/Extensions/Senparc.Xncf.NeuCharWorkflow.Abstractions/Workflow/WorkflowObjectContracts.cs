@@ -72,8 +72,11 @@ public sealed record WorkflowObjectExecutionReference(
 public sealed record WorkflowObjectExecutionResult(
     bool Success,
     string Output,
-    string ErrorMessage = null,
-    WorkflowObjectExecutionReference Reference = null);
+    string ErrorMessage = null)
+{
+    /// <summary>仅供 Workflow 日志跳转使用，不参与下游节点的业务输出。</summary>
+    public WorkflowObjectExecutionReference? Reference { get; init; }
+}
 
 /// <summary>
 /// 外部 XNCF 模块实现此接口，将其受控对象提供给已安装且开启的 Workflow 模块。

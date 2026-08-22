@@ -3,6 +3,50 @@
 // before mounting the root instead of using the deferred "#id" form.
 const MaxWorkflowConsoleEvents = 5000;
 const MaxWorkflowLoopIterations = 100000;
+const WorkflowFormulaDefinitions = [
+    { name: 'if', label: '条件', category: '判断', arity: 3, description: '根据条件返回两个值之一。第一个参数为条件，后两个参数分别是真值和假值。' },
+    { name: 'coalesce', label: '取首个非空值', category: '判断', arity: 2, description: '从多个参数中返回第一个非空值；可以继续手动添加更多参数。' },
+    { name: 'contains', label: '包含', category: '判断', arity: 2, description: '判断文本是否包含子文本，或数组是否包含指定项。' },
+    { name: 'startsWith', label: '前缀匹配', category: '判断', arity: 2, description: '判断文本是否以指定内容开头。' },
+    { name: 'endsWith', label: '后缀匹配', category: '判断', arity: 2, description: '判断文本是否以指定内容结尾。' },
+    { name: 'isEmpty', label: '是否为空', category: '判断', arity: 1, description: '判断值是否为 null、空文本或空数组。' },
+    { name: 'isNull', label: '是否为 null', category: '判断', arity: 1, description: '判断值是否为 null；空文本和空数组不视为 null。' },
+    { name: 'substring', label: '截取文本', category: '文本', arity: 3, description: '按起始位置和长度截取文本；长度参数可以留空以截取到末尾。' },
+    { name: 'trim', label: '去首尾空白', category: '文本', arity: 1, description: '删除文本首尾的空格、换行等空白字符。' },
+    { name: 'lower', label: '转小写', category: '文本', arity: 1, description: '将文本转换为小写。' },
+    { name: 'upper', label: '转大写', category: '文本', arity: 1, description: '将文本转换为大写。' },
+    { name: 'replace', label: '替换文本', category: '文本', arity: 3, description: '将文本中的指定内容替换为新内容。' },
+    { name: 'split', label: '分割文本', category: '文本', arity: 2, description: '按分隔符拆分文本并返回数组。' },
+    { name: 'concat', label: '连接值', category: '文本/数组', arity: 2, description: '连接文本；当参数中包含数组时，按数组项连接为一个新数组。' },
+    { name: 'length', label: '长度', category: '数组', arity: 1, description: '返回文本长度或数组项数。' },
+    { name: 'count', label: '计数', category: '数组', arity: 1, description: 'length 的别名，返回文本长度或数组项数。' },
+    { name: 'toArray', label: '转数组', category: '数组', arity: 1, description: '将单值包装为数组；已经是数组时返回数组副本。' },
+    { name: 'first', label: '首项', category: '数组', arity: 1, description: '返回数组或文本的第一项。' },
+    { name: 'last', label: '末项', category: '数组', arity: 1, description: '返回数组或文本的最后一项。' },
+    { name: 'at', label: '按索引取值', category: '数组', arity: 2, description: '按从 0 开始的索引读取数组或文本项。' },
+    { name: 'join', label: '连接数组', category: '数组', arity: 2, description: '使用指定分隔符把数组项连接成文本。' },
+    { name: 'sort', label: '排序', category: '数组', arity: 3, description: '对数组排序；可选字段路径和 asc/desc 排序方向。' },
+    { name: 'orderBy', label: '按字段排序', category: '数组', arity: 3, description: 'sort 的语义别名，按对象字段路径稳定排序。' },
+    { name: 'reverse', label: '反转', category: '数组', arity: 1, description: '返回数组项的反向副本。' },
+    { name: 'take', label: '取前几项', category: '数组', arity: 2, description: '返回数组开头指定数量的项。' },
+    { name: 'skip', label: '跳过前几项', category: '数组', arity: 2, description: '跳过数组开头指定数量的项。' },
+    { name: 'flatten', label: '展开一层', category: '数组', arity: 1, description: '将嵌套数组展开一层，不递归处理更深层级。' },
+    { name: 'sum', label: '求和', category: '数组', arity: 1, description: '将数组项转换为数字并求和。' },
+    { name: 'min', label: '最小值', category: '数组', arity: 1, description: '返回数组项转换后的最小数字。' },
+    { name: 'max', label: '最大值', category: '数组', arity: 1, description: '返回数组项转换后的最大数字。' },
+    { name: 'unique', label: '去重', category: '数组', arity: 1, description: '按文本表现去重并保留首次出现的项。' },
+    { name: 'keys', label: '对象键名', category: '对象', arity: 1, description: '返回对象的属性名数组。' },
+    { name: 'values', label: '对象值', category: '对象', arity: 1, description: '返回对象的属性值数组。' },
+    { name: 'has', label: '包含属性', category: '对象', arity: 2, description: '判断对象是否包含指定属性名。' },
+    { name: 'toNumber', label: '转数字', category: '类型', arity: 1, description: '将值转换为数字。' },
+    { name: 'toInt', label: '转 Int32', category: '类型', arity: 1, description: '将值转换为 Int32。' },
+    { name: 'toLong', label: '转 Int64', category: '类型', arity: 1, description: '将值转换为 Int64。' },
+    { name: 'toDecimal', label: '转 Decimal', category: '类型', arity: 1, description: '将值转换为 Decimal。' },
+    { name: 'toBool', label: '转布尔', category: '类型', arity: 1, description: '将值转换为布尔值，支持 true/false 或 1/0。' },
+    { name: 'toString', label: '转文本', category: '类型', arity: 1, description: '将值转换为文本。' },
+    { name: 'now', label: '当前时间', category: '时间', arity: 0, description: '返回当前 UTC 时间的 ISO 文本。' },
+    { name: 'formatDate', label: '格式化日期', category: '时间', arity: 2, description: '按指定格式格式化日期；格式参数留空时使用默认格式。' }
+];
 const workflowNodePickerTemplateElement = typeof document !== 'undefined'
     ? document.getElementById('workflow-node-picker-template')
     : null;
@@ -158,7 +202,7 @@ if (typeof Vue !== 'undefined' && typeof Vue.component === 'function') {
 
     Vue.component('workflow-rich-text-input', {
         props: {
-            value: { type: [String, Number], default: '' },
+            value: { type: [String, Number, Object], default: '' },
             disabled: { type: Boolean, default: false },
             multiline: { type: Boolean, default: false },
             rows: { type: Number, default: 4 },
@@ -223,17 +267,20 @@ new Vue({
             workflowSettingsVisible: false,
             templateEditorPlaceholder: '例如：请根据 {{value_1}} 生成一段摘要',
             templateEditorBindingHelp: '删除一个变量标签时，它在文本中的对应占位符也会一并删除。所有公式文本都可以使用 {{input}} 引用当前输入；带“支持公式文本”标记的字段还可以插入上游输出。',
-            templateExpressionHelp: '表达式写法：{{= if(contains(value_1, \"VIP\"), upper(value_1), \"普通\") }}。支持 if、contains、substring、length、trim、lower、upper、first、last、at、join、toNumber/toInt/toLong/toDecimal/toBool/toString、now、formatDate、split、replace、sort/orderBy、reverse、take、skip、sum、min、max、unique、比较和判断。非字符串参数请只填写完整公式，例如 {{= toInt(value_1) }}；加入前后文本后结果始终是字符串。工作流变量须写为 {{= vars.变量名 }}；不执行 JavaScript。',
             templateEditor: {
                 visible: false,
                 nodeId: '',
                 configKey: '',
                 parameterName: '',
+                targetType: '',
+                assignmentIndex: -1,
                 fieldLabel: '',
                 allowBindings: true,
                 text: '',
                 bindings: [],
-                pendingSelection: []
+                pendingSelection: [],
+                selectionStart: 0,
+                selectionEnd: 0
             },
             loopHighlight: {
                 nodeIds: [],
@@ -463,6 +510,23 @@ new Vue({
             return this.templateEditor.allowBindings
                 ? this.templateEditorBindingHelp
                 : '此字段只支持当前输入和受限公式；表达式不会执行任意 JavaScript。';
+        },
+        templateExpressionHelp() {
+            const names = WorkflowFormulaDefinitions.map(item => item.name).join('、');
+            return `表达式写法：{{= if(contains(value_1, "VIP"), upper(value_1), "普通") }}。支持 ${names}、比较和判断。非字符串参数请只填写完整公式，例如 {{= toInt(value_1) }}；加入前后文本后结果始终是字符串。工作流变量须写为 {{= vars.变量名 }}；不执行 JavaScript。右侧公式按钮可以快速插入。`;
+        },
+        templateEditorFormulaGroups() {
+            const groups = [];
+            const byCategory = new Map();
+            WorkflowFormulaDefinitions.forEach(formula => {
+                if (!byCategory.has(formula.category)) {
+                    const group = { category: formula.category, items: [] };
+                    byCategory.set(formula.category, group);
+                    groups.push(group);
+                }
+                byCategory.get(formula.category).items.push(formula);
+            });
+            return groups;
         },
         canvasZoomPercent() { return Math.round(this.canvasZoom * 100); },
         scaledCanvasSize() {
@@ -1288,6 +1352,13 @@ new Vue({
         },
         canDuplicateNode(node) {
             return !!node && !String(node.type || '').endsWith('trigger');
+        },
+        isNodeBeingEdited(node) {
+            return !!node &&
+                this.editing &&
+                !this.editingLocked &&
+                !this.inspectorCollapsed &&
+                this.selectedNodeId === node.id;
         },
         isNodeSelected(node) {
             return !!node && (this.selectedNodeIds || []).includes(node.id);
@@ -2737,7 +2808,16 @@ new Vue({
         },
         formulaValueText(value) {
             const template = this.templateFor(value);
-            return template ? String(template.text || '') : (typeof value === 'string' ? value : '');
+            if (template) return String(template.text || '');
+            if (value == null) return '';
+            if (typeof value === 'string') return value;
+            if (typeof value === 'object') {
+                try { return JSON.stringify(value); } catch { return String(value); }
+            }
+            return String(value);
+        },
+        runtimeTextLength(value) {
+            return this.formulaValueText(value).length;
         },
         isPureFormulaExpression(text) {
             const trimmed = String(text || '').trim();
@@ -2820,18 +2900,19 @@ new Vue({
                 position = end + 2;
             }
         },
-        openNodeTemplateEditor(node, configKey, options = {}) {
-            if (this.editingLocked || !node || !configKey) return;
-            const currentValue = node.config?.[configKey];
+        openTemplateEditorForValue(node, currentValue, options = {}) {
+            if (this.editingLocked || !node) return;
             if (this.isBinding(currentValue)) return;
             this.clearCanvasPointerInteraction();
             const template = this.templateFor(currentValue);
             this.templateEditor = {
                 visible: true,
                 nodeId: node.id,
-                configKey,
-                parameterName: '',
-                fieldLabel: options.fieldLabel || configKey,
+                configKey: options.configKey || '',
+                parameterName: options.parameterName || '',
+                targetType: options.targetType || 'node',
+                assignmentIndex: Number.isInteger(options.assignmentIndex) ? options.assignmentIndex : -1,
+                fieldLabel: options.fieldLabel || options.configKey || '',
                 allowBindings: options.allowBindings !== false,
                 text: template ? String(template.text || '') : (typeof currentValue === 'string' ? currentValue : ''),
                 bindings: template && Array.isArray(template.bindings)
@@ -2840,30 +2921,41 @@ new Vue({
                         source: { ...item.source }
                     }))
                     : [],
-                pendingSelection: []
+                pendingSelection: [],
+                selectionStart: 0,
+                selectionEnd: 0
             };
+        },
+        openNodeTemplateEditor(node, configKey, options = {}) {
+            if (!node || !configKey) return;
+            this.openTemplateEditorForValue(node, node.config?.[configKey], {
+                ...options,
+                configKey,
+                targetType: 'node'
+            });
         },
         openParameterTemplateEditor(node, parameter) {
             if (this.editingLocked || !node || !parameter || !this.canUseTemplate(parameter)) return;
             const currentValue = node.config.parameters?.[parameter.name];
-            this.clearCanvasPointerInteraction();
-            const template = this.templateFor(currentValue);
-            this.templateEditor = {
-                visible: true,
-                nodeId: node.id,
+            this.openTemplateEditorForValue(node, currentValue, {
                 configKey: 'parameters',
                 parameterName: parameter.name,
                 fieldLabel: `${this.parameterDisplayName(parameter)}文本`,
                 allowBindings: true,
-                text: template ? String(template.text || '') : (typeof currentValue === 'string' ? currentValue : ''),
-                bindings: template && Array.isArray(template.bindings)
-                    ? template.bindings.filter(item => item && item.source).map(item => ({
-                        token: String(item.token || ''),
-                        source: { ...item.source }
-                    }))
-                    : [],
-                pendingSelection: []
-            };
+                targetType: 'parameter'
+            });
+        },
+        openCodeAssignmentTemplateEditor(node, assignmentIndex) {
+            if (this.editingLocked || !node || !Array.isArray(node.config?.assignments)) return;
+            const assignment = node.config.assignments[assignmentIndex];
+            if (!assignment) return;
+            this.openTemplateEditorForValue(node, assignment.value, {
+                configKey: 'assignments',
+                assignmentIndex,
+                fieldLabel: `变量赋值 ${assignment.name || ''}`.trim(),
+                allowBindings: false,
+                targetType: 'code-assignment'
+            });
         },
         normalizeTemplateBindings(text, bindings) {
             const kept = [];
@@ -2893,6 +2985,60 @@ new Vue({
             this.templateEditor.text += `${separator}${placeholder}`;
             this.templateEditor.bindings.push({ token, source });
         },
+        templateEditorInputElement() {
+            const input = this.$refs && this.$refs.templateEditorInput;
+            if (!input) return null;
+            if (input.$refs && (input.$refs.textarea || input.$refs.input)) return input.$refs.textarea || input.$refs.input;
+            if (input.$el && input.$el.querySelector) return input.$el.querySelector('textarea,input');
+            return null;
+        },
+        captureTemplateSelection() {
+            const input = this.templateEditorInputElement();
+            if (!input || typeof input.selectionStart !== 'number') return;
+            this.templateEditor.selectionStart = input.selectionStart;
+            this.templateEditor.selectionEnd = input.selectionEnd;
+        },
+        insertTemplateFormula(formula) {
+            if (this.editingLocked || !formula) return;
+            const text = String(this.templateEditor.text || '');
+            const max = text.length;
+            const start = Math.max(0, Math.min(Number(this.templateEditor.selectionStart) || 0, max));
+            const end = Math.max(start, Math.min(Number(this.templateEditor.selectionEnd) || start, max));
+            const selected = text.slice(start, end);
+            const wholeFormula = selected.match(/^\s*\{\{=\s*([\s\S]*?)\s*\}\}\s*$/);
+            let replacementStart = start;
+            let replacementEnd = end;
+            let selectedArgument = wholeFormula ? wholeFormula[1].trim() : selected;
+            if (!wholeFormula) {
+                const formulaStart = text.lastIndexOf('{{=', start);
+                const formulaEndOffset = text.indexOf('}}', end);
+                const formulaPrefix = formulaStart >= 0 ? text.slice(formulaStart + 3, start) : '';
+                const formulaSuffix = formulaEndOffset >= 0 ? text.slice(end, formulaEndOffset) : '';
+                if (formulaStart >= 0 &&
+                    formulaEndOffset >= 0 &&
+                    /^\s*$/.test(formulaPrefix) &&
+                    /^\s*$/.test(formulaSuffix)) {
+                    replacementStart = formulaStart;
+                    replacementEnd = formulaEndOffset + 2;
+                    selectedArgument = selected.trim();
+                }
+            }
+            const argumentsText = Array.from({ length: Number(formula.arity) || 0 }, (_, index) =>
+                index === 0 && selectedArgument ? selectedArgument : '');
+            const snippet = `{{= ${formula.name}(${argumentsText.join(', ')}) }}`;
+            this.templateEditor.text = text.slice(0, replacementStart) + snippet + text.slice(replacementEnd);
+            this.templateEditor.selectionStart = replacementStart;
+            this.templateEditor.selectionEnd = replacementStart + snippet.length;
+            if (typeof this.$nextTick !== 'function') return;
+            this.$nextTick(() => {
+                const input = this.templateEditorInputElement();
+                if (!input || typeof input.focus !== 'function') return;
+                input.focus();
+                if (typeof input.setSelectionRange === 'function') {
+                    input.setSelectionRange(this.templateEditor.selectionStart, this.templateEditor.selectionEnd);
+                }
+            });
+        },
         removeTemplateBinding(token) {
             const placeholder = `{{${token}}}`;
             this.templateEditor.text = String(this.templateEditor.text || '').split(placeholder).join('');
@@ -2901,9 +3047,12 @@ new Vue({
         saveParameterTemplate() {
             const editor = this.templateEditor;
             const node = this.form.graph.nodes.find(item => item.id === editor.nodeId);
-            const isParameter = !editor.configKey || editor.configKey === 'parameters';
-            const target = isParameter ? node?.config?.parameters : node?.config;
-            const targetKey = isParameter ? editor.parameterName : editor.configKey;
+            const isAssignment = editor.targetType === 'code-assignment';
+            const isParameter = !isAssignment && (!editor.configKey || editor.configKey === 'parameters');
+            const target = isAssignment
+                ? node?.config?.assignments?.[editor.assignmentIndex]
+                : isParameter ? node?.config?.parameters : node?.config;
+            const targetKey = isAssignment ? 'value' : isParameter ? editor.parameterName : editor.configKey;
             if (!node || !targetKey || !target) {
                 editor.visible = false;
                 return;
@@ -3253,7 +3402,7 @@ new Vue({
                 const key = name.toLowerCase();
                 if (variableNames.has(key)) return `工作流变量“${name}”重复。`;
                 variableNames.add(key);
-                if (String(variable?.value ?? '').length > 8000) return `工作流变量“${name}”的值不能超过 8000 个字符。`;
+                if (this.runtimeTextLength(variable?.value) > 8000) return `工作流变量“${name}”的值不能超过 8000 个字符。`;
             }
             const triggers = this.form.graph.nodes.filter(node => String(node.type).endsWith('trigger'));
             if (triggers.length !== 1) return '工作流必须且只能包含一个触发器。';
@@ -3279,8 +3428,8 @@ new Vue({
             }
             if (!requireRunnable) return '';
             for (const node of this.form.graph.nodes.filter(item => item.type === 'aggregate')) {
-                if (!String(node.config?.outputTemplate || '').trim()) return `聚合节点“${node.name}”必须设置输出内容。`;
-                if (String(node.config.outputTemplate).length > 8000) return `聚合节点“${node.name}”的输出内容不能超过 8000 个字符。`;
+                if (!this.formulaValueText(node.config?.outputTemplate).trim()) return `聚合节点“${node.name}”必须设置输出内容。`;
+                if (this.runtimeTextLength(node.config.outputTemplate) > 8000) return `聚合节点“${node.name}”的输出内容不能超过 8000 个字符。`;
             }
             for (const node of this.form.graph.nodes.filter(item => item.type === 'loop')) {
                 const loopFormulaError = typeof this.loopCountFormulaValidationError === 'function'
@@ -3311,7 +3460,7 @@ new Vue({
                     if (!variableNames.has(String(assignment?.name || '').trim().toLowerCase())) {
                         return `安全代码节点“${node.name}”只能给已定义的工作流变量赋值。`;
                     }
-                    if (String(assignment?.value ?? '').length > 8000) return `安全代码节点“${node.name}”的赋值不能超过 8000 个字符。`;
+                    if (this.runtimeTextLength(assignment?.value) > 8000) return `安全代码节点“${node.name}”的赋值不能超过 8000 个字符。`;
                 }
             }
             for (const node of this.form.graph.nodes.filter(item => item.type === 'sub-workflow')) {
@@ -3353,6 +3502,10 @@ new Vue({
             node.config = node.config || {};
             node.config.assignments = Array.isArray(node.config.assignments) ? node.config.assignments : [];
             if (node.config.assignments.length < 30) node.config.assignments.push({ name: '', value: '' });
+        },
+        setCodeAssignmentValue(assignment, value) {
+            if (!assignment) return;
+            this.$set(assignment, 'value', value == null ? '' : value);
         },
         removeCodeAssignment(node, index) {
             if (this.editingLocked || !Array.isArray(node?.config?.assignments)) return;

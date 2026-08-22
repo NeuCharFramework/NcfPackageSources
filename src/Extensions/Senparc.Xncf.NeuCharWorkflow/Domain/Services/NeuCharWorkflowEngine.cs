@@ -97,8 +97,10 @@ public sealed record NeuCharWorkflowProgress(
     string Output,
     DateTimeOffset Timestamp,
     string? OutputSchema = null,
-    string? Input = null,
-    WorkflowObjectExecutionReference? ObjectReference = null);
+    string? Input = null)
+{
+    public WorkflowObjectExecutionReference? ObjectReference { get; init; }
+}
 
 public sealed class NeuCharWorkflowEngine
 {
@@ -155,7 +157,6 @@ public sealed class NeuCharWorkflowEngine
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly NeuCharWorkflowExecutionLogService _logService;
     private readonly NeuCharWorkflowParameterProtector _parameterProtector;
-    private readonly IReadOnlyDictionary<string, IWorkflowObjectProvider> _objectProviders;
     private readonly NeuCharWorkflowNeuBellProvider? _neuBellProvider;
     private readonly INeuBellPublisher? _neuBellPublisher;
     private readonly NeuCharWorkflowHumanInputService? _humanInputService;
@@ -165,7 +166,6 @@ public sealed class NeuCharWorkflowEngine
         IServiceScopeFactory scopeFactory,
         NeuCharWorkflowExecutionLogService logService,
         NeuCharWorkflowParameterProtector parameterProtector,
-        IEnumerable<IWorkflowObjectProvider> objectProviders,
         NeuCharWorkflowNeuBellProvider? neuBellProvider = null,
         INeuBellPublisher? neuBellPublisher = null,
         NeuCharWorkflowHumanInputService? humanInputService = null)
@@ -174,9 +174,6 @@ public sealed class NeuCharWorkflowEngine
         _scopeFactory = scopeFactory;
         _logService = logService;
         _parameterProtector = parameterProtector;
-        _objectProviders = objectProviders
-            .GroupBy(z => z.ProviderId, StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(z => z.Key, z => z.First(), StringComparer.OrdinalIgnoreCase);
         _neuBellProvider = neuBellProvider;
         _neuBellPublisher = neuBellPublisher;
         _humanInputService = humanInputService;
@@ -564,8 +561,10 @@ public sealed class NeuCharWorkflowEngine
 
                 var providerId = GetString(node.Config, "providerId");
                 var objectId = GetString(node.Config, "objectId");
+                using var providerScope = _scopeFactory.CreateScope();
+                var providers = GetWorkflowObjectProviders(providerScope.ServiceProvider);
                 if (string.IsNullOrWhiteSpace(providerId) ||
-                    !_objectProviders.TryGetValue(providerId, out var provider))
+                    !providers.TryGetValue(providerId, out var provider))
                 {
                     return $"节点“{node.Name ?? node.Id}”的 Provider 不可用。";
                 }
@@ -1256,8 +1255,10 @@ public sealed class NeuCharWorkflowEngine
     public async Task<IReadOnlyList<WorkflowObjectDescriptor>> GetWorkflowObjectsAsync(
         CancellationToken cancellationToken = default)
     {
+        using var scope = _scopeFactory.CreateScope();
+        var providers = GetWorkflowObjectProviders(scope.ServiceProvider);
         var result = new List<WorkflowObjectDescriptor>();
-        foreach (var provider in _objectProviders.Values)
+        foreach (var provider in providers.Values)
         {
             cancellationToken.ThrowIfCancellationRequested();
             result.AddRange(await provider.GetObjectsAsync(cancellationToken).ConfigureAwait(false));
@@ -1661,8 +1662,7 @@ public sealed class NeuCharWorkflowEngine
     {
         var providerId = GetString(node.Config, "providerId");
         var objectId = GetString(node.Config, "objectId");
-        if (string.IsNullOrWhiteSpace(providerId) ||
-            !_objectProviders.TryGetValue(providerId, out var provider))
+        if (string.IsNullOrWhiteSpace(providerId))
         {
             return (false, null, null, "工作流对象 Provider 不可用，请确认对应模块已安装并开启。");
         }
@@ -1734,6 +1734,13 @@ public sealed class NeuCharWorkflowEngine
             ? (true, JsonValue.Create(result.Output ?? NodeToText(input)), null, null)
             : (false, null, null, result.ErrorMessage);
     }
+
+    private static IReadOnlyDictionary<string, IWorkflowObjectProvider> GetWorkflowObjectProviders(
+        IServiceProvider serviceProvider) =>
+        serviceProvider
+            .GetServices<IWorkflowObjectProvider>()
+            .GroupBy(provider => provider.ProviderId, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
 
     private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteSubWorkflowNodeAsync(
         WorkflowEntity parentWorkflow,
@@ -2390,8 +2397,10 @@ public sealed class NeuCharWorkflowEngine
             output?.Length > 8_000 ? output[..8_000] : output,
             DateTimeOffset.UtcNow,
             outputSchema,
-            LimitReplayText(input, 20_000),
-            objectReference));
+            LimitReplayText(input, 20_000))
+        {
+            ObjectReference = objectReference
+        });
     }
 
     private static string? LimitReplayText(string? value, int maxLength) =>

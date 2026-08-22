@@ -336,17 +336,24 @@
                            @@mouseup.native.stop
                            width="min(760px, calc(100vw - 32px))"
                            append-to-body>
-                    <p class="template-editor-help">先输入固定文字，再从下方选择上游输出或“预载输入选择”。系统会插入一个可见的占位符；同一文本可插入多个变量。</p>
+                    <p class="template-editor-help">先输入固定文字，再从右侧选择公式或从下方选择上游输出。点击公式会插入完整表达式；选中文本时会自动包围选区，多参数公式会保留空参数位供继续填写。</p>
                     <el-alert :title="templateExpressionHelp"
                               type="warning"
                               :closable="false"
                               show-icon></el-alert>
-                    <el-input v-model="templateEditor.text"
-                              type="textarea"
-                              :rows="12"
-                              :disabled="editingLocked"
-                              :placeholder="templateEditorPlaceholder"></el-input>
-                    <div v-if="templateEditor.allowBindings" class="template-editor-picker">
+                    <div class="template-editor-layout">
+                        <div class="template-editor-main">
+                            <el-input ref="templateEditorInput"
+                                      v-model="templateEditor.text"
+                                      type="textarea"
+                                      :rows="12"
+                                      :disabled="editingLocked"
+                                      :placeholder="templateEditorPlaceholder"
+                                      @@input="captureTemplateSelection"
+                                      @@click.native="captureTemplateSelection"
+                                      @@keyup.native="captureTemplateSelection"
+                                      @@select.native="captureTemplateSelection"></el-input>
+                            <div v-if="templateEditor.allowBindings" class="template-editor-picker">
                         <span>插入上游值</span>
                         <el-cascader :value="templateEditor.pendingSelection"
                                      :options="upstreamOutputOptions(null)"
@@ -379,6 +386,31 @@
                               type="info"
                               :closable="false"
                               show-icon></el-alert>
+                        </div>
+                        <aside class="template-editor-formulas">
+                            <div class="template-editor-formulas-heading">
+                                <strong>支持的公式</strong>
+                                <small>点击插入</small>
+                            </div>
+                            <div v-for="group in templateEditorFormulaGroups" :key="group.category" class="template-editor-formula-group">
+                                <span class="template-editor-formula-category">{{group.category}}</span>
+                                <el-tooltip v-for="formula in group.items"
+                                            :key="formula.name"
+                                            effect="dark"
+                                            placement="left"
+                                            :content="formula.description">
+                                    <button type="button"
+                                            class="template-editor-formula-button"
+                                            :disabled="editingLocked"
+                                            @@mousedown.prevent.stop="captureTemplateSelection"
+                                            @@click.stop="insertTemplateFormula(formula)">
+                                        <code>{{formula.name}}({{formula.arity ? '…' : ''}})</code>
+                                        <span>{{formula.label}}</span>
+                                    </button>
+                                </el-tooltip>
+                            </div>
+                        </aside>
+                    </div>
                     <span slot="footer" class="dialog-footer">
                         <el-button @@click="templateEditor.visible=false">取消</el-button>
                         <el-button type="primary" :disabled="editingLocked" @@click="saveParameterTemplate">应用</el-button>
@@ -509,7 +541,7 @@
                                 <article v-for="(node,index) in form.graph.nodes"
                                          :key="node.id"
                                          :data-node-id="node.id"
-                                         :class="['workflow-node','node-'+node.type,'state-'+nodeState(node),{selected:isNodeSelected(node),'is-multi-selected':selectedNodeIds.length>1 && isNodeSelected(node),'validation-error':!!nodeValidationError(node),'loop-scope-highlight':isLoopScopeHighlighted(node),'loop-label-highlight':isLoopLabelHighlighted(node)}]"
+                                         :class="['workflow-node','node-'+node.type,'state-'+nodeState(node),{selected:isNodeSelected(node),'is-multi-selected':selectedNodeIds.length>1 && isNodeSelected(node),'is-editing':isNodeBeingEdited(node),'validation-error':!!nodeValidationError(node),'loop-scope-highlight':isLoopScopeHighlighted(node),'loop-label-highlight':isLoopLabelHighlighted(node)}]"
                                          :style="{left:node.x+'px',top:node.y+'px'}"
                                          :title="nodeValidationError(node) || ''"
                                          @@mousedown.stop="startDrag($event,node)"
@@ -1163,13 +1195,16 @@
                                                                    :value="variable.name"
                                                                    :disabled="!variable.name"></el-option>
                                                     </el-select>
-                                                    <workflow-rich-text-input v-model="assignment.value"
+                                                    <workflow-rich-text-input :value="formulaValueText(assignment.value)"
+                                                                              @@input="setCodeAssignmentValue(assignment,$event)"
                                                                               multiline
                                                                               :rows="2"
                                                                               :disabled="editingLocked"
-                                                                              :editable="false"
+                                                                              :editable="true"
                                                                               :maxlength="8000"
-                                                                              :help-text="'例如：{{= upper(input) }}；使用 vars.变量名 读取当前变量值。'"></workflow-rich-text-input>
+                                                                              edit-label="编辑公式"
+                                                                              :help-text="'例如：{{= upper(input) }}；使用 vars.变量名 读取当前变量值。点击编辑公式可打开统一公式编辑器。'"
+                                                                              @@edit-template="openCodeAssignmentTemplateEditor(selectedNode,index)"></workflow-rich-text-input>
                                                     <el-button type="text"
                                                                :disabled="editingLocked"
                                                                @@click="removeCodeAssignment(selectedNode,index)">删除</el-button>

@@ -300,6 +300,189 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         return result;
     }
 
+    public async Task<SandboxExecResult> ExecInteractiveAsync(
+        string sessionId,
+        string command,
+        string? workingDirectory = null,
+        int timeoutSeconds = 30,
+        CancellationToken cancellationToken = default)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
+        var context = await GetInteractiveControlContextAsync(sessionService, sessionId, cancellationToken)
+            .ConfigureAwait(false);
+
+        var normalizedCommand = (command ?? string.Empty).Trim();
+        if (normalizedCommand.Length == 0)
+        {
+            throw new InvalidOperationException("Lab 命令不能为空。");
+        }
+
+        if (normalizedCommand.Length > _quota.MaxInteractiveCommandCharacters)
+        {
+            throw new InvalidOperationException(
+                $"Lab 命令不能超过 {_quota.MaxInteractiveCommandCharacters} 个字符。");
+        }
+
+        var timeout = timeoutSeconds <= 0 ? 30 : timeoutSeconds;
+        if (timeout > _quota.MaxInteractiveCommandSeconds)
+        {
+            throw new InvalidOperationException(
+                $"Lab 命令超时时间不能超过 {_quota.MaxInteractiveCommandSeconds} 秒。");
+        }
+
+        var relativeDirectory = SandboxWorkspacePaths.NormalizeRelativePath(
+            workingDirectory,
+            allowEmpty: true);
+        var containerWorkingDirectory = SandboxWorkspacePaths.CombineContainerPath(
+            context.Template.WorkspaceMountPath,
+            relativeDirectory);
+
+        var result = await context.Runtime.ExecInteractiveAsync(
+                new SandboxInteractiveExecRequest
+                {
+                    SessionId = context.Entity.SessionId,
+                    RuntimeHandle = context.Entity.RuntimeHandle!,
+                    Command = normalizedCommand,
+                    WorkingDirectory = containerWorkingDirectory,
+                    Timeout = TimeSpan.FromSeconds(timeout),
+                    MaxOutputCharacters = _quota.MaxInteractiveOutputCharacters
+                },
+                cancellationToken)
+            .ConfigureAwait(false);
+
+        context.Entity.Touch();
+        await sessionService.SaveObjectAsync(context.Entity).ConfigureAwait(false);
+        return result;
+    }
+
+    public async Task<SandboxWorkspaceFileInfo> UploadWorkspaceFileAsync(
+        string sessionId,
+        string relativePath,
+        byte[] content,
+        bool overwrite = true,
+        CancellationToken cancellationToken = default)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
+        var context = await GetInteractiveControlContextAsync(sessionService, sessionId, cancellationToken)
+            .ConfigureAwait(false);
+
+        content ??= Array.Empty<byte>();
+        if (content.LongLength > _quota.MaxWorkspaceFileBytes)
+        {
+            throw new InvalidOperationException(
+                $"上传文件不能超过 {_quota.MaxWorkspaceFileBytes} 字节。");
+        }
+
+        var normalizedPath = SandboxWorkspacePaths.NormalizeRelativePath(relativePath);
+        var workspace = SandboxWorkspacePaths.GetSessionWorkspacePath(_workspaceRoot, context.Entity.SessionId);
+        var target = SandboxWorkspacePaths.CombineHostPath(workspace, normalizedPath);
+        EnsureWorkspacePathSafe(workspace, target);
+        if (File.Exists(target) && !overwrite)
+        {
+            throw new InvalidOperationException($"工作区文件已存在：{normalizedPath}");
+        }
+
+        Directory.CreateDirectory(Path.GetDirectoryName(target)!);
+        await File.WriteAllBytesAsync(target, content, cancellationToken).ConfigureAwait(false);
+        var file = ToWorkspaceFileInfo(workspace, target);
+        context.Entity.Touch();
+        await sessionService.SaveObjectAsync(context.Entity).ConfigureAwait(false);
+        return file;
+    }
+
+    public async Task<SandboxWorkspaceFileContent> ReadWorkspaceFileAsync(
+        string sessionId,
+        string relativePath,
+        long maxBytes = 0,
+        CancellationToken cancellationToken = default)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
+        var context = await GetInteractiveControlContextAsync(sessionService, sessionId, cancellationToken)
+            .ConfigureAwait(false);
+
+        var normalizedPath = SandboxWorkspacePaths.NormalizeRelativePath(relativePath);
+        var workspace = SandboxWorkspacePaths.GetSessionWorkspacePath(_workspaceRoot, context.Entity.SessionId);
+        var target = SandboxWorkspacePaths.CombineHostPath(workspace, normalizedPath);
+        EnsureWorkspacePathSafe(workspace, target);
+        if (!File.Exists(target))
+        {
+            throw new FileNotFoundException("工作区文件不存在。", normalizedPath);
+        }
+
+        var info = new FileInfo(target);
+        if (info.Length > _quota.MaxWorkspaceReadBytes)
+        {
+            throw new InvalidOperationException(
+                $"读取文件不能超过 {_quota.MaxWorkspaceReadBytes} 字节。");
+        }
+
+        var requestedMaxBytes = maxBytes <= 0
+            ? _quota.MaxWorkspaceReadBytes
+            : Math.Min(maxBytes, _quota.MaxWorkspaceReadBytes);
+        if (info.Length > requestedMaxBytes)
+        {
+            throw new InvalidOperationException(
+                $"文件大小超过本次读取上限 {requestedMaxBytes} 字节。");
+        }
+
+        var content = await File.ReadAllBytesAsync(target, cancellationToken).ConfigureAwait(false);
+        context.Entity.Touch();
+        await sessionService.SaveObjectAsync(context.Entity).ConfigureAwait(false);
+        return new SandboxWorkspaceFileContent
+        {
+            File = ToWorkspaceFileInfo(workspace, target),
+            Content = content
+        };
+    }
+
+    public async Task<IReadOnlyList<SandboxWorkspaceFileInfo>> ListWorkspaceFilesAsync(
+        string sessionId,
+        string? relativeDirectory = null,
+        bool recursive = false,
+        int maxItems = 0,
+        CancellationToken cancellationToken = default)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
+        var context = await GetInteractiveControlContextAsync(sessionService, sessionId, cancellationToken)
+            .ConfigureAwait(false);
+
+        var normalizedDirectory = SandboxWorkspacePaths.NormalizeRelativePath(
+            relativeDirectory,
+            allowEmpty: true);
+        var workspace = SandboxWorkspacePaths.GetSessionWorkspacePath(_workspaceRoot, context.Entity.SessionId);
+        var directory = normalizedDirectory.Length == 0
+            ? workspace
+            : SandboxWorkspacePaths.CombineHostPath(workspace, normalizedDirectory);
+        EnsureWorkspacePathSafe(workspace, directory);
+        if (!Directory.Exists(directory))
+        {
+            throw new DirectoryNotFoundException($"工作区目录不存在：{normalizedDirectory}");
+        }
+
+        var limit = maxItems <= 0
+            ? _quota.MaxWorkspaceListItems
+            : Math.Min(maxItems, _quota.MaxWorkspaceListItems);
+        var options = new EnumerationOptions
+        {
+            RecurseSubdirectories = recursive,
+            IgnoreInaccessible = true,
+            ReturnSpecialDirectories = false,
+            AttributesToSkip = FileAttributes.ReparsePoint
+        };
+        var files = Directory.EnumerateFiles(directory, "*", options)
+            .Take(limit)
+            .Select(path => ToWorkspaceFileInfo(workspace, path))
+            .ToArray();
+
+        context.Entity.Touch();
+        await sessionService.SaveObjectAsync(context.Entity).ConfigureAwait(false);
+        return files;
+    }
+
     public async Task<IReadOnlyList<SandboxSessionInfo>> ListAsync(CancellationToken cancellationToken = default)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -478,6 +661,85 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
 
         return runtime;
     }
+
+    private async Task<InteractiveControlContext> GetInteractiveControlContextAsync(
+        SandboxSessionService sessionService,
+        string sessionId,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(sessionId))
+        {
+            throw new InvalidOperationException("SessionId 不能为空。");
+        }
+
+        var entity = await sessionService.GetBySessionIdAsync(sessionId.Trim()).ConfigureAwait(false)
+                     ?? throw new InvalidOperationException($"会话不存在：{sessionId}");
+        if (entity.Status != SandboxSessionStatus.Running
+            || string.IsNullOrWhiteSpace(entity.RuntimeHandle)
+            || entity.RuntimeHandle.StartsWith("exec-placeholder:", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("当前会话不是可控制的运行中 Lab。");
+        }
+
+        if (!SandboxTemplateCatalog.TryGet(entity.TemplateKey, out var template)
+            || !template.Interactive
+            || !template.SupportsInteractiveControl)
+        {
+            throw new InvalidOperationException(
+                $"模板 {entity.TemplateKey} 不支持持久化 Lab 控制。");
+        }
+
+        var runtime = await ResolveRuntimeAsync(entity.RuntimeKind, cancellationToken).ConfigureAwait(false);
+        return new InteractiveControlContext(entity, template, runtime);
+    }
+
+    private static void EnsureWorkspacePathSafe(string workspace, string target)
+    {
+        var normalizedWorkspace = Path.GetFullPath(workspace)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+            + Path.DirectorySeparatorChar;
+        var normalizedTarget = Path.GetFullPath(target);
+        if (!normalizedTarget.StartsWith(normalizedWorkspace, StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException("工作区路径越界。");
+        }
+
+        var current = normalizedWorkspace.TrimEnd(Path.DirectorySeparatorChar);
+        var relative = Path.GetRelativePath(current, normalizedTarget);
+        foreach (var segment in relative.Split(
+                     new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar },
+                     StringSplitOptions.RemoveEmptyEntries))
+        {
+            current = Path.Combine(current, segment);
+            if (Directory.Exists(current)
+                && new DirectoryInfo(current).Attributes.HasFlag(FileAttributes.ReparsePoint))
+            {
+                throw new InvalidOperationException("工作区不允许穿过符号链接或重解析点。");
+            }
+
+            if (File.Exists(current)
+                && new FileInfo(current).Attributes.HasFlag(FileAttributes.ReparsePoint))
+            {
+                throw new InvalidOperationException("工作区不允许操作符号链接或重解析点。");
+            }
+        }
+    }
+
+    private static SandboxWorkspaceFileInfo ToWorkspaceFileInfo(string workspace, string path)
+    {
+        var info = new FileInfo(path);
+        return new SandboxWorkspaceFileInfo
+        {
+            RelativePath = Path.GetRelativePath(workspace, path).Replace('\\', '/'),
+            Length = info.Length,
+            LastWriteTimeUtc = info.LastWriteTimeUtc
+        };
+    }
+
+    private sealed record InteractiveControlContext(
+        SandboxSession Entity,
+        SandboxTemplateDefinition Template,
+        ISandboxRuntime Runtime);
 
     private async Task SweepExpiredAsync(CancellationToken cancellationToken)
     {

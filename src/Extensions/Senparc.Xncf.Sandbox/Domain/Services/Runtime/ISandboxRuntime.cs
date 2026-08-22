@@ -31,6 +31,10 @@ public interface ISandboxRuntime
         SandboxExecRequest request,
         CancellationToken cancellationToken = default);
 
+    Task<SandboxExecResult> ExecInteractiveAsync(
+        SandboxInteractiveExecRequest request,
+        CancellationToken cancellationToken = default);
+
     Task DestroyAsync(string runtimeHandle, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<string>> ListOrphanHandlesAsync(CancellationToken cancellationToken = default);

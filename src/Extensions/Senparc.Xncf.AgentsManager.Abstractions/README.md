@@ -18,4 +18,6 @@
 
 Use the shared event and integration contracts exposed through the package dependency when defining an optional agent integration. The package does not create agent templates, execute tools, persist chat history, or configure an AI provider; use `Senparc.Xncf.AgentsManager` for those runtime features.
 
+`IAgentWorkflowReferenceValidator` is an optional cross-module guard. NeuChar Workflow can call it before saving a graph so Agent-to-Workflow and multi-level Agent/Group/Workflow cycles are rejected before persistence.
+
 Treat agent messages and tool calls as sensitive data and enforce ownership and authorization in the consuming module.

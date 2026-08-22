@@ -43,11 +43,15 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.WorkContext.Provider;
+using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
 using Senparc.Xncf.AgentsManager.Domain.Services;
+using Senparc.Xncf.AgentsManager.Abstractions;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
@@ -61,6 +65,9 @@ using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using Senparc.Xncf.KnowledgeBase.Domain.Services;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.XncfBase.FunctionRenders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,12 +82,22 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly AgentsTemplateService _agentsTemplateService;
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
+        private readonly IAgentWorkflowReferenceValidator _agentWorkflowReferenceValidator;
+        private readonly IWorkflowFunctionCallingProvider _workflowFunctionCallingProvider;
 
-        public AgentTemplateAppService(IServiceProvider serviceProvider, AgentsTemplateService agentsTemplateService, PromptItemService promptItemService, PromptRangeService promptRangeService) : base(serviceProvider)
+        public AgentTemplateAppService(
+            IServiceProvider serviceProvider,
+            AgentsTemplateService agentsTemplateService,
+            PromptItemService promptItemService,
+            PromptRangeService promptRangeService,
+            IEnumerable<IAgentWorkflowReferenceValidator> agentWorkflowReferenceValidators = null,
+            IEnumerable<IWorkflowFunctionCallingProvider> workflowFunctionCallingProviders = null) : base(serviceProvider)
         {
             this._agentsTemplateService = agentsTemplateService;
             this._promptItemService = promptItemService;
             this._promptRangeService = promptRangeService;
+            _agentWorkflowReferenceValidator = agentWorkflowReferenceValidators?.FirstOrDefault();
+            _workflowFunctionCallingProvider = workflowFunctionCallingProviders?.FirstOrDefault();
         }
 
         //[ApiBind]
@@ -452,6 +469,35 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
 
                 await ValidateAgentModelBindingAsync(agentTemplateDto);
                 await ValidateKnowledgeBaseBindingAsync(agentTemplateDto.KnowledgeBaseId);
+                agentTemplateDto.FunctionBindings = AgentFunctionBindingCodec
+                    .Normalize(agentTemplateDto.FunctionBindings)
+                    .ToList();
+                agentTemplateDto.FunctionCallNames = AgentFunctionBindingCodec.Serialize(
+                    agentTemplateDto.FunctionBindings,
+                    agentTemplateDto.FunctionCallNames);
+
+                if (_agentWorkflowReferenceValidator != null && agentTemplateDto.Id > 0)
+                {
+                    var bindingError = await _agentWorkflowReferenceValidator.ValidateAgentBindingsAsync(
+                        agentTemplateDto.Id,
+                        GetCurrentAdminUserId(),
+                        agentTemplateDto.FunctionBindings
+                            .Where(AgentFunctionBindingCodec.IsWorkflowBinding)
+                            .Select(binding => binding.WorkflowId > 0
+                                ? binding.WorkflowId.Value
+                                : int.TryParse(binding.Key, out var workflowId) ? workflowId : 0)
+                            .Where(workflowId => workflowId > 0)
+                            .Distinct()
+                            .ToList(),
+                        default);
+                    if (bindingError != null)
+                    {
+                        response.Success = false;
+                        response.ErrorMessage = bindingError;
+                        return null;
+                    }
+                }
+
                 var newDto = await this._agentsTemplateService.UpdateAgentTemplateAsync(agentTemplateDto.Id, agentTemplateDto);
                 await PopulateAgentMetadataAsync(new[] { newDto });
                 return newDto;
@@ -533,6 +579,84 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                         AIModelDto = aiModelDto
                     }
                 };
+
+                return result;
+            });
+        }
+
+        [ApiBind]
+        public async Task<AppResponseBase<AgentFunctionBindingCatalogResponse>> GetFunctionBindingCatalog(int agentId = 0)
+        {
+            return await this.GetResponseAsync<AgentFunctionBindingCatalogResponse>(async (response, logger) =>
+            {
+                var result = new AgentFunctionBindingCatalogResponse();
+                var currentAgent = agentId > 0
+                    ? await _agentsTemplateService.GetObjectAsync(item => item.Id == agentId)
+                    : null;
+                result.CurrentBindings = AgentFunctionBindingCodec.Parse(currentAgent?.FunctionCallNames)
+                    .Select(CloneBinding)
+                    .ToList();
+
+                var moduleService = base.GetRequiredService<XncfModuleService>();
+                foreach (var register in XncfRegisterManager.RegisterList)
+                {
+                    var module = await moduleService.GetObjectAsync(item => item.Uid == register.Uid);
+                    var available = module?.State == XncfModules_State.开放;
+                    if (!Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var group))
+                    {
+                        continue;
+                    }
+
+                    foreach (var bag in group.Values
+                        .Where(item => item.MethodInfo != null && item.FunctionRenderAttribute.AllowAiInvocation)
+                        .GroupBy(item => item.Key)
+                        .Select(items => items.First()))
+                    {
+                        result.Functions.Add(new AgentFunctionBindingOptionResponse
+                        {
+                            Kind = "function",
+                            Key = $"{register.Uid}::{bag.Key}",
+                            Name = bag.FunctionRenderAttribute.Name,
+                            Description = bag.FunctionRenderAttribute.Description,
+                            ModuleUid = register.Uid,
+                            ModuleName = register.MenuName,
+                            ModuleVersion = register.Version,
+                            FunctionKey = bag.Key,
+                            ParameterCount = bag.MethodInfo.GetParameters().Length,
+                            Available = available
+                        });
+                    }
+                }
+
+                result.Plugins = AIPluginHub.Instance.GetAllPluginNames()
+                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                    .OrderBy(name => name)
+                    .Select(name => new AgentFunctionBindingOptionResponse
+                    {
+                        Kind = "plugin",
+                        Key = name,
+                        Name = name,
+                        Description = "兼容旧版 Agent Plugin Function Calling 绑定。",
+                        Available = true
+                    })
+                    .ToList();
+
+                var adminUserId = GetCurrentAdminUserId();
+                if (_workflowFunctionCallingProvider != null && adminUserId > 0)
+                {
+                    var workflows = await _workflowFunctionCallingProvider
+                        .GetAvailableAsync(adminUserId, default);
+                    result.Workflows = workflows.Select(workflow => new AgentFunctionBindingOptionResponse
+                    {
+                        Kind = "workflow",
+                        Key = workflow.Id.ToString(),
+                        WorkflowId = workflow.Id,
+                        Name = workflow.Name,
+                        Description = workflow.Description,
+                        ParameterCount = workflow.Parameters?.Count ?? 0,
+                        Available = true
+                    }).ToList();
+                }
 
                 return result;
             });
@@ -756,6 +880,12 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 .ToDictionary(z => z.Key, z => z.ToList());
             foreach (var dto in dtoList)
             {
+                dto.FunctionBindings = AgentFunctionBindingCodec.Parse(
+                        dto.FunctionCallNames)
+                    .Select(CloneBinding)
+                    .ToList();
+                dto.FunctionCallNames = AgentFunctionBindingCodec.GetLegacyPluginNames(
+                    dto.FunctionCallNames);
                 if (!historyGroups.TryGetValue(dto.Id, out var agentHistories))
                 {
                     continue;
@@ -813,6 +943,32 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 }
             }
         }
+
+        private int GetCurrentAdminUserId()
+        {
+            try
+            {
+                return base.GetService<IAdminWorkContextProvider>()?.GetAdminWorkContext()?.AdminUserId ?? 0;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private static AgentFunctionBindingDto CloneBinding(AgentFunctionBindingDto binding)
+            => binding == null
+                ? null
+                : new AgentFunctionBindingDto
+                {
+                    Kind = binding.Kind,
+                    Key = binding.Key,
+                    Name = binding.Name,
+                    Description = binding.Description,
+                    ModuleUid = binding.ModuleUid,
+                    FunctionKey = binding.FunctionKey,
+                    WorkflowId = binding.WorkflowId
+                };
 
         /// <summary>
         /// 获取所有已注册的 AI Plugin 类型

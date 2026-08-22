@@ -54,6 +54,8 @@ public static class SandboxTemplateCatalog
                 Interactive = true,
                 Image = "quay.io/jupyter/minimal-notebook:latest",
                 ContainerPort = 8888,
+                SupportsInteractiveControl = true,
+                WorkspaceMountPath = "/home/jovyan/work",
                 DefaultCpuLimit = 1,
                 DefaultMemoryMb = 1024,
                 DefaultTtl = TimeSpan.FromMinutes(45)
@@ -67,6 +69,8 @@ public static class SandboxTemplateCatalog
                 // Build tools/SandboxImages/JupyterDotnet or override this image in appsettings.
                 Image = "ncf-jupyter-dotnet:10.0",
                 ContainerPort = 8888,
+                SupportsInteractiveControl = true,
+                WorkspaceMountPath = "/home/jovyan/work",
                 DefaultCpuLimit = 1,
                 DefaultMemoryMb = 1536,
                 DefaultTtl = TimeSpan.FromMinutes(45)

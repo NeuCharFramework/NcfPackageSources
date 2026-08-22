@@ -27,6 +27,7 @@ NCF 独立沙箱编排模块：为用户快速创建/销毁隔离实验环境（
 | 单元测试（ImageResolver） | ✅ |
 | Jupyter 访问 / 反向代理 | ✅ 列表使用容器本机映射端口；仍支持 `/sandbox-jupyter/{sessionId}/` 代理 |
 | csharp-exec .NET 10 file-based | ✅ `sdk:10.0` + `dotnet run --file main.cs` |
+| 持久化 Lab FunctionRender 控制 | ✅ 命令、工作区文件上传/下载/列举 |
 | Wasmtime 实装 | ⏳ |
 
 ## 架构
@@ -68,6 +69,24 @@ Jupyter Kernel 和构建时预热的常用 NuGet 包；镜像构建完成后需�
 - JupyterLab：BSD-3-Clause（勿用商标背书）
 - Jupyter 列表链接使用 Docker 分配的本机映射端口和 token 直达容器；容器只绑定 `127.0.0.1`
 - Jupyter 反向代理仍可通过 `/sandbox-jupyter/{sessionId}/lab` 访问（需管理员登录）；该入口由服务端注入 token
+
+### 持久化 Lab 操作
+
+`jupyter-python` 和 `jupyter-csharp` 是持久化交互式会话。Sandbox 的 FunctionRender
+提供以下稳定方法，可由 Admin Function、AI Function Calling 和 NeuCharWorkflow 复用：
+
+- `LabExec`：在容器工作区内执行 `/bin/sh -lc` 命令，默认 30 秒，最长 120 秒，输出有长度上限；
+- `LabUploadFile`：使用 Base64 写入工作区内的相对路径，单文件默认最多约 3 MB；
+- `LabDownloadFile`：读取工作区文件并返回 Base64，读取大小受上限约束；
+- `LabListFiles`：列举工作区文件，可选择递归和返回数量上限。
+
+所有文件操作都拒绝绝对路径、路径穿越和符号链接/重解析点，并且只允许运行中的
+Jupyter Lab 会话。`python-exec` / `csharp-exec` 仍然是一次性 `docker run --rm`
+任务；`ncf-preview` 仍然只支持固定的 NCF 预览流程，不开放通用 Shell 控制。
+
+AdminChat 仍需开启 Function Invocation，并将 Sandbox 模块关联到会话；Workflow
+则通过已有 Function 目录和统一执行服务调用这些方法。命令执行属于高权限容器内操作，
+生产部署应继续结合管理员权限、会话关联和 Docker 运行时隔离策略。
 
 ## 后台入口
 

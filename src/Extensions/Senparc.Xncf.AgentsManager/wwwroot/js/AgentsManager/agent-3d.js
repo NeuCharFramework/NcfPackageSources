@@ -422,8 +422,11 @@
         roughness: 0.55
       });
       const pillar = new THREE.Mesh(groupGeom, mat);
+      const totalTasks = waiting + chatting + paused + finished + cancelled + failed;
+      const heightScale = 0.72 + Math.min(1.45, totalTasks * 0.08 + group.runningTaskCount * 0.16);
+      pillar.scale.y = heightScale;
       pillar.position.copy(group._pos);
-      pillar.position.y = 8;
+      pillar.position.y = 8 * heightScale;
       pillar.userData = { type: 'group', groupId: group.id };
       this.scene.add(pillar);
 
@@ -434,12 +437,12 @@
       const finished = statusMap[3] || statusMap['3'] || 0;
       const cancelled = statusMap[4] || statusMap['4'] || 0;
       const failed = statusMap[5] || statusMap['5'] || 0;
-      const totalTasks = waiting + chatting + paused + finished + cancelled + failed;
       const enableText = isEnabled ? '已启用' : '已停用';
       const text = group.name
         + '\n状态:' + enableText
-        + '\nTasks:' + totalTasks + ' Running:' + group.runningTaskCount
-        + '\nW:' + waiting + ' C:' + chatting + ' P:' + paused + ' F:' + finished;
+        + '\n任务:' + totalTasks + ' 运行:' + group.runningTaskCount
+        + '\n等待:' + waiting + ' 聊天:' + chatting + ' 暂停:' + paused
+        + '\n完成:' + finished + ' 取消:' + cancelled + ' 失败:' + failed;
       const label = textSprite(text, {
         fontSize: 24,
         padding: 16,
@@ -514,8 +517,15 @@
         target = new THREE.Vector3(Math.cos(angle) * (radius + 20), 2, Math.sin(angle) * (radius + 20));
       }
 
+      const isActive = activeAgentIds.has(agentKey) || agent.chattingCount > 0;
       const mat = new THREE.MeshStandardMaterial({
-        color: agent.enable ? (agent.agentKind === 'RemoteA2A' ? 0xf59e0b : 0x5ed4ff) : 0x6e7d90,
+        color: !agent.enable
+          ? 0x6e7d90
+          : (agent.agentKind === 'RemoteA2A'
+            ? (isActive ? 0xffb34d : 0xf59e0b)
+            : (isActive ? 0x8be8bd : 0x5ed4ff)),
+        emissive: isActive ? (agent.agentKind === 'RemoteA2A' ? 0x7c3d0b : 0x175f54) : 0x000000,
+        emissiveIntensity: isActive ? 0.38 : 0,
         transparent: true,
         opacity: 0.98,
         metalness: 0.08,
@@ -529,13 +539,17 @@
 
       const promptText = agent.promptCode ? agent.promptCode : '--';
       const scoreText = (typeof agent.score === 'number' && agent.score >= 0) ? agent.score.toFixed(1) : '--';
-      const stateText = agent.enable ? 'Enabled' : 'Disabled';
+      const stateText = agent.enable ? (isActive ? '运行中' : '已启用') : '已停用';
+      const a2aText = agent.agentKind === 'RemoteA2A'
+        ? '\n连接状态:' + (agent.connectionStatus || 0)
+        : (agent.hasPublishedA2A ? '\nA2A发布:' + (agent.publishedA2AEnabled ? '已启用' : '已配置') : '');
       const label = textSprite(
         agent.name
-        + '\nType:' + (agent.agentKind === 'RemoteA2A' ? 'Remote A2A' : 'Local')
+        + '\n类型:' + (agent.agentKind === 'RemoteA2A' ? '远程 A2A' : '本地 Agent')
         + '\nPrompt:' + promptText
-        + '\nScore:' + scoreText + '  Running:' + (agent.chattingCount || 0)
-        + '\nState:' + stateText,
+        + '\n评分:' + scoreText + '  运行:' + (agent.chattingCount || 0)
+        + '\n状态:' + stateText
+        + a2aText,
         {
         fontSize: 20,
         padding: 14,
@@ -556,7 +570,7 @@
         target: target,
         groupIds: memberGroupIds,
         pulseRing: null,
-        isActive: activeAgentIds.has(agentKey) || agent.chattingCount > 0,
+        isActive: isActive,
         pulsePhase: (hashNumber(agentKey) % 100) / 10,
         motionPhase: (hashNumber(agentKey + '-motion') % 100) / 16,
         baseY: target.y
@@ -747,6 +761,9 @@
     const intersects = this.raycaster.intersectObjects(this.groupObjects.map(function (g) { return g.mesh; }), false);
     if (intersects.length === 0) {
       this.lockedGroupId = null;
+      if (typeof this.options.onGroupLock === 'function') {
+        this.options.onGroupLock(null, false);
+      }
       this.applyGroupHighlight();
       return;
     }
@@ -756,6 +773,9 @@
       this.lockedGroupId = null;
     } else {
       this.lockedGroupId = groupId;
+    }
+    if (typeof this.options.onGroupLock === 'function') {
+      this.options.onGroupLock(this.lockedGroupId, Boolean(this.lockedGroupId));
     }
     this.applyGroupHighlight();
   };

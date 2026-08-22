@@ -12,6 +12,7 @@
 
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Application.DTOs.Request;
@@ -103,6 +104,113 @@ public class SandboxAppService : AppServiceBase
             logger.Append($"ExitCode={result.ExitCode}");
             response.Data =
                 $"ExitCode: {result.ExitCode}<br/><b>stdout</b><pre>{WebUtility.HtmlEncode(result.StdOut)}</pre><b>stderr</b><pre>{WebUtility.HtmlEncode(result.StdErr)}</pre>";
+            return null;
+        });
+    }
+
+    [FunctionRender("执行 Lab 命令", "在运行中的持久化 JupyterLab 容器工作区内执行受限时长的 Shell 命令", typeof(Register), AllowAiInvocation = true)]
+    public async Task<StringAppResponse> LabExec(Sandbox_LabCommandRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            var result = await _orchestrator.ExecInteractiveAsync(
+                    request.SessionId,
+                    request.Command,
+                    request.WorkingDirectory,
+                    request.TimeoutSeconds)
+                .ConfigureAwait(false);
+            logger.Append($"Lab SessionId={request.SessionId}, ExitCode={result.ExitCode}");
+            response.Data = JsonSerializer.Serialize(new
+            {
+                sessionId = request.SessionId,
+                exitCode = result.ExitCode,
+                stdout = result.StdOut,
+                stderr = result.StdErr
+            });
+            return null;
+        });
+    }
+
+    [FunctionRender("上传 Lab 文件", "把 Base64 文件内容写入运行中的持久化 JupyterLab 工作区", typeof(Register), AllowAiInvocation = true)]
+    public async Task<StringAppResponse> LabUploadFile(Sandbox_LabUploadFileRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            byte[] content;
+            try
+            {
+                content = Convert.FromBase64String(request.ContentBase64 ?? string.Empty);
+            }
+            catch (FormatException)
+            {
+                response.Success = false;
+                response.ErrorMessage = "ContentBase64 不是有效的 Base64 内容。";
+                return null;
+            }
+
+            var file = await _orchestrator.UploadWorkspaceFileAsync(
+                    request.SessionId,
+                    request.RelativePath,
+                    content,
+                    request.Overwrite)
+                .ConfigureAwait(false);
+            logger.Append($"Lab file uploaded: SessionId={request.SessionId}, Path={file.RelativePath}, Bytes={file.Length}");
+            response.Data = JsonSerializer.Serialize(new
+            {
+                sessionId = request.SessionId,
+                file.RelativePath,
+                file.Length,
+                file.LastWriteTimeUtc
+            });
+            return null;
+        });
+    }
+
+    [FunctionRender("下载 Lab 文件", "读取运行中的持久化 JupyterLab 工作区文件并返回 Base64 内容", typeof(Register), AllowAiInvocation = true)]
+    public async Task<StringAppResponse> LabDownloadFile(Sandbox_LabFileRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            var file = await _orchestrator.ReadWorkspaceFileAsync(
+                    request.SessionId,
+                    request.RelativePath,
+                    request.MaxBytes)
+                .ConfigureAwait(false);
+            logger.Append($"Lab file downloaded: SessionId={request.SessionId}, Path={file.File.RelativePath}, Bytes={file.File.Length}");
+            response.Data = JsonSerializer.Serialize(new
+            {
+                sessionId = request.SessionId,
+                file = new
+                {
+                    file.File.RelativePath,
+                    file.File.Length,
+                    file.File.LastWriteTimeUtc
+                },
+                contentBase64 = Convert.ToBase64String(file.Content)
+            });
+            return null;
+        });
+    }
+
+    [FunctionRender("列举 Lab 文件", "列举运行中的持久化 JupyterLab 工作区文件", typeof(Register), AllowAiInvocation = true)]
+    public async Task<StringAppResponse> LabListFiles(Sandbox_LabListFilesRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            var files = await _orchestrator.ListWorkspaceFilesAsync(
+                    request.SessionId,
+                    request.RelativeDirectory,
+                    request.Recursive,
+                    request.MaxItems)
+                .ConfigureAwait(false);
+            logger.Append($"Lab files listed: SessionId={request.SessionId}, Count={files.Count}");
+            response.Data = JsonSerializer.Serialize(new
+            {
+                sessionId = request.SessionId,
+                directory = request.RelativeDirectory ?? string.Empty,
+                recursive = request.Recursive,
+                files
+            });
             return null;
         });
     }
