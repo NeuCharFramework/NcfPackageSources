@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
@@ -29,6 +31,10 @@ public static class NeuCharWorkflowExpressionEngine
 {
     private const int MaxLength = 512;
     private const int MaxDepth = 32;
+    private static readonly JsonSerializerOptions TextJsonOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
     private static readonly HashSet<string> Functions = new(StringComparer.OrdinalIgnoreCase)
     {
         "if", "coalesce", "contains", "startsWith", "endsWith", "length", "substring",
@@ -464,7 +470,10 @@ public static class NeuCharWorkflowExpressionEngine
     {
         if (value == null) return string.Empty;
         if (value is JsonValue json && json.TryGetValue<string>(out var text)) return text ?? string.Empty;
-        return value.ToJsonString();
+        // Text functions operate on the readable JSON representation of arrays/objects.
+        // Keep non-ASCII characters intact so upper/lower cannot transform JSON's "\u"
+        // escape marker into the invalid "\U" form.
+        return value.ToJsonString(TextJsonOptions);
     }
 
     private sealed class ExpressionException(string message) : Exception(message) { }

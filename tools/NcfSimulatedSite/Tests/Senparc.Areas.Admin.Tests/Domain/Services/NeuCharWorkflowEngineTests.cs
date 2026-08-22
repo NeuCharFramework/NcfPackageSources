@@ -1297,6 +1297,7 @@ public class NeuCharWorkflowEngineTests
         var variables = new Dictionary<string, JsonNode>
         {
             ["item"] = JsonValue.Create("one"),
+            ["msg"] = JsonValue.Create("哈利波特"),
             ["nested"] = JsonNode.Parse("""[1, [2, 3], 4]""")!,
             ["object"] = JsonNode.Parse("""{ "first": 1, "second": 2 }""")!
         };
@@ -1313,6 +1314,19 @@ public class NeuCharWorkflowEngineTests
         Assert.IsTrue(emptyValue!.GetValue<bool>());
         Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate("isNull(null)", variables, out var nullValue, out error), error);
         Assert.IsTrue(nullValue!.GetValue<bool>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate(
+            "upper(split(msg, ','))",
+            variables,
+            out var upperArray,
+            out error), error);
+        Assert.AreEqual("[\"哈利波特\"]", upperArray!.GetValue<string>());
+        Assert.IsFalse(upperArray.GetValue<string>().Contains("\\U", StringComparison.Ordinal));
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate(
+            "upper(last(split(msg, ',')))",
+            variables,
+            out var upperLast,
+            out error), error);
+        Assert.AreEqual("哈利波特", upperLast!.GetValue<string>());
     }
 
     [TestMethod]
