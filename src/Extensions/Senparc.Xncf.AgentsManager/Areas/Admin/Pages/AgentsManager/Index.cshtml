@@ -149,56 +149,58 @@
 
                     </el-scrollbar>
                     <div v-else-if="agentListViewMode === 'three'" class="agent-3d-wrap">
-                        <div class="agent-3d-controls">
-                            <el-select v-model="agentGraphFilterGroupId" size="mini" clearable placeholder="全部组" @@change="handleAgentGraphFilterChange">
-                                <el-option v-for="item in agentGraphGroupOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                            </el-select>
-                            <el-select v-model="agentGraphFilterTaskStatuses" size="mini" multiple collapse-tags placeholder="任务状态" @@change="handleAgentGraphFilterChange">
-                                <el-option label="等待" :value="0"></el-option>
-                                <el-option label="聊天中" :value="1"></el-option>
-                                <el-option label="暂停" :value="2"></el-option>
-                                <el-option label="完成" :value="3"></el-option>
-                                <el-option label="取消" :value="4"></el-option>
-                            </el-select>
-                            <el-checkbox v-model="agentGraphShowOnlyActiveGroup" @@change="handleAgentGraphFilterChange">仅运行中组</el-checkbox>
-                            <el-select v-model="quickJumpGroupId" size="mini" clearable filterable placeholder="快速进入组">
-                                <el-option v-for="item in quickJumpGroupOptions" :key="'qg-'+item.id" :label="item.name" :value="item.id"></el-option>
-                            </el-select>
-                            <el-button size="mini" type="primary" plain @@click="handleQuickJumpGroup">进入组</el-button>
-                            <el-select v-model="quickJumpTaskId" size="mini" clearable filterable placeholder="快速进入任务">
-                                <el-option v-for="item in quickJumpTaskOptions" :key="'qt-'+item.id" :label="item.name" :value="item.id"></el-option>
-                            </el-select>
-                            <el-button size="mini" type="success" plain @@click="handleQuickJumpTask">进入任务</el-button>
+                        <div class="agent-3d-header">
+                            <div class="agent-3d-controls">
+                                <el-select v-model="agentGraphFilterGroupId" size="mini" clearable placeholder="全部组" @@change="handleAgentGraphFilterChange">
+                                    <el-option v-for="item in agentGraphGroupOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                                </el-select>
+                                <el-select v-model="agentGraphFilterTaskStatuses" size="mini" multiple collapse-tags placeholder="任务状态" @@change="handleAgentGraphFilterChange">
+                                    <el-option label="等待" :value="0"></el-option>
+                                    <el-option label="聊天中" :value="1"></el-option>
+                                    <el-option label="暂停" :value="2"></el-option>
+                                    <el-option label="完成" :value="3"></el-option>
+                                    <el-option label="取消" :value="4"></el-option>
+                                </el-select>
+                                <el-checkbox v-model="agentGraphShowOnlyActiveGroup" @@change="handleAgentGraphFilterChange">仅运行中组</el-checkbox>
+                                <el-select v-model="quickJumpGroupId" size="mini" clearable filterable placeholder="快速进入组">
+                                    <el-option v-for="item in quickJumpGroupOptions" :key="'qg-'+item.id" :label="item.name" :value="item.id"></el-option>
+                                </el-select>
+                                <el-button size="mini" type="primary" plain @@click="handleQuickJumpGroup">进入组</el-button>
+                                <el-select v-model="quickJumpTaskId" size="mini" clearable filterable placeholder="快速进入任务">
+                                    <el-option v-for="item in quickJumpTaskOptions" :key="'qt-'+item.id" :label="item.name" :value="item.id"></el-option>
+                                </el-select>
+                                <el-button size="mini" type="success" plain @@click="handleQuickJumpTask">进入任务</el-button>
+                            </div>
+                            <div class="agent-3d-overview">
+                                <div class="agent-3d-overview__item agent">
+                                    <span>本地 Agent</span>
+                                    <strong>{{ agentGraphOverview.localActive }} / {{ agentGraphOverview.local }}</strong>
+                                    <small>{{ agentGraphOverview.localEnabled }} 个已启用</small>
+                                </div>
+                                <div class="agent-3d-overview__item a2a">
+                                    <span>远程 A2A</span>
+                                    <strong>{{ agentGraphOverview.remoteActive }} / {{ agentGraphOverview.remote }}</strong>
+                                    <small>{{ agentGraphOverview.remoteEnabled }} 个可用</small>
+                                </div>
+                                <div class="agent-3d-overview__item group">
+                                    <span>Agent 组</span>
+                                    <strong>{{ agentGraphOverview.groupsActive }} / {{ agentGraphOverview.groups }}</strong>
+                                    <small>{{ agentGraphOverview.groupsEnabled }} 个已启用</small>
+                                </div>
+                                <div class="agent-3d-overview__item task">
+                                    <span>任务与发布</span>
+                                    <strong>{{ agentGraphOverview.chattingTasks }} / {{ agentGraphOverview.activeTasks }}</strong>
+                                    <small>A2A 发布 {{ agentGraphOverview.publishedEnabled }} / {{ agentGraphOverview.published }}</small>
+                                </div>
+                            </div>
+                            <div class="agent-3d-focus" v-if="agentGraphFocusedGroup">
+                                <strong>{{ agentGraphFocusedGroup.name }}</strong>
+                                <span>{{ agentGraphFocus.locked ? '已锁定' : '当前聚焦' }}</span>
+                                <span>运行中 {{ agentGraphFocusedGroup.runningTaskCount || 0 }}</span>
+                                <span>成员 {{ (agentGraphFocusedGroup.memberParticipantKeys || agentGraphFocusedGroup.memberAgentIds || []).length }}</span>
+                            </div>
+                            <div class="agent-3d-tip">悬停 Group 柱体可聚焦组成员；点击 Group 可锁定/取消锁定。颜色和流动光点分别表示 Agent 类型、启用状态与实时任务。</div>
                         </div>
-                        <div class="agent-3d-overview">
-                            <div class="agent-3d-overview__item agent">
-                                <span>本地 Agent</span>
-                                <strong>{{ agentGraphOverview.localActive }} / {{ agentGraphOverview.local }}</strong>
-                                <small>{{ agentGraphOverview.localEnabled }} 个已启用</small>
-                            </div>
-                            <div class="agent-3d-overview__item a2a">
-                                <span>远程 A2A</span>
-                                <strong>{{ agentGraphOverview.remoteActive }} / {{ agentGraphOverview.remote }}</strong>
-                                <small>{{ agentGraphOverview.remoteEnabled }} 个可用</small>
-                            </div>
-                            <div class="agent-3d-overview__item group">
-                                <span>Agent 组</span>
-                                <strong>{{ agentGraphOverview.groupsActive }} / {{ agentGraphOverview.groups }}</strong>
-                                <small>{{ agentGraphOverview.groupsEnabled }} 个已启用</small>
-                            </div>
-                            <div class="agent-3d-overview__item task">
-                                <span>任务与发布</span>
-                                <strong>{{ agentGraphOverview.chattingTasks }} / {{ agentGraphOverview.activeTasks }}</strong>
-                                <small>A2A 发布 {{ agentGraphOverview.publishedEnabled }} / {{ agentGraphOverview.published }}</small>
-                            </div>
-                        </div>
-                        <div class="agent-3d-focus" v-if="agentGraphFocusedGroup">
-                            <strong>{{ agentGraphFocusedGroup.name }}</strong>
-                            <span>{{ agentGraphFocus.locked ? '已锁定' : '当前聚焦' }}</span>
-                            <span>运行中 {{ agentGraphFocusedGroup.runningTaskCount || 0 }}</span>
-                            <span>成员 {{ (agentGraphFocusedGroup.memberParticipantKeys || agentGraphFocusedGroup.memberAgentIds || []).length }}</span>
-                        </div>
-                        <div class="agent-3d-tip">悬停 Group 柱体可聚焦组成员；点击 Group 可锁定/取消锁定。颜色和流动光点分别表示 Agent 类型、启用状态与实时任务。</div>
                         <div class="agent-3d-legend">
                             <span class="legend-item"><i class="legend-dot waiting"></i>等待</span>
                             <span class="legend-item"><i class="legend-dot chatting"></i>聊天中</span>

@@ -412,6 +412,14 @@
     groups.forEach(function (group) {
       const isEnabled = group.enable !== false;
       const hasRunningTask = group.runningTaskCount > 0;
+      const statusMap = group.taskStatusCounts || {};
+      const waiting = statusMap[0] || statusMap['0'] || 0;
+      const chatting = statusMap[1] || statusMap['1'] || 0;
+      const paused = statusMap[2] || statusMap['2'] || 0;
+      const finished = statusMap[3] || statusMap['3'] || 0;
+      const cancelled = statusMap[4] || statusMap['4'] || 0;
+      const failed = statusMap[5] || statusMap['5'] || 0;
+      const totalTasks = waiting + chatting + paused + finished + cancelled + failed;
       const mat = new THREE.MeshStandardMaterial({
         color: !isEnabled ? 0x6c5561 : (hasRunningTask ? 0x48c5ff : 0x7f91a6),
         emissive: !isEnabled ? 0x331821 : 0x000000,
@@ -422,7 +430,6 @@
         roughness: 0.55
       });
       const pillar = new THREE.Mesh(groupGeom, mat);
-      const totalTasks = waiting + chatting + paused + finished + cancelled + failed;
       const heightScale = 0.72 + Math.min(1.45, totalTasks * 0.08 + group.runningTaskCount * 0.16);
       pillar.scale.y = heightScale;
       pillar.position.copy(group._pos);
@@ -430,13 +437,6 @@
       pillar.userData = { type: 'group', groupId: group.id };
       this.scene.add(pillar);
 
-      const statusMap = group.taskStatusCounts || {};
-      const waiting = statusMap[0] || statusMap['0'] || 0;
-      const chatting = statusMap[1] || statusMap['1'] || 0;
-      const paused = statusMap[2] || statusMap['2'] || 0;
-      const finished = statusMap[3] || statusMap['3'] || 0;
-      const cancelled = statusMap[4] || statusMap['4'] || 0;
-      const failed = statusMap[5] || statusMap['5'] || 0;
       const enableText = isEnabled ? '已启用' : '已停用';
       const text = group.name
         + '\n状态:' + enableText

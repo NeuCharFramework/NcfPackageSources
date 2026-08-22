@@ -341,15 +341,31 @@ height:100%;
     overflow: hidden;
 }
 
-.agent-3d-controls {
+.agent-3d-header {
     position: absolute;
-    right: 12px;
     top: 10px;
+    left: 12px;
+    right: 12px;
     z-index: 5;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 8px;
+    pointer-events: none;
+}
+
+.agent-3d-header > * {
+    pointer-events: auto;
+}
+
+.agent-3d-controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
     padding: 6px 8px;
+    box-sizing: border-box;
     border-radius: 8px;
     background: rgba(4, 12, 22, 0.58);
     border: 1px solid rgba(89, 167, 226, 0.28);
@@ -368,12 +384,11 @@ height:100%;
 }
 
 .agent-3d-tip {
-    position: absolute;
-    left: 12px;
-    top: 58px;
-    z-index: 4;
+    align-self: flex-start;
+    max-width: 100%;
     color: rgba(226, 242, 255, 0.92);
     font-size: 12px;
+    line-height: 1.4;
     background: rgba(3, 10, 18, 0.45);
     padding: 6px 10px;
     border-radius: 6px;
@@ -381,14 +396,10 @@ height:100%;
 }
 
 .agent-3d-overview {
-    position: absolute;
-    left: 12px;
-    top: 10px;
-    z-index: 4;
     display: grid;
     grid-template-columns: repeat(4, minmax(110px, 1fr));
     gap: 8px;
-    max-width: calc(100% - 330px);
+    width: 100%;
 }
 
 .agent-3d-overview__item {
@@ -435,15 +446,11 @@ height:100%;
 }
 
 .agent-3d-focus {
-    position: absolute;
-    left: 12px;
-    top: 102px;
-    z-index: 4;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
-    max-width: calc(100% - 24px);
+    max-width: 100%;
     padding: 7px 10px;
     border: 1px solid rgba(94, 212, 255, 0.5);
     border-radius: 6px;
@@ -533,13 +540,6 @@ height:100%;
 }
 
 @media (max-width: 900px) {
-    .agent-3d-controls {
-        left: 12px;
-        right: 12px;
-        top: 10px;
-        flex-wrap: wrap;
-    }
-
     .agent-3d-controls .el-select {
         width: calc(50% - 4px);
     }
@@ -548,20 +548,8 @@ height:100%;
         width: calc(50% - 4px);
     }
 
-    .agent-3d-tip {
-        top: 236px;
-    }
-
     .agent-3d-overview {
-        top: 60px;
-        left: 12px;
-        right: 12px;
-        max-width: none;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .agent-3d-focus {
-        top: 170px;
     }
 
     .agent-3d-debug {
