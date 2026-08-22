@@ -25,6 +25,11 @@
             <p>首次仅加载最新 30 条运行记录；滚动到底部会继续加载历史，正在运行的任务会自动更新。</p>
         </div>
         <div class="workflow-tasks-header-actions">
+            <el-tag v-if="workflowIdFilter"
+                    closable
+                    size="small"
+                    type="primary"
+                    @@close="clearWorkflowFilter">当前工作流 #{{workflowIdFilter}}</el-tag>
             <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" placeholder="搜索工作流或状态"></el-input>
             <el-button size="small" icon="el-icon-delete" type="danger" plain :loading="cleaning" @@click="quickCleanTasks">快速清理</el-button>
             <el-button size="small" icon="el-icon-refresh" :loading="loading" @@click="refreshTasks">刷新</el-button>
@@ -83,9 +88,9 @@
                                :loading="abortingTaskId===scope.row.taskId"
                                @@click.stop="abortTask(scope.row)">中止</el-button>
                     <el-button type="primary" size="mini" plain icon="el-icon-video-play"
-                               :disabled="scope.row.status==='running' || !scope.row.replayAvailable"
+                               :disabled="scope.row.status!=='running' && !scope.row.replayAvailable"
                                @@click.stop="openTask(scope.row)">
-                        {{scope.row.status==='running' ? '运行中' : (scope.row.replayAvailable ? '回看运行' : '暂无快照')}}
+                        {{scope.row.status==='running' ? '查看运行' : (scope.row.replayAvailable ? '回看运行' : '暂无快照')}}
                     </el-button>
                 </template>
             </el-table-column>

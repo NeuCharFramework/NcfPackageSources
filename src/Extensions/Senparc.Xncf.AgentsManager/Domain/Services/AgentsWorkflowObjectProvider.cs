@@ -174,7 +174,7 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 return new WorkflowObjectExecutionResult(false, null, "Agent 组不存在或未启用。");
             }
 
-            await _groupService.RunChatGroupAwaitAsync(new ChatGroup_RunGroupRequest
+            var groupRun = await _groupService.RunChatGroupAwaitWithResultAsync(new ChatGroup_RunGroupRequest
             {
                 ChatGroupId = groupId,
                 AiModelId = request.AiModelId,
@@ -212,7 +212,22 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                     50),
                 CancellationToken = cancellationToken
             }).ConfigureAwait(false);
-            return new WorkflowObjectExecutionResult(true, $"Agent 组“{group.Name}”已完成本轮任务。");
+            var reference = new WorkflowObjectExecutionReference(
+                "agent-group",
+                ProviderName,
+                groupRun.ChatTaskId,
+                groupRun.ChatGroupId,
+                groupRun.ChatGroupName);
+            return groupRun.Status == ChatTask_Status.Finished
+                ? new WorkflowObjectExecutionResult(
+                    true,
+                    $"Agent 组“{group.Name}”已完成本轮任务。",
+                    Reference: reference)
+                : new WorkflowObjectExecutionResult(
+                    false,
+                    null,
+                    $"Agent 组“{group.Name}”未正常完成，当前状态：{groupRun.Status}。",
+                    reference);
         }
 
         if (request.ObjectId?.StartsWith("agent:", StringComparison.OrdinalIgnoreCase) == true &&

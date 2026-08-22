@@ -32,10 +32,11 @@ public class TasksModel(
 {
     public Task OnGetAsync() => Task.CompletedTask;
 
-    public async Task<IActionResult> OnGetListAsync(int? beforeExecutionLogId = null) =>
+    public async Task<IActionResult> OnGetListAsync(int? beforeExecutionLogId = null, int? workflowId = null) =>
         Ok(await workflowAppService.GetTaskListAsync(
             CurrentAdminUserId,
             beforeExecutionLogId,
+            workflowId,
             HttpContext.RequestAborted).ConfigureAwait(false));
 
     public async Task<IActionResult> OnGetCleanupPreviewAsync() =>

@@ -440,6 +440,7 @@ public sealed class NeuCharWorkflowAppService
     public async Task<WorkflowTaskListPage> GetTaskListAsync(
         int adminUserId,
         int? beforeExecutionLogId = null,
+        int? workflowId = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -447,9 +448,20 @@ public sealed class NeuCharWorkflowAppService
             adminUserId,
             cancellationToken).ConfigureAwait(false);
         var workflowIds = workflowNames.Keys.ToList();
+        if (workflowId.HasValue && workflowId.Value > 0)
+        {
+            if (!workflowNames.ContainsKey(workflowId.Value))
+            {
+                return new WorkflowTaskListPage(Array.Empty<WorkflowTaskListItem>(), false, null);
+            }
+
+            workflowIds = new List<int> { workflowId.Value };
+        }
         var loadLatest = !beforeExecutionLogId.HasValue || beforeExecutionLogId.Value <= 0;
         var activeRuns = loadLatest
             ? _runCoordinator.GetActiveRuns(adminUserId)
+                .Where(run => !workflowId.HasValue || workflowId.Value <= 0 || run.WorkflowId == workflowId.Value)
+                .ToArray()
             : Array.Empty<NeuCharWorkflowActiveRun>();
 
         var tasks = activeRuns.Select(run => new WorkflowTaskListItem(
@@ -597,7 +609,8 @@ public sealed class NeuCharWorkflowAppService
                 item.Output,
                 item.Timestamp,
                 item.OutputSchema,
-                item.Input)).ToList();
+                item.Input,
+                item.ObjectReference)).ToList();
         }
         catch (JsonException ex)
         {
@@ -1052,7 +1065,8 @@ public sealed record WorkflowReplayEvent(
     string? Output,
     DateTimeOffset Timestamp,
     string? OutputSchema = null,
-    string? Input = null);
+    string? Input = null,
+    WorkflowObjectExecutionReference? ObjectReference = null);
 
 public sealed record WorkflowRunReplay(
     int ExecutionLogId,

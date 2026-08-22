@@ -32,6 +32,10 @@ const runCoordinatorPath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Domain/Services/NeuCharWorkflowRunCoordinator.cs');
 const workflowEnginePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Domain/Services/NeuCharWorkflowEngine.cs');
+const agentsWorkflowObjectProviderPath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.AgentsManager/Domain/Services/AgentsWorkflowObjectProvider.cs');
+const workflowObjectContractsPath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow.Abstractions/Workflow/WorkflowObjectContracts.cs');
 const adminAxiosPath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/wwwroot/js/Admin/axios.js');
 const moduleFunctionPagePath = path.resolve(__dirname,
@@ -1752,10 +1756,9 @@ assert.strictEqual(tasksVueOptions.computed.hasRunningTasks.call({ tasks: taskRo
 const filteredTaskRows = tasksVueOptions.computed.filteredTasks.call({ tasks: taskRows, keyword: '失败', statusFilter: 'failed' });
 assert.strictEqual(filteredTaskRows.length, 1,
     'Task search and status filtering should compose without hiding matching failed tasks.');
-let liveReplayMessage = '';
-tasksVueOptions.methods.openTask.call({ $message: { info(message) { liveReplayMessage = message; } } }, taskRows[0]);
-assert.match(liveReplayMessage, /运行结束后/,
-    'An active task must wait for completion rather than opening an incomplete replay.');
+tasksVueOptions.methods.openTask.call({ $message: { warning() {} } }, taskRows[0]);
+assert.match(navigatedTaskUrl, /NeuCharWorkflow\/Index\?workflowId=21&runId=f6d7e0a2-4f33-46f8-a9e3-116a272bab58/,
+    'An active task must reopen the locked Workflow editor and resume live status polling.');
 tasksVueOptions.methods.openTask.call({}, taskRows[1]);
 assert.match(navigatedTaskUrl, /NeuCharWorkflow\/Replay\?executionLogId=88/,
     'Opening a completed task should navigate to its immutable run replay instead of the live editor.');
@@ -1767,6 +1770,12 @@ const runCoordinator = fs.readFileSync(runCoordinatorPath, 'utf8');
 const workflowEngine = fs.readFileSync(workflowEnginePath, 'utf8');
 assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=List') && tasksPage.includes('回看运行'),
     'The task page should expose a task-list endpoint and an explicit replay action.');
+assert.ok(tasksPage.includes('当前工作流 #{{workflowIdFilter}}') &&
+    fs.readFileSync(tasksScriptPath, 'utf8').includes('workflowIdFilter') &&
+    fs.readFileSync(tasksScriptPath, 'utf8').includes('workflowId=${encodeURIComponent(this.workflowIdFilter)}') &&
+    workflowAppService.includes('int? workflowId = null') &&
+    workflowAppService.includes('run.WorkflowId == workflowId.Value'),
+    'The task list should apply a workflow-scoped server query for direct links from detail and replay pages.');
 assert.ok(tasksPage.includes('@@click.stop="abortTask(scope.row)"') && fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=Abort'),
     'The task page should expose a manual abort action for active runs.');
 assert.match(tasksPage, /src="~\/js\/NeuCharWorkflow\/Tasks\.js"\s+asp-append-version="true"/,
@@ -1786,6 +1795,9 @@ assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=CleanupPrev
     'Quick cleanup should preview then delete only completed task logs, never active tasks.');
 assert.ok(page.includes('@@click="abortWorkflow"') && fs.readFileSync(scriptPath, 'utf8').includes('handler=AbortRun'),
     'The workflow editor should keep a visible abort action while a test run is active.');
+assert.ok(page.includes('@@click="openWorkflowTasks"') &&
+    workflowScript.includes('Tasks?workflowId=${encodeURIComponent(workflowId)}'),
+    'The Workflow detail page should jump directly to a list containing only its own tasks.');
 assert.match(tasksStyles, /\.workflow-task-table \.el-table__row\s*\{[^}]*cursor:\s*pointer;/s,
     'Task rows should make their workflow-board navigation discoverable.');
 assert.ok(workflowAppService.includes('GetTaskListAsync') && workflowAppService.includes('WorkflowTaskListItem'),
@@ -1829,6 +1841,9 @@ const replayScript = fs.readFileSync(replayScriptPath, 'utf8');
 const replayStyles = fs.readFileSync(replayStylePath, 'utf8');
 assert.ok(replayPage.includes('只读运行回看') && replayPage.includes('复制当前工作流并编辑') && replayPage.includes('查看最新工作流'),
     'The separate replay page should clearly be read-only and expose both requested exit actions.');
+assert.ok(replayPage.includes('查看此工作流任务') &&
+    replayScript.includes('Tasks?workflowId=${encodeURIComponent(this.replay.workflowId)}'),
+    'The replay page should jump directly to a list containing only the replayed Workflow tasks.');
 assert.ok(replayPage.includes('workflow-replay-canvas') && replayPage.includes('执行步骤'),
     'The replay page should render the frozen workflow canvas and a step timeline.');
 assert.ok(replayScript.includes('togglePlayback') && replayScript.includes('nextStep') && replayScript.includes('rebuildNodeStates'),
@@ -1841,6 +1856,14 @@ assert.ok(replayStyles.includes('.workflow-replay-node.state-running') && replay
     'Replay styling should visually distinguish active nodes and the selected timeline step.');
 assert.ok(replayPage.includes('输入参数') && replayPage.includes('currentEvent.input'),
     'The replay detail panel should show the recorded input parameters alongside output.');
+assert.ok(replayPage.includes('查看 Agent Group 对话') &&
+    replayScript.includes('openAgentGroupConversation') &&
+    fs.readFileSync(scriptPath, 'utf8').includes('hasAgentGroupConversation(event)') &&
+    fs.readFileSync(agentsWorkflowObjectProviderPath, 'utf8').includes('RunChatGroupAwaitWithResultAsync') &&
+    fs.readFileSync(agentsWorkflowObjectProviderPath, 'utf8').includes('WorkflowObjectExecutionReference') &&
+    workflowEngine.includes('ObjectReference') &&
+    fs.readFileSync(workflowObjectContractsPath, 'utf8').includes('ChatTaskId'),
+    'Agent Group Workflow events should retain the ChatTask reference so live Console and replay can open the persisted conversation.');
 assert.ok(replayScript.includes('centerCurrentNode') && replayScript.includes("behavior: 'smooth'"),
     'Selecting or playing a replay step should smoothly center its node in the canvas viewport.');
 assert.match(replayStyles, /\.workflow-replay-canvas-wrap\s*\{[^}]*scroll-behavior:\s*smooth;/s,

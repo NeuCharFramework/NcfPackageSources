@@ -893,6 +893,24 @@ new Vue({
             const viewer = window.open(url, '_blank', 'noopener,noreferrer');
             if (viewer) viewer.opener = null;
         },
+        openWorkflowTasks() {
+            const workflowId = Number(this.form && this.form.id || 0);
+            if (!Number.isInteger(workflowId) || workflowId <= 0) return;
+            window.location.assign(`/Admin/NeuCharWorkflow/Tasks?workflowId=${encodeURIComponent(workflowId)}`);
+        },
+        hasAgentGroupConversation(event) {
+            const reference = event && event.objectReference;
+            return reference && reference.kind === 'agent-group' && Number(reference.chatTaskId) > 0;
+        },
+        openAgentGroupConversation(reference) {
+            const chatTaskId = Number(reference && reference.chatTaskId || 0);
+            const chatGroupId = Number(reference && reference.chatGroupId || 0);
+            if (!Number.isInteger(chatTaskId) || chatTaskId <= 0) return;
+            const query = new URLSearchParams({ tab: 'second', taskId: String(chatTaskId) });
+            if (Number.isInteger(chatGroupId) && chatGroupId > 0) query.set('groupId', String(chatGroupId));
+            const viewer = window.open(`/Admin/AgentsManager/Index#${query.toString()}`, '_blank', 'noopener,noreferrer');
+            if (viewer) viewer.opener = null;
+        },
         async createWorkflow() {
             if (this.editingLocked || this.saveState.saving || !await this.confirmDiscardChanges('新建工作流')) return;
             this.form = this.emptyForm();

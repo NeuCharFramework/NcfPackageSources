@@ -97,7 +97,8 @@ public sealed record NeuCharWorkflowProgress(
     string Output,
     DateTimeOffset Timestamp,
     string? OutputSchema = null,
-    string? Input = null);
+    string? Input = null,
+    WorkflowObjectExecutionReference? ObjectReference = null);
 
 public sealed class NeuCharWorkflowEngine
 {
@@ -889,6 +890,8 @@ public sealed class NeuCharWorkflowEngine
             // Only Selection values are retained for bindings; do not retain unrelated input
             // parameters such as passwords in the runtime source cache.
             var functionSelectionInputs = new ConcurrentDictionary<string, JsonNode>(StringComparer.Ordinal);
+            var objectExecutionReferences = new ConcurrentDictionary<string, WorkflowObjectExecutionReference>(
+                StringComparer.Ordinal);
             outputs[WorkflowVariablesOutputKey] = BuildWorkflowVariables(
                 graph.Variables,
                 triggerInput,
@@ -901,6 +904,7 @@ public sealed class NeuCharWorkflowEngine
                 LoopExecutionState loopState,
                 string loopSignal,
                 string replayInputText,
+                string? objectReferenceKey,
                 (bool success, JsonNode output, bool? condition, string error) execution)>>();
             var streamActivationRunning = false;
 
@@ -910,6 +914,7 @@ public sealed class NeuCharWorkflowEngine
                 LoopExecutionState loopState,
                 string loopSignal,
                 string replayInputText,
+                string? objectReferenceKey,
                 (bool success, JsonNode output, bool? condition, string error) execution)> ExecuteActivationAsync(
                 (NeuCharWorkflowNode node, JsonNode value, bool isStream, LoopExecutionState loopState, string loopSignal) item)
             {
@@ -921,6 +926,9 @@ public sealed class NeuCharWorkflowEngine
                         cancellationToken)
                     .ConfigureAwait(false);
                 Report(progress, item.node, "running", "开始执行节点。", null, input: replayInputText);
+                var objectReferenceKey = item.node.Type is "agent" or "agent-group" or "a2a"
+                    ? Guid.NewGuid().ToString("N")
+                    : null;
                 var execution = await ExecuteNodeAsync(
                         workflow,
                         item.node,
@@ -929,9 +937,11 @@ public sealed class NeuCharWorkflowEngine
                         functionSelectionInputs,
                         correlationId,
                         cancellationToken,
-                        workflowPath)
+                        workflowPath,
+                        objectReferenceKey,
+                        objectExecutionReferences)
                     .ConfigureAwait(false);
-                return (item.node, item.isStream, item.loopState, item.loopSignal, replayInputText, execution);
+                return (item.node, item.isStream, item.loopState, item.loopSignal, replayInputText, objectReferenceKey, execution);
             }
 
             void ProcessCompletedExecution((
@@ -940,13 +950,20 @@ public sealed class NeuCharWorkflowEngine
                 LoopExecutionState loopState,
                 string loopSignal,
                 string replayInputText,
+                string? objectReferenceKey,
                 (bool success, JsonNode output, bool? condition, string error) execution) completed)
             {
-                var (node, isStream, loopState, loopSignal, replayInputText, execution) = completed;
+                var (node, isStream, loopState, loopSignal, replayInputText, objectReferenceKey, execution) = completed;
+                WorkflowObjectExecutionReference? objectReference = null;
+                if (!string.IsNullOrWhiteSpace(objectReferenceKey))
+                {
+                    objectExecutionReferences.TryRemove(objectReferenceKey, out objectReference);
+                }
                 trace.Add($"{node.Name ?? node.Type}: {(execution.success ? "OK" : "FAILED")}");
                 if (!execution.success)
                 {
-                    Report(progress, node, "failed", execution.error, null, input: replayInputText);
+                    Report(progress, node, "failed", execution.error, null, input: replayInputText,
+                        objectReference: objectReference);
                     throw new InvalidOperationException(execution.error);
                 }
 
@@ -956,7 +973,8 @@ public sealed class NeuCharWorkflowEngine
                 var outputSchema = NeuCharWorkflowObservedOutputSchemaBuilder.Build(node, finalOutput);
                 Report(progress, node, "success", "节点执行完成。", outputText,
                     JsonSerializer.Serialize(outputSchema, JsonOptions),
-                    replayInputText);
+                    replayInputText,
+                    objectReference);
                 if (node.Type.Equals("console", StringComparison.OrdinalIgnoreCase))
                 {
                     var printOutput = ResolveConsolePrintOutput(
@@ -1336,7 +1354,9 @@ public sealed class NeuCharWorkflowEngine
         ConcurrentDictionary<string, JsonNode> functionSelectionInputs,
         string correlationId,
         CancellationToken cancellationToken,
-        IReadOnlyCollection<int> workflowPath)
+        IReadOnlyCollection<int> workflowPath,
+        string? objectReferenceKey,
+        ConcurrentDictionary<string, WorkflowObjectExecutionReference> objectExecutionReferences)
     {
         switch (node.Type.ToLowerInvariant())
         {
@@ -1366,7 +1386,16 @@ public sealed class NeuCharWorkflowEngine
             case "agent":
             case "agent-group":
             case "a2a":
-                return await ExecuteWorkflowObjectNodeAsync(workflow, node, input, outputs, functionSelectionInputs, correlationId, cancellationToken)
+                return await ExecuteWorkflowObjectNodeWithReferenceAsync(
+                        workflow,
+                        node,
+                        input,
+                        outputs,
+                        functionSelectionInputs,
+                        correlationId,
+                        cancellationToken,
+                        objectReferenceKey,
+                        objectExecutionReferences)
                     .ConfigureAwait(false);
             case "sub-workflow":
                 return await ExecuteSubWorkflowNodeAsync(
@@ -1606,7 +1635,29 @@ public sealed class NeuCharWorkflowEngine
         IReadOnlyDictionary<string, JsonNode> outputs,
         IReadOnlyDictionary<string, JsonNode> functionSelectionInputs,
         string correlationId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken) =>
+        await ExecuteWorkflowObjectNodeWithReferenceAsync(
+                workflow,
+                node,
+                input,
+                outputs,
+                functionSelectionInputs,
+                correlationId,
+                cancellationToken,
+                null,
+                null)
+            .ConfigureAwait(false);
+
+    private async Task<(bool success, JsonNode output, bool? condition, string error)> ExecuteWorkflowObjectNodeWithReferenceAsync(
+        WorkflowEntity workflow,
+        NeuCharWorkflowNode node,
+        JsonNode input,
+        IReadOnlyDictionary<string, JsonNode> outputs,
+        IReadOnlyDictionary<string, JsonNode> functionSelectionInputs,
+        string correlationId,
+        CancellationToken cancellationToken,
+        string? objectReferenceKey,
+        ConcurrentDictionary<string, WorkflowObjectExecutionReference>? objectExecutionReferences)
     {
         var providerId = GetString(node.Config, "providerId");
         var objectId = GetString(node.Config, "objectId");
@@ -1673,6 +1724,12 @@ public sealed class NeuCharWorkflowEngine
                 executionParameters,
                 AdminUserId: workflow.AdminUserId),
             cancellationToken).ConfigureAwait(false);
+        if (result.Reference != null &&
+            objectExecutionReferences != null &&
+            !string.IsNullOrWhiteSpace(objectReferenceKey))
+        {
+            objectExecutionReferences[objectReferenceKey] = result.Reference;
+        }
         return result.Success
             ? (true, JsonValue.Create(result.Output ?? NodeToText(input)), null, null)
             : (false, null, null, result.ErrorMessage);
@@ -2322,7 +2379,8 @@ public sealed class NeuCharWorkflowEngine
         string message,
         string output,
         string? outputSchema = null,
-        string? input = null)
+        string? input = null,
+        WorkflowObjectExecutionReference? objectReference = null)
     {
         progress?.Invoke(new NeuCharWorkflowProgress(
             node.Id,
@@ -2332,7 +2390,8 @@ public sealed class NeuCharWorkflowEngine
             output?.Length > 8_000 ? output[..8_000] : output,
             DateTimeOffset.UtcNow,
             outputSchema,
-            LimitReplayText(input, 20_000)));
+            LimitReplayText(input, 20_000),
+            objectReference));
     }
 
     private static string? LimitReplayText(string? value, int maxLength) =>

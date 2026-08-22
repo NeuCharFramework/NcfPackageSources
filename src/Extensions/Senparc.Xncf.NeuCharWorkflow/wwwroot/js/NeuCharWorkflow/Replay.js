@@ -229,6 +229,24 @@ new Vue({
                 window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${this.replay.workflowId}`);
             }
         },
+        openWorkflowTasks() {
+            if (this.replay && this.replay.workflowId) {
+                window.location.assign(`/Admin/NeuCharWorkflow/Tasks?workflowId=${encodeURIComponent(this.replay.workflowId)}`);
+            }
+        },
+        hasAgentGroupConversation(event) {
+            const reference = event && event.objectReference;
+            return reference && reference.kind === 'agent-group' && Number(reference.chatTaskId) > 0;
+        },
+        openAgentGroupConversation(reference) {
+            const chatTaskId = Number(reference && reference.chatTaskId || 0);
+            const chatGroupId = Number(reference && reference.chatGroupId || 0);
+            if (!Number.isInteger(chatTaskId) || chatTaskId <= 0) return;
+            const query = new URLSearchParams({ tab: 'second', taskId: String(chatTaskId) });
+            if (Number.isInteger(chatGroupId) && chatGroupId > 0) query.set('groupId', String(chatGroupId));
+            const viewer = window.open(`/Admin/AgentsManager/Index#${query.toString()}`, '_blank', 'noopener,noreferrer');
+            if (viewer) viewer.opener = null;
+        },
         backToTasks() { window.location.assign('/Admin/NeuCharWorkflow/Tasks'); },
         errorMessage(error, fallback) {
             const data = error && error.response && error.response.data;

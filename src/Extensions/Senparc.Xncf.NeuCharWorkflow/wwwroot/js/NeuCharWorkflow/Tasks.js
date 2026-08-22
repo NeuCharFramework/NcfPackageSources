@@ -13,6 +13,7 @@ new Vue({
             abortingTaskId: '',
             cleaning: false,
             focusedRunId: '',
+            workflowIdFilter: 0,
             neuBellConsumeMessage: '',
             neuBellConsumeError: false
         };
@@ -32,7 +33,10 @@ new Vue({
         }
     },
     created() {
-        this.focusedRunId = this.routeQuery().get('runId') || '';
+        const query = this.routeQuery();
+        this.focusedRunId = query.get('runId') || '';
+        const workflowId = Number(query.get('workflowId'));
+        this.workflowIdFilter = Number.isInteger(workflowId) && workflowId > 0 ? workflowId : 0;
         this.loadTasks();
         this.consumeNeuBellFromRoute();
     },
@@ -113,7 +117,10 @@ new Vue({
             }
         },
         async getTaskPage(beforeExecutionLogId) {
-            const suffix = beforeExecutionLogId ? `&beforeExecutionLogId=${encodeURIComponent(beforeExecutionLogId)}` : '';
+            const query = [];
+            if (beforeExecutionLogId) query.push(`beforeExecutionLogId=${encodeURIComponent(beforeExecutionLogId)}`);
+            if (this.workflowIdFilter) query.push(`workflowId=${encodeURIComponent(this.workflowIdFilter)}`);
+            const suffix = query.length ? `&${query.join('&')}` : '';
             const response = await service.get(`/Admin/NeuCharWorkflow/Tasks?handler=List${suffix}`);
             const body = NeuCharWorkflowUi.unwrap(response) || {};
             if (Array.isArray(body)) {
@@ -186,7 +193,11 @@ new Vue({
         openTask(task) {
             if (!task || !task.workflowId) return;
             if (task.status === 'running') {
-                this.$message.info('该工作流仍在运行，请在运行结束后再启动回看。');
+                if (!task.runId) {
+                    this.$message.warning('该运行缺少实时运行标识，可能由已退出的服务进程遗留；请先中止或等待任务状态更新。');
+                    return;
+                }
+                window.location.assign(`/Admin/NeuCharWorkflow/Index?workflowId=${encodeURIComponent(task.workflowId)}&runId=${encodeURIComponent(task.runId)}`);
                 return;
             }
             if (!task.replayAvailable || !task.executionLogId) {
@@ -275,6 +286,9 @@ new Vue({
         routeQuery() {
             const search = window.location && window.location.search;
             return new URLSearchParams(search || '');
+        },
+        clearWorkflowFilter() {
+            window.location.assign('/Admin/NeuCharWorkflow/Tasks');
         },
         taskRowClass({ row }) {
             return this.focusedRunId && String(row.runId || '').replace(/-/g, '').toLowerCase() ===

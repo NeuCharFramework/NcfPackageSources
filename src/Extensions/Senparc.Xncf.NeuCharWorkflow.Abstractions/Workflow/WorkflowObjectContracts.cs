@@ -58,10 +58,22 @@ public static class WorkflowObjectExecutionParameters
     public const string Personality = "personality";
 }
 
+/// <summary>
+/// 受控对象执行后可供 Workflow Console 和回看页使用的外部详情引用。
+/// Output 保持为节点可继续传递的业务结果，详情引用不参与下游模板计算。
+/// </summary>
+public sealed record WorkflowObjectExecutionReference(
+    string Kind,
+    string ProviderId,
+    int? ChatTaskId = null,
+    int? ChatGroupId = null,
+    string DisplayName = null);
+
 public sealed record WorkflowObjectExecutionResult(
     bool Success,
     string Output,
-    string ErrorMessage = null);
+    string ErrorMessage = null,
+    WorkflowObjectExecutionReference Reference = null);
 
 /// <summary>
 /// 外部 XNCF 模块实现此接口，将其受控对象提供给已安装且开启的 Workflow 模块。

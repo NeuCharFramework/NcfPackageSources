@@ -94,6 +94,13 @@ public class McpEndpoint
     public string url { get; set; }
 }
 
+/// <summary>同步等待 ChatGroup 结束时返回的持久化任务引用。</summary>
+public sealed record ChatGroupRunResult(
+    int ChatTaskId,
+    int ChatGroupId,
+    string ChatGroupName,
+    ChatTask_Status Status);
+
 public class ChatGroupService : ServiceBase<ChatGroup>
 {
     // Keep this aligned with Microsoft.Agents.AI.Workflows.AIAgentExtensions.GetDescriptiveId().
@@ -222,7 +229,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return RunChatGroupExecutionCoreAsync(request);
     }
 
-    private async Task RunChatGroupExecutionCoreAsync(ChatGroup_RunGroupRequest request)
+    /// <summary>
+    /// 同步运行并返回本次创建的 ChatTask，供跨模块调用方定位完整的持久化会话。
+    /// </summary>
+    public Task<ChatGroupRunResult> RunChatGroupAwaitWithResultAsync(ChatGroup_RunGroupRequest request)
+    {
+        return RunChatGroupExecutionCoreAsync(request);
+    }
+
+    private async Task<ChatGroupRunResult> RunChatGroupExecutionCoreAsync(ChatGroup_RunGroupRequest request)
     {
         var cancellationToken = request.CancellationToken;
         cancellationToken.ThrowIfCancellationRequested();
@@ -598,14 +613,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 if (chatTask.Status == ChatTask_Status.Cancelled)
                 {
                     await _cache.RemoveFromCacheAsync(runningKey);
-                    return;
+                    return CreateRunResult(chatTask, chatGroup);
                 }
 
                 await chatTaskService.SetStatus(ChatTask_Status.Finished, chatTask);
                 await _cache.RemoveFromCacheAsync(runningKey);
                 PublishStatusEvent(chatTask.Id, ChatTask_Status.Finished);
                 SenparcTrace.SendCustomLog($"Agents 运行结果（组：{chatGroup.Name}）", logger.ToString());
-                return;
+                return CreateRunResult(chatTask, chatGroup);
             }
 
             var multiAgentContexts = runtimeContexts
@@ -865,7 +880,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         await FlushActiveResponseAsync();
                         await chatTaskService.SetStatus(ChatTask_Status.Cancelled, chatTask);
                         PublishStatusEvent(chatTask.Id, ChatTask_Status.Cancelled);
-                        return;
+                        return CreateRunResult(chatTask, chatGroup);
                     }
 
                     var turnTokenAccepted = await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
@@ -898,7 +913,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                             await FlushActiveResponseAsync();
                             await chatTaskService.SetStatus(ChatTask_Status.Cancelled, chatTask);
                             PublishStatusEvent(chatTask.Id, ChatTask_Status.Cancelled);
-                            return;
+                            return CreateRunResult(chatTask, chatGroup);
                         }
 
                         switch (workflowEvent)
@@ -1352,7 +1367,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 SenparcTrace.SendCustomLog(
                     $"Agents 运行失败（组：{chatGroup.Name}）",
                     logger.ToString());
-                return;
+                return CreateRunResult(chatTask, chatGroup);
             }
 
             if (roundIndex == 0 || workflowFailed)
@@ -1428,6 +1443,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             PublishStatusEvent(chatTask.Id, ChatTask_Status.Finished);
 
             SenparcTrace.SendCustomLog($"Agents 运行结果（组：{chatGroup.Name}）", logger.ToString());
+            return CreateRunResult(chatTask, chatGroup);
         }
         catch (Exception ex)
         {
@@ -1473,6 +1489,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             }
         }
     }
+
+    private static ChatGroupRunResult CreateRunResult(ChatTask chatTask, ChatGroup chatGroup) =>
+        new(chatTask.Id, chatGroup.Id, chatGroup.Name, chatTask.Status);
 
     private static ChatGroupContextSharingMode ResolveContextSharingMode(
         ChatGroupContextSharingMode? groupMode,
