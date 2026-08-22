@@ -8,6 +8,8 @@ new Vue({
             graph: { nodes: [], edges: [] },
             stepIndex: -1,
             nodeStates: {},
+            timelineRenderLimit: 300,
+            timelineChunkSize: 300,
             playing: false,
             playTimer: null,
             copying: false
@@ -31,6 +33,14 @@ new Vue({
         },
         canvasStyle() {
             return { width: `${this.canvasSize.width}px`, minHeight: `${this.canvasSize.height}px` };
+        },
+        visibleTimelineEvents() {
+            return this.replay
+                ? this.replay.events.slice(0, this.timelineRenderLimit)
+                : [];
+        },
+        hasMoreTimelineEvents() {
+            return this.replay && this.timelineRenderLimit < this.replay.events.length;
         }
     },
     created() {
@@ -56,6 +66,7 @@ new Vue({
                 this.replay = NeuCharWorkflowUi.unwrap(response);
                 if (!this.replay) throw new Error('未找到任务回看数据。');
                 this.replay.events = Array.isArray(this.replay.events) ? this.replay.events : [];
+                this.timelineRenderLimit = Math.min(this.timelineChunkSize, this.replay.events.length);
                 this.graph = NeuCharWorkflowUi.parseJson(this.replay.definition && this.replay.definition.graphJson, { nodes: [], edges: [] }) || { nodes: [], edges: [] };
                 this.graph.nodes = Array.isArray(this.graph.nodes) ? this.graph.nodes : [];
                 this.graph.edges = Array.isArray(this.graph.edges) ? this.graph.edges : [];
@@ -116,6 +127,7 @@ new Vue({
             this.stopPlayback();
             this.stepIndex = Math.max(-1, Math.min(index, this.replay.events.length - 1));
             this.rebuildNodeStates();
+            this.ensureTimelineRendered(this.stepIndex);
             this.centerCurrentNode();
         },
         previousStep() { this.goToStep(this.stepIndex - 1); },
@@ -125,11 +137,32 @@ new Vue({
                 return;
             }
             this.stepIndex += 1;
-            this.rebuildNodeStates();
+            this.applyEventNodeState(this.replay.events[this.stepIndex]);
+            this.ensureTimelineRendered(this.stepIndex);
             this.centerCurrentNode();
         },
         resetPlayback() { this.goToStep(-1); },
         finishPlayback() { this.goToStep(this.replay.events.length - 1); },
+        loadMoreTimelineEvents() {
+            if (!this.replay) return;
+            this.timelineRenderLimit = Math.min(
+                this.replay.events.length,
+                this.timelineRenderLimit + this.timelineChunkSize);
+        },
+        ensureTimelineRendered(index) {
+            if (!this.replay || index < this.timelineRenderLimit) return;
+            this.timelineRenderLimit = Math.min(
+                this.replay.events.length,
+                Math.max(index + 1, this.timelineRenderLimit + this.timelineChunkSize));
+        },
+        applyEventNodeState(event) {
+            if (!event || !event.nodeId) return;
+            const state = event.status === 'failed'
+                ? 'failed'
+                : event.status === 'running' ? 'running' : 'success';
+            if (this.$set) this.$set(this.nodeStates, event.nodeId, state);
+            else this.nodeStates = { ...this.nodeStates, [event.nodeId]: state };
+        },
         rebuildNodeStates() {
             const states = {};
             if (!this.replay) return;

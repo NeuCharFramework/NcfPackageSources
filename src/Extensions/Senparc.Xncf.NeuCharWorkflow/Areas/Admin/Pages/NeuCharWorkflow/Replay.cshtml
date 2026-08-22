@@ -56,12 +56,19 @@
                     <button type="button" :class="['workflow-replay-timeline-item',{active:stepIndex===-1}]" @@click="resetPlayback">
                         <span class="workflow-replay-timeline-dot"></span><span><strong>开始</strong><small>加载运行快照</small></span>
                     </button>
-                    <button v-for="(item,index) in replay.events" :key="item.sequence"
+                    <button v-for="(item,index) in visibleTimelineEvents" :key="item.sequence"
                             type="button" :class="['workflow-replay-timeline-item',{active:stepIndex===index,passed:index<=stepIndex,failed:item.status==='failed'}]"
                             @@click="goToStep(index)">
                         <span class="workflow-replay-timeline-dot"></span>
                         <span><strong>{{ item.nodeName }}</strong><small>{{ eventSummary(item) }}</small></span>
                     </button>
+                    <el-button v-if="hasMoreTimelineEvents"
+                               class="workflow-replay-load-more"
+                               type="text"
+                               size="mini"
+                               @@click="loadMoreTimelineEvents">
+                        显示更多步骤（{{ visibleTimelineEvents.length }} / {{ replay.events.length }}）
+                    </el-button>
                 </div>
             </aside>
 
@@ -108,6 +115,6 @@
 </div>
 
 @section scripts {
-    <script src="~/js/NeuCharWorkflow/common.js"></script>
-    <script src="~/js/NeuCharWorkflow/Replay.js"></script>
+    <script src="~/js/NeuCharWorkflow/common.js" asp-append-version="true"></script>
+    <script src="~/js/NeuCharWorkflow/Replay.js" asp-append-version="true"></script>
 }

@@ -458,7 +458,7 @@ public sealed class NeuCharWorkflowAppService
             workflowNames.TryGetValue(run.WorkflowId, out var workflowName) ? workflowName : $"工作流 #{run.WorkflowId}",
             run.Source,
             "running",
-            run.StartedAt.UtcDateTime,
+            run.StartedAt,
             null,
             BuildLiveSummary(run),
             null,
@@ -492,8 +492,8 @@ public sealed class NeuCharWorkflowAppService
                 log.FinishedAt == null
                     ? "running"
                     : log.Succeeded == true ? "success" : "failed",
-                log.StartedAt,
-                log.FinishedAt,
+                ToUtcOffset(log.StartedAt),
+                ToUtcOffset(log.FinishedAt),
                 log.ResultSummary,
                 log.Succeeded == false ? log.Error : null,
                 GetTaskRunId(log.WorkflowId, log.CorrelationId),
@@ -609,8 +609,8 @@ public sealed class NeuCharWorkflowAppService
             executionLog.WorkflowId,
             executionLog.WorkflowName,
             ToTaskStatus(executionLog),
-            executionLog.StartedAt,
-            executionLog.FinishedAt,
+            ToUtcOffset(executionLog.StartedAt),
+            ToUtcOffset(executionLog.FinishedAt),
             executionLog.Succeeded,
             executionLog.ResultSummary,
             executionLog.Error,
@@ -942,6 +942,12 @@ public sealed class NeuCharWorkflowAppService
         return $"{node}：{message}";
     }
 
+    private static DateTimeOffset ToUtcOffset(DateTime value) =>
+        new(DateTime.SpecifyKind(value, DateTimeKind.Utc));
+
+    private static DateTimeOffset? ToUtcOffset(DateTime? value) =>
+        value.HasValue ? ToUtcOffset(value.Value) : null;
+
     private static Guid? GetTaskRunId(int workflowId, string? correlationId)
     {
         var prefix = $"workflow-{workflowId}-run-";
@@ -1012,8 +1018,8 @@ public sealed record WorkflowTaskListItem(
     string WorkflowName,
     string Source,
     string Status,
-    DateTime StartedAt,
-    DateTime? FinishedAt,
+    DateTimeOffset StartedAt,
+    DateTimeOffset? FinishedAt,
     string? Summary,
     string? ErrorMessage,
     Guid? RunId,
@@ -1053,8 +1059,8 @@ public sealed record WorkflowRunReplay(
     int WorkflowId,
     string WorkflowName,
     string Status,
-    DateTime StartedAt,
-    DateTime? FinishedAt,
+    DateTimeOffset StartedAt,
+    DateTimeOffset? FinishedAt,
     bool? Succeeded,
     string? ResultSummary,
     string? ErrorMessage,

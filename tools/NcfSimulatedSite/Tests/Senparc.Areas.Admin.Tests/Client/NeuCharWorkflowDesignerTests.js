@@ -1790,6 +1790,10 @@ assert.match(tasksStyles, /\.workflow-task-table \.el-table__row\s*\{[^}]*cursor
     'Task rows should make their workflow-board navigation discoverable.');
 assert.ok(workflowAppService.includes('GetTaskListAsync') && workflowAppService.includes('WorkflowTaskListItem'),
     'The application service should combine execution task data behind a dedicated contract.');
+assert.ok(workflowAppService.includes('private static DateTimeOffset ToUtcOffset') &&
+    workflowAppService.includes('DateTimeOffset StartedAt') &&
+    workflowAppService.includes('ToUtcOffset(log.StartedAt)'),
+    'Persisted Workflow timestamps must be serialized with an explicit UTC offset so browsers render them in the local time zone.');
 assert.ok(workflowAppService.includes('GetReplayAsync') && workflowAppService.includes('CopyReplayAsDraftAsync'),
     'The application service should retrieve immutable task replays and create a disabled editable draft from them.');
 assert.ok(runCoordinator.includes('GetActiveRuns') && runCoordinator.includes('NeuCharWorkflowActiveRun'),
@@ -1829,6 +1833,10 @@ assert.ok(replayPage.includes('workflow-replay-canvas') && replayPage.includes('
     'The replay page should render the frozen workflow canvas and a step timeline.');
 assert.ok(replayScript.includes('togglePlayback') && replayScript.includes('nextStep') && replayScript.includes('rebuildNodeStates'),
     'The replay client should play node events one step at a time and project their states onto the frozen canvas.');
+assert.ok(replayScript.includes('visibleTimelineEvents') && replayScript.includes('timelineRenderLimit') &&
+    replayPage.includes('v-for="(item,index) in visibleTimelineEvents"') &&
+    replayPage.includes('asp-append-version="true"'),
+    'Large replays should bound the initial timeline DOM and load a versioned replay client asset.');
 assert.ok(replayStyles.includes('.workflow-replay-node.state-running') && replayStyles.includes('.workflow-replay-timeline-item.active'),
     'Replay styling should visually distinguish active nodes and the selected timeline step.');
 assert.ok(replayPage.includes('输入参数') && replayPage.includes('currentEvent.input'),
