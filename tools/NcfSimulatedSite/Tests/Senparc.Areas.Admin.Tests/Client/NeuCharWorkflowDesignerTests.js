@@ -1769,6 +1769,11 @@ assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=List') && t
     'The task page should expose a task-list endpoint and an explicit replay action.');
 assert.ok(tasksPage.includes('@@click.stop="abortTask(scope.row)"') && fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=Abort'),
     'The task page should expose a manual abort action for active runs.');
+assert.match(tasksPage, /src="~\/js\/NeuCharWorkflow\/Tasks\.js"\s+asp-append-version="true"/,
+    'The task abort script must use a versioned URL so browsers receive the latest restart-recovery behavior.');
+assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('executionLogId: task.executionLogId || null') &&
+    workflowAppService.includes('GetUnfinishedByIdAsync'),
+    'A persisted running task must remain abortable after the process that owned its run ID has restarted.');
 assert.ok(tasksPage.includes('没有更多记录') && tasksPage.includes('快速清理') &&
     fs.readFileSync(tasksScriptPath, 'utf8').includes('beforeExecutionLogId') &&
     fs.readFileSync(tasksScriptPath, 'utf8').includes('loadMoreTasks') &&
@@ -1789,8 +1794,11 @@ assert.ok(workflowAppService.includes('GetReplayAsync') && workflowAppService.in
     'The application service should retrieve immutable task replays and create a disabled editable draft from them.');
 assert.ok(runCoordinator.includes('GetActiveRuns') && runCoordinator.includes('NeuCharWorkflowActiveRun'),
     'The task list should use the coordinator for currently running node-level task state.');
-assert.ok(runCoordinator.includes('TryAbort') && runCoordinator.includes('手动中止') && workflowAppService.includes('AbortRun'),
-    'Manual aborts should be authorized by run ID and persisted as an explicit failed result.');
+assert.ok(runCoordinator.includes('TryAbort') && runCoordinator.includes('手动中止') &&
+    workflowAppService.includes('AbortRunAsync') &&
+    workflowAppService.includes('GetUnfinishedByRunIdAsync') &&
+    workflowAppService.includes('aborted-after-restart'),
+    'Manual aborts should cancel live runs and finalize abandoned persisted runs after a restart.');
 assert.ok(workflowScript.includes("type: 'merge', name: '逐项合流'") && page.includes('汇总输出内容') &&
     workflowScript.includes("['aggregate', 'merge', 'function', 'loop-end']") &&
     workflowScript.includes('outputTemplate'),
@@ -1926,8 +1934,14 @@ async function verifyUnsavedChangeGuards() {
     const source = fs.readFileSync(scriptPath, 'utf8');
     assert.ok(source.includes("window.addEventListener('beforeunload', this.onBeforeUnload)"),
         'The workflow editor should subscribe to browser leave-page confirmation.');
-    assert.ok(source.includes("window.removeEventListener('beforeunload', this.onBeforeUnload)"),
+assert.ok(source.includes("window.removeEventListener('beforeunload', this.onBeforeUnload)"),
         'The workflow editor should remove its leave-page confirmation listener when destroyed.');
+    assert.ok(workflowPageMarkup.includes('@@click="refreshWorkflowList"'),
+        'Refreshing the Workflow list should use the lightweight list-only request.');
+    assert.match(source, /async refreshWorkflowList\(\)[\s\S]*?handler=List[\s\S]*?finally \{ this\.loading = false; \}/,
+        'The Workflow list refresh should not wait for DesignerData or AIModel metadata.');
+    assert.match(source, /this\.loadDesignerData\(\);\s*this\.loadChatModels\(\);/,
+        'Initial page loading should start optional designer metadata without blocking the list.');
     assert.match(source, /async editWorkflow\(id\)\s*\{\s*if \(this\.editingLocked \|\| this\.saveState\.saving \|\| Number\(id\) === Number\(this\.form\.id\)\) return;\s*if \(!await this\.confirmDiscardChanges\('切换工作流'\)\) return;/s,
         'Switching workflows should ask before discarding unsaved changes.');
 

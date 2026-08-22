@@ -110,10 +110,10 @@ namespace Senparc.Ncf.XncfBase.Functions
                         }
                     }
                 }
-                else if (prop.PropertyType == typeof(SelectionList))
+                else if (prop.PropertyType == typeof(SelectionList) && paraObj != null)
                 {
                     var selections = prop.GetValue(paraObj, null) as SelectionList;
-                    switch (selections.SelectionType)
+                    switch (selections?.SelectionType)
                     {
                         case SelectionType.DropDownList:
                             parameterType = ParameterType.DropDownList;
@@ -162,13 +162,16 @@ namespace Senparc.Ncf.XncfBase.Functions
                 var systemType = prop.PropertyType.Name;
 
                 object value = null;
-                try
+                if (paraObj != null)
                 {
-                    value = prop.GetValue(paraObj);
-                }
-                catch (Exception ex)
-                {
-                    SenparcTrace.BaseExceptionLog(ex);
+                    try
+                    {
+                        value = prop.GetValue(paraObj);
+                    }
+                    catch (Exception ex)
+                    {
+                        SenparcTrace.BaseExceptionLog(ex);
+                    }
                 }
 
                 var functionParamInfo = new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType,

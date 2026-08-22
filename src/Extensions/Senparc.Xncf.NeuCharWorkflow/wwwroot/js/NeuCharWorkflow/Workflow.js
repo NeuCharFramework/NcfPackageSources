@@ -813,39 +813,57 @@ new Vue({
             this.dismissNodePreview();
         },
         async loadAll() {
+            await this.refreshWorkflowList();
+            // The catalog is independent of the workflow list. Let the page become
+            // interactive while the optional designer metadata loads in the background.
+            this.loadDesignerData();
+            this.loadChatModels();
+        },
+        async refreshWorkflowList() {
             this.loading = true;
             try {
-                const modelRequest = service.post(
+                const listResponse = await service.get('/Admin/NeuCharWorkflow/Index?handler=List');
+                this.workflows = NeuCharWorkflowUi.unwrap(listResponse) || [];
+            } catch (error) {
+                this.$notify({ title: '工作流列表刷新失败', message: this.errorMessage(error, '请稍后重试。'), type: 'error' });
+            } finally { this.loading = false; }
+        },
+        async loadDesignerData() {
+            try {
+                const response = await service.get('/Admin/NeuCharWorkflow/Index?handler=DesignerData');
+                const data = NeuCharWorkflowUi.unwrap(response) || {};
+                this.functions = data.functions || [];
+                this.workflowObjects = data.objects || [];
+            } catch (error) {
+                this.functions = [];
+                this.workflowObjects = [];
+                this.$notify({
+                    title: '节点目录暂不可用',
+                    message: this.errorMessage(error, 'Function、Agent 或 A2A 节点目录加载失败。'),
+                    type: 'warning'
+                });
+            }
+        },
+        async loadChatModels() {
+            try {
+                const response = await service.post(
                     '/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync',
                     {
                         page: 0,
                         size: 0,
                         order: 'Alias asc'
                     },
-                    { customAlert: true })
-                    .then(response => ({ response }))
-                    .catch(error => ({ error }));
-                const [listResponse, dataResponse, modelResponse] = await Promise.all([
-                    service.get('/Admin/NeuCharWorkflow/Index?handler=List'),
-                    service.get('/Admin/NeuCharWorkflow/Index?handler=DesignerData'),
-                    modelRequest
-                ]);
-                this.workflows = NeuCharWorkflowUi.unwrap(listResponse) || [];
-                const data = NeuCharWorkflowUi.unwrap(dataResponse) || {};
-                this.functions = data.functions || [];
-                this.workflowObjects = data.objects || [];
-                if (modelResponse.error) {
-                    this.chatModels = [];
-                    this.$notify({
-                        title: '模型列表暂不可用',
-                        message: this.errorMessage(modelResponse.error, '请确认 AIKernel 模块及当前账号的访问权限。'),
-                        type: 'warning'
-                    });
-                } else {
-                    this.chatModels = (NeuCharWorkflowUi.unwrap(modelResponse.response) || [])
-                        .filter(model => Number(model.configModelType) === 2);
-                }
-            } finally { this.loading = false; }
+                    { customAlert: true });
+                this.chatModels = (NeuCharWorkflowUi.unwrap(response) || [])
+                    .filter(model => Number(model.configModelType) === 2);
+            } catch (error) {
+                this.chatModels = [];
+                this.$notify({
+                    title: '模型列表暂不可用',
+                    message: this.errorMessage(error, '请确认 AIKernel 模块及当前账号的访问权限。'),
+                    type: 'warning'
+                });
+            }
         },
         async openTaskRoute() {
             const search = window.location && window.location.search;
@@ -3507,7 +3525,7 @@ new Vue({
                         : (options.source === 'shortcut' ? '已使用快捷键保存。' : '工作流已保存。');
                     this.$notify({ title: 'Workflow', message, type: draftCount ? 'warning' : 'success' });
                 }
-                await this.loadAll();
+                await this.refreshWorkflowList();
                 return saved;
             } catch (error) {
                 const issue = this.showValidationIssue(error, '请检查节点配置。', {
@@ -3749,7 +3767,7 @@ new Vue({
         async deleteWorkflow() {
             if (!this.form.id || this.editingLocked || this.saveState.saving) return;
             await service.post('/Admin/NeuCharWorkflow/Index?handler=Delete', { id: this.form.id }, { customAlert: true });
-            this.form = this.emptyForm(); this.observedOutputSchemas = []; this.editing = false; this.resetSaveState(); this.resetRunState(); await this.loadAll();
+            this.form = this.emptyForm(); this.observedOutputSchemas = []; this.editing = false; this.resetSaveState(); this.resetRunState(); await this.refreshWorkflowList();
         }
     }
 });

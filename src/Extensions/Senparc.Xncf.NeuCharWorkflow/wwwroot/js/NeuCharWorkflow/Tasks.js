@@ -196,7 +196,11 @@ new Vue({
             window.location.assign(`/Admin/NeuCharWorkflow/Replay?executionLogId=${encodeURIComponent(task.executionLogId)}`);
         },
         async abortTask(task) {
-            if (!task || task.status !== 'running' || !task.runId || this.abortingTaskId) return;
+            if (!task || task.status !== 'running' || this.abortingTaskId) return;
+            if (!task.runId && !task.executionLogId) {
+                this.$message.error('该运行缺少可中止标识，请刷新任务列表后重试。');
+                return;
+            }
             try {
                 if (this.$confirm) {
                     await this.$confirm(`将中止“${task.workflowName || '当前工作流'}”的运行。`, '确认中止运行', {
@@ -205,13 +209,19 @@ new Vue({
                         type: 'warning'
                     });
                 }
-            } catch (_) {
+            } catch (error) {
+                if (error !== 'cancel' && error !== 'close') {
+                    this.$message.error(this.errorMessage(error, '无法显示中止确认。'));
+                }
                 return;
             }
 
             this.abortingTaskId = task.taskId;
             try {
-                await service.post('/Admin/NeuCharWorkflow/Tasks?handler=Abort', { runId: task.runId }, { customAlert: true });
+                await service.post('/Admin/NeuCharWorkflow/Tasks?handler=Abort', {
+                    runId: task.runId || null,
+                    executionLogId: task.executionLogId || null
+                }, { customAlert: true });
                 this.$message.success('已请求手动中止，任务将标记为失败。');
                 await this.refreshTasks();
             } catch (error) {

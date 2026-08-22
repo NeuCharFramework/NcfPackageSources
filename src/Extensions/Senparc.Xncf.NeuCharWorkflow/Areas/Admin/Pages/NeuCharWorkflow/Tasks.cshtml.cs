@@ -57,11 +57,15 @@ public class TasksModel(
         }
     }
 
-    public IActionResult OnPostAbort([FromBody] AbortWorkflowRunRequest request)
+    public async Task<IActionResult> OnPostAbortAsync([FromBody] AbortWorkflowRunRequest request)
     {
         try
         {
-            workflowAppService.AbortRun(request?.RunId ?? Guid.Empty, CurrentAdminUserId);
+            await workflowAppService.AbortRunAsync(
+                request?.RunId,
+                request?.ExecutionLogId,
+                CurrentAdminUserId,
+                HttpContext.RequestAborted).ConfigureAwait(false);
             return Ok(new { success = true });
         }
         catch (WorkflowConflictException ex)
@@ -78,7 +82,8 @@ public class TasksModel(
 
     public sealed class AbortWorkflowRunRequest
     {
-        public Guid RunId { get; set; }
+        public Guid? RunId { get; set; }
+        public int? ExecutionLogId { get; set; }
     }
 
     public sealed class TaskCleanupRequest

@@ -13,15 +13,18 @@
     修改标识：Senparc - 20260815
     修改描述：v0.2.0 增强工作流并行与运行控制
 
-----------------------------------------------------------------*/
+-----------------------------------------------------------------*/
 
+using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.NeuCharWorkflow.ACL;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
 using WorkflowEntity = Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflow;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
@@ -46,6 +49,18 @@ public sealed class NeuCharWorkflowService : WorkflowClientServiceBase<WorkflowE
             nameof(WorkflowEntity.LastSucceeded),
             nameof(WorkflowEntity.LastError),
             nameof(WorkflowEntity.LastUpdateTime));
+
+    public async Task<IReadOnlyDictionary<int, string>> GetNameMapAsync(
+        int adminUserId,
+        CancellationToken cancellationToken = default)
+    {
+        return await BaseData.BaseDB.BaseDataContext.Set<WorkflowEntity>()
+            .AsNoTracking()
+            .Where(z => z.AdminUserId == adminUserId)
+            .Select(z => new { z.Id, z.Name })
+            .ToDictionaryAsync(z => z.Id, z => z.Name, cancellationToken)
+            .ConfigureAwait(false);
+    }
 
     private async Task SaveRuntimePropertiesAsync(WorkflowEntity workflow, params string[] propertyNames)
     {
@@ -86,9 +101,107 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
 
     public async Task<IReadOnlyList<NeuCharWorkflowExecutionLog>> GetRecentCompletedAsync(int workflowId)
     {
-        var logs = await GetFullListAsync(log => log.WorkflowId == workflowId,
-            log => log.StartedAt, OrderingType.Descending).ConfigureAwait(false);
-        return logs.Where(log => log.Succeeded == true).Take(20).ToList();
+        var logs = await GetObjectListAsync(
+            1,
+            20,
+            log => log.WorkflowId == workflowId && log.Succeeded == true,
+            log => log.StartedAt,
+            OrderingType.Descending).ConfigureAwait(false);
+        return logs.ToList();
+    }
+
+    public async Task<IReadOnlyList<string>> GetRecentCompletedReplayEventsAsync(
+        int workflowId,
+        int maxLogs = 5,
+        CancellationToken cancellationToken = default)
+    {
+        if (workflowId <= 0 || maxLogs <= 0)
+        {
+            return Array.Empty<string>();
+        }
+
+        return await BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+            .AsNoTracking()
+            .Where(z => z.WorkflowId == workflowId &&
+                        z.Succeeded == true &&
+                        z.ReplayEventsJson != null &&
+                        z.ReplayEventsJson != string.Empty)
+            .OrderByDescending(z => z.StartedAt)
+            .Take(maxLogs)
+            .Select(z => z.ReplayEventsJson!)
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<NeuCharWorkflowTaskLogSummary>> GetTaskPageAsync(
+        IReadOnlyCollection<int> workflowIds,
+        int? beforeExecutionLogId,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        if (workflowIds == null || workflowIds.Count == 0 || pageSize <= 0)
+        {
+            return Array.Empty<NeuCharWorkflowTaskLogSummary>();
+        }
+
+        var ids = workflowIds.Distinct().ToList();
+        var query = BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+            .AsNoTracking()
+            .Where(z => ids.Contains(z.WorkflowId));
+        if (beforeExecutionLogId.HasValue && beforeExecutionLogId.Value > 0)
+        {
+            query = query.Where(z => z.Id < beforeExecutionLogId.Value);
+        }
+
+        return await query
+            .OrderByDescending(z => z.Id)
+            .Take(pageSize)
+            .Select(z => new NeuCharWorkflowTaskLogSummary(
+                z.Id,
+                z.WorkflowId,
+                z.WorkflowName,
+                z.CorrelationId,
+                z.StartedAt,
+                z.FinishedAt,
+                z.Succeeded,
+                z.ResultSummary,
+                z.Error,
+                z.ReplaySnapshotHash != null &&
+                z.ReplayEventsJson != null))
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<NeuCharWorkflowExecutionLog?> GetUnfinishedByRunIdAsync(
+        Guid runId,
+        CancellationToken cancellationToken = default)
+    {
+        if (runId == Guid.Empty)
+        {
+            return null;
+        }
+
+        var suffix = $"-run-{runId:N}";
+        return await BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+            .Where(z => z.FinishedAt == null && z.CorrelationId.EndsWith(suffix))
+            .OrderByDescending(z => z.Id)
+            .FirstOrDefaultAsync(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public Task<NeuCharWorkflowExecutionLog?> GetUnfinishedByIdAsync(
+        int executionLogId,
+        CancellationToken cancellationToken = default)
+    {
+        if (executionLogId <= 0)
+        {
+            return Task.FromResult<NeuCharWorkflowExecutionLog?>(null);
+        }
+
+        return BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+            .FirstOrDefaultAsync(
+                z => z.Id == executionLogId && z.FinishedAt == null,
+                cancellationToken);
     }
 
     public async Task<NeuCharWorkflowExecutionLog?> GetReplaySnapshotAsync(int workflowId, string snapshotHash)
@@ -107,3 +220,15 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
             !string.IsNullOrWhiteSpace(log.ReplaySnapshotJson));
     }
 }
+
+public sealed record NeuCharWorkflowTaskLogSummary(
+    int Id,
+    int WorkflowId,
+    string WorkflowName,
+    string CorrelationId,
+    DateTime StartedAt,
+    DateTime? FinishedAt,
+    bool? Succeeded,
+    string? ResultSummary,
+    string? Error,
+    bool ReplayAvailable);

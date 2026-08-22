@@ -182,11 +182,15 @@ public class IndexModel(
         return result.Success ? Ok(result) : StatusCode(409, result.Message);
     }
 
-    public IActionResult OnPostAbortRun([FromBody] AbortWorkflowRunRequest request)
+    public async Task<IActionResult> OnPostAbortRunAsync([FromBody] AbortWorkflowRunRequest request)
     {
         try
         {
-            workflowAppService.AbortRun(request?.RunId ?? Guid.Empty, CurrentAdminUserId);
+            await workflowAppService.AbortRunAsync(
+                request?.RunId,
+                request?.ExecutionLogId,
+                CurrentAdminUserId,
+                HttpContext.RequestAborted).ConfigureAwait(false);
             return Ok(new { success = true });
         }
         catch (WorkflowConflictException ex)
@@ -251,6 +255,7 @@ public class IndexModel(
 
     public sealed class AbortWorkflowRunRequest
     {
-        public Guid RunId { get; set; }
+        public Guid? RunId { get; set; }
+        public int? ExecutionLogId { get; set; }
     }
 }

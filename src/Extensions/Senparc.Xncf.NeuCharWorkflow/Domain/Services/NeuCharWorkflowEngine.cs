@@ -750,11 +750,17 @@ public sealed class NeuCharWorkflowEngine
         CancellationToken cancellationToken = default)
     {
         var graph = ParseAndValidateGraph(storedGraphJson, requireAllNodesReachable: false);
+        var functionDescriptorCache = new Dictionary<string, NeuCharFunctionDescriptor>(
+            StringComparer.OrdinalIgnoreCase);
         foreach (var node in graph.Nodes.Where(z =>
                      z.Type.Equals("function", StringComparison.OrdinalIgnoreCase)))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var reference = await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false);
+            var reference = await ResolveFunctionReferenceAsync(
+                    node,
+                    cancellationToken,
+                    functionDescriptorCache)
+                .ConfigureAwait(false);
             if (reference == null)
             {
                 node.Config["parameters"] = new JsonObject();
@@ -2421,7 +2427,8 @@ public sealed class NeuCharWorkflowEngine
 
     private async Task<ResolvedFunctionReference> ResolveFunctionReferenceAsync(
         NeuCharWorkflowNode node,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IDictionary<string, NeuCharFunctionDescriptor> descriptorCache = null)
     {
         var moduleUid = GetString(node.Config, "moduleUid");
         var functionKey = GetString(node.Config, "functionKey");
@@ -2429,11 +2436,17 @@ public sealed class NeuCharWorkflowEngine
         {
             return null;
         }
-        var catalog = await ExecuteInFunctionScopeAsync(functionService =>
-                functionService.GetCatalogAsync(moduleUid, true, cancellationToken))
-            .ConfigureAwait(false);
-        var descriptor = catalog.FirstOrDefault(z =>
-            string.Equals(z.FunctionKey, functionKey, StringComparison.OrdinalIgnoreCase));
+        var cacheKey = $"{moduleUid.Trim()}\n{functionKey.Trim()}";
+        if (descriptorCache == null || !descriptorCache.TryGetValue(cacheKey, out var descriptor))
+        {
+            descriptor = await ExecuteInFunctionScopeAsync(functionService =>
+                    functionService.GetFunctionAsync(moduleUid, functionKey, true, cancellationToken))
+                .ConfigureAwait(false);
+            if (descriptor != null)
+            {
+                descriptorCache?.TryAdd(cacheKey, descriptor);
+            }
+        }
         return descriptor == null
             ? null
             : new ResolvedFunctionReference(descriptor, "{}");
