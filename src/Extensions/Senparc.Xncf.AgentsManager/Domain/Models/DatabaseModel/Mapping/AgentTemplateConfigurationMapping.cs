@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：AgentTemplateConfigurationMapping.cs
@@ -12,6 +12,12 @@
 
     修改标识：Senparc - 20260804
     修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 为 AiModelId 增加索引以支持模型绑定
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
 ----------------------------------------------------------------*/
 
@@ -35,6 +41,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Mapping
 
             base.Configure(builder);
             builder.HasIndex(z => z.KnowledgeBaseId);
+            builder.HasIndex(z => z.AiModelId);
         }
     }
 }

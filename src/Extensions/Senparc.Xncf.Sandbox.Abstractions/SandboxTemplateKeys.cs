@@ -4,11 +4,19 @@
     文件名：SandboxTemplateKeys.cs
     文件功能描述：沙箱预置模板协议键定义
 
-
     创建标识：Senparc - 20260808
 
     修改标识：Senparc - 20260815
-    修改描述：v0.2.0-preview2 增加 NCF 预览沙箱跨模块契约
+    修改描述：v0.2.0 增加 NCF 预览沙箱跨模块契约
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 新增 JupyterCsharp 模板键
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 同步沙箱契约版本说明
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 扩展沙箱 Jupyter 与会话生命周期契约
 
 ----------------------------------------------------------------*/
 
@@ -22,6 +30,7 @@ public static class SandboxTemplateKeys
     public const string PythonExec = "python-exec";
     public const string CsharpExec = "csharp-exec";
     public const string JupyterPython = "jupyter-python";
+    public const string JupyterCsharp = "jupyter-csharp";
     /// <summary>
     /// Dedicated NCF/XNCF preview workload. It is not a generic shell and has a fixed build and
     /// launch sequence.

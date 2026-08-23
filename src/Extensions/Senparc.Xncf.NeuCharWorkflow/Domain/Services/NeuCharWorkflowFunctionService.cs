@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Helpers;
@@ -103,42 +106,11 @@ public sealed class NeuCharWorkflowFunctionService
 
             foreach (var bag in group.Values.GroupBy(z => z.Key).Select(z => z.First()))
             {
-                IReadOnlyList<FunctionParameterInfo> parameters;
-                string catalogError = null;
-                try
-                {
-                    parameters = await FunctionHelper.GetFunctionParameterInfoAsync(
-                        _serviceProvider,
-                        bag,
-                        loadParameterOptions).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    catalogError = ex.Message;
-                    try
-                    {
-                        parameters = await FunctionHelper.GetFunctionParameterInfoAsync(
-                            _serviceProvider,
-                            bag,
-                            false).ConfigureAwait(false);
-                    }
-                    catch
-                    {
-                        parameters = Array.Empty<FunctionParameterInfo>();
-                    }
-                }
-
-                result.Add(new NeuCharFunctionDescriptor(
-                    register.Uid,
-                    register.MenuName,
-                    register.Version,
+                result.Add(await BuildDescriptorAsync(
+                    register,
                     available,
-                    bag.Key,
-                    bag.FunctionRenderAttribute.Name,
-                    bag.FunctionRenderAttribute.Description,
-                    parameters,
-                    BuildOutputDescriptor(bag.MethodInfo),
-                    catalogError));
+                    bag,
+                    loadParameterOptions).ConfigureAwait(false));
             }
         }
 
@@ -146,6 +118,87 @@ public sealed class NeuCharWorkflowFunctionService
             .OrderBy(z => z.ModuleName)
             .ThenBy(z => z.Name)
             .ToList();
+    }
+
+    public async Task<NeuCharFunctionDescriptor?> GetFunctionAsync(
+        string moduleUid,
+        string functionKeyOrName,
+        bool loadParameterOptions = true,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (string.IsNullOrWhiteSpace(moduleUid) || string.IsNullOrWhiteSpace(functionKeyOrName))
+        {
+            return null;
+        }
+
+        var register = XncfRegisterManager.RegisterList.FirstOrDefault(z =>
+            string.Equals(z.Uid, moduleUid, StringComparison.OrdinalIgnoreCase));
+        if (register == null ||
+            !Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var group))
+        {
+            return null;
+        }
+
+        var module = await _moduleService.GetObjectAsync(z => z.Uid == register.Uid).ConfigureAwait(false);
+        var available = module?.State == XncfModules_State.开放;
+        var bag = group.Values.FirstOrDefault(z =>
+            string.Equals(z.Key, functionKeyOrName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(z.FunctionRenderAttribute.Name, functionKeyOrName, StringComparison.OrdinalIgnoreCase));
+        if (bag.MethodInfo == null)
+        {
+            return null;
+        }
+
+        return await BuildDescriptorAsync(
+            register,
+            available,
+            bag,
+            loadParameterOptions).ConfigureAwait(false);
+    }
+
+    private async Task<NeuCharFunctionDescriptor> BuildDescriptorAsync(
+        IXncfRegister register,
+        bool moduleAvailable,
+        FunctionRenderBag bag,
+        bool loadParameterOptions)
+    {
+        IReadOnlyList<FunctionParameterInfo> parameters;
+        string catalogError = null;
+        try
+        {
+            parameters = await FunctionHelper.GetFunctionParameterInfoAsync(
+                _serviceProvider,
+                bag,
+                loadParameterOptions).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            catalogError = ex.Message;
+            try
+            {
+                parameters = await FunctionHelper.GetFunctionParameterInfoAsync(
+                    _serviceProvider,
+                    bag,
+                    false).ConfigureAwait(false);
+            }
+            catch
+            {
+                parameters = Array.Empty<FunctionParameterInfo>();
+            }
+        }
+
+        return new NeuCharFunctionDescriptor(
+            register.Uid,
+            register.MenuName,
+            register.Version,
+            moduleAvailable,
+            bag.Key,
+            bag.FunctionRenderAttribute.Name,
+            bag.FunctionRenderAttribute.Description,
+            parameters,
+            BuildOutputDescriptor(bag.MethodInfo),
+            catalogError);
     }
 
     public async Task<NeuCharFunctionExecutionResult> ExecuteAsync(

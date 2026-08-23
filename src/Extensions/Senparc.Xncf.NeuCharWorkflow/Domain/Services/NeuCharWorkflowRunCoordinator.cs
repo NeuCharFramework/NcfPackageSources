@@ -11,7 +11,13 @@
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
     修改标识：Senparc - 20260815
-    修改描述：v0.2.0-preview2 增强工作流并行与运行控制
+    修改描述：v0.2.0 增强工作流并行与运行控制
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
 
 ----------------------------------------------------------------*/
 
@@ -46,7 +52,9 @@ public sealed record NeuCharWorkflowRunSnapshot(
     bool? Succeeded,
     string ErrorMessage,
     string FinalOutput,
-    IReadOnlyList<NeuCharWorkflowRunEvent> Events);
+    IReadOnlyList<NeuCharWorkflowRunEvent> Events,
+    IReadOnlyList<Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow.WorkflowHumanInteraction> HumanInteractions = null,
+    int RunningCount = 0);
 
 /// <summary>
 /// 供任务列表使用的轻量实时运行状态。不返回原始输入和完整输出，避免在列表页意外暴露敏感数据。
@@ -63,6 +71,8 @@ public sealed record NeuCharWorkflowActiveRun(
 
 public sealed class NeuCharWorkflowRunCoordinator
 {
+    private const int MaxLiveRunEvents = 5_000;
+
     private sealed class RunState
     {
         private readonly object _gate = new();
@@ -144,9 +154,9 @@ public sealed class NeuCharWorkflowRunCoordinator
                     Limit(progress.Output, 20_000),
                     progress.Timestamp,
                     Limit(progress.OutputSchema, 20_000)));
-                if (_events.Count > 500)
+                if (_events.Count > MaxLiveRunEvents)
                 {
-                    _events.RemoveRange(0, _events.Count - 500);
+                    _events.RemoveRange(0, _events.Count - MaxLiveRunEvents);
                 }
             }
         }
@@ -227,13 +237,6 @@ public sealed class NeuCharWorkflowRunCoordinator
         lock (_startGate)
         {
             Cleanup();
-            if (_runs.Values.Any(z => z.WorkflowId == workflowId && z.Running))
-            {
-                runId = Guid.Empty;
-                error = "当前工作流已有运行正在执行。";
-                return false;
-            }
-
             runId = Guid.NewGuid();
             var state = new RunState(runId, workflowId, adminUserId, input ?? string.Empty, NormalizeSource(source));
             _runs[runId] = state;
@@ -245,9 +248,15 @@ public sealed class NeuCharWorkflowRunCoordinator
 
     public NeuCharWorkflowRunSnapshot GetSnapshot(Guid runId, int adminUserId, long afterSequence)
     {
-        return _runs.TryGetValue(runId, out var state) && state.AdminUserId == adminUserId
-            ? state.Snapshot(Math.Max(0, afterSequence))
-            : null;
+        if (!_runs.TryGetValue(runId, out var state) || state.AdminUserId != adminUserId)
+        {
+            return null;
+        }
+
+        return state.Snapshot(Math.Max(0, afterSequence)) with
+        {
+            RunningCount = GetActiveRunCount(adminUserId, state.WorkflowId)
+        };
     }
 
     public bool TryAbort(Guid runId, int adminUserId, out string? error)
@@ -268,6 +277,20 @@ public sealed class NeuCharWorkflowRunCoordinator
             .Select(z => z.ToActiveRun())
             .OrderByDescending(z => z.StartedAt)
             .ToList();
+    }
+
+    public int GetActiveRunCount(int adminUserId, int workflowId)
+    {
+        if (workflowId <= 0)
+        {
+            return 0;
+        }
+
+        Cleanup();
+        return _runs.Values.Count(z =>
+            z.AdminUserId == adminUserId &&
+            z.WorkflowId == workflowId &&
+            z.Running);
     }
 
     private async Task ExecuteAsync(RunState state)

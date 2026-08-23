@@ -1,26 +1,14 @@
-﻿/*----------------------------------------------------------------
+﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：AdminSenparcEntities_SqlServerModelSnapshot.cs
-    文件功能描述：AdminSenparcEntities_SqlServerModelSnapshot 相关功能实现
+    文件功能描述：AdminSenparcEntities_SqlServerModelSnapshot.cs 相关实现
 
 
     创建标识：Senparc - 20200724
 
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.3 新增登录超时配置并补齐多数据库迁移支持
-
-    修改标识：Senparc - 20260705
-    修改描述：v0.0.4 新增登录超时配置并补齐多数据库迁移支持
-
-    修改标识：Senparc - 20260808
-    修改描述：新增 NeuCharPivot、Loop Task、执行日志及 Workflow 系统表
-
-    修改标识：Senparc - 20260809
-    修改描述：新增 Workflow 自动保存配置及最近版本快照表
-
-    修改标识：Senparc - 20260813
-    修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
+    修改标识：Senparc - 20260822
+    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
 
 ----------------------------------------------------------------*/
 
@@ -305,6 +293,60 @@ namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
                     b.HasIndex("SessionId");
 
                     b.ToTable("ADMIN_AdminChatSessionModule");
+                });
+
+            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatSessionWorkflow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("AddedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("SessionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WorkflowDescription")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<int>("WorkflowId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WorkflowName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SessionId", "WorkflowId")
+                        .IsUnique();
+
+                    b.ToTable("ADMIN_AdminChatSessionWorkflow");
                 });
 
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharExecutionLog", b =>
@@ -599,159 +641,6 @@ namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
                     b.ToTable("ADMIN_NeuCharPivotLoopTask");
                 });
 
-            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharWorkflow", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("AdminUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AutoSaveMinutes")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(3);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Enabled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("GraphJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastError")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastRunAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool?>("LastSucceeded")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime?>("NextRunAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("Revision")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TriggerConfigJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TriggerType")
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Enabled", "NextRunAt");
-
-                    b.ToTable("ADMIN_NeuCharWorkflow");
-                });
-
-            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharWorkflowVersion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("AdminUserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AutoSaveMinutes")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Enabled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("GraphJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("Revision")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SaveSource")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TriggerConfigJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TriggerType")
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
-
-                    b.Property<int>("WorkflowId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WorkflowId", "Revision")
-                        .IsUnique();
-
-                    b.ToTable("ADMIN_NeuCharWorkflowVersion");
-                });
-
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatMessage", b =>
                 {
                     b.HasOne("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatSession", "Session")
@@ -764,6 +653,17 @@ namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
                 });
 
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatSessionModule", b =>
+                {
+                    b.HasOne("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatSession", "Session")
+                        .WithMany()
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Session");
+                });
+
+            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatSessionWorkflow", b =>
                 {
                     b.HasOne("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatSession", "Session")
                         .WithMany()

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.1.0</Version>
+    <PackageReleaseNotes>
+    [2026-08-17] v0.1.0 新增 C# Jupyter 沙箱学习镜像工程
+    1、提供 net10 Jupyter/C# 学习用控制台工程与 Docker 构建上下文
+    2、预置常用数据分析依赖，便于沙箱内交互式实验
+    3、提供 net10 C# Jupyter 学习项目、Docker 构建上下文和常用数据分析依赖
+    </PackageReleaseNotes>
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
+    <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+</Project>

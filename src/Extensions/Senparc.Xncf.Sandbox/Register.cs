@@ -7,7 +7,16 @@
     创建标识：Senparc - 20260808
 
     修改标识：Senparc - 20260815
-    修改描述：v0.2.0-preview3 增加 NCF 预览沙箱工作负载
+    修改描述：v0.2.0 增加 NCF 预览沙箱工作负载
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 支持沙箱会话 TTL 与永久保持能力
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
 
 ----------------------------------------------------------------*/
 
@@ -66,6 +75,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
     public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
     {
         services.Configure<SandboxImageOptions>(configuration.GetSection(SandboxImageOptions.SectionName));
+        services.Configure<SandboxDockerOptions>(configuration.GetSection(SandboxDockerOptions.SectionName));
         services.Configure<SandboxNcfPreviewOptions>(configuration.GetSection(SandboxNcfPreviewOptions.SectionName));
         services.AddSingleton<ISandboxImageResolver, SandboxImageResolver>();
         services.AddSingleton(new SandboxQuotaPolicy());

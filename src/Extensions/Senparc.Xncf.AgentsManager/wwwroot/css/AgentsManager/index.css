@@ -341,15 +341,31 @@ height:100%;
     overflow: hidden;
 }
 
-.agent-3d-controls {
+.agent-3d-header {
     position: absolute;
-    right: 12px;
     top: 10px;
+    left: 12px;
+    right: 12px;
     z-index: 5;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 8px;
+    pointer-events: none;
+}
+
+.agent-3d-header > * {
+    pointer-events: auto;
+}
+
+.agent-3d-controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
     padding: 6px 8px;
+    box-sizing: border-box;
     border-radius: 8px;
     background: rgba(4, 12, 22, 0.58);
     border: 1px solid rgba(89, 167, 226, 0.28);
@@ -368,16 +384,98 @@ height:100%;
 }
 
 .agent-3d-tip {
-    position: absolute;
-    left: 12px;
-    top: 58px;
-    z-index: 4;
+    align-self: flex-start;
+    max-width: 100%;
     color: rgba(226, 242, 255, 0.92);
     font-size: 12px;
+    line-height: 1.4;
     background: rgba(3, 10, 18, 0.45);
     padding: 6px 10px;
     border-radius: 6px;
     border: 1px solid rgba(105, 179, 231, 0.25);
+}
+
+.agent-3d-overview {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(110px, 1fr));
+    gap: 8px;
+    width: 100%;
+}
+
+.agent-3d-overview__item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid rgba(105, 179, 231, 0.25);
+    border-radius: 6px;
+    background: rgba(3, 10, 18, 0.68);
+    color: rgba(226, 242, 255, 0.86);
+}
+
+.agent-3d-overview__item span,
+.agent-3d-overview__item small {
+    overflow: hidden;
+    color: rgba(214, 237, 255, 0.72);
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.agent-3d-overview__item strong {
+    color: #fff;
+    font-size: 16px;
+    line-height: 1.1;
+}
+
+.agent-3d-overview__item.agent strong {
+    color: #8fe7ff;
+}
+
+.agent-3d-overview__item.a2a strong {
+    color: #ffc36e;
+}
+
+.agent-3d-overview__item.group strong {
+    color: #c6d3e1;
+}
+
+.agent-3d-overview__item.task strong {
+    color: #a9e8c0;
+}
+
+.agent-3d-focus {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 100%;
+    padding: 7px 10px;
+    border: 1px solid rgba(94, 212, 255, 0.5);
+    border-radius: 6px;
+    background: rgba(3, 10, 18, 0.72);
+    color: rgba(226, 242, 255, 0.92);
+    font-size: 12px;
+}
+
+.agent-3d-agent-focus {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 100%;
+    padding: 7px 10px;
+    border: 1px solid rgba(167, 139, 250, 0.55);
+    border-radius: 6px;
+    background: rgba(19, 14, 45, 0.78);
+    color: rgba(245, 243, 255, 0.95);
+    font-size: 12px;
+}
+
+.agent-3d-focus span,
+.agent-3d-agent-focus span {
+    color: rgba(214, 237, 255, 0.72);
 }
 
 .agent-3d-legend {
@@ -429,12 +527,36 @@ height:100%;
     background: #909399;
 }
 
+.agent-3d-legend .legend-dot.hil-paused {
+    background: #f472b6;
+}
+
 .agent-3d-legend .legend-dot.group-enabled {
     background: #7f91a6;
 }
 
 .agent-3d-legend .legend-dot.group-disabled {
     background: #d57585;
+}
+
+.agent-3d-legend .legend-dot.skill-function {
+    background: #5ed4ff;
+}
+
+.agent-3d-legend .legend-dot.skill-workflow {
+    background: #67c23a;
+}
+
+.agent-3d-legend .legend-dot.skill-plugin {
+    background: #a78bfa;
+}
+
+.agent-3d-legend .legend-dot.skill-mcp {
+    background: #f59e0b;
+}
+
+.agent-3d-legend .legend-dot.skill-a2a {
+    background: #ffc36e;
 }
 
 .agent-3d-debug {
@@ -457,13 +579,6 @@ height:100%;
 }
 
 @media (max-width: 900px) {
-    .agent-3d-controls {
-        left: 12px;
-        right: 12px;
-        top: 10px;
-        flex-wrap: wrap;
-    }
-
     .agent-3d-controls .el-select {
         width: calc(50% - 4px);
     }
@@ -472,8 +587,8 @@ height:100%;
         width: calc(50% - 4px);
     }
 
-    .agent-3d-tip {
-        top: 98px;
+    .agent-3d-overview {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .agent-3d-debug {
@@ -2039,9 +2154,10 @@ height:100%;
 }
 
 .taskmain-members-title {
-    height: 30px;
-    font-size: 16px;
+    min-height: 30px;
+    font-size: 14px;
     color: rgba(130, 133, 137);
+    line-height: 1.45;
     margin-bottom: 10px;
 }
 
@@ -2374,6 +2490,86 @@ height:100%;
 
 .agentParameters-head>.headavatar>.namebox {
     flex-shrink: 0;
+}
+
+.task-policy-summary {
+    margin-top: 18px;
+    border-top: 1px solid #ebeef5;
+    padding-top: 16px;
+}
+
+.task-policy-summary__title {
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #303133;
+}
+
+.task-policy-summary dl {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr);
+    margin: 0;
+    border: 1px solid #ebeef5;
+}
+
+.task-policy-summary dt,
+.task-policy-summary dd {
+    margin: 0;
+    padding: 9px 12px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.task-policy-summary dt {
+    background: #f5f7fa;
+    color: #606266;
+}
+
+.task-policy-summary dd {
+    color: #303133;
+}
+
+.task-policy-summary dt:nth-last-of-type(1),
+.task-policy-summary dd:nth-last-of-type(1) {
+    border-bottom: 0;
+}
+
+.tool-approval-summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0 10px;
+}
+
+.tool-approval-summary__label {
+    color: #909399;
+}
+
+.tool-approval-summary__agent {
+    margin-left: auto;
+    color: #606266;
+}
+
+.tool-approval-arguments {
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    background: #f7f9fc;
+}
+
+.tool-approval-arguments__title {
+    padding: 9px 12px;
+    border-bottom: 1px solid #e4e7ed;
+    color: #606266;
+    font-weight: 600;
+}
+
+.tool-approval-arguments pre {
+    max-height: 420px;
+    margin: 0;
+    padding: 14px;
+    overflow: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 13px/1.65 SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    color: #303133;
 }
 
 .agentParameters-head>.headavatar>.agentParameters-head-actions {
@@ -2728,6 +2924,123 @@ height:100%;
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 10px;
+}
+
+.function-binding-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid #dfe6ef;
+    border-radius: 5px;
+    background: #f8fbff;
+}
+
+.function-binding-summary__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.function-binding-summary__copy strong {
+    color: #303133;
+    font-size: 13px;
+}
+
+.function-binding-summary__copy span,
+.function-binding-footer-summary {
+    color: #909399;
+    font-size: 12px;
+}
+
+.function-binding-chips {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.function-binding-drawer__agent {
+    margin-left: 8px;
+    color: #909399;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.function-binding-tabs {
+    margin-bottom: 2px;
+}
+
+.function-binding-option-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.function-binding-option {
+    padding: 10px 12px;
+    border: 1px solid #e4e7ed;
+    border-radius: 5px;
+    background: #fff;
+}
+
+.function-binding-option.is-unavailable {
+    background: #f5f7fa;
+}
+
+.function-binding-option .el-checkbox {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+}
+
+.function-binding-option .el-checkbox__label {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 3px;
+}
+
+.function-binding-option__name {
+    color: #303133;
+    font-size: 13px;
+    line-height: 1.35;
+    white-space: normal;
+}
+
+.function-binding-option__meta,
+.function-binding-option__description {
+    color: #909399;
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: normal;
+}
+
+.function-binding-option__description {
+    margin: 5px 0 0 24px;
+}
+
+.function-binding-empty {
+    padding: 48px 16px;
+    color: #909399;
+    text-align: center;
+    background: #fafafa;
+    border: 1px dashed #dcdfe6;
+    border-radius: 5px;
+}
+
+@media (max-width: 640px) {
+    .function-binding-summary {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .function-binding-summary .el-button {
+        width: 100%;
+    }
 }
 
 /* MCP Endpoints 相关样式 */

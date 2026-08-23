@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.41.0-preview11</Version>
+    <Version>0.41.0</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -122,11 +122,15 @@
 			[2026-08-13] v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
 			1、新增预览状态持久化服务和托管初始化流程
 			2、提升 Agent 模板预览在重启及并发场景下的稳定性
-			[2026-08-15] v0.41.0-preview11 增强隔离开发任务与 Sandbox 预览流程
+			[2026-08-15] v0.41.0 增强隔离开发任务与 Sandbox 预览流程
 			1、新增 XncfDevelopmentJob 创建、状态存储、后台服务和管理监控页面
 			2、接入可选 Sandbox 预览契约，限制源码快照和人工合入边界，未配置预览能力时安全失败
 			3、完善工作区文件服务、数据库迁移与模板生成流程
-</PackageReleaseNotes>
+			4、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
+			5、Dependency update from Senparc.Xncf.MCP to 0.5.1
+			6、Dependency update from Senparc.Xncf.Sandbox.Abstractions to 0.2.0
+			7、统一数据库配置路径并完善开发任务、预览服务和工作区文件管理的兼容处理
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <!-- Visual Studio 特定设置 -->
@@ -170,6 +174,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- 宿主站点使用 App_Data/Database；模块内配置仅本地开发用，避免 publish 冲突 -->
+    <Content Remove="App_Data\Database\SenparcConfig.config" />
+    <None Include="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
   <!--<ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">

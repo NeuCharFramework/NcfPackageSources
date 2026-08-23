@@ -4,7 +4,6 @@
     文件名：ChatTaskStreamHub.cs
     文件功能描述：ChatTaskStreamHub 服务逻辑
 
-
     创建标识：Senparc - 20260626
 
     修改标识：Senparc - 20260701
@@ -24,6 +23,15 @@
 
     修改标识：Senparc - 20260813
     修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
 ----------------------------------------------------------------*/
 
@@ -141,6 +149,10 @@ public sealed class ChatTaskStreamHub
 
         if (group.IsComplete)
         {
+            foreach (var pair in group.Subscribers)
+            {
+                pair.Value.Writer.TryComplete();
+            }
             CleanupStreamIfFinished(item.ChatTaskId, group);
         }
     }
@@ -208,6 +220,14 @@ public sealed class ChatTaskStreamEvent
     public string FromParticipantKind { get; set; }
     public string FromAgentName { get; set; }
     public string ResponseId { get; set; }
+    public string HumanRequestId { get; set; }
+    public string HumanRequestType { get; set; }
+    public string HumanToolName { get; set; }
+    public string HumanToolArguments { get; set; }
+    public string HumanParticipantKey { get; set; }
+    public string HumanNeuBellItemId { get; set; }
+    public bool? HumanApproved { get; set; }
+    public string HumanReason { get; set; }
     public string Text { get; set; }
     public bool IsFinal { get; set; }
     public int PromptTokens { get; set; }

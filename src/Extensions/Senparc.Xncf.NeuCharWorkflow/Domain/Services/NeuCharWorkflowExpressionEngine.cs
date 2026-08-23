@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -17,6 +20,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
@@ -29,13 +34,18 @@ public static class NeuCharWorkflowExpressionEngine
 {
     private const int MaxLength = 512;
     private const int MaxDepth = 32;
+    private static readonly JsonSerializerOptions TextJsonOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
     private static readonly HashSet<string> Functions = new(StringComparer.OrdinalIgnoreCase)
     {
         "if", "coalesce", "contains", "startsWith", "endsWith", "length", "substring",
         "trim", "lower", "upper", "first", "last", "at", "join", "toNumber",
         "toInt", "toLong", "toDecimal", "toBool", "toString",
         "now", "formatDate", "split", "replace", "sort", "orderBy", "reverse",
-        "take", "skip", "sum", "min", "max", "unique"
+        "take", "skip", "sum", "min", "max", "unique", "count", "toArray",
+        "isEmpty", "isNull", "concat", "flatten", "keys", "values", "has"
     };
 
     public static bool TryValidate(string expression, IEnumerable<string> allowedVariables, out string error)
@@ -243,6 +253,9 @@ public static class NeuCharWorkflowExpressionEngine
             if (name.Equals("startsWith", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Text(Arg(0)).StartsWith(Text(Arg(1)), StringComparison.OrdinalIgnoreCase));
             if (name.Equals("endsWith", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Text(Arg(0)).EndsWith(Text(Arg(1)), StringComparison.OrdinalIgnoreCase));
             if (name.Equals("length", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Length(Arg(0)));
+            if (name.Equals("count", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Length(Arg(0)));
+            if (name.Equals("isEmpty", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Empty(Arg(0)));
+            if (name.Equals("isNull", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Arg(0) == null);
             if (name.Equals("substring", StringComparison.OrdinalIgnoreCase))
             {
                 var text = Text(Arg(0)); var start = Math.Clamp((int)Number(Arg(1)), 0, text.Length);
@@ -256,6 +269,7 @@ public static class NeuCharWorkflowExpressionEngine
             if (name.Equals("last", StringComparison.OrdinalIgnoreCase)) return Index(Arg(0), Length(Arg(0)) - 1);
             if (name.Equals("at", StringComparison.OrdinalIgnoreCase)) return Index(Arg(0), (int)Number(Arg(1)));
             if (name.Equals("join", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Join(Arg(0), Text(Arg(1))));
+            if (name.Equals("concat", StringComparison.OrdinalIgnoreCase)) return Concat(args);
             if (name.Equals("toNumber", StringComparison.OrdinalIgnoreCase) ||
                 name.Equals("toDecimal", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Decimal(Arg(0)));
             if (name.Equals("toInt", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(Int32(Arg(0)));
@@ -280,10 +294,15 @@ public static class NeuCharWorkflowExpressionEngine
             if (name.Equals("reverse", StringComparison.OrdinalIgnoreCase)) return Reverse(Arg(0));
             if (name.Equals("take", StringComparison.OrdinalIgnoreCase)) return Slice(Arg(0), 0, (int)Number(Arg(1)));
             if (name.Equals("skip", StringComparison.OrdinalIgnoreCase)) return Slice(Arg(0), (int)Number(Arg(1)), int.MaxValue);
+            if (name.Equals("toArray", StringComparison.OrdinalIgnoreCase)) return ToArrayNode(Arg(0));
+            if (name.Equals("flatten", StringComparison.OrdinalIgnoreCase)) return Flatten(Arg(0));
             if (name.Equals("sum", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(ToArray(Arg(0)).Sum(Number));
             if (name.Equals("min", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(ToArray(Arg(0)).Select(Number).DefaultIfEmpty(0).Min());
             if (name.Equals("max", StringComparison.OrdinalIgnoreCase)) return JsonValue.Create(ToArray(Arg(0)).Select(Number).DefaultIfEmpty(0).Max());
             if (name.Equals("unique", StringComparison.OrdinalIgnoreCase)) return Unique(Arg(0));
+            if (name.Equals("keys", StringComparison.OrdinalIgnoreCase)) return Keys(Arg(0));
+            if (name.Equals("values", StringComparison.OrdinalIgnoreCase)) return Values(Arg(0));
+            if (name.Equals("has", StringComparison.OrdinalIgnoreCase)) return Has(Arg(0), Arg(1));
             throw Error($"不支持函数“{name}”");
         }
 
@@ -400,6 +419,24 @@ public static class NeuCharWorkflowExpressionEngine
     private static IEnumerable<JsonNode> ToArray(JsonNode value) => value is JsonArray array
         ? array.Where(item => item != null).Select(item => item!)
         : value == null ? Enumerable.Empty<JsonNode>() : new[] { value };
+    private static JsonNode ToArrayNode(JsonNode value) => new JsonArray(ToArray(value).Select(item => item.DeepClone()).ToArray());
+    private static JsonNode Concat(IReadOnlyList<JsonNode> values)
+    {
+        if (values.Any(value => value is JsonArray))
+            return new JsonArray(values.SelectMany(ToArray).Select(item => item.DeepClone()).ToArray());
+        return JsonValue.Create(string.Concat(values.Select(Text)));
+    }
+    private static JsonNode Flatten(JsonNode value) => new JsonArray(ToArray(value)
+        .SelectMany(item => item is JsonArray nested ? nested.Where(child => child != null) : new[] { item })
+        .Select(item => item.DeepClone()).ToArray());
+    private static JsonNode Keys(JsonNode value) => value is JsonObject obj
+        ? new JsonArray(obj.Select(item => JsonValue.Create(item.Key)).ToArray())
+        : new JsonArray();
+    private static JsonNode Values(JsonNode value) => value is JsonObject obj
+        ? new JsonArray(obj.Select(item => item.Value).Where(item => item != null).Select(item => item!.DeepClone()).ToArray())
+        : new JsonArray();
+    private static JsonNode Has(JsonNode value, JsonNode key) => JsonValue.Create(value is JsonObject obj &&
+        obj.Any(item => string.Equals(item.Key, Text(key), StringComparison.OrdinalIgnoreCase)));
     private static JsonNode Reverse(JsonNode value) => new JsonArray(ToArray(value).Reverse().Select(item => item.DeepClone()).ToArray());
     private static JsonNode Slice(JsonNode value, int skip, int take) => new JsonArray(ToArray(value)
         .Skip(Math.Max(0, skip)).Take(Math.Max(0, take)).Select(item => item.DeepClone()).ToArray());
@@ -436,7 +473,10 @@ public static class NeuCharWorkflowExpressionEngine
     {
         if (value == null) return string.Empty;
         if (value is JsonValue json && json.TryGetValue<string>(out var text)) return text ?? string.Empty;
-        return value.ToJsonString();
+        // Text functions operate on the readable JSON representation of arrays/objects.
+        // Keep non-ASCII characters intact so upper/lower cannot transform JSON's "\u"
+        // escape marker into the invalid "\U" form.
+        return value.ToJsonString(TextJsonOptions);
     }
 
     private sealed class ExpressionException(string message) : Exception(message) { }

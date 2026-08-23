@@ -1,9 +1,8 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：ChatGroupAppService.cs
     文件功能描述：ChatGroupAppService 相关实现
-
 
     创建标识：Senparc - 20260704
 
@@ -19,6 +18,15 @@
     修改标识：Senparc - 20260815
     修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp;
@@ -29,6 +37,7 @@ using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Utility;
+using Senparc.Ncf.Core.WorkContext.Provider;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
@@ -62,6 +71,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly ChatTaskService _chatTaskService;
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
+        private readonly HumanInTheLoopRequestStore _humanInTheLoopRequestStore;
 
         public ChatGroupAppService(IServiceProvider serviceProvider,
             ChatGroupService chatGroupService,
@@ -73,7 +83,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             AIModelService aIModelService,
             ChatTaskService chatTaskService,
             PromptItemService promptItemService,
-            PromptRangeService promptRangeService) : base(serviceProvider)
+            PromptRangeService promptRangeService,
+            HumanInTheLoopRequestStore humanInTheLoopRequestStore) : base(serviceProvider)
         {
             this._chatGroupService = chatGroupService;
             this._chatGroupMemeberService = chatGroupMemeberService;
@@ -85,6 +96,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             this._chatTaskService = chatTaskService;
             this._promptItemService = promptItemService;
             this._promptRangeService = promptRangeService;
+            this._humanInTheLoopRequestStore = humanInTheLoopRequestStore;
         }
 
         [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.ManageChatGroup.Name", "Function.Agents.ManageChatGroup.Description", typeof(Register))]
@@ -385,6 +397,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         PromptCommand = request.Command,
                         Description = "由 FunctionRender 启动",
                         Personality = request.Individuation,
+                        RequireHumanApproval = request.RequireHumanApproval,
+                        HumanInTheLoopLevel = request.HumanInTheLoopLevel,
+                        PluginToolPermission = request.PluginToolPermission,
+                        McpToolPermission = request.McpToolPermission,
+                        IncludeHumanParticipant = request.IncludeHumanParticipant,
+                        HumanRecipientUserId = GetCurrentAdminUserId(),
                         HookPlatform = HookPlatform.None,
                         HookParameter = string.Empty,
                         ChatMaxRound = ChatGroupService.ChatMaxRound
@@ -407,7 +425,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         public async Task<AppResponseBase<ChatGroup_SetGroupChatResponse>> SetChatGroup(
             ChatGroupDto chatGroupDto,
             List<int> memberAgentTemplateIds,
-            List<int> remoteAgentIds = null)
+            List<int> remoteAgentIds = null,
+            bool includeHumanParticipant = false)
         {
             return await this.GetResponseAsync<ChatGroup_SetGroupChatResponse>(async (response, logger) =>
             {
@@ -422,6 +441,33 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 remoteAgentIds ??= new List<int>();
                 memberAgentTemplateIds = memberAgentTemplateIds.Distinct().ToList();
                 remoteAgentIds = remoteAgentIds.Distinct().ToList();
+
+                var humanTemplate = await _agentsTemplateService.GetObjectAsync(
+                    z => z.PromptCode == HumanParticipantConstants.PromptCode);
+                if (humanTemplate != null
+                    && (chatGroupDto.AdminAgentTemplateId == humanTemplate.Id
+                        || chatGroupDto.EnterAgentTemplateId == humanTemplate.Id))
+                {
+                    throw new NcfExceptionBase("Human 只能作为普通参与者，不能担任群主或对接人。");
+                }
+
+                if (includeHumanParticipant)
+                {
+                    humanTemplate ??= await EnsureHumanParticipantAsync();
+                    if (chatGroupDto.AdminAgentTemplateId == humanTemplate.Id
+                        || chatGroupDto.EnterAgentTemplateId == humanTemplate.Id)
+                    {
+                        throw new NcfExceptionBase("Human 只能作为普通参与者，不能担任群主或对接人。");
+                    }
+
+                    memberAgentTemplateIds.Add(humanTemplate.Id);
+                }
+                else if (humanTemplate != null)
+                {
+                    // 编辑既有 Group 时，复用前端回传列表也不能绕过关闭 Human 的选择。
+                    memberAgentTemplateIds.RemoveAll(z => z == humanTemplate.Id);
+                }
+                memberAgentTemplateIds = memberAgentTemplateIds.Distinct().ToList();
 
                 var isNew = false;
                 var memberList = new List<ChatGroupMember>();
@@ -527,6 +573,46 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     ChatGroupDto = this._chatGroupService.Mapping<ChatGroupDto>(chatGroup)
                 };
             });
+        }
+
+        private async Task<AgentTemplate> EnsureHumanParticipantAsync()
+        {
+            var existing = await _agentsTemplateService.GetObjectAsync(
+                z => z.PromptCode == HumanParticipantConstants.PromptCode);
+            if (existing != null)
+            {
+                if (!existing.Enable)
+                {
+                    existing.EnableAgent();
+                    await _agentsTemplateService.SaveObjectAsync(existing);
+                }
+                return existing;
+            }
+
+            var human = new AgentTemplate(
+                HumanParticipantConstants.Name,
+                "这是一个由当前登录用户输入文本的 Human 参与者，不调用模型或工具。",
+                true,
+                "系统保留的 Human-in-the-Loop 文本参与者",
+                HumanParticipantConstants.PromptCode,
+                HookRobotType.None,
+                string.Empty,
+                modelBinding: AgentModelBindingMode.FollowGroupTask);
+            await _agentsTemplateService.SaveObjectAsync(human);
+            return human;
+        }
+
+        private string GetCurrentAdminUserId()
+        {
+            try
+            {
+                var context = base.GetService<IAdminWorkContextProvider>()?.GetAdminWorkContext();
+                return context?.AdminUserId > 0 ? context.AdminUserId.ToString() : null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -663,13 +749,30 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         /// <summary>
         /// 运行智能体
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">任务正文。</param>
+        /// <param name="chatGroupId">由启动页显式传入的聊天组 ID。保留正文中的同名字段以兼容既有调用。</param>
         /// <returns></returns>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-        public async Task<AppResponseBase<string>> RunGroup(ChatGroup_RunGroupRequest request)
+        public async Task<AppResponseBase<string>> RunGroup(
+            [FromBody] ChatGroup_RunGroupRequest request,
+            [FromQuery] int chatGroupId = 0)
         {
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
+                if (request == null)
+                {
+                    throw new NcfExceptionBase("未提供聊天组启动请求。");
+                }
+
+                // 动态 ApiBind 控制器会对复杂正文参数和查询参数分别绑定。启动页把 Group ID
+                // 同时写入两处；此处优先采用显式查询参数，避免某些宿主/缓存脚本将正文属性
+                // 绑定为默认值 0 后误判为“未选择有效的聊天组”。
+                if (chatGroupId > 0)
+                {
+                    request.ChatGroupId = chatGroupId;
+                }
+
+                request.HumanRecipientUserId ??= GetCurrentAdminUserId();
                 List<Task> tasks = new List<Task>();
 
                 //TODO: 使用线程进行维护
@@ -741,12 +844,39 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     .ToDictionary(g => g.Key, g => g.Count());
 
                 var promptScoreCache = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
+                var publishedA2AByAgentId = agentIds.Count == 0
+                    ? new Dictionary<int, PublishedA2AAgent>()
+                    : (await _publishedA2AAgentService.GetFullListAsync(
+                            item => agentIds.Contains(item.AgentTemplateId)))
+                        .GroupBy(item => item.AgentTemplateId)
+                        .ToDictionary(group => group.Key, group => group.OrderByDescending(item => item.Id).First());
+                var humanInTheLoopPendingCountByTaskId = tasks
+                    .Where(task => task.Status == ChatTask_Status.Paused)
+                    .ToDictionary(
+                        task => task.Id,
+                        task => _humanInTheLoopRequestStore.GetPending(task.Id).Count);
 
                 foreach (var agent in agents)
                 {
-                    var memberGroupIds = members.Where(z => z.AgentTemplateId == agent.Id).Select(z => z.ChatGroupId).Distinct().ToList();
+                    var memberGroupIds = members
+                        .Where(z => z.AgentTemplateId == agent.Id)
+                        .Select(z => z.ChatGroupId)
+                        .Concat(groups
+                            .Where(group => group.AdminAgentTemplateId == agent.Id
+                                || group.EnterAgentTemplateId == agent.Id)
+                            .Select(group => group.Id))
+                        .Distinct()
+                        .ToList();
                     var chattingCount = memberGroupIds.Sum(groupId =>
                         activeTaskCountByGroup.TryGetValue(groupId, out var count) ? count : 0);
+                    var agentTasks = tasks
+                        .Where(task => memberGroupIds.Contains(task.ChatGroupId))
+                        .ToList();
+                    var pausedCount = agentTasks.Count(task => task.Status == ChatTask_Status.Paused);
+                    var humanInTheLoopPausedCount = agentTasks
+                        .Where(task => task.Status == ChatTask_Status.Paused)
+                        .Sum(task => humanInTheLoopPendingCountByTaskId.TryGetValue(task.Id, out var count) ? count : 0);
+                    var hasPublishedA2A = publishedA2AByAgentId.TryGetValue(agent.Id, out var publishedA2A);
 
                     var score = await GetPromptScoreAsync(agent.PromptCode, promptScoreCache);
 
@@ -759,8 +889,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         PromptCode = agent.PromptCode,
                         Score = score,
                         ChattingCount = chattingCount,
+                        PausedCount = pausedCount,
+                        HumanInTheLoopPausedCount = humanInTheLoopPausedCount,
                         Enable = agent.Enable,
-                        Avastar = agent.Avastar
+                        Avastar = agent.Avastar,
+                        SkillKinds = AgentGraphSkillHelper.GetAgentSkillKinds(agent, hasPublishedA2A),
+                        HasPublishedA2A = hasPublishedA2A,
+                        PublishedA2AEnabled = publishedA2A?.Enable == true
                     });
                 }
 
@@ -769,6 +904,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     var memberGroupIds = remoteMembers.Where(z => z.RemoteAgentId == remoteAgent.Id).Select(z => z.ChatGroupId).Distinct().ToList();
                     var chattingCount = memberGroupIds.Sum(groupId =>
                         activeTaskCountByGroup.TryGetValue(groupId, out var count) ? count : 0);
+                    var agentTasks = tasks
+                        .Where(task => memberGroupIds.Contains(task.ChatGroupId))
+                        .ToList();
 
                     result.Agents.Add(new AgentGraphAgentDto
                     {
@@ -779,9 +917,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         PromptCode = "A2A",
                         Score = -1,
                         ChattingCount = chattingCount,
+                        PausedCount = agentTasks.Count(task => task.Status == ChatTask_Status.Paused),
+                        HumanInTheLoopPausedCount = agentTasks
+                            .Where(task => task.Status == ChatTask_Status.Paused)
+                            .Sum(task => humanInTheLoopPendingCountByTaskId.TryGetValue(task.Id, out var count) ? count : 0),
                         Enable = remoteAgent.Enable,
                         Avastar = null,
-                        ConnectionStatus = (int)remoteAgent.ConnectionStatus
+                        ConnectionStatus = (int)remoteAgent.ConnectionStatus,
+                        SkillKinds = new List<string> { "a2a" }
                     });
                 }
 
@@ -791,6 +934,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         .Where(z => z.ChatGroupId == group.Id)
                         .GroupBy(z => (int)z.Status)
                         .ToDictionary(g => g.Key, g => g.Count());
+                    var groupTasks = tasks.Where(task => task.ChatGroupId == group.Id).ToList();
+                    var pausedTaskCount = groupTasks.Count(task => task.Status == ChatTask_Status.Paused);
+                    var humanInTheLoopPendingCount = groupTasks
+                        .Where(task => task.Status == ChatTask_Status.Paused)
+                        .Sum(task => humanInTheLoopPendingCountByTaskId.TryGetValue(task.Id, out var count) ? count : 0);
 
                     var memberAgentIds = members
                         .Where(z => z.ChatGroupId == group.Id)
@@ -823,6 +971,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         Enable = group.Enable,
                         State = (int)group.State,
                         RunningTaskCount = activeTaskCountByGroup.TryGetValue(group.Id, out var runningCount) ? runningCount : 0,
+                        PausedTaskCount = pausedTaskCount,
+                        HumanInTheLoopPendingCount = humanInTheLoopPendingCount,
                         TaskStatusCounts = statusMap,
                         MemberAgentIds = memberAgentIds,
                         MemberParticipantKeys = memberParticipantKeys
@@ -1218,6 +1368,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         public bool Enable { get; set; }
         public string Avastar { get; set; }
         public int ConnectionStatus { get; set; }
+        public bool HasPublishedA2A { get; set; }
+        public bool PublishedA2AEnabled { get; set; }
+        public int PausedCount { get; set; }
+        public int HumanInTheLoopPausedCount { get; set; }
+        public List<string> SkillKinds { get; set; } = new List<string>();
     }
 
     public class AgentGraphGroupDto
@@ -1227,6 +1382,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         public bool Enable { get; set; }
         public int State { get; set; }
         public int RunningTaskCount { get; set; }
+        public int PausedTaskCount { get; set; }
+        public int HumanInTheLoopPendingCount { get; set; }
         public Dictionary<int, int> TaskStatusCounts { get; set; } = new Dictionary<int, int>();
         public List<int> MemberAgentIds { get; set; } = new List<int>();
         public List<string> MemberParticipantKeys { get; set; } = new List<string>();
@@ -1247,5 +1404,37 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         public int Status { get; set; }
         public List<int> AgentIds { get; set; } = new List<int>();
         public List<string> ParticipantKeys { get; set; } = new List<string>();
+    }
+
+    internal static class AgentGraphSkillHelper
+    {
+        public static List<string> GetAgentSkillKinds(AgentTemplate agent, bool hasPublishedA2A)
+        {
+            var kinds = AgentFunctionBindingCodec
+                .Parse(agent.FunctionCallNames)
+                .Select(binding => binding.Kind?.Trim().ToLowerInvariant())
+                .Where(kind => kind is "function" or "workflow" or "plugin")
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            if (!string.IsNullOrWhiteSpace(agent.McpEndpoints))
+            {
+                kinds.Add("mcp");
+            }
+
+            if (hasPublishedA2A)
+            {
+                kinds.Add("a2a");
+            }
+
+            if (agent.IsHuman)
+            {
+                kinds.Add("human");
+            }
+
+            return kinds
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
     }
 }

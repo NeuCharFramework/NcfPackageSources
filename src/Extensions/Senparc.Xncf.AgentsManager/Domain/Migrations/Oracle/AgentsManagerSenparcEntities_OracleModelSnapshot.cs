@@ -1,14 +1,17 @@
-﻿/*----------------------------------------------------------------
+﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：AgentsManagerSenparcEntities_OracleModelSnapshot.cs
-    文件功能描述：数据库迁移与模型快照
-
-
+    文件功能描述：AgentsManager EF Core 模型快照
+    
+    
     创建标识：Senparc - 20231021
+    
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 同步 AgentTemplate 模型绑定与 HIL 策略快照
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
 ----------------------------------------------------------------*/
 
@@ -57,11 +60,17 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                     b.Property<int>("ChatGroupId")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<int>("ChatMaxRound")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("Description")
                         .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<bool>("ExecutionPolicyCaptured")
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("NUMBER(1)");
@@ -72,6 +81,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                     b.Property<string>("HookPlatformParameter")
                         .HasColumnType("NVARCHAR2(2000)");
 
+                    b.Property<int>("HumanInTheLoopLevel")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<bool>("IncludeHumanParticipant")
+                        .HasColumnType("NUMBER(1)");
+
                     b.Property<bool>("IsArchived")
                         .HasColumnType("NUMBER(1)");
 
@@ -81,10 +96,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP(7)");
 
+                    b.Property<int>("McpToolPermission")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("NVARCHAR2(150)");
+
+                    b.Property<int>("PluginToolPermission")
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("PromptCommand")
                         .IsRequired()
@@ -93,6 +114,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<bool>("RequireHumanApproval")
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<string>("ResultComment")
                         .HasColumnType("NVARCHAR2(2000)");
@@ -129,6 +153,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<int?>("AiModelId")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("Avastar")
                         .HasColumnType("NVARCHAR2(2000)");
 
@@ -159,6 +186,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                     b.Property<string>("McpEndpoints")
                         .HasColumnType("NVARCHAR2(2000)");
 
+                    b.Property<int>("ModelBinding")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)");
@@ -178,6 +208,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Oracle
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AiModelId");
 
                     b.HasIndex("KnowledgeBaseId");
 

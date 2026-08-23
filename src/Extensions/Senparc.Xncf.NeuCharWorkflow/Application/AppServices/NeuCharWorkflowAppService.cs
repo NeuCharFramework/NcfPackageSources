@@ -11,13 +11,21 @@
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
     修改标识：Senparc - 20260815
-    修改描述：v0.2.0-preview2 增强工作流并行与运行控制
+    修改描述：v0.2.0 增强工作流并行与运行控制
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
 
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.AgentsManager.Abstractions;
 using Senparc.Xncf.NeuCharWorkflow.Application.Events;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 using WorkflowEntity = Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflow;
@@ -39,6 +47,7 @@ namespace Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
 public sealed class NeuCharWorkflowAppService
 {
     private const int TaskListPageSize = 30;
+    private static readonly TimeSpan PersistedRunRecoveryAge = TimeSpan.FromMinutes(10);
     private static readonly JsonSerializerOptions DesignerJsonOptions = new(JsonSerializerDefaults.Web);
     private readonly NeuCharWorkflowService _workflowService;
     private readonly NeuCharWorkflowVersionService _workflowVersionService;
@@ -48,6 +57,9 @@ public sealed class NeuCharWorkflowAppService
     private readonly NeuCharWorkflowRunCoordinator _runCoordinator;
     private readonly WorkflowEventPublisher _eventPublisher;
     private readonly XncfModuleService _xncfModuleService;
+    private readonly IWorkflowHumanInteractionBridge _humanInteractionBridge;
+    private readonly NeuCharWorkflowHumanInputService _humanInputService;
+    private readonly IAgentWorkflowReferenceValidator? _agentWorkflowReferenceValidator;
 
     public NeuCharWorkflowAppService(
         NeuCharWorkflowService workflowService,
@@ -57,7 +69,10 @@ public sealed class NeuCharWorkflowAppService
         NeuCharWorkflowFunctionService functionService,
         NeuCharWorkflowRunCoordinator runCoordinator,
         WorkflowEventPublisher eventPublisher,
-        XncfModuleService xncfModuleService)
+        XncfModuleService xncfModuleService,
+        IWorkflowHumanInteractionBridge humanInteractionBridge,
+        NeuCharWorkflowHumanInputService humanInputService,
+        IEnumerable<IAgentWorkflowReferenceValidator>? agentWorkflowReferenceValidators = null)
     {
         _workflowService = workflowService;
         _workflowVersionService = workflowVersionService;
@@ -67,6 +82,9 @@ public sealed class NeuCharWorkflowAppService
         _runCoordinator = runCoordinator;
         _eventPublisher = eventPublisher;
         _xncfModuleService = xncfModuleService;
+        _humanInteractionBridge = humanInteractionBridge;
+        _humanInputService = humanInputService;
+        _agentWorkflowReferenceValidator = agentWorkflowReferenceValidators?.FirstOrDefault();
     }
 
     public async Task<IReadOnlyList<WorkflowListItem>> GetListAsync(int adminUserId, CancellationToken cancellationToken = default)
@@ -86,11 +104,22 @@ public sealed class NeuCharWorkflowAppService
         {
             return null;
         }
-        var editableGraphJson = await _workflowEngine.BuildEditableGraphJsonAsync(
+        var editableGraphTask = _workflowEngine.BuildEditableGraphJsonAsync(
             workflow.GraphJson,
+            cancellationToken);
+        var observedSchemasTask = GetObservedOutputSchemasAsync(workflow.Id);
+        await Task.WhenAll(editableGraphTask, observedSchemasTask).ConfigureAwait(false);
+        var editableGraphJson = await editableGraphTask.ConfigureAwait(false);
+        var observedSchemas = await observedSchemasTask.ConfigureAwait(false);
+        var runningCount = await GetRunningCountAsync(
+            adminUserId,
+            workflow.Id,
             cancellationToken).ConfigureAwait(false);
-        var observedSchemas = await GetObservedOutputSchemasAsync(workflow.Id).ConfigureAwait(false);
-        return ToDetail(workflow, editableGraphJson, observedOutputSchemas: observedSchemas);
+        return ToDetail(
+            workflow,
+            editableGraphJson,
+            runningCount: runningCount,
+            observedOutputSchemas: observedSchemas);
     }
 
     public async Task<WorkflowDesignerData> GetDesignerDataAsync(CancellationToken cancellationToken = default)
@@ -170,6 +199,22 @@ public sealed class NeuCharWorkflowAppService
         {
             throw new WorkflowInputException(subWorkflowError);
         }
+
+        if (_agentWorkflowReferenceValidator != null && workflow?.Id > 0)
+        {
+            var agentReferences = GetAgentWorkflowReferences(graph);
+            var agentReferenceError = await _agentWorkflowReferenceValidator
+                .ValidateWorkflowReferencesAsync(
+                    workflow.Id,
+                    adminUserId,
+                    agentReferences,
+                    cancellationToken)
+                .ConfigureAwait(false);
+            if (agentReferenceError != null)
+            {
+                throw new WorkflowInputException(agentReferenceError);
+            }
+        }
         if (enabled)
         {
             var referenceError = await _workflowEngine.ValidateReferencesAsync(graph, cancellationToken).ConfigureAwait(false);
@@ -231,7 +276,14 @@ public sealed class NeuCharWorkflowAppService
         {
             var editableUnchanged = await _workflowEngine.BuildEditableGraphJsonAsync(workflow.GraphJson, cancellationToken)
                 .ConfigureAwait(false);
-            return ToDetail(workflow, editableUnchanged, unchanged: true);
+            return ToDetail(
+                workflow,
+                editableUnchanged,
+                unchanged: true,
+                runningCount: await GetRunningCountAsync(
+                    adminUserId,
+                    workflow.Id,
+                    cancellationToken).ConfigureAwait(false));
         }
 
         workflow.Update(request.Name, request.Description, normalizedGraphJson, enabled, triggerType,
@@ -241,11 +293,21 @@ public sealed class NeuCharWorkflowAppService
         await _eventPublisher.PublishAsync(workflow.Id, "saved", adminUserId, cancellationToken).ConfigureAwait(false);
         var editableGraphJson = await _workflowEngine.BuildEditableGraphJsonAsync(workflow.GraphJson, cancellationToken)
             .ConfigureAwait(false);
-        return ToDetail(workflow, editableGraphJson);
+        return ToDetail(
+            workflow,
+            editableGraphJson,
+            runningCount: await GetRunningCountAsync(
+                adminUserId,
+                workflow.Id,
+                cancellationToken).ConfigureAwait(false));
     }
 
-    public async Task<NeuCharWorkflowRunResult> RunImmediatelyAsync(int workflowId, int adminUserId, string input,
-        CancellationToken cancellationToken = default)
+    public async Task<NeuCharWorkflowRunResult> RunImmediatelyAsync(
+        int workflowId,
+        int adminUserId,
+        string input,
+        CancellationToken cancellationToken = default,
+        bool parseInputAsJson = false)
     {
         await EnsureModuleEnabledAsync().ConfigureAwait(false);
         ValidateRunInput(workflowId, input);
@@ -254,7 +316,11 @@ public sealed class NeuCharWorkflowAppService
         await ValidateWorkflowAsync(workflow, cancellationToken).ConfigureAwait(false);
         workflow.MarkStarted(workflow.NextRunAt);
         await _workflowService.SaveRuntimeStartedAsync(workflow).ConfigureAwait(false);
-        var result = await _workflowEngine.RunAsync(workflow, input, cancellationToken).ConfigureAwait(false);
+        var result = await _workflowEngine.RunAsync(
+            workflow,
+            input,
+            cancellationToken,
+            parseInputAsJson: parseInputAsJson).ConfigureAwait(false);
         workflow.MarkCompleted(result.Success, result.ErrorMessage);
         await _workflowService.SaveRuntimeCompletedAsync(workflow).ConfigureAwait(false);
         return result;
@@ -279,19 +345,136 @@ public sealed class NeuCharWorkflowAppService
         return runId;
     }
 
-    public NeuCharWorkflowRunSnapshot? GetRunStatus(Guid runId, int adminUserId, long afterSequence) =>
-        runId == Guid.Empty ? null : _runCoordinator.GetSnapshot(runId, adminUserId, afterSequence);
-
-    public void AbortRun(Guid runId, int adminUserId)
+    public async Task<NeuCharWorkflowRunSnapshot?> GetRunStatusAsync(
+        Guid runId,
+        int adminUserId,
+        long afterSequence,
+        CancellationToken cancellationToken = default)
     {
         if (runId == Guid.Empty)
         {
+            return null;
+        }
+
+        var snapshot = _runCoordinator.GetSnapshot(runId, adminUserId, afterSequence);
+        if (snapshot == null)
+        {
+            return null;
+        }
+
+        var correlationId = BuildRunCorrelationId(snapshot.WorkflowId, runId);
+        var nativeInteractions = _humanInputService.GetPendingInteractions(
+            correlationId,
+            adminUserId.ToString());
+        var agentInteractions = await _humanInteractionBridge.GetPendingAsync(
+            correlationId,
+            adminUserId.ToString(),
+            cancellationToken).ConfigureAwait(false);
+        var interactions = nativeInteractions
+            .Concat(agentInteractions)
+            .OrderBy(interaction => interaction.CreatedAt)
+            .ToList();
+        return snapshot with { HumanInteractions = interactions };
+    }
+
+    public NeuCharWorkflowRunSnapshot? GetRunStatus(Guid runId, int adminUserId, long afterSequence) =>
+        runId == Guid.Empty ? null : _runCoordinator.GetSnapshot(runId, adminUserId, afterSequence);
+
+    public async Task<WorkflowHumanInteractionResult> ResolveHumanInteractionAsync(
+        Guid runId,
+        int adminUserId,
+        string requestId,
+        bool approved,
+        string input = null,
+        string reason = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (runId == Guid.Empty)
+        {
+            return new WorkflowHumanInteractionResult(false, false, null, null, "缺少有效的 Workflow 运行 ID。");
+        }
+
+        var snapshot = _runCoordinator.GetSnapshot(runId, adminUserId, 0);
+        if (snapshot == null)
+        {
+            return new WorkflowHumanInteractionResult(false, false, null, null, "Workflow 运行不存在或不属于当前账号。");
+        }
+
+        var correlationId = BuildRunCorrelationId(snapshot.WorkflowId, runId);
+        var nativeResolution = await _humanInputService.ResolveForAdminAsync(
+            correlationId,
+            adminUserId.ToString(),
+            requestId,
+            approved,
+            input,
+            reason,
+            cancellationToken).ConfigureAwait(false);
+        if (nativeResolution.Handled)
+        {
+            return new WorkflowHumanInteractionResult(
+                nativeResolution.Success,
+                nativeResolution.Approved,
+                nativeResolution.Input,
+                nativeResolution.Reason,
+                nativeResolution.Message);
+        }
+
+        return await _humanInteractionBridge.ResolveAsync(
+            correlationId,
+            adminUserId.ToString(),
+            requestId,
+            approved,
+            input,
+            reason,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    public static string BuildRunCorrelationId(int workflowId, Guid runId)
+        => $"workflow-{workflowId}-run-{runId:N}";
+
+    public async Task AbortRunAsync(
+        Guid? runId,
+        int? executionLogId,
+        int adminUserId,
+        CancellationToken cancellationToken = default)
+    {
+        var validRunId = runId.GetValueOrDefault();
+        if (validRunId == Guid.Empty && (!executionLogId.HasValue || executionLogId.Value <= 0))
+        {
             throw new WorkflowInputException("中止请求缺少有效的运行 ID。");
         }
-        if (!_runCoordinator.TryAbort(runId, adminUserId, out var error))
+
+        if (validRunId != Guid.Empty &&
+            _runCoordinator.TryAbort(validRunId, adminUserId, out _))
         {
-            throw new WorkflowConflictException(error ?? "工作流任务无法中止。");
+            return;
         }
+
+        var persistedExecutionLogId = executionLogId.GetValueOrDefault();
+        var executionLog = persistedExecutionLogId > 0
+            ? await _executionLogService.GetUnfinishedByIdAsync(persistedExecutionLogId, cancellationToken)
+                .ConfigureAwait(false)
+            : await _executionLogService.GetUnfinishedByRunIdAsync(validRunId, cancellationToken)
+                .ConfigureAwait(false);
+        if (executionLog == null ||
+            await GetOwnedWorkflowAsync(executionLog.WorkflowId, adminUserId).ConfigureAwait(false) == null)
+        {
+            throw new WorkflowConflictException("运行任务不存在或不属于当前账号。");
+        }
+
+        if (executionLog.StartedAt > DateTime.UtcNow.Subtract(PersistedRunRecoveryAge))
+        {
+            throw new WorkflowConflictException("当前进程未持有该运行；它可能仍由其他实例执行，暂不能安全中止。");
+        }
+
+        const string message = "服务重启后未能恢复此运行，已按手动中止结束。";
+        executionLog.Complete(false, null, message);
+        await _executionLogService.SaveObjectAsync(executionLog).ConfigureAwait(false);
+        await _eventPublisher.PublishAsync(
+            executionLog.WorkflowId,
+            "aborted-after-restart",
+            adminUserId,
+            cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -301,52 +484,72 @@ public sealed class NeuCharWorkflowAppService
     public async Task<WorkflowTaskListPage> GetTaskListAsync(
         int adminUserId,
         int? beforeExecutionLogId = null,
+        int? workflowId = null,
+        string? status = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        var workflows = await _workflowService.GetFullListAsync(
-            z => z.AdminUserId == adminUserId,
-            z => z.LastUpdateTime,
-            OrderingType.Descending).ConfigureAwait(false);
-        var workflowNames = workflows.ToDictionary(z => z.Id, z => z.Name);
+        var statusFilter = status?.Trim().ToLowerInvariant() switch
+        {
+            "running" or "success" or "failed" => status.Trim().ToLowerInvariant(),
+            _ => null
+        };
+        var runningOnly = statusFilter == "running";
+        var workflowNames = await _workflowService.GetNameMapAsync(
+            adminUserId,
+            cancellationToken).ConfigureAwait(false);
         var workflowIds = workflowNames.Keys.ToList();
+        if (workflowId.HasValue && workflowId.Value > 0)
+        {
+            if (!workflowNames.ContainsKey(workflowId.Value))
+            {
+                return new WorkflowTaskListPage(Array.Empty<WorkflowTaskListItem>(), false, null);
+            }
+
+            workflowIds = new List<int> { workflowId.Value };
+        }
         var loadLatest = !beforeExecutionLogId.HasValue || beforeExecutionLogId.Value <= 0;
         var activeRuns = loadLatest
             ? _runCoordinator.GetActiveRuns(adminUserId)
+                .Where(run => !workflowId.HasValue || workflowId.Value <= 0 || run.WorkflowId == workflowId.Value)
+                .ToArray()
             : Array.Empty<NeuCharWorkflowActiveRun>();
 
-        var tasks = activeRuns.Select(run => new WorkflowTaskListItem(
-            $"live:{run.RunId:N}",
-            run.WorkflowId,
-            workflowNames.TryGetValue(run.WorkflowId, out var workflowName) ? workflowName : $"工作流 #{run.WorkflowId}",
-            run.Source,
-            "running",
-            run.StartedAt.UtcDateTime,
-            null,
-            BuildLiveSummary(run),
-            null,
-            run.RunId,
-            null,
-            false)).ToList();
+        var tasks = statusFilter is null or "running"
+            ? activeRuns.Select(run => new WorkflowTaskListItem(
+                $"live:{run.RunId:N}",
+                run.WorkflowId,
+                workflowNames.TryGetValue(run.WorkflowId, out var workflowName) ? workflowName : $"工作流 #{run.WorkflowId}",
+                run.Source,
+                "running",
+                run.StartedAt,
+                null,
+                BuildLiveSummary(run),
+                null,
+                run.RunId,
+                null,
+                false)).ToList()
+            : new List<WorkflowTaskListItem>();
 
         if (workflowIds.Count == 0)
         {
             return new WorkflowTaskListPage(tasks.OrderByDescending(z => z.StartedAt).ToList(), false, null);
         }
 
-        var logPage = await _executionLogService.GetObjectListAsync(
-            1,
+        var logPage = await _executionLogService.GetTaskPageAsync(
+            workflowIds,
+            beforeExecutionLogId,
             TaskListPageSize + 1,
-            z => workflowIds.Contains(z.WorkflowId) &&
-                 (!beforeExecutionLogId.HasValue || beforeExecutionLogId.Value <= 0 || z.Id < beforeExecutionLogId.Value),
-            z => z.Id,
-            OrderingType.Descending).ConfigureAwait(false);
-        var activeWorkflowIds = activeRuns.Select(z => z.WorkflowId).ToHashSet();
+            runningOnly,
+            cancellationToken).ConfigureAwait(false);
+        var activeRunIds = activeRuns.Select(z => z.RunId).ToHashSet();
         var fetchedLogs = logPage.ToList();
         var pageLogs = fetchedLogs.Take(TaskListPageSize).ToList();
         tasks.AddRange(pageLogs
-            // 由协调器托管的运行有节点级实时流；隐藏其尚未完成的数据库镜像，避免同一任务显示两次。
-            .Where(log => log.FinishedAt != null || !activeWorkflowIds.Contains(log.WorkflowId))
+            // 由协调器托管的运行有节点级实时流；仅隐藏对应 RunId 的数据库镜像，
+            // 保留同一 Workflow 的其他未完成任务，避免并发运行时丢任务。
+            .Where(log => log.FinishedAt != null ||
+                          !activeRunIds.Contains(GetTaskRunId(log.WorkflowId, log.CorrelationId).GetValueOrDefault()))
             .Select(log => new WorkflowTaskListItem(
                 $"log:{log.Id}",
                 log.WorkflowId,
@@ -354,20 +557,29 @@ public sealed class NeuCharWorkflowAppService
                     ? (workflowNames.TryGetValue(log.WorkflowId, out var workflowName) ? workflowName : $"工作流 #{log.WorkflowId}")
                     : log.WorkflowName,
                 "history",
-                ToTaskStatus(log),
-                log.StartedAt,
-                log.FinishedAt,
+                log.FinishedAt == null
+                    ? "running"
+                    : log.Succeeded == true ? "success" : "failed",
+                ToUtcOffset(log.StartedAt),
+                ToUtcOffset(log.FinishedAt),
                 log.ResultSummary,
                 log.Succeeded == false ? log.Error : null,
                 GetTaskRunId(log.WorkflowId, log.CorrelationId),
                 log.Id,
-                CanReplay(log))));
+                log.ReplayAvailable)));
 
         return new WorkflowTaskListPage(
             tasks.OrderByDescending(z => z.StartedAt).ToList(),
             fetchedLogs.Count > TaskListPageSize,
             pageLogs.LastOrDefault()?.Id);
     }
+
+    /// <summary>兼容已编译页面与扩展模块的旧任务列表调用签名。</summary>
+    public Task<WorkflowTaskListPage> GetTaskListAsync(
+        int adminUserId,
+        int? beforeExecutionLogId,
+        CancellationToken cancellationToken) =>
+        GetTaskListAsync(adminUserId, beforeExecutionLogId, null, null, cancellationToken);
 
     /// <summary>
     /// 预览当前管理员可清理的运行历史。只处理已完成的执行日志，进程内或数据库中仍未完成的任务不会被包含。
@@ -452,15 +664,19 @@ public sealed class NeuCharWorkflowAppService
                 executionLog.ReplayEventsJson!,
                 DesignerJsonOptions) ?? new List<NeuCharWorkflowProgress>();
             events = progress.Select((item, index) => new WorkflowReplayEvent(
-                index + 1,
-                item.NodeId,
-                item.NodeName,
-                item.Status,
-                item.Message,
-                item.Output,
-                item.Timestamp,
-                item.OutputSchema,
-                item.Input)).ToList();
+                    index + 1,
+                    item.NodeId,
+                    item.NodeName,
+                    item.Status,
+                    item.Message,
+                    item.Output,
+                    item.Timestamp,
+                    item.OutputSchema,
+                    item.Input)
+                {
+                    ObjectReference = item.ObjectReference
+                })
+                .ToList();
         }
         catch (JsonException ex)
         {
@@ -472,8 +688,8 @@ public sealed class NeuCharWorkflowAppService
             executionLog.WorkflowId,
             executionLog.WorkflowName,
             ToTaskStatus(executionLog),
-            executionLog.StartedAt,
-            executionLog.FinishedAt,
+            ToUtcOffset(executionLog.StartedAt),
+            ToUtcOffset(executionLog.FinishedAt),
             executionLog.Succeeded,
             executionLog.ResultSummary,
             executionLog.Error,
@@ -649,6 +865,51 @@ public sealed class NeuCharWorkflowAppService
     private Task<WorkflowEntity?> GetOwnedWorkflowAsync(int workflowId, int adminUserId) =>
         _workflowService.GetObjectAsync(z => z.Id == workflowId && z.AdminUserId == adminUserId);
 
+    private static IReadOnlyList<AgentWorkflowReference> GetAgentWorkflowReferences(
+        NeuCharWorkflowGraph graph)
+    {
+        return (graph?.Nodes ?? new List<NeuCharWorkflowNode>())
+            .Where(node => string.Equals(node.Type, "agent", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(node.Type, "agent-group", StringComparison.OrdinalIgnoreCase))
+            .Select(node => new
+            {
+                ProviderId = ReadNodeString(node.Config, "providerId"),
+                ObjectId = ReadNodeString(node.Config, "objectId")
+            })
+            .Where(node => string.Equals(node.ProviderId, "agents-manager", StringComparison.OrdinalIgnoreCase))
+            .Select(node =>
+            {
+                if (node.ObjectId.StartsWith("agent:", StringComparison.OrdinalIgnoreCase))
+                {
+                    return new AgentWorkflowReference(
+                        "agent",
+                        ParseNodeId(node.ObjectId, "agent:"));
+                }
+
+                if (node.ObjectId.StartsWith("group:", StringComparison.OrdinalIgnoreCase))
+                {
+                    return new AgentWorkflowReference(
+                        "group",
+                        ParseNodeId(node.ObjectId, "group:"));
+                }
+
+                return null;
+            })
+            .Where(reference => reference?.Id > 0)
+            .Distinct()
+            .ToList();
+    }
+
+    private static string ReadNodeString(
+        System.Text.Json.Nodes.JsonObject? config,
+        string key)
+        => config?.TryGetPropertyValue(key, out var value) == true
+            ? value?.ToString() ?? string.Empty
+            : string.Empty;
+
+    private static int ParseNodeId(string value, string prefix)
+        => int.TryParse(value[prefix.Length..], out var id) ? id : 0;
+
     private async Task<List<NeuCharWorkflowExecutionLog>> GetCompletedTaskLogsAsync(
         int adminUserId,
         DateTime cutoff,
@@ -722,10 +983,11 @@ public sealed class NeuCharWorkflowAppService
     private async Task<IReadOnlyList<NeuCharWorkflowObservedOutputSchema>> GetObservedOutputSchemasAsync(int workflowId)
     {
         var result = new Dictionary<string, NeuCharWorkflowObservedOutputSchema>(StringComparer.Ordinal);
-        var logs = await _executionLogService.GetRecentCompletedAsync(workflowId).ConfigureAwait(false);
-        foreach (var log in logs)
+        var replayEvents = await _executionLogService.GetRecentCompletedReplayEventsAsync(workflowId)
+            .ConfigureAwait(false);
+        foreach (var replayEventsJson in replayEvents)
         {
-            AddObservedSchemas(result, log.ReplayEventsJson);
+            AddObservedSchemas(result, replayEventsJson);
         }
         return result.Values.ToList();
     }
@@ -772,11 +1034,12 @@ public sealed class NeuCharWorkflowAppService
         WorkflowEntity workflow,
         string? graphJson = null,
         bool unchanged = false,
+        int runningCount = 0,
         IReadOnlyList<NeuCharWorkflowObservedOutputSchema>? observedOutputSchemas = null) => new(
         workflow.Id, workflow.Name, workflow.Description, graphJson ?? workflow.GraphJson, workflow.Enabled,
         workflow.TriggerType, workflow.TriggerConfigJson, workflow.NextRunAt, workflow.LastRunAt, workflow.LastSucceeded,
         workflow.LastError, workflow.Revision, workflow.AutoSaveMinutes, unchanged, workflow.LastUpdateTime,
-        observedOutputSchemas);
+        runningCount, observedOutputSchemas);
 
     private static WorkflowListItem ToListItem(WorkflowEntity workflow) => new(
         workflow.Id, workflow.Name, workflow.Description, workflow.Enabled, workflow.TriggerType, workflow.NextRunAt,
@@ -802,6 +1065,24 @@ public sealed class NeuCharWorkflowAppService
         var node = string.IsNullOrWhiteSpace(run.LastNodeName) ? "工作流" : run.LastNodeName;
         var message = string.IsNullOrWhiteSpace(run.LastMessage) ? "正在执行" : run.LastMessage;
         return $"{node}：{message}";
+    }
+
+    private static DateTimeOffset ToUtcOffset(DateTime value) =>
+        new(DateTime.SpecifyKind(value, DateTimeKind.Utc));
+
+    private static DateTimeOffset? ToUtcOffset(DateTime? value) =>
+        value.HasValue ? ToUtcOffset(value.Value) : null;
+
+    private async Task<int> GetRunningCountAsync(
+        int adminUserId,
+        int workflowId,
+        CancellationToken cancellationToken)
+    {
+        var activeCount = _runCoordinator.GetActiveRunCount(adminUserId, workflowId);
+        var persistedCount = await _executionLogService
+            .GetUnfinishedCountAsync(workflowId, cancellationToken)
+            .ConfigureAwait(false);
+        return Math.Max(activeCount, persistedCount);
     }
 
     private static Guid? GetTaskRunId(int workflowId, string? correlationId)
@@ -866,6 +1147,7 @@ public sealed record WorkflowDetail(
     int Id, string Name, string? Description, string GraphJson, bool Enabled, string TriggerType, string TriggerConfigJson,
     DateTime? NextRunAt, DateTime? LastRunAt, bool? LastSucceeded, string? LastError, int Revision, int AutoSaveMinutes,
     bool Unchanged, DateTime LastUpdateTime,
+    int RunningCount = 0,
     IReadOnlyList<NeuCharWorkflowObservedOutputSchema>? ObservedOutputSchemas = null);
 
 public sealed record WorkflowTaskListItem(
@@ -874,8 +1156,8 @@ public sealed record WorkflowTaskListItem(
     string WorkflowName,
     string Source,
     string Status,
-    DateTime StartedAt,
-    DateTime? FinishedAt,
+    DateTimeOffset StartedAt,
+    DateTimeOffset? FinishedAt,
     string? Summary,
     string? ErrorMessage,
     Guid? RunId,
@@ -908,15 +1190,18 @@ public sealed record WorkflowReplayEvent(
     string? Output,
     DateTimeOffset Timestamp,
     string? OutputSchema = null,
-    string? Input = null);
+    string? Input = null)
+{
+    public WorkflowObjectExecutionReference? ObjectReference { get; init; }
+}
 
 public sealed record WorkflowRunReplay(
     int ExecutionLogId,
     int WorkflowId,
     string WorkflowName,
     string Status,
-    DateTime StartedAt,
-    DateTime? FinishedAt,
+    DateTimeOffset StartedAt,
+    DateTimeOffset? FinishedAt,
     bool? Succeeded,
     string? ResultSummary,
     string? ErrorMessage,

@@ -1,14 +1,17 @@
-﻿/*----------------------------------------------------------------
+﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：AgentsManagerSenparcEntities_SqliteModelSnapshot.cs
-    文件功能描述：数据库迁移与模型快照
-
-
+    文件功能描述：AgentsManager EF Core 模型快照
+    
+    
     创建标识：Senparc - 20231021
+    
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 同步 AgentTemplate 模型绑定与 HIL 策略快照
 
-    修改标识：Senparc - 20260813
-    修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
 ----------------------------------------------------------------*/
 
@@ -50,11 +53,17 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Property<int>("ChatGroupId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ChatMaxRound")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("ExecutionPolicyCaptured")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
@@ -65,6 +74,12 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Property<string>("HookPlatformParameter")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("HumanInTheLoopLevel")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IncludeHumanParticipant")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsArchived")
                         .HasColumnType("INTEGER");
 
@@ -74,10 +89,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("McpToolPermission")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("PluginToolPermission")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("PromptCommand")
                         .IsRequired()
@@ -86,6 +107,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("RequireHumanApproval")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ResultComment")
                         .HasColumnType("TEXT");
@@ -120,6 +144,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("AiModelId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Avastar")
                         .HasColumnType("TEXT");
 
@@ -150,6 +177,9 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                     b.Property<string>("McpEndpoints")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ModelBinding")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -169,6 +199,8 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Sqlite
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AiModelId");
 
                     b.HasIndex("KnowledgeBaseId");
 

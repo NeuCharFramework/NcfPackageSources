@@ -6,6 +6,12 @@
 
     创建标识：Senparc - 20260808
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;
@@ -26,7 +32,7 @@ public sealed class SandboxImageOptions
 
     /// <summary>
     /// 按模板键完全覆盖镜像引用（优先于 RegistryPrefix）。
-    /// 键为 python-exec / csharp-exec / jupyter-python。
+    /// 键为 python-exec / csharp-exec / jupyter-python / jupyter-csharp。
     /// </summary>
     public Dictionary<string, string> Overrides { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }

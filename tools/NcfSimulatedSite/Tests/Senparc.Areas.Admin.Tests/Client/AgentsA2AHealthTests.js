@@ -179,6 +179,61 @@ async function run() {
     assert.strictEqual(quickInfo.currentUsageText, '1 条回复 · 50 Token');
     assert.strictEqual(quickInfo.responseTimeText, '800ms');
 
+    const humanParticipant = {
+        id: 9,
+        name: 'Human',
+        description: '系统保留的 Human-in-the-Loop 文本参与者。',
+        participantKey: 'human:9',
+        agentKind: 'Human',
+        isHuman: true,
+        enable: true
+    };
+    viewModel.taskMemberList = [humanParticipant];
+    viewModel.taskHistoryList = [];
+    viewModel.renderSafeMarkdown = text => text;
+    viewModel.flushTaskStreamMessage('task', {
+        data: JSON.stringify({
+            chatTaskId: 101,
+            historyId: 99,
+            fromAgentTemplateId: 9,
+            fromParticipantKey: 'human:9',
+            fromParticipantKind: 'Human',
+            fromAgentName: 'Human',
+            responseId: 'human-response-1',
+            text: '请继续处理下一步。',
+            isFinal: true,
+            timestamp: '2026-08-17T11:07:55Z'
+        })
+    });
+    const humanQuickInfo = viewModel.getParticipantQuickInfo('task', humanParticipant);
+    assert.strictEqual(viewModel.taskHistoryList[0].fromParticipantKey, 'human:9',
+        'A finalized stream message must retain the Human participant key.');
+    assert.strictEqual(humanQuickInfo.currentUsageText, '已输入 1 条文本',
+        'Human input should count as a task contribution without being treated as a model response.');
+    assert.strictEqual(humanQuickInfo.totalUsageText, '不产生模型 Token');
+    assert.strictEqual(humanQuickInfo.canOpenEditor, false,
+        'The system Human participant must not expose an editor.');
+
+    let openedAgentEditor = null;
+    context.window.open = (url, target) => {
+        openedAgentEditor = { url, target, focused: false };
+        return {
+            focus() {
+                openedAgentEditor.focused = true;
+            }
+        };
+    };
+    viewModel.openParticipantAgentEditor({ id: 12, agentKind: 'Local' });
+    assert.deepStrictEqual(JSON.parse(JSON.stringify(openedAgentEditor)), {
+        url: '/Admin/AgentsManager/Index#tab=first&view=edit&agentId=12',
+        target: 'NcfAgentsManager_Local_12',
+        focused: true
+    }, 'Local Agent task members should open their editor in a separate window.');
+    viewModel.openParticipantAgentEditor({ id: 7, agentKind: 'RemoteA2A' });
+    assert.strictEqual(openedAgentEditor.url,
+        '/Admin/AgentsManager/Index#tab=remoteA2A&view=edit&remoteAgentId=7',
+        'Remote A2A task members should open their own editor route.');
+
     viewModel.agentList = [
         { id: 1, name: '高用量 Agent', enable: true, totalTokens: 1600, completedConversationRounds: 12, chattingCount: 2, score: 96 },
         { id: 2, name: '低用量 Agent', enable: true, totalTokens: 100, completedConversationRounds: 4, chattingCount: 0, score: 88, hasPublishedA2A: true }
@@ -233,6 +288,8 @@ async function run() {
     assert.ok(page.includes('testAllRemoteAgents'), 'The remote A2A drawer should provide a batch test action.');
     assert.ok(page.includes('participant-quick-action'), 'Task details should use the shared participant quick-info action.');
     assert.ok(page.includes("getParticipantQuickInfo('task', mitem)"), 'Task details should provide current task usage to quick info.');
+    assert.ok(page.includes('@@edit-agent="openParticipantAgentEditor(mitem)"'),
+        'Task member quick info should expose the new-window Agent editor action.');
     assert.ok(page.includes("aitem.hasPublishedA2A ? '管理 A2A' : '发布 A2A'"),
         'Published local Agents should expose a management action.');
     assert.ok(page.includes('agentCard-a2aBadge'), 'Published local Agents should display a highlighted A2A badge.');
@@ -243,6 +300,9 @@ async function run() {
     assert.ok(page.includes('handleAgentStatisticTileClick(tile.agent)'));
     assert.ok(script.includes("Vue.component('participant-quick-action'"));
     assert.ok(script.includes('Token 未由远端反馈'));
+    assert.ok(script.includes('已输入 ${this.formatUsageCount(usage.messageCount)} 条文本'));
+    assert.ok(script.includes('el-icon-top-right'));
+    assert.ok(script.includes('buildParticipantEditorUrl'));
     assert.ok(script.includes('editorFormInitialSnapshots'));
     assert.ok(script.includes('当前修改尚未保存，确认关闭？'));
     assert.ok(styleSource.includes('.taskmain-member-action__name'));

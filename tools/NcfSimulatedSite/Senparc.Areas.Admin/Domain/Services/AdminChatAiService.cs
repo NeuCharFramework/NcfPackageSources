@@ -22,9 +22,13 @@
     修改标识：Senparc - 20260815
     修改描述：v0.5.1 优化管理端 AI 插件与知识库交互
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Senparc.AI;
 using Senparc.AI.Entities;
@@ -51,6 +55,7 @@ using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.Extensions.AI;
 using Senparc.AI.AgentKernel.IWantToExtensions;
 using Senparc.AI.AgentKernel.Extensions;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
@@ -74,6 +79,7 @@ namespace Senparc.Areas.Admin.Domain.Services
     {
         private readonly AdminChatMessageService _messageService;
         private readonly AdminChatSessionModuleService _sessionModuleService;
+        private readonly AdminChatSessionWorkflowService _sessionWorkflowService;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<AdminChatAiService> _logger;
 
@@ -87,11 +93,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         public AdminChatAiService(
             AdminChatMessageService messageService,
             AdminChatSessionModuleService sessionModuleService,
+            AdminChatSessionWorkflowService sessionWorkflowService,
             IServiceProvider serviceProvider,
             ILogger<AdminChatAiService> logger)
         {
             _messageService = messageService;
             _sessionModuleService = sessionModuleService;
+            _sessionWorkflowService = sessionWorkflowService;
             _serviceProvider = serviceProvider;
             _logger = logger;
         }
@@ -118,18 +126,26 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
             var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
+            var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
 
             var agentAiHandler = new AgentAiHandler(setting);
 
 
+            var functionInvocationEnabled = generationOptions?.AllowFunctionInvocation != false;
             var modulePlugin = new ModuleAssistantPlugin(modules);
-            var aiFunctions = agentAiHandler.GetAITools(modulePlugin);
+            var aiFunctions = functionInvocationEnabled
+                ? agentAiHandler.GetAITools(modulePlugin)
+                : new List<AIFunction>();
 
-            var importedPluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "ModuleAssistant" };
+            var importedPluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (functionInvocationEnabled)
+            {
+                importedPluginNames.Add("ModuleAssistant");
+            }
 
             // 自动加载会话关联模块中的 FunctionRender（[#sym:FunctionRender]）插件对象
             var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
-            var functionRenderBags = generationOptions?.AllowFunctionInvocation != false
+            var functionRenderBags = functionInvocationEnabled
                 ? moduleUids
                     .SelectMany(uid => Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.GetByModuleUid(uid))
                     // FunctionRender is also used by the normal Admin UI. AI exposure is an
@@ -146,6 +162,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 .ToList();
 
             var importedFunctionCount = 0;
+            var importedWorkflowCount = 0;
             var importedFunctionSignatures = new List<string>();
             var loadedFunctionDebugLines = new List<string>();
 
@@ -177,10 +194,10 @@ namespace Senparc.Areas.Admin.Domain.Services
                             var kernelFunction = KernelFunctionFactory.CreateFromMethod(functionBag.MethodInfo, plugin, options);
                             kernelFunctions.Add(kernelFunction);
 
-                            aiFunctions.Add(AIFunctionFactory.Create(
+                            aiFunctions.Add(AdminChatFunctionToolFactory.Create(
                                 method: functionBag.MethodInfo,
-                                target: null,
-                                name: options.FunctionName,
+                                target: plugin,
+                                name: BuildFunctionToolName(pluginName, options.FunctionName),
                                 description: options.Description));
                         }
                         catch (Exception ex)
@@ -211,6 +228,48 @@ namespace Senparc.Areas.Admin.Domain.Services
                 }
             }
 
+            var workflowProvider = functionInvocationEnabled
+                ? _serviceProvider.GetService<IWorkflowFunctionCallingProvider>()
+                : null;
+            if (workflowProvider != null && workflows.Count > 0)
+            {
+                try
+                {
+                    var availableWorkflows = await workflowProvider
+                        .GetAvailableAsync(userId)
+                        .ConfigureAwait(false);
+                    var availableById = availableWorkflows.ToDictionary(workflow => workflow.Id);
+
+                    foreach (var sessionWorkflow in workflows)
+                    {
+                        if (!availableById.TryGetValue(sessionWorkflow.WorkflowId, out var workflow))
+                        {
+                            _logger.LogInformation(
+                                "跳过不可用的 AdminChat Workflow：SessionId={SessionId}, WorkflowId={WorkflowId}",
+                                sessionId,
+                                sessionWorkflow.WorkflowId);
+                            continue;
+                        }
+
+                        var tool = AdminChatWorkflowToolFactory.Create(workflowProvider, userId, workflow);
+                        aiFunctions.Add(tool);
+                        importedWorkflowCount++;
+                        importedFunctionSignatures.Add(
+                            $"{tool.Name}({string.Join(", ", workflow.Parameters.Select(parameter => parameter.Name))})");
+                        loadedFunctionDebugLines.Add(
+                            $"- Workflow: {tool.Name} ({workflow.Name})");
+                        loadedFunctionDebugLines.Add(
+                            $"  Description: {tool.Description}");
+                        loadedFunctionDebugLines.Add(
+                            $"  Schema: {tool.JsonSchema.GetRawText()}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "导入 AdminChat Workflow Function Calling 工具失败：SessionId={SessionId}", sessionId);
+                }
+            }
+
 
 #pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
             var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
@@ -221,7 +280,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                     MaxOutputTokens = Math.Clamp(generationOptions?.MaxOutputTokens ?? 2000, 256, 8000),
                     TopP = 0.9f,
                     Temperature = Math.Clamp(generationOptions?.Temperature ?? 0.6f, 0f, 1.5f),
-                    Tools = aiFunctions.Select(z => z as AITool).ToList()
+                    AllowMultipleToolCalls = aiFunctions.Count > 0,
+                    Tools = aiFunctions.Count > 0 ? aiFunctions.Cast<AITool>().ToList() : null
                 },
                 ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
                 {
@@ -235,11 +295,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             if (importedFunctionCount == 0)
             {
                 _logger.LogWarning(
-                    "AdminChat 未注入任何 FunctionRender 函数：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}",
+                    "AdminChat 未注入任何 FunctionRender 函数：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, SelectedWorkflowCount={WorkflowCount}",
                     sessionId,
                     userId,
                     moduleUids.Count,
-                    string.Join(",", moduleUids));
+                    string.Join(",", moduleUids),
+                    importedWorkflowCount);
             }
             else
             {
@@ -250,13 +311,14 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
 
             _logger.LogInformation(
-                "AdminChat FunctionCalling 插件加载完成：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, Plugins={Plugins}, Functions={Functions}, FunctionList={FunctionList}",
+                "AdminChat FunctionCalling 插件加载完成：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, Plugins={Plugins}, Functions={Functions}, Workflows={Workflows}, FunctionList={FunctionList}",
                 sessionId,
                 userId,
                 moduleUids.Count,
                 string.Join(",", moduleUids),
                 string.Join(",", importedPluginNames),
                 importedFunctionCount,
+                importedWorkflowCount,
                 string.Join(" | ", importedFunctionSignatures));
 
             var prompt = BuildUserPrompt(messages, userMessage);
@@ -402,6 +464,23 @@ namespace Senparc.Areas.Admin.Domain.Services
             var prefix = normalized.Length > prefixMaxLength ? normalized.Substring(0, prefixMaxLength) : normalized;
 
             return $"Xncf_{prefix}_{hash}";
+        }
+
+        private static string BuildFunctionToolName(string pluginName, string methodName)
+        {
+            var normalizedPluginName = string.IsNullOrWhiteSpace(pluginName) ? "FunctionPlugin" : pluginName;
+            var normalizedMethodName = string.IsNullOrWhiteSpace(methodName) ? "Invoke" : methodName;
+            var candidate = $"{normalizedPluginName}_{normalizedMethodName}";
+            const int maxFunctionNameLength = 64;
+            if (candidate.Length <= maxFunctionNameLength)
+            {
+                return candidate;
+            }
+
+            const int hashLength = 8;
+            var hash = ComputeShortHash(candidate, hashLength);
+            var prefixLength = maxFunctionNameLength - hashLength - 1;
+            return $"{candidate.Substring(0, prefixLength)}_{hash}";
         }
 
         private static string ComputeShortHash(string input, int length)

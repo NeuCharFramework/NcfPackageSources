@@ -7,7 +7,13 @@
     创建标识：Senparc - 20260808
 
     修改标识：Senparc - 20260815
-    修改描述：v0.2.0-preview3 增加 NCF 预览沙箱工作负载
+    修改描述：v0.2.0 增加 NCF 预览沙箱工作负载
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
 
 ----------------------------------------------------------------*/
 
@@ -16,6 +22,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Domain.Services;
 
@@ -29,11 +36,16 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
     public const string SandboxLabel = "ncf.sandbox=1";
     private readonly ILogger<DockerSandboxRuntime> _logger;
     private readonly ISandboxImageResolver _imageResolver;
+    private readonly SandboxDockerOptions _dockerOptions;
 
-    public DockerSandboxRuntime(ILogger<DockerSandboxRuntime> logger, ISandboxImageResolver imageResolver)
+    public DockerSandboxRuntime(
+        ILogger<DockerSandboxRuntime> logger,
+        ISandboxImageResolver imageResolver,
+        IOptions<SandboxDockerOptions>? dockerOptions = null)
     {
         _logger = logger;
         _imageResolver = imageResolver ?? new SandboxImageResolver(new SandboxImageOptions());
+        _dockerOptions = dockerOptions?.Value ?? new SandboxDockerOptions();
     }
 
     public SandboxRuntimeKind Kind => SandboxRuntimeKind.Docker;
@@ -73,7 +85,7 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         var image = _imageResolver.Resolve(request.Template.Key, request.Template.Image);
         _logger.LogInformation("Sandbox interactive image resolved: template={Template} image={Image}", request.Template.Key, image);
 
-        // base_url 与站点反向代理路径一致；token 仅存库并在服务端注入，不出现在对外 AccessUrl。
+        // base_url 与 Jupyter 路径一致；列表链接使用本机映射端口和 token 直达容器。
         var baseUrl = SandboxJupyterPaths.GetBaseUrl(request.SessionId);
         var args = new List<string>
         {
@@ -97,7 +109,12 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             "--ServerApp.root_dir=/home/jovyan/work"
         };
 
-        var run = await RunDockerAsync(args, null, TimeSpan.FromMinutes(3), cancellationToken).ConfigureAwait(false);
+        var createTimeout = _dockerOptions.GetInteractiveCreateTimeout();
+        _logger.LogInformation(
+            "Sandbox interactive container creating: session={SessionId} timeoutSeconds={TimeoutSeconds}",
+            request.SessionId,
+            createTimeout.TotalSeconds);
+        var run = await RunDockerAsync(args, null, createTimeout, cancellationToken).ConfigureAwait(false);
         if (run.ExitCode != 0)
         {
             throw new InvalidOperationException($"Docker 启动失败: {run.StdErr}\n{run.StdOut}");
@@ -115,9 +132,9 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         {
             RuntimeHandle = containerId,
             HostPort = hostPort,
-            AccessUrl = SandboxJupyterPaths.GetLabEntryUrl(request.SessionId),
+            AccessUrl = SandboxJupyterPaths.GetDirectLabEntryUrl(request.SessionId, hostPort, token),
             AccessToken = token,
-            Message = "JupyterLab 已启动；请通过站点反向代理访问（需管理员登录）。"
+            Message = "JupyterLab 已启动；请使用本机映射端口打开。"
         };
     }
 
@@ -314,6 +331,58 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         };
     }
 
+    public async Task<SandboxExecResult> ExecInteractiveAsync(
+        SandboxInteractiveExecRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(request.RuntimeHandle))
+        {
+            throw new InvalidOperationException("交互式 Sandbox 缺少运行时句柄。");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Command))
+        {
+            throw new InvalidOperationException("交互式 Sandbox 命令不能为空。");
+        }
+
+        var timeout = request.Timeout <= TimeSpan.Zero
+            ? TimeSpan.FromSeconds(30)
+            : request.Timeout;
+        var maxOutputCharacters = request.MaxOutputCharacters <= 0
+            ? 32_000
+            : request.MaxOutputCharacters;
+        var args = new[]
+        {
+            "exec",
+            "--workdir", request.WorkingDirectory,
+            request.RuntimeHandle,
+            "/bin/sh",
+            "-lc",
+            request.Command
+        };
+
+        _logger.LogInformation(
+            "Sandbox interactive command starting: session={SessionId} container={RuntimeHandle} workdir={WorkingDirectory}",
+            request.SessionId,
+            request.RuntimeHandle,
+            request.WorkingDirectory);
+
+        var run = await RunDockerAsync(
+                args,
+                null,
+                timeout,
+                cancellationToken,
+                maxOutputCharacters)
+            .ConfigureAwait(false);
+
+        return new SandboxExecResult
+        {
+            ExitCode = run.ExitCode,
+            StdOut = run.StdOut,
+            StdErr = run.StdErr
+        };
+    }
+
     public async Task DestroyAsync(string runtimeHandle, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(runtimeHandle))
@@ -327,15 +396,27 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
 
     public async Task<IReadOnlyList<string>> ListOrphanHandlesAsync(CancellationToken cancellationToken = default)
     {
+        return await ListHandlesAsync(all: true, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<string>> ListRunningHandlesAsync(CancellationToken cancellationToken = default)
+    {
+        return await ListHandlesAsync(all: false, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<IReadOnlyList<string>> ListHandlesAsync(bool all, CancellationToken cancellationToken)
+    {
         var result = await RunDockerAsync(
-                new[] { "ps", "-aq", "--filter", "label=ncf.sandbox=1" },
+                all
+                    ? new[] { "ps", "-aq", "--no-trunc", "--filter", "label=ncf.sandbox=1" }
+                    : new[] { "ps", "-q", "--no-trunc", "--filter", "label=ncf.sandbox=1" },
                 null,
                 TimeSpan.FromSeconds(20),
                 cancellationToken)
             .ConfigureAwait(false);
         if (result.ExitCode != 0)
         {
-            return Array.Empty<string>();
+            throw new InvalidOperationException($"Docker 查询沙箱容器失败：{result.StdErr}");
         }
 
         return result.StdOut
@@ -437,7 +518,8 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         IReadOnlyList<string> args,
         string? workingDirectory,
         TimeSpan timeout,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        int maxOutputCharacters = 0)
     {
         var psi = new ProcessStartInfo
         {
@@ -456,8 +538,20 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         using var process = new Process { StartInfo = psi, EnableRaisingEvents = true };
         var stdout = new StringBuilder();
         var stderr = new StringBuilder();
-        process.OutputDataReceived += (_, e) => { if (e.Data != null) stdout.AppendLine(e.Data); };
-        process.ErrorDataReceived += (_, e) => { if (e.Data != null) stderr.AppendLine(e.Data); };
+        process.OutputDataReceived += (_, e) =>
+        {
+            if (e.Data != null)
+            {
+                AppendLimited(stdout, e.Data, maxOutputCharacters);
+            }
+        };
+        process.ErrorDataReceived += (_, e) =>
+        {
+            if (e.Data != null)
+            {
+                AppendLimited(stderr, e.Data, maxOutputCharacters);
+            }
+        };
 
         if (!process.Start())
         {
@@ -480,5 +574,29 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         }
 
         return (process.ExitCode, stdout.ToString(), stderr.ToString());
+    }
+
+    private static void AppendLimited(StringBuilder builder, string line, int maxOutputCharacters)
+    {
+        if (maxOutputCharacters <= 0)
+        {
+            builder.AppendLine(line);
+            return;
+        }
+
+        if (builder.Length >= maxOutputCharacters)
+        {
+            return;
+        }
+
+        var remaining = maxOutputCharacters - builder.Length;
+        if (line.Length + Environment.NewLine.Length <= remaining)
+        {
+            builder.AppendLine(line);
+            return;
+        }
+
+        builder.Append(line.AsSpan(0, Math.Max(0, remaining - Environment.NewLine.Length)));
+        builder.AppendLine();
     }
 }

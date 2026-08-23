@@ -1,36 +1,36 @@
 {
-  "tag_name": "desktop-v0.10.0-build10055",
-  "name": "NCF Desktop Release desktop-v0.10.0-build10055",
+  "tag_name": "desktop-v0.10.1-build10066",
+  "name": "NCF Desktop Release desktop-v0.10.1-build10066",
   "assets": [
     {
-      "name": "ncf-desktop-linux-arm64-v0.10.0-build10055.zip",
-      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.10.0-build10055/ncf-desktop-linux-arm64-v0.10.0-build10055.zip",
-      "size": 80822741
+      "name": "ncf-desktop-linux-arm64-v0.10.1-build10066.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.10.1-build10066/ncf-desktop-linux-arm64-v0.10.1-build10066.zip",
+      "size": 80830289
     },
     {
-      "name": "ncf-desktop-linux-x64-v0.10.0-build10055.zip",
-      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.10.0-build10055/ncf-desktop-linux-x64-v0.10.0-build10055.zip",
-      "size": 81795507
+      "name": "ncf-desktop-linux-x64-v0.10.1-build10066.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.10.1-build10066/ncf-desktop-linux-x64-v0.10.1-build10066.zip",
+      "size": 81801579
     },
     {
-      "name": "ncf-desktop-osx-arm64-v0.10.0-build10055.zip",
-      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.10.0-build10055/ncf-desktop-osx-arm64-v0.10.0-build10055.zip",
-      "size": 89978967
+      "name": "ncf-desktop-osx-arm64-v0.10.1-build10066.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.10.1-build10066/ncf-desktop-osx-arm64-v0.10.1-build10066.zip",
+      "size": 89989079
     },
     {
-      "name": "ncf-desktop-osx-x64-v0.10.0-build10055.zip",
-      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.10.0-build10055/ncf-desktop-osx-x64-v0.10.0-build10055.zip",
-      "size": 95704233
+      "name": "ncf-desktop-osx-x64-v0.10.1-build10066.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.10.1-build10066/ncf-desktop-osx-x64-v0.10.1-build10066.zip",
+      "size": 95710593
     },
     {
-      "name": "ncf-desktop-win-arm64-v0.10.0-build10055.zip",
-      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.10.0-build10055/ncf-desktop-win-arm64-v0.10.0-build10055.zip",
-      "size": 77795927
+      "name": "ncf-desktop-win-arm64-v0.10.1-build10066.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.10.1-build10066/ncf-desktop-win-arm64-v0.10.1-build10066.zip",
+      "size": 77803592
     },
     {
-      "name": "ncf-desktop-win-x64-v0.10.0-build10055.zip",
-      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.10.0-build10055/ncf-desktop-win-x64-v0.10.0-build10055.zip",
-      "size": 81423789
+      "name": "ncf-desktop-win-x64-v0.10.1-build10066.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/desktop/desktop-v0.10.1-build10066/ncf-desktop-win-x64-v0.10.1-build10066.zip",
+      "size": 81434055
     }
   ]
 }

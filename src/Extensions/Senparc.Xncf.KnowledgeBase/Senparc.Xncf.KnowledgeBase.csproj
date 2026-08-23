@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.0-preview9</Version>
+    <Version>0.7.0</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -56,10 +56,12 @@
 		1、增加知识库文件删除边界保护并同步资源服务策略
 		2、优化知识库列表、召回测试页面及多语言交互反馈
 		3、适配统一 Agent 执行和文件资源边界变更
-		[2026-08-15] v0.7.0-preview9 增强知识库向量发布状态识别
+		[2026-08-15] v0.7.0 增强知识库向量发布状态识别
 		1、区分已发布的隔离向量集合、待处理和旧版切片向量状态
 		2、在知识库管理页展示可供 Agent 绑定的真实发布状态，避免将旧版向量数据误报为已发布
-</PackageReleaseNotes>
+		3、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
+		4、同步知识库管理页面格式和向量发布状态版本语义，兼容当前 Agent 绑定流程
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

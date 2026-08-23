@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：AgentTemplateResponse.cs
@@ -15,6 +15,9 @@
 
     修改标识：Senparc - 20260815
     修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
 ----------------------------------------------------------------*/
 
@@ -54,5 +57,21 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         /// </summary>
         public string EmbeddingStatus { get; set; }
         public bool IsEmbedded { get; set; }
+    }
+
+    public class AgentFunctionBindingCatalogResponse
+    {
+        public List<AgentFunctionBindingOptionResponse> Functions { get; set; } = new();
+        public List<AgentFunctionBindingOptionResponse> Plugins { get; set; } = new();
+        public List<AgentFunctionBindingOptionResponse> Workflows { get; set; } = new();
+        public List<AgentFunctionBindingDto> CurrentBindings { get; set; } = new();
+    }
+
+    public class AgentFunctionBindingOptionResponse : AgentFunctionBindingDto
+    {
+        public bool Available { get; set; }
+        public string ModuleName { get; set; }
+        public string ModuleVersion { get; set; }
+        public int ParameterCount { get; set; }
     }
 }

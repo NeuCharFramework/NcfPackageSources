@@ -1,3 +1,20 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：SandboxSessionInfo.cs
+    文件功能描述：跨模块可共享的沙箱会话快照
+    
+    
+    创建标识：Senparc - 20260808
+    
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 增加 IsTtlUnlimited 契约字段
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 扩展沙箱 Jupyter 与会话生命周期契约
+
+----------------------------------------------------------------*/
+
 namespace Senparc.Xncf.Sandbox.Abstractions;
 
 /// <summary>
@@ -15,5 +32,6 @@ public sealed class SandboxSessionInfo
     public int? HostPort { get; init; }
     public DateTimeOffset CreatedAtUtc { get; init; }
     public DateTimeOffset ExpiresAtUtc { get; init; }
+    public bool IsTtlUnlimited { get; init; }
     public DateTimeOffset LastActivityAtUtc { get; init; }
 }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.3-preview8</Version>
+    <Version>0.4.4</Version>
     <AssemblyName>Senparc.Xncf.FirmwareUpdate</AssemblyName>
     <RootNamespace>Senparc.Xncf.FirmwareUpdate</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -36,7 +36,9 @@
       [2026-08-13] v0.4.2-preview7 增强固件更新线程停止时的取消与异常处理
       1、线程停止时传递取消令牌并确保后台任务可控退出
       [2026-08-15] v0.4.3-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
-</PackageReleaseNotes>
+      [2026-08-22] v0.4.4-preview9 同步 Senparc.Xncf.FirmwareUpdate 依赖版本
+      1、递归更新上游项目依赖，保持 Senparc.Xncf.FirmwareUpdate 与当前版本组合兼容
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <Nullable>enable</Nullable>

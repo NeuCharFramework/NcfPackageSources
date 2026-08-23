@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.10</Version>
+		<Version>0.0.11</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 升级 Senparc.AI.AgentKernel 并完成兼容性适配，补充项目依赖与工程配置优化
     1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -30,8 +30,11 @@
     [2026-08-13] v0.0.9 补充线程停止与可空数值参数解析测试覆盖
     1、覆盖线程取消、停止异常与生命周期行为
     2、覆盖 decimal、double、float 可空参数归一化
-    [2026-08-15] v0.0.10 Dependency update from Senparc.Ncf.Core.Tests to 0.0.7; Senparc.Xncf.XncfBuilder to 0.41.0-preview11
-</PackageReleaseNotes>
+    [2026-08-15] v0.0.10 Dependency update from Senparc.Ncf.Core.Tests to 0.0.7; Senparc.Xncf.XncfBuilder to 0.41.0
+    1、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0
+    [2026-08-22] v0.0.11 同步 XNCF 基础模块测试依赖
+    1、更新基础模块与测试扩展依赖，保持当前功能回归验证可用
+		</PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>

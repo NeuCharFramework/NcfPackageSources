@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.36.0 集成工作流模块与 A2A 发布配置并修复认证持久化
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.37.0 集成管理端 Chat 工作流与最新桌面发布信息
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.DataProtection;
@@ -115,10 +118,6 @@ namespace Senparc.Web
                 assembliesToScan);
             
             Console.WriteLine($"EventBus 已注册，共扫描了 {assembliesToScan.Length} 个程序集");
-
-            Console.WriteLine("============ logMsg =============");
-            Console.WriteLine(logMsg);
-            Console.WriteLine("============ logMsg END =============");
 
             #region 仅在完全删除 Senparc.Xncf.Swagger 时启用以下代码！
 

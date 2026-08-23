@@ -4,7 +4,6 @@
     文件名：AgentTemplateDto.cs
     文件功能描述：AgentTemplateDto 相关实现
 
-
     创建标识：Senparc - 20240616
 
     修改标识：Senparc - 20260704
@@ -16,6 +15,15 @@
     修改标识：Senparc - 20260813
     修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Identity.Client;
@@ -24,6 +32,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
@@ -77,11 +86,34 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         public string FunctionCallNames { get; set; }
 
         /// <summary>
+        /// Function Calling 绑定。FunctionCallNames 仍保留为旧版插件类名的兼容字段。
+        /// </summary>
+        public List<AgentFunctionBindingDto> FunctionBindings { get; set; } = new();
+
+        /// <summary>
         /// McpEndpoints，多个用逗号分隔
         /// </summary>
         public string McpEndpoints { get; set; }
 
         public int? KnowledgeBaseId { get; set; }
+
+        /// <summary>
+        /// 模型绑定方式：0=从 PromptRange 继承，1=跟随组任务，2=手动选择 AIModel。
+        /// </summary>
+        public AgentModelBindingMode ModelBinding { get; set; } = AgentModelBindingMode.InheritPromptRange;
+
+        /// <summary>
+        /// 当 <see cref="ModelBinding"/> 为手动选择时使用的 AIModel ID。
+        /// </summary>
+        public int? AiModelId { get; set; }
+
+        /// <summary>是否为系统保留的 Human 参与者。</summary>
+        public bool IsHuman { get; set; }
+
+        /// <summary>是否为系统自动维护的 Agent，例如 Human、PromptCatalyzer。</summary>
+        public bool IsSystemAgent { get; set; }
+
+        public string SystemAgentKind { get; set; }
 
         public string KnowledgeBaseName { get; set; }
 
@@ -101,7 +133,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
 
         public AgentTemplateDto() { }
 
-        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null, string functionCallNames = null, string mcpEndpoints = null, int? knowledgeBaseId = null)
+        public AgentTemplateDto(string name, string systemMessage, bool enable, string description, string promptCode = null, HookRobotType hookRobotType = default, string hookRobotParameter = null, string avastar = null, string functionCallNames = null, string mcpEndpoints = null, int? knowledgeBaseId = null, AgentModelBindingMode modelBinding = AgentModelBindingMode.InheritPromptRange, int? aiModelId = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -114,11 +146,30 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
             FunctionCallNames = functionCallNames;
             McpEndpoints = mcpEndpoints;
             KnowledgeBaseId = knowledgeBaseId;
+            ModelBinding = modelBinding;
+            AiModelId = aiModelId;
         }
     }
 
     public class AgentTemplateDto_UpdateOrCreate:AgentTemplateDto {
 
+    }
+
+    public class AgentFunctionBindingDto
+    {
+        /// <summary>plugin、function 或 workflow。</summary>
+        public string Kind { get; set; }
+
+        /// <summary>绑定的稳定键：插件类型、moduleUid::functionKey 或 workflowId。</summary>
+        public string Key { get; set; }
+
+        /// <summary>仅用于管理界面显示，不作为权限依据。</summary>
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+        public string ModuleUid { get; set; }
+        public string FunctionKey { get; set; }
+        public int? WorkflowId { get; set; }
     }
 
     public class AgentTemplateSimpleStatusDto : AgentTemplateDto

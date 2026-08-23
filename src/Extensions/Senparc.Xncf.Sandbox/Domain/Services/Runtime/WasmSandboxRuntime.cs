@@ -6,6 +6,12 @@
 
     创建标识：Senparc - 20260808
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
@@ -47,12 +53,24 @@ public sealed class WasmSandboxRuntime : ISandboxRuntime
         throw new NotSupportedException("Wasm Exec Provider 为一期 Stub。计划二期接入 Wasmtime 以降低服务器压力。");
     }
 
+    public Task<SandboxExecResult> ExecInteractiveAsync(
+        SandboxInteractiveExecRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException("Wasm 运行时尚未实现持久化交互会话控制。");
+    }
+
     public Task DestroyAsync(string runtimeHandle, CancellationToken cancellationToken = default)
     {
         return Task.CompletedTask;
     }
 
     public Task<IReadOnlyList<string>> ListOrphanHandlesAsync(CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult<IReadOnlyList<string>>(Array.Empty<string>());
+    }
+
+    public Task<IReadOnlyList<string>> ListRunningHandlesAsync(CancellationToken cancellationToken = default)
     {
         return Task.FromResult<IReadOnlyList<string>>(Array.Empty<string>());
     }

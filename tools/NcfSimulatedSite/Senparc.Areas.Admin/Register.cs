@@ -37,6 +37,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
+
 ----------------------------------------------------------------*/
 
 /* 
@@ -221,9 +224,11 @@ namespace Senparc.Areas.Admin
             services.AddScoped<IAdminChatSessionRepository, AdminChatSessionRepository>();
             services.AddScoped<IAdminChatMessageRepository, AdminChatMessageRepository>();
             services.AddScoped<IAdminChatSessionModuleRepository, AdminChatSessionModuleRepository>();
+            services.AddScoped<IAdminChatSessionWorkflowRepository, AdminChatSessionWorkflowRepository>();
             services.AddScoped<AdminChatSessionService>();
             services.AddScoped<AdminChatMessageService>();
             services.AddScoped<AdminChatSessionModuleService>();
+            services.AddScoped<AdminChatSessionWorkflowService>();
             services.AddScoped<AdminChatAiService>();
 
             // ChatAgent / NeuCharPivot：系统表、声明式 UI、Function 安全执行和 EventBus 协调。

@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：ChatTaskDto.cs
@@ -16,10 +16,20 @@
     修改标识：Senparc - 20260704
     修改描述：v0.11.0-preview2 新增 ChatTask 归档能力并完善多数据库迁移支持
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
+using Senparc.Xncf.AgentsManager.Domain.Services;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -42,6 +52,20 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
 
         [Required]
         public bool IsPersonality { get; set; }
+
+        public bool ExecutionPolicyCaptured { get; set; }
+
+        public bool RequireHumanApproval { get; set; }
+
+        public HumanInTheLoopLevel HumanInTheLoopLevel { get; set; }
+
+        public ToolPermissionMode PluginToolPermission { get; set; }
+
+        public ToolPermissionMode McpToolPermission { get; set; }
+
+        public bool IncludeHumanParticipant { get; set; }
+
+        public int ChatMaxRound { get; set; } = ChatGroupService.ChatMaxRound;
 
 
         public bool Score { get; set; }
@@ -111,6 +135,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
             PromptCommand = chatTask.PromptCommand;
             Description = chatTask.Description;
             IsPersonality = chatTask.IsPersonality;
+            ExecutionPolicyCaptured = chatTask.ExecutionPolicyCaptured;
+            RequireHumanApproval = chatTask.RequireHumanApproval;
+            HumanInTheLoopLevel = chatTask.HumanInTheLoopLevel;
+            PluginToolPermission = chatTask.PluginToolPermission;
+            McpToolPermission = chatTask.McpToolPermission;
+            IncludeHumanParticipant = chatTask.IncludeHumanParticipant;
+            ChatMaxRound = chatTask.ChatMaxRound;
             Score = chatTask.Score;
             IsArchived = chatTask.IsArchived;
             StartTime = chatTask.StartTime;

@@ -10,6 +10,12 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -29,6 +35,7 @@ using Senparc.Xncf.NeuCharWorkflow.Application.Events;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
 using Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 using Senparc.Xncf.NeuCharWorkflow.Models;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -87,10 +94,20 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         services.AddSingleton<NeuCharWorkflowNeuBellProvider>();
         services.AddSingleton<INeuBellProvider>(serviceProvider =>
             serviceProvider.GetRequiredService<NeuCharWorkflowNeuBellProvider>());
+        services.AddSingleton<NeuCharWorkflowHumanInputService>();
         services.AddScoped<NeuCharWorkflowEngine>();
         services.AddSingleton<NeuCharWorkflowRunCoordinator>();
+        // 仅在没有外部执行模块提供桥接时注册空实现。AgentsManager 无论先于或后于
+        // Workflow 注册，都应成为最终的 HIL 实现。
+        if (!services.Any(descriptor =>
+                descriptor.ServiceType == typeof(IWorkflowHumanInteractionBridge)))
+        {
+            services.AddSingleton<IWorkflowHumanInteractionBridge, NullWorkflowHumanInteractionBridge>();
+        }
         services.AddScoped<WorkflowEventPublisher>();
         services.AddScoped<NeuCharWorkflowAppService>();
+        services.AddScoped<IWorkflowFunctionCallingProvider, NeuCharWorkflowFunctionCallingProvider>();
+        services.AddScoped<IWorkflowDependencyProvider, NeuCharWorkflowDependencyProvider>();
         services.AddSingleton<LegacyWorkflowMigrationService>();
         services.AddHostedService<NeuCharWorkflowHostedService>();
         return base.AddXncfModule(services, configuration, env);

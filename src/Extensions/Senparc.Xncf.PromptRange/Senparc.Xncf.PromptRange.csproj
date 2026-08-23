@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.3-preview11</Version>
+    <Version>0.19.3</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -120,8 +120,12 @@
       7、Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
       8、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.2.4-preview4
       [2026-08-13] v0.19.2-preview10 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7; Senparc.Xncf.AIKernel to 0.15.3-preview10
-      [2026-08-15] v0.19.3-preview11 Dependency update from Senparc.Xncf.AIKernel to 0.15.3-preview12
-</PackageReleaseNotes>
+      [2026-08-15] v0.19.3 Dependency update from Senparc.Xncf.AIKernel to 0.15.3-preview12
+      1、改进流式输出文本提取，兼容更多 Agent 响应增量字段
+      2、为 Ollama 低 Token 场景补充最小 thinking token 预算，降低流式调用失败率
+      3、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
+      4、补充流式输出字段提取和低 Token 场景处理，降低 Ollama 调用结果为空的概率
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">

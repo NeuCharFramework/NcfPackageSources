@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -12,6 +12,12 @@
 
     修改标识：Senparc - 20260804
     修改描述：v0.24.0-preview5 统一数据库设计时工厂与函数参数处理
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.25.1-preview8 优化多库扫描日志为矩阵表；保留 GetAssembiles 预加载并补充说明
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.26.0 增强 XNCF 基础注册与函数参数处理能力
 
 ----------------------------------------------------------------*/
 
@@ -88,6 +94,38 @@ namespace Senparc.Ncf.XncfBase
             //Console.WriteLine(msg);
         }
 
+        /// <summary>
+        /// 解析扫描日志用的「当前数据库类型」。
+        /// StartNcfEngine 早于 UseNcfDatabase，Factory.Current 通常尚未设置，优先读配置。
+        /// </summary>
+        private static MultipleDatabaseType? ResolveCurrentDatabaseTypeForScanLog(IConfiguration configuration)
+        {
+            try
+            {
+                // 设计时 / 单元测试等场景可能已提前设置
+                return DatabaseConfigurationFactory.Instance.Current.MultipleDatabaseType;
+            }
+            catch
+            {
+                // ignore：正常 Web 启动时此处尚未设置
+            }
+
+            var fromSiteConfig = SiteConfig.SenparcCoreSetting?.DatabaseType;
+            if (fromSiteConfig.HasValue)
+            {
+                return fromSiteConfig;
+            }
+
+            var dbTypeText = configuration?["SenparcCoreSetting:DatabaseType"];
+            if (!string.IsNullOrWhiteSpace(dbTypeText) &&
+                Enum.TryParse<MultipleDatabaseType>(dbTypeText.Trim(), ignoreCase: true, out var parsed))
+            {
+                return parsed;
+            }
+
+            return null;
+        }
+
 
         ///// <summary>
         ///// 启动 XNCF 模块引擎，包括初始化扫描和注册等过程
@@ -124,16 +162,14 @@ namespace Senparc.Ncf.XncfBase
             {
                 try
                 {
-                    //遍历所有程序集
+                    // 预加载全部相关程序集（含未被直接引用的 XNCF dll）到 AppDomain。
+                    // 说明：此处结果当前未直接遍历使用；随后 AddAssembleScanItem(..., runScanNow: true)
+                    // 会再次通过 RunScan → GetAssembiles 完成类型扫描。保留本调用是为了：
+                    // 1) 确保扫描委托注册前程序集已就绪（尤其是动态加载的 dll）；
+                    // 2) 预留后续扩展（例如按 assemblies 做过滤、统计、并行扫描等）。
                     var assemblies = AssembleScanHelper.GetAssembiles(true, dllFilePatterns: dllFilePatterns);
+                    _ = assemblies.Count; // 保留变量供后续扩展；当前仅依赖预加载副作用
 
-                    int columnWidth1 = 42;
-                    int columnWidth2 = 45;
-                    int columnWidth3 = 15;
-
-                    SetLog(sb, " === Multiple databases detected ===");
-                    SetLog(sb, $"| {"Register".PadRight(columnWidth1)}| {"Full Name".PadRight(columnWidth2)}| {"Database Type".PadRight(columnWidth3)}", false);
-                    SetLog(sb, $"|-{new String('-', columnWidth1)}|-{new String('-', columnWidth2)}|-{new String('-', columnWidth3)}", false);
                     AssembleScanHelper.AddAssembleScanItem(a =>
                     {
                         //Console.WriteLine("FullName:" + a.FullName);
@@ -184,10 +220,8 @@ namespace Senparc.Ncf.XncfBase
                                     //获取特性
                                     var multiDbContextAttr = t.GetCustomAttributes(true).FirstOrDefault(z => z is MultipleMigrationDbContextAttribute) as MultipleMigrationDbContextAttribute;
 
-                                    //添加配置
-                                    var multipleDatabasePool = MultipleDatabasePool.Instance;
-                                    var result = multipleDatabasePool.TryAdd(multiDbContextAttr, t, new[] { columnWidth1, columnWidth2, columnWidth3 });
-                                    SetLog(sb, result, false);
+                                    //添加配置（矩阵日志在扫描结束后统一输出）
+                                    MultipleDatabasePool.Instance.TryAdd(multiDbContextAttr, t);
                                 }
 
                                 //配置 FunctionRender
@@ -245,7 +279,13 @@ namespace Senparc.Ncf.XncfBase
 
                     }, true);
 
-                    SetLog(sb, $"{new String('-', columnWidth1 + columnWidth2 + columnWidth3 + 6)}", false);
+                    // 扫描完成后输出 Register × Database 支持矩阵，并标明当前库的 DbContext
+                    var currentDatabaseType = ResolveCurrentDatabaseTypeForScanLog(configuration);
+                    var matrixLog = MultipleDatabasePool.Instance.BuildSupportMatrixLog(currentDatabaseType);
+                    foreach (var line in matrixLog.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None))
+                    {
+                        SetLog(sb, line, addTime: false);
+                    }
                     SetLog(sb, "");
                 }
                 catch (Exception ex)

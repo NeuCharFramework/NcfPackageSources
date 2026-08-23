@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core;
@@ -293,6 +293,18 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsTrue(local.UseFreshAgentSession);
             Assert.AreEqual(local.UseFreshAgentSession, a2aWithoutTools.UseFreshAgentSession);
             Assert.IsFalse(local.AllowFunctionCalls);
+            var localWithApproval = AgentTemplateRunRequest.ForLocalWorkflow(
+                5013,
+                "workflow-run",
+                null,
+                true,
+                HumanInTheLoopLevel.ToolApproval,
+                ToolPermissionMode.RequireApproval,
+                ToolPermissionMode.Deny);
+            Assert.IsTrue(localWithApproval.AllowFunctionCalls);
+            Assert.AreEqual(HumanInTheLoopLevel.ToolApproval, localWithApproval.HumanInTheLoopLevel);
+            Assert.AreEqual(ToolPermissionMode.RequireApproval, localWithApproval.PluginToolPermission);
+            Assert.AreEqual(ToolPermissionMode.Deny, localWithApproval.McpToolPermission);
             Assert.IsFalse(a2aWithoutTools.AllowFunctionCalls);
             Assert.IsTrue(a2aWithExplicitTools.AllowFunctionCalls);
             Assert.IsFalse(a2aWithoutTools.AllowDeploymentNameModelIdFallback);
@@ -300,6 +312,45 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.IsFalse(local.AllowDeploymentNameModelIdFallback);
             Assert.AreEqual(a2aWithoutTools.MaxOutputTokens, a2aWithExplicitTools.MaxOutputTokens);
             Assert.AreEqual(a2aWithoutTools.Temperature, a2aWithExplicitTools.Temperature);
+        }
+
+        [TestMethod]
+        public void AgentTemplate_ModelBinding_PersistsOnlyManualModelAndWorkflowCanDisableIndividualSettings()
+        {
+            var template = new AgentTemplate(
+                "模型绑定回归 Agent",
+                "测试 SystemMessage",
+                true,
+                "测试",
+                "测试 SystemMessage",
+                HookRobotType.None,
+                string.Empty,
+                modelBinding: AgentModelBindingMode.ManualAiModel,
+                aiModelId: 42);
+
+            Assert.AreEqual(AgentModelBindingMode.ManualAiModel, template.ModelBinding);
+            Assert.AreEqual(42, template.AiModelId);
+
+            template.UpdateModelBinding(AgentModelBindingMode.FollowGroupTask, 42);
+            Assert.AreEqual(AgentModelBindingMode.FollowGroupTask, template.ModelBinding);
+            Assert.IsNull(template.AiModelId);
+
+            var individualWorkflowRequest = AgentTemplateRunRequest.ForLocalWorkflow(
+                5013,
+                "workflow-run",
+                42,
+                useTemplateModelSettings: true);
+            var taskWorkflowRequest = AgentTemplateRunRequest.ForLocalWorkflow(
+                5013,
+                "workflow-run",
+                42,
+                useTemplateModelSettings: false);
+
+            Assert.IsTrue(individualWorkflowRequest.UseTemplateModelSettings);
+            Assert.IsTrue(individualWorkflowRequest.UseTemplatePromptParameters);
+            Assert.IsFalse(taskWorkflowRequest.UseTemplateModelSettings);
+            Assert.IsFalse(taskWorkflowRequest.UseTemplatePromptParameters);
+            Assert.AreEqual(42, taskWorkflowRequest.AiModelId);
         }
 
         [TestMethod]
@@ -324,6 +375,27 @@ namespace Senparc.Xncf.AgentsManagerTests
             Assert.AreEqual(0, build.AgentOptions.ChatOptions.StopSequences.Count);
             StringAssert.Contains(build.Diagnostics.ExecutionParameters, "source=prompt:");
             StringAssert.Contains(build.Diagnostics.ExecutionParameters, "maxOutputTokens=2000");
+        }
+
+        [TestMethod]
+        public async Task AgentTemplateRunner_EmptyOutputRetry_OverridesPromptMaxTokenOnce()
+        {
+            var templateService = _serviceProvider.GetRequiredService<AgentsTemplateService>();
+            var template = await templateService.GetObjectAsync(z => z.Name == "产品经理机器人");
+            Assert.IsNotNull(template);
+
+            var source = AgentTemplateRunRequest.ForPublishedA2A(template.Id, "test-agent", false);
+            var retry = source.WithMinimumOutputTokenBudgetRetry(512);
+            var runner = _serviceProvider.GetRequiredService<AgentTemplateRunner>();
+            var build = await runner.BuildAsync(template, "test input", retry);
+
+            Assert.IsTrue(build.Success, build.ErrorMessage);
+            Assert.AreEqual(3000, source.MaxOutputTokens);
+            Assert.IsNull(source.MaxOutputTokensOverride);
+            Assert.AreEqual(512, retry.MaxOutputTokensOverride);
+            Assert.IsTrue(retry.EmptyOutputTokenBudgetRetryAttempted);
+            Assert.AreEqual(512, build.AgentOptions.ChatOptions.MaxOutputTokens);
+            StringAssert.Contains(build.Diagnostics.ExecutionParameters, "maxOutputTokens=512");
         }
 
         [TestMethod]
@@ -374,15 +446,75 @@ namespace Senparc.Xncf.AgentsManagerTests
         [TestMethod]
         public void PublishedA2AAgent_UsesStrictNonStreamingModelExecution()
         {
-            // Published A2A may stream its protocol events, but it must not force a provider-side
-            // streaming request. Some Azure-compatible gateways authorise ordinary Chat requests
-            // while rejecting streaming routes; this must stay aligned with local Agent execution.
+            // Published A2A starts with the strict non-streaming path. A stateless streaming retry
+            // is available only after a successful empty response and never when tools are enabled.
             Assert.IsNotNull(typeof(AgentTemplateRunner).GetMethod(
                 "ExecuteBuiltResponseRunnerAsync",
                 BindingFlags.NonPublic | BindingFlags.Static));
-            Assert.IsNull(typeof(AgentTemplateRunner).GetMethod(
-                "ExecuteBuiltStreamingRunnerAsync",
+            Assert.IsNotNull(typeof(AgentTemplateRunner).GetMethod(
+                "ExecuteEmptyResponseStreamingFallbackAsync",
                 BindingFlags.NonPublic | BindingFlags.Static));
+        }
+
+        [TestMethod]
+        public void AgentTemplateRunner_EmptyNonStreamingResponse_UsesStreamingFallbackOnlyWithoutTools()
+        {
+            var shouldUseFallbackMethod = typeof(AgentTemplateRunner).GetMethod(
+                "ShouldUseStreamingFallback",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(shouldUseFallbackMethod);
+
+            var noTools = AgentTemplateRunRequest.ForPublishedA2A(5013, "agent-5013", false);
+            var withTools = AgentTemplateRunRequest.ForPublishedA2A(5013, "agent-5013", true);
+
+            Assert.IsTrue((bool)shouldUseFallbackMethod.Invoke(null, new object[] { string.Empty, noTools })!);
+            Assert.IsFalse((bool)shouldUseFallbackMethod.Invoke(null, new object[] { "normal output", noTools })!);
+            Assert.IsFalse((bool)shouldUseFallbackMethod.Invoke(null, new object[] { string.Empty, withTools })!);
+        }
+
+        [TestMethod]
+        public void AgentTemplateRunner_OllamaLowTokenBudget_DisablesThinkingOnlyForOllama()
+        {
+            var compatibilityMethod = typeof(AgentTemplateRunner).GetMethod(
+                "ApplyOllamaLowTokenCompatibility",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Assert.IsNotNull(compatibilityMethod);
+
+            var lowBudgetOllama = new Microsoft.Extensions.AI.ChatOptions { MaxOutputTokens = 100 };
+            compatibilityMethod.Invoke(null, new object[]
+            {
+                lowBudgetOllama,
+                Senparc.AI.AiPlatform.Ollama,
+                5013,
+                "qwen3.8:27b"
+            });
+
+            Assert.IsNotNull(lowBudgetOllama.AdditionalProperties);
+            Assert.AreEqual(false, lowBudgetOllama.AdditionalProperties["think"]);
+
+            var adequateBudgetOllama = new Microsoft.Extensions.AI.ChatOptions { MaxOutputTokens = 512 };
+            compatibilityMethod.Invoke(null, new object[]
+            {
+                adequateBudgetOllama,
+                Senparc.AI.AiPlatform.Ollama,
+                5013,
+                "qwen3.8:27b"
+            });
+
+            Assert.IsTrue(adequateBudgetOllama.AdditionalProperties == null
+                          || !adequateBudgetOllama.AdditionalProperties.ContainsKey("think"));
+
+            var lowBudgetOpenAi = new Microsoft.Extensions.AI.ChatOptions { MaxOutputTokens = 100 };
+            compatibilityMethod.Invoke(null, new object[]
+            {
+                lowBudgetOpenAi,
+                Senparc.AI.AiPlatform.OpenAI,
+                5013,
+                "gpt-test"
+            });
+
+            Assert.IsTrue(lowBudgetOpenAi.AdditionalProperties == null
+                          || !lowBudgetOpenAi.AdditionalProperties.ContainsKey("think"));
         }
 
         [TestMethod]

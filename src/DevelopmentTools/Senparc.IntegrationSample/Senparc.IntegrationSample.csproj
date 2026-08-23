@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.9</Version>
+		<Version>0.0.10</Version>
 		<PackageReleaseNotes>
 		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -91,8 +91,12 @@
 		  23、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.4-preview6
 		  24、Dependency update from Senparc.IntegrationSample.AreaTests to 0.0.5
 		  [2026-08-13] v0.0.8 Dependency update from Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7; Senparc.Xncf.XncfBuilder to 0.40.0-preview10
-		  [2026-08-15] v0.0.9 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8; Senparc.Xncf.AIKernel to 0.15.3-preview12; Senparc.Xncf.XncfBuilder to 0.41.0-preview11
-</PackageReleaseNotes>
+		  [2026-08-15] v0.0.9 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8; Senparc.Xncf.AIKernel to 0.15.3-preview12; Senparc.Xncf.XncfBuilder to 0.41.0
+		  1、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
+		  2、Dependency update from Senparc.Xncf.AIAgentsHub to 0.13.6
+		  [2026-08-22] v0.0.10 同步集成示例依赖与 Agents 配置
+		  1、更新集成示例使用的 AI、Agents 和基础模块版本
+		</PackageReleaseNotes>
 		<Configurations>Debug;Release;TemplateRelease</Configurations>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>

@@ -4,7 +4,6 @@
     文件名：AgentTemplateRunner.cs
     文件功能描述：统一执行本地 AgentTemplate；A2A 仅在其上叠加协议与授权策略
 
-
     创建标识：Senparc - 20260813
 
     修改标识：Senparc - 20260813
@@ -12,6 +11,15 @@
 
     修改标识：Senparc - 20260815
     修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 空输出时按最低 Token 预算自动重试一次
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
 ----------------------------------------------------------------*/
 
@@ -26,11 +34,17 @@ using Senparc.AI.Interfaces;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core;
+using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
+using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.KnowledgeBase.Domain.Services;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
@@ -51,18 +65,25 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services;
 /// </summary>
 public sealed class AgentTemplateRunner
 {
+    private const int MinimumOllamaThinkingTokenBudget = 512;
+    private const int MinimumEmptyOutputRetryTokenBudget = 512;
+    private const string EmptyAgentOutputMessage = "独立 Agent 没有返回有效内容。";
+
     private readonly IServiceProvider _serviceProvider;
     private readonly PromptItemService _promptItemService;
     private readonly AIModelService _aiModelService;
+    private readonly IWorkflowFunctionCallingProvider _workflowFunctionCallingProvider;
 
     public AgentTemplateRunner(
         IServiceProvider serviceProvider,
         PromptItemService promptItemService,
-        AIModelService aiModelService)
+        AIModelService aiModelService,
+        IEnumerable<IWorkflowFunctionCallingProvider> workflowFunctionCallingProviders)
     {
         _serviceProvider = serviceProvider;
         _promptItemService = promptItemService;
         _aiModelService = aiModelService;
+        _workflowFunctionCallingProvider = workflowFunctionCallingProviders?.FirstOrDefault();
     }
 
     /// <summary>
@@ -97,7 +118,16 @@ public sealed class AgentTemplateRunner
         // 本地工作流与发布型 A2A 共享严格响应入口。旧的 RunChatAsync 包装会把一部分
         // 上游异常写入 OutputString，使 401/403 看起来像一条正常的 Agent 回复；统一后，
         // 两条路径都会保留真实故障，同时仍保留会话不兼容时的无状态回退。
-        return await ExecuteBuiltResponseRunnerAsync(build, userText, request, cancellationToken)
+        var execution = await ExecuteBuiltResponseRunnerAsync(build, userText, request, cancellationToken)
+            .ConfigureAwait(false);
+        return await RetryEmptyOutputWithHigherTokenBudgetAsync(
+                template,
+                userText,
+                request,
+                onPrepared,
+                build,
+                execution,
+                cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -324,10 +354,126 @@ public sealed class AgentTemplateRunner
         }
 
         var output = response?.Text?.Trim();
+        if (ShouldUseStreamingFallback(output, request))
+        {
+            try
+            {
+                var streamedOutput = await ExecuteEmptyResponseStreamingFallbackAsync(
+                        build,
+                        input,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+                if (!string.IsNullOrWhiteSpace(streamedOutput))
+                {
+                    output = streamedOutput;
+                    SenparcTrace.SendCustomLog(
+                        "AgentsManager.AgentTemplateRunner.StreamOutputFallback",
+                        $"Agent={build.Diagnostics.TemplateId}; non-streaming response was empty; " +
+                        $"used stateless streaming text. {build.Diagnostics.ModelDescription}; " +
+                        build.Diagnostics.ExecutionParameters);
+                }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.AgentTemplateRunner.StreamOutputFallback",
+                    $"Agent={build.Diagnostics.TemplateId}; streaming fallback failed with " +
+                    $"{ex.GetType().Name}: {ex.Message}");
+            }
+        }
 
-        return string.IsNullOrWhiteSpace(output)
-            ? AgentTemplateRunResult.Failed("独立 Agent 没有返回有效内容。", build.Diagnostics)
-            : AgentTemplateRunResult.Succeeded(output, build.Diagnostics);
+        if (!string.IsNullOrWhiteSpace(output))
+        {
+            return AgentTemplateRunResult.Succeeded(output, build.Diagnostics);
+        }
+
+        SenparcTrace.SendCustomLog(
+            "AgentsManager.AgentTemplateRunner.EmptyResponse",
+            $"Agent={build.Diagnostics.TemplateId}; responseMessages={response?.Messages?.Count ?? 0}; " +
+            $"hasUsage={response?.Usage != null}; functionCallsEnabled={request.AllowFunctionCalls}; " +
+            $"streamingFallbackAttempted={ShouldUseStreamingFallback(output, request)}; " +
+            $"{build.Diagnostics.ModelDescription}; {build.Diagnostics.ExecutionParameters}");
+        return AgentTemplateRunResult.Failed(EmptyAgentOutputMessage, build.Diagnostics);
+    }
+
+    private async Task<AgentTemplateRunResult> RetryEmptyOutputWithHigherTokenBudgetAsync(
+        AgentTemplate template,
+        string userText,
+        AgentTemplateRunRequest request,
+        Action<AgentTemplateExecutionDiagnostics> onPrepared,
+        AgentTemplateRunnerBuildResult build,
+        AgentTemplateRunResult execution,
+        CancellationToken cancellationToken)
+    {
+        var effectiveMaxOutputTokens = build.AgentOptions?.ChatOptions?.MaxOutputTokens;
+        if (execution.Success
+            || !string.Equals(execution.ErrorMessage, EmptyAgentOutputMessage, StringComparison.Ordinal)
+            || request.AllowFunctionCalls
+            || request.EmptyOutputTokenBudgetRetryAttempted
+            || !effectiveMaxOutputTokens.HasValue
+            || effectiveMaxOutputTokens.Value <= 0
+            || effectiveMaxOutputTokens.Value >= MinimumEmptyOutputRetryTokenBudget)
+        {
+            return execution;
+        }
+
+        var retryRequest = request.WithMinimumOutputTokenBudgetRetry(MinimumEmptyOutputRetryTokenBudget);
+        SenparcTrace.SendCustomLog(
+            "AgentsManager.AgentTemplateRunner.EmptyOutputTokenRetry",
+            $"Agent={template.Id}; MaxOutputTokens={effectiveMaxOutputTokens}; " +
+            $"RetryMaxOutputTokens={retryRequest.MaxOutputTokensOverride}; " +
+            $"functionCalls=False; {build.Diagnostics.ModelDescription}");
+
+        var retryBuild = await BuildAsync(
+                template,
+                userText,
+                retryRequest,
+                onPrepared,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        if (!retryBuild.Success)
+        {
+            return AgentTemplateRunResult.Failed(retryBuild.ErrorMessage, retryBuild.Diagnostics);
+        }
+
+        return await ExecuteBuiltResponseRunnerAsync(
+                retryBuild,
+                userText,
+                retryRequest,
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    private static bool ShouldUseStreamingFallback(string output, AgentTemplateRunRequest request)
+        => string.IsNullOrWhiteSpace(output) && request?.AllowFunctionCalls != true;
+
+    private static async Task<string> ExecuteEmptyResponseStreamingFallbackAsync(
+        AgentTemplateRunnerBuildResult build,
+        string input,
+        CancellationToken cancellationToken)
+    {
+        var output = new StringBuilder();
+        var messages = new List<ChatMessage>
+        {
+            new(ChatRole.User, input)
+        };
+
+        await foreach (var update in build.Runner.Kernel.ChatClientAgent.RunStreamingAsync(
+                           messages,
+                           session: null,
+                           cancellationToken: cancellationToken))
+        {
+            if (!string.IsNullOrWhiteSpace(update?.Text))
+            {
+                output.Append(update.Text);
+            }
+        }
+
+        return output.ToString().Trim();
     }
 
     /// <summary>
@@ -355,19 +501,33 @@ public sealed class AgentTemplateRunner
         var handler = request.EnableModelTransportDiagnostics
             ? new AgentAiHandler(configuration.Setting, httpClient: PublishedA2AModelTransport.SharedClient)
             : new AgentAiHandler(configuration.Setting);
+        var toolPolicy = HumanInTheLoopPolicyResolver.Resolve(
+            request.HumanInTheLoopLevel,
+            request.PluginToolPermission,
+            request.McpToolPermission,
+            request.RequireHumanApproval);
         var tools = request.AllowFunctionCalls
-            ? await BuildAgentToolsAsync(handler, template, cancellationToken).ConfigureAwait(false)
+            ? await BuildAgentToolsAsync(
+                handler,
+                template,
+                toolPolicy.PluginTools,
+                toolPolicy.McpTools,
+                request.DiagnosticId,
+                request.AdminUserId,
+                cancellationToken).ConfigureAwait(false)
             : new List<AITool>();
 
         var promptParameters = request.UseTemplatePromptParameters
             ? configuration.PromptItem
             : null;
+        var configuredMaxOutputTokens = request.MaxOutputTokensOverride
+            ?? (promptParameters?.MaxToken > 0
+                ? promptParameters.MaxToken
+                : request.MaxOutputTokens);
         var chatOptions = new ChatOptions
         {
             Instructions = configuration.Instructions,
-            MaxOutputTokens = promptParameters?.MaxToken > 0
-                ? promptParameters.MaxToken
-                : request.MaxOutputTokens,
+            MaxOutputTokens = configuredMaxOutputTokens,
             Temperature = promptParameters?.Temperature ?? request.Temperature,
             TopP = promptParameters?.TopP ?? request.TopP,
             FrequencyPenalty = promptParameters?.FrequencyPenalty,
@@ -376,6 +536,11 @@ public sealed class AgentTemplateRunner
             AllowMultipleToolCalls = tools.Count > 0,
             Tools = tools.Count > 0 ? tools.Cast<AITool>().ToList() : null
         };
+        ApplyOllamaLowTokenCompatibility(
+            chatOptions,
+            configuration.ResolvedModel?.AiPlatform ?? configuration.Setting.AiPlatform,
+            template.Id,
+            configuration.ResolvedModel?.ModelId);
         var diagnostics = configuration.Diagnostics with
         {
             FunctionCallsEnabled = request.AllowFunctionCalls,
@@ -419,6 +584,9 @@ public sealed class AgentTemplateRunner
         PromptItemDto resolvedPromptItem = null;
         AIModelDto resolvedModel = null;
         var modelSource = request.DefaultSetting == null ? "system-default" : "caller-default";
+        var modelBinding = Enum.IsDefined(template.ModelBinding)
+            ? template.ModelBinding
+            : AgentModelBindingMode.InheritPromptRange;
 
         if (!string.IsNullOrWhiteSpace(template.PromptCode))
         {
@@ -431,7 +599,8 @@ public sealed class AgentTemplateRunner
                 {
                     resolvedPromptItem = promptResult.PromptItem;
                     promptContent = promptResult.PromptItem.Content ?? string.Empty;
-                    if (request.UseTemplateModelSettings)
+                    if (request.UseTemplateModelSettings
+                        && modelBinding == AgentModelBindingMode.InheritPromptRange)
                     {
                         resolvedModel = promptResult.PromptItem.AIModelDto;
                         setting = promptResult.SenparcAiSetting ?? setting;
@@ -463,7 +632,24 @@ public sealed class AgentTemplateRunner
             }
         }
 
-        if (request.AiModelId > 0)
+        if (request.UseTemplateModelSettings
+            && modelBinding == AgentModelBindingMode.ManualAiModel
+            && template.AiModelId > 0)
+        {
+            var aiModel = await _aiModelService
+                .GetObjectAsync(z => z.Id == template.AiModelId.Value)
+                .ConfigureAwait(false);
+            if (aiModel != null)
+            {
+                resolvedModel = new AIModelDto(aiModel);
+                setting = _aiModelService.BuildSenparcAiSetting(resolvedModel);
+                modelSource = $"agent:{template.Id}:manual";
+            }
+        }
+
+        if ((!request.UseTemplateModelSettings
+                || modelBinding == AgentModelBindingMode.FollowGroupTask)
+            && request.AiModelId > 0)
         {
             var aiModel = await _aiModelService
                 .GetObjectAsync(z => z.Id == request.AiModelId.Value)
@@ -472,7 +658,7 @@ public sealed class AgentTemplateRunner
             {
                 resolvedModel = new AIModelDto(aiModel);
                 setting = _aiModelService.BuildSenparcAiSetting(resolvedModel);
-                modelSource = "workflow-override";
+                modelSource = "task-model";
             }
         }
 
@@ -523,12 +709,40 @@ public sealed class AgentTemplateRunner
 
     private static string DescribeExecutionParameters(string source, ChatOptions options)
     {
+        var thinking = options?.AdditionalProperties != null
+                      && options.AdditionalProperties.TryGetValue("think", out var thinkValue)
+            ? thinkValue?.ToString() ?? "null"
+            : "provider-default";
         return $"source={source}; maxOutputTokens={options?.MaxOutputTokens?.ToString() ?? "unset"}; " +
                $"temperature={options?.Temperature?.ToString() ?? "unset"}; " +
                $"topP={options?.TopP?.ToString() ?? "unset"}; " +
                $"frequencyPenalty={options?.FrequencyPenalty?.ToString() ?? "unset"}; " +
                $"presencePenalty={options?.PresencePenalty?.ToString() ?? "unset"}; " +
-               $"stopSequences={options?.StopSequences?.Count ?? 0}";
+               $"stopSequences={options?.StopSequences?.Count ?? 0}; think={thinking}";
+    }
+
+    private static void ApplyOllamaLowTokenCompatibility(
+        ChatOptions chatOptions,
+        AiPlatform platform,
+        int agentTemplateId,
+        string modelId)
+    {
+        if (chatOptions == null
+            || platform != AiPlatform.Ollama
+            || !chatOptions.MaxOutputTokens.HasValue
+            || chatOptions.MaxOutputTokens.Value <= 0
+            || chatOptions.MaxOutputTokens.Value >= MinimumOllamaThinkingTokenBudget)
+        {
+            return;
+        }
+
+        chatOptions.AdditionalProperties ??= new AdditionalPropertiesDictionary();
+        chatOptions.AdditionalProperties["think"] = false;
+        SenparcTrace.SendCustomLog(
+            "AgentsManager.AgentTemplateRunner.OllamaThinking",
+            $"Agent={agentTemplateId}; Model={modelId ?? "unset"}; " +
+            $"MaxOutputTokens={chatOptions.MaxOutputTokens}; think=false. " +
+            "低预算下关闭 Ollama 思考模式，避免思考过程耗尽预算而未生成可显示正文。");
     }
 
     private async Task<string> AppendKnowledgeBaseContextAsync(
@@ -580,27 +794,52 @@ public sealed class AgentTemplateRunner
     private async Task<List<AITool>> BuildAgentToolsAsync(
         AgentAiHandler agentHandler,
         AgentTemplate template,
+        ToolPermissionMode pluginToolPermission,
+        ToolPermissionMode mcpToolPermission,
+        string correlationId,
+        int adminUserId,
         CancellationToken cancellationToken)
     {
         var tools = new List<AITool>();
-        var functionCallNames = template.FunctionCallNames.IsNullOrEmpty()
-            ? Array.Empty<string>()
-            : template.FunctionCallNames
-                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Where(z => !string.IsNullOrWhiteSpace(z))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToArray();
+        var bindings = AgentFunctionBindingCodec.Parse(template.FunctionCallNames);
+        var pluginBindings = bindings
+            .Where(binding => string.Equals(binding.Kind, "plugin", StringComparison.OrdinalIgnoreCase))
+            .Select(binding => binding.Key)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
 
-        foreach (var functionCall in functionCallNames)
+        foreach (var functionCall in pluginBindings)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            if (pluginToolPermission == ToolPermissionMode.Deny)
+            {
+                continue;
+            }
+
             try
             {
                 var functionCallType = AIPluginHub.Instance.GetPluginType(functionCall, true);
                 var plugin = functionCallType == null ? null : _serviceProvider.GetService(functionCallType);
                 if (plugin != null)
                 {
-                    tools.AddRange(agentHandler.GetAITools(plugin));
+                    foreach (var tool in agentHandler.GetAITools(plugin))
+                    {
+                        if (tool is not AIFunction function)
+                        {
+                            tools.Add(tool);
+                            continue;
+                        }
+
+                        AIFunction diagnosticFunction = new DiagnosticAIFunction(
+                            function,
+                            template.Id,
+                            template.Name,
+                            correlationId);
+                        tools.Add(pluginToolPermission == ToolPermissionMode.RequireApproval
+                            ? new ApprovalRequiredAIFunction(diagnosticFunction)
+                            : diagnosticFunction);
+                    }
                 }
             }
             catch (Exception ex)
@@ -609,8 +848,124 @@ public sealed class AgentTemplateRunner
             }
         }
 
+        foreach (var binding in bindings.Where(binding =>
+                     string.Equals(binding.Kind, "function", StringComparison.OrdinalIgnoreCase)))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (pluginToolPermission == ToolPermissionMode.Deny
+                || !TryParseFunctionBinding(binding, out var moduleUid, out var functionKey))
+            {
+                continue;
+            }
+
+            try
+            {
+                var register = XncfRegisterManager.RegisterList.FirstOrDefault(item =>
+                    string.Equals(item.Uid, moduleUid, StringComparison.OrdinalIgnoreCase));
+                var moduleService = _serviceProvider.GetService(typeof(XncfModuleService)) as XncfModuleService;
+                var module = moduleService == null
+                    ? null
+                    : await moduleService.GetObjectAsync(item => item.Uid == moduleUid).ConfigureAwait(false);
+                if (register == null
+                    || module?.State != XncfModules_State.开放
+                || !Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var functionGroup))
+                {
+                    continue;
+                }
+
+                var functionBag = functionGroup.Values.FirstOrDefault(item =>
+                    string.Equals(item.Key, functionKey, StringComparison.OrdinalIgnoreCase)
+                    && item.FunctionRenderAttribute.AllowAiInvocation);
+                var target = functionBag.MethodInfo?.DeclaringType == null
+                    ? null
+                    : _serviceProvider.GetService(functionBag.MethodInfo.DeclaringType);
+                if (functionBag.MethodInfo == null || target == null)
+                {
+                    continue;
+                }
+
+                var function = AIFunctionFactory.Create(
+                    functionBag.MethodInfo,
+                    target,
+                    name: BuildFunctionToolName(
+                        moduleUid,
+                        functionKey,
+                        functionBag.FunctionRenderAttribute.Name),
+                    description: functionBag.FunctionRenderAttribute.Description);
+                AIFunction diagnosticFunction = new DiagnosticAIFunction(
+                    function,
+                    template.Id,
+                    template.Name,
+                    correlationId);
+                tools.Add(pluginToolPermission == ToolPermissionMode.RequireApproval
+                    ? new ApprovalRequiredAIFunction(diagnosticFunction)
+                    : diagnosticFunction);
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.AgentTemplateRunner.ImportFunctionRender",
+                    $"Agent={template.Id}; Binding={binding.Key}; {ex.Message}");
+            }
+        }
+
+        if (_workflowFunctionCallingProvider != null && adminUserId > 0)
+        {
+            try
+            {
+                var availableWorkflows = await _workflowFunctionCallingProvider
+                    .GetAvailableAsync(adminUserId, cancellationToken)
+                    .ConfigureAwait(false);
+                var workflowMap = availableWorkflows
+                    .Where(workflow => workflow != null)
+                    .ToDictionary(workflow => workflow.Id);
+
+                foreach (var binding in bindings.Where(binding =>
+                             string.Equals(binding.Kind, "workflow", StringComparison.OrdinalIgnoreCase)))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var workflowId = binding.WorkflowId > 0
+                        ? binding.WorkflowId.Value
+                        : int.TryParse(binding.Key, out var parsedWorkflowId)
+                            ? parsedWorkflowId
+                            : 0;
+                    if (workflowId <= 0 || !workflowMap.TryGetValue(workflowId, out var workflow))
+                    {
+                        continue;
+                    }
+
+                    AIFunction workflowFunction = new AgentTemplateWorkflowAIFunction(
+                        _workflowFunctionCallingProvider,
+                        adminUserId,
+                        workflow);
+                    AIFunction diagnosticFunction = new DiagnosticAIFunction(
+                        workflowFunction,
+                        template.Id,
+                        template.Name,
+                        correlationId);
+                    tools.Add(pluginToolPermission == ToolPermissionMode.RequireApproval
+                        ? new ApprovalRequiredAIFunction(diagnosticFunction)
+                        : diagnosticFunction);
+                }
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.AgentTemplateRunner.ImportWorkflowFunction",
+                    $"Agent={template.Id}; {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+
         if (!string.IsNullOrWhiteSpace(template.McpEndpoints))
         {
+            if (mcpToolPermission == ToolPermissionMode.Deny)
+            {
+                return tools
+                    .GroupBy(z => z.Name, StringComparer.OrdinalIgnoreCase)
+                    .Select(z => z.First())
+                    .ToList();
+            }
+
             try
             {
                 var endpoints = JsonSerializer.Deserialize<Dictionary<string, McpEndpoint>>(template.McpEndpoints)
@@ -622,7 +977,9 @@ public sealed class AgentTemplateRunner
                     cancellationToken.ThrowIfCancellationRequested();
                     tools.Add(new HostedMcpServerTool(endpoint.Key, endpoint.Value.url)
                     {
-                        ApprovalMode = HostedMcpServerToolApprovalMode.NeverRequire
+                        ApprovalMode = mcpToolPermission == ToolPermissionMode.RequireApproval
+                            ? HostedMcpServerToolApprovalMode.AlwaysRequire
+                            : HostedMcpServerToolApprovalMode.NeverRequire
                     });
                 }
             }
@@ -636,6 +993,57 @@ public sealed class AgentTemplateRunner
             .GroupBy(z => z.Name, StringComparer.OrdinalIgnoreCase)
             .Select(z => z.First())
             .ToList();
+    }
+
+    private static bool TryParseFunctionBinding(
+        AgentFunctionBindingDto binding,
+        out string moduleUid,
+        out string functionKey)
+    {
+        moduleUid = binding?.ModuleUid;
+        functionKey = binding?.FunctionKey;
+        if (!string.IsNullOrWhiteSpace(moduleUid) && !string.IsNullOrWhiteSpace(functionKey))
+        {
+            return true;
+        }
+
+        var separator = binding?.Key?.IndexOf("::", StringComparison.Ordinal) ?? -1;
+        if (separator <= 0 || separator >= binding.Key.Length - 2)
+        {
+            return false;
+        }
+
+        moduleUid = binding.Key[..separator];
+        functionKey = binding.Key[(separator + 2)..];
+        return true;
+    }
+
+    private static string BuildFunctionToolName(
+        string moduleUid,
+        string functionKey,
+        string displayName)
+    {
+        var readable = new string((displayName ?? "Function")
+            .Select(character => character <= 127
+                && (char.IsLetterOrDigit(character) || character == '_' || character == '-')
+                ? character
+                : '_')
+            .ToArray());
+        if (string.IsNullOrWhiteSpace(readable))
+        {
+            readable = "Function";
+        }
+
+        var hash = 17;
+        foreach (var character in $"{moduleUid}|{functionKey}")
+        {
+            hash = unchecked(hash * 31 + character);
+        }
+
+        var suffix = ((uint)hash).ToString("x", System.Globalization.CultureInfo.InvariantCulture);
+        var prefix = $"Function_{readable}";
+        var maxPrefixLength = Math.Max(1, 64 - suffix.Length - 1);
+        return $"{prefix[..Math.Min(prefix.Length, maxPrefixLength)]}_{suffix}";
     }
 
     private static string DescribeModel(string modelSource, AIModelDto model, ISenparcAiSetting setting)
@@ -789,8 +1197,24 @@ public sealed class AgentTemplateRunRequest
     public const string LocalWorkflowCompatibleProfile = "local-workflow-compatible";
     public const string LocalChatGroupCompatibleProfile = "local-chat-group-compatible";
     public string ProfileName { get; init; } = LocalWorkflowCompatibleProfile;
+    /// <summary>
+    /// Workflow 或 Group 本次任务选择的模型。关闭个性化时它覆盖所有 Agent；
+    /// 启用个性化时仅被“跟随组任务”的 Agent 使用。
+    /// </summary>
     public int? AiModelId { get; init; }
+    /// <summary>当前管理员 ID，用于按管理员权限解析 Workflow Function Calling 绑定。</summary>
+    public int AdminUserId { get; init; }
     public bool AllowFunctionCalls { get; init; }
+    /// <summary>
+    /// 将可执行工具标记为需要人工确认。默认关闭，以保持现有 AgentsManager 对话行为。
+    /// </summary>
+    public bool RequireHumanApproval { get; init; }
+    /// <summary>HIL 主等级。旧调用方只设置 RequireHumanApproval 时仍保持旧语义。</summary>
+    public HumanInTheLoopLevel HumanInTheLoopLevel { get; init; } = HumanInTheLoopLevel.Automatic;
+    /// <summary>插件工具权限；Inherit 时由 HIL 等级计算。</summary>
+    public ToolPermissionMode PluginToolPermission { get; init; } = ToolPermissionMode.Inherit;
+    /// <summary>MCP 工具权限；Inherit 时由 HIL 等级计算。</summary>
+    public ToolPermissionMode McpToolPermission { get; init; } = ToolPermissionMode.Inherit;
     /// <summary>
     /// 调用方已经解析好的默认模型。ChatGroup 在关闭个性化参数时使用该模型。
     /// </summary>
@@ -824,16 +1248,39 @@ public sealed class AgentTemplateRunRequest
     public string DiagnosticId { get; init; }
     public string RunnerName { get; init; }
     public int MaxOutputTokens { get; init; } = 3000;
+    /// <summary>
+    /// 单次空正文恢复时覆盖 PromptRange 中的 MaxToken；常规执行始终为 null，
+    /// 继续尊重 PromptRange 或调用方的原始预算。
+    /// </summary>
+    public int? MaxOutputTokensOverride { get; init; }
+    /// <summary>防止空正文恢复路径重复提高预算并产生循环重试。</summary>
+    public bool EmptyOutputTokenBudgetRetryAttempted { get; init; }
     public float Temperature { get; init; } = 0.5f;
     public float? TopP { get; init; }
 
-    public static AgentTemplateRunRequest ForLocalWorkflow(int agentTemplateId, string correlationId, int? aiModelId)
+    public static AgentTemplateRunRequest ForLocalWorkflow(
+        int agentTemplateId,
+        string correlationId,
+        int? aiModelId,
+        bool allowFunctionCalls = false,
+        HumanInTheLoopLevel humanInTheLoopLevel = HumanInTheLoopLevel.Automatic,
+        ToolPermissionMode pluginToolPermission = ToolPermissionMode.Inherit,
+        ToolPermissionMode mcpToolPermission = ToolPermissionMode.Inherit,
+        bool useTemplateModelSettings = true,
+        int adminUserId = 0)
     {
         return new AgentTemplateRunRequest
         {
             AiModelId = aiModelId,
+            AdminUserId = adminUserId,
             RunnerName = $"WorkflowAgent-{agentTemplateId}-{correlationId}",
-            AllowFunctionCalls = false
+            UseTemplateModelSettings = useTemplateModelSettings,
+            UseTemplatePromptParameters = useTemplateModelSettings,
+            AllowFunctionCalls = allowFunctionCalls,
+            HumanInTheLoopLevel = humanInTheLoopLevel,
+            PluginToolPermission = pluginToolPermission,
+            McpToolPermission = mcpToolPermission,
+            DiagnosticId = correlationId
         };
     }
 
@@ -864,7 +1311,12 @@ public sealed class AgentTemplateRunRequest
         return new AgentTemplateRunRequest
         {
             ProfileName = $"{ProfileName}-deployment-model-id-fallback",
+            AdminUserId = AdminUserId,
             AllowFunctionCalls = AllowFunctionCalls,
+            RequireHumanApproval = RequireHumanApproval,
+            HumanInTheLoopLevel = HumanInTheLoopLevel,
+            PluginToolPermission = PluginToolPermission,
+            McpToolPermission = McpToolPermission,
             DefaultSetting = setting,
             // DefaultSetting is deliberately the alternate form of the same resolved model. Do not
             // re-apply the Prompt-bound model configuration during the compatibility retry.
@@ -876,6 +1328,8 @@ public sealed class AgentTemplateRunRequest
             DiagnosticId = DiagnosticId,
             RunnerName = $"{RunnerName}-deployment-model-id-fallback",
             MaxOutputTokens = MaxOutputTokens,
+            MaxOutputTokensOverride = MaxOutputTokensOverride,
+            EmptyOutputTokenBudgetRetryAttempted = EmptyOutputTokenBudgetRetryAttempted,
             Temperature = Temperature,
             TopP = TopP
         };
@@ -887,7 +1341,12 @@ public sealed class AgentTemplateRunRequest
         {
             ProfileName = $"{ProfileName}-standard-transport-fallback",
             AiModelId = AiModelId,
+            AdminUserId = AdminUserId,
             AllowFunctionCalls = AllowFunctionCalls,
+            RequireHumanApproval = RequireHumanApproval,
+            HumanInTheLoopLevel = HumanInTheLoopLevel,
+            PluginToolPermission = PluginToolPermission,
+            McpToolPermission = McpToolPermission,
             DefaultSetting = DefaultSetting,
             UseTemplateModelSettings = UseTemplateModelSettings,
             UseTemplatePromptParameters = UseTemplatePromptParameters,
@@ -900,6 +1359,8 @@ public sealed class AgentTemplateRunRequest
             DiagnosticId = DiagnosticId,
             RunnerName = $"{RunnerName}-standard-transport-fallback",
             MaxOutputTokens = MaxOutputTokens,
+            MaxOutputTokensOverride = MaxOutputTokensOverride,
+            EmptyOutputTokenBudgetRetryAttempted = EmptyOutputTokenBudgetRetryAttempted,
             Temperature = Temperature,
             TopP = TopP
         };
@@ -911,7 +1372,12 @@ public sealed class AgentTemplateRunRequest
         {
             ProfileName = $"{ProfileName}-configured-api-version-fallback",
             AiModelId = AiModelId,
+            AdminUserId = AdminUserId,
             AllowFunctionCalls = AllowFunctionCalls,
+            RequireHumanApproval = RequireHumanApproval,
+            HumanInTheLoopLevel = HumanInTheLoopLevel,
+            PluginToolPermission = PluginToolPermission,
+            McpToolPermission = McpToolPermission,
             DefaultSetting = DefaultSetting,
             UseTemplateModelSettings = UseTemplateModelSettings,
             UseTemplatePromptParameters = UseTemplatePromptParameters,
@@ -921,6 +1387,41 @@ public sealed class AgentTemplateRunRequest
             DiagnosticId = DiagnosticId,
             RunnerName = $"{RunnerName}-configured-api-version-fallback",
             MaxOutputTokens = MaxOutputTokens,
+            MaxOutputTokensOverride = MaxOutputTokensOverride,
+            EmptyOutputTokenBudgetRetryAttempted = EmptyOutputTokenBudgetRetryAttempted,
+            Temperature = Temperature,
+            TopP = TopP
+        };
+    }
+
+    public AgentTemplateRunRequest WithMinimumOutputTokenBudgetRetry(int minimumOutputTokens)
+    {
+        if (minimumOutputTokens <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(minimumOutputTokens));
+        }
+
+        return new AgentTemplateRunRequest
+        {
+            ProfileName = $"{ProfileName}-empty-output-token-retry",
+            AiModelId = AiModelId,
+            AdminUserId = AdminUserId,
+            AllowFunctionCalls = AllowFunctionCalls,
+            RequireHumanApproval = RequireHumanApproval,
+            HumanInTheLoopLevel = HumanInTheLoopLevel,
+            PluginToolPermission = PluginToolPermission,
+            McpToolPermission = McpToolPermission,
+            DefaultSetting = DefaultSetting,
+            UseTemplateModelSettings = UseTemplateModelSettings,
+            UseTemplatePromptParameters = UseTemplatePromptParameters,
+            UseFreshAgentSession = UseFreshAgentSession,
+            AllowDeploymentNameModelIdFallback = AllowDeploymentNameModelIdFallback,
+            EnableModelTransportDiagnostics = EnableModelTransportDiagnostics,
+            DiagnosticId = DiagnosticId,
+            RunnerName = $"{RunnerName}-empty-output-token-retry",
+            MaxOutputTokens = MaxOutputTokens,
+            MaxOutputTokensOverride = minimumOutputTokens,
+            EmptyOutputTokenBudgetRetryAttempted = true,
             Temperature = Temperature,
             TopP = TopP
         };

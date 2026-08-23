@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：CrawlPlugin.cs
@@ -15,6 +15,15 @@
 
     修改标识：Senparc - 20260717
     修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
 ----------------------------------------------------------------*/
 
@@ -58,32 +67,48 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
         }
 
         [KernelFunction, LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Description")]
-        public async Task<string> Crawl(
+        public Task<string> Crawl(
             [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Url")]
             string url,
             [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Depth")]
-            int maxDeepth,
+            int maxDepth = 1,
             [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.PageCount")]
-            int maxPageCount,
+            int maxPageCount = 5,
             [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Crawl.Question")]
-            string question
+            string question = ""
          )
         {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var targetUri)
+                || (targetUri.Scheme != Uri.UriSchemeHttp && targetUri.Scheme != Uri.UriSchemeHttps))
+            {
+                throw new ArgumentException("Crawl 需要有效的 HTTP 或 HTTPS URL。", nameof(url));
+            }
+
+            maxDepth = Math.Clamp(maxDepth, 0, 3);
+            maxPageCount = Math.Clamp(maxPageCount, 1, 20);
+            _ = question;
             List<KeyValuePair<ContentType, string>> contentMap = new List<KeyValuePair<ContentType, string>>();
 
-            Console.WriteLine($"Crawl 爬取：{url}，深度：{maxDeepth}，最大页面数：{maxPageCount}");
+            Console.WriteLine($"Crawl 爬取：{targetUri}，深度：{maxDepth}，最大页面数：{maxPageCount}");
+            SenparcTrace.SendCustomLog(
+                "AgentsManager.Crawl.Start",
+                $"Url={targetUri}; MaxDepth={maxDepth}; MaxPageCount={maxPageCount}");
 
             var senMapicEngine = new SenMapicEngine(
                                 serviceProvider: _serviceProvider,
-                                urls: new[] { url },
+                                urls: new[] { targetUri.ToString() },
                                 maxThread: 20,
                                 maxBuildMinutesForSingleSite: 5,
-                                maxDeep: maxDeepth,
+                                maxDeep: maxDepth,
                                 maxPageCount: maxPageCount);
 
             var senMapicResult = senMapicEngine.Build();
 
-            return senMapicResult.Values.FirstOrDefault()?.MarkDownHtmlContent;
+            var result = senMapicResult.Values.FirstOrDefault()?.MarkDownHtmlContent ?? string.Empty;
+            SenparcTrace.SendCustomLog(
+                "AgentsManager.Crawl.Completed",
+                $"Url={targetUri}; Pages={senMapicResult.Count}; ContentLength={result.Length}");
+            return Task.FromResult(result);
             /*
             foreach (var item in senMapicResult)
             {

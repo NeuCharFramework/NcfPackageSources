@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：ChatTaskAppService.cs
@@ -15,7 +15,20 @@
 
     修改标识：Senparc - 20260705
     修改描述：v0.11.2-preview4 重构系统配置初始化与更新流程并统一模型处理
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
+-
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+
 ----------------------------------------------------------------*/
+
 using Microsoft.AspNetCore.Mvc;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Cache;
@@ -28,6 +41,7 @@ using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using Senparc.Xncf.AreaBase.Admin.Filters;
+using Senparc.Ncf.Core.WorkContext.Provider;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,14 +54,20 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
     {
         private readonly ChatTaskService _chatTaskService;
         private readonly ChatGroupService _chatGroupService;
+        private readonly HumanInTheLoopRequestStore _humanInTheLoopRequestStore;
+        private readonly AgentsManagerHumanInteractionService _humanInteractionService;
 
         public ChatTaskAppService(
             IServiceProvider serviceProvider,
             ChatTaskService chatTaskService,
-            ChatGroupService chatGroupService) : base(serviceProvider)
+            ChatGroupService chatGroupService,
+            HumanInTheLoopRequestStore humanInTheLoopRequestStore,
+            AgentsManagerHumanInteractionService humanInteractionService) : base(serviceProvider)
         {
             _chatTaskService = chatTaskService;
             _chatGroupService = chatGroupService;
+            _humanInTheLoopRequestStore = humanInTheLoopRequestStore;
+            _humanInteractionService = humanInteractionService;
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
@@ -114,6 +134,82 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 {
                     ChatTaskDto = this._chatTaskService.Mapping<ChatTaskDto>(chatTask)
                 };
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<List<HumanInTheLoopRequestDto>>> GetHumanRequests(int chatTaskId)
+        {
+            return await this.GetResponseAsync<List<HumanInTheLoopRequestDto>>(async (response, logger) =>
+            {
+                return _humanInTheLoopRequestStore.GetPending(chatTaskId).ToList();
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> ResolveHumanRequest(
+            string requestId,
+            bool approved,
+            string reason = null,
+            string input = null)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                if (_humanInTheLoopRequestStore.TryGet(requestId, out var pending)
+                    && string.Equals(pending.RequestType, "humanTurn", StringComparison.Ordinal))
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Human 回合必须通过文本回复接口提交，不能使用工具审批接口。";
+                    return null;
+                }
+
+                var resolution = await _humanInteractionService.ResolveAsync(
+                    requestId,
+                    GetCurrentAdminUserId(),
+                    new HumanInTheLoopDecision(approved, reason, input));
+                if (!resolution.Success)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = resolution.Message;
+                    return null;
+                }
+
+                return approved ? "人工审批已批准" : "人工审批已拒绝";
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<string>> SendHumanMessage([FromBody] HumanMessageRequest request)
+        {
+            return await this.GetResponseAsync<string>(async (response, logger) =>
+            {
+                if (request == null || string.IsNullOrWhiteSpace(request.Input))
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Human 回复不能为空";
+                    return null;
+                }
+
+                if (!_humanInTheLoopRequestStore.TryGet(request.RequestId, out var pending)
+                    || !string.Equals(pending.RequestType, "humanTurn", StringComparison.Ordinal))
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Human 回合不存在、已处理或已失效";
+                    return null;
+                }
+
+                var resolution = await _humanInteractionService.ResolveAsync(
+                    request.RequestId,
+                    GetCurrentAdminUserId(),
+                    new HumanInTheLoopDecision(true, "Human 文本回复", request.Input.Trim()));
+                if (!resolution.Success)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = resolution.Message;
+                    return null;
+                }
+
+                return "Human 回复已提交，任务继续执行";
             });
         }
 
@@ -193,6 +289,13 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         PromptCommand = task.PromptCommand,
                         Description = task.Description,
                         Personality = task.IsPersonality,
+                        RequireHumanApproval = task.RequireHumanApproval,
+                        HumanInTheLoopLevel = task.HumanInTheLoopLevel,
+                        PluginToolPermission = task.PluginToolPermission,
+                        McpToolPermission = task.McpToolPermission,
+                        IncludeHumanParticipant = task.IncludeHumanParticipant,
+                        ChatMaxRound = task.ChatMaxRound,
+                        HumanRecipientUserId = GetCurrentAdminUserId(),
                         HookPlatform = task.HookPlatform,
                         HookParameter = task.HookPlatformParameter
                     };
@@ -221,18 +324,34 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
             foreach (var task in taskList)
             {
-                if (task.Status == ChatTask_Status.Finished || task.Status == ChatTask_Status.Cancelled)
+                if (task.Status == ChatTask_Status.Finished
+                    || task.Status == ChatTask_Status.Cancelled
+                    || task.Status == ChatTask_Status.Failed)
                 {
                     skipped++;
                     continue;
                 }
 
                 await _chatTaskService.SetStatus(ChatTask_Status.Cancelled, task);
+                _humanInTheLoopRequestStore.CancelForTask(task.Id);
                 await cache.RemoveFromCacheAsync(_chatTaskService.GetChatTaskRunCacheKey(task.Id));
                 changed++;
             }
 
             return $"强制停止完成：成功 {changed} 条，跳过 {skipped} 条";
+        }
+
+        private string GetCurrentAdminUserId()
+        {
+            try
+            {
+                var context = base.GetService<IAdminWorkContextProvider>()?.GetAdminWorkContext();
+                return context?.AdminUserId > 0 ? context.AdminUserId.ToString() : null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private async Task<string> DeleteInternalAsync(List<int> ids)
@@ -259,11 +378,19 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
             foreach (var task in taskList)
             {
+                _humanInTheLoopRequestStore.CancelForTask(task.Id);
                 await cache.RemoveFromCacheAsync(_chatTaskService.GetChatTaskRunCacheKey(task.Id));
                 await _chatTaskService.DeleteObjectAsync(task);
             }
 
             return $"删除任务完成：成功 {taskList.Count} 条";
         }
+    }
+
+    public sealed class HumanMessageRequest
+    {
+        public string RequestId { get; set; }
+
+        public string Input { get; set; }
     }
 }

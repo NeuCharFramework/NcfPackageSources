@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：FunctionHelper.cs
@@ -9,6 +9,9 @@
     
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.26.0 增强 XNCF 基础注册与函数参数处理能力
 
 ----------------------------------------------------------------*/
 
@@ -110,10 +113,10 @@ namespace Senparc.Ncf.XncfBase.Functions
                         }
                     }
                 }
-                else if (prop.PropertyType == typeof(SelectionList))
+                else if (prop.PropertyType == typeof(SelectionList) && paraObj != null)
                 {
                     var selections = prop.GetValue(paraObj, null) as SelectionList;
-                    switch (selections.SelectionType)
+                    switch (selections?.SelectionType)
                     {
                         case SelectionType.DropDownList:
                             parameterType = ParameterType.DropDownList;
@@ -162,13 +165,16 @@ namespace Senparc.Ncf.XncfBase.Functions
                 var systemType = prop.PropertyType.Name;
 
                 object value = null;
-                try
+                if (paraObj != null)
                 {
-                    value = prop.GetValue(paraObj);
-                }
-                catch (Exception ex)
-                {
-                    SenparcTrace.BaseExceptionLog(ex);
+                    try
+                    {
+                        value = prop.GetValue(paraObj);
+                    }
+                    catch (Exception ex)
+                    {
+                        SenparcTrace.BaseExceptionLog(ex);
+                    }
                 }
 
                 var functionParamInfo = new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType,

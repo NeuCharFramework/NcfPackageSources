@@ -240,6 +240,7 @@
             </button>
         </section>
     </div>
+    @Html.AntiForgeryToken()
     <!--lib-->
     <script src="~/lib/vue/vue.js"></script>
     <script src="~/lib/element-ui_2.13.2/element.js"></script>
@@ -248,7 +249,7 @@
     @await Html.PartialAsync("_LocalizationScripts")
     <!--js-->
     <script src="~/js/Admin/store.js"></script>
-    <script src="~/js/Admin/axios.js"></script>
+    <script src="~/js/Admin/axios.js" asp-append-version="true"></script>
     <script src="~/js/Admin/global.js"></script>
     <!--菜单栏-->
     <script src="~/js/Admin/navMenu.js"></script>
@@ -282,6 +283,5 @@
             window.ncfStartSessionMonitor();
         }
     </script>
-    @Html.AntiForgeryToken()
 </body>
 </html>

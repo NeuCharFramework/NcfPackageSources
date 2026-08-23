@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.15.0-preview20</Version>
+    <Version>0.16.0</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -144,7 +144,16 @@
 		3、AgentTemplate 与 ChatGroup 执行入口传递取消令牌，完善手动 Prompt 与远程请求的可取消边界
 		4、补充知识库向量发布状态与管理界面反馈，并保持本地 Agent 与发布型 A2A 的执行配置一致
 		5、完善手动 Prompt 判定回归测试，避免自然语言被错误当作 PromptRange 版本查询
-</PackageReleaseNotes>
+		[2026-08-17] v0.16.0 新增 ChatTask Human-in-the-Loop 人工审批与人类参与者能力
+		1、为 ChatTask 增加 HIL 等级、最大对话轮次与工具权限策略，并补齐多数据库迁移
+		2、支持人工审批工具调用、Human 参与者发言，以及 ChatGroup 按配置自动纳入人类参与者
+		3、完善 ChatGroup/ChatTask 请求校验、显式 GroupId 传参与管理端交互反馈
+		4、AgentTemplate 支持绑定 AI 模型（AiModelId）并补齐多数据库迁移
+		5、独立 Agent 空输出时按最低 Token 预算自动重试一次，避免过低 MaxToken 导致误失败
+		6、优化管理端人类参与者配置、任务执行策略展示与 Agent 编辑入口
+		7、增加工作流引用校验和函数绑定序列化能力，优化 Agent 编辑、任务筛选及响应式管理界面
+		8、补充 Agent 群组会话查看、执行引用和任务状态处理，提升管理端交互一致性
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

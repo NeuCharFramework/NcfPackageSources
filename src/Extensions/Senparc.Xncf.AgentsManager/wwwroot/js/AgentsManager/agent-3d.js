@@ -25,6 +25,131 @@
     return (collaboration && collaboration.agentIds ? collaboration.agentIds : []).map(function (id) { return 'local:' + id; });
   }
 
+  function normalizeSkillKinds(agent) {
+    const kinds = agent && Array.isArray(agent.skillKinds) ? agent.skillKinds : [];
+    return kinds
+      .map(function (kind) { return String(kind || '').trim().toLowerCase(); })
+      .filter(Boolean)
+      .filter(function (kind, index, list) { return list.indexOf(kind) === index; });
+  }
+
+  function skillShortName(kind) {
+    return {
+      function: 'F',
+      workflow: 'W',
+      plugin: 'P',
+      mcp: 'M',
+      a2a: 'A2A',
+      human: 'H'
+    }[kind] || kind.toUpperCase();
+  }
+
+  function skillDisplayText(agent) {
+    const skills = normalizeSkillKinds(agent);
+    return skills.length ? skills.map(skillShortName).join(' ') : '--';
+  }
+
+  function skillColor(kind) {
+    return {
+      function: 0x5ed4ff,
+      workflow: 0x67c23a,
+      plugin: 0xa78bfa,
+      mcp: 0xf59e0b,
+      a2a: 0xffc36e,
+      human: 0xf472b6
+    }[kind] || 0xb8c7d9;
+  }
+
+  function groupStatusInfo(group) {
+    const statusMap = group && group.taskStatusCounts ? group.taskStatusCounts : {};
+    const waiting = statusMap[0] || statusMap['0'] || 0;
+    const chatting = statusMap[1] || statusMap['1'] || 0;
+    const paused = statusMap[2] || statusMap['2'] || 0;
+    const finished = statusMap[3] || statusMap['3'] || 0;
+    const cancelled = statusMap[4] || statusMap['4'] || 0;
+    const failed = statusMap[5] || statusMap['5'] || 0;
+    const humanPending = Number(group && group.humanInTheLoopPendingCount || 0);
+    const total = waiting + chatting + paused + finished + cancelled + failed;
+
+    let kind = 'idle';
+    if (group && group.enable === false) {
+      kind = 'disabled';
+    } else if (humanPending > 0) {
+      kind = 'hil-paused';
+    } else if (paused > 0) {
+      kind = 'paused';
+    } else if (chatting > 0) {
+      kind = 'chatting';
+    } else if (waiting > 0) {
+      kind = 'waiting';
+    }
+
+    return {
+      kind: kind,
+      waiting: waiting,
+      chatting: chatting,
+      paused: paused,
+      finished: finished,
+      cancelled: cancelled,
+      failed: failed,
+      humanPending: humanPending,
+      total: total
+    };
+  }
+
+  function groupStatusStyle(status) {
+    return {
+      disabled: {
+        color: 0x6c5561,
+        emissive: 0x331821,
+        emissiveIntensity: 0.34,
+        opacity: 0.48,
+        ring: 0xd57585
+      },
+      'hil-paused': {
+        color: 0xd946ef,
+        emissive: 0x7e1b77,
+        emissiveIntensity: 0.58,
+        opacity: 0.92,
+        ring: 0xf0abfc
+      },
+      paused: {
+        color: 0xf59e0b,
+        emissive: 0x7c3d0b,
+        emissiveIntensity: 0.38,
+        opacity: 0.9,
+        ring: 0xfbbf24
+      },
+      chatting: {
+        color: 0x48c5ff,
+        emissive: 0x0b527c,
+        emissiveIntensity: 0.3,
+        opacity: 0.9,
+        ring: 0x7dd3fc
+      },
+      waiting: {
+        color: 0x3376cd,
+        emissive: 0x123e74,
+        emissiveIntensity: 0.26,
+        opacity: 0.86,
+        ring: 0x60a5fa
+      },
+      idle: {
+        color: 0x7f91a6,
+        emissive: 0x000000,
+        emissiveIntensity: 0,
+        opacity: 0.86,
+        ring: 0x94a3b8
+      }
+    }[status] || {
+      color: 0x7f91a6,
+      emissive: 0x000000,
+      emissiveIntensity: 0,
+      opacity: 0.86,
+      ring: 0x94a3b8
+    };
+  }
+
   function textSprite(text, options) {
     const fontSize = options.fontSize || 24;
     const padding = options.padding || 14;
@@ -310,8 +435,32 @@
         }
       }
       if (entry.label) {
-        entry.label.position.set(entry.mesh.position.x, entry.mesh.position.y + 3.7, entry.mesh.position.z);
+        const labelOffset = entry.labelOffset || { x: 0, y: 3.7, z: 0 };
+        entry.label.position.set(
+          entry.mesh.position.x + labelOffset.x,
+          entry.mesh.position.y + labelOffset.y,
+          entry.mesh.position.z + labelOffset.z);
       }
+      if (entry.statusBadge) {
+        entry.statusBadge.position.set(
+          entry.mesh.position.x,
+          entry.mesh.position.y + 2.15,
+          entry.mesh.position.z);
+        entry.statusBadge.rotation.y += moving ? 0.025 : 0.008;
+      }
+    });
+
+    this.groupObjects.forEach(function (entry) {
+      if (!entry.statusRing) {
+        return;
+      }
+      const elapsed = Date.now() * 0.002 + entry.pulsePhase;
+      const isHIL = entry.statusKind === 'hil-paused';
+      const scale = isHIL ? 1 + ((Math.sin(elapsed) + 1) * 0.14) : 1;
+      entry.statusRing.scale.set(scale, scale, scale);
+      entry.statusRing.material.opacity = isHIL
+        ? 0.38 + ((Math.sin(elapsed * 1.4) + 1) * 0.22)
+        : 0.48;
     });
 
     this.refreshLinkGeometry();
@@ -332,6 +481,9 @@
       if (g.label) {
         all.push(g.label);
       }
+      if (g.statusRing) {
+        all.push(g.statusRing);
+      }
     });
 
     this.agentObjects.forEach(function (a) {
@@ -343,6 +495,9 @@
       }
       if (a.pulseRing) {
         all.push(a.pulseRing);
+      }
+      if (a.statusBadge) {
+        all.push(a.statusBadge);
       }
     });
 
@@ -411,48 +566,90 @@
     const groupGeom = new THREE.CylinderGeometry(0.9, 0.9, 16, 16);
     groups.forEach(function (group) {
       const isEnabled = group.enable !== false;
-      const hasRunningTask = group.runningTaskCount > 0;
+      const status = groupStatusInfo(group);
+      const style = groupStatusStyle(status.kind);
+      const waiting = status.waiting;
+      const chatting = status.chatting;
+      const paused = status.paused;
+      const finished = status.finished;
+      const cancelled = status.cancelled;
+      const failed = status.failed;
+      const totalTasks = status.total;
       const mat = new THREE.MeshStandardMaterial({
-        color: !isEnabled ? 0x6c5561 : (hasRunningTask ? 0x48c5ff : 0x7f91a6),
-        emissive: !isEnabled ? 0x331821 : 0x000000,
-        emissiveIntensity: !isEnabled ? 0.34 : 0,
+        color: style.color,
+        emissive: style.emissive,
+        emissiveIntensity: style.emissiveIntensity,
         transparent: true,
-        opacity: isEnabled ? 0.86 : 0.48,
+        opacity: style.opacity,
         metalness: 0.15,
         roughness: 0.55
       });
       const pillar = new THREE.Mesh(groupGeom, mat);
+      const heightScale = 0.72 + Math.min(1.45, totalTasks * 0.08 + group.runningTaskCount * 0.16);
+      pillar.scale.y = heightScale;
       pillar.position.copy(group._pos);
-      pillar.position.y = 8;
+      pillar.position.y = 8 * heightScale;
       pillar.userData = { type: 'group', groupId: group.id };
       this.scene.add(pillar);
 
-      const statusMap = group.taskStatusCounts || {};
-      const waiting = statusMap[0] || statusMap['0'] || 0;
-      const chatting = statusMap[1] || statusMap['1'] || 0;
-      const paused = statusMap[2] || statusMap['2'] || 0;
-      const finished = statusMap[3] || statusMap['3'] || 0;
-      const cancelled = statusMap[4] || statusMap['4'] || 0;
-      const failed = statusMap[5] || statusMap['5'] || 0;
-      const totalTasks = waiting + chatting + paused + finished + cancelled + failed;
       const enableText = isEnabled ? '已启用' : '已停用';
       const text = group.name
         + '\n状态:' + enableText
-        + '\nTasks:' + totalTasks + ' Running:' + group.runningTaskCount
-        + '\nW:' + waiting + ' C:' + chatting + ' P:' + paused + ' F:' + finished;
+        + '\n任务:' + totalTasks + ' 运行:' + group.runningTaskCount
+        + '\n等待:' + waiting + ' 聊天:' + chatting + ' 暂停:' + paused
+        + '\n完成:' + finished + ' 取消:' + cancelled + ' 失败:' + failed
+        + (status.humanPending > 0 ? '\nHIL等待:' + status.humanPending : '');
       const label = textSprite(text, {
-        fontSize: 24,
+        fontSize: 18,
         padding: 16,
-        scaleDivisor: 18,
-        background: isEnabled ? 'rgba(5,14,26,0.90)' : 'rgba(40,17,24,0.92)',
-        border: isEnabled ? 'rgba(72,197,255,0.65)' : 'rgba(239,119,139,0.82)',
-        color: isEnabled ? '#DDEFFF' : '#FFE2E8'
+        scaleDivisor: 20,
+        maxLineLength: 24,
+        maxLines: 6,
+        maxWorldWidth: 12,
+        maxWorldHeight: 6,
+        background: status.kind === 'hil-paused'
+          ? 'rgba(54,12,62,0.94)'
+          : status.kind === 'paused'
+            ? 'rgba(54,31,5,0.94)'
+            : !isEnabled ? 'rgba(40,17,24,0.92)' : 'rgba(5,14,26,0.90)',
+        border: status.kind === 'hil-paused'
+          ? 'rgba(240,171,252,0.9)'
+          : status.kind === 'paused'
+            ? 'rgba(251,191,36,0.86)'
+            : !isEnabled ? 'rgba(239,119,139,0.82)' : 'rgba(72,197,255,0.65)',
+        color: status.kind === 'hil-paused'
+          ? '#fce7ff'
+          : status.kind === 'paused' ? '#fff1c2' : !isEnabled ? '#FFE2E8' : '#DDEFFF'
       });
-      label.position.set(group._pos.x, 19, group._pos.z);
+      label.position.set(group._pos.x, 22 + heightScale, group._pos.z);
       this.scene.add(label);
 
-      this.groupObjects.push({ mesh: pillar, label: label, group: group });
-      this.groupById.set(group.id, { mesh: pillar, label: label, group: group });
+      let statusRing = null;
+      if (status.kind === 'hil-paused' || status.kind === 'paused') {
+        const ringGeometry = new THREE.TorusGeometry(1.55, 0.16, 10, 32);
+        const ringMaterial = new THREE.MeshBasicMaterial({
+          color: style.ring,
+          transparent: true,
+          opacity: 0.48,
+          side: THREE.DoubleSide,
+          depthWrite: false
+        });
+        statusRing = new THREE.Mesh(ringGeometry, ringMaterial);
+        statusRing.rotation.x = -Math.PI / 2;
+        statusRing.position.set(group._pos.x, 16 * heightScale + 0.35, group._pos.z);
+        this.scene.add(statusRing);
+      }
+
+      const groupEntry = {
+        mesh: pillar,
+        label: label,
+        group: group,
+        statusRing: statusRing,
+        statusKind: status.kind,
+        pulsePhase: (hashNumber(group.id + '-status') % 100) / 10
+      };
+      this.groupObjects.push(groupEntry);
+      this.groupById.set(group.id, groupEntry);
     }.bind(this));
 
     const memberships = new Map();
@@ -462,6 +659,18 @@
         memberships.set(key, []);
       }
       memberships.get(key).push(link.groupId);
+    });
+
+    const memberOrderByGroup = new Map();
+    groups.forEach(function (group) {
+      const configuredKeys = Array.isArray(group.memberParticipantKeys) && group.memberParticipantKeys.length
+        ? group.memberParticipantKeys
+        : (group.memberAgentIds || []).map(function (id) { return 'local:' + id; });
+      const linkedKeys = links
+        .filter(function (link) { return link.groupId === group.id; })
+        .map(linkParticipantKey);
+      const keys = configuredKeys.length ? configuredKeys : linkedKeys;
+      memberOrderByGroup.set(group.id, keys);
     });
 
     const activeGroupIds = new Set((this.currentSnapshot.collaborations || []).map(function (c) { return c.groupId; }));
@@ -479,43 +688,77 @@
       const agentKey = participantKey(agent);
       const memberGroupIds = memberships.get(agentKey) || [];
       let target = null;
+      let labelOffset = { x: 0, y: 4.2, z: 0 };
 
       const activeGroupId = memberGroupIds.find(function (groupId) { return activeGroupIds.has(groupId); });
-      if (activeGroupId) {
-        const groupNode = this.groupById.get(activeGroupId);
+      const primaryGroupId = activeGroupId || memberGroupIds[0];
+      if (primaryGroupId) {
+        const groupNode = this.groupById.get(primaryGroupId);
         if (groupNode) {
-          const h = hashNumber(agentKey);
-          const theta = (h % 360) * Math.PI / 180;
-          const spread = 4 + (h % 3);
+          const memberKeys = memberOrderByGroup.get(primaryGroupId) || [];
+          const memberIndex = Math.max(0, memberKeys.indexOf(agentKey));
+          const memberCount = Math.max(memberKeys.length, memberGroupIds.length, 1);
+          const ringCapacity = Math.min(10, Math.max(6, Math.ceil(Math.sqrt(memberCount) * 3)));
+          const ringIndex = Math.floor(memberIndex / ringCapacity);
+          const slot = memberIndex % ringCapacity;
+          const h = hashNumber(agentKey + '-' + primaryGroupId);
+          const theta = (Math.PI * 2 * slot / ringCapacity)
+            - Math.PI / 2
+            + (((h % 17) - 8) * Math.PI / 180);
+          const spread = 11 + ringIndex * 5.5 + (activeGroupId ? 1.5 : 0);
           target = new THREE.Vector3(
             groupNode.mesh.position.x + Math.cos(theta) * spread,
-            2 + ((h % 5) * 0.35),
+            2.5 + ringIndex * 1.15,
             groupNode.mesh.position.z + Math.sin(theta) * spread
           );
-        }
-      }
-
-      if (!target && memberGroupIds.length > 0) {
-        const groupNode = this.groupById.get(memberGroupIds[0]);
-        if (groupNode) {
-          const h = hashNumber(agentKey + '-base');
-          const theta = (h % 360) * Math.PI / 180;
-          const spread = 10 + (h % 6);
-          target = new THREE.Vector3(
-            groupNode.mesh.position.x + Math.cos(theta) * spread,
-            2,
-            groupNode.mesh.position.z + Math.sin(theta) * spread
-          );
+          labelOffset = {
+            x: Math.cos(theta) * 4.3,
+            y: 2.2 + ringIndex * 0.35,
+            z: Math.sin(theta) * 4.3
+          };
         }
       }
 
       if (!target) {
-        const angle = (Math.PI * 2 * index) / Math.max(1, agents.length);
-        target = new THREE.Vector3(Math.cos(angle) * (radius + 20), 2, Math.sin(angle) * (radius + 20));
+        const ringCapacity = 10;
+        const ringIndex = Math.floor(index / ringCapacity);
+        const slot = index % ringCapacity;
+        const angle = (Math.PI * 2 * slot / ringCapacity) - Math.PI / 2;
+        const spread = radius + 22 + ringIndex * 5.5;
+        target = new THREE.Vector3(
+          Math.cos(angle) * spread,
+          2.5 + ringIndex * 1.15,
+          Math.sin(angle) * spread);
+        labelOffset = {
+          x: Math.cos(angle) * 4.3,
+          y: 2.2 + ringIndex * 0.35,
+          z: Math.sin(angle) * 4.3
+        };
       }
 
+      const isHILPaused = Number(agent.humanInTheLoopPausedCount || 0) > 0;
+      const isPaused = Number(agent.pausedCount || 0) > 0;
+      const isActive = activeAgentIds.has(agentKey) || agent.chattingCount > 0;
+      const agentColor = !agent.enable
+        ? 0x6e7d90
+        : isHILPaused
+          ? 0xf472b6
+          : isPaused
+            ? 0xf59e0b
+            : agent.agentKind === 'RemoteA2A'
+              ? (isActive ? 0xffb34d : 0xf59e0b)
+              : (isActive ? 0x8be8bd : 0x5ed4ff);
+      const agentEmissive = isHILPaused
+        ? 0x7e1b58
+        : isPaused
+          ? 0x7c3d0b
+          : isActive
+            ? (agent.agentKind === 'RemoteA2A' ? 0x7c3d0b : 0x175f54)
+            : 0x000000;
       const mat = new THREE.MeshStandardMaterial({
-        color: agent.enable ? (agent.agentKind === 'RemoteA2A' ? 0xf59e0b : 0x5ed4ff) : 0x6e7d90,
+        color: agentColor,
+        emissive: agentEmissive,
+        emissiveIntensity: isHILPaused ? 0.55 : isPaused || isActive ? 0.38 : 0,
         transparent: true,
         opacity: 0.98,
         metalness: 0.08,
@@ -525,28 +768,36 @@
       sphere.position.copy(target);
       sphere.userData = { type: 'agent', agentId: agentKey };
       this.decorateCuteAgent(sphere, agent.enable);
+      this.decorateAgentSkills(sphere, agent.skillKinds);
       this.scene.add(sphere);
 
-      const promptText = agent.promptCode ? agent.promptCode : '--';
-      const scoreText = (typeof agent.score === 'number' && agent.score >= 0) ? agent.score.toFixed(1) : '--';
-      const stateText = agent.enable ? 'Enabled' : 'Disabled';
+      const stateText = !agent.enable
+        ? '已停用'
+        : isHILPaused
+          ? 'HIL等待'
+          : isPaused
+            ? '暂停'
+            : isActive ? '运行中' : '已启用';
       const label = textSprite(
         agent.name
-        + '\nType:' + (agent.agentKind === 'RemoteA2A' ? 'Remote A2A' : 'Local')
-        + '\nPrompt:' + promptText
-        + '\nScore:' + scoreText + '  Running:' + (agent.chattingCount || 0)
-        + '\nState:' + stateText,
+        + '\n' + (agent.agentKind === 'RemoteA2A' ? '远程 A2A' : '本地 Agent')
+        + ' · ' + stateText
+        + '\n技能:' + skillDisplayText(agent),
         {
-        fontSize: 20,
-        padding: 14,
-        scaleDivisor: 18,
-        background: 'rgba(6, 14, 24, 0.85)',
-        border: 'rgba(94,212,255,0.55)',
+        fontSize: 16,
+        padding: 12,
+        scaleDivisor: 22,
+        maxLineLength: 26,
+        maxLines: 3,
+        maxWorldWidth: 8.5,
+        maxWorldHeight: 3.8,
+        background: isHILPaused ? 'rgba(73,18,59,0.9)' : isPaused ? 'rgba(67,38,6,0.9)' : 'rgba(6,14,24,0.86)',
+        border: isHILPaused ? 'rgba(244,114,182,0.82)' : isPaused ? 'rgba(251,191,36,0.82)' : 'rgba(94,212,255,0.55)',
         color: '#E8F7FF'
       });
-      label.position.set(target.x, target.y + 3.7, target.z);
+      label.position.set(target.x + labelOffset.x, target.y + labelOffset.y, target.z + labelOffset.z);
       label.userData = { type: 'agent-label', agentId: agentKey };
-      label.material.opacity = 0.42;
+      label.material.opacity = isActive || isPaused ? 0.8 : 0.42;
       this.scene.add(label);
 
       const entry = {
@@ -556,7 +807,9 @@
         target: target,
         groupIds: memberGroupIds,
         pulseRing: null,
-        isActive: activeAgentIds.has(agentKey) || agent.chattingCount > 0,
+        statusBadge: null,
+        labelOffset: labelOffset,
+        isActive: isActive,
         pulsePhase: (hashNumber(agentKey) % 100) / 10,
         motionPhase: (hashNumber(agentKey + '-motion') % 100) / 16,
         baseY: target.y
@@ -578,26 +831,24 @@
         entry.pulseRing = ring;
       }
 
+      if (isHILPaused || isPaused) {
+        const badgeGeometry = new THREE.TorusGeometry(1.9, 0.13, 10, 32);
+        const badgeMaterial = new THREE.MeshBasicMaterial({
+          color: isHILPaused ? 0xf472b6 : 0xf59e0b,
+          transparent: true,
+          opacity: 0.72,
+          side: THREE.DoubleSide,
+          depthWrite: false
+        });
+        const badge = new THREE.Mesh(badgeGeometry, badgeMaterial);
+        badge.rotation.x = -Math.PI / 2;
+        badge.position.set(target.x, target.y + 2.15, target.z);
+        this.scene.add(badge);
+        entry.statusBadge = badge;
+      }
+
       this.agentObjects.push(entry);
       this.agentById.set(agentKey, entry);
-    }.bind(this));
-
-    (this.currentSnapshot.collaborations || []).forEach(function (col) {
-      const members = collaborationParticipantKeys(col).map(function (key) { return this.agentById.get(key); }.bind(this)).filter(Boolean);
-      if (members.length < 2) {
-        return;
-      }
-      const center = new THREE.Vector3();
-      members.forEach(function (m) { center.add(m.target); });
-      center.divideScalar(members.length);
-      members.forEach(function (m, idx) {
-        const angle = (Math.PI * 2 * idx) / members.length;
-        m.target = new THREE.Vector3(
-          center.x + Math.cos(angle) * 2.2,
-          2.5,
-          center.z + Math.sin(angle) * 2.2
-        );
-      });
     }.bind(this));
 
     links.forEach(function (link) {
@@ -713,6 +964,10 @@
     } else {
       this.activeAgentId = null;
     }
+    if (typeof this.options.onAgentHover === 'function') {
+      const agentEntry = this.activeAgentId ? this.agentById.get(this.activeAgentId) : null;
+      this.options.onAgentHover(agentEntry ? agentEntry.agent : null);
+    }
 
     if (this.lockedGroupId) {
       this.applyGroupHighlight();
@@ -747,6 +1002,9 @@
     const intersects = this.raycaster.intersectObjects(this.groupObjects.map(function (g) { return g.mesh; }), false);
     if (intersects.length === 0) {
       this.lockedGroupId = null;
+      if (typeof this.options.onGroupLock === 'function') {
+        this.options.onGroupLock(null, false);
+      }
       this.applyGroupHighlight();
       return;
     }
@@ -756,6 +1014,9 @@
       this.lockedGroupId = null;
     } else {
       this.lockedGroupId = groupId;
+    }
+    if (typeof this.options.onGroupLock === 'function') {
+      this.options.onGroupLock(this.lockedGroupId, Boolean(this.lockedGroupId));
     }
     this.applyGroupHighlight();
   };
@@ -767,6 +1028,9 @@
     }
     this.activeGroupId = null;
     this.activeAgentId = null;
+    if (typeof this.options.onAgentHover === 'function') {
+      this.options.onAgentHover(null);
+    }
     if (typeof this.options.onGroupHover === 'function') {
       this.options.onGroupHover(null);
     }
@@ -879,6 +1143,49 @@
     rightFoot.position.set(0.45, -1.35, 0.5);
     bodyMesh.add(leftFoot);
     bodyMesh.add(rightFoot);
+  };
+
+  AgentGraph3D.prototype.decorateAgentSkills = function (bodyMesh, skillKinds) {
+    const skills = (Array.isArray(skillKinds) ? skillKinds : [])
+      .map(function (kind) { return String(kind || '').trim().toLowerCase(); })
+      .filter(function (kind, index, list) { return kind && list.indexOf(kind) === index; });
+    if (skills.length === 0) {
+      return;
+    }
+
+    const markerCount = Math.min(skills.length, 6);
+    for (let index = 0; index < markerCount; index++) {
+      const kind = skills[index];
+      let geometry;
+      if (kind === 'workflow') {
+        geometry = new THREE.TorusGeometry(0.34, 0.08, 8, 18);
+      } else if (kind === 'plugin') {
+        geometry = new THREE.OctahedronGeometry(0.38, 0);
+      } else if (kind === 'mcp') {
+        geometry = new THREE.CylinderGeometry(0.24, 0.24, 0.58, 10);
+      } else if (kind === 'a2a') {
+        geometry = new THREE.IcosahedronGeometry(0.38, 0);
+      } else {
+        geometry = new THREE.BoxGeometry(0.48, 0.48, 0.48);
+      }
+
+      const material = new THREE.MeshStandardMaterial({
+        color: skillColor(kind),
+        emissive: skillColor(kind),
+        emissiveIntensity: 0.22,
+        metalness: 0.12,
+        roughness: 0.4,
+        transparent: true,
+        opacity: 0.94
+      });
+      const marker = new THREE.Mesh(geometry, material);
+      const angle = (Math.PI * 2 * index / markerCount) - Math.PI / 2;
+      marker.position.set(Math.cos(angle) * 1.45, 1.85, Math.sin(angle) * 1.45);
+      if (kind === 'workflow') {
+        marker.rotation.x = Math.PI / 2;
+      }
+      bodyMesh.add(marker);
+    }
   };
 
   global.AgentGraph3D = AgentGraph3D;

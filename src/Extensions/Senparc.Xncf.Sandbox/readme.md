@@ -25,8 +25,9 @@ NCF 独立沙箱编排模块：为用户快速创建/销毁隔离实验环境（
 | NcfDocs 环境准备文档 | ✅ [线上文档](https://doc.ncf.pub/zh/NcfPackageSources/xncf/sandbox-environment.html) |
 | 镜像仓库映射配置 | ✅ `SenparcXncfSandbox:Images`（RegistryPrefix / Overrides） |
 | 单元测试（ImageResolver） | ✅ |
-| Jupyter 反向代理 / 鉴权 | ✅ `/sandbox-jupyter/{sessionId}/`（Admin Cookie + 服务端注入 token） |
+| Jupyter 访问 / 反向代理 | ✅ 列表使用容器本机映射端口；仍支持 `/sandbox-jupyter/{sessionId}/` 代理 |
 | csharp-exec .NET 10 file-based | ✅ `sdk:10.0` + `dotnet run --file main.cs` |
+| 持久化 Lab FunctionRender 控制 | ✅ 命令、工作区文件上传/下载/列举 |
 | Wasmtime 实装 | ⏳ |
 
 ## 架构
@@ -47,13 +48,18 @@ ISandboxRuntime
 |---|---|---|
 | `python-exec` | 短任务 Python | 否（登记会话；Exec 时 `docker run --rm`） |
 | `csharp-exec` | 短任务 C#（**.NET 10** file-based：`dotnet run --file main.cs`） | 否（同上） |
-| `jupyter-python` | JupyterLab 交互（更耗内存） | **是**（Destroy / TTL 停容器） |
+| `jupyter-python` | JupyterLab 交互（Python；更耗内存） | **是**（Destroy / TTL 停容器） |
+| `jupyter-csharp` | JupyterLab 交互（C#；需配置独立镜像） | **是**（Destroy / TTL 停容器） |
 
-「销毁」始终清理会话登记与配额；若存在真实容器（Jupyter 或将来的常驻 Exec worker）则一并删除。
+「销毁」停止并清理运行环境，保留会话记录用于状态追踪；若存在真实容器（Jupyter 或将来的常驻 Exec worker）则一并删除。
+「删除会话记录」仅允许用于已停止、已过期或已清理完成的失败会话，并会永久删除数据库记录。
 
 默认镜像（与 Docs 对齐）：`mcr.microsoft.com/dotnet/sdk:10.0`。更新 tag 时优先改 Docs，再同步代码模板。  
 C# 代码可用顶层语句，例如：`Console.WriteLine("hello");`（无需手写完整 Program/csproj）。  
 Exec 容器无外网：自动注入离线 `nuget.config` + `PublishAot=false`（避免默认 AOT 去拉 NuGet）。
+
+`jupyter-csharp` 使用 `tools/SandboxImages/JupyterDotnet` 构建的独立镜像，内含 .NET SDK、.NET Interactive
+Jupyter Kernel 和构建时预热的常用 NuGet 包；镜像构建完成后需通过 `Images:Overrides:jupyter-csharp` 配置。
 
 ### 安全与资源默认
 
@@ -62,19 +68,39 @@ Exec 容器无外网：自动注入离线 `nuget.config` + `PublishAot=false`（
 - TTL 强制回收
 - **无 Docker 时不降级裸进程**
 - JupyterLab：BSD-3-Clause（勿用商标背书）
-- Jupyter 访问：站点反向代理 `/sandbox-jupyter/{sessionId}/lab`（需管理员登录）；容器只绑 `127.0.0.1`；token 不下发到浏览器链接
+- Jupyter 列表链接使用 Docker 分配的本机映射端口和 token 直达容器；容器只绑定 `127.0.0.1`
+- Jupyter 反向代理仍可通过 `/sandbox-jupyter/{sessionId}/lab` 访问（需管理员登录）；该入口由服务端注入 token
+
+### 持久化 Lab 操作
+
+`jupyter-python` 和 `jupyter-csharp` 是持久化交互式会话。Sandbox 的 FunctionRender
+提供以下稳定方法，可由 Admin Function、AI Function Calling 和 NeuCharWorkflow 复用：
+
+- `LabExec`：在容器工作区内执行 `/bin/sh -lc` 命令，默认 30 秒，最长 120 秒，输出有长度上限；
+- `LabUploadFile`：使用 Base64 写入工作区内的相对路径，单文件默认最多约 3 MB；
+- `LabDownloadFile`：读取工作区文件并返回 Base64，读取大小受上限约束；
+- `LabListFiles`：列举工作区文件，可选择递归和返回数量上限。
+
+所有文件操作都拒绝绝对路径、路径穿越和符号链接/重解析点，并且只允许运行中的
+Jupyter Lab 会话。`python-exec` / `csharp-exec` 仍然是一次性 `docker run --rm`
+任务；`ncf-preview` 仍然只支持固定的 NCF 预览流程，不开放通用 Shell 控制。
+
+AdminChat 仍需开启 Function Invocation，并将 Sandbox 模块关联到会话；Workflow
+则通过已有 Function 目录和统一执行服务调用这些方法。命令执行属于高权限容器内操作，
+生产部署应继续结合管理员权限、会话关联和 Docker 运行时隔离策略。
 
 ## 后台入口
 
 1. **环境准备** `/Admin/Sandbox/Setup`：Docker 检测 + 文档链接  
-2. **沙箱面板** `/Admin/Sandbox/Index`：会话列表 / 打开 Notebook（代理）/ 销毁  
-3. Function：创建沙箱 / 列表 / Exec / 销毁  
+2. **沙箱面板** `/Admin/Sandbox/Index`：会话列表 / 打开 Notebook（本机映射端口）/ 销毁运行环境 / 删除会话记录
+3. Function：创建沙箱 / 列表 / Exec / 销毁运行环境 / 删除会话记录
 
 ### Jupyter 代理调试
 
 - 中间件：`SandboxJupyterProxyMiddleware`（HTTP + WebSocket）
 - 容器启动参数：`ServerApp.base_url=/sandbox-jupyter/{sessionId}/`
 - 未登录访问代理路径会跳转 `/Admin/Login?returnUrl=...`  
+- 应用关闭时不会主动删除交互式容器；应用启动会按 Docker 完整容器 ID 校准运行中、已停止和已删除的会话，并清理无对应会话的孤儿容器
 
 
 ## 调试信息
@@ -112,9 +138,17 @@ dotnet run -- --database-upgrade
 
 ```json
 "SenparcXncfSandbox": {
+  "Docker": {
+    // docker run 在本地没有镜像时会同步下载；默认 900 秒，可按需调整为 60-3600
+    "InteractiveCreateTimeoutSeconds": 900
+  },
   "Images": {
     "RegistryPrefix": "",
-    "Overrides": { }
+    "Overrides": {
+      // 国内网络临时代理示例（第三方地址，稳定性不保证；不是清华 TUNA 官方镜像）
+      // "jupyter-python": "quay.dockerproxy.net/jupyter/minimal-notebook:latest",
+      // "jupyter-csharp": "ncf-jupyter-dotnet:10.0"
+    }
   }
 }
 ```

@@ -25,12 +25,17 @@ const replayPagePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Areas/Admin/Pages/NeuCharWorkflow/Replay.cshtml');
 const replayStylePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/wwwroot/css/NeuCharWorkflow/Replay.css');
+const workflowScript = fs.readFileSync(scriptPath, 'utf8');
 const workflowAppServicePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Application/AppServices/NeuCharWorkflowAppService.cs');
 const runCoordinatorPath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Domain/Services/NeuCharWorkflowRunCoordinator.cs');
 const workflowEnginePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow/Domain/Services/NeuCharWorkflowEngine.cs');
+const agentsWorkflowObjectProviderPath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.AgentsManager/Domain/Services/AgentsWorkflowObjectProvider.cs');
+const workflowObjectContractsPath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.NeuCharWorkflow.Abstractions/Workflow/WorkflowObjectContracts.cs');
 const adminAxiosPath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/wwwroot/js/Admin/axios.js');
 const moduleFunctionPagePath = path.resolve(__dirname,
@@ -39,7 +44,10 @@ const moduleFunctionScriptPath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/wwwroot/js/Admin/Pages/XncfModule/start.js');
 const moduleFunctionStylePath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/wwwroot/css/Admin/XncfModule/XncfModule.css');
+const adminLayoutPath = path.resolve(__dirname,
+    '../../../Senparc.Areas.Admin/Areas/Admin/Pages/Shared/_Layout_Vue.cshtml');
 const workflowPageMarkup = fs.readFileSync(pagePath, 'utf8');
+const adminLayoutMarkup = fs.readFileSync(adminLayoutPath, 'utf8');
 const nodePickerTemplateOffset = workflowPageMarkup.indexOf('id="workflow-node-picker-template"');
 const workflowRootEndOffset = workflowPageMarkup.lastIndexOf('</div>\n\n@section scripts');
 
@@ -51,12 +59,20 @@ assert.match(workflowPageMarkup, /:data-node-id="node\.id"/,
     'Each Workflow node must expose its id so validation focus can target it.');
 assert.ok(workflowPageMarkup.includes('工作流变量'),
     'Workflow settings must expose declared workflow variables.');
-assert.ok(workflowPageMarkup.includes('调用工作流'),
+assert.ok(workflowPageMarkup.includes('调用工作流') || workflowScript.includes('调用工作流'),
     'The picker and node inspector must expose the sub-workflow node.');
 assert.ok(workflowPageMarkup.includes('安全代码'),
     'The picker and node inspector must expose the constrained Safe Code node.');
+assert.ok(workflowScript.includes("type: 'human-input'") && workflowPageMarkup.includes("selectedNode.type==='human-input'"),
+    'The picker and node inspector must expose the native human-input system node.');
+assert.ok(workflowPageMarkup.includes('X-NeuChar-Workflow-Resume-Key'),
+    'The human-input inspector must document the key-protected external resume contract.');
 assert.ok(workflowPageMarkup.includes('A2A'),
     'Remote A2A objects must be visually distinguishable in the picker.');
+assert.ok(workflowPageMarkup.includes('node-input-continue') && workflowPageMarkup.includes('node-input-break'),
+    'Loop-end nodes must expose separate continue and break input ports.');
+assert.ok(workflowPageMarkup.includes('node-output-break') && workflowPageMarkup.includes('breakOn'),
+    'Condition nodes must expose a break output and an explicit break condition.');
 
 const axiosInterceptors = {};
 const axiosSandbox = {
@@ -64,7 +80,11 @@ const axiosSandbox = {
         create() {
             return {
                 interceptors: {
-                    request: { use() {} },
+                    request: {
+                        use(success) {
+                            axiosInterceptors.request = success;
+                        }
+                    },
                     response: {
                         use(success, failure) {
                             axiosInterceptors.failure = failure;
@@ -81,7 +101,7 @@ const axiosSandbox = {
         reject(value) { return { rejected: value }; },
         resolve(value) { return { resolved: value }; }
     },
-    console: { log() {} }
+    console: { log() {}, error() {} }
 };
 vm.createContext(axiosSandbox);
 vm.runInContext(fs.readFileSync(adminAxiosPath, 'utf8'), axiosSandbox, { filename: adminAxiosPath });
@@ -93,6 +113,52 @@ const validationResponseError = {
 const interceptedValidationError = axiosInterceptors.failure(validationResponseError);
 assert.strictEqual(interceptedValidationError.rejected, validationResponseError,
     'A customAlert validation request must bypass the legacy global app message handler and reach Workflow unchanged.');
+const ordinaryResponseError = {
+    message: 'Request failed with status code 500',
+    config: {},
+    response: { status: 500, data: 'AIModel is unavailable.' }
+};
+const interceptedOrdinaryError = axiosInterceptors.failure(ordinaryResponseError);
+assert.strictEqual(interceptedOrdinaryError.rejected, ordinaryResponseError,
+    'A shared Axios error must remain the original request error when no global app message API is available.');
+const requestConfig = { method: 'post', headers: {} };
+const requestWithToken = axiosInterceptors.request(requestConfig);
+assert.strictEqual(requestWithToken.headers.RequestVerificationToken, 'token',
+    'The shared Axios request interceptor must attach an available anti-forgery token.');
+const missingTokenSandbox = {
+    ...axiosSandbox,
+    window: { document: { getElementsByName() { return []; } } }
+};
+const missingTokenInterceptors = {};
+missingTokenSandbox.axios = {
+    create() {
+        return {
+            interceptors: {
+                request: {
+                    use(success) {
+                        missingTokenInterceptors.request = success;
+                    }
+                },
+                response: { use() {} }
+            }
+        };
+    }
+};
+vm.createContext(missingTokenSandbox);
+vm.runInContext(fs.readFileSync(adminAxiosPath, 'utf8'), missingTokenSandbox, { filename: adminAxiosPath });
+const requestWithoutToken = missingTokenInterceptors.request({ method: 'post', headers: {} });
+assert.deepStrictEqual(requestWithoutToken.headers, { 'x-requested-with': 'XMLHttpRequest' },
+    'The shared Axios request interceptor must not throw when the page token is not parsed yet.');
+assert.match(adminLayoutMarkup, /src="~\/js\/Admin\/axios\.js"\s+asp-append-version="true"/,
+    'The shared Axios script must use a versioned URL so browsers do not retain an old interceptor after deployment.');
+const tokenOffset = adminLayoutMarkup.indexOf('@Html.AntiForgeryToken()');
+const pageScriptsOffset = adminLayoutMarkup.indexOf('@RenderSection("scripts", false)');
+assert.ok(tokenOffset >= 0 && pageScriptsOffset > tokenOffset,
+    'The shared anti-forgery token must be emitted before page scripts can issue an initial POST.');
+assert.ok(workflowScript.includes('AIModelAppService/Xncf.AIKernel_AIModelAppService.GetListAsync') &&
+    workflowScript.includes('{ customAlert: true }') &&
+    workflowScript.includes('模型列表暂不可用'),
+    'Optional Workflow model loading must bypass the legacy global alert and leave the designer usable on failure.');
 
 let vueOptions = null;
 function Vue(options) { vueOptions = options; }
@@ -141,12 +207,62 @@ assert.match(registeredVueComponents['workflow-rich-text-input'].template, /@mou
     'Formula editor controls must keep their pointer completion event away from the canvas handler.');
 assert.match(workflowPageMarkup, /@@mouseup\.native\.stop/,
     'Pointer events inside the formula dialog must not reach the global canvas pointer handler.');
+assert.ok(workflowScript.includes("name: 'toArray'") && workflowScript.includes("name: 'flatten'"),
+    'The formula picker should expose the shared array helpers.');
+assert.ok(workflowPageMarkup.includes('template-editor-formulas') &&
+    workflowPageMarkup.includes('insertTemplateFormula(formula)') &&
+    workflowPageMarkup.includes('openCodeAssignmentTemplateEditor'),
+    'Safe Code assignments should reuse the common formula dialog and its quick-insert catalog.');
 assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('subWorkflowTargets()'),
     'The designer must provide valid target workflows to the sub-workflow selector.');
 assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('openSubWorkflow(workflowId)'),
     'The sub-workflow selector must support opening a target workflow in a separate tab.');
 assert.ok(fs.readFileSync(stylePath, 'utf8').includes('node-a2a'),
     'The canvas must assign remote A2A nodes their own visual style.');
+assert.ok(fs.readFileSync(stylePath, 'utf8').includes('node-human-input'),
+    'The canvas must assign human-input nodes their own visual style.');
+
+let previewEvent = null;
+const nodePickerMethods = registeredVueComponents['workflow-node-picker'].methods;
+const nodePicker = registeredVueComponents['workflow-node-picker'];
+const nodePickerContext = Object.assign({
+    functions: [
+        { functionName: '摘要', moduleName: 'PromptRange', description: '生成摘要', functionKey: 'summary', moduleUid: 'prompt-range' }
+    ],
+    objects: [
+        { providerId: 'agents-manager', objectId: 'agent:1', kind: 'agent', name: '客服 Agent', description: '处理客服问题', metadata: { type: '独立 Agent' } },
+        { providerId: 'agents-manager', objectId: 'group:2', kind: 'agent-group', name: '销售 Group', description: '销售协作组', metadata: { type: 'Agent 组' } },
+        { providerId: 'agents-manager', objectId: 'a2a:3', kind: 'a2a', name: '远程助手', description: 'Remote A2A endpoint', metadata: { type: '远程 A2A Agent' } }
+    ],
+    pinnedFunctionKeys: [],
+    module: '',
+    keyword: ''
+}, nodePicker.data(), nodePickerMethods);
+assert.strictEqual(nodePicker.computed.filteredObjects.call(Object.assign({}, nodePickerContext, { keyword: 'group' })).length, 1,
+    'The shared node search should match Agent groups by their name and kind metadata.');
+assert.strictEqual(nodePicker.computed.filteredObjects.call(Object.assign({}, nodePickerContext, { keyword: 'a2a' })).length, 1,
+    'The shared node search should match remote A2A objects by protocol/type text.');
+assert.strictEqual(nodePicker.computed.filteredSystemNodes.call(Object.assign({}, nodePickerContext, { keyword: '循环' })).length, 2,
+    'The shared node search should include system nodes by their visible names.');
+assert.strictEqual(nodePicker.computed.filteredSystemNodes.call(Object.assign({}, nodePickerContext, { keyword: '人工输入' })).length, 1,
+    'The shared node search should surface the human-input system node.');
+assert.strictEqual(nodePicker.computed.filteredFunctions.call(Object.assign({}, nodePickerContext, { keyword: '摘要' })).length, 1,
+    'The shared node search should retain Function name matching.');
+nodePickerMethods.previewNode.call({
+    functionIdentity: nodePickerMethods.functionIdentity,
+    nodePreviewKey: nodePickerMethods.nodePreviewKey,
+    previewAnchor: nodePickerMethods.previewAnchor,
+    $emit(...args) { previewEvent = args; }
+}, 'function', { moduleUid: 'module-1', functionKey: 'sample' }, 'hover', {
+    currentTarget: {
+        getBoundingClientRect() {
+            return { left: 120, top: 80, right: 260, bottom: 124, width: 140, height: 44 };
+        }
+    }
+});
+assert.strictEqual(JSON.stringify(previewEvent[1].anchor), JSON.stringify({
+    left: 120, top: 80, right: 260, bottom: 124, width: 140, height: 44
+}), 'Node previews should retain the hovered palette button bounds for collision-aware placement.');
 
 const scheduledWorkflow = { triggerType: 'interval', enabled: true, nextRunAt: '2026-08-12T12:15:00Z' };
 const workflowScheduleContext = {
@@ -447,6 +563,7 @@ const connectionContext = {
     makeId() { return 'new-edge'; },
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    targetHandleFor: vueOptions.methods.targetHandleFor,
     wouldCreateCycle: vueOptions.methods.wouldCreateCycle
 };
 connectionContext.canConnect = (...args) => vueOptions.methods.canConnect.call(connectionContext, ...args);
@@ -463,6 +580,7 @@ const parallelContext = {
     makeId(prefix) { return `${prefix}-${this.form.graph.edges.length + 1}`; },
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    targetHandleFor: vueOptions.methods.targetHandleFor,
     wouldCreateCycle: vueOptions.methods.wouldCreateCycle
 };
 parallelContext.canConnect = (...args) => vueOptions.methods.canConnect.call(parallelContext, ...args);
@@ -483,24 +601,62 @@ assert.match(vueOptions.methods.systemNodePreview.call({}, 'loop', '循环（For
 const loopEndNode = vueOptions.methods.createSimpleNode.call({ makeId(type) { return `${type}-1`; } }, 'loop-end', '循环结束');
 assert.strictEqual(loopEndNode.type, 'loop-end',
     'The designer should provide an explicit loop-end boundary node.');
-assert.match(vueOptions.methods.systemNodePreview.call({}, 'loop-end', '循环结束').description, /最后一个循环体节点/,
-    'The loop-end preview should explain that the following nodes run after all iterations.');
+assert.strictEqual(loopEndNode.config.loopId, '',
+    'A new loop-end node should start without an owner so single-layer loops can be auto-detected.');
+assert.match(vueOptions.methods.systemNodePreview.call({}, 'loop-end', '循环结束').description, /continue.*break/,
+    'The loop-end preview should explain its continue and break inputs.');
+const conditionNode = vueOptions.methods.createSimpleNode.call({ makeId(type) { return `${type}-1`; } }, 'condition', '条件判断');
+assert.strictEqual(conditionNode.config.breakOn, '',
+    'A new condition node should leave loop breaking disabled until configured.');
+assert.match(vueOptions.methods.systemNodePreview.call({}, 'condition', '条件判断').description, /真.*假.*break/,
+    'The condition preview should explain its true, false and break outputs.');
 const loopValidationContext = {
     form: {
         name: '循环测试',
         triggerType: 'manual',
         graph: {
-            nodes: [{ id: 'trigger', type: 'manual-trigger' }, { id: 'loop', type: 'loop', name: '循环', config: { count: 101 } }],
+            nodes: [{ id: 'trigger', type: 'manual-trigger' }, { id: 'loop', type: 'loop', name: '循环', config: { count: 100001 } }],
             edges: [{ id: 'edge-1', source: 'trigger', target: 'loop' }]
         }
     },
     getDisconnectedNodes() { return []; },
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
-    isBinding: vueOptions.methods.isBinding
+    isBinding: vueOptions.methods.isBinding,
+    isTemplateValue: vueOptions.methods.isTemplateValue
 };
-assert.match(vueOptions.methods.validate.call(loopValidationContext, { requireRunnable: true }), /1 到 100/,
+assert.match(vueOptions.methods.validate.call(loopValidationContext, { requireRunnable: true }), /1 到 100000/,
     'The designer should reject a static loop count outside the safe range before run.');
+const formulaLoopValidationContext = {
+    ...loopValidationContext,
+    form: {
+        ...loopValidationContext.form,
+        graph: {
+            ...loopValidationContext.form.graph,
+            nodes: [
+                { id: 'trigger', type: 'manual-trigger' },
+                {
+                    id: 'loop',
+                    type: 'loop',
+                    name: '循环',
+                    config: {
+                        count: {
+                            $template: {
+                                text: '{{= toInt( toNumber(vars.end) - toNumber(vars.number)) }}',
+                                bindings: []
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    templateFor: vueOptions.methods.templateFor,
+    loopCountFormulaValidationError: vueOptions.methods.loopCountFormulaValidationError,
+    loopBoundaryValidationError() { return ''; }
+};
+assert.strictEqual(vueOptions.methods.validate.call(formulaLoopValidationContext, { requireRunnable: true }), '',
+    'The designer should accept a complete workflow-variable formula as a dynamic loop count.');
 
 const boundedLoopValidationContext = {
     form: {
@@ -526,11 +682,119 @@ const boundedLoopValidationContext = {
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
     isBinding: vueOptions.methods.isBinding,
+    isTemplateValue: vueOptions.methods.isTemplateValue,
     loopBoundaryNodes: vueOptions.methods.loopBoundaryNodes,
     loopBoundaryValidationError: vueOptions.methods.loopBoundaryValidationError
 };
 assert.strictEqual(vueOptions.methods.validate.call(boundedLoopValidationContext, { requireRunnable: true }), '',
     'A loop with a linear body and explicit loop-end should pass designer validation.');
+
+const breakLoopValidationContext = {
+    form: {
+        name: '条件跳出循环测试',
+        triggerType: 'manual',
+        graph: {
+            nodes: [
+                { id: 'trigger', type: 'manual-trigger' },
+                { id: 'loop', type: 'loop', name: '循环', config: { count: 5 } },
+                { id: 'condition', type: 'condition', name: '条件', config: { breakOn: 'true' } },
+                { id: 'body', type: 'delay', name: '循环体' },
+                { id: 'loop-end', type: 'loop-end', name: '循环结束', config: { loopId: 'loop' } },
+                { id: 'after', type: 'console', name: '循环后' }
+            ],
+            edges: [
+                { id: 'edge-1', source: 'trigger', target: 'loop' },
+                { id: 'edge-2', source: 'loop', target: 'condition' },
+                { id: 'edge-3', source: 'condition', target: 'body', sourceHandle: 'false' },
+                { id: 'edge-4', source: 'condition', target: 'loop-end', sourceHandle: 'break', targetHandle: 'break' },
+                { id: 'edge-5', source: 'body', target: 'loop-end', targetHandle: 'continue' },
+                { id: 'edge-6', source: 'loop-end', target: 'after' }
+            ]
+        }
+    },
+    getDisconnectedNodes() { return []; },
+    incomingEdges: vueOptions.methods.incomingEdges,
+    supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    isBinding: vueOptions.methods.isBinding,
+    isTemplateValue: vueOptions.methods.isTemplateValue,
+    loopBoundaryNodes: vueOptions.methods.loopBoundaryNodes,
+    loopBoundaryValidationError: vueOptions.methods.loopBoundaryValidationError
+};
+assert.strictEqual(vueOptions.methods.validate.call(breakLoopValidationContext, { requireRunnable: true }), '',
+    'A condition break routed to the current loop-end break input should pass designer validation.');
+
+const loopScopeGraph = {
+    nodes: [
+        { id: 'trigger', type: 'manual-trigger' },
+        { id: 'outer-loop', type: 'loop', name: '外层循环' },
+        { id: 'inner-loop', type: 'loop', name: '内层循环' },
+        { id: 'inner-body', type: 'delay' },
+        { id: 'inner-end', type: 'loop-end', config: { loopId: 'inner-loop' } },
+        { id: 'outer-body', type: 'console' },
+        { id: 'outer-end', type: 'loop-end', config: { loopId: 'outer-loop' } },
+        { id: 'after', type: 'end' }
+    ],
+    edges: [
+        { source: 'trigger', target: 'outer-loop' },
+        { source: 'outer-loop', target: 'inner-loop' },
+        { source: 'inner-loop', target: 'inner-body' },
+        { source: 'inner-body', target: 'inner-end', targetHandle: 'continue' },
+        { source: 'inner-end', target: 'outer-body' },
+        { source: 'outer-body', target: 'outer-end', targetHandle: 'continue' },
+        { source: 'outer-end', target: 'after' }
+    ]
+};
+const loopScopeContext = {
+    form: { graph: loopScopeGraph },
+    loopBoundaryNodes: vueOptions.methods.loopBoundaryNodes,
+    loopScopeNodeIds: vueOptions.methods.loopScopeNodeIds
+};
+const outerLoop = loopScopeGraph.nodes.find(node => node.id === 'outer-loop');
+const innerLoop = loopScopeGraph.nodes.find(node => node.id === 'inner-loop');
+const outerScopeIds = vueOptions.methods.loopScopeNodeIds.call(loopScopeContext, outerLoop);
+const innerScopeIds = vueOptions.methods.loopScopeNodeIds.call(loopScopeContext, innerLoop);
+assert.ok(outerScopeIds.includes('inner-body') && outerScopeIds.includes('outer-end') && !outerScopeIds.includes('after'),
+    'An outer loop scope should include a nested loop body through the inner boundary but stop at its own boundary.');
+assert.ok(innerScopeIds.includes('inner-body') && innerScopeIds.includes('inner-end') && !innerScopeIds.includes('outer-body'),
+    'An inner loop scope should stop at its explicitly owned loop-end.');
+const affectingContext = {
+    ...loopScopeContext,
+    loopsAffectingNode: vueOptions.methods.loopsAffectingNode
+};
+assert.deepStrictEqual(
+    vueOptions.methods.loopsAffectingNode.call(affectingContext, loopScopeGraph.nodes.find(node => node.id === 'inner-body')).map(node => node.id),
+    ['outer-loop', 'inner-loop'],
+    'Selecting a node inside a nested loop should identify every enclosing loop label.');
+
+let highlightTimer = null;
+const previousHighlightTimeout = sandbox.window.setTimeout;
+sandbox.window.setTimeout = (callback, delay) => {
+    highlightTimer = { callback, delay };
+    return highlightTimer;
+};
+const highlightContext = {
+    ...affectingContext,
+    loopHighlight: { nodeIds: [], labelNodeIds: [], edgeIds: [] },
+    loopHighlightTimer: null,
+    loopHighlightSequence: 0,
+    clearLoopHighlight: vueOptions.methods.clearLoopHighlight,
+    highlightLoopContext: vueOptions.methods.highlightLoopContext,
+    loopScopeLabelNodeIds: vueOptions.methods.loopScopeLabelNodeIds,
+    isLoopScopeHighlighted: vueOptions.methods.isLoopScopeHighlighted,
+    isLoopLabelHighlighted: vueOptions.methods.isLoopLabelHighlighted
+};
+vueOptions.methods.highlightLoopContext.call(highlightContext, loopScopeGraph.nodes.find(node => node.id === 'inner-body'));
+assert.ok(highlightContext.loopHighlight.labelNodeIds.includes('outer-loop') &&
+    highlightContext.loopHighlight.labelNodeIds.includes('outer-end') &&
+    highlightContext.loopHighlight.labelNodeIds.includes('inner-loop') &&
+    highlightContext.loopHighlight.labelNodeIds.includes('inner-end'),
+    'Selecting a nested loop node should temporarily highlight both its own and all enclosing loop labels.');
+assert.strictEqual(highlightTimer.delay, 3500,
+    'Loop scope highlighting should automatically disappear after a short hint interval.');
+highlightTimer.callback();
+assert.strictEqual(highlightContext.loopHighlight.nodeIds.length, 0,
+    'The loop scope highlight should clear when its hint interval expires.');
+sandbox.window.setTimeout = previousHighlightTimeout;
 
 const branchSource = { id: 'condition', type: 'condition' };
 const branchTarget = { id: 'target', type: 'delay' };
@@ -538,16 +802,31 @@ const branchContext = {
     form: { graph: { nodes: [branchSource, branchTarget], edges: [{ source: 'condition', target: 'target', sourceHandle: 'true' }] } },
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    targetHandleFor: vueOptions.methods.targetHandleFor,
     wouldCreateCycle: vueOptions.methods.wouldCreateCycle
 };
 assert.strictEqual(vueOptions.methods.canConnect.call(branchContext, branchSource, branchTarget, 'false'), false,
     'A second condition branch must not create two inputs on an ordinary node.');
+
+const loopEndTarget = { id: 'loop-end-target', type: 'loop-end' };
+const breakConnectionContext = {
+    form: { graph: { nodes: [branchSource, loopEndTarget], edges: [] } },
+    incomingEdges: vueOptions.methods.incomingEdges,
+    supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    targetHandleFor: vueOptions.methods.targetHandleFor,
+    wouldCreateCycle: vueOptions.methods.wouldCreateCycle
+};
+assert.strictEqual(vueOptions.methods.canConnect.call(breakConnectionContext, branchSource, loopEndTarget, 'break'), true,
+    'A condition break output should be able to target a loop-end break input.');
+assert.strictEqual(vueOptions.methods.canConnect.call(breakConnectionContext, { id: 'body', type: 'delay' }, loopEndTarget, 'default', 'break'), false,
+    'An ordinary loop-body node must not be able to target the loop-end break input.');
 
 const functionTarget = { id: 'function-target', type: 'function' };
 const functionBranchContext = {
     form: { graph: { nodes: [branchSource, functionTarget], edges: [{ source: 'condition', target: 'function-target', sourceHandle: 'true' }] } },
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    targetHandleFor: vueOptions.methods.targetHandleFor,
     wouldCreateCycle: vueOptions.methods.wouldCreateCycle
 };
 assert.strictEqual(vueOptions.methods.canConnect.call(functionBranchContext, branchSource, functionTarget, 'false'), true,
@@ -567,6 +846,7 @@ const insertionContext = {
     makeId(prefix) { generatedEdgeNumber += 1; return `${prefix}-${generatedEdgeNumber}`; },
     incomingEdges: vueOptions.methods.incomingEdges,
     supportsMultipleInputs: vueOptions.methods.supportsMultipleInputs,
+    targetHandleFor: vueOptions.methods.targetHandleFor,
     wouldCreateCycle: vueOptions.methods.wouldCreateCycle,
     isHorizontalLayout() { return false; },
     closeEdgeInsertMenu: vueOptions.methods.closeEdgeInsertMenu,
@@ -672,6 +952,28 @@ vueOptions.methods.hideHoveredNodePreview.call(nodePreviewContext, 'system:delay
 assert.strictEqual(nodePreviewContext.nodePreview.visible, false, 'A hover-only node detail preview should close when leaving that block.');
 sandbox.window.setTimeout = originalSetTimeout;
 
+const originalViewport = { width: sandbox.window.innerWidth, height: sandbox.window.innerHeight };
+sandbox.window.innerWidth = 1000;
+sandbox.window.innerHeight = 700;
+const previewStyleFor = anchor => vueOptions.computed.nodePreviewStyle.call({ nodePreview: { anchor } });
+const rightPreviewStyle = previewStyleFor({ left: 100, top: 100, right: 220, bottom: 140, width: 120, height: 40 });
+assert.ok(Number.parseFloat(rightPreviewStyle.left) > 220 && rightPreviewStyle.transform === 'translate(0, 0)',
+    'A node preview should prefer the available space to the right of its palette button.');
+const leftPreviewStyle = previewStyleFor({ left: 760, top: 100, right: 900, bottom: 140, width: 140, height: 40 });
+assert.ok(Number.parseFloat(leftPreviewStyle.left) < 760,
+    'A node preview should move to the left when the right side cannot fit the popup.');
+sandbox.window.innerWidth = 600;
+const belowPreviewStyle = previewStyleFor({ left: 220, top: 100, right: 340, bottom: 140, width: 120, height: 40 });
+assert.strictEqual(belowPreviewStyle.top, '152px',
+    'When neither side has room, a node preview should use the available space below the button.');
+const abovePreviewStyle = previewStyleFor({ left: 220, top: 500, right: 340, bottom: 540, width: 120, height: 40 });
+assert.ok(Number.parseFloat(abovePreviewStyle.top) < 500,
+    'When below the button cannot fit, a node preview should use the available space above it.');
+if (originalViewport.width === undefined) delete sandbox.window.innerWidth;
+else sandbox.window.innerWidth = originalViewport.width;
+if (originalViewport.height === undefined) delete sandbox.window.innerHeight;
+else sandbox.window.innerHeight = originalViewport.height;
+
 const duplicateNode = { id: 'node-1', type: 'delay', name: '等待', x: 80, y: 120, config: { seconds: 3 } };
 const duplicateContext = {
     editingLocked: false,
@@ -752,6 +1054,20 @@ vueOptions.methods.setSelectedNodes.call(unchangedSelectionContext, [selectionNo
 assert.strictEqual(unchangedSelectionContext.selectedNodeIds, unchangedSelectionIds,
     'Selecting the already-selected node must not replace the reactive selection array.');
 
+const editingNode = { id: 'editing-node', type: 'delay' };
+const editingNodeContext = {
+    editing: true,
+    editingLocked: false,
+    inspectorCollapsed: false,
+    selectedNodeId: 'editing-node'
+};
+assert.strictEqual(vueOptions.methods.isNodeBeingEdited.call(editingNodeContext, editingNode), true,
+    'The current inspector target should expose the active editing state on the canvas node.');
+assert.strictEqual(vueOptions.methods.isNodeBeingEdited.call({ ...editingNodeContext, inspectorCollapsed: true }, editingNode), false,
+    'A selected node should not be marked as being edited while the inspector is collapsed.');
+assert.strictEqual(vueOptions.methods.isNodeBeingEdited.call({ ...editingNodeContext, selectedNodeId: 'other-node' }, editingNode), false,
+    'Only the node currently shown in the inspector should expose the active editing state.');
+
 const formulaPointerContext = {
     canvasPan: { active: false, moved: false },
     selectionBox: { active: true, startX: 10, startY: 10, endX: 20, endY: 20, additive: false },
@@ -778,7 +1094,8 @@ const formulaOpenContext = {
     clearSelectionBox: vueOptions.methods.clearSelectionBox,
     clearCanvasPointerInteraction: vueOptions.methods.clearCanvasPointerInteraction,
     isBinding() { return false; },
-    templateFor() { return null; }
+    templateFor() { return null; },
+    openTemplateEditorForValue: vueOptions.methods.openTemplateEditorForValue
 };
 vueOptions.methods.openNodeTemplateEditor.call(formulaOpenContext, {
     id: 'selection-a',
@@ -1070,21 +1387,23 @@ assert.ok(page.includes('@@drag-node="beginPaletteNodeDrag"') && page.includes('
     'Node-picker blocks should be draggable onto the canvas and handled by one insertion drop path.');
 assert.ok(page.includes('@@preview-node="showNodePreview"') && page.includes('@@dblclick="selectFunction(fn)"') && page.includes('nodePreviewDetails.actionText'),
     'Node picker blocks should preview on the first interaction and reserve double-click for adding a node.');
-assert.ok(page.includes("selectSystem('condition','条件判断')"), 'The shared picker should expose condition nodes.');
-assert.ok(page.includes("selectSystem('loop','循环（For）')") && page.includes('重复次数（For）') && page.includes('loopCountOutputOptions()'),
+assert.ok(page.includes('filteredSystemNodes') && workflowScript.includes("type: 'condition', name: '条件判断'"), 'The shared picker should expose condition nodes.');
+assert.ok(workflowScript.includes("type: 'loop', name: '循环（For）'") && page.includes('重复次数（For）') && page.includes('loopCountOutputOptions()') &&
+    page.includes(':max="100000"') && workflowScript.includes('MaxWorkflowLoopIterations = 100000'),
     'The shared picker should expose a novice-friendly bounded For loop with a selectable upstream count.');
-assert.ok(page.includes("selectSystem('aggregate','聚合')"), 'The shared picker should expose multi-input aggregate nodes.');
-assert.ok(page.includes("selectSystem('parallel','并行')"), 'The shared picker should expose a parallel fan-out node.');
-assert.ok(page.includes("selectSystem('console','Console 打印')"), 'The shared picker should expose console output nodes.');
-assert.ok(page.includes("selectSystem('neubell','发送纽铃')"), 'The shared picker should expose a NeuBell notification node.');
-assert.ok(page.includes("selectSystem('end','结束')"), 'The shared picker should expose end nodes.');
+assert.ok(workflowScript.includes("type: 'aggregate', name: '聚合'"), 'The shared picker should expose multi-input aggregate nodes.');
+assert.ok(workflowScript.includes("type: 'parallel', name: '并行'"), 'The shared picker should expose a parallel fan-out node.');
+assert.ok(workflowScript.includes("type: 'console', name: 'Console 打印'"), 'The shared picker should expose console output nodes.');
+assert.ok(workflowScript.includes("type: 'neubell', name: '发送纽铃'"), 'The shared picker should expose a NeuBell notification node.');
+assert.ok(workflowScript.includes("type: 'end', name: '结束'"), 'The shared picker should expose end nodes.');
 assert.ok(page.includes('class="edge-delete"'), 'Every edge should expose a midpoint delete control.');
 assert.ok(page.includes('class="edge-insert"') && page.includes('workflow-edge-insert-menu'),
     'Every edge should expose a plus action that opens an inline insertion picker.');
 assert.ok(styles.includes('.workflow-edge-insert-menu') && styles.includes('.edge-insert'),
     'The inline picker and plus action should receive dedicated canvas styles.');
-assert.ok(styles.includes('.workflow-node-preview') && styles.includes('rgba(28, 42, 59, .80)'),
-    'Node detail previews should use the centered translucent overlay treatment.');
+assert.ok(page.includes(':style="nodePreviewStyle"') && fs.readFileSync(scriptPath, 'utf8').includes('getBoundingClientRect') &&
+    styles.includes('.workflow-node-preview') && styles.includes('rgba(28, 42, 59, .80)'),
+    'Node detail previews should anchor near the hovered button and use the translucent overlay treatment.');
 assert.ok(page.includes("'is-hover-preview':nodePreview.mode==='hover'") &&
     /\.workflow-node-preview\.is-hover-preview\s*\{[^}]*pointer-events:\s*none;/s.test(styles),
     'Hover-only node previews must not intercept the pointer, so covered palette buttons remain clickable without flicker.');
@@ -1102,11 +1421,15 @@ assert.ok(page.includes('按设置自动排版</button>') && page.includes('就�
     'The canvas shortcut menu should surface the common overflow layout actions.');
 assert.ok(page.includes('onCanvasMouseDown') && page.includes('class="workflow-selection-box"') && page.includes('selectedNodeIds'),
     'The canvas should expose a drag-selection rectangle and a multi-node selection state.');
+assert.ok(page.includes("'is-editing':isNodeBeingEdited(node)") && workflowScript.includes('isNodeBeingEdited(node)'),
+    'The canvas should distinguish the node currently being edited from the rest of the selection.');
 assert.ok(page.includes('openNodeContextMenu'), 'Nodes should expose a context menu on right click.');
 assert.ok(page.includes('class="workflow-context-menu"'), 'The node context menu should be rendered in the workflow page.');
 assert.ok(page.includes('>复制</button>') && page.includes('>删除</button>'), 'The node context menu should expose copy and delete actions.');
 assert.ok(styles.includes('.workflow-selection-box') && styles.includes('.workflow-node.is-multi-selected'),
     'Multi-selection should have a visible marquee and selected-node treatment.');
+assert.ok(styles.includes('.workflow-node.is-editing') && styles.includes('outline-offset: 3px'),
+    'The node currently being edited should have a distinct outer focus treatment.');
 assert.ok(styles.includes('.workflow-canvas-context-menu') && styles.includes('.workflow-canvas-node-insert-menu'),
     'Canvas shortcut commands and the contextual node picker should share dedicated styles.');
 assert.ok(page.includes('value="webhook"'), 'Workflow trigger settings should expose a Webhook mode.');
@@ -1140,6 +1463,58 @@ assert.ok(page.includes('@@command="handleWorkflowAction"') && page.includes('�
 assert.ok(page.includes('selectedWorkflowObject'), 'Agent nodes should show the selected workflow object details.');
 assert.ok(page.includes('openWorkflowObjectEditor'), 'Agent nodes should expose an edit action.');
 assert.ok(page.includes('workflow-object-card'), 'Agent nodes should render a compact basic information card.');
+assert.ok(page.includes('selectedNode.config.humanInTheLoopLevel') &&
+    page.includes('selectedNode.config.pluginToolPermission') &&
+    page.includes('selectedNode.config.mcpToolPermission') &&
+    page.includes('selectedNode.config.includeHumanParticipant'),
+    'Local Agent and Group nodes should expose the same HIL and tool permission controls as AgentsManager.');
+const workflowAgentNode = vueOptions.methods.createObjectNode.call({
+    makeId() { return 'agent-node'; }
+}, {
+    providerId: 'agents-manager',
+    objectId: 'agent:42',
+    kind: 'agent',
+    name: '审批 Agent',
+    metadata: { supportsHumanInTheLoop: 'true', supportsHumanParticipant: 'false' }
+});
+assert.deepStrictEqual(JSON.parse(JSON.stringify(workflowAgentNode.config)), {
+    providerId: 'agents-manager',
+    objectId: 'agent:42',
+    prompt: '处理以下输入：{{input}}',
+    aiModelId: null,
+    personality: true,
+    allowFunctionCalls: false,
+    humanInTheLoopLevel: 0,
+    pluginToolPermission: 0,
+    mcpToolPermission: 0,
+    includeHumanParticipant: false,
+    chatMaxRound: 20
+}, 'New independent Agent nodes should preserve the legacy no-tools default while retaining explicit HIL policy fields.');
+const legacyGroupNode = { type: 'agent-group', config: {} };
+vueOptions.methods.ensureWorkflowObjectPolicyConfig.call({
+    $set(target, key, value) { target[key] = value; }
+}, legacyGroupNode);
+assert.strictEqual(legacyGroupNode.config.allowFunctionCalls, true);
+assert.strictEqual(legacyGroupNode.config.aiModelId, 0);
+assert.strictEqual(legacyGroupNode.config.personality, false,
+    'Existing Group nodes should keep their original task-model execution behavior until explicitly changed.');
+assert.strictEqual(legacyGroupNode.config.humanInTheLoopLevel, 0);
+assert.strictEqual(legacyGroupNode.config.includeHumanParticipant, false,
+    'Legacy Group nodes should receive stable automatic HIL defaults without enabling Human turns unexpectedly.');
+assert.strictEqual(legacyGroupNode.config.chatMaxRound, 20,
+    'Legacy Group nodes should retain the existing 20-round runtime default.');
+assert.ok(page.includes('selectedNode.config.aiModelId') && page.includes('selectedNode.config.personality'),
+    'Workflow Agent and Group nodes should expose a task model plus the per-Agent model binding switch.');
+const agentManagerPage = fs.readFileSync(
+    path.resolve(__dirname,
+        '../../../../../src/Extensions/Senparc.Xncf.AgentsManager/Areas/Admin/Pages/AgentsManager/Index.cshtml'),
+    'utf8');
+const groupDrawerStart = agentManagerPage.indexOf('<el-drawer :visible.sync="visible.drawerGroup"');
+const groupDrawerEnd = agentManagerPage.indexOf('</el-drawer>', groupDrawerStart);
+assert.ok(groupDrawerStart >= 0 && groupDrawerEnd > groupDrawerStart,
+    'AgentsManager Group editor should retain a distinct drawer boundary.');
+assert.ok(!agentManagerPage.slice(groupDrawerStart, groupDrawerEnd).includes('agentForm.modelBinding'),
+    'Agent model binding controls must not be rendered inside the Group editor.');
 assert.ok(vueOptions.methods.workflowObjectEditUrl, 'Workflow objects should expose a safe editor URL resolver.');
 assert.strictEqual(vueOptions.methods.workflowObjectEditUrl.call({}, { editUrl: 'https://example.invalid' }), '',
     'Workflow object edit links must not open arbitrary external URLs.');
@@ -1254,6 +1629,59 @@ assert.strictEqual(templateSaveNode.config.parameters.message, '固定文本',
     'A removed placeholder must be saved as ordinary text rather than an invalid template that the server rejects.');
 assert.strictEqual(templateSaveContext.templateEditor.visible, false,
     'Applying a normalized template should still close the explicit variable editor.');
+const formulaInsertContext = {
+    editingLocked: false,
+    templateEditor: { text: 'hello world', selectionStart: 6, selectionEnd: 11 },
+    templateEditorInputElement() { return null; },
+    $nextTick() { }
+};
+vueOptions.methods.insertTemplateFormula.call(formulaInsertContext,
+    { name: 'toArray', arity: 1 });
+assert.strictEqual(formulaInsertContext.templateEditor.text, 'hello {{= toArray(world) }}',
+    'Selecting text before clicking a formula should wrap the selection as the first argument.');
+formulaInsertContext.templateEditor.text = "{{= upper(split(vars.msg, ',')) }}";
+formulaInsertContext.templateEditor.selectionStart = 0;
+formulaInsertContext.templateEditor.selectionEnd = formulaInsertContext.templateEditor.text.length;
+vueOptions.methods.insertTemplateFormula.call(formulaInsertContext,
+    { name: 'toArray', arity: 1 });
+assert.strictEqual(formulaInsertContext.templateEditor.text,
+    "{{= toArray(upper(split(vars.msg, ','))) }}",
+    'Selecting an existing whole formula should remove its old template wrapper before applying the new formula.');
+formulaInsertContext.templateEditor.text = "{{= upper(split(vars.msg, ',')) }}";
+formulaInsertContext.templateEditor.selectionStart = 3;
+formulaInsertContext.templateEditor.selectionEnd = formulaInsertContext.templateEditor.text.length - 3;
+vueOptions.methods.insertTemplateFormula.call(formulaInsertContext,
+    { name: 'toArray', arity: 1 });
+assert.strictEqual(formulaInsertContext.templateEditor.text,
+    "{{= toArray(upper(split(vars.msg, ','))) }}",
+    'Selecting only the expression inside an external formula wrapper should replace the whole wrapper instead of nesting it.');
+formulaInsertContext.templateEditor.text = '';
+formulaInsertContext.templateEditor.selectionStart = 0;
+formulaInsertContext.templateEditor.selectionEnd = 0;
+vueOptions.methods.insertTemplateFormula.call(formulaInsertContext,
+    { name: 'substring', arity: 3 });
+assert.strictEqual(formulaInsertContext.templateEditor.text, '{{= substring(, , ) }}',
+    'Multi-argument formulas should leave editable empty argument positions when no text is selected.');
+const assignmentSaveNode = { id: 'code-node', config: { assignments: [{ name: 'result', value: '' }] } };
+const assignmentSaveContext = {
+    templateEditor: {
+        visible: true,
+        nodeId: 'code-node',
+        configKey: 'assignments',
+        targetType: 'code-assignment',
+        assignmentIndex: 0,
+        text: '{{= toArray(input) }}',
+        bindings: []
+    },
+    form: { graph: { nodes: [assignmentSaveNode] } },
+    normalizeTemplateBindings: vueOptions.methods.normalizeTemplateBindings,
+    templateUsesBindingToken: vueOptions.methods.templateUsesBindingToken,
+    $set(target, key, value) { target[key] = value; }
+};
+vueOptions.methods.saveParameterTemplate.call(assignmentSaveContext);
+assert.strictEqual(assignmentSaveNode.config.assignments[0].value.$template.text,
+    '{{= toArray(input) }}',
+    'Safe Code formula edits should persist through the shared template contract.');
 assert.doesNotThrow(() => vueOptions.methods.setConfigBinding.call({
     form: { graph: { nodes: [] } },
     nodeOutputFields() { return []; },
@@ -1296,6 +1724,16 @@ assert.ok(page.includes("selectedNode.config.title") && page.includes("selectedN
     'NeuBell title/content and Agent Prompt should use the shared formula text input.');
 assert.ok(styles.includes('.workflow-rich-text-input') && styles.includes('.workflow-rich-text-info'),
     'Formula text inputs should have a distinct visual treatment and an info icon.');
+assert.ok(styles.includes('container-type: inline-size') &&
+    styles.includes('@container (max-width: 360px)') &&
+    styles.includes('.workflow-rich-text-input-control { flex-direction: column; }'),
+    'Shared formula inputs should stack their textarea and editor action when the Inspector makes the component narrow.');
+assert.ok(styles.includes('@container (max-width: 560px)') &&
+    styles.includes('.workflow-code-assignment-row { grid-template-columns: minmax(0, 1fr); }'),
+    'Safe Code assignment rows should stack variable, formula input, and delete action in narrow containers.');
+assert.ok(styles.includes('@container (max-width: 440px)') &&
+    styles.includes('.workflow-function-actions { width: 100%; flex-wrap: wrap; }'),
+    'Function and Agent object cards should let action buttons wrap instead of squeezing their titles.');
 assert.ok(fs.readFileSync(scriptPath, 'utf8').includes('$template'),
     'The designer should persist mixed text binding values with an explicit template contract.');
 assert.ok(!page.includes("{{'{{'+item.token+'}}'}}"),
@@ -1326,7 +1764,7 @@ assert.ok(tasksScript.includes("neuBellProvider") && tasksScript.includes("servi
 assert.ok(sourceIncludesFitOnLoad(), 'Editing an existing workflow should fit all nodes after its canvas has rendered.');
 assert.ok(page.includes('自动保存'), 'Workflow settings should expose the auto-save interval.');
 assert.ok(page.includes(':precision="0"'), 'The auto-save editor must only accept whole minutes so a fractional interval cannot create a rapid save loop.');
-assert.ok(page.includes("selectSystem('loop-end','循环结束')") && page.includes('循环体边界'),
+assert.ok(workflowScript.includes("type: 'loop-end', name: '循环结束'") && page.includes('循环体边界'),
     'The designer should expose an explicit loop-end node and explain its continuation semantics.');
 assert.ok(page.includes('Command/Ctrl + S'), 'Workflow save should advertise the system save shortcut.');
 assert.ok(!page.includes(':visible.sync="runDialogVisible"'),
@@ -1406,10 +1844,9 @@ assert.strictEqual(tasksVueOptions.computed.hasRunningTasks.call({ tasks: taskRo
 const filteredTaskRows = tasksVueOptions.computed.filteredTasks.call({ tasks: taskRows, keyword: '失败', statusFilter: 'failed' });
 assert.strictEqual(filteredTaskRows.length, 1,
     'Task search and status filtering should compose without hiding matching failed tasks.');
-let liveReplayMessage = '';
-tasksVueOptions.methods.openTask.call({ $message: { info(message) { liveReplayMessage = message; } } }, taskRows[0]);
-assert.match(liveReplayMessage, /运行结束后/,
-    'An active task must wait for completion rather than opening an incomplete replay.');
+tasksVueOptions.methods.openTask.call({ $message: { warning() {} } }, taskRows[0]);
+assert.match(navigatedTaskUrl, /NeuCharWorkflow\/Index\?workflowId=21&runId=f6d7e0a2-4f33-46f8-a9e3-116a272bab58/,
+    'An active task must reopen the locked Workflow editor and resume live status polling.');
 tasksVueOptions.methods.openTask.call({}, taskRows[1]);
 assert.match(navigatedTaskUrl, /NeuCharWorkflow\/Replay\?executionLogId=88/,
     'Opening a completed task should navigate to its immutable run replay instead of the live editor.');
@@ -1421,8 +1858,21 @@ const runCoordinator = fs.readFileSync(runCoordinatorPath, 'utf8');
 const workflowEngine = fs.readFileSync(workflowEnginePath, 'utf8');
 assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=List') && tasksPage.includes('回看运行'),
     'The task page should expose a task-list endpoint and an explicit replay action.');
+assert.ok(tasksPage.includes('当前工作流 #{{workflowIdFilter}}') &&
+    fs.readFileSync(tasksScriptPath, 'utf8').includes('workflowIdFilter') &&
+    fs.readFileSync(tasksScriptPath, 'utf8').includes('workflowId=${encodeURIComponent(this.workflowIdFilter)}') &&
+    fs.readFileSync(tasksScriptPath, 'utf8').includes('status=${encodeURIComponent(this.statusFilter)}') &&
+    tasksPage.includes('正在运行') &&
+    workflowAppService.includes('int? workflowId = null') &&
+    workflowAppService.includes('run.WorkflowId == workflowId.Value'),
+    'The task list should apply a workflow-scoped server query for direct links from detail and replay pages.');
 assert.ok(tasksPage.includes('@@click.stop="abortTask(scope.row)"') && fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=Abort'),
     'The task page should expose a manual abort action for active runs.');
+assert.match(tasksPage, /src="~\/js\/NeuCharWorkflow\/Tasks\.js"\s+asp-append-version="true"/,
+    'The task abort script must use a versioned URL so browsers receive the latest restart-recovery behavior.');
+assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('executionLogId: task.executionLogId || null') &&
+    workflowAppService.includes('GetUnfinishedByIdAsync'),
+    'A persisted running task must remain abortable after the process that owned its run ID has restarted.');
 assert.ok(tasksPage.includes('没有更多记录') && tasksPage.includes('快速清理') &&
     fs.readFileSync(tasksScriptPath, 'utf8').includes('beforeExecutionLogId') &&
     fs.readFileSync(tasksScriptPath, 'utf8').includes('loadMoreTasks') &&
@@ -1435,28 +1885,53 @@ assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=CleanupPrev
     'Quick cleanup should preview then delete only completed task logs, never active tasks.');
 assert.ok(page.includes('@@click="abortWorkflow"') && fs.readFileSync(scriptPath, 'utf8').includes('handler=AbortRun'),
     'The workflow editor should keep a visible abort action while a test run is active.');
+assert.ok(page.includes('运行中 {{form.runningCount}}') &&
+    workflowScript.includes("openWorkflowTasks(status)") &&
+    workflowScript.includes("query.set('status', status)") &&
+    workflowScript.includes('snapshot.runningCount') &&
+    workflowAppService.includes('GetActiveRunCount') &&
+    runCoordinator.includes('public int GetActiveRunCount') &&
+    runCoordinator.includes('RunningCount = GetActiveRunCount'),
+    'The Workflow detail page should expose the active run count and link directly to its running-task filter.');
+assert.ok(!runCoordinator.includes('当前工作流已有运行正在执行'),
+    'A Workflow must be able to register more than one active run at the same time.');
+assert.ok(page.includes('@@click="openWorkflowTasks"') &&
+    workflowScript.includes("new URLSearchParams({ workflowId: String(workflowId) })"),
+    'The Workflow detail page should jump directly to a list containing only its own tasks.');
 assert.match(tasksStyles, /\.workflow-task-table \.el-table__row\s*\{[^}]*cursor:\s*pointer;/s,
     'Task rows should make their workflow-board navigation discoverable.');
 assert.ok(workflowAppService.includes('GetTaskListAsync') && workflowAppService.includes('WorkflowTaskListItem'),
     'The application service should combine execution task data behind a dedicated contract.');
+assert.ok(workflowAppService.includes('private static DateTimeOffset ToUtcOffset') &&
+    workflowAppService.includes('DateTimeOffset StartedAt') &&
+    workflowAppService.includes('ToUtcOffset(log.StartedAt)'),
+    'Persisted Workflow timestamps must be serialized with an explicit UTC offset so browsers render them in the local time zone.');
 assert.ok(workflowAppService.includes('GetReplayAsync') && workflowAppService.includes('CopyReplayAsDraftAsync'),
     'The application service should retrieve immutable task replays and create a disabled editable draft from them.');
 assert.ok(runCoordinator.includes('GetActiveRuns') && runCoordinator.includes('NeuCharWorkflowActiveRun'),
     'The task list should use the coordinator for currently running node-level task state.');
-assert.ok(runCoordinator.includes('TryAbort') && runCoordinator.includes('手动中止') && workflowAppService.includes('AbortRun'),
-    'Manual aborts should be authorized by run ID and persisted as an explicit failed result.');
-assert.ok(page.includes("'merge','逐项合流'") && page.includes('汇总输出内容') &&
-    fs.readFileSync(scriptPath, 'utf8').includes("['aggregate', 'merge', 'function']") &&
-    fs.readFileSync(scriptPath, 'utf8').includes('outputTemplate'),
+assert.ok(runCoordinator.includes('TryAbort') && runCoordinator.includes('手动中止') &&
+    workflowAppService.includes('AbortRunAsync') &&
+    workflowAppService.includes('GetUnfinishedByRunIdAsync') &&
+    workflowAppService.includes('aborted-after-restart'),
+    'Manual aborts should cancel live runs and finalize abandoned persisted runs after a restart.');
+assert.ok(workflowScript.includes("type: 'merge', name: '逐项合流'") && page.includes('汇总输出内容') &&
+    workflowScript.includes("['aggregate', 'merge', 'function', 'loop-end']") &&
+    workflowScript.includes('outputTemplate'),
     'The designer should distinguish once-only aggregation from per-item merge and expose aggregate output content.');
 assert.ok(page.includes('Console 打印内容') && page.includes('仅影响 Console 展示，不改变下游输入') &&
     fs.readFileSync(scriptPath, 'utf8').includes("printTemplate: '{{input}}'") &&
     workflowEngine.includes('ResolveConsolePrintOutput') && workflowEngine.includes('"printTemplate"'),
     'The Console node should expose a configurable print template while preserving its raw downstream input.');
 assert.ok(workflowEngine.includes('"merge"') && workflowEngine.includes('MaxStreamActivations') &&
+    workflowEngine.includes('MaxReplayEvents') && workflowEngine.includes('5_000') &&
     workflowEngine.includes('ResolveAggregateOutput') && workflowEngine.includes('ValidateAggregateOutputTemplate') &&
     workflowEngine.includes('不能位于逐项合流节点之后'),
-    'The engine should serially propagate merge activations, validate aggregate output templates, and reject ambiguous merge-to-aggregate chains.');
+    'The engine should serially propagate merge activations, retain at least 5000 replay events, validate aggregate output templates, and reject ambiguous merge-to-aggregate chains.');
+assert.ok(runCoordinator.includes('MaxLiveRunEvents') &&
+    fs.readFileSync(scriptPath, 'utf8').includes('MaxWorkflowConsoleEvents') &&
+    fs.readFileSync(scriptPath, 'utf8').includes('const MaxWorkflowConsoleEvents = 5000'),
+    'Live Workflow Console and server-side run snapshots should retain at least 5000 events.');
 assert.ok(workflowEngine.includes('MaxLoopIterations') && workflowEngine.includes('TryResolveLoopCount') &&
     workflowEngine.includes('循环或逐项合流产生的执行次数超过') &&
     workflowEngine.includes('不能位于循环节点之后'),
@@ -1466,14 +1941,29 @@ const replayScript = fs.readFileSync(replayScriptPath, 'utf8');
 const replayStyles = fs.readFileSync(replayStylePath, 'utf8');
 assert.ok(replayPage.includes('只读运行回看') && replayPage.includes('复制当前工作流并编辑') && replayPage.includes('查看最新工作流'),
     'The separate replay page should clearly be read-only and expose both requested exit actions.');
+assert.ok(replayPage.includes('查看此工作流任务') &&
+    replayScript.includes('Tasks?workflowId=${encodeURIComponent(this.replay.workflowId)}'),
+    'The replay page should jump directly to a list containing only the replayed Workflow tasks.');
 assert.ok(replayPage.includes('workflow-replay-canvas') && replayPage.includes('执行步骤'),
     'The replay page should render the frozen workflow canvas and a step timeline.');
 assert.ok(replayScript.includes('togglePlayback') && replayScript.includes('nextStep') && replayScript.includes('rebuildNodeStates'),
     'The replay client should play node events one step at a time and project their states onto the frozen canvas.');
+assert.ok(replayScript.includes('visibleTimelineEvents') && replayScript.includes('timelineRenderLimit') &&
+    replayPage.includes('v-for="(item,index) in visibleTimelineEvents"') &&
+    replayPage.includes('asp-append-version="true"'),
+    'Large replays should bound the initial timeline DOM and load a versioned replay client asset.');
 assert.ok(replayStyles.includes('.workflow-replay-node.state-running') && replayStyles.includes('.workflow-replay-timeline-item.active'),
     'Replay styling should visually distinguish active nodes and the selected timeline step.');
 assert.ok(replayPage.includes('输入参数') && replayPage.includes('currentEvent.input'),
     'The replay detail panel should show the recorded input parameters alongside output.');
+assert.ok(replayPage.includes('查看 Agent Group 对话') &&
+    replayScript.includes('openAgentGroupConversation') &&
+    fs.readFileSync(scriptPath, 'utf8').includes('hasAgentGroupConversation(event)') &&
+    fs.readFileSync(agentsWorkflowObjectProviderPath, 'utf8').includes('RunChatGroupAwaitWithResultAsync') &&
+    fs.readFileSync(agentsWorkflowObjectProviderPath, 'utf8').includes('WorkflowObjectExecutionReference') &&
+    workflowEngine.includes('ObjectReference') &&
+    fs.readFileSync(workflowObjectContractsPath, 'utf8').includes('ChatTaskId'),
+    'Agent Group Workflow events should retain the ChatTask reference so live Console and replay can open the persisted conversation.');
 assert.ok(replayScript.includes('centerCurrentNode') && replayScript.includes("behavior: 'smooth'"),
     'Selecting or playing a replay step should smoothly center its node in the canvas viewport.');
 assert.match(replayStyles, /\.workflow-replay-canvas-wrap\s*\{[^}]*scroll-behavior:\s*smooth;/s,
@@ -1575,8 +2065,14 @@ async function verifyUnsavedChangeGuards() {
     const source = fs.readFileSync(scriptPath, 'utf8');
     assert.ok(source.includes("window.addEventListener('beforeunload', this.onBeforeUnload)"),
         'The workflow editor should subscribe to browser leave-page confirmation.');
-    assert.ok(source.includes("window.removeEventListener('beforeunload', this.onBeforeUnload)"),
+assert.ok(source.includes("window.removeEventListener('beforeunload', this.onBeforeUnload)"),
         'The workflow editor should remove its leave-page confirmation listener when destroyed.');
+    assert.ok(workflowPageMarkup.includes('@@click="refreshWorkflowList"'),
+        'Refreshing the Workflow list should use the lightweight list-only request.');
+    assert.match(source, /async refreshWorkflowList\(\)[\s\S]*?handler=List[\s\S]*?finally \{ this\.loading = false; \}/,
+        'The Workflow list refresh should not wait for DesignerData or AIModel metadata.');
+    assert.match(source, /this\.loadDesignerData\(\);\s*this\.loadChatModels\(\);/,
+        'Initial page loading should start optional designer metadata without blocking the list.');
     assert.match(source, /async editWorkflow\(id\)\s*\{\s*if \(this\.editingLocked \|\| this\.saveState\.saving \|\| Number\(id\) === Number\(this\.form\.id\)\) return;\s*if \(!await this\.confirmDiscardChanges\('切换工作流'\)\) return;/s,
         'Switching workflows should ask before discarding unsaved changes.');
 
@@ -1635,7 +2131,66 @@ async function verifyUnsavedChangeGuards() {
         'The compact overflow menu should retain the fit-canvas action.');
 }
 
-verifyUnsavedChangeGuards()
+async function verifyWorkflowHumanInteractionSubmission() {
+    const submittedRequests = [];
+    sandbox.service.post = async (url, body, options) => {
+        submittedRequests.push({ url, body, options });
+        return { data: { success: true } };
+    };
+
+    const humanTurnContext = {
+        run: {
+            runId: 'a08b0f18-1e76-42d4-aa1b-d0aaee5a9071',
+            humanReplyRequest: { requestId: 'human-turn-1', requestType: 'humanTurn' },
+            humanReplyInput: '  补充给 Group 的 Human 输入  ',
+            humanReplySubmitting: false,
+            humanInteractions: [{ requestId: 'human-turn-1', requestType: 'humanTurn' }],
+            humanReplyVisible: true
+        },
+        requiresHumanTextInput: vueOptions.methods.requiresHumanTextInput,
+        errorMessage(error) { return error.message; },
+        $notify() { }
+    };
+
+    await vueOptions.methods.resolveHumanInteraction.call(humanTurnContext, true);
+    assert.strictEqual(submittedRequests.length, 1,
+        'Submitting a Human turn should issue one workflow resolution request.');
+    assert.strictEqual(submittedRequests[0].url, '/Admin/NeuCharWorkflow/Index?handler=ResolveHuman');
+    assert.deepStrictEqual(JSON.parse(JSON.stringify(submittedRequests[0].body)), {
+        runId: 'a08b0f18-1e76-42d4-aa1b-d0aaee5a9071',
+        requestId: 'human-turn-1',
+        approved: true,
+        input: '补充给 Group 的 Human 输入',
+        reason: 'Workflow 快速输入'
+    }, 'Human turns should submit trimmed input and the workflow-input reason without referencing an undefined variable.');
+
+    const approvalContext = {
+        run: {
+            runId: 'a08b0f18-1e76-42d4-aa1b-d0aaee5a9071',
+            humanReplyRequest: { requestId: 'tool-approval-1', requestType: 'toolApproval', prompt: '允许调用工具' },
+            humanReplyInput: '不应发送为工具审批输入',
+            humanReplySubmitting: false,
+            humanInteractions: [{ requestId: 'tool-approval-1', requestType: 'toolApproval' }],
+            humanReplyVisible: true
+        },
+        requiresHumanTextInput: vueOptions.methods.requiresHumanTextInput,
+        errorMessage(error) { return error.message; },
+        $notify() { }
+    };
+
+    await vueOptions.methods.resolveHumanInteraction.call(approvalContext, false);
+    assert.strictEqual(submittedRequests.length, 2,
+        'Rejecting a tool approval should issue a separate workflow resolution request.');
+    assert.deepStrictEqual(JSON.parse(JSON.stringify(submittedRequests[1].body)), {
+        runId: 'a08b0f18-1e76-42d4-aa1b-d0aaee5a9071',
+        requestId: 'tool-approval-1',
+        approved: false,
+        input: '',
+        reason: 'Workflow 快速审批'
+    }, 'Tool approvals should keep the approval reason and omit Human text input.');
+}
+
+Promise.all([verifyUnsavedChangeGuards(), verifyWorkflowHumanInteractionSubmission()])
     .then(() => console.log('NeuChar Workflow designer tests passed.'))
     .catch(error => {
         console.error(error);

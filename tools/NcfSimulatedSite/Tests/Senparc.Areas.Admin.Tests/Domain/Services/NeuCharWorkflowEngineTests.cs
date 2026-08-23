@@ -19,6 +19,73 @@ namespace Senparc.Areas.Admin.Tests.Domain.Services;
 public class NeuCharWorkflowEngineTests
 {
     [TestMethod]
+    public void ParseAndValidateGraph_HumanInputNode_ShouldNormalizeExternalResumeSettings()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "human", "type": "human-input", "name": "补充信息", "config": { "externalResumeEnabled": true, "externalResumeKey": "resume-key" } }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "human" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+        var node = graph.Nodes.Single(z => z.Id == "human");
+
+        Assert.AreEqual("Workflow 等待人工输入", node.Config["title"]!.GetValue<string>());
+        Assert.AreEqual("请补充必要信息：{{input}}", node.Config["prompt"]!.GetValue<string>());
+        Assert.IsTrue(node.Config["externalResumeEnabled"]!.GetValue<bool>());
+        Assert.AreEqual("resume-key", node.Config["externalResumeKey"]!.GetValue<string>());
+    }
+
+    [TestMethod]
+    public async Task ValidateReferencesAsync_HumanInputNodeWithoutExternalKey_ShouldBeRejected()
+    {
+        var engine = CreateEngine();
+        var graph = engine.ParseAndValidateGraph(
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"human", "type":"human-input", "config":{ "externalResumeEnabled":true } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"human" }] }""");
+
+        var error = await engine.ValidateReferencesAsync(graph);
+
+        StringAssert.Contains(error, "未设置恢复密钥");
+    }
+
+    [TestMethod]
+    public async Task HumanInputService_ExternalResolution_ShouldRequireKeyAndCompleteRequest()
+    {
+        var service = new NeuCharWorkflowHumanInputService();
+        var pending = service.Create(
+            7,
+            "workflow-7-run-42",
+            13,
+            "human-node",
+            "人工补充",
+            "请提供工单号",
+            true,
+            "resume-key");
+
+        Assert.AreEqual(0, service.GetExternalPending(7, "incorrect-key").Count);
+        Assert.AreEqual(pending.RequestId, service.GetExternalPending(7, "resume-key").Single().RequestId);
+
+        var rejected = await service.ResolveFromExternalAsync(pending.RequestId, "incorrect-key", true, "T-100");
+        Assert.IsFalse(rejected.Success);
+
+        var resolved = await service.ResolveFromExternalAsync(pending.RequestId, "resume-key", true, "T-100");
+        var decision = await pending.Completion;
+
+        Assert.IsTrue(resolved.Success);
+        Assert.IsTrue(decision.Approved);
+        Assert.AreEqual("T-100", decision.Input);
+        Assert.AreEqual(0, service.GetExternalPending(7, "resume-key").Count);
+    }
+
+    [TestMethod]
     public void ParseAndValidateGraph_ValidLinearGraph_ShouldNormalizeConfig()
     {
         var engine = CreateEngine();
@@ -368,6 +435,78 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public void ParseAndValidateGraph_ConditionBreak_ShouldUseLoopEndBreakInput()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "loop", "type": "loop", "config": { "count": 5 } },
+                { "id": "condition", "type": "condition", "config": { "breakOn": "true" } },
+                { "id": "body", "type": "delay" },
+                { "id": "loop-end", "type": "loop-end", "config": { "loopId": "loop" } },
+                { "id": "after", "type": "console" },
+                { "id": "end", "type": "end" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "loop" },
+                { "id": "edge-2", "source": "loop", "target": "condition" },
+                { "id": "edge-3", "source": "condition", "target": "body", "sourceHandle": "false" },
+                { "id": "edge-4", "source": "condition", "target": "loop-end", "sourceHandle": "break", "targetHandle": "break" },
+                { "id": "edge-5", "source": "body", "target": "loop-end", "targetHandle": "continue" },
+                { "id": "edge-6", "source": "loop-end", "target": "after" },
+                { "id": "edge-7", "source": "after", "target": "end" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+
+        Assert.AreEqual("break", graph.Edges.Single(edge => edge.Id == "edge-4").SourceHandle);
+        Assert.AreEqual("break", graph.Edges.Single(edge => edge.Id == "edge-4").TargetHandle);
+        Assert.AreEqual("continue", graph.Edges.Single(edge => edge.Id == "edge-5").TargetHandle);
+    }
+
+    [TestMethod]
+    public void ParseAndValidateGraph_NestedLoops_ShouldValidateEachExplicitBoundary()
+    {
+        var engine = CreateEngine();
+        const string graphJson =
+            """
+            {
+              "nodes": [
+                { "id": "trigger", "type": "manual-trigger" },
+                { "id": "outer-loop", "type": "loop", "config": { "count": 2 } },
+                { "id": "inner-loop", "type": "loop", "config": { "count": 3 } },
+                { "id": "inner-body", "type": "delay" },
+                { "id": "inner-end", "type": "loop-end", "config": { "loopId": "inner-loop" } },
+                { "id": "outer-body", "type": "console" },
+                { "id": "outer-end", "type": "loop-end", "config": { "loopId": "outer-loop" } },
+                { "id": "after", "type": "console" },
+                { "id": "end", "type": "end" }
+              ],
+              "edges": [
+                { "id": "edge-1", "source": "trigger", "target": "outer-loop" },
+                { "id": "edge-2", "source": "outer-loop", "target": "inner-loop" },
+                { "id": "edge-3", "source": "inner-loop", "target": "inner-body" },
+                { "id": "edge-4", "source": "inner-body", "target": "inner-end", "targetHandle": "continue" },
+                { "id": "edge-5", "source": "inner-end", "target": "outer-body" },
+                { "id": "edge-6", "source": "outer-body", "target": "outer-end", "targetHandle": "continue" },
+                { "id": "edge-7", "source": "outer-end", "target": "after" },
+                { "id": "edge-8", "source": "after", "target": "end" }
+              ]
+            }
+            """;
+
+        var graph = engine.ParseAndValidateGraph(graphJson);
+
+        Assert.AreEqual("inner-loop", graph.Nodes.Single(node => node.Id == "inner-end").Config["loopId"]!.GetValue<string>());
+        Assert.AreEqual("outer-loop", graph.Nodes.Single(node => node.Id == "outer-end").Config["loopId"]!.GetValue<string>());
+    }
+
+    [TestMethod]
     public void ParseAndValidateGraph_LoopBoundaryWithBranch_ShouldBeRejected()
     {
         var engine = CreateEngine();
@@ -406,11 +545,11 @@ public class NeuCharWorkflowEngineTests
     {
         var engine = CreateEngine();
         var graph = engine.ParseAndValidateGraph(
-            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"loop", "type":"loop", "name":"循环", "config":{ "count":101 } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"loop" }] }""");
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"loop", "type":"loop", "name":"循环", "config":{ "count":100001 } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"loop" }] }""");
 
         var error = await engine.ValidateReferencesAsync(graph);
 
-        StringAssert.Contains(error, "1 到 100");
+        StringAssert.Contains(error, "1 到 100000");
     }
 
     [TestMethod]
@@ -462,6 +601,69 @@ public class NeuCharWorkflowEngineTests
 
         Assert.IsTrue(success);
         Assert.AreEqual(4, (int)arguments[4]!);
+    }
+
+    [TestMethod]
+    public async Task LoopCount_ShouldResolveFormulaRuntimeValue()
+    {
+        var engine = CreateEngine();
+        var graph = engine.ParseAndValidateGraph(
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"loop", "type":"loop", "name":"循环", "config":{ "count":{ "$template":{ "text":"{{= toInt(input) }}", "bindings":[] } } } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"loop" }] }""");
+
+        Assert.IsNull(await engine.ValidateReferencesAsync(graph));
+
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "TryResolveLoopCount",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        object?[] arguments =
+        {
+            graph.Nodes.Single(node => node.Id == "loop").Config,
+            JsonValue.Create("4"),
+            new Dictionary<string, JsonNode>(),
+            new Dictionary<string, JsonNode>(),
+            0,
+            null
+        };
+
+        var success = (bool)method.Invoke(null, arguments)!;
+
+        Assert.IsTrue(success);
+        Assert.AreEqual(4, (int)arguments[4]!);
+    }
+
+    [TestMethod]
+    public async Task LoopCount_ShouldResolveFormulaUsingWorkflowVariables()
+    {
+        var engine = CreateEngine();
+        var graph = engine.ParseAndValidateGraph(
+            """{ "nodes":[{ "id":"trigger", "type":"manual-trigger" },{ "id":"loop", "type":"loop", "name":"循环", "config":{ "count":{ "$template":{ "text":"{{= toInt( toNumber(vars.end) - toNumber(vars.number)) }}", "bindings":[] } } } }], "edges":[{ "id":"edge-1", "source":"trigger", "target":"loop" }] }""");
+
+        Assert.IsNull(await engine.ValidateReferencesAsync(graph));
+
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "TryResolveLoopCount",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+        object?[] arguments =
+        {
+            graph.Nodes.Single(node => node.Id == "loop").Config,
+            JsonValue.Create("input"),
+            new Dictionary<string, JsonNode>
+            {
+                ["__workflow_variables__"] = new JsonObject
+                {
+                    ["end"] = 9,
+                    ["number"] = 4
+                }
+            },
+            new Dictionary<string, JsonNode>(),
+            0,
+            null
+        };
+
+        var success = (bool)method.Invoke(null, arguments)!;
+
+        Assert.IsTrue(success);
+        Assert.AreEqual(5, (int)arguments[4]!);
     }
 
     [TestMethod]
@@ -733,8 +935,7 @@ public class NeuCharWorkflowEngineTests
             null!,
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
             null!,
-            null!,
-            Array.Empty<IWorkflowObjectProvider>());
+            null!);
         var method = typeof(NeuCharWorkflowEngine).GetMethod(
             "ExecuteInFunctionScopeAsync",
             BindingFlags.Instance | BindingFlags.NonPublic)!.MakeGenericMethod(typeof(int));
@@ -748,6 +949,86 @@ public class NeuCharWorkflowEngineTests
 
         Assert.AreNotEqual(identities[0], identities[1],
             "Concurrent Function operations must not share the same scoped Function service/DbContext graph.");
+    }
+
+    [TestMethod]
+    public void Construction_ShouldNotResolveWorkflowObjectProviders()
+    {
+        var providerResolved = false;
+        var services = new ServiceCollection();
+        services.AddScoped<NeuCharWorkflowService>(_ => null!);
+        services.AddScoped<NeuCharWorkflowExecutionLogService>(_ => null!);
+        services.AddScoped<NeuCharWorkflowParameterProtector>(_ => null!);
+        services.AddScoped<IWorkflowObjectProvider>(_ =>
+        {
+            providerResolved = true;
+            return new CapturingWorkflowObjectProvider();
+        });
+        services.AddScoped<NeuCharWorkflowEngine>();
+        using var serviceProvider = services.BuildServiceProvider();
+        using var scope = serviceProvider.CreateScope();
+
+        _ = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowEngine>();
+
+        Assert.IsFalse(providerResolved,
+            "Workflow page construction must not instantiate external object providers or their dependency graph.");
+    }
+
+    [TestMethod]
+    public async Task AgentGroupExecution_ShouldPassHilPolicyThroughProviderParameters()
+    {
+        var provider = new CapturingWorkflowObjectProvider();
+        var services = new ServiceCollection();
+        services.AddSingleton<IWorkflowObjectProvider>(provider);
+        using var serviceProvider = services.BuildServiceProvider();
+        var engine = new NeuCharWorkflowEngine(
+            null!,
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            null!,
+            null!);
+        var workflow = new Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel.NeuCharWorkflow(
+            "HIL 参数测试",
+            37);
+        var node = new NeuCharWorkflowNode
+        {
+            Id = "group-node",
+            Type = "agent-group",
+            Name = "审批组",
+            Config = new JsonObject
+            {
+                ["providerId"] = provider.ProviderId,
+                ["objectId"] = "group:42",
+                ["prompt"] = "{{input}}",
+                [WorkflowObjectExecutionParameters.HumanInTheLoopLevel] = 3,
+                [WorkflowObjectExecutionParameters.PluginToolPermission] = 2,
+                [WorkflowObjectExecutionParameters.McpToolPermission] = 3,
+                [WorkflowObjectExecutionParameters.IncludeHumanParticipant] = true,
+                [WorkflowObjectExecutionParameters.ChatMaxRound] = 2
+            }
+        };
+        var method = typeof(NeuCharWorkflowEngine).GetMethod(
+            "ExecuteWorkflowObjectNodeAsync",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+        var invocation = (Task)method.Invoke(engine, new object[]
+        {
+            workflow,
+            node,
+            JsonValue.Create("继续处理")!,
+            new Dictionary<string, JsonNode>(),
+            new Dictionary<string, JsonNode>(),
+            "workflow-17-run-4f33d29e185c4f43b67c890af104674e",
+            CancellationToken.None
+        })!;
+
+        await invocation;
+
+        Assert.IsNotNull(provider.LastRequest);
+        Assert.AreEqual("3", provider.LastRequest.Parameters![WorkflowObjectExecutionParameters.HumanInTheLoopLevel]);
+        Assert.AreEqual("2", provider.LastRequest.Parameters[WorkflowObjectExecutionParameters.PluginToolPermission]);
+        Assert.AreEqual("3", provider.LastRequest.Parameters[WorkflowObjectExecutionParameters.McpToolPermission]);
+        Assert.AreEqual("True", provider.LastRequest.Parameters[WorkflowObjectExecutionParameters.IncludeHumanParticipant]);
+        Assert.AreEqual("2", provider.LastRequest.Parameters[WorkflowObjectExecutionParameters.ChatMaxRound]);
+        Assert.AreEqual(37, provider.LastRequest.AdminUserId);
     }
 
     [TestMethod]
@@ -1011,6 +1292,44 @@ public class NeuCharWorkflowEngineTests
     }
 
     [TestMethod]
+    public void TemplateExpression_ShouldSupportArrayAndObjectConversions()
+    {
+        var variables = new Dictionary<string, JsonNode>
+        {
+            ["item"] = JsonValue.Create("one"),
+            ["msg"] = JsonValue.Create("哈利波特"),
+            ["nested"] = JsonNode.Parse("""[1, [2, 3], 4]""")!,
+            ["object"] = JsonNode.Parse("""{ "first": 1, "second": 2 }""")!
+        };
+
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate("toArray(item)[0]", variables, out var arrayItem, out var error), error);
+        Assert.AreEqual("one", arrayItem!.GetValue<string>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate("flatten(nested)[2]", variables, out var flattenedItem, out error), error);
+        Assert.AreEqual(3, flattenedItem!.GetValue<int>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate("concat(toArray(item), nested)[1]", variables, out var concatenatedItem, out error), error);
+        Assert.AreEqual(1, concatenatedItem!.GetValue<int>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate("has(object, 'second')", variables, out var hasProperty, out error), error);
+        Assert.IsTrue(hasProperty!.GetValue<bool>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate("isEmpty(null)", variables, out var emptyValue, out error), error);
+        Assert.IsTrue(emptyValue!.GetValue<bool>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate("isNull(null)", variables, out var nullValue, out error), error);
+        Assert.IsTrue(nullValue!.GetValue<bool>());
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate(
+            "upper(split(msg, ','))",
+            variables,
+            out var upperArray,
+            out error), error);
+        Assert.AreEqual("[\"哈利波特\"]", upperArray!.GetValue<string>());
+        Assert.IsFalse(upperArray.GetValue<string>().Contains("\\U", StringComparison.Ordinal));
+        Assert.IsTrue(NeuCharWorkflowExpressionEngine.TryEvaluate(
+            "upper(last(split(msg, ',')))",
+            variables,
+            out var upperLast,
+            out error), error);
+        Assert.AreEqual("哈利波特", upperLast!.GetValue<string>());
+    }
+
+    [TestMethod]
     public async Task WorkflowVariablesAndSafeCode_ShouldRemainRunLocalAndRequireDeclaration()
     {
         var engine = CreateEngine();
@@ -1211,6 +1530,40 @@ public class NeuCharWorkflowEngineTests
         Assert.AreEqual("手动中止", snapshot.ErrorMessage);
     }
 
+    [TestMethod]
+    public void RunCoordinator_ShouldRetainLatest5000LiveEvents()
+    {
+        var runStateType = typeof(NeuCharWorkflowRunCoordinator).GetNestedType(
+            "RunState",
+            BindingFlags.NonPublic)!;
+        var constructor = runStateType.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Single();
+        var state = constructor.Invoke(new object[] { Guid.NewGuid(), 12, 34, string.Empty, "manual" });
+        var add = runStateType.GetMethod("Add", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!;
+        var timestamp = DateTimeOffset.UtcNow;
+
+        for (var index = 1; index <= 5_001; index++)
+        {
+            add.Invoke(state, new object[]
+            {
+                new NeuCharWorkflowProgress(
+                    $"node-{index}",
+                    "循环节点",
+                    "success",
+                    $"第 {index} 条",
+                    string.Empty,
+                    timestamp.AddTicks(index))
+            });
+        }
+
+        var snapshot = (NeuCharWorkflowRunSnapshot)runStateType.GetMethod("Snapshot")!
+            .Invoke(state, new object[] { 0L })!;
+
+        Assert.AreEqual(5_000, snapshot.Events.Count);
+        Assert.AreEqual(2L, snapshot.Events[0].Sequence);
+        Assert.AreEqual(5_001L, snapshot.Events[^1].Sequence);
+        Assert.AreEqual("第 2 条", snapshot.Events[0].Message);
+    }
+
     private static Task<AppResponseBase<List<SampleOutput>>> ListOutputFunction() => null!;
 
     private sealed class SampleOutput
@@ -1219,6 +1572,34 @@ public class NeuCharWorkflowEngineTests
         public List<string> Tags { get; set; } = new();
     }
 
+    private sealed class CapturingWorkflowObjectProvider : IWorkflowObjectProvider
+    {
+        public string ProviderId => "test-provider";
+        public WorkflowObjectExecutionRequest? LastRequest { get; private set; }
+
+        public ValueTask<IReadOnlyList<WorkflowObjectDescriptor>> GetObjectsAsync(
+            CancellationToken cancellationToken = default)
+            => ValueTask.FromResult<IReadOnlyList<WorkflowObjectDescriptor>>(
+                new[]
+                {
+                    new WorkflowObjectDescriptor(
+                        ProviderId,
+                        "group:42",
+                        "agent-group",
+                        "审批组",
+                        string.Empty,
+                        true)
+                });
+
+        public ValueTask<WorkflowObjectExecutionResult> ExecuteAsync(
+            WorkflowObjectExecutionRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            LastRequest = request;
+            return ValueTask.FromResult(new WorkflowObjectExecutionResult(true, "完成"));
+        }
+    }
+
     private static NeuCharWorkflowEngine CreateEngine() =>
-        new(null!, null!, null!, null!, Array.Empty<IWorkflowObjectProvider>());
+        new(null!, null!, null!, null!);
 }

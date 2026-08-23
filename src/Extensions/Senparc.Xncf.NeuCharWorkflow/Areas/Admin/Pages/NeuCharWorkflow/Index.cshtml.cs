@@ -10,6 +10,12 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 支持 Human Input 人工节点暂停与外部恢复
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -156,17 +162,38 @@ public class IndexModel(
         }
     }
 
-    public IActionResult OnGetRunStatus(Guid runId, long afterSequence = 0)
+    public async Task<IActionResult> OnGetRunStatusAsync(Guid runId, long afterSequence = 0)
     {
-        var snapshot = workflowAppService.GetRunStatus(runId, CurrentAdminUserId, afterSequence);
+        var snapshot = await workflowAppService.GetRunStatusAsync(
+            runId,
+            CurrentAdminUserId,
+            afterSequence,
+            HttpContext.RequestAborted).ConfigureAwait(false);
         return snapshot == null ? NotFound() : Ok(snapshot);
     }
 
-    public IActionResult OnPostAbortRun([FromBody] AbortWorkflowRunRequest request)
+    public async Task<IActionResult> OnPostResolveHumanAsync([FromBody] ResolveHumanWorkflowRequest request)
+    {
+        var result = await workflowAppService.ResolveHumanInteractionAsync(
+            request?.RunId ?? Guid.Empty,
+            CurrentAdminUserId,
+            request?.RequestId,
+            request?.Approved ?? false,
+            request?.Input,
+            request?.Reason,
+            HttpContext.RequestAborted).ConfigureAwait(false);
+        return result.Success ? Ok(result) : StatusCode(409, result.Message);
+    }
+
+    public async Task<IActionResult> OnPostAbortRunAsync([FromBody] AbortWorkflowRunRequest request)
     {
         try
         {
-            workflowAppService.AbortRun(request?.RunId ?? Guid.Empty, CurrentAdminUserId);
+            await workflowAppService.AbortRunAsync(
+                request?.RunId,
+                request?.ExecutionLogId,
+                CurrentAdminUserId,
+                HttpContext.RequestAborted).ConfigureAwait(false);
             return Ok(new { success = true });
         }
         catch (WorkflowConflictException ex)
@@ -215,6 +242,15 @@ public class IndexModel(
         public string? Input { get; set; }
     }
 
+    public sealed class ResolveHumanWorkflowRequest
+    {
+        public Guid RunId { get; set; }
+        public string? RequestId { get; set; }
+        public bool Approved { get; set; }
+        public string? Input { get; set; }
+        public string? Reason { get; set; }
+    }
+
     public sealed class DeleteWorkflowRequest
     {
         public int Id { get; set; }
@@ -222,6 +258,7 @@ public class IndexModel(
 
     public sealed class AbortWorkflowRunRequest
     {
-        public Guid RunId { get; set; }
+        public Guid? RunId { get; set; }
+        public int? ExecutionLogId { get; set; }
     }
 }

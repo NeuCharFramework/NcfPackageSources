@@ -6,6 +6,12 @@
 
     创建标识：Senparc - 20260808
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Domain.Services;
@@ -13,7 +19,7 @@ namespace Senparc.Xncf.Sandbox.Domain.Services;
 public static class SandboxJupyterPaths
 {
     /// <summary>
-    /// 对外代理前缀（相对站点根）。完整形态：/sandbox-jupyter/{sessionId}/lab
+    /// Jupyter 的 base_url 前缀。完整形态：/sandbox-jupyter/{sessionId}/lab
     /// </summary>
     public const string ProxyPrefix = "/sandbox-jupyter";
 
@@ -28,6 +34,21 @@ public static class SandboxJupyterPaths
     }
 
     public static string GetLabEntryUrl(string sessionId) => GetBaseUrl(sessionId) + "lab";
+
+    public static string GetDirectLabEntryUrl(string sessionId, int hostPort, string accessToken)
+    {
+        if (hostPort is < 1 or > 65535)
+        {
+            throw new ArgumentOutOfRangeException(nameof(hostPort), "hostPort 必须在 1 到 65535 之间。");
+        }
+
+        if (string.IsNullOrWhiteSpace(accessToken))
+        {
+            throw new ArgumentException("accessToken 不能为空。", nameof(accessToken));
+        }
+
+        return $"http://127.0.0.1:{hostPort}{GetLabEntryUrl(sessionId)}?token={Uri.EscapeDataString(accessToken)}";
+    }
 
     public static bool TryParse(string path, out string sessionId, out string remaining)
     {

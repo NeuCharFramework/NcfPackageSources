@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.8</Version>
+    <Version>0.0.9</Version>
     <PackageReleaseNotes>
 [2026-07-07] v0.0.1 Dependency updates from upstream modules
 1、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
@@ -22,8 +22,10 @@
 2、Dependency update from Senparc.Ncf.Service to 0.23.6-preview6
 3、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.19-preview.6
 [2026-08-13] v0.0.7 Dependency update from Senparc.Ncf.Service to 0.23.7-preview7; Senparc.Ncf.UnitTestExtension to 0.3.20-preview.7; Senparc.Xncf.PromptRange to 0.19.2-preview10
-[2026-08-15] v0.0.8 Dependency update from Senparc.Ncf.Service to 0.23.8-preview8; Senparc.Ncf.UnitTestExtension to 0.3.21-preview.8; Senparc.Xncf.PromptRange to 0.19.3-preview11
-</PackageReleaseNotes>
+[2026-08-15] v0.0.8 Dependency update from Senparc.Ncf.Service to 0.23.8-preview8; Senparc.Ncf.UnitTestExtension to 0.3.21-preview.8; Senparc.Xncf.PromptRange to 0.19.3
+[2026-08-22] v0.0.9 同步服务测试依赖并保持 Agents 相关回归覆盖
+1、更新测试项目依赖，兼容当前服务与 AgentsManager 版本
+    </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 

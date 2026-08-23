@@ -149,36 +149,81 @@
 
                     </el-scrollbar>
                     <div v-else-if="agentListViewMode === 'three'" class="agent-3d-wrap">
-                        <div class="agent-3d-controls">
-                            <el-select v-model="agentGraphFilterGroupId" size="mini" clearable placeholder="全部组" @@change="handleAgentGraphFilterChange">
-                                <el-option v-for="item in agentGraphGroupOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                            </el-select>
-                            <el-select v-model="agentGraphFilterTaskStatuses" size="mini" multiple collapse-tags placeholder="任务状态" @@change="handleAgentGraphFilterChange">
-                                <el-option label="等待" :value="0"></el-option>
-                                <el-option label="聊天中" :value="1"></el-option>
-                                <el-option label="暂停" :value="2"></el-option>
-                                <el-option label="完成" :value="3"></el-option>
-                                <el-option label="取消" :value="4"></el-option>
-                            </el-select>
-                            <el-checkbox v-model="agentGraphShowOnlyActiveGroup" @@change="handleAgentGraphFilterChange">仅运行中组</el-checkbox>
-                            <el-select v-model="quickJumpGroupId" size="mini" clearable filterable placeholder="快速进入组">
-                                <el-option v-for="item in quickJumpGroupOptions" :key="'qg-'+item.id" :label="item.name" :value="item.id"></el-option>
-                            </el-select>
-                            <el-button size="mini" type="primary" plain @@click="handleQuickJumpGroup">进入组</el-button>
-                            <el-select v-model="quickJumpTaskId" size="mini" clearable filterable placeholder="快速进入任务">
-                                <el-option v-for="item in quickJumpTaskOptions" :key="'qt-'+item.id" :label="item.name" :value="item.id"></el-option>
-                            </el-select>
-                            <el-button size="mini" type="success" plain @@click="handleQuickJumpTask">进入任务</el-button>
+                        <div class="agent-3d-header">
+                            <div class="agent-3d-controls">
+                                <el-select v-model="agentGraphFilterGroupId" size="mini" clearable placeholder="全部组" @@change="handleAgentGraphFilterChange">
+                                    <el-option v-for="item in agentGraphGroupOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                                </el-select>
+                                <el-select v-model="agentGraphFilterTaskStatuses" size="mini" multiple collapse-tags placeholder="任务状态" @@change="handleAgentGraphFilterChange">
+                                    <el-option label="等待" :value="0"></el-option>
+                                    <el-option label="聊天中" :value="1"></el-option>
+                                    <el-option label="暂停" :value="2"></el-option>
+                                    <el-option label="完成" :value="3"></el-option>
+                                    <el-option label="取消" :value="4"></el-option>
+                                </el-select>
+                                <el-checkbox v-model="agentGraphShowOnlyActiveGroup" @@change="handleAgentGraphFilterChange">仅运行中组</el-checkbox>
+                                <el-select v-model="quickJumpGroupId" size="mini" clearable filterable placeholder="快速进入组">
+                                    <el-option v-for="item in quickJumpGroupOptions" :key="'qg-'+item.id" :label="item.name" :value="item.id"></el-option>
+                                </el-select>
+                                <el-button size="mini" type="primary" plain @@click="handleQuickJumpGroup">进入组</el-button>
+                                <el-select v-model="quickJumpTaskId" size="mini" clearable filterable placeholder="快速进入任务">
+                                    <el-option v-for="item in quickJumpTaskOptions" :key="'qt-'+item.id" :label="item.name" :value="item.id"></el-option>
+                                </el-select>
+                                <el-button size="mini" type="success" plain @@click="handleQuickJumpTask">进入任务</el-button>
+                            </div>
+                            <div class="agent-3d-overview">
+                                <div class="agent-3d-overview__item agent">
+                                    <span>本地 Agent</span>
+                                    <strong>{{ agentGraphOverview.localActive }} / {{ agentGraphOverview.local }}</strong>
+                                    <small>{{ agentGraphOverview.localEnabled }} 个已启用</small>
+                                </div>
+                                <div class="agent-3d-overview__item a2a">
+                                    <span>远程 A2A</span>
+                                    <strong>{{ agentGraphOverview.remoteActive }} / {{ agentGraphOverview.remote }}</strong>
+                                    <small>{{ agentGraphOverview.remoteEnabled }} 个可用</small>
+                                </div>
+                                <div class="agent-3d-overview__item group">
+                                    <span>Agent 组</span>
+                                    <strong>{{ agentGraphOverview.groupsActive }} / {{ agentGraphOverview.groups }}</strong>
+                                    <small>{{ agentGraphOverview.groupsEnabled }} 个已启用</small>
+                                </div>
+                                <div class="agent-3d-overview__item task">
+                                    <span>任务与发布</span>
+                                    <strong>{{ agentGraphOverview.chattingTasks }} / {{ agentGraphOverview.activeTasks }}</strong>
+                                    <small>暂停 {{ agentGraphOverview.pausedTasks }} · HIL {{ agentGraphOverview.hilPending }}</small>
+                                    <small>A2A 发布 {{ agentGraphOverview.publishedEnabled }} / {{ agentGraphOverview.published }}</small>
+                                </div>
+                            </div>
+                            <div class="agent-3d-focus" v-if="agentGraphFocusedGroup">
+                                <strong>{{ agentGraphFocusedGroup.name }}</strong>
+                                <span>{{ agentGraphFocus.locked ? '已锁定' : '当前聚焦' }}</span>
+                                <span>运行中 {{ agentGraphFocusedGroup.runningTaskCount || 0 }}</span>
+                                <span>暂停 {{ agentGraphFocusedGroup.pausedTaskCount || 0 }}</span>
+                                <span>HIL等待 {{ agentGraphFocusedGroup.humanInTheLoopPendingCount || 0 }}</span>
+                                <span>成员 {{ (agentGraphFocusedGroup.memberParticipantKeys || agentGraphFocusedGroup.memberAgentIds || []).length }}</span>
+                            </div>
+                            <div class="agent-3d-agent-focus" v-if="agentGraphFocusedAgent">
+                                <strong>{{ agentGraphFocusedAgent.name }}</strong>
+                                <span>{{ agentGraphFocusedAgent.agentKind === 'RemoteA2A' ? '远程 A2A' : '本地 Agent' }}</span>
+                                <span>状态 {{ agentGraphFocusedAgent.humanInTheLoopPausedCount ? 'HIL等待' : agentGraphFocusedAgent.pausedCount ? '暂停' : agentGraphFocusedAgent.chattingCount ? '运行中' : '待命' }}</span>
+                                <span>技能 {{ agentGraphFocusedAgentSkills }}</span>
+                            </div>
+                            <div class="agent-3d-tip">悬停 Group 柱体可聚焦组成员；点击 Group 可锁定/取消锁定。颜色和流动光点分别表示 Agent 类型、启用状态与实时任务。</div>
                         </div>
-                        <div class="agent-3d-tip">悬停 Group 柱体可高亮组成员；点击 Group 可锁定/取消锁定；灰红柱体和“已停用”标签表示该组不会接收新任务或作为 Workflow 节点使用。</div>
                         <div class="agent-3d-legend">
                             <span class="legend-item"><i class="legend-dot waiting"></i>等待</span>
                             <span class="legend-item"><i class="legend-dot chatting"></i>聊天中</span>
                             <span class="legend-item"><i class="legend-dot paused"></i>暂停</span>
                             <span class="legend-item"><i class="legend-dot finished"></i>完成</span>
                             <span class="legend-item"><i class="legend-dot cancelled"></i>取消</span>
+                            <span class="legend-item"><i class="legend-dot hil-paused"></i>HIL等待</span>
                             <span class="legend-item"><i class="legend-dot group-enabled"></i>组已启用</span>
                             <span class="legend-item"><i class="legend-dot group-disabled"></i>组已停用</span>
+                            <span class="legend-item"><i class="legend-dot skill-function"></i>F</span>
+                            <span class="legend-item"><i class="legend-dot skill-workflow"></i>W</span>
+                            <span class="legend-item"><i class="legend-dot skill-plugin"></i>P</span>
+                            <span class="legend-item"><i class="legend-dot skill-mcp"></i>M</span>
+                            <span class="legend-item"><i class="legend-dot skill-a2a"></i>A2A</span>
                         </div>
                         <pre class="agent-3d-debug">{{ agentGraphDebugText }}</pre>
                         <div ref="agent3dContainer" class="agent-3d-canvas"></div>
@@ -611,7 +656,7 @@
                                                 </div>
                                                 <el-input v-model="agentGroupTaskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'agentGroupTask')"></el-input>
                                                 <div class="taskmain-members-title">
-                                                    机器人·{{ agentDetailsGroupTaskMemberList.length }}
+                                                    Human 参与者：{{ taskHumanParticipantStatusText(agentDetailsGroupDetailsTaskDetails) }} · 机器人·{{ agentDetailsGroupTaskMemberList.length }}
                                                 </div>
                                                 <el-scrollbar class="sidebar-taskmembers-container"
                                                     wrap-class="scrollbar-wrapper">
@@ -623,6 +668,7 @@
                                                             :participant="mitem"
                                                             :quick-info="getParticipantQuickInfo('agentGroupTask', mitem)"
                                                             :testing="isRemoteAgentTesting(mitem.id)"
+                                                            @@edit-agent="openParticipantAgentEditor(mitem)"
                                                             @@test-remote="testTaskRemoteAgent(mitem)">
                                                         </participant-quick-action>
                                                     </div>
@@ -758,6 +804,7 @@
                                                     :participant="mitem"
                                                     :quick-info="getParticipantQuickInfo('agentTask', mitem)"
                                                     :testing="isRemoteAgentTesting(mitem.id)"
+                                                    @@edit-agent="openParticipantAgentEditor(mitem)"
                                                     @@test-remote="testTaskRemoteAgent(mitem)">
                                                 </participant-quick-action>
                                             </div>
@@ -1112,7 +1159,7 @@
                                 </div>
                                 <el-input v-model="groupTaskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'groupTask')"></el-input>
                                 <div class="taskmain-members-title">
-                                    机器人·{{ groupTaskMemberList.length }}
+                                    Human 参与者：{{ taskHumanParticipantStatusText(groupTaskDetails) }} · 机器人·{{ groupTaskMemberList.length }}
                                 </div>
                                 <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                     <div class="df-wn flex-dc taskmain-members-listWrap">
@@ -1123,6 +1170,7 @@
                                             :participant="mitem"
                                             :quick-info="getParticipantQuickInfo('groupTask', mitem)"
                                             :testing="isRemoteAgentTesting(mitem.id)"
+                                            @@edit-agent="openParticipantAgentEditor(mitem)"
                                             @@test-remote="testTaskRemoteAgent(mitem)">
                                         </participant-quick-action>
                                     </div>
@@ -1380,7 +1428,7 @@
                             </div>
                             <el-input v-model="taskMemberfilter" placeholder="请输入名称搜索" suffix-icon="el-icon-search" style="margin-bottom: 15px;" @@input="handleTaskFilterChange($event,'task')"></el-input>
                             <div class="taskmain-members-title">
-                                机器人·{{ taskMemberList ? taskMemberList.length : 0 }}
+                                Human 参与者：{{ taskHumanParticipantStatusText(taskDetails) }} · 机器人·{{ taskMemberList ? taskMemberList.length : 0 }}
                             </div>
                             <el-scrollbar class="sidebar-taskmembers-container" wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskmain-members-listWrap">
@@ -1391,6 +1439,7 @@
                                         :participant="mitem"
                                         :quick-info="getParticipantQuickInfo('task', mitem)"
                                         :testing="isRemoteAgentTesting(mitem.id)"
+                                        @@edit-agent="openParticipantAgentEditor(mitem)"
                                         @@test-remote="testTaskRemoteAgent(mitem)">
                                     </participant-quick-action>
                                 </div>
@@ -1492,45 +1541,65 @@
     <div class="drawerRtl">
         @* 内容中的头（包括标题和关闭图标） *@
         <div class="drawerRtl__header">
-            <div class="drawerRtl__header__title">{{ agentForm.id ? '编辑智能体' : '新增智能体' }}</div>
+            <div class="drawerRtl__header__title">{{ agentForm.id ? (agentForm.isSystemAgent ? '编辑系统 Agent' : '编辑智能体') : '新增智能体' }}</div>
             <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerAgent')">&times;</div>
         </div>
         @* 内容中的主体内容 *@
         <div class="drawerRtl__body">
             <el-form v-if="visible.drawerAgent" ref="agentELForm" :model="agentForm" :rules="agentFormRules"
                 :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
+                <el-alert v-if="agentForm.isSystemAgent"
+                          :title="'系统 Agent：' + (agentForm.systemAgentKind || agentForm.name)"
+                          :description="agentForm.isHuman ? 'Human 由当前登录用户输入文本，不调用模型或工具。可调整模型绑定策略，但不能修改系统身份或 Prompt。' : '系统 Agent 由模块自动创建或维护（例如 PromptCatalyzer）。修改模型绑定前请确认相关自动化任务的运行要求。'"
+                          type="info"
+                          :closable="false"
+                          show-icon
+                          style="margin-bottom:16px;"></el-alert>
                 <el-form-item label="智能体名称" prop="name">
                     <div class="agentNameFormField">
-                        <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
-                        <el-button v-if="agentForm.id" size="small" type="danger" plain icon="el-icon-delete"
+                        <el-input v-model="agentForm.name" placeholder="请填写" :disabled="agentForm.isHuman"></el-input>
+                        <el-button v-if="agentForm.id && !agentForm.isHuman" size="small" type="danger" plain icon="el-icon-delete"
                             @@click="handleAgentDelete(agentForm, { closeEditor: true })">删除智能体</el-button>
                     </div>
                 </el-form-item>
-                <el-form-item label="SystemMessage" required>
+                <el-form-item v-if="!agentForm.isHuman" label="SystemMessage" required>
                     <el-radio-group v-model="agentForm.systemMessageType" @@change="handleSystemMessageTypeChange">
                         <el-radio label="1" border>自选</el-radio>
                         <el-radio label="2" border>手动</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item v-show="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
+                <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
                     @* @change="handleChange($event,'')" *@
                     <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage"
                         direction="vertical" placeholder="请选择" @@options-loaded="handleSystemMessageOptionsLoaded" />
                 </el-form-item>
-                <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
-                    <el-input  
-                       type="textarea"  
+                <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
+                    <el-input
+                       type="textarea"
                        v-model="agentForm.systemMessage"  
                        @@change="handleIdentify"  
                        placeholder="请填写"  
                        :rows="4">  
                     </el-input>
-                    
+
                 </el-form-item>
-                <el-form-item label="是否启用" prop="enable">
+                <el-form-item label="绑定模型" prop="modelBinding">
+                    <el-radio-group v-model="agentForm.modelBinding" @@change="handleAgentModelBindingChange">
+                        <el-radio :label="0" border :disabled="agentForm.isHuman">从 PromptRange 继承</el-radio>
+                        <el-radio :label="1" border>跟随组任务</el-radio>
+                        <el-radio :label="2" border>手动选择 AIModel</el-radio>
+                    </el-radio-group>
+                    <div v-if="agentForm.modelBinding === 2" style="margin-top:10px;">
+                        <load-more-select v-model="agentForm.aiModelId" service-type="model" :chat-only="true"
+                                          direction="vertical" placeholder="请选择 Chat 模型" />
+                    </div>
+                    <div class="form-help-text" v-if="agentForm.systemMessageType === '2' && !agentForm.isHuman">手动 Prompt 没有 PromptRange 模型可继承，必须手动选择一个 Chat 类型 AIModel。</div>
+                    <div class="form-help-text" v-else-if="agentForm.isHuman">Human 不调用模型；该绑定用于保留其系统 Agent 的任务策略配置，默认跟随组任务。</div>
+                </el-form-item>
+                <el-form-item v-if="!agentForm.isHuman" label="是否启用" prop="enable">
                     <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
                 </el-form-item>
-                <el-form-item v-if="agentForm.id" label="A2A 对外服务">
+                <el-form-item v-if="agentForm.id && !agentForm.isHuman" label="A2A 对外服务">
                     <el-button size="small" type="warning" plain icon="el-icon-connection" @@click="openPublishedA2AEditor(agentForm)">配置 / 发布为 A2A Agent</el-button>
                     <div class="form-help-text">发布后将生成标准 Agent Card，供任意兼容 A2A 的系统发现和调用。</div>
                 </el-form-item>
@@ -1576,57 +1645,25 @@
                         </div>
                     </div>
                 </el-form-item>
-                <el-form-item label="Function Calls" prop="functionCallNames">
-                    <div class="function-call-container">
-                        <div style="margin-bottom: 8px;">
-                            <el-switch
-                                v-model="agentAutoAttachXncf"
-                                @@change="handleAutoAttachXncfChange"
-                                active-text="自动附加所有 XNCF 功能插件"
-                                inactive-text="手动选择">
-                            </el-switch>
-                            <el-tooltip content="开启后将自动附加所有已注册的 XNCF 功能插件，使智能体能自动识别并触发对应模块的功能" placement="top">
-                                <i class="el-icon-question" style="margin-left: 6px; color: #909399;"></i>
-                            </el-tooltip>
+                <el-form-item label="工具与流程">
+                    <div class="function-binding-summary">
+                        <div class="function-binding-summary__copy">
+                            <strong>{{ functionBindingSummary }}</strong>
+                            <span>让模型按需调用 FunctionRender、Workflow 或兼容的 Plugin。</span>
                         </div>
-                        <div class="function-call-tags">
-                            <el-tag
-                                v-for="tag in agentForm.functionCallNames ? agentForm.functionCallNames.split(',').filter(x => x) : []"
-                                :key="tag"
-                                closable
-                                :disable-transitions="false"
-                                @@close="handleFunctionCallClose(tag)"
-                                class="function-call-tag">
-                                {{tag}}
-                            </el-tag>
-                            <el-input
-                                v-if="functionCallInputVisible"
-                                ref="functionCallInput"
-                                v-model="functionCallInputValue"
-                                class="input-new-tag"
-                                size="small"
-                                placeholder="可输入 Plugin 类名，或带有命名空间的完整名称"
-                                @@keyup.enter.native="handleFunctionCallInputConfirm"
-                                @@blur="handleFunctionCallInputConfirm">
-                            </el-input>
-                            <el-button v-else class="button-new-tag" size="small" @@click="showFunctionCallInput">+ 添加</el-button>
-                        </div>
-                        
-                        <div class="plugin-types-container" v-if="availablePluginTypes.length">
-                            <div class="plugin-types-title">可用插件类型:</div>
-                            <div class="plugin-types-list">
-                                <el-button
-                                    v-for="pluginType in availablePluginTypes"
-                                    :key="pluginType"
-                                    size="small"
-                                    type="info"
-                                    plain
-                                    class="plugin-type-btn"
-                                    @@click="handleAddPluginType(pluginType)">
-                                    {{ pluginType }}
-                                </el-button>
-                            </div>
-                        </div>
+                        <el-button type="primary" plain icon="el-icon-setting"
+                            @@click="openFunctionBindingDrawer">管理绑定</el-button>
+                    </div>
+                    <div class="function-binding-chips" v-if="agentForm.functionBindings && agentForm.functionBindings.length">
+                        <el-tag v-for="binding in agentForm.functionBindings.slice(0, 6)"
+                            :key="(binding.kind || 'plugin') + ':' + binding.key"
+                            size="mini" closable
+                            @@close="removeFunctionBinding(binding)">
+                            {{ binding.name || binding.key }}
+                        </el-tag>
+                        <span v-if="agentForm.functionBindings.length > 6" class="form-help-text">
+                            还有 {{ agentForm.functionBindings.length - 6 }} 项，点击“管理绑定”查看
+                        </span>
                     </div>
                 </el-form-item>
                 
@@ -1721,6 +1758,64 @@
         </div>
     </div>
 </el-drawer>
+@* 抽屉 FunctionRender / Workflow / Plugin 绑定 *@
+<el-drawer :visible.sync="visible.drawerFunctionBindings" direction="rtl" :with-header="false"
+    :wrapper-closable="false" :close-on-press-escape="false" size="620px">
+    <div class="drawerRtl function-binding-drawer">
+        <div class="drawerRtl__header">
+            <div class="drawerRtl__header__title">
+                工具与流程绑定
+                <span class="function-binding-drawer__agent">{{ agentForm.name || '新智能体' }}</span>
+            </div>
+            <div class="drawerRtl__header__close" @@click="visible.drawerFunctionBindings = false">&times;</div>
+        </div>
+        <div class="drawerRtl__body" v-loading="functionBindingLoading">
+            <el-alert type="info" :closable="false" show-icon
+                title="只显示当前管理员可用的 Workflow；保存 Agent 或 Workflow 时会再次检查权限与循环引用。"
+                style="margin-bottom:12px;"></el-alert>
+            <el-tabs v-model="functionBindingTab" class="function-binding-tabs">
+                <el-tab-pane name="function">
+                    <span slot="label"><i class="el-icon-set-up"></i> FunctionRender</span>
+                </el-tab-pane>
+                <el-tab-pane name="workflow">
+                    <span slot="label"><i class="el-icon-s-operation"></i> Workflow</span>
+                </el-tab-pane>
+                <el-tab-pane name="plugin">
+                    <span slot="label"><i class="el-icon-s-tools"></i> 兼容 Plugin</span>
+                </el-tab-pane>
+            </el-tabs>
+            <el-input v-model="functionBindingSearch" clearable prefix-icon="el-icon-search"
+                placeholder="搜索名称、模块或说明" style="margin-bottom:12px;"></el-input>
+            <div v-if="!filteredFunctionBindingOptions.length" class="function-binding-empty">
+                当前没有可选择的绑定。
+            </div>
+            <div v-else class="function-binding-option-list">
+                <div v-for="option in filteredFunctionBindingOptions"
+                    :key="option.kind + ':' + option.key"
+                    class="function-binding-option"
+                    :class="{'is-unavailable': option.available === false}">
+                    <el-checkbox :value="isFunctionBindingSelected(option)"
+                        :disabled="option.available === false"
+                        @@change="toggleFunctionBinding(option, $event)">
+                        <span class="function-binding-option__name">{{ option.name || option.key }}</span>
+                        <span class="function-binding-option__meta">
+                            <template v-if="option.moduleName">{{ option.moduleName }} · </template>
+                            <template v-if="option.parameterCount">参数 {{ option.parameterCount }} · </template>
+                            {{ option.available === false ? '模块不可用' : '可调用' }}
+                        </span>
+                    </el-checkbox>
+                    <div v-if="option.description" class="function-binding-option__description">
+                        {{ option.description }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="drawerRtl__footer text-right">
+            <span class="function-binding-footer-summary">{{ functionBindingSummary }}</span>
+            <el-button :size="elSize" type="primary" @@click="visible.drawerFunctionBindings = false">完成</el-button>
+        </div>
+    </div>
+</el-drawer>
 @* 抽屉 远程 A2A 智能体管理 *@
 <el-drawer :visible.sync="visible.drawerRemoteAgent" direction="rtl" :with-header="false" :wrapper-closable="false"
     :close-on-press-escape="false" size="900px">
@@ -1809,6 +1904,10 @@
                 <el-form-item label="是否启用" prop="enable">
                     <el-checkbox v-model="groupForm.enable">启用该组</el-checkbox>
                     <div class="form-help-text">新建组默认启用。停用后不会创建新任务，也不会作为 Workflow 节点使用。</div>
+                </el-form-item>
+                <el-form-item label="Human 参与者">
+                    <el-checkbox v-model="groupForm.includeHumanParticipant">加入 Human 文本参与者</el-checkbox>
+                    <div class="form-help-text">运行轮次到达 Human 时任务会暂停，窗口提供文本输入；回复成功后继续 MAF 工作流。</div>
                 </el-form-item>
                 <el-form-item label="本地成员" prop="members">
                     <div class="groupFMB">
@@ -1946,11 +2045,56 @@
                 </el-form-item>
                 <el-form-item label="选择模型" prop="aiModelId">
                     @* @change="handleChange($event,'')" *@
-                    <load-more-select v-model="groupStartForm.aiModelId" service-type="model" direction="vertical"
+                    <load-more-select v-model="groupStartForm.aiModelId" service-type="model" :chat-only="true" direction="vertical"
                         placeholder="请选择" />
                 </el-form-item>
                 <el-form-item label="个性化智能体" prop="personality">
                     <el-checkbox v-model="groupStartForm.personality">采用个性化参数运行智能体</el-checkbox>
+                </el-form-item>
+                <el-form-item label="工具调用审批" prop="requireHumanApproval">
+                    <el-checkbox v-model="groupStartForm.requireHumanApproval">兼容总开关：强制所有工具调用前审批</el-checkbox>
+                    <div class="form-help-text">开启后会覆盖下方较宽松的工具权限；新配置建议直接使用 HIL 等级和分类权限。</div>
+                </el-form-item>
+                <el-form-item label="HIL 等级" prop="humanInTheLoopLevel">
+                    <el-select v-model="groupStartForm.humanInTheLoopLevel" style="width:100%;">
+                        <el-option label="L0 全自动（插件/MCP 自动执行）" :value="0"></el-option>
+                        <el-option label="L1 风险分层（MCP 默认审批）" :value="1"></el-option>
+                        <el-option label="L2 工具审批（所有工具先确认）" :value="2"></el-option>
+                        <el-option label="L3 Human 参与者 + 工具审批" :value="3"></el-option>
+                    </el-select>
+                    <div class="form-help-text">Group 已配置 Human 成员时，会在轮到 Human 时暂停等待文本回复。</div>
+                </el-form-item>
+                <el-form-item label="插件工具权限" prop="pluginToolPermission">
+                    <el-select v-model="groupStartForm.pluginToolPermission" style="width:100%;">
+                        <el-option label="继承 HIL 等级" :value="0"></el-option>
+                        <el-option label="自动执行" :value="1"></el-option>
+                        <el-option label="执行前审批" :value="2"></el-option>
+                        <el-option label="禁止使用" :value="3"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="MCP 工具权限" prop="mcpToolPermission">
+                    <el-select v-model="groupStartForm.mcpToolPermission" style="width:100%;">
+                        <el-option label="继承 HIL 等级" :value="0"></el-option>
+                        <el-option label="自动执行" :value="1"></el-option>
+                        <el-option label="执行前审批" :value="2"></el-option>
+                        <el-option label="禁止使用" :value="3"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-if="groupStartParticipants.some(participant => participant.agentKind === 'Human')"
+                              label="Human 参与者"
+                              prop="includeHumanParticipant">
+                    <el-switch v-model="groupStartForm.includeHumanParticipant"
+                               :disabled="true"
+                               @@change="markGroupStartHumanParticipantTouched"
+                               active-text="Group 已配置，本次任务将包含 Human"
+                               inactive-text="正在加载 Group 配置"></el-switch>
+                </el-form-item>
+                <el-form-item label="最大对话轮数" prop="chatMaxRound">
+                    <el-input-number v-model="groupStartForm.chatMaxRound"
+                                     :min="1"
+                                     :max="50"
+                                     :step="1"
+                                     controls-position="right"></el-input-number>
                 </el-form-item>
                 <el-form-item label="可提及的组员">
                     <div class="groupStartMentions" v-loading="groupStartParticipantLoading">
@@ -2004,27 +2148,46 @@
     </div>
 </el-drawer>
 @* Dialog 智能体 新增 *@
-<el-dialog :title="agentForm.id ? '编辑智能体' : '新增智能体'" :visible.sync="visible.dialogGroupAgent" :show-close="false"
+<el-dialog :title="agentForm.id ? (agentForm.isSystemAgent ? '编辑系统 Agent' : '编辑智能体') : '新增智能体'" :visible.sync="visible.dialogGroupAgent" :show-close="false"
     :close-on-click-modal="false" :close-on-press-escape="false">
     <el-form v-if="visible.dialogGroupAgent" ref="agentELForm" :model="agentForm" :rules="agentFormRules" :size="elSize"
         label-position="left" label-width="130px" class="drawerForm-container">
+        <el-alert v-if="agentForm.isSystemAgent"
+                  :title="'系统 Agent：' + (agentForm.systemAgentKind || agentForm.name)"
+                  :description="agentForm.isHuman ? 'Human 由当前登录用户输入文本，不调用模型或工具。可调整模型绑定策略，但不能修改系统身份或 Prompt。' : '系统 Agent 由模块自动创建或维护（例如 PromptCatalyzer）。'"
+                  type="info"
+                  :closable="false"
+                  show-icon
+                  style="margin-bottom:16px;"></el-alert>
         <el-form-item label="智能体名称" prop="name">
-            <el-input v-model="agentForm.name" placeholder="请填写"></el-input>
+            <el-input v-model="agentForm.name" placeholder="请填写" :disabled="agentForm.isHuman"></el-input>
         </el-form-item>
-        <el-form-item label="SystemMessage" required>
+        <el-form-item v-if="!agentForm.isHuman" label="SystemMessage" required>
             <el-radio-group v-model="agentForm.systemMessageType" @@change="handleSystemMessageTypeChange">
                 <el-radio label="1" border>自选</el-radio>
                 <el-radio label="2" border>手动</el-radio>
             </el-radio-group>
         </el-form-item>
-        <el-form-item v-show="agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
+        <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '1'" label="自选" prop="systemMessage">
             <load-more-select v-model="agentForm.systemMessage" service-type="systemMessage" direction="vertical"
                 placeholder="请选择" @@options-loaded="handleSystemMessageOptionsLoaded" />
         </el-form-item>
-        <el-form-item v-if="agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
+        <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
             <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>
         </el-form-item>
-        <el-form-item label="是否启用" prop="enable">
+        <el-form-item label="绑定模型" prop="modelBinding">
+            <el-radio-group v-model="agentForm.modelBinding" @@change="handleAgentModelBindingChange">
+                <el-radio :label="0" border :disabled="agentForm.isHuman">从 PromptRange 继承</el-radio>
+                <el-radio :label="1" border>跟随组任务</el-radio>
+                <el-radio :label="2" border>手动选择 AIModel</el-radio>
+            </el-radio-group>
+            <div v-if="agentForm.modelBinding === 2" style="margin-top:10px;">
+                <load-more-select v-model="agentForm.aiModelId" service-type="model" :chat-only="true"
+                                  direction="vertical" placeholder="请选择 Chat 模型" />
+            </div>
+            <div class="form-help-text" v-if="agentForm.systemMessageType === '2' && !agentForm.isHuman">手动 Prompt 必须手动选择一个 Chat 类型 AIModel。</div>
+        </el-form-item>
+        <el-form-item v-if="!agentForm.isHuman" label="是否启用" prop="enable">
             <el-checkbox v-model="agentForm.enable">启用智能体</el-checkbox>
         </el-form-item>
         <el-form-item label="绑定知识库" prop="knowledgeBaseId">
@@ -2066,57 +2229,25 @@
                 </div>
             </div>
         </el-form-item>
-        <el-form-item label="Function Calls" prop="functionCallNames">
-            <div class="function-call-container">
-                <div style="margin-bottom: 8px;">
-                    <el-switch
-                        v-model="agentAutoAttachXncf"
-                        @@change="handleAutoAttachXncfChange"
-                        active-text="自动附加所有 XNCF 功能插件"
-                        inactive-text="手动选择">
-                    </el-switch>
-                    <el-tooltip content="开启后将自动附加所有已注册的 XNCF 功能插件，使智能体能自动识别并触发对应模块的功能" placement="top">
-                        <i class="el-icon-question" style="margin-left: 6px; color: #909399;"></i>
-                    </el-tooltip>
+        <el-form-item label="工具与流程">
+            <div class="function-binding-summary">
+                <div class="function-binding-summary__copy">
+                    <strong>{{ functionBindingSummary }}</strong>
+                    <span>复杂绑定集中在右侧抽屉，当前 Agent 编辑状态会保留。</span>
                 </div>
-                <div class="function-call-tags">
-                    <el-tag
-                        v-for="tag in agentForm.functionCallNames ? agentForm.functionCallNames.split(',').filter(x => x) : []"
-                        :key="tag"
-                        closable
-                        :disable-transitions="false"
-                        @@close="handleFunctionCallClose(tag)"
-                        class="function-call-tag">
-                        {{tag}}
-                    </el-tag>
-                    <el-input
-                        v-if="functionCallInputVisible"
-                        ref="functionCallInput"
-                        v-model="functionCallInputValue"
-                        class="input-new-tag"
-                        size="small"
-                        placeholder="可输入 Plugin 类名，或带有命名空间的完整名称"
-                        @@keyup.enter.native="handleFunctionCallInputConfirm"
-                        @@blur="handleFunctionCallInputConfirm">
-                    </el-input>
-                    <el-button v-else class="button-new-tag" size="small" @@click="showFunctionCallInput">+ 添加</el-button>
-                </div>
-                
-                <div class="plugin-types-container" v-if="availablePluginTypes.length">
-                    <div class="plugin-types-title">可用插件类型:</div>
-                    <div class="plugin-types-list">
-                        <el-button
-                            v-for="pluginType in availablePluginTypes"
-                            :key="pluginType"
-                            size="small"
-                            type="info"
-                            plain
-                            class="plugin-type-btn"
-                            @@click="handleAddPluginType(pluginType)">
-                            {{ pluginType }}
-                        </el-button>
-                    </div>
-                </div>
+                <el-button type="primary" plain icon="el-icon-setting"
+                    @@click="openFunctionBindingDrawer">管理绑定</el-button>
+            </div>
+            <div class="function-binding-chips" v-if="agentForm.functionBindings && agentForm.functionBindings.length">
+                <el-tag v-for="binding in agentForm.functionBindings.slice(0, 6)"
+                    :key="(binding.kind || 'plugin') + ':' + binding.key"
+                    size="mini" closable
+                    @@close="removeFunctionBinding(binding)">
+                    {{ binding.name || binding.key }}
+                </el-tag>
+                <span v-if="agentForm.functionBindings.length > 6" class="form-help-text">
+                    还有 {{ agentForm.functionBindings.length - 6 }} 项
+                </span>
             </div>
         </el-form-item>
         
@@ -2334,11 +2465,34 @@
     </div>
 </el-dialog>
 @* Dialog 任务描述 *@
-<el-dialog title="任务描述" :visible.sync="visible.dialogTaskDescription" :show-close="false" :close-on-click-modal="false"
-    :close-on-press-escape="false">
+<el-dialog title="任务描述与执行策略" :visible.sync="visible.dialogTaskDescription" :show-close="false" :close-on-click-modal="false"
+    :close-on-press-escape="false" width="720px">
     <div class="dialog-describeContent">
         {{ describeContent }}
     </div>
+    <div v-if="taskDescriptionDetails && taskDescriptionDetails.executionPolicyCaptured"
+        class="task-policy-summary">
+        <div class="task-policy-summary__title">本次运行策略</div>
+        <dl>
+            <dt>HIL 等级</dt>
+            <dd>{{taskHumanInTheLoopLevelText(taskDescriptionDetails.humanInTheLoopLevel)}}</dd>
+            <dt>插件工具权限</dt>
+            <dd>{{taskToolPermissionText(taskDescriptionDetails.pluginToolPermission)}}</dd>
+            <dt>MCP 工具权限</dt>
+            <dd>{{taskToolPermissionText(taskDescriptionDetails.mcpToolPermission)}}</dd>
+            <dt>Human 参与者</dt>
+            <dd>{{taskDescriptionDetails.includeHumanParticipant ? '包含' : '跳过'}}</dd>
+            <dt>最大对话轮数</dt>
+            <dd>{{taskDescriptionDetails.chatMaxRound}}</dd>
+            <dt>个性化参数</dt>
+            <dd>{{taskDescriptionDetails.isPersonality ? '启用' : '关闭'}}</dd>
+            <dt>兼容强制审批</dt>
+            <dd>{{taskDescriptionDetails.requireHumanApproval ? '启用' : '关闭'}}</dd>
+        </dl>
+    </div>
+    <el-alert v-else-if="taskDescriptionDetails"
+        title="此任务创建于策略记录功能启用之前，无法还原当时的 HIL 与工具权限。"
+        type="info" :closable="false" show-icon style="margin-top:16px;"></el-alert>
     <div slot="footer" class="dialog-footer">
         <el-button type="text" @@click="taskDescriptionCopy">
             <i class="far fa-clone"></i>
@@ -2390,6 +2544,45 @@
     </div>
     <div class="dialog-footer" slot="footer">
         <el-button type="primary" @@click="visible.dialogMcpTools = false">关闭</el-button>
+    </div>
+</el-dialog>
+@* Dialog Human 文本回合：NeuBell 点击只导航，提交成功后由业务路径消费提醒 *@
+<el-dialog title="工具调用审批" :visible.sync="toolApprovalDialogVisible" width="760px"
+    :before-close="deferToolApproval" :close-on-click-modal="false" :close-on-press-escape="false">
+    <template v-if="toolApprovalRequest">
+        <el-alert type="warning" :closable="false" show-icon
+            :title="toolApprovalRequest.text || toolApprovalRequest.prompt || '智能体请求人工确认后执行工具。'"></el-alert>
+        <div class="tool-approval-summary">
+            <span class="tool-approval-summary__label">工具</span>
+            <strong>{{toolApprovalRequest.humanToolName || toolApprovalRequest.toolName || '工具调用'}}</strong>
+            <span v-if="toolApprovalRequest.fromAgentName || toolApprovalRequest.agentName"
+                class="tool-approval-summary__agent">
+                Agent：{{toolApprovalRequest.fromAgentName || toolApprovalRequest.agentName}}
+            </span>
+        </div>
+        <div class="tool-approval-arguments">
+            <div class="tool-approval-arguments__title">完整参数</div>
+            <pre>{{toolApprovalArgumentText}}</pre>
+        </div>
+    </template>
+    <div slot="footer" class="dialog-footer">
+        <el-button @@click="deferToolApproval" :disabled="toolApprovalSubmitting">稍后处理</el-button>
+        <el-button @@click="resolveToolApproval(false)" :loading="toolApprovalSubmitting">拒绝</el-button>
+        <el-button type="primary" @@click="resolveToolApproval(true)" :loading="toolApprovalSubmitting">批准</el-button>
+    </div>
+</el-dialog>
+<el-dialog title="Human 回合" :visible.sync="humanReplyDialogVisible" width="680px"
+    :close-on-click-modal="false" :close-on-press-escape="false" :show-close="false">
+    <el-alert type="warning" :closable="false" show-icon
+        title="当前 Group 已轮到 Human，任务正在等待文本回复。"></el-alert>
+    <div style="margin:16px 0 10px; white-space:pre-wrap; color:#4a5568;">
+        {{ humanReplyRequest ? (humanReplyRequest.text || humanReplyRequest.prompt || '请输入本轮 Human 回复。') : '' }}
+    </div>
+    <el-input v-model="humanReplyText" type="textarea" :rows="7" maxlength="10000" show-word-limit
+        placeholder="请输入文本，提交后任务将继续执行"></el-input>
+    <div slot="footer" class="dialog-footer">
+        <el-button @@click="closeHumanReplyDialog" :disabled="humanReplySubmitting">稍后回复</el-button>
+        <el-button type="primary" @@click="submitHumanReply" :loading="humanReplySubmitting">提交 Human 回复</el-button>
     </div>
 </el-dialog>
 @* Dialog 将本地 Agent 发布为标准 A2A 服务 *@
@@ -2462,5 +2655,5 @@
     <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
     <script src="~/js/AgentsManager/lib/axios.min.js"></script>
     <script src="~/js/PromptRange/lib/marked.min.js"></script>
-    <script type="module" src="~/js/AgentsManager/three-loader.js"></script>
+    <script type="module" src="~/js/AgentsManager/three-loader.js" asp-append-version="true"></script>
 }

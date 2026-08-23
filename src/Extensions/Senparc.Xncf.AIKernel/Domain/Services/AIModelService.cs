@@ -31,6 +31,12 @@
     修改标识：Senparc - 20260815
     修改描述：v0.15.3-preview12 修复指定 AI 模型配置穿透并保留兼容 API Version
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.15.4 Ollama 配置补齐 ModelName
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.15.4 修复 Ollama 指定模型名称传递
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -215,6 +221,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     aiSettings.OllamaKeys = new OllamaKeys()
                     {
                         Endpoint = normalizedEndpoint,
+                        ModelName = modelName,
                     };
                     break;
                 case AiPlatform.DeepSeek:

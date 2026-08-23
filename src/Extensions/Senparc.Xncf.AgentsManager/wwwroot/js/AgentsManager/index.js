@@ -27,6 +27,7 @@ var app = new Vue({
         dialogTaskDescription: false, // 任务描述
         dialogTaskEvaluation: false, // 任务评价页面
         dialogMcpTools: false, // MCP工具列表对话框
+        drawerFunctionBindings: false, // FunctionRender / Workflow 绑定
       },
       taskStateText: {
         0: '等待',  // 等待 Waiting stand #3376cd
@@ -349,8 +350,11 @@ var app = new Vue({
         hookRobotParameter: '', // 外接参数
         avastar: '/images/AgentsManager/avatar/avatar1.png', // 头像
         functionCallNames: '', // Function Call 名称，逗号分隔
+        functionBindings: [], // FunctionRender / Workflow / Plugin 结构化绑定
         mcpEndpoints: '', // MCP Endpoints
         knowledgeBaseId: null, // 绑定的知识库
+        modelBinding: 0, // 0 PromptRange，1 跟随组任务，2 手动 AIModel
+        aiModelId: null,
       },
       // 编辑现有智能体时，等待 PromptRange 候选项返回后再确定“自选”或“手动”。
       agentSystemMessageTypeDetectionPending: false,
@@ -386,7 +390,8 @@ var app = new Vue({
         description: '', // 说明
         contextSharingMode: null, // null 时本地群沿用旧行为，远程成员默认最小化共享
         adminAgentTemplateId: '', // 群主即agent
-        enterAgentTemplateId: '' // 对接人即agent
+        enterAgentTemplateId: '', // 对接人即agent
+        includeHumanParticipant: false // 是否加入 Human 文本参与者
       },
       groupFormRules: {
         name: [
@@ -413,10 +418,17 @@ var app = new Vue({
         aiModelId: '', // 模型 id
         promptCommand: '', // 任务描述
         personality: true, // 是否采用个性化
+        requireHumanApproval: false, // 工具调用是否需要人工批准
+        humanInTheLoopLevel: 0, // 0 自动，1 风险分层，2 工具审批，3 Human 参与者
+        pluginToolPermission: 0, // 0 继承，1 自动，2 审批，3 禁止
+        mcpToolPermission: 0,
+        includeHumanParticipant: false,
+        chatMaxRound: 20,
         description: ''
       },
       groupStartParticipants: [],
       groupStartParticipantLoading: false,
+      groupStartHumanParticipantTouched: false,
       groupStartPromptCaretStart: 0,
       groupStartPromptCaretEnd: 0,
       groupStartFormRules: {
@@ -455,6 +467,16 @@ var app = new Vue({
       historyStream: {},
       historyStreamSilentTimer: {},
       historyStreamingDrafts: {},
+      humanApprovalRequests: {},
+      toolApprovalDialogVisible: false,
+      toolApprovalRequest: null,
+      toolApprovalArgumentText: '',
+      toolApprovalQueue: [],
+      toolApprovalSubmitting: false,
+      humanReplyDialogVisible: false,
+      humanReplyRequest: null,
+      humanReplyText: '',
+      humanReplySubmitting: false,
       usageAnalyticsVisible: false,
       usageAnalyticsLoading: false,
       usageAnalyticsTaskId: null,
@@ -482,10 +504,21 @@ var app = new Vue({
       agentParameterList: [],
       // 描述内容
       describeContent: '',
+      taskDescriptionDetails: null,
       functionCallInputVisible: false,
       functionCallInputValue: '',
       functionCallTags: [], // 用于编辑时临时存储标签
       pluginTypes: [], // 存储所有可用的插件类型
+      functionBindingCatalog: {
+        functions: [],
+        plugins: [],
+        workflows: [],
+        currentBindings: []
+      },
+      functionBindingTab: 'function',
+      functionBindingSearch: '',
+      functionBindingLoading: false,
+      functionBindingSaving: false,
       agentAutoAttachXncf: false, // 是否自动附加所有 XNCF 功能插件
       editorFormInitialSnapshots: {}, // 打开编辑器时的表单快照，用于避免无变更时仍二次确认
       // MCP Endpoints相关
@@ -516,6 +549,11 @@ var app = new Vue({
       agentGraphFilterTaskStatuses: [],
       agentGraphShowOnlyActiveGroup: false,
       agentGraphRequesting: false,
+      agentGraphFocus: {
+        groupId: null,
+        locked: false
+      },
+      agentGraphFocusedAgent: null,
       agentGraphLastSignature: '',
       agentGraphLastRefreshAt: null,
       agentGraphLastRenderAt: null,
@@ -538,6 +576,41 @@ var app = new Vue({
       return this.pluginTypes.filter(type =>
         !currentNames.includes(type)
       );
+    },
+    functionBindingCount() {
+      return Array.isArray(this.agentForm.functionBindings)
+        ? this.agentForm.functionBindings.length
+        : 0
+    },
+    functionBindingSummary() {
+      const bindings = Array.isArray(this.agentForm.functionBindings)
+        ? this.agentForm.functionBindings
+        : []
+      const counts = bindings.reduce((result, item) => {
+        const kind = item?.kind || item?.Kind || 'plugin'
+        result[kind] = (result[kind] || 0) + 1
+        return result
+      }, {})
+      const parts = []
+      if (counts.function) parts.push(`FunctionRender ${counts.function}`)
+      if (counts.workflow) parts.push(`Workflow ${counts.workflow}`)
+      if (counts.plugin) parts.push(`Plugin ${counts.plugin}`)
+      return parts.length ? parts.join(' · ') : '未绑定工具或流程'
+    },
+    filteredFunctionBindingOptions() {
+      const catalog = this.functionBindingCatalog || {}
+      const tab = this.functionBindingTab
+      const options = Array.isArray(catalog[`${tab}s`])
+        ? catalog[`${tab}s`]
+        : []
+      const keyword = String(this.functionBindingSearch || '').trim().toLowerCase()
+      if (!keyword) return options
+      return options.filter(item => [
+        item.name,
+        item.description,
+        item.moduleName,
+        item.key
+      ].some(value => String(value || '').toLowerCase().includes(keyword)))
     },
     // 解析 McpEndpoints JSON 字符串
     parsedMcpEndpoints() {
@@ -608,6 +681,62 @@ var app = new Vue({
         'Refresh: ' + this.formatAgentGraphDebugTime(this.agentGraphLastRefreshAt),
         'Render: ' + this.formatAgentGraphDebugTime(this.agentGraphLastRenderAt)
       ].join('\n')
+    },
+    agentGraphOverview() {
+      const snapshot = this.agentGraphSnapshot || {}
+      const agents = Array.isArray(snapshot.agents) ? snapshot.agents : []
+      const groups = Array.isArray(snapshot.groups) ? snapshot.groups : []
+      const collaborations = Array.isArray(snapshot.collaborations) ? snapshot.collaborations : []
+      const activeKeys = new Set(collaborations.flatMap(item => item.participantKeys || []))
+      const local = agents.filter(item => item.agentKind !== 'RemoteA2A')
+      const remote = agents.filter(item => item.agentKind === 'RemoteA2A')
+      const activeTasks = groups.reduce((sum, group) => {
+        const counts = group.taskStatusCounts || {}
+        return sum + Number(counts[0] || counts['0'] || 0)
+          + Number(counts[1] || counts['1'] || 0)
+          + Number(counts[2] || counts['2'] || 0)
+      }, 0)
+      const chattingTasks = groups.reduce((sum, group) => {
+        const counts = group.taskStatusCounts || {}
+        return sum + Number(counts[1] || counts['1'] || 0)
+      }, 0)
+      const pausedTasks = groups.reduce((sum, group) => sum + Number(group.pausedTaskCount || 0), 0)
+      const hilPending = groups.reduce((sum, group) => sum + Number(group.humanInTheLoopPendingCount || 0), 0)
+      return {
+        local: local.length,
+        localEnabled: local.filter(item => item.enable !== false).length,
+        localActive: local.filter(item => activeKeys.has(item.participantKey) || Number(item.chattingCount || 0) > 0).length,
+        remote: remote.length,
+        remoteEnabled: remote.filter(item => item.enable !== false).length,
+        remoteActive: remote.filter(item => activeKeys.has(item.participantKey) || Number(item.chattingCount || 0) > 0).length,
+        published: local.filter(item => item.hasPublishedA2A).length,
+        publishedEnabled: local.filter(item => item.hasPublishedA2A && item.publishedA2AEnabled).length,
+        groups: groups.length,
+        groupsEnabled: groups.filter(item => item.enable !== false).length,
+        groupsActive: groups.filter(item => Number(item.runningTaskCount || 0) > 0).length,
+        activeTasks,
+        chattingTasks,
+        pausedTasks,
+        hilPending
+      }
+    },
+    agentGraphFocusedGroup() {
+      const groupId = Number(this.agentGraphFocus?.groupId || 0)
+      return (this.agentGraphSnapshot.groups || []).find(item => Number(item.id) === groupId) || null
+    },
+    agentGraphFocusedAgentSkills() {
+      const skills = Array.isArray(this.agentGraphFocusedAgent?.skillKinds)
+        ? this.agentGraphFocusedAgent.skillKinds
+        : []
+      const labels = {
+        function: 'FunctionRender',
+        workflow: 'Workflow',
+        plugin: 'Plugin',
+        mcp: 'MCP',
+        a2a: 'A2A',
+        human: 'Human'
+      }
+      return skills.map(skill => labels[skill] || skill).join(' · ') || '无额外技能'
     },
     quickJumpGroupOptions() {
       const map = new Map()
@@ -997,10 +1126,29 @@ var app = new Vue({
         return ''
       }
       return JSON.stringify({
-        agents: (snapshot.agents || []).map(item => [item.participantKey || `local:${item.id}`, item.chattingCount, item.score, item.enable, item.agentKind, item.connectionStatus]),
-        groups: (snapshot.groups || []).map(item => [item.id, item.enable, item.runningTaskCount, item.state, item.taskStatusCounts]),
+        agents: (snapshot.agents || []).map(item => [
+          item.participantKey || `local:${item.id}`,
+          item.chattingCount,
+          item.pausedCount,
+          item.humanInTheLoopPausedCount,
+          item.score,
+          item.enable,
+          item.agentKind,
+          item.connectionStatus,
+          item.skillKinds
+        ]),
+        groups: (snapshot.groups || []).map(item => [
+          item.id,
+          item.enable,
+          item.runningTaskCount,
+          item.pausedTaskCount,
+          item.humanInTheLoopPendingCount,
+          item.state,
+          item.taskStatusCounts
+        ]),
         links: (snapshot.links || []).map(item => [item.groupId, item.participantKey || `local:${item.agentId}`]),
-        collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.participantKeys || item.agentIds])
+        collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.participantKeys || item.agentIds]),
+        published: (snapshot.agents || []).map(item => [item.participantKey || `local:${item.id}`, item.hasPublishedA2A, item.publishedA2AEnabled])
       })
     },
     buildFilteredAgentGraphSnapshot(snapshot) {
@@ -1111,6 +1259,15 @@ var app = new Vue({
         this.agentGraph3d = new AgentGraph3D(this.$refs.agent3dContainer, {
           onGroupHover: (groupId) => {
             this.hoveredAgentGroupId = groupId
+          },
+          onGroupLock: (groupId, locked) => {
+            this.$set(this, 'agentGraphFocus', {
+              groupId: groupId || null,
+              locked: !!locked
+            })
+          },
+          onAgentHover: (agent) => {
+            this.$set(this, 'agentGraphFocusedAgent', agent || null)
           }
         })
         this.agentGraph3d.init()
@@ -2679,6 +2836,35 @@ var app = new Vue({
         this.taskArchiveSavingId = 0
       }
     },
+    getGroupStartChatGroupId(serviceForm = {}) {
+      const candidates = [
+        serviceForm?.chatGroupId,
+        serviceForm?.chatGroupDto?.id,
+        serviceForm?.groupId,
+        this.groupStartForm?.chatGroupId,
+        this.groupTaskDetails?.chatGroupId,
+        this.groupDetails?.chatGroupDto?.id,
+        this.scrollbarGroupIndex,
+        this.groupTaskQueryList?.chatGroupId,
+        this.agentDetailsGroupDetailsTaskDetails?.chatGroupId,
+        this.agentDetailsGroupDetails?.chatGroupDto?.id,
+        this.agentDetailsGroupTaskQueryList?.chatGroupId,
+        this.agentDetailsTaskDetails?.chatGroupId,
+        this.taskDetails?.chatGroupId,
+        typeof window !== 'undefined'
+          ? window.location.hash.match(/(?:#|&)groupId=(\d+)/)?.[1]
+          : ''
+      ]
+
+      for (const candidate of candidates) {
+        const id = Number(candidate)
+        if (Number.isInteger(id) && id > 0) {
+          return id
+        }
+      }
+
+      return 0
+    },
     // 保存 submitForm 数据
     async saveSubmitFormData(saveType, serviceForm = {}) {
       //debugger
@@ -2688,8 +2874,13 @@ var app = new Vue({
         // 确保 serviceForm 是正确的对象
         serviceForm = serviceForm || {};
 
-        // 直接将 functionCallTags 数组转换为字符串并赋值
-        serviceForm.functionCallNames = this.functionCallTags.length > 0 ? this.functionCallTags.join(',') : '';
+        serviceForm.functionBindings = (serviceForm.functionBindings || this.agentForm.functionBindings || [])
+          .map(item => this.normalizeFunctionBinding(item))
+          .filter(Boolean)
+        serviceForm.functionCallNames = serviceForm.functionBindings
+          .filter(item => item.kind === 'plugin')
+          .map(item => item.key)
+          .join(',')
 
         // 打印日志以便调试
         console.log('Submitting serviceForm:', serviceForm);
@@ -2704,15 +2895,36 @@ var app = new Vue({
       // 组 新增|编辑
       if (saveType === 'drawerGroup') {
         serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.SetChatGroup'
-        const memberAgentTemplateIds = (serviceForm.members || []).map(item => item.id)
+        const memberAgentTemplateIds = (serviceForm.members || [])
+          .filter(item => item && item.isHuman !== true)
+          .map(item => item.id)
         const remoteAgentIds = (serviceForm.remoteMembers || []).map(item => item.id)
         serviceForm.memberAgentTemplateIds = memberAgentTemplateIds
         serviceForm.remoteAgentIds = remoteAgentIds
-        serviceURL += `?${getInterfaceQueryStr({ memberAgentTemplateIds, remoteAgentIds })}`
+        serviceURL += `?${getInterfaceQueryStr({ memberAgentTemplateIds, remoteAgentIds, includeHumanParticipant: !!serviceForm.includeHumanParticipant })}`
       }
       // 组启动（运行任务） ['drawerGroupStart', 'drawerTaskStart'].includes(btnType)
       if (['drawerGroupStart', 'drawerTaskStart'].includes(saveType)) {
+        const chatGroupId = this.getGroupStartChatGroupId(serviceForm)
+        if (!chatGroupId) {
+          app.$message({
+            message: '未找到有效的聊天组，请重新从聊天组或任务详情打开启动窗口。',
+            type: 'error',
+            duration: 5 * 1000
+          })
+          return
+        }
+
+        // 启动窗口可能由任务详情打开；此时表单对象只携带了部分字段，
+        // 统一把当前上下文解析出的 Group ID 写回请求，避免后台收到 0。
+        serviceForm.chatGroupId = chatGroupId
+        if (serviceForm.requireHumanApproval && Number(serviceForm.humanInTheLoopLevel || 0) === 0) {
+          serviceForm.humanInTheLoopLevel = 2
+        }
         serviceURL = '/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.RunGroup'
+        // RunGroup 将聊天组 ID 同时作为查询参数和正文属性提交。查询参数由动态 ApiBind
+        // 控制器显式绑定，即使旧脚本或宿主环境异常处理了正文属性，后台仍能可靠取得 Group ID。
+        serviceURL += `?${getInterfaceQueryStr({ chatGroupId })}`
       }
       if (saveType === 'dialogTaskEvaluation') {
         serviceURL = ''
@@ -3058,6 +3270,7 @@ var app = new Vue({
       const streamUrl = `/api/Senparc.Xncf.AgentsManager/ChatTaskStream/Subscribe?chatTaskId=${chatTaskId}&replayBuffered=false&_ts=${Date.now()}`
       const source = new EventSource(streamUrl, { withCredentials: true })
       this.historyStream[listType] = source
+      this.loadPendingHumanRequests(chatTaskId)
       this.resetTaskHistoryStreamSilentTimer(listType, chatTaskId)
 
       const rearmSilentTimer = () => {
@@ -3120,9 +3333,31 @@ var app = new Vue({
         rearmSilentTimer()
       }
 
+      const onHumanRequest = (event) => {
+        if (this.historyStream[listType] !== source) return
+        this.clearTaskHistoryStreamSilentTimer(listType)
+        const payload = this.safeParseStreamEvent(event)
+        if (payload) {
+          this.setCurrentTaskStatusByType(listType, chatTaskId, 2)
+          this.handleHumanApprovalRequest(payload)
+        }
+        rearmSilentTimer()
+      }
+      const onHumanResolved = (event) => {
+        if (this.historyStream[listType] !== source) return
+        const payload = this.safeParseStreamEvent(event)
+        const requestId = this.getHumanRequestId(payload)
+        if (requestId) {
+          this.removeResolvedHumanRequest(requestId)
+        }
+        rearmSilentTimer()
+      }
+
       source.addEventListener('chunk', onChunk)
       source.addEventListener('message', onMessage)
       source.addEventListener('status', onStatus)
+      source.addEventListener('humanRequest', onHumanRequest)
+      source.addEventListener('humanResolved', onHumanResolved)
 
       source.onerror = () => {
         if (this.historyStream[listType] !== source) return
@@ -3131,6 +3366,165 @@ var app = new Vue({
         this.clearTaskGeneratingPlaceholder(listType)
         this.pullTaskHistoryAfterStreamClosed(listType, chatTaskId)
         this.pollGetTaskHistoryData(listType, this.getTaskRecordListData, chatTaskId)
+      }
+    },
+    getHumanRequestId(payload) {
+      return String(payload?.humanRequestId || payload?.requestId || '')
+    },
+    formatToolApprovalArguments(rawArguments) {
+      let value = rawArguments
+      if (value === undefined || value === null || String(value).trim() === '') {
+        return '（未提供参数）'
+      }
+
+      for (let index = 0; index < 2 && typeof value === 'string'; index++) {
+        const text = value.trim()
+        if (!text || !['{', '[', '"'].includes(text[0])) break
+        try {
+          value = JSON.parse(text)
+        } catch (_) {
+          break
+        }
+      }
+
+      if (typeof value === 'string') {
+        return value
+      }
+
+      try {
+        return JSON.stringify(value, null, 2)
+      } catch (_) {
+        return String(value)
+      }
+    },
+    showNextToolApproval() {
+      if (this.toolApprovalRequest || this.toolApprovalQueue.length === 0) return
+      const request = this.toolApprovalQueue.shift()
+      this.toolApprovalRequest = request
+      this.toolApprovalArgumentText = this.formatToolApprovalArguments(
+        request?.humanToolArguments ?? request?.toolArguments)
+      this.toolApprovalDialogVisible = true
+    },
+    async handleHumanApprovalRequest(payload) {
+      const requestId = this.getHumanRequestId(payload)
+      if (!requestId || this.humanApprovalRequests[requestId]) {
+        return
+      }
+
+      this.$set(this.humanApprovalRequests, requestId, true)
+      if (String(payload?.humanRequestType || payload?.requestType || '').toLowerCase() === 'humanturn') {
+        this.humanReplyRequest = payload
+        this.humanReplyText = ''
+        this.humanReplyDialogVisible = true
+        return
+      }
+
+      this.toolApprovalQueue.push({
+        ...payload,
+        requestId
+      })
+      this.showNextToolApproval()
+    },
+    async resolveToolApproval(approved) {
+      const request = this.toolApprovalRequest
+      const requestId = this.getHumanRequestId(request)
+      if (!requestId || this.toolApprovalSubmitting) return
+
+      this.toolApprovalSubmitting = true
+      try {
+        const reason = approved ? '用户确认' : '用户拒绝'
+        const query = getInterfaceQueryStr({ requestId, approved, reason })
+        const response = await serviceAM.post(`/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.ResolveHumanRequest?${query}`)
+        const data = response?.data ?? {}
+        if (!data.success) {
+          this.$message.error(data.errorMessage || data.data || '人工审批提交失败')
+          return
+        }
+        this.$message.success(approved ? '已批准工具调用，任务继续执行' : '已拒绝工具调用，任务继续处理')
+        this.toolApprovalDialogVisible = false
+        this.toolApprovalRequest = null
+        this.toolApprovalArgumentText = ''
+        this.$delete(this.humanApprovalRequests, requestId)
+        this.$nextTick(() => this.showNextToolApproval())
+      } catch (error) {
+        this.$message.error(error?.message || '人工审批提交失败')
+      } finally {
+        this.toolApprovalSubmitting = false
+      }
+    },
+    deferToolApproval() {
+      const requestId = this.getHumanRequestId(this.toolApprovalRequest)
+      this.toolApprovalDialogVisible = false
+      this.toolApprovalRequest = null
+      this.toolApprovalArgumentText = ''
+      if (requestId) {
+        this.$delete(this.humanApprovalRequests, requestId)
+      }
+      this.$nextTick(() => this.showNextToolApproval())
+    },
+    removeResolvedHumanRequest(requestId) {
+      if (!requestId) return
+      this.toolApprovalQueue = this.toolApprovalQueue
+        .filter(item => this.getHumanRequestId(item) !== requestId)
+      if (this.getHumanRequestId(this.toolApprovalRequest) === requestId) {
+        this.toolApprovalDialogVisible = false
+        this.toolApprovalRequest = null
+        this.toolApprovalArgumentText = ''
+        this.$nextTick(() => this.showNextToolApproval())
+      }
+      this.$delete(this.humanApprovalRequests, requestId)
+    },
+    async submitHumanReply() {
+      const requestId = String(this.humanReplyRequest?.humanRequestId || this.humanReplyRequest?.requestId || '')
+      const input = String(this.humanReplyText || '').trim()
+      if (!requestId || !input) {
+        this.$message.warning('请输入 Human 回复')
+        return
+      }
+
+      this.humanReplySubmitting = true
+      try {
+        const response = await serviceAM.post(
+          '/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.SendHumanMessage',
+          { requestId, input })
+        const data = response?.data ?? {}
+        if (!data.success) {
+          this.$message.error(data.errorMessage || data.data || 'Human 回复提交失败')
+          return
+        }
+
+        const submittedRequestId = requestId
+        this.humanReplyDialogVisible = false
+        this.humanReplyRequest = null
+        this.humanReplyText = ''
+        this.$delete(this.humanApprovalRequests, submittedRequestId)
+        this.$message.success('Human 回复已提交')
+      } catch (error) {
+        this.$message.error(error?.message || 'Human 回复提交失败')
+      } finally {
+        this.humanReplySubmitting = false
+      }
+    },
+    closeHumanReplyDialog() {
+      const requestId = String(this.humanReplyRequest?.humanRequestId || this.humanReplyRequest?.requestId || '')
+      this.humanReplyDialogVisible = false
+      this.humanReplyRequest = null
+      this.humanReplyText = ''
+      if (requestId) {
+        this.$delete(this.humanApprovalRequests, requestId)
+      }
+    },
+    async loadPendingHumanRequests(chatTaskId) {
+      if (!chatTaskId) return
+      try {
+        const response = await serviceAM.get(
+          `/api/Senparc.Xncf.AgentsManager/ChatTaskAppService/Xncf.AgentsManager_ChatTaskAppService.GetHumanRequests?chatTaskId=${encodeURIComponent(chatTaskId)}`,
+          { customAlert: true }
+        )
+        const pendingRequests = response?.data?.data || []
+        pendingRequests.forEach(request => this.handleHumanApprovalRequest(request))
+      } catch (error) {
+        console.warn('load pending human approval requests failed', chatTaskId, error)
       }
     },
     clearTaskHistoryStreamSilentTimer(listType) {
@@ -3250,6 +3644,9 @@ var app = new Vue({
         const mergedFinal = {
           ...existedFinal,
           fromAgentTemplateId: payload.fromAgentTemplateId || existedFinal.fromAgentTemplateId || 0,
+          fromParticipantKey: payload.fromParticipantKey || existedFinal.fromParticipantKey || '',
+          fromParticipantKind: payload.fromParticipantKind || existedFinal.fromParticipantKind || '',
+          fromParticipantName: payload.fromAgentName || existedFinal.fromParticipantName || '',
           addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : (existedFinal.addTime || new Date().toISOString()),
           message: message || existedFinal.message || '',
           messageHtml: this.renderSafeMarkdown(message || existedFinal.message || ''),
@@ -3271,6 +3668,9 @@ var app = new Vue({
       const finalItem = {
         id: payload.historyId || `${draftKey || 'msg'}:${Date.now()}`,
         fromAgentTemplateId: payload.fromAgentTemplateId || 0,
+        fromParticipantKey: payload.fromParticipantKey || '',
+        fromParticipantKind: payload.fromParticipantKind || '',
+        fromParticipantName: payload.fromAgentName || '',
         addTime: payload.timestamp ? new Date(payload.timestamp).toISOString() : new Date().toISOString(),
         message,
         messageHtml: this.renderSafeMarkdown(message),
@@ -3354,8 +3754,19 @@ var app = new Vue({
           const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
           console.log('formData', formData);
 
-          // 确保 functionCallNames 被正确初始化
-          this.functionCallTags = formData.functionCallNames ? formData.functionCallNames.split(',').filter(Boolean) : [];
+          // FunctionBindings 是新契约；没有该字段时回退到旧版插件类名列表。
+          const loadedBindings = Array.isArray(formData.functionBindings)
+            ? formData.functionBindings
+            : (formData.functionCallNames
+              ? formData.functionCallNames.split(',').filter(Boolean).map(name => ({
+                kind: 'plugin',
+                key: name,
+                name
+              }))
+              : [])
+          this.$set(this.agentForm, 'functionBindings', loadedBindings.map(item => this.normalizeFunctionBinding(item)).filter(Boolean))
+          this.syncLegacyFunctionCallNames()
+          this.functionCallTags = this.agentForm.functionCallNames ? this.agentForm.functionCallNames.split(',').filter(Boolean) : [];
 
           // 将数据赋值给表单
           Object.assign(this[formName], formData);
@@ -3376,6 +3787,8 @@ var app = new Vue({
                   Object.assign(this[formName], {
                     ...groupDetail.chatGroupDto,
                     members: groupDetail.agentTemplateDtoList || groupDetail.chatGroupMembers || [],
+                    includeHumanParticipant: (groupDetail.agentTemplateDtoList || groupDetail.chatGroupMembers || [])
+                      .some(member => member && member.isHuman === true),
                     remoteMembers: (groupDetail.remoteMemberDtoList || []).map(member => member.remoteAgentDto || member)
                   })
                 }
@@ -3464,6 +3877,10 @@ var app = new Vue({
         }
         if (Number(this.groupStartForm.chatGroupId) === requestedGroupId) {
           this.groupStartParticipants = this.buildGroupStartParticipants(data.data || {})
+          if (!this.groupStartHumanParticipantTouched) {
+            this.groupStartForm.includeHumanParticipant = this.groupStartParticipants
+              .some(participant => participant.agentKind === 'Human')
+          }
           await this.autoTestRemoteParticipants(this.groupStartParticipants)
         }
       } catch (error) {
@@ -3476,6 +3893,9 @@ var app = new Vue({
           this.groupStartParticipantLoading = false
         }
       }
+    },
+    markGroupStartHumanParticipantTouched() {
+      this.groupStartHumanParticipantTouched = true
     },
     getGroupStartPromptTextarea() {
       const input = this.$refs?.groupStartPromptCommand
@@ -3599,6 +4019,7 @@ var app = new Vue({
         refName = 'groupStartELForm'
         this.groupStartParticipants = []
         this.groupStartParticipantLoading = false
+        this.groupStartHumanParticipantTouched = false
         this.groupStartPromptCaretStart = 0
         this.groupStartPromptCaretEnd = 0
       }
@@ -3632,10 +4053,13 @@ var app = new Vue({
       if (btnType === 'drawerGroupStart') {
         // 详情: formData.chatGroupDto 列表: formData
         const chatGroup = formData?.chatGroupDto || formData || {}
+        const chatGroupId = chatGroup.id || chatGroup.chatGroupId || formData?.chatGroupId || ''
         this.groupStartForm.groupName = chatGroup.name || ''
         this.groupStartForm.name = chatGroup.name ? `${chatGroup.name}1` : ''
-        this.groupStartForm.chatGroupId = chatGroup.id || ''
+        this.groupStartForm.chatGroupId = chatGroupId
         this.groupStartParticipants = this.buildGroupStartParticipants(formData)
+        this.groupStartHumanParticipantTouched = false
+        this.groupStartForm.includeHumanParticipant = this.groupStartParticipants.some(participant => participant.agentKind === 'Human')
         this.groupStartPromptCaretStart = 0
         this.groupStartPromptCaretEnd = 0
         this.visible[visibleKey] = true
@@ -3645,6 +4069,13 @@ var app = new Vue({
       }
       if (btnType === 'drawerTaskStart') {
         visibleKey = 'drawerGroupStart'
+        const chatGroupId = this.getGroupStartChatGroupId(this.groupStartForm)
+        if (!this.groupStartForm.groupName && chatGroupId) {
+          const groupDetail = this.groupDetails?.chatGroupDto
+            || this.agentDetailsGroupDetails?.chatGroupDto
+            || {}
+          this.groupStartForm.groupName = groupDetail.name || ''
+        }
       }
       let initialSnapshotLoader = null
       if (btnType === 'drawerGroup') {
@@ -3672,6 +4103,7 @@ var app = new Vue({
       } else if (btnType === 'dialogTaskDescription') {
         // 清空数据
         this.describeContent = ''
+        this.taskDescriptionDetails = null
         this.$nextTick(() => {
           this.visible[btnType] = false
         })
@@ -3714,6 +4146,10 @@ var app = new Vue({
         formName = 'evaluationForm'
       }
       if (!refName) return
+      if (['drawerAgent', 'dialogGroupAgent'].includes(btnType)
+        && !this.validateAgentModelBindingForm()) {
+        return
+      }
       this.$refs[refName].validate(async (valid) => {
         if (valid) {
           const submitForm = this[formName] ?? {}
@@ -3752,9 +4188,33 @@ var app = new Vue({
       console.log('识别事件', e);
     },
 
-    handleSystemMessageTypeChange() {
+    handleSystemMessageTypeChange(type) {
       // 用户显式切换时，应以用户的选择为准，不再让异步加载结果覆盖它。
       this.agentSystemMessageTypeDetectionPending = false
+      if (String(type) === '2') {
+        this.$set(this.agentForm, 'modelBinding', 2)
+      }
+    },
+
+    handleAgentModelBindingChange(value) {
+      if (Number(value) !== 2) {
+        this.$set(this.agentForm, 'aiModelId', null)
+      }
+    },
+
+    validateAgentModelBindingForm() {
+      const isManualPrompt = String(this.agentForm?.systemMessageType || '') === '2'
+      const binding = Number(this.agentForm?.modelBinding ?? 0)
+      const aiModelId = Number(this.agentForm?.aiModelId || 0)
+      if (isManualPrompt && binding !== 2) {
+        this.$message.error('手动 Prompt 没有 PromptRange 模型可继承，请选择“手动选择 AIModel”。')
+        return false
+      }
+      if (binding === 2 && !aiModelId) {
+        this.$message.error('手动选择 AIModel 时必须选择一个 Chat 类型模型。')
+        return false
+      }
+      return true
     },
 
     handleSystemMessageOptionsLoaded(options) {
@@ -4703,6 +5163,10 @@ var app = new Vue({
     // 再次执行 (即再次启动)
     handleTaskAgain(optype, item = {}) {
       let startData = item ?? {}
+      const chatGroupId = this.getGroupStartChatGroupId(startData)
+      if (chatGroupId) {
+        startData = Object.assign({}, startData, { chatGroupId })
+      }
       // this.groupStartForm.groupName = item.name
       this.handleEditDrawerOpenBtn('drawerTaskStart', startData)
     },
@@ -4981,12 +5445,54 @@ var app = new Vue({
     // 查看任务描述
     viewTaskDescription(item) {
       this.describeContent = item?.promptCommand ?? ''
+      this.taskDescriptionDetails = item || null
       this.visible.dialogTaskDescription = true
+    },
+    taskHumanInTheLoopLevelText(value) {
+      return {
+        0: 'L0 全自动',
+        1: 'L1 风险分层',
+        2: 'L2 工具审批',
+        3: 'L3 Human 参与者 + 工具审批'
+      }[Number(value)] || `未知（${value}）`
+    },
+    taskToolPermissionText(value) {
+      return {
+        0: '继承 HIL 等级',
+        1: '自动执行',
+        2: '执行前审批',
+        3: '禁止使用'
+      }[Number(value)] || `未知（${value}）`
+    },
+    taskHumanParticipantStatusText(task) {
+      if (!task?.executionPolicyCaptured) {
+        return '历史任务未记录'
+      }
+      return task.includeHumanParticipant ? '已加入本任务' : '本任务未启用'
+    },
+    taskDescriptionCopyText() {
+      const detail = this.taskDescriptionDetails || {}
+      if (!detail.executionPolicyCaptured) {
+        return this.describeContent
+      }
+
+      return [
+        this.describeContent,
+        '',
+        '--- 执行策略 ---',
+        `HIL 等级：${this.taskHumanInTheLoopLevelText(detail.humanInTheLoopLevel)}`,
+        `插件工具权限：${this.taskToolPermissionText(detail.pluginToolPermission)}`,
+        `MCP 工具权限：${this.taskToolPermissionText(detail.mcpToolPermission)}`,
+        `Human 参与者：${detail.includeHumanParticipant ? '包含' : '跳过'}`,
+        `最大对话轮数：${Number(detail.chatMaxRound || 0)}`,
+        `个性化参数：${detail.isPersonality ? '启用' : '关闭'}`,
+        `兼容强制审批：${detail.requireHumanApproval ? '启用' : '关闭'}`
+      ].join('\n')
     },
     // 任务描述复制
     taskDescriptionCopy() {
       // 复制文本
-      this.copyText('4', this.describeContent).then(() => {
+      this.copyText('4', this.taskDescriptionCopyText()).then(() => {
         this.handleElVisibleClose('dialogTaskDescription')
       })
     },
@@ -5050,6 +5556,9 @@ var app = new Vue({
       const relatedHistory = this.getTaskHistoryListForParticipantInfo(taskType)
         .filter(item => this.getParticipantKey(item) === participantKey)
       const usage = this.buildTaskHistoryUsageSummary(relatedHistory)
+      const isHuman = participant?.isHuman === true
+        || participant?.agentKind === 'Human'
+        || participantKey.startsWith('human:')
       const hasReportedTokenUsage = relatedHistory.some(item => {
         return ['promptTokens', 'completionTokens', 'totalTokens']
           .some(field => item?.[field] !== null && item?.[field] !== undefined)
@@ -5062,28 +5571,69 @@ var app = new Vue({
       const statusType = isRemote
         ? this.remoteParticipantAvailabilityType(participant)
         : (enabled ? 'success' : 'info')
-      const currentUsageText = usage.messageCount === 0
-        ? '尚无已完成回复'
-        : (hasReportedTokenUsage
-          ? `${this.formatUsageCount(usage.messageCount)} 条回复 · ${this.formatUsageCount(usage.totalTokens)} Token`
-          : `${this.formatUsageCount(usage.messageCount)} 条回复 · Token 未由远端反馈`)
+      const currentUsageText = isHuman
+        ? (usage.messageCount === 0
+          ? '尚无已提交输入'
+          : `已输入 ${this.formatUsageCount(usage.messageCount)} 条文本`)
+        : (usage.messageCount === 0
+          ? '尚无已完成回复'
+          : (hasReportedTokenUsage
+            ? `${this.formatUsageCount(usage.messageCount)} 条回复 · ${this.formatUsageCount(usage.totalTokens)} Token`
+            : `${this.formatUsageCount(usage.messageCount)} 条回复 · Token 未由远端反馈`))
       const totalTokens = Number(participant?.totalTokens || 0)
 
       return {
-        kindText: isRemote ? '远程 A2A' : '本地 Agent',
-        kindType: isRemote ? 'warning' : 'primary',
+        kindText: isHuman ? 'Human 参与者' : (isRemote ? '远程 A2A' : '本地 Agent'),
+        kindType: isHuman ? 'info' : (isRemote ? 'warning' : 'primary'),
         statusText,
         statusType,
         description: participant?.description || '暂无简介',
         currentUsageText,
-        responseTimeText: this.formatResponseMilliseconds(usage.averageResponseMilliseconds, '暂无响应时长'),
-        totalUsageText: totalTokens > 0
-          ? `${this.formatUsageCount(totalTokens)} Token`
-          : '暂无累计数据',
+        responseTimeText: isHuman
+          ? '不适用'
+          : this.formatResponseMilliseconds(usage.averageResponseMilliseconds, '暂无响应时长'),
+        totalUsageText: isHuman
+          ? '不产生模型 Token'
+          : (totalTokens > 0
+            ? `${this.formatUsageCount(totalTokens)} Token`
+            : '暂无累计数据'),
         activityText: this.formatActivityTime(participant?.lastActiveTime || participant?.lastHealthCheckAt),
         healthMessage: isRemote ? (participant?.lastHealthCheckMessage || '尚未执行连接检测') : '',
         isRemote,
+        canOpenEditor: !isHuman && Number.isInteger(Number(participant?.id)) && Number(participant.id) > 0,
       }
+    },
+
+    buildParticipantEditorUrl(participant) {
+      const id = Number(participant?.id || 0)
+      if (!Number.isInteger(id) || id <= 0 || participant?.isHuman === true || participant?.agentKind === 'Human') {
+        return ''
+      }
+
+      if (participant?.agentKind === 'RemoteA2A') {
+        return `/Admin/AgentsManager/Index#tab=remoteA2A&view=edit&remoteAgentId=${id}`
+      }
+
+      return `/Admin/AgentsManager/Index#tab=first&view=edit&agentId=${id}`
+    },
+
+    openParticipantAgentEditor(participant) {
+      const url = this.buildParticipantEditorUrl(participant)
+      if (!url) {
+        return
+      }
+
+      const participantType = participant?.agentKind === 'RemoteA2A' ? 'RemoteA2A' : 'Local'
+      const targetName = `NcfAgentsManager_${participantType}_${participant.id}`
+      const openedWindow = typeof window.open === 'function'
+        ? window.open(url, targetName)
+        : null
+      if (openedWindow) {
+        openedWindow.focus?.()
+        return
+      }
+
+      window.location?.assign?.(url)
     },
 
     getGroupParticipantList(groupDetail) {
@@ -5093,8 +5643,8 @@ var app = new Vue({
       const localParticipantMap = new Map()
       const localParticipants = localAgents.map(agent => {
         const participant = Object.assign({}, agent, {
-          participantKey: `local:${agent.id}`,
-          agentKind: 'Local',
+          participantKey: agent.isHuman ? `human:${agent.id}` : `local:${agent.id}`,
+          agentKind: agent.isHuman ? 'Human' : 'Local',
           roles: []
         })
         localParticipantMap.set(agent.id, participant)
@@ -5323,6 +5873,92 @@ var app = new Vue({
       const copied = await copyTextForEmbeddedBrowser(text)
       this.$message[copied ? 'success' : 'error'](copied ? '复制成功' : '复制失败')
       return copied
+    },
+    openFunctionBindingDrawer() {
+      this.visible.drawerFunctionBindings = true
+      this.functionBindingSearch = ''
+      this.functionBindingTab = 'function'
+      this.loadFunctionBindingCatalog()
+    },
+    async loadFunctionBindingCatalog() {
+      this.functionBindingLoading = true
+      try {
+        const agentId = Number(this.agentForm?.id || 0)
+        const response = await serviceAM.get(
+          `/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetFunctionBindingCatalog?agentId=${agentId}`)
+        const data = response?.data ?? {}
+        if (!data.success) {
+          this.$message.error(data.errorMessage || '读取 Function 与 Workflow 列表失败')
+          return
+        }
+
+        const catalog = data.data || {}
+        this.$set(this, 'functionBindingCatalog', {
+          functions: Array.isArray(catalog.functions) ? catalog.functions : [],
+          plugins: Array.isArray(catalog.plugins) ? catalog.plugins : [],
+          workflows: Array.isArray(catalog.workflows) ? catalog.workflows : [],
+          currentBindings: Array.isArray(catalog.currentBindings) ? catalog.currentBindings : []
+        })
+        if ((!this.agentForm.functionBindings || this.agentForm.functionBindings.length === 0)
+          && this.functionBindingCatalog.currentBindings.length > 0) {
+          this.$set(this.agentForm, 'functionBindings', this.functionBindingCatalog.currentBindings)
+          this.syncLegacyFunctionCallNames()
+        }
+      } catch (error) {
+        console.error('读取 Function 绑定目录失败:', error)
+        this.$message.error(error?.message || '读取 Function 与 Workflow 列表失败')
+      } finally {
+        this.functionBindingLoading = false
+      }
+    },
+    normalizeFunctionBinding(binding) {
+      if (!binding) return null
+      const kind = String(binding.kind || binding.Kind || 'plugin').toLowerCase()
+      const key = String(binding.key || binding.Key || '').trim()
+      if (!key) return null
+      return {
+        kind,
+        key,
+        name: binding.name || binding.Name || key,
+        description: binding.description || binding.Description || '',
+        moduleUid: binding.moduleUid || binding.ModuleUid || '',
+        functionKey: binding.functionKey || binding.FunctionKey || '',
+        workflowId: binding.workflowId || binding.WorkflowId || (kind === 'workflow' ? Number(key) || null : null)
+      }
+    },
+    isFunctionBindingSelected(option) {
+      const normalized = this.normalizeFunctionBinding(option)
+      if (!normalized) return false
+      return (this.agentForm.functionBindings || []).some(item => {
+        const current = this.normalizeFunctionBinding(item)
+        return current && current.kind === normalized.kind && current.key.toLowerCase() === normalized.key.toLowerCase()
+      })
+    },
+    toggleFunctionBinding(option, selected) {
+      const normalized = this.normalizeFunctionBinding(option)
+      if (!normalized) return
+      const current = (this.agentForm.functionBindings || [])
+        .map(item => this.normalizeFunctionBinding(item))
+        .filter(Boolean)
+      const index = current.findIndex(item => item.kind === normalized.kind
+        && item.key.toLowerCase() === normalized.key.toLowerCase())
+      if (selected && index < 0) {
+        current.push(normalized)
+      } else if (!selected && index >= 0) {
+        current.splice(index, 1)
+      }
+      this.$set(this.agentForm, 'functionBindings', current)
+      this.syncLegacyFunctionCallNames()
+    },
+    removeFunctionBinding(binding) {
+      this.toggleFunctionBinding(binding, false)
+    },
+    syncLegacyFunctionCallNames() {
+      const names = (this.agentForm.functionBindings || [])
+        .map(item => this.normalizeFunctionBinding(item))
+        .filter(item => item?.kind === 'plugin')
+        .map(item => item.key)
+      this.$set(this.agentForm, 'functionCallNames', [...new Set(names)].join(','))
     },
     // 组成员头像堆叠 数量处理
     displayedAvatars(list, limit = 5) {
@@ -5966,6 +6602,8 @@ function getInterfaceQueryStr(queryObj) {
         return value.length > 0
       } else if (typeof value === 'number') {
         return true
+      } else if (typeof value === 'boolean') {
+        return true
       } else {
         // if(typeof value === 'undefined')
         return false
@@ -6126,6 +6764,9 @@ Vue.component('participant-quick-action', {
     },
     testRemote() {
       this.$emit('test-remote')
+    },
+    editAgent() {
+      this.$emit('edit-agent')
     }
   },
   template: `
@@ -6154,6 +6795,7 @@ Vue.component('participant-quick-action', {
         </div>
         <div class="participant-quick-info__footer">
           <span>用量仅统计当前任务中已加载的记录</span>
+          <el-button v-if="quickInfo.canOpenEditor" type="text" size="mini" icon="el-icon-top-right" title="在新窗口中编辑 Agent" @click.stop="editAgent">编辑</el-button>
           <el-button v-if="quickInfo.isRemote" type="text" size="mini" :loading="testing" @click.stop="testRemote">测试连接</el-button>
         </div>
       </section>
@@ -6213,7 +6855,17 @@ Vue.component('load-more-select', {
   // v-el-select-loadmore="interestsLoadmore" filterable remote collapse-tags reserve-keyword :remote-method="remoteMethod" @focus="remoteMethod('',true)" @visible-change="reverseArrow"
   template: `<div :class="[direction === 'horizontal' ? 'df-wn flex-ac flex-js' : '']" style="width:100%;gap:10px;">
         <el-select ref="elSelectLoadMore" v-model="selectVal"  :disabled="disabled" :loading="interesLoading" :placeholder="placeholder" filterable :multiple="multipleChoice" clearable style="width:100%" @change="handleChange">
-    <el-option v-for="(item,index) in interestsOptions" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
+    <el-option v-for="(item,index) in interestsOptions" :key="item.value" :label="item.label" :value="item.value">
+      <template v-if="serviceType === 'model'">
+        <span>{{item.label}}</span>
+        <span style="float:right;display:flex;gap:4px;">
+          <el-tag size="mini" effect="plain">{{modelTypeLabel(item.configModelType)}}</el-tag>
+          <el-tag size="mini" type="info" effect="plain">{{modelPlatformLabel(item.aiPlatform)}}</el-tag>
+          <el-tag v-if="item.deploymentName || item.modelId" size="mini" type="warning" effect="plain">{{item.deploymentName || item.modelId}}</el-tag>
+        </span>
+      </template>
+      <template v-else>{{item.label}}</template>
+    </el-option></el-select>
     <template v-if="direction==='horizontal'">
         <i class="cursorPointer fas fa-redo" title="刷新" @click="refreshManagementList" />
     </template>
@@ -6253,6 +6905,10 @@ Vue.component('load-more-select', {
     direction: {
       type: String,
       default: 'horizontal' // 横向/竖向  horizontal/vertical
+    },
+    chatOnly: {
+      type: Boolean,
+      default: false
     }
   },
   data: function () {
@@ -6305,6 +6961,13 @@ Vue.component('load-more-select', {
     this.refreshManagementList()
   },
   methods: {
+    modelTypeLabel(type) {
+      return Number(type) === 2 ? 'Chat' : `类型 ${type ?? '未知'}`
+    },
+    modelPlatformLabel(platform) {
+      const labels = { 1: 'OpenAI', 2: 'Azure OpenAI', 3: 'Hugging Face', 4: 'NeuCharAI' }
+      return labels[Number(platform)] || `平台 ${platform ?? '未知'}`
+    },
     jumpPromptRange(urlType) {
       let url = ''
       if (urlType === 'promptRange') {
@@ -6413,7 +7076,8 @@ Vue.component('load-more-select', {
           const data = res?.data ?? {}
           if (data.success) {
             //console.log('getModelOptData:', res.data)
-            const modelData = data?.data ?? []
+            const modelData = (data?.data ?? [])
+              .filter(item => !this.chatOnly || Number(item.configModelType) === 2)
             const listData = modelData.map(item => {
               return {
                 ...item,

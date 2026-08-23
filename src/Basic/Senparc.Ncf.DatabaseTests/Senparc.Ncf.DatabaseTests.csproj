@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.7</Version>
+		<Version>0.0.8</Version>
 		<PackageReleaseNotes>
 		  [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
 		  1、Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.2-preview2
@@ -35,7 +35,11 @@
 		  8、Dependency update from Senparc.Ncf.Database to 0.21.6-preview6
 		  [2026-08-13] v0.0.6 Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.7-preview7; Senparc.Ncf.Database.MySql to 0.20.7-preview7; Senparc.Ncf.Database.Oracle to 0.10.7-preview7; Senparc.Ncf.Database.PostgreSQL to 0.13.7-preview7; Senparc.Ncf.Database.SqlServer to 0.20.7-preview7; Senparc.Ncf.Database.Sqlite to 0.20.7-preview7; Senparc.Ncf.Database to 0.21.7-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7
 		  [2026-08-15] v0.0.7 Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.8-preview8; Senparc.Ncf.Database.MySql to 0.20.8-preview8; Senparc.Ncf.Database.Oracle to 0.10.8-preview8; Senparc.Ncf.Database.PostgreSQL to 0.13.8-preview8; Senparc.Ncf.Database.SqlServer to 0.20.8-preview8; Senparc.Ncf.Database.Sqlite to 0.20.8-preview8; Senparc.Ncf.Database to 0.21.8-preview8; Senparc.Ncf.DatabasePlant to 0.21.8-preview8
-</PackageReleaseNotes>
+		  1、Dependency update from Senparc.Ncf.Database 及相关数据库项目到 preview8
+		  2、补充多库支持矩阵日志 BuildSupportMatrixLog 单测
+		  [2026-08-22] v0.0.8 补充多数据库支持矩阵日志回归测试
+		  1、覆盖 BuildSupportMatrixLog 的数据库绑定和矩阵输出行为
+		</PackageReleaseNotes>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>10.0</LangVersion>

@@ -5,11 +5,17 @@
     文件功能描述：沙箱 Function / OHS 入口
 
     创建标识：Senparc - 20260808
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 支持创建与更新沙箱会话 TTL/永久保持
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
 
 ----------------------------------------------------------------*/
 
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Application.DTOs.Request;
@@ -37,8 +43,15 @@ public class SandboxAppService : AppServiceBase
                 : SandboxRuntimeKind.Docker;
 
             logger.Append($"创建沙箱 Template={request.TemplateKey}, Runtime={runtime}");
-            var info = await _orchestrator.CreateAsync(ownerUserId: 0, request.TemplateKey, runtime).ConfigureAwait(false);
+            var info = await _orchestrator.CreateAsync(
+                    ownerUserId: 0,
+                    templateKey: request.TemplateKey,
+                    preferredRuntime: runtime,
+                    ttlMinutes: request.TtlMinutes,
+                    keepAlive: request.KeepAlive)
+                .ConfigureAwait(false);
             logger.Append($"SessionId={info.SessionId}, Status={info.Status}");
+            logger.Append(FormatTtl(info));
             if (!string.IsNullOrWhiteSpace(info.AccessUrl))
             {
                 logger.Append($"AccessUrl={info.AccessUrl}");
@@ -98,6 +111,113 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    [FunctionRender("执行 Lab 命令", "在运行中的持久化 JupyterLab 容器工作区内执行受限时长的 Shell 命令", typeof(Register), AllowAiInvocation = true)]
+    public async Task<StringAppResponse> LabExec(Sandbox_LabCommandRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            var result = await _orchestrator.ExecInteractiveAsync(
+                    request.SessionId,
+                    request.Command,
+                    request.WorkingDirectory,
+                    request.TimeoutSeconds)
+                .ConfigureAwait(false);
+            logger.Append($"Lab SessionId={request.SessionId}, ExitCode={result.ExitCode}");
+            response.Data = JsonSerializer.Serialize(new
+            {
+                sessionId = request.SessionId,
+                exitCode = result.ExitCode,
+                stdout = result.StdOut,
+                stderr = result.StdErr
+            });
+            return null;
+        });
+    }
+
+    [FunctionRender("上传 Lab 文件", "把 Base64 文件内容写入运行中的持久化 JupyterLab 工作区", typeof(Register), AllowAiInvocation = true)]
+    public async Task<StringAppResponse> LabUploadFile(Sandbox_LabUploadFileRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            byte[] content;
+            try
+            {
+                content = Convert.FromBase64String(request.ContentBase64 ?? string.Empty);
+            }
+            catch (FormatException)
+            {
+                response.Success = false;
+                response.ErrorMessage = "ContentBase64 不是有效的 Base64 内容。";
+                return null;
+            }
+
+            var file = await _orchestrator.UploadWorkspaceFileAsync(
+                    request.SessionId,
+                    request.RelativePath,
+                    content,
+                    request.Overwrite)
+                .ConfigureAwait(false);
+            logger.Append($"Lab file uploaded: SessionId={request.SessionId}, Path={file.RelativePath}, Bytes={file.Length}");
+            response.Data = JsonSerializer.Serialize(new
+            {
+                sessionId = request.SessionId,
+                file.RelativePath,
+                file.Length,
+                file.LastWriteTimeUtc
+            });
+            return null;
+        });
+    }
+
+    [FunctionRender("下载 Lab 文件", "读取运行中的持久化 JupyterLab 工作区文件并返回 Base64 内容", typeof(Register), AllowAiInvocation = true)]
+    public async Task<StringAppResponse> LabDownloadFile(Sandbox_LabFileRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            var file = await _orchestrator.ReadWorkspaceFileAsync(
+                    request.SessionId,
+                    request.RelativePath,
+                    request.MaxBytes)
+                .ConfigureAwait(false);
+            logger.Append($"Lab file downloaded: SessionId={request.SessionId}, Path={file.File.RelativePath}, Bytes={file.File.Length}");
+            response.Data = JsonSerializer.Serialize(new
+            {
+                sessionId = request.SessionId,
+                file = new
+                {
+                    file.File.RelativePath,
+                    file.File.Length,
+                    file.File.LastWriteTimeUtc
+                },
+                contentBase64 = Convert.ToBase64String(file.Content)
+            });
+            return null;
+        });
+    }
+
+    [FunctionRender("列举 Lab 文件", "列举运行中的持久化 JupyterLab 工作区文件", typeof(Register), AllowAiInvocation = true)]
+    public async Task<StringAppResponse> LabListFiles(Sandbox_LabListFilesRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            var files = await _orchestrator.ListWorkspaceFilesAsync(
+                    request.SessionId,
+                    request.RelativeDirectory,
+                    request.Recursive,
+                    request.MaxItems)
+                .ConfigureAwait(false);
+            logger.Append($"Lab files listed: SessionId={request.SessionId}, Count={files.Count}");
+            response.Data = JsonSerializer.Serialize(new
+            {
+                sessionId = request.SessionId,
+                directory = request.RelativeDirectory ?? string.Empty,
+                recursive = request.Recursive,
+                files
+            });
+            return null;
+        });
+    }
+
     [FunctionRender("销毁沙箱", "停止并清理指定会话", typeof(Register))]
     public async Task<StringAppResponse> Destroy(Sandbox_SessionIdRequest request)
     {
@@ -106,6 +226,34 @@ public class SandboxAppService : AppServiceBase
             await _orchestrator.DestroyAsync(request.SessionId).ConfigureAwait(false);
             logger.Append($"已销毁 {request.SessionId}");
             response.Data = $"已销毁会话 {WebUtility.HtmlEncode(request.SessionId)}";
+            return null;
+        });
+    }
+
+    [FunctionRender("删除沙箱记录", "永久删除已停止、已过期或已清理完成的会话记录", typeof(Register))]
+    public async Task<StringAppResponse> DeleteRecord(Sandbox_SessionIdRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            await _orchestrator.DeleteRecordAsync(request.SessionId).ConfigureAwait(false);
+            logger.Append($"已删除会话记录 {request.SessionId}");
+            response.Data = $"已删除会话记录 {WebUtility.HtmlEncode(request.SessionId)}";
+            return null;
+        });
+    }
+
+    [FunctionRender("修改 TTL", "延长、缩短或设为永久保持", typeof(Register))]
+    public async Task<StringAppResponse> UpdateTtl(Sandbox_UpdateTtlRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            var info = await _orchestrator.UpdateTtlAsync(
+                    request.SessionId,
+                    request.TtlMinutes,
+                    request.KeepAlive)
+                .ConfigureAwait(false);
+            logger.Append($"已更新 {info.SessionId} 的 {FormatTtl(info)}");
+            response.Data = FormatSession(info);
             return null;
         });
     }
@@ -119,7 +267,14 @@ public class SandboxAppService : AppServiceBase
             $"Status: {info.Status}<br/>" +
             $"HostPort(loopback): {info.HostPort?.ToString() ?? "-"}<br/>" +
             $"Url(proxy): {WebUtility.HtmlEncode(info.AccessUrl ?? "-")}<br/>" +
-            $"Expires(UTC): {info.ExpiresAtUtc:u}<br/>" +
+            $"{FormatTtl(info)}<br/>" +
             $"Message: {WebUtility.HtmlEncode(info.StatusMessage ?? "-")}";
+    }
+
+    private static string FormatTtl(SandboxSessionInfo info)
+    {
+        return info.IsTtlUnlimited
+            ? "TTL: 永久保持（仅管理员销毁）"
+            : $"Expires(UTC): {info.ExpiresAtUtc:u}";
     }
 }

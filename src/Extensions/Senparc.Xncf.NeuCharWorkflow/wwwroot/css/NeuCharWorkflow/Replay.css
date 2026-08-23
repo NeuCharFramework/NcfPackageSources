@@ -27,6 +27,7 @@
 .workflow-replay-timeline-item small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .workflow-replay-timeline-item strong { font-size: 13px; }
 .workflow-replay-timeline-item small { margin-top: 3px; font-size: 11px; opacity: .82; }
+.workflow-replay-load-more { width: 100%; min-height: 34px; margin: 4px 0 8px; }
 .workflow-replay-timeline-dot { flex: 0 0 auto; width: 8px; height: 8px; margin-top: 5px; border: 2px solid #aeb9c7; border-radius: 50%; }
 .workflow-replay-timeline-item.passed .workflow-replay-timeline-dot,
 .workflow-replay-timeline-item.active .workflow-replay-timeline-dot { border-color: #409eff; background: #409eff; }

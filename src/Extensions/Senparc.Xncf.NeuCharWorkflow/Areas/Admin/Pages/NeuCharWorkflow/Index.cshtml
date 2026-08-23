@@ -22,6 +22,7 @@
     <transition name="workflow-node-preview-fade">
         <section v-if="nodePreview.visible"
                  :class="['workflow-node-preview', {'is-hover-preview':nodePreview.mode==='hover'}]"
+                 :style="nodePreviewStyle"
                  @@mousedown.stop
                  @@click.stop>
             <header>
@@ -52,7 +53,7 @@
                                title="刷新工作流列表"
                                aria-label="刷新工作流列表"
                                :disabled="editingLocked"
-                               @@click="loadAll"></el-button>
+                               @@click="refreshWorkflowList"></el-button>
                     <el-button type="primary"
                                plain
                                size="mini"
@@ -112,6 +113,17 @@
                                    :disabled="!form.id || editingLocked || disconnectedNodes.length>0"
                                    :title="disconnectedNodes.length?'请先连接所有草稿节点后再测试运行':'保存并测试运行'"
                                    @@click="startWorkflow">运行</el-button>
+                        <el-button v-if="form.id"
+                                   size="small"
+                                   icon="el-icon-tickets"
+                                   @@click="openWorkflowTasks">任务</el-button>
+                        <el-button v-if="form.id"
+                                   size="small"
+                                   type="warning"
+                                   plain
+                                   icon="el-icon-loading"
+                                   :title="form.runningCount ? '查看当前正在运行的任务' : '当前没有正在运行的任务'"
+                                   @@click="openWorkflowTasks('running')">运行中 {{form.runningCount}}</el-button>
                         <el-button v-if="run.running"
                                    size="small"
                                    type="danger"
@@ -331,17 +343,24 @@
                            @@mouseup.native.stop
                            width="min(760px, calc(100vw - 32px))"
                            append-to-body>
-                    <p class="template-editor-help">先输入固定文字，再从下方选择上游输出或“预载输入选择”。系统会插入一个可见的占位符；同一文本可插入多个变量。</p>
+                    <p class="template-editor-help">先输入固定文字，再从右侧选择公式或从下方选择上游输出。点击公式会插入完整表达式；选中文本时会自动包围选区，多参数公式会保留空参数位供继续填写。</p>
                     <el-alert :title="templateExpressionHelp"
                               type="warning"
                               :closable="false"
                               show-icon></el-alert>
-                    <el-input v-model="templateEditor.text"
-                              type="textarea"
-                              :rows="12"
-                              :disabled="editingLocked"
-                              :placeholder="templateEditorPlaceholder"></el-input>
-                    <div v-if="templateEditor.allowBindings" class="template-editor-picker">
+                    <div class="template-editor-layout">
+                        <div class="template-editor-main">
+                            <el-input ref="templateEditorInput"
+                                      v-model="templateEditor.text"
+                                      type="textarea"
+                                      :rows="12"
+                                      :disabled="editingLocked"
+                                      :placeholder="templateEditorPlaceholder"
+                                      @@input="captureTemplateSelection"
+                                      @@click.native="captureTemplateSelection"
+                                      @@keyup.native="captureTemplateSelection"
+                                      @@select.native="captureTemplateSelection"></el-input>
+                            <div v-if="templateEditor.allowBindings" class="template-editor-picker">
                         <span>插入上游值</span>
                         <el-cascader :value="templateEditor.pendingSelection"
                                      :options="upstreamOutputOptions(null)"
@@ -374,6 +393,31 @@
                               type="info"
                               :closable="false"
                               show-icon></el-alert>
+                        </div>
+                        <aside class="template-editor-formulas">
+                            <div class="template-editor-formulas-heading">
+                                <strong>支持的公式</strong>
+                                <small>点击插入</small>
+                            </div>
+                            <div v-for="group in templateEditorFormulaGroups" :key="group.category" class="template-editor-formula-group">
+                                <span class="template-editor-formula-category">{{group.category}}</span>
+                                <el-tooltip v-for="formula in group.items"
+                                            :key="formula.name"
+                                            effect="dark"
+                                            placement="left"
+                                            :content="formula.description">
+                                    <button type="button"
+                                            class="template-editor-formula-button"
+                                            :disabled="editingLocked"
+                                            @@mousedown.prevent.stop="captureTemplateSelection"
+                                            @@click.stop="insertTemplateFormula(formula)">
+                                        <code>{{formula.name}}({{formula.arity ? '…' : ''}})</code>
+                                        <span>{{formula.label}}</span>
+                                    </button>
+                                </el-tooltip>
+                            </div>
+                        </aside>
+                    </div>
                     <span slot="footer" class="dialog-footer">
                         <el-button @@click="templateEditor.visible=false">取消</el-button>
                         <el-button type="primary" :disabled="editingLocked" @@click="saveParameterTemplate">应用</el-button>
@@ -422,9 +466,9 @@
                                     <defs>
                                         <marker id="workflow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z"></path></marker>
                                     </defs>
-                                    <g v-for="edge in form.graph.edges" :key="edge.id" :class="{'edge-insert-candidate':activeInsertionEdgeId===edge.id}">
+                                    <g v-for="edge in form.graph.edges" :key="edge.id" :class="{'edge-insert-candidate':activeInsertionEdgeId===edge.id,'loop-scope-edge-highlight':isLoopScopeEdgeHighlighted(edge)}">
                                         <path :d="edgePath(edge)" marker-end="url(#workflow-arrow)"></path>
-                                        <text v-if="edge.sourceHandle==='true' || edge.sourceHandle==='false'" :x="edgeLabelX(edge)" :y="edgeLabelY(edge)">{{edge.sourceHandle==='true'?'真':'假'}}</text>
+                                        <text v-if="['true','false','break'].includes(edge.sourceHandle)" :x="edgeLabelX(edge)" :y="edgeLabelY(edge)">{{edge.sourceHandle==='true'?'真':(edge.sourceHandle==='false'?'假':'break')}}</text>
                                     </g>
                                     <path v-if="connectionDraft.sourceId" class="draft-wire" :d="draftEdgePath()"></path>
                                 </svg>
@@ -504,12 +548,16 @@
                                 <article v-for="(node,index) in form.graph.nodes"
                                          :key="node.id"
                                          :data-node-id="node.id"
-                                         :class="['workflow-node','node-'+node.type,'state-'+nodeState(node),{selected:isNodeSelected(node),'is-multi-selected':selectedNodeIds.length>1 && isNodeSelected(node),'validation-error':!!nodeValidationError(node)}]"
+                                         :class="['workflow-node','node-'+node.type,'state-'+nodeState(node),{selected:isNodeSelected(node),'is-multi-selected':selectedNodeIds.length>1 && isNodeSelected(node),'is-editing':isNodeBeingEdited(node),'validation-error':!!nodeValidationError(node),'loop-scope-highlight':isLoopScopeHighlighted(node),'loop-label-highlight':isLoopLabelHighlighted(node)}]"
                                          :style="{left:node.x+'px',top:node.y+'px'}"
                                          :title="nodeValidationError(node) || ''"
                                          @@mousedown.stop="startDrag($event,node)"
                                          @@contextmenu.stop.prevent="openNodeContextMenu($event,node)">
-                                    <button v-if="!node.type.endsWith('trigger')"
+                                    <template v-if="node.type==='loop-end'">
+                                        <button type="button" class="node-port node-input node-input-continue" :class="{ready:!!connectionDraft.sourceId}" title="连接到 continue 输入端" @@mousedown.stop @@mouseup.stop="completeConnection(node,'continue')">continue</button>
+                                        <button type="button" class="node-port node-input node-input-break" :class="{ready:!!connectionDraft.sourceId}" title="连接到 break 输入端" @@mousedown.stop @@mouseup.stop="completeConnection(node,'break')">break</button>
+                                    </template>
+                                    <button v-else-if="!node.type.endsWith('trigger')"
                                             type="button"
                                             class="node-port node-input"
                                             :class="{ready:!!connectionDraft.sourceId}"
@@ -533,6 +581,7 @@
                                     <template v-if="node.type==='condition'">
                                         <button type="button" class="node-port node-output node-output-true" title="拖动真分支" @@mousedown.stop="beginConnection($event,node,'true')">真</button>
                                         <button type="button" class="node-port node-output node-output-false" title="拖动假分支" @@mousedown.stop="beginConnection($event,node,'false')">假</button>
+                                        <button type="button" class="node-port node-output node-output-break" title="拖动 break：跳出当前循环" @@mousedown.stop="beginConnection($event,node,'break')">break</button>
                                     </template>
                                     <button v-else-if="node.type!=='end'"
                                             type="button"
@@ -619,6 +668,19 @@
                                         <el-form-item label="条件为假时">
                                             <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'false')" placeholder="也可直接拖拽连线" @@change="setTarget(selectedNode,'false',$event)">
                                                 <el-option v-for="target in availableTargets(selectedNode,'false')" :key="target.id" :label="target.name" :value="target.id"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item label="循环控制（可选）">
+                                            <el-select v-model="selectedNode.config.breakOn" :disabled="editingLocked" clearable placeholder="普通条件判断">
+                                                <el-option label="不启用 break" value=""></el-option>
+                                                <el-option label="条件为真时跳出循环" value="true"></el-option>
+                                                <el-option label="条件为假时跳出循环" value="false"></el-option>
+                                            </el-select>
+                                            <p class="node-config-help">启用后，把节点的 break 端口连接到当前“循环结束”的 break 输入端；另一结果继续走真/假分支。</p>
+                                        </el-form-item>
+                                        <el-form-item label="break 后续节点">
+                                            <el-select clearable :disabled="editingLocked" :value="targetFor(selectedNode,'break')" placeholder="仅在循环控制启用时使用" @@change="setTarget(selectedNode,'break',$event)">
+                                                <el-option v-for="target in availableTargets(selectedNode,'break')" :key="target.id" :label="target.name" :value="target.id"></el-option>
                                             </el-select>
                                         </el-form-item>
                                     </template>
@@ -801,22 +863,36 @@
                                     </el-form-item>
                                     <template v-if="selectedNode.type==='loop'">
                                         <el-form-item label="重复次数（For）">
-                                            <div v-if="isBinding(selectedNode.config.count)" class="workflow-loop-count-binding">
+                                            <div v-if="isTemplateValue(selectedNode.config.count)" class="workflow-loop-count-binding workflow-loop-count-formula">
+                                                <strong>使用语法计算次数：{{parameterTemplateSummary(selectedNode.config.count)}}</strong>
+                                                <span>运行时结果必须是 1–100000 的整数；可使用 <code v-pre>{{= toInt(input) }}</code> 或插入上游输出。</span>
+                                                <div class="parameter-template-actions">
+                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="openNodeTemplateEditor(selectedNode,'count',{fieldLabel:'循环次数'})">编辑语法</el-button>
+                                                    <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetNodeTemplateManual(selectedNode,'count')">改为固定次数</el-button>
+                                                </div>
+                                            </div>
+                                            <div v-else-if="isBinding(selectedNode.config.count)" class="workflow-loop-count-binding">
                                                 <strong>引用上游：{{loopCountSourceLabel(selectedNode)}}</strong>
-                                                <span>运行时读取，必须是 1–100 的整数。</span>
+                                                <span>运行时读取，必须是 1–100000 的整数。</span>
                                                 <el-button type="text" size="mini" :disabled="editingLocked" @@click="resetLoopCountManual(selectedNode)">改为固定次数</el-button>
                                             </div>
-                                            <el-input-number v-else v-model="selectedNode.config.count" :disabled="editingLocked" :min="1" :max="100" :step="1" :precision="0"></el-input-number>
+                                            <el-input-number v-else v-model="selectedNode.config.count" :disabled="editingLocked" :min="1" :max="100000" :step="1" :precision="0"></el-input-number>
+                                            <el-button v-if="!isBinding(selectedNode.config.count) && !isTemplateValue(selectedNode.config.count)"
+                                                       class="workflow-loop-count-formula-button"
+                                                       size="mini"
+                                                       icon="el-icon-magic-stick"
+                                                       :disabled="editingLocked"
+                                                       @@click="openNodeTemplateEditor(selectedNode,'count',{fieldLabel:'循环次数'})">使用语法编辑</el-button>
                                             <el-cascader :value="configBindingSelection(selectedNode,'count')"
                                                          :options="loopCountOutputOptions()"
                                                          :disabled="editingLocked || !loopCountOutputOptions().length"
                                                          clearable
                                                          filterable
-                                                         placeholder="或引用上游次数（1–100）"
+                                                         placeholder="或引用上游次数（1–100000）"
                                                          @@change="setLoopCountBinding(selectedNode,$event)"></el-cascader>
-                                            <p class="node-config-help">如需限制循环范围，请将“循环结束”放在循环体最后；其后的节点会在全部轮次完成后只执行一次。</p>
+                                            <p class="node-config-help">次数可以固定填写、引用上游单值，或使用受限语法编辑；语法结果必须是 1–100000 的整数。循环范围请用“循环结束”标记。</p>
                                         </el-form-item>
-                                        <el-alert title="安全上限：单个循环最多 100 次；循环与逐项合流的下游激活合计最多 500 次。"
+                                        <el-alert title="配置上限：单个循环最多 100000 次；单次运行的循环与逐项合流下游激活合计最多 5000 次。"
                                                   type="info"
                                                   :closable="false"></el-alert>
                                     </template>
@@ -825,6 +901,14 @@
                                               description="请把此节点连接在循环体最后；它后面的节点会等待所有轮次完成后再执行一次。"
                                               type="success"
                                               :closable="false"></el-alert>
+                                    <template v-if="selectedNode.type==='loop-end'">
+                                        <el-form-item label="所属循环">
+                                            <el-select v-model="selectedNode.config.loopId" :disabled="editingLocked" clearable placeholder="自动识别（单层循环）">
+                                                <el-option v-for="loop in loopOwnerOptions(selectedNode)" :key="loop.id" :label="loop.name" :value="loop.id"></el-option>
+                                            </el-select>
+                                            <p class="node-config-help">嵌套循环时请选择对应的循环节点，避免内层“循环结束”被外层误识别。</p>
+                                        </el-form-item>
+                                    </template>
                                     <template v-if="selectedNode.type==='neubell'">
                                         <el-form-item label="提醒标题">
                                             <template v-if="isTemplateValue(selectedNode.config.title)">
@@ -881,6 +965,61 @@
                                             <p class="node-config-help">用于有明确查看即已读场景；例如 DesktopBridge 等需要业务审核的提醒应选择“只查看”。</p>
                                         </el-form-item>
                                     </template>
+                                    <template v-if="selectedNode.type==='human-input'">
+                                        <el-form-item label="提醒标题">
+                                            <workflow-rich-text-input v-model="selectedNode.config.title"
+                                                                      :disabled="editingLocked"
+                                                                      :maxlength="200"
+                                                                      :show-word-limit="true"
+                                                                      :help-text="'创建等待项时会发送 NeuBell；标题支持 {{input}}、受限公式和上游变量。'"
+                                                                      placeholder="例如：请补充审批意见"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'title',{fieldLabel:'人工输入提醒标题'})"></workflow-rich-text-input>
+                                        </el-form-item>
+                                        <el-form-item label="人工输入提示">
+                                            <workflow-rich-text-input v-model="selectedNode.config.prompt"
+                                                                      multiline
+                                                                      :rows="4"
+                                                                      :disabled="editingLocked"
+                                                                      :maxlength="4000"
+                                                                      :show-word-limit="true"
+                                                                      :help-text="'提示会显示在 Workflow 快速处理面板，并随 NeuBell 提醒发送；支持 {{input}}、受限公式和上游变量。'"
+                                                                      placeholder="例如：请说明审批结论和下一步处理方式"
+                                                                      @@edit-template="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'人工输入提示'})"></workflow-rich-text-input>
+                                        </el-form-item>
+                                        <el-form-item label="允许外部恢复">
+                                            <el-switch v-model="selectedNode.config.externalResumeEnabled"
+                                                       :disabled="editingLocked"
+                                                       active-text="允许持有密钥的外部程序提交输入"
+                                                       inactive-text="仅允许后台用户处理"></el-switch>
+                                        </el-form-item>
+                                        <template v-if="selectedNode.config.externalResumeEnabled">
+                                            <el-form-item label="外部恢复密钥">
+                                                <el-input v-model="selectedNode.config.externalResumeKey"
+                                                          type="password"
+                                                          show-password
+                                                          :disabled="editingLocked"
+                                                          maxlength="512"
+                                                          autocomplete="new-password"
+                                                          placeholder="保存后不会再返回；留空将保留已保存密钥"></el-input>
+                                                <el-button size="mini"
+                                                           icon="el-icon-key"
+                                                           :disabled="editingLocked"
+                                                           @@click="generateHumanInputExternalKey(selectedNode)">生成新密钥</el-button>
+                                                <p class="node-config-help">外部接口仅接受此节点密钥；密钥会加密保存，重新打开编辑器时不会显示。更换密钥后，正在等待的旧请求仍使用启动该次运行时的密钥。</p>
+                                            </el-form-item>
+                                            <el-alert title="内部 WebAPI（无需后台登录）"
+                                                      type="warning"
+                                                      :closable="false"
+                                                      show-icon>
+                                                <p v-pre>GET /api/Senparc.Xncf.NeuCharWorkflow/neuchar-workflow/human-input/pending/{workflowId}</p>
+                                                <p v-pre>POST /api/Senparc.Xncf.NeuCharWorkflow/neuchar-workflow/human-input/{requestId}</p>
+                                                <p>请求头使用 <code>X-NeuChar-Workflow-Resume-Key</code>；POST JSON 至少提供 <code>{"input":"人工文本"}</code>。</p>
+                                            </el-alert>
+                                        </template>
+                                        <el-alert title="运行到此节点会创建一条 NeuBell，并暂停当前分支；后台快速处理或已启用的外部 API 都会恢复同一个运行。Agent/Group 自身触发的 HIL 会继续复用下方同一 Workflow HIL 面板。"
+                                                  type="info"
+                                                  :closable="false"></el-alert>
+                                    </template>
                                     <template v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group' || selectedNode.type==='a2a'">
                                         <div class="workflow-object-card">
                                             <div class="workflow-object-card-header">
@@ -931,6 +1070,92 @@
                                                                   @@edit-template="openNodeTemplateEditor(selectedNode,'prompt',{fieldLabel:'Prompt'})"></workflow-rich-text-input>
                                         <el-cascader :value="configBindingSelection(selectedNode,'prompt')" :options="upstreamOutputOptions(null)" :disabled="editingLocked || !upstreamOutputOptions(null).length" clearable filterable placeholder="关联上游 Output" @@change="setConfigBinding(selectedNode,'prompt',$event)"></el-cascader>
                                     </el-form-item>
+                                    <template v-if="selectedNode.type==='agent' || selectedNode.type==='agent-group'">
+                                        <el-divider content-position="left">模型</el-divider>
+                                        <el-form-item label="任务模型">
+                                            <el-select v-model="selectedNode.config.aiModelId"
+                                                       :disabled="editingLocked"
+                                                       clearable
+                                                       filterable
+                                                       placeholder="未选择时使用群组默认模型">
+                                                <el-option v-for="model in chatModels"
+                                                           :key="model.id"
+                                                           :label="workflowModelLabel(model)"
+                                                           :value="model.id">
+                                                    <span>{{workflowModelLabel(model)}}</span>
+                                                    <span style="float:right;display:flex;gap:4px;">
+                                                        <el-tag size="mini" effect="plain">Chat</el-tag>
+                                                        <el-tag size="mini" type="info" effect="plain">{{workflowModelPlatformLabel(model)}}</el-tag>
+                                                    </span>
+                                                </el-option>
+                                            </el-select>
+                                            <p class="node-config-help">未选择时，AgentGroup 先继承群主的 PromptRange 模型；没有可用模型时才回退系统默认 Chat 模型。</p>
+                                        </el-form-item>
+                                        <el-form-item label="个性化智能体模型">
+                                            <el-switch v-model="selectedNode.config.personality"
+                                                       :disabled="editingLocked"
+                                                       active-text="按每个 Agent 的模型绑定策略运行"
+                                                       inactive-text="所有 Agent 使用本次任务模型"></el-switch>
+                                        </el-form-item>
+                                    </template>
+                                    <template v-if="(selectedNode.type==='agent' || selectedNode.type==='agent-group') && selectedWorkflowObject && String(selectedWorkflowObject.metadata && selectedWorkflowObject.metadata.supportsHumanInTheLoop).toLowerCase()==='true'">
+                                        <el-divider content-position="left">Human-in-the-Loop</el-divider>
+                                        <el-form-item v-if="selectedNode.type==='agent'" label="Agent 工具">
+                                            <el-switch v-model="selectedNode.config.allowFunctionCalls"
+                                                       :disabled="editingLocked"
+                                                       active-text="允许使用已配置的插件与 MCP 工具"
+                                                       inactive-text="不向模型暴露工具"></el-switch>
+                                        </el-form-item>
+                                        <el-form-item label="HIL 等级">
+                                            <el-select v-model="selectedNode.config.humanInTheLoopLevel"
+                                                       :disabled="editingLocked"
+                                                       style="width:100%;">
+                                                <el-option label="L0 全自动" :value="0"></el-option>
+                                                <el-option label="L1 风险分层（MCP 默认审批）" :value="1"></el-option>
+                                                <el-option label="L2 所有工具调用前审批" :value="2"></el-option>
+                                                <el-option v-if="selectedNode.type==='agent-group'" label="L3 Human 参与者 + 工具审批" :value="3"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item label="插件工具权限">
+                                            <el-select v-model="selectedNode.config.pluginToolPermission"
+                                                       :disabled="editingLocked"
+                                                       style="width:100%;">
+                                                <el-option label="继承 HIL 等级" :value="0"></el-option>
+                                                <el-option label="自动执行" :value="1"></el-option>
+                                                <el-option label="执行前审批" :value="2"></el-option>
+                                                <el-option label="禁止使用" :value="3"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item label="MCP 工具权限">
+                                            <el-select v-model="selectedNode.config.mcpToolPermission"
+                                                       :disabled="editingLocked"
+                                                       style="width:100%;">
+                                                <el-option label="继承 HIL 等级" :value="0"></el-option>
+                                                <el-option label="自动执行" :value="1"></el-option>
+                                                <el-option label="执行前审批" :value="2"></el-option>
+                                                <el-option label="禁止使用" :value="3"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectedNode.type==='agent-group' && String(selectedWorkflowObject.metadata && selectedWorkflowObject.metadata.supportsHumanParticipant).toLowerCase()==='true'"
+                                                      label="Human 参与者">
+                                            <el-switch v-model="selectedNode.config.includeHumanParticipant"
+                                                       :disabled="editingLocked"
+                                                       active-text="允许 Group 中已配置的 Human 参与本次运行"
+                                                       inactive-text="本次运行跳过 Human 成员"></el-switch>
+                                        </el-form-item>
+                                        <el-form-item v-if="selectedNode.type==='agent-group'" label="最大对话轮数">
+                                            <el-input-number v-model="selectedNode.config.chatMaxRound"
+                                                             :disabled="editingLocked"
+                                                             :min="1"
+                                                             :max="50"
+                                                             :step="1"
+                                                             controls-position="right"></el-input-number>
+                                        </el-form-item>
+                                        <el-alert v-if="selectedNode.type==='agent' && !selectedNode.config.allowFunctionCalls"
+                                                  title="当前未向独立 Agent 暴露工具，工具权限和审批等级会保留但不会触发。"
+                                                  type="info"
+                                                  :closable="false"></el-alert>
+                                    </template>
                                     <template v-if="selectedNode.type==='sub-workflow'">
                                         <el-form-item label="要调用的工作流" required>
                                             <el-select v-model="selectedNode.config.workflowId"
@@ -977,13 +1202,16 @@
                                                                    :value="variable.name"
                                                                    :disabled="!variable.name"></el-option>
                                                     </el-select>
-                                                    <workflow-rich-text-input v-model="assignment.value"
+                                                    <workflow-rich-text-input :value="formulaValueText(assignment.value)"
+                                                                              @@input="setCodeAssignmentValue(assignment,$event)"
                                                                               multiline
                                                                               :rows="2"
                                                                               :disabled="editingLocked"
-                                                                              :editable="false"
+                                                                              :editable="true"
                                                                               :maxlength="8000"
-                                                                              :help-text="'例如：{{= upper(input) }}；使用 vars.变量名 读取当前变量值。'"></workflow-rich-text-input>
+                                                                              edit-label="编辑公式"
+                                                                              :help-text="'例如：{{= upper(input) }}；使用 vars.变量名 读取当前变量值。点击编辑公式可打开统一公式编辑器。'"
+                                                                              @@edit-template="openCodeAssignmentTemplateEditor(selectedNode,index)"></workflow-rich-text-input>
                                                     <el-button type="text"
                                                                :disabled="editingLocked"
                                                                @@click="removeCodeAssignment(selectedNode,index)">删除</el-button>
@@ -1023,7 +1251,7 @@
                                         </el-form-item>
                                         <el-alert title="聚合会等待所有已激活的上游分支结束，再按连线顺序汇总，并只向下游输出一次。" type="info" :closable="false"></el-alert>
                                     </template>
-                                    <el-alert v-if="selectedNode.type==='merge'" title="逐项合流不会等待全部输入：每条输入都会独立向下游发出一次。下游按稳定的执行计划顺序串行运行，单次工作流最多处理 500 次逐项激活。" type="info" :closable="false"></el-alert>
+                                    <el-alert v-if="selectedNode.type==='merge'" title="逐项合流不会等待全部输入：每条输入都会独立向下游发出一次。下游按稳定的执行计划顺序串行运行，单次工作流最多处理 5000 次逐项激活。" type="info" :closable="false"></el-alert>
                                     <el-alert v-if="selectedNode.type==='parallel'" title="并行节点将同一输入同时分发到所有后续分支；各分支独立运行。" type="info" :closable="false"></el-alert>
                                     <template v-if="selectedNode.type==='console'">
                                         <el-form-item label="Console 打印内容">
@@ -1071,6 +1299,52 @@
                         <el-button v-if="run.running" type="danger" size="small" plain icon="el-icon-circle-close" :loading="run.aborting" @@click="abortWorkflow">中止</el-button>
                         <el-button type="text" size="small" :icon="run.consoleOpen?'el-icon-arrow-down':'el-icon-arrow-up'" @@click="run.consoleOpen=!run.consoleOpen">Console</el-button>
                     </div>
+                    <div v-if="run.humanInteractions.length" class="workflow-human-quick-panel">
+                        <div class="workflow-human-quick-copy">
+                            <i class="el-icon-user-solid"></i>
+                            <span><strong>Workflow 等待 Human</strong> · {{run.humanInteractions.length}} 个待处理请求</span>
+                            <small v-if="run.humanInteractions[0].prompt">{{run.humanInteractions[0].prompt}}</small>
+                        </div>
+                        <el-button type="warning" size="small" plain @@click="openHumanInteraction(run.humanInteractions[0])">快速处理</el-button>
+                    </div>
+                    <el-dialog title="Workflow Human-in-the-Loop"
+                               :visible.sync="run.humanReplyVisible"
+                               width="560px"
+                               append-to-body
+                               @@close="closeHumanInteractionDialog">
+                        <template v-if="run.humanReplyRequest">
+                            <el-alert v-if="requiresHumanTextInput(run.humanReplyRequest)"
+                                      title="当前轮次需要 Human 输入，提交后 Workflow 会继续等待或向下执行。"
+                                      type="info"
+                                      :closable="false"
+                                      show-icon></el-alert>
+                            <el-alert v-else
+                                      title="Agent 请求执行工具，请确认是否允许本次调用。"
+                                      type="warning"
+                                      :closable="false"
+                                      show-icon></el-alert>
+                            <p class="workflow-human-prompt">{{run.humanReplyRequest.prompt}}</p>
+                            <pre v-if="run.humanReplyRequest.toolArguments" class="workflow-human-tool-arguments">{{run.humanReplyRequest.toolArguments}}</pre>
+                            <el-input v-if="requiresHumanTextInput(run.humanReplyRequest)"
+                                      v-model="run.humanReplyInput"
+                                      type="textarea"
+                                      :rows="5"
+                                      maxlength="8000"
+                                      show-word-limit
+                                      placeholder="输入 Human 回复"></el-input>
+                        </template>
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @@click="closeHumanInteractionDialog">稍后处理</el-button>
+                            <el-button v-if="run.humanReplyRequest && !requiresHumanTextInput(run.humanReplyRequest)"
+                                       type="danger"
+                                       plain
+                                       :loading="run.humanReplySubmitting"
+                                       @@click="resolveHumanInteraction(false)">拒绝</el-button>
+                            <el-button type="primary"
+                                       :loading="run.humanReplySubmitting"
+                                       @@click="resolveHumanInteraction(true)">{{run.humanReplyRequest && requiresHumanTextInput(run.humanReplyRequest)?'提交并继续':'同意并继续'}}</el-button>
+                        </span>
+                    </el-dialog>
                     <div v-show="run.consoleOpen" class="workflow-console">
                         <div class="console-toolbar">
                             <span>执行 Console · {{run.events.length}} 条</span>
@@ -1081,6 +1355,11 @@
                                 <time>{{event.timestamp ? event.timestamp.substring(11,19) : '--:--:--'}}</time>
                                 <strong>{{event.nodeName || 'Workflow'}}</strong>
                                 <span>{{event.message}}</span>
+                                <el-button v-if="hasAgentGroupConversation(event)"
+                                           type="text"
+                                           size="mini"
+                                           icon="el-icon-chat-dot-round"
+                                           @@click="openAgentGroupConversation(event.objectReference)">查看 Agent Group 对话</el-button>
                                 <pre v-if="event.output">{{event.output}}</pre>
                             </div>
                             <div v-if="!run.events.length" class="console-empty">运行后，这里会显示校验结果、当前节点、执行状态和 Console 节点输出。</div>
@@ -1104,29 +1383,22 @@
     <script type="text/x-template" id="workflow-node-picker-template">
         <div class="workflow-node-picker" :class="{'is-edge-insert':edgeInsert}">
             <div class="workflow-node-picker-filters">
-                <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" placeholder="搜索 Function 或模块"></el-input>
+                <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" placeholder="搜索节点、Function、模块或对象"></el-input>
                 <el-select v-model="module" size="small" clearable filterable placeholder="全部模块">
                     <el-option v-for="name in moduleNames" :key="name" :label="name" :value="name"></el-option>
                 </el-select>
             </div>
 
-            <div class="palette-system-grid">
-                <el-button plain icon="el-icon-s-operation" :class="['node-picker-system-button','node-picker-condition']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'condition','条件判断')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('condition','条件判断','hover')" @@mouseleave.native="hideSystemPreview('condition','条件判断')" @@click="previewSystem('condition','条件判断','click')" @@dblclick.native="selectSystem('condition','条件判断')">条件</el-button>
-                <el-button plain icon="el-icon-time" :class="['node-picker-system-button','node-picker-delay']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'delay','等待')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('delay','等待','hover')" @@mouseleave.native="hideSystemPreview('delay','等待')" @@click="previewSystem('delay','等待','click')" @@dblclick.native="selectSystem('delay','等待')">等待</el-button>
-                <el-button plain icon="el-icon-refresh" :class="['node-picker-system-button','node-picker-loop']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'loop','循环（For）')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('loop','循环（For）','hover')" @@mouseleave.native="hideSystemPreview('loop','循环（For）')" @@click="previewSystem('loop','循环（For）','click')" @@dblclick.native="selectSystem('loop','循环（For）')">循环</el-button>
-                <el-button plain icon="el-icon-circle-check" :class="['node-picker-system-button','node-picker-loop-end']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'loop-end','循环结束')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('loop-end','循环结束','hover')" @@mouseleave.native="hideSystemPreview('loop-end','循环结束')" @@click="previewSystem('loop-end','循环结束','click')" @@dblclick.native="selectSystem('loop-end','循环结束')">循环结束</el-button>
-                <el-button plain icon="el-icon-document" :class="['node-picker-system-button','node-picker-sub-workflow']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'sub-workflow','调用工作流')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('sub-workflow','调用工作流','hover')" @@mouseleave.native="hideSystemPreview('sub-workflow','调用工作流')" @@click="previewSystem('sub-workflow','调用工作流','click')" @@dblclick.native="selectSystem('sub-workflow','调用工作流')">调用流程</el-button>
-                <el-button plain icon="el-icon-edit-outline" :class="['node-picker-system-button','node-picker-code']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'code','安全代码')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('code','安全代码','hover')" @@mouseleave.native="hideSystemPreview('code','安全代码')" @@click="previewSystem('code','安全代码','click')" @@dblclick.native="selectSystem('code','安全代码')">安全代码</el-button>
-                <el-button plain icon="el-icon-collection" :class="['node-picker-system-button','node-picker-aggregate']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'aggregate','聚合')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('aggregate','聚合','hover')" @@mouseleave.native="hideSystemPreview('aggregate','聚合')" @@click="previewSystem('aggregate','聚合','click')" @@dblclick.native="selectSystem('aggregate','聚合')">聚合</el-button>
-                <el-button plain icon="el-icon-sort" :class="['node-picker-system-button','node-picker-merge']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'merge','逐项合流')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('merge','逐项合流','hover')" @@mouseleave.native="hideSystemPreview('merge','逐项合流')" @@click="previewSystem('merge','逐项合流','click')" @@dblclick.native="selectSystem('merge','逐项合流')">逐项合流</el-button>
-                <el-button plain icon="el-icon-share" :class="['node-picker-system-button','node-picker-parallel']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'parallel','并行')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('parallel','并行','hover')" @@mouseleave.native="hideSystemPreview('parallel','并行')" @@click="previewSystem('parallel','并行','click')" @@dblclick.native="selectSystem('parallel','并行')">并行</el-button>
-                <el-button plain icon="el-icon-monitor" :class="['node-picker-system-button','node-picker-console']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'console','Console 打印')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('console','Console 打印','hover')" @@mouseleave.native="hideSystemPreview('console','Console 打印')" @@click="previewSystem('console','Console 打印','click')" @@dblclick.native="selectSystem('console','Console 打印')">Console</el-button>
-                <el-button plain icon="el-icon-bell" :class="['node-picker-system-button','node-picker-neubell']" :disabled="locked" draggable="true" @@dragstart.native="startSystemDrag($event,'neubell','发送纽铃')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('neubell','发送纽铃','hover')" @@mouseleave.native="hideSystemPreview('neubell','发送纽铃')" @@click="previewSystem('neubell','发送纽铃','click')" @@dblclick.native="selectSystem('neubell','发送纽铃')">发送纽铃</el-button>
-                <el-button plain icon="el-icon-circle-check" :class="['node-picker-system-button','node-picker-end']" :disabled="locked || edgeInsert" :title="edgeInsert?'结束节点不能插入到连线中':''" draggable="true" @@dragstart.native="startSystemDrag($event,'end','结束')" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem('end','结束','hover')" @@mouseleave.native="hideSystemPreview('end','结束')" @@click="previewSystem('end','结束','click')" @@dblclick.native="selectSystem('end','结束')">结束</el-button>
-            </div>
+            <template v-if="filteredSystemNodes.length">
+                <el-divider>系统节点</el-divider>
+                <div class="palette-system-grid">
+                    <el-button v-for="node in filteredSystemNodes" :key="node.type" plain :icon="node.icon" :class="['node-picker-system-button','node-picker-'+node.type]" :disabled="locked || (edgeInsert && node.type === 'end')" :title="edgeInsert && node.type === 'end'?'结束节点不能插入到连线中':''" draggable="true" @@dragstart.native="startSystemDrag($event,node)" @@dragend.native="finishDrag" @@mouseenter.native="previewSystem(node,'hover',$event)" @@mouseleave.native="hideSystemPreview(node)" @@click="previewSystem(node,'click',$event)" @@dblclick.native="selectSystem(node)">{{node.label}}</el-button>
+                </div>
+            </template>
 
-            <el-divider>NeuCharPivot Function</el-divider>
-            <div v-if="filteredFunctions.length" class="palette-functions">
+            <template v-if="filteredFunctions.length">
+                <el-divider>NeuCharPivot Function</el-divider>
+                <div class="palette-functions">
                 <button v-for="fn in filteredFunctions"
                         :key="functionIdentity(fn)"
                         :class="['palette-item','node-picker-function',{'is-unavailable':!fn.moduleAvailable}]"
@@ -1134,9 +1406,9 @@
                         draggable="true"
                         @@dragstart="startFunctionDrag($event,fn)"
                         @@dragend="finishDrag"
-                        @@mouseenter="previewNode('function',fn,'hover')"
+                        @@mouseenter="previewNode('function',fn,'hover',$event)"
                         @@mouseleave="hideNodePreview('function',fn)"
-                        @@click="previewNode('function',fn,'click')"
+                        @@click="previewNode('function',fn,'click',$event)"
                         @@dblclick="selectFunction(fn)">
                     <span class="palette-item-copy">
                         <strong>{{fn.functionName}}</strong>
@@ -1150,29 +1422,30 @@
                         <i :class="isPinned(fn)?'el-icon-star-on':'el-icon-star-off'"></i>
                     </span>
                 </button>
-            </div>
-            <div v-else class="palette-empty">没有匹配的 Function</div>
+                </div>
+            </template>
 
-            <template v-if="objects.length">
+            <template v-if="filteredObjects.length">
                 <el-divider>AgentsManager / A2A</el-divider>
-                <button v-for="object in objects"
+                <button v-for="object in filteredObjects"
                         :key="object.providerId+object.objectId"
                         :class="['palette-item','node-picker-'+object.kind,{'is-a2a-object':object.kind==='a2a','is-unavailable':!object.enabled}]"
                         :disabled="locked"
                         draggable="true"
                         @@dragstart="startObjectDrag($event,object)"
                         @@dragend="finishDrag"
-                        @@mouseenter="previewNode('object',object,'hover')"
+                        @@mouseenter="previewNode('object',object,'hover',$event)"
                         @@mouseleave="hideNodePreview('object',object)"
-                        @@click="previewNode('object',object,'click')"
+                        @@click="previewNode('object',object,'click',$event)"
                         @@dblclick="selectObject(object)">
                     <span class="palette-item-copy">
                         <strong>{{object.name}}</strong>
-                        <small>{{object.kind==='a2a'?'远程 A2A Agent':object.kind==='agent-group'?'Agent 组':'独立 Agent'}} · {{object.enabled?'可用':'不可用'}}</small>
+                        <small>{{objectKindLabel(object)}} · {{object.enabled?'可用':'不可用'}}</small>
                     </span>
                     <el-tag v-if="object.kind==='a2a'" size="mini" type="warning" effect="plain">A2A</el-tag>
                 </button>
             </template>
+            <div v-if="!filteredSystemNodes.length && !filteredFunctions.length && !filteredObjects.length" class="palette-empty">没有匹配的节点</div>
         </div>
     </script>
     <script src="~/js/NeuCharWorkflow/common.js"></script>

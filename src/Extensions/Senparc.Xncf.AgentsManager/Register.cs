@@ -4,7 +4,6 @@
     文件名：Register.cs
     文件功能描述：模块注册与初始化逻辑
 
-
     创建标识：Senparc - 20200818
 
     修改标识：Senparc - 20260701
@@ -24,6 +23,15 @@
 
     修改标识：Senparc - 20260815
     修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
 ----------------------------------------------------------------*/
 
@@ -50,8 +58,10 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using Senparc.Xncf.AgentsManager.Abstractions;
 using Senparc.Xncf.XncfBuilder.OHS.Local;
 using Senparc.Ncf.Shared.Abstractions.ChatAgent;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -141,6 +151,12 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<PromptOptimizationKernelFallbackService>();
             services.AddScoped<PromptOptimizationService>(); // 注册 PromptOptimizationService
             services.AddSingleton<ChatTaskStreamHub>();
+            services.AddSingleton<HumanInTheLoopRequestStore>();
+            services.AddSingleton<AgentsManagerNeuBellProvider>();
+            services.AddSingleton<AgentsManagerHumanInteractionService>();
+            services.AddSingleton<IWorkflowHumanInteractionBridge, AgentsManagerWorkflowHumanInteractionBridge>();
+            services.AddSingleton<INeuBellProvider>(serviceProvider =>
+                serviceProvider.GetRequiredService<AgentsManagerNeuBellProvider>());
             services.AddScoped<ChatGroupService>();
             services.AddScoped<ChatGroupHistoryService>();
             services.AddScoped<ChatTaskService>();
@@ -160,6 +176,9 @@ namespace Senparc.Xncf.AgentsManager
             services.AddSingleton<PublishedA2ARequestHandler>();
             services.AddScoped<PublishedA2AAgentFactory>();
             services.AddScoped<AgentsWorkflowObjectProvider>();
+            services.AddScoped<AgentWorkflowReferenceValidator>();
+            services.AddScoped<IAgentWorkflowReferenceValidator>(serviceProvider =>
+                serviceProvider.GetRequiredService<AgentWorkflowReferenceValidator>());
             services.AddScoped<IWorkflowObjectProvider>(serviceProvider =>
                 serviceProvider.GetRequiredService<AgentsWorkflowObjectProvider>());
 
@@ -217,7 +236,6 @@ namespace Senparc.Xncf.AgentsManager
         }
     }
 }
-
 
 
 

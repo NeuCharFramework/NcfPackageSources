@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -32,10 +35,15 @@ public class TasksModel(
 {
     public Task OnGetAsync() => Task.CompletedTask;
 
-    public async Task<IActionResult> OnGetListAsync(int? beforeExecutionLogId = null) =>
+    public async Task<IActionResult> OnGetListAsync(
+        int? beforeExecutionLogId = null,
+        int? workflowId = null,
+        string? status = null) =>
         Ok(await workflowAppService.GetTaskListAsync(
             CurrentAdminUserId,
             beforeExecutionLogId,
+            workflowId,
+            status,
             HttpContext.RequestAborted).ConfigureAwait(false));
 
     public async Task<IActionResult> OnGetCleanupPreviewAsync() =>
@@ -57,11 +65,15 @@ public class TasksModel(
         }
     }
 
-    public IActionResult OnPostAbort([FromBody] AbortWorkflowRunRequest request)
+    public async Task<IActionResult> OnPostAbortAsync([FromBody] AbortWorkflowRunRequest request)
     {
         try
         {
-            workflowAppService.AbortRun(request?.RunId ?? Guid.Empty, CurrentAdminUserId);
+            await workflowAppService.AbortRunAsync(
+                request?.RunId,
+                request?.ExecutionLogId,
+                CurrentAdminUserId,
+                HttpContext.RequestAborted).ConfigureAwait(false);
             return Ok(new { success = true });
         }
         catch (WorkflowConflictException ex)
@@ -78,7 +90,8 @@ public class TasksModel(
 
     public sealed class AbortWorkflowRunRequest
     {
-        public Guid RunId { get; set; }
+        public Guid? RunId { get; set; }
+        public int? ExecutionLogId { get; set; }
     }
 
     public sealed class TaskCleanupRequest

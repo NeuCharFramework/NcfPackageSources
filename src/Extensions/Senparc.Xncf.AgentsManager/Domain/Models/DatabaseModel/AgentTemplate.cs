@@ -13,11 +13,21 @@
     修改标识：Senparc - 20260804
     修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
+using Senparc.Xncf.AgentsManager.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -87,6 +97,34 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         /// 绑定的 KnowledgeBase ID。跨 XNCF 数据库上下文，不建立数据库外键。
         /// </summary>
         public int? KnowledgeBaseId { get; private set; }
+
+        /// <summary>
+        /// 模型绑定方式。默认沿用 PromptRange 中的模型配置，保持升级前行为。
+        /// </summary>
+        [Required]
+        public AgentModelBindingMode ModelBinding { get; private set; } = AgentModelBindingMode.InheritPromptRange;
+
+        /// <summary>
+        /// 手动绑定的 AIModel ID。跨 XNCF 数据库上下文，不建立数据库外键。
+        /// </summary>
+        public int? AiModelId { get; private set; }
+
+        /// <summary>是否为系统保留的 Human 参与者。该属性不落库。</summary>
+        [NotMapped]
+        public bool IsHuman => HumanParticipantConstants.IsHuman(PromptCode);
+
+        /// <summary>是否为系统自动维护的 Agent。</summary>
+        [NotMapped]
+        public bool IsSystemAgent => IsHuman
+            || string.Equals(Name, "PromptCatalyzer", StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>系统 Agent 类型，仅用于管理界面标识。</summary>
+        [NotMapped]
+        public string SystemAgentKind => IsHuman
+            ? HumanParticipantConstants.Name
+            : string.Equals(Name, "PromptCatalyzer", StringComparison.OrdinalIgnoreCase)
+                ? "PromptCatalyzer"
+                : null;
 
         /// <summary>
         /// 获取McpEndpoints的JSON对象
@@ -182,7 +220,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 
         private AgentTemplate() { }
 
-        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null, string functionCallNames = null, string mcpEndpoints = null, int? knowledgeBaseId = null)
+        public AgentTemplate(string name, string systemMessage, bool enable, string description, string promptCode, HookRobotType hookRobotType, string hookRobotParameter, string avastar = null, string functionCallNames = null, string mcpEndpoints = null, int? knowledgeBaseId = null, AgentModelBindingMode modelBinding = AgentModelBindingMode.InheritPromptRange, int? aiModelId = null)
         {
             Name = name;
             SystemMessage = systemMessage;
@@ -195,6 +233,7 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             FunctionCallNames = functionCallNames;
             McpEndpoints = mcpEndpoints;
             KnowledgeBaseId = knowledgeBaseId;
+            SetModelBinding(modelBinding, aiModelId);
         }
 
         public bool EnableAgent()
@@ -222,7 +261,38 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             Avastar = agentTemplateDto.Avastar;
             McpEndpoints = agentTemplateDto.McpEndpoints;
             KnowledgeBaseId = agentTemplateDto.KnowledgeBaseId;
+            SetModelBinding(agentTemplateDto.ModelBinding, agentTemplateDto.AiModelId);
         }
+
+        public void UpdateModelBinding(AgentModelBindingMode modelBinding, int? aiModelId)
+        {
+            SetModelBinding(modelBinding, aiModelId);
+        }
+
+        private void SetModelBinding(AgentModelBindingMode modelBinding, int? aiModelId)
+        {
+            ModelBinding = Enum.IsDefined(modelBinding)
+                ? modelBinding
+                : AgentModelBindingMode.InheritPromptRange;
+            AiModelId = ModelBinding == AgentModelBindingMode.ManualAiModel
+                ? aiModelId
+                : null;
+        }
+    }
+
+    /// <summary>
+    /// Agent 的运行模型来源。
+    /// </summary>
+    public enum AgentModelBindingMode
+    {
+        /// <summary>沿用 PromptRange Prompt 版本绑定的模型。</summary>
+        InheritPromptRange = 0,
+
+        /// <summary>沿用 Group 或 Workflow 节点的本次任务模型。</summary>
+        FollowGroupTask = 1,
+
+        /// <summary>固定使用 Agent 手动绑定的 AIModel。</summary>
+        ManualAiModel = 2
     }
 
     /// <summary>

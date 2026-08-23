@@ -1,9 +1,8 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：AgentTemplateAppService.cs
     文件功能描述：AgentTemplateAppService 服务逻辑
-
 
     创建标识：Senparc - 20240616
 
@@ -28,6 +27,15 @@
     修改标识：Senparc - 20260815
     修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 Human-in-the-Loop 人工审批与人类参与者执行策略
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;
@@ -38,14 +46,19 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.Core.WorkContext.Provider;
+using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
 using Senparc.Xncf.AgentsManager.Domain.Services;
+using Senparc.Xncf.AgentsManager.Abstractions;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AIKernel.Domain.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.AreaBase.Admin.Filters;
@@ -55,6 +68,9 @@ using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using Senparc.Xncf.KnowledgeBase.Domain.Services;
+using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.XncfBase.FunctionRenders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,12 +85,22 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly AgentsTemplateService _agentsTemplateService;
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
+        private readonly IAgentWorkflowReferenceValidator _agentWorkflowReferenceValidator;
+        private readonly IWorkflowFunctionCallingProvider _workflowFunctionCallingProvider;
 
-        public AgentTemplateAppService(IServiceProvider serviceProvider, AgentsTemplateService agentsTemplateService, PromptItemService promptItemService, PromptRangeService promptRangeService) : base(serviceProvider)
+        public AgentTemplateAppService(
+            IServiceProvider serviceProvider,
+            AgentsTemplateService agentsTemplateService,
+            PromptItemService promptItemService,
+            PromptRangeService promptRangeService,
+            IEnumerable<IAgentWorkflowReferenceValidator> agentWorkflowReferenceValidators = null,
+            IEnumerable<IWorkflowFunctionCallingProvider> workflowFunctionCallingProviders = null) : base(serviceProvider)
         {
             this._agentsTemplateService = agentsTemplateService;
             this._promptItemService = promptItemService;
             this._promptRangeService = promptRangeService;
+            _agentWorkflowReferenceValidator = agentWorkflowReferenceValidators?.FirstOrDefault();
+            _workflowFunctionCallingProvider = workflowFunctionCallingProviders?.FirstOrDefault();
         }
 
         //[ApiBind]
@@ -89,6 +115,15 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     ? await NormalizePromptCodeAsync(requestedPrompt)
                     : requestedPrompt;
                 var promptTemplate = promptCode;
+
+                var existingAgent = request.Id > 0
+                    ? await _agentsTemplateService.GetObjectAsync(z => z.Id == request.Id)
+                    : null;
+                if ((existingAgent?.IsHuman ?? false)
+                    || HumanParticipantConstants.IsHuman(promptCode))
+                {
+                    return "Human 是系统保留的特殊参与者，不能通过普通 Agent 接口创建或修改。";
+                }
 
                 if (AgentTemplateRunner.IsPromptRangeReference(promptCode))
                 {
@@ -138,6 +173,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 if (string.IsNullOrEmpty(request.Name))
                 {
                     return "请输入智能体名称";
+                }
+
+                if (HumanParticipantConstants.IsHuman(promptCode))
+                {
+                    return "Human 是系统保留的特殊参与者，不能通过普通 Agent 接口创建。";
                 }
 
                 // 检查是否已有使用该 PromptCode 前缀的智能体
@@ -409,7 +449,58 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
 
             return await this.GetResponseAsync<AgentTemplateDto>(async (response, logger) =>
             {
+                var existingAgent = agentTemplateDto.Id > 0
+                    ? await _agentsTemplateService.GetObjectAsync(z => z.Id == agentTemplateDto.Id)
+                    : null;
+                if (existingAgent?.IsHuman ?? false)
+                {
+                    await ValidateAgentModelBindingAsync(agentTemplateDto, isHumanParticipant: true);
+                    existingAgent.UpdateModelBinding(agentTemplateDto.ModelBinding, agentTemplateDto.AiModelId);
+                    await _agentsTemplateService.SaveObjectAsync(existingAgent);
+
+                    var humanDto = _agentsTemplateService.Mapping<AgentTemplateDto>(existingAgent);
+                    await PopulateAgentMetadataAsync(new[] { humanDto });
+                    return humanDto;
+                }
+
+                if (HumanParticipantConstants.IsHuman(agentTemplateDto.PromptCode))
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Human 是系统保留的特殊参与者，不能通过普通 Agent 接口创建。";
+                    return null;
+                }
+
+                await ValidateAgentModelBindingAsync(agentTemplateDto);
                 await ValidateKnowledgeBaseBindingAsync(agentTemplateDto.KnowledgeBaseId);
+                agentTemplateDto.FunctionBindings = AgentFunctionBindingCodec
+                    .Normalize(agentTemplateDto.FunctionBindings)
+                    .ToList();
+                agentTemplateDto.FunctionCallNames = AgentFunctionBindingCodec.Serialize(
+                    agentTemplateDto.FunctionBindings,
+                    agentTemplateDto.FunctionCallNames);
+
+                if (_agentWorkflowReferenceValidator != null && agentTemplateDto.Id > 0)
+                {
+                    var bindingError = await _agentWorkflowReferenceValidator.ValidateAgentBindingsAsync(
+                        agentTemplateDto.Id,
+                        GetCurrentAdminUserId(),
+                        agentTemplateDto.FunctionBindings
+                            .Where(AgentFunctionBindingCodec.IsWorkflowBinding)
+                            .Select(binding => binding.WorkflowId > 0
+                                ? binding.WorkflowId.Value
+                                : int.TryParse(binding.Key, out var workflowId) ? workflowId : 0)
+                            .Where(workflowId => workflowId > 0)
+                            .Distinct()
+                            .ToList(),
+                        default);
+                    if (bindingError != null)
+                    {
+                        response.Success = false;
+                        response.ErrorMessage = bindingError;
+                        return null;
+                    }
+                }
+
                 var newDto = await this._agentsTemplateService.UpdateAgentTemplateAsync(agentTemplateDto.Id, agentTemplateDto);
                 await PopulateAgentMetadataAsync(new[] { newDto });
                 return newDto;
@@ -458,11 +549,18 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 PromptItemDto promptItemDto = null;
                 PromptRangeDto promptRangeDto = null;
                 AIModelDto aiModelDto = null;
+                var aiModelService = base.GetService<AIModelService>();
 
                 // PromptCode 兼容两种数据：PromptRange 版本号，或用户手动输入的 SystemMessage。
                 // 手动 Prompt 没有关联 PromptItem，不能直接交给 GetBestPromptAsync，否则会被当作
                 // RangeName 查询并返回“找不到对应的靶场”。
-                if (AgentTemplateRunner.IsPromptRangeReference(promptCode))
+                if (agentTemplateDto.ModelBinding == AgentModelBindingMode.ManualAiModel
+                    && agentTemplateDto.AiModelId > 0)
+                {
+                    var aiModel = await aiModelService.GetObjectAsync(z => z.Id == agentTemplateDto.AiModelId.Value);
+                    aiModelDto = aiModelService.Mapping<AIModelDto>(aiModel);
+                }
+                else if (AgentTemplateRunner.IsPromptRangeReference(promptCode))
                 {
                     var promptItem = await this._promptItemService.GetBestPromptAsync(promptCode.Trim(), true);
                     promptItemDto = this._promptItemService.Mapping<PromptItemDto>(promptItem);
@@ -470,7 +568,6 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     promptRangeDto = await _promptRangeService.GetAsync(promptItem.RangeId);
                     promptItemDto.PromptRange = promptRangeDto;
 
-                    var aiModelService = base.GetService<AIModelService>();
                     var aiModel = await aiModelService.GetObjectAsync(z => z.Id == promptItem.ModelId);
                     aiModelDto = aiModelService.Mapping<AIModelDto>(aiModel);
                 }
@@ -490,6 +587,84 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             });
         }
 
+        [ApiBind]
+        public async Task<AppResponseBase<AgentFunctionBindingCatalogResponse>> GetFunctionBindingCatalog(int agentId = 0)
+        {
+            return await this.GetResponseAsync<AgentFunctionBindingCatalogResponse>(async (response, logger) =>
+            {
+                var result = new AgentFunctionBindingCatalogResponse();
+                var currentAgent = agentId > 0
+                    ? await _agentsTemplateService.GetObjectAsync(item => item.Id == agentId)
+                    : null;
+                result.CurrentBindings = AgentFunctionBindingCodec.Parse(currentAgent?.FunctionCallNames)
+                    .Select(CloneBinding)
+                    .ToList();
+
+                var moduleService = base.GetRequiredService<XncfModuleService>();
+                foreach (var register in XncfRegisterManager.RegisterList)
+                {
+                    var module = await moduleService.GetObjectAsync(item => item.Uid == register.Uid);
+                    var available = module?.State == XncfModules_State.开放;
+                    if (!Senparc.Ncf.XncfBase.Register.FunctionRenderCollection.TryGetValue(register.GetType(), out var group))
+                    {
+                        continue;
+                    }
+
+                    foreach (var bag in group.Values
+                        .Where(item => item.MethodInfo != null && item.FunctionRenderAttribute.AllowAiInvocation)
+                        .GroupBy(item => item.Key)
+                        .Select(items => items.First()))
+                    {
+                        result.Functions.Add(new AgentFunctionBindingOptionResponse
+                        {
+                            Kind = "function",
+                            Key = $"{register.Uid}::{bag.Key}",
+                            Name = bag.FunctionRenderAttribute.Name,
+                            Description = bag.FunctionRenderAttribute.Description,
+                            ModuleUid = register.Uid,
+                            ModuleName = register.MenuName,
+                            ModuleVersion = register.Version,
+                            FunctionKey = bag.Key,
+                            ParameterCount = bag.MethodInfo.GetParameters().Length,
+                            Available = available
+                        });
+                    }
+                }
+
+                result.Plugins = AIPluginHub.Instance.GetAllPluginNames()
+                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                    .OrderBy(name => name)
+                    .Select(name => new AgentFunctionBindingOptionResponse
+                    {
+                        Kind = "plugin",
+                        Key = name,
+                        Name = name,
+                        Description = "兼容旧版 Agent Plugin Function Calling 绑定。",
+                        Available = true
+                    })
+                    .ToList();
+
+                var adminUserId = GetCurrentAdminUserId();
+                if (_workflowFunctionCallingProvider != null && adminUserId > 0)
+                {
+                    var workflows = await _workflowFunctionCallingProvider
+                        .GetAvailableAsync(adminUserId, default);
+                    result.Workflows = workflows.Select(workflow => new AgentFunctionBindingOptionResponse
+                    {
+                        Kind = "workflow",
+                        Key = workflow.Id.ToString(),
+                        WorkflowId = workflow.Id,
+                        Name = workflow.Name,
+                        Description = workflow.Description,
+                        ParameterCount = workflow.Parameters?.Count ?? 0,
+                        Available = true
+                    }).ToList();
+                }
+
+                return result;
+            });
+        }
+
         /// <summary>
         /// 启用或者停用 AgentTemplate
         /// </summary>
@@ -502,6 +677,13 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             return await this.GetResponseAsync<string>(async (response, logger) =>
             {
                 var agent = await this._agentsTemplateService.GetAgentTemplateAsync(id);
+                if (agent.IsHuman)
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Human 是系统保留的特殊参与者，不能停用或启用。";
+                    return null;
+                }
+
                 if (enable)
                 {
                     agent.EnableAgent();
@@ -613,6 +795,75 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             }
         }
 
+        private async Task ValidateAgentModelBindingAsync(
+            AgentTemplateDto agentTemplateDto,
+            bool isHumanParticipant = false)
+        {
+            if (!Enum.IsDefined(agentTemplateDto.ModelBinding))
+            {
+                throw new InvalidOperationException("模型绑定方式无效。");
+            }
+
+            if (isHumanParticipant)
+            {
+                if (agentTemplateDto.ModelBinding != AgentModelBindingMode.ManualAiModel)
+                {
+                    agentTemplateDto.AiModelId = null;
+                    return;
+                }
+
+                if (agentTemplateDto.AiModelId is not > 0)
+                {
+                    throw new InvalidOperationException("手动选择 AIModel 时必须选择一个 Chat 类型模型。");
+                }
+
+                // Human 本身不会调用模型；仍保存选择，使其在系统 Agent 管理页面中的
+                // 任务策略保持可见且可调整，并与其他系统 Agent 使用同一数据契约。
+                var humanModelService = base.GetService<AIModelService>()
+                    ?? throw new InvalidOperationException("AIKernel 模块服务未启用，无法绑定 AIModel。");
+                var humanModel = await humanModelService.GetObjectAsync(z => z.Id == agentTemplateDto.AiModelId.Value)
+                    ?? throw new InvalidOperationException($"绑定的 AIModel 不存在：{agentTemplateDto.AiModelId.Value}");
+                if (humanModel.ConfigModelType != ConfigModelType.Chat)
+                {
+                    throw new InvalidOperationException(
+                        $"AIModel“{humanModel.Alias}”不是 Chat 类型，不能绑定给 Agent。");
+                }
+                return;
+            }
+
+            var promptCode = string.IsNullOrWhiteSpace(agentTemplateDto.SystemMessage)
+                ? agentTemplateDto.PromptCode
+                : agentTemplateDto.SystemMessage;
+            var isPromptRangeReference = AgentTemplateRunner.IsPromptRangeReference(promptCode);
+            if (!isPromptRangeReference
+                && agentTemplateDto.ModelBinding != AgentModelBindingMode.ManualAiModel)
+            {
+                throw new InvalidOperationException(
+                    "手动 Prompt 没有 PromptRange 模型可继承，请选择“手动选择 AIModel”。");
+            }
+
+            if (agentTemplateDto.ModelBinding != AgentModelBindingMode.ManualAiModel)
+            {
+                agentTemplateDto.AiModelId = null;
+                return;
+            }
+
+            if (agentTemplateDto.AiModelId is not > 0)
+            {
+                throw new InvalidOperationException("手动选择 AIModel 时必须选择一个 Chat 类型模型。");
+            }
+
+            var aiModelService = base.GetService<AIModelService>()
+                ?? throw new InvalidOperationException("AIKernel 模块服务未启用，无法绑定 AIModel。");
+            var aiModel = await aiModelService.GetObjectAsync(z => z.Id == agentTemplateDto.AiModelId.Value)
+                ?? throw new InvalidOperationException($"绑定的 AIModel 不存在：{agentTemplateDto.AiModelId.Value}");
+            if (aiModel.ConfigModelType != ConfigModelType.Chat)
+            {
+                throw new InvalidOperationException(
+                    $"AIModel“{aiModel.Alias}”不是 Chat 类型，不能绑定给 Agent。");
+            }
+        }
+
         public async Task PopulateAgentMetadataAsync<TAgentDto>(IEnumerable<TAgentDto> agentDtos)
             where TAgentDto : AgentTemplateDto
         {
@@ -632,6 +883,12 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 .ToDictionary(z => z.Key, z => z.ToList());
             foreach (var dto in dtoList)
             {
+                dto.FunctionBindings = AgentFunctionBindingCodec.Parse(
+                        dto.FunctionCallNames)
+                    .Select(CloneBinding)
+                    .ToList();
+                dto.FunctionCallNames = AgentFunctionBindingCodec.GetLegacyPluginNames(
+                    dto.FunctionCallNames);
                 if (!historyGroups.TryGetValue(dto.Id, out var agentHistories))
                 {
                     continue;
@@ -689,6 +946,32 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 }
             }
         }
+
+        private int GetCurrentAdminUserId()
+        {
+            try
+            {
+                return base.GetService<IAdminWorkContextProvider>()?.GetAdminWorkContext()?.AdminUserId ?? 0;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private static AgentFunctionBindingDto CloneBinding(AgentFunctionBindingDto binding)
+            => binding == null
+                ? null
+                : new AgentFunctionBindingDto
+                {
+                    Kind = binding.Kind,
+                    Key = binding.Key,
+                    Name = binding.Name,
+                    Description = binding.Description,
+                    ModuleUid = binding.ModuleUid,
+                    FunctionKey = binding.FunctionKey,
+                    WorkflowId = binding.WorkflowId
+                };
 
         /// <summary>
         /// 获取所有已注册的 AI Plugin 类型
@@ -822,6 +1105,13 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 if (agent == null)
                 {
                     missing++;
+                    continue;
+                }
+
+                if (agent.IsHuman)
+                {
+                    blocked++;
+                    logger.Append($"✗ 阻止删除 Agent【{agent.Name}】：Human 是系统保留的特殊参与者");
                     continue;
                 }
 

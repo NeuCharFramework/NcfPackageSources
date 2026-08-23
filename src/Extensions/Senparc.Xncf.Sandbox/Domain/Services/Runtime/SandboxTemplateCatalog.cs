@@ -8,7 +8,13 @@
     创建标识：Senparc - 20260808
 
     修改标识：Senparc - 20260815
-    修改描述：v0.2.0-preview3 增加 NCF 预览沙箱工作负载
+    修改描述：v0.2.0 增加 NCF 预览沙箱工作负载
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
 
 ----------------------------------------------------------------*/
 
@@ -51,8 +57,25 @@ public static class SandboxTemplateCatalog
                 Interactive = true,
                 Image = "quay.io/jupyter/minimal-notebook:latest",
                 ContainerPort = 8888,
+                SupportsInteractiveControl = true,
+                WorkspaceMountPath = "/home/jovyan/work",
                 DefaultCpuLimit = 1,
                 DefaultMemoryMb = 1024,
+                DefaultTtl = TimeSpan.FromMinutes(45)
+            },
+            [SandboxTemplateKeys.JupyterCsharp] = new SandboxTemplateDefinition
+            {
+                Key = SandboxTemplateKeys.JupyterCsharp,
+                DisplayName = "JupyterLab (C#)",
+                PreferredRuntime = SandboxRuntimeKind.Docker,
+                Interactive = true,
+                // Build tools/SandboxImages/JupyterDotnet or override this image in appsettings.
+                Image = "ncf-jupyter-dotnet:10.0",
+                ContainerPort = 8888,
+                SupportsInteractiveControl = true,
+                WorkspaceMountPath = "/home/jovyan/work",
+                DefaultCpuLimit = 1,
+                DefaultMemoryMb = 1536,
                 DefaultTtl = TimeSpan.FromMinutes(45)
             },
             [SandboxTemplateKeys.NcfPreview] = new SandboxTemplateDefinition

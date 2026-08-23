@@ -6,12 +6,22 @@
 
     创建标识：Senparc - 20260808
 
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 增强 jupyter-csharp 模板与沙箱会话管理
+
+    修改标识：Senparc - 20260817
+    修改描述：v0.2.0 支持更新过期时间与无限 TTL 标记
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.Sandbox.Abstractions;
+using Senparc.Xncf.Sandbox.Domain.Services;
 
 namespace Senparc.Xncf.Sandbox.Domain.Models.DatabaseModel;
 
@@ -114,6 +124,9 @@ public class SandboxSession : EntityBase<int>
         Status = SandboxSessionStatus.Stopped;
         StatusMessage = message;
         RuntimeHandle = null;
+        HostPort = null;
+        AccessUrl = null;
+        AccessToken = null;
         Touch();
     }
 
@@ -122,10 +135,21 @@ public class SandboxSession : EntityBase<int>
         Status = SandboxSessionStatus.Expired;
         StatusMessage = message ?? "TTL expired";
         RuntimeHandle = null;
+        HostPort = null;
+        AccessUrl = null;
+        AccessToken = null;
         Touch();
     }
 
-    public void Extend(DateTime newExpiresAtUtc)
+    public bool CanDeleteRecord()
+    {
+        return Status is (SandboxSessionStatus.Stopped
+            or SandboxSessionStatus.Expired
+            or SandboxSessionStatus.Failed)
+            && string.IsNullOrWhiteSpace(RuntimeHandle);
+    }
+
+    public void SetExpiresAtUtc(DateTime newExpiresAtUtc)
     {
         ExpiresAtUtc = newExpiresAtUtc;
         Touch();
@@ -151,6 +175,7 @@ public class SandboxSession : EntityBase<int>
             HostPort = HostPort,
             CreatedAtUtc = new DateTimeOffset(AddTime.ToUniversalTime()),
             ExpiresAtUtc = new DateTimeOffset(ExpiresAtUtc, TimeSpan.Zero),
+            IsTtlUnlimited = SandboxTtlPolicy.IsUnlimited(ExpiresAtUtc),
             LastActivityAtUtc = new DateTimeOffset(LastActivityAtUtc, TimeSpan.Zero)
         };
     }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.5.1</Version>
+		<Version>0.6.0</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -46,7 +46,10 @@
     3、优化 AgentsManager 统计、操作交互及后台认证兼容
     [2026-08-15] v0.5.1 优化管理端 AI 插件与知识库交互
     1、适配 AgentsManager 与 KnowledgeBase 的新状态和请求流程，改善管理端模型助手调用与反馈
-</PackageReleaseNotes>
+    [2026-08-22] v0.6.0 新增管理端 Chat 会话工作流能力
+    1、新增 Admin Chat 会话工作流持久化、工具工厂和执行服务，支持工作流上下文复用
+    2、完善 Chat 模块选择、启动器交互和管理端 AI 工具调用反馈
+		</PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -101,6 +104,7 @@
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Mvc.UI\Senparc.Ncf.Mvc.UI.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.NeuCharWorkflow.Abstractions\Senparc.Xncf.NeuCharWorkflow.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />

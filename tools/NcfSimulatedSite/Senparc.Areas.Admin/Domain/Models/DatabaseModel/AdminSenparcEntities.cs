@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -67,6 +70,11 @@ namespace Senparc.Areas.Admin.Domain.Models
         public DbSet<AdminChatSessionModule> AdminChatSessionModules { get; set; }
 
         /// <summary>
+        /// 管理后台聊天会话-Workflow 关联
+        /// </summary>
+        public DbSet<AdminChatSessionWorkflow> AdminChatSessionWorkflows { get; set; }
+
+        /// <summary>
         /// 系统级 NeuCharPivot 配置
         /// </summary>
         public DbSet<NeuCharPivotConfiguration> NeuCharPivotConfigurations { get; set; }
@@ -111,6 +119,9 @@ namespace Senparc.Areas.Admin.Domain.Models
                 .HasIndex(z => z.CorrelationId);
             modelBuilder.Entity<NeuCharExecutionLog>()
                 .HasIndex(z => new { z.SourceType, z.SourceId });
+            modelBuilder.Entity<AdminChatSessionWorkflow>()
+                .HasIndex(z => new { z.SessionId, z.WorkflowId })
+                .IsUnique();
 
             var providerName = Database.ProviderName ?? string.Empty;
             var largeTextType = providerName.Contains("Oracle", StringComparison.OrdinalIgnoreCase)
