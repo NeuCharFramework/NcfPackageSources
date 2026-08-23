@@ -1,10 +1,10 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AgentsManagerSenparcEntities_SqlServerModelSnapshot.cs
-    文件功能描述：AgentsManagerSenparcEntities_SqlServerModelSnapshot.cs 相关实现
+    文件名：20260822164335_Add_AgentExecutionTasks.Designer.cs
+    文件功能描述：20260822164335_Add_AgentExecutionTasks.Designer.cs 相关实现
 
-    创建标识：Senparc - 20231021
+    创建标识：Senparc - 20260822
 
     修改标识：Senparc - 20260822
     修改描述：v0.16.0 新增独立 Agent 执行任务多数据库迁移
@@ -16,6 +16,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.AgentsManager.Models;
 
@@ -24,9 +25,11 @@ using Senparc.Xncf.AgentsManager.Models;
 namespace Senparc.Xncf.AgentsManager.Domain.Migrations.SqlServer
 {
     [DbContext(typeof(AgentsManagerSenparcEntities_SqlServer))]
-    partial class AgentsManagerSenparcEntities_SqlServerModelSnapshot : ModelSnapshot
+    [Migration("20260822164335_Add_AgentExecutionTasks")]
+    partial class Add_AgentExecutionTasks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

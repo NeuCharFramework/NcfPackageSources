@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：SandboxSessionService.cs
+    文件功能描述：SandboxSessionService.cs 相关实现
+
+    创建标识：Senparc - 20260822
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 完善沙箱会话状态服务与生命周期处理
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;

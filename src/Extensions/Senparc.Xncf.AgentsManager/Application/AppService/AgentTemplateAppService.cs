@@ -878,8 +878,15 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             var histories = agentIds.Count == 0
                 ? new List<Models.DatabaseModel.Models.ChatGroupHistory>()
                 : await historyService.GetFullListAsync(z => z.FromAgentTemplateId.HasValue && agentIds.Contains(z.FromAgentTemplateId.Value));
+            var executionService = base.GetRequiredService<AgentExecutionService>();
+            var executions = agentIds.Count == 0
+                ? new List<AgentExecutionTask>()
+                : await executionService.GetFullListAsync(z => agentIds.Contains(z.AgentTemplateId));
 
             var historyGroups = histories.GroupBy(z => z.FromAgentTemplateId.Value)
+                .ToDictionary(z => z.Key, z => z.ToList());
+            var executionGroups = executions
+                .GroupBy(z => z.AgentTemplateId)
                 .ToDictionary(z => z.Key, z => z.ToList());
             foreach (var dto in dtoList)
             {
@@ -889,17 +896,33 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     .ToList();
                 dto.FunctionCallNames = AgentFunctionBindingCodec.GetLegacyPluginNames(
                     dto.FunctionCallNames);
-                if (!historyGroups.TryGetValue(dto.Id, out var agentHistories))
-                {
-                    continue;
-                }
+                historyGroups.TryGetValue(dto.Id, out var agentHistories);
+                executionGroups.TryGetValue(dto.Id, out var agentExecutions);
+                agentHistories ??= new List<Models.DatabaseModel.Models.ChatGroupHistory>();
+                agentExecutions ??= new List<AgentExecutionTask>();
 
                 var completedHistories = agentHistories
                     .Where(z => z.Status == Models.DatabaseModel.Models.Status.Finished)
                     .ToList();
+                var completedExecutions = agentExecutions
+                    .Where(z => z.Status == AgentExecutionTask_Status.Finished)
+                    .ToList();
                 dto.CompletedConversationRounds = completedHistories.Count;
-                dto.CompletedTaskCount = completedHistories.Select(z => z.ChatTaskId).Distinct().Count();
-                dto.LastActiveTime = agentHistories.Max(z => z.LastUpdateTime);
+                dto.CompletedConversationRounds += completedExecutions.Sum(z => Math.Max(1, z.ResponseCount));
+                dto.CompletedTaskCount = completedHistories.Select(z => z.ChatTaskId).Distinct().Count()
+                    + completedExecutions.Count;
+
+                var historyLastActive = agentHistories.Count == 0
+                    ? (DateTime?)null
+                    : agentHistories.Max(z => z.LastUpdateTime);
+                var executionLastActive = agentExecutions.Count == 0
+                    ? (DateTime?)null
+                    : agentExecutions.Max(z => z.EndTime ?? z.StartTime);
+                var activeTimes = new[] { historyLastActive, executionLastActive }
+                    .Where(z => z.HasValue)
+                    .Select(z => z.Value)
+                    .ToList();
+                dto.LastActiveTime = activeTimes.Count == 0 ? null : activeTimes.Max();
 
                 long totalResponseMilliseconds = 0;
                 var responseCount = 0;
@@ -915,6 +938,15 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     dto.TotalTokens += usage.TotalTokens;
                     totalResponseMilliseconds += usage.ResponseMilliseconds;
                     responseCount++;
+                }
+
+                foreach (var execution in agentExecutions)
+                {
+                    dto.PromptTokens += execution.TotalPromptTokens;
+                    dto.CompletionTokens += execution.TotalCompletionTokens;
+                    dto.TotalTokens += execution.TotalTokens;
+                    totalResponseMilliseconds += execution.TotalResponseMilliseconds;
+                    responseCount += execution.ResponseCount;
                 }
 
                 dto.AverageResponseMilliseconds = responseCount == 0
@@ -1074,6 +1106,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
             var chatGroupMemberService = base.GetRequiredService<ChatGroupMemberService>();
             var chatGroupHistoryService = base.GetRequiredService<ChatGroupHistoryService>();
             var publishedA2AAgentService = base.GetRequiredService<PublishedA2AAgentService>();
+            var agentExecutionService = base.GetRequiredService<AgentExecutionService>();
 
             var groupsAsRole = await chatGroupService.GetFullListAsync(
                 z => idSet.Contains(z.AdminAgentTemplateId) || idSet.Contains(z.EnterAgentTemplateId));
@@ -1119,6 +1152,15 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 {
                     blocked++;
                     logger.Append($"✗ 阻止删除 Agent【{agent.Name}】：{string.Join("；", blockedMessages)}");
+                    continue;
+                }
+
+                var executionTasks = await agentExecutionService.GetFullListAsync(
+                    z => z.AgentTemplateId == id);
+                if (executionTasks.Count > 0)
+                {
+                    blocked++;
+                    logger.Append($"✗ 阻止删除 Agent【{agent.Name}】：已有 {executionTasks.Count} 条独立执行记录，请先保留或清理执行记录");
                     continue;
                 }
 

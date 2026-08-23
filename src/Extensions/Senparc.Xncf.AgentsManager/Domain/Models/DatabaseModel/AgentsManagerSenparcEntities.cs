@@ -13,6 +13,13 @@
     修改标识：Senparc - 20260813
     修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 注册独立 Agent 执行任务数据库集合
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 新增独立 Agent 执行任务持久化、管理页和 SSE 过程回放
+
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +63,8 @@ namespace Senparc.Xncf.AgentsManager.Models
         public DbSet<ChatGroupHistory> ChatGroupHistories { get; set; }
 
         public DbSet<ChatTask> ChatTasks { get; set; }
+
+        public DbSet<AgentExecutionTask> AgentExecutionTasks { get; set; }
 
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }

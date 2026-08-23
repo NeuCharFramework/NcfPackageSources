@@ -975,6 +975,16 @@ new Vue({
             const viewer = window.open(`/Admin/AgentsManager/Index#${query.toString()}`, '_blank', 'noopener,noreferrer');
             if (viewer) viewer.opener = null;
         },
+        hasAgentExecution(event) {
+            const reference = event && event.objectReference;
+            return reference && Number(reference.agentExecutionTaskId) > 0;
+        },
+        openAgentExecution(reference) {
+            const taskId = Number(reference && reference.agentExecutionTaskId || 0);
+            if (!Number.isInteger(taskId) || taskId <= 0) return;
+            const viewer = window.open(`/Admin/AgentsManager/AgentExecutions?taskId=${encodeURIComponent(taskId)}`, '_blank', 'noopener,noreferrer');
+            if (viewer) viewer.opener = null;
+        },
         async createWorkflow() {
             if (this.editingLocked || this.saveState.saving || !await this.confirmDiscardChanges('新建工作流')) return;
             this.form = this.emptyForm();

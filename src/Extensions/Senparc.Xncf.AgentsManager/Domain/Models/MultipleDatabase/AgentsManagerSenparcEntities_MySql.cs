@@ -29,7 +29,7 @@ namespace Senparc.Xncf.AgentsManager.Models
         protected override Action<IApplicationBuilder> AppAction => app =>
         {
             //指定其他数据库
-            app.UseNcfDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDatabaseConfiguration");
+            app.UseNcfDatabase("Senparc.Ncf.Database.MySql", "Senparc.Ncf.Database.MySql", "MySqlDesignTimeDatabaseConfiguration");
         };
 
         public SenparcDbContextFactory_MySql() : base(SenparcDbContextFactoryConfig.RootDirectoryPath)

@@ -65,7 +65,21 @@ public class SandboxSessionStateTests
         session.MarkRunning("container-3", 49152, "http://127.0.0.1:49152/lab", "token");
         Assert.IsFalse(session.CanDeleteRecord());
 
+        session.MarkFailed("runtime failure");
+        Assert.IsFalse(session.CanDeleteRecord());
+
         session.MarkStopped("destroyed");
         Assert.IsTrue(session.CanDeleteRecord());
+
+        var failedSession = new SandboxSession(
+            "session-4",
+            1,
+            SandboxTemplateKeys.JupyterPython,
+            SandboxRuntimeKind.Docker,
+            0.5,
+            512,
+            DateTime.UtcNow.AddHours(1));
+        failedSession.MarkFailed("creation failure");
+        Assert.IsTrue(failedSession.CanDeleteRecord());
     }
 }

@@ -46,7 +46,8 @@ public sealed class HumanInTheLoopRequestStore
         ToolApprovalRequestContent request,
         Func<HumanInTheLoopDecision, object> responseFactory,
         string correlationId = null,
-        string recipientUserId = null)
+        string recipientUserId = null,
+        int agentExecutionTaskId = 0)
     {
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(responseFactory);
@@ -57,7 +58,8 @@ public sealed class HumanInTheLoopRequestStore
             request,
             responseFactory,
             correlationId,
-            recipientUserId);
+            recipientUserId,
+            agentExecutionTaskId);
         Add(pending);
         return pending;
     }
@@ -68,7 +70,8 @@ public sealed class HumanInTheLoopRequestStore
         ExternalRequest externalRequest,
         ToolApprovalRequestContent request,
         string correlationId = null,
-        string recipientUserId = null)
+        string recipientUserId = null,
+        int agentExecutionTaskId = 0)
     {
         ArgumentNullException.ThrowIfNull(externalRequest);
         ArgumentNullException.ThrowIfNull(request);
@@ -83,7 +86,8 @@ public sealed class HumanInTheLoopRequestStore
                 return externalRequest.CreateResponse(response);
             },
             correlationId,
-            recipientUserId);
+            recipientUserId,
+            agentExecutionTaskId);
     }
 
     public PendingHumanRequest RegisterHumanTurn(
@@ -92,7 +96,8 @@ public sealed class HumanInTheLoopRequestStore
         string participantKey,
         string prompt,
         string correlationId = null,
-        string recipientUserId = null)
+        string recipientUserId = null,
+        int agentExecutionTaskId = 0)
     {
         var pending = PendingHumanRequest.FromHumanTurn(
             chatTaskId,
@@ -100,7 +105,8 @@ public sealed class HumanInTheLoopRequestStore
             participantKey,
             prompt,
             correlationId,
-            recipientUserId);
+            recipientUserId,
+            agentExecutionTaskId);
         Add(pending);
         return pending;
     }
@@ -156,6 +162,13 @@ public sealed class HumanInTheLoopRequestStore
             .Select(z => z.ToDto())
             .ToList();
 
+    public IReadOnlyList<HumanInTheLoopRequestDto> GetPendingForAgentExecution(int agentExecutionTaskId)
+        => _pending.Values
+            .Where(z => z.AgentExecutionTaskId == agentExecutionTaskId)
+            .OrderBy(z => z.CreatedAt)
+            .Select(z => z.ToDto())
+            .ToList();
+
     public IReadOnlyList<PendingHumanRequest> GetPendingByCorrelationId(string correlationId)
     {
         if (string.IsNullOrWhiteSpace(correlationId))
@@ -174,6 +187,21 @@ public sealed class HumanInTheLoopRequestStore
     {
         var cancelled = new List<PendingHumanRequest>();
         foreach (var pair in _pending.Where(z => z.Value.ChatTaskId == chatTaskId).ToList())
+        {
+            if (_pending.TryRemove(pair.Key, out var pending))
+            {
+                pending.TrySetCanceled();
+                cancelled.Add(pending);
+            }
+        }
+
+        return cancelled;
+    }
+
+    public IReadOnlyList<PendingHumanRequest> CancelForAgentExecution(int agentExecutionTaskId)
+    {
+        var cancelled = new List<PendingHumanRequest>();
+        foreach (var pair in _pending.Where(z => z.Value.AgentExecutionTaskId == agentExecutionTaskId).ToList())
         {
             if (_pending.TryRemove(pair.Key, out var pending))
             {
@@ -216,9 +244,11 @@ public sealed class PendingHumanRequest
         string participantKey,
         Func<HumanInTheLoopDecision, object> responseFactory,
         string correlationId,
-        string recipientUserId)
+        string recipientUserId,
+        int agentExecutionTaskId)
     {
         ChatTaskId = chatTaskId;
+        AgentExecutionTaskId = agentExecutionTaskId;
         AgentName = agentName ?? string.Empty;
         RequestType = requestType;
         ToolName = toolName ?? string.Empty;
@@ -234,6 +264,7 @@ public sealed class PendingHumanRequest
 
     public string RequestId { get; }
     public int ChatTaskId { get; }
+    public int AgentExecutionTaskId { get; }
     public string AgentName { get; }
     public string RequestType { get; }
     public string ToolName { get; }
@@ -255,7 +286,8 @@ public sealed class PendingHumanRequest
         ToolApprovalRequestContent request,
         Func<HumanInTheLoopDecision, object> responseFactory,
         string correlationId = null,
-        string recipientUserId = null)
+        string recipientUserId = null,
+        int agentExecutionTaskId = 0)
     {
         var functionCall = request.ToolCall as FunctionCallContent;
         var arguments = functionCall?.Arguments == null
@@ -272,7 +304,8 @@ public sealed class PendingHumanRequest
             string.Empty,
             responseFactory,
             correlationId,
-            recipientUserId);
+            recipientUserId,
+            agentExecutionTaskId);
     }
 
     public static PendingHumanRequest FromHumanTurn(
@@ -281,7 +314,8 @@ public sealed class PendingHumanRequest
         string participantKey,
         string prompt,
         string correlationId = null,
-        string recipientUserId = null)
+        string recipientUserId = null,
+        int agentExecutionTaskId = 0)
     {
         return new PendingHumanRequest(
             chatTaskId,
@@ -293,7 +327,8 @@ public sealed class PendingHumanRequest
             participantKey,
             decision => decision.Input ?? string.Empty,
             correlationId,
-            recipientUserId);
+            recipientUserId,
+            agentExecutionTaskId);
     }
 
     public void SetNeuBellItemId(string itemId)
@@ -318,6 +353,7 @@ public sealed class PendingHumanRequest
         {
             RequestId = RequestId,
             ChatTaskId = ChatTaskId,
+            AgentExecutionTaskId = AgentExecutionTaskId,
             AgentName = AgentName,
             RequestType = RequestType,
             ToolName = ToolName,
@@ -334,6 +370,7 @@ public sealed class HumanInTheLoopRequestDto
 {
     public string RequestId { get; set; }
     public int ChatTaskId { get; set; }
+    public int AgentExecutionTaskId { get; set; }
     public string AgentName { get; set; }
     public string RequestType { get; set; }
     public string ToolName { get; set; }

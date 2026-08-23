@@ -1,17 +1,13 @@
-﻿/*-----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
-  
+
     文件名：AgentsManagerSenparcEntities_DmModelSnapshot.cs
-    文件功能描述：AgentsManager EF Core 模型快照
-    
-    
+    文件功能描述：AgentsManagerSenparcEntities_DmModelSnapshot.cs 相关实现
+
     创建标识：Senparc - 20231021
-    
-    修改标识：Senparc - 20260817
-    修改描述：v0.16.0 同步 AgentTemplate 模型绑定与 HIL 策略快照
 
     修改标识：Senparc - 20260822
-    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+    修改描述：v0.16.0 新增独立 Agent 执行任务多数据库迁移
 
 ----------------------------------------------------------------*/
 
@@ -37,6 +33,142 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Dm
                 .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn)
                 .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            modelBuilder.Entity("Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.AgentExecutionTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("AdminUserId")
+                        .HasColumnType("INT");
+
+                    b.Property<int>("AgentTemplateId")
+                        .HasColumnType("INT");
+
+                    b.Property<string>("AgentTemplateName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
+
+                    b.Property<int?>("AiModelId")
+                        .HasColumnType("INT");
+
+                    b.Property<bool>("AllowFunctionCalls")
+                        .HasColumnType("BIT");
+
+                    b.Property<string>("CorrelationId")
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
+
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("NVARCHAR2(32767)");
+
+                    b.Property<string>("EventsJson")
+                        .HasColumnType("NVARCHAR2(32767)");
+
+                    b.Property<string>("ExternalReference")
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("BIT");
+
+                    b.Property<int>("HumanInTheLoopLevel")
+                        .HasColumnType("INT");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("BIT");
+
+                    b.Property<bool>("IsPersonality")
+                        .HasColumnType("BIT");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<int>("MaxResponseMilliseconds")
+                        .HasColumnType("INT");
+
+                    b.Property<int>("McpToolPermission")
+                        .HasColumnType("INT");
+
+                    b.Property<string>("ModelDescription")
+                        .HasMaxLength(1000)
+                        .HasColumnType("NVARCHAR2(1000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
+
+                    b.Property<string>("Output")
+                        .HasColumnType("NVARCHAR2(32767)");
+
+                    b.Property<int>("PluginToolPermission")
+                        .HasColumnType("INT");
+
+                    b.Property<string>("PromptCommand")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(32767)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("ResponseCount")
+                        .HasColumnType("INT");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("NVARCHAR2(40)");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INT");
+
+                    b.Property<int>("ToolCallCount")
+                        .HasColumnType("INT");
+
+                    b.Property<int>("TotalCompletionTokens")
+                        .HasColumnType("INT");
+
+                    b.Property<int>("TotalPromptTokens")
+                        .HasColumnType("INT");
+
+                    b.Property<int>("TotalResponseMilliseconds")
+                        .HasColumnType("INT");
+
+                    b.Property<int>("TotalTokens")
+                        .HasColumnType("INT");
+
+                    b.Property<int?>("WorkflowId")
+                        .HasColumnType("INT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CorrelationId");
+
+                    b.HasIndex("AgentTemplateId", "StartTime");
+
+                    b.ToTable("Senparc_AgentsManager_AgentExecutionTask");
+                });
 
             modelBuilder.Entity("Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.ChatTask", b =>
                 {
@@ -610,6 +742,17 @@ namespace Senparc.Xncf.AgentsManager.Domain.Migrations.Dm
                     b.HasIndex("Enable");
 
                     b.ToTable("Senparc_AgentsManager_RemoteAgent");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.AgentExecutionTask", b =>
+                {
+                    b.HasOne("Senparc.Xncf.AgentsManager.Models.DatabaseModel.AgentTemplate", "AgentTemplate")
+                        .WithMany()
+                        .HasForeignKey("AgentTemplateId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AgentTemplate");
                 });
 
             modelBuilder.Entity("Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.ChatGroup", b =>

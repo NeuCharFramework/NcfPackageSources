@@ -38,17 +38,20 @@ internal sealed class DiagnosticAIFunction : DelegatingAIFunction
     private readonly int _agentTemplateId;
     private readonly string _agentName;
     private readonly string _correlationId;
+    private readonly Action<AgentToolExecutionEvent> _onToolEvent;
 
     public DiagnosticAIFunction(
         AIFunction innerFunction,
         int agentTemplateId,
         string agentName,
-        string correlationId)
+        string correlationId,
+        Action<AgentToolExecutionEvent> onToolEvent = null)
         : base(innerFunction)
     {
         _agentTemplateId = agentTemplateId;
         _agentName = agentName ?? string.Empty;
         _correlationId = correlationId ?? string.Empty;
+        _onToolEvent = onToolEvent;
     }
 
     protected override async ValueTask<object> InvokeCoreAsync(
@@ -60,6 +63,14 @@ internal sealed class DiagnosticAIFunction : DelegatingAIFunction
             "AgentsManager.ToolInvocation.Start",
             $"Correlation={_correlationId}; Agent={_agentTemplateId}:{_agentName}; " +
             $"Tool={Name}; Arguments={argumentSummary}");
+        _onToolEvent?.Invoke(new AgentToolExecutionEvent(
+            "tool-start",
+            "running",
+            $"工具“{Name}”开始执行。",
+            Name,
+            argumentSummary,
+            null,
+            null));
 
         try
         {
@@ -68,6 +79,14 @@ internal sealed class DiagnosticAIFunction : DelegatingAIFunction
                 "AgentsManager.ToolInvocation.Completed",
                 $"Correlation={_correlationId}; Agent={_agentTemplateId}:{_agentName}; " +
                 $"Tool={Name}; Result={DescribeResult(result)}");
+            _onToolEvent?.Invoke(new AgentToolExecutionEvent(
+                "tool-complete",
+                "completed",
+                $"工具“{Name}”执行完成。",
+                Name,
+                argumentSummary,
+                DescribeResult(result),
+                null));
             return result;
         }
         catch (Exception ex)
@@ -77,6 +96,14 @@ internal sealed class DiagnosticAIFunction : DelegatingAIFunction
                 "AgentsManager.ToolInvocation.Failed",
                 $"Correlation={_correlationId}; Agent={_agentTemplateId}:{_agentName}; " +
                 $"Tool={Name}; Arguments={argumentSummary}; Error={root.GetType().Name}: {root.Message}");
+            _onToolEvent?.Invoke(new AgentToolExecutionEvent(
+                "tool-failed",
+                "failed",
+                $"工具“{Name}”执行失败。",
+                Name,
+                argumentSummary,
+                null,
+                $"{root.GetType().Name}: {root.Message}"));
             throw;
         }
     }
@@ -127,3 +154,12 @@ internal sealed class DiagnosticAIFunction : DelegatingAIFunction
         return $"{result.GetType().Name}(length={text.Length})";
     }
 }
+
+public sealed record AgentToolExecutionEvent(
+    string EventType,
+    string Status,
+    string Message,
+    string ToolName,
+    string Arguments,
+    string Result,
+    string ErrorMessage);

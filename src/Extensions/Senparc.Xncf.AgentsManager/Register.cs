@@ -143,6 +143,7 @@ namespace Senparc.Xncf.AgentsManager
                 profile.CreateMap<PublishedA2AAgent, PublishedA2AAgentDto>().ReverseMap();
                 profile.CreateMap<ChatGroupHistory, ChatGroupHistoryDto>().ReverseMap();
                 profile.CreateMap<ChatTask, ChatTaskDto>().ReverseMap();
+                profile.CreateMap<AgentExecutionTask, AgentExecutionTaskDto>().ReverseMap();
             });
 
             //Service DI
@@ -165,6 +166,9 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<RemoteAgentService>();
             services.AddScoped<PublishedA2AAgentService>();
             services.AddScoped<AgentTemplateRunner>();
+            services.AddScoped<AgentExecutionService>();
+            services.AddSingleton<AgentExecutionStreamHub>();
+            services.AddSingleton<AgentExecutionRuntimeStore>();
             services.AddHttpClient(RemoteA2AAgentFactory.HttpClientName);
             // Aspire ServiceDefaults 会在所有 HttpClient 上添加固定 30 秒的 Polly 尝试超时。
             // A2A 请求可能需要更长的模型推理时间，并且 POST 不能被隐式重试；
@@ -236,7 +240,6 @@ namespace Senparc.Xncf.AgentsManager
         }
     }
 }
-
 
 
 
