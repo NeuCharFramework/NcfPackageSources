@@ -51,7 +51,8 @@ ISandboxRuntime
 | `jupyter-python` | JupyterLab 交互（Python；更耗内存） | **是**（Destroy / TTL 停容器） |
 | `jupyter-csharp` | JupyterLab 交互（C#；需配置独立镜像） | **是**（Destroy / TTL 停容器） |
 
-「销毁」始终清理会话登记与配额；若存在真实容器（Jupyter 或将来的常驻 Exec worker）则一并删除。
+「销毁」停止并清理运行环境，保留会话记录用于状态追踪；若存在真实容器（Jupyter 或将来的常驻 Exec worker）则一并删除。
+「删除会话记录」仅允许用于已停止、已过期或已清理完成的失败会话，并会永久删除数据库记录。
 
 默认镜像（与 Docs 对齐）：`mcr.microsoft.com/dotnet/sdk:10.0`。更新 tag 时优先改 Docs，再同步代码模板。  
 C# 代码可用顶层语句，例如：`Console.WriteLine("hello");`（无需手写完整 Program/csproj）。  
@@ -91,8 +92,8 @@ AdminChat 仍需开启 Function Invocation，并将 Sandbox 模块关联到会�
 ## 后台入口
 
 1. **环境准备** `/Admin/Sandbox/Setup`：Docker 检测 + 文档链接  
-2. **沙箱面板** `/Admin/Sandbox/Index`：会话列表 / 打开 Notebook（本机映射端口）/ 销毁
-3. Function：创建沙箱 / 列表 / Exec / 销毁  
+2. **沙箱面板** `/Admin/Sandbox/Index`：会话列表 / 打开 Notebook（本机映射端口）/ 销毁运行环境 / 删除会话记录
+3. Function：创建沙箱 / 列表 / Exec / 销毁运行环境 / 删除会话记录
 
 ### Jupyter 代理调试
 

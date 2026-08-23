@@ -459,7 +459,22 @@ height:100%;
     font-size: 12px;
 }
 
-.agent-3d-focus span {
+.agent-3d-agent-focus {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 100%;
+    padding: 7px 10px;
+    border: 1px solid rgba(167, 139, 250, 0.55);
+    border-radius: 6px;
+    background: rgba(19, 14, 45, 0.78);
+    color: rgba(245, 243, 255, 0.95);
+    font-size: 12px;
+}
+
+.agent-3d-focus span,
+.agent-3d-agent-focus span {
     color: rgba(214, 237, 255, 0.72);
 }
 
@@ -512,12 +527,36 @@ height:100%;
     background: #909399;
 }
 
+.agent-3d-legend .legend-dot.hil-paused {
+    background: #f472b6;
+}
+
 .agent-3d-legend .legend-dot.group-enabled {
     background: #7f91a6;
 }
 
 .agent-3d-legend .legend-dot.group-disabled {
     background: #d57585;
+}
+
+.agent-3d-legend .legend-dot.skill-function {
+    background: #5ed4ff;
+}
+
+.agent-3d-legend .legend-dot.skill-workflow {
+    background: #67c23a;
+}
+
+.agent-3d-legend .legend-dot.skill-plugin {
+    background: #a78bfa;
+}
+
+.agent-3d-legend .legend-dot.skill-mcp {
+    background: #f59e0b;
+}
+
+.agent-3d-legend .legend-dot.skill-a2a {
+    background: #ffc36e;
 }
 
 .agent-3d-debug {

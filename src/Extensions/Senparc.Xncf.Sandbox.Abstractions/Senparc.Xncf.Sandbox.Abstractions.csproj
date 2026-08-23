@@ -25,7 +25,8 @@
       2、新增固定模板键和受控依赖恢复网络约束，避免将预览能力暴露为任意 Shell 执行
       3、新增 JupyterCsharp 模板键，支持 C# Jupyter 沙箱跨模块识别
       4、SandboxSessionInfo 增加 IsTtlUnlimited，标识永久保持会话
-</PackageReleaseNotes>
+      5、新增 C# Jupyter 模板键、预览工作区契约和永久 TTL 状态标识
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

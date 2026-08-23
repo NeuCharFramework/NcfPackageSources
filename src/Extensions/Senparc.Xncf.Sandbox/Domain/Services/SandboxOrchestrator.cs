@@ -15,6 +15,9 @@
     修改标识：Senparc - 20260817
     修改描述：v0.2.0 支持创建与更新会话 TTL/永久保持策略
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -636,6 +639,40 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             TryDeleteWorkspace(sessionId);
             entity.MarkStopped("Destroyed by user/admin.");
             await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
+    public async Task DeleteRecordAsync(string sessionId, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(sessionId))
+        {
+            throw new InvalidOperationException("SessionId 不能为空。");
+        }
+
+        var normalizedSessionId = sessionId.Trim();
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
+            var entity = await sessionService.GetBySessionIdAsync(normalizedSessionId).ConfigureAwait(false);
+            if (entity == null)
+            {
+                return;
+            }
+
+            if (!entity.CanDeleteRecord())
+            {
+                throw new InvalidOperationException("只有已停止、已过期或已清理完成的失败会话才能删除记录，请先销毁运行环境。");
+            }
+
+            TryDeleteWorkspace(normalizedSessionId);
+            await sessionService.DeletePermanentlyAsync(entity).ConfigureAwait(false);
+            _logger.LogInformation("Deleted sandbox session record {SessionId}", normalizedSessionId);
         }
         finally
         {

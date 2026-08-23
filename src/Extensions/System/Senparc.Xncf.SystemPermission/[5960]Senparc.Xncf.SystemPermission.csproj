@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.15.6-preview8</Version>
+    <Version>0.15.7-preview9</Version>
     <AssemblyName>Senparc.Xncf.SystemPermission</AssemblyName>
     <RootNamespace>Senparc.Xncf.SystemPermission</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -50,7 +50,9 @@
 				3、Dependency update from Senparc.Ncf.XncfBase to 0.24.1-preview6
 				[2026-08-13] v0.15.5-preview7 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7
 				[2026-08-15] v0.15.6-preview8 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8; Senparc.Ncf.XncfBase to 0.25.1-preview8
-</PackageReleaseNotes>
+				[2026-08-22] v0.15.7-preview9 同步 [5960]Senparc.Xncf.SystemPermission 依赖版本
+				1、递归更新上游项目依赖，保持 [5960]Senparc.Xncf.SystemPermission 与当前版本组合兼容
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

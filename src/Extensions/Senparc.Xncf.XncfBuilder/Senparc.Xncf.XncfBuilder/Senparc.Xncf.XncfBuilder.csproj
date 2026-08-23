@@ -129,7 +129,8 @@
 			4、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
 			5、Dependency update from Senparc.Xncf.MCP to 0.5.1
 			6、Dependency update from Senparc.Xncf.Sandbox.Abstractions to 0.2.0
-</PackageReleaseNotes>
+			7、统一数据库配置路径并完善开发任务、预览服务和工作区文件管理的兼容处理
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <!-- Visual Studio 特定设置 -->

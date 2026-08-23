@@ -9,6 +9,9 @@
     修改标识：Senparc - 20260815
     修改描述：v0.2.0 增加 NCF 预览沙箱工作负载
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Domain.Services.Runtime;

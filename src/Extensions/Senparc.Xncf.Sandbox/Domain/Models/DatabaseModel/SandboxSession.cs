@@ -12,6 +12,9 @@
     修改标识：Senparc - 20260817
     修改描述：v0.2.0 支持更新过期时间与无限 TTL 标记
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel.DataAnnotations;
@@ -136,6 +139,14 @@ public class SandboxSession : EntityBase<int>
         AccessUrl = null;
         AccessToken = null;
         Touch();
+    }
+
+    public bool CanDeleteRecord()
+    {
+        return Status is (SandboxSessionStatus.Stopped
+            or SandboxSessionStatus.Expired
+            or SandboxSessionStatus.Failed)
+            && string.IsNullOrWhiteSpace(RuntimeHandle);
     }
 
     public void SetExpiresAtUtc(DateTime newExpiresAtUtc)

@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：WorkflowFunctionCallingContracts.cs
+    文件功能描述：WorkflowFunctionCallingContracts.cs 相关实现
+
+
+    创建标识：Senparc - 20260821
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 扩展工作流依赖、函数调用和人工交互契约
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.Threading;

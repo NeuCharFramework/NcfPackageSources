@@ -40,7 +40,8 @@
       2、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
       [2026-08-13] v1.1.5 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; [5955]Senparc.Xncf.AreasBase to 0.13.5-preview7
       [2026-08-15] v1.1.6 Dependency update from Senparc.Ncf.AreaBase to 0.23.4-preview8; [5955]Senparc.Xncf.AreasBase to 0.13.6-preview8
-</PackageReleaseNotes>
+      1、更新模板项目使用的 AreaBase 与 AreasBase 依赖，保持生成项目兼容
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

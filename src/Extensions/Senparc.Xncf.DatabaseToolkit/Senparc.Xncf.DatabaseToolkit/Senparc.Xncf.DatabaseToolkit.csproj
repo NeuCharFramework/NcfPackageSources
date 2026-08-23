@@ -4,7 +4,7 @@
     <!--<TargetFrameworks>netstandard2.1;netcoreapp3.1;net8.0</TargetFrameworks>-->
     <!--<TargetFrameworks Condition=" '$(DatabasePlant)' != 'true' ">netstandard2.1</TargetFrameworks>
     <TargetFrameworks Condition=" '$(DatabasePlant)' == 'true'">netcoreapp3.1</TargetFrameworks>-->
-    <Version>0.27.5-preview8</Version>
+    <Version>0.27.6-preview9</Version>
     <AssemblyName>Senparc.Xncf.DatabaseToolkit</AssemblyName>
     <RootNamespace>Senparc.Xncf.DatabaseToolkit</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -62,7 +62,9 @@
       4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.6-preview6
       [2026-08-13] v0.27.4-preview7 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; Senparc.Ncf.Core to 0.28.2-preview7; Senparc.Ncf.DatabasePlant to 0.21.7-preview7; Senparc.Ncf.XncfBase to 0.25.0-preview7
       [2026-08-15] v0.27.5-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
-</PackageReleaseNotes>
+      [2026-08-22] v0.27.6-preview9 同步 Senparc.Xncf.DatabaseToolkit 依赖版本
+      1、递归更新上游项目依赖，保持 Senparc.Xncf.DatabaseToolkit 与当前版本组合兼容
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

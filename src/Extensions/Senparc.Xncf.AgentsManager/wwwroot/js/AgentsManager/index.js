@@ -553,6 +553,7 @@ var app = new Vue({
         groupId: null,
         locked: false
       },
+      agentGraphFocusedAgent: null,
       agentGraphLastSignature: '',
       agentGraphLastRefreshAt: null,
       agentGraphLastRenderAt: null,
@@ -699,6 +700,8 @@ var app = new Vue({
         const counts = group.taskStatusCounts || {}
         return sum + Number(counts[1] || counts['1'] || 0)
       }, 0)
+      const pausedTasks = groups.reduce((sum, group) => sum + Number(group.pausedTaskCount || 0), 0)
+      const hilPending = groups.reduce((sum, group) => sum + Number(group.humanInTheLoopPendingCount || 0), 0)
       return {
         local: local.length,
         localEnabled: local.filter(item => item.enable !== false).length,
@@ -712,12 +715,28 @@ var app = new Vue({
         groupsEnabled: groups.filter(item => item.enable !== false).length,
         groupsActive: groups.filter(item => Number(item.runningTaskCount || 0) > 0).length,
         activeTasks,
-        chattingTasks
+        chattingTasks,
+        pausedTasks,
+        hilPending
       }
     },
     agentGraphFocusedGroup() {
       const groupId = Number(this.agentGraphFocus?.groupId || 0)
       return (this.agentGraphSnapshot.groups || []).find(item => Number(item.id) === groupId) || null
+    },
+    agentGraphFocusedAgentSkills() {
+      const skills = Array.isArray(this.agentGraphFocusedAgent?.skillKinds)
+        ? this.agentGraphFocusedAgent.skillKinds
+        : []
+      const labels = {
+        function: 'FunctionRender',
+        workflow: 'Workflow',
+        plugin: 'Plugin',
+        mcp: 'MCP',
+        a2a: 'A2A',
+        human: 'Human'
+      }
+      return skills.map(skill => labels[skill] || skill).join(' · ') || '无额外技能'
     },
     quickJumpGroupOptions() {
       const map = new Map()
@@ -1107,8 +1126,26 @@ var app = new Vue({
         return ''
       }
       return JSON.stringify({
-        agents: (snapshot.agents || []).map(item => [item.participantKey || `local:${item.id}`, item.chattingCount, item.score, item.enable, item.agentKind, item.connectionStatus]),
-        groups: (snapshot.groups || []).map(item => [item.id, item.enable, item.runningTaskCount, item.state, item.taskStatusCounts]),
+        agents: (snapshot.agents || []).map(item => [
+          item.participantKey || `local:${item.id}`,
+          item.chattingCount,
+          item.pausedCount,
+          item.humanInTheLoopPausedCount,
+          item.score,
+          item.enable,
+          item.agentKind,
+          item.connectionStatus,
+          item.skillKinds
+        ]),
+        groups: (snapshot.groups || []).map(item => [
+          item.id,
+          item.enable,
+          item.runningTaskCount,
+          item.pausedTaskCount,
+          item.humanInTheLoopPendingCount,
+          item.state,
+          item.taskStatusCounts
+        ]),
         links: (snapshot.links || []).map(item => [item.groupId, item.participantKey || `local:${item.agentId}`]),
         collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.participantKeys || item.agentIds]),
         published: (snapshot.agents || []).map(item => [item.participantKey || `local:${item.id}`, item.hasPublishedA2A, item.publishedA2AEnabled])
@@ -1228,6 +1265,9 @@ var app = new Vue({
               groupId: groupId || null,
               locked: !!locked
             })
+          },
+          onAgentHover: (agent) => {
+            this.$set(this, 'agentGraphFocusedAgent', agent || null)
           }
         })
         this.agentGraph3d.init()

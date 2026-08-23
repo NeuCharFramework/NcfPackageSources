@@ -28,7 +28,9 @@
       4、优化管理端沙箱会话交互与 Jupyter 路径约束，改善创建/回收体验
       5、支持创建与更新会话 TTL，并可选择永久保持（需手动销毁）
       6、管理端展示无限 TTL 状态，并提供会话生命周期调整入口
-</PackageReleaseNotes>
+      7、增加 Jupyter C# 模板、预览代理和工作区路径约束，完善 Docker/Wasm 运行时配置
+      8、支持会话 TTL 更新和永久保持状态，管理端提供生命周期调整与回收反馈
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <Nullable>enable</Nullable>

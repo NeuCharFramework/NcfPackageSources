@@ -4,7 +4,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.1.7</Version>
+		<Version>0.1.8</Version>
 		<AssemblyName>Senparc.Xncf.Installer.Interface</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer.Interface</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -29,7 +29,9 @@
 			[2026-08-08] v0.1.5 Dependency update from Senparc.Xncf.Tenant to 0.15.4-preview6
 			[2026-08-13] v0.1.6 Dependency update from [5990]Senparc.Xncf.Tenant to 0.15.5-preview7
 			[2026-08-15] v0.1.7 Dependency update from [5990]Senparc.Xncf.Tenant to 0.15.6-preview8
-</PackageReleaseNotes>
+			[2026-08-22] v0.1.8 同步 Senparc.Xncf.Installer.Interface 依赖版本
+			1、递归更新上游项目依赖，保持 Senparc.Xncf.Installer.Interface 与当前版本组合兼容
+		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
 	</PropertyGroup>

@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：NeuCharWorkflowDependencyProvider.cs
+    文件功能描述：NeuCharWorkflowDependencyProvider.cs 相关实现
+
+
+    创建标识：Senparc - 20260822
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
+
+----------------------------------------------------------------*/
+
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using System;
 using System.Collections.Generic;

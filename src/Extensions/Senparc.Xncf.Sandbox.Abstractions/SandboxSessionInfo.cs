@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260817
     修改描述：v0.2.0 增加 IsTtlUnlimited 契约字段
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 扩展沙箱 Jupyter 与会话生命周期契约
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Abstractions;

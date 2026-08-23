@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Index.cshtml.cs
@@ -9,6 +9,9 @@
     
     修改标识：Senparc - 20260817
     修改描述：v0.2.0 支持会话 TTL 调整与永久保持展示
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
 
 ----------------------------------------------------------------*/
 
@@ -65,6 +68,16 @@ public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
         if (!string.IsNullOrWhiteSpace(sessionId))
         {
             await _orchestrator.DestroyAsync(sessionId.Trim()).ConfigureAwait(false);
+        }
+
+        return new JsonResult(new { success = true });
+    }
+
+    public async Task<IActionResult> OnPostDeleteAsync([FromForm] string sessionId)
+    {
+        if (!string.IsNullOrWhiteSpace(sessionId))
+        {
+            await _orchestrator.DeleteRecordAsync(sessionId.Trim()).ConfigureAwait(false);
         }
 
         return new JsonResult(new { success = true });

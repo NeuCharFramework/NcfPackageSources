@@ -190,6 +190,7 @@
                                 <div class="agent-3d-overview__item task">
                                     <span>任务与发布</span>
                                     <strong>{{ agentGraphOverview.chattingTasks }} / {{ agentGraphOverview.activeTasks }}</strong>
+                                    <small>暂停 {{ agentGraphOverview.pausedTasks }} · HIL {{ agentGraphOverview.hilPending }}</small>
                                     <small>A2A 发布 {{ agentGraphOverview.publishedEnabled }} / {{ agentGraphOverview.published }}</small>
                                 </div>
                             </div>
@@ -197,7 +198,15 @@
                                 <strong>{{ agentGraphFocusedGroup.name }}</strong>
                                 <span>{{ agentGraphFocus.locked ? '已锁定' : '当前聚焦' }}</span>
                                 <span>运行中 {{ agentGraphFocusedGroup.runningTaskCount || 0 }}</span>
+                                <span>暂停 {{ agentGraphFocusedGroup.pausedTaskCount || 0 }}</span>
+                                <span>HIL等待 {{ agentGraphFocusedGroup.humanInTheLoopPendingCount || 0 }}</span>
                                 <span>成员 {{ (agentGraphFocusedGroup.memberParticipantKeys || agentGraphFocusedGroup.memberAgentIds || []).length }}</span>
+                            </div>
+                            <div class="agent-3d-agent-focus" v-if="agentGraphFocusedAgent">
+                                <strong>{{ agentGraphFocusedAgent.name }}</strong>
+                                <span>{{ agentGraphFocusedAgent.agentKind === 'RemoteA2A' ? '远程 A2A' : '本地 Agent' }}</span>
+                                <span>状态 {{ agentGraphFocusedAgent.humanInTheLoopPausedCount ? 'HIL等待' : agentGraphFocusedAgent.pausedCount ? '暂停' : agentGraphFocusedAgent.chattingCount ? '运行中' : '待命' }}</span>
+                                <span>技能 {{ agentGraphFocusedAgentSkills }}</span>
                             </div>
                             <div class="agent-3d-tip">悬停 Group 柱体可聚焦组成员；点击 Group 可锁定/取消锁定。颜色和流动光点分别表示 Agent 类型、启用状态与实时任务。</div>
                         </div>
@@ -207,8 +216,14 @@
                             <span class="legend-item"><i class="legend-dot paused"></i>暂停</span>
                             <span class="legend-item"><i class="legend-dot finished"></i>完成</span>
                             <span class="legend-item"><i class="legend-dot cancelled"></i>取消</span>
+                            <span class="legend-item"><i class="legend-dot hil-paused"></i>HIL等待</span>
                             <span class="legend-item"><i class="legend-dot group-enabled"></i>组已启用</span>
                             <span class="legend-item"><i class="legend-dot group-disabled"></i>组已停用</span>
+                            <span class="legend-item"><i class="legend-dot skill-function"></i>F</span>
+                            <span class="legend-item"><i class="legend-dot skill-workflow"></i>W</span>
+                            <span class="legend-item"><i class="legend-dot skill-plugin"></i>P</span>
+                            <span class="legend-item"><i class="legend-dot skill-mcp"></i>M</span>
+                            <span class="legend-item"><i class="legend-dot skill-a2a"></i>A2A</span>
                         </div>
                         <pre class="agent-3d-debug">{{ agentGraphDebugText }}</pre>
                         <div ref="agent3dContainer" class="agent-3d-canvas"></div>

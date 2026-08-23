@@ -45,6 +45,11 @@ public class SandboxSessionService : ServiceBase<SandboxSession>
             z.Status == SandboxSessionStatus.Creating || z.Status == SandboxSessionStatus.Running);
     }
 
+    public async Task DeletePermanentlyAsync(SandboxSession session)
+    {
+        await RepositoryBase.DeleteAsync(session, softDelete: false).ConfigureAwait(false);
+    }
+
     public async Task<List<SandboxSession>> GetExpiredRunningAsync(DateTime utcNow)
     {
         var list = await GetObjectListAsync(

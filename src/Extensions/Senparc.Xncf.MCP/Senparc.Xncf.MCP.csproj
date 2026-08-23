@@ -61,7 +61,8 @@
       2、补齐多语言资源，保持管理端功能文案一致
       [2026-08-15] v0.5.1 Dependency update from Senparc.Xncf.AIKernel to 0.15.3-preview12
       1、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
-</PackageReleaseNotes>
+      2、更新 AIKernel 依赖，保持发布智能体相关 MCP 能力兼容
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

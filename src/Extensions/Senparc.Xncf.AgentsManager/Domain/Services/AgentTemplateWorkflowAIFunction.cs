@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：AgentTemplateWorkflowAIFunction.cs
+    文件功能描述：AgentTemplateWorkflowAIFunction.cs 相关实现
+
+
+    创建标识：Senparc - 20260822
+
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+
+----------------------------------------------------------------*/
+
 using Microsoft.Extensions.AI;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using System;

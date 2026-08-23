@@ -47,4 +47,25 @@ public class SandboxSessionStateTests
 
         Assert.IsTrue(session.ToInfo().IsTtlUnlimited);
     }
+
+    [TestMethod]
+    public void CanDeleteRecord_RequiresTerminalStatusWithoutRuntimeHandle()
+    {
+        var session = new SandboxSession(
+            "session-3",
+            1,
+            SandboxTemplateKeys.JupyterPython,
+            SandboxRuntimeKind.Docker,
+            0.5,
+            512,
+            DateTime.UtcNow.AddHours(1));
+
+        Assert.IsFalse(session.CanDeleteRecord());
+
+        session.MarkRunning("container-3", 49152, "http://127.0.0.1:49152/lab", "token");
+        Assert.IsFalse(session.CanDeleteRecord());
+
+        session.MarkStopped("destroyed");
+        Assert.IsTrue(session.CanDeleteRecord());
+    }
 }

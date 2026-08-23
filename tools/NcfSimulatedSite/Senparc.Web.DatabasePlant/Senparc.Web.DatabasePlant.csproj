@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
 
-    <Version>0.0.9</Version>
+    <Version>0.0.10</Version>
     <PackageReleaseNotes>
       [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
       1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -22,7 +22,9 @@
       [2026-08-15] v0.0.9 Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0
       1、Dependency update from Senparc.Xncf.AgentsManager to 0.16.0
       2、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0
-</PackageReleaseNotes>
+      [2026-08-22] v0.0.10 同步模拟站点数据库示例依赖
+      1、更新数据库示例项目依赖以兼容当前基础库和 AgentsManager 版本
+    </PackageReleaseNotes>
     <Configurations>Debug;Release;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
   </PropertyGroup>
   <ItemGroup>

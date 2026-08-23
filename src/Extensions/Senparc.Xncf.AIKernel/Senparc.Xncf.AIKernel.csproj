@@ -99,7 +99,8 @@
 		3、统一指定模型在 NeuCharAI 与 AzureOpenAI 初始化时的兼容 API Version 默认值，并保证 RunModelsync 使用传入模型配置
 		[2026-08-17] v0.15.4 修复 Ollama 模型配置缺少 ModelName 的问题
 		1、BuildSenparcAiSetting 在 Ollama 场景写入 ModelName，保证指定模型测试与调用使用正确模型名
-</PackageReleaseNotes>
+		2、Ollama 模型配置写入 ModelName，保证指定模型调用使用正确模型名称
+    </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

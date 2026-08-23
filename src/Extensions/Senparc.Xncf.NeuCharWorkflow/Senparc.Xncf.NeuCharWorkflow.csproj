@@ -13,7 +13,9 @@
       3、新增 Human Input 节点：用户提示、外部恢复与外部键校验
       4、完善人工交互服务、运行协调器与管理端/脚本交互，保证人工节点可暂停与恢复
       5、Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.2.0
-</PackageReleaseNotes>
+      6、新增工作流函数调用提供程序并扩大循环执行能力，支持按任务和执行引用筛选管理记录
+      7、使用 DateTimeOffset 统一时间语义，完善终止、回放加载更多和非 ASCII JSON 序列化处理
+    </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

@@ -8,6 +8,9 @@
     修改标识：Senparc - 20260817
     修改描述：v0.2.0 支持创建与更新沙箱会话 TTL/永久保持
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
 ----------------------------------------------------------------*/
 
 using System.Net;
@@ -223,6 +226,18 @@ public class SandboxAppService : AppServiceBase
             await _orchestrator.DestroyAsync(request.SessionId).ConfigureAwait(false);
             logger.Append($"已销毁 {request.SessionId}");
             response.Data = $"已销毁会话 {WebUtility.HtmlEncode(request.SessionId)}";
+            return null;
+        });
+    }
+
+    [FunctionRender("删除沙箱记录", "永久删除已停止、已过期或已清理完成的会话记录", typeof(Register))]
+    public async Task<StringAppResponse> DeleteRecord(Sandbox_SessionIdRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            await _orchestrator.DeleteRecordAsync(request.SessionId).ConfigureAwait(false);
+            logger.Append($"已删除会话记录 {request.SessionId}");
+            response.Data = $"已删除会话记录 {WebUtility.HtmlEncode(request.SessionId)}";
             return null;
         });
     }

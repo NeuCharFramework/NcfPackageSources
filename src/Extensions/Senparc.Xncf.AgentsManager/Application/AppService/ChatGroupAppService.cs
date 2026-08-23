@@ -24,6 +24,9 @@
     修改标识：Senparc - 20260817
     修改描述：v0.16.0 支持 AgentTemplate 模型绑定、空输出 Token 重试与 Human-in-the-Loop
 
+    修改标识：Senparc - 20260822
+    修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp;
@@ -68,6 +71,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly ChatTaskService _chatTaskService;
         private readonly PromptItemService _promptItemService;
         private readonly PromptRangeService _promptRangeService;
+        private readonly HumanInTheLoopRequestStore _humanInTheLoopRequestStore;
 
         public ChatGroupAppService(IServiceProvider serviceProvider,
             ChatGroupService chatGroupService,
@@ -79,7 +83,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             AIModelService aIModelService,
             ChatTaskService chatTaskService,
             PromptItemService promptItemService,
-            PromptRangeService promptRangeService) : base(serviceProvider)
+            PromptRangeService promptRangeService,
+            HumanInTheLoopRequestStore humanInTheLoopRequestStore) : base(serviceProvider)
         {
             this._chatGroupService = chatGroupService;
             this._chatGroupMemeberService = chatGroupMemeberService;
@@ -91,6 +96,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             this._chatTaskService = chatTaskService;
             this._promptItemService = promptItemService;
             this._promptRangeService = promptRangeService;
+            this._humanInTheLoopRequestStore = humanInTheLoopRequestStore;
         }
 
         [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.ManageChatGroup.Name", "Function.Agents.ManageChatGroup.Description", typeof(Register))]
@@ -844,12 +850,33 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                             item => agentIds.Contains(item.AgentTemplateId)))
                         .GroupBy(item => item.AgentTemplateId)
                         .ToDictionary(group => group.Key, group => group.OrderByDescending(item => item.Id).First());
+                var humanInTheLoopPendingCountByTaskId = tasks
+                    .Where(task => task.Status == ChatTask_Status.Paused)
+                    .ToDictionary(
+                        task => task.Id,
+                        task => _humanInTheLoopRequestStore.GetPending(task.Id).Count);
 
                 foreach (var agent in agents)
                 {
-                    var memberGroupIds = members.Where(z => z.AgentTemplateId == agent.Id).Select(z => z.ChatGroupId).Distinct().ToList();
+                    var memberGroupIds = members
+                        .Where(z => z.AgentTemplateId == agent.Id)
+                        .Select(z => z.ChatGroupId)
+                        .Concat(groups
+                            .Where(group => group.AdminAgentTemplateId == agent.Id
+                                || group.EnterAgentTemplateId == agent.Id)
+                            .Select(group => group.Id))
+                        .Distinct()
+                        .ToList();
                     var chattingCount = memberGroupIds.Sum(groupId =>
                         activeTaskCountByGroup.TryGetValue(groupId, out var count) ? count : 0);
+                    var agentTasks = tasks
+                        .Where(task => memberGroupIds.Contains(task.ChatGroupId))
+                        .ToList();
+                    var pausedCount = agentTasks.Count(task => task.Status == ChatTask_Status.Paused);
+                    var humanInTheLoopPausedCount = agentTasks
+                        .Where(task => task.Status == ChatTask_Status.Paused)
+                        .Sum(task => humanInTheLoopPendingCountByTaskId.TryGetValue(task.Id, out var count) ? count : 0);
+                    var hasPublishedA2A = publishedA2AByAgentId.TryGetValue(agent.Id, out var publishedA2A);
 
                     var score = await GetPromptScoreAsync(agent.PromptCode, promptScoreCache);
 
@@ -862,9 +889,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         PromptCode = agent.PromptCode,
                         Score = score,
                         ChattingCount = chattingCount,
+                        PausedCount = pausedCount,
+                        HumanInTheLoopPausedCount = humanInTheLoopPausedCount,
                         Enable = agent.Enable,
                         Avastar = agent.Avastar,
-                        HasPublishedA2A = publishedA2AByAgentId.TryGetValue(agent.Id, out var publishedA2A),
+                        SkillKinds = AgentGraphSkillHelper.GetAgentSkillKinds(agent, hasPublishedA2A),
+                        HasPublishedA2A = hasPublishedA2A,
                         PublishedA2AEnabled = publishedA2A?.Enable == true
                     });
                 }
@@ -874,6 +904,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     var memberGroupIds = remoteMembers.Where(z => z.RemoteAgentId == remoteAgent.Id).Select(z => z.ChatGroupId).Distinct().ToList();
                     var chattingCount = memberGroupIds.Sum(groupId =>
                         activeTaskCountByGroup.TryGetValue(groupId, out var count) ? count : 0);
+                    var agentTasks = tasks
+                        .Where(task => memberGroupIds.Contains(task.ChatGroupId))
+                        .ToList();
 
                     result.Agents.Add(new AgentGraphAgentDto
                     {
@@ -884,9 +917,14 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         PromptCode = "A2A",
                         Score = -1,
                         ChattingCount = chattingCount,
+                        PausedCount = agentTasks.Count(task => task.Status == ChatTask_Status.Paused),
+                        HumanInTheLoopPausedCount = agentTasks
+                            .Where(task => task.Status == ChatTask_Status.Paused)
+                            .Sum(task => humanInTheLoopPendingCountByTaskId.TryGetValue(task.Id, out var count) ? count : 0),
                         Enable = remoteAgent.Enable,
                         Avastar = null,
-                        ConnectionStatus = (int)remoteAgent.ConnectionStatus
+                        ConnectionStatus = (int)remoteAgent.ConnectionStatus,
+                        SkillKinds = new List<string> { "a2a" }
                     });
                 }
 
@@ -896,6 +934,11 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         .Where(z => z.ChatGroupId == group.Id)
                         .GroupBy(z => (int)z.Status)
                         .ToDictionary(g => g.Key, g => g.Count());
+                    var groupTasks = tasks.Where(task => task.ChatGroupId == group.Id).ToList();
+                    var pausedTaskCount = groupTasks.Count(task => task.Status == ChatTask_Status.Paused);
+                    var humanInTheLoopPendingCount = groupTasks
+                        .Where(task => task.Status == ChatTask_Status.Paused)
+                        .Sum(task => humanInTheLoopPendingCountByTaskId.TryGetValue(task.Id, out var count) ? count : 0);
 
                     var memberAgentIds = members
                         .Where(z => z.ChatGroupId == group.Id)
@@ -928,6 +971,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         Enable = group.Enable,
                         State = (int)group.State,
                         RunningTaskCount = activeTaskCountByGroup.TryGetValue(group.Id, out var runningCount) ? runningCount : 0,
+                        PausedTaskCount = pausedTaskCount,
+                        HumanInTheLoopPendingCount = humanInTheLoopPendingCount,
                         TaskStatusCounts = statusMap,
                         MemberAgentIds = memberAgentIds,
                         MemberParticipantKeys = memberParticipantKeys
@@ -1325,6 +1370,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         public int ConnectionStatus { get; set; }
         public bool HasPublishedA2A { get; set; }
         public bool PublishedA2AEnabled { get; set; }
+        public int PausedCount { get; set; }
+        public int HumanInTheLoopPausedCount { get; set; }
+        public List<string> SkillKinds { get; set; } = new List<string>();
     }
 
     public class AgentGraphGroupDto
@@ -1334,6 +1382,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         public bool Enable { get; set; }
         public int State { get; set; }
         public int RunningTaskCount { get; set; }
+        public int PausedTaskCount { get; set; }
+        public int HumanInTheLoopPendingCount { get; set; }
         public Dictionary<int, int> TaskStatusCounts { get; set; } = new Dictionary<int, int>();
         public List<int> MemberAgentIds { get; set; } = new List<int>();
         public List<string> MemberParticipantKeys { get; set; } = new List<string>();
@@ -1354,5 +1404,37 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         public int Status { get; set; }
         public List<int> AgentIds { get; set; } = new List<int>();
         public List<string> ParticipantKeys { get; set; } = new List<string>();
+    }
+
+    internal static class AgentGraphSkillHelper
+    {
+        public static List<string> GetAgentSkillKinds(AgentTemplate agent, bool hasPublishedA2A)
+        {
+            var kinds = AgentFunctionBindingCodec
+                .Parse(agent.FunctionCallNames)
+                .Select(binding => binding.Kind?.Trim().ToLowerInvariant())
+                .Where(kind => kind is "function" or "workflow" or "plugin")
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            if (!string.IsNullOrWhiteSpace(agent.McpEndpoints))
+            {
+                kinds.Add("mcp");
+            }
+
+            if (hasPublishedA2A)
+            {
+                kinds.Add("a2a");
+            }
+
+            if (agent.IsHuman)
+            {
+                kinds.Add("human");
+            }
+
+            return kinds
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
     }
 }

@@ -124,7 +124,8 @@
       1、改进流式输出文本提取，兼容更多 Agent 响应增量字段
       2、为 Ollama 低 Token 场景补充最小 thinking token 预算，降低流式调用失败率
       3、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
-</PackageReleaseNotes>
+      4、补充流式输出字段提取和低 Token 场景处理，降低 Ollama 调用结果为空的概率
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">
