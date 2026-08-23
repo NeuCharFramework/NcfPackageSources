@@ -110,12 +110,6 @@
                                plain
                                icon="el-icon-chat-dot-round"
                                @@click="openAgentGroupConversation(currentEvent.objectReference)">查看 Agent Group 对话</el-button>
-                    <el-button v-if="hasAgentExecution(currentEvent)"
-                               size="small"
-                               type="primary"
-                               plain
-                               icon="el-icon-video-play"
-                               @@click="openAgentExecution(currentEvent.objectReference)">查看 Agent 执行</el-button>
                 </template>
                 <template v-else>
                     <el-tag size="mini" :type="replay.succeeded ? 'success' : 'danger'">{{ statusText(replay.status) }}</el-tag>

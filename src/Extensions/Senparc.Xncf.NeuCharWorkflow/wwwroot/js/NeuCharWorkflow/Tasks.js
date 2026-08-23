@@ -37,6 +37,8 @@ new Vue({
         this.focusedRunId = query.get('runId') || '';
         const workflowId = Number(query.get('workflowId'));
         this.workflowIdFilter = Number.isInteger(workflowId) && workflowId > 0 ? workflowId : 0;
+        const status = String(query.get('status') || '').trim().toLowerCase();
+        this.statusFilter = ['running', 'success', 'failed'].includes(status) ? status : '';
         this.loadTasks();
         this.consumeNeuBellFromRoute();
     },
@@ -120,6 +122,7 @@ new Vue({
             const query = [];
             if (beforeExecutionLogId) query.push(`beforeExecutionLogId=${encodeURIComponent(beforeExecutionLogId)}`);
             if (this.workflowIdFilter) query.push(`workflowId=${encodeURIComponent(this.workflowIdFilter)}`);
+            if (this.statusFilter) query.push(`status=${encodeURIComponent(this.statusFilter)}`);
             const suffix = query.length ? `&${query.join('&')}` : '';
             const response = await service.get(`/Admin/NeuCharWorkflow/Tasks?handler=List${suffix}`);
             const body = NeuCharWorkflowUi.unwrap(response) || {};
@@ -288,7 +291,8 @@ new Vue({
             return new URLSearchParams(search || '');
         },
         clearWorkflowFilter() {
-            window.location.assign('/Admin/NeuCharWorkflow/Tasks');
+            const query = this.statusFilter ? `?status=${encodeURIComponent(this.statusFilter)}` : '';
+            window.location.assign(`/Admin/NeuCharWorkflow/Tasks${query}`);
         },
         taskRowClass({ row }) {
             return this.focusedRunId && String(row.runId || '').replace(/-/g, '').toLowerCase() ===

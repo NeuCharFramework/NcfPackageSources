@@ -140,6 +140,7 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
         IReadOnlyCollection<int> workflowIds,
         int? beforeExecutionLogId,
         int pageSize,
+        bool runningOnly = false,
         CancellationToken cancellationToken = default)
     {
         if (workflowIds == null || workflowIds.Count == 0 || pageSize <= 0)
@@ -151,6 +152,10 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
         var query = BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
             .AsNoTracking()
             .Where(z => ids.Contains(z.WorkflowId));
+        if (runningOnly)
+        {
+            query = query.Where(z => z.FinishedAt == null);
+        }
         if (beforeExecutionLogId.HasValue && beforeExecutionLogId.Value > 0)
         {
             query = query.Where(z => z.Id < beforeExecutionLogId.Value);
@@ -173,6 +178,22 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
                 z.ReplayEventsJson != null))
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
+    }
+
+    public Task<int> GetUnfinishedCountAsync(
+        int workflowId,
+        CancellationToken cancellationToken = default)
+    {
+        if (workflowId <= 0)
+        {
+            return Task.FromResult(0);
+        }
+
+        return BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+            .AsNoTracking()
+            .CountAsync(
+                z => z.WorkflowId == workflowId && z.FinishedAt == null,
+                cancellationToken);
     }
 
     public async Task<NeuCharWorkflowExecutionLog?> GetUnfinishedByRunIdAsync(

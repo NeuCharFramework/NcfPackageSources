@@ -1861,6 +1861,8 @@ assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=List') && t
 assert.ok(tasksPage.includes('当前工作流 #{{workflowIdFilter}}') &&
     fs.readFileSync(tasksScriptPath, 'utf8').includes('workflowIdFilter') &&
     fs.readFileSync(tasksScriptPath, 'utf8').includes('workflowId=${encodeURIComponent(this.workflowIdFilter)}') &&
+    fs.readFileSync(tasksScriptPath, 'utf8').includes('status=${encodeURIComponent(this.statusFilter)}') &&
+    tasksPage.includes('正在运行') &&
     workflowAppService.includes('int? workflowId = null') &&
     workflowAppService.includes('run.WorkflowId == workflowId.Value'),
     'The task list should apply a workflow-scoped server query for direct links from detail and replay pages.');
@@ -1883,8 +1885,18 @@ assert.ok(fs.readFileSync(tasksScriptPath, 'utf8').includes('handler=CleanupPrev
     'Quick cleanup should preview then delete only completed task logs, never active tasks.');
 assert.ok(page.includes('@@click="abortWorkflow"') && fs.readFileSync(scriptPath, 'utf8').includes('handler=AbortRun'),
     'The workflow editor should keep a visible abort action while a test run is active.');
+assert.ok(page.includes('运行中 {{form.runningCount}}') &&
+    workflowScript.includes("openWorkflowTasks(status)") &&
+    workflowScript.includes("query.set('status', status)") &&
+    workflowScript.includes('snapshot.runningCount') &&
+    workflowAppService.includes('GetActiveRunCount') &&
+    runCoordinator.includes('public int GetActiveRunCount') &&
+    runCoordinator.includes('RunningCount = GetActiveRunCount'),
+    'The Workflow detail page should expose the active run count and link directly to its running-task filter.');
+assert.ok(!runCoordinator.includes('当前工作流已有运行正在执行'),
+    'A Workflow must be able to register more than one active run at the same time.');
 assert.ok(page.includes('@@click="openWorkflowTasks"') &&
-    workflowScript.includes('Tasks?workflowId=${encodeURIComponent(workflowId)}'),
+    workflowScript.includes("new URLSearchParams({ workflowId: String(workflowId) })"),
     'The Workflow detail page should jump directly to a list containing only its own tasks.');
 assert.match(tasksStyles, /\.workflow-task-table \.el-table__row\s*\{[^}]*cursor:\s*pointer;/s,
     'Task rows should make their workflow-board navigation discoverable.');

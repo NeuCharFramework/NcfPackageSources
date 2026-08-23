@@ -1614,9 +1614,6 @@ var app = new Vue({
       this.visible.drawerRemoteAgent = true
       this.getRemoteAgentListData()
     },
-    openAgentExecutionManager() {
-      window.location.assign('/Admin/AgentsManager/AgentExecutions')
-    },
     async openPublishedA2AEditor(item) {
       const agent = item?.agentTemplateDto || item || this.agentForm
       const agentTemplateId = Number(agent?.id || agent?.agentTemplateId || 0)

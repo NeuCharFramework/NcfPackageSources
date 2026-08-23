@@ -153,8 +153,6 @@
 		6、优化管理端人类参与者配置、任务执行策略展示与 Agent 编辑入口
 		7、增加工作流引用校验和函数绑定序列化能力，优化 Agent 编辑、任务筛选及响应式管理界面
 		8、补充 Agent 群组会话查看、执行引用和任务状态处理，提升管理端交互一致性
-		9、统一独立 Agent 执行入口，持久化任务、过程事件、模型用量并提供列表、详情、取消和 SSE 回放
-		10、增加 AgentExecutions 管理页、六种数据库迁移和前端执行详情交互，支持任务筛选、回放与操作反馈
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

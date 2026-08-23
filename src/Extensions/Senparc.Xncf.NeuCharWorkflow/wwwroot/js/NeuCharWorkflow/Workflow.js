@@ -307,7 +307,7 @@ new Vue({
             canvasSafeInsets: { left: 0, right: 0 },
             canvasZoom: 1,
             canvasViewport: { width: 0, height: 0, scrollLeft: 0, scrollTop: 0, left: 0, right: 0, bottom: 0, windowWidth: 0, windowHeight: 0 },
-            form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [], variables: [], layout: { direction: 'vertical' } } },
+            form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, runningCount: 0, graph: { nodes: [], edges: [], variables: [], layout: { direction: 'vertical' } } },
             saveState: {
                 saving: false,
                 lastSavedSignature: '',
@@ -706,7 +706,7 @@ new Vue({
             return `下次执行：${nextRun.getFullYear()}-${pad(nextRun.getMonth() + 1)}-${pad(nextRun.getDate())} ${pad(nextRun.getHours())}:${pad(nextRun.getMinutes())}`;
         },
         emptyForm() {
-            return { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, graph: { nodes: [], edges: [], variables: [], layout: { direction: 'vertical' } } };
+            return { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, runningCount: 0, graph: { nodes: [], edges: [], variables: [], layout: { direction: 'vertical' } } };
         },
         ensureGraphLayout(graph) {
             const target = graph || { nodes: [], edges: [] };
@@ -957,10 +957,12 @@ new Vue({
             const viewer = window.open(url, '_blank', 'noopener,noreferrer');
             if (viewer) viewer.opener = null;
         },
-        openWorkflowTasks() {
+        openWorkflowTasks(status) {
             const workflowId = Number(this.form && this.form.id || 0);
             if (!Number.isInteger(workflowId) || workflowId <= 0) return;
-            window.location.assign(`/Admin/NeuCharWorkflow/Tasks?workflowId=${encodeURIComponent(workflowId)}`);
+            const query = new URLSearchParams({ workflowId: String(workflowId) });
+            if (status) query.set('status', status);
+            window.location.assign(`/Admin/NeuCharWorkflow/Tasks?${query.toString()}`);
         },
         hasAgentGroupConversation(event) {
             const reference = event && event.objectReference;
@@ -973,16 +975,6 @@ new Vue({
             const query = new URLSearchParams({ tab: 'second', taskId: String(chatTaskId) });
             if (Number.isInteger(chatGroupId) && chatGroupId > 0) query.set('groupId', String(chatGroupId));
             const viewer = window.open(`/Admin/AgentsManager/Index#${query.toString()}`, '_blank', 'noopener,noreferrer');
-            if (viewer) viewer.opener = null;
-        },
-        hasAgentExecution(event) {
-            const reference = event && event.objectReference;
-            return reference && Number(reference.agentExecutionTaskId) > 0;
-        },
-        openAgentExecution(reference) {
-            const taskId = Number(reference && reference.agentExecutionTaskId || 0);
-            if (!Number.isInteger(taskId) || taskId <= 0) return;
-            const viewer = window.open(`/Admin/AgentsManager/AgentExecutions?taskId=${encodeURIComponent(taskId)}`, '_blank', 'noopener,noreferrer');
             if (viewer) viewer.opener = null;
         },
         async createWorkflow() {
@@ -3650,6 +3642,9 @@ new Vue({
                 required: !!parameter.required,
                 description: parameter.description || ''
             }));
+            if (saved.runningCount !== undefined && saved.runningCount !== null) {
+                this.form.runningCount = Math.max(0, Number(saved.runningCount) || 0);
+            }
             if (saved.graphJson) {
                 const graph = NeuCharWorkflowUi.parseJson(saved.graphJson, this.form.graph);
                 graph.nodes = graph.nodes || [];
@@ -3772,6 +3767,9 @@ new Vue({
             try {
                 const response = await service.get(`/Admin/NeuCharWorkflow/Index?handler=RunStatus&runId=${encodeURIComponent(this.run.runId)}&afterSequence=${this.run.lastSequence}`);
                 const snapshot = NeuCharWorkflowUi.unwrap(response) || {};
+                if (snapshot.runningCount !== undefined && snapshot.runningCount !== null) {
+                    this.form.runningCount = Math.max(0, Number(snapshot.runningCount) || 0);
+                }
                 (snapshot.events || []).forEach(event => {
                     this.run.lastSequence = Math.max(this.run.lastSequence, Number(event.sequence || 0));
                     this.applyRunEvent(event);

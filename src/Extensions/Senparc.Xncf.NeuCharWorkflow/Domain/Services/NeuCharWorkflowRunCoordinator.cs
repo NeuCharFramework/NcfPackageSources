@@ -53,7 +53,8 @@ public sealed record NeuCharWorkflowRunSnapshot(
     string ErrorMessage,
     string FinalOutput,
     IReadOnlyList<NeuCharWorkflowRunEvent> Events,
-    IReadOnlyList<Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow.WorkflowHumanInteraction> HumanInteractions = null);
+    IReadOnlyList<Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow.WorkflowHumanInteraction> HumanInteractions = null,
+    int RunningCount = 0);
 
 /// <summary>
 /// 供任务列表使用的轻量实时运行状态。不返回原始输入和完整输出，避免在列表页意外暴露敏感数据。
@@ -236,13 +237,6 @@ public sealed class NeuCharWorkflowRunCoordinator
         lock (_startGate)
         {
             Cleanup();
-            if (_runs.Values.Any(z => z.WorkflowId == workflowId && z.Running))
-            {
-                runId = Guid.Empty;
-                error = "当前工作流已有运行正在执行。";
-                return false;
-            }
-
             runId = Guid.NewGuid();
             var state = new RunState(runId, workflowId, adminUserId, input ?? string.Empty, NormalizeSource(source));
             _runs[runId] = state;
@@ -254,9 +248,15 @@ public sealed class NeuCharWorkflowRunCoordinator
 
     public NeuCharWorkflowRunSnapshot GetSnapshot(Guid runId, int adminUserId, long afterSequence)
     {
-        return _runs.TryGetValue(runId, out var state) && state.AdminUserId == adminUserId
-            ? state.Snapshot(Math.Max(0, afterSequence))
-            : null;
+        if (!_runs.TryGetValue(runId, out var state) || state.AdminUserId != adminUserId)
+        {
+            return null;
+        }
+
+        return state.Snapshot(Math.Max(0, afterSequence)) with
+        {
+            RunningCount = GetActiveRunCount(adminUserId, state.WorkflowId)
+        };
     }
 
     public bool TryAbort(Guid runId, int adminUserId, out string? error)
@@ -277,6 +277,20 @@ public sealed class NeuCharWorkflowRunCoordinator
             .Select(z => z.ToActiveRun())
             .OrderByDescending(z => z.StartedAt)
             .ToList();
+    }
+
+    public int GetActiveRunCount(int adminUserId, int workflowId)
+    {
+        if (workflowId <= 0)
+        {
+            return 0;
+        }
+
+        Cleanup();
+        return _runs.Values.Count(z =>
+            z.AdminUserId == adminUserId &&
+            z.WorkflowId == workflowId &&
+            z.Running);
     }
 
     private async Task ExecuteAsync(RunState state)

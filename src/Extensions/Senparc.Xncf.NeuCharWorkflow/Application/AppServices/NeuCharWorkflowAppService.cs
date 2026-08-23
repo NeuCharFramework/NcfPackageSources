@@ -111,7 +111,15 @@ public sealed class NeuCharWorkflowAppService
         await Task.WhenAll(editableGraphTask, observedSchemasTask).ConfigureAwait(false);
         var editableGraphJson = await editableGraphTask.ConfigureAwait(false);
         var observedSchemas = await observedSchemasTask.ConfigureAwait(false);
-        return ToDetail(workflow, editableGraphJson, observedOutputSchemas: observedSchemas);
+        var runningCount = await GetRunningCountAsync(
+            adminUserId,
+            workflow.Id,
+            cancellationToken).ConfigureAwait(false);
+        return ToDetail(
+            workflow,
+            editableGraphJson,
+            runningCount: runningCount,
+            observedOutputSchemas: observedSchemas);
     }
 
     public async Task<WorkflowDesignerData> GetDesignerDataAsync(CancellationToken cancellationToken = default)
@@ -268,7 +276,14 @@ public sealed class NeuCharWorkflowAppService
         {
             var editableUnchanged = await _workflowEngine.BuildEditableGraphJsonAsync(workflow.GraphJson, cancellationToken)
                 .ConfigureAwait(false);
-            return ToDetail(workflow, editableUnchanged, unchanged: true);
+            return ToDetail(
+                workflow,
+                editableUnchanged,
+                unchanged: true,
+                runningCount: await GetRunningCountAsync(
+                    adminUserId,
+                    workflow.Id,
+                    cancellationToken).ConfigureAwait(false));
         }
 
         workflow.Update(request.Name, request.Description, normalizedGraphJson, enabled, triggerType,
@@ -278,7 +293,13 @@ public sealed class NeuCharWorkflowAppService
         await _eventPublisher.PublishAsync(workflow.Id, "saved", adminUserId, cancellationToken).ConfigureAwait(false);
         var editableGraphJson = await _workflowEngine.BuildEditableGraphJsonAsync(workflow.GraphJson, cancellationToken)
             .ConfigureAwait(false);
-        return ToDetail(workflow, editableGraphJson);
+        return ToDetail(
+            workflow,
+            editableGraphJson,
+            runningCount: await GetRunningCountAsync(
+                adminUserId,
+                workflow.Id,
+                cancellationToken).ConfigureAwait(false));
     }
 
     public async Task<NeuCharWorkflowRunResult> RunImmediatelyAsync(
@@ -464,9 +485,16 @@ public sealed class NeuCharWorkflowAppService
         int adminUserId,
         int? beforeExecutionLogId = null,
         int? workflowId = null,
+        string? status = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        var statusFilter = status?.Trim().ToLowerInvariant() switch
+        {
+            "running" or "success" or "failed" => status.Trim().ToLowerInvariant(),
+            _ => null
+        };
+        var runningOnly = statusFilter == "running";
         var workflowNames = await _workflowService.GetNameMapAsync(
             adminUserId,
             cancellationToken).ConfigureAwait(false);
@@ -487,19 +515,21 @@ public sealed class NeuCharWorkflowAppService
                 .ToArray()
             : Array.Empty<NeuCharWorkflowActiveRun>();
 
-        var tasks = activeRuns.Select(run => new WorkflowTaskListItem(
-            $"live:{run.RunId:N}",
-            run.WorkflowId,
-            workflowNames.TryGetValue(run.WorkflowId, out var workflowName) ? workflowName : $"工作流 #{run.WorkflowId}",
-            run.Source,
-            "running",
-            run.StartedAt,
-            null,
-            BuildLiveSummary(run),
-            null,
-            run.RunId,
-            null,
-            false)).ToList();
+        var tasks = statusFilter is null or "running"
+            ? activeRuns.Select(run => new WorkflowTaskListItem(
+                $"live:{run.RunId:N}",
+                run.WorkflowId,
+                workflowNames.TryGetValue(run.WorkflowId, out var workflowName) ? workflowName : $"工作流 #{run.WorkflowId}",
+                run.Source,
+                "running",
+                run.StartedAt,
+                null,
+                BuildLiveSummary(run),
+                null,
+                run.RunId,
+                null,
+                false)).ToList()
+            : new List<WorkflowTaskListItem>();
 
         if (workflowIds.Count == 0)
         {
@@ -510,13 +540,16 @@ public sealed class NeuCharWorkflowAppService
             workflowIds,
             beforeExecutionLogId,
             TaskListPageSize + 1,
+            runningOnly,
             cancellationToken).ConfigureAwait(false);
-        var activeWorkflowIds = activeRuns.Select(z => z.WorkflowId).ToHashSet();
+        var activeRunIds = activeRuns.Select(z => z.RunId).ToHashSet();
         var fetchedLogs = logPage.ToList();
         var pageLogs = fetchedLogs.Take(TaskListPageSize).ToList();
         tasks.AddRange(pageLogs
-            // 由协调器托管的运行有节点级实时流；隐藏其尚未完成的数据库镜像，避免同一任务显示两次。
-            .Where(log => log.FinishedAt != null || !activeWorkflowIds.Contains(log.WorkflowId))
+            // 由协调器托管的运行有节点级实时流；仅隐藏对应 RunId 的数据库镜像，
+            // 保留同一 Workflow 的其他未完成任务，避免并发运行时丢任务。
+            .Where(log => log.FinishedAt != null ||
+                          !activeRunIds.Contains(GetTaskRunId(log.WorkflowId, log.CorrelationId).GetValueOrDefault()))
             .Select(log => new WorkflowTaskListItem(
                 $"log:{log.Id}",
                 log.WorkflowId,
@@ -546,7 +579,7 @@ public sealed class NeuCharWorkflowAppService
         int adminUserId,
         int? beforeExecutionLogId,
         CancellationToken cancellationToken) =>
-        GetTaskListAsync(adminUserId, beforeExecutionLogId, null, cancellationToken);
+        GetTaskListAsync(adminUserId, beforeExecutionLogId, null, null, cancellationToken);
 
     /// <summary>
     /// 预览当前管理员可清理的运行历史。只处理已完成的执行日志，进程内或数据库中仍未完成的任务不会被包含。
@@ -1001,11 +1034,12 @@ public sealed class NeuCharWorkflowAppService
         WorkflowEntity workflow,
         string? graphJson = null,
         bool unchanged = false,
+        int runningCount = 0,
         IReadOnlyList<NeuCharWorkflowObservedOutputSchema>? observedOutputSchemas = null) => new(
         workflow.Id, workflow.Name, workflow.Description, graphJson ?? workflow.GraphJson, workflow.Enabled,
         workflow.TriggerType, workflow.TriggerConfigJson, workflow.NextRunAt, workflow.LastRunAt, workflow.LastSucceeded,
         workflow.LastError, workflow.Revision, workflow.AutoSaveMinutes, unchanged, workflow.LastUpdateTime,
-        observedOutputSchemas);
+        runningCount, observedOutputSchemas);
 
     private static WorkflowListItem ToListItem(WorkflowEntity workflow) => new(
         workflow.Id, workflow.Name, workflow.Description, workflow.Enabled, workflow.TriggerType, workflow.NextRunAt,
@@ -1038,6 +1072,18 @@ public sealed class NeuCharWorkflowAppService
 
     private static DateTimeOffset? ToUtcOffset(DateTime? value) =>
         value.HasValue ? ToUtcOffset(value.Value) : null;
+
+    private async Task<int> GetRunningCountAsync(
+        int adminUserId,
+        int workflowId,
+        CancellationToken cancellationToken)
+    {
+        var activeCount = _runCoordinator.GetActiveRunCount(adminUserId, workflowId);
+        var persistedCount = await _executionLogService
+            .GetUnfinishedCountAsync(workflowId, cancellationToken)
+            .ConfigureAwait(false);
+        return Math.Max(activeCount, persistedCount);
+    }
 
     private static Guid? GetTaskRunId(int workflowId, string? correlationId)
     {
@@ -1101,6 +1147,7 @@ public sealed record WorkflowDetail(
     int Id, string Name, string? Description, string GraphJson, bool Enabled, string TriggerType, string TriggerConfigJson,
     DateTime? NextRunAt, DateTime? LastRunAt, bool? LastSucceeded, string? LastError, int Revision, int AutoSaveMinutes,
     bool Unchanged, DateTime LastUpdateTime,
+    int RunningCount = 0,
     IReadOnlyList<NeuCharWorkflowObservedOutputSchema>? ObservedOutputSchemas = null);
 
 public sealed record WorkflowTaskListItem(

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.9-preview9</Version>
+    <Version>0.7.9</Version>
     <Nullable>enable</Nullable>
     <AssemblyName>Senparc.Ncf.Database.Dm</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.Dm</RootNamespace>

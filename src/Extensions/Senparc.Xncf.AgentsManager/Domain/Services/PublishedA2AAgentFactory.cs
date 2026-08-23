@@ -13,10 +13,6 @@
     修改标识：Senparc - 20260815
     修改描述：v0.15.0-preview20 增强 AgentTemplate、ChatGroup 与发布型 A2A 的取消和请求处理
 
-    修改标识：Senparc - 20260822
-    修改描述：v0.16.0 统一独立 Agent 执行入口并兼容发布型 A2A 调用
-
-
 ----------------------------------------------------------------*/
 
 using A2A;
@@ -40,18 +36,18 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
     {
         private readonly PublishedA2AAgentService _publishedA2AAgentService;
         private readonly AgentsTemplateService _agentsTemplateService;
-        private readonly AgentExecutionService _agentExecutionService;
+        private readonly AgentTemplateRunner _agentTemplateRunner;
         private readonly ILogger<PublishedA2AAgentFactory> _logger;
 
         public PublishedA2AAgentFactory(
             PublishedA2AAgentService publishedA2AAgentService,
             AgentsTemplateService agentsTemplateService,
-            AgentExecutionService agentExecutionService,
+            AgentTemplateRunner agentTemplateRunner,
             ILogger<PublishedA2AAgentFactory> logger)
         {
             _publishedA2AAgentService = publishedA2AAgentService;
             _agentsTemplateService = agentsTemplateService;
-            _agentExecutionService = agentExecutionService;
+            _agentTemplateRunner = agentTemplateRunner;
             _logger = logger;
         }
 
@@ -68,59 +64,23 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
 
             // 发布型 A2A 只负责协议与授权边界；模板解析、Prompt 参数、模型配置、
-            // AgentKernel 构建、持久化和用量统计全部复用独立 Agent 执行入口。
+            // AgentKernel 构建和响应执行全部复用本地独立 Agent 的 RunAsync 入口。
+            // 不在正常路径替换 HttpClient、API Version、Deployment 或模型。
+            AgentTemplateRunResult execution;
             try
             {
-                var execution = await _agentExecutionService.ExecuteAsync(
-                    new AgentExecutionRequest
-                    {
-                        AgentTemplateId = template.Id,
-                        Name = $"A2A · {template.Name}",
-                        Input = userText,
-                        Source = "PublishedA2A",
-                        CorrelationId = $"a2a-{diagnosticId}",
-                        ExternalReference = publishedAgent.PublicAgentKey,
-                        AdminUserId = 0,
-                        AllowFunctionCalls = publishedAgent.AllowFunctionCalls,
-                        UseTemplateModelSettings = true
-                    },
-                    cancellationToken).ConfigureAwait(false);
-                if (execution.Diagnostics != null)
-                {
-                    LogExecutionModel(diagnosticId, publishedAgent, execution.Diagnostics);
-                }
-
-                if (!execution.Success)
-                {
-                    throw new A2AException(
-                        execution.ErrorMessage ?? "The A2A agent did not return a displayable response.",
-                        A2AErrorCode.InvalidAgentResponse);
-                }
-
-                if (ContainsServiceFailureSignature(execution.Output))
-                {
-                    _logger.LogWarning(
-                        "Published A2A run {DiagnosticId} for agent {AgentKey} received an upstream model-service failure. {ModelDescription} Failure: {Failure}",
-                        diagnosticId,
+                execution = await _agentTemplateRunner.RunAsync(
+                    template,
+                    userText,
+                    AgentTemplateRunRequest.ForPublishedA2A(
+                        template.Id,
                         publishedAgent.PublicAgentKey,
-                        execution.Diagnostics?.ModelDescription ?? "unknown",
-                        SummarizeFailure(execution.Output));
-                    SenparcTrace.SendCustomLog(
-                        "AgentsManager.A2A.UpstreamModelFailure",
-                        $"DiagnosticId={diagnosticId}; Agent={publishedAgent.PublicAgentKey}; " +
-                        (execution.Diagnostics?.ModelDescription ?? "unknown") + "; Failure=" + SummarizeFailure(execution.Output));
-                    throw new A2AException(
-                        $"The published A2A agent's upstream model service rejected the request. DiagnosticId: {diagnosticId}. Check server diagnostics.",
-                        A2AErrorCode.InternalError);
-                }
-
-                return execution.Output;
+                        publishedAgent.AllowFunctionCalls,
+                        diagnosticId),
+                    diagnostics => LogExecutionModel(diagnosticId, publishedAgent, diagnostics),
+                    cancellationToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-            {
-                throw;
-            }
-            catch (A2AException)
             {
                 throw;
             }
@@ -142,9 +102,34 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             {
                 PublishedA2AModelTransport.ClearFailure(diagnosticId);
             }
-            throw new A2AException(
-                "The published A2A agent did not produce a response.",
-                A2AErrorCode.InvalidAgentResponse);
+            if (!execution.Success)
+            {
+                throw new A2AException(execution.ErrorMessage ?? "The A2A agent did not return a displayable response.", A2AErrorCode.InvalidAgentResponse);
+            }
+
+            var output = execution.Output;
+
+            // Several provider adapters encode an upstream HTTP failure as OutputString instead
+            // of throwing. Do not publish it as a successful A2A message; otherwise a mixed
+            // ChatGroup treats the failure text as an Agent conclusion and broadcasts it.
+            if (ContainsServiceFailureSignature(output))
+            {
+                _logger.LogWarning(
+                    "Published A2A run {DiagnosticId} for agent {AgentKey} received an upstream model-service failure. {ModelDescription} Failure: {Failure}",
+                    diagnosticId,
+                    publishedAgent.PublicAgentKey,
+                    execution.Diagnostics.ModelDescription,
+                    SummarizeFailure(output));
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.A2A.UpstreamModelFailure",
+                    $"DiagnosticId={diagnosticId}; Agent={publishedAgent.PublicAgentKey}; " +
+                    execution.Diagnostics.ModelDescription + "; Failure=" + SummarizeFailure(output));
+                throw new A2AException(
+                    $"The published A2A agent's upstream model service rejected the request. DiagnosticId: {diagnosticId}. Check server diagnostics.",
+                    A2AErrorCode.InternalError);
+            }
+
+            return output;
         }
 
         private static string BuildProviderConfigurationFailureMessage(string providerMessage, string diagnosticId)

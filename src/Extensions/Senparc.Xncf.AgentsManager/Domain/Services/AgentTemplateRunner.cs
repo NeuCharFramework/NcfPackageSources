@@ -98,9 +98,7 @@ public sealed class AgentTemplateRunner
         string userText,
         AgentTemplateRunRequest request,
         Action<AgentTemplateExecutionDiagnostics> onPrepared = null,
-        CancellationToken cancellationToken = default,
-        Action<string> onExecutionInfo = null,
-        Action<AgentToolExecutionEvent> onToolEvent = null)
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(template);
         ArgumentNullException.ThrowIfNull(request);
@@ -110,9 +108,7 @@ public sealed class AgentTemplateRunner
                 userText,
                 request,
                 onPrepared,
-                onExecutionInfo,
-                cancellationToken: cancellationToken,
-                onToolEvent: onToolEvent)
+                cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         if (!build.Success)
         {
@@ -131,9 +127,7 @@ public sealed class AgentTemplateRunner
                 onPrepared,
                 build,
                 execution,
-                cancellationToken,
-                onExecutionInfo,
-                onToolEvent)
+                cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -394,11 +388,7 @@ public sealed class AgentTemplateRunner
 
         if (!string.IsNullOrWhiteSpace(output))
         {
-            return AgentTemplateRunResult.Succeeded(
-                output,
-                build.Diagnostics,
-                response?.Usage,
-                response?.ResponseId);
+            return AgentTemplateRunResult.Succeeded(output, build.Diagnostics);
         }
 
         SenparcTrace.SendCustomLog(
@@ -407,11 +397,7 @@ public sealed class AgentTemplateRunner
             $"hasUsage={response?.Usage != null}; functionCallsEnabled={request.AllowFunctionCalls}; " +
             $"streamingFallbackAttempted={ShouldUseStreamingFallback(output, request)}; " +
             $"{build.Diagnostics.ModelDescription}; {build.Diagnostics.ExecutionParameters}");
-        return AgentTemplateRunResult.Failed(
-            EmptyAgentOutputMessage,
-            build.Diagnostics,
-            response?.Usage,
-            response?.ResponseId);
+        return AgentTemplateRunResult.Failed(EmptyAgentOutputMessage, build.Diagnostics);
     }
 
     private async Task<AgentTemplateRunResult> RetryEmptyOutputWithHigherTokenBudgetAsync(
@@ -421,9 +407,7 @@ public sealed class AgentTemplateRunner
         Action<AgentTemplateExecutionDiagnostics> onPrepared,
         AgentTemplateRunnerBuildResult build,
         AgentTemplateRunResult execution,
-        CancellationToken cancellationToken,
-        Action<string> onExecutionInfo,
-        Action<AgentToolExecutionEvent> onToolEvent)
+        CancellationToken cancellationToken)
     {
         var effectiveMaxOutputTokens = build.AgentOptions?.ChatOptions?.MaxOutputTokens;
         if (execution.Success
@@ -449,9 +433,7 @@ public sealed class AgentTemplateRunner
                 userText,
                 retryRequest,
                 onPrepared,
-                onExecutionInfo,
-                cancellationToken: cancellationToken,
-                onToolEvent: onToolEvent)
+                cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         if (!retryBuild.Success)
         {
@@ -504,8 +486,7 @@ public sealed class AgentTemplateRunner
         AgentTemplateRunRequest request,
         Action<AgentTemplateExecutionDiagnostics> onPrepared = null,
         Action<string> onExecutionInfo = null,
-        CancellationToken cancellationToken = default,
-        Action<AgentToolExecutionEvent> onToolEvent = null)
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(template);
         ArgumentNullException.ThrowIfNull(request);
@@ -533,8 +514,7 @@ public sealed class AgentTemplateRunner
                 toolPolicy.McpTools,
                 request.DiagnosticId,
                 request.AdminUserId,
-                cancellationToken,
-                onToolEvent).ConfigureAwait(false)
+                cancellationToken).ConfigureAwait(false)
             : new List<AITool>();
 
         var promptParameters = request.UseTemplatePromptParameters
@@ -706,8 +686,7 @@ public sealed class AgentTemplateRunner
                     : "stateless",
                 ExecutionParameters: "unresolved",
                 FunctionCallsEnabled: false,
-                ToolCount: 0,
-                EffectiveModelId: resolvedModel?.Id));
+                ToolCount: 0));
     }
 
     private static IList<string> ParseStopSequences(string stopSequences)
@@ -819,8 +798,7 @@ public sealed class AgentTemplateRunner
         ToolPermissionMode mcpToolPermission,
         string correlationId,
         int adminUserId,
-        CancellationToken cancellationToken,
-        Action<AgentToolExecutionEvent> onToolEvent)
+        CancellationToken cancellationToken)
     {
         var tools = new List<AITool>();
         var bindings = AgentFunctionBindingCodec.Parse(template.FunctionCallNames);
@@ -857,8 +835,7 @@ public sealed class AgentTemplateRunner
                             function,
                             template.Id,
                             template.Name,
-                            correlationId,
-                            onToolEvent);
+                            correlationId);
                         tools.Add(pluginToolPermission == ToolPermissionMode.RequireApproval
                             ? new ApprovalRequiredAIFunction(diagnosticFunction)
                             : diagnosticFunction);
@@ -919,8 +896,7 @@ public sealed class AgentTemplateRunner
                     function,
                     template.Id,
                     template.Name,
-                    correlationId,
-                    onToolEvent);
+                    correlationId);
                 tools.Add(pluginToolPermission == ToolPermissionMode.RequireApproval
                     ? new ApprovalRequiredAIFunction(diagnosticFunction)
                     : diagnosticFunction);
@@ -966,8 +942,7 @@ public sealed class AgentTemplateRunner
                         workflowFunction,
                         template.Id,
                         template.Name,
-                        correlationId,
-                        onToolEvent);
+                        correlationId);
                     tools.Add(pluginToolPermission == ToolPermissionMode.RequireApproval
                         ? new ApprovalRequiredAIFunction(diagnosticFunction)
                         : diagnosticFunction);
@@ -1461,8 +1436,7 @@ public sealed record AgentTemplateExecutionDiagnostics(
     string SessionStrategy,
     string ExecutionParameters,
     bool FunctionCallsEnabled,
-    int ToolCount,
-    int? EffectiveModelId = null);
+    int ToolCount);
 
 /// <summary>
 /// 已构造的本地 Agent 运行器。ChatGroup 与独立调用共用该对象，确保两条路径使用完全相同的配置。
@@ -1494,21 +1468,11 @@ public sealed record AgentTemplateRunResult(
     bool Success,
     string Output,
     string ErrorMessage,
-    AgentTemplateExecutionDiagnostics Diagnostics,
-    UsageDetails Usage = null,
-    string ResponseId = null)
+    AgentTemplateExecutionDiagnostics Diagnostics)
 {
-    public static AgentTemplateRunResult Succeeded(
-        string output,
-        AgentTemplateExecutionDiagnostics diagnostics,
-        UsageDetails usage = null,
-        string responseId = null)
-        => new(true, output, null, diagnostics, usage, responseId);
+    public static AgentTemplateRunResult Succeeded(string output, AgentTemplateExecutionDiagnostics diagnostics)
+        => new(true, output, null, diagnostics);
 
-    public static AgentTemplateRunResult Failed(
-        string errorMessage,
-        AgentTemplateExecutionDiagnostics diagnostics,
-        UsageDetails usage = null,
-        string responseId = null)
-        => new(false, null, errorMessage, diagnostics, usage, responseId);
+    public static AgentTemplateRunResult Failed(string errorMessage, AgentTemplateExecutionDiagnostics diagnostics)
+        => new(false, null, errorMessage, diagnostics);
 }

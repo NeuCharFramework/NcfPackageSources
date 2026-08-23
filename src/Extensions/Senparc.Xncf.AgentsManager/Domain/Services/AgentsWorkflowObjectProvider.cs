@@ -23,11 +23,13 @@
 
 ----------------------------------------------------------------*/
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
@@ -35,6 +37,7 @@ using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -45,25 +48,31 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
     public const string ProviderName = "agents-manager";
     private readonly AgentsTemplateService _agentService;
     private readonly ChatGroupService _groupService;
-    private readonly AgentExecutionService _agentExecutionService;
+    private readonly AgentTemplateRunner _agentTemplateRunner;
     private readonly XncfModuleService _moduleService;
     private readonly RemoteAgentService _remoteAgentService;
     private readonly RemoteA2AAgentFactory _remoteA2AAgentFactory;
+    private readonly HumanInTheLoopRequestStore _humanInTheLoopRequestStore;
+    private readonly AgentsManagerNeuBellProvider _neuBellProvider;
 
     public AgentsWorkflowObjectProvider(
         AgentsTemplateService agentService,
         ChatGroupService groupService,
-        AgentExecutionService agentExecutionService,
+        AgentTemplateRunner agentTemplateRunner,
         XncfModuleService moduleService,
         RemoteAgentService remoteAgentService,
-        RemoteA2AAgentFactory remoteA2AAgentFactory)
+        RemoteA2AAgentFactory remoteA2AAgentFactory,
+        HumanInTheLoopRequestStore humanInTheLoopRequestStore,
+        AgentsManagerNeuBellProvider neuBellProvider)
     {
         _agentService = agentService;
         _groupService = groupService;
-        _agentExecutionService = agentExecutionService;
+        _agentTemplateRunner = agentTemplateRunner;
         _moduleService = moduleService;
         _remoteAgentService = remoteAgentService;
         _remoteA2AAgentFactory = remoteA2AAgentFactory;
+        _humanInTheLoopRequestStore = humanInTheLoopRequestStore;
+        _neuBellProvider = neuBellProvider;
     }
 
     public string ProviderId => ProviderName;
@@ -273,49 +282,145 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             request,
             WorkflowObjectExecutionParameters.Personality,
             fallback: true);
-        var execution = await _agentExecutionService.ExecuteAsync(
-                new AgentExecutionRequest
-                {
-                    AgentTemplateId = agentId,
-                    Name = $"Workflow · {agent.Name}",
-                    Input = request.Input,
-                    Source = "Workflow",
-                    CorrelationId = request.CorrelationId,
-                    WorkflowId = TryGetWorkflowId(request.CorrelationId),
-                    AdminUserId = request.AdminUserId ?? 0,
-                    AiModelId = request.AiModelId > 0 ? request.AiModelId : null,
-                    AllowFunctionCalls = allowFunctionCalls,
-                    HumanInTheLoopLevel = humanInTheLoopLevel,
-                    PluginToolPermission = pluginToolPermission,
-                    McpToolPermission = mcpToolPermission,
-                    UseTemplateModelSettings = personality
-                },
-                cancellationToken)
-            .ConfigureAwait(false);
-        var reference = new WorkflowObjectExecutionReference(
-            "agent",
-            ProviderName,
-            DisplayName: agent.Name)
+        var runRequest = AgentTemplateRunRequest.ForLocalWorkflow(
+            agentId,
+            request.CorrelationId,
+            request.AiModelId > 0 ? request.AiModelId : null,
+            allowFunctionCalls,
+            humanInTheLoopLevel,
+            pluginToolPermission,
+            mcpToolPermission,
+            useTemplateModelSettings: personality,
+            adminUserId: request.AdminUserId ?? 0);
+        var effectivePolicy = HumanInTheLoopPolicyResolver.Resolve(
+            humanInTheLoopLevel,
+            pluginToolPermission,
+            mcpToolPermission);
+        if (allowFunctionCalls
+            && (effectivePolicy.PluginTools == ToolPermissionMode.RequireApproval
+                || effectivePolicy.McpTools == ToolPermissionMode.RequireApproval))
         {
-            AgentExecutionTaskId = execution.TaskId,
-            AgentTemplateId = agent.Id
-        };
-        return execution.Success
-            ? new WorkflowObjectExecutionResult(true, execution.Output) { Reference = reference }
-            : new WorkflowObjectExecutionResult(false, null, execution.ErrorMessage) { Reference = reference };
-    }
-
-    private static int? TryGetWorkflowId(string correlationId)
-    {
-        if (string.IsNullOrWhiteSpace(correlationId))
-        {
-            return null;
+            return await ExecuteSingleAgentWithHumanApprovalAsync(
+                agent,
+                request,
+                runRequest,
+                cancellationToken).ConfigureAwait(false);
         }
 
-        var parts = correlationId.Split('-', StringSplitOptions.RemoveEmptyEntries);
-        return parts.Length >= 2 && int.TryParse(parts[1], out var workflowId)
-            ? workflowId
-            : null;
+        var execution = await _agentTemplateRunner.RunAsync(
+                agent,
+                request.Input,
+                runRequest,
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        return execution.Success
+            ? new WorkflowObjectExecutionResult(true, execution.Output)
+            : new WorkflowObjectExecutionResult(false, null, execution.ErrorMessage);
+    }
+
+    private async ValueTask<WorkflowObjectExecutionResult> ExecuteSingleAgentWithHumanApprovalAsync(
+        AgentTemplate agent,
+        WorkflowObjectExecutionRequest request,
+        AgentTemplateRunRequest runRequest,
+        CancellationToken cancellationToken)
+    {
+        var build = await _agentTemplateRunner.BuildAsync(
+            agent,
+            request.Input,
+            runRequest,
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+        if (!build.Success)
+        {
+            return new WorkflowObjectExecutionResult(false, null, build.ErrorMessage);
+        }
+
+        var session = build.Runner?.Kernel?.AgentSession;
+        var nextMessages = new List<ChatMessage>
+        {
+            new(ChatRole.User, request.Input ?? string.Empty)
+        };
+        var output = new StringBuilder();
+        var registeredRequests = new List<PendingHumanRequest>();
+
+        try
+        {
+            while (nextMessages != null)
+            {
+                var approvals = new List<ToolApprovalRequestContent>();
+                await foreach (var update in build.Runner.Kernel.ChatClientAgent.RunStreamingAsync(
+                    nextMessages,
+                    session,
+                    cancellationToken: cancellationToken))
+                {
+                    if (!string.IsNullOrWhiteSpace(update?.Text))
+                    {
+                        output.Append(update.Text);
+                    }
+                    if (update?.Contents != null)
+                    {
+                        approvals.AddRange(update.Contents.OfType<ToolApprovalRequestContent>());
+                    }
+                }
+
+                if (approvals.Count == 0)
+                {
+                    break;
+                }
+
+                registeredRequests = approvals
+                    .Select(approval => _humanInTheLoopRequestStore.RegisterToolApproval(
+                        0,
+                        agent.Name,
+                        approval,
+                        decision => approval.CreateResponse(decision.Approved, decision.Reason),
+                        request.CorrelationId,
+                        request.AdminUserId?.ToString()))
+                    .ToList();
+
+                foreach (var pending in registeredRequests)
+                {
+                    var itemId = _neuBellProvider.SendWorkflowToolApproval(
+                        request.CorrelationId,
+                        request.AdminUserId?.ToString(),
+                        pending.AgentName,
+                        pending.ToolName);
+                    pending.SetNeuBellItemId(itemId);
+                }
+                await NotifyNeuBellChangedAsync().ConfigureAwait(false);
+
+                var responses = new List<ChatMessage>();
+                foreach (var pending in registeredRequests)
+                {
+                    await pending.Completion.WaitAsync(cancellationToken).ConfigureAwait(false);
+                    if (pending.ResolvedResponse is ToolApprovalResponseContent approvalResponse)
+                    {
+                        responses.Add(new ChatMessage(ChatRole.User, new[] { approvalResponse }));
+                    }
+                }
+
+                registeredRequests.Clear();
+                nextMessages = responses;
+            }
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            await CancelPendingRequestsAsync(
+                registeredRequests,
+                request.AdminUserId?.ToString()).ConfigureAwait(false);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            await CancelPendingRequestsAsync(
+                registeredRequests,
+                request.AdminUserId?.ToString()).ConfigureAwait(false);
+            return new WorkflowObjectExecutionResult(false, null, $"独立 Agent 执行失败：{ex.Message}");
+        }
+
+        var result = output.ToString().Trim();
+        return string.IsNullOrWhiteSpace(result)
+            ? new WorkflowObjectExecutionResult(false, null, "独立 Agent 没有返回有效内容。")
+            : new WorkflowObjectExecutionResult(true, result);
     }
 
     private async ValueTask<WorkflowObjectExecutionResult> ExecuteRemoteA2AAsync(
@@ -405,4 +510,34 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 : fallback;
     }
 
+    private static async Task NotifyNeuBellChangedAsync()
+    {
+        var publisher = SenparcDI.GetServiceProvider(true).GetService<INeuBellPublisher>();
+        if (publisher != null)
+        {
+            await publisher.NotifyChangedAsync(AgentsManagerNeuBellProvider.ProviderIdValue).ConfigureAwait(false);
+        }
+    }
+
+    private async Task CancelPendingRequestsAsync(
+        IEnumerable<PendingHumanRequest> requests,
+        string recipientUserId)
+    {
+        var changed = false;
+        foreach (var pending in requests ?? Array.Empty<PendingHumanRequest>())
+        {
+            changed |= _humanInTheLoopRequestStore.TryCancel(pending.RequestId);
+            if (!string.IsNullOrWhiteSpace(pending.NeuBellItemId))
+            {
+                changed |= (await _neuBellProvider.ConsumeItemAsync(
+                    new NeuBellRequestContext(recipientUserId),
+                    pending.NeuBellItemId).ConfigureAwait(false)) > 0;
+            }
+        }
+
+        if (changed)
+        {
+            await NotifyNeuBellChangedAsync().ConfigureAwait(false);
+        }
+    }
 }

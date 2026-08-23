@@ -247,16 +247,6 @@ new Vue({
             const viewer = window.open(`/Admin/AgentsManager/Index#${query.toString()}`, '_blank', 'noopener,noreferrer');
             if (viewer) viewer.opener = null;
         },
-        hasAgentExecution(event) {
-            const reference = event && event.objectReference;
-            return reference && Number(reference.agentExecutionTaskId) > 0;
-        },
-        openAgentExecution(reference) {
-            const taskId = Number(reference && reference.agentExecutionTaskId || 0);
-            if (!Number.isInteger(taskId) || taskId <= 0) return;
-            const viewer = window.open(`/Admin/AgentsManager/AgentExecutions?taskId=${encodeURIComponent(taskId)}`, '_blank', 'noopener,noreferrer');
-            if (viewer) viewer.opener = null;
-        },
         backToTasks() { window.location.assign('/Admin/NeuCharWorkflow/Tasks'); },
         errorMessage(error, fallback) {
             const data = error && error.response && error.response.data;

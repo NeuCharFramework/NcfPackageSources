@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.3.0-preview6</Version>
+    <Version>0.3.0</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>

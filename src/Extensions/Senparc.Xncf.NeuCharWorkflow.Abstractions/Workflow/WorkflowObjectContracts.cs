@@ -70,12 +70,7 @@ public sealed record WorkflowObjectExecutionReference(
     string ProviderId,
     int? ChatTaskId = null,
     int? ChatGroupId = null,
-    string DisplayName = null)
-{
-    public int? AgentExecutionTaskId { get; init; }
-    public int? AgentTemplateId { get; init; }
-    public int? RemoteAgentId { get; init; }
-}
+    string DisplayName = null);
 
 public sealed record WorkflowObjectExecutionResult(
     bool Success,

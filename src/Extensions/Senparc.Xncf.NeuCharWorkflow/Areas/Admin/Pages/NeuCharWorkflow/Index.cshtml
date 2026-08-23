@@ -117,6 +117,13 @@
                                    size="small"
                                    icon="el-icon-tickets"
                                    @@click="openWorkflowTasks">任务</el-button>
+                        <el-button v-if="form.id"
+                                   size="small"
+                                   type="warning"
+                                   plain
+                                   icon="el-icon-loading"
+                                   :title="form.runningCount ? '查看当前正在运行的任务' : '当前没有正在运行的任务'"
+                                   @@click="openWorkflowTasks('running')">运行中 {{form.runningCount}}</el-button>
                         <el-button v-if="run.running"
                                    size="small"
                                    type="danger"
@@ -1353,11 +1360,6 @@
                                            size="mini"
                                            icon="el-icon-chat-dot-round"
                                            @@click="openAgentGroupConversation(event.objectReference)">查看 Agent Group 对话</el-button>
-                                <el-button v-if="hasAgentExecution(event)"
-                                           type="text"
-                                           size="mini"
-                                           icon="el-icon-video-play"
-                                           @@click="openAgentExecution(event.objectReference)">查看 Agent 执行</el-button>
                                 <pre v-if="event.output">{{event.output}}</pre>
                             </div>
                             <div v-if="!run.events.length" class="console-empty">运行后，这里会显示校验结果、当前节点、执行状态和 Console 节点输出。</div>
