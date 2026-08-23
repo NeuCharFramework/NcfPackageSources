@@ -125,3 +125,4 @@ tools/NcfDesktopApp.GUI/publish-self-contained.pre-package-*
 .cursor/
 tools/NcfSimulatedSite/Senparc.Web/wwwroot/NcfPackages/
 .cursor/scratchpad.md
+upgrade-senparc-packages/
