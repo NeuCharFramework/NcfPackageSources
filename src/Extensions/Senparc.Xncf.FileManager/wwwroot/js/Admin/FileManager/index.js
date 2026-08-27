@@ -55,12 +55,29 @@
                 },
                 uploadDialog: { visible: false, fileList: [], uploading: false, progress: 0, mode: 'files', folderRootName: '' },
                 folderDialog: { visible: false, loading: false, editing: false, form: { id: null, name: '', description: '' } },
-                guideDialogVisible: false
+                noteDialog: { visible: false, loading: false, row: null, note: '' },
+                guideDialogVisible: false,
+                treeFilter: '',
+                fileSearchKeyword: ''
             };
+        },
+        watch: {
+            treeFilter: function (value) {
+                if (this.$refs.folderTree) this.$refs.folderTree.filter(value);
+            }
         },
         computed: {
             isSiteAsset: function () { return this.resourceScope === 200; },
             resourceScopeName: function () { return this.isSiteAsset ? '站点静态资源' : '知识库资料'; },
+            canGoParent: function () { return this.currentFolderId != null; },
+            displayTableData: function () {
+                const keyword = (this.fileSearchKeyword || '').trim().toLowerCase();
+                if (!keyword) return this.tableData;
+                return this.tableData.filter(function (row) {
+                    return (row.fileName || '').toLowerCase().indexOf(keyword) !== -1
+                        || (row.description || '').toLowerCase().indexOf(keyword) !== -1;
+                });
+            },
             scopeHint: function () {
                 return this.isSiteAsset
                     ? '站点静态资源默认私有；公开后会生成带 SHA-256 指纹的 /assets/ URL。为防止同源脚本注入，不接受 HTML、SVG、JavaScript 或压缩包。'
@@ -110,6 +127,53 @@
             fileTypeLabel: function (fileType) {
                 return ({ 0: '文本', 1: 'Word', 2: 'PowerPoint', 3: 'Excel', 4: '代码', 999: '其他' })[fileType] || '其他';
             },
+            updatedByLabel: function (row) { return '-'; },
+            filterFolderNode: function (value, data) {
+                if (!value) return true;
+                return (data.name || '').toLowerCase().indexOf(value.toLowerCase()) !== -1;
+            },
+            handleCreateCommand: function (command) {
+                if (command === 'folder') this.showCreateFolderDialog();
+            },
+            handleUploadCommand: function (command) {
+                if (command === 'files') {
+                    this.showUploadDialog();
+                    return;
+                }
+                if (command === 'folder') {
+                    this.showUploadDialog();
+                    this.$nextTick(function () { this.chooseUploadFolder(); }.bind(this));
+                }
+            },
+            handleRowCommand: function (command, row) {
+                if (command === 'download') return this.downloadFile(row);
+                if (command === 'togglePublish') return this.setPublication(row, row.accessLevel !== 100);
+                if (command === 'copyUrl') return this.copyPublicUrl(row);
+                if (command === 'editNote') return this.showNoteDialog(row);
+                if (command === 'delete') return this.deleteFile(row);
+            },
+            enterParentFolder: function () {
+                if (this.folderPath.length > 1) {
+                    this.enterFolder(this.folderPath[this.folderPath.length - 2].id);
+                    return;
+                }
+                this.enterFolder(null);
+            },
+            showNoteDialog: function (row) {
+                this.noteDialog = { visible: true, loading: false, row: row, note: row.description || '' };
+            },
+            submitNote: async function () {
+                const row = this.noteDialog.row;
+                if (!row) return;
+                this.noteDialog.loading = true;
+                try {
+                    row.description = this.noteDialog.note || '';
+                    await this.handleNoteChange(row);
+                    this.noteDialog.visible = false;
+                } finally {
+                    this.noteDialog.loading = false;
+                }
+            },
             getList: async function () {
                 this.tableLoading = true;
                 try {
@@ -142,6 +206,8 @@
                 this.currentFolderId = null;
                 this.folderPath = [];
                 this.page.page = 1;
+                this.treeFilter = '';
+                this.fileSearchKeyword = '';
                 this.reloadFolderTree();
                 await this.enterFolder(null);
             },

@@ -94,6 +94,7 @@
 		<!--<ProjectReference Include="..\..\..\..\NcfPackageSources\src\Extensions\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.ForNcf.csproj" />-->
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Database.Sqlite\Senparc.Ncf.Database.Sqlite.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Database.SqlServer\Senparc.Ncf.Database.SqlServer.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Database.MySql\Senparc.Ncf.Database.MySql.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit.csproj" />
