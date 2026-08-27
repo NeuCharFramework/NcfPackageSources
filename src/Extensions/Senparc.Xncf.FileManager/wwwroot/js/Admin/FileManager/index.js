@@ -58,7 +58,25 @@
                 noteDialog: { visible: false, loading: false, row: null, note: '' },
                 guideDialogVisible: false,
                 treeFilter: '',
-                fileSearchKeyword: ''
+                fileSearchKeyword: '',
+                orgName: '山西米立信息技术有限公司',
+                rootFolderName: '企业文档',
+                activeNavKey: 'enterprise',
+                navItems: [
+                    { key: 'home', label: '首页', icon: 'el-icon-s-home' },
+                    { key: 'favorite', label: '收藏', icon: 'el-icon-star-off' },
+                    { key: 'enterprise', label: '企业文档', icon: 'el-icon-folder', scope: 100 },
+                    { key: 'team', label: '团队文档', icon: 'el-icon-user' },
+                    { key: 'group', label: '内部群文档', icon: 'el-icon-chat-dot-round' },
+                    { key: 'mine', label: '我的文档', icon: 'el-icon-document' },
+                    { key: 'shared', label: '共享文档', icon: 'el-icon-share' },
+                    { key: 'project', label: '项目文档', icon: 'el-icon-files', scope: 200 },
+                    { key: 'recycle', label: '回收站', icon: 'el-icon-delete' },
+                    { key: 'divider', label: '', divider: true },
+                    { key: 'dashboard', label: '数据面板', icon: 'el-icon-data-line' },
+                    { key: 'tags', label: '标签管理', icon: 'el-icon-price-tag' },
+                    { key: 'settings', label: '设置', icon: 'el-icon-setting' }
+                ]
             };
         },
         watch: {
@@ -89,7 +107,7 @@
                     : '支持文本、JSON/XML/YAML、代码、DOCX、XLSX、PPTX。';
             },
             uploadTargetText: function () {
-                const currentFolder = this.folderPath.length ? this.folderPath[this.folderPath.length - 1].name : '根目录';
+                const currentFolder = this.folderPath.length ? this.folderPath[this.folderPath.length - 1].name : this.rootFolderName;
                 return this.resourceScopeName + ' / ' + currentFolder;
             },
             uploadFolderSummary: function () {
@@ -99,9 +117,32 @@
         },
         created: function () {
             this.restoreRouteState();
+            this.syncActiveNavFromScope();
             this.enterFolder(this.currentFolderId);
         },
         methods: {
+            syncActiveNavFromScope: function () {
+                this.activeNavKey = this.resourceScope === 200 ? 'project' : 'enterprise';
+            },
+            onNavClick: function (item) {
+                if (!item || item.divider) return;
+                if (item.key === 'settings') {
+                    this.guideDialogVisible = true;
+                    return;
+                }
+                if (item.scope === 100 || item.scope === 200) {
+                    if (this.resourceScope === item.scope) {
+                        this.activeNavKey = item.key;
+                        return;
+                    }
+                    this.resourceScope = item.scope;
+                    this.activeNavKey = item.key;
+                    this.changeResourceScope();
+                    return;
+                }
+                this.activeNavKey = item.key;
+                this.$message.info('「' + item.label + '」功能即将开放');
+            },
             restoreRouteState: function () {
                 const query = new URLSearchParams(window.location.search);
                 const scope = Number(query.get('scope'));
@@ -208,6 +249,7 @@
                 this.page.page = 1;
                 this.treeFilter = '';
                 this.fileSearchKeyword = '';
+                this.syncActiveNavFromScope();
                 this.reloadFolderTree();
                 await this.enterFolder(null);
             },
