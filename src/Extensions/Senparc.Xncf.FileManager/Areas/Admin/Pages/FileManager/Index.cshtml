@@ -132,13 +132,13 @@
         }
 
         .file-manager-layout-left .file-manager-nav-item.is-active {
-            color: #e60012;
-            background: #fff;
+            color: #409eff;
+            background: #ecf5ff;
             font-weight: 500;
         }
 
         .file-manager-layout-left .file-manager-nav-item.is-active i {
-            color: #e60012;
+            color: #409eff;
         }
 
         .file-manager-layout-left .file-manager-nav-item.is-divider {
@@ -379,14 +379,27 @@
     <div class="file-manager-layout-left">
         <nav class="file-manager-nav-panel">
             <ul class="file-manager-nav-list">
-                <li
-                    v-for="item in navItems"
-                    :key="item.key"
-                    class="file-manager-nav-item"
-                    :class="{ 'is-active': activeNavKey === item.key, 'is-divider': item.divider }"
-                    @@click="onNavClick(item)">
-                    <i v-if="item.icon" :class="item.icon"></i>
-                    <span>{{ item.label }}</span>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'home' }" @@click="onNavClick({ key: 'home', label: '首页' })">
+                    <i class="el-icon-s-home"></i><span>首页</span>
+                </li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'favorite' }" @@click="onNavClick({ key: 'favorite', label: '收藏' })">
+                    <i class="el-icon-star-off"></i><span>收藏</span>
+                </li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'enterprise' }" @@click="onNavClick({ key: 'enterprise', label: '企业文档', scope: 100 })">
+                    <i class="el-icon-folder"></i><span>企业文档</span>
+                </li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'recycle' }" @@click="onNavClick({ key: 'recycle', label: '回收站' })">
+                    <i class="el-icon-delete"></i><span>回收站</span>
+                </li>
+                <li class="file-manager-nav-item is-divider"></li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'dashboard' }" @@click="onNavClick({ key: 'dashboard', label: '数据面板' })">
+                    <i class="el-icon-data-line"></i><span>数据面板</span>
+                </li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'tags' }" @@click="onNavClick({ key: 'tags', label: '标签管理' })">
+                    <i class="el-icon-price-tag"></i><span>标签管理</span>
+                </li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'settings' }" @@click="onNavClick({ key: 'settings', label: '设置' })">
+                    <i class="el-icon-setting"></i><span>设置</span>
                 </li>
             </ul>
         </nav>
@@ -464,7 +477,7 @@
                         </el-dropdown-menu>
                     </el-dropdown>
                     <el-dropdown trigger="click" @@command="handleUploadCommand">
-                        <el-button type="danger" size="small">
+                        <el-button type="primary" size="small">
                             上传<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
@@ -497,7 +510,7 @@
                         <div class="file-manager-empty">
                             <i class="el-icon-document"></i>
                             <strong>暂无文档</strong>
-                            <el-button type="danger" size="mini" @@click="showUploadDialog">上传文件</el-button>
+                            <el-button type="primary" size="mini" @@click="showUploadDialog">上传文件</el-button>
                         </div>
                     </template>
                     <el-table-column type="selection" width="48"></el-table-column>
@@ -591,7 +604,7 @@
 
 <el-dialog title="文件资源管理使用说明" :visible.sync="guideDialogVisible" width="520px" append-to-body>
     <ol class="file-manager-guide">
-        <li><strong>先选用途：</strong>左侧「企业文档」用于知识库资料，「项目文档」用于站点静态资源，两者物理隔离。</li>
+        <li><strong>先选用途：</strong>左侧「企业文档」用于管理知识库资料；站点静态资源可通过地址栏 scope 参数切换。</li>
         <li><strong>再放位置：</strong>在中间目录树选择或新建文件夹；刷新页面后，当前用途和文件夹会保留在地址栏中。</li>
         <li v-if="!isSiteAsset"><strong>知识库资料：</strong>上传后到“知识库管理 → 配置”关联资料，保存后点击“向量化”。</li>
         <li v-else><strong>站点资源：</strong>上传默认私有；确认无误后点“公开”，再复制生成的 URL 到站点内容中。</li>

@@ -66,11 +66,6 @@
                     { key: 'home', label: '首页', icon: 'el-icon-s-home' },
                     { key: 'favorite', label: '收藏', icon: 'el-icon-star-off' },
                     { key: 'enterprise', label: '企业文档', icon: 'el-icon-folder', scope: 100 },
-                    { key: 'team', label: '团队文档', icon: 'el-icon-user' },
-                    { key: 'group', label: '内部群文档', icon: 'el-icon-chat-dot-round' },
-                    { key: 'mine', label: '我的文档', icon: 'el-icon-document' },
-                    { key: 'shared', label: '共享文档', icon: 'el-icon-share' },
-                    { key: 'project', label: '项目文档', icon: 'el-icon-files', scope: 200 },
                     { key: 'recycle', label: '回收站', icon: 'el-icon-delete' },
                     { key: 'divider', label: '', divider: true },
                     { key: 'dashboard', label: '数据面板', icon: 'el-icon-data-line' },
@@ -122,7 +117,7 @@
         },
         methods: {
             syncActiveNavFromScope: function () {
-                this.activeNavKey = this.resourceScope === 200 ? 'project' : 'enterprise';
+                this.activeNavKey = 'enterprise';
             },
             onNavClick: function (item) {
                 if (!item || item.divider) return;
