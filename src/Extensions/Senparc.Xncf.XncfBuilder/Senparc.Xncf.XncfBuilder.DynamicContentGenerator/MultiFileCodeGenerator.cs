@@ -237,11 +237,15 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
 
     private string GetFileContent(string filePath, ImmutableArray<AdditionalText> additionalFiles)
     {
-        // 首先尝试从 AdditionalFiles 中查找
+        var fileName = Path.GetFileName(filePath);
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
+
+        // 首先尝试从 AdditionalFiles 中查找（支持 .cshtml.template 等非 Razor 扩展名副本）
         var file = additionalFiles.FirstOrDefault(f =>
             f.Path.EndsWith(filePath) ||
             f.Path.Replace('\\', '/').EndsWith(filePath.Replace('\\', '/')) ||
-            Path.GetFileName(f.Path).Equals(Path.GetFileName(filePath), StringComparison.OrdinalIgnoreCase)
+            Path.GetFileName(f.Path).Equals(fileName, StringComparison.OrdinalIgnoreCase) ||
+            Path.GetFileNameWithoutExtension(f.Path).Equals(fileNameWithoutExtension, StringComparison.OrdinalIgnoreCase)
         );
 
         if (file != null)
