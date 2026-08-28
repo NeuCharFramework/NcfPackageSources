@@ -40,8 +40,7 @@
 }
 
 .file-manager-layout-left,
-.file-manager-layout-middle,
-.file-manager-layout-right {
+.file-manager-layout-main {
     box-sizing: border-box !important;
     height: 100% !important;
     margin: 0 !important;
@@ -57,35 +56,62 @@
     background: #f5f7fa !important;
 }
 
-.file-manager-layout-middle {
-    flex: 0 0 15% !important;
-    width: 15% !important;
-    max-width: 15% !important;
-    border-right: 1px solid #ebeef5 !important;
-    background: #fff !important;
-}
-
-.file-manager-layout-right {
-    flex: 0 0 70% !important;
-    width: 70% !important;
-    max-width: 70% !important;
+.file-manager-layout-main {
+    flex: 1 1 85% !important;
+    width: 85% !important;
     min-width: 0 !important;
     background: #fff !important;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
-.file-manager-layout-left .file-manager-nav-panel {
+.file-manager-layout-main .file-manager-browser {
+    display: flex;
+    flex-direction: row;
     width: 100%;
     height: 100%;
-    overflow-y: auto;
+    overflow: hidden;
 }
 
-.file-manager-layout-middle .file-manager-tree-panel,
-.file-manager-layout-right .file-manager-main-panel {
+.file-manager-layout-main .file-manager-tree-wrap {
+    flex: 0 0 18%;
+    max-width: 280px;
+    min-width: 180px;
+    height: 100%;
+    border-right: 1px solid #ebeef5;
+}
+
+.file-manager-layout-main .file-manager-content-wrap {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+}
+
+.file-manager-layout-main .file-manager-tree-panel,
+.file-manager-layout-main .file-manager-main-panel,
+.file-manager-layout-main .file-manager-dashboard-panel {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
     overflow: hidden;
+}
+
+.file-manager-layout-main .file-manager-dashboard-panel {
+    flex: 1 1 auto;
+    padding: 12px;
+    overflow: auto;
+    background: #f0f2f5;
+}
+
+.file-manager-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(300px, 1fr) minmax(300px, 1fr);
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+    min-height: calc(100vh - 140px);
 }
 
 .file-manager-folder-input {

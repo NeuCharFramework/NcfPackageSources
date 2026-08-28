@@ -56,10 +56,9 @@
             position: relative !important;
         }
 
-        /* ========== 左 / 中 / 右 三栏 ========== */
+        /* ========== 左栏 / 主区域 ========== */
         .file-manager-layout-left,
-        .file-manager-layout-middle,
-        .file-manager-layout-right {
+        .file-manager-layout-main {
             box-sizing: border-box !important;
             height: 100% !important;
             margin: 0 !important;
@@ -77,20 +76,44 @@
             background: #f5f7fa !important;
         }
 
-        .file-manager-layout-middle {
-            flex: 0 0 15% !important;
-            width: 15% !important;
-            max-width: 15% !important;
-            border-right: 1px solid #ebeef5 !important;
-            background: #fff !important;
-        }
-
-        .file-manager-layout-right {
-            flex: 0 0 70% !important;
-            width: 70% !important;
-            max-width: 70% !important;
+        .file-manager-layout-main {
+            flex: 1 1 85% !important;
+            width: 85% !important;
             min-width: 0 !important;
             background: #fff !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        /* 文件浏览：主区域内再分 树 + 表 */
+        .file-manager-layout-main .file-manager-browser {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap {
+            flex: 0 0 18%;
+            width: 18%;
+            max-width: 280px;
+            min-width: 180px;
+            height: 100%;
+            border-right: 1px solid #ebeef5;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .file-manager-layout-main .file-manager-content-wrap {
+            flex: 1 1 auto;
+            min-width: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #fff;
         }
 
         /* ========== 左栏：导航 ========== */
@@ -151,7 +174,7 @@
         }
 
         /* ========== 中栏：目录树 ========== */
-        .file-manager-layout-middle .file-manager-tree-panel {
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-panel {
             display: flex;
             flex-direction: column;
             box-sizing: border-box;
@@ -160,7 +183,7 @@
             overflow: hidden;
         }
 
-        .file-manager-layout-middle .file-manager-org-header {
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-org-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -170,7 +193,7 @@
             border-bottom: 1px solid #f0f2f5;
         }
 
-        .file-manager-layout-middle .file-manager-org-name {
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-org-name {
             font-size: 13px;
             font-weight: 600;
             color: #303133;
@@ -178,26 +201,26 @@
             word-break: break-all;
         }
 
-        .file-manager-layout-middle .file-manager-org-toggle {
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-org-toggle {
             flex-shrink: 0;
             color: #909399;
             cursor: pointer;
         }
 
-        .file-manager-layout-middle .file-manager-tree-search {
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-search {
             flex-shrink: 0;
             padding: 8px 10px;
             border-bottom: 1px solid #f0f2f5;
         }
 
-        .file-manager-layout-middle .file-manager-tree-body {
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-body {
             flex: 1;
             min-height: 0;
             overflow: auto;
             padding: 6px 0 12px;
         }
 
-        .file-manager-layout-middle .file-manager-root-node {
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-root-node {
             display: flex;
             align-items: center;
             gap: 6px;
@@ -209,13 +232,13 @@
             font-size: 13px;
         }
 
-        .file-manager-layout-middle .file-manager-root-node:hover,
-        .file-manager-layout-middle .file-manager-root-node.is-active {
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-root-node:hover,
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-root-node.is-active {
             color: #409eff;
             background: #ecf5ff;
         }
 
-        .file-manager-layout-middle .file-manager-tree-node {
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-node {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -223,37 +246,37 @@
             min-width: 0;
         }
 
-        .file-manager-layout-middle .file-manager-tree-label {
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-label {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             font-size: 13px;
         }
 
-        .file-manager-layout-middle .file-manager-tree-actions {
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-actions {
             display: none;
             white-space: nowrap;
         }
 
-        .file-manager-layout-middle .el-tree-node__content:hover .file-manager-tree-actions {
+        .file-manager-layout-main .file-manager-tree-wrap .el-tree-node__content:hover .file-manager-tree-actions {
             display: inline-flex;
         }
 
-        .file-manager-layout-middle .file-manager-tree-actions .el-button {
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-actions .el-button {
             margin-left: 2px;
             padding: 2px;
         }
 
-        .file-manager-layout-middle .el-tree {
+        .file-manager-layout-main .file-manager-tree-wrap .el-tree {
             background: transparent;
         }
 
-        .file-manager-layout-middle .el-tree-node__content {
+        .file-manager-layout-main .file-manager-tree-wrap .el-tree-node__content {
             height: 32px;
         }
 
         /* ========== 右栏：文件表 ========== */
-        .file-manager-layout-right .file-manager-main-panel {
+        .file-manager-layout-main .file-manager-main-panel {
             display: flex;
             flex-direction: column;
             box-sizing: border-box;
@@ -262,7 +285,7 @@
             overflow: hidden;
         }
 
-        .file-manager-layout-right .file-manager-top-bar {
+        .file-manager-layout-main .file-manager-top-bar {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -273,20 +296,20 @@
             border-bottom: 1px solid #f0f2f5;
         }
 
-        .file-manager-layout-right .file-manager-top-search {
+        .file-manager-layout-main .file-manager-top-search {
             flex: 1;
             max-width: 420px;
             min-width: 0;
         }
 
-        .file-manager-layout-right .file-manager-top-actions {
+        .file-manager-layout-main .file-manager-top-actions {
             display: flex;
             align-items: center;
             gap: 8px;
             flex-shrink: 0;
         }
 
-        .file-manager-layout-right .file-manager-nav-bar {
+        .file-manager-layout-main .file-manager-nav-bar {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -297,32 +320,32 @@
             font-size: 13px;
         }
 
-        .file-manager-layout-right .file-manager-back-link {
+        .file-manager-layout-main .file-manager-back-link {
             color: #409eff;
             text-decoration: none;
             white-space: nowrap;
         }
 
-        .file-manager-layout-right .file-manager-back-link:hover {
+        .file-manager-layout-main .file-manager-back-link:hover {
             color: #66b1ff;
         }
 
-        .file-manager-layout-right .file-manager-nav-divider {
+        .file-manager-layout-main .file-manager-nav-divider {
             color: #dcdfe6;
         }
 
-        .file-manager-layout-right .file-manager-nav-bar .el-breadcrumb {
+        .file-manager-layout-main .file-manager-nav-bar .el-breadcrumb {
             line-height: 1;
         }
 
-        .file-manager-layout-right .file-manager-table-wrap {
+        .file-manager-layout-main .file-manager-table-wrap {
             flex: 1;
             min-height: 0;
             padding: 0 16px;
             overflow: auto;
         }
 
-        .file-manager-layout-right .file-manager-pagination {
+        .file-manager-layout-main .file-manager-pagination {
             display: flex;
             justify-content: flex-end;
             flex-shrink: 0;
@@ -330,7 +353,7 @@
             border-top: 1px solid #f0f2f5;
         }
 
-        .file-manager-layout-right .file-manager-empty {
+        .file-manager-layout-main .file-manager-empty {
             display: flex;
             min-height: 280px;
             align-items: center;
@@ -340,21 +363,23 @@
             color: #909399;
         }
 
-        .file-manager-layout-right .file-manager-empty i {
+        .file-manager-layout-main .file-manager-empty i {
             color: #c0c4cc;
             font-size: 48px;
         }
 
-        .file-manager-layout-right .file-manager-empty strong {
+        .file-manager-layout-main .file-manager-empty strong {
             color: #606266;
             font-size: 14px;
         }
 
-        /* ========== 数据面板 ========== */
-        .file-manager-layout-right .file-manager-dashboard-panel {
+        /* ========== 数据面板：占满 file-manager-layout-main ========== */
+        .file-manager-layout-main .file-manager-dashboard-panel {
             box-sizing: border-box;
+            flex: 1 1 auto;
             width: 100%;
             height: 100%;
+            min-height: 0;
             padding: 12px;
             overflow: auto;
             background: #f0f2f5;
@@ -363,9 +388,17 @@
         .file-manager-dashboard-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: minmax(280px, 1fr) minmax(280px, 1fr);
+            grid-template-rows: minmax(300px, 1fr) minmax(300px, 1fr);
             gap: 12px;
-            min-height: 100%;
+            width: 100%;
+            height: 100%;
+            min-height: calc(100vh - 140px);
+        }
+
+        .file-manager-dash-chart {
+            flex: 1;
+            min-height: 240px;
+            width: 100%;
         }
 
         .file-manager-dash-card {
@@ -424,12 +457,6 @@
             color: #67c23a;
             font-size: 12px;
             white-space: nowrap;
-        }
-
-        .file-manager-dash-chart {
-            flex: 1;
-            min-height: 200px;
-            width: 100%;
         }
 
         .file-manager-dash-org-list {
@@ -539,154 +566,157 @@
         </nav>
     </div>
 
-    @* 中栏 15%：目录树 *@
-    <div class="file-manager-layout-middle">
-        <aside class="file-manager-tree-panel">
-            <div class="file-manager-org-header">
-                <span class="file-manager-org-name">山西米立信息技术有限公司</span>
-                <i class="el-icon-s-operation file-manager-org-toggle"></i>
-            </div>
-            <div class="file-manager-tree-search">
-                <el-input
-                    v-model="treeFilter"
-                    size="small"
-                    placeholder="搜索目录"
-                    prefix-icon="el-icon-search"
-                    clearable>
-                </el-input>
-            </div>
-            <div class="file-manager-tree-body">
-                <div
-                    class="file-manager-root-node"
-                    :class="{ 'is-active': currentFolderId === null }"
-                    @@click="enterFolder(null)">
-                    <i class="el-icon-folder-opened"></i>
-                    <span>{{ rootFolderName }}</span>
-                </div>
-                <el-tree
-                    :key="folderTreeKey"
-                    ref="folderTree"
-                    :data="folderTree"
-                    :props="folderTreeProps"
-                    node-key="id"
-                    lazy
-                    highlight-current
-                    :expand-on-click-node="false"
-                    :load="loadFolderChildren"
-                    :filter-node-method="filterFolderNode"
-                    @@node-click="onFolderNodeClick">
-                    <span class="file-manager-tree-node" slot-scope="{ node, data }">
-                        <span class="file-manager-tree-label"><i class="el-icon-folder"></i> {{ data.name }}</span>
-                        <span class="file-manager-tree-actions">
-                            <el-button type="text" icon="el-icon-edit" @@click.stop="showEditFolderDialog(data)"></el-button>
-                            <el-button type="text" icon="el-icon-delete" @@click.stop="deleteFolder(data)"></el-button>
-                        </span>
-                    </span>
-                </el-tree>
-            </div>
-        </aside>
-    </div>
-
-    @* 右栏 70%：文件列表 / 数据面板 *@
-    <div class="file-manager-layout-right">
-        <main class="file-manager-main-panel" v-if="activeNavKey !== 'dashboard'">
-            <div class="file-manager-top-bar">
-                <div class="file-manager-top-search">
-                    <el-input
-                        v-model="fileSearchKeyword"
-                        size="small"
-                        placeholder="搜索文件/文件夹"
-                        prefix-icon="el-icon-search"
-                        clearable>
-                    </el-input>
-                </div>
-                <div class="file-manager-top-actions">
-                    <el-button size="small" icon="el-icon-refresh" @@click="reloadFolderTree" title="刷新"></el-button>
-                    <el-dropdown trigger="click" @@command="handleCreateCommand">
-                        <el-button size="small">
-                            新建<i class="el-icon-arrow-down el-icon--right"></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="folder">新建文件夹</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                    <el-dropdown trigger="click" @@command="handleUploadCommand">
-                        <el-button type="primary" size="small">
-                            上传<i class="el-icon-arrow-down el-icon--right"></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item command="files">上传文件</el-dropdown-item>
-                            <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </div>
-            </div>
-
-            <div class="file-manager-nav-bar">
-                <a
-                    v-if="canGoParent"
-                    class="file-manager-back-link"
-                    href="javascript:void(0)"
-                    @@click="enterParentFolder">返回上一级</a>
-                <span v-if="canGoParent" class="file-manager-nav-divider">|</span>
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item><a href="javascript:void(0)" @@click="enterFolder(null)">{{ rootFolderName }}</a></el-breadcrumb-item>
-                    <el-breadcrumb-item><span>{{ orgName }}</span></el-breadcrumb-item>
-                    <el-breadcrumb-item v-for="item in folderPath" :key="item.id">
-                        <a href="javascript:void(0)" @@click="enterFolder(item.id)">{{ item.name }}</a>
-                    </el-breadcrumb-item>
-                </el-breadcrumb>
-            </div>
-
-            <div class="file-manager-table-wrap">
-                <el-table :data="displayTableData" v-loading="tableLoading" border stripe>
-                    <template slot="empty">
-                        <div class="file-manager-empty">
-                            <i class="el-icon-document"></i>
-                            <strong>暂无文档</strong>
-                            <el-button type="primary" size="mini" @@click="showUploadDialog">上传文件</el-button>
+    @* 主区域 85%：文件浏览（树+表）或数据面板 *@
+    <div class="file-manager-layout-main">
+        <div class="file-manager-browser" v-if="activeNavKey !== 'dashboard'">
+            <div class="file-manager-tree-wrap">
+                <aside class="file-manager-tree-panel">
+                    <div class="file-manager-org-header">
+                        <span class="file-manager-org-name">山西米立信息技术有限公司</span>
+                        <i class="el-icon-s-operation file-manager-org-toggle"></i>
+                    </div>
+                    <div class="file-manager-tree-search">
+                        <el-input
+                            v-model="treeFilter"
+                            size="small"
+                            placeholder="搜索目录"
+                            prefix-icon="el-icon-search"
+                            clearable>
+                        </el-input>
+                    </div>
+                    <div class="file-manager-tree-body">
+                        <div
+                            class="file-manager-root-node"
+                            :class="{ 'is-active': currentFolderId === null }"
+                            @@click="enterFolder(null)">
+                            <i class="el-icon-folder-opened"></i>
+                            <span>{{ rootFolderName }}</span>
                         </div>
-                    </template>
-                    <el-table-column type="selection" width="48"></el-table-column>
-                    <el-table-column prop="fileName" label="文件名" min-width="220" show-overflow-tooltip></el-table-column>
-                    <el-table-column label="更新者" width="120" show-overflow-tooltip>
-                        <template slot-scope="scope">{{ updatedByLabel(scope.row) }}</template>
-                    </el-table-column>
-                    <el-table-column prop="fileSize" label="大小" width="110">
-                        <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
-                    </el-table-column>
-                    <el-table-column prop="uploadTime" label="更新时间" width="170">
-                        <template slot-scope="scope">{{ dateFormatter(scope.row.uploadTime) }}</template>
-                    </el-table-column>
-                    <el-table-column label="操作" width="120" fixed="right">
-                        <template slot-scope="scope">
-                            <el-dropdown trigger="click" @@command="handleRowCommand($event, scope.row)">
-                                <el-button type="text" size="mini">更多<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                        <el-tree
+                            :key="folderTreeKey"
+                            ref="folderTree"
+                            :data="folderTree"
+                            :props="folderTreeProps"
+                            node-key="id"
+                            lazy
+                            highlight-current
+                            :expand-on-click-node="false"
+                            :load="loadFolderChildren"
+                            :filter-node-method="filterFolderNode"
+                            @@node-click="onFolderNodeClick">
+                            <span class="file-manager-tree-node" slot-scope="{ node, data }">
+                                <span class="file-manager-tree-label"><i class="el-icon-folder"></i> {{ data.name }}</span>
+                                <span class="file-manager-tree-actions">
+                                    <el-button type="text" icon="el-icon-edit" @@click.stop="showEditFolderDialog(data)"></el-button>
+                                    <el-button type="text" icon="el-icon-delete" @@click.stop="deleteFolder(data)"></el-button>
+                                </span>
+                            </span>
+                        </el-tree>
+                    </div>
+                </aside>
+            </div>
+
+            <div class="file-manager-content-wrap">
+                <main class="file-manager-main-panel">
+                    <div class="file-manager-top-bar">
+                        <div class="file-manager-top-search">
+                            <el-input
+                                v-model="fileSearchKeyword"
+                                size="small"
+                                placeholder="搜索文件/文件夹"
+                                prefix-icon="el-icon-search"
+                                clearable>
+                            </el-input>
+                        </div>
+                        <div class="file-manager-top-actions">
+                            <el-button size="small" icon="el-icon-refresh" @@click="reloadFolderTree" title="刷新"></el-button>
+                            <el-dropdown trigger="click" @@command="handleCreateCommand">
+                                <el-button size="small">
+                                    新建<i class="el-icon-arrow-down el-icon--right"></i>
+                                </el-button>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item command="download">下载</el-dropdown-item>
-                                    <el-dropdown-item v-if="isSiteAsset" command="togglePublish">{{ scope.row.accessLevel === 100 ? '取消公开' : '公开' }}</el-dropdown-item>
-                                    <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl">复制 URL</el-dropdown-item>
-                                    <el-dropdown-item command="editNote">编辑备注</el-dropdown-item>
-                                    <el-dropdown-item command="delete" divided>删除</el-dropdown-item>
+                                    <el-dropdown-item command="folder">新建文件夹</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </div>
+                            <el-dropdown trigger="click" @@command="handleUploadCommand">
+                                <el-button type="primary" size="small">
+                                    上传<i class="el-icon-arrow-down el-icon--right"></i>
+                                </el-button>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="files">上传文件</el-dropdown-item>
+                                    <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
+                    </div>
 
-            <div class="file-manager-pagination">
-                <el-pagination
-                    @@current-change="handleCurrentChange"
-                    @@size-change="handleSizeChange"
-                    :current-page="page.page"
-                    :page-sizes="[10, 20, 30, 40]"
-                    :page-size="page.size"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
-                </el-pagination>
+                    <div class="file-manager-nav-bar">
+                        <a
+                            v-if="canGoParent"
+                            class="file-manager-back-link"
+                            href="javascript:void(0)"
+                            @@click="enterParentFolder">返回上一级</a>
+                        <span v-if="canGoParent" class="file-manager-nav-divider">|</span>
+                        <el-breadcrumb separator="/">
+                            <el-breadcrumb-item><a href="javascript:void(0)" @@click="enterFolder(null)">{{ rootFolderName }}</a></el-breadcrumb-item>
+                            <el-breadcrumb-item><span>{{ orgName }}</span></el-breadcrumb-item>
+                            <el-breadcrumb-item v-for="item in folderPath" :key="item.id">
+                                <a href="javascript:void(0)" @@click="enterFolder(item.id)">{{ item.name }}</a>
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+
+                    <div class="file-manager-table-wrap">
+                        <el-table :data="displayTableData" v-loading="tableLoading" border stripe>
+                            <template slot="empty">
+                                <div class="file-manager-empty">
+                                    <i class="el-icon-document"></i>
+                                    <strong>暂无文档</strong>
+                                    <el-button type="primary" size="mini" @@click="showUploadDialog">上传文件</el-button>
+                                </div>
+                            </template>
+                            <el-table-column type="selection" width="48"></el-table-column>
+                            <el-table-column prop="fileName" label="文件名" min-width="220" show-overflow-tooltip></el-table-column>
+                            <el-table-column label="更新者" width="120" show-overflow-tooltip>
+                                <template slot-scope="scope">{{ updatedByLabel(scope.row) }}</template>
+                            </el-table-column>
+                            <el-table-column prop="fileSize" label="大小" width="110">
+                                <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
+                            </el-table-column>
+                            <el-table-column prop="uploadTime" label="更新时间" width="170">
+                                <template slot-scope="scope">{{ dateFormatter(scope.row.uploadTime) }}</template>
+                            </el-table-column>
+                            <el-table-column label="操作" width="120" fixed="right">
+                                <template slot-scope="scope">
+                                    <el-dropdown trigger="click" @@command="handleRowCommand($event, scope.row)">
+                                        <el-button type="text" size="mini">更多<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item command="download">下载</el-dropdown-item>
+                                            <el-dropdown-item v-if="isSiteAsset" command="togglePublish">{{ scope.row.accessLevel === 100 ? '取消公开' : '公开' }}</el-dropdown-item>
+                                            <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl">复制 URL</el-dropdown-item>
+                                            <el-dropdown-item command="editNote">编辑备注</el-dropdown-item>
+                                            <el-dropdown-item command="delete" divided>删除</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+
+                    <div class="file-manager-pagination">
+                        <el-pagination
+                            @@current-change="handleCurrentChange"
+                            @@size-change="handleSizeChange"
+                            :current-page="page.page"
+                            :page-sizes="[10, 20, 30, 40]"
+                            :page-size="page.size"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="total">
+                        </el-pagination>
+                    </div>
+                </main>
             </div>
-        </main>
+        </div>
 
         <div class="file-manager-dashboard-panel" v-if="activeNavKey === 'dashboard' && dashboard">
             <div class="file-manager-dashboard-grid">
