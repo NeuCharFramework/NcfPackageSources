@@ -13,6 +13,7 @@ using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,15 +32,18 @@ public sealed class NeuCharWorkflowFunctionCallingProvider : IWorkflowFunctionCa
     private readonly NeuCharWorkflowService _workflowService;
     private readonly NeuCharWorkflowAppService _workflowAppService;
     private readonly XncfModuleService _moduleService;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     public NeuCharWorkflowFunctionCallingProvider(
         NeuCharWorkflowService workflowService,
         NeuCharWorkflowAppService workflowAppService,
-        XncfModuleService moduleService)
+        XncfModuleService moduleService,
+        IServiceScopeFactory scopeFactory)
     {
         _workflowService = workflowService;
         _workflowAppService = workflowAppService;
         _moduleService = moduleService;
+        _scopeFactory = scopeFactory;
     }
 
     public async Task<IReadOnlyList<WorkflowFunctionCallingDescriptor>> GetAvailableAsync(
@@ -71,6 +75,28 @@ public sealed class NeuCharWorkflowFunctionCallingProvider : IWorkflowFunctionCa
         string input,
         IReadOnlyDictionary<string, object?> parameters,
         CancellationToken cancellationToken = default)
+    {
+        // Agent Function invocations can resume after an external HIL request and may
+        // overlap other Group/Workflow work. Do not reuse the scoped provider captured
+        // while the Agent tools were built; its services own a scoped EF Core DbContext.
+        using var scope = _scopeFactory.CreateScope();
+        var isolatedProvider = scope.ServiceProvider
+            .GetRequiredService<NeuCharWorkflowFunctionCallingProvider>();
+        return await isolatedProvider.ExecuteCoreAsync(
+                workflowId,
+                adminUserId,
+                input,
+                parameters,
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    private async Task<WorkflowFunctionCallingResult> ExecuteCoreAsync(
+        int workflowId,
+        int adminUserId,
+        string input,
+        IReadOnlyDictionary<string, object?> parameters,
+        CancellationToken cancellationToken)
     {
         if (!await IsModuleOpenAsync().ConfigureAwait(false))
         {

@@ -1211,9 +1211,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                         pendingToolNamesByCallId[functionCall.CallId] =
                                             functionCall.Name ?? pending.ToolName;
                                     }
+                                    var approvalCallId = approvalRequest.ToolCall is FunctionCallContent requestedFunctionCall
+                                        ? requestedFunctionCall.CallId
+                                        : string.Empty;
                                     SenparcTrace.SendCustomLog(
                                         "AgentsManager.HIL.ToolApproval.Requested",
                                         $"Group={chatGroup.Id}; Task={chatTask.Id}; Request={pending.RequestId}; " +
+                                        $"ApprovalId={approvalRequest.RequestId}; CallId={approvalCallId}; " +
                                         $"Tool={pending.ToolName}; Arguments={pending.ToolArguments}");
                                     await AttachToolApprovalNotificationAsync(
                                         pending,
@@ -1304,6 +1308,16 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         workflowPendingRequests.Clear();
                         foreach (var externalResponse in externalResponses)
                         {
+                            var responseContent = externalResponse.Data.As<ToolApprovalResponseContent>();
+                            var responseCallId = responseContent?.ToolCall is FunctionCallContent responseFunctionCall
+                                ? responseFunctionCall.CallId
+                                : string.Empty;
+                            SenparcTrace.SendCustomLog(
+                                "AgentsManager.HIL.ToolApproval.ResponsePrepared",
+                                $"Group={chatGroup.Id}; Task={chatTask.Id}; " +
+                                $"ExternalRequestId={externalResponse.RequestId}; " +
+                                $"ApprovalId={responseContent?.RequestId}; CallId={responseCallId}; " +
+                                $"Approved={responseContent?.Approved}");
                             await run.SendResponseAsync(externalResponse);
                         }
                         SenparcTrace.SendCustomLog(
