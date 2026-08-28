@@ -1,11 +1,11 @@
 ﻿/*-----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
-    文件名：AdminSenparcEntities_SqlServerModelSnapshot.cs
-    文件功能描述：AdminSenparcEntities_SqlServerModelSnapshot.cs 相关实现
+    文件名：20260828120000_Add_NeuCharPivotLoopTask_Workflow.Designer.cs
+    文件功能描述：20260828120000_Add_NeuCharPivotLoopTask_Workflow.Designer.cs 相关实现
 
 
-    创建标识：Senparc - 20200724
+    创建标识：Senparc - 20260809
 
     修改标识：Senparc - 20260822
     修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
@@ -17,6 +17,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Areas.Admin.Domain.Models;
 
@@ -25,9 +26,11 @@ using Senparc.Areas.Admin.Domain.Models;
 namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
 {
     [DbContext(typeof(AdminSenparcEntities_SqlServer))]
-    partial class AdminSenparcEntities_SqlServerModelSnapshot : ModelSnapshot
+    [Migration("20260828120000_Add_NeuCharPivotLoopTask_Workflow")]
+    partial class Add_NeuCharPivotLoopTask_Workflow
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

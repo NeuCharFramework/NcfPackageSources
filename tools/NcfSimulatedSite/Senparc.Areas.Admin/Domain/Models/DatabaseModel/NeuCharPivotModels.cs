@@ -170,6 +170,8 @@ public class NeuCharPivotLoopTask : EntityBase<int>
 
     public bool UseNeuBell { get; private set; }
 
+    public int? WorkflowId { get; private set; }
+
     public DateTime? NextRunAt { get; private set; }
 
     public DateTime? LastRunAt { get; private set; }
@@ -190,12 +192,18 @@ public class NeuCharPivotLoopTask : EntityBase<int>
         ParametersJson = "{}";
     }
 
-    public void Configure(int intervalSeconds, string parametersJson, bool enabled, bool useNeuBell)
+    public void Configure(
+        int intervalSeconds,
+        string parametersJson,
+        bool enabled,
+        bool useNeuBell,
+        int? workflowId = null)
     {
         IntervalSeconds = Math.Clamp(intervalSeconds, 60, 31_536_000);
         ParametersJson = parametersJson ?? "{}";
         Enabled = enabled;
         UseNeuBell = useNeuBell;
+        WorkflowId = workflowId > 0 ? workflowId : null;
         NextRunAt = enabled ? DateTime.UtcNow.AddSeconds(IntervalSeconds) : null;
         if (!enabled)
         {

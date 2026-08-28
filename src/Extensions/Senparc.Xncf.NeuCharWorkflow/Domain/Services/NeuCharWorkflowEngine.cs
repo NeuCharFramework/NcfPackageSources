@@ -928,7 +928,7 @@ public sealed class NeuCharWorkflowEngine
                         cancellationToken)
                     .ConfigureAwait(false);
                 Report(progress, item.node, "running", "开始执行节点。", null, input: replayInputText);
-                var objectReferenceKey = item.node.Type is "agent" or "agent-group" or "a2a"
+                var objectReferenceKey = item.node.Type is "agent" or "agent-group" or "a2a" or "function"
                     ? Guid.NewGuid().ToString("N")
                     : null;
                 var execution = await ExecuteNodeAsync(
@@ -1386,7 +1386,15 @@ public sealed class NeuCharWorkflowEngine
                     ? (true, input, null, null)
                     : (false, null, null, loopError);
             case "function":
-                return await ExecuteFunctionNodeAsync(node, input, outputs, functionSelectionInputs, cancellationToken).ConfigureAwait(false);
+                return await ExecuteFunctionNodeAsync(
+                        node,
+                        input,
+                        outputs,
+                        functionSelectionInputs,
+                        cancellationToken,
+                        objectReferenceKey,
+                        objectExecutionReferences)
+                    .ConfigureAwait(false);
             case "agent":
             case "agent-group":
             case "a2a":
@@ -1452,12 +1460,22 @@ public sealed class NeuCharWorkflowEngine
         JsonNode input,
         IReadOnlyDictionary<string, JsonNode> outputs,
         ConcurrentDictionary<string, JsonNode> functionSelectionInputs,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        string? objectReferenceKey = null,
+        ConcurrentDictionary<string, WorkflowObjectExecutionReference>? objectExecutionReferences = null)
     {
         var reference = await ResolveFunctionReferenceAsync(node, cancellationToken).ConfigureAwait(false);
         if (reference == null)
         {
             return (false, null, null, "工作流引用的 NeuCharPivot Function 不存在或已失效。");
+        }
+        if (objectExecutionReferences != null && !string.IsNullOrWhiteSpace(objectReferenceKey))
+        {
+            objectExecutionReferences[objectReferenceKey] = new WorkflowObjectExecutionReference(
+                "function",
+                reference.Descriptor.ModuleUid,
+                DisplayName: $"{reference.Descriptor.ModuleName} / {reference.Descriptor.Name}",
+                ObjectId: reference.Descriptor.FunctionKey);
         }
 
         var parameterNode = node.Config?["parameters"]?.DeepClone();

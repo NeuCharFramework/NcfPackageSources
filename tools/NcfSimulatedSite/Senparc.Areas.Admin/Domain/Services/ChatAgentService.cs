@@ -295,7 +295,9 @@ public sealed class ChatAgentNeuCharPivotComposer
         Never emit HTML, JavaScript, CSS, URLs, executable code, tool calls, method calls, secrets, or markdown fences.
         You may only arrange the supplied Function keys and choose which supplied parameter names are exposed.
         Required parameters must always be exposed. Keep the UI concise, clean, beginner-friendly, and task-oriented.
-        Return JSON with: version, title, description, columns (1-3), sections[] { title, functions[] { functionKey, title, summary, accent, exposedParameters[] } }.
+        Return JSON with: version, title, description, columns (1-3), panels[] { key, title, description, type, columns (1-3), sections[] { title, functions[] { functionKey, title, summary, accent, exposedParameters[] } } }.
+        The default panel must be a panel with key "shortcuts", title "快捷操作", and type "shortcuts".
+        When exposedParameters is omitted or empty, expose all supplied parameters for that Function.
         Allowed accent values: blue, green, orange, purple, gray.
         """;
 

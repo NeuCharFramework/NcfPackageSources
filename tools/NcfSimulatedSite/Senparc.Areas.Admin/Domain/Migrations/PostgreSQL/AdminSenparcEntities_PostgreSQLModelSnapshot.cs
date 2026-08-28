@@ -631,12 +631,17 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
                     b.Property<bool>("UseNeuBell")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("WorkflowId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FunctionId")
                         .IsUnique();
 
                     b.HasIndex("Enabled", "NextRunAt");
+
+                    b.HasIndex("WorkflowId");
 
                     b.ToTable("ADMIN_NeuCharPivotLoopTask");
                 });

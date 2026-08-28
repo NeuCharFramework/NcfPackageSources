@@ -631,12 +631,17 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
                     b.Property<bool>("UseNeuBell")
                         .HasColumnType("NUMBER(1)");
 
+                    b.Property<int?>("WorkflowId")
+                        .HasColumnType("NUMBER(10)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FunctionId")
                         .IsUnique();
 
                     b.HasIndex("Enabled", "NextRunAt");
+
+                    b.HasIndex("WorkflowId");
 
                     b.ToTable("ADMIN_NeuCharPivotLoopTask");
                 });

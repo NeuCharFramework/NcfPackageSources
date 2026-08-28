@@ -69,8 +69,65 @@ public class NeuCharPivotServiceTests
         var layout = CreateService().NormalizeLayout("not-json", CreateCatalog());
 
         Assert.AreEqual(1, layout.Sections.Count);
+        Assert.AreEqual(1, layout.Panels.Count);
+        Assert.AreEqual("shortcuts", layout.Panels[0].Key);
         Assert.AreEqual("快捷操作", layout.Sections[0].Title);
         Assert.AreEqual(2, layout.Sections[0].Functions.Count);
+    }
+
+    [TestMethod]
+    public void NormalizeLayout_PanelsAndRequiredOnlySelection_ShouldKeepMultiplePanelsAndUsableParameters()
+    {
+        const string candidate =
+            """
+            {
+              "title": "Operations",
+              "panels": [
+                {
+                  "key": "shortcuts",
+                  "title": "快捷操作",
+                  "type": "shortcuts",
+                  "sections": [
+                    {
+                      "title": "发送",
+                      "functions": [
+                        {
+                          "functionKey": "send-message",
+                          "exposedParameters": ["requiredText"]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "key": "health",
+                  "title": "健康状态",
+                  "type": "summary",
+                  "sections": [
+                    {
+                      "title": "检查",
+                      "functions": [
+                        { "functionKey": "health-check" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+            """;
+
+        var layout = CreateService().NormalizeLayout(candidate, CreateCatalog());
+
+        Assert.AreEqual(2, layout.Panels.Count);
+        Assert.AreEqual("summary", layout.Panels[1].Type);
+        var send = layout.Panels[0].Sections.SelectMany(section => section.Functions)
+            .Single(function => function.FunctionKey == "send-message");
+        CollectionAssert.Contains(send.ExposedParameters, "optional");
+        Assert.AreEqual(2, layout.Panels.SelectMany(panel => panel.Sections)
+            .SelectMany(section => section.Functions)
+            .Select(function => function.FunctionKey)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Count());
     }
 
     private static NeuCharPivotService CreateService() => new(null!, null!, null!, null!);

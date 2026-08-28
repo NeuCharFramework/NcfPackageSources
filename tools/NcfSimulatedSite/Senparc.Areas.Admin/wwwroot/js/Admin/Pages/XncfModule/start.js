@@ -58,10 +58,18 @@
                 aiModels: [],
                 configuration: null,
                 functions: [],
-                layout: { title: 'NeuCharPivot', description: '', columns: 2, sections: [] },
+                layout: { title: 'NeuCharPivot', description: '', columns: 2, panels: [] },
                 inputs: {},
                 moduleAvailable: false,
-                moduleState: 'missing'
+                moduleState: 'missing',
+                activePanel: 'shortcuts',
+                functionStateFilter: '',
+                loopStatusFilter: '',
+                workflowFilter: '',
+                workflowOptions: [],
+                summary: {},
+                now: new Date(),
+                clockTimer: null
             },
             chat: {
                 visible: false,
@@ -73,13 +81,24 @@
                 function: null,
                 enabled: false,
                 intervalSeconds: 300,
-                useNeuBell: false
+                useNeuBell: false,
+                workflowId: null
             }
         };
     },
     created() {
         this.readFunctionNavigation();
         this.getList();
+        if (window && window.setInterval) {
+            this.pivot.clockTimer = window.setInterval(() => {
+                this.pivot.now = new Date();
+            }, 1000);
+        }
+    },
+    beforeDestroy() {
+        if (this.pivot.clockTimer && window && window.clearInterval) {
+            window.clearInterval(this.pivot.clockTimer);
+        }
     },
     methods: {
         safeHtml(value) {
@@ -239,6 +258,8 @@
                 this.pivot.configuration = null;
                 this.pivot.functions = [];
                 this.pivot.inputs = {};
+                this.pivot.workflowOptions = [];
+                this.pivot.summary = {};
                 this.pivot.moduleAvailable = this.data.xncfModule && Number(this.data.xncfModule.state) === 1;
                 return;
             }
@@ -246,9 +267,14 @@
             this.pivot.functions = snapshot.functions || [];
             this.pivot.moduleAvailable = !!snapshot.moduleAvailable;
             this.pivot.moduleState = snapshot.moduleState || 'missing';
-            this.pivot.layout = this.parseJson(
+            this.pivot.workflowOptions = snapshot.workflowOptions || [];
+            this.pivot.summary = snapshot.summary || {};
+            this.pivot.layout = NeuCharPivotUi.normalizeLayout(this.parseJson(
                 snapshot.configuration && snapshot.configuration.layoutSchemaJson,
-                { title: 'NeuCharPivot', description: '', columns: 2, sections: [] });
+                { title: 'NeuCharPivot', description: '', columns: 2, panels: [] }));
+            if (!this.pivot.layout.panels.some(panel => panel.key === this.pivot.activePanel)) {
+                this.pivot.activePanel = this.pivot.layout.panels[0] && this.pivot.layout.panels[0].key || 'shortcuts';
+            }
             this.pivot.requirement = (snapshot.configuration && snapshot.configuration.userRequirement) || this.pivot.requirement;
             this.pivot.aiModelId = Number((snapshot.configuration && snapshot.configuration.aiModelId) || this.pivot.aiModelId || 0);
             const nextInputs = {};
@@ -271,6 +297,38 @@
                 });
             });
             this.pivot.inputs = nextInputs;
+        },
+        resetPivotFilters() {
+            this.pivot.functionStateFilter = '';
+            this.pivot.loopStatusFilter = '';
+            this.pivot.workflowFilter = '';
+        },
+        matchesPivotFunction(fn) {
+            if (!fn) return false;
+            if (this.pivot.functionStateFilter === 'available' && !fn.available) return false;
+            if (this.pivot.functionStateFilter === 'unavailable' && fn.available) return false;
+            const status = NeuCharPivotUi.loopStatus(fn.loopTask);
+            if (this.pivot.loopStatusFilter && status !== this.pivot.loopStatusFilter) return false;
+            if (this.pivot.workflowFilter === 'linked' && !(fn.loopTask && fn.loopTask.workflowId)) return false;
+            if (this.pivot.workflowFilter === 'unlinked' && fn.loopTask && fn.loopTask.workflowId) return false;
+            if (this.pivot.workflowFilter && this.pivot.workflowFilter !== 'linked' && this.pivot.workflowFilter !== 'unlinked' &&
+                String(fn.loopTask && fn.loopTask.workflowId || '') !== this.pivot.workflowFilter) return false;
+            return true;
+        },
+        visiblePivotFunctions(section) {
+            return (section.functions || [])
+                .map(item => this.getPivotFunction(item.functionKey))
+                .filter(fn => this.matchesPivotFunction(fn));
+        },
+        pivotLoopStatusText(fn) {
+            return NeuCharPivotUi.loopStatusText(NeuCharPivotUi.loopStatus(fn && fn.loopTask));
+        },
+        pivotLoopCountdown(fn) {
+            return NeuCharPivotUi.formatCountdown(fn && fn.loopTask && fn.loopTask.nextRunAt, this.pivot.now);
+        },
+        workflowName(workflowId) {
+            const workflow = this.pivot.workflowOptions.find(option => Number(option.id) === Number(workflowId));
+            return workflow ? workflow.name : `Workflow #${workflowId}`;
         },
         getPivotFunction(functionKey) {
             return this.pivot.functions.find(fn => String(fn.functionKey).toLowerCase() === String(functionKey).toLowerCase());
@@ -372,6 +430,7 @@
             this.loop.enabled = !!task.enabled;
             this.loop.intervalSeconds = Number(task.intervalSeconds || 300);
             this.loop.useNeuBell = !!task.useNeuBell;
+            this.loop.workflowId = task.workflowId || null;
             this.loop.visible = true;
         },
         async saveLoopTask() {
@@ -386,7 +445,8 @@
                     parametersJson: this.getPivotParameterJson(fn),
                     enabled: !!this.loop.enabled,
                     intervalSeconds: Number(this.loop.intervalSeconds || 300),
-                    useNeuBell: !!this.loop.useNeuBell
+                    useNeuBell: !!this.loop.useNeuBell,
+                    workflowId: this.loop.workflowId || null
                 }, { customAlert: true });
                 fn.loopTask = this.unwrapResponse(response);
                 this.loop.visible = false;

@@ -631,12 +631,17 @@ namespace Senparc.Areas.Admin.Domain.Migrations.MySql
                     b.Property<bool>("UseNeuBell")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int?>("WorkflowId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FunctionId")
                         .IsUnique();
 
                     b.HasIndex("Enabled", "NextRunAt");
+
+                    b.HasIndex("WorkflowId");
 
                     b.ToTable("ADMIN_NeuCharPivotLoopTask");
                 });

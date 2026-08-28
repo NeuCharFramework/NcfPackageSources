@@ -606,12 +606,17 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Sqlite
                     b.Property<bool>("UseNeuBell")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("WorkflowId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FunctionId")
                         .IsUnique();
 
                     b.HasIndex("Enabled", "NextRunAt");
+
+                    b.HasIndex("WorkflowId");
 
                     b.ToTable("ADMIN_NeuCharPivotLoopTask");
                 });

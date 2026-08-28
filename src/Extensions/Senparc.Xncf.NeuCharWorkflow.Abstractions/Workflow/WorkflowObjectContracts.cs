@@ -70,7 +70,8 @@ public sealed record WorkflowObjectExecutionReference(
     string ProviderId,
     int? ChatTaskId = null,
     int? ChatGroupId = null,
-    string DisplayName = null);
+    string DisplayName = null,
+    string ObjectId = null);
 
 public sealed record WorkflowObjectExecutionResult(
     bool Success,

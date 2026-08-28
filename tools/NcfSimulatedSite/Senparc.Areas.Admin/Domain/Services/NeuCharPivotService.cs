@@ -56,6 +56,24 @@ public sealed class NeuCharPivotLayout
     public string Title { get; set; }
     public string Description { get; set; }
     public int Columns { get; set; } = 2;
+    public List<NeuCharPivotPanel> Panels { get; set; } = new();
+
+    // Legacy JSON used sections[] directly. Keep a separate deserialization slot so
+    // normalized layouts are persisted in the new panels[] shape only.
+    [JsonPropertyName("sections")]
+    public List<NeuCharPivotSection> LegacySections { get; set; }
+
+    [JsonIgnore]
+    public List<NeuCharPivotSection> Sections { get; set; } = new();
+}
+
+public sealed class NeuCharPivotPanel
+{
+    public string Key { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public string Type { get; set; } = "shortcuts";
+    public int Columns { get; set; } = 2;
     public List<NeuCharPivotSection> Sections { get; set; } = new();
 }
 
@@ -102,6 +120,12 @@ public sealed record NeuCharPivotSnapshot(
     IReadOnlyDictionary<int, bool> FunctionAvailability,
     bool ModuleAvailable,
     string ModuleState);
+
+public sealed record NeuCharPivotWorkflowOption(
+    int Id,
+    string Name,
+    string Description,
+    IReadOnlyList<string> Parameters);
 
 public sealed class NeuCharPivotService
 {
@@ -243,7 +267,7 @@ public sealed class NeuCharPivotService
         var order = 0;
         var activeKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var section in normalized.Sections)
+        foreach (var section in normalized.Panels.SelectMany(z => z.Sections))
         {
             foreach (var layoutFunction in section.Functions)
             {
@@ -322,38 +346,69 @@ public sealed class NeuCharPivotService
             Title = catalog.FirstOrDefault()?.ModuleName ?? "NeuCharPivot",
             Description = "由模块 Functions 生成的快捷操作面板",
             Columns = 2,
-            Sections = new List<NeuCharPivotSection>()
+            Panels = new List<NeuCharPivotPanel>()
         };
         layout.Version = 1;
         layout.Title = CleanText(layout.Title, 120) ?? catalog.FirstOrDefault()?.ModuleName ?? "NeuCharPivot";
         layout.Description = CleanText(layout.Description, 500) ?? string.Empty;
         layout.Columns = Math.Clamp(layout.Columns, 1, 3);
-        layout.Sections ??= new List<NeuCharPivotSection>();
+        layout.Panels ??= new List<NeuCharPivotPanel>();
+        var sourcePanels = layout.Panels.Count > 0
+            ? layout.Panels
+            : new List<NeuCharPivotPanel>
+            {
+                new()
+                {
+                    Key = "shortcuts",
+                    Title = "快捷操作",
+                    Description = "常用 Function 的参数化执行面板",
+                    Type = "shortcuts",
+                    Columns = layout.Columns,
+                    Sections = layout.LegacySections ?? new List<NeuCharPivotSection>()
+                }
+            };
 
         var catalogByKey = catalog.ToDictionary(z => z.FunctionKey, StringComparer.OrdinalIgnoreCase);
         var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        var normalizedSections = new List<NeuCharPivotSection>();
-        foreach (var section in layout.Sections.Take(12))
+        var normalizedPanels = new List<NeuCharPivotPanel>();
+        foreach (var panel in sourcePanels.Take(12))
         {
-            var normalizedFunctions = new List<NeuCharPivotLayoutFunction>();
-            foreach (var item in (section.Functions ?? new List<NeuCharPivotLayoutFunction>()).Take(100))
+            var normalizedSections = new List<NeuCharPivotSection>();
+            foreach (var section in (panel.Sections ?? new List<NeuCharPivotSection>()).Take(12))
             {
-                if (string.IsNullOrWhiteSpace(item.FunctionKey) ||
-                    !catalogByKey.TryGetValue(item.FunctionKey, out var descriptor) ||
-                    !used.Add(descriptor.FunctionKey))
+                var normalizedFunctions = new List<NeuCharPivotLayoutFunction>();
+                foreach (var item in (section.Functions ?? new List<NeuCharPivotLayoutFunction>()).Take(100))
                 {
-                    continue;
+                    if (string.IsNullOrWhiteSpace(item.FunctionKey) ||
+                        !catalogByKey.TryGetValue(item.FunctionKey, out var descriptor) ||
+                        !used.Add(descriptor.FunctionKey))
+                    {
+                        continue;
+                    }
+
+                    normalizedFunctions.Add(NormalizeFunction(item, descriptor));
                 }
 
-                normalizedFunctions.Add(NormalizeFunction(item, descriptor));
+                if (normalizedFunctions.Count > 0)
+                {
+                    normalizedSections.Add(new NeuCharPivotSection
+                    {
+                        Title = CleanText(section.Title, 100) ?? "快捷操作",
+                        Functions = normalizedFunctions
+                    });
+                }
             }
 
-            if (normalizedFunctions.Count > 0)
+            if (normalizedSections.Count > 0)
             {
-                normalizedSections.Add(new NeuCharPivotSection
+                normalizedPanels.Add(new NeuCharPivotPanel
                 {
-                    Title = CleanText(section.Title, 100) ?? "快捷操作",
-                    Functions = normalizedFunctions
+                    Key = CleanKey(panel.Key, $"panel-{normalizedPanels.Count + 1}"),
+                    Title = CleanText(panel.Title, 100) ?? (normalizedPanels.Count == 0 ? "快捷操作" : $"面板 {normalizedPanels.Count + 1}"),
+                    Description = CleanText(panel.Description, 500) ?? string.Empty,
+                    Type = NormalizePanelType(panel.Type),
+                    Columns = Math.Clamp(panel.Columns <= 0 ? layout.Columns : panel.Columns, 1, 3),
+                    Sections = normalizedSections
                 });
             }
         }
@@ -361,14 +416,29 @@ public sealed class NeuCharPivotService
         var missing = catalog.Where(z => !used.Contains(z.FunctionKey)).ToList();
         if (missing.Count > 0)
         {
-            normalizedSections.Add(new NeuCharPivotSection
+            if (normalizedPanels.Count == 0)
             {
-                Title = normalizedSections.Count == 0 ? "快捷操作" : "更多功能",
+                normalizedPanels.Add(new NeuCharPivotPanel
+                {
+                    Key = "shortcuts",
+                    Title = "快捷操作",
+                    Description = "常用 Function 的参数化执行面板",
+                    Type = "shortcuts",
+                    Columns = layout.Columns,
+                    Sections = new List<NeuCharPivotSection>()
+                });
+            }
+
+            normalizedPanels[^1].Sections.Add(new NeuCharPivotSection
+            {
+                Title = normalizedPanels[^1].Sections.Count == 0 ? "快捷操作" : "更多功能",
                 Functions = missing.Select(z => NormalizeFunction(null, z)).ToList()
             });
         }
 
-        layout.Sections = normalizedSections;
+        layout.Panels = normalizedPanels;
+        layout.LegacySections = null;
+        layout.Sections = normalizedPanels.FirstOrDefault()?.Sections ?? new List<NeuCharPivotSection>();
         return layout;
     }
 
@@ -377,10 +447,22 @@ public sealed class NeuCharPivotService
         NeuCharFunctionDescriptor descriptor)
     {
         var parameterNames = descriptor.Parameters.Select(z => z.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
-        var exposed = (item?.ExposedParameters ?? new List<string>())
+        var requiredParameterNames = descriptor.Parameters
+            .Where(parameter => parameter.IsRequired)
+            .Select(parameter => parameter.Name)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var hasOptionalSelection = item?.ExposedParameters?.Any(
+            parameter => !requiredParameterNames.Contains(parameter)) == true;
+        IEnumerable<string> requestedParameters = item == null ||
+            item.ExposedParameters == null ||
+            item.ExposedParameters.Count == 0 ||
+            !hasOptionalSelection
+            ? parameterNames
+            : item.ExposedParameters;
+        var exposed = requestedParameters
             .Where(parameterNames.Contains)
             .Distinct(StringComparer.OrdinalIgnoreCase)
-            .Take(12)
+            .Take(24)
             .ToList();
         foreach (var required in descriptor.Parameters.Where(z => z.IsRequired))
         {
@@ -398,6 +480,22 @@ public sealed class NeuCharPivotService
             Accent = AllowedAccents.Contains(item?.Accent ?? string.Empty) ? item.Accent.ToLowerInvariant() : "blue",
             ExposedParameters = exposed
         };
+    }
+
+    private static string NormalizePanelType(string value) =>
+        value?.Trim().ToLowerInvariant() switch
+        {
+            "shortcuts" or "summary" or "workflow" => value.Trim().ToLowerInvariant(),
+            _ => "shortcuts"
+        };
+
+    private static string CleanKey(string value, string fallback)
+    {
+        var cleaned = new string((value ?? string.Empty)
+            .Trim()
+            .Where(char.IsLetterOrDigit)
+            .ToArray());
+        return string.IsNullOrWhiteSpace(cleaned) ? fallback : cleaned[..Math.Min(80, cleaned.Length)];
     }
 
     public static List<NeuCharPivotParameterSchema> BuildParameterSchema(

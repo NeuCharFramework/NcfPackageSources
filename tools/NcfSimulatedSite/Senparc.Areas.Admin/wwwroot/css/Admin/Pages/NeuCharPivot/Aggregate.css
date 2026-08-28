@@ -1,7 +1,21 @@
 .pivot-aggregate > .neuchar-page-header .el-input { width: 300px; }
+.aggregate-header-actions { display: flex; align-items: center; gap: 8px; }
 .aggregate-module-title { display: flex; align-items: center; gap: 10px; width: 100%; }
 .aggregate-module-title > span:last-child { margin-left: auto; color: #909399; font-size: 12px; }
 .aggregate-functions { padding-top: 16px; }
+.pivot-stat-grid { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 10px; margin: 14px 0; }
+.pivot-stat-item { min-height: 76px; padding: 12px 14px; background: #fff; border: 1px solid #ebeef5; border-radius: 6px; }
+.pivot-stat-item span, .pivot-stat-item small { display: block; color: #909399; font-size: 12px; }
+.pivot-stat-item strong { display: block; margin: 6px 0 2px; color: #303133; font-size: 20px; line-height: 1.1; }
+.pivot-stat-item strong.is-danger { color: #f56c6c; }
+.pivot-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0 16px; padding: 10px; background: #fff; border: 1px solid #ebeef5; }
+.pivot-filter-bar .el-select { width: 170px; }
+.aggregate-panel-tabs { margin-top: 14px; }
+.aggregate-panel-description { margin: 12px 0 0; color: #909399; font-size: 13px; }
+.aggregate-panel-grid { display: block; }
+.aggregate-section { margin-top: 14px; }
+.aggregate-section > h4 { margin: 0; color: #606266; font-size: 14px; }
+.aggregate-workflow-link { display: block; color: #409eff; }
 .aggregate-result { max-height: 55vh; margin: 0; padding: 14px; overflow: auto; overflow-wrap: anywhere; background: #f5f7fa; border-radius: 6px; }
 .aggregate-result-text { white-space: pre-wrap; }
 .aggregate-result-html { color: #303640; line-height: 1.65; }
@@ -13,3 +27,14 @@
 .aggregate-result-html table { width: 100%; border-spacing: 0; border-collapse: collapse; background: #fff; }
 .aggregate-result-html th, .aggregate-result-html td { padding: 7px 9px; text-align: left; border: 1px solid #dfe5ec; }
 .aggregate-result-html th { background: #eef3f8; }
+
+@media (max-width: 1200px) {
+    .pivot-stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+    .aggregate-header-actions { width: 100%; align-items: stretch; }
+    .aggregate-header-actions .el-input { flex: 1; width: auto; }
+    .pivot-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pivot-filter-bar .el-select { width: 100%; }
+}

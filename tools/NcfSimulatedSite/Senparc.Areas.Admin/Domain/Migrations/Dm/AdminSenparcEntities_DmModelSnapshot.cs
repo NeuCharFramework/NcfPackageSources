@@ -620,12 +620,17 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Dm
                     b.Property<bool>("UseNeuBell")
                         .HasColumnType("BIT");
 
+                    b.Property<int?>("WorkflowId")
+                        .HasColumnType("INT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FunctionId")
                         .IsUnique();
 
                     b.HasIndex("Enabled", "NextRunAt");
+
+                    b.HasIndex("WorkflowId");
 
                     b.ToTable("ADMIN_NeuCharPivotLoopTask");
                 });

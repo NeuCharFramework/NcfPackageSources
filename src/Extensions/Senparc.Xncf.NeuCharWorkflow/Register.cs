@@ -89,6 +89,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         services.AddScoped<NeuCharWorkflowVersionService>();
         services.AddScoped<NeuCharWorkflowExecutionLogService>();
         services.AddScoped<NeuCharWorkflowFunctionService>();
+        services.AddScoped<NeuCharWorkflowAnalyticsService>();
         services.AddDataProtection();
         services.AddScoped<NeuCharWorkflowParameterProtector>();
         services.AddSingleton<NeuCharWorkflowNeuBellProvider>();
