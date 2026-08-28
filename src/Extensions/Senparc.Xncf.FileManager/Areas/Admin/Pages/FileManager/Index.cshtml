@@ -524,6 +524,93 @@
             margin-top: 10px;
         }
 
+        /* ========== 上传对话框（图1样式） ========== */
+        .file-manager-upload-dialog .el-dialog__header {
+            padding: 14px 20px;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .file-manager-upload-dialog .el-dialog__title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #303133;
+            line-height: 1.4;
+        }
+
+        .file-manager-upload-dialog .el-dialog__body {
+            padding: 16px 20px 8px;
+        }
+
+        .file-manager-upload-dialog .el-dialog__footer {
+            padding: 12px 20px 16px;
+            border-top: 1px solid #ebeef5;
+        }
+
+        .file-manager-upload-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .file-manager-upload-dropzone {
+            width: 100%;
+        }
+
+        .file-manager-upload-dropzone .el-upload {
+            width: 100%;
+        }
+
+        .file-manager-upload-dropzone .el-upload-dragger {
+            width: 100%;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #c0c4cc;
+            border-radius: 4px;
+            background: #fff;
+        }
+
+        .file-manager-upload-dropzone .el-upload-dragger:hover {
+            border-color: #409eff;
+        }
+
+        .file-manager-upload-drop-hint {
+            color: #c0c4cc;
+            font-size: 18px;
+            line-height: 1.6;
+            text-align: center;
+            padding: 0 24px;
+            pointer-events: none;
+        }
+
+        .file-manager-upload-tip {
+            margin-top: 10px;
+            color: #909399;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .file-manager-upload-filelist {
+            margin-top: 12px;
+            max-height: 180px;
+            overflow: auto;
+        }
+
+        .file-manager-upload-start-btn {
+            background-color: #67c23a !important;
+            border-color: #67c23a !important;
+            color: #fff !important;
+        }
+
+        .file-manager-upload-start-btn:hover,
+        .file-manager-upload-start-btn:focus {
+            background-color: #85ce61 !important;
+            border-color: #85ce61 !important;
+            color: #fff !important;
+        }
+
         .file-manager-guide {
             margin: 0;
             padding-left: 22px;
@@ -1409,30 +1496,74 @@
     </div>
 </div>
 
-<el-dialog title="上传文件" :visible.sync="uploadDialog.visible" width="540px" append-to-body>
+<el-dialog
+    :title="getUploadDialogTitle()"
+    :visible.sync="uploadDialog.visible"
+    width="720px"
+    custom-class="file-manager-upload-dialog"
+    append-to-body
+    @@closed="cancelUpload">
+    <div class="file-manager-upload-toolbar">
+        <el-dropdown trigger="click" @@command="handleUploadPickerCommand">
+            <el-button size="small">
+                上传文件<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="files">上传文件</el-dropdown-item>
+                <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+        <el-button type="text" size="small" @@click="clearUploadList">清空列表</el-button>
+    </div>
+
     <el-upload
         ref="upload"
+        class="file-manager-upload-dropzone"
         action="#"
+        drag
         :auto-upload="false"
         :multiple="true"
-        :show-file-list="true"
+        :show-file-list="false"
         :on-change="handleFileChange"
         :before-upload="beforeUpload"
         :file-list="uploadDialog.fileList">
-        <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-        <el-button size="small" icon="el-icon-folder-opened" @@click.stop="chooseUploadFolder">选择文件夹</el-button>
-        <div slot="tip" class="el-upload__tip">{{ uploadExtensionHint }}。选择文件夹后会保留其完整层级结构；每批最多 20 个文件，系统会自动分批上传。</div>
+        <div class="file-manager-upload-drop-hint">请将需要上传的文件/文件夹拖到此处</div>
     </el-upload>
     <input ref="folderUploadInput" class="file-manager-folder-input" type="file" webkitdirectory directory multiple @@change="handleFolderSelection" />
-    <el-alert v-if="uploadFolderSummary" class="file-manager-folder-upload-summary" type="success" :closable="false" show-icon :title="uploadFolderSummary"></el-alert>
-    <el-alert class="file-manager-upload-target" type="info" show-icon :closable="false" title="上传位置" :description="uploadTargetText"></el-alert>
-    <el-progress v-if="uploadDialog.uploading" :percentage="uploadDialog.progress" :stroke-width="10" status="success"></el-progress>
-    <div v-for="file in uploadDialog.fileList" :key="file.uid" class="file-manager-upload-note">
-        <el-input v-model="file.description" :placeholder="file.name + ' 的备注'" size="small"></el-input>
+
+    <div v-if="uploadDialog.fileList.length" class="file-manager-upload-filelist">
+        <el-table :data="uploadDialog.fileList" size="mini" border max-height="180">
+            <el-table-column prop="name" label="文件名" min-width="220" show-overflow-tooltip></el-table-column>
+            <el-table-column label="大小" width="100">
+                <template slot-scope="scope">{{ formatFileSize(scope.row.size || (scope.row.raw && scope.row.raw.size) || 0) }}</template>
+            </el-table-column>
+            <el-table-column label="备注" min-width="160">
+                <template slot-scope="scope">
+                    <el-input v-model="scope.row.description" size="mini" placeholder="可选备注"></el-input>
+                </template>
+            </el-table-column>
+        </el-table>
     </div>
+
+    <el-alert
+        v-if="uploadFolderSummary"
+        class="file-manager-folder-upload-summary"
+        type="success"
+        :closable="false"
+        show-icon
+        :title="uploadFolderSummary">
+    </el-alert>
+    <div class="file-manager-upload-tip">{{ uploadExtensionHint }}。选择文件夹后会保留完整层级结构；每批最多 20 个文件，系统会自动分批上传。</div>
+    <el-progress v-if="uploadDialog.uploading" :percentage="uploadDialog.progress" :stroke-width="10" status="success" style="margin-top: 10px;"></el-progress>
+
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="cancelUpload">取消</el-button>
-        <el-button type="primary" @@click="submitUpload" :loading="uploadDialog.uploading">上传</el-button>
+        <el-button
+            class="file-manager-upload-start-btn"
+            size="small"
+            @@click="submitUpload"
+            :loading="uploadDialog.uploading">
+            开始上传
+        </el-button>
     </span>
 </el-dialog>
 
@@ -1720,6 +1851,41 @@
                             if (!keyword) return true;
                             return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1;
                         });
+                    };
+                }
+
+                if (!vm.$options.computed) vm.$options.computed = {};
+                if (typeof vm.getUploadDialogTitle !== 'function') {
+                    vm.getUploadDialogTitle = function () {
+                        var segments = [this.rootFolderName || '根目录'].concat((this.folderPath || []).map(function (item) { return item.name; }));
+                        return '上传文件到 【/' + segments.join('/') + '】 --支持断点续传';
+                    };
+                }
+
+                if (typeof vm.handleUploadPickerCommand !== 'function') {
+                    vm.handleUploadPickerCommand = function (command) {
+                        if (command === 'files') {
+                            this.triggerUploadFilePicker && this.triggerUploadFilePicker();
+                            return;
+                        }
+                        if (command === 'folder' && this.chooseUploadFolder) this.chooseUploadFolder();
+                    };
+                    vm.triggerUploadFilePicker = function () {
+                        var upload = this.$refs.upload;
+                        if (!upload) return;
+                        if (upload.$refs && upload.$refs['upload-inner'] && typeof upload.$refs['upload-inner'].handleClick === 'function') {
+                            upload.$refs['upload-inner'].handleClick();
+                            return;
+                        }
+                        var input = upload.$el && upload.$el.querySelector('input[type="file"]');
+                        if (input) input.click();
+                    };
+                    vm.clearUploadList = function () {
+                        this.uploadDialog.fileList = [];
+                        this.uploadDialog.mode = 'files';
+                        this.uploadDialog.folderRootName = '';
+                        this.uploadDialog.progress = 0;
+                        if (this.$refs.upload) this.$refs.upload.clearFiles();
                     };
                 }
 

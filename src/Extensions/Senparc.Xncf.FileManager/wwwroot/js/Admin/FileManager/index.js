@@ -512,6 +512,34 @@
                     this.$nextTick(function () { this.chooseUploadFolder(); }.bind(this));
                 }
             },
+            handleUploadPickerCommand: function (command) {
+                if (command === 'files') {
+                    this.triggerUploadFilePicker();
+                    return;
+                }
+                if (command === 'folder') this.chooseUploadFolder();
+            },
+            triggerUploadFilePicker: function () {
+                const upload = this.$refs.upload;
+                if (!upload) return;
+                if (upload.$refs && upload.$refs['upload-inner'] && typeof upload.$refs['upload-inner'].handleClick === 'function') {
+                    upload.$refs['upload-inner'].handleClick();
+                    return;
+                }
+                const input = upload.$el && upload.$el.querySelector('input[type="file"]');
+                if (input) input.click();
+            },
+            clearUploadList: function () {
+                this.uploadDialog.fileList = [];
+                this.uploadDialog.mode = 'files';
+                this.uploadDialog.folderRootName = '';
+                this.uploadDialog.progress = 0;
+                if (this.$refs.upload) this.$refs.upload.clearFiles();
+            },
+            getUploadDialogTitle: function () {
+                const segments = [this.rootFolderName || '根目录'].concat((this.folderPath || []).map(function (item) { return item.name; }));
+                return '上传文件到 【/' + segments.join('/') + '】 --支持断点续传';
+            },
             handleRowCommand: function (command, row) {
                 if (command === 'download') return this.downloadFile(row);
                 if (command === 'togglePublish') return this.setPublication(row, row.accessLevel !== 100);
@@ -659,8 +687,14 @@
             handleFileChange: function (file, fileList) {
                 if (file.description === undefined) this.$set(file, 'description', '');
                 this.uploadDialog.fileList = fileList;
-                this.uploadDialog.mode = 'files';
-                this.uploadDialog.folderRootName = '';
+                if (this.uploadDialog.mode !== 'folder') {
+                    this.uploadDialog.mode = 'files';
+                    this.uploadDialog.folderRootName = '';
+                }
+            },
+            cancelUpload: function () {
+                if (this.uploadDialog.uploading) return;
+                this.resetUploadDialog(false);
             },
             chooseUploadFolder: function () {
                 const input = this.$refs.folderUploadInput;
@@ -754,7 +788,6 @@
                     this.uploadDialog.uploading = false;
                 }
             },
-            cancelUpload: function () { this.resetUploadDialog(false); },
             showCreateFolderDialog: function () {
                 this.folderDialog = { visible: true, loading: false, editing: false, form: { id: null, name: '', description: '' } };
             },
