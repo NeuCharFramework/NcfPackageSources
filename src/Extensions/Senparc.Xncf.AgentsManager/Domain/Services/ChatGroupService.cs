@@ -258,6 +258,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         ChatTask chatTask = null;
         ChatTaskService chatTaskService = null;
         string runningKey = null;
+        var preparedBuilds = new List<AgentTemplateRunnerBuildResult>();
 
         try
         {
@@ -534,6 +535,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 {
                     throw new NcfExceptionBase(build.ErrorMessage);
                 }
+
+                preparedBuilds.Add(build);
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.ChatGroup.AgentPrepared",
+                    $"Group={chatGroup.Id}; Task={chatTask.Id}; " +
+                    AgentModelRequestDiagnostics.DescribeBuild(template, build));
 
                 runtimeContexts.Add(new AgentRuntimeContext
                 {
@@ -1233,6 +1240,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                     "AgentsManager.ChatGroup.ExecutorFailure",
                                     $"Group={chatGroup.Id}; Task={chatTask.Id}; Executor={executorFailed.ExecutorId}; " +
                                     executorFailureDetails);
+                                var executorFailureException = executorFailed.Data as Exception
+                                    ?? new InvalidOperationException(executorFailureDetails);
+                                var modelFailureDiagnostics = await AgentModelRequestDiagnostics
+                                    .DescribeFailureAsync(executorFailureException, preparedBuilds)
+                                    .ConfigureAwait(false);
+                                SenparcTrace.SendCustomLog(
+                                    "AgentsManager.ChatGroup.ModelRequestFailure",
+                                    $"Group={chatGroup.Id}; Task={chatTask.Id}; " +
+                                    modelFailureDiagnostics);
                                 workflowFailureReason = FormatExecutorFailureReason(
                                     executorFailed.ExecutorId,
                                     executorFailureDetails,
@@ -1455,6 +1471,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         {
             SenparcTrace.BaseExceptionLog(ex);
             SenparcTrace.SendCustomLog("异常详情", ex.StackTrace);
+            SenparcTrace.SendCustomLog(
+                "AgentsManager.ChatGroup.ModelRequestFailure",
+                $"Group={request.ChatGroupId}; Task={chatTask?.Id.ToString() ?? "unset"}; " +
+                await AgentModelRequestDiagnostics
+                    .DescribeFailureAsync(ex, preparedBuilds)
+                    .ConfigureAwait(false));
 
             if (chatTask != null && chatTaskService != null)
             {
