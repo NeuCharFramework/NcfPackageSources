@@ -62,6 +62,34 @@
                 orgName: '山西米立信息技术有限公司',
                 rootFolderName: '企业文档',
                 activeNavKey: 'enterprise',
+                dashboard: {
+                    capacityRange: '7d',
+                    capacityDates: [],
+                    statsCutoff: '',
+                    enterpriseUsed: '6.28GB',
+                    orgUsages: [
+                        { name: '山西米立信息技术有限公司', size: '6.28GB' },
+                        { name: '企业文档根目录', size: '0.00KB' },
+                        { name: '知识库资料', size: '0.00KB' }
+                    ],
+                    sizeTotalLabel: '7G',
+                    countTotalLabel: '90',
+                    sizeSlices: [
+                        { name: '其他', value: 4.55, percent: '70.00%', color: '#91d5ff' },
+                        { name: '文档', value: 1.22, percent: '18.77%', color: '#95de64' },
+                        { name: '视频', value: 0.54, percent: '8.31%', color: '#ffd666' },
+                        { name: '图片', value: 0.19, percent: '2.92%', color: '#597ef7' },
+                        { name: '音频', value: 0, percent: '0.00%', color: '#ff9c6e' }
+                    ],
+                    countSlices: [
+                        { name: '其他', value: 48, percent: '53.33%', color: '#91d5ff' },
+                        { name: '图片', value: 23, percent: '25.56%', color: '#597ef7' },
+                        { name: '文档', value: 13, percent: '14.44%', color: '#95de64' },
+                        { name: '视频', value: 6, percent: '6.67%', color: '#ffd666' },
+                        { name: '音频', value: 0, percent: '0.00%', color: '#ff9c6e' }
+                    ]
+                },
+                _dashboardCharts: null,
                 navItems: [
                     { key: 'home', label: '首页', icon: 'el-icon-s-home' },
                     { key: 'favorite', label: '收藏', icon: 'el-icon-star-off' },
@@ -77,6 +105,11 @@
         watch: {
             treeFilter: function (value) {
                 if (this.$refs.folderTree) this.$refs.folderTree.filter(value);
+            },
+            activeNavKey: function (value) {
+                if (value === 'dashboard') {
+                    this.$nextTick(this.refreshDashboardCharts);
+                }
             }
         },
         computed: {
@@ -113,7 +146,15 @@
         created: function () {
             this.restoreRouteState();
             this.syncActiveNavFromScope();
+            this.initDashboardDefaults();
             this.enterFolder(this.currentFolderId);
+        },
+        mounted: function () {
+            window.addEventListener('resize', this.resizeDashboardCharts);
+        },
+        beforeDestroy: function () {
+            window.removeEventListener('resize', this.resizeDashboardCharts);
+            this.disposeDashboardCharts();
         },
         methods: {
             syncActiveNavFromScope: function () {
@@ -123,6 +164,11 @@
                 if (!item || item.divider) return;
                 if (item.key === 'settings') {
                     this.guideDialogVisible = true;
+                    return;
+                }
+                if (item.key === 'dashboard') {
+                    this.activeNavKey = 'dashboard';
+                    this.$nextTick(this.refreshDashboardCharts);
                     return;
                 }
                 if (item.scope === 100 || item.scope === 200) {
@@ -135,8 +181,151 @@
                     this.changeResourceScope();
                     return;
                 }
+                if (item.key === 'home' || item.key === 'enterprise') {
+                    this.activeNavKey = item.key === 'home' ? 'enterprise' : item.key;
+                    if (item.key === 'home') this.enterFolder(null);
+                    return;
+                }
                 this.activeNavKey = item.key;
                 this.$message.info('「' + item.label + '」功能即将开放');
+            },
+            initDashboardDefaults: function () {
+                const end = new Date();
+                const start = new Date();
+                start.setDate(end.getDate() - 6);
+                const fmt = function (d) {
+                    const m = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    return d.getFullYear() + '-' + m + '-' + day;
+                };
+                const pad = function (n) { return String(n).padStart(2, '0'); };
+                this.dashboard.capacityDates = [fmt(start), fmt(end)];
+                this.dashboard.statsCutoff = fmt(end) + ' ' + pad(end.getHours()) + ':' + pad(end.getMinutes()) + ':' + pad(end.getSeconds());
+                if (!this.dashboard.orgUsages.some(function (x) { return x.name === '山西米立信息技术有限公司'; })) {
+                    this.dashboard.orgUsages.unshift({ name: '山西米立信息技术有限公司', size: this.dashboard.enterpriseUsed });
+                }
+            },
+            getOrCreateChart: function (el) {
+                if (!el || typeof echarts === 'undefined') return null;
+                const existing = echarts.getInstanceByDom(el);
+                return existing || echarts.init(el);
+            },
+            buildCapacityDates: function () {
+                const dates = this.dashboard.capacityDates;
+                if (Array.isArray(dates) && dates.length === 2 && dates[0] && dates[1]) {
+                    const list = [];
+                    const cursor = new Date(dates[0]);
+                    const end = new Date(dates[1]);
+                    while (cursor <= end && list.length < 31) {
+                        const m = String(cursor.getMonth() + 1).padStart(2, '0');
+                        const d = String(cursor.getDate()).padStart(2, '0');
+                        list.push(m + '-' + d);
+                        cursor.setDate(cursor.getDate() + 1);
+                    }
+                    if (list.length) return list;
+                }
+                const days = this.dashboard.capacityRange === '365d' ? 12 : (this.dashboard.capacityRange === '30d' ? 30 : 7);
+                const result = [];
+                const now = new Date();
+                for (let i = days - 1; i >= 0; i--) {
+                    const d = new Date(now);
+                    d.setDate(now.getDate() - i);
+                    result.push(String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'));
+                }
+                return result;
+            },
+            refreshDashboardCharts: function () {
+                if (this.activeNavKey !== 'dashboard') return;
+                if (typeof echarts === 'undefined') return;
+                const labels = this.buildCapacityDates();
+                const total = labels.map(function (_, i) { return Number((6.2 + (i % 5) * 0.05).toFixed(2)); });
+                const enterprise = labels.map(function () { return Number((0.08 + Math.random() * 0.05).toFixed(2)); });
+                const group = labels.map(function () { return Number((0.05 + Math.random() * 0.04).toFixed(2)); });
+                const personal = labels.map(function () { return Number((0.03 + Math.random() * 0.03).toFixed(2)); });
+                const team = labels.map(function () { return Number((0.02 + Math.random() * 0.02).toFixed(2)); });
+
+                const capacityChart = this.getOrCreateChart(this.$refs.capacityChart);
+                if (capacityChart) {
+                    capacityChart.setOption({
+                        color: ['#409eff', '#95de64', '#69c0ff', '#ff9c6e', '#ffc069'],
+                        tooltip: { trigger: 'axis' },
+                        legend: { bottom: 0, data: ['总容量', '企业文档', '群文档', '个人文档', '团队文档'] },
+                        grid: { left: 40, right: 20, top: 24, bottom: 48 },
+                        xAxis: { type: 'category', boundaryGap: false, data: labels },
+                        yAxis: { type: 'value', axisLabel: { formatter: '{value}G' }, splitLine: { lineStyle: { type: 'dashed' } } },
+                        series: [
+                            { name: '总容量', type: 'line', smooth: true, data: total },
+                            { name: '企业文档', type: 'line', smooth: true, data: enterprise },
+                            { name: '群文档', type: 'line', smooth: true, data: group },
+                            { name: '个人文档', type: 'line', smooth: true, data: personal },
+                            { name: '团队文档', type: 'line', smooth: true, data: team }
+                        ]
+                    }, true);
+                }
+
+                const sizeChart = this.getOrCreateChart(this.$refs.sizeChart);
+                if (sizeChart) {
+                    sizeChart.setOption({
+                        tooltip: { trigger: 'item', formatter: '{b}: {c}G ({d}%)' },
+                        legend: { bottom: 0, data: this.dashboard.sizeSlices.map(function (x) { return x.name; }) },
+                        series: [{
+                            type: 'pie',
+                            radius: ['48%', '68%'],
+                            center: ['50%', '46%'],
+                            label: { formatter: '{b}\n{c}G ({d}%)' },
+                            data: this.dashboard.sizeSlices.map(function (x) {
+                                return { name: x.name, value: x.value, itemStyle: { color: x.color } };
+                            }),
+                            emphasis: { scale: false }
+                        }],
+                        graphic: [{
+                            type: 'text',
+                            left: 'center',
+                            top: '42%',
+                            style: { text: this.dashboard.sizeTotalLabel, textAlign: 'center', fill: '#303133', fontSize: 28, fontWeight: 600 }
+                        }]
+                    }, true);
+                }
+
+                const countChart = this.getOrCreateChart(this.$refs.countChart);
+                if (countChart) {
+                    countChart.setOption({
+                        tooltip: { trigger: 'item', formatter: '{b}: {c}个文件 ({d}%)' },
+                        legend: { bottom: 0, data: this.dashboard.countSlices.map(function (x) { return x.name; }) },
+                        series: [{
+                            type: 'pie',
+                            radius: ['48%', '68%'],
+                            center: ['50%', '46%'],
+                            label: { formatter: '{b}\n{c}个文件 ({d}%)' },
+                            data: this.dashboard.countSlices.map(function (x) {
+                                return { name: x.name, value: x.value, itemStyle: { color: x.color } };
+                            }),
+                            emphasis: { scale: false }
+                        }],
+                        graphic: [{
+                            type: 'text',
+                            left: 'center',
+                            top: '42%',
+                            style: { text: this.dashboard.countTotalLabel, textAlign: 'center', fill: '#303133', fontSize: 28, fontWeight: 600 }
+                        }]
+                    }, true);
+                }
+
+                this._dashboardCharts = [capacityChart, sizeChart, countChart].filter(Boolean);
+                this.resizeDashboardCharts();
+            },
+            resizeDashboardCharts: function () {
+                if (!this._dashboardCharts) return;
+                this._dashboardCharts.forEach(function (chart) {
+                    if (chart) chart.resize();
+                });
+            },
+            disposeDashboardCharts: function () {
+                if (!this._dashboardCharts) return;
+                this._dashboardCharts.forEach(function (chart) {
+                    if (chart) chart.dispose();
+                });
+                this._dashboardCharts = null;
             },
             restoreRouteState: function () {
                 const query = new URLSearchParams(window.location.search);

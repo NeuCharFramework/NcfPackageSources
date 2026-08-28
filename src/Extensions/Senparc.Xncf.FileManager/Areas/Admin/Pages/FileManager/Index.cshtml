@@ -350,6 +350,140 @@
             font-size: 14px;
         }
 
+        /* ========== 数据面板 ========== */
+        .file-manager-layout-right .file-manager-dashboard-panel {
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            padding: 12px;
+            overflow: auto;
+            background: #f0f2f5;
+        }
+
+        .file-manager-dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: minmax(280px, 1fr) minmax(280px, 1fr);
+            gap: 12px;
+            min-height: 100%;
+        }
+
+        .file-manager-dash-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            background: #fff;
+            border: 1px solid #e4e7ed;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .file-manager-dash-card-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            padding: 12px 14px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #303133;
+        }
+
+        .file-manager-dash-card-header .el-icon-question {
+            color: #c0c4cc;
+            font-size: 14px;
+            cursor: help;
+        }
+
+        .file-manager-dash-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            padding: 10px 14px;
+        }
+
+        .file-manager-dash-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            padding: 8px 14px 0;
+            font-size: 12px;
+            color: #909399;
+        }
+
+        .file-manager-dash-used-tag {
+            padding: 2px 8px;
+            border-radius: 2px;
+            background: #f0f9eb;
+            color: #67c23a;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .file-manager-dash-chart {
+            flex: 1;
+            min-height: 200px;
+            width: 100%;
+        }
+
+        .file-manager-dash-org-list {
+            flex: 1;
+            min-height: 0;
+            margin: 8px 0 0;
+            padding: 0 14px 12px;
+            overflow: auto;
+        }
+
+        .file-manager-dash-org-head,
+        .file-manager-dash-org-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 13px;
+        }
+
+        .file-manager-dash-org-head {
+            color: #909399;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 1;
+        }
+
+        .file-manager-dash-org-row {
+            color: #606266;
+        }
+
+        .file-manager-dash-org-name {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-manager-dash-org-name i {
+            color: #409eff;
+            flex-shrink: 0;
+        }
+
+        .file-manager-dash-org-size {
+            flex-shrink: 0;
+            color: #909399;
+        }
+
         .file-manager-folder-input {
             display: none !important;
         }
@@ -453,9 +587,9 @@
         </aside>
     </div>
 
-    @* 右栏 70%：文件列表 *@
+    @* 右栏 70%：文件列表 / 数据面板 *@
     <div class="file-manager-layout-right">
-        <main class="file-manager-main-panel">
+        <main class="file-manager-main-panel" v-if="activeNavKey !== 'dashboard'">
             <div class="file-manager-top-bar">
                 <div class="file-manager-top-search">
                     <el-input
@@ -553,6 +687,79 @@
                 </el-pagination>
             </div>
         </main>
+
+        <div class="file-manager-dashboard-panel" v-if="activeNavKey === 'dashboard' && dashboard">
+            <div class="file-manager-dashboard-grid">
+                <section class="file-manager-dash-card">
+                    <div class="file-manager-dash-card-header">
+                        <span>文件库容量统计</span>
+                        <i class="el-icon-question" title="展示文件库容量随时间变化趋势"></i>
+                    </div>
+                    <div class="file-manager-dash-toolbar">
+                        <el-radio-group v-model="dashboard.capacityRange" size="mini" @@change="refreshDashboardCharts">
+                            <el-radio-button label="7d">过去7天</el-radio-button>
+                            <el-radio-button label="30d">过去一个月</el-radio-button>
+                            <el-radio-button label="365d">过去一年</el-radio-button>
+                        </el-radio-group>
+                        <el-date-picker
+                            v-model="dashboard.capacityDates"
+                            type="daterange"
+                            size="mini"
+                            value-format="yyyy-MM-dd"
+                            range-separator="~"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            style="width: 240px;"
+                            @@change="refreshDashboardCharts">
+                        </el-date-picker>
+                    </div>
+                    <div ref="capacityChart" class="file-manager-dash-chart"></div>
+                </section>
+
+                <section class="file-manager-dash-card">
+                    <div class="file-manager-dash-card-header">
+                        <span>企业文档容量统计</span>
+                        <i class="el-icon-question" title="按组织统计企业文档占用空间"></i>
+                    </div>
+                    <div class="file-manager-dash-meta">
+                        <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
+                        <span class="file-manager-dash-used-tag">企业文档已使用：{{ dashboard.enterpriseUsed }}</span>
+                    </div>
+                    <div class="file-manager-dash-org-list">
+                        <div class="file-manager-dash-org-head">
+                            <span>租户/组织名称</span>
+                            <span>已用空间</span>
+                        </div>
+                        <div class="file-manager-dash-org-row" v-for="org in dashboard.orgUsages" :key="org.name">
+                            <span class="file-manager-dash-org-name"><i class="el-icon-office-building"></i>{{ org.name }}</span>
+                            <span class="file-manager-dash-org-size">{{ org.size }}</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="file-manager-dash-card">
+                    <div class="file-manager-dash-card-header">
+                        <span>文件大小统计</span>
+                        <i class="el-icon-question" title="按文件类型统计占用容量"></i>
+                    </div>
+                    <div class="file-manager-dash-meta">
+                        <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
+                    </div>
+                    <div ref="sizeChart" class="file-manager-dash-chart"></div>
+                </section>
+
+                <section class="file-manager-dash-card">
+                    <div class="file-manager-dash-card-header">
+                        <span>文件个数统计</span>
+                        <i class="el-icon-question" title="按文件类型统计文件数量"></i>
+                    </div>
+                    <div class="file-manager-dash-meta">
+                        <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
+                    </div>
+                    <div ref="countChart" class="file-manager-dash-chart"></div>
+                </section>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -614,5 +821,152 @@
 
 @section scripts {
     <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
+    <script src="~/lib/echarts/dist/echarts.js"></script>
     <script src="~/js/Admin/FileManager/index.js" asp-append-version="true"></script>
+    <script>
+        // 嵌入资源未重编时，仍保证「数据面板」可切换并渲染图表
+        (function ensureFileManagerDashboard() {
+            function pad(n) { return String(n).padStart(2, '0'); }
+            function fmtDate(d) {
+                return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+            }
+            function apply() {
+                var root = document.getElementById('app');
+                var vm = root && root.__vue__;
+                if (!vm) {
+                    setTimeout(apply, 40);
+                    return;
+                }
+
+                if (!vm.dashboard) {
+                    var end = new Date();
+                    var start = new Date();
+                    start.setDate(end.getDate() - 6);
+                    Vue.set(vm, 'dashboard', {
+                        capacityRange: '7d',
+                        capacityDates: [fmtDate(start), fmtDate(end)],
+                        statsCutoff: fmtDate(end) + ' ' + pad(end.getHours()) + ':' + pad(end.getMinutes()) + ':' + pad(end.getSeconds()),
+                        enterpriseUsed: '6.28GB',
+                        orgUsages: [
+                            { name: '山西米立信息技术有限公司', size: '6.28GB' },
+                            { name: '企业文档根目录', size: '0.00KB' },
+                            { name: '知识库资料', size: '0.00KB' }
+                        ],
+                        sizeTotalLabel: '7G',
+                        countTotalLabel: '90',
+                        sizeSlices: [
+                            { name: '其他', value: 4.55, color: '#91d5ff' },
+                            { name: '文档', value: 1.22, color: '#95de64' },
+                            { name: '视频', value: 0.54, color: '#ffd666' },
+                            { name: '图片', value: 0.19, color: '#597ef7' },
+                            { name: '音频', value: 0, color: '#ff9c6e' }
+                        ],
+                        countSlices: [
+                            { name: '其他', value: 48, color: '#91d5ff' },
+                            { name: '图片', value: 23, color: '#597ef7' },
+                            { name: '文档', value: 13, color: '#95de64' },
+                            { name: '视频', value: 6, color: '#ffd666' },
+                            { name: '音频', value: 0, color: '#ff9c6e' }
+                        ]
+                    });
+                }
+
+                var originalOnNavClick = vm.onNavClick && vm.onNavClick.bind(vm);
+                vm.onNavClick = function (item) {
+                    if (item && item.key === 'dashboard') {
+                        this.activeNavKey = 'dashboard';
+                        var self = this;
+                        this.$nextTick(function () {
+                            if (typeof self.refreshDashboardCharts === 'function') self.refreshDashboardCharts();
+                        });
+                        return;
+                    }
+                    if (typeof originalOnNavClick === 'function') return originalOnNavClick(item);
+                };
+
+                if (typeof vm.refreshDashboardCharts !== 'function') {
+                    vm.getOrCreateChart = function (el) {
+                        if (!el || typeof echarts === 'undefined') return null;
+                        return (echarts.getInstanceByDom && echarts.getInstanceByDom(el)) || echarts.init(el);
+                    };
+                    vm.buildCapacityDates = function () {
+                        var dates = this.dashboard && this.dashboard.capacityDates;
+                        if (Array.isArray(dates) && dates[0] && dates[1]) {
+                            var list = [];
+                            var cursor = new Date(dates[0]);
+                            var endDate = new Date(dates[1]);
+                            while (cursor <= endDate && list.length < 31) {
+                                list.push(pad(cursor.getMonth() + 1) + '-' + pad(cursor.getDate()));
+                                cursor.setDate(cursor.getDate() + 1);
+                            }
+                            if (list.length) return list;
+                        }
+                        var result = [];
+                        var now = new Date();
+                        for (var i = 6; i >= 0; i--) {
+                            var d = new Date(now);
+                            d.setDate(now.getDate() - i);
+                            result.push(pad(d.getMonth() + 1) + '-' + pad(d.getDate()));
+                        }
+                        return result;
+                    };
+                    vm.refreshDashboardCharts = function () {
+                        if (this.activeNavKey !== 'dashboard' || typeof echarts === 'undefined') return;
+                        var labels = this.buildCapacityDates();
+                        var total = labels.map(function (_, i) { return Number((6.2 + (i % 5) * 0.05).toFixed(2)); });
+                        var capacityChart = this.getOrCreateChart(this.$refs.capacityChart);
+                        if (capacityChart) {
+                            capacityChart.setOption({
+                                color: ['#409eff', '#95de64', '#69c0ff', '#ff9c6e', '#ffc069'],
+                                tooltip: { trigger: 'axis' },
+                                legend: { bottom: 0, data: ['总容量', '企业文档', '群文档', '个人文档', '团队文档'] },
+                                grid: { left: 40, right: 20, top: 24, bottom: 48 },
+                                xAxis: { type: 'category', boundaryGap: false, data: labels },
+                                yAxis: { type: 'value', axisLabel: { formatter: '{value}G' }, splitLine: { lineStyle: { type: 'dashed' } } },
+                                series: [
+                                    { name: '总容量', type: 'line', smooth: true, data: total },
+                                    { name: '企业文档', type: 'line', smooth: true, data: labels.map(function () { return 0.1; }) },
+                                    { name: '群文档', type: 'line', smooth: true, data: labels.map(function () { return 0.06; }) },
+                                    { name: '个人文档', type: 'line', smooth: true, data: labels.map(function () { return 0.04; }) },
+                                    { name: '团队文档', type: 'line', smooth: true, data: labels.map(function () { return 0.02; }) }
+                                ]
+                            }, true);
+                        }
+                        var sizeChart = this.getOrCreateChart(this.$refs.sizeChart);
+                        if (sizeChart) {
+                            sizeChart.setOption({
+                                tooltip: { trigger: 'item' },
+                                legend: { bottom: 0 },
+                                series: [{
+                                    type: 'pie', radius: ['48%', '68%'], center: ['50%', '46%'],
+                                    label: { formatter: '{b}\n{c}G' },
+                                    data: this.dashboard.sizeSlices.map(function (x) {
+                                        return { name: x.name, value: x.value, itemStyle: { color: x.color } };
+                                    })
+                                }],
+                                graphic: [{ type: 'text', left: 'center', top: '42%', style: { text: this.dashboard.sizeTotalLabel, fill: '#303133', fontSize: 28, fontWeight: 600, textAlign: 'center' } }]
+                            }, true);
+                        }
+                        var countChart = this.getOrCreateChart(this.$refs.countChart);
+                        if (countChart) {
+                            countChart.setOption({
+                                tooltip: { trigger: 'item' },
+                                legend: { bottom: 0 },
+                                series: [{
+                                    type: 'pie', radius: ['48%', '68%'], center: ['50%', '46%'],
+                                    label: { formatter: '{b}\n{c}个' },
+                                    data: this.dashboard.countSlices.map(function (x) {
+                                        return { name: x.name, value: x.value, itemStyle: { color: x.color } };
+                                    })
+                                }],
+                                graphic: [{ type: 'text', left: 'center', top: '42%', style: { text: this.dashboard.countTotalLabel, fill: '#303133', fontSize: 28, fontWeight: 600, textAlign: 'center' } }]
+                            }, true);
+                        }
+                        [capacityChart, sizeChart, countChart].forEach(function (c) { if (c) c.resize(); });
+                    };
+                }
+            }
+            apply();
+        })();
+    </script>
 }
