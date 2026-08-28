@@ -612,6 +612,65 @@
             font-size: 14px;
             font-weight: 400;
         }
+
+        /* ========== 回收站：占满 file-manager-layout-main ========== */
+        .file-manager-layout-main .file-manager-recycle-panel {
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .file-manager-recycle-header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .file-manager-recycle-table-wrap {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 0 16px;
+        }
+
+        .file-manager-recycle-empty {
+            display: flex;
+            min-height: 360px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #909399;
+        }
+
+        .file-manager-recycle-empty i {
+            font-size: 52px;
+            color: #c0c4cc;
+        }
+
+        .file-manager-recycle-empty strong {
+            color: #606266;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .file-manager-recycle-pagination {
+            display: flex;
+            justify-content: flex-end;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-top: 1px solid #f0f2f5;
+        }
     </style>
 }
 
@@ -650,7 +709,7 @@
 
     @* 主区域 85%：文件浏览（树+表）或数据面板 *@
     <div class="file-manager-layout-main">
-        <div class="file-manager-browser" v-if="activeNavKey !== 'dashboard' && activeNavKey !== 'tags'">
+        <div class="file-manager-browser" v-if="activeNavKey !== 'dashboard' && activeNavKey !== 'tags' && activeNavKey !== 'recycle'">
             <div class="file-manager-tree-wrap">
                 <aside class="file-manager-tree-panel">
                     <div class="file-manager-org-header">
@@ -959,6 +1018,47 @@
                 </el-table>
             </div>
         </div>
+
+        <div class="file-manager-recycle-panel" v-if="activeNavKey === 'recycle' && recycleBin">
+            <div class="file-manager-recycle-header">
+                <el-button type="primary" size="small" icon="el-icon-delete" @@click="emptyRecycleBin">一键清空</el-button>
+            </div>
+            <div class="file-manager-recycle-table-wrap">
+                <el-table
+                    :data="recycleBin.displayList"
+                    border
+                    stripe
+                    height="100%"
+                    @@selection-change="onRecycleSelectionChange">
+                    <template slot="empty">
+                        <div class="file-manager-recycle-empty">
+                            <i class="el-icon-document"></i>
+                            <strong>暂无文档</strong>
+                        </div>
+                    </template>
+                    <el-table-column type="selection" width="48"></el-table-column>
+                    <el-table-column prop="fileName" label="文件名称" min-width="220" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="fileSize" label="大小" width="110">
+                        <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
+                    </el-table-column>
+                    <el-table-column prop="deletedAt" label="删除时间" width="180">
+                        <template slot-scope="scope">{{ dateFormatter(scope.row.deletedAt) }}</template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div class="file-manager-recycle-pagination">
+                <el-pagination
+                    @@current-change="handleRecyclePageChange"
+                    @@size-change="handleRecycleSizeChange"
+                    :current-page="recycleBin.page"
+                    :page-sizes="[10, 20, 30, 40]"
+                    :page-size="recycleBin.size"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="recycleBin.total">
+                </el-pagination>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -1099,6 +1199,21 @@
                         if (typeof this.searchTags === 'function') this.searchTags();
                         return;
                     }
+                    if (item && item.key === 'recycle') {
+                        if (!this.recycleBin) {
+                            Vue.set(this, 'recycleBin', {
+                                list: [],
+                                displayList: [],
+                                selectedIds: [],
+                                page: 1,
+                                size: 20,
+                                total: 0
+                            });
+                        }
+                        this.activeNavKey = 'recycle';
+                        if (typeof this.loadRecycleBin === 'function') this.loadRecycleBin();
+                        return;
+                    }
                     if (typeof originalOnNavClick === 'function') return originalOnNavClick(item);
                 };
 
@@ -1134,6 +1249,52 @@
                     vm.importTags = function () { this.$message.info('导入功能即将开放'); };
                     vm.exportTags = function () { this.$message.info('导出功能即将开放'); };
                     vm.openTagRowMenu = function () { this.$message.info('更多操作即将开放'); };
+                }
+
+                if (!vm.recycleBin) {
+                    Vue.set(vm, 'recycleBin', {
+                        list: [],
+                        displayList: [],
+                        selectedIds: [],
+                        page: 1,
+                        size: 20,
+                        total: 0
+                    });
+                }
+
+                if (typeof vm.loadRecycleBin !== 'function') {
+                    vm.loadRecycleBin = function () {
+                        if (!this.recycleBin) return;
+                        this.recycleBin.displayList = this.recycleBin.list || [];
+                        this.recycleBin.total = this.recycleBin.displayList.length;
+                    };
+                    vm.onRecycleSelectionChange = function (rows) {
+                        this.recycleBin.selectedIds = (rows || []).map(function (row) { return row.id; });
+                    };
+                    vm.handleRecyclePageChange = function (page) {
+                        this.recycleBin.page = page;
+                        this.loadRecycleBin();
+                    };
+                    vm.handleRecycleSizeChange = function (size) {
+                        this.recycleBin.size = size;
+                        this.recycleBin.page = 1;
+                        this.loadRecycleBin();
+                    };
+                    vm.emptyRecycleBin = function () {
+                        var self = this;
+                        if (!this.recycleBin.displayList.length) {
+                            this.$message.info('回收站暂无文档');
+                            return;
+                        }
+                        this.$confirm('确认一键清空回收站吗？清空后无法恢复。', '一键清空', { type: 'warning' })
+                            .then(function () {
+                                self.recycleBin.list = [];
+                                self.recycleBin.selectedIds = [];
+                                self.loadRecycleBin();
+                                self.$message.success('回收站已清空');
+                            })
+                            .catch(function () { });
+                    };
                 }
 
                 if (!vm.tagManager) {

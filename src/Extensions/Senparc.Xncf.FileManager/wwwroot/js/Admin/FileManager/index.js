@@ -102,6 +102,14 @@
                     list: [],
                     displayList: []
                 },
+                recycleBin: {
+                    list: [],
+                    displayList: [],
+                    selectedIds: [],
+                    page: 1,
+                    size: 20,
+                    total: 0
+                },
                 navItems: [
                     { key: 'home', label: '首页', icon: 'el-icon-s-home' },
                     { key: 'favorite', label: '收藏', icon: 'el-icon-star-off' },
@@ -186,6 +194,11 @@
                 if (item.key === 'tags') {
                     this.activeNavKey = 'tags';
                     this.searchTags();
+                    return;
+                }
+                if (item.key === 'recycle') {
+                    this.activeNavKey = 'recycle';
+                    this.loadRecycleBin();
                     return;
                 }
                 if (item.scope === 100 || item.scope === 200) {
@@ -375,6 +388,38 @@
             importTags: function () { this.$message.info('导入功能即将开放'); },
             exportTags: function () { this.$message.info('导出功能即将开放'); },
             openTagRowMenu: function () { this.$message.info('更多操作即将开放'); },
+            loadRecycleBin: function () {
+                if (!this.recycleBin) return;
+                this.recycleBin.displayList = this.recycleBin.list || [];
+                this.recycleBin.total = this.recycleBin.displayList.length;
+            },
+            onRecycleSelectionChange: function (rows) {
+                this.recycleBin.selectedIds = (rows || []).map(function (row) { return row.id; });
+            },
+            handleRecyclePageChange: function (page) {
+                this.recycleBin.page = page;
+                this.loadRecycleBin();
+            },
+            handleRecycleSizeChange: function (size) {
+                this.recycleBin.size = size;
+                this.recycleBin.page = 1;
+                this.loadRecycleBin();
+            },
+            emptyRecycleBin: function () {
+                var self = this;
+                if (!this.recycleBin.displayList.length) {
+                    this.$message.info('回收站暂无文档');
+                    return;
+                }
+                this.$confirm('确认一键清空回收站吗？清空后无法恢复。', '一键清空', { type: 'warning' })
+                    .then(function () {
+                        self.recycleBin.list = [];
+                        self.recycleBin.selectedIds = [];
+                        self.loadRecycleBin();
+                        self.$message.success('回收站已清空');
+                    })
+                    .catch(function () { });
+            },
             restoreRouteState: function () {
                 const query = new URLSearchParams(window.location.search);
                 const scope = Number(query.get('scope'));
