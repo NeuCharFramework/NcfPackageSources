@@ -1985,6 +1985,36 @@
                         [capacityChart, sizeChart, countChart].forEach(function (c) { if (c) c.resize(); });
                     };
                 }
+
+                // 修复列表解析：PagedList 序列化为数组时，原先取 result.data/items 会得到空表
+                vm.getList = async function () {
+                    var pageUrlLocal = window.location.pathname || '/Admin/FileManager/Index';
+                    this.tableLoading = true;
+                    try {
+                        var url = pageUrlLocal + '?handler=List&page=' + this.page.page + '&pageSize=' + this.page.size + '&resourceScope=' + this.resourceScope;
+                        if (this.currentFolderId != null) url += '&folderId=' + encodeURIComponent(this.currentFolderId);
+                        var response = await axios.get(url);
+                        var result = response && response.data && response.data.data !== undefined ? response.data.data : (response && response.data);
+                        if (Array.isArray(result)) {
+                            this.tableData = result;
+                            this.total = result.length;
+                        } else {
+                            this.tableData = (result && (result.items || result.data)) || [];
+                            this.total = (result && (result.totalCount != null ? result.totalCount : result.total)) || 0;
+                        }
+                    } catch (error) {
+                        var data = error && error.response && error.response.data;
+                        var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
+                        this.$message.error('获取文件列表失败：' + (message || (error && error.message) || '请求失败'));
+                    } finally {
+                        this.tableLoading = false;
+                    }
+                };
+
+                if (typeof vm.getList === 'function' && !vm.__fileListPatched) {
+                    vm.__fileListPatched = true;
+                    vm.getList();
+                }
             }
             apply();
         })();

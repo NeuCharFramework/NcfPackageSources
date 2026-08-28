@@ -575,8 +575,15 @@
                     let url = pageUrl + '?handler=List&page=' + this.page.page + '&pageSize=' + this.page.size + '&resourceScope=' + this.resourceScope;
                     if (this.currentFolderId != null) url += '&folderId=' + encodeURIComponent(this.currentFolderId);
                     const result = unwrap(await axios.get(url));
-                    this.tableData = result && (result.data || result.items) || [];
-                    this.total = result && (result.totalCount || result.total) || 0;
+                    // PagedList used to serialize as a bare array (TotalCount lost).
+                    // Prefer explicit { items, totalCount }; still accept legacy shapes.
+                    if (Array.isArray(result)) {
+                        this.tableData = result;
+                        this.total = result.length;
+                    } else {
+                        this.tableData = (result && (result.items || result.data)) || [];
+                        this.total = (result && (result.totalCount != null ? result.totalCount : result.total)) || 0;
+                    }
                 } catch (error) {
                     this.$message.error('获取文件列表失败：' + errorMessage(error));
                 } finally {
