@@ -671,6 +671,229 @@
             padding: 12px 16px;
             border-top: 1px solid #f0f2f5;
         }
+
+        /* ========== 收藏：占满 file-manager-layout-main ========== */
+        .file-manager-layout-main .file-manager-favorite-panel {
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .file-manager-favorite-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .file-manager-favorite-search {
+            flex: 1;
+            max-width: 420px;
+            min-width: 0;
+        }
+
+        .file-manager-favorite-table-wrap {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 0 16px;
+        }
+
+        .file-manager-favorite-empty {
+            display: flex;
+            min-height: 360px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #909399;
+        }
+
+        .file-manager-favorite-empty i {
+            font-size: 52px;
+            color: #c0c4cc;
+        }
+
+        .file-manager-favorite-empty strong {
+            color: #606266;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .file-manager-favorite-pagination {
+            display: flex;
+            justify-content: flex-end;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-top: 1px solid #f0f2f5;
+        }
+
+        /* ========== 首页：占满 file-manager-layout-main ========== */
+        .file-manager-layout-main .file-manager-home-panel {
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .file-manager-home-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .file-manager-home-search {
+            flex: 1;
+            max-width: 420px;
+            min-width: 0;
+        }
+
+        .file-manager-home-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .file-manager-home-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            flex-shrink: 0;
+            margin: 16px;
+            padding: 24px 28px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #eef4ff 0%, #f3e9ff 55%, #e8f3ff 100%);
+            overflow: hidden;
+        }
+
+        .file-manager-home-banner-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-manager-home-banner-text h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #3a5ccc;
+            line-height: 1.4;
+        }
+
+        .file-manager-home-banner-text p {
+            margin: 0;
+            font-size: 13px;
+            color: #606266;
+            line-height: 1.7;
+        }
+
+        .file-manager-home-banner-art {
+            flex-shrink: 0;
+            width: 180px;
+            height: 110px;
+            border-radius: 8px;
+            background: linear-gradient(145deg, #ffffff 0%, #dbe7ff 100%);
+            border: 1px solid rgba(64, 158, 255, 0.18);
+            box-shadow: 0 8px 20px rgba(64, 158, 255, 0.12);
+            position: relative;
+        }
+
+        .file-manager-home-banner-art::before,
+        .file-manager-home-banner-art::after {
+            content: '';
+            position: absolute;
+            border-radius: 4px;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+        }
+
+        .file-manager-home-banner-art::before {
+            left: 18px;
+            top: 18px;
+            width: 86px;
+            height: 64px;
+        }
+
+        .file-manager-home-banner-art::after {
+            right: 16px;
+            bottom: 16px;
+            width: 70px;
+            height: 52px;
+            background: #f5f7fa;
+        }
+
+        .file-manager-home-recent {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 0 16px 0;
+            overflow: hidden;
+        }
+
+        .file-manager-home-recent-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #303133;
+        }
+
+        .file-manager-home-recent-title i {
+            color: #909399;
+            cursor: pointer;
+        }
+
+        .file-manager-home-table-wrap {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+        }
+
+        .file-manager-home-empty {
+            display: flex;
+            min-height: 280px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #909399;
+        }
+
+        .file-manager-home-empty i {
+            font-size: 52px;
+            color: #c0c4cc;
+        }
+
+        .file-manager-home-empty strong {
+            color: #606266;
+            font-size: 14px;
+            font-weight: 400;
+        }
     </style>
 }
 
@@ -709,7 +932,7 @@
 
     @* 主区域 85%：文件浏览（树+表）或数据面板 *@
     <div class="file-manager-layout-main">
-        <div class="file-manager-browser" v-if="activeNavKey !== 'dashboard' && activeNavKey !== 'tags' && activeNavKey !== 'recycle'">
+        <div class="file-manager-browser" v-if="activeNavKey !== 'dashboard' && activeNavKey !== 'tags' && activeNavKey !== 'recycle' && activeNavKey !== 'favorite' && activeNavKey !== 'home'">
             <div class="file-manager-tree-wrap">
                 <aside class="file-manager-tree-panel">
                     <div class="file-manager-org-header">
@@ -1059,6 +1282,130 @@
                 </el-pagination>
             </div>
         </div>
+
+        <div class="file-manager-favorite-panel" v-if="activeNavKey === 'favorite' && favoriteList">
+            <div class="file-manager-favorite-header">
+                <div class="file-manager-favorite-search">
+                    <el-input
+                        v-model="favoriteList.keyword"
+                        size="small"
+                        placeholder="搜索文件/文件夹"
+                        prefix-icon="el-icon-search"
+                        clearable
+                        @@input="searchFavorites"
+                        @@keyup.enter.native="searchFavorites">
+                    </el-input>
+                </div>
+            </div>
+            <div class="file-manager-favorite-table-wrap">
+                <el-table
+                    :data="favoriteList.displayList"
+                    border
+                    stripe
+                    height="100%">
+                    <template slot="empty">
+                        <div class="file-manager-favorite-empty">
+                            <i class="el-icon-document"></i>
+                            <strong>暂无文档</strong>
+                        </div>
+                    </template>
+                    <el-table-column prop="fileName" label="文件名称" min-width="220" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="fileSize" label="大小" width="110">
+                        <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
+                    </el-table-column>
+                    <el-table-column prop="updatedAt" label="更新时间" width="180">
+                        <template slot-scope="scope">{{ dateFormatter(scope.row.updatedAt) }}</template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div class="file-manager-favorite-pagination">
+                <el-pagination
+                    @@current-change="handleFavoritePageChange"
+                    @@size-change="handleFavoriteSizeChange"
+                    :current-page="favoriteList.page"
+                    :page-sizes="[10, 20, 30, 40]"
+                    :page-size="favoriteList.size"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="favoriteList.total">
+                </el-pagination>
+            </div>
+        </div>
+
+        <div class="file-manager-home-panel" v-if="activeNavKey === 'home' && homePage">
+            <div class="file-manager-home-header">
+                <div class="file-manager-home-search">
+                    <el-input
+                        v-model="homePage.keyword"
+                        size="small"
+                        placeholder="搜索文件/文件夹"
+                        prefix-icon="el-icon-search"
+                        clearable
+                        @@input="searchHomeRecent"
+                        @@keyup.enter.native="searchHomeRecent">
+                    </el-input>
+                </div>
+                <div class="file-manager-home-actions">
+                    <el-dropdown trigger="click" @@command="handleCreateCommand">
+                        <el-button size="small">
+                            新建<i class="el-icon-arrow-down el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="folder">新建文件夹</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <el-dropdown trigger="click" @@command="handleUploadCommand">
+                        <el-button type="primary" size="small">
+                            上传<i class="el-icon-arrow-down el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="files">上传文件</el-dropdown-item>
+                            <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+            </div>
+
+            <div class="file-manager-home-banner">
+                <div class="file-manager-home-banner-text">
+                    <h3>灵活使用快速访问，畅享高效工作!</h3>
+                    <p>可将常用的文件和文件夹添加至「快速访问」，方便查找和使用。点击列表“更多”即可手动添加或移除快速访问</p>
+                </div>
+                <div class="file-manager-home-banner-art" aria-hidden="true"></div>
+            </div>
+
+            <div class="file-manager-home-recent">
+                <div class="file-manager-home-recent-title">
+                    <span>最近访问</span>
+                    <i class="el-icon-sort" title="排序"></i>
+                </div>
+                <div class="file-manager-home-table-wrap">
+                    <el-table
+                        :data="homePage.displayList"
+                        border
+                        stripe
+                        height="100%">
+                        <template slot="empty">
+                            <div class="file-manager-home-empty">
+                                <i class="el-icon-document"></i>
+                                <strong>暂无文档</strong>
+                            </div>
+                        </template>
+                        <el-table-column prop="fileName" label="文件名称" min-width="200" show-overflow-tooltip sortable></el-table-column>
+                        <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="fileSize" label="大小" width="110">
+                            <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
+                        </el-table-column>
+                        <el-table-column prop="updatedAt" label="更新时间" width="170">
+                            <template slot-scope="scope">{{ dateFormatter(scope.row.updatedAt) }}</template>
+                        </el-table-column>
+                        <el-table-column prop="accessedAt" label="访问时间" width="170">
+                            <template slot-scope="scope">{{ dateFormatter(scope.row.accessedAt) }}</template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -1214,6 +1561,33 @@
                         if (typeof this.loadRecycleBin === 'function') this.loadRecycleBin();
                         return;
                     }
+                    if (item && item.key === 'favorite') {
+                        if (!this.favoriteList) {
+                            Vue.set(this, 'favoriteList', {
+                                keyword: '',
+                                list: [],
+                                displayList: [],
+                                page: 1,
+                                size: 20,
+                                total: 0
+                            });
+                        }
+                        this.activeNavKey = 'favorite';
+                        if (typeof this.searchFavorites === 'function') this.searchFavorites();
+                        return;
+                    }
+                    if (item && item.key === 'home') {
+                        if (!this.homePage) {
+                            Vue.set(this, 'homePage', {
+                                keyword: '',
+                                list: [],
+                                displayList: []
+                            });
+                        }
+                        this.activeNavKey = 'home';
+                        if (typeof this.searchHomeRecent === 'function') this.searchHomeRecent();
+                        return;
+                    }
                     if (typeof originalOnNavClick === 'function') return originalOnNavClick(item);
                 };
 
@@ -1294,6 +1668,58 @@
                                 self.$message.success('回收站已清空');
                             })
                             .catch(function () { });
+                    };
+                }
+
+                if (!vm.favoriteList) {
+                    Vue.set(vm, 'favoriteList', {
+                        keyword: '',
+                        list: [],
+                        displayList: [],
+                        page: 1,
+                        size: 20,
+                        total: 0
+                    });
+                }
+
+                if (typeof vm.searchFavorites !== 'function') {
+                    vm.searchFavorites = function () {
+                        if (!this.favoriteList) return;
+                        var keyword = (this.favoriteList.keyword || '').trim().toLowerCase();
+                        var filtered = (this.favoriteList.list || []).filter(function (row) {
+                            if (!keyword) return true;
+                            return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1;
+                        });
+                        this.favoriteList.displayList = filtered;
+                        this.favoriteList.total = filtered.length;
+                    };
+                    vm.handleFavoritePageChange = function (page) {
+                        this.favoriteList.page = page;
+                        this.searchFavorites();
+                    };
+                    vm.handleFavoriteSizeChange = function (size) {
+                        this.favoriteList.size = size;
+                        this.favoriteList.page = 1;
+                        this.searchFavorites();
+                    };
+                }
+
+                if (!vm.homePage) {
+                    Vue.set(vm, 'homePage', {
+                        keyword: '',
+                        list: [],
+                        displayList: []
+                    });
+                }
+
+                if (typeof vm.searchHomeRecent !== 'function') {
+                    vm.searchHomeRecent = function () {
+                        if (!this.homePage) return;
+                        var keyword = (this.homePage.keyword || '').trim().toLowerCase();
+                        this.homePage.displayList = (this.homePage.list || []).filter(function (row) {
+                            if (!keyword) return true;
+                            return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1;
+                        });
                     };
                 }
 

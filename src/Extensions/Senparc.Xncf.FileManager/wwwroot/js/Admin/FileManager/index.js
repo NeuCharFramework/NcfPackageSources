@@ -110,6 +110,19 @@
                     size: 20,
                     total: 0
                 },
+                favoriteList: {
+                    keyword: '',
+                    list: [],
+                    displayList: [],
+                    page: 1,
+                    size: 20,
+                    total: 0
+                },
+                homePage: {
+                    keyword: '',
+                    list: [],
+                    displayList: []
+                },
                 navItems: [
                     { key: 'home', label: '首页', icon: 'el-icon-s-home' },
                     { key: 'favorite', label: '收藏', icon: 'el-icon-star-off' },
@@ -201,6 +214,16 @@
                     this.loadRecycleBin();
                     return;
                 }
+                if (item.key === 'favorite') {
+                    this.activeNavKey = 'favorite';
+                    this.searchFavorites();
+                    return;
+                }
+                if (item.key === 'home') {
+                    this.activeNavKey = 'home';
+                    this.searchHomeRecent();
+                    return;
+                }
                 if (item.scope === 100 || item.scope === 200) {
                     if (this.resourceScope === item.scope) {
                         this.activeNavKey = item.key;
@@ -211,9 +234,8 @@
                     this.changeResourceScope();
                     return;
                 }
-                if (item.key === 'home' || item.key === 'enterprise') {
-                    this.activeNavKey = item.key === 'home' ? 'enterprise' : item.key;
-                    if (item.key === 'home') this.enterFolder(null);
+                if (item.key === 'enterprise') {
+                    this.activeNavKey = 'enterprise';
                     return;
                 }
                 this.activeNavKey = item.key;
@@ -419,6 +441,33 @@
                         self.$message.success('回收站已清空');
                     })
                     .catch(function () { });
+            },
+            searchFavorites: function () {
+                if (!this.favoriteList) return;
+                const keyword = (this.favoriteList.keyword || '').trim().toLowerCase();
+                const filtered = (this.favoriteList.list || []).filter(function (row) {
+                    if (!keyword) return true;
+                    return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1;
+                });
+                this.favoriteList.displayList = filtered;
+                this.favoriteList.total = filtered.length;
+            },
+            handleFavoritePageChange: function (page) {
+                this.favoriteList.page = page;
+                this.searchFavorites();
+            },
+            handleFavoriteSizeChange: function (size) {
+                this.favoriteList.size = size;
+                this.favoriteList.page = 1;
+                this.searchFavorites();
+            },
+            searchHomeRecent: function () {
+                if (!this.homePage) return;
+                const keyword = (this.homePage.keyword || '').trim().toLowerCase();
+                this.homePage.displayList = (this.homePage.list || []).filter(function (row) {
+                    if (!keyword) return true;
+                    return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1;
+                });
             },
             restoreRouteState: function () {
                 const query = new URLSearchParams(window.location.search);
