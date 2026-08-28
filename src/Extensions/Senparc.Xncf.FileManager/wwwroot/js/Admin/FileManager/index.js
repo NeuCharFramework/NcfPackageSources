@@ -90,6 +90,18 @@
                     ]
                 },
                 _dashboardCharts: null,
+                tagManager: {
+                    keyword: '',
+                    category: '',
+                    status: '',
+                    selectedIds: [],
+                    categoryOptions: [
+                        { label: '业务分类', value: 'biz' },
+                        { label: '系统分类', value: 'system' }
+                    ],
+                    list: [],
+                    displayList: []
+                },
                 navItems: [
                     { key: 'home', label: '首页', icon: 'el-icon-s-home' },
                     { key: 'favorite', label: '收藏', icon: 'el-icon-star-off' },
@@ -169,6 +181,11 @@
                 if (item.key === 'dashboard') {
                     this.activeNavKey = 'dashboard';
                     this.$nextTick(this.refreshDashboardCharts);
+                    return;
+                }
+                if (item.key === 'tags') {
+                    this.activeNavKey = 'tags';
+                    this.searchTags();
                     return;
                 }
                 if (item.scope === 100 || item.scope === 200) {
@@ -327,6 +344,37 @@
                 });
                 this._dashboardCharts = null;
             },
+            searchTags: function () {
+                if (!this.tagManager) return;
+                const keyword = (this.tagManager.keyword || '').trim().toLowerCase();
+                const category = this.tagManager.category || '';
+                const status = this.tagManager.status || '';
+                this.tagManager.displayList = (this.tagManager.list || []).filter(function (row) {
+                    if (keyword && String(row.name || '').toLowerCase().indexOf(keyword) === -1) return false;
+                    if (category && row.category !== category) return false;
+                    if (status === 'enabled' && row.status !== '启用') return false;
+                    if (status === 'disabled' && row.status !== '停用') return false;
+                    return true;
+                });
+            },
+            resetTagFilters: function () {
+                if (!this.tagManager) return;
+                this.tagManager.keyword = '';
+                this.tagManager.category = '';
+                this.tagManager.status = '';
+                this.searchTags();
+            },
+            onTagSelectionChange: function (rows) {
+                this.tagManager.selectedIds = (rows || []).map(function (row) { return row.id; });
+            },
+            createTag: function () { this.$message.info('新增标签功能即将开放'); },
+            createTagCategory: function () { this.$message.info('新增分类功能即将开放'); },
+            expandTagRows: function () { this.$message.info('展开功能即将开放'); },
+            enableSelectedTags: function () { this.$message.info('启用功能即将开放'); },
+            disableSelectedTags: function () { this.$message.info('停用功能即将开放'); },
+            importTags: function () { this.$message.info('导入功能即将开放'); },
+            exportTags: function () { this.$message.info('导出功能即将开放'); },
+            openTagRowMenu: function () { this.$message.info('更多操作即将开放'); },
             restoreRouteState: function () {
                 const query = new URLSearchParams(window.location.search);
                 const scope = Number(query.get('scope'));

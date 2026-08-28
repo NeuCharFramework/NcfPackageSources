@@ -530,6 +530,88 @@
             color: #606266;
             line-height: 1.9;
         }
+
+        /* ========== 标签管理：占满 file-manager-layout-main ========== */
+        .file-manager-layout-main .file-manager-tags-panel {
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            padding: 16px 20px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .file-manager-tags-filter {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 16px;
+            flex-shrink: 0;
+            margin-bottom: 16px;
+        }
+
+        .file-manager-tags-filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-manager-tags-filter-item > span {
+            color: #606266;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .file-manager-tags-filter-item .el-input,
+        .file-manager-tags-filter-item .el-select {
+            width: 200px;
+        }
+
+        .file-manager-tags-filter-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-manager-tags-toolbar {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 8px;
+            flex-shrink: 0;
+            margin-bottom: 12px;
+        }
+
+        .file-manager-tags-table-wrap {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+        }
+
+        .file-manager-tags-empty {
+            display: flex;
+            min-height: 320px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #909399;
+        }
+
+        .file-manager-tags-empty i {
+            font-size: 48px;
+            color: #c0c4cc;
+        }
+
+        .file-manager-tags-empty strong {
+            color: #606266;
+            font-size: 14px;
+            font-weight: 400;
+        }
     </style>
 }
 
@@ -568,7 +650,7 @@
 
     @* 主区域 85%：文件浏览（树+表）或数据面板 *@
     <div class="file-manager-layout-main">
-        <div class="file-manager-browser" v-if="activeNavKey !== 'dashboard'">
+        <div class="file-manager-browser" v-if="activeNavKey !== 'dashboard' && activeNavKey !== 'tags'">
             <div class="file-manager-tree-wrap">
                 <aside class="file-manager-tree-panel">
                     <div class="file-manager-org-header">
@@ -790,6 +872,93 @@
                 </section>
             </div>
         </div>
+
+        <div class="file-manager-tags-panel" v-if="activeNavKey === 'tags' && tagManager">
+            <div class="file-manager-tags-filter">
+                <div class="file-manager-tags-filter-item">
+                    <span>搜索</span>
+                    <el-input
+                        v-model="tagManager.keyword"
+                        size="small"
+                        placeholder="搜索标签名称"
+                        prefix-icon="el-icon-search"
+                        clearable
+                        @@keyup.enter.native="searchTags">
+                    </el-input>
+                </div>
+                <div class="file-manager-tags-filter-item">
+                    <span>分类</span>
+                    <el-select v-model="tagManager.category" size="small" placeholder="选择分类" clearable>
+                        <el-option
+                            v-for="item in tagManager.categoryOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="file-manager-tags-filter-item">
+                    <span>状态</span>
+                    <el-select v-model="tagManager.status" size="small" placeholder="全部" clearable>
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="启用" value="enabled"></el-option>
+                        <el-option label="停用" value="disabled"></el-option>
+                    </el-select>
+                </div>
+                <div class="file-manager-tags-filter-actions">
+                    <el-button type="primary" size="small" icon="el-icon-search" @@click="searchTags"></el-button>
+                    <el-button type="text" size="small" @@click="resetTagFilters">重置</el-button>
+                </div>
+            </div>
+
+            <div class="file-manager-tags-toolbar">
+                <el-button type="primary" size="small" @@click="createTag">新增标签</el-button>
+                <el-button size="small" @@click="createTagCategory">新增分类</el-button>
+                <el-button size="small" @@click="expandTagRows">
+                    展开<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="enableSelectedTags">启用</el-button>
+                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="disableSelectedTags">停用</el-button>
+                <el-button size="small" @@click="importTags">导入</el-button>
+                <el-button size="small" @@click="exportTags">导出</el-button>
+            </div>
+
+            <div class="file-manager-tags-table-wrap">
+                <el-table
+                    :data="tagManager.displayList"
+                    border
+                    stripe
+                    height="100%"
+                    @@selection-change="onTagSelectionChange">
+                    <template slot="empty">
+                        <div class="file-manager-tags-empty">
+                            <i class="el-icon-document"></i>
+                            <strong>暂无数据</strong>
+                        </div>
+                    </template>
+                    <el-table-column type="selection" width="48"></el-table-column>
+                    <el-table-column prop="name" label="名称" min-width="160" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="type" label="类型" width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="status" label="状态" width="100">
+                        <template slot-scope="scope">
+                            <el-tag :type="scope.row.status === '启用' ? 'success' : 'info'" size="mini">{{ scope.row.status }}</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="tagCount" label="标签数量" width="110"></el-table-column>
+                    <el-table-column prop="updatedAt" label="最后更新时间" width="170"></el-table-column>
+                    <el-table-column prop="updatedBy" label="最后更新人" width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="admin" label="管理员" width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column width="48" align="center">
+                        <template slot="header">
+                            <i class="el-icon-s-operation" title="列设置"></i>
+                        </template>
+                        <template slot-scope="scope">
+                            <el-button type="text" icon="el-icon-more" size="mini" @@click="openTagRowMenu(scope.row)"></el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -911,8 +1080,76 @@
                         });
                         return;
                     }
+                    if (item && item.key === 'tags') {
+                        if (!this.tagManager) {
+                            Vue.set(this, 'tagManager', {
+                                keyword: '',
+                                category: '',
+                                status: '',
+                                selectedIds: [],
+                                categoryOptions: [
+                                    { label: '业务分类', value: 'biz' },
+                                    { label: '系统分类', value: 'system' }
+                                ],
+                                list: [],
+                                displayList: []
+                            });
+                        }
+                        this.activeNavKey = 'tags';
+                        if (typeof this.searchTags === 'function') this.searchTags();
+                        return;
+                    }
                     if (typeof originalOnNavClick === 'function') return originalOnNavClick(item);
                 };
+
+                if (typeof vm.searchTags !== 'function') {
+                    vm.searchTags = function () {
+                        if (!this.tagManager) return;
+                        var keyword = (this.tagManager.keyword || '').trim().toLowerCase();
+                        var category = this.tagManager.category || '';
+                        var status = this.tagManager.status || '';
+                        this.tagManager.displayList = (this.tagManager.list || []).filter(function (row) {
+                            if (keyword && String(row.name || '').toLowerCase().indexOf(keyword) === -1) return false;
+                            if (category && row.category !== category) return false;
+                            if (status === 'enabled' && row.status !== '启用') return false;
+                            if (status === 'disabled' && row.status !== '停用') return false;
+                            return true;
+                        });
+                    };
+                    vm.resetTagFilters = function () {
+                        if (!this.tagManager) return;
+                        this.tagManager.keyword = '';
+                        this.tagManager.category = '';
+                        this.tagManager.status = '';
+                        this.searchTags();
+                    };
+                    vm.onTagSelectionChange = function (rows) {
+                        this.tagManager.selectedIds = (rows || []).map(function (row) { return row.id; });
+                    };
+                    vm.createTag = function () { this.$message.info('新增标签功能即将开放'); };
+                    vm.createTagCategory = function () { this.$message.info('新增分类功能即将开放'); };
+                    vm.expandTagRows = function () { this.$message.info('展开功能即将开放'); };
+                    vm.enableSelectedTags = function () { this.$message.info('启用功能即将开放'); };
+                    vm.disableSelectedTags = function () { this.$message.info('停用功能即将开放'); };
+                    vm.importTags = function () { this.$message.info('导入功能即将开放'); };
+                    vm.exportTags = function () { this.$message.info('导出功能即将开放'); };
+                    vm.openTagRowMenu = function () { this.$message.info('更多操作即将开放'); };
+                }
+
+                if (!vm.tagManager) {
+                    Vue.set(vm, 'tagManager', {
+                        keyword: '',
+                        category: '',
+                        status: '',
+                        selectedIds: [],
+                        categoryOptions: [
+                            { label: '业务分类', value: 'biz' },
+                            { label: '系统分类', value: 'system' }
+                        ],
+                        list: [],
+                        displayList: []
+                    });
+                }
 
                 if (typeof vm.refreshDashboardCharts !== 'function') {
                     vm.getOrCreateChart = function (el) {
