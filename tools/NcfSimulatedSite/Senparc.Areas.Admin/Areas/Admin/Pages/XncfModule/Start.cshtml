@@ -194,7 +194,8 @@
                                                 <div class="pivot-function-title">
                                                     <span>{{layoutFunction.title}}</span>
                                                     <div>
-                                                        <el-tag v-if="!pivot.moduleAvailable || !getPivotFunction(layoutFunction.functionKey).available" type="info" size="mini">{{pivot.moduleAvailable?'Function 已移除':'模块不可用'}}</el-tag>
+                                                        <el-tag v-if="!pivot.moduleAvailable" type="info" size="mini">模块已关闭</el-tag>
+                                                        <el-tag v-else-if="!getPivotFunction(layoutFunction.functionKey).available" type="warning" size="mini">当前版本已移除</el-tag>
                                                         <el-tag v-if="getPivotFunction(layoutFunction.functionKey).loopTask" size="mini" type="warning"><i class="el-icon-time"></i> {{pivotLoopStatusText(getPivotFunction(layoutFunction.functionKey))}}</el-tag>
                                                     </div>
                                                 </div>

@@ -14,6 +14,7 @@ new Vue({
             activePanels: {},
             workflowOptions: [],
             summary: {},
+            showUnavailableModules: false,
             now: new Date(),
             clockTimer: null,
             result: { visible: false, title: '', content: '', html: '', htmlMode: false }
@@ -28,6 +29,9 @@ new Vue({
                 }))
                 .filter(module =>
                     this.matchesModule(module) &&
+                    (this.showUnavailableModules ||
+                        this.moduleStateFilter === 'unavailable' ||
+                        module.moduleAvailable) &&
                     (module.functions.length > 0 || this.moduleMatchesKeyword(module)));
         }
     },
@@ -59,7 +63,7 @@ new Vue({
                         this.activePanels[module.configuration.moduleUid] ||
                         (layout.panels[0] && layout.panels[0].key));
                     return module;
-                });
+                }).sort((left, right) => Number(right.moduleAvailable) - Number(left.moduleAvailable));
                 this.inputs = inputs;
                 this.openedModules = this.modules.slice(0, 3)
                     .map(module => module.configuration.moduleUid);
@@ -73,6 +77,21 @@ new Vue({
             this.functionStateFilter = '';
             this.loopStatusFilter = '';
             this.workflowFilter = '';
+        },
+        moduleAnchorId(module) {
+            return `aggregate-module-${module.configuration.id}`;
+        },
+        jumpToModule(module) {
+            const uid = module.configuration.moduleUid;
+            if (!this.openedModules.includes(uid)) {
+                this.openedModules = this.openedModules.concat(uid);
+            }
+            this.$nextTick(() => {
+                const target = document.getElementById(this.moduleAnchorId(module));
+                if (target && typeof target.scrollIntoView === 'function') {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
         },
         moduleMatchesKeyword(module) {
             const keyword = this.keyword.trim().toLowerCase();

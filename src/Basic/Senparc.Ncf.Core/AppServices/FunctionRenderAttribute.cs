@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260815
     修改描述：v0.29.0-preview8 新增 FunctionRender 的 AI 自动调用控制
 
+    修改标识：Senparc - 20260828
+    修改描述：增加全局 NeuCharPivot 浮动调用映射及访问策略元数据
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -74,6 +77,24 @@ namespace Senparc.Ncf.Core.AppServices
         /// </para>
         /// </summary>
         public bool AllowAiInvocation { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets whether the Function may be opened from the global
+        /// NeuCharPivot floating invocation surface.
+        /// </summary>
+        public bool AllowGlobalPivot { get; set; }
+
+        /// <summary>
+        /// Comma-separated role codes allowed to open the global Pivot mapping.
+        /// An empty value means any authenticated admin may use it.
+        /// </summary>
+        public string GlobalPivotRoleCodes { get; set; }
+
+        /// <summary>
+        /// Comma-separated permission resource codes allowed to open the global
+        /// Pivot mapping. Role and permission rules are alternative grants.
+        /// </summary>
+        public string GlobalPivotPermissionCodes { get; set; }
 
         public FunctionRenderAttribute(string name, string description, Type registerType/*TODO：可提供系统模块的默认值*/)
         {

@@ -84,7 +84,9 @@ public class AggregateModel(
                 function.FunctionKey,
                 function.FunctionName,
                 function.Description,
-                parameterSchemaJson = function.UiSchemaJson,
+                parameterSchemaJson = pivotService.GetCurrentParameterSchemaJson(
+                    function,
+                    snapshot.FunctionCatalog),
                 function.DefaultParametersJson,
                 function.ModuleVersion,
                 available = snapshot.FunctionAvailability.TryGetValue(function.Id, out var available) && available,

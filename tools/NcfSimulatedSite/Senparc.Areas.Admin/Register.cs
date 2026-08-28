@@ -242,6 +242,8 @@ namespace Senparc.Areas.Admin
             services.AddScoped<NeuCharExecutionLogService>();
             services.AddScoped<NeuCharFunctionService>();
             services.AddScoped<NeuCharPivotService>();
+            services.AddScoped<NeuCharPivotGlobalAccessService>();
+            services.AddScoped<NeuCharPivotGlobalFunctionService>();
             services.AddDataProtection();
             services.AddScoped<NeuCharParameterProtector>();
             services.AddScoped<ChatAgentNeuCharPivotComposer>();

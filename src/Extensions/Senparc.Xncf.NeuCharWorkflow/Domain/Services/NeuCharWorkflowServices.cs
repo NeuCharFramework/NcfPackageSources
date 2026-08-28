@@ -234,6 +234,62 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
             .ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<NeuCharWorkflowAnalyticsLog>> GetAnalyticsLogsAsync(
+        IReadOnlyCollection<int> workflowIds,
+        string? statusFilter = null,
+        DateTime? fromUtc = null,
+        DateTime? toUtc = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (workflowIds == null || workflowIds.Count == 0)
+        {
+            return Array.Empty<NeuCharWorkflowAnalyticsLog>();
+        }
+
+        var ids = workflowIds.Distinct().ToList();
+        var query = BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+            .AsNoTracking()
+            .Where(z => ids.Contains(z.WorkflowId));
+        if (fromUtc.HasValue)
+        {
+            query = query.Where(z => z.StartedAt >= fromUtc.Value);
+        }
+        if (toUtc.HasValue)
+        {
+            query = query.Where(z => z.StartedAt < toUtc.Value);
+        }
+        if (string.Equals(statusFilter, "running", StringComparison.OrdinalIgnoreCase))
+        {
+            query = query.Where(z => z.FinishedAt == null);
+        }
+        else if (string.Equals(statusFilter, "success", StringComparison.OrdinalIgnoreCase))
+        {
+            query = query.Where(z => z.FinishedAt != null && z.Succeeded == true);
+        }
+        else if (string.Equals(statusFilter, "failed", StringComparison.OrdinalIgnoreCase))
+        {
+            query = query.Where(z => z.FinishedAt != null && z.Succeeded != true);
+        }
+
+        // Keep only fields needed by analytics. ReplaySnapshotJson is intentionally excluded.
+        return await query
+            .OrderByDescending(z => z.StartedAt)
+            .Select(z => new NeuCharWorkflowAnalyticsLog(
+                z.Id,
+                z.WorkflowId,
+                z.WorkflowName,
+                z.CorrelationId,
+                z.StartedAt,
+                z.FinishedAt,
+                z.Succeeded,
+                z.ResultSummary,
+                z.Error,
+                z.ReplaySnapshotHash,
+                z.ReplayEventsJson))
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
     public Task<int> GetUnfinishedCountAsync(
         int workflowId,
         CancellationToken cancellationToken = default)
@@ -318,3 +374,16 @@ public sealed record NeuCharWorkflowTaskSummarySource(
     DateTime StartedAt,
     DateTime? FinishedAt,
     bool? Succeeded);
+
+public sealed record NeuCharWorkflowAnalyticsLog(
+    int Id,
+    int WorkflowId,
+    string WorkflowName,
+    string CorrelationId,
+    DateTime StartedAt,
+    DateTime? FinishedAt,
+    bool? Succeeded,
+    string? ResultSummary,
+    string? Error,
+    string? ReplaySnapshotHash,
+    string? ReplayEventsJson);

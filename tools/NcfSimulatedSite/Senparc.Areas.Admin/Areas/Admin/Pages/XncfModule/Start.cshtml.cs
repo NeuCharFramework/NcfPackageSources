@@ -425,6 +425,9 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                     function.FunctionKey,
                     function.FunctionName,
                     function.Description,
+                    parameterSchemaJson = _neuCharPivotService.GetCurrentParameterSchemaJson(
+                        function,
+                        snapshot.FunctionCatalog),
                     function.UiSchemaJson,
                     function.DefaultParametersJson,
                     function.ModuleVersion,

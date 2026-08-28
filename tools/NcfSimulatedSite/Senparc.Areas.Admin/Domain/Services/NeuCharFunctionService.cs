@@ -40,7 +40,10 @@ public sealed record NeuCharFunctionDescriptor(
     string Description,
     IReadOnlyList<FunctionParameterInfo> Parameters,
     NeuCharFunctionOutputDescriptor Output = null,
-    string CatalogError = null);
+    string CatalogError = null,
+    bool AllowGlobalPivot = false,
+    IReadOnlyList<string> GlobalPivotRoleCodes = null,
+    IReadOnlyList<string> GlobalPivotPermissionCodes = null);
 
 public sealed record NeuCharFunctionOutputFieldDescriptor(
     string Path,
@@ -136,7 +139,10 @@ public sealed class NeuCharFunctionService
                     bag.FunctionRenderAttribute.Description,
                     parameters,
                     BuildOutputDescriptor(bag.MethodInfo),
-                    catalogError));
+                    catalogError,
+                    bag.FunctionRenderAttribute.AllowGlobalPivot,
+                    ParseCodes(bag.FunctionRenderAttribute.GlobalPivotRoleCodes),
+                    ParseCodes(bag.FunctionRenderAttribute.GlobalPivotPermissionCodes)));
             }
         }
 
@@ -459,4 +465,14 @@ public sealed class NeuCharFunctionService
 
     private static NeuCharFunctionExecutionResult Failure(string message) =>
         new(false, null, message, null);
+
+    private static IReadOnlyList<string> ParseCodes(string codes)
+    {
+        return string.IsNullOrWhiteSpace(codes)
+            ? Array.Empty<string>()
+            : codes
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+    }
 }

@@ -65,19 +65,35 @@
             <el-option v-for="workflow in workflowOptions" :key="workflow.id" :label="workflow.name" :value="String(workflow.id)"></el-option>
         </el-select>
         <el-button size="mini" icon="el-icon-refresh-left" @@click="resetFilters">重置筛选</el-button>
+        <el-checkbox v-model="showUnavailableModules" border size="mini">
+            显示不可用模块（{{summary.unavailableModuleCount || 0}}）
+        </el-checkbox>
     </section>
 
-    <el-collapse v-if="filteredModules.length" v-model="openedModules">
-        <el-collapse-item v-for="module in filteredModules" :key="module.configuration.moduleUid" :name="module.configuration.moduleUid">
+    <div v-if="filteredModules.length" class="aggregate-content-layout">
+        <aside class="aggregate-module-nav" aria-label="NeuCharPivot 模块导航">
+            <div class="aggregate-module-nav-title"><i class="el-icon-menu"></i> 模块导航</div>
+            <button v-for="module in filteredModules"
+                    :key="'nav-' + module.configuration.moduleUid"
+                    type="button"
+                    class="aggregate-module-nav-item"
+                    @@click="jumpToModule(module)">
+                <span>{{module.configuration.name}}</span>
+                <small>{{module.functions.length}} Functions</small>
+            </button>
+        </aside>
+        <main class="aggregate-module-list">
+            <el-collapse v-model="openedModules">
+        <el-collapse-item v-for="module in filteredModules" :key="module.configuration.moduleUid" :id="moduleAnchorId(module)" :name="module.configuration.moduleUid">
             <template slot="title">
                 <div class="aggregate-module-title">
                     <strong>{{module.configuration.name}}</strong>
                     <el-tag size="mini">Revision {{module.configuration.revision}}</el-tag>
-                    <el-tag :type="module.moduleAvailable ? 'success' : 'danger'" size="mini">{{module.moduleAvailable ? '已开启' : '不可用'}}</el-tag>
+                    <el-tag :type="module.moduleAvailable ? 'success' : 'info'" size="mini">{{module.moduleAvailable ? '已开启' : '模块已关闭'}}</el-tag>
                     <span>{{module.functions.length}} Functions</span>
                 </div>
             </template>
-            <el-alert v-if="!module.moduleAvailable" title="该模块当前未安装或未开启。所有引用均已禁用，重新开启模块后会自动恢复。" type="warning" :closable="false" show-icon></el-alert>
+            <el-alert v-if="!module.moduleAvailable" title="该模块当前未安装或未开启，Function 仅保留配置，不允许执行。" type="info" :closable="false" show-icon></el-alert>
             <el-tabs v-if="panels(module).length" v-model="activePanels[module.configuration.moduleUid]" type="card" class="aggregate-panel-tabs">
                 <el-tab-pane v-for="panel in panels(module)" :key="panel.key" :name="panel.key">
                     <span slot="label"><i class="el-icon-menu"></i> {{panel.title}}</span>
@@ -91,7 +107,8 @@
                                         <div class="neuchar-function-head">
                                             <div><h4>{{fn.functionName}}</h4><p>{{fn.description}}</p></div>
                                             <div>
-                                                <el-tag v-if="!fn.available" size="mini" type="danger">Function 已移除</el-tag>
+                                                <el-tag v-if="!module.moduleAvailable" size="mini" type="info">模块已关闭</el-tag>
+                                                <el-tag v-else-if="!fn.available" size="mini" type="warning">当前版本已移除</el-tag>
                                                 <el-tag v-if="fn.loopTask" size="mini" :type="loopStatus(fn)==='running'?'warning':(loopStatus(fn)==='failed'?'danger':'info')">
                                                     <i class="el-icon-time"></i> {{loopStatusText(fn)}}
                                                 </el-tag>
@@ -126,6 +143,8 @@
             </el-tabs>
         </el-collapse-item>
     </el-collapse>
+        </main>
+    </div>
     <div v-else-if="!loading" class="neuchar-empty"><i class="fa fa-th-large fa-3x"></i><h3>没有匹配的 NeuCharPivot</h3><p>请调整筛选条件，或先进入任意模块的“设置/执行 → NeuCharPivot”生成操作面板。</p></div>
 
     <el-dialog :title="result.title" :visible.sync="result.visible" width="50%" :close-on-click-modal="false">

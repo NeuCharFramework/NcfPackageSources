@@ -72,5 +72,20 @@ namespace Senparc.Ncf.Core.Tests.AppServices
             attribute.AllowAiInvocation = false;
             Assert.IsFalse(attribute.AllowAiInvocation);
         }
+
+        [TestMethod]
+        public void FunctionRenderAttribute_ShouldKeepGlobalPivotOptInAndExposeAccessRules()
+        {
+            var attribute = new FunctionRenderAttribute("Sandbox", "description", typeof(LocalizedMetadataTests));
+
+            Assert.IsFalse(attribute.AllowGlobalPivot);
+            attribute.AllowGlobalPivot = true;
+            attribute.GlobalPivotRoleCodes = "sandbox-admin,operator";
+            attribute.GlobalPivotPermissionCodes = "sandbox.execute";
+
+            Assert.IsTrue(attribute.AllowGlobalPivot);
+            Assert.AreEqual("sandbox-admin,operator", attribute.GlobalPivotRoleCodes);
+            Assert.AreEqual("sandbox.execute", attribute.GlobalPivotPermissionCodes);
+        }
     }
 }

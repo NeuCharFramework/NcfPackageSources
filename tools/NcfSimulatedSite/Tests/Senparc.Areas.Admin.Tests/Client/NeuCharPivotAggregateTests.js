@@ -9,8 +9,12 @@ const commonPath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/wwwroot/js/Admin/Pages/NeuCharPivot/common.js');
 const aggregatePath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/wwwroot/js/Admin/Pages/NeuCharPivot/Aggregate.js');
+const globalFunctionPath = path.resolve(__dirname,
+    '../../../Senparc.Areas.Admin/wwwroot/js/Admin/GlobalNeuCharPivot.js');
 const pagePath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/Areas/Admin/Pages/NeuCharPivot/Aggregate.cshtml');
+const sandboxPagePath = path.resolve(__dirname,
+    '../../../../../src/Extensions/Senparc.Xncf.Sandbox/Areas/Admin/Pages/Sandbox/Index.cshtml');
 
 let receivedValue = null;
 let receivedOptions = null;
@@ -51,19 +55,36 @@ assert.strictEqual(sandbox.window.NeuCharPivotUi.loopStatus({ enabled: true, nex
 assert.strictEqual(sandbox.window.NeuCharPivotUi.loopStatus({ enabled: true, isRunning: true }), 'running');
 
 const aggregateScript = fs.readFileSync(aggregatePath, 'utf8');
+const globalFunctionScript = fs.readFileSync(globalFunctionPath, 'utf8');
 const page = fs.readFileSync(pagePath, 'utf8');
+const sandboxPage = fs.readFileSync(sandboxPagePath, 'utf8');
 assert.ok(aggregateScript.includes('NeuCharPivotUi.sanitizeHtml(data.data)'),
     'String Function results must pass through the shared sanitizer.');
 assert.ok(aggregateScript.includes('workflowFilter'),
     'Aggregate filters must include Workflow associations.');
 assert.ok(aggregateScript.includes('formatCountdown'),
     'Aggregate must display LoopTask countdown information.');
+assert.ok(aggregateScript.includes('jumpToModule'),
+    'Aggregate must provide fast module navigation.');
 assert.ok(page.includes('v-html="result.html"'), 'Sanitized Function HTML should be rendered as HTML.');
 assert.ok(page.includes('pivot-stat-grid'), 'Aggregate must render global NeuCharPivot statistics.');
 assert.ok(page.includes('aggregate-panel-tabs'), 'Aggregate must render multiple NeuCharPivot panels.');
+assert.ok(page.includes('aggregate-module-nav'), 'Aggregate must render a scrollable module index.');
+assert.ok(page.includes('显示不可用模块'), 'Unavailable modules must be opt-in in the main list.');
+assert.ok(page.includes('模块已关闭'), 'Closed modules must be distinguished from removed Functions.');
 assert.ok(page.indexOf('dompurify.min.js') < page.indexOf('common.js'),
     'DOMPurify must load before the shared NeuCharPivot helpers.');
 assert.ok(page.includes('v-else class="aggregate-result aggregate-result-text"'),
     'Structured results and errors must retain a text-only rendering path.');
+assert.ok(globalFunctionScript.includes('global.NeuCharPivotFunction'),
+    'The global Pivot invocation API must be exposed to every Admin page.');
+assert.ok(globalFunctionScript.includes('/Admin/NeuCharPivot/Function?handler=Describe'),
+    'The global floating dialog must resolve the server-side Function mapping.');
+assert.ok(globalFunctionScript.includes('/Admin/NeuCharPivot/Function?handler=Run'),
+    'The global floating dialog must execute through the unified server endpoint.');
+assert.ok(sandboxPage.includes('window.NeuCharPivotFunction.open'),
+    'Sandbox shortcuts must use the global floating Function mapping.');
+assert.ok(sandboxPage.includes('window.location.assign(this.getFunctionUrl'),
+    'Sandbox must retain the existing Function page as a fallback.');
 
 console.log('NeuCharPivot Aggregate safe HTML tests passed.');

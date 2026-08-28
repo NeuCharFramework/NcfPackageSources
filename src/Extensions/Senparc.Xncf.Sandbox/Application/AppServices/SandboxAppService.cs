@@ -33,7 +33,11 @@ public class SandboxAppService : AppServiceBase
         _orchestrator = orchestrator;
     }
 
-    [FunctionRender("创建沙箱", "按模板创建独立沙箱会话（Docker / Wasm Stub）", typeof(Register))]
+    [FunctionRender(
+        "创建沙箱",
+        "按模板创建独立沙箱会话（Docker / Wasm Stub）",
+        typeof(Register),
+        AllowGlobalPivot = true)]
     public async Task<StringAppResponse> Create(Sandbox_CreateRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -98,7 +102,11 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("执行代码", "在 Exec 模板会话中运行代码片段", typeof(Register))]
+    [FunctionRender(
+        "执行代码",
+        "在 Exec 模板会话中运行代码片段",
+        typeof(Register),
+        AllowGlobalPivot = true)]
     public async Task<StringAppResponse> Exec(Sandbox_ExecRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>
@@ -218,7 +226,11 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
-    [FunctionRender("销毁沙箱", "停止并清理指定会话", typeof(Register))]
+    [FunctionRender(
+        "销毁沙箱",
+        "停止并清理指定会话",
+        typeof(Register),
+        AllowGlobalPivot = true)]
     public async Task<StringAppResponse> Destroy(Sandbox_SessionIdRequest request)
     {
         return await this.GetStringResponseAsync(async (response, logger) =>

@@ -1939,9 +1939,12 @@ assert.ok(analyticsStyles.includes('.workflow-analytics-summary') &&
 assert.ok(workflowAppService.includes('GetAnalyticsAsync') &&
     analyticsService.includes('WorkflowAnalyticsSummary') &&
     analyticsService.includes('ParseResources') &&
+    analyticsService.includes('GetAnalyticsLogsAsync') &&
+    analyticsService.includes('JsonDocument.Parse') &&
+    !analyticsService.includes('GetFullListAsync(') &&
     analyticsService.includes('"function"') &&
     analyticsService.includes('"agent-group"'),
-    'The server analytics contract should aggregate run health and persisted external resource references.');
+    'The server analytics contract should use a projected log query and lightweight resource parsing for run health and persisted references.');
 assert.ok(workflowContracts.includes('string ObjectId = null') &&
     agentsWorkflowObjectProvider.includes('ObjectId: request.ObjectId') &&
     agentsWorkflowObjectProvider.includes('Reference = reference'),

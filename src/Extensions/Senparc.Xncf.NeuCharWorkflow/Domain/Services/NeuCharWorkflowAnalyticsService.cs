@@ -7,7 +7,6 @@
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
-using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -23,8 +22,6 @@ public sealed class NeuCharWorkflowAnalyticsService(
     NeuCharWorkflowExecutionLogService executionLogService,
     NeuCharWorkflowRunCoordinator runCoordinator)
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
-
     public async Task<WorkflowAnalyticsResult> GetAsync(
         int adminUserId,
         WorkflowAnalyticsQuery query,
@@ -39,12 +36,12 @@ public sealed class NeuCharWorkflowAnalyticsService(
         }
 
         var (fromUtc, toUtc) = NormalizeDateRange(query);
-        var logs = await executionLogService.GetFullListAsync(
-                log => workflowIds.Contains(log.WorkflowId) &&
-                       (!fromUtc.HasValue || log.StartedAt >= fromUtc.Value) &&
-                       (!toUtc.HasValue || log.StartedAt < toUtc.Value),
-                log => log.StartedAt,
-                OrderingType.Descending)
+        var logs = await executionLogService.GetAnalyticsLogsAsync(
+                workflowIds,
+                NormalizeStatus(query.Status),
+                fromUtc,
+                toUtc,
+                cancellationToken)
             .ConfigureAwait(false);
 
         var activeRuns = runCoordinator.GetActiveRuns(adminUserId)
@@ -198,7 +195,7 @@ public sealed class NeuCharWorkflowAnalyticsService(
         (!toUtc.HasValue || value < toUtc.Value);
 
     private static AnalyticsRun ToRun(
-        Domain.Models.DatabaseModel.NeuCharWorkflowExecutionLog log,
+        NeuCharWorkflowAnalyticsLog log,
         IReadOnlyDictionary<int, string> workflows)
     {
         var resources = ParseResources(log.ReplayEventsJson);
@@ -446,26 +443,94 @@ public sealed class NeuCharWorkflowAnalyticsService(
 
         try
         {
-            var events = JsonSerializer.Deserialize<List<NeuCharWorkflowProgress>>(json, JsonOptions)
-                         ?? new List<NeuCharWorkflowProgress>();
-            return events
-                .Where(item => item.Status is "success" or "failed")
-                .Where(item => item.ObjectReference != null)
-                .Select(item => new ResourceUsage(
-                    item.ObjectReference!.Kind,
-                    item.ObjectReference.ProviderId,
-                    item.ObjectReference.ObjectId,
-                    string.IsNullOrWhiteSpace(item.ObjectReference.DisplayName)
-                        ? item.ObjectReference.ObjectId ?? item.ObjectReference.Kind
-                        : item.ObjectReference.DisplayName,
-                    item.Status == "success",
-                    item.Timestamp))
-                .ToList();
+            using var document = JsonDocument.Parse(json);
+            if (document.RootElement.ValueKind != JsonValueKind.Array)
+            {
+                return Array.Empty<ResourceUsage>();
+            }
+
+            var resources = new List<ResourceUsage>();
+            foreach (var item in document.RootElement.EnumerateArray())
+            {
+                var status = GetJsonString(item, "status");
+                if (status is not ("success" or "failed") ||
+                    !TryGetJsonProperty(item, "objectReference", out var reference) ||
+                    reference.ValueKind != JsonValueKind.Object)
+                {
+                    continue;
+                }
+
+                var kind = GetJsonString(reference, "kind");
+                var providerId = GetJsonString(reference, "providerId");
+                var objectId = GetJsonString(reference, "objectId");
+                var displayName = GetJsonString(reference, "displayName");
+                if (string.IsNullOrWhiteSpace(kind) && string.IsNullOrWhiteSpace(objectId))
+                {
+                    continue;
+                }
+
+                resources.Add(new ResourceUsage(
+                    kind ?? string.Empty,
+                    providerId ?? string.Empty,
+                    objectId,
+                    string.IsNullOrWhiteSpace(displayName)
+                        ? objectId ?? kind ?? "未知资源"
+                        : displayName,
+                    status == "success",
+                    GetJsonDateTimeOffset(item, "timestamp") ?? DateTimeOffset.UnixEpoch));
+            }
+
+            return resources;
         }
         catch (JsonException)
         {
             return Array.Empty<ResourceUsage>();
         }
+    }
+
+    private static string? GetJsonString(JsonElement element, string propertyName) =>
+        TryGetJsonProperty(element, propertyName, out var property) &&
+        property.ValueKind == JsonValueKind.String
+            ? property.GetString()
+            : null;
+
+    private static DateTimeOffset? GetJsonDateTimeOffset(JsonElement element, string propertyName)
+    {
+        var value = GetJsonString(element, propertyName);
+        return DateTimeOffset.TryParse(
+            value,
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+            out var result)
+            ? result
+            : null;
+    }
+
+    private static bool TryGetJsonProperty(
+        JsonElement element,
+        string propertyName,
+        out JsonElement value)
+    {
+        if (element.ValueKind == JsonValueKind.Object &&
+            element.TryGetProperty(propertyName, out value))
+        {
+            return true;
+        }
+
+        if (element.ValueKind == JsonValueKind.Object)
+        {
+            foreach (var property in element.EnumerateObject())
+            {
+                if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
+                {
+                    value = property.Value;
+                    return true;
+                }
+            }
+        }
+
+        value = default;
+        return false;
     }
 
     private static string ToStatus(DateTime? finishedAt, bool? succeeded) =>
