@@ -434,18 +434,25 @@ public class NcfPackageMirrorService
         CancellationToken cancellationToken)
     {
         var tagSegment = MakeSafeDirectorySegment(latest.TagName!);
+        var versionRoot = Path.Combine(root, feed.FolderName, tagSegment);
+        var mirroredAssets = new List<GitHubAssetMirrorDto>(assets.Count);
+        foreach (var asset in assets)
+        {
+            var assetPath = Path.Combine(versionRoot, asset.Name!);
+            mirroredAssets.Add(new GitHubAssetMirrorDto
+            {
+                Name = asset.Name,
+                Size = asset.Size,
+                Md5 = await ComputeMd5Async(assetPath, cancellationToken).ConfigureAwait(false),
+                BrowserDownloadUrl = $"{PublicPackageBaseUrl.TrimEnd('/')}/{Uri.EscapeDataString(feed.FolderName)}/{Uri.EscapeDataString(tagSegment)}/{Uri.EscapeDataString(asset.Name!)}"
+            });
+        }
+
         var mirror = new GitHubReleaseMirrorDto
         {
             TagName = latest.TagName,
             Name = latest.Name,
-            Assets = assets
-                .Select(asset => new GitHubAssetMirrorDto
-                {
-                    Name = asset.Name,
-                    Size = asset.Size,
-                    BrowserDownloadUrl = $"{PublicPackageBaseUrl.TrimEnd('/')}/{Uri.EscapeDataString(feed.FolderName)}/{Uri.EscapeDataString(tagSegment)}/{Uri.EscapeDataString(asset.Name!)}"
-                })
-                .ToArray()
+            Assets = mirroredAssets.ToArray()
         };
 
         var path = Path.Combine(root, feed.LatestFileName);
@@ -513,6 +520,13 @@ public class NcfPackageMirrorService
     {
         await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
         var hash = await SHA256.HashDataAsync(stream, cancellationToken).ConfigureAwait(false);
+        return Convert.ToHexStringLower(hash);
+    }
+
+    private static async Task<string> ComputeMd5Async(string path, CancellationToken cancellationToken)
+    {
+        await using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        var hash = await MD5.HashDataAsync(stream, cancellationToken).ConfigureAwait(false);
         return Convert.ToHexStringLower(hash);
     }
 
@@ -665,5 +679,8 @@ public class NcfPackageMirrorService
 
         [JsonPropertyName("size")]
         public long Size { get; set; }
+
+        [JsonPropertyName("md5")]
+        public string? Md5 { get; set; }
     }
 }

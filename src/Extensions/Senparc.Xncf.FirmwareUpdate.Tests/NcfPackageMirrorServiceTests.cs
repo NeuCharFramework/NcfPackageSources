@@ -143,6 +143,12 @@ public sealed class NcfPackageMirrorServiceTests
             StringAssert.Contains(
                 asset.GetProperty("browser_download_url").GetString(),
                 "/NcfPackages/desktop/");
+            var md5 = asset.GetProperty("md5").GetString();
+            Assert.IsNotNull(md5);
+            Assert.AreEqual(32, md5.Length);
+            var expectedMd5 = Convert.ToHexStringLower(
+                MD5.HashData(Encoding.UTF8.GetBytes($"content:{asset.GetProperty("name").GetString()}")));
+            Assert.AreEqual(expectedMd5, md5);
         }
     }
 

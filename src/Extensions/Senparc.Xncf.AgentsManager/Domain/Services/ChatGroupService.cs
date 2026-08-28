@@ -156,6 +156,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     private readonly ChatTaskStreamHub _chatTaskStreamHub;
     private readonly HumanInTheLoopRequestStore _humanInTheLoopRequestStore;
     private readonly AgentsManagerNeuBellProvider _agentsManagerNeuBellProvider;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     public ChatGroupService(
         IRepositoryBase<ChatGroup> repo,
@@ -163,13 +164,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         IBaseObjectCacheStrategy cache,
         ChatTaskStreamHub chatTaskStreamHub,
         HumanInTheLoopRequestStore humanInTheLoopRequestStore,
-        AgentsManagerNeuBellProvider agentsManagerNeuBellProvider)
+        AgentsManagerNeuBellProvider agentsManagerNeuBellProvider,
+        IServiceScopeFactory scopeFactory)
         : base(repo, serviceProvider)
     {
         _cache = cache;
         _chatTaskStreamHub = chatTaskStreamHub;
         _humanInTheLoopRequestStore = humanInTheLoopRequestStore;
         _agentsManagerNeuBellProvider = agentsManagerNeuBellProvider;
+        _scopeFactory = scopeFactory;
     }
 
     /// <summary>
@@ -883,6 +886,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                 var emittedTurnTokens = 0;
                 var idleSuperStepCount = 0;
+                var startNextSuperStepWithTurnToken = true;
 
                 while (!shouldExit)
                 {
@@ -896,20 +900,29 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         return CreateRunResult(chatTask, chatGroup);
                     }
 
-                    var turnTokenAccepted = await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
-                    if (turnTokenAccepted)
+                    if (startNextSuperStepWithTurnToken)
                     {
-                        emittedTurnTokens += 1;
+                        var turnTokenAccepted = await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
+                        if (turnTokenAccepted)
+                        {
+                            emittedTurnTokens += 1;
+                        }
+                        else
+                        {
+                            var rejectedStatus = await run.GetStatusAsync();
+                            if (rejectedStatus == RunStatus.Ended)
+                            {
+                                break;
+                            }
+
+                            logger.AppendLine($"[{chatGroup.Name}] TurnToken 未被接收，当前状态：{rejectedStatus}");
+                        }
                     }
                     else
                     {
-                        var rejectedStatus = await run.GetStatusAsync();
-                        if (rejectedStatus == RunStatus.Ended)
-                        {
-                            break;
-                        }
-
-                        logger.AppendLine($"[{chatGroup.Name}] TurnToken 未被接收，当前状态：{rejectedStatus}");
+                        // SendResponseAsync 已将外部审批响应排入下一超级步。此处不能再同时注入
+                        // TurnToken，否则 GroupChat 会并行推进下一参与者，令 Human 回合与工具审批续跑交错。
+                        startNextSuperStepWithTurnToken = true;
                     }
 
                     var hadEventsInCurrentSuperStep = false;
@@ -1224,7 +1237,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                         chatTask.Id,
                                         request.HumanRecipientUserId).ConfigureAwait(false);
                                     workflowPendingRequests.Add(pending);
-                                    await chatTaskService.SetStatus(ChatTask_Status.Paused, chatTask);
+                                    await SetChatTaskStatusInIsolatedScopeAsync(
+                                        chatTask,
+                                        ChatTask_Status.Paused).ConfigureAwait(false);
                                     PublishStatusEvent(chatTask.Id, ChatTask_Status.Paused);
                                     PublishHumanRequestEvent(chatTask.Id, pending.ToDto(), roundIndex + 1);
                                     workflowRequestReceived = true;
@@ -1323,9 +1338,16 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         SenparcTrace.SendCustomLog(
                             "AgentsManager.HIL.ToolApproval.ResponseDispatched",
                             $"Group={chatGroup.Id}; Task={chatTask.Id}; Responses={externalResponses.Count}");
+                        SenparcTrace.SendCustomLog(
+                            "AgentsManager.ChatGroup.ToolApprovalResumeQueued",
+                            $"Group={chatGroup.Id}; Task={chatTask.Id}; " +
+                            "NextSuperStep=ExternalResponseOnly");
 
-                        await chatTaskService.SetStatus(ChatTask_Status.Chatting, chatTask);
+                        await SetChatTaskStatusInIsolatedScopeAsync(
+                            chatTask,
+                            ChatTask_Status.Chatting).ConfigureAwait(false);
                         PublishStatusEvent(chatTask.Id, ChatTask_Status.Chatting);
+                        startNextSuperStepWithTurnToken = false;
                         continue;
                     }
 
@@ -1373,6 +1395,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             {
                 workflowFailed = true;
                 workflowFailureReason = workflowEx.Message;
+                SenparcTrace.SendCustomLog(
+                    "AgentsManager.ChatGroup.WorkflowExecutionFailure",
+                    $"Group={chatGroup.Id}; Task={chatTask.Id}; {workflowEx}");
                 logger.AppendLine($"[{chatGroup.Name}] 工作流执行异常：{workflowFailureReason}");
             }
             finally
@@ -3115,6 +3140,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             return;
         }
 
+        SenparcTrace.SendCustomLog(
+            "AgentsManager.HIL.HumanTurn.Requested",
+            $"Task={chatTask.Id}; Request={pending.RequestId}; Participant={pending.ParticipantKey}; " +
+            $"Round={roundIndex}");
         var neuBellItemId = _agentsManagerNeuBellProvider.Send(
             chatTask.Id,
             recipientUserId,
@@ -3122,7 +3151,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         pending.SetNeuBellItemId(neuBellItemId);
 
         await NotifyNeuBellChangedAsync().ConfigureAwait(false);
-        await chatTaskService.SetStatus(ChatTask_Status.Paused, chatTask).ConfigureAwait(false);
+        await SetChatTaskStatusInIsolatedScopeAsync(
+            chatTask,
+            ChatTask_Status.Paused).ConfigureAwait(false);
         PublishStatusEvent(chatTask.Id, ChatTask_Status.Paused);
         PublishHumanRequestEvent(chatTask.Id, pending.ToDto(), roundIndex);
     }
@@ -3157,9 +3188,35 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             return;
         }
 
+        SenparcTrace.SendCustomLog(
+            "AgentsManager.HIL.HumanTurn.Resolved",
+            $"Task={chatTask.Id}; Request={pending.RequestId}; Participant={pending.ParticipantKey}; " +
+            $"Approved={decision.Approved}; InputLength={decision.Input?.Trim().Length ?? 0}");
         PublishHumanResolvedEvent(chatTask.Id, pending.RequestId, decision);
-        await chatTaskService.SetStatus(ChatTask_Status.Chatting, chatTask).ConfigureAwait(false);
+        await SetChatTaskStatusInIsolatedScopeAsync(
+            chatTask,
+            ChatTask_Status.Chatting).ConfigureAwait(false);
         PublishStatusEvent(chatTask.Id, ChatTask_Status.Chatting);
+    }
+
+    private async Task SetChatTaskStatusInIsolatedScopeAsync(
+        ChatTask chatTask,
+        ChatTask_Status status)
+    {
+        ArgumentNullException.ThrowIfNull(chatTask);
+        chatTask.ChangeStatus(status);
+
+        using var scope = _scopeFactory.CreateScope();
+        var isolatedTaskService = scope.ServiceProvider.GetRequiredService<ChatTaskService>();
+        var persistedTask = await isolatedTaskService
+            .GetObjectAsync(item => item.Id == chatTask.Id)
+            .ConfigureAwait(false);
+        if (persistedTask == null)
+        {
+            throw new InvalidOperationException($"ChatTask 不存在：{chatTask.Id}");
+        }
+
+        await isolatedTaskService.SetStatus(status, persistedTask).ConfigureAwait(false);
     }
 
     private async Task NotifyNeuBellChangedAsync()
