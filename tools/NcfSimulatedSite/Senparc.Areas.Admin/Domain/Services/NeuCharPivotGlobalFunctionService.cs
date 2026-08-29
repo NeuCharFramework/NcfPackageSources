@@ -118,9 +118,7 @@ public sealed class NeuCharPivotGlobalFunctionService
                 true,
                 cancellationToken)
             .ConfigureAwait(false))
-            .FirstOrDefault(item =>
-                string.Equals(item.FunctionKey, functionKey, StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(item.Name, functionKey, StringComparison.OrdinalIgnoreCase));
+            .FirstOrDefault(item => MatchesFunctionKey(item, functionKey));
 
         if (descriptor == null)
         {
@@ -165,4 +163,15 @@ public sealed class NeuCharPivotGlobalFunctionService
 
     private static NeuCharGlobalFunctionResolution Denied(string message) =>
         new(null, message);
+
+    public static bool MatchesFunctionKey(
+        NeuCharFunctionDescriptor descriptor,
+        string functionKey)
+    {
+        return descriptor != null &&
+            !string.IsNullOrWhiteSpace(functionKey) &&
+            (string.Equals(descriptor.FunctionKey, functionKey, StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(descriptor.MethodName, functionKey, StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(descriptor.Name, functionKey, StringComparison.OrdinalIgnoreCase));
+    }
 }

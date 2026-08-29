@@ -43,7 +43,8 @@ public sealed record NeuCharFunctionDescriptor(
     string CatalogError = null,
     bool AllowGlobalPivot = false,
     IReadOnlyList<string> GlobalPivotRoleCodes = null,
-    IReadOnlyList<string> GlobalPivotPermissionCodes = null);
+    IReadOnlyList<string> GlobalPivotPermissionCodes = null,
+    string MethodName = null);
 
 public sealed record NeuCharFunctionOutputFieldDescriptor(
     string Path,
@@ -142,7 +143,8 @@ public sealed class NeuCharFunctionService
                     catalogError,
                     bag.FunctionRenderAttribute.AllowGlobalPivot,
                     ParseCodes(bag.FunctionRenderAttribute.GlobalPivotRoleCodes),
-                    ParseCodes(bag.FunctionRenderAttribute.GlobalPivotPermissionCodes)));
+                    ParseCodes(bag.FunctionRenderAttribute.GlobalPivotPermissionCodes),
+                    bag.MethodInfo.Name));
             }
         }
 
@@ -188,7 +190,8 @@ public sealed class NeuCharFunctionService
 
         var bag = group.Values.FirstOrDefault(z =>
             string.Equals(z.Key, functionKeyOrName, StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(z.FunctionRenderAttribute.Name, functionKeyOrName, StringComparison.OrdinalIgnoreCase));
+            string.Equals(z.FunctionRenderAttribute.Name, functionKeyOrName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(z.MethodInfo?.Name, functionKeyOrName, StringComparison.OrdinalIgnoreCase));
         if (bag.MethodInfo == null)
         {
             return Failure("Function 不存在或版本升级后已被移除。");

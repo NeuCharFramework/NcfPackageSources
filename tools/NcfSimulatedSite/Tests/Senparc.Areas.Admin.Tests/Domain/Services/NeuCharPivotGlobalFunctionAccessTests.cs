@@ -76,6 +76,17 @@ public class NeuCharPivotGlobalFunctionAccessTests
         Assert.AreEqual("当前账号没有访问该全局 Function 的角色或权限。", denial);
     }
 
+    [TestMethod]
+    public void GlobalFunctionKey_ShouldMatchMethodNameAliasWithoutChangingCanonicalKey()
+    {
+        var descriptor = CreateDescriptor();
+
+        Assert.IsTrue(NeuCharPivotGlobalFunctionService.MatchesFunctionKey(descriptor, "Create"));
+        Assert.IsTrue(NeuCharPivotGlobalFunctionService.MatchesFunctionKey(descriptor, descriptor.FunctionKey));
+        Assert.IsTrue(NeuCharPivotGlobalFunctionService.MatchesFunctionKey(descriptor, descriptor.Name));
+        Assert.IsFalse(NeuCharPivotGlobalFunctionService.MatchesFunctionKey(descriptor, "Unknown"));
+    }
+
     private static NeuCharFunctionDescriptor CreateDescriptor(
         IReadOnlyList<string> roles = null,
         IReadOnlyList<string> permissions = null) =>
@@ -90,5 +101,6 @@ public class NeuCharPivotGlobalFunctionAccessTests
             Array.Empty<Senparc.Ncf.XncfBase.FunctionParameterInfo>(),
             AllowGlobalPivot: true,
             GlobalPivotRoleCodes: roles,
-            GlobalPivotPermissionCodes: permissions);
+            GlobalPivotPermissionCodes: permissions,
+            MethodName: "Create");
 }
