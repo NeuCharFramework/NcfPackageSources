@@ -33,6 +33,7 @@
       [2026-08-29] v0.3.0 支持从全局 NeuCharPivot 受控调用 Sandbox Function
       1、新增全局调用入口并复用既有 Function 执行路径，保持模块和参数校验
       2、通过显式启用与管理员访问边界限制全局调用，保留原 Sandbox 页面入口
+      3、统一宿主工作区、会话目录和目标路径的边界校验，避免相邻目录被误判为工作区子路径
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

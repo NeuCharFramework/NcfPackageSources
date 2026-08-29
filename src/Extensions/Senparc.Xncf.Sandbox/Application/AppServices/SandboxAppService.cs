@@ -14,15 +14,20 @@
     修改标识：Senparc - 20260829
     修改描述：v0.3.0 支持从全局 NeuCharPivot 受控调用 Sandbox Function
 
+    修改标识：Senparc - 20260829
+    修改描述：补充 Lab 文件列举的树状 Data 和执行日志
+
 ----------------------------------------------------------------*/
 
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Application.DTOs.Request;
 using Senparc.Xncf.Sandbox.Domain.Services;
+using Senparc.Xncf.Sandbox.Domain.Services.Runtime;
 
 namespace Senparc.Xncf.Sandbox.Application.AppServices;
 
@@ -217,14 +222,24 @@ public class SandboxAppService : AppServiceBase
                     request.Recursive,
                     request.MaxItems)
                 .ConfigureAwait(false);
+            var tree = BuildWorkspaceFileTree(files, request.RelativeDirectory);
+            var treeText = FormatWorkspaceFileTree(tree);
+
             logger.Append($"Lab files listed: SessionId={request.SessionId}, Count={files.Count}");
+            foreach (var line in treeText.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
+            {
+                logger.Append(line);
+            }
+
             response.Data = JsonSerializer.Serialize(new
             {
                 sessionId = request.SessionId,
                 directory = request.RelativeDirectory ?? string.Empty,
                 recursive = request.Recursive,
+                count = files.Count,
+                tree,
                 files
-            });
+            }, LabListJsonOptions);
             return null;
         });
     }
@@ -291,5 +306,144 @@ public class SandboxAppService : AppServiceBase
         return info.IsTtlUnlimited
             ? "TTL: 永久保持（仅管理员销毁）"
             : $"Expires(UTC): {info.ExpiresAtUtc:u}";
+    }
+
+    internal static SandboxWorkspaceFileTreeNode BuildWorkspaceFileTree(
+        IReadOnlyList<SandboxWorkspaceFileInfo> files,
+        string? relativeDirectory)
+    {
+        var normalizedDirectory = SandboxWorkspacePaths.NormalizeRelativePath(
+            relativeDirectory,
+            allowEmpty: true);
+        var root = new SandboxWorkspaceFileTreeNode
+        {
+            Name = normalizedDirectory.Length == 0 ? "." : normalizedDirectory,
+            Type = "directory",
+            Children = new List<SandboxWorkspaceFileTreeNode>()
+        };
+
+        foreach (var file in files)
+        {
+            var normalizedPath = SandboxWorkspacePaths.NormalizeRelativePath(file.RelativePath);
+            var treePath = normalizedDirectory.Length == 0
+                ? normalizedPath
+                : normalizedPath.StartsWith(
+                    normalizedDirectory + "/",
+                    StringComparison.Ordinal)
+                    ? normalizedPath[(normalizedDirectory.Length + 1)..]
+                    : normalizedPath;
+            var segments = treePath.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var current = root.Children!;
+
+            for (var index = 0; index < segments.Length; index++)
+            {
+                var segment = segments[index];
+                var isFile = index == segments.Length - 1;
+                var node = current.FirstOrDefault(item =>
+                    string.Equals(item.Name, segment, StringComparison.Ordinal));
+
+                if (node == null)
+                {
+                    node = isFile
+                        ? new SandboxWorkspaceFileTreeNode
+                        {
+                            Name = segment,
+                            Type = "file",
+                            Length = file.Length,
+                            LastWriteTimeUtc = file.LastWriteTimeUtc
+                        }
+                        : new SandboxWorkspaceFileTreeNode
+                        {
+                            Name = segment,
+                            Type = "directory",
+                            Children = new List<SandboxWorkspaceFileTreeNode>()
+                        };
+                    current.Add(node);
+                }
+
+                if (!isFile)
+                {
+                    node.Children ??= new List<SandboxWorkspaceFileTreeNode>();
+                    current = node.Children;
+                }
+            }
+        }
+
+        SortWorkspaceFileTree(root.Children!);
+        return root;
+    }
+
+    internal static string FormatWorkspaceFileTree(SandboxWorkspaceFileTreeNode root)
+    {
+        var builder = new StringBuilder();
+        builder.Append(root.Name).Append('/').AppendLine();
+        AppendWorkspaceFileTree(builder, root.Children ?? new List<SandboxWorkspaceFileTreeNode>(), string.Empty);
+        return builder.ToString();
+    }
+
+    private static void SortWorkspaceFileTree(List<SandboxWorkspaceFileTreeNode> nodes)
+    {
+        nodes.Sort((left, right) =>
+        {
+            var typeCompare = string.Compare(
+                left.Type,
+                right.Type,
+                StringComparison.OrdinalIgnoreCase);
+            return typeCompare != 0
+                ? typeCompare
+                : string.Compare(left.Name, right.Name, StringComparison.OrdinalIgnoreCase);
+        });
+
+        foreach (var directory in nodes.Where(node =>
+                     string.Equals(node.Type, "directory", StringComparison.Ordinal)))
+        {
+            if (directory.Children != null)
+            {
+                SortWorkspaceFileTree(directory.Children);
+            }
+        }
+    }
+
+    private static void AppendWorkspaceFileTree(
+        StringBuilder builder,
+        IReadOnlyList<SandboxWorkspaceFileTreeNode> nodes,
+        string prefix)
+    {
+        for (var index = 0; index < nodes.Count; index++)
+        {
+            var node = nodes[index];
+            var isLast = index == nodes.Count - 1;
+            builder.Append(prefix)
+                .Append(isLast ? "`-- " : "|-- ")
+                .Append(node.Name);
+            if (string.Equals(node.Type, "directory", StringComparison.Ordinal))
+            {
+                builder.Append('/');
+            }
+
+            builder.AppendLine();
+            if (node.Children is { Count: > 0 })
+            {
+                AppendWorkspaceFileTree(
+                    builder,
+                    node.Children,
+                    prefix + (isLast ? "    " : "|   "));
+            }
+        }
+    }
+
+    private static readonly JsonSerializerOptions LabListJsonOptions = new()
+    {
+        WriteIndented = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
+
+    internal sealed class SandboxWorkspaceFileTreeNode
+    {
+        public string Name { get; init; } = string.Empty;
+        public string Type { get; init; } = string.Empty;
+        public long? Length { get; init; }
+        public DateTime? LastWriteTimeUtc { get; init; }
+        public List<SandboxWorkspaceFileTreeNode>? Children { get; set; }
     }
 }
