@@ -373,6 +373,62 @@
             font-size: 14px;
         }
 
+        .file-manager-file-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .file-manager-file-name-text {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-manager-favorite-star {
+            flex-shrink: 0;
+            font-size: 16px;
+            color: #c0c4cc;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.15s ease, transform 0.15s ease;
+        }
+
+        .file-manager-favorite-star:hover {
+            color: #f7ba2a;
+            transform: scale(1.08);
+        }
+
+        .file-manager-favorite-star.is-on {
+            color: #f7ba2a;
+        }
+
+        .file-manager-favorite-name-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+            padding: 4px 0;
+        }
+
+        .file-manager-favorite-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #303133;
+        }
+
+        .file-manager-favorite-path {
+            font-size: 12px;
+            color: #909399;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         /* ========== 数据面板：占满 file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-dashboard-panel {
             box-sizing: border-box;
@@ -721,6 +777,36 @@
             flex-shrink: 0;
             padding: 12px 16px;
             border-bottom: 1px solid #f0f2f5;
+            position: relative;
+            z-index: 2;
+        }
+
+        .file-manager-recycle-empty-dialog .file-manager-recycle-empty-body {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 8px 0 4px;
+        }
+
+        .file-manager-recycle-empty-dialog .file-manager-recycle-empty-body > i {
+            font-size: 24px;
+            color: #e6a23c;
+            line-height: 1.2;
+            margin-top: 2px;
+        }
+
+        .file-manager-recycle-empty-dialog .file-manager-recycle-empty-text strong {
+            display: block;
+            font-size: 16px;
+            color: #303133;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .file-manager-recycle-empty-dialog .file-manager-recycle-empty-text p {
+            margin: 0;
+            color: #606266;
+            font-size: 14px;
         }
 
         .file-manager-recycle-table-wrap {
@@ -1040,7 +1126,7 @@
                     <i class="el-icon-s-home"></i><span>首页</span>
                 </li>
                 <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'favorite' }" @@click="onNavClick({ key: 'favorite', label: '收藏' })">
-                    <i class="el-icon-star-off"></i><span>收藏</span>
+                    <i :class="activeNavKey === 'favorite' ? 'el-icon-star-on' : 'el-icon-star-off'"></i><span>收藏</span>
                 </li>
                 <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'enterprise' }" @@click="onNavClick({ key: 'enterprise', label: '企业文档', scope: 100 })">
                     <i class="el-icon-folder"></i><span>企业文档</span>
@@ -1172,7 +1258,19 @@
                                 </div>
                             </template>
                             <el-table-column type="selection" width="48"></el-table-column>
-                            <el-table-column prop="fileName" label="文件名" min-width="220" show-overflow-tooltip></el-table-column>
+                            <el-table-column label="文件名" min-width="260">
+                                <template slot-scope="scope">
+                                    <div class="file-manager-file-name-cell">
+                                        <span class="file-manager-file-name-text" :title="scope.row.fileName">{{ scope.row.fileName }}</span>
+                                        <i
+                                            class="file-manager-favorite-star"
+                                            :class="isFileFavorited(scope.row) ? 'el-icon-star-on is-on' : 'el-icon-star-off'"
+                                            :title="isFileFavorited(scope.row) ? '取消收藏' : '收藏'"
+                                            @@click.stop="toggleFavorite(scope.row)">
+                                        </i>
+                                    </div>
+                                </template>
+                            </el-table-column>
                             <el-table-column label="更新者" width="120" show-overflow-tooltip>
                                 <template slot-scope="scope">{{ updatedByLabel(scope.row) }}</template>
                             </el-table-column>
@@ -1377,7 +1475,12 @@
 
         <div class="file-manager-recycle-panel" v-if="activeNavKey === 'recycle' && recycleBin">
             <div class="file-manager-recycle-header">
-                <el-button type="primary" size="small" icon="el-icon-delete" @@click="emptyRecycleBin">一键清空</el-button>
+                <el-button
+                    type="primary"
+                    size="small"
+                    icon="el-icon-delete"
+                    :loading="!!recycleBin.emptying"
+                    @@click.stop.prevent="emptyRecycleBin">一键清空</el-button>
             </div>
             <div class="file-manager-recycle-table-wrap">
                 <el-table
@@ -1393,8 +1496,17 @@
                         </div>
                     </template>
                     <el-table-column type="selection" width="48"></el-table-column>
-                    <el-table-column prop="fileName" label="文件名称" min-width="220" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column label="文件名称" min-width="280">
+                        <template slot-scope="scope">
+                            <div class="file-manager-favorite-name-cell">
+                                <span class="file-manager-favorite-name" :title="scope.row.fileName">{{ scope.row.fileName }}</span>
+                                <div class="file-manager-favorite-path" :title="scope.row.folderPathText">{{ scope.row.folderPathText }}</div>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip>
+                        <template slot-scope="scope">{{ scope.row.updatedBy || updatedByLabel(scope.row) }}</template>
+                    </el-table-column>
                     <el-table-column prop="fileSize" label="大小" width="110">
                         <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                     </el-table-column>
@@ -1442,13 +1554,29 @@
                             <strong>暂无文档</strong>
                         </div>
                     </template>
-                    <el-table-column prop="fileName" label="文件名称" min-width="220" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column label="文件名称" min-width="280">
+                        <template slot-scope="scope">
+                            <div class="file-manager-favorite-name-cell">
+                                <div class="file-manager-file-name-cell">
+                                    <span class="file-manager-favorite-name" :title="scope.row.fileName">{{ scope.row.fileName }}</span>
+                                    <i
+                                        class="file-manager-favorite-star is-on el-icon-star-on"
+                                        title="取消收藏"
+                                        @@click.stop="toggleFavorite(scope.row)">
+                                    </i>
+                                </div>
+                                <div class="file-manager-favorite-path" :title="scope.row.folderPathText">{{ scope.row.folderPathText }}</div>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip>
+                        <template slot-scope="scope">{{ scope.row.updatedBy || updatedByLabel(scope.row) }}</template>
+                    </el-table-column>
                     <el-table-column prop="fileSize" label="大小" width="110">
                         <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
                     </el-table-column>
-                    <el-table-column prop="updatedAt" label="更新时间" width="180">
-                        <template slot-scope="scope">{{ dateFormatter(scope.row.updatedAt) }}</template>
+                    <el-table-column label="更新时间" width="180">
+                        <template slot-scope="scope">{{ dateFormatter(scope.row.updatedAt || scope.row.uploadTime) }}</template>
                     </el-table-column>
                 </el-table>
             </div>
@@ -1633,6 +1761,27 @@
 </el-dialog>
 
 <el-dialog
+    v-if="recycleEmptyDialog"
+    :visible.sync="recycleEmptyDialog.visible"
+    width="420px"
+    custom-class="file-manager-recycle-empty-dialog"
+    append-to-body
+    :close-on-click-modal="false"
+    :show-close="true">
+    <div class="file-manager-recycle-empty-body">
+        <i class="el-icon-warning"></i>
+        <div class="file-manager-recycle-empty-text">
+            <strong>文件清空后将彻底删除，无法恢复？</strong>
+            <p>确定继续吗？</p>
+        </div>
+    </div>
+    <span slot="footer" class="dialog-footer">
+        <el-button @@click="cancelEmptyRecycleBin">取消</el-button>
+        <el-button type="danger" :loading="!!(recycleBin && recycleBin.emptying)" @@click="confirmEmptyRecycleBin">确定</el-button>
+    </span>
+</el-dialog>
+
+<el-dialog
     title="标签管理"
     :visible.sync="fileTagDialog.visible"
     width="480px"
@@ -1685,7 +1834,7 @@
     <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
     <script src="~/lib/echarts/dist/echarts.js"></script>
     <script>
-        // 嵌入的 index.js 未重编时，模板已引用 fileTagDialog，必须在 new Vue 之前注入，否则首屏 ReferenceError 白屏
+        // 嵌入的 index.js 未重编时，模板已引用 fileTagDialog / isFileFavorited，必须在 new Vue 之前注入
         (function ensureFileTagDialogBeforeVue() {
             if (!window.Vue || window.Vue.__ncfFileTagDialogMixin) return;
             window.Vue.__ncfFileTagDialogMixin = true;
@@ -1702,6 +1851,26 @@
                             draft: '',
                             row: null,
                             tags: []
+                        },
+                        favoriteStorageKey: 'ncf.fileManager.favorites',
+                        favoriteList: {
+                            keyword: '',
+                            list: [],
+                            displayList: [],
+                            page: 1,
+                            size: 20,
+                            total: 0
+                        },
+                        recycleStorageKey: 'ncf.fileManager.recycleBin',
+                        recycleEmptyDialog: { visible: false },
+                        recycleBin: {
+                            list: [],
+                            displayList: [],
+                            selectedIds: [],
+                            page: 1,
+                            size: 20,
+                            total: 0,
+                            emptying: false
                         }
                     };
                 },
@@ -1762,6 +1931,133 @@
                             this.$message.success('标签已更新');
                         } finally {
                             this.fileTagDialog.loading = false;
+                        }
+                    },
+                    isFileFavorited: function (row) {
+                        if (!row || row.id == null || !this.favoriteList) return false;
+                        return (this.favoriteList.list || []).some(function (item) { return item.id === row.id; });
+                    },
+                    buildFavoritePathText: function () {
+                        var segments = [this.rootFolderName || '企业文档', this.orgName || ''].concat(
+                            (this.folderPath || []).map(function (item) { return item.name; })
+                        ).filter(function (name) { return !!name; });
+                        return segments.join(' > ');
+                    },
+                    saveFavoritesToStorage: function () {
+                        try {
+                            localStorage.setItem(
+                                this.favoriteStorageKey || 'ncf.fileManager.favorites',
+                                JSON.stringify((this.favoriteList && this.favoriteList.list) || [])
+                            );
+                        } catch (e) { /* ignore */ }
+                    },
+                    syncFavoriteFlagsOnTable: function () {
+                        var self = this;
+                        (this.tableData || []).forEach(function (row) {
+                            self.$set(row, 'isFavorite', self.isFileFavorited(row));
+                        });
+                    },
+                    searchFavorites: function () {
+                        if (!this.favoriteList) return;
+                        var keyword = (this.favoriteList.keyword || '').trim().toLowerCase();
+                        var filtered = (this.favoriteList.list || []).filter(function (row) {
+                            if (!keyword) return true;
+                            return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1
+                                || String(row.folderPathText || '').toLowerCase().indexOf(keyword) !== -1;
+                        });
+                        this.favoriteList.displayList = filtered;
+                        this.favoriteList.total = filtered.length;
+                    },
+                    toggleFavorite: function (row) {
+                        if (!row || row.id == null) return;
+                        if (!this.favoriteList) {
+                            this.$set(this, 'favoriteList', { keyword: '', list: [], displayList: [], page: 1, size: 20, total: 0 });
+                        }
+                        var list = this.favoriteList.list || [];
+                        var index = -1;
+                        for (var i = 0; i < list.length; i++) {
+                            if (list[i].id === row.id) { index = i; break; }
+                        }
+                        if (index >= 0) {
+                            list.splice(index, 1);
+                            this.$set(row, 'isFavorite', false);
+                            this.$message.success('已取消收藏');
+                        } else {
+                            list.unshift({
+                                id: row.id,
+                                fileName: row.fileName,
+                                fileSize: row.fileSize,
+                                uploadTime: row.uploadTime,
+                                updatedAt: row.uploadTime || row.updatedAt,
+                                updatedBy: typeof this.updatedByLabel === 'function' ? this.updatedByLabel(row) : '-',
+                                folderPathText: this.buildFavoritePathText(),
+                                resourceScope: this.resourceScope,
+                                isFavorite: true
+                            });
+                            this.$set(row, 'isFavorite', true);
+                            this.$message.success('已加入收藏');
+                        }
+                        this.favoriteList.list = list;
+                        this.saveFavoritesToStorage();
+                        this.searchFavorites();
+                        this.syncFavoriteFlagsOnTable();
+                    },
+                    emptyRecycleBin: function () {
+                        var list = (this.recycleBin && (this.recycleBin.list || this.recycleBin.displayList)) || [];
+                        if (!list.length) {
+                            this.$message.info('回收站暂无文档');
+                            return;
+                        }
+                        if (!this.recycleEmptyDialog) {
+                            this.$set(this, 'recycleEmptyDialog', { visible: false });
+                        }
+                        this.recycleEmptyDialog.visible = true;
+                    },
+                    cancelEmptyRecycleBin: function () {
+                        if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
+                    },
+                    confirmEmptyRecycleBin: async function () {
+                        var pageUrlLocal = window.location.pathname || '/Admin/FileManager/Index';
+                        if (!this.recycleBin) return;
+                        if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
+                        var items = (this.recycleBin.list && this.recycleBin.list.length
+                            ? this.recycleBin.list
+                            : (this.recycleBin.displayList || [])).slice();
+                        if (!items.length) {
+                            this.$message.info('回收站暂无文档');
+                            return;
+                        }
+                        this.$set(this.recycleBin, 'emptying', true);
+                        var remaining = [];
+                        var successCount = 0;
+                        var lastError = '';
+                        try {
+                            var tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+                            var token = tokenInput && tokenInput.value;
+                            for (var i = 0; i < items.length; i++) {
+                                try {
+                                    await axios.post(pageUrlLocal + '?handler=Delete&id=' + encodeURIComponent(items[i].id), null, {
+                                        headers: { RequestVerificationToken: token, 'x-requested-with': 'XMLHttpRequest' }
+                                    });
+                                    successCount += 1;
+                                } catch (error) {
+                                    remaining.push(items[i]);
+                                    var data = error && error.response && error.response.data;
+                                    lastError = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || '';
+                                }
+                            }
+                            this.recycleBin.list = remaining;
+                            this.recycleBin.displayList = remaining.slice();
+                            this.recycleBin.total = remaining.length;
+                            this.recycleBin.selectedIds = [];
+                            try {
+                                localStorage.setItem(this.recycleStorageKey || 'ncf.fileManager.recycleBin', JSON.stringify(remaining));
+                            } catch (e) { /* ignore */ }
+                            if (remaining.length === 0) this.$message.success('一键清空成功');
+                            else if (successCount > 0) this.$message.warning('已彻底删除 ' + successCount + ' 个，另有 ' + remaining.length + ' 个失败' + (lastError ? '：' + lastError : ''));
+                            else this.$message.error('一键清空失败' + (lastError ? '：' + lastError : ''));
+                        } finally {
+                            this.$set(this.recycleBin, 'emptying', false);
                         }
                     }
                 }
@@ -1854,11 +2150,17 @@
                                 selectedIds: [],
                                 page: 1,
                                 size: 20,
-                                total: 0
+                                total: 0,
+                                emptying: false
                             });
                         }
+                        if (!this.recycleEmptyDialog) {
+                            Vue.set(this, 'recycleEmptyDialog', { visible: false });
+                        }
+                        this.$set(this.recycleBin, 'emptying', false);
                         this.activeNavKey = 'recycle';
-                        if (typeof this.loadRecycleBin === 'function') this.loadRecycleBin();
+                        if (typeof this.loadRecycleFromStorage === 'function') this.loadRecycleFromStorage();
+                        else if (typeof this.loadRecycleBin === 'function') this.loadRecycleBin();
                         return;
                     }
                     if (item && item.key === 'favorite') {
@@ -1935,40 +2237,180 @@
                         total: 0
                     });
                 }
+                if (!vm.recycleStorageKey) {
+                    Vue.set(vm, 'recycleStorageKey', 'ncf.fileManager.recycleBin');
+                }
 
-                if (typeof vm.loadRecycleBin !== 'function') {
-                    vm.loadRecycleBin = function () {
-                        if (!this.recycleBin) return;
-                        this.recycleBin.displayList = this.recycleBin.list || [];
-                        this.recycleBin.total = this.recycleBin.displayList.length;
-                    };
-                    vm.onRecycleSelectionChange = function (rows) {
-                        this.recycleBin.selectedIds = (rows || []).map(function (row) { return row.id; });
-                    };
-                    vm.handleRecyclePageChange = function (page) {
-                        this.recycleBin.page = page;
-                        this.loadRecycleBin();
-                    };
-                    vm.handleRecycleSizeChange = function (size) {
-                        this.recycleBin.size = size;
-                        this.recycleBin.page = 1;
-                        this.loadRecycleBin();
-                    };
-                    vm.emptyRecycleBin = function () {
-                        var self = this;
-                        if (!this.recycleBin.displayList.length) {
-                            this.$message.info('回收站暂无文档');
-                            return;
+                vm.loadRecycleBin = function () {
+                    if (!this.recycleBin) return;
+                    this.recycleBin.displayList = this.recycleBin.list || [];
+                    this.recycleBin.total = this.recycleBin.displayList.length;
+                };
+                vm.onRecycleSelectionChange = function (rows) {
+                    this.recycleBin.selectedIds = (rows || []).map(function (row) { return row.id; });
+                };
+                vm.handleRecyclePageChange = function (page) {
+                    this.recycleBin.page = page;
+                    this.loadRecycleBin();
+                };
+                vm.handleRecycleSizeChange = function (size) {
+                    this.recycleBin.size = size;
+                    this.recycleBin.page = 1;
+                    this.loadRecycleBin();
+                };
+                vm.loadRecycleFromStorage = function () {
+                    if (!this.recycleBin) {
+                        Vue.set(this, 'recycleBin', { list: [], displayList: [], selectedIds: [], page: 1, size: 20, total: 0 });
+                    }
+                    try {
+                        var raw = localStorage.getItem(this.recycleStorageKey || 'ncf.fileManager.recycleBin');
+                        var list = raw ? JSON.parse(raw) : [];
+                        this.recycleBin.list = Array.isArray(list) ? list : [];
+                    } catch (e) {
+                        this.recycleBin.list = [];
+                    }
+                    this.loadRecycleBin();
+                };
+                vm.saveRecycleToStorage = function () {
+                    try {
+                        localStorage.setItem(
+                            this.recycleStorageKey || 'ncf.fileManager.recycleBin',
+                            JSON.stringify((this.recycleBin && this.recycleBin.list) || [])
+                        );
+                    } catch (e) { /* ignore */ }
+                };
+                vm.getRecycledIdSet = function () {
+                    var set = {};
+                    ((this.recycleBin && this.recycleBin.list) || []).forEach(function (item) {
+                        if (item && item.id != null) set[item.id] = true;
+                    });
+                    return set;
+                };
+                vm.filterOutRecycledFiles = function (rows) {
+                    var recycled = this.getRecycledIdSet();
+                    return (rows || []).filter(function (row) { return !recycled[row.id]; });
+                };
+                vm.moveFileToRecycleBin = function (row) {
+                    if (!row || row.id == null) return;
+                    if (!this.recycleBin) {
+                        Vue.set(this, 'recycleBin', { list: [], displayList: [], selectedIds: [], page: 1, size: 20, total: 0 });
+                    }
+                    var list = this.recycleBin.list || [];
+                    if (list.some(function (item) { return item.id === row.id; })) return;
+                    list.unshift({
+                        id: row.id,
+                        fileName: row.fileName,
+                        fileSize: row.fileSize,
+                        uploadTime: row.uploadTime,
+                        updatedBy: typeof this.updatedByLabel === 'function' ? this.updatedByLabel(row) : '-',
+                        folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
+                        deletedAt: new Date().toISOString(),
+                        resourceScope: this.resourceScope
+                    });
+                    this.recycleBin.list = list;
+                    this.saveRecycleToStorage();
+                    this.loadRecycleBin();
+                    if (this.favoriteList && this.favoriteList.list) {
+                        this.favoriteList.list = this.favoriteList.list.filter(function (item) { return item.id !== row.id; });
+                        if (typeof this.saveFavoritesToStorage === 'function') this.saveFavoritesToStorage();
+                        if (typeof this.searchFavorites === 'function') this.searchFavorites();
+                    }
+                    this.tableData = (this.tableData || []).filter(function (item) { return item.id !== row.id; });
+                    if (this.total > 0) this.total -= 1;
+                };
+                if (!vm.recycleEmptyDialog) {
+                    Vue.set(vm, 'recycleEmptyDialog', { visible: false });
+                }
+
+                vm.emptyRecycleBin = function () {
+                    var list = (this.recycleBin && (this.recycleBin.list || this.recycleBin.displayList)) || [];
+                    if (!list.length) {
+                        this.$message.info('回收站暂无文档');
+                        return;
+                    }
+                    if (!this.recycleEmptyDialog) {
+                        Vue.set(this, 'recycleEmptyDialog', { visible: false });
+                    }
+                    this.recycleEmptyDialog.visible = true;
+                };
+                vm.cancelEmptyRecycleBin = function () {
+                    if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
+                };
+                vm.confirmEmptyRecycleBin = async function () {
+                    var pageUrlLocal = window.location.pathname || '/Admin/FileManager/Index';
+                    if (!this.recycleBin) return;
+                    if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
+
+                    var items = (this.recycleBin.list && this.recycleBin.list.length
+                        ? this.recycleBin.list
+                        : (this.recycleBin.displayList || [])).slice();
+                    if (!items.length) {
+                        this.$message.info('回收站暂无文档');
+                        return;
+                    }
+
+                    this.$set(this.recycleBin, 'emptying', true);
+                    var remaining = [];
+                    var successCount = 0;
+                    var lastError = '';
+                    try {
+                        var tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+                        var token = tokenInput && tokenInput.value;
+                        for (var i = 0; i < items.length; i++) {
+                            var item = items[i];
+                            try {
+                                await axios.post(pageUrlLocal + '?handler=Delete&id=' + encodeURIComponent(item.id), null, {
+                                    headers: {
+                                        RequestVerificationToken: token,
+                                        'x-requested-with': 'XMLHttpRequest'
+                                    }
+                                });
+                                successCount += 1;
+                            } catch (error) {
+                                remaining.push(item);
+                                var data = error && error.response && error.response.data;
+                                lastError = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || '';
+                            }
                         }
-                        this.$confirm('确认一键清空回收站吗？清空后无法恢复。', '一键清空', { type: 'warning' })
-                            .then(function () {
-                                self.recycleBin.list = [];
-                                self.recycleBin.selectedIds = [];
-                                self.loadRecycleBin();
-                                self.$message.success('回收站已清空');
-                            })
-                            .catch(function () { });
-                    };
+                        this.recycleBin.list = remaining;
+                        this.recycleBin.displayList = remaining.slice();
+                        this.recycleBin.total = remaining.length;
+                        this.recycleBin.selectedIds = [];
+                        this.saveRecycleToStorage();
+                        this.loadRecycleBin();
+                        if (remaining.length === 0) {
+                            this.$message.success('一键清空成功');
+                        } else if (successCount > 0) {
+                            this.$message.warning('已彻底删除 ' + successCount + ' 个文件，另有 ' + remaining.length + ' 个删除失败' + (lastError ? '：' + lastError : ''));
+                        } else {
+                            this.$message.error('一键清空失败' + (lastError ? '：' + lastError : '，文件未能彻底删除'));
+                        }
+                    } finally {
+                        this.$set(this.recycleBin, 'emptying', false);
+                    }
+                };
+                vm.deleteFile = async function (row) {
+                    try {
+                        var shortName = String(row.fileName || '').replace(/\.[^.]+$/, '') || row.fileName;
+                        await this.$confirm(
+                            '此操作将文件放至回收站，是否继续？',
+                            '是否删除: ' + shortName,
+                            { type: 'warning', confirmButtonText: '确定', cancelButtonText: '取消' }
+                        );
+                        this.moveFileToRecycleBin(row);
+                        this.$message.success('已移至回收站');
+                    } catch (error) {
+                        if (error !== 'cancel') {
+                            var data = error && error.response && error.response.data;
+                            var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
+                            this.$message.error('删除失败：' + (message || (error && error.message) || '请求失败'));
+                        }
+                    }
+                };
+
+                if (!vm.__recycleLoaded) {
+                    vm.__recycleLoaded = true;
+                    vm.loadRecycleFromStorage();
                 }
 
                 if (!vm.favoriteList) {
@@ -1981,27 +2423,106 @@
                         total: 0
                     });
                 }
+                if (!vm.favoriteStorageKey) {
+                    Vue.set(vm, 'favoriteStorageKey', 'ncf.fileManager.favorites');
+                }
 
-                if (typeof vm.searchFavorites !== 'function') {
-                    vm.searchFavorites = function () {
-                        if (!this.favoriteList) return;
-                        var keyword = (this.favoriteList.keyword || '').trim().toLowerCase();
-                        var filtered = (this.favoriteList.list || []).filter(function (row) {
-                            if (!keyword) return true;
-                            return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1;
+                vm.loadFavoritesFromStorage = function () {
+                    if (!this.favoriteList) {
+                        Vue.set(this, 'favoriteList', { keyword: '', list: [], displayList: [], page: 1, size: 20, total: 0 });
+                    }
+                    try {
+                        var raw = localStorage.getItem(this.favoriteStorageKey || 'ncf.fileManager.favorites');
+                        var list = raw ? JSON.parse(raw) : [];
+                        this.favoriteList.list = Array.isArray(list) ? list : [];
+                    } catch (e) {
+                        this.favoriteList.list = [];
+                    }
+                    this.searchFavorites();
+                    this.syncFavoriteFlagsOnTable();
+                };
+                vm.saveFavoritesToStorage = function () {
+                    try {
+                        localStorage.setItem(
+                            this.favoriteStorageKey || 'ncf.fileManager.favorites',
+                            JSON.stringify((this.favoriteList && this.favoriteList.list) || [])
+                        );
+                    } catch (e) { /* ignore */ }
+                };
+                vm.buildFavoritePathText = function () {
+                    var segments = [this.rootFolderName || '企业文档', this.orgName || ''].concat(
+                        (this.folderPath || []).map(function (item) { return item.name; })
+                    ).filter(function (name) { return !!name; });
+                    return segments.join(' > ');
+                };
+                vm.isFileFavorited = function (row) {
+                    if (!row || row.id == null || !this.favoriteList) return false;
+                    return (this.favoriteList.list || []).some(function (item) { return item.id === row.id; });
+                };
+                vm.syncFavoriteFlagsOnTable = function () {
+                    var self = this;
+                    (this.tableData || []).forEach(function (row) {
+                        self.$set(row, 'isFavorite', self.isFileFavorited(row));
+                    });
+                };
+                vm.toggleFavorite = function (row) {
+                    if (!row || row.id == null) return;
+                    if (!this.favoriteList) {
+                        Vue.set(this, 'favoriteList', { keyword: '', list: [], displayList: [], page: 1, size: 20, total: 0 });
+                    }
+                    var list = this.favoriteList.list || [];
+                    var index = -1;
+                    for (var i = 0; i < list.length; i++) {
+                        if (list[i].id === row.id) { index = i; break; }
+                    }
+                    if (index >= 0) {
+                        list.splice(index, 1);
+                        this.$set(row, 'isFavorite', false);
+                        this.$message.success('已取消收藏');
+                    } else {
+                        list.unshift({
+                            id: row.id,
+                            fileName: row.fileName,
+                            fileSize: row.fileSize,
+                            uploadTime: row.uploadTime,
+                            updatedAt: row.uploadTime || row.updatedAt,
+                            updatedBy: typeof this.updatedByLabel === 'function' ? this.updatedByLabel(row) : '-',
+                            folderPathText: this.buildFavoritePathText(),
+                            resourceScope: this.resourceScope,
+                            isFavorite: true
                         });
-                        this.favoriteList.displayList = filtered;
-                        this.favoriteList.total = filtered.length;
-                    };
-                    vm.handleFavoritePageChange = function (page) {
-                        this.favoriteList.page = page;
-                        this.searchFavorites();
-                    };
-                    vm.handleFavoriteSizeChange = function (size) {
-                        this.favoriteList.size = size;
-                        this.favoriteList.page = 1;
-                        this.searchFavorites();
-                    };
+                        this.$set(row, 'isFavorite', true);
+                        this.$message.success('已加入收藏');
+                    }
+                    this.favoriteList.list = list;
+                    this.saveFavoritesToStorage();
+                    this.searchFavorites();
+                    this.syncFavoriteFlagsOnTable();
+                };
+                vm.searchFavorites = function () {
+                    if (!this.favoriteList) return;
+                    var keyword = (this.favoriteList.keyword || '').trim().toLowerCase();
+                    var filtered = (this.favoriteList.list || []).filter(function (row) {
+                        if (!keyword) return true;
+                        return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1
+                            || String(row.folderPathText || '').toLowerCase().indexOf(keyword) !== -1;
+                    });
+                    this.favoriteList.displayList = filtered;
+                    this.favoriteList.total = filtered.length;
+                };
+                vm.handleFavoritePageChange = function (page) {
+                    this.favoriteList.page = page;
+                    this.searchFavorites();
+                };
+                vm.handleFavoriteSizeChange = function (size) {
+                    this.favoriteList.size = size;
+                    this.favoriteList.page = 1;
+                    this.searchFavorites();
+                };
+
+                if (!vm.__favoritesLoaded) {
+                    vm.__favoritesLoaded = true;
+                    vm.loadFavoritesFromStorage();
                 }
 
                 if (!vm.homePage) {
@@ -2165,12 +2686,14 @@
                         var response = await axios.get(url);
                         var result = response && response.data && response.data.data !== undefined ? response.data.data : (response && response.data);
                         if (Array.isArray(result)) {
-                            this.tableData = result;
+                            this.tableData = typeof this.filterOutRecycledFiles === 'function' ? this.filterOutRecycledFiles(result) : result;
                             this.total = result.length;
                         } else {
-                            this.tableData = (result && (result.items || result.data)) || [];
+                            var items = (result && (result.items || result.data)) || [];
+                            this.tableData = typeof this.filterOutRecycledFiles === 'function' ? this.filterOutRecycledFiles(items) : items;
                             this.total = (result && (result.totalCount != null ? result.totalCount : result.total)) || 0;
                         }
+                        if (typeof this.syncFavoriteFlagsOnTable === 'function') this.syncFavoriteFlagsOnTable();
                     } catch (error) {
                         var data = error && error.response && error.response.data;
                         var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));

@@ -109,8 +109,11 @@
                     selectedIds: [],
                     page: 1,
                     size: 20,
-                    total: 0
+                    total: 0,
+                    emptying: false
                 },
+                recycleEmptyDialog: { visible: false },
+                recycleStorageKey: 'ncf.fileManager.recycleBin',
                 favoriteList: {
                     keyword: '',
                     list: [],
@@ -119,6 +122,7 @@
                     size: 20,
                     total: 0
                 },
+                favoriteStorageKey: 'ncf.fileManager.favorites',
                 homePage: {
                     keyword: '',
                     list: [],
@@ -181,6 +185,8 @@
             this.restoreRouteState();
             this.syncActiveNavFromScope();
             this.initDashboardDefaults();
+            this.loadFavoritesFromStorage();
+            this.loadRecycleFromStorage();
             this.enterFolder(this.currentFolderId);
         },
         mounted: function () {
@@ -212,7 +218,8 @@
                 }
                 if (item.key === 'recycle') {
                     this.activeNavKey = 'recycle';
-                    this.loadRecycleBin();
+                    this.$set(this.recycleBin, 'emptying', false);
+                    this.loadRecycleFromStorage();
                     return;
                 }
                 if (item.key === 'favorite') {
@@ -428,27 +435,135 @@
                 this.recycleBin.page = 1;
                 this.loadRecycleBin();
             },
+            loadRecycleFromStorage: function () {
+                if (!this.recycleBin) {
+                    this.recycleBin = { list: [], displayList: [], selectedIds: [], page: 1, size: 20, total: 0 };
+                }
+                try {
+                    const raw = localStorage.getItem(this.recycleStorageKey || 'ncf.fileManager.recycleBin');
+                    const list = raw ? JSON.parse(raw) : [];
+                    this.recycleBin.list = Array.isArray(list) ? list : [];
+                } catch (e) {
+                    this.recycleBin.list = [];
+                }
+                this.loadRecycleBin();
+            },
+            saveRecycleToStorage: function () {
+                try {
+                    localStorage.setItem(
+                        this.recycleStorageKey || 'ncf.fileManager.recycleBin',
+                        JSON.stringify(this.recycleBin.list || [])
+                    );
+                } catch (e) { /* ignore */ }
+            },
+            getRecycledIdSet: function () {
+                const set = {};
+                (this.recycleBin && this.recycleBin.list || []).forEach(function (item) {
+                    if (item && item.id != null) set[item.id] = true;
+                });
+                return set;
+            },
+            filterOutRecycledFiles: function (rows) {
+                const recycled = this.getRecycledIdSet();
+                return (rows || []).filter(function (row) { return !recycled[row.id]; });
+            },
+            moveFileToRecycleBin: function (row) {
+                if (!row || row.id == null) return;
+                if (!this.recycleBin) {
+                    this.recycleBin = { list: [], displayList: [], selectedIds: [], page: 1, size: 20, total: 0 };
+                }
+                const list = this.recycleBin.list || [];
+                if (list.some(function (item) { return item.id === row.id; })) return;
+                list.unshift({
+                    id: row.id,
+                    fileName: row.fileName,
+                    fileSize: row.fileSize,
+                    uploadTime: row.uploadTime,
+                    updatedBy: typeof this.updatedByLabel === 'function' ? this.updatedByLabel(row) : '-',
+                    folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
+                    deletedAt: new Date().toISOString(),
+                    resourceScope: this.resourceScope
+                });
+                this.recycleBin.list = list;
+                this.saveRecycleToStorage();
+                this.loadRecycleBin();
+
+                // 从收藏中移除
+                if (this.favoriteList && this.favoriteList.list) {
+                    this.favoriteList.list = this.favoriteList.list.filter(function (item) { return item.id !== row.id; });
+                    this.saveFavoritesToStorage();
+                    this.searchFavorites();
+                }
+
+                // 从当前列表移除
+                this.tableData = (this.tableData || []).filter(function (item) { return item.id !== row.id; });
+                if (this.total > 0) this.total -= 1;
+            },
             emptyRecycleBin: function () {
-                var self = this;
-                if (!this.recycleBin.displayList.length) {
+                var list = (this.recycleBin && (this.recycleBin.list || this.recycleBin.displayList)) || [];
+                if (!list.length) {
                     this.$message.info('回收站暂无文档');
                     return;
                 }
-                this.$confirm('确认一键清空回收站吗？清空后无法恢复。', '一键清空', { type: 'warning' })
-                    .then(function () {
-                        self.recycleBin.list = [];
-                        self.recycleBin.selectedIds = [];
-                        self.loadRecycleBin();
-                        self.$message.success('回收站已清空');
-                    })
-                    .catch(function () { });
+                if (!this.recycleEmptyDialog) {
+                    this.$set(this, 'recycleEmptyDialog', { visible: false });
+                }
+                this.recycleEmptyDialog.visible = true;
+            },
+            cancelEmptyRecycleBin: function () {
+                if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
+            },
+            confirmEmptyRecycleBin: async function () {
+                if (!this.recycleBin) return;
+                if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
+
+                var items = (this.recycleBin.list && this.recycleBin.list.length
+                    ? this.recycleBin.list
+                    : (this.recycleBin.displayList || [])).slice();
+                if (!items.length) {
+                    this.$message.info('回收站暂无文档');
+                    return;
+                }
+
+                this.$set(this.recycleBin, 'emptying', true);
+                var remaining = [];
+                var successCount = 0;
+                var lastError = '';
+                try {
+                    for (var i = 0; i < items.length; i++) {
+                        var item = items[i];
+                        try {
+                            await post(pageUrl + '?handler=Delete&id=' + encodeURIComponent(item.id));
+                            successCount += 1;
+                        } catch (error) {
+                            remaining.push(item);
+                            lastError = errorMessage(error);
+                        }
+                    }
+                    this.recycleBin.list = remaining;
+                    this.recycleBin.displayList = remaining.slice();
+                    this.recycleBin.total = remaining.length;
+                    this.recycleBin.selectedIds = [];
+                    this.saveRecycleToStorage();
+                    this.loadRecycleBin();
+                    if (remaining.length === 0) {
+                        this.$message.success('一键清空成功');
+                    } else if (successCount > 0) {
+                        this.$message.warning('已彻底删除 ' + successCount + ' 个文件，另有 ' + remaining.length + ' 个删除失败' + (lastError ? '：' + lastError : ''));
+                    } else {
+                        this.$message.error('一键清空失败' + (lastError ? '：' + lastError : '，文件未能彻底删除'));
+                    }
+                } finally {
+                    this.$set(this.recycleBin, 'emptying', false);
+                }
             },
             searchFavorites: function () {
                 if (!this.favoriteList) return;
                 const keyword = (this.favoriteList.keyword || '').trim().toLowerCase();
                 const filtered = (this.favoriteList.list || []).filter(function (row) {
                     if (!keyword) return true;
-                    return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1;
+                    return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1
+                        || String(row.folderPathText || '').toLowerCase().indexOf(keyword) !== -1;
                 });
                 this.favoriteList.displayList = filtered;
                 this.favoriteList.total = filtered.length;
@@ -461,6 +576,75 @@
                 this.favoriteList.size = size;
                 this.favoriteList.page = 1;
                 this.searchFavorites();
+            },
+            loadFavoritesFromStorage: function () {
+                if (!this.favoriteList) {
+                    this.favoriteList = { keyword: '', list: [], displayList: [], page: 1, size: 20, total: 0 };
+                }
+                try {
+                    const raw = localStorage.getItem(this.favoriteStorageKey || 'ncf.fileManager.favorites');
+                    const list = raw ? JSON.parse(raw) : [];
+                    this.favoriteList.list = Array.isArray(list) ? list : [];
+                } catch (e) {
+                    this.favoriteList.list = [];
+                }
+                this.searchFavorites();
+                this.syncFavoriteFlagsOnTable();
+            },
+            saveFavoritesToStorage: function () {
+                try {
+                    localStorage.setItem(
+                        this.favoriteStorageKey || 'ncf.fileManager.favorites',
+                        JSON.stringify(this.favoriteList.list || [])
+                    );
+                } catch (e) { /* ignore quota */ }
+            },
+            buildFavoritePathText: function () {
+                const segments = [this.rootFolderName || '企业文档', this.orgName || ''].concat(
+                    (this.folderPath || []).map(function (item) { return item.name; })
+                ).filter(function (name) { return !!name; });
+                return segments.join(' > ');
+            },
+            isFileFavorited: function (row) {
+                if (!row || row.id == null || !this.favoriteList) return false;
+                return (this.favoriteList.list || []).some(function (item) { return item.id === row.id; });
+            },
+            syncFavoriteFlagsOnTable: function () {
+                const self = this;
+                (this.tableData || []).forEach(function (row) {
+                    self.$set(row, 'isFavorite', self.isFileFavorited(row));
+                });
+            },
+            toggleFavorite: function (row) {
+                if (!row || row.id == null) return;
+                if (!this.favoriteList) {
+                    this.favoriteList = { keyword: '', list: [], displayList: [], page: 1, size: 20, total: 0 };
+                }
+                const list = this.favoriteList.list || [];
+                const index = list.findIndex(function (item) { return item.id === row.id; });
+                if (index >= 0) {
+                    list.splice(index, 1);
+                    this.$set(row, 'isFavorite', false);
+                    this.$message.success('已取消收藏');
+                } else {
+                    list.unshift({
+                        id: row.id,
+                        fileName: row.fileName,
+                        fileSize: row.fileSize,
+                        uploadTime: row.uploadTime,
+                        updatedAt: row.uploadTime || row.updatedAt,
+                        updatedBy: this.updatedByLabel(row),
+                        folderPathText: this.buildFavoritePathText(),
+                        resourceScope: this.resourceScope,
+                        isFavorite: true
+                    });
+                    this.$set(row, 'isFavorite', true);
+                    this.$message.success('已加入收藏');
+                }
+                this.favoriteList.list = list;
+                this.saveFavoritesToStorage();
+                this.searchFavorites();
+                this.syncFavoriteFlagsOnTable();
             },
             searchHomeRecent: function () {
                 if (!this.homePage) return;
@@ -634,12 +818,14 @@
                     // PagedList used to serialize as a bare array (TotalCount lost).
                     // Prefer explicit { items, totalCount }; still accept legacy shapes.
                     if (Array.isArray(result)) {
-                        this.tableData = result;
+                        this.tableData = this.filterOutRecycledFiles(result);
                         this.total = result.length;
                     } else {
-                        this.tableData = (result && (result.items || result.data)) || [];
+                        const items = (result && (result.items || result.data)) || [];
+                        this.tableData = this.filterOutRecycledFiles(items);
                         this.total = (result && (result.totalCount != null ? result.totalCount : result.total)) || 0;
                     }
+                    this.syncFavoriteFlagsOnTable();
                 } catch (error) {
                     this.$message.error('获取文件列表失败：' + errorMessage(error));
                 } finally {
@@ -715,11 +901,14 @@
             downloadFile: function (row) { window.location.assign(pageUrl + '?handler=Download&id=' + encodeURIComponent(row.id)); },
             deleteFile: async function (row) {
                 try {
-                    const referenceHint = this.isSiteAsset ? '' : '；若它仍被知识库关联，系统会阻止删除';
-                    await this.$confirm('删除后无法恢复' + referenceHint + '，确认删除“' + row.fileName + '”吗？', '确认删除', { type: 'warning' });
-                    await post(pageUrl + '?handler=Delete&id=' + encodeURIComponent(row.id));
-                    this.$message.success('已删除');
-                    await this.getList();
+                    const shortName = String(row.fileName || '').replace(/\.[^.]+$/, '') || row.fileName;
+                    await this.$confirm(
+                        '此操作将文件放至回收站，是否继续？',
+                        '是否删除: ' + shortName,
+                        { type: 'warning', confirmButtonText: '确定', cancelButtonText: '取消' }
+                    );
+                    this.moveFileToRecycleBin(row);
+                    this.$message.success('已移至回收站');
                 } catch (error) {
                     if (error !== 'cancel') this.$message.error('删除失败：' + errorMessage(error));
                 }
