@@ -1761,13 +1761,13 @@
 </el-dialog>
 
 <el-dialog
-    v-if="recycleEmptyDialog"
     :visible.sync="recycleEmptyDialog.visible"
     width="420px"
     custom-class="file-manager-recycle-empty-dialog"
     append-to-body
     :close-on-click-modal="false"
-    :show-close="true">
+    :close-on-press-escape="!(recycleBin && recycleBin.emptying)"
+    :show-close="!(recycleBin && recycleBin.emptying)">
     <div class="file-manager-recycle-empty-body">
         <i class="el-icon-warning"></i>
         <div class="file-manager-recycle-empty-text">
@@ -1776,8 +1776,8 @@
         </div>
     </div>
     <span slot="footer" class="dialog-footer">
-        <el-button @@click="cancelEmptyRecycleBin">取消</el-button>
-        <el-button type="danger" :loading="!!(recycleBin && recycleBin.emptying)" @@click="confirmEmptyRecycleBin">确定</el-button>
+        <el-button :disabled="!!(recycleBin && recycleBin.emptying)" @@click.stop="cancelEmptyRecycleBin">取消</el-button>
+        <el-button type="danger" :loading="!!(recycleBin && recycleBin.emptying)" @@click.stop="confirmEmptyRecycleBin">确定</el-button>
     </span>
 </el-dialog>
 
@@ -2011,41 +2011,42 @@
                         if (!this.recycleEmptyDialog) {
                             this.$set(this, 'recycleEmptyDialog', { visible: false });
                         }
+                        if (this.recycleBin) this.$set(this.recycleBin, 'emptying', false);
                         this.recycleEmptyDialog.visible = true;
                     },
                     cancelEmptyRecycleBin: function () {
+                        if (this.recycleBin && this.recycleBin.emptying) return;
                         if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
                     },
                     confirmEmptyRecycleBin: async function () {
                         var pageUrlLocal = window.location.pathname || '/Admin/FileManager/Index';
-                        if (!this.recycleBin) return;
-                        if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
+                        if (!this.recycleBin || this.recycleBin.emptying) return;
                         var items = (this.recycleBin.list && this.recycleBin.list.length
                             ? this.recycleBin.list
                             : (this.recycleBin.displayList || [])).slice();
                         if (!items.length) {
+                            if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
                             this.$message.info('回收站暂无文档');
                             return;
                         }
                         this.$set(this.recycleBin, 'emptying', true);
-                        var remaining = [];
-                        var successCount = 0;
-                        var lastError = '';
                         try {
                             var tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
                             var token = tokenInput && tokenInput.value;
-                            for (var i = 0; i < items.length; i++) {
-                                try {
-                                    await axios.post(pageUrlLocal + '?handler=Delete&id=' + encodeURIComponent(items[i].id), null, {
-                                        headers: { RequestVerificationToken: token, 'x-requested-with': 'XMLHttpRequest' }
-                                    });
-                                    successCount += 1;
-                                } catch (error) {
-                                    remaining.push(items[i]);
-                                    var data = error && error.response && error.response.data;
-                                    lastError = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || '';
+                            var ids = items.map(function (item) { return item.id; }).filter(function (id) { return id != null; });
+                            var response = await axios.post(pageUrlLocal + '?handler=EmptyRecycle', { ids: ids }, {
+                                headers: {
+                                    RequestVerificationToken: token,
+                                    'x-requested-with': 'XMLHttpRequest',
+                                    'Content-Type': 'application/json'
                                 }
-                            }
+                            });
+                            var payload = response && response.data;
+                            var result = payload && payload.data !== undefined ? payload.data : payload;
+                            var failedIds = (result && result.failedIds) || [];
+                            var failedSet = {};
+                            failedIds.forEach(function (id) { failedSet[id] = true; });
+                            var remaining = items.filter(function (item) { return failedSet[item.id]; });
                             this.recycleBin.list = remaining;
                             this.recycleBin.displayList = remaining.slice();
                             this.recycleBin.total = remaining.length;
@@ -2053,9 +2054,14 @@
                             try {
                                 localStorage.setItem(this.recycleStorageKey || 'ncf.fileManager.recycleBin', JSON.stringify(remaining));
                             } catch (e) { /* ignore */ }
-                            if (remaining.length === 0) this.$message.success('一键清空成功');
-                            else if (successCount > 0) this.$message.warning('已彻底删除 ' + successCount + ' 个，另有 ' + remaining.length + ' 个失败' + (lastError ? '：' + lastError : ''));
-                            else this.$message.error('一键清空失败' + (lastError ? '：' + lastError : ''));
+                            if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
+                            if (remaining.length === 0) this.$message.success((result && result.message) || '一键清空成功');
+                            else if (remaining.length < items.length) this.$message.warning((result && result.message) || ('部分删除失败，仍有 ' + remaining.length + ' 个'));
+                            else this.$message.error((result && result.message) || '一键清空失败');
+                        } catch (error) {
+                            var data = error && error.response && error.response.data;
+                            var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || '请求失败';
+                            this.$message.error('一键清空失败：' + message);
                         } finally {
                             this.$set(this.recycleBin, 'emptying', false);
                         }
@@ -2331,60 +2337,89 @@
                     if (!this.recycleEmptyDialog) {
                         Vue.set(this, 'recycleEmptyDialog', { visible: false });
                     }
+                    this.$set(this.recycleBin, 'emptying', false);
                     this.recycleEmptyDialog.visible = true;
                 };
                 vm.cancelEmptyRecycleBin = function () {
+                    if (this.recycleBin && this.recycleBin.emptying) return;
                     if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
                 };
                 vm.confirmEmptyRecycleBin = async function () {
                     var pageUrlLocal = window.location.pathname || '/Admin/FileManager/Index';
-                    if (!this.recycleBin) return;
-                    if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
-
+                    if (!this.recycleBin || this.recycleBin.emptying) return;
                     var items = (this.recycleBin.list && this.recycleBin.list.length
                         ? this.recycleBin.list
                         : (this.recycleBin.displayList || [])).slice();
                     if (!items.length) {
+                        if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
                         this.$message.info('回收站暂无文档');
                         return;
                     }
-
                     this.$set(this.recycleBin, 'emptying', true);
-                    var remaining = [];
-                    var successCount = 0;
-                    var lastError = '';
                     try {
                         var tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
                         var token = tokenInput && tokenInput.value;
-                        for (var i = 0; i < items.length; i++) {
-                            var item = items[i];
-                            try {
-                                await axios.post(pageUrlLocal + '?handler=Delete&id=' + encodeURIComponent(item.id), null, {
-                                    headers: {
-                                        RequestVerificationToken: token,
-                                        'x-requested-with': 'XMLHttpRequest'
-                                    }
-                                });
-                                successCount += 1;
-                            } catch (error) {
-                                remaining.push(item);
-                                var data = error && error.response && error.response.data;
-                                lastError = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || '';
+                        var ids = items.map(function (item) { return item.id; }).filter(function (id) { return id != null; });
+                        var result = null;
+                        try {
+                            var response = await axios.post(pageUrlLocal + '?handler=EmptyRecycle', { ids: ids }, {
+                                headers: {
+                                    RequestVerificationToken: token,
+                                    'x-requested-with': 'XMLHttpRequest',
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+                            var payload = response && response.data;
+                            result = payload && payload.data !== undefined ? payload.data : payload;
+                        } catch (batchError) {
+                            var remainingFallback = [];
+                            var successFallback = 0;
+                            var lastError = '';
+                            for (var i = 0; i < items.length; i++) {
+                                try {
+                                    await axios.post(pageUrlLocal + '?handler=Delete&id=' + encodeURIComponent(items[i].id), null, {
+                                        headers: {
+                                            RequestVerificationToken: token,
+                                            'x-requested-with': 'XMLHttpRequest'
+                                        }
+                                    });
+                                    successFallback += 1;
+                                } catch (error) {
+                                    remainingFallback.push(items[i]);
+                                    var data = error && error.response && error.response.data;
+                                    lastError = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title || data.msg)) || (error && error.message) || '';
+                                }
                             }
+                            result = {
+                                deletedCount: successFallback,
+                                failedIds: remainingFallback.map(function (x) { return x.id; }),
+                                message: remainingFallback.length === 0
+                                    ? '一键清空成功'
+                                    : ('已删除 ' + successFallback + ' 个，失败 ' + remainingFallback.length + ' 个' + (lastError ? '：' + lastError : ''))
+                            };
                         }
+                        var failedIds = (result && result.failedIds) || [];
+                        var failedSet = {};
+                        failedIds.forEach(function (id) { failedSet[id] = true; });
+                        var remaining = items.filter(function (item) { return failedSet[item.id]; });
                         this.recycleBin.list = remaining;
                         this.recycleBin.displayList = remaining.slice();
                         this.recycleBin.total = remaining.length;
                         this.recycleBin.selectedIds = [];
                         this.saveRecycleToStorage();
                         this.loadRecycleBin();
+                        if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
                         if (remaining.length === 0) {
-                            this.$message.success('一键清空成功');
-                        } else if (successCount > 0) {
-                            this.$message.warning('已彻底删除 ' + successCount + ' 个文件，另有 ' + remaining.length + ' 个删除失败' + (lastError ? '：' + lastError : ''));
+                            this.$message.success((result && result.message) || '一键清空成功');
+                        } else if (remaining.length < items.length) {
+                            this.$message.warning((result && result.message) || ('部分文件删除失败，仍有 ' + remaining.length + ' 个留在回收站'));
                         } else {
-                            this.$message.error('一键清空失败' + (lastError ? '：' + lastError : '，文件未能彻底删除'));
+                            this.$message.error((result && result.message) || '一键清空失败，文件未能彻底删除');
                         }
+                    } catch (error) {
+                        var errData = error && error.response && error.response.data;
+                        var message = typeof errData === 'string' ? errData : (errData && (errData.errorMessage || errData.message || errData.title || errData.msg)) || (error && error.message) || '请求失败';
+                        this.$message.error('一键清空失败：' + message);
                     } finally {
                         this.$set(this.recycleBin, 'emptying', false);
                     }

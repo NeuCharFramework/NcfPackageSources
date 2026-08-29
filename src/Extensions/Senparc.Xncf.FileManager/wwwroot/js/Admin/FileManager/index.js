@@ -508,51 +508,77 @@
                 if (!this.recycleEmptyDialog) {
                     this.$set(this, 'recycleEmptyDialog', { visible: false });
                 }
+                this.$set(this.recycleBin, 'emptying', false);
                 this.recycleEmptyDialog.visible = true;
             },
             cancelEmptyRecycleBin: function () {
+                if (this.recycleBin && this.recycleBin.emptying) return;
                 if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
             },
             confirmEmptyRecycleBin: async function () {
-                if (!this.recycleBin) return;
-                if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
+                if (!this.recycleBin || (this.recycleBin && this.recycleBin.emptying)) return;
 
                 var items = (this.recycleBin.list && this.recycleBin.list.length
                     ? this.recycleBin.list
                     : (this.recycleBin.displayList || [])).slice();
                 if (!items.length) {
+                    if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
                     this.$message.info('回收站暂无文档');
                     return;
                 }
 
                 this.$set(this.recycleBin, 'emptying', true);
-                var remaining = [];
-                var successCount = 0;
-                var lastError = '';
                 try {
-                    for (var i = 0; i < items.length; i++) {
-                        var item = items[i];
-                        try {
-                            await post(pageUrl + '?handler=Delete&id=' + encodeURIComponent(item.id));
-                            successCount += 1;
-                        } catch (error) {
-                            remaining.push(item);
-                            lastError = errorMessage(error);
+                    var ids = items.map(function (item) { return item.id; }).filter(function (id) { return id != null; });
+                    var result = null;
+                    try {
+                        result = unwrap(await post(pageUrl + '?handler=EmptyRecycle', { ids: ids }));
+                    } catch (batchError) {
+                        // 后端未重编时回退为逐个 Delete
+                        var remainingFallback = [];
+                        var successFallback = 0;
+                        var lastError = '';
+                        for (var i = 0; i < items.length; i++) {
+                            try {
+                                await post(pageUrl + '?handler=Delete&id=' + encodeURIComponent(items[i].id));
+                                successFallback += 1;
+                            } catch (error) {
+                                remainingFallback.push(items[i]);
+                                lastError = errorMessage(error);
+                            }
                         }
+                        result = {
+                            deletedCount: successFallback,
+                            failedIds: remainingFallback.map(function (x) { return x.id; }),
+                            message: remainingFallback.length === 0
+                                ? '一键清空成功'
+                                : ('已删除 ' + successFallback + ' 个，失败 ' + remainingFallback.length + ' 个' + (lastError ? '：' + lastError : ''))
+                        };
                     }
+
+                    var failedIds = (result && result.failedIds) || [];
+                    var failedSet = {};
+                    failedIds.forEach(function (id) { failedSet[id] = true; });
+
+                    var remaining = items.filter(function (item) { return failedSet[item.id]; });
                     this.recycleBin.list = remaining;
                     this.recycleBin.displayList = remaining.slice();
                     this.recycleBin.total = remaining.length;
                     this.recycleBin.selectedIds = [];
                     this.saveRecycleToStorage();
                     this.loadRecycleBin();
+
+                    if (this.recycleEmptyDialog) this.recycleEmptyDialog.visible = false;
+
                     if (remaining.length === 0) {
-                        this.$message.success('一键清空成功');
-                    } else if (successCount > 0) {
-                        this.$message.warning('已彻底删除 ' + successCount + ' 个文件，另有 ' + remaining.length + ' 个删除失败' + (lastError ? '：' + lastError : ''));
+                        this.$message.success((result && result.message) || '一键清空成功');
+                    } else if (remaining.length < items.length) {
+                        this.$message.warning((result && result.message) || ('部分文件删除失败，仍有 ' + remaining.length + ' 个留在回收站'));
                     } else {
-                        this.$message.error('一键清空失败' + (lastError ? '：' + lastError : '，文件未能彻底删除'));
+                        this.$message.error((result && result.message) || '一键清空失败，文件未能彻底删除');
                     }
+                } catch (error) {
+                    this.$message.error('一键清空失败：' + errorMessage(error));
                 } finally {
                     this.$set(this.recycleBin, 'emptying', false);
                 }
