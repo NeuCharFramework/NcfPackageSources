@@ -21,6 +21,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
+    修改标识：Senparc - 20260829
+    修改描述：v0.17.0 增强 Agent 请求诊断、ChatGroup 状态处理与工作流对象支持
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -220,7 +223,8 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 ProviderName,
                 groupRun.ChatTaskId,
                 groupRun.ChatGroupId,
-                groupRun.ChatGroupName);
+                groupRun.ChatGroupName,
+                request.ObjectId);
             return groupRun.Status == ChatTask_Status.Finished
                 ? new WorkflowObjectExecutionResult(
                     true,
@@ -258,9 +262,17 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         CancellationToken cancellationToken)
     {
         var agent = await _agentService.GetObjectAsync(z => z.Id == agentId).ConfigureAwait(false);
+        var reference = new WorkflowObjectExecutionReference(
+            "agent",
+            ProviderName,
+            DisplayName: agent?.Name,
+            ObjectId: request.ObjectId);
         if (agent == null || !agent.Enable)
         {
-            return new WorkflowObjectExecutionResult(false, null, "独立 Agent 不存在或未启用。");
+            return new WorkflowObjectExecutionResult(false, null, "独立 Agent 不存在或未启用")
+            {
+                Reference = reference
+            };
         }
 
         var allowFunctionCalls = GetBooleanParameter(
@@ -307,15 +319,29 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 cancellationToken).ConfigureAwait(false);
         }
 
-        var execution = await _agentTemplateRunner.RunAsync(
-                agent,
-                request.Input,
-                runRequest,
-                cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
-        return execution.Success
-            ? new WorkflowObjectExecutionResult(true, execution.Output)
-            : new WorkflowObjectExecutionResult(false, null, execution.ErrorMessage);
+        try
+        {
+            var execution = await _agentTemplateRunner.RunAsync(
+                    agent,
+                    request.Input,
+                    runRequest,
+                    cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            return execution.Success
+                ? new WorkflowObjectExecutionResult(true, execution.Output) { Reference = reference }
+                : new WorkflowObjectExecutionResult(false, null, execution.ErrorMessage) { Reference = reference };
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            return new WorkflowObjectExecutionResult(false, null, $"独立 Agent 执行失败：{ex.Message}")
+            {
+                Reference = reference
+            };
+        }
     }
 
     private async ValueTask<WorkflowObjectExecutionResult> ExecuteSingleAgentWithHumanApprovalAsync(
@@ -418,9 +444,14 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         }
 
         var result = output.ToString().Trim();
+        var reference = new WorkflowObjectExecutionReference(
+            "agent",
+            ProviderName,
+            DisplayName: agent.Name,
+            ObjectId: request.ObjectId);
         return string.IsNullOrWhiteSpace(result)
-            ? new WorkflowObjectExecutionResult(false, null, "独立 Agent 没有返回有效内容。")
-            : new WorkflowObjectExecutionResult(true, result);
+            ? new WorkflowObjectExecutionResult(false, null, "独立 Agent 没有返回有效内容。") { Reference = reference }
+            : new WorkflowObjectExecutionResult(true, result) { Reference = reference };
     }
 
     private async ValueTask<WorkflowObjectExecutionResult> ExecuteRemoteA2AAsync(
@@ -449,9 +480,14 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 .ToAgentResponseAsync(cancellationToken)
                 .ConfigureAwait(false);
             var output = response?.Text?.Trim();
+            var reference = new WorkflowObjectExecutionReference(
+                "a2a",
+                ProviderName,
+                DisplayName: remoteAgent.Name,
+                ObjectId: request.ObjectId);
             return string.IsNullOrWhiteSpace(output)
-                ? new WorkflowObjectExecutionResult(false, null, "远程 A2A Agent 没有返回可显示内容。")
-                : new WorkflowObjectExecutionResult(true, output);
+                ? new WorkflowObjectExecutionResult(false, null, "远程 A2A Agent 没有返回可显示内容。") { Reference = reference }
+                : new WorkflowObjectExecutionResult(true, output) { Reference = reference };
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
@@ -459,7 +495,14 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         }
         catch (Exception ex)
         {
-            return new WorkflowObjectExecutionResult(false, null, $"远程 A2A Agent 调用失败：{ex.Message}");
+            return new WorkflowObjectExecutionResult(false, null, $"远程 A2A Agent 调用失败：{ex.Message}")
+            {
+                Reference = new WorkflowObjectExecutionReference(
+                    "a2a",
+                    ProviderName,
+                    DisplayName: remoteAgent.Name,
+                    ObjectId: request.ObjectId)
+            };
         }
     }
 

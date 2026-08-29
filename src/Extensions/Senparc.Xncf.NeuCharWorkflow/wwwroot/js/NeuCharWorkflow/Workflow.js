@@ -964,6 +964,11 @@ new Vue({
             if (status) query.set('status', status);
             window.location.assign(`/Admin/NeuCharWorkflow/Tasks?${query.toString()}`);
         },
+        openWorkflowAnalytics() {
+            const workflowId = Number(this.form && this.form.id || 0);
+            if (!Number.isInteger(workflowId) || workflowId <= 0) return;
+            window.location.assign(`/Admin/NeuCharWorkflow/Analytics?workflowId=${encodeURIComponent(workflowId)}`);
+        },
         hasAgentGroupConversation(event) {
             const reference = event && event.objectReference;
             return reference && reference.kind === 'agent-group' && Number(reference.chatTaskId) > 0;

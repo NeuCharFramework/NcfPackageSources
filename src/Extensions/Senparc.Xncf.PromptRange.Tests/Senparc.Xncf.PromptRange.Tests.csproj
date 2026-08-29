@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.11</Version>
+		<Version>0.0.12</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 升级 Senparc.AI.AgentKernel 并完成兼容性适配，升级并适配 net10.0 框架
     1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -27,6 +27,8 @@
     1、补充 PromptResult 流式输出回归测试
     [2026-08-22] v0.0.11 补充 PromptRange 流式结果回归测试
     1、覆盖流式响应增量字段和低 Token 输出处理
+    [2026-08-29] v0.0.12 Dependency updates from Senparc.Ncf.Core.Tests to 0.0.9
+    1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.9
 		</PackageReleaseNotes>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>

@@ -31,6 +31,7 @@
                     type="primary"
                     @@close="clearWorkflowFilter">当前工作流 #{{workflowIdFilter}}</el-tag>
             <el-input v-model="keyword" size="small" clearable prefix-icon="el-icon-search" placeholder="搜索工作流或状态"></el-input>
+            <el-button size="small" icon="el-icon-data-analysis" @@click="openAnalytics">统计分析</el-button>
             <el-button size="small" icon="el-icon-delete" type="danger" plain :loading="cleaning" @@click="quickCleanTasks">快速清理</el-button>
             <el-button size="small" icon="el-icon-refresh" :loading="loading" @@click="refreshTasks">刷新</el-button>
         </div>
@@ -42,17 +43,21 @@
               class="workflow-task-consume-status"></el-alert>
 
     <section class="workflow-task-summary" aria-label="任务统计">
-        <button type="button" :class="['workflow-task-summary-card',{active:statusFilter===''}]" @@click="statusFilter=''">
-            <strong>{{tasks.length}}</strong><span>全部任务</span>
+        <button type="button" :class="['workflow-task-summary-card',{active:statusFilter===''}]" @@click="selectStatus('')">
+            <strong>{{summaryCount('all')}}</strong><span>全部任务</span>
+            <el-tag v-if="statusFilter===''" size="mini" type="primary" effect="plain">当前</el-tag>
         </button>
-        <button type="button" :class="['workflow-task-summary-card',{active:statusFilter==='running'}]" @@click="statusFilter='running'">
-            <strong>{{statusCount('running')}}</strong><span>正在运行</span>
+        <button type="button" :class="['workflow-task-summary-card',{active:statusFilter==='running'}]" @@click="selectStatus('running')">
+            <strong>{{summaryCount('running')}}</strong><span>正在运行</span>
+            <el-tag v-if="statusFilter==='running'" size="mini" type="primary" effect="plain">当前</el-tag>
         </button>
-        <button type="button" :class="['workflow-task-summary-card',{active:statusFilter==='success'}]" @@click="statusFilter='success'">
-            <strong>{{statusCount('success')}}</strong><span>运行成功</span>
+        <button type="button" :class="['workflow-task-summary-card',{active:statusFilter==='success'}]" @@click="selectStatus('success')">
+            <strong>{{summaryCount('success')}}</strong><span>运行成功</span>
+            <el-tag v-if="statusFilter==='success'" size="mini" type="primary" effect="plain">当前</el-tag>
         </button>
-        <button type="button" :class="['workflow-task-summary-card',{active:statusFilter==='failed'}]" @@click="statusFilter='failed'">
-            <strong>{{statusCount('failed')}}</strong><span>运行失败</span>
+        <button type="button" :class="['workflow-task-summary-card',{active:statusFilter==='failed'}]" @@click="selectStatus('failed')">
+            <strong>{{summaryCount('failed')}}</strong><span>运行失败</span>
+            <el-tag v-if="statusFilter==='failed'" size="mini" type="primary" effect="plain">当前</el-tag>
         </button>
     </section>
 

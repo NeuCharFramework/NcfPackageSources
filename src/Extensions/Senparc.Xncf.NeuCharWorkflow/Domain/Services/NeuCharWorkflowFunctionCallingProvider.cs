@@ -7,12 +7,16 @@
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
 
+    修改标识：Senparc - 20260829
+    修改描述：v0.3.0 新增工作流分析查询与管理端可视化
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,15 +35,18 @@ public sealed class NeuCharWorkflowFunctionCallingProvider : IWorkflowFunctionCa
     private readonly NeuCharWorkflowService _workflowService;
     private readonly NeuCharWorkflowAppService _workflowAppService;
     private readonly XncfModuleService _moduleService;
+    private readonly IServiceScopeFactory _scopeFactory;
 
     public NeuCharWorkflowFunctionCallingProvider(
         NeuCharWorkflowService workflowService,
         NeuCharWorkflowAppService workflowAppService,
-        XncfModuleService moduleService)
+        XncfModuleService moduleService,
+        IServiceScopeFactory scopeFactory)
     {
         _workflowService = workflowService;
         _workflowAppService = workflowAppService;
         _moduleService = moduleService;
+        _scopeFactory = scopeFactory;
     }
 
     public async Task<IReadOnlyList<WorkflowFunctionCallingDescriptor>> GetAvailableAsync(
@@ -71,6 +78,28 @@ public sealed class NeuCharWorkflowFunctionCallingProvider : IWorkflowFunctionCa
         string input,
         IReadOnlyDictionary<string, object?> parameters,
         CancellationToken cancellationToken = default)
+    {
+        // Agent Function invocations can resume after an external HIL request and may
+        // overlap other Group/Workflow work. Do not reuse the scoped provider captured
+        // while the Agent tools were built; its services own a scoped EF Core DbContext.
+        using var scope = _scopeFactory.CreateScope();
+        var isolatedProvider = scope.ServiceProvider
+            .GetRequiredService<NeuCharWorkflowFunctionCallingProvider>();
+        return await isolatedProvider.ExecuteCoreAsync(
+                workflowId,
+                adminUserId,
+                input,
+                parameters,
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    private async Task<WorkflowFunctionCallingResult> ExecuteCoreAsync(
+        int workflowId,
+        int adminUserId,
+        string input,
+        IReadOnlyDictionary<string, object?> parameters,
+        CancellationToken cancellationToken)
     {
         if (!await IsModuleOpenAsync().ConfigureAwait(false))
         {

@@ -119,6 +119,10 @@
                                    @@click="openWorkflowTasks">任务</el-button>
                         <el-button v-if="form.id"
                                    size="small"
+                                   icon="el-icon-data-analysis"
+                                   @@click="openWorkflowAnalytics">统计</el-button>
+                        <el-button v-if="form.id"
+                                   size="small"
                                    type="warning"
                                    plain
                                    icon="el-icon-loading"

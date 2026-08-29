@@ -5,6 +5,7 @@ new Vue({
             loading: false,
             loadingMore: false,
             tasks: [],
+            summary: {},
             hasMore: false,
             nextExecutionLogId: null,
             keyword: '',
@@ -14,6 +15,8 @@ new Vue({
             cleaning: false,
             focusedRunId: '',
             workflowIdFilter: 0,
+            fromDate: '',
+            toDate: '',
             neuBellConsumeMessage: '',
             neuBellConsumeError: false
         };
@@ -39,6 +42,8 @@ new Vue({
         this.workflowIdFilter = Number.isInteger(workflowId) && workflowId > 0 ? workflowId : 0;
         const status = String(query.get('status') || '').trim().toLowerCase();
         this.statusFilter = ['running', 'success', 'failed'].includes(status) ? status : '';
+        this.fromDate = query.get('from') || '';
+        this.toDate = query.get('to') || '';
         this.loadTasks();
         this.consumeNeuBellFromRoute();
     },
@@ -63,6 +68,7 @@ new Vue({
             try {
                 const page = await this.getTaskPage();
                 this.tasks = this.sortTasks(page.items);
+                this.summary = page.summary || {};
                 this.hasMore = page.hasMore;
                 this.nextExecutionLogId = page.nextExecutionLogId;
             } catch (error) {
@@ -79,6 +85,7 @@ new Vue({
             try {
                 const page = await this.getTaskPage();
                 const wasEmpty = this.tasks.length === 0;
+                this.summary = page.summary || this.summary;
                 this.mergeLatestTasks(page.items);
                 // 已加载到末尾时，刷新只合并顶部新增记录，不能重新把已加载历史标记为“未加载”。
                 if (wasEmpty) {
@@ -123,16 +130,19 @@ new Vue({
             if (beforeExecutionLogId) query.push(`beforeExecutionLogId=${encodeURIComponent(beforeExecutionLogId)}`);
             if (this.workflowIdFilter) query.push(`workflowId=${encodeURIComponent(this.workflowIdFilter)}`);
             if (this.statusFilter) query.push(`status=${encodeURIComponent(this.statusFilter)}`);
+            if (this.fromDate) query.push(`from=${encodeURIComponent(this.fromDate)}`);
+            if (this.toDate) query.push(`to=${encodeURIComponent(this.toDate)}`);
             const suffix = query.length ? `&${query.join('&')}` : '';
             const response = await service.get(`/Admin/NeuCharWorkflow/Tasks?handler=List${suffix}`);
             const body = NeuCharWorkflowUi.unwrap(response) || {};
             if (Array.isArray(body)) {
-                return { items: body, hasMore: false, nextExecutionLogId: null };
+                return { items: body, hasMore: false, nextExecutionLogId: null, summary: {} };
             }
             return {
                 items: Array.isArray(body.items) ? body.items : [],
                 hasMore: Boolean(body.hasMore),
-                nextExecutionLogId: body.nextExecutionLogId || null
+                nextExecutionLogId: body.nextExecutionLogId || null,
+                summary: body.summary || {}
             };
         },
         mergeLatestTasks(items) {
@@ -171,8 +181,20 @@ new Vue({
             if (this.refreshTimer) window.clearTimeout(this.refreshTimer);
             this.refreshTimer = null;
         },
+        summaryCount(status) {
+            if (status === 'all') return Number(this.summary.totalRuns ?? this.tasks.length);
+            const property = status === 'running' ? 'runningCount' : status === 'success' ? 'successCount' : 'failedCount';
+            return Number(this.summary[property] ?? this.statusCount(status));
+        },
         statusCount(status) {
             return this.tasks.filter(task => task.status === status).length;
+        },
+        selectStatus(status) {
+            const nextStatus = status || '';
+            if (this.statusFilter === nextStatus) return;
+            this.statusFilter = nextStatus;
+            this.syncRoute();
+            this.loadTasks();
         },
         statusText(status) {
             return { running: '运行中', success: '成功', failed: '失败' }[status] || '未知';
@@ -290,9 +312,27 @@ new Vue({
             const search = window.location && window.location.search;
             return new URLSearchParams(search || '');
         },
+        syncRoute() {
+            const query = new URLSearchParams();
+            if (this.workflowIdFilter) query.set('workflowId', String(this.workflowIdFilter));
+            if (this.statusFilter) query.set('status', this.statusFilter);
+            if (this.fromDate) query.set('from', this.fromDate);
+            if (this.toDate) query.set('to', this.toDate);
+            const url = `/Admin/NeuCharWorkflow/Tasks${query.toString() ? `?${query.toString()}` : ''}`;
+            window.history.replaceState({}, '', url);
+        },
         clearWorkflowFilter() {
-            const query = this.statusFilter ? `?status=${encodeURIComponent(this.statusFilter)}` : '';
-            window.location.assign(`/Admin/NeuCharWorkflow/Tasks${query}`);
+            this.workflowIdFilter = 0;
+            this.syncRoute();
+            this.loadTasks();
+        },
+        openAnalytics() {
+            const query = new URLSearchParams();
+            if (this.workflowIdFilter) query.set('workflowId', String(this.workflowIdFilter));
+            if (this.statusFilter) query.set('status', this.statusFilter);
+            if (this.fromDate) query.set('from', this.fromDate);
+            if (this.toDate) query.set('to', this.toDate);
+            window.location.assign(`/Admin/NeuCharWorkflow/Analytics${query.toString() ? `?${query.toString()}` : ''}`);
         },
         taskRowClass({ row }) {
             return this.focusedRunId && String(row.runId || '').replace(/-/g, '').toLowerCase() ===

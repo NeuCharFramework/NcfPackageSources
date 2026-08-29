@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
 
+    修改标识：Senparc - 20260829
+    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -156,7 +159,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 using var stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonBody));
                 var result = await Senparc.CO2NET.HttpUtility.Post.PostGetJsonAsync<AdminUserInfo_SetDigitalPipeResponse>(
                     ServiceProvider,
-                    "http://192.168.1.175:5000/api/DisplayNumber",
+                    "http://192.168.1.64:5000/api/DisplayNumber",
                     cookieContainer: null,
                     fileStream: stream,
                     encoding: Encoding.UTF8,

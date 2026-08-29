@@ -22,6 +22,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
 
+    修改标识：Senparc - 20260829
+    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -115,6 +118,8 @@ namespace Senparc.Areas.Admin.Domain.Models
                 .IsUnique();
             modelBuilder.Entity<NeuCharPivotLoopTask>()
                 .HasIndex(z => new { z.Enabled, z.NextRunAt });
+            modelBuilder.Entity<NeuCharPivotLoopTask>()
+                .HasIndex(z => z.WorkflowId);
             modelBuilder.Entity<NeuCharExecutionLog>()
                 .HasIndex(z => z.CorrelationId);
             modelBuilder.Entity<NeuCharExecutionLog>()

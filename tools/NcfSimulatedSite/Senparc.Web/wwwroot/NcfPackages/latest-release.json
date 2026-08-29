@@ -1,36 +1,42 @@
 {
-  "tag_name": "v0.35.0-build10008",
-  "name": "NCF Release v0.35.0-build10008",
+  "tag_name": "v0.39.0-build10090",
+  "name": "NCF Release v0.39.0-build10090",
   "assets": [
     {
-      "name": "ncf-linux-arm64-0.35.0-build10008.zip",
-      "browser_download_url": "https://www.ncf.pub/NcfPackages/host/v0.35.0-build10008/ncf-linux-arm64-0.35.0-build10008.zip",
-      "size": 106265041
+      "name": "ncf-linux-arm64-0.39.0-build10090.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/host/v0.39.0-build10090/ncf-linux-arm64-0.39.0-build10090.zip",
+      "size": 106123828,
+      "md5": "c5ef5356f0e0e0bbe600c2d5906d3252"
     },
     {
-      "name": "ncf-linux-x64-0.35.0-build10008.zip",
-      "browser_download_url": "https://www.ncf.pub/NcfPackages/host/v0.35.0-build10008/ncf-linux-x64-0.35.0-build10008.zip",
-      "size": 108838012
+      "name": "ncf-linux-x64-0.39.0-build10090.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/host/v0.39.0-build10090/ncf-linux-x64-0.39.0-build10090.zip",
+      "size": 108697448,
+      "md5": "697407a6b654951c6e5f5665b80a0def"
     },
     {
-      "name": "ncf-osx-arm64-0.35.0-build10008.zip",
-      "browser_download_url": "https://www.ncf.pub/NcfPackages/host/v0.35.0-build10008/ncf-osx-arm64-0.35.0-build10008.zip",
-      "size": 105131573
+      "name": "ncf-osx-arm64-0.39.0-build10090.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/host/v0.39.0-build10090/ncf-osx-arm64-0.39.0-build10090.zip",
+      "size": 105007411,
+      "md5": "e32c3fc5249147144976d419a3f01c60"
     },
     {
-      "name": "ncf-osx-x64-0.35.0-build10008.zip",
-      "browser_download_url": "https://www.ncf.pub/NcfPackages/host/v0.35.0-build10008/ncf-osx-x64-0.35.0-build10008.zip",
-      "size": 107833444
+      "name": "ncf-osx-x64-0.39.0-build10090.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/host/v0.39.0-build10090/ncf-osx-x64-0.39.0-build10090.zip",
+      "size": 107709484,
+      "md5": "5e7133096fa2a32e642a5eed7704a98d"
     },
     {
-      "name": "ncf-win-arm64-0.35.0-build10008.zip",
-      "browser_download_url": "https://www.ncf.pub/NcfPackages/host/v0.35.0-build10008/ncf-win-arm64-0.35.0-build10008.zip",
-      "size": 107660157
+      "name": "ncf-win-arm64-0.39.0-build10090.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/host/v0.39.0-build10090/ncf-win-arm64-0.39.0-build10090.zip",
+      "size": 107432863,
+      "md5": "94f6ebc26a9fab9fa2eede34b2195c79"
     },
     {
-      "name": "ncf-win-x64-0.35.0-build10008.zip",
-      "browser_download_url": "https://www.ncf.pub/NcfPackages/host/v0.35.0-build10008/ncf-win-x64-0.35.0-build10008.zip",
-      "size": 109747913
+      "name": "ncf-win-x64-0.39.0-build10090.zip",
+      "browser_download_url": "https://www.ncf.pub/NcfPackages/host/v0.39.0-build10090/ncf-win-x64-0.39.0-build10090.zip",
+      "size": 109521635,
+      "md5": "df1c6ff4580ac0df138649a4296ebe02"
     }
   ]
 }

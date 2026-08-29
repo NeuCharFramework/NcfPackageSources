@@ -234,6 +234,11 @@ new Vue({
                 window.location.assign(`/Admin/NeuCharWorkflow/Tasks?workflowId=${encodeURIComponent(this.replay.workflowId)}`);
             }
         },
+        openWorkflowAnalytics() {
+            if (this.replay && this.replay.workflowId) {
+                window.location.assign(`/Admin/NeuCharWorkflow/Analytics?workflowId=${encodeURIComponent(this.replay.workflowId)}`);
+            }
+        },
         hasAgentGroupConversation(event) {
             const reference = event && event.objectReference;
             return reference && reference.kind === 'agent-group' && Number(reference.chatTaskId) > 0;

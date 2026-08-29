@@ -415,6 +415,14 @@
                     return '/Admin/XncfModule/Start/?' + search.toString() + anchor;
                 },
                 openFunction(functionKey) {
+                    if (functionKey && window.NeuCharPivotFunction &&
+                        typeof window.NeuCharPivotFunction.open === 'function') {
+                        window.NeuCharPivotFunction.open({
+                            moduleUid: this.moduleUid,
+                            functionKey: functionKey
+                        });
+                        return;
+                    }
                     window.location.assign(this.getFunctionUrl(functionKey, functionKey ? 'run' : 'settings'));
                 },
                 openSetup() {

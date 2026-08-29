@@ -31,6 +31,7 @@
             <div class="workflow-replay-actions">
                 <el-button icon="el-icon-back" @@click="backToTasks">返回任务列表</el-button>
                 <el-button icon="el-icon-tickets" @@click="openWorkflowTasks">查看此工作流任务</el-button>
+                <el-button icon="el-icon-data-analysis" @@click="openWorkflowAnalytics">查看统计</el-button>
                 <el-button type="primary" plain icon="el-icon-copy-document" :loading="copying" @@click="copyReplay">复制当前工作流并编辑</el-button>
                 <el-button type="primary" icon="el-icon-edit-outline" @@click="openLatestWorkflow">查看最新工作流</el-button>
             </div>

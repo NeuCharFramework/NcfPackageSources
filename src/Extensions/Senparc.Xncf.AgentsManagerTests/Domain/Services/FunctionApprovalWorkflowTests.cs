@@ -132,6 +132,65 @@ public class FunctionApprovalWorkflowTests
     }
 
     [TestMethod]
+    public async Task ApprovedFunctionCallInGroupChatResumesWithoutAdditionalTurnToken()
+    {
+        var tool = new RecordingTool();
+        using var toolClient = new FunctionInvokingChatClient(new FunctionRequestChatClient());
+        var function = AIFunctionFactory.Create(
+            (Func<string, string>)tool.Crawl,
+            name: "Crawl");
+        var toolAgent = new ChatClientAgent(
+            toolClient,
+            new ChatClientAgentOptions
+            {
+                Name = "Crawler",
+                ChatOptions = new ChatOptions
+                {
+                    Tools = [new ApprovalRequiredAIFunction(function)],
+                    AllowMultipleToolCalls = false
+                }
+            });
+        var passiveAgent = new ChatClientAgent(
+            new TextChatClient("等待爬虫结果"),
+            new ChatClientAgentOptions { Name = "Coordinator" });
+        var workflow = AgentWorkflowBuilder
+            .CreateGroupChatBuilderWith(agents =>
+            {
+                var manager = new RoundRobinGroupChatManager(agents)
+                {
+                    MaximumIterationCount = 4
+                };
+                return manager;
+            })
+            .AddParticipants([toolAgent, passiveAgent])
+            .Build();
+
+        await using var run = await InProcessExecution.RunStreamingAsync(
+            workflow,
+            new List<ChatMessage> { new(ChatRole.User, "读取网页") });
+
+        RequestInfoEvent? requestEvent = null;
+        for (var turn = 0; turn < 4 && requestEvent == null; turn++)
+        {
+            Assert.IsTrue(await run.TrySendMessageAsync(new TurnToken(emitEvents: true)));
+            requestEvent = (await ReadUntilHaltAsync(run))
+                .OfType<RequestInfoEvent>()
+                .FirstOrDefault();
+        }
+
+        Assert.IsNotNull(requestEvent);
+        var approvalRequest = requestEvent.Request.Data.As<ToolApprovalRequestContent>();
+        Assert.IsNotNull(approvalRequest);
+
+        await run.SendResponseAsync(requestEvent.Request.CreateResponse(
+            approvalRequest.CreateResponse(true, "测试批准")));
+        await ReadUntilHaltAsync(run);
+
+        Assert.AreEqual(1, tool.InvocationCount);
+        Assert.AreEqual("https://www.ncf.pub", tool.LastUrl);
+    }
+
+    [TestMethod]
     public async Task RequestStoreResolutionResumesApprovedFunctionCallInGroupChat()
     {
         var tool = new RecordingTool();

@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.8</Version>
+		<Version>0.0.9</Version>
 		<PackageReleaseNotes>
 		  [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
 		  1、Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.2-preview2
@@ -39,6 +39,15 @@
 		  2、补充多库支持矩阵日志 BuildSupportMatrixLog 单测
 		  [2026-08-22] v0.0.8 补充多数据库支持矩阵日志回归测试
 		  1、覆盖 BuildSupportMatrixLog 的数据库绑定和矩阵输出行为
+		  [2026-08-29] v0.0.9 Dependency updates from Senparc.Ncf.Database.MySql.Backcup to 0.20.10; Dependency update from Senparc.Ncf.Database.MySql to 0.20.10; Dependency update from Senparc.Ncf.Database.Oracle to 0.10.10; Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.10; Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.10; Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.10; Dependency update from Senparc.Ncf.Database to 0.21.10; Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
+		  1、Dependency update from Senparc.Ncf.Database.MySql.Backcup to 0.20.10
+		  2、Dependency update from Senparc.Ncf.Database.MySql to 0.20.10
+		  3、Dependency update from Senparc.Ncf.Database.Oracle to 0.10.10
+		  4、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.10
+		  5、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.10
+		  6、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.10
+		  7、Dependency update from Senparc.Ncf.Database to 0.21.10
+		  8、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
 		</PackageReleaseNotes>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>

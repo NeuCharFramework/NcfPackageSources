@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
 
+    修改标识：Senparc - 20260829
+    修改描述：v0.3.0 新增工作流分析查询与管理端可视化
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -54,6 +57,7 @@ public sealed class NeuCharWorkflowAppService
     private readonly NeuCharWorkflowExecutionLogService _executionLogService;
     private readonly NeuCharWorkflowEngine _workflowEngine;
     private readonly NeuCharWorkflowFunctionService _functionService;
+    private readonly NeuCharWorkflowAnalyticsService _analyticsService;
     private readonly NeuCharWorkflowRunCoordinator _runCoordinator;
     private readonly WorkflowEventPublisher _eventPublisher;
     private readonly XncfModuleService _xncfModuleService;
@@ -67,6 +71,7 @@ public sealed class NeuCharWorkflowAppService
         NeuCharWorkflowExecutionLogService executionLogService,
         NeuCharWorkflowEngine workflowEngine,
         NeuCharWorkflowFunctionService functionService,
+        NeuCharWorkflowAnalyticsService analyticsService,
         NeuCharWorkflowRunCoordinator runCoordinator,
         WorkflowEventPublisher eventPublisher,
         XncfModuleService xncfModuleService,
@@ -79,6 +84,7 @@ public sealed class NeuCharWorkflowAppService
         _executionLogService = executionLogService;
         _workflowEngine = workflowEngine;
         _functionService = functionService;
+        _analyticsService = analyticsService;
         _runCoordinator = runCoordinator;
         _eventPublisher = eventPublisher;
         _xncfModuleService = xncfModuleService;
@@ -486,15 +492,14 @@ public sealed class NeuCharWorkflowAppService
         int? beforeExecutionLogId = null,
         int? workflowId = null,
         string? status = null,
+        string? from = null,
+        string? to = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        var statusFilter = status?.Trim().ToLowerInvariant() switch
-        {
-            "running" or "success" or "failed" => status.Trim().ToLowerInvariant(),
-            _ => null
-        };
-        var runningOnly = statusFilter == "running";
+        var statusFilter = NeuCharWorkflowAnalyticsService.NormalizeStatus(status);
+        var fromUtc = NeuCharWorkflowAnalyticsService.ParseDate(from);
+        var toUtc = NeuCharWorkflowAnalyticsService.ParseDate(to)?.AddDays(1);
         var workflowNames = await _workflowService.GetNameMapAsync(
             adminUserId,
             cancellationToken).ConfigureAwait(false);
@@ -512,10 +517,12 @@ public sealed class NeuCharWorkflowAppService
         var activeRuns = loadLatest
             ? _runCoordinator.GetActiveRuns(adminUserId)
                 .Where(run => !workflowId.HasValue || workflowId.Value <= 0 || run.WorkflowId == workflowId.Value)
+                .Where(run => !fromUtc.HasValue || run.StartedAt.UtcDateTime >= fromUtc.Value)
+                .Where(run => !toUtc.HasValue || run.StartedAt.UtcDateTime < toUtc.Value)
                 .ToArray()
             : Array.Empty<NeuCharWorkflowActiveRun>();
 
-        var tasks = statusFilter is null or "running"
+        var tasks = string.IsNullOrWhiteSpace(statusFilter) || statusFilter == "running"
             ? activeRuns.Select(run => new WorkflowTaskListItem(
                 $"live:{run.RunId:N}",
                 run.WorkflowId,
@@ -540,7 +547,9 @@ public sealed class NeuCharWorkflowAppService
             workflowIds,
             beforeExecutionLogId,
             TaskListPageSize + 1,
-            runningOnly,
+            statusFilter,
+            fromUtc,
+            toUtc,
             cancellationToken).ConfigureAwait(false);
         var activeRunIds = activeRuns.Select(z => z.RunId).ToHashSet();
         var fetchedLogs = logPage.ToList();
@@ -571,7 +580,14 @@ public sealed class NeuCharWorkflowAppService
         return new WorkflowTaskListPage(
             tasks.OrderByDescending(z => z.StartedAt).ToList(),
             fetchedLogs.Count > TaskListPageSize,
-            pageLogs.LastOrDefault()?.Id);
+            pageLogs.LastOrDefault()?.Id,
+            await _analyticsService.GetSummaryAsync(
+                    adminUserId,
+                    workflowId,
+                    from,
+                    to,
+                    cancellationToken)
+                .ConfigureAwait(false));
     }
 
     /// <summary>兼容已编译页面与扩展模块的旧任务列表调用签名。</summary>
@@ -579,7 +595,13 @@ public sealed class NeuCharWorkflowAppService
         int adminUserId,
         int? beforeExecutionLogId,
         CancellationToken cancellationToken) =>
-        GetTaskListAsync(adminUserId, beforeExecutionLogId, null, null, cancellationToken);
+        GetTaskListAsync(adminUserId, beforeExecutionLogId, null, null, null, null, cancellationToken);
+
+    public Task<WorkflowAnalyticsResult> GetAnalyticsAsync(
+        int adminUserId,
+        WorkflowAnalyticsQuery query,
+        CancellationToken cancellationToken = default) =>
+        _analyticsService.GetAsync(adminUserId, query, cancellationToken);
 
     /// <summary>
     /// 预览当前管理员可清理的运行历史。只处理已完成的执行日志，进程内或数据库中仍未完成的任务不会被包含。
@@ -1168,7 +1190,8 @@ public sealed record WorkflowTaskListItem(
 public sealed record WorkflowTaskListPage(
     IReadOnlyList<WorkflowTaskListItem> Items,
     bool HasMore,
-    int? NextExecutionLogId);
+    int? NextExecutionLogId,
+    WorkflowAnalyticsSummary? Summary = null);
 
 /// <summary>一次快速清理在确认前展示的不可恢复数据范围。</summary>
 public sealed record WorkflowTaskCleanupPreview(
