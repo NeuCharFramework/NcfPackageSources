@@ -98,7 +98,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Remove="readme.md" />
+    <None Remove="README.md" />
     <None Remove="templates\template1\ACL\readme.md" />
     <None Remove="templates\template1\Domain\readme.md" />
     <None Remove="templates\template1\OHS\Local\readme.md" />
@@ -107,7 +107,7 @@
     <None Remove="templates\template1\readme.md" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="readme.md" Pack="true" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
