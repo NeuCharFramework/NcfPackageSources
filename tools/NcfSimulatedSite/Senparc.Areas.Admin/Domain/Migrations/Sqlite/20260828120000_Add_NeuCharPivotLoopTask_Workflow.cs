@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20260828120000_Add_NeuCharPivotLoopTask_Workflow.cs
+    文件功能描述：数据库迁移定义
+
+
+    创建标识：Senparc - 20260828
+
+    修改标识：Senparc - 20260829
+    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+
+----------------------------------------------------------------*/
+
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

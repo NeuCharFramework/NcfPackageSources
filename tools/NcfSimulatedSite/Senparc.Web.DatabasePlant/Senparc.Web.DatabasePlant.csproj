@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
 
-    <Version>0.0.10</Version>
+    <Version>0.0.11</Version>
     <PackageReleaseNotes>
       [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
       1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -24,6 +24,8 @@
       2、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0
       [2026-08-22] v0.0.10 同步模拟站点数据库示例依赖
       1、更新数据库示例项目依赖以兼容当前基础库和 AgentsManager 版本
+      [2026-08-29] v0.0.11 更新数据库示例的基础库与 Swagger 依赖兼容配置
+      1、升级 Senparc.Ncf.DatabasePlant 与 Senparc.Xncf.Swagger 依赖，匹配当前基础库组合
     </PackageReleaseNotes>
     <Configurations>Debug;Release;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
   </PropertyGroup>

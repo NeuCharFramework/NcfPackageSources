@@ -736,7 +736,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
             + Path.DirectorySeparatorChar;
         var normalizedTarget = Path.GetFullPath(target);
-        if (!normalizedTarget.StartsWith(normalizedWorkspace, StringComparison.Ordinal))
+        if (!SandboxWorkspacePaths.IsWithinWorkspace(workspace, normalizedTarget))
         {
             throw new InvalidOperationException("工作区路径越界。");
         }

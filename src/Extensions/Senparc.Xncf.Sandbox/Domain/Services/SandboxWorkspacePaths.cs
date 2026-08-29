@@ -73,7 +73,7 @@ public static class SandboxWorkspacePaths
             .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
             + Path.DirectorySeparatorChar;
         var path = Path.GetFullPath(Path.Combine(root, sessionId));
-        if (!path.StartsWith(root, StringComparison.Ordinal))
+        if (!IsWithinWorkspace(workspaceRoot, path))
         {
             throw new InvalidOperationException("工作区路径越界。");
         }
@@ -88,7 +88,7 @@ public static class SandboxWorkspacePaths
             .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
             + Path.DirectorySeparatorChar;
         var path = Path.GetFullPath(Path.Combine(root, relative.Replace('/', Path.DirectorySeparatorChar)));
-        if (!path.StartsWith(root, StringComparison.Ordinal))
+        if (!IsWithinWorkspace(workspacePath, path))
         {
             throw new InvalidOperationException("工作区路径越界。");
         }
@@ -107,5 +107,20 @@ public static class SandboxWorkspacePaths
         return relative.Length == 0
             ? mountPath.TrimEnd('/')
             : $"{mountPath.TrimEnd('/')}/{relative}";
+    }
+
+    internal static bool IsWithinWorkspace(string workspacePath, string targetPath)
+    {
+        var normalizedWorkspace = Path.GetFullPath(workspacePath)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var normalizedTarget = Path.GetFullPath(targetPath);
+
+        return string.Equals(
+                   normalizedTarget.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                   normalizedWorkspace,
+                   StringComparison.Ordinal)
+               || normalizedTarget.StartsWith(
+                   normalizedWorkspace + Path.DirectorySeparatorChar,
+                   StringComparison.Ordinal);
     }
 }

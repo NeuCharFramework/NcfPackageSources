@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.15.7</Version>
+    <Version>0.15.8</Version>
     <AssemblyName>Senparc.Xncf.Tenant</AssemblyName>
     <RootNamespace>Senparc.Xncf.Tenant</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -57,6 +57,11 @@
 				[2026-08-15] v0.15.6-preview8 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8; Senparc.Ncf.Repository to 0.20.8-preview8; Senparc.Ncf.XncfBase to 0.25.1-preview8; [5990]Senparc.Xncf.Tenant.Interface to 0.10.8-preview8
 				[2026-08-22] v0.15.7-preview9 同步 [5990]Senparc.Xncf.Tenant 依赖版本
 				1、递归更新上游项目依赖，保持 [5990]Senparc.Xncf.Tenant 与当前版本组合兼容
+				[2026-08-29] v0.15.8 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10; Dependency update from Senparc.Ncf.Repository to 0.20.9-preview9; Dependency update from Senparc.Ncf.XncfBase to 0.26.1; Dependency update from [5990]Senparc.Xncf.Tenant.Interface to 0.10.9-preview9
+				1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
+				2、Dependency update from Senparc.Ncf.Repository to 0.20.9-preview9
+				3、Dependency update from Senparc.Ncf.XncfBase to 0.26.1
+				4、Dependency update from [5990]Senparc.Xncf.Tenant.Interface to 0.10.9-preview9
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

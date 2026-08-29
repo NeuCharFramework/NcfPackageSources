@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <AssemblyName>Senparc.Xncf.Sandbox</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -30,6 +30,9 @@
       6、管理端展示无限 TTL 状态，并提供会话生命周期调整入口
       7、增加 Jupyter C# 模板、预览代理和工作区路径约束，完善 Docker/Wasm 运行时配置
       8、支持会话 TTL 更新和永久保持状态，管理端提供生命周期调整与回收反馈
+      [2026-08-29] v0.3.0 支持从全局 NeuCharPivot 受控调用 Sandbox Function
+      1、新增全局调用入口并复用既有 Function 执行路径，保持模块和参数校验
+      2、通过显式启用与管理员访问边界限制全局调用，保留原 Sandbox 页面入口
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

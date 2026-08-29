@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.6.2</Version>
+    <Version>0.6.3</Version>
     <AssemblyName>Senparc.Xncf.FileManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.FileManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -53,6 +53,9 @@
       [2026-08-15] v0.6.1-preview2 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8; Senparc.Ncf.Service to 0.23.8-preview8
       [2026-08-22] v0.6.2-preview3 修复文件管理脚本缓存刷新
       1、为文件管理页面脚本引用补充版本参数，确保部署后加载最新资源
+      [2026-08-29] v0.6.3 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10; Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
+      1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
+      2、Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
