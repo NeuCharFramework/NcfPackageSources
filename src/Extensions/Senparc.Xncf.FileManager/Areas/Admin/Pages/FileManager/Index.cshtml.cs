@@ -71,7 +71,15 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
                 Math.Clamp(pageSize, 1, 100),
                 folderId,
                 resourceScope);
-            return Ok(result);
+            // PagedList<T> inherits List<T>; serializing it alone becomes a bare JSON
+            // array and drops TotalCount. Return an explicit page envelope for the UI.
+            return Ok(new
+            {
+                items = result.ToList(),
+                totalCount = result.TotalCount,
+                pageIndex = result.PageIndex,
+                pageCount = result.PageCount
+            });
         }
 
         public async Task<IActionResult> OnGetFoldersAsync(

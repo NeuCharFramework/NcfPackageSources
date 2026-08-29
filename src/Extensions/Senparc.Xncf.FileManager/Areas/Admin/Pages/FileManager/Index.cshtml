@@ -10,178 +10,2254 @@
     <el-breadcrumb-item>文件资源管理</el-breadcrumb-item>
 }
 
-@section style {
-    <link rel="stylesheet" href="~/css/Admin/FileManager/index.css" />
+@section Style {
+    <link rel="stylesheet" href="~/css/Admin/FileManager/index.css" asp-append-version="true" />
+    <style>
+        /* ========== 清除父级对布局节点的控制 ========== */
+        .el-main.admin-content:has(.file-manager-layout),
+        .admin-content:has(.file-manager-layout) {
+            all: unset;
+            display: block !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            height: calc(100vh - 96px) !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+            background: #fff !important;
+        }
+
+        .admin-content:has(.file-manager-layout) .ifram-wrapper {
+            all: unset;
+            display: block !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            height: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+        }
+
+        /* ========== 根布局：横向 flex ========== */
+        .file-manager-layout {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            align-items: stretch !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 480px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+            overflow: hidden !important;
+            float: none !important;
+            position: relative !important;
+        }
+
+        /* ========== 左栏 / 主区域 ========== */
+        .file-manager-layout-left,
+        .file-manager-layout-main {
+            box-sizing: border-box !important;
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+            float: none !important;
+            position: relative !important;
+        }
+
+        .file-manager-layout-left {
+            flex: 0 0 15% !important;
+            width: 15% !important;
+            max-width: 15% !important;
+            border-right: 1px solid #ebeef5 !important;
+            background: #f5f7fa !important;
+        }
+
+        .file-manager-layout-main {
+            flex: 1 1 85% !important;
+            width: 85% !important;
+            min-width: 0 !important;
+            background: #fff !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        /* 文件浏览：主区域内再分 树 + 表 */
+        .file-manager-layout-main .file-manager-browser {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap {
+            flex: 0 0 18%;
+            width: 18%;
+            max-width: 280px;
+            min-width: 180px;
+            height: 100%;
+            border-right: 1px solid #ebeef5;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .file-manager-layout-main .file-manager-content-wrap {
+            flex: 1 1 auto;
+            min-width: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        /* ========== 左栏：导航 ========== */
+        .file-manager-layout-left .file-manager-nav-panel {
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .file-manager-layout-left .file-manager-nav-list {
+            list-style: none;
+            margin: 0;
+            padding: 8px 0;
+        }
+
+        .file-manager-layout-left .file-manager-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #606266;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .file-manager-layout-left .file-manager-nav-item i {
+            width: 16px;
+            text-align: center;
+            color: #909399;
+            font-size: 14px;
+        }
+
+        .file-manager-layout-left .file-manager-nav-item:hover {
+            color: #303133;
+            background: #eef1f6;
+        }
+
+        .file-manager-layout-left .file-manager-nav-item.is-active {
+            color: #409eff;
+            background: #ecf5ff;
+            font-weight: 500;
+        }
+
+        .file-manager-layout-left .file-manager-nav-item.is-active i {
+            color: #409eff;
+        }
+
+        .file-manager-layout-left .file-manager-nav-item.is-divider {
+            height: 1px;
+            padding: 0;
+            margin: 8px 14px;
+            background: #e4e7ed;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* ========== 中栏：目录树 ========== */
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-panel {
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-org-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-shrink: 0;
+            padding: 14px 12px 10px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-org-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #303133;
+            line-height: 1.4;
+            word-break: break-all;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-org-toggle {
+            flex-shrink: 0;
+            color: #909399;
+            cursor: pointer;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-search {
+            flex-shrink: 0;
+            padding: 8px 10px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-body {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 6px 0 12px;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-root-node {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 0 8px 4px;
+            padding: 7px 10px;
+            border-radius: 4px;
+            color: #606266;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-root-node:hover,
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-root-node.is-active {
+            color: #409eff;
+            background: #ecf5ff;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-node {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-actions {
+            display: none;
+            white-space: nowrap;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .el-tree-node__content:hover .file-manager-tree-actions {
+            display: inline-flex;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .file-manager-tree-actions .el-button {
+            margin-left: 2px;
+            padding: 2px;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .el-tree {
+            background: transparent;
+        }
+
+        .file-manager-layout-main .file-manager-tree-wrap .el-tree-node__content {
+            height: 32px;
+        }
+
+        /* ========== 右栏：文件表 ========== */
+        .file-manager-layout-main .file-manager-main-panel {
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .file-manager-layout-main .file-manager-top-bar {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .file-manager-layout-main .file-manager-top-search {
+            flex: 1;
+            max-width: 420px;
+            min-width: 0;
+        }
+
+        .file-manager-layout-main .file-manager-top-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .file-manager-layout-main .file-manager-nav-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            padding: 10px 16px;
+            border-bottom: 1px solid #f0f2f5;
+            color: #909399;
+            font-size: 13px;
+        }
+
+        .file-manager-layout-main .file-manager-back-link {
+            color: #409eff;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .file-manager-layout-main .file-manager-back-link:hover {
+            color: #66b1ff;
+        }
+
+        .file-manager-layout-main .file-manager-nav-divider {
+            color: #dcdfe6;
+        }
+
+        .file-manager-layout-main .file-manager-nav-bar .el-breadcrumb {
+            line-height: 1;
+        }
+
+        .file-manager-layout-main .file-manager-table-wrap {
+            flex: 1;
+            min-height: 0;
+            padding: 0 16px;
+            overflow: auto;
+        }
+
+        .file-manager-layout-main .file-manager-pagination {
+            display: flex;
+            justify-content: flex-end;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-top: 1px solid #f0f2f5;
+        }
+
+        .file-manager-layout-main .file-manager-empty {
+            display: flex;
+            min-height: 280px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #909399;
+        }
+
+        .file-manager-layout-main .file-manager-empty i {
+            color: #c0c4cc;
+            font-size: 48px;
+        }
+
+        .file-manager-layout-main .file-manager-empty strong {
+            color: #606266;
+            font-size: 14px;
+        }
+
+        /* ========== 数据面板：占满 file-manager-layout-main ========== */
+        .file-manager-layout-main .file-manager-dashboard-panel {
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            padding: 12px;
+            overflow: auto;
+            background: #f0f2f5;
+        }
+
+        .file-manager-dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: minmax(300px, 1fr) minmax(300px, 1fr);
+            gap: 12px;
+            width: 100%;
+            height: 100%;
+            min-height: calc(100vh - 140px);
+        }
+
+        .file-manager-dash-chart {
+            flex: 1;
+            min-height: 240px;
+            width: 100%;
+        }
+
+        .file-manager-dash-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            background: #fff;
+            border: 1px solid #e4e7ed;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .file-manager-dash-card-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            padding: 12px 14px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #303133;
+        }
+
+        .file-manager-dash-card-header .el-icon-question {
+            color: #c0c4cc;
+            font-size: 14px;
+            cursor: help;
+        }
+
+        .file-manager-dash-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            padding: 10px 14px;
+        }
+
+        .file-manager-dash-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            padding: 8px 14px 0;
+            font-size: 12px;
+            color: #909399;
+        }
+
+        .file-manager-dash-used-tag {
+            padding: 2px 8px;
+            border-radius: 2px;
+            background: #f0f9eb;
+            color: #67c23a;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .file-manager-dash-org-list {
+            flex: 1;
+            min-height: 0;
+            margin: 8px 0 0;
+            padding: 0 14px 12px;
+            overflow: auto;
+        }
+
+        .file-manager-dash-org-head,
+        .file-manager-dash-org-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 13px;
+        }
+
+        .file-manager-dash-org-head {
+            color: #909399;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 1;
+        }
+
+        .file-manager-dash-org-row {
+            color: #606266;
+        }
+
+        .file-manager-dash-org-name {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-manager-dash-org-name i {
+            color: #409eff;
+            flex-shrink: 0;
+        }
+
+        .file-manager-dash-org-size {
+            flex-shrink: 0;
+            color: #909399;
+        }
+
+        .file-manager-folder-input {
+            display: none !important;
+        }
+
+        .file-manager-folder-upload-summary,
+        .file-manager-upload-target {
+            margin: 12px 0;
+        }
+
+        .file-manager-upload-note {
+            margin-top: 10px;
+        }
+
+        /* ========== 上传对话框（图1样式） ========== */
+        .file-manager-upload-dialog .el-dialog__header {
+            padding: 14px 20px;
+            border-bottom: 1px solid #ebeef5;
+        }
+
+        .file-manager-upload-dialog .el-dialog__title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #303133;
+            line-height: 1.4;
+        }
+
+        .file-manager-upload-dialog .el-dialog__body {
+            padding: 16px 20px 8px;
+        }
+
+        .file-manager-upload-dialog .el-dialog__footer {
+            padding: 12px 20px 16px;
+            border-top: 1px solid #ebeef5;
+        }
+
+        .file-manager-upload-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .file-manager-upload-dropzone {
+            width: 100%;
+        }
+
+        .file-manager-upload-dropzone .el-upload {
+            width: 100%;
+        }
+
+        .file-manager-upload-dropzone .el-upload-dragger {
+            width: 100%;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #c0c4cc;
+            border-radius: 4px;
+            background: #fff;
+        }
+
+        .file-manager-upload-dropzone .el-upload-dragger:hover {
+            border-color: #409eff;
+        }
+
+        .file-manager-upload-drop-hint {
+            color: #c0c4cc;
+            font-size: 18px;
+            line-height: 1.6;
+            text-align: center;
+            padding: 0 24px;
+            pointer-events: none;
+        }
+
+        .file-manager-upload-tip {
+            margin-top: 10px;
+            color: #909399;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .file-manager-upload-filelist {
+            margin-top: 12px;
+            max-height: 180px;
+            overflow: auto;
+        }
+
+        .file-manager-upload-start-btn {
+            background-color: #67c23a !important;
+            border-color: #67c23a !important;
+            color: #fff !important;
+        }
+
+        .file-manager-upload-start-btn:hover,
+        .file-manager-upload-start-btn:focus {
+            background-color: #85ce61 !important;
+            border-color: #85ce61 !important;
+            color: #fff !important;
+        }
+
+        .file-manager-guide {
+            margin: 0;
+            padding-left: 22px;
+            color: #606266;
+            line-height: 1.9;
+        }
+
+        /* ========== 标签管理：占满 file-manager-layout-main ========== */
+        .file-manager-layout-main .file-manager-tags-panel {
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            padding: 16px 20px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .file-manager-tags-filter {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 16px;
+            flex-shrink: 0;
+            margin-bottom: 16px;
+        }
+
+        .file-manager-tags-filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-manager-tags-filter-item > span {
+            color: #606266;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .file-manager-tags-filter-item .el-input,
+        .file-manager-tags-filter-item .el-select {
+            width: 200px;
+        }
+
+        .file-manager-tags-filter-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-manager-tags-toolbar {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 8px;
+            flex-shrink: 0;
+            margin-bottom: 12px;
+        }
+
+        .file-manager-tags-table-wrap {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+        }
+
+        .file-manager-tags-empty {
+            display: flex;
+            min-height: 320px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #909399;
+        }
+
+        .file-manager-tags-empty i {
+            font-size: 48px;
+            color: #c0c4cc;
+        }
+
+        .file-manager-tags-empty strong {
+            color: #606266;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        /* ========== 回收站：占满 file-manager-layout-main ========== */
+        .file-manager-layout-main .file-manager-recycle-panel {
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .file-manager-recycle-header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .file-manager-recycle-table-wrap {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 0 16px;
+        }
+
+        .file-manager-recycle-empty {
+            display: flex;
+            min-height: 360px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #909399;
+        }
+
+        .file-manager-recycle-empty i {
+            font-size: 52px;
+            color: #c0c4cc;
+        }
+
+        .file-manager-recycle-empty strong {
+            color: #606266;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .file-manager-recycle-pagination {
+            display: flex;
+            justify-content: flex-end;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-top: 1px solid #f0f2f5;
+        }
+
+        /* ========== 收藏：占满 file-manager-layout-main ========== */
+        .file-manager-layout-main .file-manager-favorite-panel {
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .file-manager-favorite-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .file-manager-favorite-search {
+            flex: 1;
+            max-width: 420px;
+            min-width: 0;
+        }
+
+        .file-manager-favorite-table-wrap {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            padding: 0 16px;
+        }
+
+        .file-manager-favorite-empty {
+            display: flex;
+            min-height: 360px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #909399;
+        }
+
+        .file-manager-favorite-empty i {
+            font-size: 52px;
+            color: #c0c4cc;
+        }
+
+        .file-manager-favorite-empty strong {
+            color: #606266;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .file-manager-favorite-pagination {
+            display: flex;
+            justify-content: flex-end;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-top: 1px solid #f0f2f5;
+        }
+
+        /* ========== 首页：占满 file-manager-layout-main ========== */
+        .file-manager-layout-main .file-manager-home-panel {
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .file-manager-home-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-shrink: 0;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .file-manager-home-search {
+            flex: 1;
+            max-width: 420px;
+            min-width: 0;
+        }
+
+        .file-manager-home-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .file-manager-home-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            flex-shrink: 0;
+            margin: 16px;
+            padding: 24px 28px;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #eef4ff 0%, #f3e9ff 55%, #e8f3ff 100%);
+            overflow: hidden;
+        }
+
+        .file-manager-home-banner-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-manager-home-banner-text h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #3a5ccc;
+            line-height: 1.4;
+        }
+
+        .file-manager-home-banner-text p {
+            margin: 0;
+            font-size: 13px;
+            color: #606266;
+            line-height: 1.7;
+        }
+
+        .file-manager-home-banner-art {
+            flex-shrink: 0;
+            width: 180px;
+            height: 110px;
+            border-radius: 8px;
+            background: linear-gradient(145deg, #ffffff 0%, #dbe7ff 100%);
+            border: 1px solid rgba(64, 158, 255, 0.18);
+            box-shadow: 0 8px 20px rgba(64, 158, 255, 0.12);
+            position: relative;
+        }
+
+        .file-manager-home-banner-art::before,
+        .file-manager-home-banner-art::after {
+            content: '';
+            position: absolute;
+            border-radius: 4px;
+            background: #fff;
+            border: 1px solid #dcdfe6;
+        }
+
+        .file-manager-home-banner-art::before {
+            left: 18px;
+            top: 18px;
+            width: 86px;
+            height: 64px;
+        }
+
+        .file-manager-home-banner-art::after {
+            right: 16px;
+            bottom: 16px;
+            width: 70px;
+            height: 52px;
+            background: #f5f7fa;
+        }
+
+        .file-manager-home-recent {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 0 16px 0;
+            overflow: hidden;
+        }
+
+        .file-manager-home-recent-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #303133;
+        }
+
+        /* 文件行「标签管理」对话框 */
+        .file-tag-dialog .file-tag-dialog-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .file-tag-dialog .file-tag-dialog-label {
+            font-size: 14px;
+            color: #303133;
+            font-weight: 500;
+        }
+
+        .file-tag-dialog .file-tag-dialog-add {
+            padding: 0;
+            font-size: 14px;
+            color: #409EFF;
+        }
+
+        .file-tag-dialog .file-tag-dialog-box {
+            min-height: 160px;
+            padding: 12px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            background: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 8px;
+        }
+
+        .file-tag-dialog .file-tag-dialog-empty {
+            width: 100%;
+            text-align: center;
+            color: #c0c4cc;
+            font-size: 13px;
+            padding: 48px 0;
+            line-height: 1.6;
+        }
+
+        .file-tag-dialog .file-tag-dialog-input {
+            width: 140px;
+        }
+
+        .file-manager-home-recent-title i {
+            color: #909399;
+            cursor: pointer;
+        }
+
+        .file-manager-home-table-wrap {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+        }
+
+        .file-manager-home-empty {
+            display: flex;
+            min-height: 280px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 12px;
+            color: #909399;
+        }
+
+        .file-manager-home-empty i {
+            font-size: 52px;
+            color: #c0c4cc;
+        }
+
+        .file-manager-home-empty strong {
+            color: #606266;
+            font-size: 14px;
+            font-weight: 400;
+        }
+    </style>
 }
 
 <div class="file-manager-layout">
     @Html.AntiForgeryToken()
-    <aside class="file-manager-folders">
-        <el-card shadow="never">
-            <div slot="header" class="file-manager-card-header">
-                <span>{{ resourceScopeName }}文件夹</span>
-                <el-button type="text" size="mini" @@click="showCreateFolderDialog">新建</el-button>
+
+    @* 左栏 15%：分类导航 *@
+    <div class="file-manager-layout-left">
+        <nav class="file-manager-nav-panel">
+            <ul class="file-manager-nav-list">
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'home' }" @@click="onNavClick({ key: 'home', label: '首页' })">
+                    <i class="el-icon-s-home"></i><span>首页</span>
+                </li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'favorite' }" @@click="onNavClick({ key: 'favorite', label: '收藏' })">
+                    <i class="el-icon-star-off"></i><span>收藏</span>
+                </li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'enterprise' }" @@click="onNavClick({ key: 'enterprise', label: '企业文档', scope: 100 })">
+                    <i class="el-icon-folder"></i><span>企业文档</span>
+                </li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'recycle' }" @@click="onNavClick({ key: 'recycle', label: '回收站' })">
+                    <i class="el-icon-delete"></i><span>回收站</span>
+                </li>
+                <li class="file-manager-nav-item is-divider"></li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'dashboard' }" @@click="onNavClick({ key: 'dashboard', label: '数据面板' })">
+                    <i class="el-icon-data-line"></i><span>数据面板</span>
+                </li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'tags' }" @@click="onNavClick({ key: 'tags', label: '标签管理' })">
+                    <i class="el-icon-price-tag"></i><span>标签管理</span>
+                </li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'settings' }" @@click="onNavClick({ key: 'settings', label: '设置' })">
+                    <i class="el-icon-setting"></i><span>设置</span>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    @* 主区域 85%：文件浏览（树+表）或数据面板 *@
+    <div class="file-manager-layout-main">
+        <div class="file-manager-browser" v-if="activeNavKey !== 'dashboard' && activeNavKey !== 'tags' && activeNavKey !== 'recycle' && activeNavKey !== 'favorite' && activeNavKey !== 'home'">
+            <div class="file-manager-tree-wrap">
+                <aside class="file-manager-tree-panel">
+                    <div class="file-manager-org-header">
+                        <span class="file-manager-org-name">山西米立信息技术有限公司</span>
+                        <i class="el-icon-s-operation file-manager-org-toggle"></i>
+                    </div>
+                    <div class="file-manager-tree-search">
+                        <el-input
+                            v-model="treeFilter"
+                            size="small"
+                            placeholder="搜索目录"
+                            prefix-icon="el-icon-search"
+                            clearable>
+                        </el-input>
+                    </div>
+                    <div class="file-manager-tree-body">
+                        <div
+                            class="file-manager-root-node"
+                            :class="{ 'is-active': currentFolderId === null }"
+                            @@click="enterFolder(null)">
+                            <i class="el-icon-folder-opened"></i>
+                            <span>{{ rootFolderName }}</span>
+                        </div>
+                        <el-tree
+                            :key="folderTreeKey"
+                            ref="folderTree"
+                            :data="folderTree"
+                            :props="folderTreeProps"
+                            node-key="id"
+                            lazy
+                            highlight-current
+                            :expand-on-click-node="false"
+                            :load="loadFolderChildren"
+                            :filter-node-method="filterFolderNode"
+                            @@node-click="onFolderNodeClick">
+                            <span class="file-manager-tree-node" slot-scope="{ node, data }">
+                                <span class="file-manager-tree-label"><i class="el-icon-folder"></i> {{ data.name }}</span>
+                                <span class="file-manager-tree-actions">
+                                    <el-button type="text" icon="el-icon-edit" @@click.stop="showEditFolderDialog(data)"></el-button>
+                                    <el-button type="text" icon="el-icon-delete" @@click.stop="deleteFolder(data)"></el-button>
+                                </span>
+                            </span>
+                        </el-tree>
+                    </div>
+                </aside>
             </div>
-            <el-button class="file-manager-root-button" :class="{ 'is-active': currentFolderId === null }" type="text" @@click="enterFolder(null)">
-                <i class="el-icon-folder-opened"></i> 根目录
-            </el-button>
-            <el-tree
-                :key="folderTreeKey"
-                ref="folderTree"
-                :data="folderTree"
-                :props="folderTreeProps"
-                node-key="id"
-                lazy
-                highlight-current
-                :expand-on-click-node="false"
-                :load="loadFolderChildren"
-                @@node-click="onFolderNodeClick">
-                <span class="file-manager-tree-node" slot-scope="{ node, data }">
-                    <span><i class="el-icon-folder"></i> {{ data.name }}</span>
-                    <span class="file-manager-tree-actions">
-                        <el-button type="text" icon="el-icon-edit" @@click.stop="showEditFolderDialog(data)"></el-button>
-                        <el-button type="text" icon="el-icon-delete" @@click.stop="deleteFolder(data)"></el-button>
-                    </span>
-                </span>
-            </el-tree>
-        </el-card>
-    </aside>
 
-    <main class="file-manager-content">
-        <div class="filter-container file-manager-toolbar">
-            <el-select v-model="resourceScope" size="small" class="file-manager-scope-select" @@change="changeResourceScope">
-                <el-option :value="100" label="知识库源文件"></el-option>
-                <el-option :value="200" label="站点静态资源"></el-option>
-            </el-select>
-            <el-button type="primary" icon="el-icon-upload" size="small" @@click="showUploadDialog">上传文件</el-button>
-            <el-button size="small" icon="el-icon-refresh" @@click="reloadFolderTree">刷新</el-button>
-            <el-button type="text" size="small" icon="el-icon-question" @@click="guideDialogVisible = true">使用说明</el-button>
+            <div class="file-manager-content-wrap">
+                <main class="file-manager-main-panel">
+                    <div class="file-manager-top-bar">
+                        <div class="file-manager-top-search">
+                            <el-input
+                                v-model="fileSearchKeyword"
+                                size="small"
+                                placeholder="搜索文件/文件夹"
+                                prefix-icon="el-icon-search"
+                                clearable>
+                            </el-input>
+                        </div>
+                        <div class="file-manager-top-actions">
+                            <el-button size="small" icon="el-icon-refresh" @@click="reloadFolderTree" title="刷新"></el-button>
+                            <el-dropdown trigger="click" @@command="handleCreateCommand">
+                                <el-button size="small">
+                                    新建<i class="el-icon-arrow-down el-icon--right"></i>
+                                </el-button>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="folder">新建文件夹</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                            <el-dropdown trigger="click" @@command="handleUploadCommand">
+                                <el-button type="primary" size="small">
+                                    上传<i class="el-icon-arrow-down el-icon--right"></i>
+                                </el-button>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="files">上传文件</el-dropdown-item>
+                                    <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
+                    </div>
+
+                    <div class="file-manager-nav-bar">
+                        <a
+                            v-if="canGoParent"
+                            class="file-manager-back-link"
+                            href="javascript:void(0)"
+                            @@click="enterParentFolder">返回上一级</a>
+                        <span v-if="canGoParent" class="file-manager-nav-divider">|</span>
+                        <el-breadcrumb separator="/">
+                            <el-breadcrumb-item><a href="javascript:void(0)" @@click="enterFolder(null)">{{ rootFolderName }}</a></el-breadcrumb-item>
+                            <el-breadcrumb-item><span>{{ orgName }}</span></el-breadcrumb-item>
+                            <el-breadcrumb-item v-for="item in folderPath" :key="item.id">
+                                <a href="javascript:void(0)" @@click="enterFolder(item.id)">{{ item.name }}</a>
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+
+                    <div class="file-manager-table-wrap">
+                        <el-table :data="displayTableData" v-loading="tableLoading" border stripe>
+                            <template slot="empty">
+                                <div class="file-manager-empty">
+                                    <i class="el-icon-document"></i>
+                                    <strong>暂无文档</strong>
+                                    <el-button type="primary" size="mini" @@click="showUploadDialog">上传文件</el-button>
+                                </div>
+                            </template>
+                            <el-table-column type="selection" width="48"></el-table-column>
+                            <el-table-column prop="fileName" label="文件名" min-width="220" show-overflow-tooltip></el-table-column>
+                            <el-table-column label="更新者" width="120" show-overflow-tooltip>
+                                <template slot-scope="scope">{{ updatedByLabel(scope.row) }}</template>
+                            </el-table-column>
+                            <el-table-column prop="fileSize" label="大小" width="110">
+                                <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
+                            </el-table-column>
+                            <el-table-column prop="uploadTime" label="更新时间" width="170">
+                                <template slot-scope="scope">{{ dateFormatter(scope.row.uploadTime) }}</template>
+                            </el-table-column>
+                            <el-table-column label="操作" width="120" fixed="right">
+                                <template slot-scope="scope">
+                                    <el-dropdown trigger="click" @@command="handleRowCommand($event, scope.row)">
+                                        <el-button type="text" size="mini">更多<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item command="download">下载</el-dropdown-item>
+                                            <el-dropdown-item v-if="isSiteAsset" command="togglePublish">{{ scope.row.accessLevel === 100 ? '取消公开' : '公开' }}</el-dropdown-item>
+                                            <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl">复制 URL</el-dropdown-item>
+                                            <el-dropdown-item command="editNote">编辑备注</el-dropdown-item>
+                                            <el-dropdown-item command="manageTags" icon="el-icon-price-tag">标签管理</el-dropdown-item>
+                                            <el-dropdown-item command="delete" divided icon="el-icon-delete">删除</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </div>
+
+                    <div class="file-manager-pagination">
+                        <el-pagination
+                            @@current-change="handleCurrentChange"
+                            @@size-change="handleSizeChange"
+                            :current-page="page.page"
+                            :page-sizes="[10, 20, 30, 40]"
+                            :page-size="page.size"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="total">
+                        </el-pagination>
+                    </div>
+                </main>
+            </div>
         </div>
 
-        <el-alert
-            class="file-manager-scope-hint"
-            type="info"
-            :closable="false"
-            show-icon
-            :title="scopeHint">
-        </el-alert>
+        <div class="file-manager-dashboard-panel" v-if="activeNavKey === 'dashboard' && dashboard">
+            <div class="file-manager-dashboard-grid">
+                <section class="file-manager-dash-card">
+                    <div class="file-manager-dash-card-header">
+                        <span>文件库容量统计</span>
+                        <i class="el-icon-question" title="展示文件库容量随时间变化趋势"></i>
+                    </div>
+                    <div class="file-manager-dash-toolbar">
+                        <el-radio-group v-model="dashboard.capacityRange" size="mini" @@change="refreshDashboardCharts">
+                            <el-radio-button label="7d">过去7天</el-radio-button>
+                            <el-radio-button label="30d">过去一个月</el-radio-button>
+                            <el-radio-button label="365d">过去一年</el-radio-button>
+                        </el-radio-group>
+                        <el-date-picker
+                            v-model="dashboard.capacityDates"
+                            type="daterange"
+                            size="mini"
+                            value-format="yyyy-MM-dd"
+                            range-separator="~"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            style="width: 240px;"
+                            @@change="refreshDashboardCharts">
+                        </el-date-picker>
+                    </div>
+                    <div ref="capacityChart" class="file-manager-dash-chart"></div>
+                </section>
 
-        <div class="folder-breadcrumb">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><a href="javascript:void(0)" @@click="enterFolder(null)">根目录</a></el-breadcrumb-item>
-                <el-breadcrumb-item v-for="item in folderPath" :key="item.id">
-                    <a href="javascript:void(0)" @@click="enterFolder(item.id)">{{ item.name }}</a>
-                </el-breadcrumb-item>
-            </el-breadcrumb>
+                <section class="file-manager-dash-card">
+                    <div class="file-manager-dash-card-header">
+                        <span>企业文档容量统计</span>
+                        <i class="el-icon-question" title="按组织统计企业文档占用空间"></i>
+                    </div>
+                    <div class="file-manager-dash-meta">
+                        <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
+                        <span class="file-manager-dash-used-tag">企业文档已使用：{{ dashboard.enterpriseUsed }}</span>
+                    </div>
+                    <div class="file-manager-dash-org-list">
+                        <div class="file-manager-dash-org-head">
+                            <span>租户/组织名称</span>
+                            <span>已用空间</span>
+                        </div>
+                        <div class="file-manager-dash-org-row" v-for="org in dashboard.orgUsages" :key="org.name">
+                            <span class="file-manager-dash-org-name"><i class="el-icon-office-building"></i>{{ org.name }}</span>
+                            <span class="file-manager-dash-org-size">{{ org.size }}</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="file-manager-dash-card">
+                    <div class="file-manager-dash-card-header">
+                        <span>文件大小统计</span>
+                        <i class="el-icon-question" title="按文件类型统计占用容量"></i>
+                    </div>
+                    <div class="file-manager-dash-meta">
+                        <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
+                    </div>
+                    <div ref="sizeChart" class="file-manager-dash-chart"></div>
+                </section>
+
+                <section class="file-manager-dash-card">
+                    <div class="file-manager-dash-card-header">
+                        <span>文件个数统计</span>
+                        <i class="el-icon-question" title="按文件类型统计文件数量"></i>
+                    </div>
+                    <div class="file-manager-dash-meta">
+                        <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
+                    </div>
+                    <div ref="countChart" class="file-manager-dash-chart"></div>
+                </section>
+            </div>
         </div>
 
-        <el-table :data="tableData" v-loading="tableLoading" border>
-            <template slot="empty">
-                <div class="file-manager-empty">
-                    <i class="el-icon-folder-opened"></i>
-                    <strong>{{ resourceScopeName }}还没有文件</strong>
-                    <span>{{ isSiteAsset ? '先上传资源，确认预览后再公开并复制 URL。' : '先上传可提取资料，再到知识库中关联并向量化。' }}</span>
-                    <el-button type="primary" size="mini" @@click="showUploadDialog">上传第一个文件</el-button>
+        <div class="file-manager-tags-panel" v-if="activeNavKey === 'tags' && tagManager">
+            <div class="file-manager-tags-filter">
+                <div class="file-manager-tags-filter-item">
+                    <span>搜索</span>
+                    <el-input
+                        v-model="tagManager.keyword"
+                        size="small"
+                        placeholder="搜索标签名称"
+                        prefix-icon="el-icon-search"
+                        clearable
+                        @@keyup.enter.native="searchTags">
+                    </el-input>
                 </div>
-            </template>
-            <el-table-column prop="fileName" label="文件名" min-width="190"></el-table-column>
-            <el-table-column prop="fileSize" label="大小" width="110">
-                <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
+                <div class="file-manager-tags-filter-item">
+                    <span>分类</span>
+                    <el-select v-model="tagManager.category" size="small" placeholder="选择分类" clearable>
+                        <el-option
+                            v-for="item in tagManager.categoryOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="file-manager-tags-filter-item">
+                    <span>状态</span>
+                    <el-select v-model="tagManager.status" size="small" placeholder="全部" clearable>
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="启用" value="enabled"></el-option>
+                        <el-option label="停用" value="disabled"></el-option>
+                    </el-select>
+                </div>
+                <div class="file-manager-tags-filter-actions">
+                    <el-button type="primary" size="small" icon="el-icon-search" @@click="searchTags"></el-button>
+                    <el-button type="text" size="small" @@click="resetTagFilters">重置</el-button>
+                </div>
+            </div>
+
+            <div class="file-manager-tags-toolbar">
+                <el-button type="primary" size="small" @@click="createTag">新增标签</el-button>
+                <el-button size="small" @@click="createTagCategory">新增分类</el-button>
+                <el-button size="small" @@click="expandTagRows">
+                    展开<i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="enableSelectedTags">启用</el-button>
+                <el-button size="small" :disabled="!tagManager.selectedIds.length" @@click="disableSelectedTags">停用</el-button>
+                <el-button size="small" @@click="importTags">导入</el-button>
+                <el-button size="small" @@click="exportTags">导出</el-button>
+            </div>
+
+            <div class="file-manager-tags-table-wrap">
+                <el-table
+                    :data="tagManager.displayList"
+                    border
+                    stripe
+                    height="100%"
+                    @@selection-change="onTagSelectionChange">
+                    <template slot="empty">
+                        <div class="file-manager-tags-empty">
+                            <i class="el-icon-document"></i>
+                            <strong>暂无数据</strong>
+                        </div>
+                    </template>
+                    <el-table-column type="selection" width="48"></el-table-column>
+                    <el-table-column prop="name" label="名称" min-width="160" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="type" label="类型" width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="status" label="状态" width="100">
+                        <template slot-scope="scope">
+                            <el-tag :type="scope.row.status === '启用' ? 'success' : 'info'" size="mini">{{ scope.row.status }}</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="tagCount" label="标签数量" width="110"></el-table-column>
+                    <el-table-column prop="updatedAt" label="最后更新时间" width="170"></el-table-column>
+                    <el-table-column prop="updatedBy" label="最后更新人" width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="admin" label="管理员" width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column width="48" align="center">
+                        <template slot="header">
+                            <i class="el-icon-s-operation" title="列设置"></i>
+                        </template>
+                        <template slot-scope="scope">
+                            <el-button type="text" icon="el-icon-more" size="mini" @@click="openTagRowMenu(scope.row)"></el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+
+        <div class="file-manager-recycle-panel" v-if="activeNavKey === 'recycle' && recycleBin">
+            <div class="file-manager-recycle-header">
+                <el-button type="primary" size="small" icon="el-icon-delete" @@click="emptyRecycleBin">一键清空</el-button>
+            </div>
+            <div class="file-manager-recycle-table-wrap">
+                <el-table
+                    :data="recycleBin.displayList"
+                    border
+                    stripe
+                    height="100%"
+                    @@selection-change="onRecycleSelectionChange">
+                    <template slot="empty">
+                        <div class="file-manager-recycle-empty">
+                            <i class="el-icon-document"></i>
+                            <strong>暂无文档</strong>
+                        </div>
+                    </template>
+                    <el-table-column type="selection" width="48"></el-table-column>
+                    <el-table-column prop="fileName" label="文件名称" min-width="220" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="fileSize" label="大小" width="110">
+                        <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
+                    </el-table-column>
+                    <el-table-column prop="deletedAt" label="删除时间" width="180">
+                        <template slot-scope="scope">{{ dateFormatter(scope.row.deletedAt) }}</template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div class="file-manager-recycle-pagination">
+                <el-pagination
+                    @@current-change="handleRecyclePageChange"
+                    @@size-change="handleRecycleSizeChange"
+                    :current-page="recycleBin.page"
+                    :page-sizes="[10, 20, 30, 40]"
+                    :page-size="recycleBin.size"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="recycleBin.total">
+                </el-pagination>
+            </div>
+        </div>
+
+        <div class="file-manager-favorite-panel" v-if="activeNavKey === 'favorite' && favoriteList">
+            <div class="file-manager-favorite-header">
+                <div class="file-manager-favorite-search">
+                    <el-input
+                        v-model="favoriteList.keyword"
+                        size="small"
+                        placeholder="搜索文件/文件夹"
+                        prefix-icon="el-icon-search"
+                        clearable
+                        @@input="searchFavorites"
+                        @@keyup.enter.native="searchFavorites">
+                    </el-input>
+                </div>
+            </div>
+            <div class="file-manager-favorite-table-wrap">
+                <el-table
+                    :data="favoriteList.displayList"
+                    border
+                    stripe
+                    height="100%">
+                    <template slot="empty">
+                        <div class="file-manager-favorite-empty">
+                            <i class="el-icon-document"></i>
+                            <strong>暂无文档</strong>
+                        </div>
+                    </template>
+                    <el-table-column prop="fileName" label="文件名称" min-width="220" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="fileSize" label="大小" width="110">
+                        <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
+                    </el-table-column>
+                    <el-table-column prop="updatedAt" label="更新时间" width="180">
+                        <template slot-scope="scope">{{ dateFormatter(scope.row.updatedAt) }}</template>
+                    </el-table-column>
+                </el-table>
+            </div>
+            <div class="file-manager-favorite-pagination">
+                <el-pagination
+                    @@current-change="handleFavoritePageChange"
+                    @@size-change="handleFavoriteSizeChange"
+                    :current-page="favoriteList.page"
+                    :page-sizes="[10, 20, 30, 40]"
+                    :page-size="favoriteList.size"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="favoriteList.total">
+                </el-pagination>
+            </div>
+        </div>
+
+        <div class="file-manager-home-panel" v-if="activeNavKey === 'home' && homePage">
+            <div class="file-manager-home-header">
+                <div class="file-manager-home-search">
+                    <el-input
+                        v-model="homePage.keyword"
+                        size="small"
+                        placeholder="搜索文件/文件夹"
+                        prefix-icon="el-icon-search"
+                        clearable
+                        @@input="searchHomeRecent"
+                        @@keyup.enter.native="searchHomeRecent">
+                    </el-input>
+                </div>
+                <div class="file-manager-home-actions">
+                    <el-dropdown trigger="click" @@command="handleCreateCommand">
+                        <el-button size="small">
+                            新建<i class="el-icon-arrow-down el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="folder">新建文件夹</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <el-dropdown trigger="click" @@command="handleUploadCommand">
+                        <el-button type="primary" size="small">
+                            上传<i class="el-icon-arrow-down el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="files">上传文件</el-dropdown-item>
+                            <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </div>
+            </div>
+
+            <div class="file-manager-home-banner">
+                <div class="file-manager-home-banner-text">
+                    <h3>灵活使用快速访问，畅享高效工作!</h3>
+                    <p>可将常用的文件和文件夹添加至「快速访问」，方便查找和使用。点击列表“更多”即可手动添加或移除快速访问</p>
+                </div>
+                <div class="file-manager-home-banner-art" aria-hidden="true"></div>
+            </div>
+
+            <div class="file-manager-home-recent">
+                <div class="file-manager-home-recent-title">
+                    <span>最近访问</span>
+                    <i class="el-icon-sort" title="排序"></i>
+                </div>
+                <div class="file-manager-home-table-wrap">
+                    <el-table
+                        :data="homePage.displayList"
+                        border
+                        stripe
+                        height="100%">
+                        <template slot="empty">
+                            <div class="file-manager-home-empty">
+                                <i class="el-icon-document"></i>
+                                <strong>暂无文档</strong>
+                            </div>
+                        </template>
+                        <el-table-column prop="fileName" label="文件名称" min-width="200" show-overflow-tooltip sortable></el-table-column>
+                        <el-table-column prop="updatedBy" label="更新者" width="120" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="fileSize" label="大小" width="110">
+                            <template slot-scope="scope">{{ formatFileSize(scope.row.fileSize) }}</template>
+                        </el-table-column>
+                        <el-table-column prop="updatedAt" label="更新时间" width="170">
+                            <template slot-scope="scope">{{ dateFormatter(scope.row.updatedAt) }}</template>
+                        </el-table-column>
+                        <el-table-column prop="accessedAt" label="访问时间" width="170">
+                            <template slot-scope="scope">{{ dateFormatter(scope.row.accessedAt) }}</template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<el-dialog
+    :title="getUploadDialogTitle()"
+    :visible.sync="uploadDialog.visible"
+    width="720px"
+    custom-class="file-manager-upload-dialog"
+    append-to-body
+    @@closed="cancelUpload">
+    <div class="file-manager-upload-toolbar">
+        <el-dropdown trigger="click" @@command="handleUploadPickerCommand">
+            <el-button size="small">
+                上传文件<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="files">上传文件</el-dropdown-item>
+                <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+        <el-button type="text" size="small" @@click="clearUploadList">清空列表</el-button>
+    </div>
+
+    <el-upload
+        ref="upload"
+        class="file-manager-upload-dropzone"
+        action="#"
+        drag
+        :auto-upload="false"
+        :multiple="true"
+        :show-file-list="false"
+        :on-change="handleFileChange"
+        :before-upload="beforeUpload"
+        :file-list="uploadDialog.fileList">
+        <div class="file-manager-upload-drop-hint">请将需要上传的文件/文件夹拖到此处</div>
+    </el-upload>
+    <input ref="folderUploadInput" class="file-manager-folder-input" type="file" webkitdirectory directory multiple @@change="handleFolderSelection" />
+
+    <div v-if="uploadDialog.fileList.length" class="file-manager-upload-filelist">
+        <el-table :data="uploadDialog.fileList" size="mini" border max-height="180">
+            <el-table-column prop="name" label="文件名" min-width="220" show-overflow-tooltip></el-table-column>
+            <el-table-column label="大小" width="100">
+                <template slot-scope="scope">{{ formatFileSize(scope.row.size || (scope.row.raw && scope.row.raw.size) || 0) }}</template>
             </el-table-column>
-            <el-table-column prop="fileType" label="类型" width="110">
-                <template slot-scope="scope">{{ fileTypeLabel(scope.row.fileType) }}</template>
-            </el-table-column>
-            <el-table-column prop="contentType" label="MIME" min-width="150"></el-table-column>
-            <el-table-column v-if="isSiteAsset" label="发布状态" width="110">
+            <el-table-column label="备注" min-width="160">
                 <template slot-scope="scope">
-                    <el-tag :type="scope.row.accessLevel === 100 ? 'success' : 'info'" size="mini">
-                        {{ scope.row.accessLevel === 100 ? '已公开' : '私有' }}
-                    </el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column prop="description" label="备注" min-width="180">
-                <template slot-scope="scope">
-                    <el-input v-model="scope.row.description" size="small" @@blur="handleNoteChange(scope.row)"></el-input>
-                </template>
-            </el-table-column>
-            <el-table-column prop="uploadTime" label="上传时间" width="170">
-                <template slot-scope="scope">{{ dateFormatter(scope.row.uploadTime) }}</template>
-            </el-table-column>
-            <el-table-column label="操作" width="310">
-                <template slot-scope="scope">
-                    <el-button type="primary" size="mini" @@click="downloadFile(scope.row)">下载</el-button>
-                    <el-button v-if="isSiteAsset" size="mini" @@click="setPublication(scope.row, scope.row.accessLevel !== 100)">
-                        {{ scope.row.accessLevel === 100 ? '取消公开' : '公开' }}
-                    </el-button>
-                    <el-button v-if="isSiteAsset && scope.row.publicUrl" size="mini" @@click="copyPublicUrl(scope.row)">复制 URL</el-button>
-                    <el-button type="danger" size="mini" @@click="deleteFile(scope.row)">删除</el-button>
+                    <el-input v-model="scope.row.description" size="mini" placeholder="可选备注"></el-input>
                 </template>
             </el-table-column>
         </el-table>
+    </div>
 
-        <div class="pagination-container">
-            <el-pagination
-                @@current-change="handleCurrentChange"
-                @@size-change="handleSizeChange"
-                :current-page="page.page"
-                :page-sizes="[10, 20, 30, 40]"
-                :page-size="page.size"
-                layout="total, sizes, prev, pager, next"
-                :total="total">
-            </el-pagination>
-        </div>
-    </main>
+    <el-alert
+        v-if="uploadFolderSummary"
+        class="file-manager-folder-upload-summary"
+        type="success"
+        :closable="false"
+        show-icon
+        :title="uploadFolderSummary">
+    </el-alert>
+    <div class="file-manager-upload-tip">{{ uploadExtensionHint }}。选择文件夹后会保留完整层级结构；每批最多 20 个文件，系统会自动分批上传。</div>
+    <el-progress v-if="uploadDialog.uploading" :percentage="uploadDialog.progress" :stroke-width="10" status="success" style="margin-top: 10px;"></el-progress>
 
-    <el-dialog title="上传文件" :visible.sync="uploadDialog.visible" width="540px">
-        <el-upload
-            ref="upload"
-            action="#"
-            :auto-upload="false"
-            :multiple="true"
-            :show-file-list="true"
-            :on-change="handleFileChange"
-            :before-upload="beforeUpload"
-            :file-list="uploadDialog.fileList">
-            <el-button slot="trigger" size="small" type="primary">选择文件</el-button>
-            <el-button size="small" icon="el-icon-folder-opened" @@click.stop="chooseUploadFolder">选择文件夹</el-button>
-            <div slot="tip" class="el-upload__tip">{{ uploadExtensionHint }}。选择文件夹后会保留其完整层级结构；每批最多 20 个文件，系统会自动分批上传。</div>
-        </el-upload>
-        <input ref="folderUploadInput" class="file-manager-folder-input" type="file" webkitdirectory directory multiple @@change="handleFolderSelection" />
-        <el-alert v-if="uploadFolderSummary" class="file-manager-folder-upload-summary" type="success" :closable="false" show-icon :title="uploadFolderSummary"></el-alert>
-        <el-alert class="file-manager-upload-target" type="info" show-icon :closable="false" title="上传位置" :description="uploadTargetText"></el-alert>
-        <el-progress v-if="uploadDialog.uploading" :percentage="uploadDialog.progress" :stroke-width="10" status="success"></el-progress>
-        <div v-for="file in uploadDialog.fileList" :key="file.uid" class="file-manager-upload-note">
-            <el-input v-model="file.description" :placeholder="file.name + ' 的备注'" size="small"></el-input>
-        </div>
-        <span slot="footer" class="dialog-footer">
-            <el-button @@click="cancelUpload">取消</el-button>
-            <el-button type="primary" @@click="submitUpload" :loading="uploadDialog.uploading">上传</el-button>
-        </span>
-    </el-dialog>
+    <span slot="footer" class="dialog-footer">
+        <el-button
+            class="file-manager-upload-start-btn"
+            size="small"
+            @@click="submitUpload"
+            :loading="uploadDialog.uploading">
+            开始上传
+        </el-button>
+    </span>
+</el-dialog>
 
-    <el-dialog :title="folderDialog.editing ? '编辑文件夹' : '新建文件夹'" :visible.sync="folderDialog.visible" width="420px">
-        <el-form :model="folderDialog.form" label-width="80px">
-            <el-form-item label="名称"><el-input v-model="folderDialog.form.name" placeholder="请输入文件夹名称"></el-input></el-form-item>
-            <el-form-item label="备注"><el-input type="textarea" v-model="folderDialog.form.description" placeholder="可选" rows="3"></el-input></el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-            <el-button @@click="folderDialog.visible=false">取消</el-button>
-            <el-button type="primary" @@click="submitFolder" :loading="folderDialog.loading">确定</el-button>
-        </span>
-    </el-dialog>
+<el-dialog :title="folderDialog.editing ? '编辑文件夹' : '新建文件夹'" :visible.sync="folderDialog.visible" width="420px" append-to-body>
+    <el-form :model="folderDialog.form" label-width="80px">
+        <el-form-item label="名称"><el-input v-model="folderDialog.form.name" placeholder="请输入文件夹名称"></el-input></el-form-item>
+        <el-form-item label="备注"><el-input type="textarea" v-model="folderDialog.form.description" placeholder="可选" rows="3"></el-input></el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+        <el-button @@click="folderDialog.visible=false">取消</el-button>
+        <el-button type="primary" @@click="submitFolder" :loading="folderDialog.loading">确定</el-button>
+    </span>
+</el-dialog>
 
-    <el-dialog title="文件资源管理使用说明" :visible.sync="guideDialogVisible" width="520px">
-        <ol class="file-manager-guide">
-            <li><strong>先选用途：</strong>知识库资料和站点静态资源会物理隔离，不能互相转换。</li>
-            <li><strong>再放位置：</strong>在左侧选择或新建文件夹；刷新页面后，当前用途和文件夹会保留在地址栏中。</li>
-            <li v-if="!isSiteAsset"><strong>知识库资料：</strong>上传后到“知识库管理 → 配置”关联资料，保存后点击“向量化”。</li>
-            <li v-else><strong>站点资源：</strong>上传默认私有；确认无误后点“公开”，再复制生成的 URL 到站点内容中。</li>
-        </ol>
-        <span slot="footer" class="dialog-footer"><el-button type="primary" @@click="guideDialogVisible = false">我知道了</el-button></span>
-    </el-dialog>
-</div>
+<el-dialog title="编辑备注" :visible.sync="noteDialog.visible" width="420px" append-to-body>
+    <el-input type="textarea" v-model="noteDialog.note" rows="4" placeholder="请输入文件备注"></el-input>
+    <span slot="footer" class="dialog-footer">
+        <el-button @@click="noteDialog.visible=false">取消</el-button>
+        <el-button type="primary" @@click="submitNote" :loading="noteDialog.loading">保存</el-button>
+    </span>
+</el-dialog>
+
+<el-dialog
+    title="标签管理"
+    :visible.sync="fileTagDialog.visible"
+    width="480px"
+    custom-class="file-tag-dialog"
+    append-to-body
+    @@closed="onFileTagDialogClosed">
+    <div class="file-tag-dialog-toolbar">
+        <span class="file-tag-dialog-label">已添加标签</span>
+        <el-button type="text" class="file-tag-dialog-add" @@click="startAddFileTag">+ 添加标签</el-button>
+    </div>
+    <div class="file-tag-dialog-box">
+        <template v-if="(fileTagDialog.tags && fileTagDialog.tags.length) || fileTagDialog.adding">
+            <el-tag
+                v-for="(tag, index) in fileTagDialog.tags"
+                :key="tag + '-' + index"
+                size="small"
+                closable
+                @@close="removeFileTag(index)">{{ tag }}</el-tag>
+            <el-input
+                v-if="fileTagDialog.adding"
+                ref="fileTagInput"
+                class="file-tag-dialog-input"
+                size="mini"
+                v-model="fileTagDialog.draft"
+                maxlength="20"
+                placeholder="输入标签名"
+                @@keyup.enter.native="confirmAddFileTag"
+                @@blur="confirmAddFileTag">
+            </el-input>
+        </template>
+        <div v-else class="file-tag-dialog-empty">请添加标签</div>
+    </div>
+    <span slot="footer" class="dialog-footer">
+        <el-button @@click="fileTagDialog.visible=false">取消</el-button>
+        <el-button type="primary" @@click="submitFileTags" :loading="fileTagDialog.loading">确定</el-button>
+    </span>
+</el-dialog>
+
+<el-dialog title="文件资源管理使用说明" :visible.sync="guideDialogVisible" width="520px" append-to-body>
+    <ol class="file-manager-guide">
+        <li><strong>先选用途：</strong>左侧「企业文档」用于管理知识库资料；站点静态资源可通过地址栏 scope 参数切换。</li>
+        <li><strong>再放位置：</strong>在中间目录树选择或新建文件夹；刷新页面后，当前用途和文件夹会保留在地址栏中。</li>
+        <li v-if="!isSiteAsset"><strong>知识库资料：</strong>上传后到“知识库管理 → 配置”关联资料，保存后点击“向量化”。</li>
+        <li v-else><strong>站点资源：</strong>上传默认私有；确认无误后点“公开”，再复制生成的 URL 到站点内容中。</li>
+    </ol>
+    <span slot="footer" class="dialog-footer"><el-button type="primary" @@click="guideDialogVisible = false">我知道了</el-button></span>
+</el-dialog>
 
 @section scripts {
     <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
+    <script src="~/lib/echarts/dist/echarts.js"></script>
+    <script>
+        // 嵌入的 index.js 未重编时，模板已引用 fileTagDialog，必须在 new Vue 之前注入，否则首屏 ReferenceError 白屏
+        (function ensureFileTagDialogBeforeVue() {
+            if (!window.Vue || window.Vue.__ncfFileTagDialogMixin) return;
+            window.Vue.__ncfFileTagDialogMixin = true;
+            Vue.mixin({
+                data: function () {
+                    var el = this.$options && this.$options.el;
+                    var isAppRoot = el === '#app' || el === document.getElementById('app');
+                    if (!isAppRoot) return {};
+                    return {
+                        fileTagDialog: {
+                            visible: false,
+                            loading: false,
+                            adding: false,
+                            draft: '',
+                            row: null,
+                            tags: []
+                        }
+                    };
+                },
+                methods: {
+                    showFileTagDialog: function (row) {
+                        var existing = Array.isArray(row && row.tags) ? row.tags.slice() : [];
+                        this.fileTagDialog = {
+                            visible: true,
+                            loading: false,
+                            adding: false,
+                            draft: '',
+                            row: row,
+                            tags: existing
+                        };
+                    },
+                    startAddFileTag: function () {
+                        if (!this.fileTagDialog) return;
+                        this.fileTagDialog.adding = true;
+                        this.fileTagDialog.draft = '';
+                        var self = this;
+                        this.$nextTick(function () {
+                            var input = self.$refs.fileTagInput;
+                            if (input && typeof input.focus === 'function') input.focus();
+                        });
+                    },
+                    confirmAddFileTag: function () {
+                        if (!this.fileTagDialog || !this.fileTagDialog.adding) return;
+                        var name = (this.fileTagDialog.draft || '').trim();
+                        this.fileTagDialog.adding = false;
+                        this.fileTagDialog.draft = '';
+                        if (!name) return;
+                        if (this.fileTagDialog.tags.indexOf(name) !== -1) {
+                            this.$message.warning('标签已存在');
+                            return;
+                        }
+                        this.fileTagDialog.tags.push(name);
+                    },
+                    removeFileTag: function (index) {
+                        if (!this.fileTagDialog) return;
+                        this.fileTagDialog.tags.splice(index, 1);
+                    },
+                    onFileTagDialogClosed: function () {
+                        if (!this.fileTagDialog) return;
+                        this.fileTagDialog.adding = false;
+                        this.fileTagDialog.draft = '';
+                        this.fileTagDialog.row = null;
+                        this.fileTagDialog.tags = [];
+                    },
+                    submitFileTags: function () {
+                        if (!this.fileTagDialog) return;
+                        var row = this.fileTagDialog.row;
+                        if (!row) return;
+                        this.fileTagDialog.loading = true;
+                        try {
+                            if (this.fileTagDialog.adding) this.confirmAddFileTag();
+                            this.$set(row, 'tags', this.fileTagDialog.tags.slice());
+                            this.fileTagDialog.visible = false;
+                            this.$message.success('标签已更新');
+                        } finally {
+                            this.fileTagDialog.loading = false;
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
     <script src="~/js/Admin/FileManager/index.js" asp-append-version="true"></script>
+    <script>
+        // 嵌入资源未重编时，仍保证「数据面板」可切换并渲染图表
+        (function ensureFileManagerDashboard() {
+            function pad(n) { return String(n).padStart(2, '0'); }
+            function fmtDate(d) {
+                return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+            }
+            function apply() {
+                var root = document.getElementById('app');
+                var vm = root && root.__vue__;
+                if (!vm) {
+                    setTimeout(apply, 40);
+                    return;
+                }
+
+                if (!vm.dashboard) {
+                    var end = new Date();
+                    var start = new Date();
+                    start.setDate(end.getDate() - 6);
+                    Vue.set(vm, 'dashboard', {
+                        capacityRange: '7d',
+                        capacityDates: [fmtDate(start), fmtDate(end)],
+                        statsCutoff: fmtDate(end) + ' ' + pad(end.getHours()) + ':' + pad(end.getMinutes()) + ':' + pad(end.getSeconds()),
+                        enterpriseUsed: '6.28GB',
+                        orgUsages: [
+                            { name: '山西米立信息技术有限公司', size: '6.28GB' },
+                            { name: '企业文档根目录', size: '0.00KB' },
+                            { name: '知识库资料', size: '0.00KB' }
+                        ],
+                        sizeTotalLabel: '7G',
+                        countTotalLabel: '90',
+                        sizeSlices: [
+                            { name: '其他', value: 4.55, color: '#91d5ff' },
+                            { name: '文档', value: 1.22, color: '#95de64' },
+                            { name: '视频', value: 0.54, color: '#ffd666' },
+                            { name: '图片', value: 0.19, color: '#597ef7' },
+                            { name: '音频', value: 0, color: '#ff9c6e' }
+                        ],
+                        countSlices: [
+                            { name: '其他', value: 48, color: '#91d5ff' },
+                            { name: '图片', value: 23, color: '#597ef7' },
+                            { name: '文档', value: 13, color: '#95de64' },
+                            { name: '视频', value: 6, color: '#ffd666' },
+                            { name: '音频', value: 0, color: '#ff9c6e' }
+                        ]
+                    });
+                }
+
+                var originalOnNavClick = vm.onNavClick && vm.onNavClick.bind(vm);
+                vm.onNavClick = function (item) {
+                    if (item && item.key === 'dashboard') {
+                        this.activeNavKey = 'dashboard';
+                        var self = this;
+                        this.$nextTick(function () {
+                            if (typeof self.refreshDashboardCharts === 'function') self.refreshDashboardCharts();
+                        });
+                        return;
+                    }
+                    if (item && item.key === 'tags') {
+                        if (!this.tagManager) {
+                            Vue.set(this, 'tagManager', {
+                                keyword: '',
+                                category: '',
+                                status: '',
+                                selectedIds: [],
+                                categoryOptions: [
+                                    { label: '业务分类', value: 'biz' },
+                                    { label: '系统分类', value: 'system' }
+                                ],
+                                list: [],
+                                displayList: []
+                            });
+                        }
+                        this.activeNavKey = 'tags';
+                        if (typeof this.searchTags === 'function') this.searchTags();
+                        return;
+                    }
+                    if (item && item.key === 'recycle') {
+                        if (!this.recycleBin) {
+                            Vue.set(this, 'recycleBin', {
+                                list: [],
+                                displayList: [],
+                                selectedIds: [],
+                                page: 1,
+                                size: 20,
+                                total: 0
+                            });
+                        }
+                        this.activeNavKey = 'recycle';
+                        if (typeof this.loadRecycleBin === 'function') this.loadRecycleBin();
+                        return;
+                    }
+                    if (item && item.key === 'favorite') {
+                        if (!this.favoriteList) {
+                            Vue.set(this, 'favoriteList', {
+                                keyword: '',
+                                list: [],
+                                displayList: [],
+                                page: 1,
+                                size: 20,
+                                total: 0
+                            });
+                        }
+                        this.activeNavKey = 'favorite';
+                        if (typeof this.searchFavorites === 'function') this.searchFavorites();
+                        return;
+                    }
+                    if (item && item.key === 'home') {
+                        if (!this.homePage) {
+                            Vue.set(this, 'homePage', {
+                                keyword: '',
+                                list: [],
+                                displayList: []
+                            });
+                        }
+                        this.activeNavKey = 'home';
+                        if (typeof this.searchHomeRecent === 'function') this.searchHomeRecent();
+                        return;
+                    }
+                    if (typeof originalOnNavClick === 'function') return originalOnNavClick(item);
+                };
+
+                if (typeof vm.searchTags !== 'function') {
+                    vm.searchTags = function () {
+                        if (!this.tagManager) return;
+                        var keyword = (this.tagManager.keyword || '').trim().toLowerCase();
+                        var category = this.tagManager.category || '';
+                        var status = this.tagManager.status || '';
+                        this.tagManager.displayList = (this.tagManager.list || []).filter(function (row) {
+                            if (keyword && String(row.name || '').toLowerCase().indexOf(keyword) === -1) return false;
+                            if (category && row.category !== category) return false;
+                            if (status === 'enabled' && row.status !== '启用') return false;
+                            if (status === 'disabled' && row.status !== '停用') return false;
+                            return true;
+                        });
+                    };
+                    vm.resetTagFilters = function () {
+                        if (!this.tagManager) return;
+                        this.tagManager.keyword = '';
+                        this.tagManager.category = '';
+                        this.tagManager.status = '';
+                        this.searchTags();
+                    };
+                    vm.onTagSelectionChange = function (rows) {
+                        this.tagManager.selectedIds = (rows || []).map(function (row) { return row.id; });
+                    };
+                    vm.createTag = function () { this.$message.info('新增标签功能即将开放'); };
+                    vm.createTagCategory = function () { this.$message.info('新增分类功能即将开放'); };
+                    vm.expandTagRows = function () { this.$message.info('展开功能即将开放'); };
+                    vm.enableSelectedTags = function () { this.$message.info('启用功能即将开放'); };
+                    vm.disableSelectedTags = function () { this.$message.info('停用功能即将开放'); };
+                    vm.importTags = function () { this.$message.info('导入功能即将开放'); };
+                    vm.exportTags = function () { this.$message.info('导出功能即将开放'); };
+                    vm.openTagRowMenu = function () { this.$message.info('更多操作即将开放'); };
+                }
+
+                if (!vm.recycleBin) {
+                    Vue.set(vm, 'recycleBin', {
+                        list: [],
+                        displayList: [],
+                        selectedIds: [],
+                        page: 1,
+                        size: 20,
+                        total: 0
+                    });
+                }
+
+                if (typeof vm.loadRecycleBin !== 'function') {
+                    vm.loadRecycleBin = function () {
+                        if (!this.recycleBin) return;
+                        this.recycleBin.displayList = this.recycleBin.list || [];
+                        this.recycleBin.total = this.recycleBin.displayList.length;
+                    };
+                    vm.onRecycleSelectionChange = function (rows) {
+                        this.recycleBin.selectedIds = (rows || []).map(function (row) { return row.id; });
+                    };
+                    vm.handleRecyclePageChange = function (page) {
+                        this.recycleBin.page = page;
+                        this.loadRecycleBin();
+                    };
+                    vm.handleRecycleSizeChange = function (size) {
+                        this.recycleBin.size = size;
+                        this.recycleBin.page = 1;
+                        this.loadRecycleBin();
+                    };
+                    vm.emptyRecycleBin = function () {
+                        var self = this;
+                        if (!this.recycleBin.displayList.length) {
+                            this.$message.info('回收站暂无文档');
+                            return;
+                        }
+                        this.$confirm('确认一键清空回收站吗？清空后无法恢复。', '一键清空', { type: 'warning' })
+                            .then(function () {
+                                self.recycleBin.list = [];
+                                self.recycleBin.selectedIds = [];
+                                self.loadRecycleBin();
+                                self.$message.success('回收站已清空');
+                            })
+                            .catch(function () { });
+                    };
+                }
+
+                if (!vm.favoriteList) {
+                    Vue.set(vm, 'favoriteList', {
+                        keyword: '',
+                        list: [],
+                        displayList: [],
+                        page: 1,
+                        size: 20,
+                        total: 0
+                    });
+                }
+
+                if (typeof vm.searchFavorites !== 'function') {
+                    vm.searchFavorites = function () {
+                        if (!this.favoriteList) return;
+                        var keyword = (this.favoriteList.keyword || '').trim().toLowerCase();
+                        var filtered = (this.favoriteList.list || []).filter(function (row) {
+                            if (!keyword) return true;
+                            return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1;
+                        });
+                        this.favoriteList.displayList = filtered;
+                        this.favoriteList.total = filtered.length;
+                    };
+                    vm.handleFavoritePageChange = function (page) {
+                        this.favoriteList.page = page;
+                        this.searchFavorites();
+                    };
+                    vm.handleFavoriteSizeChange = function (size) {
+                        this.favoriteList.size = size;
+                        this.favoriteList.page = 1;
+                        this.searchFavorites();
+                    };
+                }
+
+                if (!vm.homePage) {
+                    Vue.set(vm, 'homePage', {
+                        keyword: '',
+                        list: [],
+                        displayList: []
+                    });
+                }
+
+                if (typeof vm.searchHomeRecent !== 'function') {
+                    vm.searchHomeRecent = function () {
+                        if (!this.homePage) return;
+                        var keyword = (this.homePage.keyword || '').trim().toLowerCase();
+                        this.homePage.displayList = (this.homePage.list || []).filter(function (row) {
+                            if (!keyword) return true;
+                            return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1;
+                        });
+                    };
+                }
+
+                if (!vm.$options.computed) vm.$options.computed = {};
+                if (typeof vm.getUploadDialogTitle !== 'function') {
+                    vm.getUploadDialogTitle = function () {
+                        var segments = [this.rootFolderName || '根目录'].concat((this.folderPath || []).map(function (item) { return item.name; }));
+                        return '上传文件到 【/' + segments.join('/') + '】 --支持断点续传';
+                    };
+                }
+
+                if (typeof vm.handleUploadPickerCommand !== 'function') {
+                    vm.handleUploadPickerCommand = function (command) {
+                        if (command === 'files') {
+                            this.triggerUploadFilePicker && this.triggerUploadFilePicker();
+                            return;
+                        }
+                        if (command === 'folder' && this.chooseUploadFolder) this.chooseUploadFolder();
+                    };
+                    vm.triggerUploadFilePicker = function () {
+                        var upload = this.$refs.upload;
+                        if (!upload) return;
+                        if (upload.$refs && upload.$refs['upload-inner'] && typeof upload.$refs['upload-inner'].handleClick === 'function') {
+                            upload.$refs['upload-inner'].handleClick();
+                            return;
+                        }
+                        var input = upload.$el && upload.$el.querySelector('input[type="file"]');
+                        if (input) input.click();
+                    };
+                    vm.clearUploadList = function () {
+                        this.uploadDialog.fileList = [];
+                        this.uploadDialog.mode = 'files';
+                        this.uploadDialog.folderRootName = '';
+                        this.uploadDialog.progress = 0;
+                        if (this.$refs.upload) this.$refs.upload.clearFiles();
+                    };
+                }
+
+                if (!vm.tagManager) {
+                    Vue.set(vm, 'tagManager', {
+                        keyword: '',
+                        category: '',
+                        status: '',
+                        selectedIds: [],
+                        categoryOptions: [
+                            { label: '业务分类', value: 'biz' },
+                            { label: '系统分类', value: 'system' }
+                        ],
+                        list: [],
+                        displayList: []
+                    });
+                }
+
+                if (typeof vm.refreshDashboardCharts !== 'function') {
+                    vm.getOrCreateChart = function (el) {
+                        if (!el || typeof echarts === 'undefined') return null;
+                        return (echarts.getInstanceByDom && echarts.getInstanceByDom(el)) || echarts.init(el);
+                    };
+                    vm.buildCapacityDates = function () {
+                        var dates = this.dashboard && this.dashboard.capacityDates;
+                        if (Array.isArray(dates) && dates[0] && dates[1]) {
+                            var list = [];
+                            var cursor = new Date(dates[0]);
+                            var endDate = new Date(dates[1]);
+                            while (cursor <= endDate && list.length < 31) {
+                                list.push(pad(cursor.getMonth() + 1) + '-' + pad(cursor.getDate()));
+                                cursor.setDate(cursor.getDate() + 1);
+                            }
+                            if (list.length) return list;
+                        }
+                        var result = [];
+                        var now = new Date();
+                        for (var i = 6; i >= 0; i--) {
+                            var d = new Date(now);
+                            d.setDate(now.getDate() - i);
+                            result.push(pad(d.getMonth() + 1) + '-' + pad(d.getDate()));
+                        }
+                        return result;
+                    };
+                    vm.refreshDashboardCharts = function () {
+                        if (this.activeNavKey !== 'dashboard' || typeof echarts === 'undefined') return;
+                        var labels = this.buildCapacityDates();
+                        var total = labels.map(function (_, i) { return Number((6.2 + (i % 5) * 0.05).toFixed(2)); });
+                        var capacityChart = this.getOrCreateChart(this.$refs.capacityChart);
+                        if (capacityChart) {
+                            capacityChart.setOption({
+                                color: ['#409eff', '#95de64', '#69c0ff', '#ff9c6e', '#ffc069'],
+                                tooltip: { trigger: 'axis' },
+                                legend: { bottom: 0, data: ['总容量', '企业文档', '群文档', '个人文档', '团队文档'] },
+                                grid: { left: 40, right: 20, top: 24, bottom: 48 },
+                                xAxis: { type: 'category', boundaryGap: false, data: labels },
+                                yAxis: { type: 'value', axisLabel: { formatter: '{value}G' }, splitLine: { lineStyle: { type: 'dashed' } } },
+                                series: [
+                                    { name: '总容量', type: 'line', smooth: true, data: total },
+                                    { name: '企业文档', type: 'line', smooth: true, data: labels.map(function () { return 0.1; }) },
+                                    { name: '群文档', type: 'line', smooth: true, data: labels.map(function () { return 0.06; }) },
+                                    { name: '个人文档', type: 'line', smooth: true, data: labels.map(function () { return 0.04; }) },
+                                    { name: '团队文档', type: 'line', smooth: true, data: labels.map(function () { return 0.02; }) }
+                                ]
+                            }, true);
+                        }
+                        var sizeChart = this.getOrCreateChart(this.$refs.sizeChart);
+                        if (sizeChart) {
+                            sizeChart.setOption({
+                                tooltip: { trigger: 'item' },
+                                legend: { bottom: 0 },
+                                series: [{
+                                    type: 'pie', radius: ['48%', '68%'], center: ['50%', '46%'],
+                                    label: { formatter: '{b}\n{c}G' },
+                                    data: this.dashboard.sizeSlices.map(function (x) {
+                                        return { name: x.name, value: x.value, itemStyle: { color: x.color } };
+                                    })
+                                }],
+                                graphic: [{ type: 'text', left: 'center', top: '42%', style: { text: this.dashboard.sizeTotalLabel, fill: '#303133', fontSize: 28, fontWeight: 600, textAlign: 'center' } }]
+                            }, true);
+                        }
+                        var countChart = this.getOrCreateChart(this.$refs.countChart);
+                        if (countChart) {
+                            countChart.setOption({
+                                tooltip: { trigger: 'item' },
+                                legend: { bottom: 0 },
+                                series: [{
+                                    type: 'pie', radius: ['48%', '68%'], center: ['50%', '46%'],
+                                    label: { formatter: '{b}\n{c}个' },
+                                    data: this.dashboard.countSlices.map(function (x) {
+                                        return { name: x.name, value: x.value, itemStyle: { color: x.color } };
+                                    })
+                                }],
+                                graphic: [{ type: 'text', left: 'center', top: '42%', style: { text: this.dashboard.countTotalLabel, fill: '#303133', fontSize: 28, fontWeight: 600, textAlign: 'center' } }]
+                            }, true);
+                        }
+                        [capacityChart, sizeChart, countChart].forEach(function (c) { if (c) c.resize(); });
+                    };
+                }
+
+                // 修复列表解析：PagedList 序列化为数组时，原先取 result.data/items 会得到空表
+                vm.getList = async function () {
+                    var pageUrlLocal = window.location.pathname || '/Admin/FileManager/Index';
+                    this.tableLoading = true;
+                    try {
+                        var url = pageUrlLocal + '?handler=List&page=' + this.page.page + '&pageSize=' + this.page.size + '&resourceScope=' + this.resourceScope;
+                        if (this.currentFolderId != null) url += '&folderId=' + encodeURIComponent(this.currentFolderId);
+                        var response = await axios.get(url);
+                        var result = response && response.data && response.data.data !== undefined ? response.data.data : (response && response.data);
+                        if (Array.isArray(result)) {
+                            this.tableData = result;
+                            this.total = result.length;
+                        } else {
+                            this.tableData = (result && (result.items || result.data)) || [];
+                            this.total = (result && (result.totalCount != null ? result.totalCount : result.total)) || 0;
+                        }
+                    } catch (error) {
+                        var data = error && error.response && error.response.data;
+                        var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
+                        this.$message.error('获取文件列表失败：' + (message || (error && error.message) || '请求失败'));
+                    } finally {
+                        this.tableLoading = false;
+                    }
+                };
+
+                if (!vm.fileTagDialog) {
+                    Vue.set(vm, 'fileTagDialog', {
+                        visible: false,
+                        loading: false,
+                        adding: false,
+                        draft: '',
+                        row: null,
+                        tags: []
+                    });
+                }
+
+                vm.showFileTagDialog = function (row) {
+                    var existing = Array.isArray(row && row.tags) ? row.tags.slice() : [];
+                    this.fileTagDialog = {
+                        visible: true,
+                        loading: false,
+                        adding: false,
+                        draft: '',
+                        row: row,
+                        tags: existing
+                    };
+                };
+                vm.startAddFileTag = function () {
+                    this.fileTagDialog.adding = true;
+                    this.fileTagDialog.draft = '';
+                    var self = this;
+                    this.$nextTick(function () {
+                        var input = self.$refs.fileTagInput;
+                        if (input && typeof input.focus === 'function') input.focus();
+                    });
+                };
+                vm.confirmAddFileTag = function () {
+                    if (!this.fileTagDialog.adding) return;
+                    var name = (this.fileTagDialog.draft || '').trim();
+                    this.fileTagDialog.adding = false;
+                    this.fileTagDialog.draft = '';
+                    if (!name) return;
+                    if (this.fileTagDialog.tags.indexOf(name) !== -1) {
+                        this.$message.warning('标签已存在');
+                        return;
+                    }
+                    this.fileTagDialog.tags.push(name);
+                };
+                vm.removeFileTag = function (index) {
+                    this.fileTagDialog.tags.splice(index, 1);
+                };
+                vm.onFileTagDialogClosed = function () {
+                    this.fileTagDialog.adding = false;
+                    this.fileTagDialog.draft = '';
+                    this.fileTagDialog.row = null;
+                    this.fileTagDialog.tags = [];
+                };
+                vm.submitFileTags = function () {
+                    var row = this.fileTagDialog.row;
+                    if (!row) return;
+                    this.fileTagDialog.loading = true;
+                    try {
+                        if (this.fileTagDialog.adding) this.confirmAddFileTag();
+                        this.$set(row, 'tags', this.fileTagDialog.tags.slice());
+                        this.fileTagDialog.visible = false;
+                        this.$message.success('标签已更新');
+                    } finally {
+                        this.fileTagDialog.loading = false;
+                    }
+                };
+
+                var originalHandleRowCommand = vm.handleRowCommand && vm.handleRowCommand.bind(vm);
+                vm.handleRowCommand = function (command, row) {
+                    if (command === 'manageTags') return this.showFileTagDialog(row);
+                    if (typeof originalHandleRowCommand === 'function') return originalHandleRowCommand(command, row);
+                };
+
+                if (typeof vm.getList === 'function' && !vm.__fileListPatched) {
+                    vm.__fileListPatched = true;
+                    vm.getList();
+                }
+            }
+            apply();
+        })();
+    </script>
 }
