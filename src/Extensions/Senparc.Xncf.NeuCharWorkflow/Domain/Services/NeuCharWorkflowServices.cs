@@ -16,7 +16,12 @@
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
 
------------------------------------------------------------------*/
+-
+
+    修改标识：Senparc - 20260829
+    修改描述：v0.3.0 新增工作流分析查询与管理端可视化
+
+----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Core.Enums;
@@ -140,7 +145,9 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
         IReadOnlyCollection<int> workflowIds,
         int? beforeExecutionLogId,
         int pageSize,
-        bool runningOnly = false,
+        string? statusFilter = null,
+        DateTime? fromUtc = null,
+        DateTime? toUtc = null,
         CancellationToken cancellationToken = default)
     {
         if (workflowIds == null || workflowIds.Count == 0 || pageSize <= 0)
@@ -152,9 +159,25 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
         var query = BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
             .AsNoTracking()
             .Where(z => ids.Contains(z.WorkflowId));
-        if (runningOnly)
+        if (fromUtc.HasValue)
+        {
+            query = query.Where(z => z.StartedAt >= fromUtc.Value);
+        }
+        if (toUtc.HasValue)
+        {
+            query = query.Where(z => z.StartedAt < toUtc.Value);
+        }
+        if (string.Equals(statusFilter, "running", StringComparison.OrdinalIgnoreCase))
         {
             query = query.Where(z => z.FinishedAt == null);
+        }
+        else if (string.Equals(statusFilter, "success", StringComparison.OrdinalIgnoreCase))
+        {
+            query = query.Where(z => z.FinishedAt != null && z.Succeeded == true);
+        }
+        else if (string.Equals(statusFilter, "failed", StringComparison.OrdinalIgnoreCase))
+        {
+            query = query.Where(z => z.FinishedAt != null && z.Succeeded != true);
         }
         if (beforeExecutionLogId.HasValue && beforeExecutionLogId.Value > 0)
         {
@@ -176,6 +199,98 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
                 z.Error,
                 z.ReplaySnapshotHash != null &&
                 z.ReplayEventsJson != null))
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<NeuCharWorkflowTaskSummarySource>> GetTaskSummaryAsync(
+        IReadOnlyCollection<int> workflowIds,
+        DateTime? fromUtc = null,
+        DateTime? toUtc = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (workflowIds == null || workflowIds.Count == 0)
+        {
+            return Array.Empty<NeuCharWorkflowTaskSummarySource>();
+        }
+
+        var ids = workflowIds.Distinct().ToList();
+        var query = BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+            .AsNoTracking()
+            .Where(z => ids.Contains(z.WorkflowId));
+        if (fromUtc.HasValue)
+        {
+            query = query.Where(z => z.StartedAt >= fromUtc.Value);
+        }
+        if (toUtc.HasValue)
+        {
+            query = query.Where(z => z.StartedAt < toUtc.Value);
+        }
+
+        return await query
+            .Select(z => new NeuCharWorkflowTaskSummarySource(
+                z.Id,
+                z.WorkflowId,
+                z.CorrelationId,
+                z.StartedAt,
+                z.FinishedAt,
+                z.Succeeded))
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<NeuCharWorkflowAnalyticsLog>> GetAnalyticsLogsAsync(
+        IReadOnlyCollection<int> workflowIds,
+        string? statusFilter = null,
+        DateTime? fromUtc = null,
+        DateTime? toUtc = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (workflowIds == null || workflowIds.Count == 0)
+        {
+            return Array.Empty<NeuCharWorkflowAnalyticsLog>();
+        }
+
+        var ids = workflowIds.Distinct().ToList();
+        var query = BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+            .AsNoTracking()
+            .Where(z => ids.Contains(z.WorkflowId));
+        if (fromUtc.HasValue)
+        {
+            query = query.Where(z => z.StartedAt >= fromUtc.Value);
+        }
+        if (toUtc.HasValue)
+        {
+            query = query.Where(z => z.StartedAt < toUtc.Value);
+        }
+        if (string.Equals(statusFilter, "running", StringComparison.OrdinalIgnoreCase))
+        {
+            query = query.Where(z => z.FinishedAt == null);
+        }
+        else if (string.Equals(statusFilter, "success", StringComparison.OrdinalIgnoreCase))
+        {
+            query = query.Where(z => z.FinishedAt != null && z.Succeeded == true);
+        }
+        else if (string.Equals(statusFilter, "failed", StringComparison.OrdinalIgnoreCase))
+        {
+            query = query.Where(z => z.FinishedAt != null && z.Succeeded != true);
+        }
+
+        // Keep only fields needed by analytics. ReplaySnapshotJson is intentionally excluded.
+        return await query
+            .OrderByDescending(z => z.StartedAt)
+            .Select(z => new NeuCharWorkflowAnalyticsLog(
+                z.Id,
+                z.WorkflowId,
+                z.WorkflowName,
+                z.CorrelationId,
+                z.StartedAt,
+                z.FinishedAt,
+                z.Succeeded,
+                z.ResultSummary,
+                z.Error,
+                z.ReplaySnapshotHash,
+                z.ReplayEventsJson))
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
     }
@@ -256,3 +371,24 @@ public sealed record NeuCharWorkflowTaskLogSummary(
     string? ResultSummary,
     string? Error,
     bool ReplayAvailable);
+
+public sealed record NeuCharWorkflowTaskSummarySource(
+    int Id,
+    int WorkflowId,
+    string CorrelationId,
+    DateTime StartedAt,
+    DateTime? FinishedAt,
+    bool? Succeeded);
+
+public sealed record NeuCharWorkflowAnalyticsLog(
+    int Id,
+    int WorkflowId,
+    string WorkflowName,
+    string CorrelationId,
+    DateTime StartedAt,
+    DateTime? FinishedAt,
+    bool? Succeeded,
+    string? ResultSummary,
+    string? Error,
+    string? ReplaySnapshotHash,
+    string? ReplayEventsJson);

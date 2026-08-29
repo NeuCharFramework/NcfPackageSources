@@ -33,7 +33,24 @@ public class FunctionRenderAttribute : Attribute
 }
 ```
 
-### 2. FunctionRenderBag 数据包
+### 2. 全局 NeuCharPivot 浮动调用
+
+需要从任意 Admin 页面通过统一浮动窗口调用 Function 时，必须显式开启映射：
+
+```csharp
+[FunctionRender(
+    "执行代码",
+    "在受控沙箱中执行代码",
+    typeof(Register),
+    AllowGlobalPivot = true,
+    GlobalPivotRoleCodes = "sandbox-admin",
+    GlobalPivotPermissionCodes = "sandbox.execute")]
+```
+
+`AllowGlobalPivot` 默认关闭。未配置角色或权限时，映射只允许已登录的后台管理员访问；配置角色或权限后，当前账号命中任一规则即可访问，否则服务端拒绝读取和执行。前端调用统一入口：
+`window.NeuCharPivotFunction.open({ moduleUid, functionKey })`。
+
+### 3. FunctionRenderBag 数据包
 **位置**: `src/Basic/Senparc.Ncf.XncfBase/FunctionRenders/FunctionRenderBag.cs`
 
 ```csharp
@@ -53,7 +70,7 @@ public struct FunctionRenderBag
 }
 ```
 
-### 3. FunctionRenderCollection 集合
+### 4. FunctionRenderCollection 集合
 **位置**: `src/Basic/Senparc.Ncf.XncfBase/FunctionRenders/FunctionRenderCollection.cs`
 
 ```csharp

@@ -42,7 +42,8 @@
 }
 
 .workflow-task-summary-card strong { color: #303640; font-size: 25px; line-height: 1.1; }
-.workflow-task-summary-card span { margin-top: 8px; font-size: 13px; }
+.workflow-task-summary-card > span { margin-top: 8px; font-size: 13px; }
+.workflow-task-summary-card .el-tag { margin-top: 8px; }
 .workflow-task-summary-card:nth-child(2) strong { color: #e6a23c; }
 .workflow-task-summary-card:nth-child(3) strong { color: #67c23a; }
 .workflow-task-summary-card:nth-child(4) strong { color: #f56c6c; }

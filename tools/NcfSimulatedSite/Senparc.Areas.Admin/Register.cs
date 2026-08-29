@@ -40,6 +40,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
 
+    修改标识：Senparc - 20260829
+    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+
 ----------------------------------------------------------------*/
 
 /* 
@@ -120,7 +123,7 @@ namespace Senparc.Areas.Admin
 
         public override string Uid => ModuleUid;// "00000000-0000-0001-0001-000000000001";
 
-        public override string Version => "0.5.10-beta5";
+        public override string Version => "0.5.11";
 
         public override string MenuName => T("Admin.Register.MenuName", "NCF 系统管理员后台");
 
@@ -242,6 +245,8 @@ namespace Senparc.Areas.Admin
             services.AddScoped<NeuCharExecutionLogService>();
             services.AddScoped<NeuCharFunctionService>();
             services.AddScoped<NeuCharPivotService>();
+            services.AddScoped<NeuCharPivotGlobalAccessService>();
+            services.AddScoped<NeuCharPivotGlobalFunctionService>();
             services.AddDataProtection();
             services.AddScoped<NeuCharParameterProtector>();
             services.AddScoped<ChatAgentNeuCharPivotComposer>();
