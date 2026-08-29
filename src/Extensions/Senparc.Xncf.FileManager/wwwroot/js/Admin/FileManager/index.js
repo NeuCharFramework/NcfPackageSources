@@ -56,6 +56,7 @@
                 uploadDialog: { visible: false, fileList: [], uploading: false, progress: 0, mode: 'files', folderRootName: '' },
                 folderDialog: { visible: false, loading: false, editing: false, form: { id: null, name: '', description: '' } },
                 noteDialog: { visible: false, loading: false, row: null, note: '' },
+                fileTagDialog: { visible: false, loading: false, adding: false, draft: '', row: null, tags: [] },
                 guideDialogVisible: false,
                 treeFilter: '',
                 fileSearchKeyword: '',
@@ -545,7 +546,62 @@
                 if (command === 'togglePublish') return this.setPublication(row, row.accessLevel !== 100);
                 if (command === 'copyUrl') return this.copyPublicUrl(row);
                 if (command === 'editNote') return this.showNoteDialog(row);
+                if (command === 'manageTags') return this.showFileTagDialog(row);
                 if (command === 'delete') return this.deleteFile(row);
+            },
+            showFileTagDialog: function (row) {
+                const existing = Array.isArray(row.tags) ? row.tags.slice() : [];
+                this.fileTagDialog = {
+                    visible: true,
+                    loading: false,
+                    adding: false,
+                    draft: '',
+                    row: row,
+                    tags: existing
+                };
+            },
+            startAddFileTag: function () {
+                this.fileTagDialog.adding = true;
+                this.fileTagDialog.draft = '';
+                const self = this;
+                this.$nextTick(function () {
+                    const input = self.$refs.fileTagInput;
+                    if (input && typeof input.focus === 'function') input.focus();
+                });
+            },
+            confirmAddFileTag: function () {
+                if (!this.fileTagDialog.adding) return;
+                const name = (this.fileTagDialog.draft || '').trim();
+                this.fileTagDialog.adding = false;
+                this.fileTagDialog.draft = '';
+                if (!name) return;
+                if (this.fileTagDialog.tags.indexOf(name) !== -1) {
+                    this.$message.warning('标签已存在');
+                    return;
+                }
+                this.fileTagDialog.tags.push(name);
+            },
+            removeFileTag: function (index) {
+                this.fileTagDialog.tags.splice(index, 1);
+            },
+            onFileTagDialogClosed: function () {
+                this.fileTagDialog.adding = false;
+                this.fileTagDialog.draft = '';
+                this.fileTagDialog.row = null;
+                this.fileTagDialog.tags = [];
+            },
+            submitFileTags: function () {
+                const row = this.fileTagDialog.row;
+                if (!row) return;
+                this.fileTagDialog.loading = true;
+                try {
+                    if (this.fileTagDialog.adding) this.confirmAddFileTag();
+                    this.$set(row, 'tags', this.fileTagDialog.tags.slice());
+                    this.fileTagDialog.visible = false;
+                    this.$message.success('标签已更新');
+                } finally {
+                    this.fileTagDialog.loading = false;
+                }
             },
             enterParentFolder: function () {
                 if (this.folderPath.length > 1) {

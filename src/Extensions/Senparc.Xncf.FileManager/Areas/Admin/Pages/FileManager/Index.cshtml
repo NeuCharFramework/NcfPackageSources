@@ -950,6 +950,51 @@
             color: #303133;
         }
 
+        /* 文件行「标签管理」对话框 */
+        .file-tag-dialog .file-tag-dialog-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .file-tag-dialog .file-tag-dialog-label {
+            font-size: 14px;
+            color: #303133;
+            font-weight: 500;
+        }
+
+        .file-tag-dialog .file-tag-dialog-add {
+            padding: 0;
+            font-size: 14px;
+            color: #409EFF;
+        }
+
+        .file-tag-dialog .file-tag-dialog-box {
+            min-height: 160px;
+            padding: 12px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            background: #fff;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 8px;
+        }
+
+        .file-tag-dialog .file-tag-dialog-empty {
+            width: 100%;
+            text-align: center;
+            color: #c0c4cc;
+            font-size: 13px;
+            padding: 48px 0;
+            line-height: 1.6;
+        }
+
+        .file-tag-dialog .file-tag-dialog-input {
+            width: 140px;
+        }
+
         .file-manager-home-recent-title i {
             color: #909399;
             cursor: pointer;
@@ -1146,7 +1191,8 @@
                                             <el-dropdown-item v-if="isSiteAsset" command="togglePublish">{{ scope.row.accessLevel === 100 ? '取消公开' : '公开' }}</el-dropdown-item>
                                             <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl">复制 URL</el-dropdown-item>
                                             <el-dropdown-item command="editNote">编辑备注</el-dropdown-item>
-                                            <el-dropdown-item command="delete" divided>删除</el-dropdown-item>
+                                            <el-dropdown-item command="manageTags" icon="el-icon-price-tag">标签管理</el-dropdown-item>
+                                            <el-dropdown-item command="delete" divided icon="el-icon-delete">删除</el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </template>
@@ -1586,6 +1632,45 @@
     </span>
 </el-dialog>
 
+<el-dialog
+    title="标签管理"
+    :visible.sync="fileTagDialog.visible"
+    width="480px"
+    custom-class="file-tag-dialog"
+    append-to-body
+    @@closed="onFileTagDialogClosed">
+    <div class="file-tag-dialog-toolbar">
+        <span class="file-tag-dialog-label">已添加标签</span>
+        <el-button type="text" class="file-tag-dialog-add" @@click="startAddFileTag">+ 添加标签</el-button>
+    </div>
+    <div class="file-tag-dialog-box">
+        <template v-if="(fileTagDialog.tags && fileTagDialog.tags.length) || fileTagDialog.adding">
+            <el-tag
+                v-for="(tag, index) in fileTagDialog.tags"
+                :key="tag + '-' + index"
+                size="small"
+                closable
+                @@close="removeFileTag(index)">{{ tag }}</el-tag>
+            <el-input
+                v-if="fileTagDialog.adding"
+                ref="fileTagInput"
+                class="file-tag-dialog-input"
+                size="mini"
+                v-model="fileTagDialog.draft"
+                maxlength="20"
+                placeholder="输入标签名"
+                @@keyup.enter.native="confirmAddFileTag"
+                @@blur="confirmAddFileTag">
+            </el-input>
+        </template>
+        <div v-else class="file-tag-dialog-empty">请添加标签</div>
+    </div>
+    <span slot="footer" class="dialog-footer">
+        <el-button @@click="fileTagDialog.visible=false">取消</el-button>
+        <el-button type="primary" @@click="submitFileTags" :loading="fileTagDialog.loading">确定</el-button>
+    </span>
+</el-dialog>
+
 <el-dialog title="文件资源管理使用说明" :visible.sync="guideDialogVisible" width="520px" append-to-body>
     <ol class="file-manager-guide">
         <li><strong>先选用途：</strong>左侧「企业文档」用于管理知识库资料；站点静态资源可通过地址栏 scope 参数切换。</li>
@@ -1599,6 +1684,90 @@
 @section scripts {
     <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
     <script src="~/lib/echarts/dist/echarts.js"></script>
+    <script>
+        // 嵌入的 index.js 未重编时，模板已引用 fileTagDialog，必须在 new Vue 之前注入，否则首屏 ReferenceError 白屏
+        (function ensureFileTagDialogBeforeVue() {
+            if (!window.Vue || window.Vue.__ncfFileTagDialogMixin) return;
+            window.Vue.__ncfFileTagDialogMixin = true;
+            Vue.mixin({
+                data: function () {
+                    var el = this.$options && this.$options.el;
+                    var isAppRoot = el === '#app' || el === document.getElementById('app');
+                    if (!isAppRoot) return {};
+                    return {
+                        fileTagDialog: {
+                            visible: false,
+                            loading: false,
+                            adding: false,
+                            draft: '',
+                            row: null,
+                            tags: []
+                        }
+                    };
+                },
+                methods: {
+                    showFileTagDialog: function (row) {
+                        var existing = Array.isArray(row && row.tags) ? row.tags.slice() : [];
+                        this.fileTagDialog = {
+                            visible: true,
+                            loading: false,
+                            adding: false,
+                            draft: '',
+                            row: row,
+                            tags: existing
+                        };
+                    },
+                    startAddFileTag: function () {
+                        if (!this.fileTagDialog) return;
+                        this.fileTagDialog.adding = true;
+                        this.fileTagDialog.draft = '';
+                        var self = this;
+                        this.$nextTick(function () {
+                            var input = self.$refs.fileTagInput;
+                            if (input && typeof input.focus === 'function') input.focus();
+                        });
+                    },
+                    confirmAddFileTag: function () {
+                        if (!this.fileTagDialog || !this.fileTagDialog.adding) return;
+                        var name = (this.fileTagDialog.draft || '').trim();
+                        this.fileTagDialog.adding = false;
+                        this.fileTagDialog.draft = '';
+                        if (!name) return;
+                        if (this.fileTagDialog.tags.indexOf(name) !== -1) {
+                            this.$message.warning('标签已存在');
+                            return;
+                        }
+                        this.fileTagDialog.tags.push(name);
+                    },
+                    removeFileTag: function (index) {
+                        if (!this.fileTagDialog) return;
+                        this.fileTagDialog.tags.splice(index, 1);
+                    },
+                    onFileTagDialogClosed: function () {
+                        if (!this.fileTagDialog) return;
+                        this.fileTagDialog.adding = false;
+                        this.fileTagDialog.draft = '';
+                        this.fileTagDialog.row = null;
+                        this.fileTagDialog.tags = [];
+                    },
+                    submitFileTags: function () {
+                        if (!this.fileTagDialog) return;
+                        var row = this.fileTagDialog.row;
+                        if (!row) return;
+                        this.fileTagDialog.loading = true;
+                        try {
+                            if (this.fileTagDialog.adding) this.confirmAddFileTag();
+                            this.$set(row, 'tags', this.fileTagDialog.tags.slice());
+                            this.fileTagDialog.visible = false;
+                            this.$message.success('标签已更新');
+                        } finally {
+                            this.fileTagDialog.loading = false;
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
     <script src="~/js/Admin/FileManager/index.js" asp-append-version="true"></script>
     <script>
         // 嵌入资源未重编时，仍保证「数据面板」可切换并渲染图表
@@ -2009,6 +2178,78 @@
                     } finally {
                         this.tableLoading = false;
                     }
+                };
+
+                if (!vm.fileTagDialog) {
+                    Vue.set(vm, 'fileTagDialog', {
+                        visible: false,
+                        loading: false,
+                        adding: false,
+                        draft: '',
+                        row: null,
+                        tags: []
+                    });
+                }
+
+                vm.showFileTagDialog = function (row) {
+                    var existing = Array.isArray(row && row.tags) ? row.tags.slice() : [];
+                    this.fileTagDialog = {
+                        visible: true,
+                        loading: false,
+                        adding: false,
+                        draft: '',
+                        row: row,
+                        tags: existing
+                    };
+                };
+                vm.startAddFileTag = function () {
+                    this.fileTagDialog.adding = true;
+                    this.fileTagDialog.draft = '';
+                    var self = this;
+                    this.$nextTick(function () {
+                        var input = self.$refs.fileTagInput;
+                        if (input && typeof input.focus === 'function') input.focus();
+                    });
+                };
+                vm.confirmAddFileTag = function () {
+                    if (!this.fileTagDialog.adding) return;
+                    var name = (this.fileTagDialog.draft || '').trim();
+                    this.fileTagDialog.adding = false;
+                    this.fileTagDialog.draft = '';
+                    if (!name) return;
+                    if (this.fileTagDialog.tags.indexOf(name) !== -1) {
+                        this.$message.warning('标签已存在');
+                        return;
+                    }
+                    this.fileTagDialog.tags.push(name);
+                };
+                vm.removeFileTag = function (index) {
+                    this.fileTagDialog.tags.splice(index, 1);
+                };
+                vm.onFileTagDialogClosed = function () {
+                    this.fileTagDialog.adding = false;
+                    this.fileTagDialog.draft = '';
+                    this.fileTagDialog.row = null;
+                    this.fileTagDialog.tags = [];
+                };
+                vm.submitFileTags = function () {
+                    var row = this.fileTagDialog.row;
+                    if (!row) return;
+                    this.fileTagDialog.loading = true;
+                    try {
+                        if (this.fileTagDialog.adding) this.confirmAddFileTag();
+                        this.$set(row, 'tags', this.fileTagDialog.tags.slice());
+                        this.fileTagDialog.visible = false;
+                        this.$message.success('标签已更新');
+                    } finally {
+                        this.fileTagDialog.loading = false;
+                    }
+                };
+
+                var originalHandleRowCommand = vm.handleRowCommand && vm.handleRowCommand.bind(vm);
+                vm.handleRowCommand = function (command, row) {
+                    if (command === 'manageTags') return this.showFileTagDialog(row);
+                    if (typeof originalHandleRowCommand === 'function') return originalHandleRowCommand(command, row);
                 };
 
                 if (typeof vm.getList === 'function' && !vm.__fileListPatched) {
