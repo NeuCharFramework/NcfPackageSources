@@ -133,6 +133,12 @@
                     displayList: [],
                     quickAccess: []
                 },
+                uploadSettingsStorageKey: 'ncf.fileManager.uploadSettings',
+                uploadSettings: {
+                    allowedTypesText: '',
+                    maxSizeMb: 50,
+                    blockedTypesText: ''
+                },
                 navItems: [
                     { key: 'home', label: '首页', icon: 'el-icon-s-home' },
                     { key: 'favorite', label: '收藏', icon: 'el-icon-star-off' },
@@ -175,6 +181,12 @@
                     : '知识库源文件只能是可安全提取的文本和 Office Open XML 文件。它们不会生成公开 URL，也不能在此处发布。';
             },
             uploadExtensionHint: function () {
+                if (this.uploadSettings && this.uploadSettings.allowedTypesText) {
+                    const list = this.parseExtensionList(this.uploadSettings.allowedTypesText);
+                    if (list.length) {
+                        return '支持 ' + list.map(function (ext) { return ext.replace(/^\./, '').toUpperCase(); }).join('、') + '。';
+                    }
+                }
                 return this.isSiteAsset
                     ? '支持 JPG、PNG、GIF、WebP、AVIF、ICO、音视频和字体格式。'
                     : '支持文本、JSON/XML/YAML、代码、DOCX、XLSX、PPTX。';
@@ -195,6 +207,7 @@
             this.loadFavoritesFromStorage();
             this.loadRecycleFromStorage();
             this.loadQuickAccessFromStorage();
+            this.loadUploadSettingsFromStorage();
             this.enterFolder(this.currentFolderId);
         },
         mounted: function () {
@@ -211,7 +224,8 @@
             onNavClick: function (item) {
                 if (!item || item.divider) return;
                 if (item.key === 'settings') {
-                    this.guideDialogVisible = true;
+                    this.activeNavKey = 'settings';
+                    this.loadUploadSettingsFromStorage();
                     return;
                 }
                 if (item.key === 'dashboard') {
@@ -908,6 +922,108 @@
             handleQuickAccessCommand: function (command, item) {
                 if (command === 'remove') this.toggleQuickAccess(item);
             },
+            getDefaultUploadSettings: function () {
+                return {
+                    allowedTypesText: [
+                        '.txt', '.log', '.md', '.markdown', '.csv', '.tsv', '.json', '.xml',
+                        '.yaml', '.yml', '.html', '.htm', '.css', '.js', '.ts', '.cs', '.sql',
+                        '.docx', '.xlsx', '.pptx',
+                        '.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.ico',
+                        '.mp3', '.wav', '.ogg', '.mp4', '.webm',
+                        '.woff', '.woff2', '.ttf', '.otf', '.pdf'
+                    ].join('\n'),
+                    maxSizeMb: 50,
+                    blockedTypesText: [
+                        '.exe', '.bat', '.cmd', '.com', '.msi', '.scr', '.ps1', '.vbs',
+                        '.dll', '.sys', '.apk', '.ipa'
+                    ].join('\n')
+                };
+            },
+            parseExtensionList: function (text) {
+                const result = [];
+                const seen = {};
+                String(text || '').split(/[\n,;，；\s]+/).forEach(function (part) {
+                    var ext = String(part || '').trim().toLowerCase();
+                    if (!ext) return;
+                    if (ext.charAt(0) !== '.') ext = '.' + ext;
+                    if (seen[ext]) return;
+                    seen[ext] = true;
+                    result.push(ext);
+                });
+                return result;
+            },
+            loadUploadSettingsFromStorage: function () {
+                const defaults = this.getDefaultUploadSettings();
+                try {
+                    const raw = localStorage.getItem(this.uploadSettingsStorageKey || 'ncf.fileManager.uploadSettings');
+                    const saved = raw ? JSON.parse(raw) : null;
+                    this.uploadSettings = {
+                        allowedTypesText: saved && saved.allowedTypesText != null ? saved.allowedTypesText : defaults.allowedTypesText,
+                        maxSizeMb: saved && saved.maxSizeMb != null ? Number(saved.maxSizeMb) || defaults.maxSizeMb : defaults.maxSizeMb,
+                        blockedTypesText: saved && saved.blockedTypesText != null ? saved.blockedTypesText : defaults.blockedTypesText
+                    };
+                } catch (e) {
+                    this.uploadSettings = defaults;
+                }
+            },
+            saveUploadSettings: function () {
+                if (!this.uploadSettings) this.uploadSettings = this.getDefaultUploadSettings();
+                let maxSizeMb = Number(this.uploadSettings.maxSizeMb);
+                if (!maxSizeMb || maxSizeMb < 1) maxSizeMb = 1;
+                if (maxSizeMb > 512) maxSizeMb = 512;
+                this.uploadSettings.maxSizeMb = maxSizeMb;
+                try {
+                    localStorage.setItem(
+                        this.uploadSettingsStorageKey || 'ncf.fileManager.uploadSettings',
+                        JSON.stringify({
+                            allowedTypesText: this.uploadSettings.allowedTypesText || '',
+                            maxSizeMb: maxSizeMb,
+                            blockedTypesText: this.uploadSettings.blockedTypesText || ''
+                        })
+                    );
+                    this.$message.success('上传设置已保存');
+                } catch (e) {
+                    this.$message.error('保存失败，请检查浏览器本地存储是否可用');
+                }
+            },
+            resetUploadSettings: function () {
+                this.uploadSettings = this.getDefaultUploadSettings();
+                try {
+                    localStorage.setItem(
+                        this.uploadSettingsStorageKey || 'ncf.fileManager.uploadSettings',
+                        JSON.stringify({
+                            allowedTypesText: this.uploadSettings.allowedTypesText || '',
+                            maxSizeMb: this.uploadSettings.maxSizeMb,
+                            blockedTypesText: this.uploadSettings.blockedTypesText || ''
+                        })
+                    );
+                    this.$message.success('已恢复默认上传设置');
+                } catch (e) {
+                    this.$message.error('恢复默认失败');
+                }
+            },
+            getMaxUploadSizeBytes: function () {
+                const mb = (this.uploadSettings && Number(this.uploadSettings.maxSizeMb)) || 50;
+                return Math.max(1, mb) * 1024 * 1024;
+            },
+            validateUploadFile: function (fileName, fileSize) {
+                const name = fileName || '';
+                const extMatch = /\.[^.\\/]+$/.exec(name);
+                const ext = extMatch ? extMatch[0].toLowerCase() : '';
+                const blocked = this.parseExtensionList((this.uploadSettings && this.uploadSettings.blockedTypesText) || '');
+                if (ext && blocked.indexOf(ext) !== -1) {
+                    return '文件“' + name + '”类型 ' + ext + ' 已被过滤，无法上传。';
+                }
+                const allowed = this.parseExtensionList((this.uploadSettings && this.uploadSettings.allowedTypesText) || '');
+                if (allowed.length && (!ext || allowed.indexOf(ext) === -1)) {
+                    return '文件“' + name + '”类型不在允许上传列表中。';
+                }
+                const maxBytes = this.getMaxUploadSizeBytes();
+                if (fileSize > maxBytes) {
+                    return '文件“' + name + '”超过 ' + Math.round(maxBytes / 1024 / 1024) + ' MB，无法上传。';
+                }
+                return '';
+            },
             showFileTagDialog: function (row) {
                 const existing = Array.isArray(row.tags) ? row.tags.slice() : [];
                 this.fileTagDialog = {
@@ -1160,13 +1276,23 @@
             },
             beforeUpload: function () { return false; },
             createUploadBatches: function (fileList) {
+                const self = this;
+                const maxBytes = typeof this.getMaxUploadSizeBytes === 'function'
+                    ? this.getMaxUploadSizeBytes()
+                    : maxFileSizeBytes;
+                const maxMb = Math.round(maxBytes / 1024 / 1024);
                 const batches = [];
                 let batch = [];
                 let batchBytes = 0;
                 fileList.forEach(function (file) {
                     const rawFile = file.raw || file;
                     if (!rawFile || !rawFile.size) throw new Error('存在无法读取的文件，请重新选择。');
-                    if (rawFile.size > maxFileSizeBytes) throw new Error('文件“' + file.name + '”超过 50 MB，无法上传。');
+                    if (typeof self.validateUploadFile === 'function') {
+                        const reason = self.validateUploadFile(file.name || rawFile.name, rawFile.size);
+                        if (reason) throw new Error(reason);
+                    } else if (rawFile.size > maxBytes) {
+                        throw new Error('文件“' + file.name + '”超过 ' + maxMb + ' MB，无法上传。');
+                    }
                     if (batch.length && (batch.length >= maxFilesPerUpload || batchBytes + rawFile.size > maxTotalUploadBytes)) {
                         batches.push(batch);
                         batch = [];

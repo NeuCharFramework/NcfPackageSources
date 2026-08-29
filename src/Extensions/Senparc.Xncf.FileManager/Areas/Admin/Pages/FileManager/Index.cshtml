@@ -674,6 +674,56 @@
             line-height: 1.9;
         }
 
+        /* ========== 设置：占满 file-manager-layout-main ========== */
+        .file-manager-layout-main .file-manager-settings-panel {
+            box-sizing: border-box;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            padding: 20px 28px;
+            overflow: auto;
+            background: #fff;
+        }
+
+        .file-manager-settings-title {
+            margin: 0 0 8px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #303133;
+        }
+
+        .file-manager-settings-desc {
+            margin: 0 0 24px;
+            font-size: 13px;
+            color: #909399;
+            line-height: 1.6;
+        }
+
+        .file-manager-settings-form {
+            max-width: 640px;
+        }
+
+        .file-manager-settings-form .el-form-item__label {
+            color: #606266;
+            font-weight: 500;
+        }
+
+        .file-manager-settings-hint {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #909399;
+            line-height: 1.5;
+        }
+
+        .file-manager-settings-actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 12px;
+        }
+
         /* ========== 标签管理：占满 file-manager-layout-main ========== */
         .file-manager-layout-main .file-manager-tags-panel {
             box-sizing: border-box;
@@ -1216,7 +1266,7 @@
 
     @* 主区域 85%：文件浏览（树+表）或数据面板 *@
     <div class="file-manager-layout-main">
-        <div class="file-manager-browser" v-if="activeNavKey !== 'dashboard' && activeNavKey !== 'tags' && activeNavKey !== 'recycle' && activeNavKey !== 'favorite' && activeNavKey !== 'home'">
+        <div class="file-manager-browser" v-if="activeNavKey !== 'dashboard' && activeNavKey !== 'tags' && activeNavKey !== 'recycle' && activeNavKey !== 'favorite' && activeNavKey !== 'home' && activeNavKey !== 'settings'">
             <div class="file-manager-tree-wrap">
                 <aside class="file-manager-tree-panel">
                     <div class="file-manager-org-header">
@@ -1453,6 +1503,45 @@
                     <div ref="countChart" class="file-manager-dash-chart"></div>
                 </section>
             </div>
+        </div>
+
+        <div class="file-manager-settings-panel" v-if="activeNavKey === 'settings' && uploadSettings">
+            <h2 class="file-manager-settings-title">上传设置</h2>
+            <p class="file-manager-settings-desc">配置文件上传的允许类型、大小上限以及需要拦截的扩展名。保存后立即对后续上传生效（本机浏览器记忆）。</p>
+            <el-form class="file-manager-settings-form" label-position="top" size="small">
+                <el-form-item label="允许上传的文件类型">
+                    <el-input
+                        type="textarea"
+                        :rows="8"
+                        v-model="uploadSettings.allowedTypesText"
+                        placeholder="每行一个扩展名，例如：.docx&#10;.xlsx&#10;.pdf">
+                    </el-input>
+                    <div class="file-manager-settings-hint">支持每行一个扩展名，也可使用逗号分隔。建议带点号（如 .docx）。留空表示不限制允许列表（仍受下方过滤类型约束）。</div>
+                </el-form-item>
+                <el-form-item label="单文件上传大小上限（MB）">
+                    <el-input-number
+                        v-model="uploadSettings.maxSizeMb"
+                        :min="1"
+                        :max="512"
+                        :step="1"
+                        controls-position="right">
+                    </el-input-number>
+                    <div class="file-manager-settings-hint">默认 50 MB；超过此大小的文件将在上传前被拦截。</div>
+                </el-form-item>
+                <el-form-item label="需要过滤的文件类型">
+                    <el-input
+                        type="textarea"
+                        :rows="6"
+                        v-model="uploadSettings.blockedTypesText"
+                        placeholder="每行一个扩展名，例如：.exe&#10;.bat&#10;.js">
+                    </el-input>
+                    <div class="file-manager-settings-hint">黑名单扩展名，命中后禁止上传（优先级高于允许列表）。</div>
+                </el-form-item>
+                <div class="file-manager-settings-actions">
+                    <el-button type="primary" @@click="saveUploadSettings">保存设置</el-button>
+                    <el-button @@click="resetUploadSettings">恢复默认</el-button>
+                </div>
+            </el-form>
         </div>
 
         <div class="file-manager-tags-panel" v-if="activeNavKey === 'tags' && tagManager">
@@ -1963,10 +2052,118 @@
                             list: [],
                             displayList: [],
                             quickAccess: []
+                        },
+                        uploadSettingsStorageKey: 'ncf.fileManager.uploadSettings',
+                        uploadSettings: {
+                            allowedTypesText: '',
+                            maxSizeMb: 50,
+                            blockedTypesText: ''
                         }
                     };
                 },
                 methods: {
+                    getDefaultUploadSettings: function () {
+                        return {
+                            allowedTypesText: [
+                                '.txt', '.log', '.md', '.markdown', '.csv', '.tsv', '.json', '.xml',
+                                '.yaml', '.yml', '.html', '.htm', '.css', '.js', '.ts', '.cs', '.sql',
+                                '.docx', '.xlsx', '.pptx',
+                                '.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.ico',
+                                '.mp3', '.wav', '.ogg', '.mp4', '.webm',
+                                '.woff', '.woff2', '.ttf', '.otf', '.pdf'
+                            ].join('\n'),
+                            maxSizeMb: 50,
+                            blockedTypesText: [
+                                '.exe', '.bat', '.cmd', '.com', '.msi', '.scr', '.ps1', '.vbs',
+                                '.dll', '.sys', '.apk', '.ipa'
+                            ].join('\n')
+                        };
+                    },
+                    parseExtensionList: function (text) {
+                        var result = [];
+                        var seen = {};
+                        String(text || '').split(/[\n,;，；\s]+/).forEach(function (part) {
+                            var ext = String(part || '').trim().toLowerCase();
+                            if (!ext) return;
+                            if (ext.charAt(0) !== '.') ext = '.' + ext;
+                            if (seen[ext]) return;
+                            seen[ext] = true;
+                            result.push(ext);
+                        });
+                        return result;
+                    },
+                    loadUploadSettingsFromStorage: function () {
+                        var defaults = this.getDefaultUploadSettings();
+                        try {
+                            var raw = localStorage.getItem(this.uploadSettingsStorageKey || 'ncf.fileManager.uploadSettings');
+                            var saved = raw ? JSON.parse(raw) : null;
+                            this.uploadSettings = {
+                                allowedTypesText: saved && saved.allowedTypesText != null ? saved.allowedTypesText : defaults.allowedTypesText,
+                                maxSizeMb: saved && saved.maxSizeMb != null ? Number(saved.maxSizeMb) || defaults.maxSizeMb : defaults.maxSizeMb,
+                                blockedTypesText: saved && saved.blockedTypesText != null ? saved.blockedTypesText : defaults.blockedTypesText
+                            };
+                        } catch (e) {
+                            this.uploadSettings = defaults;
+                        }
+                    },
+                    saveUploadSettings: function () {
+                        if (!this.uploadSettings) this.uploadSettings = this.getDefaultUploadSettings();
+                        var maxSizeMb = Number(this.uploadSettings.maxSizeMb);
+                        if (!maxSizeMb || maxSizeMb < 1) maxSizeMb = 1;
+                        if (maxSizeMb > 512) maxSizeMb = 512;
+                        this.uploadSettings.maxSizeMb = maxSizeMb;
+                        try {
+                            localStorage.setItem(
+                                this.uploadSettingsStorageKey || 'ncf.fileManager.uploadSettings',
+                                JSON.stringify({
+                                    allowedTypesText: this.uploadSettings.allowedTypesText || '',
+                                    maxSizeMb: maxSizeMb,
+                                    blockedTypesText: this.uploadSettings.blockedTypesText || ''
+                                })
+                            );
+                            this.$message.success('上传设置已保存');
+                        } catch (e) {
+                            this.$message.error('保存失败，请检查浏览器本地存储是否可用');
+                        }
+                    },
+                    resetUploadSettings: function () {
+                        this.uploadSettings = this.getDefaultUploadSettings();
+                        try {
+                            localStorage.setItem(
+                                this.uploadSettingsStorageKey || 'ncf.fileManager.uploadSettings',
+                                JSON.stringify({
+                                    allowedTypesText: this.uploadSettings.allowedTypesText || '',
+                                    maxSizeMb: this.uploadSettings.maxSizeMb,
+                                    blockedTypesText: this.uploadSettings.blockedTypesText || ''
+                                })
+                            );
+                            this.$message.success('已恢复默认上传设置');
+                        } catch (e) {
+                            this.$message.error('恢复默认失败');
+                        }
+                    },
+                    getMaxUploadSizeBytes: function () {
+                        var mb = (this.uploadSettings && Number(this.uploadSettings.maxSizeMb)) || 50;
+                        return Math.max(1, mb) * 1024 * 1024;
+                    },
+                    validateUploadFile: function (fileName, fileSize) {
+                        var name = fileName || '';
+                        var extMatch = /\.[^.\\/]+$/.exec(name);
+                        var ext = extMatch ? extMatch[0].toLowerCase() : '';
+                        var blocked = this.parseExtensionList((this.uploadSettings && this.uploadSettings.blockedTypesText) || '');
+                        if (ext && blocked.indexOf(ext) !== -1) {
+                            return '文件“' + name + '”类型 ' + ext + ' 已被过滤，无法上传。';
+                        }
+                        var allowed = this.parseExtensionList((this.uploadSettings && this.uploadSettings.allowedTypesText) || '');
+                        if (allowed.length && (!ext || allowed.indexOf(ext) === -1)) {
+                            return '文件“' + name + '”类型不在允许上传列表中。';
+                        }
+                        var maxBytes = this.getMaxUploadSizeBytes();
+                        if (fileSize > maxBytes) {
+                            return '文件“' + name + '”超过 ' + Math.round(maxBytes / 1024 / 1024) + ' MB，无法上传。';
+                        }
+                        return '';
+                    },
                     isInQuickAccess: function (row) {
                         if (!row || row.id == null || !this.homePage) return false;
                         return (this.homePage.quickAccess || []).some(function (item) { return item.id === row.id; });
@@ -2350,6 +2547,18 @@
                         this.activeNavKey = 'home';
                         if (typeof this.loadQuickAccessFromStorage === 'function') this.loadQuickAccessFromStorage();
                         if (typeof this.searchHomeRecent === 'function') this.searchHomeRecent();
+                        return;
+                    }
+                    if (item && item.key === 'settings') {
+                        if (!this.uploadSettings) {
+                            Vue.set(this, 'uploadSettings', {
+                                allowedTypesText: '',
+                                maxSizeMb: 50,
+                                blockedTypesText: ''
+                            });
+                        }
+                        this.activeNavKey = 'settings';
+                        if (typeof this.loadUploadSettingsFromStorage === 'function') this.loadUploadSettingsFromStorage();
                         return;
                     }
                     if (typeof originalOnNavClick === 'function') return originalOnNavClick(item);
@@ -2790,6 +2999,162 @@
                 if (!vm.__quickAccessLoaded) {
                     vm.__quickAccessLoaded = true;
                     vm.loadQuickAccessFromStorage();
+                }
+
+                if (!vm.uploadSettings) {
+                    Vue.set(vm, 'uploadSettings', {
+                        allowedTypesText: '',
+                        maxSizeMb: 50,
+                        blockedTypesText: ''
+                    });
+                }
+                if (!vm.uploadSettingsStorageKey) {
+                    Vue.set(vm, 'uploadSettingsStorageKey', 'ncf.fileManager.uploadSettings');
+                }
+                vm.getDefaultUploadSettings = function () {
+                    return {
+                        allowedTypesText: [
+                            '.txt', '.log', '.md', '.markdown', '.csv', '.tsv', '.json', '.xml',
+                            '.yaml', '.yml', '.html', '.htm', '.css', '.js', '.ts', '.cs', '.sql',
+                            '.docx', '.xlsx', '.pptx',
+                            '.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif', '.ico',
+                            '.mp3', '.wav', '.ogg', '.mp4', '.webm',
+                            '.woff', '.woff2', '.ttf', '.otf', '.pdf'
+                        ].join('\n'),
+                        maxSizeMb: 50,
+                        blockedTypesText: [
+                            '.exe', '.bat', '.cmd', '.com', '.msi', '.scr', '.ps1', '.vbs',
+                            '.dll', '.sys', '.apk', '.ipa'
+                        ].join('\n')
+                    };
+                };
+                vm.parseExtensionList = function (text) {
+                    var result = [];
+                    var seen = {};
+                    String(text || '').split(/[\n,;，；\s]+/).forEach(function (part) {
+                        var ext = String(part || '').trim().toLowerCase();
+                        if (!ext) return;
+                        if (ext.charAt(0) !== '.') ext = '.' + ext;
+                        if (seen[ext]) return;
+                        seen[ext] = true;
+                        result.push(ext);
+                    });
+                    return result;
+                };
+                vm.loadUploadSettingsFromStorage = function () {
+                    var defaults = this.getDefaultUploadSettings();
+                    try {
+                        var raw = localStorage.getItem(this.uploadSettingsStorageKey || 'ncf.fileManager.uploadSettings');
+                        var saved = raw ? JSON.parse(raw) : null;
+                        this.uploadSettings = {
+                            allowedTypesText: saved && saved.allowedTypesText != null ? saved.allowedTypesText : defaults.allowedTypesText,
+                            maxSizeMb: saved && saved.maxSizeMb != null ? Number(saved.maxSizeMb) || defaults.maxSizeMb : defaults.maxSizeMb,
+                            blockedTypesText: saved && saved.blockedTypesText != null ? saved.blockedTypesText : defaults.blockedTypesText
+                        };
+                    } catch (e) {
+                        this.uploadSettings = defaults;
+                    }
+                };
+                vm.saveUploadSettings = function () {
+                    if (!this.uploadSettings) this.uploadSettings = this.getDefaultUploadSettings();
+                    var maxSizeMb = Number(this.uploadSettings.maxSizeMb);
+                    if (!maxSizeMb || maxSizeMb < 1) maxSizeMb = 1;
+                    if (maxSizeMb > 512) maxSizeMb = 512;
+                    this.uploadSettings.maxSizeMb = maxSizeMb;
+                    try {
+                        localStorage.setItem(
+                            this.uploadSettingsStorageKey || 'ncf.fileManager.uploadSettings',
+                            JSON.stringify({
+                                allowedTypesText: this.uploadSettings.allowedTypesText || '',
+                                maxSizeMb: maxSizeMb,
+                                blockedTypesText: this.uploadSettings.blockedTypesText || ''
+                            })
+                        );
+                        this.$message.success('上传设置已保存');
+                    } catch (e) {
+                        this.$message.error('保存失败，请检查浏览器本地存储是否可用');
+                    }
+                };
+                vm.resetUploadSettings = function () {
+                    this.uploadSettings = this.getDefaultUploadSettings();
+                    try {
+                        localStorage.setItem(
+                            this.uploadSettingsStorageKey || 'ncf.fileManager.uploadSettings',
+                            JSON.stringify({
+                                allowedTypesText: this.uploadSettings.allowedTypesText || '',
+                                maxSizeMb: this.uploadSettings.maxSizeMb,
+                                blockedTypesText: this.uploadSettings.blockedTypesText || ''
+                            })
+                        );
+                        this.$message.success('已恢复默认上传设置');
+                    } catch (e) {
+                        this.$message.error('恢复默认失败');
+                    }
+                };
+                vm.getMaxUploadSizeBytes = function () {
+                    var mb = (this.uploadSettings && Number(this.uploadSettings.maxSizeMb)) || 50;
+                    return Math.max(1, mb) * 1024 * 1024;
+                };
+                vm.validateUploadFile = function (fileName, fileSize) {
+                    var name = fileName || '';
+                    var extMatch = /\.[^.\\/]+$/.exec(name);
+                    var ext = extMatch ? extMatch[0].toLowerCase() : '';
+                    var blocked = this.parseExtensionList((this.uploadSettings && this.uploadSettings.blockedTypesText) || '');
+                    if (ext && blocked.indexOf(ext) !== -1) {
+                        return '文件“' + name + '”类型 ' + ext + ' 已被过滤，无法上传。';
+                    }
+                    var allowed = this.parseExtensionList((this.uploadSettings && this.uploadSettings.allowedTypesText) || '');
+                    if (allowed.length && (!ext || allowed.indexOf(ext) === -1)) {
+                        return '文件“' + name + '”类型不在允许上传列表中。';
+                    }
+                    var maxBytes = this.getMaxUploadSizeBytes();
+                    if (fileSize > maxBytes) {
+                        return '文件“' + name + '”超过 ' + Math.round(maxBytes / 1024 / 1024) + ' MB，无法上传。';
+                    }
+                    return '';
+                };
+                if (!vm.__uploadSettingsLoaded) {
+                    vm.__uploadSettingsLoaded = true;
+                    vm.loadUploadSettingsFromStorage();
+                }
+
+                // 未重编 index.js 时，仍用设置校验上传
+                if (typeof vm.createUploadBatches === 'function' && !vm.__uploadSettingsBatchPatched) {
+                    vm.__uploadSettingsBatchPatched = true;
+                    var originalCreateUploadBatches = vm.createUploadBatches.bind(vm);
+                    vm.createUploadBatches = function (fileList) {
+                        var self = this;
+                        var maxBytes = typeof this.getMaxUploadSizeBytes === 'function'
+                            ? this.getMaxUploadSizeBytes()
+                            : (50 * 1024 * 1024);
+                        var maxMb = Math.round(maxBytes / 1024 / 1024);
+                        var maxFilesPerUpload = 20;
+                        var maxTotalUploadBytes = 100 * 1024 * 1024;
+                        var batches = [];
+                        var batch = [];
+                        var batchBytes = 0;
+                        (fileList || []).forEach(function (file) {
+                            var rawFile = file.raw || file;
+                            if (!rawFile || !rawFile.size) throw new Error('存在无法读取的文件，请重新选择。');
+                            if (typeof self.validateUploadFile === 'function') {
+                                var reason = self.validateUploadFile(file.name || rawFile.name, rawFile.size);
+                                if (reason) throw new Error(reason);
+                            } else if (rawFile.size > maxBytes) {
+                                throw new Error('文件“' + file.name + '”超过 ' + maxMb + ' MB，无法上传。');
+                            }
+                            if (batch.length && (batch.length >= maxFilesPerUpload || batchBytes + rawFile.size > maxTotalUploadBytes)) {
+                                batches.push(batch);
+                                batch = [];
+                                batchBytes = 0;
+                            }
+                            batch.push(file);
+                            batchBytes += rawFile.size;
+                        });
+                        if (batch.length) batches.push(batch);
+                        return batches;
+                    };
+                    // keep reference to avoid unused warning in some bundlers
+                    void originalCreateUploadBatches;
                 }
 
                 if (typeof vm.searchHomeRecent !== 'function') {
