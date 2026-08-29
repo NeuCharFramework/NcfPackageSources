@@ -126,10 +126,12 @@
                     total: 0
                 },
                 favoriteStorageKey: 'ncf.fileManager.favorites',
+                quickAccessStorageKey: 'ncf.fileManager.quickAccess',
                 homePage: {
                     keyword: '',
                     list: [],
-                    displayList: []
+                    displayList: [],
+                    quickAccess: []
                 },
                 navItems: [
                     { key: 'home', label: '首页', icon: 'el-icon-s-home' },
@@ -192,6 +194,7 @@
             this.initDashboardDefaults();
             this.loadFavoritesFromStorage();
             this.loadRecycleFromStorage();
+            this.loadQuickAccessFromStorage();
             this.enterFolder(this.currentFolderId);
         },
         mounted: function () {
@@ -581,6 +584,12 @@
                     this.searchFavorites();
                 }
 
+                // 从快速访问移除
+                if (this.homePage && this.homePage.quickAccess) {
+                    this.homePage.quickAccess = this.homePage.quickAccess.filter(function (item) { return item.id !== row.id; });
+                    this.saveQuickAccessToStorage();
+                }
+
                 // 从当前列表移除
                 this.tableData = (this.tableData || []).filter(function (item) { return item.id !== row.id; });
                 if (this.total > 0) this.total -= 1;
@@ -842,8 +851,62 @@
                 if (command === 'togglePublish') return this.setPublication(row, row.accessLevel !== 100);
                 if (command === 'copyUrl') return this.copyPublicUrl(row);
                 if (command === 'editNote') return this.showNoteDialog(row);
+                if (command === 'toggleQuickAccess') return this.toggleQuickAccess(row);
                 if (command === 'manageTags') return this.showFileTagDialog(row);
                 if (command === 'delete') return this.deleteFile(row);
+            },
+            isInQuickAccess: function (row) {
+                if (!row || row.id == null || !this.homePage) return false;
+                return (this.homePage.quickAccess || []).some(function (item) { return item.id === row.id; });
+            },
+            loadQuickAccessFromStorage: function () {
+                if (!this.homePage) {
+                    this.homePage = { keyword: '', list: [], displayList: [], quickAccess: [] };
+                }
+                try {
+                    const raw = localStorage.getItem(this.quickAccessStorageKey || 'ncf.fileManager.quickAccess');
+                    const list = raw ? JSON.parse(raw) : [];
+                    this.$set(this.homePage, 'quickAccess', Array.isArray(list) ? list : []);
+                } catch (e) {
+                    this.$set(this.homePage, 'quickAccess', []);
+                }
+            },
+            saveQuickAccessToStorage: function () {
+                try {
+                    localStorage.setItem(
+                        this.quickAccessStorageKey || 'ncf.fileManager.quickAccess',
+                        JSON.stringify((this.homePage && this.homePage.quickAccess) || [])
+                    );
+                } catch (e) { /* ignore */ }
+            },
+            toggleQuickAccess: function (row) {
+                if (!row || row.id == null) return;
+                if (!this.homePage) {
+                    this.$set(this, 'homePage', { keyword: '', list: [], displayList: [], quickAccess: [] });
+                }
+                if (!Array.isArray(this.homePage.quickAccess)) {
+                    this.$set(this.homePage, 'quickAccess', []);
+                }
+                const list = this.homePage.quickAccess;
+                const index = list.findIndex(function (item) { return item.id === row.id; });
+                if (index >= 0) {
+                    list.splice(index, 1);
+                    this.$message.success('已从快速访问移除');
+                } else {
+                    list.unshift({
+                        id: row.id,
+                        fileName: row.fileName,
+                        fileSize: row.fileSize,
+                        uploadTime: row.uploadTime,
+                        folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
+                        resourceScope: this.resourceScope
+                    });
+                    this.$message.success('已添加至快速访问');
+                }
+                this.saveQuickAccessToStorage();
+            },
+            handleQuickAccessCommand: function (command, item) {
+                if (command === 'remove') this.toggleQuickAccess(item);
             },
             showFileTagDialog: function (row) {
                 const existing = Array.isArray(row.tags) ? row.tags.slice() : [];

@@ -1016,6 +1016,72 @@
             background: #f5f7fa;
         }
 
+        .file-manager-home-quick-access {
+            flex-shrink: 0;
+            margin: 16px 16px 0;
+        }
+
+        .file-manager-home-quick-title {
+            margin: 0 0 12px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #303133;
+        }
+
+        .file-manager-home-quick-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .file-manager-home-quick-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 220px;
+            max-width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ebeef5;
+            border-radius: 6px;
+            background: #fff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+            cursor: default;
+        }
+
+        .file-manager-home-quick-card:hover {
+            border-color: #c6e2ff;
+            background: #f5f9ff;
+        }
+
+        .file-manager-home-quick-icon {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8f5e9;
+            color: #67c23a;
+            font-size: 18px;
+        }
+
+        .file-manager-home-quick-name {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 13px;
+            color: #303133;
+        }
+
+        .file-manager-home-quick-more {
+            flex-shrink: 0;
+            padding: 0;
+            color: #909399;
+        }
+
         .file-manager-home-recent {
             flex: 1;
             min-height: 0;
@@ -1289,6 +1355,9 @@
                                             <el-dropdown-item v-if="isSiteAsset" command="togglePublish">{{ scope.row.accessLevel === 100 ? '取消公开' : '公开' }}</el-dropdown-item>
                                             <el-dropdown-item v-if="isSiteAsset && scope.row.publicUrl" command="copyUrl">复制 URL</el-dropdown-item>
                                             <el-dropdown-item command="editNote">编辑备注</el-dropdown-item>
+                                            <el-dropdown-item command="toggleQuickAccess" icon="el-icon-s-opportunity">
+                                                {{ isInQuickAccess(scope.row) ? '从快速访问移除' : '添加至快速访问' }}
+                                            </el-dropdown-item>
                                             <el-dropdown-item command="manageTags" icon="el-icon-price-tag">标签管理</el-dropdown-item>
                                             <el-dropdown-item command="delete" divided icon="el-icon-delete">删除</el-dropdown-item>
                                         </el-dropdown-menu>
@@ -1627,12 +1696,28 @@
                 </div>
             </div>
 
-            <div class="file-manager-home-banner">
+            <div class="file-manager-home-banner" v-if="!(homePage.quickAccess && homePage.quickAccess.length)">
                 <div class="file-manager-home-banner-text">
                     <h3>灵活使用快速访问，畅享高效工作!</h3>
                     <p>可将常用的文件和文件夹添加至「快速访问」，方便查找和使用。点击列表“更多”即可手动添加或移除快速访问</p>
                 </div>
                 <div class="file-manager-home-banner-art" aria-hidden="true"></div>
+            </div>
+
+            <div class="file-manager-home-quick-access" v-else>
+                <div class="file-manager-home-quick-title">快速访问</div>
+                <div class="file-manager-home-quick-list">
+                    <div class="file-manager-home-quick-card" v-for="item in homePage.quickAccess" :key="item.id">
+                        <span class="file-manager-home-quick-icon"><i class="el-icon-document"></i></span>
+                        <span class="file-manager-home-quick-name" :title="item.fileName">{{ item.fileName }}</span>
+                        <el-dropdown trigger="click" @@command="handleQuickAccessCommand($event, item)">
+                            <el-button type="text" class="file-manager-home-quick-more" icon="el-icon-more"></el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="remove">从快速访问移除</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                </div>
             </div>
 
             <div class="file-manager-home-recent">
@@ -1871,10 +1956,73 @@
                             size: 20,
                             total: 0,
                             emptying: false
+                        },
+                        quickAccessStorageKey: 'ncf.fileManager.quickAccess',
+                        homePage: {
+                            keyword: '',
+                            list: [],
+                            displayList: [],
+                            quickAccess: []
                         }
                     };
                 },
                 methods: {
+                    isInQuickAccess: function (row) {
+                        if (!row || row.id == null || !this.homePage) return false;
+                        return (this.homePage.quickAccess || []).some(function (item) { return item.id === row.id; });
+                    },
+                    loadQuickAccessFromStorage: function () {
+                        if (!this.homePage) {
+                            this.homePage = { keyword: '', list: [], displayList: [], quickAccess: [] };
+                        }
+                        try {
+                            var raw = localStorage.getItem(this.quickAccessStorageKey || 'ncf.fileManager.quickAccess');
+                            var list = raw ? JSON.parse(raw) : [];
+                            this.$set(this.homePage, 'quickAccess', Array.isArray(list) ? list : []);
+                        } catch (e) {
+                            this.$set(this.homePage, 'quickAccess', []);
+                        }
+                    },
+                    saveQuickAccessToStorage: function () {
+                        try {
+                            localStorage.setItem(
+                                this.quickAccessStorageKey || 'ncf.fileManager.quickAccess',
+                                JSON.stringify((this.homePage && this.homePage.quickAccess) || [])
+                            );
+                        } catch (e) { /* ignore */ }
+                    },
+                    toggleQuickAccess: function (row) {
+                        if (!row || row.id == null) return;
+                        if (!this.homePage) {
+                            this.$set(this, 'homePage', { keyword: '', list: [], displayList: [], quickAccess: [] });
+                        }
+                        if (!Array.isArray(this.homePage.quickAccess)) {
+                            this.$set(this.homePage, 'quickAccess', []);
+                        }
+                        var list = this.homePage.quickAccess;
+                        var index = -1;
+                        for (var i = 0; i < list.length; i++) {
+                            if (list[i].id === row.id) { index = i; break; }
+                        }
+                        if (index >= 0) {
+                            list.splice(index, 1);
+                            this.$message.success('已从快速访问移除');
+                        } else {
+                            list.unshift({
+                                id: row.id,
+                                fileName: row.fileName,
+                                fileSize: row.fileSize,
+                                uploadTime: row.uploadTime,
+                                folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
+                                resourceScope: this.resourceScope
+                            });
+                            this.$message.success('已添加至快速访问');
+                        }
+                        this.saveQuickAccessToStorage();
+                    },
+                    handleQuickAccessCommand: function (command, item) {
+                        if (command === 'remove') this.toggleQuickAccess(item);
+                    },
                     showFileTagDialog: function (row) {
                         var existing = Array.isArray(row && row.tags) ? row.tags.slice() : [];
                         this.fileTagDialog = {
@@ -2195,10 +2343,12 @@
                             Vue.set(this, 'homePage', {
                                 keyword: '',
                                 list: [],
-                                displayList: []
+                                displayList: [],
+                                quickAccess: []
                             });
                         }
                         this.activeNavKey = 'home';
+                        if (typeof this.loadQuickAccessFromStorage === 'function') this.loadQuickAccessFromStorage();
                         if (typeof this.searchHomeRecent === 'function') this.searchHomeRecent();
                         return;
                     }
@@ -2570,8 +2720,76 @@
                     Vue.set(vm, 'homePage', {
                         keyword: '',
                         list: [],
-                        displayList: []
+                        displayList: [],
+                        quickAccess: []
                     });
+                } else if (!vm.homePage.quickAccess) {
+                    Vue.set(vm.homePage, 'quickAccess', []);
+                }
+                if (!vm.quickAccessStorageKey) {
+                    Vue.set(vm, 'quickAccessStorageKey', 'ncf.fileManager.quickAccess');
+                }
+
+                vm.isInQuickAccess = function (row) {
+                    if (!row || row.id == null || !this.homePage) return false;
+                    return (this.homePage.quickAccess || []).some(function (item) { return item.id === row.id; });
+                };
+                vm.loadQuickAccessFromStorage = function () {
+                    if (!this.homePage) {
+                        Vue.set(this, 'homePage', { keyword: '', list: [], displayList: [], quickAccess: [] });
+                    }
+                    try {
+                        var raw = localStorage.getItem(this.quickAccessStorageKey || 'ncf.fileManager.quickAccess');
+                        var list = raw ? JSON.parse(raw) : [];
+                        this.$set(this.homePage, 'quickAccess', Array.isArray(list) ? list : []);
+                    } catch (e) {
+                        this.$set(this.homePage, 'quickAccess', []);
+                    }
+                };
+                vm.saveQuickAccessToStorage = function () {
+                    try {
+                        localStorage.setItem(
+                            this.quickAccessStorageKey || 'ncf.fileManager.quickAccess',
+                            JSON.stringify((this.homePage && this.homePage.quickAccess) || [])
+                        );
+                    } catch (e) { /* ignore */ }
+                };
+                vm.toggleQuickAccess = function (row) {
+                    if (!row || row.id == null) return;
+                    if (!this.homePage) {
+                        Vue.set(this, 'homePage', { keyword: '', list: [], displayList: [], quickAccess: [] });
+                    }
+                    if (!Array.isArray(this.homePage.quickAccess)) {
+                        this.$set(this.homePage, 'quickAccess', []);
+                    }
+                    var list = this.homePage.quickAccess;
+                    var index = -1;
+                    for (var i = 0; i < list.length; i++) {
+                        if (list[i].id === row.id) { index = i; break; }
+                    }
+                    if (index >= 0) {
+                        list.splice(index, 1);
+                        this.$message.success('已从快速访问移除');
+                    } else {
+                        list.unshift({
+                            id: row.id,
+                            fileName: row.fileName,
+                            fileSize: row.fileSize,
+                            uploadTime: row.uploadTime,
+                            folderPathText: typeof this.buildFavoritePathText === 'function' ? this.buildFavoritePathText() : '',
+                            resourceScope: this.resourceScope
+                        });
+                        this.$message.success('已添加至快速访问');
+                    }
+                    this.saveQuickAccessToStorage();
+                };
+                vm.handleQuickAccessCommand = function (command, item) {
+                    if (command === 'remove') this.toggleQuickAccess(item);
+                };
+
+                if (!vm.__quickAccessLoaded) {
+                    vm.__quickAccessLoaded = true;
+                    vm.loadQuickAccessFromStorage();
                 }
 
                 if (typeof vm.searchHomeRecent !== 'function') {
@@ -2867,6 +3085,7 @@
                 var originalHandleRowCommand = vm.handleRowCommand && vm.handleRowCommand.bind(vm);
                 vm.handleRowCommand = function (command, row) {
                     if (command === 'manageTags') return this.showFileTagDialog(row);
+                    if (command === 'toggleQuickAccess') return this.toggleQuickAccess(row);
                     if (typeof originalHandleRowCommand === 'function') return originalHandleRowCommand(command, row);
                 };
 
