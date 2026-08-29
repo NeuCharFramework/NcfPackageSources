@@ -102,19 +102,23 @@
                     categoryOptions: [],
                     list: [],
                     displayList: [],
-                    tags: []
+                    tags: [],
+                    treeExpanded: true,
+                    treeExpandKey: 0
                 },
                 tagManagerStorageKey: 'ncf.fileManager.tagManager',
                 tagAdminOptions: ['管理员', '当前用户'],
                 tagCategoryDialog: {
                     visible: false,
                     loading: false,
-                    form: { name: '', description: '', parentId: '', admin: '' }
+                    editing: false,
+                    form: { id: '', name: '', description: '', parentId: '', admin: '' }
                 },
                 tagCreateDialog: {
                     visible: false,
                     loading: false,
-                    form: { name: '', description: '', categoryId: '' }
+                    editing: false,
+                    form: { id: '', name: '', description: '', categoryId: '' }
                 },
                 tagCategoryRules: {
                     name: [
@@ -524,16 +528,77 @@
             },
             searchTags: function () {
                 if (!this.tagManager) return;
+                this.tagManager.displayList = this.buildTagTreeDisplay();
+            },
+            matchTagStatusFilter: function (statusValue, filter) {
+                const enabled = statusValue === '启用';
+                if (filter === 'enabled') return enabled;
+                if (filter === 'disabled') return !enabled;
+                return true;
+            },
+            isTagRowEnabled: function (row) {
+                return !!(row && row.status === '启用');
+            },
+            isTagCategoryRow: function (row) {
+                return !!(row && row.nodeType !== 'tag');
+            },
+            buildTagTreeDisplay: function () {
+                if (!this.tagManager) return [];
                 const keyword = (this.tagManager.keyword || '').trim().toLowerCase();
-                const category = this.tagManager.category || '';
-                const status = this.tagManager.status || '';
-                this.tagManager.displayList = (this.tagManager.list || []).filter(function (row) {
-                    if (keyword && String(row.name || '').toLowerCase().indexOf(keyword) === -1) return false;
-                    if (category && row.id !== category && row.parentId !== category) return false;
-                    if (status === 'enabled' && row.status !== '启用') return false;
-                    if (status === 'disabled' && row.status !== '停用') return false;
-                    return true;
+                const categoryFilter = this.tagManager.category || '';
+                const statusFilter = this.tagManager.status || '';
+                const self = this;
+                const categoryMap = {};
+                const categories = (this.tagManager.list || []).map(function (row) {
+                    const cat = Object.assign({}, row, { nodeType: 'category', children: [] });
+                    categoryMap[cat.id] = cat;
+                    return cat;
                 });
+
+                categories.forEach(function (cat) {
+                    const hasParent = !!(cat.parentId && categoryMap[cat.parentId]);
+                    cat.type = hasParent ? '二级分类' : '一级分类';
+                    cat.level = hasParent ? 2 : 1;
+                    if (hasParent) {
+                        categoryMap[cat.parentId].children.push(cat);
+                        cat.__linked = true;
+                    }
+                });
+
+                (this.tagManager.tags || []).forEach(function (row) {
+                    const tag = Object.assign({}, row, {
+                        nodeType: 'tag',
+                        type: '标签',
+                        tagCount: '-',
+                        admin: '-',
+                        children: []
+                    });
+                    const parent = tag.categoryId && categoryMap[tag.categoryId];
+                    if (parent) parent.children.push(tag);
+                });
+
+                categories.forEach(function (cat) {
+                    cat.tagCount = (cat.children || []).filter(function (c) { return c.nodeType === 'tag'; }).length;
+                });
+
+                function prune(node) {
+                    const children = (node.children || []).map(prune).filter(function (item) { return !!item; });
+                    const nameOk = !keyword || String(node.name || '').toLowerCase().indexOf(keyword) !== -1;
+                    const statusOk = self.matchTagStatusFilter(node.status, statusFilter);
+                    if (nameOk && statusOk) {
+                        return Object.assign({}, node, { children: children });
+                    }
+                    if (children.length) {
+                        return Object.assign({}, node, { children: children });
+                    }
+                    return null;
+                }
+
+                let roots = categories.filter(function (cat) { return !cat.__linked; });
+                if (categoryFilter && categoryMap[categoryFilter]) {
+                    roots = [categoryMap[categoryFilter]];
+                }
+                return roots.map(prune).filter(function (item) { return !!item; });
             },
             resetTagFilters: function () {
                 if (!this.tagManager) return;
@@ -561,9 +626,12 @@
                 if (!this.tagManager) {
                     this.tagManager = {
                         keyword: '', category: '', status: '', selectedIds: [],
-                        categoryOptions: [], list: [], displayList: [], tags: []
+                        categoryOptions: [], list: [], displayList: [], tags: [],
+                        treeExpanded: true, treeExpandKey: 0
                     };
                 }
+                if (this.tagManager.treeExpanded == null) this.tagManager.treeExpanded = true;
+                if (this.tagManager.treeExpandKey == null) this.tagManager.treeExpandKey = 0;
                 try {
                     const raw = localStorage.getItem(this.tagManagerStorageKey || 'ncf.fileManager.tagManager');
                     const saved = raw ? JSON.parse(raw) : null;
@@ -587,7 +655,7 @@
                     );
                 } catch (e) { /* ignore */ }
             },
-            createTag: function () {
+            createTag: function (presetCategoryId) {
                 this.loadTagManagerFromStorage();
                 if (!(this.tagManager.list || []).length) {
                     this.$message.warning('请先新增分类后再创建标签');
@@ -596,35 +664,159 @@
                 this.tagCreateDialog = {
                     visible: true,
                     loading: false,
-                    form: { name: '', description: '', categoryId: '' }
+                    editing: false,
+                    form: { id: '', name: '', description: '', categoryId: presetCategoryId || '' }
                 };
                 const self = this;
                 this.$nextTick(function () {
                     if (self.$refs.tagCreateForm) self.$refs.tagCreateForm.clearValidate();
                 });
             },
-            createTagCategory: function () {
+            createTagCategory: function (presetParentId) {
                 this.loadTagManagerFromStorage();
                 this.tagCategoryDialog = {
                     visible: true,
                     loading: false,
-                    form: { name: '', description: '', parentId: '', admin: '' }
+                    editing: false,
+                    form: { id: '', name: '', description: '', parentId: presetParentId || '', admin: '' }
                 };
                 const self = this;
                 this.$nextTick(function () {
                     if (self.$refs.tagCategoryForm) self.$refs.tagCategoryForm.clearValidate();
                 });
             },
+            createTagUnder: function (row) {
+                if (!this.isTagCategoryRow(row)) return;
+                this.createTag(row.id);
+            },
+            createTagCategoryUnder: function (row) {
+                if (!this.isTagCategoryRow(row)) return;
+                this.createTagCategory(row.id);
+            },
+            editTagRow: function (row) {
+                if (!row) return;
+                if (row.nodeType === 'tag') {
+                    this.tagCreateDialog = {
+                        visible: true,
+                        loading: false,
+                        editing: true,
+                        form: {
+                            id: row.id,
+                            name: row.name || '',
+                            description: row.description || '',
+                            categoryId: row.categoryId || ''
+                        }
+                    };
+                    const self = this;
+                    this.$nextTick(function () {
+                        if (self.$refs.tagCreateForm) self.$refs.tagCreateForm.clearValidate();
+                    });
+                    return;
+                }
+                this.tagCategoryDialog = {
+                    visible: true,
+                    loading: false,
+                    editing: true,
+                    form: {
+                        id: row.id,
+                        name: row.name || '',
+                        description: row.description || '',
+                        parentId: row.parentId || '',
+                        admin: row.admin && row.admin !== '-' ? row.admin : ''
+                    }
+                };
+                const self = this;
+                this.$nextTick(function () {
+                    if (self.$refs.tagCategoryForm) self.$refs.tagCategoryForm.clearValidate();
+                });
+            },
+            deleteTagRow: function (row) {
+                if (!row) return;
+                const self = this;
+                const tip = row.nodeType === 'tag'
+                    ? '确定删除标签「' + row.name + '」吗？'
+                    : '确定删除分类「' + row.name + '」及其下属标签吗？';
+                this.$confirm(tip, '提示', { type: 'warning' }).then(function () {
+                    if (row.nodeType === 'tag') {
+                        self.tagManager.tags = (self.tagManager.tags || []).filter(function (item) { return item.id !== row.id; });
+                        const category = (self.tagManager.list || []).find(function (item) { return item.id === row.categoryId; });
+                        if (category) {
+                            category.tagCount = Math.max(0, (category.tagCount || 0) - 1);
+                            category.updatedAt = self.formatTagDateTime(new Date());
+                        }
+                    } else {
+                        const removeIds = {};
+                        removeIds[row.id] = true;
+                        (self.tagManager.list || []).forEach(function (cat) {
+                            if (cat.parentId === row.id) removeIds[cat.id] = true;
+                        });
+                        self.tagManager.list = (self.tagManager.list || []).filter(function (cat) { return !removeIds[cat.id]; });
+                        self.tagManager.tags = (self.tagManager.tags || []).filter(function (tag) { return !removeIds[tag.categoryId]; });
+                    }
+                    self.syncTagCategoryOptions();
+                    self.saveTagManagerToStorage();
+                    self.searchTags();
+                    self.$message.success('已删除');
+                }).catch(function () { /* cancel */ });
+            },
+            toggleTagRowStatus: function (row) {
+                if (!row) return;
+                const enabled = this.isTagRowEnabled(row);
+                const nextStatus = enabled ? '已停用' : '启用';
+                const now = this.formatTagDateTime(new Date());
+                if (row.nodeType === 'tag') {
+                    const tag = (this.tagManager.tags || []).find(function (item) { return item.id === row.id; });
+                    if (!tag) return;
+                    tag.status = nextStatus;
+                    tag.updatedAt = now;
+                } else {
+                    const cat = (this.tagManager.list || []).find(function (item) { return item.id === row.id; });
+                    if (!cat) return;
+                    cat.status = nextStatus;
+                    cat.updatedAt = now;
+                }
+                this.saveTagManagerToStorage();
+                this.searchTags();
+                this.$message.success(enabled ? '已停用' : '已启用');
+            },
+            setSelectedTagStatus: function (enabled) {
+                const ids = (this.tagManager && this.tagManager.selectedIds) || [];
+                if (!ids.length) {
+                    this.$message.warning('请先选择数据');
+                    return;
+                }
+                const idMap = {};
+                ids.forEach(function (id) { idMap[id] = true; });
+                const nextStatus = enabled ? '启用' : '已停用';
+                const now = this.formatTagDateTime(new Date());
+                (this.tagManager.list || []).forEach(function (cat) {
+                    if (idMap[cat.id]) {
+                        cat.status = nextStatus;
+                        cat.updatedAt = now;
+                    }
+                });
+                (this.tagManager.tags || []).forEach(function (tag) {
+                    if (idMap[tag.id]) {
+                        tag.status = nextStatus;
+                        tag.updatedAt = now;
+                    }
+                });
+                this.saveTagManagerToStorage();
+                this.searchTags();
+                this.$message.success(enabled ? '已启用所选项目' : '已停用所选项目');
+            },
             onTagCategoryDialogClosed: function () {
                 if (!this.tagCategoryDialog) return;
                 this.tagCategoryDialog.loading = false;
-                this.tagCategoryDialog.form = { name: '', description: '', parentId: '', admin: '' };
+                this.tagCategoryDialog.editing = false;
+                this.tagCategoryDialog.form = { id: '', name: '', description: '', parentId: '', admin: '' };
                 if (this.$refs.tagCategoryForm) this.$refs.tagCategoryForm.clearValidate();
             },
             onTagCreateDialogClosed: function () {
                 if (!this.tagCreateDialog) return;
                 this.tagCreateDialog.loading = false;
-                this.tagCreateDialog.form = { name: '', description: '', categoryId: '' };
+                this.tagCreateDialog.editing = false;
+                this.tagCreateDialog.form = { id: '', name: '', description: '', categoryId: '' };
                 if (this.$refs.tagCreateForm) this.$refs.tagCreateForm.clearValidate();
             },
             submitTagCategory: function () {
@@ -635,11 +827,18 @@
                     if (!valid) return;
                     const form = self.tagCategoryDialog.form || {};
                     const name = (form.name || '').trim();
+                    const editing = !!self.tagCategoryDialog.editing;
+                    const currentId = form.id || '';
                     if (!name) {
                         self.$message.warning('请输入分类名称');
                         return;
                     }
+                    if (form.parentId && form.parentId === currentId) {
+                        self.$message.warning('所属分类不能选择自己');
+                        return;
+                    }
                     const exists = (self.tagManager.list || []).some(function (row) {
+                        if (editing && row.id === currentId) return false;
                         return String(row.name || '').toLowerCase() === name.toLowerCase();
                     });
                     if (exists) {
@@ -649,23 +848,38 @@
                     self.tagCategoryDialog.loading = true;
                     try {
                         const now = self.formatTagDateTime(new Date());
-                        self.tagManager.list.unshift({
-                            id: 'cat-' + Date.now(),
-                            name: name,
-                            description: (form.description || '').trim(),
-                            parentId: form.parentId || '',
-                            type: '分类',
-                            status: '启用',
-                            tagCount: 0,
-                            updatedAt: now,
-                            updatedBy: '当前用户',
-                            admin: form.admin || '-'
-                        });
+                        if (editing) {
+                            const target = (self.tagManager.list || []).find(function (row) { return row.id === currentId; });
+                            if (!target) {
+                                self.$message.error('分类不存在');
+                                return;
+                            }
+                            target.name = name;
+                            target.description = (form.description || '').trim();
+                            target.parentId = form.parentId || '';
+                            target.admin = form.admin || '-';
+                            target.updatedAt = now;
+                            target.updatedBy = '当前用户';
+                            self.$message.success('分类已更新');
+                        } else {
+                            self.tagManager.list.unshift({
+                                id: 'cat-' + Date.now(),
+                                name: name,
+                                description: (form.description || '').trim(),
+                                parentId: form.parentId || '',
+                                type: '分类',
+                                status: '启用',
+                                tagCount: 0,
+                                updatedAt: now,
+                                updatedBy: '当前用户',
+                                admin: form.admin || '-'
+                            });
+                            self.$message.success('分类已创建');
+                        }
                         self.syncTagCategoryOptions();
                         self.saveTagManagerToStorage();
                         self.searchTags();
                         self.tagCategoryDialog.visible = false;
-                        self.$message.success('分类已创建');
                     } finally {
                         self.tagCategoryDialog.loading = false;
                     }
@@ -680,6 +894,8 @@
                     const form = self.tagCreateDialog.form || {};
                     const name = (form.name || '').trim();
                     const categoryId = form.categoryId;
+                    const editing = !!self.tagCreateDialog.editing;
+                    const currentId = form.id || '';
                     if (!name) {
                         self.$message.warning('请输入标签名称');
                         return;
@@ -694,6 +910,7 @@
                         return;
                     }
                     const dup = (self.tagManager.tags || []).some(function (tag) {
+                        if (editing && tag.id === currentId) return false;
                         return tag.categoryId === categoryId
                             && String(tag.name || '').toLowerCase() === name.toLowerCase();
                     });
@@ -705,34 +922,64 @@
                     try {
                         if (!Array.isArray(self.tagManager.tags)) self.tagManager.tags = [];
                         const now = self.formatTagDateTime(new Date());
-                        self.tagManager.tags.unshift({
-                            id: 'tag-' + Date.now(),
-                            name: name,
-                            description: (form.description || '').trim(),
-                            categoryId: categoryId,
-                            categoryName: category.name,
-                            status: '启用',
-                            updatedAt: now,
-                            updatedBy: '当前用户'
-                        });
-                        category.tagCount = (category.tagCount || 0) + 1;
-                        category.updatedAt = now;
-                        category.updatedBy = '当前用户';
+                        if (editing) {
+                            const target = self.tagManager.tags.find(function (tag) { return tag.id === currentId; });
+                            if (!target) {
+                                self.$message.error('标签不存在');
+                                return;
+                            }
+                            const oldCategoryId = target.categoryId;
+                            target.name = name;
+                            target.description = (form.description || '').trim();
+                            target.categoryId = categoryId;
+                            target.categoryName = category.name;
+                            target.updatedAt = now;
+                            target.updatedBy = '当前用户';
+                            if (oldCategoryId !== categoryId) {
+                                const oldCat = (self.tagManager.list || []).find(function (row) { return row.id === oldCategoryId; });
+                                if (oldCat) oldCat.tagCount = Math.max(0, (oldCat.tagCount || 0) - 1);
+                                category.tagCount = (category.tagCount || 0) + 1;
+                            }
+                            category.updatedAt = now;
+                            self.$message.success('标签已更新');
+                        } else {
+                            self.tagManager.tags.unshift({
+                                id: 'tag-' + Date.now(),
+                                name: name,
+                                description: (form.description || '').trim(),
+                                categoryId: categoryId,
+                                categoryName: category.name,
+                                status: '启用',
+                                updatedAt: now,
+                                updatedBy: '当前用户'
+                            });
+                            category.tagCount = (category.tagCount || 0) + 1;
+                            category.updatedAt = now;
+                            category.updatedBy = '当前用户';
+                            self.$message.success('标签已创建');
+                        }
                         self.saveTagManagerToStorage();
                         self.searchTags();
                         self.tagCreateDialog.visible = false;
-                        self.$message.success('标签已创建');
                     } finally {
                         self.tagCreateDialog.loading = false;
                     }
                 });
             },
-            expandTagRows: function () { this.$message.info('展开功能即将开放'); },
-            enableSelectedTags: function () { this.$message.info('启用功能即将开放'); },
-            disableSelectedTags: function () { this.$message.info('停用功能即将开放'); },
+            expandTagRows: function () {
+                if (!this.tagManager) return;
+                this.tagManager.treeExpanded = !this.tagManager.treeExpanded;
+                this.tagManager.treeExpandKey = (this.tagManager.treeExpandKey || 0) + 1;
+            },
+            enableSelectedTags: function () { this.setSelectedTagStatus(true); },
+            disableSelectedTags: function () { this.setSelectedTagStatus(false); },
             importTags: function () { this.$message.info('导入功能即将开放'); },
             exportTags: function () { this.$message.info('导出功能即将开放'); },
-            openTagRowMenu: function () { this.$message.info('更多操作即将开放'); },
+            openTagRowMenu: function (row) {
+                if (!row) return;
+                // 与行扩展一致：打开编辑
+                this.editTagRow(row);
+            },
             loadRecycleBin: function () {
                 if (!this.recycleBin) return;
                 this.recycleBin.displayList = this.recycleBin.list || [];
