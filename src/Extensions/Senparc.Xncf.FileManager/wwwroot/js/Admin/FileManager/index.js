@@ -67,27 +67,30 @@
                     capacityRange: '7d',
                     capacityDates: [],
                     statsCutoff: '',
-                    enterpriseUsed: '6.28GB',
+                    enterpriseUsed: '0B',
+                    totalCount: 0,
+                    totalSizeBytes: 0,
+                    capacityTrend: [],
                     orgUsages: [
-                        { name: '山西米立信息技术有限公司', size: '6.28GB' },
-                        { name: '企业文档根目录', size: '0.00KB' },
-                        { name: '知识库资料', size: '0.00KB' }
+                        { name: '山西米立信息技术有限公司', size: '0B' },
+                        { name: '企业文档根目录', size: '0B' },
+                        { name: '知识库资料', size: '0B' }
                     ],
-                    sizeTotalLabel: '7G',
-                    countTotalLabel: '90',
+                    sizeTotalLabel: '0B',
+                    countTotalLabel: '0',
                     sizeSlices: [
-                        { name: '其他', value: 4.55, percent: '70.00%', color: '#91d5ff' },
-                        { name: '文档', value: 1.22, percent: '18.77%', color: '#95de64' },
-                        { name: '视频', value: 0.54, percent: '8.31%', color: '#ffd666' },
-                        { name: '图片', value: 0.19, percent: '2.92%', color: '#597ef7' },
-                        { name: '音频', value: 0, percent: '0.00%', color: '#ff9c6e' }
+                        { name: '文档', value: 0, color: '#95de64' },
+                        { name: '图片', value: 0, color: '#597ef7' },
+                        { name: '视频', value: 0, color: '#ffd666' },
+                        { name: '音频', value: 0, color: '#ff9c6e' },
+                        { name: '其他', value: 0, color: '#91d5ff' }
                     ],
                     countSlices: [
-                        { name: '其他', value: 48, percent: '53.33%', color: '#91d5ff' },
-                        { name: '图片', value: 23, percent: '25.56%', color: '#597ef7' },
-                        { name: '文档', value: 13, percent: '14.44%', color: '#95de64' },
-                        { name: '视频', value: 6, percent: '6.67%', color: '#ffd666' },
-                        { name: '音频', value: 0, percent: '0.00%', color: '#ff9c6e' }
+                        { name: '文档', value: 0, color: '#95de64' },
+                        { name: '图片', value: 0, color: '#597ef7' },
+                        { name: '视频', value: 0, color: '#ffd666' },
+                        { name: '音频', value: 0, color: '#ff9c6e' },
+                        { name: '其他', value: 0, color: '#91d5ff' }
                     ]
                 },
                 _dashboardCharts: null,
@@ -146,7 +149,9 @@
             },
             activeNavKey: function (value) {
                 if (value === 'dashboard') {
-                    this.$nextTick(this.refreshDashboardCharts);
+                    this.$nextTick(function () {
+                        this.loadDashboardStats();
+                    }.bind(this));
                 }
             }
         },
@@ -208,7 +213,9 @@
                 }
                 if (item.key === 'dashboard') {
                     this.activeNavKey = 'dashboard';
-                    this.$nextTick(this.refreshDashboardCharts);
+                    this.$nextTick(function () {
+                        this.loadDashboardStats();
+                    }.bind(this));
                     return;
                 }
                 if (item.key === 'tags') {
@@ -276,7 +283,7 @@
                     const list = [];
                     const cursor = new Date(dates[0]);
                     const end = new Date(dates[1]);
-                    while (cursor <= end && list.length < 31) {
+                    while (cursor <= end && list.length < 366) {
                         const m = String(cursor.getMonth() + 1).padStart(2, '0');
                         const d = String(cursor.getDate()).padStart(2, '0');
                         list.push(m + '-' + d);
@@ -284,7 +291,7 @@
                     }
                     if (list.length) return list;
                 }
-                const days = this.dashboard.capacityRange === '365d' ? 12 : (this.dashboard.capacityRange === '30d' ? 30 : 7);
+                const days = this.dashboard.capacityRange === '365d' ? 365 : (this.dashboard.capacityRange === '30d' ? 30 : 7);
                 const result = [];
                 const now = new Date();
                 for (let i = days - 1; i >= 0; i--) {
@@ -294,47 +301,125 @@
                 }
                 return result;
             },
+            onDashboardRangeChange: function () {
+                const end = new Date();
+                const start = new Date();
+                const days = this.dashboard.capacityRange === '365d' ? 365 : (this.dashboard.capacityRange === '30d' ? 30 : 7);
+                start.setDate(end.getDate() - (days - 1));
+                const fmt = function (d) {
+                    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+                };
+                this.dashboard.capacityDates = [fmt(start), fmt(end)];
+                this.loadDashboardStats();
+            },
+            loadDashboardStats: async function () {
+                if (!this.dashboard) return;
+                try {
+                    let url = pageUrl + '?handler=DashboardStats';
+                    const dates = this.dashboard.capacityDates;
+                    if (Array.isArray(dates) && dates[0] && dates[1]) {
+                        url += '&startDate=' + encodeURIComponent(dates[0]) + '&endDate=' + encodeURIComponent(dates[1]);
+                    }
+                    const result = unwrap(await axios.get(url)) || {};
+                    if (result.statsCutoff) this.dashboard.statsCutoff = result.statsCutoff;
+                    if (result.enterpriseUsed) this.dashboard.enterpriseUsed = result.enterpriseUsed;
+                    if (result.totalCount != null) this.dashboard.totalCount = result.totalCount;
+                    if (result.totalSizeBytes != null) this.dashboard.totalSizeBytes = result.totalSizeBytes;
+                    if (Array.isArray(result.orgUsages)) this.dashboard.orgUsages = result.orgUsages;
+                    if (result.sizeTotalLabel) this.dashboard.sizeTotalLabel = result.sizeTotalLabel;
+                    if (result.countTotalLabel != null) this.dashboard.countTotalLabel = String(result.countTotalLabel);
+                    if (Array.isArray(result.sizeSlices)) this.dashboard.sizeSlices = result.sizeSlices;
+                    if (Array.isArray(result.countSlices)) this.dashboard.countSlices = result.countSlices;
+                    if (Array.isArray(result.capacityTrend)) this.dashboard.capacityTrend = result.capacityTrend;
+                } catch (error) {
+                    this.dashboard.capacityTrend = this.buildCapacityDates().map(function (date) {
+                        return { date: date, fileCount: 0, totalSizeBytes: 0 };
+                    });
+                }
+                this.$nextTick(this.refreshDashboardCharts);
+            },
             refreshDashboardCharts: function () {
                 if (this.activeNavKey !== 'dashboard') return;
                 if (typeof echarts === 'undefined') return;
-                const labels = this.buildCapacityDates();
-                const total = labels.map(function (_, i) { return Number((6.2 + (i % 5) * 0.05).toFixed(2)); });
-                const enterprise = labels.map(function () { return Number((0.08 + Math.random() * 0.05).toFixed(2)); });
-                const group = labels.map(function () { return Number((0.05 + Math.random() * 0.04).toFixed(2)); });
-                const personal = labels.map(function () { return Number((0.03 + Math.random() * 0.03).toFixed(2)); });
-                const team = labels.map(function () { return Number((0.02 + Math.random() * 0.02).toFixed(2)); });
+
+                const trend = Array.isArray(this.dashboard.capacityTrend) && this.dashboard.capacityTrend.length
+                    ? this.dashboard.capacityTrend
+                    : this.buildCapacityDates().map(function (date) {
+                        return { date: date, fileCount: 0, totalSizeBytes: 0 };
+                    });
+                const labels = trend.map(function (x) { return x.date; });
+                const fileCounts = trend.map(function (x) { return Number(x.fileCount || 0); });
+                const sizeMb = trend.map(function (x) {
+                    return Number(((Number(x.totalSizeBytes || 0)) / (1024 * 1024)).toFixed(2));
+                });
 
                 const capacityChart = this.getOrCreateChart(this.$refs.capacityChart);
                 if (capacityChart) {
                     capacityChart.setOption({
-                        color: ['#409eff', '#95de64', '#69c0ff', '#ff9c6e', '#ffc069'],
-                        tooltip: { trigger: 'axis' },
-                        legend: { bottom: 0, data: ['总容量', '企业文档', '群文档', '个人文档', '团队文档'] },
-                        grid: { left: 40, right: 20, top: 24, bottom: 48 },
+                        color: ['#409eff', '#67c23a'],
+                        tooltip: {
+                            trigger: 'axis',
+                            formatter: function (params) {
+                                if (!params || !params.length) return '';
+                                var lines = [params[0].axisValue];
+                                params.forEach(function (p) {
+                                    var unit = p.seriesName === '文件数量' ? ' 个' : ' MB';
+                                    lines.push(p.marker + p.seriesName + '：' + p.data + unit);
+                                });
+                                return lines.join('<br/>');
+                            }
+                        },
+                        legend: { bottom: 0, data: ['文件数量', '总大小'] },
+                        grid: { left: 48, right: 56, top: 28, bottom: 48 },
                         xAxis: { type: 'category', boundaryGap: false, data: labels },
-                        yAxis: { type: 'value', axisLabel: { formatter: '{value}G' }, splitLine: { lineStyle: { type: 'dashed' } } },
+                        yAxis: [
+                            {
+                                type: 'value',
+                                name: '数量',
+                                minInterval: 1,
+                                axisLabel: { formatter: '{value}' },
+                                splitLine: { lineStyle: { type: 'dashed' } }
+                            },
+                            {
+                                type: 'value',
+                                name: '大小',
+                                axisLabel: { formatter: '{value}MB' },
+                                splitLine: { show: false }
+                            }
+                        ],
                         series: [
-                            { name: '总容量', type: 'line', smooth: true, data: total },
-                            { name: '企业文档', type: 'line', smooth: true, data: enterprise },
-                            { name: '群文档', type: 'line', smooth: true, data: group },
-                            { name: '个人文档', type: 'line', smooth: true, data: personal },
-                            { name: '团队文档', type: 'line', smooth: true, data: team }
+                            {
+                                name: '文件数量',
+                                type: 'line',
+                                smooth: true,
+                                yAxisIndex: 0,
+                                data: fileCounts,
+                                areaStyle: { opacity: 0.08 }
+                            },
+                            {
+                                name: '总大小',
+                                type: 'line',
+                                smooth: true,
+                                yAxisIndex: 1,
+                                data: sizeMb
+                            }
                         ]
                     }, true);
                 }
 
+                const sizeSlices = (this.dashboard.sizeSlices || []).filter(function (x) { return Number(x.value) > 0; });
                 const sizeChart = this.getOrCreateChart(this.$refs.sizeChart);
                 if (sizeChart) {
                     sizeChart.setOption({
-                        tooltip: { trigger: 'item', formatter: '{b}: {c}G ({d}%)' },
-                        legend: { bottom: 0, data: this.dashboard.sizeSlices.map(function (x) { return x.name; }) },
+                        tooltip: { trigger: 'item', formatter: '{b}: {c} MB ({d}%)' },
+                        legend: { bottom: 0, data: (this.dashboard.sizeSlices || []).map(function (x) { return x.name; }) },
                         series: [{
                             type: 'pie',
                             radius: ['48%', '68%'],
                             center: ['50%', '46%'],
-                            label: { formatter: '{b}\n{c}G ({d}%)' },
-                            data: this.dashboard.sizeSlices.map(function (x) {
-                                return { name: x.name, value: x.value, itemStyle: { color: x.color } };
+                            label: { formatter: '{b}\\n{d}%' },
+                            data: (sizeSlices.length ? sizeSlices : this.dashboard.sizeSlices).map(function (x) {
+                                return { name: x.name, value: Number(x.value || 0), itemStyle: { color: x.color } };
                             }),
                             emphasis: { scale: false }
                         }],
@@ -342,23 +427,24 @@
                             type: 'text',
                             left: 'center',
                             top: '42%',
-                            style: { text: this.dashboard.sizeTotalLabel, textAlign: 'center', fill: '#303133', fontSize: 28, fontWeight: 600 }
+                            style: { text: this.dashboard.sizeTotalLabel || '0B', textAlign: 'center', fill: '#303133', fontSize: 22, fontWeight: 600 }
                         }]
                     }, true);
                 }
 
+                const countSlices = (this.dashboard.countSlices || []).filter(function (x) { return Number(x.value) > 0; });
                 const countChart = this.getOrCreateChart(this.$refs.countChart);
                 if (countChart) {
                     countChart.setOption({
-                        tooltip: { trigger: 'item', formatter: '{b}: {c}个文件 ({d}%)' },
-                        legend: { bottom: 0, data: this.dashboard.countSlices.map(function (x) { return x.name; }) },
+                        tooltip: { trigger: 'item', formatter: '{b}: {c} 个 ({d}%)' },
+                        legend: { bottom: 0, data: (this.dashboard.countSlices || []).map(function (x) { return x.name; }) },
                         series: [{
                             type: 'pie',
                             radius: ['48%', '68%'],
                             center: ['50%', '46%'],
-                            label: { formatter: '{b}\n{c}个文件 ({d}%)' },
-                            data: this.dashboard.countSlices.map(function (x) {
-                                return { name: x.name, value: x.value, itemStyle: { color: x.color } };
+                            label: { formatter: '{b}\\n{c}个' },
+                            data: (countSlices.length ? countSlices : this.dashboard.countSlices).map(function (x) {
+                                return { name: x.name, value: Number(x.value || 0), itemStyle: { color: x.color } };
                             }),
                             emphasis: { scale: false }
                         }],
@@ -366,7 +452,7 @@
                             type: 'text',
                             left: 'center',
                             top: '42%',
-                            style: { text: this.dashboard.countTotalLabel, textAlign: 'center', fill: '#303133', fontSize: 28, fontWeight: 600 }
+                            style: { text: String(this.dashboard.countTotalLabel || '0'), textAlign: 'center', fill: '#303133', fontSize: 28, fontWeight: 600 }
                         }]
                     }, true);
                 }

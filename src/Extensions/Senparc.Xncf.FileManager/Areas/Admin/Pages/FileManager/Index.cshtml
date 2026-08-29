@@ -1318,10 +1318,10 @@
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
                         <span>文件库容量统计</span>
-                        <i class="el-icon-question" title="展示文件库容量随时间变化趋势"></i>
+                        <i class="el-icon-question" title="仅统计企业文档：展示文件数量与总大小随时间变化"></i>
                     </div>
                     <div class="file-manager-dash-toolbar">
-                        <el-radio-group v-model="dashboard.capacityRange" size="mini" @@change="refreshDashboardCharts">
+                        <el-radio-group v-model="dashboard.capacityRange" size="mini" @@change="onDashboardRangeChange">
                             <el-radio-button label="7d">过去7天</el-radio-button>
                             <el-radio-button label="30d">过去一个月</el-radio-button>
                             <el-radio-button label="365d">过去一年</el-radio-button>
@@ -1335,7 +1335,7 @@
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
                             style="width: 240px;"
-                            @@change="refreshDashboardCharts">
+                            @@change="loadDashboardStats">
                         </el-date-picker>
                     </div>
                     <div ref="capacityChart" class="file-manager-dash-chart"></div>
@@ -1344,7 +1344,7 @@
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
                         <span>企业文档容量统计</span>
-                        <i class="el-icon-question" title="按组织统计企业文档占用空间"></i>
+                        <i class="el-icon-question" title="展示企业文档库当前已使用空间"></i>
                     </div>
                     <div class="file-manager-dash-meta">
                         <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
@@ -1365,7 +1365,7 @@
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
                         <span>文件大小统计</span>
-                        <i class="el-icon-question" title="按文件类型统计占用容量"></i>
+                        <i class="el-icon-question" title="按文件类型统计占用容量占比"></i>
                     </div>
                     <div class="file-manager-dash-meta">
                         <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
@@ -1376,7 +1376,7 @@
                 <section class="file-manager-dash-card">
                     <div class="file-manager-dash-card-header">
                         <span>文件个数统计</span>
-                        <i class="el-icon-question" title="按文件类型统计文件数量"></i>
+                        <i class="el-icon-question" title="按文件类型统计文件数量占比"></i>
                     </div>
                     <div class="file-manager-dash-meta">
                         <span>统计截止时间：{{ dashboard.statsCutoff }}</span>
@@ -2094,29 +2094,34 @@
                         capacityRange: '7d',
                         capacityDates: [fmtDate(start), fmtDate(end)],
                         statsCutoff: fmtDate(end) + ' ' + pad(end.getHours()) + ':' + pad(end.getMinutes()) + ':' + pad(end.getSeconds()),
-                        enterpriseUsed: '6.28GB',
+                        enterpriseUsed: '0B',
+                        totalCount: 0,
+                        totalSizeBytes: 0,
+                        capacityTrend: [],
                         orgUsages: [
-                            { name: '山西米立信息技术有限公司', size: '6.28GB' },
-                            { name: '企业文档根目录', size: '0.00KB' },
-                            { name: '知识库资料', size: '0.00KB' }
+                            { name: '山西米立信息技术有限公司', size: '0B' },
+                            { name: '企业文档根目录', size: '0B' },
+                            { name: '知识库资料', size: '0B' }
                         ],
-                        sizeTotalLabel: '7G',
-                        countTotalLabel: '90',
+                        sizeTotalLabel: '0B',
+                        countTotalLabel: '0',
                         sizeSlices: [
-                            { name: '其他', value: 4.55, color: '#91d5ff' },
-                            { name: '文档', value: 1.22, color: '#95de64' },
-                            { name: '视频', value: 0.54, color: '#ffd666' },
-                            { name: '图片', value: 0.19, color: '#597ef7' },
-                            { name: '音频', value: 0, color: '#ff9c6e' }
+                            { name: '文档', value: 0, color: '#95de64' },
+                            { name: '图片', value: 0, color: '#597ef7' },
+                            { name: '视频', value: 0, color: '#ffd666' },
+                            { name: '音频', value: 0, color: '#ff9c6e' },
+                            { name: '其他', value: 0, color: '#91d5ff' }
                         ],
                         countSlices: [
-                            { name: '其他', value: 48, color: '#91d5ff' },
-                            { name: '图片', value: 23, color: '#597ef7' },
-                            { name: '文档', value: 13, color: '#95de64' },
-                            { name: '视频', value: 6, color: '#ffd666' },
-                            { name: '音频', value: 0, color: '#ff9c6e' }
+                            { name: '文档', value: 0, color: '#95de64' },
+                            { name: '图片', value: 0, color: '#597ef7' },
+                            { name: '视频', value: 0, color: '#ffd666' },
+                            { name: '音频', value: 0, color: '#ff9c6e' },
+                            { name: '其他', value: 0, color: '#91d5ff' }
                         ]
                     });
+                } else if (!vm.dashboard.capacityTrend) {
+                    Vue.set(vm.dashboard, 'capacityTrend', []);
                 }
 
                 var originalOnNavClick = vm.onNavClick && vm.onNavClick.bind(vm);
@@ -2125,7 +2130,8 @@
                         this.activeNavKey = 'dashboard';
                         var self = this;
                         this.$nextTick(function () {
-                            if (typeof self.refreshDashboardCharts === 'function') self.refreshDashboardCharts();
+                            if (typeof self.loadDashboardStats === 'function') self.loadDashboardStats();
+                            else if (typeof self.refreshDashboardCharts === 'function') self.refreshDashboardCharts();
                         });
                         return;
                     }
@@ -2629,87 +2635,141 @@
                     });
                 }
 
-                if (typeof vm.refreshDashboardCharts !== 'function') {
-                    vm.getOrCreateChart = function (el) {
-                        if (!el || typeof echarts === 'undefined') return null;
-                        return (echarts.getInstanceByDom && echarts.getInstanceByDom(el)) || echarts.init(el);
-                    };
-                    vm.buildCapacityDates = function () {
-                        var dates = this.dashboard && this.dashboard.capacityDates;
+                vm.getOrCreateChart = function (el) {
+                    if (!el || typeof echarts === 'undefined') return null;
+                    return (echarts.getInstanceByDom && echarts.getInstanceByDom(el)) || echarts.init(el);
+                };
+                vm.buildCapacityDates = function () {
+                    var dates = this.dashboard && this.dashboard.capacityDates;
+                    if (Array.isArray(dates) && dates[0] && dates[1]) {
+                        var list = [];
+                        var cursor = new Date(dates[0]);
+                        var endDate = new Date(dates[1]);
+                        while (cursor <= endDate && list.length < 366) {
+                            list.push(pad(cursor.getMonth() + 1) + '-' + pad(cursor.getDate()));
+                            cursor.setDate(cursor.getDate() + 1);
+                        }
+                        if (list.length) return list;
+                    }
+                    var days = this.dashboard && this.dashboard.capacityRange === '365d' ? 365 : (this.dashboard && this.dashboard.capacityRange === '30d' ? 30 : 7);
+                    var result = [];
+                    var now = new Date();
+                    for (var i = days - 1; i >= 0; i--) {
+                        var d = new Date(now);
+                        d.setDate(now.getDate() - i);
+                        result.push(pad(d.getMonth() + 1) + '-' + pad(d.getDate()));
+                    }
+                    return result;
+                };
+                vm.onDashboardRangeChange = function () {
+                    var end = new Date();
+                    var start = new Date();
+                    var days = this.dashboard.capacityRange === '365d' ? 365 : (this.dashboard.capacityRange === '30d' ? 30 : 7);
+                    start.setDate(end.getDate() - (days - 1));
+                    this.dashboard.capacityDates = [fmtDate(start), fmtDate(end)];
+                    this.loadDashboardStats();
+                };
+                vm.loadDashboardStats = async function () {
+                    if (!this.dashboard) return;
+                    var pageUrlLocal = window.location.pathname || '/Admin/FileManager/Index';
+                    try {
+                        var url = pageUrlLocal + '?handler=DashboardStats';
+                        var dates = this.dashboard.capacityDates;
                         if (Array.isArray(dates) && dates[0] && dates[1]) {
-                            var list = [];
-                            var cursor = new Date(dates[0]);
-                            var endDate = new Date(dates[1]);
-                            while (cursor <= endDate && list.length < 31) {
-                                list.push(pad(cursor.getMonth() + 1) + '-' + pad(cursor.getDate()));
-                                cursor.setDate(cursor.getDate() + 1);
-                            }
-                            if (list.length) return list;
+                            url += '&startDate=' + encodeURIComponent(dates[0]) + '&endDate=' + encodeURIComponent(dates[1]);
                         }
-                        var result = [];
-                        var now = new Date();
-                        for (var i = 6; i >= 0; i--) {
-                            var d = new Date(now);
-                            d.setDate(now.getDate() - i);
-                            result.push(pad(d.getMonth() + 1) + '-' + pad(d.getDate()));
-                        }
-                        return result;
-                    };
-                    vm.refreshDashboardCharts = function () {
-                        if (this.activeNavKey !== 'dashboard' || typeof echarts === 'undefined') return;
-                        var labels = this.buildCapacityDates();
-                        var total = labels.map(function (_, i) { return Number((6.2 + (i % 5) * 0.05).toFixed(2)); });
-                        var capacityChart = this.getOrCreateChart(this.$refs.capacityChart);
-                        if (capacityChart) {
-                            capacityChart.setOption({
-                                color: ['#409eff', '#95de64', '#69c0ff', '#ff9c6e', '#ffc069'],
-                                tooltip: { trigger: 'axis' },
-                                legend: { bottom: 0, data: ['总容量', '企业文档', '群文档', '个人文档', '团队文档'] },
-                                grid: { left: 40, right: 20, top: 24, bottom: 48 },
-                                xAxis: { type: 'category', boundaryGap: false, data: labels },
-                                yAxis: { type: 'value', axisLabel: { formatter: '{value}G' }, splitLine: { lineStyle: { type: 'dashed' } } },
-                                series: [
-                                    { name: '总容量', type: 'line', smooth: true, data: total },
-                                    { name: '企业文档', type: 'line', smooth: true, data: labels.map(function () { return 0.1; }) },
-                                    { name: '群文档', type: 'line', smooth: true, data: labels.map(function () { return 0.06; }) },
-                                    { name: '个人文档', type: 'line', smooth: true, data: labels.map(function () { return 0.04; }) },
-                                    { name: '团队文档', type: 'line', smooth: true, data: labels.map(function () { return 0.02; }) }
-                                ]
-                            }, true);
-                        }
-                        var sizeChart = this.getOrCreateChart(this.$refs.sizeChart);
-                        if (sizeChart) {
-                            sizeChart.setOption({
-                                tooltip: { trigger: 'item' },
-                                legend: { bottom: 0 },
-                                series: [{
-                                    type: 'pie', radius: ['48%', '68%'], center: ['50%', '46%'],
-                                    label: { formatter: '{b}\n{c}G' },
-                                    data: this.dashboard.sizeSlices.map(function (x) {
-                                        return { name: x.name, value: x.value, itemStyle: { color: x.color } };
-                                    })
-                                }],
-                                graphic: [{ type: 'text', left: 'center', top: '42%', style: { text: this.dashboard.sizeTotalLabel, fill: '#303133', fontSize: 28, fontWeight: 600, textAlign: 'center' } }]
-                            }, true);
-                        }
-                        var countChart = this.getOrCreateChart(this.$refs.countChart);
-                        if (countChart) {
-                            countChart.setOption({
-                                tooltip: { trigger: 'item' },
-                                legend: { bottom: 0 },
-                                series: [{
-                                    type: 'pie', radius: ['48%', '68%'], center: ['50%', '46%'],
-                                    label: { formatter: '{b}\n{c}个' },
-                                    data: this.dashboard.countSlices.map(function (x) {
-                                        return { name: x.name, value: x.value, itemStyle: { color: x.color } };
-                                    })
-                                }],
-                                graphic: [{ type: 'text', left: 'center', top: '42%', style: { text: this.dashboard.countTotalLabel, fill: '#303133', fontSize: 28, fontWeight: 600, textAlign: 'center' } }]
-                            }, true);
-                        }
-                        [capacityChart, sizeChart, countChart].forEach(function (c) { if (c) c.resize(); });
-                    };
-                }
+                        var response = await axios.get(url);
+                        var result = response && response.data && response.data.data !== undefined ? response.data.data : (response && response.data);
+                        result = result || {};
+                        if (result.statsCutoff) this.dashboard.statsCutoff = result.statsCutoff;
+                        if (result.enterpriseUsed) this.dashboard.enterpriseUsed = result.enterpriseUsed;
+                        if (result.totalCount != null) this.dashboard.totalCount = result.totalCount;
+                        if (result.totalSizeBytes != null) this.dashboard.totalSizeBytes = result.totalSizeBytes;
+                        if (Array.isArray(result.orgUsages)) this.dashboard.orgUsages = result.orgUsages;
+                        if (result.sizeTotalLabel) this.dashboard.sizeTotalLabel = result.sizeTotalLabel;
+                        if (result.countTotalLabel != null) this.dashboard.countTotalLabel = String(result.countTotalLabel);
+                        if (Array.isArray(result.sizeSlices)) this.dashboard.sizeSlices = result.sizeSlices;
+                        if (Array.isArray(result.countSlices)) this.dashboard.countSlices = result.countSlices;
+                        if (Array.isArray(result.capacityTrend)) this.dashboard.capacityTrend = result.capacityTrend;
+                    } catch (e) {
+                        this.dashboard.capacityTrend = this.buildCapacityDates().map(function (date) {
+                            return { date: date, fileCount: 0, totalSizeBytes: 0 };
+                        });
+                    }
+                    var self = this;
+                    this.$nextTick(function () { self.refreshDashboardCharts(); });
+                };
+                vm.refreshDashboardCharts = function () {
+                    if (this.activeNavKey !== 'dashboard' || typeof echarts === 'undefined') return;
+                    var trend = Array.isArray(this.dashboard.capacityTrend) && this.dashboard.capacityTrend.length
+                        ? this.dashboard.capacityTrend
+                        : this.buildCapacityDates().map(function (date) { return { date: date, fileCount: 0, totalSizeBytes: 0 }; });
+                    var labels = trend.map(function (x) { return x.date; });
+                    var fileCounts = trend.map(function (x) { return Number(x.fileCount || 0); });
+                    var sizeMb = trend.map(function (x) { return Number(((Number(x.totalSizeBytes || 0)) / (1024 * 1024)).toFixed(2)); });
+                    var capacityChart = this.getOrCreateChart(this.$refs.capacityChart);
+                    if (capacityChart) {
+                        capacityChart.setOption({
+                            color: ['#409eff', '#67c23a'],
+                            tooltip: {
+                                trigger: 'axis',
+                                formatter: function (params) {
+                                    if (!params || !params.length) return '';
+                                    var lines = [params[0].axisValue];
+                                    params.forEach(function (p) {
+                                        var unit = p.seriesName === '文件数量' ? ' 个' : ' MB';
+                                        lines.push(p.marker + p.seriesName + '：' + p.data + unit);
+                                    });
+                                    return lines.join('<br/>');
+                                }
+                            },
+                            legend: { bottom: 0, data: ['文件数量', '总大小'] },
+                            grid: { left: 48, right: 56, top: 28, bottom: 48 },
+                            xAxis: { type: 'category', boundaryGap: false, data: labels },
+                            yAxis: [
+                                { type: 'value', name: '数量', minInterval: 1, axisLabel: { formatter: '{value}' }, splitLine: { lineStyle: { type: 'dashed' } } },
+                                { type: 'value', name: '大小', axisLabel: { formatter: '{value}MB' }, splitLine: { show: false } }
+                            ],
+                            series: [
+                                { name: '文件数量', type: 'line', smooth: true, yAxisIndex: 0, data: fileCounts, areaStyle: { opacity: 0.08 } },
+                                { name: '总大小', type: 'line', smooth: true, yAxisIndex: 1, data: sizeMb }
+                            ]
+                        }, true);
+                    }
+                    var sizeSlices = (this.dashboard.sizeSlices || []).filter(function (x) { return Number(x.value) > 0; });
+                    var sizeChart = this.getOrCreateChart(this.$refs.sizeChart);
+                    if (sizeChart) {
+                        sizeChart.setOption({
+                            tooltip: { trigger: 'item', formatter: '{b}: {c} MB ({d}%)' },
+                            legend: { bottom: 0 },
+                            series: [{
+                                type: 'pie', radius: ['48%', '68%'], center: ['50%', '46%'],
+                                label: { formatter: '{b}\n{d}%' },
+                                data: (sizeSlices.length ? sizeSlices : this.dashboard.sizeSlices).map(function (x) {
+                                    return { name: x.name, value: Number(x.value || 0), itemStyle: { color: x.color } };
+                                })
+                            }],
+                            graphic: [{ type: 'text', left: 'center', top: '42%', style: { text: this.dashboard.sizeTotalLabel || '0B', fill: '#303133', fontSize: 22, fontWeight: 600, textAlign: 'center' } }]
+                        }, true);
+                    }
+                    var countSlices = (this.dashboard.countSlices || []).filter(function (x) { return Number(x.value) > 0; });
+                    var countChart = this.getOrCreateChart(this.$refs.countChart);
+                    if (countChart) {
+                        countChart.setOption({
+                            tooltip: { trigger: 'item', formatter: '{b}: {c} 个 ({d}%)' },
+                            legend: { bottom: 0 },
+                            series: [{
+                                type: 'pie', radius: ['48%', '68%'], center: ['50%', '46%'],
+                                label: { formatter: '{b}\n{c}个' },
+                                data: (countSlices.length ? countSlices : this.dashboard.countSlices).map(function (x) {
+                                    return { name: x.name, value: Number(x.value || 0), itemStyle: { color: x.color } };
+                                })
+                            }],
+                            graphic: [{ type: 'text', left: 'center', top: '42%', style: { text: String(this.dashboard.countTotalLabel || '0'), fill: '#303133', fontSize: 28, fontWeight: 600, textAlign: 'center' } }]
+                        }, true);
+                    }
+                    [capacityChart, sizeChart, countChart].forEach(function (c) { if (c) c.resize(); });
+                };
 
                 // 修复列表解析：PagedList 序列化为数组时，原先取 result.data/items 会得到空表
                 vm.getList = async function () {

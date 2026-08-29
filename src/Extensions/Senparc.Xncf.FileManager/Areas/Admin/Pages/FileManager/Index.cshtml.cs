@@ -82,6 +82,14 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             });
         }
 
+        public async Task<IActionResult> OnGetDashboardStatsAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null)
+        {
+            var stats = await _fileService.GetDashboardStatsAsync(startDate, endDate);
+            return Ok(stats);
+        }
+
         public async Task<IActionResult> OnGetFoldersAsync(
             int? parentId = null,
             NcfFileResourceScope resourceScope = NcfFileResourceScope.KnowledgeBase)
