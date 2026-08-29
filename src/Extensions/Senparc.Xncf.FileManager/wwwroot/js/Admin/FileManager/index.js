@@ -55,12 +55,109 @@
                 },
                 uploadDialog: { visible: false, fileList: [], uploading: false, progress: 0, mode: 'files', folderRootName: '' },
                 folderDialog: { visible: false, loading: false, editing: false, form: { id: null, name: '', description: '' } },
-                guideDialogVisible: false
+                noteDialog: { visible: false, loading: false, row: null, note: '' },
+                fileTagDialog: { visible: false, loading: false, adding: false, draft: '', row: null, tags: [] },
+                guideDialogVisible: false,
+                treeFilter: '',
+                fileSearchKeyword: '',
+                orgName: '山西米立信息技术有限公司',
+                rootFolderName: '企业文档',
+                activeNavKey: 'enterprise',
+                dashboard: {
+                    capacityRange: '7d',
+                    capacityDates: [],
+                    statsCutoff: '',
+                    enterpriseUsed: '6.28GB',
+                    orgUsages: [
+                        { name: '山西米立信息技术有限公司', size: '6.28GB' },
+                        { name: '企业文档根目录', size: '0.00KB' },
+                        { name: '知识库资料', size: '0.00KB' }
+                    ],
+                    sizeTotalLabel: '7G',
+                    countTotalLabel: '90',
+                    sizeSlices: [
+                        { name: '其他', value: 4.55, percent: '70.00%', color: '#91d5ff' },
+                        { name: '文档', value: 1.22, percent: '18.77%', color: '#95de64' },
+                        { name: '视频', value: 0.54, percent: '8.31%', color: '#ffd666' },
+                        { name: '图片', value: 0.19, percent: '2.92%', color: '#597ef7' },
+                        { name: '音频', value: 0, percent: '0.00%', color: '#ff9c6e' }
+                    ],
+                    countSlices: [
+                        { name: '其他', value: 48, percent: '53.33%', color: '#91d5ff' },
+                        { name: '图片', value: 23, percent: '25.56%', color: '#597ef7' },
+                        { name: '文档', value: 13, percent: '14.44%', color: '#95de64' },
+                        { name: '视频', value: 6, percent: '6.67%', color: '#ffd666' },
+                        { name: '音频', value: 0, percent: '0.00%', color: '#ff9c6e' }
+                    ]
+                },
+                _dashboardCharts: null,
+                tagManager: {
+                    keyword: '',
+                    category: '',
+                    status: '',
+                    selectedIds: [],
+                    categoryOptions: [
+                        { label: '业务分类', value: 'biz' },
+                        { label: '系统分类', value: 'system' }
+                    ],
+                    list: [],
+                    displayList: []
+                },
+                recycleBin: {
+                    list: [],
+                    displayList: [],
+                    selectedIds: [],
+                    page: 1,
+                    size: 20,
+                    total: 0
+                },
+                favoriteList: {
+                    keyword: '',
+                    list: [],
+                    displayList: [],
+                    page: 1,
+                    size: 20,
+                    total: 0
+                },
+                homePage: {
+                    keyword: '',
+                    list: [],
+                    displayList: []
+                },
+                navItems: [
+                    { key: 'home', label: '首页', icon: 'el-icon-s-home' },
+                    { key: 'favorite', label: '收藏', icon: 'el-icon-star-off' },
+                    { key: 'enterprise', label: '企业文档', icon: 'el-icon-folder', scope: 100 },
+                    { key: 'recycle', label: '回收站', icon: 'el-icon-delete' },
+                    { key: 'divider', label: '', divider: true },
+                    { key: 'dashboard', label: '数据面板', icon: 'el-icon-data-line' },
+                    { key: 'tags', label: '标签管理', icon: 'el-icon-price-tag' },
+                    { key: 'settings', label: '设置', icon: 'el-icon-setting' }
+                ]
             };
+        },
+        watch: {
+            treeFilter: function (value) {
+                if (this.$refs.folderTree) this.$refs.folderTree.filter(value);
+            },
+            activeNavKey: function (value) {
+                if (value === 'dashboard') {
+                    this.$nextTick(this.refreshDashboardCharts);
+                }
+            }
         },
         computed: {
             isSiteAsset: function () { return this.resourceScope === 200; },
             resourceScopeName: function () { return this.isSiteAsset ? '站点静态资源' : '知识库资料'; },
+            canGoParent: function () { return this.currentFolderId != null; },
+            displayTableData: function () {
+                const keyword = (this.fileSearchKeyword || '').trim().toLowerCase();
+                if (!keyword) return this.tableData;
+                return this.tableData.filter(function (row) {
+                    return (row.fileName || '').toLowerCase().indexOf(keyword) !== -1
+                        || (row.description || '').toLowerCase().indexOf(keyword) !== -1;
+                });
+            },
             scopeHint: function () {
                 return this.isSiteAsset
                     ? '站点静态资源默认私有；公开后会生成带 SHA-256 指纹的 /assets/ URL。为防止同源脚本注入，不接受 HTML、SVG、JavaScript 或压缩包。'
@@ -72,7 +169,7 @@
                     : '支持文本、JSON/XML/YAML、代码、DOCX、XLSX、PPTX。';
             },
             uploadTargetText: function () {
-                const currentFolder = this.folderPath.length ? this.folderPath[this.folderPath.length - 1].name : '根目录';
+                const currentFolder = this.folderPath.length ? this.folderPath[this.folderPath.length - 1].name : this.rootFolderName;
                 return this.resourceScopeName + ' / ' + currentFolder;
             },
             uploadFolderSummary: function () {
@@ -82,9 +179,297 @@
         },
         created: function () {
             this.restoreRouteState();
+            this.syncActiveNavFromScope();
+            this.initDashboardDefaults();
             this.enterFolder(this.currentFolderId);
         },
+        mounted: function () {
+            window.addEventListener('resize', this.resizeDashboardCharts);
+        },
+        beforeDestroy: function () {
+            window.removeEventListener('resize', this.resizeDashboardCharts);
+            this.disposeDashboardCharts();
+        },
         methods: {
+            syncActiveNavFromScope: function () {
+                this.activeNavKey = 'enterprise';
+            },
+            onNavClick: function (item) {
+                if (!item || item.divider) return;
+                if (item.key === 'settings') {
+                    this.guideDialogVisible = true;
+                    return;
+                }
+                if (item.key === 'dashboard') {
+                    this.activeNavKey = 'dashboard';
+                    this.$nextTick(this.refreshDashboardCharts);
+                    return;
+                }
+                if (item.key === 'tags') {
+                    this.activeNavKey = 'tags';
+                    this.searchTags();
+                    return;
+                }
+                if (item.key === 'recycle') {
+                    this.activeNavKey = 'recycle';
+                    this.loadRecycleBin();
+                    return;
+                }
+                if (item.key === 'favorite') {
+                    this.activeNavKey = 'favorite';
+                    this.searchFavorites();
+                    return;
+                }
+                if (item.key === 'home') {
+                    this.activeNavKey = 'home';
+                    this.searchHomeRecent();
+                    return;
+                }
+                if (item.scope === 100 || item.scope === 200) {
+                    if (this.resourceScope === item.scope) {
+                        this.activeNavKey = item.key;
+                        return;
+                    }
+                    this.resourceScope = item.scope;
+                    this.activeNavKey = item.key;
+                    this.changeResourceScope();
+                    return;
+                }
+                if (item.key === 'enterprise') {
+                    this.activeNavKey = 'enterprise';
+                    return;
+                }
+                this.activeNavKey = item.key;
+                this.$message.info('「' + item.label + '」功能即将开放');
+            },
+            initDashboardDefaults: function () {
+                const end = new Date();
+                const start = new Date();
+                start.setDate(end.getDate() - 6);
+                const fmt = function (d) {
+                    const m = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    return d.getFullYear() + '-' + m + '-' + day;
+                };
+                const pad = function (n) { return String(n).padStart(2, '0'); };
+                this.dashboard.capacityDates = [fmt(start), fmt(end)];
+                this.dashboard.statsCutoff = fmt(end) + ' ' + pad(end.getHours()) + ':' + pad(end.getMinutes()) + ':' + pad(end.getSeconds());
+                if (!this.dashboard.orgUsages.some(function (x) { return x.name === '山西米立信息技术有限公司'; })) {
+                    this.dashboard.orgUsages.unshift({ name: '山西米立信息技术有限公司', size: this.dashboard.enterpriseUsed });
+                }
+            },
+            getOrCreateChart: function (el) {
+                if (!el || typeof echarts === 'undefined') return null;
+                const existing = echarts.getInstanceByDom(el);
+                return existing || echarts.init(el);
+            },
+            buildCapacityDates: function () {
+                const dates = this.dashboard.capacityDates;
+                if (Array.isArray(dates) && dates.length === 2 && dates[0] && dates[1]) {
+                    const list = [];
+                    const cursor = new Date(dates[0]);
+                    const end = new Date(dates[1]);
+                    while (cursor <= end && list.length < 31) {
+                        const m = String(cursor.getMonth() + 1).padStart(2, '0');
+                        const d = String(cursor.getDate()).padStart(2, '0');
+                        list.push(m + '-' + d);
+                        cursor.setDate(cursor.getDate() + 1);
+                    }
+                    if (list.length) return list;
+                }
+                const days = this.dashboard.capacityRange === '365d' ? 12 : (this.dashboard.capacityRange === '30d' ? 30 : 7);
+                const result = [];
+                const now = new Date();
+                for (let i = days - 1; i >= 0; i--) {
+                    const d = new Date(now);
+                    d.setDate(now.getDate() - i);
+                    result.push(String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'));
+                }
+                return result;
+            },
+            refreshDashboardCharts: function () {
+                if (this.activeNavKey !== 'dashboard') return;
+                if (typeof echarts === 'undefined') return;
+                const labels = this.buildCapacityDates();
+                const total = labels.map(function (_, i) { return Number((6.2 + (i % 5) * 0.05).toFixed(2)); });
+                const enterprise = labels.map(function () { return Number((0.08 + Math.random() * 0.05).toFixed(2)); });
+                const group = labels.map(function () { return Number((0.05 + Math.random() * 0.04).toFixed(2)); });
+                const personal = labels.map(function () { return Number((0.03 + Math.random() * 0.03).toFixed(2)); });
+                const team = labels.map(function () { return Number((0.02 + Math.random() * 0.02).toFixed(2)); });
+
+                const capacityChart = this.getOrCreateChart(this.$refs.capacityChart);
+                if (capacityChart) {
+                    capacityChart.setOption({
+                        color: ['#409eff', '#95de64', '#69c0ff', '#ff9c6e', '#ffc069'],
+                        tooltip: { trigger: 'axis' },
+                        legend: { bottom: 0, data: ['总容量', '企业文档', '群文档', '个人文档', '团队文档'] },
+                        grid: { left: 40, right: 20, top: 24, bottom: 48 },
+                        xAxis: { type: 'category', boundaryGap: false, data: labels },
+                        yAxis: { type: 'value', axisLabel: { formatter: '{value}G' }, splitLine: { lineStyle: { type: 'dashed' } } },
+                        series: [
+                            { name: '总容量', type: 'line', smooth: true, data: total },
+                            { name: '企业文档', type: 'line', smooth: true, data: enterprise },
+                            { name: '群文档', type: 'line', smooth: true, data: group },
+                            { name: '个人文档', type: 'line', smooth: true, data: personal },
+                            { name: '团队文档', type: 'line', smooth: true, data: team }
+                        ]
+                    }, true);
+                }
+
+                const sizeChart = this.getOrCreateChart(this.$refs.sizeChart);
+                if (sizeChart) {
+                    sizeChart.setOption({
+                        tooltip: { trigger: 'item', formatter: '{b}: {c}G ({d}%)' },
+                        legend: { bottom: 0, data: this.dashboard.sizeSlices.map(function (x) { return x.name; }) },
+                        series: [{
+                            type: 'pie',
+                            radius: ['48%', '68%'],
+                            center: ['50%', '46%'],
+                            label: { formatter: '{b}\n{c}G ({d}%)' },
+                            data: this.dashboard.sizeSlices.map(function (x) {
+                                return { name: x.name, value: x.value, itemStyle: { color: x.color } };
+                            }),
+                            emphasis: { scale: false }
+                        }],
+                        graphic: [{
+                            type: 'text',
+                            left: 'center',
+                            top: '42%',
+                            style: { text: this.dashboard.sizeTotalLabel, textAlign: 'center', fill: '#303133', fontSize: 28, fontWeight: 600 }
+                        }]
+                    }, true);
+                }
+
+                const countChart = this.getOrCreateChart(this.$refs.countChart);
+                if (countChart) {
+                    countChart.setOption({
+                        tooltip: { trigger: 'item', formatter: '{b}: {c}个文件 ({d}%)' },
+                        legend: { bottom: 0, data: this.dashboard.countSlices.map(function (x) { return x.name; }) },
+                        series: [{
+                            type: 'pie',
+                            radius: ['48%', '68%'],
+                            center: ['50%', '46%'],
+                            label: { formatter: '{b}\n{c}个文件 ({d}%)' },
+                            data: this.dashboard.countSlices.map(function (x) {
+                                return { name: x.name, value: x.value, itemStyle: { color: x.color } };
+                            }),
+                            emphasis: { scale: false }
+                        }],
+                        graphic: [{
+                            type: 'text',
+                            left: 'center',
+                            top: '42%',
+                            style: { text: this.dashboard.countTotalLabel, textAlign: 'center', fill: '#303133', fontSize: 28, fontWeight: 600 }
+                        }]
+                    }, true);
+                }
+
+                this._dashboardCharts = [capacityChart, sizeChart, countChart].filter(Boolean);
+                this.resizeDashboardCharts();
+            },
+            resizeDashboardCharts: function () {
+                if (!this._dashboardCharts) return;
+                this._dashboardCharts.forEach(function (chart) {
+                    if (chart) chart.resize();
+                });
+            },
+            disposeDashboardCharts: function () {
+                if (!this._dashboardCharts) return;
+                this._dashboardCharts.forEach(function (chart) {
+                    if (chart) chart.dispose();
+                });
+                this._dashboardCharts = null;
+            },
+            searchTags: function () {
+                if (!this.tagManager) return;
+                const keyword = (this.tagManager.keyword || '').trim().toLowerCase();
+                const category = this.tagManager.category || '';
+                const status = this.tagManager.status || '';
+                this.tagManager.displayList = (this.tagManager.list || []).filter(function (row) {
+                    if (keyword && String(row.name || '').toLowerCase().indexOf(keyword) === -1) return false;
+                    if (category && row.category !== category) return false;
+                    if (status === 'enabled' && row.status !== '启用') return false;
+                    if (status === 'disabled' && row.status !== '停用') return false;
+                    return true;
+                });
+            },
+            resetTagFilters: function () {
+                if (!this.tagManager) return;
+                this.tagManager.keyword = '';
+                this.tagManager.category = '';
+                this.tagManager.status = '';
+                this.searchTags();
+            },
+            onTagSelectionChange: function (rows) {
+                this.tagManager.selectedIds = (rows || []).map(function (row) { return row.id; });
+            },
+            createTag: function () { this.$message.info('新增标签功能即将开放'); },
+            createTagCategory: function () { this.$message.info('新增分类功能即将开放'); },
+            expandTagRows: function () { this.$message.info('展开功能即将开放'); },
+            enableSelectedTags: function () { this.$message.info('启用功能即将开放'); },
+            disableSelectedTags: function () { this.$message.info('停用功能即将开放'); },
+            importTags: function () { this.$message.info('导入功能即将开放'); },
+            exportTags: function () { this.$message.info('导出功能即将开放'); },
+            openTagRowMenu: function () { this.$message.info('更多操作即将开放'); },
+            loadRecycleBin: function () {
+                if (!this.recycleBin) return;
+                this.recycleBin.displayList = this.recycleBin.list || [];
+                this.recycleBin.total = this.recycleBin.displayList.length;
+            },
+            onRecycleSelectionChange: function (rows) {
+                this.recycleBin.selectedIds = (rows || []).map(function (row) { return row.id; });
+            },
+            handleRecyclePageChange: function (page) {
+                this.recycleBin.page = page;
+                this.loadRecycleBin();
+            },
+            handleRecycleSizeChange: function (size) {
+                this.recycleBin.size = size;
+                this.recycleBin.page = 1;
+                this.loadRecycleBin();
+            },
+            emptyRecycleBin: function () {
+                var self = this;
+                if (!this.recycleBin.displayList.length) {
+                    this.$message.info('回收站暂无文档');
+                    return;
+                }
+                this.$confirm('确认一键清空回收站吗？清空后无法恢复。', '一键清空', { type: 'warning' })
+                    .then(function () {
+                        self.recycleBin.list = [];
+                        self.recycleBin.selectedIds = [];
+                        self.loadRecycleBin();
+                        self.$message.success('回收站已清空');
+                    })
+                    .catch(function () { });
+            },
+            searchFavorites: function () {
+                if (!this.favoriteList) return;
+                const keyword = (this.favoriteList.keyword || '').trim().toLowerCase();
+                const filtered = (this.favoriteList.list || []).filter(function (row) {
+                    if (!keyword) return true;
+                    return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1;
+                });
+                this.favoriteList.displayList = filtered;
+                this.favoriteList.total = filtered.length;
+            },
+            handleFavoritePageChange: function (page) {
+                this.favoriteList.page = page;
+                this.searchFavorites();
+            },
+            handleFavoriteSizeChange: function (size) {
+                this.favoriteList.size = size;
+                this.favoriteList.page = 1;
+                this.searchFavorites();
+            },
+            searchHomeRecent: function () {
+                if (!this.homePage) return;
+                const keyword = (this.homePage.keyword || '').trim().toLowerCase();
+                this.homePage.displayList = (this.homePage.list || []).filter(function (row) {
+                    if (!keyword) return true;
+                    return String(row.fileName || '').toLowerCase().indexOf(keyword) !== -1;
+                });
+            },
             restoreRouteState: function () {
                 const query = new URLSearchParams(window.location.search);
                 const scope = Number(query.get('scope'));
@@ -110,14 +495,151 @@
             fileTypeLabel: function (fileType) {
                 return ({ 0: '文本', 1: 'Word', 2: 'PowerPoint', 3: 'Excel', 4: '代码', 999: '其他' })[fileType] || '其他';
             },
+            updatedByLabel: function (row) { return '-'; },
+            filterFolderNode: function (value, data) {
+                if (!value) return true;
+                return (data.name || '').toLowerCase().indexOf(value.toLowerCase()) !== -1;
+            },
+            handleCreateCommand: function (command) {
+                if (command === 'folder') this.showCreateFolderDialog();
+            },
+            handleUploadCommand: function (command) {
+                if (command === 'files') {
+                    this.showUploadDialog();
+                    return;
+                }
+                if (command === 'folder') {
+                    this.showUploadDialog();
+                    this.$nextTick(function () { this.chooseUploadFolder(); }.bind(this));
+                }
+            },
+            handleUploadPickerCommand: function (command) {
+                if (command === 'files') {
+                    this.triggerUploadFilePicker();
+                    return;
+                }
+                if (command === 'folder') this.chooseUploadFolder();
+            },
+            triggerUploadFilePicker: function () {
+                const upload = this.$refs.upload;
+                if (!upload) return;
+                if (upload.$refs && upload.$refs['upload-inner'] && typeof upload.$refs['upload-inner'].handleClick === 'function') {
+                    upload.$refs['upload-inner'].handleClick();
+                    return;
+                }
+                const input = upload.$el && upload.$el.querySelector('input[type="file"]');
+                if (input) input.click();
+            },
+            clearUploadList: function () {
+                this.uploadDialog.fileList = [];
+                this.uploadDialog.mode = 'files';
+                this.uploadDialog.folderRootName = '';
+                this.uploadDialog.progress = 0;
+                if (this.$refs.upload) this.$refs.upload.clearFiles();
+            },
+            getUploadDialogTitle: function () {
+                const segments = [this.rootFolderName || '根目录'].concat((this.folderPath || []).map(function (item) { return item.name; }));
+                return '上传文件到 【/' + segments.join('/') + '】 --支持断点续传';
+            },
+            handleRowCommand: function (command, row) {
+                if (command === 'download') return this.downloadFile(row);
+                if (command === 'togglePublish') return this.setPublication(row, row.accessLevel !== 100);
+                if (command === 'copyUrl') return this.copyPublicUrl(row);
+                if (command === 'editNote') return this.showNoteDialog(row);
+                if (command === 'manageTags') return this.showFileTagDialog(row);
+                if (command === 'delete') return this.deleteFile(row);
+            },
+            showFileTagDialog: function (row) {
+                const existing = Array.isArray(row.tags) ? row.tags.slice() : [];
+                this.fileTagDialog = {
+                    visible: true,
+                    loading: false,
+                    adding: false,
+                    draft: '',
+                    row: row,
+                    tags: existing
+                };
+            },
+            startAddFileTag: function () {
+                this.fileTagDialog.adding = true;
+                this.fileTagDialog.draft = '';
+                const self = this;
+                this.$nextTick(function () {
+                    const input = self.$refs.fileTagInput;
+                    if (input && typeof input.focus === 'function') input.focus();
+                });
+            },
+            confirmAddFileTag: function () {
+                if (!this.fileTagDialog.adding) return;
+                const name = (this.fileTagDialog.draft || '').trim();
+                this.fileTagDialog.adding = false;
+                this.fileTagDialog.draft = '';
+                if (!name) return;
+                if (this.fileTagDialog.tags.indexOf(name) !== -1) {
+                    this.$message.warning('标签已存在');
+                    return;
+                }
+                this.fileTagDialog.tags.push(name);
+            },
+            removeFileTag: function (index) {
+                this.fileTagDialog.tags.splice(index, 1);
+            },
+            onFileTagDialogClosed: function () {
+                this.fileTagDialog.adding = false;
+                this.fileTagDialog.draft = '';
+                this.fileTagDialog.row = null;
+                this.fileTagDialog.tags = [];
+            },
+            submitFileTags: function () {
+                const row = this.fileTagDialog.row;
+                if (!row) return;
+                this.fileTagDialog.loading = true;
+                try {
+                    if (this.fileTagDialog.adding) this.confirmAddFileTag();
+                    this.$set(row, 'tags', this.fileTagDialog.tags.slice());
+                    this.fileTagDialog.visible = false;
+                    this.$message.success('标签已更新');
+                } finally {
+                    this.fileTagDialog.loading = false;
+                }
+            },
+            enterParentFolder: function () {
+                if (this.folderPath.length > 1) {
+                    this.enterFolder(this.folderPath[this.folderPath.length - 2].id);
+                    return;
+                }
+                this.enterFolder(null);
+            },
+            showNoteDialog: function (row) {
+                this.noteDialog = { visible: true, loading: false, row: row, note: row.description || '' };
+            },
+            submitNote: async function () {
+                const row = this.noteDialog.row;
+                if (!row) return;
+                this.noteDialog.loading = true;
+                try {
+                    row.description = this.noteDialog.note || '';
+                    await this.handleNoteChange(row);
+                    this.noteDialog.visible = false;
+                } finally {
+                    this.noteDialog.loading = false;
+                }
+            },
             getList: async function () {
                 this.tableLoading = true;
                 try {
                     let url = pageUrl + '?handler=List&page=' + this.page.page + '&pageSize=' + this.page.size + '&resourceScope=' + this.resourceScope;
                     if (this.currentFolderId != null) url += '&folderId=' + encodeURIComponent(this.currentFolderId);
                     const result = unwrap(await axios.get(url));
-                    this.tableData = result && (result.data || result.items) || [];
-                    this.total = result && (result.totalCount || result.total) || 0;
+                    // PagedList used to serialize as a bare array (TotalCount lost).
+                    // Prefer explicit { items, totalCount }; still accept legacy shapes.
+                    if (Array.isArray(result)) {
+                        this.tableData = result;
+                        this.total = result.length;
+                    } else {
+                        this.tableData = (result && (result.items || result.data)) || [];
+                        this.total = (result && (result.totalCount != null ? result.totalCount : result.total)) || 0;
+                    }
                 } catch (error) {
                     this.$message.error('获取文件列表失败：' + errorMessage(error));
                 } finally {
@@ -142,6 +664,9 @@
                 this.currentFolderId = null;
                 this.folderPath = [];
                 this.page.page = 1;
+                this.treeFilter = '';
+                this.fileSearchKeyword = '';
+                this.syncActiveNavFromScope();
                 this.reloadFolderTree();
                 await this.enterFolder(null);
             },
@@ -225,8 +750,14 @@
             handleFileChange: function (file, fileList) {
                 if (file.description === undefined) this.$set(file, 'description', '');
                 this.uploadDialog.fileList = fileList;
-                this.uploadDialog.mode = 'files';
-                this.uploadDialog.folderRootName = '';
+                if (this.uploadDialog.mode !== 'folder') {
+                    this.uploadDialog.mode = 'files';
+                    this.uploadDialog.folderRootName = '';
+                }
+            },
+            cancelUpload: function () {
+                if (this.uploadDialog.uploading) return;
+                this.resetUploadDialog(false);
             },
             chooseUploadFolder: function () {
                 const input = this.$refs.folderUploadInput;
@@ -320,7 +851,6 @@
                     this.uploadDialog.uploading = false;
                 }
             },
-            cancelUpload: function () { this.resetUploadDialog(false); },
             showCreateFolderDialog: function () {
                 this.folderDialog = { visible: true, loading: false, editing: false, form: { id: null, name: '', description: '' } };
             },
