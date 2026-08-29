@@ -1132,6 +1132,48 @@
             color: #909399;
         }
 
+        /* ========== 新增分类 / 新增标签 对话框 ========== */
+        .tag-manage-dialog .el-dialog__body {
+            padding: 16px 24px 8px;
+        }
+
+        .tag-manage-dialog .el-form-item {
+            margin-bottom: 18px;
+        }
+
+        .tag-manage-name-field {
+            position: relative;
+        }
+
+        .tag-manage-name-field .el-input__inner {
+            padding-right: 42px;
+        }
+
+        .tag-manage-lang-badge {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 24px;
+            height: 18px;
+            padding: 0 4px;
+            border-radius: 2px;
+            background: #f0f2f5;
+            color: #909399;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .tag-manage-dialog .el-textarea .el-input__count {
+            background: transparent;
+        }
+
         .file-manager-home-recent {
             flex: 1;
             min-height: 0;
@@ -1994,6 +2036,123 @@
     </span>
 </el-dialog>
 
+<el-dialog
+    title="新增分类"
+    :visible.sync="tagCategoryDialog.visible"
+    width="520px"
+    custom-class="tag-manage-dialog"
+    append-to-body
+    @@closed="onTagCategoryDialogClosed">
+    <el-form ref="tagCategoryForm" :model="tagCategoryDialog.form" :rules="tagCategoryRules" label-width="100px" size="small">
+        <el-form-item label="分类名称" prop="name">
+            <div class="tag-manage-name-field">
+                <el-input
+                    v-model="tagCategoryDialog.form.name"
+                    maxlength="50"
+                    placeholder="请输入分类名称，最多50个字符">
+                </el-input>
+                <span class="tag-manage-lang-badge">CN</span>
+            </div>
+        </el-form-item>
+        <el-form-item label="分类描述" prop="description">
+            <el-input
+                type="textarea"
+                v-model="tagCategoryDialog.form.description"
+                :rows="3"
+                maxlength="200"
+                show-word-limit
+                placeholder="分类描述">
+            </el-input>
+        </el-form-item>
+        <el-form-item label="所属分类" prop="parentId">
+            <el-select
+                v-model="tagCategoryDialog.form.parentId"
+                placeholder="选择分类"
+                clearable
+                filterable
+                style="width: 100%;">
+                <el-option
+                    v-for="item in tagCategorySelectOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="分类管理员" prop="admin">
+            <el-select
+                v-model="tagCategoryDialog.form.admin"
+                placeholder="请选择管理员"
+                clearable
+                filterable
+                allow-create
+                default-first-option
+                style="width: 100%;">
+                <el-option
+                    v-for="item in tagAdminOptions"
+                    :key="item"
+                    :label="item"
+                    :value="item">
+                </el-option>
+            </el-select>
+        </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+        <el-button @@click="tagCategoryDialog.visible = false">取消</el-button>
+        <el-button type="primary" :loading="tagCategoryDialog.loading" @@click="submitTagCategory">保存</el-button>
+    </span>
+</el-dialog>
+
+<el-dialog
+    title="新增标签"
+    :visible.sync="tagCreateDialog.visible"
+    width="520px"
+    custom-class="tag-manage-dialog"
+    append-to-body
+    @@closed="onTagCreateDialogClosed">
+    <el-form ref="tagCreateForm" :model="tagCreateDialog.form" :rules="tagCreateRules" label-width="100px" size="small">
+        <el-form-item label="标签名称" prop="name">
+            <div class="tag-manage-name-field">
+                <el-input
+                    v-model="tagCreateDialog.form.name"
+                    maxlength="30"
+                    placeholder="请输入标签名称，最多30个字符">
+                </el-input>
+                <span class="tag-manage-lang-badge">CN</span>
+            </div>
+        </el-form-item>
+        <el-form-item label="标签描述" prop="description">
+            <el-input
+                type="textarea"
+                v-model="tagCreateDialog.form.description"
+                :rows="3"
+                maxlength="100"
+                show-word-limit
+                placeholder="请输入标签描述">
+            </el-input>
+        </el-form-item>
+        <el-form-item label="所属分类" prop="categoryId">
+            <el-select
+                v-model="tagCreateDialog.form.categoryId"
+                placeholder="选择分类"
+                clearable
+                filterable
+                style="width: 100%;">
+                <el-option
+                    v-for="item in tagCategorySelectOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+        <el-button @@click="tagCreateDialog.visible = false">取消</el-button>
+        <el-button type="primary" :loading="tagCreateDialog.loading" @@click="submitTagCreate">保存</el-button>
+    </span>
+</el-dialog>
+
 <el-dialog title="文件资源管理使用说明" :visible.sync="guideDialogVisible" width="520px" append-to-body>
     <ol class="file-manager-guide">
         <li><strong>先选用途：</strong>左侧「企业文档」用于管理知识库资料；站点静态资源可通过地址栏 scope 参数切换。</li>
@@ -2058,8 +2217,43 @@
                             allowedTypesText: '',
                             maxSizeMb: 50,
                             blockedTypesText: ''
+                        },
+                        tagManagerStorageKey: 'ncf.fileManager.tagManager',
+                        tagAdminOptions: ['管理员', '当前用户'],
+                        tagCategoryDialog: {
+                            visible: false,
+                            loading: false,
+                            form: { name: '', description: '', parentId: '', admin: '' }
+                        },
+                        tagCreateDialog: {
+                            visible: false,
+                            loading: false,
+                            form: { name: '', description: '', categoryId: '' }
+                        },
+                        tagCategoryRules: {
+                            name: [
+                                { required: true, message: '请输入分类名称', trigger: 'blur' },
+                                { max: 50, message: '分类名称最多50个字符', trigger: 'blur' }
+                            ]
+                        },
+                        tagCreateRules: {
+                            name: [
+                                { required: true, message: '请输入标签名称', trigger: 'blur' },
+                                { max: 30, message: '标签名称最多30个字符', trigger: 'blur' }
+                            ],
+                            categoryId: [
+                                { required: true, message: '请选择所属分类', trigger: 'change' }
+                            ]
                         }
                     };
+                },
+                computed: {
+                    tagCategorySelectOptions: function () {
+                        var list = (this.tagManager && this.tagManager.list) || [];
+                        return list.map(function (row) {
+                            return { label: row.name, value: row.id };
+                        });
+                    }
                 },
                 methods: {
                     getDefaultUploadSettings: function () {
@@ -2219,6 +2413,194 @@
                     },
                     handleQuickAccessCommand: function (command, item) {
                         if (command === 'remove') this.toggleQuickAccess(item);
+                    },
+                    formatTagDateTime: function (date) {
+                        var d = date instanceof Date ? date : new Date(date || Date.now());
+                        var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+                        return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())
+                            + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+                    },
+                    syncTagCategoryOptions: function () {
+                        if (!this.tagManager) return;
+                        this.tagManager.categoryOptions = (this.tagManager.list || []).map(function (row) {
+                            return { label: row.name, value: row.id };
+                        });
+                    },
+                    loadTagManagerFromStorage: function () {
+                        if (!this.tagManager) {
+                            this.$set(this, 'tagManager', {
+                                keyword: '', category: '', status: '', selectedIds: [],
+                                categoryOptions: [], list: [], displayList: [], tags: []
+                            });
+                        }
+                        try {
+                            var raw = localStorage.getItem(this.tagManagerStorageKey || 'ncf.fileManager.tagManager');
+                            var saved = raw ? JSON.parse(raw) : null;
+                            this.tagManager.list = saved && Array.isArray(saved.categories) ? saved.categories : [];
+                            this.tagManager.tags = saved && Array.isArray(saved.tags) ? saved.tags : [];
+                        } catch (e) {
+                            this.tagManager.list = [];
+                            this.tagManager.tags = [];
+                        }
+                        this.syncTagCategoryOptions();
+                        if (typeof this.searchTags === 'function') this.searchTags();
+                    },
+                    saveTagManagerToStorage: function () {
+                        try {
+                            localStorage.setItem(
+                                this.tagManagerStorageKey || 'ncf.fileManager.tagManager',
+                                JSON.stringify({
+                                    categories: (this.tagManager && this.tagManager.list) || [],
+                                    tags: (this.tagManager && this.tagManager.tags) || []
+                                })
+                            );
+                        } catch (e) { /* ignore */ }
+                    },
+                    createTag: function () {
+                        if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
+                        if (!(this.tagManager && this.tagManager.list && this.tagManager.list.length)) {
+                            this.$message.warning('请先新增分类后再创建标签');
+                            return;
+                        }
+                        this.tagCreateDialog = {
+                            visible: true,
+                            loading: false,
+                            form: { name: '', description: '', categoryId: '' }
+                        };
+                        var self = this;
+                        this.$nextTick(function () {
+                            if (self.$refs.tagCreateForm) self.$refs.tagCreateForm.clearValidate();
+                        });
+                    },
+                    createTagCategory: function () {
+                        if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
+                        this.tagCategoryDialog = {
+                            visible: true,
+                            loading: false,
+                            form: { name: '', description: '', parentId: '', admin: '' }
+                        };
+                        var self = this;
+                        this.$nextTick(function () {
+                            if (self.$refs.tagCategoryForm) self.$refs.tagCategoryForm.clearValidate();
+                        });
+                    },
+                    onTagCategoryDialogClosed: function () {
+                        if (!this.tagCategoryDialog) return;
+                        this.tagCategoryDialog.loading = false;
+                        this.tagCategoryDialog.form = { name: '', description: '', parentId: '', admin: '' };
+                        if (this.$refs.tagCategoryForm) this.$refs.tagCategoryForm.clearValidate();
+                    },
+                    onTagCreateDialogClosed: function () {
+                        if (!this.tagCreateDialog) return;
+                        this.tagCreateDialog.loading = false;
+                        this.tagCreateDialog.form = { name: '', description: '', categoryId: '' };
+                        if (this.$refs.tagCreateForm) this.$refs.tagCreateForm.clearValidate();
+                    },
+                    submitTagCategory: function () {
+                        var formRef = this.$refs.tagCategoryForm;
+                        if (!formRef) return;
+                        var self = this;
+                        formRef.validate(function (valid) {
+                            if (!valid) return;
+                            var form = self.tagCategoryDialog.form || {};
+                            var name = (form.name || '').trim();
+                            if (!name) {
+                                self.$message.warning('请输入分类名称');
+                                return;
+                            }
+                            if (!self.tagManager) {
+                                self.$set(self, 'tagManager', {
+                                    keyword: '', category: '', status: '', selectedIds: [],
+                                    categoryOptions: [], list: [], displayList: [], tags: []
+                                });
+                            }
+                            var exists = (self.tagManager.list || []).some(function (row) {
+                                return String(row.name || '').toLowerCase() === name.toLowerCase();
+                            });
+                            if (exists) {
+                                self.$message.warning('分类名称已存在');
+                                return;
+                            }
+                            self.tagCategoryDialog.loading = true;
+                            try {
+                                var now = self.formatTagDateTime(new Date());
+                                self.tagManager.list.unshift({
+                                    id: 'cat-' + Date.now(),
+                                    name: name,
+                                    description: (form.description || '').trim(),
+                                    parentId: form.parentId || '',
+                                    type: '分类',
+                                    status: '启用',
+                                    tagCount: 0,
+                                    updatedAt: now,
+                                    updatedBy: '当前用户',
+                                    admin: form.admin || '-'
+                                });
+                                self.syncTagCategoryOptions();
+                                self.saveTagManagerToStorage();
+                                if (typeof self.searchTags === 'function') self.searchTags();
+                                self.tagCategoryDialog.visible = false;
+                                self.$message.success('分类已创建');
+                            } finally {
+                                self.tagCategoryDialog.loading = false;
+                            }
+                        });
+                    },
+                    submitTagCreate: function () {
+                        var formRef = this.$refs.tagCreateForm;
+                        if (!formRef) return;
+                        var self = this;
+                        formRef.validate(function (valid) {
+                            if (!valid) return;
+                            var form = self.tagCreateDialog.form || {};
+                            var name = (form.name || '').trim();
+                            var categoryId = form.categoryId;
+                            if (!name) {
+                                self.$message.warning('请输入标签名称');
+                                return;
+                            }
+                            if (!categoryId) {
+                                self.$message.warning('请选择所属分类');
+                                return;
+                            }
+                            var category = (self.tagManager.list || []).find(function (row) { return row.id === categoryId; });
+                            if (!category) {
+                                self.$message.warning('所属分类不存在，请重新选择');
+                                return;
+                            }
+                            if (!Array.isArray(self.tagManager.tags)) self.tagManager.tags = [];
+                            var dup = self.tagManager.tags.some(function (tag) {
+                                return tag.categoryId === categoryId
+                                    && String(tag.name || '').toLowerCase() === name.toLowerCase();
+                            });
+                            if (dup) {
+                                self.$message.warning('该分类下已存在同名标签');
+                                return;
+                            }
+                            self.tagCreateDialog.loading = true;
+                            try {
+                                var now = self.formatTagDateTime(new Date());
+                                self.tagManager.tags.unshift({
+                                    id: 'tag-' + Date.now(),
+                                    name: name,
+                                    description: (form.description || '').trim(),
+                                    categoryId: categoryId,
+                                    categoryName: category.name,
+                                    status: '启用',
+                                    updatedAt: now,
+                                    updatedBy: '当前用户'
+                                });
+                                category.tagCount = (category.tagCount || 0) + 1;
+                                category.updatedAt = now;
+                                category.updatedBy = '当前用户';
+                                self.saveTagManagerToStorage();
+                                if (typeof self.searchTags === 'function') self.searchTags();
+                                self.tagCreateDialog.visible = false;
+                                self.$message.success('标签已创建');
+                            } finally {
+                                self.tagCreateDialog.loading = false;
+                            }
+                        });
                     },
                     showFileTagDialog: function (row) {
                         var existing = Array.isArray(row && row.tags) ? row.tags.slice() : [];
@@ -2487,16 +2869,15 @@
                                 category: '',
                                 status: '',
                                 selectedIds: [],
-                                categoryOptions: [
-                                    { label: '业务分类', value: 'biz' },
-                                    { label: '系统分类', value: 'system' }
-                                ],
+                                categoryOptions: [],
                                 list: [],
-                                displayList: []
+                                displayList: [],
+                                tags: []
                             });
                         }
                         this.activeNavKey = 'tags';
-                        if (typeof this.searchTags === 'function') this.searchTags();
+                        if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
+                        else if (typeof this.searchTags === 'function') this.searchTags();
                         return;
                     }
                     if (item && item.key === 'recycle') {
@@ -2572,7 +2953,7 @@
                         var status = this.tagManager.status || '';
                         this.tagManager.displayList = (this.tagManager.list || []).filter(function (row) {
                             if (keyword && String(row.name || '').toLowerCase().indexOf(keyword) === -1) return false;
-                            if (category && row.category !== category) return false;
+                            if (category && row.id !== category && row.parentId !== category) return false;
                             if (status === 'enabled' && row.status !== '启用') return false;
                             if (status === 'disabled' && row.status !== '停用') return false;
                             return true;
@@ -2588,14 +2969,175 @@
                     vm.onTagSelectionChange = function (rows) {
                         this.tagManager.selectedIds = (rows || []).map(function (row) { return row.id; });
                     };
-                    vm.createTag = function () { this.$message.info('新增标签功能即将开放'); };
-                    vm.createTagCategory = function () { this.$message.info('新增分类功能即将开放'); };
+                    vm.createTag = function () {
+                        if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
+                        if (!(this.tagManager && this.tagManager.list && this.tagManager.list.length)) {
+                            this.$message.warning('请先新增分类后再创建标签');
+                            return;
+                        }
+                        this.tagCreateDialog = {
+                            visible: true,
+                            loading: false,
+                            form: { name: '', description: '', categoryId: '' }
+                        };
+                        var self = this;
+                        this.$nextTick(function () {
+                            if (self.$refs.tagCreateForm) self.$refs.tagCreateForm.clearValidate();
+                        });
+                    };
+                    vm.createTagCategory = function () {
+                        if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
+                        this.tagCategoryDialog = {
+                            visible: true,
+                            loading: false,
+                            form: { name: '', description: '', parentId: '', admin: '' }
+                        };
+                        var self = this;
+                        this.$nextTick(function () {
+                            if (self.$refs.tagCategoryForm) self.$refs.tagCategoryForm.clearValidate();
+                        });
+                    };
                     vm.expandTagRows = function () { this.$message.info('展开功能即将开放'); };
                     vm.enableSelectedTags = function () { this.$message.info('启用功能即将开放'); };
                     vm.disableSelectedTags = function () { this.$message.info('停用功能即将开放'); };
                     vm.importTags = function () { this.$message.info('导入功能即将开放'); };
                     vm.exportTags = function () { this.$message.info('导出功能即将开放'); };
                     vm.openTagRowMenu = function () { this.$message.info('更多操作即将开放'); };
+                }
+
+                if (!vm.tagCategoryDialog) {
+                    Vue.set(vm, 'tagCategoryDialog', {
+                        visible: false,
+                        loading: false,
+                        form: { name: '', description: '', parentId: '', admin: '' }
+                    });
+                }
+                if (!vm.tagCreateDialog) {
+                    Vue.set(vm, 'tagCreateDialog', {
+                        visible: false,
+                        loading: false,
+                        form: { name: '', description: '', categoryId: '' }
+                    });
+                }
+                if (!vm.tagAdminOptions) {
+                    Vue.set(vm, 'tagAdminOptions', ['管理员', '当前用户']);
+                }
+                if (!vm.tagManagerStorageKey) {
+                    Vue.set(vm, 'tagManagerStorageKey', 'ncf.fileManager.tagManager');
+                }
+                if (vm.tagManager && !Array.isArray(vm.tagManager.tags)) {
+                    Vue.set(vm.tagManager, 'tags', []);
+                }
+                // ensure methods exist even if mixin already defined them
+                if (typeof vm.submitTagCategory !== 'function') {
+                    vm.submitTagCategory = function () {
+                        var formRef = this.$refs.tagCategoryForm;
+                        if (!formRef) return;
+                        var self = this;
+                        formRef.validate(function (valid) {
+                            if (!valid) return;
+                            var form = self.tagCategoryDialog.form || {};
+                            var name = (form.name || '').trim();
+                            if (!name) { self.$message.warning('请输入分类名称'); return; }
+                            if (!self.tagManager) {
+                                Vue.set(self, 'tagManager', {
+                                    keyword: '', category: '', status: '', selectedIds: [],
+                                    categoryOptions: [], list: [], displayList: [], tags: []
+                                });
+                            }
+                            var exists = (self.tagManager.list || []).some(function (row) {
+                                return String(row.name || '').toLowerCase() === name.toLowerCase();
+                            });
+                            if (exists) { self.$message.warning('分类名称已存在'); return; }
+                            self.tagCategoryDialog.loading = true;
+                            try {
+                                var now = typeof self.formatTagDateTime === 'function'
+                                    ? self.formatTagDateTime(new Date())
+                                    : new Date().toISOString();
+                                self.tagManager.list.unshift({
+                                    id: 'cat-' + Date.now(),
+                                    name: name,
+                                    description: (form.description || '').trim(),
+                                    parentId: form.parentId || '',
+                                    type: '分类',
+                                    status: '启用',
+                                    tagCount: 0,
+                                    updatedAt: now,
+                                    updatedBy: '当前用户',
+                                    admin: form.admin || '-'
+                                });
+                                if (typeof self.syncTagCategoryOptions === 'function') self.syncTagCategoryOptions();
+                                if (typeof self.saveTagManagerToStorage === 'function') self.saveTagManagerToStorage();
+                                if (typeof self.searchTags === 'function') self.searchTags();
+                                self.tagCategoryDialog.visible = false;
+                                self.$message.success('分类已创建');
+                            } finally {
+                                self.tagCategoryDialog.loading = false;
+                            }
+                        });
+                    };
+                }
+                if (typeof vm.submitTagCreate !== 'function') {
+                    vm.submitTagCreate = function () {
+                        var formRef = this.$refs.tagCreateForm;
+                        if (!formRef) return;
+                        var self = this;
+                        formRef.validate(function (valid) {
+                            if (!valid) return;
+                            var form = self.tagCreateDialog.form || {};
+                            var name = (form.name || '').trim();
+                            var categoryId = form.categoryId;
+                            if (!name) { self.$message.warning('请输入标签名称'); return; }
+                            if (!categoryId) { self.$message.warning('请选择所属分类'); return; }
+                            var category = (self.tagManager.list || []).find(function (row) { return row.id === categoryId; });
+                            if (!category) { self.$message.warning('所属分类不存在，请重新选择'); return; }
+                            if (!Array.isArray(self.tagManager.tags)) self.tagManager.tags = [];
+                            var dup = self.tagManager.tags.some(function (tag) {
+                                return tag.categoryId === categoryId
+                                    && String(tag.name || '').toLowerCase() === name.toLowerCase();
+                            });
+                            if (dup) { self.$message.warning('该分类下已存在同名标签'); return; }
+                            self.tagCreateDialog.loading = true;
+                            try {
+                                var now = typeof self.formatTagDateTime === 'function'
+                                    ? self.formatTagDateTime(new Date())
+                                    : new Date().toISOString();
+                                self.tagManager.tags.unshift({
+                                    id: 'tag-' + Date.now(),
+                                    name: name,
+                                    description: (form.description || '').trim(),
+                                    categoryId: categoryId,
+                                    categoryName: category.name,
+                                    status: '启用',
+                                    updatedAt: now,
+                                    updatedBy: '当前用户'
+                                });
+                                category.tagCount = (category.tagCount || 0) + 1;
+                                category.updatedAt = now;
+                                category.updatedBy = '当前用户';
+                                if (typeof self.saveTagManagerToStorage === 'function') self.saveTagManagerToStorage();
+                                if (typeof self.searchTags === 'function') self.searchTags();
+                                self.tagCreateDialog.visible = false;
+                                self.$message.success('标签已创建');
+                            } finally {
+                                self.tagCreateDialog.loading = false;
+                            }
+                        });
+                    };
+                }
+                if (typeof vm.onTagCategoryDialogClosed !== 'function') {
+                    vm.onTagCategoryDialogClosed = function () {
+                        if (!this.tagCategoryDialog) return;
+                        this.tagCategoryDialog.loading = false;
+                        this.tagCategoryDialog.form = { name: '', description: '', parentId: '', admin: '' };
+                    };
+                }
+                if (typeof vm.onTagCreateDialogClosed !== 'function') {
+                    vm.onTagCreateDialogClosed = function () {
+                        if (!this.tagCreateDialog) return;
+                        this.tagCreateDialog.loading = false;
+                        this.tagCreateDialog.form = { name: '', description: '', categoryId: '' };
+                    };
                 }
 
                 if (!vm.recycleBin) {
@@ -3209,13 +3751,17 @@
                         category: '',
                         status: '',
                         selectedIds: [],
-                        categoryOptions: [
-                            { label: '业务分类', value: 'biz' },
-                            { label: '系统分类', value: 'system' }
-                        ],
+                        categoryOptions: [],
                         list: [],
-                        displayList: []
+                        displayList: [],
+                        tags: []
                     });
+                } else if (!Array.isArray(vm.tagManager.tags)) {
+                    Vue.set(vm.tagManager, 'tags', []);
+                }
+                if (!vm.__tagManagerLoaded) {
+                    vm.__tagManagerLoaded = true;
+                    if (typeof vm.loadTagManagerFromStorage === 'function') vm.loadTagManagerFromStorage();
                 }
 
                 vm.getOrCreateChart = function (el) {
