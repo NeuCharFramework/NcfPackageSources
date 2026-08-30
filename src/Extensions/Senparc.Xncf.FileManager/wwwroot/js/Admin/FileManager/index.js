@@ -56,7 +56,14 @@
                 uploadDialog: { visible: false, fileList: [], uploading: false, progress: 0, mode: 'files', folderRootName: '' },
                 folderDialog: { visible: false, loading: false, editing: false, form: { id: null, name: '', description: '' } },
                 noteDialog: { visible: false, loading: false, row: null, note: '' },
-                fileTagDialog: { visible: false, loading: false, adding: false, draft: '', row: null, tags: [] },
+                fileTagDialog: {
+                    visible: false,
+                    loading: false,
+                    row: null,
+                    selectedIds: []
+                },
+                fileTagStorageKey: 'ncf.fileManager.fileTags',
+                fileTagMap: {},
                 guideDialogVisible: false,
                 treeFilter: '',
                 fileSearchKeyword: '',
@@ -233,6 +240,40 @@
                 return list.map(function (row) {
                     return { label: row.name, value: row.id };
                 });
+            },
+            fileTagCatalogOptions: function () {
+                return (this.tagManager && this.tagManager.tags) || [];
+            },
+            fileTagCatalogGroups: function () {
+                const categories = (this.tagManager && this.tagManager.list) || [];
+                const tags = (this.tagManager && this.tagManager.tags) || [];
+                const groups = categories.map(function (cat) {
+                    return {
+                        id: cat.id,
+                        name: cat.name,
+                        tags: tags.filter(function (tag) { return tag.categoryId === cat.id; })
+                    };
+                }).filter(function (group) { return group.tags.length; });
+                const known = {};
+                categories.forEach(function (cat) { known[cat.id] = true; });
+                const orphanTags = tags.filter(function (tag) { return !tag.categoryId || !known[tag.categoryId]; });
+                if (orphanTags.length) {
+                    groups.push({ id: '__other__', name: '未分类', tags: orphanTags });
+                }
+                return groups;
+            },
+            selectedFileTagItems: function () {
+                const ids = (this.fileTagDialog && this.fileTagDialog.selectedIds) || [];
+                const catalog = this.fileTagCatalogOptions || [];
+                const map = {};
+                catalog.forEach(function (tag) { map[tag.id] = tag; });
+                const saved = (this.fileTagDialog && this.fileTagDialog.row && this.fileTagDialog.row.tagItems) || [];
+                saved.forEach(function (tag) {
+                    if (tag && tag.id && !map[tag.id]) map[tag.id] = tag;
+                });
+                return ids.map(function (id) {
+                    return map[id] || { id: id, name: id };
+                });
             }
         },
         created: function () {
@@ -244,6 +285,7 @@
             this.loadQuickAccessFromStorage();
             this.loadUploadSettingsFromStorage();
             this.loadTagManagerFromStorage();
+            this.loadFileTagMapFromStorage();
             this.enterFolder(this.currentFolderId);
         },
         mounted: function () {
@@ -1484,55 +1526,114 @@
                 return '';
             },
             showFileTagDialog: function (row) {
-                const existing = Array.isArray(row.tags) ? row.tags.slice() : [];
+                if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
+                if (typeof this.loadFileTagMapFromStorage === 'function') this.loadFileTagMapFromStorage();
+                const catalog = (this.tagManager && this.tagManager.tags) || [];
+                if (!catalog.length) {
+                    this.$message.warning('请先在「标签管理」中维护标签后再设置');
+                }
+                const existingItems = this.getFileTagItems(row);
+                const selectedIds = existingItems.map(function (item) { return item.id; }).filter(Boolean);
                 this.fileTagDialog = {
                     visible: true,
                     loading: false,
-                    adding: false,
-                    draft: '',
                     row: row,
-                    tags: existing
+                    selectedIds: selectedIds
                 };
             },
-            startAddFileTag: function () {
-                this.fileTagDialog.adding = true;
-                this.fileTagDialog.draft = '';
+            getFileTagItems: function (row) {
+                if (!row) return [];
+                if (Array.isArray(row.tagItems) && row.tagItems.length) {
+                    return row.tagItems.map(function (item) {
+                        if (typeof item === 'string') return { id: item, name: item };
+                        return { id: item.id, name: item.name || item.id };
+                    });
+                }
+                const fromMap = this.fileTagMap && row.id != null ? this.fileTagMap[String(row.id)] : null;
+                if (Array.isArray(fromMap) && fromMap.length) {
+                    return fromMap.map(function (item) {
+                        if (typeof item === 'string') return { id: item, name: item };
+                        return { id: item.id, name: item.name || item.id };
+                    });
+                }
+                if (Array.isArray(row.tags) && row.tags.length) {
+                    return row.tags.map(function (item) {
+                        if (typeof item === 'string') return { id: item, name: item };
+                        return { id: item.id, name: item.name || item.id };
+                    });
+                }
+                return [];
+            },
+            getFileTagLabels: function (row) {
+                return this.getFileTagItems(row).map(function (item) { return item.name; }).filter(Boolean);
+            },
+            removeSelectedFileTag: function (tagId) {
+                if (!this.fileTagDialog || !Array.isArray(this.fileTagDialog.selectedIds)) return;
+                this.fileTagDialog.selectedIds = this.fileTagDialog.selectedIds.filter(function (id) { return id !== tagId; });
+            },
+            loadFileTagMapFromStorage: function () {
+                try {
+                    const raw = localStorage.getItem(this.fileTagStorageKey || 'ncf.fileManager.fileTags');
+                    const map = raw ? JSON.parse(raw) : {};
+                    this.fileTagMap = map && typeof map === 'object' && !Array.isArray(map) ? map : {};
+                } catch (e) {
+                    this.fileTagMap = {};
+                }
+            },
+            saveFileTagMapToStorage: function () {
+                try {
+                    localStorage.setItem(
+                        this.fileTagStorageKey || 'ncf.fileManager.fileTags',
+                        JSON.stringify(this.fileTagMap || {})
+                    );
+                } catch (e) { /* ignore */ }
+            },
+            applyFileTagsToTable: function () {
                 const self = this;
-                this.$nextTick(function () {
-                    const input = self.$refs.fileTagInput;
-                    if (input && typeof input.focus === 'function') input.focus();
+                if (!this.fileTagMap) this.loadFileTagMapFromStorage();
+                (this.tableData || []).forEach(function (row) {
+                    const mapped = self.fileTagMap && row.id != null ? self.fileTagMap[String(row.id)] : null;
+                    const finalItems = Array.isArray(mapped)
+                        ? mapped.map(function (item) {
+                            if (typeof item === 'string') return { id: item, name: item };
+                            return { id: item.id, name: item.name || item.id };
+                        })
+                        : [];
+                    self.$set(row, 'tagItems', finalItems);
+                    self.$set(row, 'tags', finalItems.map(function (item) { return item.name; }));
+                    self.$set(row, 'tagIds', finalItems.map(function (item) { return item.id; }));
                 });
             },
-            confirmAddFileTag: function () {
-                if (!this.fileTagDialog.adding) return;
-                const name = (this.fileTagDialog.draft || '').trim();
-                this.fileTagDialog.adding = false;
-                this.fileTagDialog.draft = '';
-                if (!name) return;
-                if (this.fileTagDialog.tags.indexOf(name) !== -1) {
-                    this.$message.warning('标签已存在');
-                    return;
-                }
-                this.fileTagDialog.tags.push(name);
-            },
-            removeFileTag: function (index) {
-                this.fileTagDialog.tags.splice(index, 1);
-            },
             onFileTagDialogClosed: function () {
-                this.fileTagDialog.adding = false;
-                this.fileTagDialog.draft = '';
+                if (!this.fileTagDialog) return;
+                this.fileTagDialog.loading = false;
                 this.fileTagDialog.row = null;
-                this.fileTagDialog.tags = [];
+                this.fileTagDialog.selectedIds = [];
             },
             submitFileTags: function () {
-                const row = this.fileTagDialog.row;
-                if (!row) return;
+                const row = this.fileTagDialog && this.fileTagDialog.row;
+                if (!row || row.id == null) return;
                 this.fileTagDialog.loading = true;
                 try {
-                    if (this.fileTagDialog.adding) this.confirmAddFileTag();
-                    this.$set(row, 'tags', this.fileTagDialog.tags.slice());
+                    const selectedIds = (this.fileTagDialog.selectedIds || []).slice();
+                    const catalogMap = {};
+                    ((this.tagManager && this.tagManager.tags) || []).forEach(function (tag) {
+                        catalogMap[tag.id] = tag;
+                    });
+                    const items = selectedIds.map(function (id) {
+                        const hit = catalogMap[id];
+                        return hit
+                            ? { id: hit.id, name: hit.name, categoryId: hit.categoryId || '' }
+                            : { id: id, name: String(id) };
+                    });
+                    if (!this.fileTagMap) this.fileTagMap = {};
+                    this.$set(this.fileTagMap, String(row.id), items);
+                    this.saveFileTagMapToStorage();
+                    this.$set(row, 'tagItems', items);
+                    this.$set(row, 'tags', items.map(function (item) { return item.name; }));
+                    this.$set(row, 'tagIds', items.map(function (item) { return item.id; }));
                     this.fileTagDialog.visible = false;
-                    this.$message.success('标签已更新');
+                    this.$message.success(items.length ? '文件标签已更新' : '已清空文件标签');
                 } finally {
                     this.fileTagDialog.loading = false;
                 }
@@ -1576,6 +1677,7 @@
                         this.total = (result && (result.totalCount != null ? result.totalCount : result.total)) || 0;
                     }
                     this.syncFavoriteFlagsOnTable();
+                    this.applyFileTagsToTable();
                 } catch (error) {
                     this.$message.error('获取文件列表失败：' + errorMessage(error));
                 } finally {

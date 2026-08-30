@@ -375,6 +375,14 @@
 
         .file-manager-file-name-cell {
             display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .file-manager-file-name-main {
+            display: flex;
             align-items: center;
             gap: 8px;
             min-width: 0;
@@ -386,6 +394,19 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        .file-manager-file-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            padding-left: 0;
+        }
+
+        .file-manager-file-tags .el-tag {
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .file-manager-favorite-star {
@@ -1239,14 +1260,20 @@
             font-weight: 500;
         }
 
-        .file-tag-dialog .file-tag-dialog-add {
-            padding: 0;
-            font-size: 14px;
-            color: #409EFF;
+        .file-tag-dialog .file-tag-dialog-hint {
+            margin: 0 0 10px;
+            font-size: 12px;
+            color: #909399;
+            line-height: 1.5;
+        }
+
+        .file-tag-dialog .file-tag-dialog-select {
+            width: 100%;
+            margin-bottom: 12px;
         }
 
         .file-tag-dialog .file-tag-dialog-box {
-            min-height: 160px;
+            min-height: 100px;
             padding: 12px;
             border: 1px solid #dcdfe6;
             border-radius: 4px;
@@ -1262,12 +1289,8 @@
             text-align: center;
             color: #c0c4cc;
             font-size: 13px;
-            padding: 48px 0;
+            padding: 28px 0;
             line-height: 1.6;
-        }
-
-        .file-tag-dialog .file-tag-dialog-input {
-            width: 140px;
         }
 
         .file-manager-home-recent-title i {
@@ -1450,13 +1473,23 @@
                             <el-table-column label="文件名" min-width="260">
                                 <template slot-scope="scope">
                                     <div class="file-manager-file-name-cell">
-                                        <span class="file-manager-file-name-text" :title="scope.row.fileName">{{ scope.row.fileName }}</span>
-                                        <i
-                                            class="file-manager-favorite-star"
-                                            :class="isFileFavorited(scope.row) ? 'el-icon-star-on is-on' : 'el-icon-star-off'"
-                                            :title="isFileFavorited(scope.row) ? '取消收藏' : '收藏'"
-                                            @@click.stop="toggleFavorite(scope.row)">
-                                        </i>
+                                        <div class="file-manager-file-name-main">
+                                            <span class="file-manager-file-name-text" :title="scope.row.fileName">{{ scope.row.fileName }}</span>
+                                            <i
+                                                class="file-manager-favorite-star"
+                                                :class="isFileFavorited(scope.row) ? 'el-icon-star-on is-on' : 'el-icon-star-off'"
+                                                :title="isFileFavorited(scope.row) ? '取消收藏' : '收藏'"
+                                                @@click.stop="toggleFavorite(scope.row)">
+                                            </i>
+                                        </div>
+                                        <div class="file-manager-file-tags" v-if="getFileTagLabels(scope.row).length">
+                                            <el-tag
+                                                v-for="(tag, index) in getFileTagLabels(scope.row)"
+                                                :key="tag + '-' + index"
+                                                size="mini"
+                                                type="info"
+                                                effect="plain">{{ tag }}</el-tag>
+                                        </div>
                                     </div>
                                 </template>
                             </el-table-column>
@@ -2073,35 +2106,49 @@
 <el-dialog
     title="标签管理"
     :visible.sync="fileTagDialog.visible"
-    width="480px"
+    width="520px"
     custom-class="file-tag-dialog"
     append-to-body
     @@closed="onFileTagDialogClosed">
     <div class="file-tag-dialog-toolbar">
-        <span class="file-tag-dialog-label">已添加标签</span>
-        <el-button type="text" class="file-tag-dialog-add" @@click="startAddFileTag">+ 添加标签</el-button>
+        <span class="file-tag-dialog-label">为文件设置标签</span>
     </div>
+    <p class="file-tag-dialog-hint">可选标签来自「标签管理」中已维护的数据；选择后将写入当前文件的标识字段。</p>
+    <el-select
+        class="file-tag-dialog-select"
+        v-model="fileTagDialog.selectedIds"
+        multiple
+        filterable
+        clearable
+        collapse-tags
+        placeholder="请选择标签（来自标签管理）"
+        :disabled="!(fileTagCatalogOptions && fileTagCatalogOptions.length)">
+        <el-option-group
+            v-for="group in fileTagCatalogGroups"
+            :key="group.id"
+            :label="group.name">
+            <el-option
+                v-for="item in group.tags"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+                :disabled="item.status === '已停用' || item.status === '停用'">
+            </el-option>
+        </el-option-group>
+    </el-select>
     <div class="file-tag-dialog-box">
-        <template v-if="(fileTagDialog.tags && fileTagDialog.tags.length) || fileTagDialog.adding">
+        <template v-if="fileTagDialog.selectedIds && fileTagDialog.selectedIds.length">
             <el-tag
-                v-for="(tag, index) in fileTagDialog.tags"
-                :key="tag + '-' + index"
+                v-for="item in selectedFileTagItems"
+                :key="item.id"
                 size="small"
                 closable
-                @@close="removeFileTag(index)">{{ tag }}</el-tag>
-            <el-input
-                v-if="fileTagDialog.adding"
-                ref="fileTagInput"
-                class="file-tag-dialog-input"
-                size="mini"
-                v-model="fileTagDialog.draft"
-                maxlength="20"
-                placeholder="输入标签名"
-                @@keyup.enter.native="confirmAddFileTag"
-                @@blur="confirmAddFileTag">
-            </el-input>
+                @@close="removeSelectedFileTag(item.id)">{{ item.name }}</el-tag>
         </template>
-        <div v-else class="file-tag-dialog-empty">请添加标签</div>
+        <div v-else class="file-tag-dialog-empty">
+            <template v-if="fileTagCatalogOptions && fileTagCatalogOptions.length">请从上方选择标签</template>
+            <template v-else>暂无可用标签，请先在左侧「标签管理」中新增标签</template>
+        </div>
     </div>
     <span slot="footer" class="dialog-footer">
         <el-button @@click="fileTagDialog.visible=false">取消</el-button>
@@ -2253,11 +2300,11 @@
                         fileTagDialog: {
                             visible: false,
                             loading: false,
-                            adding: false,
-                            draft: '',
                             row: null,
-                            tags: []
+                            selectedIds: []
                         },
+                        fileTagStorageKey: 'ncf.fileManager.fileTags',
+                        fileTagMap: {},
                         favoriteStorageKey: 'ncf.fileManager.favorites',
                         favoriteList: {
                             keyword: '',
@@ -2327,6 +2374,40 @@
                         var list = (this.tagManager && this.tagManager.list) || [];
                         return list.map(function (row) {
                             return { label: row.name, value: row.id };
+                        });
+                    },
+                    fileTagCatalogOptions: function () {
+                        return (this.tagManager && this.tagManager.tags) || [];
+                    },
+                    fileTagCatalogGroups: function () {
+                        var categories = (this.tagManager && this.tagManager.list) || [];
+                        var tags = (this.tagManager && this.tagManager.tags) || [];
+                        var groups = categories.map(function (cat) {
+                            return {
+                                id: cat.id,
+                                name: cat.name,
+                                tags: tags.filter(function (tag) { return tag.categoryId === cat.id; })
+                            };
+                        }).filter(function (group) { return group.tags.length; });
+                        var known = {};
+                        categories.forEach(function (cat) { known[cat.id] = true; });
+                        var orphanTags = tags.filter(function (tag) { return !tag.categoryId || !known[tag.categoryId]; });
+                        if (orphanTags.length) {
+                            groups.push({ id: '__other__', name: '未分类', tags: orphanTags });
+                        }
+                        return groups;
+                    },
+                    selectedFileTagItems: function () {
+                        var ids = (this.fileTagDialog && this.fileTagDialog.selectedIds) || [];
+                        var catalog = (this.tagManager && this.tagManager.tags) || [];
+                        var map = {};
+                        catalog.forEach(function (tag) { map[tag.id] = tag; });
+                        var saved = (this.fileTagDialog && this.fileTagDialog.row && this.fileTagDialog.row.tagItems) || [];
+                        saved.forEach(function (tag) {
+                            if (tag && tag.id && !map[tag.id]) map[tag.id] = tag;
+                        });
+                        return ids.map(function (id) {
+                            return map[id] || { id: id, name: id };
                         });
                     }
                 },
@@ -2721,59 +2802,115 @@
                         });
                     },
                     showFileTagDialog: function (row) {
-                        var existing = Array.isArray(row && row.tags) ? row.tags.slice() : [];
+                        if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
+                        if (typeof this.loadFileTagMapFromStorage === 'function') this.loadFileTagMapFromStorage();
+                        var catalog = (this.tagManager && this.tagManager.tags) || [];
+                        if (!catalog.length) {
+                            this.$message.warning('请先在「标签管理」中维护标签后再设置');
+                        }
+                        var existingItems = this.getFileTagItems(row);
+                        var selectedIds = existingItems.map(function (item) { return item.id; }).filter(Boolean);
                         this.fileTagDialog = {
                             visible: true,
                             loading: false,
-                            adding: false,
-                            draft: '',
                             row: row,
-                            tags: existing
+                            selectedIds: selectedIds
                         };
                     },
-                    startAddFileTag: function () {
-                        if (!this.fileTagDialog) return;
-                        this.fileTagDialog.adding = true;
-                        this.fileTagDialog.draft = '';
-                        var self = this;
-                        this.$nextTick(function () {
-                            var input = self.$refs.fileTagInput;
-                            if (input && typeof input.focus === 'function') input.focus();
-                        });
-                    },
-                    confirmAddFileTag: function () {
-                        if (!this.fileTagDialog || !this.fileTagDialog.adding) return;
-                        var name = (this.fileTagDialog.draft || '').trim();
-                        this.fileTagDialog.adding = false;
-                        this.fileTagDialog.draft = '';
-                        if (!name) return;
-                        if (this.fileTagDialog.tags.indexOf(name) !== -1) {
-                            this.$message.warning('标签已存在');
-                            return;
+                    getFileTagItems: function (row) {
+                        if (!row) return [];
+                        if (Array.isArray(row.tagItems) && row.tagItems.length) {
+                            return row.tagItems.map(function (item) {
+                                if (typeof item === 'string') return { id: item, name: item };
+                                return { id: item.id, name: item.name || item.id };
+                            });
                         }
-                        this.fileTagDialog.tags.push(name);
+                        var fromMap = this.fileTagMap && row.id != null ? this.fileTagMap[String(row.id)] : null;
+                        if (Array.isArray(fromMap) && fromMap.length) {
+                            return fromMap.map(function (item) {
+                                if (typeof item === 'string') return { id: item, name: item };
+                                return { id: item.id, name: item.name || item.id };
+                            });
+                        }
+                        if (Array.isArray(row.tags) && row.tags.length) {
+                            return row.tags.map(function (item) {
+                                if (typeof item === 'string') return { id: item, name: item };
+                                return { id: item.id, name: item.name || item.id };
+                            });
+                        }
+                        return [];
                     },
-                    removeFileTag: function (index) {
-                        if (!this.fileTagDialog) return;
-                        this.fileTagDialog.tags.splice(index, 1);
+                    getFileTagLabels: function (row) {
+                        return this.getFileTagItems(row).map(function (item) { return item.name; }).filter(Boolean);
+                    },
+                    removeSelectedFileTag: function (tagId) {
+                        if (!this.fileTagDialog || !Array.isArray(this.fileTagDialog.selectedIds)) return;
+                        this.fileTagDialog.selectedIds = this.fileTagDialog.selectedIds.filter(function (id) { return id !== tagId; });
+                    },
+                    loadFileTagMapFromStorage: function () {
+                        try {
+                            var raw = localStorage.getItem(this.fileTagStorageKey || 'ncf.fileManager.fileTags');
+                            var map = raw ? JSON.parse(raw) : {};
+                            this.fileTagMap = map && typeof map === 'object' && !Array.isArray(map) ? map : {};
+                        } catch (e) {
+                            this.fileTagMap = {};
+                        }
+                    },
+                    saveFileTagMapToStorage: function () {
+                        try {
+                            localStorage.setItem(
+                                this.fileTagStorageKey || 'ncf.fileManager.fileTags',
+                                JSON.stringify(this.fileTagMap || {})
+                            );
+                        } catch (e) { /* ignore */ }
+                    },
+                    applyFileTagsToTable: function () {
+                        var self = this;
+                        if (!this.fileTagMap) this.loadFileTagMapFromStorage();
+                        (this.tableData || []).forEach(function (row) {
+                            var mapped = self.fileTagMap && row.id != null ? self.fileTagMap[String(row.id)] : null;
+                            var finalItems = Array.isArray(mapped)
+                                ? mapped.map(function (item) {
+                                    if (typeof item === 'string') return { id: item, name: item };
+                                    return { id: item.id, name: item.name || item.id };
+                                })
+                                : [];
+                            self.$set(row, 'tagItems', finalItems);
+                            self.$set(row, 'tags', finalItems.map(function (item) { return item.name; }));
+                            self.$set(row, 'tagIds', finalItems.map(function (item) { return item.id; }));
+                        });
                     },
                     onFileTagDialogClosed: function () {
                         if (!this.fileTagDialog) return;
-                        this.fileTagDialog.adding = false;
-                        this.fileTagDialog.draft = '';
+                        this.fileTagDialog.loading = false;
                         this.fileTagDialog.row = null;
-                        this.fileTagDialog.tags = [];
+                        this.fileTagDialog.selectedIds = [];
                     },
                     submitFileTags: function () {
                         if (!this.fileTagDialog) return;
                         var row = this.fileTagDialog.row;
-                        if (!row) return;
+                        if (!row || row.id == null) return;
                         this.fileTagDialog.loading = true;
                         try {
-                            if (this.fileTagDialog.adding) this.confirmAddFileTag();
-                            this.$set(row, 'tags', this.fileTagDialog.tags.slice());
+                            var selectedIds = (this.fileTagDialog.selectedIds || []).slice();
+                            var catalogMap = {};
+                            ((this.tagManager && this.tagManager.tags) || []).forEach(function (tag) {
+                                catalogMap[tag.id] = tag;
+                            });
+                            var items = selectedIds.map(function (id) {
+                                var hit = catalogMap[id];
+                                return hit
+                                    ? { id: hit.id, name: hit.name, categoryId: hit.categoryId || '' }
+                                    : { id: id, name: String(id) };
+                            });
+                            if (!this.fileTagMap) this.fileTagMap = {};
+                            this.$set(this.fileTagMap, String(row.id), items);
+                            this.saveFileTagMapToStorage();
+                            this.$set(row, 'tagItems', items);
+                            this.$set(row, 'tags', items.map(function (item) { return item.name; }));
+                            this.$set(row, 'tagIds', items.map(function (item) { return item.id; }));
                             this.fileTagDialog.visible = false;
-                            this.$message.success('标签已更新');
+                            this.$message.success(items.length ? '文件标签已更新' : '已清空文件标签');
                         } finally {
                             this.fileTagDialog.loading = false;
                         }
@@ -4074,6 +4211,7 @@
                             this.total = (result && (result.totalCount != null ? result.totalCount : result.total)) || 0;
                         }
                         if (typeof this.syncFavoriteFlagsOnTable === 'function') this.syncFavoriteFlagsOnTable();
+                        if (typeof this.applyFileTagsToTable === 'function') this.applyFileTagsToTable();
                     } catch (error) {
                         var data = error && error.response && error.response.data;
                         var message = typeof data === 'string' ? data : (data && (data.errorMessage || data.message || data.title));
@@ -4087,67 +4225,132 @@
                     Vue.set(vm, 'fileTagDialog', {
                         visible: false,
                         loading: false,
-                        adding: false,
-                        draft: '',
                         row: null,
-                        tags: []
+                        selectedIds: []
                     });
+                } else if (!Array.isArray(vm.fileTagDialog.selectedIds)) {
+                    Vue.set(vm.fileTagDialog, 'selectedIds', []);
                 }
+                if (!vm.fileTagStorageKey) Vue.set(vm, 'fileTagStorageKey', 'ncf.fileManager.fileTags');
+                if (!vm.fileTagMap) Vue.set(vm, 'fileTagMap', {});
 
+                vm.getFileTagItems = function (row) {
+                    if (!row) return [];
+                    if (Array.isArray(row.tagItems) && row.tagItems.length) {
+                        return row.tagItems.map(function (item) {
+                            if (typeof item === 'string') return { id: item, name: item };
+                            return { id: item.id, name: item.name || item.id };
+                        });
+                    }
+                    var fromMap = this.fileTagMap && row.id != null ? this.fileTagMap[String(row.id)] : null;
+                    if (Array.isArray(fromMap) && fromMap.length) {
+                        return fromMap.map(function (item) {
+                            if (typeof item === 'string') return { id: item, name: item };
+                            return { id: item.id, name: item.name || item.id };
+                        });
+                    }
+                    if (Array.isArray(row.tags) && row.tags.length) {
+                        return row.tags.map(function (item) {
+                            if (typeof item === 'string') return { id: item, name: item };
+                            return { id: item.id, name: item.name || item.id };
+                        });
+                    }
+                    return [];
+                };
+                vm.getFileTagLabels = function (row) {
+                    return this.getFileTagItems(row).map(function (item) { return item.name; }).filter(Boolean);
+                };
+                vm.removeSelectedFileTag = function (tagId) {
+                    if (!this.fileTagDialog || !Array.isArray(this.fileTagDialog.selectedIds)) return;
+                    this.fileTagDialog.selectedIds = this.fileTagDialog.selectedIds.filter(function (id) { return id !== tagId; });
+                };
+                vm.loadFileTagMapFromStorage = function () {
+                    try {
+                        var raw = localStorage.getItem(this.fileTagStorageKey || 'ncf.fileManager.fileTags');
+                        var map = raw ? JSON.parse(raw) : {};
+                        this.fileTagMap = map && typeof map === 'object' && !Array.isArray(map) ? map : {};
+                    } catch (e) {
+                        this.fileTagMap = {};
+                    }
+                };
+                vm.saveFileTagMapToStorage = function () {
+                    try {
+                        localStorage.setItem(
+                            this.fileTagStorageKey || 'ncf.fileManager.fileTags',
+                            JSON.stringify(this.fileTagMap || {})
+                        );
+                    } catch (e) { /* ignore */ }
+                };
+                vm.applyFileTagsToTable = function () {
+                    var self = this;
+                    if (!this.fileTagMap) this.loadFileTagMapFromStorage();
+                    (this.tableData || []).forEach(function (row) {
+                        var mapped = self.fileTagMap && row.id != null ? self.fileTagMap[String(row.id)] : null;
+                        var finalItems = Array.isArray(mapped)
+                            ? mapped.map(function (item) {
+                                if (typeof item === 'string') return { id: item, name: item };
+                                return { id: item.id, name: item.name || item.id };
+                            })
+                            : [];
+                        self.$set(row, 'tagItems', finalItems);
+                        self.$set(row, 'tags', finalItems.map(function (item) { return item.name; }));
+                        self.$set(row, 'tagIds', finalItems.map(function (item) { return item.id; }));
+                    });
+                };
                 vm.showFileTagDialog = function (row) {
-                    var existing = Array.isArray(row && row.tags) ? row.tags.slice() : [];
+                    if (typeof this.loadTagManagerFromStorage === 'function') this.loadTagManagerFromStorage();
+                    this.loadFileTagMapFromStorage();
+                    var catalog = (this.tagManager && this.tagManager.tags) || [];
+                    if (!catalog.length) {
+                        this.$message.warning('请先在「标签管理」中维护标签后再设置');
+                    }
+                    var existingItems = this.getFileTagItems(row);
+                    var selectedIds = existingItems.map(function (item) { return item.id; }).filter(Boolean);
                     this.fileTagDialog = {
                         visible: true,
                         loading: false,
-                        adding: false,
-                        draft: '',
                         row: row,
-                        tags: existing
+                        selectedIds: selectedIds
                     };
                 };
-                vm.startAddFileTag = function () {
-                    this.fileTagDialog.adding = true;
-                    this.fileTagDialog.draft = '';
-                    var self = this;
-                    this.$nextTick(function () {
-                        var input = self.$refs.fileTagInput;
-                        if (input && typeof input.focus === 'function') input.focus();
-                    });
-                };
-                vm.confirmAddFileTag = function () {
-                    if (!this.fileTagDialog.adding) return;
-                    var name = (this.fileTagDialog.draft || '').trim();
-                    this.fileTagDialog.adding = false;
-                    this.fileTagDialog.draft = '';
-                    if (!name) return;
-                    if (this.fileTagDialog.tags.indexOf(name) !== -1) {
-                        this.$message.warning('标签已存在');
-                        return;
-                    }
-                    this.fileTagDialog.tags.push(name);
-                };
-                vm.removeFileTag = function (index) {
-                    this.fileTagDialog.tags.splice(index, 1);
-                };
                 vm.onFileTagDialogClosed = function () {
-                    this.fileTagDialog.adding = false;
-                    this.fileTagDialog.draft = '';
+                    if (!this.fileTagDialog) return;
+                    this.fileTagDialog.loading = false;
                     this.fileTagDialog.row = null;
-                    this.fileTagDialog.tags = [];
+                    this.fileTagDialog.selectedIds = [];
                 };
                 vm.submitFileTags = function () {
-                    var row = this.fileTagDialog.row;
-                    if (!row) return;
+                    var row = this.fileTagDialog && this.fileTagDialog.row;
+                    if (!row || row.id == null) return;
                     this.fileTagDialog.loading = true;
                     try {
-                        if (this.fileTagDialog.adding) this.confirmAddFileTag();
-                        this.$set(row, 'tags', this.fileTagDialog.tags.slice());
+                        var selectedIds = (this.fileTagDialog.selectedIds || []).slice();
+                        var catalogMap = {};
+                        ((this.tagManager && this.tagManager.tags) || []).forEach(function (tag) {
+                            catalogMap[tag.id] = tag;
+                        });
+                        var items = selectedIds.map(function (id) {
+                            var hit = catalogMap[id];
+                            return hit
+                                ? { id: hit.id, name: hit.name, categoryId: hit.categoryId || '' }
+                                : { id: id, name: String(id) };
+                        });
+                        if (!this.fileTagMap) this.fileTagMap = {};
+                        this.$set(this.fileTagMap, String(row.id), items);
+                        this.saveFileTagMapToStorage();
+                        this.$set(row, 'tagItems', items);
+                        this.$set(row, 'tags', items.map(function (item) { return item.name; }));
+                        this.$set(row, 'tagIds', items.map(function (item) { return item.id; }));
                         this.fileTagDialog.visible = false;
-                        this.$message.success('标签已更新');
+                        this.$message.success(items.length ? '文件标签已更新' : '已清空文件标签');
                     } finally {
                         this.fileTagDialog.loading = false;
                     }
                 };
+                if (!vm.__fileTagsLoaded) {
+                    vm.__fileTagsLoaded = true;
+                    vm.loadFileTagMapFromStorage();
+                }
 
                 var originalHandleRowCommand = vm.handleRowCommand && vm.handleRowCommand.bind(vm);
                 vm.handleRowCommand = function (command, row) {
