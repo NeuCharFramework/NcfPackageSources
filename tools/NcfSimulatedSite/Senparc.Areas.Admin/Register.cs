@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -236,10 +236,12 @@ namespace Senparc.Areas.Admin
             services.AddScoped<INeuCharPivotFunctionRepository, NeuCharPivotFunctionRepository>();
             services.AddScoped<INeuCharPivotLoopTaskRepository, NeuCharPivotLoopTaskRepository>();
             services.AddScoped<INeuCharExecutionLogRepository, NeuCharExecutionLogRepository>();
+            services.AddScoped<INeuCharPivotBoardRepository, NeuCharPivotBoardRepository>();
             services.AddScoped<NeuCharPivotConfigurationService>();
             services.AddScoped<NeuCharPivotFunctionService>();
             services.AddScoped<NeuCharPivotLoopTaskService>();
             services.AddScoped<NeuCharExecutionLogService>();
+            services.AddScoped<NeuCharPivotBoardService>();
             services.AddScoped<NeuCharFunctionService>();
             services.AddScoped<NeuCharPivotService>();
             services.AddScoped<NeuCharPivotGlobalAccessService>();

@@ -15,6 +15,12 @@
         return {
             // 表格数据
             tableData: [],
+            // 配置模式（拖拽调整一级菜单顺序，保存后真实更新 Sort 数值）
+            configMode: false,
+            configMenus: [],
+            dragIndex: null,
+            dragOverIndex: null,
+            configSaving: false,
             dialog: {
                 title: ncfT('Menu.AddTitle'),
                 visible: false,
@@ -690,6 +696,92 @@
         pickIcon(item) {
             this.dialogIcon.visible = false;
             this.dialog.data.icon = item;
+        },
+        // 切换配置模式（一级菜单拖拽排序）
+        toggleConfigMode() {
+            this.configMode = !this.configMode;
+            if (this.configMode) {
+                this.buildConfigMenus();
+            }
+        },
+        // 构建配置模式菜单列表：取一级菜单，按 Sort 降序（与左侧菜单一致）
+        buildConfigMenus() {
+            var firstLevel = (this.tableData || []).filter(function (m) {
+                return !m.parentId;
+            });
+            firstLevel.sort(function (a, b) {
+                return (Number(b.sort) || 0) - (Number(a.sort) || 0);
+            });
+            this.configMenus = firstLevel.map(function (m) {
+                return {
+                    id: m.id,
+                    menuName: m.menuName,
+                    icon: m.icon || '',
+                    sort: m.sort
+                };
+            });
+        },
+        // 拖拽开始
+        onConfigDragStart(index) {
+            this.dragIndex = index;
+        },
+        // 拖拽悬停
+        onConfigDragOver(index) {
+            this.dragOverIndex = index;
+        },
+        // 拖拽结束（落点）
+        onConfigDrop(index) {
+            var from = this.dragIndex;
+            if (from === null || from === index) {
+                this.onConfigDragEnd();
+                return;
+            }
+            var list = this.configMenus.slice();
+            var moved = list.splice(from, 1)[0];
+            list.splice(index, 0, moved);
+            this.configMenus = list;
+            this.onConfigDragEnd();
+        },
+        onConfigDragEnd() {
+            this.dragIndex = null;
+            this.dragOverIndex = null;
+        },
+        // 按钮移动（辅助键盘/鼠标用户）
+        moveConfigItem(index, delta) {
+            var to = index + delta;
+            if (to < 0 || to >= this.configMenus.length) {
+                return;
+            }
+            var list = this.configMenus.slice();
+            var moved = list.splice(index, 1)[0];
+            list.splice(to, 0, moved);
+            this.configMenus = list;
+        },
+        // 保存配置模式排序：真实更新一级菜单 Sort 数值
+        saveConfigOrder() {
+            if (!this.configMenus.length) {
+                this.$message.warning(ncfT('Menu.ConfigEmpty'));
+                return;
+            }
+            var self = this;
+            self.configSaving = true;
+            service.post('/Admin/Menu/Index?handler=Reorder', {
+                ids: self.configMenus.map(function (m) { return m.id; })
+            }).then(function (res) {
+                if (res.data.success) {
+                    self.$notify({
+                        title: ncfT('AdminUserInfo.Success'),
+                        message: ncfT('Menu.ConfigSaveSuccess'),
+                        type: 'success',
+                        duration: 2000
+                    });
+                    self.getList();
+                } else {
+                    self.$message.error(res.data.msg || ncfT('Admin.Common.Error'));
+                }
+            }).finally(function () {
+                self.configSaving = false;
+            });
         },
         // 更新授权
         async  auUpdateData() {

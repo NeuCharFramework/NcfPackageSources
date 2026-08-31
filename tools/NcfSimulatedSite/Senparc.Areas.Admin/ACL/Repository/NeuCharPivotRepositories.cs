@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：NeuCharPivotRepositories.cs
@@ -45,4 +45,12 @@ public sealed class NeuCharExecutionLogRepository : ClientRepositoryBase<NeuChar
 {
     private NeuCharExecutionLogRepository() : base(null) { }
     public NeuCharExecutionLogRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
+}
+
+public interface INeuCharPivotBoardRepository : IClientRepositoryBase<NeuCharPivotBoard> { }
+
+public sealed class NeuCharPivotBoardRepository : ClientRepositoryBase<NeuCharPivotBoard>, INeuCharPivotBoardRepository
+{
+    private NeuCharPivotBoardRepository() : base(null) { }
+    public NeuCharPivotBoardRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }

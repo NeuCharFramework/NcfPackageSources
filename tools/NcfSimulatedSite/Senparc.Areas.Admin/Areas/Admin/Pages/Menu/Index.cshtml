@@ -14,6 +14,39 @@
     <div class="admin-role">
         <div class="filter-container">
             <el-button class="filter-item" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">@AR["Menu.增加菜单"]</el-button>
+            <el-button class="filter-item" :type="configMode ? 'warning' : 'default'" icon="el-icon-rank" @@click="toggleConfigMode">
+                {{ configMode ? ncfT('Menu.ConfigModeExit') : ncfT('Menu.ConfigMode') }}
+            </el-button>
+        </div>
+        <div v-if="configMode" class="menu-config-mode">
+            <div class="menu-config-mode-header">
+                <span class="menu-config-mode-title"><i class="el-icon-rank"></i> {{ ncfT('Menu.ConfigModeTip') }}</span>
+                <span>
+                    <el-button size="mini" plain @@click="toggleConfigMode">{{ ncfT('Common.取消') }}</el-button>
+                    <el-button size="mini" type="primary" :loading="configSaving" @@click="saveConfigOrder">{{ ncfT('Menu.ConfigSave') }}</el-button>
+                </span>
+            </div>
+            <ul class="menu-config-list" v-if="configMenus.length">
+                <li v-for="(menu, index) in configMenus"
+                    :key="menu.id"
+                    class="menu-config-item"
+                    :class="{ 'is-dragging': dragIndex === index, 'is-drag-over': dragOverIndex === index && dragIndex !== index }"
+                    draggable="true"
+                    @@dragstart="onConfigDragStart(index)"
+                    @@dragover.prevent="onConfigDragOver(index)"
+                    @@drop.prevent="onConfigDrop(index)"
+                    @@dragend="onConfigDragEnd">
+                    <i class="el-icon-rank menu-config-drag-handle"></i>
+                    <i v-if="menu.icon" :class="menu.icon" class="menu-config-icon"></i>
+                    <span class="menu-config-name">{{ menu.menuName }}</span>
+                    <span class="menu-config-sort">{{ ncfT('Common.排序') }}: {{ menu.sort }}</span>
+                    <span class="menu-config-actions">
+                        <el-button type="text" size="mini" icon="el-icon-top" :disabled="index === 0" @@click="moveConfigItem(index, -1)"></el-button>
+                        <el-button type="text" size="mini" icon="el-icon-bottom" :disabled="index === configMenus.length - 1" @@click="moveConfigItem(index, 1)"></el-button>
+                    </span>
+                </li>
+            </ul>
+            <div v-else class="menu-config-empty">{{ ncfT('Menu.ConfigEmpty') }}</div>
         </div>
         <el-table :data="tableData"
                   style="width: 100%;margin-bottom: 20px;"

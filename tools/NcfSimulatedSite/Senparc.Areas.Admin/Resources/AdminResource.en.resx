@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -44,6 +44,27 @@
   </data>
   <data name="Admin.Nav.Home" xml:space="preserve">
     <value>Home</value>
+  </data>
+  <data name="Admin.Nav.Search" xml:space="preserve">
+    <value>Search menu</value>
+  </data>
+  <data name="Admin.Nav.SearchPlaceholder" xml:space="preserve">
+    <value>Type a keyword to filter the menu</value>
+  </data>
+  <data name="Admin.Nav.SearchEmpty" xml:space="preserve">
+    <value>No matching menu found</value>
+  </data>
+  <data name="Admin.Nav.ConfigTitle" xml:space="preserve">
+    <value>Menu Configuration</value>
+  </data>
+  <data name="Admin.Nav.ConfigHint" xml:space="preserve">
+    <value>Drag first-level menus to reorder; saving updates the menu sort values</value>
+  </data>
+  <data name="Admin.Nav.ConfigSave" xml:space="preserve">
+    <value>Save order</value>
+  </data>
+  <data name="Admin.Nav.ConfigSaved" xml:space="preserve">
+    <value>Menu order saved</value>
   </data>
   <data name="Admin.Layout.Welcome" xml:space="preserve">
     <value>Welcome,</value>
@@ -551,4 +572,22 @@
   <data name="Admin.Home.AgentsWaitingOrPaused" xml:space="preserve"><value>Waiting / paused</value></data>
   <data name="Admin.Home.AiQuickDescription" xml:space="preserve"><value>Use the Footer AI quick chat to open the full conversation and context selector when needed.</value></data>
   <data name="Admin.Home.AiQuickDialog" xml:space="preserve"><value>Open quick chat</value></data>
+  <data name="Menu.ConfigMode" xml:space="preserve">
+    <value>Config Mode</value>
+  </data>
+  <data name="Menu.ConfigModeExit" xml:space="preserve">
+    <value>Exit Config Mode</value>
+  </data>
+  <data name="Menu.ConfigModeTip" xml:space="preserve">
+    <value>Drag the first-level menus below to reorder the left navigation. Saving will really update the Sort values.</value>
+  </data>
+  <data name="Menu.ConfigSave" xml:space="preserve">
+    <value>Save Order</value>
+  </data>
+  <data name="Menu.ConfigSaveSuccess" xml:space="preserve">
+    <value>Menu order has been saved</value>
+  </data>
+  <data name="Menu.ConfigEmpty" xml:space="preserve">
+    <value>No first-level menus to sort</value>
+  </data>
 </root>
