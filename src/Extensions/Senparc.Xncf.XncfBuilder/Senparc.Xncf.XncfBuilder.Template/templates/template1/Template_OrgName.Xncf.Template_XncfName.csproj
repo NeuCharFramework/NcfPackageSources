@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>1.1.6</Version>
+    <Version>1.1.7</Version>
     <AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
     <RootNamespace>Template_OrgName.Xncf.Template_XncfName</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -40,7 +40,9 @@
       2、Dependency update from Senparc.Xncf.AreasBase to 0.13.4-preview6
       [2026-08-13] v1.1.5 Dependency update from Senparc.Ncf.AreaBase to 0.23.3-preview7; [5955]Senparc.Xncf.AreasBase to 0.13.5-preview7
       [2026-08-15] v1.1.6 Dependency update from Senparc.Ncf.AreaBase to 0.23.4-preview8; [5955]Senparc.Xncf.AreasBase to 0.13.6-preview8
-      1、更新模板项目使用的 AreaBase 与 AreasBase 依赖，保持生成项目兼容
+      [2026-08-22] v1.1.7 同步 Template_OrgName.Xncf.Template_XncfName 依赖版本
+      1、递归更新上游项目依赖，保持 Template_OrgName.Xncf.Template_XncfName 与当前版本组合兼容
+      2、更新模板示例使用的 Senparc.Ncf.DatabasePlant 依赖，保持生成项目与基础库兼容
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -54,7 +56,7 @@
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.21.1-preview1" />
+    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.21.8-preview8" />
   </ItemGroup>
   <ItemGroup>
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.22.4-preview1" />

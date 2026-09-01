@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.29.0-preview8</Version>
+    <Version>0.30.0-preview9</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -73,6 +73,9 @@
 				[2026-08-15] v0.29.0-preview8 新增 FunctionRender 的 AI 自动调用控制
 				1、为 FunctionRenderAttribute 增加 AllowAiInvocation 开关，允许模块声明是否自动暴露给 AI 对话工具
 				2、保持原有 FunctionRender 页面和显式 AppService 调用行为不变，区分 AI 自动调用与人工触发路径
+				[2026-08-29] v0.30.0-preview9 新增 FunctionRender 函数名匹配与全局调用控制能力
+				1、新增 MethodName 和函数键匹配逻辑，兼容按方法名解析 FunctionRender
+				2、扩展全局 NeuCharPivot 调用访问策略元数据，保持人工触发与受控调用边界
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

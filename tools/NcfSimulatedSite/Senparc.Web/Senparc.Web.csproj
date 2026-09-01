@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
-		<Version>0.37.0</Version>
+		<Version>0.38.0</Version>
 		<PackageReleaseNotes>
 			[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
 			[2026-07-02] v0.21.5 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -50,6 +50,9 @@
 			[2026-08-22] v0.37.0 集成管理端 Chat 工作流与最新桌面发布信息
 			1、同步模拟站点配置和 Admin Chat 工作流能力，保持任务、模型与管理端交互兼容
 			2、更新桌面发布清单和静态资源版本，确保站点加载当前发布构建
+			[2026-08-29] v0.38.0 增强发布下载页的来源选择与完整性提示
+			1、新增自动、本地和 GitHub 下载源选择，支持用户按场景切换发布来源
+			2、展示发布包 MD5 指纹并补充多语言提示，帮助用户核验下载内容
 		</PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>

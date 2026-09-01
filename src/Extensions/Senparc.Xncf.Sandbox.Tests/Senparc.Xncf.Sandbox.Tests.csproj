@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.3</Version>
+    <Version>0.0.4</Version>
     <PackageReleaseNotes>
       [2026-08-13] v0.0.1 Dependency update from Senparc.Xncf.Sandbox to 0.1.1-preview2
       [2026-08-15] v0.0.2 增加 Sandbox 预览路径回归测试
@@ -11,6 +11,9 @@
       4、Dependency update from Senparc.Xncf.Sandbox to 0.2.0
       [2026-08-22] v0.0.3 补充沙箱运行时与 TTL 策略回归测试
       1、覆盖模板目录、Jupyter 路径、工作区状态、运行时解析和永久保持会话策略
+      [2026-08-29] v0.0.4 Dependency updates from Senparc.Xncf.Sandbox to 0.3.0
+      1、Dependency update from Senparc.Xncf.Sandbox to 0.3.0
+      2、补充工作区根目录、子路径和相邻目录边界的回归测试
     </PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>

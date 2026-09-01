@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.5.4</Version>
+		<Version>0.5.5</Version>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -62,6 +62,8 @@
 			1、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.0
 			[2026-08-22] v0.5.4 同步安装器模块依赖与本地配置
 			1、更新安装器项目依赖并补充当前模拟站点数据库配置文件
+			[2026-08-29] v0.5.5 Dependency updates from Senparc.Areas.Admin to 0.7.0
+			1、Dependency update from Senparc.Areas.Admin to 0.7.0
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

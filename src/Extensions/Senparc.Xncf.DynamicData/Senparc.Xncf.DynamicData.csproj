@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.5</Version>
+    <Version>0.7.6</Version>
     <AssemblyName>Senparc.Xncf.DynamicData</AssemblyName>
     <RootNamespace>Senparc.Xncf.DynamicData</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -58,6 +58,8 @@
       [2026-08-15] v0.7.4-preview8 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.8-preview8
       [2026-08-22] v0.7.5-preview9 同步 Senparc.Xncf.DynamicData 依赖版本
       1、递归更新上游项目依赖，保持 Senparc.Xncf.DynamicData 与当前版本组合兼容
+      [2026-08-29] v0.7.6 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10
+      1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

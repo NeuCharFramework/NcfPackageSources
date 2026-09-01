@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.12.9</Version>
+    <Version>0.12.10</Version>
     <AssemblyName>Senparc.Xncf.OfficeExtension</AssemblyName>
     <RootNamespace>Senparc.Xncf.OfficeExtension</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -33,6 +33,8 @@
 				[2026-08-15] v0.12.8-preview8 Dependency update from Senparc.Ncf.XncfBase to 0.25.1-preview8
 				[2026-08-22] v0.12.9-preview9 同步 Senparc.Xncf.OfficeExtension 依赖版本
 				1、递归更新上游项目依赖，保持 Senparc.Xncf.OfficeExtension 与当前版本组合兼容
+				[2026-08-29] v0.12.10 Dependency updates from Senparc.Ncf.XncfBase to 0.26.1
+				1、Dependency update from Senparc.Ncf.XncfBase to 0.26.1
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

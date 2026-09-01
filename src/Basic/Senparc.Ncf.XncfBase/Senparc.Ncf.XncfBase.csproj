@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.26.0</Version>
+    <Version>0.26.1</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -82,6 +82,8 @@
 			2、启动扫描多库日志改为矩阵表输出，并保留 GetAssembiles 预加载说明
 			[2026-08-22] v0.26.0-preview9 增强 XNCF 基础注册与函数参数处理能力
 			1、完善模块注册生命周期和函数参数解析，保持基础模块与多数据库日志能力兼容
+			[2026-08-29] v0.26.1 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
+			1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

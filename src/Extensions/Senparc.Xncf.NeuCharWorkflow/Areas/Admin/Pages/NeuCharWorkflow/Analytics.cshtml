@@ -1,0 +1,265 @@
+@page
+@model Senparc.Xncf.NeuCharWorkflow.Areas.NeuCharWorkflow.Pages.AnalyticsModel
+@using Microsoft.Extensions.Localization
+@using Senparc.Xncf.NeuCharWorkflow
+@inject IStringLocalizer<NeuCharWorkflowResource> XR
+@{
+    ViewData["Title"] = "Workflow 统计分析";
+    Layout = "_Layout_Vue";
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>@XR["Module.MenuName"]</el-breadcrumb-item>
+    <el-breadcrumb-item><a href="/Admin/NeuCharWorkflow/Tasks">@XR["Area.Tasks"]</a></el-breadcrumb-item>
+    <el-breadcrumb-item>统计分析</el-breadcrumb-item>
+}
+
+@section Style {
+    <link rel="stylesheet" href="~/css/NeuCharWorkflow/common.css" />
+    <link rel="stylesheet" href="~/css/NeuCharWorkflow/Analytics.css" />
+}
+
+<div class="neuchar-page workflow-analytics-page" v-loading="loading">
+    <div class="neuchar-page-header workflow-analytics-header">
+        <div>
+            <h2>Workflow 统计分析</h2>
+            <p>运行健康度、外部资源调用和可回看的执行记录。</p>
+        </div>
+        <div class="workflow-analytics-header-actions">
+            <el-button size="small" icon="el-icon-tickets" @@click="openTasks">任务列表</el-button>
+            <el-button size="small" icon="el-icon-refresh" :loading="loading" @@click="loadData">刷新</el-button>
+        </div>
+    </div>
+
+    <section class="workflow-analytics-filters" aria-label="统计筛选">
+        <el-date-picker v-model="filters.dateRange"
+                        type="daterange"
+                        size="small"
+                        value-format="yyyy-MM-dd"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :clearable="true"
+                        @@change="applyFilters"></el-date-picker>
+        <el-select v-model="filters.workflowId"
+                   size="small"
+                   clearable
+                   filterable
+                   placeholder="全部工作流"
+                   @@change="applyFilters">
+            <el-option v-for="item in workflowOptions"
+                       :key="item.objectId"
+                       :label="item.label"
+                       :value="item.objectId"></el-option>
+        </el-select>
+        <el-select v-model="filters.status"
+                   size="small"
+                   clearable
+                   placeholder="全部状态"
+                   @@change="applyFilters">
+            <el-option label="运行中" value="running"></el-option>
+            <el-option label="成功" value="success"></el-option>
+            <el-option label="失败" value="failed"></el-option>
+        </el-select>
+        <el-select v-model="filters.resourceType"
+                   size="small"
+                   clearable
+                   placeholder="全部资源类型"
+                   @@change="applyResourceType">
+            <el-option v-for="item in resourceTypes"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value"></el-option>
+        </el-select>
+        <el-select v-model="filters.resourceKey"
+                   size="small"
+                   clearable
+                   filterable
+                   placeholder="全部外部资源"
+                   @@change="applyResourceFilter">
+            <el-option v-for="item in resourceOptions"
+                       :key="resourceKey(item)"
+                       :label="item.label"
+                       :value="resourceKey(item)"></el-option>
+        </el-select>
+        <el-input v-model="filters.keyword"
+                  size="small"
+                  clearable
+                  prefix-icon="el-icon-search"
+                  placeholder="搜索工作流、资源或错误"
+                  @@keyup.enter.native="applyFilters"></el-input>
+        <el-button size="small" type="primary" icon="el-icon-search" @@click="applyFilters">查询</el-button>
+        <el-button size="small" icon="el-icon-refresh-left" @@click="resetFilters">重置</el-button>
+    </section>
+
+    <section class="workflow-analytics-summary" aria-label="运行概览">
+        <button type="button"
+                :class="['workflow-analytics-summary-card',{active:!filters.status}]"
+                @@click="selectStatus('')">
+            <strong>{{formatNumber(summary.totalRuns)}}</strong>
+            <span>运行总数</span>
+        </button>
+        <button type="button"
+                :class="['workflow-analytics-summary-card is-running',{active:filters.status==='running'}]"
+                @@click="selectStatus('running')">
+            <strong>{{formatNumber(summary.runningCount)}}</strong>
+            <span>运行中</span>
+        </button>
+        <button type="button"
+                :class="['workflow-analytics-summary-card is-success',{active:filters.status==='success'}]"
+                @@click="selectStatus('success')">
+            <strong>{{formatNumber(summary.successCount)}}</strong>
+            <span>成功</span>
+        </button>
+        <button type="button"
+                :class="['workflow-analytics-summary-card is-failed',{active:filters.status==='failed'}]"
+                @@click="selectStatus('failed')">
+            <strong>{{formatNumber(summary.failedCount)}}</strong>
+            <span>失败</span>
+        </button>
+        <div class="workflow-analytics-summary-card">
+            <strong>{{formatPercent(summary.successRate)}}</strong>
+            <span>成功率</span>
+        </div>
+        <div class="workflow-analytics-summary-card">
+            <strong>{{formatDuration(summary.averageDurationSeconds)}}</strong>
+            <span>平均耗时</span>
+        </div>
+    </section>
+
+    <div class="workflow-analytics-grid">
+        <section class="workflow-analytics-panel workflow-analytics-trend-panel">
+            <div class="workflow-analytics-panel-header">
+                <div>
+                    <h3>运行趋势</h3>
+                    <small>按开始日期统计</small>
+                </div>
+                <el-tag size="mini" type="info" effect="plain">{{trend.length}} 天</el-tag>
+            </div>
+            <div v-if="trend.length" class="workflow-analytics-trend-list">
+                <div v-for="item in trend" :key="item.date" class="workflow-analytics-trend-row">
+                    <span class="workflow-analytics-trend-date">{{item.date}}</span>
+                    <div class="workflow-analytics-trend-bars">
+                        <span class="workflow-analytics-bar is-success"
+                              :style="{width: trendWidth(item.success)}"></span>
+                        <span class="workflow-analytics-bar is-failed"
+                              :style="{width: trendWidth(item.failed)}"></span>
+                        <span class="workflow-analytics-bar is-running"
+                              :style="{width: trendWidth(item.running)}"></span>
+                    </div>
+                    <strong>{{item.total}}</strong>
+                </div>
+            </div>
+            <div v-else class="workflow-analytics-empty">当前筛选范围没有运行记录。</div>
+        </section>
+
+        <section class="workflow-analytics-panel">
+            <div class="workflow-analytics-panel-header">
+                <div>
+                    <h3>外部资源调用</h3>
+                    <small>{{formatNumber(summary.resourceCallCount)}} 次调用 · {{formatNumber(summary.resourceCount)}} 个资源</small>
+                </div>
+            </div>
+            <el-table v-if="resources.length"
+                      :data="resources"
+                      size="small"
+                      class="workflow-analytics-table"
+                      @@row-click="selectResourceRow">
+                <el-table-column label="资源" min-width="220">
+                    <template slot-scope="scope">
+                        <div class="workflow-analytics-resource">
+                            <el-tag size="mini" effect="plain">{{scope.row.typeLabel}}</el-tag>
+                            <strong>{{scope.row.name}}</strong>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="调用" width="72" prop="callCount"></el-table-column>
+                <el-table-column label="成功率" width="92">
+                    <template slot-scope="scope">{{resourceSuccessRate(scope.row)}}</template>
+                </el-table-column>
+                <el-table-column label="涉及工作流" width="96" prop="workflowCount"></el-table-column>
+            </el-table>
+            <div v-else class="workflow-analytics-empty">当前筛选范围没有资源调用记录。</div>
+        </section>
+    </div>
+
+    <section class="workflow-analytics-panel">
+        <div class="workflow-analytics-panel-header">
+            <div>
+                <h3>工作流健康度</h3>
+                <small>点击工作流名称可进入对应任务范围</small>
+            </div>
+        </div>
+        <el-table v-if="workflows.length" :data="workflows" size="small" class="workflow-analytics-table">
+            <el-table-column label="工作流" min-width="220">
+                <template slot-scope="scope">
+                    <button type="button" class="workflow-analytics-link" @@click="openWorkflow(scope.row.workflowId)">
+                        {{scope.row.workflowName}}
+                    </button>
+                </template>
+            </el-table-column>
+            <el-table-column label="运行" width="78" prop="runCount"></el-table-column>
+            <el-table-column label="成功" width="78" prop="successCount"></el-table-column>
+            <el-table-column label="失败" width="78" prop="failedCount"></el-table-column>
+            <el-table-column label="成功率" width="96">
+                <template slot-scope="scope">{{formatPercent(scope.row.successRate)}}</template>
+            </el-table-column>
+            <el-table-column label="平均耗时" width="116">
+                <template slot-scope="scope">{{formatDuration(scope.row.averageDurationSeconds)}}</template>
+            </el-table-column>
+            <el-table-column label="最近运行" width="172">
+                <template slot-scope="scope">{{formatDate(scope.row.lastRunAt)}}</template>
+            </el-table-column>
+        </el-table>
+        <div v-else class="workflow-analytics-empty">当前筛选范围没有工作流运行记录。</div>
+    </section>
+
+    <section class="workflow-analytics-panel">
+        <div class="workflow-analytics-panel-header">
+            <div>
+                <h3>运行明细</h3>
+                <small>点击记录进入实时运行或只读回看</small>
+            </div>
+            <div class="workflow-analytics-pagination">
+                <el-button size="mini" icon="el-icon-arrow-left" :disabled="page<=1 || loading" @@click="changePage(page-1)">上一页</el-button>
+                <span>第 {{page}} 页</span>
+                <el-button size="mini" icon="el-icon-arrow-right" :disabled="!hasMore || loading" @@click="changePage(page+1)">下一页</el-button>
+            </div>
+        </div>
+        <el-table v-if="runs.length" :data="runs" size="small" class="workflow-analytics-table" @@row-click="openRun">
+            <el-table-column label="工作流" min-width="190">
+                <template slot-scope="scope">
+                    <strong>{{scope.row.workflowName}}</strong>
+                    <small class="workflow-analytics-subline">#{{scope.row.workflowId}} · {{sourceText(scope.row.source)}}</small>
+                </template>
+            </el-table-column>
+            <el-table-column label="状态" width="90">
+                <template slot-scope="scope">
+                    <el-tag size="mini" effect="dark" :type="statusType(scope.row.status)">{{statusText(scope.row.status)}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="开始时间" width="172">
+                <template slot-scope="scope">{{formatDate(scope.row.startedAt)}}</template>
+            </el-table-column>
+            <el-table-column label="耗时" width="100">
+                <template slot-scope="scope">{{formatDuration(scope.row.durationSeconds)}}</template>
+            </el-table-column>
+            <el-table-column label="资源" min-width="250">
+                <template slot-scope="scope">
+                    <span class="workflow-analytics-resource-list">
+                        {{resourceNames(scope.row.resources)}}
+                    </span>
+                </template>
+            </el-table-column>
+            <el-table-column label="结果" min-width="250">
+                <template slot-scope="scope">{{scope.row.error || scope.row.summary || '—'}}</template>
+            </el-table-column>
+        </el-table>
+        <div v-else class="workflow-analytics-empty">当前筛选范围没有运行明细。</div>
+    </section>
+</div>
+
+@section scripts {
+    <script src="~/js/NeuCharWorkflow/common.js" asp-append-version="true"></script>
+    <script src="~/js/NeuCharWorkflow/Analytics.js" asp-append-version="true"></script>
+}

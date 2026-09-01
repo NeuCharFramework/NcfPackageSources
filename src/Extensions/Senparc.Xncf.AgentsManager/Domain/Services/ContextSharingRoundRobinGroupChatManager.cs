@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
+    修改标识：Senparc - 20260829
+    修改描述：v0.17.0 增强 Agent 请求诊断、ChatGroup 状态处理与工作流对象支持
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -43,18 +46,19 @@ internal sealed class ContextSharingRoundRobinGroupChatManager : RoundRobinGroup
         _contextSharingMode = contextSharingMode;
     }
 
-    protected override ValueTask<IEnumerable<ChatMessage>> UpdateHistoryAsync(
+    protected override async ValueTask<IEnumerable<ChatMessage>> UpdateHistoryAsync(
         IReadOnlyList<ChatMessage> history,
         CancellationToken cancellationToken = default)
     {
         if (_contextSharingMode == ChatGroupContextSharingMode.LegacyFullHistory)
         {
-            return base.UpdateHistoryAsync(history, cancellationToken);
+            var fullHistory = await base.UpdateHistoryAsync(history, cancellationToken).ConfigureAwait(false);
+            return RemoveApprovalProtocolContent(fullHistory);
         }
 
         if (history == null || history.Count == 0)
         {
-            return ValueTask.FromResult<IEnumerable<ChatMessage>>(Array.Empty<ChatMessage>());
+            return Array.Empty<ChatMessage>();
         }
 
         if (_contextSharingMode == ChatGroupContextSharingMode.InstructionOnly)
@@ -63,20 +67,54 @@ internal sealed class ContextSharingRoundRobinGroupChatManager : RoundRobinGroup
             var instruction = history.LastOrDefault(z => z.Role == ChatRole.User);
             if (instruction != null)
             {
-                return ValueTask.FromResult<IEnumerable<ChatMessage>>(new[] { CreateTextOnlyMessage(instruction, MaxSharedConclusionLength) });
+                return new[] { CreateTextOnlyMessage(instruction, MaxSharedConclusionLength) };
             }
 
-            return ValueTask.FromResult<IEnumerable<ChatMessage>>(new[]
+            return new[]
             {
                 new ChatMessage(ChatRole.User,
                     "协作已进入下一轮。请只依据初始任务和你的职责继续工作，并输出不含推理过程的简短共享结论。")
-            });
+            };
         }
 
         // InstructionAndKeyReplies：默认远程模式。只投递当前轮的纯文本、截断后的共享结论；
         // 丢弃 RawRepresentation、工具调用、usage、结构化内容和此前历史。
-        return ValueTask.FromResult<IEnumerable<ChatMessage>>(
-            history.Select(z => CreateTextOnlyMessage(z, MaxSharedConclusionLength)).ToList());
+        return history.Select(z => CreateTextOnlyMessage(z, MaxSharedConclusionLength)).ToList();
+    }
+
+    private static IEnumerable<ChatMessage> RemoveApprovalProtocolContent(
+        IEnumerable<ChatMessage> history)
+    {
+        foreach (var message in history ?? Array.Empty<ChatMessage>())
+        {
+            var contents = message.Contents?
+                .Where(content =>
+                    content is not ToolApprovalRequestContent
+                    && content is not ToolApprovalResponseContent)
+                .ToList()
+                ?? new List<AIContent>();
+
+            if (contents.Count == 0)
+            {
+                continue;
+            }
+
+            if (message.Contents != null && contents.Count == message.Contents.Count)
+            {
+                yield return message;
+                continue;
+            }
+
+            yield return new ChatMessage(message.Role, contents)
+            {
+                AuthorName = message.AuthorName,
+                MessageId = message.MessageId,
+                CreatedAt = message.CreatedAt,
+                AdditionalProperties = message.AdditionalProperties == null
+                    ? null
+                    : new AdditionalPropertiesDictionary(message.AdditionalProperties)
+            };
+        }
     }
 
     private static ChatMessage CreateTextOnlyMessage(ChatMessage source, int maxLength)

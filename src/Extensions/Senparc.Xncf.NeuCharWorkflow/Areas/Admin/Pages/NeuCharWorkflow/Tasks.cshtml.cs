@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
 
+    修改标识：Senparc - 20260829
+    修改描述：v0.3.0 新增工作流分析查询与管理端可视化
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -38,12 +41,16 @@ public class TasksModel(
     public async Task<IActionResult> OnGetListAsync(
         int? beforeExecutionLogId = null,
         int? workflowId = null,
-        string? status = null) =>
+        string? status = null,
+        string? from = null,
+        string? to = null) =>
         Ok(await workflowAppService.GetTaskListAsync(
             CurrentAdminUserId,
             beforeExecutionLogId,
             workflowId,
             status,
+            from,
+            to,
             HttpContext.RequestAborted).ConfigureAwait(false));
 
     public async Task<IActionResult> OnGetCleanupPreviewAsync() =>
