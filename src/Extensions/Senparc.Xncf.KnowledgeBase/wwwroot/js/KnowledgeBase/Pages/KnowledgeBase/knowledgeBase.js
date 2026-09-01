@@ -197,7 +197,6 @@ var app = new Vue({
 
         //TODO:初始化设置选中的字段
         that.checkedColumns = that.colData.filter(item => item.istrue).map(item => item.title);
-        console.log(`that.checkedColumns --- ${JSON.stringify(that.checkedColumns)}`)
     },
     watch:
     {
@@ -213,7 +212,6 @@ var app = new Vue({
         },
         'checkedColumns': function (val) {
             //debugger
-            console.log(val);
             let arr = this.checkBoxGroup.filter(i => !val.includes(i));
             this.colData.filter(i => {
                 if (arr.indexOf(i.title) != -1) {
@@ -265,10 +263,8 @@ var app = new Vue({
             })
         },
         handleChange(value) {
-            console.log(value);
         },
         handleRemove(file, fileList) {
-            log(file, fileList, 2);
         },
         handlePictureCardPreview(file) {
             let that = this
@@ -322,7 +318,7 @@ var app = new Vue({
                 });
                 that.$notify({ title: '成功', message: '资料已上传并勾选，请点击“确认”保存关联', type: 'success' });
             } else {
-                that.$notify.error({ title: '失败', message: (res && res.errorMessage) || '上传失败，请重试' });
+                that.$notify.error({ title: '失败', message: '上传失败，请重试' });
             }
             that.$nextTick(() => {
                 if (that.$refs.configUploadRef) that.$refs.configUploadRef.clearFiles();
@@ -342,9 +338,8 @@ var app = new Vue({
                 page: that.page.page,
                 size: that.page.modelCount,
             }
-            await axios.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync', param)
+            await axios.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetSelectionListAsync', param)
                 .then(res => {
-                    console.log(res)
                     that.embeddingModelData = res.data.data.data;
                 })
 
@@ -355,9 +350,8 @@ var app = new Vue({
                 page: that.page.page,
                 size: that.page.modelCount,
             }
-            await axios.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetPagedListAsync', param)
+            await axios.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetSelectionListAsync', param)
                 .then(res => {
-                    console.log(res)
                     that.vectorDBData = res.data.data.data;
                 })
         },
@@ -367,9 +361,8 @@ var app = new Vue({
                 page: that.page.page,
                 size: that.page.modelCount,
             }
-            await axios.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync', param)
+            await axios.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetSelectionListAsync', param)
                 .then(res => {
-                    console.log(res)
                     that.chatModelData = res.data.data.data;
                 })
         },
@@ -400,10 +393,10 @@ var app = new Vue({
                             })
                         }
                     } else {
-                        app.$message({ message: data.errorMessage || data.data || 'Error', type: 'error', duration: 5 * 1000 })
+                        app.$message({ message: '资料列表加载失败，请稍后重试。', type: 'error', duration: 5 * 1000 })
                     }
                 }).catch((err) => {
-                    console.log('err', err)
+                    that.$notify({ title: '错误', message: '资料列表加载失败，请稍后重试。', type: 'error', duration: 3000 })
                 })
         },
         // 配置页文件列表：页码变化（首页/上一页/下一页/尾页/跳转）
@@ -463,7 +456,6 @@ var app = new Vue({
                     that.getFileListData('file')
                 }
             } catch (e) {
-                console.error(e)
                 that.getFileListData('file')
             }
         },
@@ -512,7 +504,6 @@ var app = new Vue({
             //获取分类列表数据
             await service.get('/Admin/KnowledgeBase/Index?handler=KnowledgeBasesCategory').then(res => {
                 that.categoryData = res.data.data.list;
-                log('categoryData', res, 2);
             });
         },
         // 编辑 // 新增知识库管理（文件在配置中上传，此处不再使用文件列表）
@@ -608,11 +599,10 @@ var app = new Vue({
                             that.visible.drawerGroup = false;
                             that.getList();
                         } else {
-                            that.$notify({ title: '失败', message: (res && res.message) || (res && res.data && res.data.errorMessage) || '文件导入失败', type: 'error', duration: 3000 });
+                            that.$notify({ title: '失败', message: '文件导入失败，请稍后重试。', type: 'error', duration: 3000 });
                         }
                     } catch (err) {
-                        console.error('Request Error:', err);
-                        that.$notify({ title: '错误', message: '文件导入失败: ' + (err.message || err), type: 'error', duration: 3000 });
+                        that.$notify({ title: '错误', message: '文件导入失败，请稍后重试。', type: 'error', duration: 3000 });
                     }
                 } else if (contentType === 1) {
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.SetKnowledgeBaseDetail';
@@ -624,12 +614,12 @@ var app = new Vue({
                     try {
                         const res = await service.post(serviceURL, requestData);
                         const success = res && (res.data === true || (res.data && (res.data.success === true || res.data.data === true)));
-                        if (!success) throw new Error((res && res.message) || '内容保存失败');
+                        if (!success) throw new Error('内容保存失败');
                         that.$notify({ title: '成功', message: '知识库文本内容已同步', type: 'success', duration: 2000 });
                         that.visible.drawerGroup = false;
                         that.getList();
                     } catch (err) {
-                        that.$notify({ title: '错误', message: '内容保存失败: ' + (err.message || err), type: 'error', duration: 3000 });
+                        that.$notify({ title: '错误', message: '内容保存失败，请稍后重试。', type: 'error', duration: 3000 });
                     }
                 } else {
                     that.$notify({
@@ -683,10 +673,7 @@ var app = new Vue({
                         content: that.dialog.data.content || '',
                         NcfFileIds: null
                     };
-                    console.log('保存知识库数据：' + JSON.stringify(data));
                     service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
-                      console.log('保存响应：', res);
-                        debugger
                         // res.data 是后端返回的对象：{success: true, data: true, msg: "保存成功"}
                         if (res.data && res.data.data.success && res.data.data.data === true) {
                             that.getList();
@@ -708,10 +695,9 @@ var app = new Vue({
                             that.dialog.updateLoading = false;
                         }
                     }).catch(err => {
-                        console.error('保存错误：', err);
                         that.$notify({
                             title: "错误",
-                            message: "保存出错：" + (err.message || err),
+                            message: "保存出错，请稍后重试。",
                             type: "error",
                             duration: 3000
                         });
@@ -739,11 +725,9 @@ var app = new Vue({
         handleSelectionChange(val) {
             let that = this
             that.multipleSelection = val;
-            console.log(`that.multipleSelection----${JSON.stringify(that.multipleSelection)}`);
             if (that.multipleSelection.length == 1) {
                 //that.newsId = that.multipleSelection[0].id;
                 //that.dialogVote.data.newsId = that.multipleSelection[0].id;
-                //console.log(`that.newsId----${that.newsId}`);
             }
         },
         // 配置抽屉内「文件列表」表格勾选变化：同步到 groupForm.files，保存时用于关联知识库
@@ -760,19 +744,14 @@ var app = new Vue({
         handleDbClick(row, column, event) {
             let that = this
             //that.multipleSelection = val;
-            console.log(`row----${JSON.stringify(row)}`);
-            console.log(`column----${JSON.stringify(column)}`);
-            console.log(`event----${JSON.stringify(event)}`);
             //if (that.multipleSelection.length == 1) {
             //  //that.newsId = that.multipleSelection[0].id;
             //  //that.dialogVote.data.newsId = that.multipleSelection[0].id;
-            //  //console.log(`that.newsId----${that.newsId}`);
             //}
             that.detailDialog.visible = true;
         },
         // 筛选输入变化
         handleFilterChange(value, filterType) {
-            console.log('handleFilterChange', filterType, value)
             if (filterType === 'groupAgent') {
                 this.groupAgentQueryList.filter = value
                 this.getAgentListData('groupAgent', 1)
@@ -808,7 +787,6 @@ var app = new Vue({
             //获取选中数据
             //that.templateSelection = row;
             that.multipleSelection = row;
-            log('multipleSelection', row, 2)
             //that.newsId = that.multipleSelection.id;
             //that.dialogVote.data.newsId = that.multipleSelection.id;
         },
@@ -854,7 +832,6 @@ var app = new Vue({
 
         },
         onSubmit() {
-            console.log('submit!');
         },
         handleEmbeddingBtn(btnType, item) {
             const that = this;
@@ -906,7 +883,7 @@ var app = new Vue({
                             }, 400);
                         } else {
                             that.embeddingProgressStatus = 'exception';
-                            that.embeddingProgressText = (res && res.errorMessage) || (res && res.message) || '向量化失败';
+                            that.embeddingProgressText = '向量化失败，请稍后重试。';
                             setTimeout(function () {
                                 that.visible.embeddingProgress = false;
                                 that.$notify({ title: '向量化失败', message: that.embeddingProgressText, type: 'error', duration: 5000 });
@@ -919,12 +896,12 @@ var app = new Vue({
                         }
                         that.embeddingProgressStatus = 'exception';
                         that.embeddingProgressPercent = Math.max(that.embeddingProgressPercent, 50);
-                        that.embeddingProgressText = '处理出错：' + (err.message || err);
+                        that.embeddingProgressText = '处理出错，请稍后重试。';
                         setTimeout(function () {
                             that.visible.embeddingProgress = false;
                             that.$notify({
                                 title: '错误',
-                                message: err.message || '向量化处理出错，请检查配置',
+                                message: '向量化处理出错，请检查配置后重试',
                                 type: 'error',
                                 duration: 5000
                             });
@@ -1012,7 +989,6 @@ var app = new Vue({
                     //debugger
                     // this.visible[btnType] = false
                 } else {
-                    console.log('error submit!!');
                     return false;
                 }
             });
@@ -1033,7 +1009,6 @@ var app = new Vue({
         // 编辑 Dailog|抽屉 按钮 
         async handleEditDrawerOpenBtn(btnType, item) {
             // drawerAgent dialogGroupAgent drawerGroup drawerGroupStart
-            //console.log('handleEditDrawerOpenBtn', btnType, item);
             let formName = ''
             // 智能体
             if (['dialogGroupAgent'].includes(btnType)) {
@@ -1042,20 +1017,14 @@ var app = new Vue({
 
             if (formName) {
                 if (btnType === 'drawerAgent' && item) {
-                    console.log('item', item);
                     // 创建一个新的对象来存储表单数据
                     const formData = item.agentTemplateDto ? { ...item.agentTemplateDto } : { ...item };
-                    console.log('formData', formData);
 
                     // 确保 functionCallNames 被正确初始化
                     this.functionCallTags = formData.functionCallNames ? formData.functionCallNames.split(',').filter(Boolean) : [];
 
                     // 将数据赋值给表单
                     Object.assign(this[formName], formData);
-
-                    // 打印日志以便调试
-                    console.log('Loaded form data:', formData);
-                    console.log('functionCallTags:', this.functionCallTags);
 
                 } else if (btnType === 'drawerGroup') {
                     if (item.chatGroupDto) {
@@ -1117,7 +1086,6 @@ function getInterfaceQueryStr(queryObj) {
     return Object.entries(queryObj)
         .filter(([key, value]) => {
             // 过滤掉空值
-            // console.log('value', typeof value)
             if (typeof value === 'string') {
                 return value !== ''
             } else if (typeof value === 'object' && value instanceof Array) {

@@ -112,6 +112,28 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
+        /// 分页获取供其他管理页面选择的 AIVector 基本信息。
+        /// 不返回连接字符串、备注等配置敏感字段。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<PagedResponse<AIVectorSelectionResponse>>> GetSelectionListAsync(AIVector_GetListRequest request)
+        {
+            return await this
+                .GetResponseAsync<AppResponseBase<PagedResponse<AIVectorSelectionResponse>>, PagedResponse<AIVectorSelectionResponse>>(
+                    async (response, logger) =>
+                    {
+                        var where = GetListWhere(request);
+
+                        var vectorList = await _aIVectorService.GetObjectListAsync(request.Page, request.Size, where, request.Order);
+                        var total = await _aIVectorService.GetCountAsync(where);
+
+                        return new PagedResponse<AIVectorSelectionResponse>(
+                            total,
+                            vectorList.Select(m => new AIVectorSelectionResponse(m)));
+                    });
+        }
+
+        /// <summary>
         /// 获取AIVector列表
         /// </summary>
         /// <param name="request"></param>

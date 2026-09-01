@@ -79,6 +79,9 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                 await knowledgeBasesService.CreateOrUpdateAsync(dto);
                 bool result = true;
                 return result;
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "知识库保存失败，请稍后重试。";
             });
         }
 
@@ -104,6 +107,9 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                 logger.Append("知识库文本内容已同步。");
 
                 return true;
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "知识库内容保存失败，请稍后重试。";
             });
         }
 
@@ -125,10 +131,13 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                 }
                 catch (Exception ex)
                 {
-                    logger.Append($"向量化处理失败：{ex.Message}");
-                    System.Console.WriteLine(ex.Message);
+                    logger.Append("向量化处理失败。");
+                    System.Console.WriteLine("知识库向量化处理失败。");
                     throw;
                 }
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "向量化失败，请检查配置后重试。";
             });
         }
 
@@ -162,9 +171,12 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                 }
                 catch (Exception ex)
                 {
-                    logger.Append($"导入失败：{ex.Message}");
+                    logger.Append("导入失败。");
                     throw;
                 }
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "文件导入失败，请稍后重试。";
             });
         }
 
@@ -181,6 +193,9 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                     request.fileIds ?? new List<int>());
                 logger.Append($"知识库文件关联已同步：{request.fileIds?.Distinct().Count() ?? 0} 个文件。");
                 return true;
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "知识库资料关联保存失败，请稍后重试。";
             });
         }
     }

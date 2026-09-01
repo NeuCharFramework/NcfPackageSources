@@ -80,8 +80,6 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
                         response.PageIndex,
                         List = response.Select(_ => new {
                             _.Id,
-                            _.LastUpdateTime,
-                            _.Remark,
                             _.EmbeddingModelId,
                             _.VectorDBId,
                             _.ChatModelId,
