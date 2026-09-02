@@ -33,6 +33,14 @@ public class BoardModel(
     private readonly IAdminWorkContextProvider _adminWorkContextProvider = adminWorkContextProvider;
 
     /// <summary>
+    /// 默认 GET：渲染面板管理页（JSON 数据由 handler=Boards/Functions/ByPageKey 提供）
+    /// </summary>
+    public IActionResult OnGet()
+    {
+        return Page();
+    }
+
+    /// <summary>
     /// 面板列表（含反序列化后的块列表）
     /// </summary>
     public async Task<IActionResult> OnGetBoardsAsync()
