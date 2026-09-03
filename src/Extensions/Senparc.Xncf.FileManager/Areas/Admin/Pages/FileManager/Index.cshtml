@@ -570,6 +570,11 @@
             color: #303133;
         }
 
+        .file-manager-file-name-main .file-manager-favorite-name {
+            flex: 1;
+            min-width: 0;
+        }
+
         .file-manager-favorite-path {
             font-size: 12px;
             color: #909399;
@@ -1993,7 +1998,7 @@
                     <el-table-column label="文件名称" min-width="280">
                         <template slot-scope="scope">
                             <div class="file-manager-favorite-name-cell">
-                                <div class="file-manager-file-name-cell">
+                                <div class="file-manager-file-name-main">
                                     <span class="file-manager-favorite-name" :title="scope.row.fileName">{{ scope.row.fileName }}</span>
                                     <i
                                         class="file-manager-favorite-star is-on el-icon-star-on"
