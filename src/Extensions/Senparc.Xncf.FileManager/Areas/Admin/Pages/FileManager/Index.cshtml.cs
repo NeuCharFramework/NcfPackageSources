@@ -82,6 +82,14 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             });
         }
 
+        public async Task<IActionResult> OnGetDashboardStatsAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null)
+        {
+            var stats = await _fileService.GetDashboardStatsAsync(startDate, endDate);
+            return Ok(stats);
+        }
+
         public async Task<IActionResult> OnGetFoldersAsync(
             int? parentId = null,
             NcfFileResourceScope resourceScope = NcfFileResourceScope.KnowledgeBase)
@@ -193,6 +201,52 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
         {
             await _fileService.DeleteFileAsync(id);
             return Ok(true);
+        }
+
+        public record EmptyRecycleRequest(List<int> Ids);
+
+        /// <summary>
+        /// Permanently deletes files currently held in the recycle bin UI.
+        /// Missing ids are treated as already removed.
+        /// </summary>
+        public async Task<IActionResult> OnPostEmptyRecycleAsync([FromBody] EmptyRecycleRequest request)
+        {
+            var ids = (request?.Ids ?? new List<int>())
+                .Where(id => id > 0)
+                .Distinct()
+                .ToList();
+
+            if (ids.Count == 0)
+            {
+                return Ok(new { deletedCount = 0, failedIds = Array.Empty<int>(), message = "回收站为空" });
+            }
+
+            var failedIds = new List<int>();
+            var deletedCount = 0;
+            string lastError = null;
+
+            foreach (var id in ids)
+            {
+                try
+                {
+                    await _fileService.DeleteFileAsync(id);
+                    deletedCount++;
+                }
+                catch (Exception ex)
+                {
+                    failedIds.Add(id);
+                    lastError = ex.Message;
+                }
+            }
+
+            return Ok(new
+            {
+                deletedCount,
+                failedIds,
+                message = failedIds.Count == 0
+                    ? "一键清空成功"
+                    : $"已删除 {deletedCount} 个，失败 {failedIds.Count} 个" + (string.IsNullOrEmpty(lastError) ? "" : $"：{lastError}")
+            });
         }
 
         public async Task<IActionResult> OnGetDownloadAsync(int id)

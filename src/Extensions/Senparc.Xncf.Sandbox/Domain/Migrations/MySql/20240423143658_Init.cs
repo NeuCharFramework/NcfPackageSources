@@ -20,15 +20,15 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.MySql
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
 
-                    SessionId = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false),
+                    SessionId = table.Column<string>(type: "varchar(1000)", maxLength: 64, nullable: false),
                     OwnerUserId = table.Column<int>(type: "int", nullable: false),
-                    TemplateKey = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false),
+                    TemplateKey = table.Column<string>(type: "varchar(1000)", maxLength: 64, nullable: false),
                     RuntimeKind = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    RuntimeHandle = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true),
+                    RuntimeHandle = table.Column<string>(type: "varchar(1000)", maxLength: 128, nullable: true),
                     HostPort = table.Column<int>(type: "int", nullable: true),
-                    AccessUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
-                    AccessToken = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: true),
+                    AccessUrl = table.Column<string>(type: "varchar(1000)", maxLength: 500, nullable: true),
+                    AccessToken = table.Column<string>(type: "varchar(1000)", maxLength: 128, nullable: true),
                     CpuLimit = table.Column<double>(type: "double", nullable: false),
                     MemoryMb = table.Column<int>(type: "int", nullable: false),
                     ExpiresAtUtc = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -38,8 +38,8 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.MySql
                     AddTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     LastUpdateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     TenantId = table.Column<int>(type: "int", nullable: false),
-                    AdminRemark = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true),
-                    Remark = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true)
+                    AdminRemark = table.Column<string>(type: "varchar(1000)", maxLength: 300, nullable: true),
+                    Remark = table.Column<string>(type: "varchar(1000)", maxLength: 300, nullable: true)
                 },
                 constraints: table =>
                 {
