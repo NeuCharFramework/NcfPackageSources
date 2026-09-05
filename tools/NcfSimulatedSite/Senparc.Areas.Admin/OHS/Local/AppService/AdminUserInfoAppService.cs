@@ -145,7 +145,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
 
-        [FunctionRender("设置数字管", "设置数字管显示", typeof(Register))]
+        [FunctionRender("设置数字管", "设置数字管显示", typeof(Register), AllowAiInvocation = false)]
         public async Task<AppResponseBase<AdminUserInfo_SetDigitalPipeResponse>> SetDigitalPipeAsync(AdminUserInfo_SetDigitalPipeRequest request)
         {
             return await this.GetResponseAsync<AppResponseBase<AdminUserInfo_SetDigitalPipeResponse>, AdminUserInfo_SetDigitalPipeResponse>(async (response, logger) =>

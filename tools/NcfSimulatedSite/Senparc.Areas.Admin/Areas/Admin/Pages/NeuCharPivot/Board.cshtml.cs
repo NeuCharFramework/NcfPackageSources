@@ -26,7 +26,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages.NeuCharPivot;
 [AdminAuthorize(BackendJwtAuthorizeAttribute.SuperAdminPolicyName)]
 public class BoardModel(
     IServiceProvider serviceProvider,
-    NeuCharPivotBoardService boardService,
+    NeuCharPivotBoardService boar 【dService,
     IAdminWorkContextProvider adminWorkContextProvider) : BaseAdminPageModel(serviceProvider)
 {
     private readonly NeuCharPivotBoardService _boardService = boardService;
@@ -40,7 +40,7 @@ public class BoardModel(
         return Page();
     }
 
-    /// <summary>
+    0/// <summary>
     /// 面板列表（含反序列化后的块列表）
     /// </summary>
     public async Task<IActionResult> OnGetBoardsAsync()

@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -108,6 +108,9 @@ namespace Senparc.Xncf.AIKernel
             //services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
             //Console.WriteLine("======================services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();================");
             services.AddScoped<AgentAiHandler>();
+
+            // Token 监控服务（进程内单例，用于实时聚合与异步进度）
+            services.AddSingleton<Senparc.Xncf.AIKernel.Domain.Services.AITokenMonitorService>();
 
             services.AddAutoMapper(config =>
             {

@@ -43,7 +43,8 @@ namespace Senparc.Xncf.AIKernel
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
 new AreaPageMenuItem(GetAreaHomeUrl(), AIKernelResource.Get("Area.Home", "首页"),"fa fa-laptop"),
 new AreaPageMenuItem(GetAreaUrl($"/Admin/AIVector/Index"), AIKernelResource.Get("Area.AIKernel.VectorDatabase", "向量数据库"),"fa fa-bookmark-o"),
-new AreaPageMenuItem(GetAreaUrl($"/Admin/Dashboard/Index"), AIKernelResource.Get("Area.AIKernel.Dashboard", "仪表盘"),"fa fa-dashboard")
+new AreaPageMenuItem(GetAreaUrl($"/Admin/Dashboard/Index"), AIKernelResource.Get("Area.AIKernel.Dashboard", "仪表盘"),"fa fa-dashboard"),
+new AreaPageMenuItem(GetAreaUrl($"/Admin/AITokenMonitor/Index"), AIKernelResource.Get("Area.AIKernel.TokenMonitor", "Token 监控"),"fa fa-tachometer-alt")
 //new AreaPageMenuItem(GetAreaUrl($"/Admin/AIKernel/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
 };
 

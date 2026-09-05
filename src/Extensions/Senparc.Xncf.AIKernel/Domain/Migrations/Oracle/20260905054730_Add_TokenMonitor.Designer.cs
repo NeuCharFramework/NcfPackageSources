@@ -2,41 +2,46 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Oracle.EntityFrameworkCore.Metadata;
 using Senparc.Xncf.AIKernel.Models;
 
 #nullable disable
 
-namespace Senparc.Xncf.AIKernel.Domain.Migrations.Dm
+namespace Senparc.Xncf.AIKernel.Domain.Migrations.Oracle
 {
-    [DbContext(typeof(AIKernelSenparcEntities_Dm))]
-    partial class AIKernelSenparcEntities_DmModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AIKernelSenparcEntities_Oracle))]
+    [Migration("20260905054730_Add_TokenMonitor")]
+    partial class Add_TokenMonitor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn)
                 .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Senparc.Xncf.AIKernel.Models.AIModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INT")
-                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("AiPlatform")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("Alias")
                         .IsRequired()
@@ -52,7 +57,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Dm
                         .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<int>("ConfigModelType")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("DeploymentName")
                         .HasMaxLength(150)
@@ -63,16 +68,16 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Dm
                         .HasColumnType("NVARCHAR2(250)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("BIT");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<bool>("IsShared")
-                        .HasColumnType("BIT");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int>("MaxToken")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("ModelId")
                         .IsRequired()
@@ -80,7 +85,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Dm
                         .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("Note")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("OrganizationId")
                         .HasMaxLength(200)
@@ -91,10 +96,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Dm
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<bool>("Show")
-                        .HasColumnType("BIT");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
@@ -105,44 +110,45 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Dm
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INT")
-                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("AiPlatform")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<long>("CachedInputTokens")
-                        .HasColumnType("BIGINT");
+                        .HasColumnType("NUMBER(19)");
 
                     b.Property<int>("ConfigModelType")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("DeploymentName")
                         .HasMaxLength(150)
                         .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<int>("DurationMs")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("ErrorNote")
                         .HasMaxLength(500)
                         .HasColumnType("NVARCHAR2(500)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("BIT");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<long>("InputTokens")
-                        .HasColumnType("BIGINT");
+                        .HasColumnType("NUMBER(19)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("ModelAlias")
                         .HasMaxLength(50)
@@ -153,10 +159,10 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Dm
                         .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<long>("OutputTokens")
-                        .HasColumnType("BIGINT");
+                        .HasColumnType("NUMBER(19)");
 
                     b.Property<long>("ReasoningTokens")
-                        .HasColumnType("BIGINT");
+                        .HasColumnType("NUMBER(19)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
@@ -167,13 +173,13 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Dm
                         .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<long>("TotalTokens")
-                        .HasColumnType("BIGINT");
+                        .HasColumnType("NUMBER(19)");
 
                     b.HasKey("Id");
 
@@ -184,11 +190,12 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Dm
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INT")
-                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
@@ -200,36 +207,36 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Dm
                         .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<string>("ConnectionString")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("BIT");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<bool>("IsShared")
-                        .HasColumnType("BIT");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TIMESTAMP");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(150)
                         .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<string>("Note")
-                        .HasColumnType("NVARCHAR2(32767)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<bool>("Show")
-                        .HasColumnType("BIT");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<int>("VectorDBType")
-                        .HasColumnType("INT");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("VectorId")
                         .IsRequired()

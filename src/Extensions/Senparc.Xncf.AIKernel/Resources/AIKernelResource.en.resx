@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -164,4 +164,85 @@
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Token output speed</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>User satisfaction</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>Total messages</value></data>
+  <data name="Area.AIKernel.TokenMonitor" xml:space="preserve">
+    <value>Token Monitor</value>
+  </data>
+  <data name="TokenMonitor.Title" xml:space="preserve">
+    <value>Token Monitor</value>
+  </data>
+  <data name="TokenMonitor.TotalTokens" xml:space="preserve">
+    <value>Total Tokens</value>
+  </data>
+  <data name="TokenMonitor.TotalCalls" xml:space="preserve">
+    <value>Total Calls</value>
+  </data>
+  <data name="TokenMonitor.SuccessError" xml:space="preserve">
+    <value>Success / Error</value>
+  </data>
+  <data name="TokenMonitor.AverageDuration" xml:space="preserve">
+    <value>Avg Duration</value>
+  </data>
+  <data name="TokenMonitor.InputTokens" xml:space="preserve">
+    <value>Input Tokens</value>
+  </data>
+  <data name="TokenMonitor.OutputTokens" xml:space="preserve">
+    <value>Output Tokens</value>
+  </data>
+  <data name="TokenMonitor.RunMonitor" xml:space="preserve">
+    <value>Run with Monitor</value>
+  </data>
+  <data name="TokenMonitor.Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="TokenMonitor.Prompt" xml:space="preserve">
+    <value>Prompt</value>
+  </data>
+  <data name="TokenMonitor.Run" xml:space="preserve">
+    <value>Run</value>
+  </data>
+  <data name="TokenMonitor.Elapsed" xml:space="preserve">
+    <value>Elapsed</value>
+  </data>
+  <data name="TokenMonitor.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="TokenMonitor.OutputPreview" xml:space="preserve">
+    <value>Output Preview</value>
+  </data>
+  <data name="TokenMonitor.Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="TokenMonitor.Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="TokenMonitor.Failed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="TokenMonitor.Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="TokenMonitor.SelectModel" xml:space="preserve">
+    <value>Please select a model</value>
+  </data>
+  <data name="TokenMonitor.InputPrompt" xml:space="preserve">
+    <value>Please enter a prompt</value>
+  </data>
+  <data name="TokenMonitor.RunDone" xml:space="preserve">
+    <value>Run finished</value>
+  </data>
+  <data name="TokenMonitor.Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="TokenMonitor.Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="TokenMonitor.DailyTitle" xml:space="preserve">
+    <value>Token Usage (Last 7 Days)</value>
+  </data>
+  <data name="TokenMonitor.ModelTitle" xml:space="preserve">
+    <value>Token Usage by Model</value>
+  </data>
+  <data name="TokenMonitor.ConfirmDelete" xml:space="preserve">
+    <value>Delete this token usage record?</value>
+  </data>
 </root>
