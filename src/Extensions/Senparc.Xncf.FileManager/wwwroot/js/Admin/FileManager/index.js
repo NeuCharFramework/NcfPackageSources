@@ -4,6 +4,11 @@
     const maxTotalUploadBytes = 100 * 1024 * 1024;
     const maxFileSizeBytes = 50 * 1024 * 1024;
 
+    function resolveSystemName() {
+        const name = (window.__NCF_SYSTEM_NAME__ || '').toString().trim();
+        return name || 'NCF';
+    }
+
     function unwrap(response) {
         return response && response.data && response.data.data !== undefined ? response.data.data : response.data;
     }
@@ -67,7 +72,7 @@
                 guideDialogVisible: false,
                 treeFilter: '',
                 fileSearchKeyword: '',
-                orgName: '山西米立信息技术有限公司',
+                orgName: resolveSystemName(),
                 rootFolderName: '企业文档',
                 activeNavKey: 'enterprise',
                 dashboard: {
@@ -79,7 +84,7 @@
                     totalSizeBytes: 0,
                     capacityTrend: [],
                     orgUsages: [
-                        { name: '山西米立信息技术有限公司', size: '0B' },
+                        { name: resolveSystemName(), size: '0B' },
                         { name: '企业文档根目录', size: '0B' },
                         { name: '知识库资料', size: '0B' }
                     ],
@@ -363,8 +368,10 @@
                 const pad = function (n) { return String(n).padStart(2, '0'); };
                 this.dashboard.capacityDates = [fmt(start), fmt(end)];
                 this.dashboard.statsCutoff = fmt(end) + ' ' + pad(end.getHours()) + ':' + pad(end.getMinutes()) + ':' + pad(end.getSeconds());
-                if (!this.dashboard.orgUsages.some(function (x) { return x.name === '山西米立信息技术有限公司'; })) {
-                    this.dashboard.orgUsages.unshift({ name: '山西米立信息技术有限公司', size: this.dashboard.enterpriseUsed });
+                const systemName = resolveSystemName();
+                this.orgName = systemName;
+                if (!this.dashboard.orgUsages.some(function (x) { return x.name === systemName; })) {
+                    this.dashboard.orgUsages.unshift({ name: systemName, size: this.dashboard.enterpriseUsed });
                 }
             },
             getOrCreateChart: function (el) {
@@ -416,6 +423,10 @@
                         url += '&startDate=' + encodeURIComponent(dates[0]) + '&endDate=' + encodeURIComponent(dates[1]);
                     }
                     const result = unwrap(await axios.get(url)) || {};
+                    if (result.systemName) {
+                        this.orgName = result.systemName;
+                        window.__NCF_SYSTEM_NAME__ = result.systemName;
+                    }
                     if (result.statsCutoff) this.dashboard.statsCutoff = result.statsCutoff;
                     if (result.enterpriseUsed) this.dashboard.enterpriseUsed = result.enterpriseUsed;
                     if (result.totalCount != null) this.dashboard.totalCount = result.totalCount;
