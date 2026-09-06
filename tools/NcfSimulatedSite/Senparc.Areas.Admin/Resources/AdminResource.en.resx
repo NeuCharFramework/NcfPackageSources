@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -579,7 +579,7 @@
     <value>Exit Config Mode</value>
   </data>
   <data name="Menu.ConfigModeTip" xml:space="preserve">
-    <value>Drag the first-level menus below to reorder the left navigation. Saving will really update the Sort values.</value>
+    <value>All menus/pages are listed below by hierarchy (buttons are not sortable). Drag items within the same level to reorder, or type a number in the Sort box and press Enter to jump to that position. Saving really updates the Sort values and refreshes the left menu.</value>
   </data>
   <data name="Menu.ConfigSave" xml:space="preserve">
     <value>Save Order</value>
@@ -588,6 +588,6 @@
     <value>Menu order has been saved</value>
   </data>
   <data name="Menu.ConfigEmpty" xml:space="preserve">
-    <value>No first-level menus to sort</value>
+    <value>No sortable menus or pages</value>
   </data>
 </root>

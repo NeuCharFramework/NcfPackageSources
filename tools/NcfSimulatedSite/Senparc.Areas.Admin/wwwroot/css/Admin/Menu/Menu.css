@@ -1,4 +1,4 @@
-﻿.menu-icons-grid{
+.menu-icons-grid{
     position:relative;
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
@@ -170,4 +170,80 @@
     font-size: 13px;
     padding: 20px 0;
     text-align: center;
+}
+
+/* ===== 全层级“菜单/页面”排序（配置模式扩展） ===== */
+.menu-config-mode {
+    max-width: 860px;
+}
+
+.menu-config-body {
+    max-height: 62vh;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.menu-config-list {
+    max-width: 100%;
+}
+
+.menu-config-item {
+    cursor: grab;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.menu-config-item:active {
+    cursor: grabbing;
+}
+
+.menu-config-item.is-dragging {
+    opacity: .5;
+    border-style: dashed;
+    border-color: #409eff;
+}
+
+.menu-config-item.is-drag-over {
+    border-color: #409eff;
+    background-color: #ecf5ff;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, .2);
+}
+
+.menu-config-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 排序数字输入框 */
+.menu-config-sort-input {
+    width: 70px;
+    height: 24px;
+    line-height: 24px;
+    margin: 0 8px 0 auto;
+    padding: 0 4px;
+    text-align: center;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    outline: none;
+    font-size: 13px;
+    color: #606266;
+    background: #fff;
+    flex-shrink: 0;
+}
+
+.menu-config-sort-input:focus {
+    border-color: #409eff;
+}
+
+/* 上移/下移按钮列，右侧对齐且不换行 */
+.menu-config-actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.menu-config-actions .el-button {
+    padding: 6px 3px;
 }

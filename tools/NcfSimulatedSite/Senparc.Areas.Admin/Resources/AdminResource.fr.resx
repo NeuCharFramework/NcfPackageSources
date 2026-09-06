@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -577,7 +577,7 @@
     <value>Quitter le mode de configuration</value>
   </data>
   <data name="Menu.ConfigModeTip" xml:space="preserve">
-    <value>Faites glisser les menus de premier niveau ci-dessous pour réorganiser la navigation latérale. La sauvegarde mettra réellement à jour les valeurs de tri.</value>
+    <value>Tous les menus/pages sont listés ci-dessous par hiérarchie (les boutons ne sont pas triables). Glissez les éléments du même niveau pour les réordonner, ou saisissez un nombre dans la colonne Tri puis appuyez sur Entrée pour aller à cette position. L'enregistrement met réellement à jour les valeurs Sort et rafraîchit le menu de gauche.</value>
   </data>
   <data name="Menu.ConfigSave" xml:space="preserve">
     <value>Enregistrer l'ordre</value>
@@ -586,6 +586,6 @@
     <value>L'ordre des menus a été enregistré</value>
   </data>
   <data name="Menu.ConfigEmpty" xml:space="preserve">
-    <value>Aucun menu de premier niveau à trier</value>
+    <value>Aucun menu ou page à trier</value>
   </data>
 </root>

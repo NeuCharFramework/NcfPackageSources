@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -577,7 +577,7 @@
     <value>Выйти из режима настройки</value>
   </data>
   <data name="Menu.ConfigModeTip" xml:space="preserve">
-    <value>Перетащите первичные меню ниже, чтобы изменить порядок левого меню. Сохранение реально обновит значения Sort.</value>
+    <value>Ниже перечислены все меню/страницы по иерархии (кнопки не сортируются). Перетаскивайте элементы одного уровня, чтобы изменить порядок, или введите число в поле «Сортировка» и нажмите Enter, чтобы переместить на эту позицию. После сохранения реально обновляются значения Sort и обновляется левое меню.</value>
   </data>
   <data name="Menu.ConfigSave" xml:space="preserve">
     <value>Сохранить порядок</value>
@@ -586,6 +586,6 @@
     <value>Порядок меню сохранён</value>
   </data>
   <data name="Menu.ConfigEmpty" xml:space="preserve">
-    <value>Нет первичных меню для сортировки</value>
+    <value>Нет меню или страниц для сортировки</value>
   </data>
 </root>

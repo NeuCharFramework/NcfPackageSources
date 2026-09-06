@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -577,7 +577,7 @@
     <value>設定モードを終了</value>
   </data>
   <data name="Menu.ConfigModeTip" xml:space="preserve">
-    <value>下の一次メニューをドラッグして左ナビゲーションの順序を調整します。保存すると Sort 値が実際に更新されます。</value>
+    <value>下にすべてのメニュー/ページを階層で表示します（ボタンは並べ替え対象外）。同じ階層内はドラッグで並べ替え、または右の並べ替え欄に数値を入力して Enter でその位置へ移動できます。保存すると Sort 値が実際に更新され、左メニューが更新されます。</value>
   </data>
   <data name="Menu.ConfigSave" xml:space="preserve">
     <value>順序を保存</value>
@@ -586,6 +586,6 @@
     <value>メニューの順序を保存しました</value>
   </data>
   <data name="Menu.ConfigEmpty" xml:space="preserve">
-    <value>順序付け可能な一次メニューがありません</value>
+    <value>並べ替え可能なメニューやページがありません</value>
   </data>
 </root>

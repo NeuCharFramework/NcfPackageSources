@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,9 +49,9 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         }
 
         /// <summary>
-        /// 配置模式：保存一级菜单拖拽排序结果，真实更新 Sort 数值
+        /// 配置模式：保存整棵树“菜单/页面”的拖拽/数字排序结果，按父级分组真实更新 Sort 数值
         /// </summary>
-        /// <param name="request">按从上到下顺序排列的一级菜单 Id 列表</param>
+        /// <param name="request">按从上到下（深度优先）顺序排列的“菜单/页面”Id 列表</param>
         /// <returns></returns>
         public async Task<IActionResult> OnPostReorderAsync([FromBody] MenuReorderRequest request)
         {
@@ -65,27 +65,57 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 .Distinct()
                 .ToList();
 
-            // 仅处理一级菜单（ParentId 为空）
-            var firstLevelMenus = await _sysMenuService.GetFullListAsync(
-                _ => validIds.Contains(_.Id) && string.IsNullOrEmpty(_.ParentId));
-
-            if (firstLevelMenus.Count == 0)
+            if (validIds.Count == 0)
             {
-                return Ok(false, "未找到可排序的一级菜单");
+                return Ok(false, "排序数据不能为空");
             }
 
-            int total = validIds.Count;
-            foreach (var menu in firstLevelMenus)
+            var menus = (await _sysMenuService.GetFullListAsync(_ => validIds.Contains(_.Id))).ToList();
+            if (menus.Count == 0)
             {
-                int position = validIds.IndexOf(menu.Id);
-                // 左侧菜单按 Sort 降序渲染：位置越靠前（index 越小），Sort 数值越大
-                int newSort = (total - position) * 10;
-                if (menu.Sort != newSort)
+                return Ok(false, "未找到可排序的菜单");
+            }
+
+            // 仅处理“菜单/页面”类型（前端只提交这两类，这里做兜底），按钮类型不参与排序
+            var sortableMenus = menus
+                .Where(_ => _.MenuType == MenuType.菜单 || _.MenuType == MenuType.页面)
+                .ToList();
+
+            // 按父级分组：同一父级下的子节点按提交顺序（从上到下）分配 Sort 数值
+            var parentGroups = new Dictionary<string, List<(int Index, SysMenu Menu)>>();
+            foreach (var menu in sortableMenus)
+            {
+                var parentKey = menu.ParentId ?? string.Empty;
+                if (!parentGroups.TryGetValue(parentKey, out var group))
                 {
-                    menu.Sort = newSort;
-                    menu.LastUpdateTime = DateTime.Now;
-                    await _sysMenuService.SaveObjectAsync(menu);
+                    group = new List<(int, SysMenu)>();
+                    parentGroups[parentKey] = group;
                 }
+                group.Add((validIds.IndexOf(menu.Id), menu));
+            }
+
+            var toUpdate = new List<SysMenu>();
+            foreach (var parentGroup in parentGroups)
+            {
+                var ordered = parentGroup.Value.OrderBy(z => z.Index).ToList();
+                int total = ordered.Count;
+                for (int i = 0; i < ordered.Count; i++)
+                {
+                    var menu = ordered[i].Menu;
+                    // 左侧菜单按 Sort 降序渲染：位置越靠前（index 越小），Sort 数值越大
+                    int newSort = (total - i) * 10;
+                    if (menu.Sort != newSort)
+                    {
+                        menu.Sort = newSort;
+                        menu.LastUpdateTime = DateTime.Now;
+                        toUpdate.Add(menu);
+                    }
+                }
+            }
+
+            if (toUpdate.Count > 0)
+            {
+                await _sysMenuService.SaveObjectListAsync(toUpdate);
             }
 
             // 刷新菜单缓存，使左侧菜单顺序立即生效
@@ -96,7 +126,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
     }
 
     /// <summary>
-    /// 一级菜单排序请求
+    /// 菜单排序请求（按深度优先顺序提交全部“菜单/页面”节点 Id）
     /// </summary>
     public class MenuReorderRequest
     {

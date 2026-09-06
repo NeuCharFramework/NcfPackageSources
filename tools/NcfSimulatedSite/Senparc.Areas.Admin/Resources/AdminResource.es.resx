@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -577,7 +577,7 @@
     <value>Salir del modo de configuración</value>
   </data>
   <data name="Menu.ConfigModeTip" xml:space="preserve">
-    <value>Arrastre los menús de primer nivel a continuación para reordenar la navegación lateral. Al guardar se actualizarán realmente los valores de orden.</value>
+    <value>Todos los menús/páginas aparecen abajo por jerarquía (los botones no se ordenan). Arrastre elementos del mismo nivel para reordenarlos, o escriba un número en la casilla Orden y pulse Enter para saltar a esa posición. Al guardar se actualizan de verdad los valores Sort y se refresca el menú izquierdo.</value>
   </data>
   <data name="Menu.ConfigSave" xml:space="preserve">
     <value>Guardar orden</value>
@@ -586,6 +586,6 @@
     <value>El orden de los menús se ha guardado</value>
   </data>
   <data name="Menu.ConfigEmpty" xml:space="preserve">
-    <value>No hay menús de primer nivel para ordenar</value>
+    <value>No hay menús o páginas para ordenar</value>
   </data>
 </root>

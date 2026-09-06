@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -731,7 +731,7 @@
     <value>退出配置模式</value>
   </data>
   <data name="Menu.ConfigModeTip" xml:space="preserve">
-    <value>拖拽下方一级菜单调整左侧菜单顺序，保存后将真实更新排序值（Sort 数值）</value>
+    <value>下方按层级列出所有“菜单/页面”（按钮不参与排序）。同级之间可直接拖拽调整顺序，也可在右侧“排序”框输入数字后回车跳转到对应位置；保存后将真实更新 Sort 数值并刷新左侧菜单</value>
   </data>
   <data name="Menu.ConfigSave" xml:space="preserve">
     <value>保存排序</value>
@@ -740,6 +740,6 @@
     <value>菜单排序已保存</value>
   </data>
   <data name="Menu.ConfigEmpty" xml:space="preserve">
-    <value>暂无可排序的一级菜单</value>
+    <value>暂无可排序的菜单或页面</value>
   </data>
 </root>
