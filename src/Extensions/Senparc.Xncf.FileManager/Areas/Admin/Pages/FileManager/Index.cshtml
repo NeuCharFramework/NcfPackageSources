@@ -1366,7 +1366,7 @@
             <div class="file-manager-tree-wrap">
                 <aside class="file-manager-tree-panel">
                     <div class="file-manager-org-header">
-                        <span class="file-manager-org-name">山西米立信息技术有限公司</span>
+                        <span class="file-manager-org-name">{{ orgName }}</span>
                         <i class="el-icon-s-operation file-manager-org-toggle"></i>
                     </div>
                     <div class="file-manager-tree-search">
@@ -3052,6 +3052,9 @@
             });
         })();
     </script>
+    <script>
+        window.__NCF_SYSTEM_NAME__ = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.FullSystemConfig?.SystemName ?? "NCF"));
+    </script>
     <script src="~/js/Admin/FileManager/index.js" asp-append-version="true"></script>
     <script>
         // 嵌入资源未重编时，仍保证「数据面板」可切换并渲染图表
@@ -3081,7 +3084,7 @@
                         totalSizeBytes: 0,
                         capacityTrend: [],
                         orgUsages: [
-                            { name: '山西米立信息技术有限公司', size: '0B' },
+                            { name: (window.__NCF_SYSTEM_NAME__ || 'NCF'), size: '0B' },
                             { name: '企业文档根目录', size: '0B' },
                             { name: '知识库资料', size: '0B' }
                         ],
@@ -4103,6 +4106,10 @@
                         var response = await axios.get(url);
                         var result = response && response.data && response.data.data !== undefined ? response.data.data : (response && response.data);
                         result = result || {};
+                        if (result.systemName) {
+                            this.orgName = result.systemName;
+                            window.__NCF_SYSTEM_NAME__ = result.systemName;
+                        }
                         if (result.statsCutoff) this.dashboard.statsCutoff = result.statsCutoff;
                         if (result.enterpriseUsed) this.dashboard.enterpriseUsed = result.enterpriseUsed;
                         if (result.totalCount != null) this.dashboard.totalCount = result.totalCount;

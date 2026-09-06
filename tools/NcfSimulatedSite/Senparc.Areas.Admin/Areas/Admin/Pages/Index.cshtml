@@ -1043,7 +1043,7 @@
 <div id="home-header">
     <el-container>
         <el-header class="module-header">
-            <span class="start-title"><span class="module-header-v">@AR["Admin.Home.Header"]</span></span>
+            <span class="start-title"><span class="module-header-v">@(Model.FullSystemConfig?.SystemName ?? AR["Admin.Home.Header"])</span></span>
         </el-header>
         <el-main>
             <el-row :gutter="20">

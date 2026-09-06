@@ -15,6 +15,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Repository;
@@ -184,6 +185,7 @@ public class NcfFileService : ServiceBase<NcfFile>
 
         var totalBytes = files.Sum(f => f.FileSize);
         var totalCount = files.Count;
+        var systemName = ResolveSystemName();
 
         string FormatSize(long bytes)
         {
@@ -196,13 +198,14 @@ public class NcfFileService : ServiceBase<NcfFile>
         return new
         {
             statsCutoff = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+            systemName,
             totalCount,
             totalSizeBytes = totalBytes,
             totalSizeLabel = FormatSize(totalBytes),
             enterpriseUsed = FormatSize(totalBytes),
             orgUsages = new[]
             {
-                new { name = "山西米立信息技术有限公司", size = FormatSize(totalBytes) },
+                new { name = systemName, size = FormatSize(totalBytes) },
                 new { name = "企业文档根目录", size = FormatSize(0) },
                 new { name = "知识库资料", size = FormatSize(totalBytes) }
             },
@@ -212,6 +215,28 @@ public class NcfFileService : ServiceBase<NcfFile>
             countSlices,
             capacityTrend = trend
         };
+    }
+
+    /// <summary>
+    /// Reads the configured site name from SystemConfig (via FullSystemConfigCache).
+    /// </summary>
+    private string ResolveSystemName()
+    {
+        try
+        {
+            var cache = _serviceProvider.GetService<FullSystemConfigCache>();
+            var systemName = cache?.Data?.SystemName;
+            if (!string.IsNullOrWhiteSpace(systemName))
+            {
+                return systemName.Trim();
+            }
+        }
+        catch (Exception ex)
+        {
+            SenparcTrace.BaseExceptionLog(ex);
+        }
+
+        return "NCF";
     }
 
     /// <summary>
