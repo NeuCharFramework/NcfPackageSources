@@ -49,6 +49,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Agents.AI;
 using Microsoft.AspNetCore.Routing.Constraints;
@@ -132,6 +133,211 @@ namespace Senparc.Areas.Admin.Domain.Services
 
 
             var functionInvocationEnabled = generationOptions?.AllowFunctionInvocation != false;
+            var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, functionInvocationEnabled);
+            var aiFunctions = build.Functions;
+            var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
+            var importedFunctionCount = build.ImportedFunctionCount;
+            var importedWorkflowCount = build.ImportedWorkflowCount;
+            var importedPluginNames = build.PluginNames;
+            var importedFunctionSignatures = build.Signatures;
+            var loadedFunctionDebugLines = build.DebugLines;
+
+
+#pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+            var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
+            {
+                ChatOptions = new ChatOptions()
+                {
+                    Instructions = generationOptions?.SystemInstructions ?? BuildSystemMessage(modules),
+                    MaxOutputTokens = Math.Clamp(generationOptions?.MaxOutputTokens ?? 2000, 256, 8000),
+                    TopP = 0.9f,
+                    Temperature = Math.Clamp(generationOptions?.Temperature ?? 0.6f, 0f, 1.5f),
+                    AllowMultipleToolCalls = aiFunctions.Count > 0,
+                    Tools = aiFunctions.Count > 0 ? aiFunctions.Cast<AITool>().ToList() : null
+                },
+                ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
+                {
+                    ChatReducer = new MessageCountingChatReducer(20)
+                })
+            }
+                ).BuildKernelWithAgentSessionAsync();
+#pragma warning restore MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+
+
+            if (importedFunctionCount == 0)
+            {
+                _logger.LogWarning(
+                    "AdminChat 未注入任何 FunctionRender 函数：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, SelectedWorkflowCount={WorkflowCount}",
+                    sessionId,
+                    userId,
+                    moduleUids.Count,
+                    string.Join(",", moduleUids),
+                    importedWorkflowCount);
+            }
+            else
+            {
+                if (showLoadedFunctionsInConsole)
+                {
+                    WriteLoadedFunctionsToConsole(sessionId, userId, loadedFunctionDebugLines);
+                }
+            }
+
+            _logger.LogInformation(
+                "AdminChat FunctionCalling 插件加载完成：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, Plugins={Plugins}, Functions={Functions}, Workflows={Workflows}, FunctionList={FunctionList}",
+                sessionId,
+                userId,
+                moduleUids.Count,
+                string.Join(",", moduleUids),
+                string.Join(",", importedPluginNames),
+                importedFunctionCount,
+                importedWorkflowCount,
+                string.Join(" | ", importedFunctionSignatures));
+
+            var prompt = BuildUserPrompt(messages, userMessage);
+
+            // 使用 FunctionChoiceBehavior.Auto() 让 AI 根据需要自动调用 ModuleAssistantPlugin 函数
+            //var executionSettings = new PromptExecutionSettings
+            //{
+            //    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+            //};
+
+            // TODO: 测试 MAF 中是否自动开启工具调用
+            // 当调用方提供回调时，使用 AgentKernel 已有的流式回调；没有回调时保留原有整包路径。
+            var streamedOutput = new StringBuilder();
+            var hasStreamedChunk = false;
+            var skResult = onChunk == null
+                ? await iWantToRun.RunChatAsync(prompt)
+                : await ExecuteRunnerWithSessionRetryAsync(
+                    iWantToRun,
+                    prompt,
+                    update =>
+                    {
+                        var updateText = update?.Text;
+                        if (string.IsNullOrEmpty(updateText))
+                        {
+                            return;
+                        }
+
+                        streamedOutput.Append(updateText);
+                        hasStreamedChunk = true;
+                        onChunk(updateText);
+                    });
+
+            var result = string.IsNullOrWhiteSpace(skResult?.OutputString)
+                ? streamedOutput.ToString().Trim()
+                : skResult.OutputString.Trim();
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                _logger.LogWarning("AI 返回空内容：SessionId={SessionId}, UserId={UserId}", sessionId, userId);
+                result = "抱歉，我暂时没有生成有效回复，请稍后再试。";
+            }
+
+            // 某些模型/网关不提供增量内容，但仍返回最终文本。为流式客户端补发一个完整片段，
+            // 这样界面不会一直停留在“正在回复”状态。
+            if (onChunk != null && !hasStreamedChunk)
+            {
+                onChunk(result);
+            }
+
+            return (result, modelIdentifier);
+        }
+
+        /// <summary>
+        /// 以 MAF Harness 模式执行长任务：在同一 Agent/Session 上多步运行（计划 → 调用工具 → 观察 → 继续），
+        /// 受最大步数与超时预算约束，并通过 onStep 回调暴露每一步的执行过程。
+        /// </summary>
+        public async Task<(string response, string modelIdentifier, AdminChatHarnessResult harness)> GenerateHarnessResponseAsync(
+            int sessionId,
+            int userId,
+            string userMessage,
+            int aiModelId = 0,
+            Action<AdminChatHarnessStep> onStep = null,
+            int maxSteps = 0,
+            TimeSpan? timeout = null,
+            CancellationToken cancellationToken = default)
+        {
+            var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
+
+            var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
+            var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
+            var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
+
+            var agentAiHandler = new AgentAiHandler(setting);
+            var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, functionInvocationEnabled: true);
+
+            var effectiveMaxSteps = maxSteps > 0 ? maxSteps : 8;
+            var effectiveTimeout = timeout ?? TimeSpan.FromSeconds(120);
+
+#pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+            var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChatHarness-{userId}-{sessionId}", new ChatClientAgentOptions()
+            {
+                ChatOptions = new ChatOptions()
+                {
+                    Instructions = BuildSystemMessage(modules) + AdminChatHarnessExecutor.BuildProtocolInstructions(),
+                    MaxOutputTokens = 4000,
+                    TopP = 0.9f,
+                    Temperature = 0.4f,
+                    AllowMultipleToolCalls = build.Functions.Count > 0,
+                    Tools = build.Functions.Count > 0 ? build.Functions.Cast<AITool>().ToList() : null
+                },
+                ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
+                {
+                    ChatReducer = new MessageCountingChatReducer(20)
+                })
+            }
+                ).BuildKernelWithAgentSessionAsync();
+#pragma warning restore MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+
+            var firstTurnPrompt = BuildUserPrompt(messages, userMessage) + AdminChatHarnessExecutor.BuildStartTail();
+            var continuePrompt = AdminChatHarnessExecutor.BuildContinuePrompt();
+
+            var executor = new AdminChatHarnessExecutor
+            {
+                MaxSteps = effectiveMaxSteps,
+                Timeout = effectiveTimeout,
+                TurnExecutor = async (step, prompt, ct) =>
+                {
+                    var session = iWantToRun.Kernel?.AgentSession;
+                    var text = await ExecuteHarnessTurnAsync(iWantToRun, session, prompt, ct);
+                    return string.IsNullOrWhiteSpace(text) ? string.Empty : text;
+                }
+            };
+
+            var result = await executor.RunAsync(firstTurnPrompt, continuePrompt, onStep, cancellationToken);
+            return (result.FinalText, modelIdentifier, result);
+        }
+
+        private static async Task<string> ExecuteHarnessTurnAsync(
+            IWantToRun runner,
+            AgentSession session,
+            string prompt,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await runner.RunChatResponseAsync(prompt, session, options: null, cancellationToken: cancellationToken).ConfigureAwait(false);
+                return response?.Text?.Trim() ?? string.Empty;
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch when (session != null)
+            {
+                var response = await runner.RunChatResponseAsync(prompt, agentSession: null, options: null, cancellationToken: cancellationToken).ConfigureAwait(false);
+                return response?.Text?.Trim() ?? string.Empty;
+            }
+        }
+
+        private async Task<AdminChatFunctionBuild> BuildAdminChatFunctionsAsync(
+            SenparcAiSetting setting,
+            AgentAiHandler agentAiHandler,
+            int sessionId,
+            int userId,
+            List<AdminChatSessionModule> modules,
+            List<AdminChatSessionWorkflow> workflows,
+            bool functionInvocationEnabled)
+        {
             var modulePlugin = new ModuleAssistantPlugin(modules);
             var aiFunctions = functionInvocationEnabled
                 ? agentAiHandler.GetAITools(modulePlugin)
@@ -269,105 +475,25 @@ namespace Senparc.Areas.Admin.Domain.Services
                     _logger.LogWarning(ex, "导入 AdminChat Workflow Function Calling 工具失败：SessionId={SessionId}", sessionId);
                 }
             }
-
-
-#pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
-            var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
+            return new AdminChatFunctionBuild
             {
-                ChatOptions = new ChatOptions()
-                {
-                    Instructions = generationOptions?.SystemInstructions ?? BuildSystemMessage(modules),
-                    MaxOutputTokens = Math.Clamp(generationOptions?.MaxOutputTokens ?? 2000, 256, 8000),
-                    TopP = 0.9f,
-                    Temperature = Math.Clamp(generationOptions?.Temperature ?? 0.6f, 0f, 1.5f),
-                    AllowMultipleToolCalls = aiFunctions.Count > 0,
-                    Tools = aiFunctions.Count > 0 ? aiFunctions.Cast<AITool>().ToList() : null
-                },
-                ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
-                {
-                    ChatReducer = new MessageCountingChatReducer(20)
-                })
-            }
-                ).BuildKernelWithAgentSessionAsync();
-#pragma warning restore MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+                Functions = aiFunctions,
+                PluginNames = importedPluginNames,
+                ImportedFunctionCount = importedFunctionCount,
+                ImportedWorkflowCount = importedWorkflowCount,
+                Signatures = importedFunctionSignatures,
+                DebugLines = loadedFunctionDebugLines
+            };
+        }
 
-
-            if (importedFunctionCount == 0)
-            {
-                _logger.LogWarning(
-                    "AdminChat 未注入任何 FunctionRender 函数：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, SelectedWorkflowCount={WorkflowCount}",
-                    sessionId,
-                    userId,
-                    moduleUids.Count,
-                    string.Join(",", moduleUids),
-                    importedWorkflowCount);
-            }
-            else
-            {
-                if (showLoadedFunctionsInConsole)
-                {
-                    WriteLoadedFunctionsToConsole(sessionId, userId, loadedFunctionDebugLines);
-                }
-            }
-
-            _logger.LogInformation(
-                "AdminChat FunctionCalling 插件加载完成：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, Plugins={Plugins}, Functions={Functions}, Workflows={Workflows}, FunctionList={FunctionList}",
-                sessionId,
-                userId,
-                moduleUids.Count,
-                string.Join(",", moduleUids),
-                string.Join(",", importedPluginNames),
-                importedFunctionCount,
-                importedWorkflowCount,
-                string.Join(" | ", importedFunctionSignatures));
-
-            var prompt = BuildUserPrompt(messages, userMessage);
-
-            // 使用 FunctionChoiceBehavior.Auto() 让 AI 根据需要自动调用 ModuleAssistantPlugin 函数
-            //var executionSettings = new PromptExecutionSettings
-            //{
-            //    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
-            //};
-
-            // TODO: 测试 MAF 中是否自动开启工具调用
-            // 当调用方提供回调时，使用 AgentKernel 已有的流式回调；没有回调时保留原有整包路径。
-            var streamedOutput = new StringBuilder();
-            var hasStreamedChunk = false;
-            var skResult = onChunk == null
-                ? await iWantToRun.RunChatAsync(prompt)
-                : await ExecuteRunnerWithSessionRetryAsync(
-                    iWantToRun,
-                    prompt,
-                    update =>
-                    {
-                        var updateText = update?.Text;
-                        if (string.IsNullOrEmpty(updateText))
-                        {
-                            return;
-                        }
-
-                        streamedOutput.Append(updateText);
-                        hasStreamedChunk = true;
-                        onChunk(updateText);
-                    });
-
-            var result = string.IsNullOrWhiteSpace(skResult?.OutputString)
-                ? streamedOutput.ToString().Trim()
-                : skResult.OutputString.Trim();
-            if (string.IsNullOrWhiteSpace(result))
-            {
-                _logger.LogWarning("AI 返回空内容：SessionId={SessionId}, UserId={UserId}", sessionId, userId);
-                result = "抱歉，我暂时没有生成有效回复，请稍后再试。";
-            }
-
-            // 某些模型/网关不提供增量内容，但仍返回最终文本。为流式客户端补发一个完整片段，
-            // 这样界面不会一直停留在“正在回复”状态。
-            if (onChunk != null && !hasStreamedChunk)
-            {
-                onChunk(result);
-            }
-
-            return (result, modelIdentifier);
+        private sealed class AdminChatFunctionBuild
+        {
+            public List<AIFunction> Functions { get; set; }
+            public HashSet<string> PluginNames { get; set; }
+            public int ImportedFunctionCount { get; set; }
+            public int ImportedWorkflowCount { get; set; }
+            public List<string> Signatures { get; set; }
+            public List<string> DebugLines { get; set; }
         }
 
         private static async Task<SenparcKernelAiResult<string>> ExecuteRunnerWithSessionRetryAsync(

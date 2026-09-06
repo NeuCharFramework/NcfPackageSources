@@ -1,0 +1,117 @@
+@page
+@model Senparc.Areas.Admin.Areas.Admin.Pages.NeuBell.IndexModel
+@{
+    ViewData["Title"] = "NeuBell · WebHook 设置";
+    Layout = "_Layout_Vue";
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>NeuBell</el-breadcrumb-item>
+    <el-breadcrumb-item>WebHook 设置</el-breadcrumb-item>
+}
+
+@section Style {
+    <link rel="stylesheet" href="~/css/Admin/Pages/NeuBell/Index.css" />
+}
+
+<div class="neubell-webhook-page" v-loading="loading">
+    <header class="neubell-webhook-header">
+        <div>
+            <h2>NeuBell WebHook 设置</h2>
+            <p>为纽铃（NeuBell）添加外部 WebAPI（WebHook）通知端点。当纽铃条目发生新增（added）或移除（removed）时，系统会按 Provider 过滤条件以异步方式 POST 通知到对应地址；配置签名密钥后请求会携带 HMAC-SHA256 签名头。</p>
+        </div>
+        <div class="neubell-webhook-header-actions">
+            <el-input v-model="keyword" clearable prefix-icon="el-icon-search"
+                      placeholder="搜索名称、地址或 Provider"></el-input>
+            <el-button icon="el-icon-refresh" @@click="load">刷新</el-button>
+            <el-button type="primary" icon="el-icon-plus" @@click="openCreate">新增 WebHook</el-button>
+        </div>
+    </header>
+
+    <el-table :data="filteredItems" border style="width: 100%" v-if="filteredItems.length">
+        <el-table-column label="名称" prop="name" min-width="160" show-overflow-tooltip></el-table-column>
+        <el-table-column label="WebHook 地址" prop="webHookUrl" min-width="260" show-overflow-tooltip></el-table-column>
+        <el-table-column label="Provider 过滤" min-width="160" show-overflow-tooltip>
+            <template slot-scope="scope">
+                <el-tag v-if="scope.row.providerFilter" size="mini">{{ scope.row.providerFilter }}</el-tag>
+                <span v-else class="neubell-muted">全部</span>
+            </template>
+        </el-table-column>
+        <el-table-column label="签名" align="center" width="80">
+            <template slot-scope="scope">
+                <el-tag v-if="scope.row.hasSecret" size="mini" type="success">已配置</el-tag>
+                <span v-else class="neubell-muted">—</span>
+            </template>
+        </el-table-column>
+        <el-table-column label="新增" align="center" width="70">
+            <template slot-scope="scope">
+                <i v-if="scope.row.notifyOnAdd" class="fa fa-check text-success"></i>
+                <span v-else class="neubell-muted">—</span>
+            </template>
+        </el-table-column>
+        <el-table-column label="移除" align="center" width="70">
+            <template slot-scope="scope">
+                <i v-if="scope.row.notifyOnRemove" class="fa fa-check text-success"></i>
+                <span v-else class="neubell-muted">—</span>
+            </template>
+        </el-table-column>
+        <el-table-column label="启用" align="center" width="90">
+            <template slot-scope="scope">
+                <el-switch v-model="scope.row.isEnabled" @@change="toggleEnabled(scope.row)"></el-switch>
+            </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" width="200" fixed="right">
+            <template slot-scope="scope">
+                <el-button size="mini" icon="el-icon-s-promotion" :loading="scope.row.testing" @@click="sendTest(scope.row)">测试</el-button>
+                <el-button size="mini" icon="el-icon-edit" @@click="openEdit(scope.row)">编辑</el-button>
+                <el-button size="mini" type="danger" plain icon="el-icon-delete" @@click="removeRow(scope.row)">删除</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <div v-else-if="!loading" class="neubell-empty">
+        <i class="fa fa-bell-o fa-3x"></i>
+        <h3>还没有 WebHook</h3>
+        <p>点击右上角“新增 WebHook”，配置一个外部 WebAPI 通知端点。</p>
+    </div>
+
+    <el-dialog :title="form.id ? '编辑 WebHook' : '新增 WebHook'" :visible.sync="formDialogVisible"
+               width="560px" :close-on-click-modal="false">
+        <el-form label-width="110px">
+            <el-form-item label="名称" required>
+                <el-input v-model="form.name" maxlength="200" placeholder="例如：运维值班机器人"></el-input>
+            </el-form-item>
+            <el-form-item label="WebHook 地址" required>
+                <el-input v-model="form.webHookUrl" maxlength="1000"
+                          placeholder="https://example.com/api/neubell-webhook"></el-input>
+            </el-form-item>
+            <el-form-item label="Provider 过滤">
+                <el-select v-model="form.providerFilter" clearable filterable placeholder="留空表示全部 Provider"
+                           style="width: 100%">
+                    <el-option v-for="p in providers" :key="p.providerId"
+                               :label="p.displayName || p.providerId" :value="p.providerId"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="签名密钥">
+                <el-input v-model="form.secret" :type="form.id && !form.showSecret ? 'password' : 'text'" maxlength="300"
+                          placeholder="配置后请求携带 X-NeuBell-Signature（HMAC-SHA256）"></el-input>
+            </el-form-item>
+            <el-form-item label="新增时通知">
+                <el-switch v-model="form.notifyOnAdd"></el-switch>
+            </el-form-item>
+            <el-form-item label="移除时通知">
+                <el-switch v-model="form.notifyOnRemove"></el-switch>
+            </el-form-item>
+            <el-form-item label="启用">
+                <el-switch v-model="form.isEnabled"></el-switch>
+            </el-form-item>
+        </el-form>
+        <span slot="footer">
+            <el-button @@click="formDialogVisible = false">取消</el-button>
+            <el-button type="primary" :loading="formSaving" @@click="saveRow">保存</el-button>
+        </span>
+    </el-dialog>
+</div>
+
+@section scripts {
+    <script src="~/js/Admin/Pages/NeuBell/Index.js"></script>
+}

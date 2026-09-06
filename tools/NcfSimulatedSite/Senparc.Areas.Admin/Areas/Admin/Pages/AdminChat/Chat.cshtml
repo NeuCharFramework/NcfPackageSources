@@ -231,6 +231,23 @@
                             <span class="message-time">{{ formatTime(message.addTime) }}</span>
                         </div>
                         <div class="message-text" v-html="formatMessageContent(message.content)"></div>
+                        <div class="message-harness-steps" v-if="message.roleType === 1 && !isManageMode && message.harnessSteps && message.harnessSteps.length > 0">
+                            <el-collapse class="harness-collapse">
+                                <el-collapse-item :title="harnessStepsTitle(message.harnessSteps)">
+                                    <div class="harness-step" v-for="(step, idx) in message.harnessSteps" :key="idx">
+                                        <div class="harness-step-head">
+                                            <span class="harness-step-index">
+                                                <i :class="step.isFinal ? 'fa fa-flag-checkered' : (step.timedOut ? 'fa fa-exclamation-triangle' : 'fa fa-arrow-circle-right')"></i>
+                                                {{ step.index }}
+                                            </span>
+                                            <i v-if="step.isFinal" class="fa fa-flag-checkered harness-step-done"></i>
+                                            <i v-else-if="step.timedOut" class="fa fa-exclamation-triangle harness-step-timeout"></i>
+                                        </div>
+                                        <div class="harness-step-body" v-html="formatMessageContent(step.output)"></div>
+                                    </div>
+                                </el-collapse-item>
+                            </el-collapse>
+                        </div>
                         <div class="message-actions" v-if="message.roleType === 1 && !isManageMode">
                             <el-button 
                                 type="text" 
@@ -287,6 +304,14 @@
                     <span class="input-tip">
                         <i class="fa fa-info-circle"></i> @AR["AdminChat.SendHint"]
                     </span>
+                    <el-radio-group v-model="chatMode" size="mini" class="chat-mode-toggle" :disabled="isSending">
+                        <el-radio-button label="simple">
+                            <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
+                        </el-radio-button>
+                        <el-radio-button label="harness">
+                            <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
+                        </el-radio-button>
+                    </el-radio-group>
                     <el-button 
                         type="primary" 
                         icon="el-icon-s-promotion"

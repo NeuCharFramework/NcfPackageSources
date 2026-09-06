@@ -222,6 +222,25 @@ li {
     line-height: 1.6;
 }
 
+.admin-neubell-webhook-entry {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 2px 0 4px;
+    padding: 4px 10px;
+    color: #409eff;
+    font-size: 12px;
+    border: 1px solid #d9ecff;
+    border-radius: 4px;
+    background: #ecf5ff;
+    text-decoration: none;
+}
+
+.admin-neubell-webhook-entry:hover {
+    color: #66b1ff;
+    border-color: #b3d8ff;
+}
+
 .admin-neubell-provider {
     margin-top: 14px;
     border: 1px solid #ebeef5;

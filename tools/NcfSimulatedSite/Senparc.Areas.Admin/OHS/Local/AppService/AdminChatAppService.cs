@@ -286,7 +286,23 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 await _sessionService.UpdateLastMessageTimeAsync(request.SessionId);
 
-                var (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(request.SessionId, userId, request.Content, request.AiModelId);
+                var mode = request.Mode;
+                string aiResponse;
+                string modelIdentifier;
+                AdminChatHarnessResult harness = null;
+
+                if (mode == AdminChatMode.Harness)
+                {
+                    (aiResponse, modelIdentifier, harness) = await _chatAiService.GenerateHarnessResponseAsync(
+                        request.SessionId,
+                        userId,
+                        request.Content,
+                        request.AiModelId);
+                }
+                else
+                {
+                    (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(request.SessionId, userId, request.Content, request.AiModelId);
+                }
 
                 var assistantMessage = await _messageService.AddMessageAsync(
                     request.SessionId,
@@ -294,13 +310,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     aiResponse,
                     modelIdentifier);
 
-                logger.Append($"发送消息: SessionId={request.SessionId}, MessageId={userMessage.Id}");
+                logger.Append($"发送消息: SessionId={request.SessionId}, MessageId={userMessage.Id}, Mode={mode}");
                 await PublishSyncEventAsync(userId, request.SessionId, "messages-changed");
 
                 return new SendMessageResponse
                 {
                     UserMessage = AdminChatMessageDto.CreateFromEntity(userMessage),
-                    AssistantMessage = AdminChatMessageDto.CreateFromEntity(assistantMessage)
+                    AssistantMessage = AdminChatMessageDto.CreateFromEntity(assistantMessage),
+                    Mode = mode,
+                    HarnessSteps = harness?.Steps
                 };
             });
         }
@@ -824,6 +842,16 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     {
         public AdminChatMessageDto UserMessage { get; set; }
         public AdminChatMessageDto AssistantMessage { get; set; }
+
+        /// <summary>
+        /// 本次运行使用的模式（Simple 或 Harness）。
+        /// </summary>
+        public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
+
+        /// <summary>
+        /// Harness 模式的执行步骤记录（Simple 模式为 null）。
+        /// </summary>
+        public IReadOnlyList<AdminChatHarnessStep> HarnessSteps { get; set; }
     }
 
     /// <summary>

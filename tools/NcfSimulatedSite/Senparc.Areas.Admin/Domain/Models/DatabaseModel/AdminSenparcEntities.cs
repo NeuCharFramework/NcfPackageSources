@@ -102,6 +102,11 @@ namespace Senparc.Areas.Admin.Domain.Models
         /// </summary>
         public DbSet<NeuCharPivotBoard> NeuCharPivotBoards { get; set; }
 
+        /// <summary>
+        /// 纽铃 WebHook（WebAPI）通知设置
+        /// </summary>
+        public DbSet<NeuBellWebHook> NeuBellWebHooks { get; set; }
+
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
 
         #endregion
@@ -134,6 +139,8 @@ namespace Senparc.Areas.Admin.Domain.Models
                 .IsUnique();
             modelBuilder.Entity<NeuCharPivotBoard>()
                 .HasIndex(z => z.PageKey);
+            modelBuilder.Entity<NeuBellWebHook>()
+                .HasIndex(z => z.ProviderFilter);
 
             var providerName = Database.ProviderName ?? string.Empty;
             var largeTextType = providerName.Contains("Oracle", StringComparison.OrdinalIgnoreCase)

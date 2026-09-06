@@ -588,4 +588,5 @@
   <data name="Menu.ConfigEmpty" xml:space="preserve">
     <value>並べ替え可能なメニューやページがありません</value>
   </data>
+  <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>WebHook 設定</value></data>
 </root>

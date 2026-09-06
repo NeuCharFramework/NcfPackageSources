@@ -309,6 +309,10 @@
   <data name="AdminChat.SendHint" xml:space="preserve"><value>Press Ctrl + Enter or Cmd + Enter to send</value></data>
   <data name="AdminChat.Send" xml:space="preserve"><value>Send</value></data>
   <data name="AdminChat.Thinking" xml:space="preserve"><value>Thinking...</value></data>
+
+  <data name="AdminChat.ModeSimple" xml:space="preserve"><value>Chat</value></data>
+  <data name="AdminChat.ModeHarness" xml:space="preserve"><value>Harness</value></data>
+  <data name="AdminChat.HarnessSteps" xml:space="preserve"><value>Harness Steps</value></data>
   <data name="AdminChat.NewSessionDescription" xml:space="preserve"><value>Enter a question and select reference modules to start a conversation</value></data>
   <data name="AdminChat.ComputePower" xml:space="preserve"><value>AI model</value></data>
   <data name="AdminChat.DeleteConfirm" xml:space="preserve"><value>Delete this conversation?</value></data>
@@ -590,4 +594,5 @@
   <data name="Menu.ConfigEmpty" xml:space="preserve">
     <value>No sortable menus or pages</value>
   </data>
+  <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>WebHook Settings</value></data>
 </root>

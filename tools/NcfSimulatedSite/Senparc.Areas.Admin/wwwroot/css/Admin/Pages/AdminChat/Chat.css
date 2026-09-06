@@ -703,3 +703,64 @@
 .session-list::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+
+/* ===== Admin Chat Harness 模式 ===== */
+.chat-mode-toggle {
+  margin-left: 12px;
+  vertical-align: middle;
+}
+
+.chat-mode-toggle .el-radio-button__inner {
+  padding: 5px 10px;
+}
+
+.message-harness-steps {
+  margin-top: 8px;
+  border: 1px solid #ebeef5;
+  border-radius: 6px;
+  background: #fafbfc;
+  padding: 4px 10px;
+}
+
+.harness-collapse .el-collapse-item__header {
+  font-size: 12px;
+  color: #606266;
+  background: transparent;
+}
+
+.harness-step {
+  padding: 6px 0;
+  border-bottom: 1px dashed #ebeef5;
+}
+
+.harness-step:last-child {
+  border-bottom: none;
+}
+
+.harness-step-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.harness-step-index {
+  color: #409eff;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.harness-step-done {
+  color: #67c23a;
+}
+
+.harness-step-timeout {
+  color: #e6a23c;
+}
+
+.harness-step-body {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}

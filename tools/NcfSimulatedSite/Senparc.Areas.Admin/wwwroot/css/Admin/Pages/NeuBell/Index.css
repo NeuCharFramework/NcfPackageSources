@@ -1,0 +1,50 @@
+.neubell-webhook-page {
+    padding: 16px 20px;
+}
+
+.neubell-webhook-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.neubell-webhook-header h2 {
+    margin: 0 0 6px;
+    font-size: 18px;
+}
+
+.neubell-webhook-header p {
+    margin: 0;
+    max-width: 640px;
+    color: #909399;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.neubell-webhook-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.neubell-webhook-header-actions .el-input {
+    width: 240px;
+}
+
+.neubell-muted {
+    color: #c0c4cc;
+}
+
+.neubell-empty {
+    padding: 60px 0;
+    text-align: center;
+    color: #909399;
+}
+
+.neubell-empty h3 {
+    margin: 12px 0 6px;
+    color: #606266;
+}

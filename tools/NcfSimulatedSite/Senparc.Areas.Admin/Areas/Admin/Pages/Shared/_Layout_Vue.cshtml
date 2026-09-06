@@ -197,6 +197,7 @@
             size="380px">
             <div class="admin-neubell-panel" v-loading="neuBellLoading">
                 <p class="admin-neubell-description">选择在 Footer 显示的模块提醒。设置保存在当前账号的浏览器中。</p>
+                <a class="admin-neubell-webhook-entry" href="/Admin/NeuBell/Index"><i class="fa fa-plug"></i> @AR["Admin.Footer.NeuBellWebHookSettings"]</a>
                 <div v-if="neuBellProviders.length === 0" class="admin-neubell-empty">当前没有模块提供纽铃信息。</div>
                 <section v-for="provider in neuBellProviders" :key="provider.providerId" class="admin-neubell-provider">
                     <header>

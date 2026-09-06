@@ -8,6 +8,7 @@ var chatApp = new Vue({
       currentSessionModules: [],
       currentSessionWorkflows: [],
       currentSessionAiModelId: 0,
+      chatMode: 'simple',
       aiModelOptions: [],
       aiKernelAvailable: false,
       loadingAiModelOptions: false,
@@ -72,6 +73,11 @@ var chatApp = new Vue({
     handleCurrentSessionAiModelChange(value) {
       this.currentSessionAiModelId = this.normalizeAiModelId(value);
       this.setSessionAiModelId(this.currentSessionId, this.currentSessionAiModelId);
+    },
+
+    harnessStepsTitle(steps) {
+      const label = (typeof ncfT === 'function' && ncfT('AdminChat.HarnessSteps')) || 'Harness';
+      return label + ' · ' + (steps ? steps.length : 0);
     },
 
     handleChatInputKeydown(event) {
@@ -167,13 +173,15 @@ var chatApp = new Vue({
         const requestData = {
           sessionId: this.currentSessionId,
           aiModelId: this.normalizeAiModelId(this.currentSessionAiModelId),
-          content: messageContent
+          content: messageContent,
+          mode: this.chatMode === 'harness' ? 1 : 0
         };
 
         const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.SendMessageAsync', requestData);
         
         if (response.data && response.data.success && response.data.data) {
           const { userMessage, assistantMessage } = response.data.data;
+          const harnessSteps = response.data.data.harnessSteps || null;
 
                   const tempIndex = this.messageList.findIndex((item) => item.id === tempMessageId);
                   if (tempIndex >= 0) {
@@ -182,6 +190,7 @@ var chatApp = new Vue({
                   }
 
                   if (assistantMessage) {
+                    assistantMessage.harnessSteps = harnessSteps;
                     this.messageList.push(assistantMessage);
                   }
           
