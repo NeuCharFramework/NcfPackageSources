@@ -149,5 +149,15 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 
             return stats;
         }
+
+        /// <summary>
+        /// 按模型代号聚合 Token 使用（用于模型列表页展示，模型代号不区分大小写）
+        /// </summary>
+        /// <returns>以模型代号为键的 Token 使用聚合字典</returns>
+        public async Task<Dictionary<string, AITokenModelUsage>> GetModelUsageMapAsync()
+        {
+            var all = await this.GetFullListAsync(z => z.Flag == false);
+            return TokenUsageAggregator.BuildModelUsageMap(all);
+        }
     }
 }

@@ -284,4 +284,13 @@
   <data name="TokenMonitor.ConfirmDelete" xml:space="preserve">
     <value>确定删除该 Token 使用记录吗？</value>
   </data>
+  <data name="TokenMonitor.LastUsed" xml:space="preserve">
+    <value>最近使用</value>
+  </data>
+  <data name="TokenMonitor.SearchPlaceholder" xml:space="preserve">
+    <value>输入模型代号进行搜索</value>
+  </data>
+  <data name="TokenMonitor.Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
 </root>

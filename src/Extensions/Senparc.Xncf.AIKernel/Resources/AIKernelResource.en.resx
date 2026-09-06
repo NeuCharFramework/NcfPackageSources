@@ -245,4 +245,13 @@
   <data name="TokenMonitor.ConfirmDelete" xml:space="preserve">
     <value>Delete this token usage record?</value>
   </data>
+  <data name="TokenMonitor.LastUsed" xml:space="preserve">
+    <value>Last Used</value>
+  </data>
+  <data name="TokenMonitor.SearchPlaceholder" xml:space="preserve">
+    <value>Search by model alias</value>
+  </data>
+  <data name="TokenMonitor.Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
 </root>

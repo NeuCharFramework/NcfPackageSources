@@ -48,13 +48,43 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
     public class AIModelAppService : AppServiceBase
     {
         private readonly AIModelService _aIModelService;
+        private readonly AITokenUsageService _aITokenUsageService;
 
 
         public AIModelAppService(
             IServiceProvider serviceProvider,
-            AIModelService aIModelService) : base(serviceProvider)
+            AIModelService aIModelService,
+            AITokenUsageService aITokenUsageService) : base(serviceProvider)
         {
             _aIModelService = aIModelService;
+            _aITokenUsageService = aITokenUsageService;
+        }
+
+        private async Task FillModelUsageAsync(IEnumerable<AIModelDto> dtos)
+        {
+            if (dtos == null)
+            {
+                return;
+            }
+
+            var usageMap = await _aITokenUsageService.GetModelUsageMapAsync();
+            if (usageMap == null)
+            {
+                return;
+            }
+
+            foreach (var dto in dtos)
+            {
+                if (dto == null || dto.Alias.IsNullOrWhiteSpace())
+                {
+                    continue;
+                }
+
+                if (usageMap.TryGetValue(dto.Alias, out var usage))
+                {
+                    dto.Usage = usage;
+                }
+            }
         }
 
         protected virtual Expression<Func<AIModel, bool>> GetListWhere(AIModel_GetListRequest request)
@@ -103,9 +133,12 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 
                         var total = await _aIModelService.GetCountAsync(where);
 
+                        var modelDtos = modelList.Select(m => new AIModelDto(m)).ToList();
+                        await FillModelUsageAsync(modelDtos);
+
                         return new PagedResponse<AIModelDto>(
                             total,
-                            modelList.Select(m => new AIModelDto(m))
+                            modelDtos
                         );
                     });
         }
@@ -148,6 +181,8 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                     var modelList = (await _aIModelService.GetFullListAsync(where, request.Order))
                         .Select(m => new AIModelDto(m))
                         .ToList();
+
+                    await FillModelUsageAsync(modelList);
 
                     return modelList;
                 });
