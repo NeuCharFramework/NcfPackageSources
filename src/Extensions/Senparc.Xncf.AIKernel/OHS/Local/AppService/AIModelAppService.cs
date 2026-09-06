@@ -111,6 +111,28 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         }
 
         /// <summary>
+        /// 分页获取供其他管理页面选择的 AIModel 基本信息。
+        /// 不返回 ApiKey、Endpoint、OrganizationId 等配置敏感字段。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<PagedResponse<AIModelSelectionResponse>>> GetSelectionListAsync(AIModel_GetListRequest request)
+        {
+            return await this
+                .GetResponseAsync<AppResponseBase<PagedResponse<AIModelSelectionResponse>>, PagedResponse<AIModelSelectionResponse>>(
+                    async (response, logger) =>
+                    {
+                        var where = GetListWhere(request);
+
+                        var modelList = await _aIModelService.GetObjectListAsync(request.Page, request.Size, where, request.Order);
+                        var total = await _aIModelService.GetCountAsync(where);
+
+                        return new PagedResponse<AIModelSelectionResponse>(
+                            total,
+                            modelList.Select(m => new AIModelSelectionResponse(m)));
+                    });
+        }
+
+        /// <summary>
         /// 获取AIModel列表
         /// </summary>
         /// <param name="request"></param>

@@ -428,6 +428,66 @@ namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
                     b.ToTable("ADMIN_NeuCharExecutionLog");
                 });
 
+            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharPivotBoard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("AdminUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("BlocksJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Columns")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("PageKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PageKey");
+
+                    b.ToTable("ADMIN_NeuCharPivotBoard");
+                });
+
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharPivotConfiguration", b =>
                 {
                     b.Property<int>("Id")
@@ -642,9 +702,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
                     b.HasIndex("FunctionId")
                         .IsUnique();
 
-                    b.HasIndex("Enabled", "NextRunAt");
-
                     b.HasIndex("WorkflowId");
+
+                    b.HasIndex("Enabled", "NextRunAt");
 
                     b.ToTable("ADMIN_NeuCharPivotLoopTask");
                 });

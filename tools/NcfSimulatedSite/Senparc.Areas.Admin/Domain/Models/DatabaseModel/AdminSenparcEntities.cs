@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：AdminSenparcEntities.cs
@@ -97,6 +97,11 @@ namespace Senparc.Areas.Admin.Domain.Models
         /// </summary>
         public DbSet<NeuCharExecutionLog> NeuCharExecutionLogs { get; set; }
 
+        /// <summary>
+        /// Pivot 面板（Provit Panel）：为特定页面聚合各模块 Pivot 的 Function 块
+        /// </summary>
+        public DbSet<NeuCharPivotBoard> NeuCharPivotBoards { get; set; }
+
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
 
         #endregion
@@ -127,6 +132,8 @@ namespace Senparc.Areas.Admin.Domain.Models
             modelBuilder.Entity<AdminChatSessionWorkflow>()
                 .HasIndex(z => new { z.SessionId, z.WorkflowId })
                 .IsUnique();
+            modelBuilder.Entity<NeuCharPivotBoard>()
+                .HasIndex(z => z.PageKey);
 
             var providerName = Database.ProviderName ?? string.Empty;
             var largeTextType = providerName.Contains("Oracle", StringComparison.OrdinalIgnoreCase)
@@ -153,6 +160,9 @@ namespace Senparc.Areas.Admin.Domain.Models
             SetLargeText<NeuCharExecutionLog>(modelBuilder, largeTextType,
                 nameof(NeuCharExecutionLog.ResultSummary),
                 nameof(NeuCharExecutionLog.Error));
+            SetLargeText<NeuCharPivotBoard>(modelBuilder, largeTextType,
+                nameof(NeuCharPivotBoard.Description),
+                nameof(NeuCharPivotBoard.BlocksJson));
         }
 
         private static void SetLargeText<TEntity>(

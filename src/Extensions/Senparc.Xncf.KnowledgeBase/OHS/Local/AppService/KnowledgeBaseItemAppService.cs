@@ -92,6 +92,9 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                         knowledgeBase.Content));
                 }
                 return result;
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "知识库资料加载失败，请稍后重试。";
             });
         }
 

@@ -70,6 +70,9 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                 // 知识库内嵌上传只能创建资料文件，绝不能借此写入可公开的站点资源区。
                 var result = await ncfFileService.UploadFileAsync(file, NcfFileResourceScope.KnowledgeBase);
                 return result.Id.ToString();
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "资料上传失败，请稍后重试。";
             });
         }
 

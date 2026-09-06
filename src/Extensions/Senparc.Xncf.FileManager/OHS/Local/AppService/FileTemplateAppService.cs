@@ -124,6 +124,9 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
                     PageIndex = listDto.PageIndex
                 };
                 return result;
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "资料列表加载失败，请稍后重试。";
             });
         }
 

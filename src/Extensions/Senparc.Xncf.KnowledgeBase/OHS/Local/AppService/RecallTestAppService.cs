@@ -83,9 +83,12 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                 }
                 catch (Exception ex)
                 {
-                    logger.Append($"召回测试失败：{ex.Message}");
+                    logger.Append("召回测试失败。");
                     throw;
                 }
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "召回测试失败，请检查配置后重试。";
             });
         }
     }

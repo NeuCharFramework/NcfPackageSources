@@ -1,17 +1,12 @@
-/*-----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
+  
+    文件名：20260831034100_Add_NeuCharPivotBoard.Designer.cs
+    文件功能描述：数据库迁移与模型快照
 
-    文件名：AdminSenparcEntities_MySqlModelSnapshot.cs
-    文件功能描述：AdminSenparcEntities_MySqlModelSnapshot.cs 相关实现
 
-
-    创建标识：Senparc - 20200724
-
-    修改标识：Senparc - 20260822
-    修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
-
-    修改标识：Senparc - 20260829
-    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+    创建标识：Senparc - 20260831
+    修改描述：v0.7.0 新增 NeuCharPivotBoard（Provit 面板）迁移
 
 ----------------------------------------------------------------*/
 
@@ -20,6 +15,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Areas.Admin.Domain.Models;
 
@@ -28,9 +24,11 @@ using Senparc.Areas.Admin.Domain.Models;
 namespace Senparc.Areas.Admin.Domain.Migrations.MySql
 {
     [DbContext(typeof(AdminSenparcEntities_MySql))]
-    partial class AdminSenparcEntities_MySqlModelSnapshot : ModelSnapshot
+    [Migration("20260831034100_Add_NeuCharPivotBoard")]
+    partial class Add_NeuCharPivotBoard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

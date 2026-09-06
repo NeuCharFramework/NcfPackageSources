@@ -428,6 +428,66 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
                     b.ToTable("ADMIN_NeuCharExecutionLog");
                 });
 
+            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharPivotBoard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("AdminUserId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("BlocksJson")
+                        .HasColumnType("NCLOB");
+
+                    b.Property<int>("Columns")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("NCLOB");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
+
+                    b.Property<string>("PageKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PageKey");
+
+                    b.ToTable("ADMIN_NeuCharPivotBoard");
+                });
+
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharPivotConfiguration", b =>
                 {
                     b.Property<int>("Id")
@@ -642,9 +702,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
                     b.HasIndex("FunctionId")
                         .IsUnique();
 
-                    b.HasIndex("Enabled", "NextRunAt");
-
                     b.HasIndex("WorkflowId");
+
+                    b.HasIndex("Enabled", "NextRunAt");
 
                     b.ToTable("ADMIN_NeuCharPivotLoopTask");
                 });

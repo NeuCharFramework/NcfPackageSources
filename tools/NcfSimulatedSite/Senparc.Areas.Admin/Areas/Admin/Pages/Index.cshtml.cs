@@ -333,6 +333,18 @@ namespace Senparc.Areas.Admin.Pages
                     ParentId = pivotMenu.Id
                 });
             }
+
+            if (!dest.Any(z => string.Equals(z.Url, "/Admin/NeuCharPivot/Board", StringComparison.OrdinalIgnoreCase)))
+            {
+                dest.Add(new SysMenuDto
+                {
+                    MenuName = "面板",
+                    Url = "/Admin/NeuCharPivot/Board",
+                    Icon = "fa fa-th-large",
+                    Id = (index++).ToString(),
+                    ParentId = pivotMenu.Id
+                });
+            }
             GetSysMenuTreesRecursive(dest, sysMenuTrees, null);
             return sysMenuTrees;
         }
