@@ -29,4 +29,18 @@ public class SandboxWorkspacePathsTests
             "/home/jovyan/work/data/input.json",
             SandboxWorkspacePaths.CombineContainerPath("/home/jovyan/work", "data/input.json"));
     }
+
+    [TestMethod]
+    public void IsWithinWorkspace_AllowsRootAndChildren_ButRejectsSibling()
+    {
+        var workspace = Path.Combine(Path.GetTempPath(), "Senparc.Ncf", "Sandbox", "session");
+        var sibling = workspace + "-other";
+
+        Assert.IsTrue(SandboxWorkspacePaths.IsWithinWorkspace(workspace, workspace));
+        Assert.IsTrue(SandboxWorkspacePaths.IsWithinWorkspace(
+            workspace,
+            Path.Combine(workspace, "data", "input.json")));
+        Assert.IsFalse(SandboxWorkspacePaths.IsWithinWorkspace(sibling, workspace));
+        Assert.IsFalse(SandboxWorkspacePaths.IsWithinWorkspace(workspace, sibling));
+    }
 }

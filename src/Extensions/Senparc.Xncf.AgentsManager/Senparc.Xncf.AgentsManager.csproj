@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.16.0</Version>
+    <Version>0.17.0</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -153,6 +153,10 @@
 		6、优化管理端人类参与者配置、任务执行策略展示与 Agent 编辑入口
 		7、增加工作流引用校验和函数绑定序列化能力，优化 Agent 编辑、任务筛选及响应式管理界面
 		8、补充 Agent 群组会话查看、执行引用和任务状态处理，提升管理端交互一致性
+		[2026-08-29] v0.17.0 增强 Agent 请求诊断、ChatGroup 状态处理与工作流对象支持
+		1、新增模型请求结果与异常诊断摘要，脱敏记录敏感配置并保留可追踪信息
+		2、改进 ChatGroup Token、审批日志、状态更新和服务作用域隔离，减少无效流式通知
+		3、完善工作流对象解析及消息历史处理，提升多智能体执行兼容性
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.5</Version>
+    <Version>0.0.6</Version>
     <PackageReleaseNotes>
       [2026-08-04] v0.0.1 新增发布包镜像服务测试
       1、覆盖 NCF 与 NcfDesktop 包元数据同步及镜像行为
@@ -11,6 +11,8 @@
       [2026-08-15] v0.0.4 Dependency update from Senparc.Xncf.FirmwareUpdate to 0.4.3-preview8
       [2026-08-22] v0.0.5 同步 Senparc.Xncf.FirmwareUpdate.Tests 依赖版本
       1、递归更新上游项目依赖，保持 Senparc.Xncf.FirmwareUpdate.Tests 与当前版本组合兼容
+      [2026-08-29] v0.0.6 补充固件包镜像服务回归测试
+      1、覆盖镜像包同步结果、日志摘要和异常处理路径
     </PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>

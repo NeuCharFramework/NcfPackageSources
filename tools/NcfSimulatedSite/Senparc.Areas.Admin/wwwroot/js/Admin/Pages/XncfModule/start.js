@@ -169,6 +169,21 @@
         functionKey(item) {
             return String(item && item.key && (item.key.functionKey || item.key.name) || '').trim();
         },
+        functionKeyMatches(item, requestedKey) {
+            const key = this.functionKey(item);
+            const requested = String(requestedKey || '').trim();
+            if (!key || !requested) {
+                return false;
+            }
+
+            if (key.toLowerCase() === requested.toLowerCase()) {
+                return true;
+            }
+
+            const separatorIndex = key.lastIndexOf('-');
+            return separatorIndex >= 0 &&
+                key.slice(separatorIndex + 1).toLowerCase() === requested.toLowerCase();
+        },
         functionAnchorId(item) {
             const key = this.functionKey(item);
             return key ? `function-${encodeURIComponent(key)}` : '';
@@ -184,7 +199,7 @@
             this.functionNavigationApplied = true;
             const items = (this.data && this.data.functionParameterInfoCollection) || [];
             const item = items.find(candidate =>
-                this.functionKey(candidate).toLowerCase() === this.requestedFunctionKey.toLowerCase());
+                this.functionKeyMatches(candidate, this.requestedFunctionKey));
             if (!item) {
                 if (this.$notify) {
                     this.$notify({

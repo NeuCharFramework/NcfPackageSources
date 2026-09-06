@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.21.9</Version>
+    <Version>0.21.10</Version>
     <AssemblyName>Senparc.Ncf.Database</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -38,6 +38,8 @@
 				2、多库扫描日志改为 Register×Database 支持矩阵，并单独输出当前库 DbContext 绑定
 				[2026-08-22] v0.21.9-preview9 优化多数据库支持矩阵日志输出并补充当前 DbContext 绑定信息
 				1、多库扫描日志按 Register 与 Database 输出支持矩阵，便于诊断当前数据库绑定
+				[2026-08-29] v0.21.10 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
+				1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

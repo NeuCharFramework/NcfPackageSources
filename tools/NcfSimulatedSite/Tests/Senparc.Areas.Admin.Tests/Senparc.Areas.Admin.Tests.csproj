@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.9</Version>
+    <Version>0.0.10</Version>
     <PackageReleaseNotes>
 [2026-07-07] v0.0.1 Dependency updates from upstream modules
 1、Dependency update from Senparc.Areas.Admin to 0.0.5
@@ -25,6 +25,9 @@
 2、补充 NeuCharWorkflow 引擎与设计器相关回归测试，覆盖人工交互场景
 [2026-08-22] v0.0.9 补充管理端 Chat 与工作流测试覆盖
 1、增加 Admin Chat 工具、Agent 群组和工作流设计器的客户端与服务回归测试
+[2026-08-29] v0.0.10 补充 NeuCharPivot 全局调用与循环工作流回归测试
+1、覆盖全局 Function 访问控制、函数匹配和管理端执行路径
+2、补充 NeuCharPivot 循环任务与 Workflow 关联模型的回归验证
     </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

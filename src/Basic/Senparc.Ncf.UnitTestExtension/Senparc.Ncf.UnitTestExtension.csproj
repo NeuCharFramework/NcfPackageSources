@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.3.22</Version>
+		<Version>0.3.23</Version>
 		<AssemblyName>Senparc.Ncf.UnitTestExtension</AssemblyName>
 		<RootNamespace>Senparc.Ncf.UnitTestExtension</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -72,6 +72,8 @@
 				[2026-08-15] v0.3.21-preview.8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
 				[2026-08-22] v0.3.22-preview.9 同步 Senparc.Ncf.UnitTestExtension 依赖版本
 				1、递归更新上游项目依赖，保持 Senparc.Ncf.UnitTestExtension 与当前版本组合兼容
+				[2026-08-29] v0.3.23 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
+				1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
 		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>

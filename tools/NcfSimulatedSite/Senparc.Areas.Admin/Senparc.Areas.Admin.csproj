@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.6.0</Version>
+		<Version>0.7.0</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -49,6 +49,10 @@
     [2026-08-22] v0.6.0 新增管理端 Chat 会话工作流能力
     1、新增 Admin Chat 会话工作流持久化、工具工厂和执行服务，支持工作流上下文复用
     2、完善 Chat 模块选择、启动器交互和管理端 AI 工具调用反馈
+    [2026-08-29] v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+    1、新增全局 NeuCharPivot 浮动入口、函数执行页和访问控制，改善模块功能导航
+    2、增加 NeuCharPivot 循环任务与 Workflow 关联的多数据库迁移和管理端状态处理
+    3、优化聚合模块、筛选栏、工具栏及函数匹配交互，保持 Admin Chat 与工作流配置兼容
 		</PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.3</Version>
+    <Version>0.19.4</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -125,6 +125,8 @@
       2、为 Ollama 低 Token 场景补充最小 thinking token 预算，降低流式调用失败率
       3、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
       4、补充流式输出字段提取和低 Token 场景处理，降低 Ollama 调用结果为空的概率
+      [2026-08-29] v0.19.4 Dependency updates from Senparc.Ncf.XncfBase to 0.26.1
+      1、Dependency update from Senparc.Ncf.XncfBase to 0.26.1
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <PackageReleaseNotes>
       [2026-08-13] v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
       1、支持版本与自动保存、Webhook 触发、并行节点和执行回放
@@ -15,6 +15,10 @@
       5、Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.2.0
       6、新增工作流函数调用提供程序并扩大循环执行能力，支持按任务和执行引用筛选管理记录
       7、使用 DateTimeOffset 统一时间语义，完善终止、回放加载更多和非 ASCII JSON 序列化处理
+      [2026-08-29] v0.3.0 新增工作流分析查询与管理端可视化
+      1、新增按日期范围、Workflow ID 和状态筛选的 Analytics 页面与服务
+      2、增加任务统计、汇总指标和导航入口，改善工作流执行监控与回看
+      3、强化任务状态、执行引用和服务作用域处理，保持既有工作流运行兼容
     </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>

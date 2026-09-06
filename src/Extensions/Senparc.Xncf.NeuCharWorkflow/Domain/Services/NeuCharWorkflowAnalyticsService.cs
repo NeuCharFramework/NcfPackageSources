@@ -4,6 +4,9 @@
     文件名：NeuCharWorkflowAnalyticsService.cs
     文件功能描述：Workflow 运行、资源和趋势统计
 
+    修改标识：Senparc - 20260829
+    修改描述：v0.3.0 新增工作流分析查询与管理端可视化
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;

@@ -86,6 +86,135 @@ public class NcfFileService : ServiceBase<NcfFile>
     }
 
     /// <summary>
+    /// Aggregates enterprise-document (knowledge-base) usage for the admin dashboard.
+    /// </summary>
+    public async Task<object> GetDashboardStatsAsync(DateTime? startDate = null, DateTime? endDate = null)
+    {
+        var scope = NcfFileResourceScope.KnowledgeBase;
+        var files = await GetObjectListAsync(
+            0,
+            0,
+            z => z.ResourceScope == scope,
+            z => z.UploadTime,
+            OrderingType.Ascending,
+            null);
+
+        var end = (endDate ?? DateTime.Today).Date;
+        var start = (startDate ?? end.AddDays(-6)).Date;
+        if (start > end)
+        {
+            (start, end) = (end, start);
+        }
+
+        // Cap trend points to avoid huge payloads for long ranges.
+        var daySpan = (int)(end - start).TotalDays + 1;
+        if (daySpan > 366)
+        {
+            start = end.AddDays(-365);
+            daySpan = 366;
+        }
+
+        var trend = new List<object>(daySpan);
+        for (var day = start; day <= end; day = day.AddDays(1))
+        {
+            var dayEnd = day.AddDays(1);
+            var cum = files.Where(f => f.UploadTime < dayEnd).ToList();
+            trend.Add(new
+            {
+                date = day.ToString("MM-dd"),
+                fullDate = day.ToString("yyyy-MM-dd"),
+                fileCount = cum.Count,
+                totalSizeBytes = cum.Sum(f => f.FileSize)
+            });
+        }
+
+        static string CategoryOf(NcfFile file)
+        {
+            var ext = (file.FileExtension ?? string.Empty).Trim().ToLowerInvariant();
+            if (ext is ".jpg" or ".jpeg" or ".png" or ".gif" or ".webp" or ".bmp" or ".ico" or ".avif")
+                return "图片";
+            if (ext is ".mp4" or ".avi" or ".mov" or ".wmv" or ".mkv" or ".webm")
+                return "视频";
+            if (ext is ".mp3" or ".wav" or ".flac" or ".aac" or ".ogg" or ".m4a")
+                return "音频";
+            if (file.FileType is FileType.Text or FileType.Word or FileType.PowerPoint or FileType.Excel or FileType.Code
+                || ext is ".pdf" or ".doc" or ".docx" or ".xls" or ".xlsx" or ".ppt" or ".pptx" or ".txt" or ".md" or ".json" or ".xml" or ".csv")
+                return "文档";
+            return "其他";
+        }
+
+        var groups = files
+            .GroupBy(CategoryOf)
+            .Select(g => new { name = g.Key, count = g.Count(), sizeBytes = g.Sum(x => x.FileSize) })
+            .ToList();
+
+        var colors = new Dictionary<string, string>
+        {
+            ["文档"] = "#95de64",
+            ["图片"] = "#597ef7",
+            ["视频"] = "#ffd666",
+            ["音频"] = "#ff9c6e",
+            ["其他"] = "#91d5ff"
+        };
+
+        var order = new[] { "文档", "图片", "视频", "音频", "其他" };
+        var sizeSlices = order.Select(name =>
+        {
+            var g = groups.FirstOrDefault(x => x.name == name);
+            var bytes = g?.sizeBytes ?? 0L;
+            return new
+            {
+                name,
+                value = Math.Round(bytes / (1024d * 1024d), 2), // MB for chart readability
+                sizeBytes = bytes,
+                color = colors[name]
+            };
+        }).Where(x => x.sizeBytes > 0 || x.name == "文档" || x.name == "其他").ToList();
+
+        var countSlices = order.Select(name =>
+        {
+            var g = groups.FirstOrDefault(x => x.name == name);
+            return new
+            {
+                name,
+                value = g?.count ?? 0,
+                color = colors[name]
+            };
+        }).Where(x => x.value > 0 || x.name == "文档" || x.name == "其他").ToList();
+
+        var totalBytes = files.Sum(f => f.FileSize);
+        var totalCount = files.Count;
+
+        string FormatSize(long bytes)
+        {
+            if (bytes < 1024) return $"{bytes}B";
+            if (bytes < 1024 * 1024) return $"{bytes / 1024d:F2}KB";
+            if (bytes < 1024L * 1024 * 1024) return $"{bytes / (1024d * 1024d):F2}MB";
+            return $"{bytes / (1024d * 1024d * 1024d):F2}GB";
+        }
+
+        return new
+        {
+            statsCutoff = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+            totalCount,
+            totalSizeBytes = totalBytes,
+            totalSizeLabel = FormatSize(totalBytes),
+            enterpriseUsed = FormatSize(totalBytes),
+            orgUsages = new[]
+            {
+                new { name = "山西米立信息技术有限公司", size = FormatSize(totalBytes) },
+                new { name = "企业文档根目录", size = FormatSize(0) },
+                new { name = "知识库资料", size = FormatSize(totalBytes) }
+            },
+            sizeTotalLabel = FormatSize(totalBytes).Replace(" ", ""),
+            countTotalLabel = totalCount.ToString(),
+            sizeSlices,
+            countSlices,
+            capacityTrend = trend
+        };
+    }
+
+    /// <summary>
     /// Backward-compatible overload: callers predating the resource boundary
     /// keep creating knowledge-base sources.
     /// </summary>

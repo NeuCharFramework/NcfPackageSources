@@ -18,6 +18,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
 
+    修改标识：Senparc - 20260829
+    修改描述：v0.3.0 强化沙箱工作区边界校验与会话路径隔离
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -736,7 +739,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
             + Path.DirectorySeparatorChar;
         var normalizedTarget = Path.GetFullPath(target);
-        if (!normalizedTarget.StartsWith(normalizedWorkspace, StringComparison.Ordinal))
+        if (!SandboxWorkspacePaths.IsWithinWorkspace(workspace, normalizedTarget))
         {
             throw new InvalidOperationException("工作区路径越界。");
         }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.0</Version>
+    <Version>0.7.1</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -61,6 +61,9 @@
 		2、在知识库管理页展示可供 Agent 绑定的真实发布状态，避免将旧版向量数据误报为已发布
 		3、Dependency update from Senparc.Xncf.AIKernel to 0.15.4
 		4、同步知识库管理页面格式和向量发布状态版本语义，兼容当前 Agent 绑定流程
+		[2026-08-29] v0.7.1 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10; Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
+		1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
+		2、Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.5.0 集成 NeuCharPivot 与 NeuCharWorkflow 管理能力并优化后台体验
 
+    修改标识：Senparc - 20260829
+    修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Helpers;
@@ -43,7 +46,8 @@ public sealed record NeuCharFunctionDescriptor(
     string CatalogError = null,
     bool AllowGlobalPivot = false,
     IReadOnlyList<string> GlobalPivotRoleCodes = null,
-    IReadOnlyList<string> GlobalPivotPermissionCodes = null);
+    IReadOnlyList<string> GlobalPivotPermissionCodes = null,
+    string MethodName = null);
 
 public sealed record NeuCharFunctionOutputFieldDescriptor(
     string Path,
@@ -142,7 +146,8 @@ public sealed class NeuCharFunctionService
                     catalogError,
                     bag.FunctionRenderAttribute.AllowGlobalPivot,
                     ParseCodes(bag.FunctionRenderAttribute.GlobalPivotRoleCodes),
-                    ParseCodes(bag.FunctionRenderAttribute.GlobalPivotPermissionCodes)));
+                    ParseCodes(bag.FunctionRenderAttribute.GlobalPivotPermissionCodes),
+                    bag.MethodInfo.Name));
             }
         }
 
@@ -188,7 +193,8 @@ public sealed class NeuCharFunctionService
 
         var bag = group.Values.FirstOrDefault(z =>
             string.Equals(z.Key, functionKeyOrName, StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(z.FunctionRenderAttribute.Name, functionKeyOrName, StringComparison.OrdinalIgnoreCase));
+            string.Equals(z.FunctionRenderAttribute.Name, functionKeyOrName, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(z.MethodInfo?.Name, functionKeyOrName, StringComparison.OrdinalIgnoreCase));
         if (bag.MethodInfo == null)
         {
             return Failure("Function 不存在或版本升级后已被移除。");
