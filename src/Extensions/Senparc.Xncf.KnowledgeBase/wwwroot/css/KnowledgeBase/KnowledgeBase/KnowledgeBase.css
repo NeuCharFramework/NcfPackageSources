@@ -1,122 +1,304 @@
+/* ========== 清除父级对布局节点的控制 ========== */
+.el-main.admin-content:has(.knowledge-base-layout),
+.admin-content:has(.knowledge-base-layout) {
+    all: unset;
+    display: block !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: calc(100vh - 96px) !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    background: #fff !important;
+}
+
+.admin-content:has(.knowledge-base-layout) .ifram-wrapper {
+    all: unset;
+    display: block !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+
+/* ========== 根布局：横向 flex ========== */
+.knowledge-base-layout {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 480px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.knowledge-base-layout-left,
+.knowledge-base-layout-main {
+    box-sizing: border-box !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.knowledge-base-layout-left {
+    flex: 0 0 15% !important;
+    width: 15% !important;
+    max-width: 15% !important;
+    border-right: 1px solid #ebeef5 !important;
+    background: #f5f7fa !important;
+}
+
+.knowledge-base-layout-main {
+    flex: 1 1 85% !important;
+    width: 85% !important;
+    min-width: 0 !important;
+    background: #fff !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* ========== 左栏：导航 ========== */
+.knowledge-base-nav-panel {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.knowledge-base-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+}
+
+.knowledge-base-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #606266;
+    cursor: pointer;
+    user-select: none;
+}
+
+.knowledge-base-nav-item i {
+    width: 16px;
+    text-align: center;
+    color: #909399;
+    font-size: 14px;
+}
+
+.knowledge-base-nav-item:hover {
+    color: #303133;
+    background: #eef1f6;
+}
+
+.knowledge-base-nav-item.is-active {
+    color: #409eff;
+    background: #ecf5ff;
+    font-weight: 500;
+}
+
+.knowledge-base-nav-item.is-active i {
+    color: #409eff;
+}
+
+.knowledge-base-nav-item.is-divider {
+    height: 1px;
+    padding: 0;
+    margin: 8px 14px;
+    background: #e4e7ed;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* ========== 主面板通用 ========== */
+.kb-list-panel,
+.kb-recall-panel,
+.kb-guide-panel {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.kb-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+    padding: 12px 16px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.kb-top-search {
+    flex: 1;
+    max-width: 360px;
+}
+
+.kb-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.kb-guide-alert {
+    flex-shrink: 0;
+    margin: 12px 16px 0;
+}
+
+.kb-table-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 12px 16px 0;
+    overflow: auto;
+}
+
+.kb-pagination {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 16px 14px;
+    border-top: 1px solid #f0f2f5;
+}
+
+.kb-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 48px 16px;
+    color: #909399;
+}
+
+.kb-empty i {
+    font-size: 40px;
+    color: #c0c4cc;
+}
+
+.kb-empty strong {
+    color: #606266;
+    font-size: 14px;
+}
+
+.kb-status-tag {
+    margin-right: 0;
+}
+
+.kb-name-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.kb-name-main {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #303133;
+    font-weight: 500;
+}
+
+.kb-name-sub {
+    font-size: 12px;
+    color: #909399;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ========== 召回测试面板（嵌入主区） ========== */
+.kb-recall-panel {
+    overflow: auto;
+    background: #f5f7fa;
+}
+
+.kb-recall-panel .recall-test-page {
+    padding: 16px;
+    background: transparent;
+    height: auto;
+}
+
+.kb-recall-panel .recall-test-wrap {
+    max-width: none;
+    margin: 0;
+}
+
+/* ========== 使用指南面板 ========== */
+.kb-guide-panel {
+    overflow: auto;
+    padding: 20px 24px;
+    background: #f5f7fa;
+}
+
+.kb-guide-card {
+    max-width: 720px;
+    background: #fff;
+    border: 1px solid #e4e7ed;
+    border-radius: 4px;
+    padding: 20px 24px;
+}
+
+.kb-guide-card h3 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    color: #303133;
+}
+
+.kb-guide-card ol {
+    margin: 0;
+    padding-left: 20px;
+    color: #606266;
+    line-height: 1.9;
+    font-size: 14px;
+}
+
+.kb-guide-card .kb-guide-tip {
+    margin-top: 16px;
+    padding: 10px 12px;
+    background: #f0f9eb;
+    border-radius: 4px;
+    color: #67c23a;
+    font-size: 13px;
+}
+
+/* ========== 原有表单 / 抽屉样式 ========== */
 .el-dialog .el-form-item .el-input,
 .el-dialog .el-form-item .el-textarea {
     width: 15rem;
-}
-
-.el-form-item__content {
-    /*width: 30rem;*/
-}
-
-.filter-condition {
-    margin-bottom: 0.5rem;
 }
 
 .hidden {
     display: none;
 }
 
-.col-thumb img {
-    width: 6rem;
-    height: 4rem;
-}
-
-.col-file video {
-    width: 8rem;
-    height: 5rem;
-}
-
-.col-file audio {
-    width: 10rem;
-    height: 5rem;
-}
-
-.item .item-left {
-    text-align: right;
-    padding-right: 1rem;
-    background: #909399;
-    color: #fff;
-    height: 2rem;
-    line-height: 2rem;
-}
-
-.item .item-right {
-    text-align: left;
-    padding-left: 1rem;
-    /*background: #909399;*/
-    border: 1px solid #909399;
-    color: #000;
-    height: 2rem;
-    line-height: 2rem;
-}
-
-.item-right img, .item-right video {
-    width: 15rem;
-    -webkit-filter: drop-shadow(10px 10px 10px rgba(0,0,0,.5)); /*考虑浏览器兼容性：兼容 Chrome, Safari, Opera */
-    filter: drop-shadow(10px 10px 10px rgba(0,0,0,.5));
-}
-
-/*.el-row{padding-bottom:1rem;}*/
-
 .el-form-item {
     margin-bottom: 5px;
 }
 
-.operator_button {
-    display: flex;
-    flex-direction: row;
-}
-
-.row-bg {
-    padding: 5px;
-    background-color: #f9fafc;
-}
-
-/*.el-input__inner{
-width: 250px;
-}*/
-
-/* 抽屉 表单容器 */
 .drawerForm-container {
     padding: 0px 20px;
 }
 
-    .drawerForm-container .agentForm-agentAvatarBox {
-        gap: 10px;
-    }
-
-    .drawerForm-container .agentAvatarBoxItem {
-        flex-shrink: 0;
-        width: 58px;
-        height: 55px;
-        border-radius: 2px;
-        border-width: 1px;
-        border-style: solid;
-        border-color: rgba(229, 229, 229, 1);
-        cursor: pointer;
-        overflow: hidden;
-    }
-
-        .drawerForm-container .agentAvatarBoxItem img {
-            flex-shrink: 0;
-            width: 35px;
-            height: auto;
-            /* height: 30px; */
-        }
-
-    .drawerForm-container .agentAvatarBoxItem-active {
-        border-color: rgba(42, 130, 228, 1);
-    }
-
-        .drawerForm-container .agentAvatarBoxItem-active img {
-            transform: translateY(-60px);
-            /* //颜色、x轴偏移量、y轴偏移量, */
-            filter: drop-shadow(#409eff 0 60px);
-            /* background-image: url(''), linear-gradient(#409eff, #409eff);
-background-blend-mode: lighten;
-background-size: cover; */
-        }
-
-/* 文件列表 */
 .groupFMB {
     line-height: normal;
     padding: 10px 15px;
@@ -124,25 +306,12 @@ background-size: cover; */
     border: 1px solid rgba(229, 229, 229, 1);
 }
 
-.groupFMB_filter_addBtn {
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    color: rgba(64, 158, 255, 1);
-    text-align: left;
-    /* vertical-align: top; */
-    cursor: pointer;
-}
-
 .groupFMB_ma_label {
     flex-shrink: 0;
     white-space: nowrap;
     font-size: 14px;
     font-weight: 400;
-    letter-spacing: 0px;
     color: rgba(166, 166, 166, 1);
-    text-align: left;
-    /* vertical-align: top; */
 }
 
 .groupFMB_ma_list {
@@ -152,30 +321,22 @@ background-size: cover; */
     overflow-x: hidden;
 }
 
-    .groupFMB_ma_list .groupFMB_ma_list_item {
-        gap: 10px;
-        padding: 5px 10px;
-        border: 1px solid rgba(229, 229, 229, 1);
-        white-space: nowrap;
-    }
+.groupFMB_ma_list .groupFMB_ma_list_item {
+    gap: 10px;
+    padding: 5px 10px;
+    border: 1px solid rgba(229, 229, 229, 1);
+    white-space: nowrap;
+}
 
-        .groupFMB_ma_list .groupFMB_ma_list_item .groupFMB_ma_list_item_text {
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 0px;
-            color: rgba(42, 130, 228, 1);
-            text-align: left;
-            vertical-align: top;
-        }
+.groupFMB_ma_list .groupFMB_ma_list_item .groupFMB_ma_list_item_text {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(42, 130, 228, 1);
+}
 
-
-
-
-/* 抽屉 右侧自定义 */
 .drawerRtl {
     display: flex;
     flex-direction: column;
-    /* height: 100%; */
     height: 100vh;
 }
 
@@ -217,12 +378,8 @@ background-size: cover; */
     box-sizing: border-box;
     padding: 10px 20px;
     border-top: 1px solid #d3d4d5;
-    /*background: #f9f8f8;*/
-    /*border-top: 1px solid #ededed;*/
-    /*box-shadow: 0 -1px 4px 1px rgba(0, 0, 0, 0.14);*/
 }
 
-/* 向量化进度弹窗 */
 .embedding-progress-body {
     padding: 10px 0 16px;
 }
@@ -233,7 +390,6 @@ background-size: cover; */
     font-size: 14px;
 }
 
-/* 向量化结果展示 */
 .embedding-result-body {
     max-height: 420px;
     overflow: auto;
@@ -249,4 +405,37 @@ background-size: cover; */
     white-space: pre-wrap;
     word-break: break-word;
     color: #303133;
+}
+
+.df,
+.df-wn {
+    display: flex;
+}
+
+.df-wn {
+    flex-wrap: nowrap;
+}
+
+.flex-ac {
+    align-items: center;
+}
+
+.flex-as {
+    align-items: flex-start;
+}
+
+.flex-js {
+    justify-content: flex-start;
+}
+
+.flex-jsb {
+    justify-content: space-between;
+}
+
+.cursorPointer {
+    cursor: pointer;
+}
+
+.text-right {
+    text-align: right;
 }

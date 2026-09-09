@@ -5,6 +5,7 @@ var app = new Vue({
             callback();
         };
         return {
+            activeNavKey: 'list', // list | recall | guide
             defaultMSG: null,
             editorData: '',
             elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
@@ -14,7 +15,21 @@ var app = new Vue({
                 dialogFile: false,   // 配置抽屉内「新建文件」上传弹框
                 embeddingProgress: false,  // 向量化进度弹窗
                 embeddingResult: false,    // 向量化结果展示弹窗
+                searchSettingsDrawer: false,
+                paragraphDetailDialog: false,
             },
+            // 召回测试
+            selectedKnowledgeBaseId: null,
+            recallContent: '',
+            topK: 5,
+            recallLoading: false,
+            recallResults: [],
+            lastElapsedMilliseconds: null,
+            recordList: [],
+            recordPage: 1,
+            recordPageSize: 5,
+            paragraphDetailItem: null,
+            recallKbOptions: [], // 召回下拉用的全量知识库（独立于列表分页）
             embeddingProgressPercent: 0,
             embeddingProgressStatus: '',   // '' | success | exception
             embeddingProgressText: '正在准备...',
@@ -184,6 +199,32 @@ var app = new Vue({
             fileNamesToSelect: [], // 打开配置时待选中的文件名（从 KnowledgeBaseItem 回显用）
         }
     },
+    computed: {
+        recallKnowledgeBaseList() {
+            const source = (this.recallKbOptions && this.recallKbOptions.length)
+                ? this.recallKbOptions
+                : (this.tableData || []);
+            return source.map(item => {
+                const ready = this.isKnowledgeBaseReady(item);
+                return {
+                    id: item.id,
+                    name: item.name || ('知识库-' + item.id),
+                    ready: ready,
+                    label: (item.name || ('知识库-' + item.id)) + (ready ? '' : '（尚未向量化）')
+                };
+            });
+        },
+        selectedKnowledgeBase() {
+            return this.recallKnowledgeBaseList.find(item => Number(item.id) === Number(this.selectedKnowledgeBaseId)) || null;
+        },
+        recordTotal() {
+            return this.recordList.length;
+        },
+        recordPageList() {
+            const start = (this.recordPage - 1) * this.recordPageSize;
+            return this.recordList.slice(start, start + this.recordPageSize);
+        }
+    },
     created: function () {
         let that = this
         that.initializeKnowledgeBaseNavigation()
@@ -191,7 +232,6 @@ var app = new Vue({
         that.getEmbeddingModelList();
         that.getVectorDBList();
         that.getChatModelList();
-        //debugger
         // 获取文件数据
         that.getFileListData('file');
 
@@ -212,7 +252,6 @@ var app = new Vue({
             }
         },
         'checkedColumns': function (val) {
-            //debugger
             console.log(val);
             let arr = this.checkBoxGroup.filter(i => !val.includes(i));
             this.colData.filter(i => {
@@ -223,10 +262,129 @@ var app = new Vue({
                 }
             });
             this.reload = Math.random()
+        },
+        recordList: function () {
+            const maxPage = Math.max(1, Math.ceil(this.recordTotal / this.recordPageSize));
+            if (this.recordPage > maxPage) this.recordPage = maxPage;
         }
     },
     methods:
     {
+        onNavClick(key) {
+            this.activeNavKey = key;
+            if (key === 'recall') {
+                this.loadRecallKnowledgeBaseList();
+            }
+        },
+        isKnowledgeBaseReady(row) {
+            return !!(row && row.vectorCollectionName && row.embeddedTime);
+        },
+        onEmbeddingResultConfirm() {
+            this.visible.embeddingResult = false;
+            this.getList();
+            if (this.activeNavKey === 'recall' || (this.recallKbOptions && this.recallKbOptions.length)) {
+                this.loadRecallKnowledgeBaseList();
+            }
+        },
+        async loadRecallKnowledgeBaseList() {
+            try {
+                const res = await service.get('/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=1&pageSize=200&keyword=&orderField=AddTime%20Desc');
+                const payload = res && res.data && res.data.data ? res.data.data : {};
+                this.recallKbOptions = Array.isArray(payload.list) ? payload.list : [];
+            } catch (e) {
+                console.error(e);
+                this.$message.error('无法获取知识库列表，请稍后重试');
+            }
+        },
+        handleRowCommand(command, row) {
+            if (command === 'edit') {
+                this.handleEdit(0, row, 'edit');
+            } else if (command === 'recall') {
+                this.selectedKnowledgeBaseId = row && row.id != null ? Number(row.id) : null;
+                this.activeNavKey = 'recall';
+                this.loadRecallKnowledgeBaseList();
+            } else if (command === 'delete') {
+                this.$confirm('确认删除此知识库管理吗？', '删除确认', {
+                    confirmButtonText: '删除',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.handleDelete(0, row);
+                }).catch(() => {});
+            }
+        },
+        formatScore(score) {
+            const value = Number(score);
+            return Number.isFinite(value) ? value.toFixed(4) : '—';
+        },
+        handleRecordSizeChange(value) {
+            this.recordPageSize = value;
+            this.recordPage = 1;
+        },
+        handleRecordPageChange(value) {
+            this.recordPage = value;
+        },
+        openParagraphDetail(item) {
+            this.paragraphDetailItem = item;
+            this.visible.paragraphDetailDialog = true;
+        },
+        async doRecall() {
+            const knowledgeBase = this.selectedKnowledgeBase;
+            const content = (this.recallContent || '').trim();
+            const recallUrl = '/api/Senparc.Xncf.KnowledgeBase/RecallTestAppService/Xncf.KnowledgeBase_RecallTestAppService.RecallTest';
+            if (!knowledgeBase) {
+                this.$message.warning('请先选择知识库');
+                return;
+            }
+            if (!knowledgeBase.ready) {
+                this.$message.warning('该知识库尚未向量化，请先执行“向量化”');
+                return;
+            }
+            if (!content) {
+                this.$message.warning('请输入要测试的问题');
+                return;
+            }
+
+            this.recallLoading = true;
+            this.recallResults = [];
+            this.lastElapsedMilliseconds = null;
+            try {
+                const response = await service.post(recallUrl, {
+                    id: Number(knowledgeBase.id),
+                    content: content,
+                    topK: this.topK
+                });
+                const body = response && response.data;
+                const results = body && Object.prototype.hasOwnProperty.call(body, 'data') ? body.data : body;
+                if (!Array.isArray(results)) throw new Error('服务未返回有效的召回结果');
+
+                this.recallResults = results.map(function (item, index) {
+                    return Object.assign({}, item, {
+                        rank: item.rank || index + 1,
+                        content: item.content || '',
+                        sourceName: item.sourceName || '',
+                        sourceLink: item.sourceLink || ''
+                    });
+                });
+                this.lastElapsedMilliseconds = this.recallResults.length ? this.recallResults[0].elapsedMilliseconds : null;
+                const scores = this.recallResults.map(item => Number(item.score)).filter(Number.isFinite);
+                this.recordList.unshift({
+                    queryContent: content,
+                    knowledgeBaseName: knowledgeBase.name,
+                    resultCount: this.recallResults.length,
+                    highestScore: scores.length ? Math.max.apply(null, scores) : null,
+                    time: new Date().toLocaleString('zh-CN', { hour12: false })
+                });
+                this.recordPage = 1;
+                this.$message.success(this.recallResults.length ? '召回测试完成，请核对来源与内容。' : '测试完成，但没有返回匹配片段。');
+            } catch (error) {
+                const response = error && error.response && error.response.data;
+                const msg = (response && (response.errorMessage || response.message || response.title)) || (error && error.message) || '请求未完成，请检查知识库和模型配置。';
+                this.$notify({ title: '召回未完成', message: msg, type: 'error', duration: 6000 });
+            } finally {
+                this.recallLoading = false;
+            }
+        },
         initializeKnowledgeBaseNavigation() {
             const query = new URLSearchParams(window.location.search || '')
             const knowledgeBaseId = Number(query.get('knowledgeBaseId') || 0)
@@ -686,7 +844,6 @@ var app = new Vue({
                     console.log('保存知识库数据：' + JSON.stringify(data));
                     service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
                       console.log('保存响应：', res);
-                        debugger
                         // res.data 是后端返回的对象：{success: true, data: true, msg: "保存成功"}
                         if (res.data && res.data.data.success && res.data.data.data === true) {
                             that.getList();
@@ -821,11 +978,14 @@ var app = new Vue({
         },
         handleSearch() {
             let that = this
+            that.listQuery.pageIndex = 1;
             that.getList();
         },
         resetCondition() {
             let that = this
             that.keyword = '';
+            that.listQuery.pageIndex = 1;
+            that.getList();
         },
         setRecommendFormat(row, column, cellValue, index) {
             if (cellValue) {
