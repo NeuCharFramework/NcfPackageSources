@@ -117,17 +117,25 @@ var app = new Vue({
             dialogVisible: false,
             dialog:
             {
-                title: '新增知识库管理',
+                title: '添加知识库',
                 visible: false,
                 data:
                 {
-                    id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
+                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: ''
                 },
                 rules:
                 {
                     name:
                         [
-                            { required: true, message: "知识库管理名称为必填项", trigger: "blur" }
+                            { required: true, message: "请输入知识库名称", trigger: "blur" }
+                        ],
+                    embeddingModelId:
+                        [
+                            { required: true, message: "请选择 Embedding 模型", trigger: "change" }
+                        ],
+                    vectorDBId:
+                        [
+                            { required: true, message: "请选择向量数据库", trigger: "change" }
                         ]
                 },
                 updateLoading: false,
@@ -140,7 +148,7 @@ var app = new Vue({
                 visible: false,
                 data:
                 {
-                    id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
+                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: ''
                 },
                 rules:
                 {
@@ -245,7 +253,7 @@ var app = new Vue({
             // 关闭dialog，清空
             if (!val) {
                 this.dialog.data = {
-                    id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
+                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: ''
                 };
                 this.dialog.updateLoading = false;
                 this.dialog.disabled = false;
@@ -673,7 +681,7 @@ var app = new Vue({
                 log('categoryData', res, 2);
             });
         },
-        // 编辑 // 新增知识库管理（文件在配置中上传，此处不再使用文件列表）
+        // 编辑 // 新增知识库（下拉直接绑定 dialog.data.*Id）
         handleEdit(index, row, flag) {
             let that = this;
             that.dialog.visible = false;
@@ -682,19 +690,15 @@ var app = new Vue({
             });
 
             if (flag === 'add') {
-                // 新增 - 初始化空数据
-                that.dialog.title = '新增知识库管理';
+                that.dialog.title = '添加知识库';
                 that.dialog.data = {
                     id: 0,
-                    embeddingModelId: 0,
-                    vectorDBId: 0,
-                    chatModelId: 0,
+                    embeddingModelId: null,
+                    vectorDBId: null,
+                    chatModelId: null,
                     name: '',
                     content: ''
                 };
-                that.selectDefaultEmbeddingModel = [];
-                that.selectDefaultVectorDB = [];
-                that.selectDefaultChatModel = [];
                 that.dialogImageUrl = '';
                 return;
             }
@@ -703,26 +707,15 @@ var app = new Vue({
             let { id, embeddingModelId, vectorDBId, chatModelId, name, content } = row;
             that.dialog.data = {
                 id: id || 0,
-                embeddingModelId: embeddingModelId || 0,
-                vectorDBId: vectorDBId || 0,
-                chatModelId: chatModelId || 0,
+                embeddingModelId: embeddingModelId ? parseInt(embeddingModelId, 10) : null,
+                vectorDBId: vectorDBId ? parseInt(vectorDBId, 10) : null,
+                chatModelId: chatModelId ? parseInt(chatModelId, 10) : null,
                 name: name || '',
                 content: content || ''
             };
 
-            // 设置下拉框默认值
-            if (that.dialog.data.embeddingModelId) {
-                that.selectDefaultEmbeddingModel = [parseInt(that.dialog.data.embeddingModelId)];
-            }
-            if (that.dialog.data.vectorDBId) {
-                that.selectDefaultVectorDB = [parseInt(that.dialog.data.vectorDBId)];
-            }
-            if (that.dialog.data.chatModelId) {
-                that.selectDefaultChatModel = [parseInt(that.dialog.data.chatModelId)];
-            }
-
             if (flag === 'edit') {
-                that.dialog.title = '编辑知识库管理';
+                that.dialog.title = '编辑知识库';
             }
         },
         // 设置父级菜单默认显示 递归
@@ -829,9 +822,11 @@ var app = new Vue({
         // 更新新增、编辑（文件改为在「配置」中上传并关联，此处不再传文件）
         updateData() {
             let that = this;
-            that.dialog.updateLoading = true;
             that.$refs['dataForm'].validate(valid => {
-                if (valid) {
+                if (!valid) {
+                    return;
+                }
+                that.dialog.updateLoading = true;
                     let data = {
                         id: that.dialog.data.id || 0,
                         embeddingModelId: parseInt(that.dialog.data.embeddingModelId) || 0,
@@ -874,7 +869,6 @@ var app = new Vue({
                         });
                         that.dialog.updateLoading = false;
                     });
-                }
             });
         },
         // 删除

@@ -241,71 +241,84 @@
 
     @* ========== 全局弹层：新增/编辑、配置、上传、向量化（各导航共用） ========== *@
     <el-dialog :title="dialog.title"
+               custom-class="kb-edit-dialog"
                :visible.sync="dialog.visible"
                :close-on-click-modal="false"
-               width="600px"
+               width="520px"
                append-to-body>
         <el-form ref="dataForm"
+                 class="kb-edit-form"
                  :rules="dialog.rules"
                  :model="dialog.data"
                  :disabled="dialog.disabled"
-                 size="mini"
-                 label-position="left"
-                 label-width="150px"
-                 style="max-width: 600px; margin-left:50px;">
+                 size="small"
+                 label-position="right"
+                 label-width="120px">
             <el-form-item label="名称" prop="name">
-                <el-input size="mini" v-model="dialog.data.name" clearable placeholder="请输入名称" />
+                <el-input v-model="dialog.data.name" clearable placeholder="请输入知识库名称" />
             </el-form-item>
 
-            <el-form-item label="选择Embedding模型">
-                <el-cascader v-model="selectDefaultEmbeddingModel"
-                             :options="embeddingModelData"
-                             @@change="selectEmbeddingModel"
-                             clearable
-                             filterable
-                             :props="{label:'alias',value:'id'}">
-                </el-cascader>
+            <el-form-item label="Embedding模型" prop="embeddingModelId">
+                <el-select v-model="dialog.data.embeddingModelId"
+                           class="kb-edit-select"
+                           popper-class="kb-edit-select-dropdown"
+                           clearable
+                           filterable
+                           placeholder="请选择 Embedding 模型"
+                           style="width: 100%;">
+                    <el-option v-for="item in embeddingModelData"
+                               :key="item.id"
+                               :label="item.alias || item.name || ('模型-' + item.id)"
+                               :value="item.id">
+                    </el-option>
+                </el-select>
             </el-form-item>
 
-            <el-form-item label="Embedding模型Id" prop="embeddingModelId" class="hidden">
-                <el-input size="mini" v-model="dialog.data.embeddingModelId" clearable placeholder="请输入Embedding模型Id" />
+            <el-form-item label="向量数据库" prop="vectorDBId">
+                <el-select v-model="dialog.data.vectorDBId"
+                           class="kb-edit-select"
+                           popper-class="kb-edit-select-dropdown"
+                           clearable
+                           filterable
+                           placeholder="请选择向量数据库"
+                           style="width: 100%;">
+                    <el-option v-for="item in vectorDBData"
+                               :key="item.id"
+                               :label="item.alias || item.name || ('向量库-' + item.id)"
+                               :value="item.id">
+                    </el-option>
+                </el-select>
             </el-form-item>
 
-            <el-form-item label="选择向量数据库">
-                <el-cascader v-model="selectDefaultVectorDB"
-                             :options="vectorDBData"
-                             @@change="selectVectorDB"
-                             clearable
-                             filterable
-                             :props="{label:'alias',value:'id'}">
-                </el-cascader>
-            </el-form-item>
-
-            <el-form-item label="向量数据库Id" prop="vectorDBId" class="hidden">
-                <el-input size="mini" v-model="dialog.data.vectorDBId" clearable placeholder="请输入向量数据库Id" />
-            </el-form-item>
-
-            <el-form-item label="选择对话模型">
-                <el-cascader v-model="selectDefaultChatModel"
-                             :options="chatModelData"
-                             @@change="selectChatModel"
-                             clearable
-                             filterable
-                             :props="{label:'alias',value:'id'}">
-                </el-cascader>
-            </el-form-item>
-
-            <el-form-item label="对话模型Id" prop="chatModelId" class="hidden">
-                <el-input size="mini" v-model="dialog.data.chatModelId" clearable placeholder="请输入对话模型Id" />
+            <el-form-item label="对话模型" prop="chatModelId">
+                <el-select v-model="dialog.data.chatModelId"
+                           class="kb-edit-select"
+                           popper-class="kb-edit-select-dropdown"
+                           clearable
+                           filterable
+                           placeholder="请选择对话模型"
+                           style="width: 100%;">
+                    <el-option v-for="item in chatModelData"
+                               :key="item.id"
+                               :label="item.alias || item.name || ('模型-' + item.id)"
+                               :value="item.id">
+                    </el-option>
+                </el-select>
             </el-form-item>
 
             <el-form-item label="内容" prop="content">
-                <el-input type="textarea" size="mini" v-model="dialog.data.content" clearable placeholder="请输入内容" />
+                <el-input type="textarea"
+                          v-model="dialog.data.content"
+                          :rows="4"
+                          clearable
+                          placeholder="请输入内容（可选）" />
             </el-form-item>
+
+            <p class="kb-edit-form-tip">* Embedding 模型与向量数据库为向量化所必需，保存后可在「配置」中关联资料。</p>
         </el-form>
-        <div slot="footer" class="dialog-footer">
-            <el-button size="mini" @@click="dialog.visible=false">取消</el-button>
-            <el-button size="mini" :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">确认</el-button>
+        <div slot="footer" class="kb-edit-dialog-footer">
+            <el-button class="kb-btn-cancel" size="small" @@click="dialog.visible=false">取消</el-button>
+            <el-button class="kb-btn-confirm" size="small" :loading="dialog.updateLoading" :disabled="dialog.disabled" @@click="updateData">确定</el-button>
         </div>
     </el-dialog>
 
