@@ -60,6 +60,7 @@ var app = new Vue({
             embeddingModelData: [],
             selectDefaultVectorDB: [],
             vectorDBData: [],
+            vectorDBDataAll: [],
             selectDefaultChatModel: [],
             chatModelData: [],
             page: {
@@ -71,7 +72,8 @@ var app = new Vue({
                 embeddingModelId: [],
                 vectorDBId: [],
                 chatModelId: [],
-                name: []
+                name: [],
+                content: []
             },
             colData: [
                 { title: "Embedding模型Id", istrue: false },
@@ -283,6 +285,12 @@ var app = new Vue({
             if (key === 'recall') {
                 this.loadRecallKnowledgeBaseList();
             }
+        },
+        formatSelectLabel(item, fallbackPrefix) {
+            if (!item) {
+                return '';
+            }
+            return item.alias || item.name || ((fallbackPrefix || '选项') + '-' + item.id);
         },
         isKnowledgeBaseReady(row) {
             return !!(row && row.vectorCollectionName && row.embeddedTime);
@@ -524,8 +532,54 @@ var app = new Vue({
             await axios.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetPagedListAsync', param)
                 .then(res => {
                     console.log(res)
-                    that.vectorDBData = res.data.data.data;
+                    const list = (res.data && res.data.data && res.data.data.data) || [];
+                    // KnowledgeBase 仅支持可持久化的 Redis / Qdrant；Memory 等内存库后端会直接拒绝
+                    that.vectorDBData = (Array.isArray(list) ? list : []).filter(item => that.isSupportedVectorDb(item));
+                    that.vectorDBDataAll = Array.isArray(list) ? list : [];
                 })
+        },
+        isSupportedVectorDb(item) {
+            if (!item) {
+                return false;
+            }
+            var typeVal = item.vectorDBType != null ? item.vectorDBType : item.VectorDBType;
+            var typeName = String(typeVal == null ? '' : typeVal).toLowerCase();
+            var alias = String(item.alias || item.Alias || item.name || item.Name || '').toLowerCase();
+
+            if (typeName === 'memory' || typeName === 'volatileinmemory' || typeName === '0') {
+                return false;
+            }
+            if (alias === 'memory' || alias.indexOf('memory') >= 0) {
+                return false;
+            }
+            if (typeName === 'redis' || typeName === 'qdrant') {
+                return true;
+            }
+            if (alias.indexOf('redis') >= 0 || alias.indexOf('qdrant') >= 0) {
+                return true;
+            }
+            if (typeof typeVal === 'number') {
+                return typeVal !== 0;
+            }
+            return true;
+        },
+        resolveSaveResponse(res) {
+            var body = res && res.data;
+            if (!body) {
+                return { ok: false, message: '保存失败：未收到服务端响应' };
+            }
+            var payload = body;
+            if (body.data && typeof body.data === 'object' && !Array.isArray(body.data)) {
+                if (Object.prototype.hasOwnProperty.call(body.data, 'success')
+                    || Object.prototype.hasOwnProperty.call(body.data, 'Success')) {
+                    payload = body.data;
+                }
+            }
+            var success = payload.success === true || payload.Success === true;
+            var message = payload.msg || payload.Msg || body.msg || body.Msg
+                || body.exception || body.Exception
+                || (success ? '知识库保存成功' : '保存失败，请检查数据');
+            return { ok: success, message: String(message) };
         },
         async getChatModelList() {
             let that = this
@@ -827,48 +881,51 @@ var app = new Vue({
                     return;
                 }
                 that.dialog.updateLoading = true;
-                    let data = {
-                        id: that.dialog.data.id || 0,
-                        embeddingModelId: parseInt(that.dialog.data.embeddingModelId) || 0,
-                        vectorDBId: parseInt(that.dialog.data.vectorDBId) || 0,
-                        chatModelId: parseInt(that.dialog.data.chatModelId) || 0,
-                        name: that.dialog.data.name,
-                        content: that.dialog.data.content || '',
-                        NcfFileIds: null
-                    };
-                    console.log('保存知识库数据：' + JSON.stringify(data));
-                    service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
-                      console.log('保存响应：', res);
-                        // res.data 是后端返回的对象：{success: true, data: true, msg: "保存成功"}
-                        if (res.data && res.data.data.success && res.data.data.data === true) {
-                            that.getList();
-                            that.$notify({
-                                title: "成功",
-                                message: res.data.msg || "知识库保存成功",
-                                type: "success",
-                                duration: 2000
-                            });
-                            that.dialog.visible = false;
-                            that.dialog.updateLoading = false;
-                        } else {
-                            that.$notify({
-                                title: "失败",
-                                message: (res.data && res.data.msg) || "保存失败，请检查数据",
-                                type: "error",
-                                duration: 3000
-                            });
-                            that.dialog.updateLoading = false;
-                        }
-                    }).catch(err => {
-                        console.error('保存错误：', err);
+                let data = {
+                    id: that.dialog.data.id || 0,
+                    embeddingModelId: parseInt(that.dialog.data.embeddingModelId, 10) || 0,
+                    vectorDBId: parseInt(that.dialog.data.vectorDBId, 10) || 0,
+                    chatModelId: parseInt(that.dialog.data.chatModelId, 10) || 0,
+                    name: that.dialog.data.name,
+                    content: that.dialog.data.content || '',
+                    NcfFileIds: null
+                };
+                console.log('保存知识库数据：' + JSON.stringify(data));
+                service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
+                    console.log('保存响应：', res);
+                    const result = that.resolveSaveResponse(res);
+                    if (result.ok) {
+                        that.getList();
                         that.$notify({
-                            title: "错误",
-                            message: "保存出错：" + (err.message || err),
-                            type: "error",
-                            duration: 3000
+                            title: "成功",
+                            message: result.message || "知识库保存成功",
+                            type: "success",
+                            duration: 2000
                         });
-                        that.dialog.updateLoading = false;
+                        that.dialog.visible = false;
+                    } else {
+                        that.$notify({
+                            title: "失败",
+                            message: result.message || "保存失败，请检查数据",
+                            type: "error",
+                            duration: 5000
+                        });
+                    }
+                    that.dialog.updateLoading = false;
+                }).catch(err => {
+                    console.error('保存错误：', err);
+                    const response = err && err.response && err.response.data;
+                    const message = (response && (response.msg || response.Msg || response.message || response.Message || response.exception))
+                        || (err && err.message)
+                        || '保存出错，请稍后重试';
+                    that.$notify({
+                        title: "错误",
+                        message: String(message),
+                        type: "error",
+                        duration: 5000
                     });
+                    that.dialog.updateLoading = false;
+                });
             });
         },
         // 删除

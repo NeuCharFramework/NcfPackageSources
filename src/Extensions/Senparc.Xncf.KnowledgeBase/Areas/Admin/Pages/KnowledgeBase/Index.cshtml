@@ -8,6 +8,39 @@
 @section Style {
     <link href="~/css/KnowledgeBase/KnowledgeBase/KnowledgeBase.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/KnowledgeBase/RecallTest/RecallTest.css" rel="stylesheet" asp-append-version="true" />
+    <style>
+        /* 兜底布局：即使外链 CSS 未刷新，也避免主区域高度为 0 的白屏 */
+        .el-main.admin-content:has(.knowledge-base-layout),
+        .admin-content:has(.knowledge-base-layout) {
+            display: block !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            height: calc(100vh - 96px) !important;
+            min-height: 480px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+            background: #fff !important;
+        }
+        .admin-content:has(.knowledge-base-layout) .ifram-wrapper {
+            display: block !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 480px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+        }
+        .knowledge-base-layout {
+            display: flex !important;
+            flex-direction: row !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 480px !important;
+            background: #fff !important;
+            overflow: hidden !important;
+        }
+    </style>
 }
 
 @section breadcrumbs {
@@ -37,7 +70,7 @@
     @* 主区域 85% *@
     <div class="knowledge-base-layout-main">
         @* —— 知识库列表 —— *@
-        <div class="kb-list-panel" v-show="activeNavKey === 'list'">
+        <div class="kb-list-panel" v-show="activeNavKey === 'list' || !activeNavKey">
             <div class="kb-top-bar">
                 <div class="kb-top-search">
                     <el-input v-model="keyword"
@@ -162,7 +195,7 @@
                                         <el-option v-for="item in recallKnowledgeBaseList" :key="item.id" :label="item.label" :value="item.id" :disabled="!item.ready"></el-option>
                                     </el-select>
                                 </div>
-                                <p class="field-tip" v-if="selectedKnowledgeBase">{{ selectedKnowledgeBase.ready ? '该知识库已完成向量化，可以开始测试。' : '该知识库尚未向量化，请先执行“向量化”。' }}</p>
+                                <p class="field-tip" v-if="selectedKnowledgeBase">{{ selectedKnowledgeBase.ready ? '该知识库已完成向量化，可以开始测试。' : '该知识库尚未向量化，请先执行向量化。' }}</p>
 
                                 <div class="query-box">
                                     <div class="query-box-header">
@@ -268,7 +301,7 @@
                            style="width: 100%;">
                     <el-option v-for="item in embeddingModelData"
                                :key="item.id"
-                               :label="item.alias || item.name || ('模型-' + item.id)"
+                               :label="formatSelectLabel(item, '模型')"
                                :value="item.id">
                     </el-option>
                 </el-select>
@@ -280,14 +313,15 @@
                            popper-class="kb-edit-select-dropdown"
                            clearable
                            filterable
-                           placeholder="请选择向量数据库"
+                           placeholder="请选择 Redis 或 Qdrant 向量库"
                            style="width: 100%;">
                     <el-option v-for="item in vectorDBData"
                                :key="item.id"
-                               :label="item.alias || item.name || ('向量库-' + item.id)"
+                               :label="formatSelectLabel(item, '向量库')"
                                :value="item.id">
                     </el-option>
                 </el-select>
+                <div v-if="!vectorDBData.length" class="kb-edit-form-inline-tip">当前没有可用的持久化向量库。请先在 AIKernel 中配置 Redis 或 Qdrant（Memory 内存库不可用于知识库）。</div>
             </el-form-item>
 
             <el-form-item label="对话模型" prop="chatModelId">
@@ -300,7 +334,7 @@
                            style="width: 100%;">
                     <el-option v-for="item in chatModelData"
                                :key="item.id"
-                               :label="item.alias || item.name || ('模型-' + item.id)"
+                               :label="formatSelectLabel(item, '模型')"
                                :value="item.id">
                     </el-option>
                 </el-select>
@@ -314,7 +348,7 @@
                           placeholder="请输入内容（可选）" />
             </el-form-item>
 
-            <p class="kb-edit-form-tip">* Embedding 模型与向量数据库为向量化所必需，保存后可在「配置」中关联资料。</p>
+            <p class="kb-edit-form-tip">* 向量库仅支持 Redis / Qdrant；Memory 无法跨请求持久化。保存后可在「配置」中关联资料并执行向量化。</p>
         </el-form>
         <div slot="footer" class="kb-edit-dialog-footer">
             <el-button class="kb-btn-cancel" size="small" @@click="dialog.visible=false">取消</el-button>
