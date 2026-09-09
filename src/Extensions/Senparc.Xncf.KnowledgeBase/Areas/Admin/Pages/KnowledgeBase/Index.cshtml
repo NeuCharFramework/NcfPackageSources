@@ -476,33 +476,64 @@
         </div>
     </el-dialog>
 
-    @* 向量化进度弹窗 *@
-    <el-dialog title="向量化进度"
-               :visible.sync="visible.embeddingProgress"
-               width="420px"
-               :close-on-click-modal="false"
-               :close-on-press-escape="false"
-               :show-close="false"
-               append-to-body>
-        <div class="embedding-progress-body">
-            <el-progress :percentage="embeddingProgressPercent" :status="embeddingProgressStatus"></el-progress>
-            <p class="embedding-progress-text">{{ embeddingProgressText }}</p>
-        </div>
-    </el-dialog>
-
-    @* 向量化结果展示弹窗 *@
-    <el-dialog title="向量化结果"
-               :visible.sync="visible.embeddingResult"
-               width="560px"
-               append-to-body
-               @@close="embeddingResultText = ''">
-        <div class="embedding-result-body">
-            <pre class="embedding-result-pre">{{ embeddingResultText }}</pre>
-        </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" size="small" @@click="onEmbeddingResultConfirm">确定</el-button>
+    @* 向量化进度：右下角浮动任务面板（非阻塞） *@
+    <div class="kb-embedding-float" v-show="visible.embeddingProgress" :class="{ 'is-collapsed': embeddingPanelCollapsed, 'is-success': embeddingProgressStatus === 'success', 'is-error': embeddingProgressStatus === 'exception' }">
+        <div class="kb-embedding-float__header" @@click="embeddingPanelCollapsed = !embeddingPanelCollapsed">
+            <div class="kb-embedding-float__summary">
+                <el-progress type="circle"
+                             :percentage="embeddingProgressPercent"
+                             :width="28"
+                             :stroke-width="3"
+                             :status="embeddingProgressStatus"
+                             :show-text="true">
+                </el-progress>
+                <span class="kb-embedding-float__summary-text">
+                    <template v-if="embeddingProgressStatus === 'success'">处理完成 {{ embeddingDoneCount }}/{{ embeddingTotalCount }}</template>
+                    <template v-else-if="embeddingProgressStatus === 'exception'">处理失败 {{ embeddingDoneCount }}/{{ embeddingTotalCount }}</template>
+                    <template v-else>正在处理 {{ embeddingDoneCount }}/{{ embeddingTotalCount }}</template>
+                </span>
             </div>
-    </el-dialog>
+            <i class="kb-embedding-float__toggle" :class="embeddingPanelCollapsed ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
+        </div>
+        <div class="kb-embedding-float__body" v-show="!embeddingPanelCollapsed">
+            <div class="kb-embedding-float__task">
+                <span class="kb-embedding-float__task-name" :title="embeddingTaskName">{{ embeddingTaskName || '知识库向量化' }}</span>
+                <div class="kb-embedding-float__task-bar">
+                    <el-progress :percentage="embeddingProgressPercent"
+                                 :status="embeddingProgressStatus"
+                                 :stroke-width="6"
+                                 :show-text="false">
+                    </el-progress>
+                </div>
+                <span class="kb-embedding-float__task-pct">{{ embeddingProgressPercent }}%</span>
+            </div>
+            <p class="kb-embedding-float__hint">{{ embeddingProgressText }}</p>
+        </div>
+    </div>
+
+    @* 向量化结果：右下角结果提示卡片 *@
+    <div class="kb-embedding-result-toast"
+         v-show="visible.embeddingResult"
+         :class="{ 'is-error': embeddingResultCard.isError }">
+        <i class="kb-embedding-result-toast__close el-icon-close" @@click="closeEmbeddingResultToast"></i>
+        <div class="kb-embedding-result-toast__row">
+            <span class="kb-embedding-result-toast__icon" :class="embeddingResultCard.isError ? 'is-error' : 'is-success'">
+                <i :class="embeddingResultCard.isError ? 'el-icon-close' : 'el-icon-check'"></i>
+            </span>
+            <div class="kb-embedding-result-toast__content">
+                <div class="kb-embedding-result-toast__title">{{ embeddingResultCard.title }}</div>
+                <div class="kb-embedding-result-toast__meta">
+                    您于 {{ embeddingResultCard.timeText }} 发起的 【{{ embeddingResultCard.taskName }}】
+                </div>
+                <div class="kb-embedding-result-toast__stats">
+                    共处理 <em class="is-total">{{ embeddingResultCard.total }}</em> 条，
+                    成功 <em class="is-ok">{{ embeddingResultCard.success }}</em> 条，
+                    失败 <em class="is-fail">{{ embeddingResultCard.fail }}</em> 条
+                </div>
+                <div class="kb-embedding-result-toast__detail" v-if="embeddingResultCard.detail">{{ embeddingResultCard.detail }}</div>
+            </div>
+        </div>
+    </div>
 
     @* 召回：检索设置 *@
     <el-drawer title="检索设置" :visible.sync="visible.searchSettingsDrawer" direction="rtl" size="380px" append-to-body>

@@ -34,7 +34,23 @@ var app = new Vue({
             embeddingProgressStatus: '',   // '' | success | exception
             embeddingProgressText: '正在准备...',
             embeddingResultText: '',
+            embeddingTaskName: '',
+            embeddingDoneCount: 0,
+            embeddingTotalCount: 1,
+            embeddingPanelCollapsed: false,
+            embeddingStartedAt: null,
+            embeddingResultCard: {
+                isError: false,
+                title: '',
+                timeText: '',
+                taskName: '',
+                total: 0,
+                success: 0,
+                fail: 0,
+                detail: ''
+            },
             _embeddingTimer: null,
+            _embeddingResultTimer: null,
             configUploadFileList: [], // 新建文件弹框内的上传列表（仅展示用，关闭时清空）
             form:
             {
@@ -296,11 +312,70 @@ var app = new Vue({
             return !!(row && row.vectorCollectionName && row.embeddedTime);
         },
         onEmbeddingResultConfirm() {
+            this.closeEmbeddingResultToast();
+        },
+        closeEmbeddingResultToast() {
+            if (this._embeddingResultTimer) {
+                clearTimeout(this._embeddingResultTimer);
+                this._embeddingResultTimer = null;
+            }
             this.visible.embeddingResult = false;
+            this.embeddingResultText = '';
             this.getList();
             if (this.activeNavKey === 'recall' || (this.recallKbOptions && this.recallKbOptions.length)) {
                 this.loadRecallKnowledgeBaseList();
             }
+        },
+        formatEmbeddingTime(dateObj) {
+            var d = dateObj instanceof Date ? dateObj : new Date();
+            var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+            return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())
+                + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+        },
+        parseEmbeddingResultStats(message) {
+            var text = String(message || '');
+            var totalMatch = text.match(/总计[:：]\s*(\d+)/);
+            var successMatch = text.match(/成功[:：]\s*(\d+)/);
+            var failMatch = text.match(/失败[:：]\s*(\d+)/);
+            var total = totalMatch ? parseInt(totalMatch[1], 10) : 0;
+            var success = successMatch ? parseInt(successMatch[1], 10) : (total || 0);
+            var fail = failMatch ? parseInt(failMatch[1], 10) : 0;
+            if (!total && success) {
+                total = success + fail;
+            }
+            return { total: total, success: success, fail: fail };
+        },
+        showEmbeddingResultToast(options) {
+            var that = this;
+            var opts = options || {};
+            var stats = that.parseEmbeddingResultStats(opts.message || '');
+            if (opts.total != null) stats.total = opts.total;
+            if (opts.success != null) stats.success = opts.success;
+            if (opts.fail != null) stats.fail = opts.fail;
+            if (!stats.total && !opts.isError) {
+                stats.total = 1;
+                stats.success = 1;
+                stats.fail = 0;
+            }
+            that.embeddingResultCard = {
+                isError: !!opts.isError,
+                title: opts.title || (opts.isError ? '向量化任务执行失败!' : '向量化请求已经执行完毕!'),
+                timeText: that.formatEmbeddingTime(opts.startedAt || that.embeddingStartedAt || new Date()),
+                taskName: opts.taskName || that.embeddingTaskName || '知识库向量化',
+                total: stats.total,
+                success: stats.success,
+                fail: stats.fail,
+                detail: opts.detail || ''
+            };
+            that.embeddingResultText = opts.message || '';
+            that.visible.embeddingProgress = false;
+            that.visible.embeddingResult = true;
+            if (that._embeddingResultTimer) {
+                clearTimeout(that._embeddingResultTimer);
+            }
+            that._embeddingResultTimer = setTimeout(function () {
+                that.closeEmbeddingResultToast();
+            }, 12000);
         },
         async loadRecallKnowledgeBaseList() {
             try {
@@ -1078,6 +1153,12 @@ var app = new Vue({
                     that.embeddingProgressPercent = 0;
                     that.embeddingProgressStatus = '';
                     that.embeddingProgressText = '正在准备...';
+                    that.embeddingTaskName = item && item.name ? item.name : ('知识库-' + (item && item.id ? item.id : ''));
+                    that.embeddingDoneCount = 0;
+                    that.embeddingTotalCount = 1;
+                    that.embeddingPanelCollapsed = false;
+                    that.embeddingStartedAt = new Date();
+                    that.visible.embeddingResult = false;
                     that.visible.embeddingProgress = true;
 
                     var progressVal = 0;
@@ -1089,7 +1170,7 @@ var app = new Vue({
                     }, 400);
 
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.EmbeddingKnowledgeBase';
-                    const dataTemp = { id: item?.id ?? '' };
+                    const dataTemp = { id: item && item.id != null ? item.id : '' };
 
                     service.post(serviceURL, dataTemp).then(res => {
                         if (that._embeddingTimer) {
@@ -1098,29 +1179,37 @@ var app = new Vue({
                         }
                         that.embeddingProgressPercent = 100;
                         that.embeddingProgressStatus = 'success';
+                        that.embeddingDoneCount = 1;
                         that.embeddingProgressText = '向量化完成';
 
                         var body = res && res.data;
                         var success = body && (body.success === true);
                         var resultMessage = (body && body.data != null) ? (typeof body.data === 'string' ? body.data : (body.data.data != null ? body.data.data : '')) : '';
-                        if (success && resultMessage) {
+                        if (success) {
                             setTimeout(function () {
-                                that.visible.embeddingProgress = false;
-                                that.embeddingResultText = resultMessage;
-                                that.visible.embeddingResult = true;
-                            }, 400);
-                        } else if (success) {
-                            setTimeout(function () {
-                                that.visible.embeddingProgress = false;
-                                that.embeddingResultText = '知识库「' + (item.name || '') + '」向量化已完成。';
-                                that.visible.embeddingResult = true;
-                            }, 400);
+                                that.showEmbeddingResultToast({
+                                    isError: false,
+                                    title: '向量化请求已经执行完毕!',
+                                    taskName: that.embeddingTaskName,
+                                    startedAt: that.embeddingStartedAt,
+                                    message: resultMessage || ('知识库「' + (item.name || '') + '」向量化已完成。')
+                                });
+                            }, 500);
                         } else {
                             that.embeddingProgressStatus = 'exception';
                             that.embeddingProgressText = (res && res.errorMessage) || (res && res.message) || '向量化失败';
                             setTimeout(function () {
-                                that.visible.embeddingProgress = false;
-                                that.$notify({ title: '向量化失败', message: that.embeddingProgressText, type: 'error', duration: 5000 });
+                                that.showEmbeddingResultToast({
+                                    isError: true,
+                                    title: '向量化任务执行失败!',
+                                    taskName: that.embeddingTaskName,
+                                    startedAt: that.embeddingStartedAt,
+                                    total: 1,
+                                    success: 0,
+                                    fail: 1,
+                                    detail: that.embeddingProgressText,
+                                    message: that.embeddingProgressText
+                                });
                             }, 800);
                         }
                     }).catch(err => {
@@ -1132,12 +1221,16 @@ var app = new Vue({
                         that.embeddingProgressPercent = Math.max(that.embeddingProgressPercent, 50);
                         that.embeddingProgressText = '处理出错：' + (err.message || err);
                         setTimeout(function () {
-                            that.visible.embeddingProgress = false;
-                            that.$notify({
-                                title: '错误',
-                                message: err.message || '向量化处理出错，请检查配置',
-                                type: 'error',
-                                duration: 5000
+                            that.showEmbeddingResultToast({
+                                isError: true,
+                                title: '向量化任务执行失败!',
+                                taskName: that.embeddingTaskName,
+                                startedAt: that.embeddingStartedAt,
+                                total: 1,
+                                success: 0,
+                                fail: 1,
+                                detail: err.message || '向量化处理出错，请检查配置',
+                                message: err.message || '向量化处理出错，请检查配置'
                             });
                         }, 800);
                     });

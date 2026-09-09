@@ -503,14 +503,208 @@
     border-top: 1px solid #d3d4d5;
 }
 
-.embedding-progress-body {
-    padding: 10px 0 16px;
+.kb-embedding-float {
+    position: fixed;
+    right: 24px;
+    bottom: 56px;
+    z-index: 4000;
+    width: 360px;
+    background: #fff;
+    border: 1px solid #e4e7ed;
+    border-radius: 4px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    user-select: none;
 }
 
-.embedding-progress-text {
-    margin: 14px 0 0;
-    color: #606266;
+.kb-embedding-float__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0f2f5;
+    cursor: pointer;
+    background: #fafafa;
+}
+
+.kb-embedding-float.is-collapsed .kb-embedding-float__header {
+    border-bottom: none;
+}
+
+.kb-embedding-float__summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.kb-embedding-float__summary .el-progress {
+    flex-shrink: 0;
+}
+
+.kb-embedding-float__summary .el-progress__text {
+    font-size: 10px !important;
+}
+
+.kb-embedding-float__summary-text {
+    font-size: 13px;
+    color: #303133;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.kb-embedding-float__toggle {
+    color: #909399;
     font-size: 14px;
+    flex-shrink: 0;
+}
+
+.kb-embedding-float__body {
+    padding: 12px;
+}
+
+.kb-embedding-float__task {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.kb-embedding-float__task-name {
+    flex: 0 0 96px;
+    max-width: 96px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    color: #606266;
+}
+
+.kb-embedding-float__task-bar {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.kb-embedding-float__task-pct {
+    flex: 0 0 36px;
+    text-align: right;
+    font-size: 12px;
+    color: #909399;
+}
+
+.kb-embedding-float__hint {
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: #909399;
+    line-height: 1.4;
+}
+
+.kb-embedding-float.is-success .kb-embedding-float__summary-text {
+    color: #67c23a;
+}
+
+.kb-embedding-float.is-error .kb-embedding-float__summary-text {
+    color: #f56c6c;
+}
+
+/* ========== 向量化结果：右下角提示卡片 ========== */
+.kb-embedding-result-toast {
+    position: fixed;
+    right: 24px;
+    bottom: 56px;
+    z-index: 4100;
+    width: 420px;
+    box-sizing: border-box;
+    padding: 16px 18px 14px;
+    background: #fff;
+    border: 1px solid #e4e7ed;
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.kb-embedding-result-toast__close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 14px;
+    color: #c0c4cc;
+    cursor: pointer;
+}
+
+.kb-embedding-result-toast__close:hover {
+    color: #909399;
+}
+
+.kb-embedding-result-toast__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding-right: 16px;
+}
+
+.kb-embedding-result-toast__icon {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    margin-top: 1px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+}
+
+.kb-embedding-result-toast__icon.is-success {
+    background: #67c23a;
+}
+
+.kb-embedding-result-toast__icon.is-error {
+    background: #f56c6c;
+}
+
+.kb-embedding-result-toast__content {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+.kb-embedding-result-toast__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #303133;
+    line-height: 1.4;
+    margin-bottom: 6px;
+}
+
+.kb-embedding-result-toast__meta,
+.kb-embedding-result-toast__stats,
+.kb-embedding-result-toast__detail {
+    font-size: 12px;
+    color: #606266;
+    line-height: 1.7;
+}
+
+.kb-embedding-result-toast__stats em {
+    font-style: normal;
+    font-weight: 600;
+}
+
+.kb-embedding-result-toast__stats .is-total {
+    color: #303133;
+}
+
+.kb-embedding-result-toast__stats .is-ok {
+    color: #67c23a;
+}
+
+.kb-embedding-result-toast__stats .is-fail {
+    color: #f56c6c;
+}
+
+.kb-embedding-result-toast__detail {
+    margin-top: 4px;
+    color: #909399;
+    word-break: break-word;
 }
 
 .embedding-result-body {
