@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260829
     修改描述：v0.3.0 新增工作流分析查询与管理端可视化
 
+    修改标识：Senparc - 20260909
+    修改描述：v0.4.0 新增 Chat 触发器：聊天页面、会话服务与匿名访问
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -99,6 +102,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         services.AddSingleton<INeuBellProvider>(serviceProvider =>
             serviceProvider.GetRequiredService<NeuCharWorkflowNeuBellProvider>());
         services.AddSingleton<NeuCharWorkflowHumanInputService>();
+        services.AddSingleton<NeuCharWorkflowChatSessionService>();
         services.AddScoped<NeuCharWorkflowEngine>();
         services.AddSingleton<NeuCharWorkflowRunCoordinator>();
         // 仅在没有外部执行模块提供桥接时注册空实现。AgentsManager 无论先于或后于

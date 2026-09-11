@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强工作流函数调用、任务控制与回放管理
 
+    修改标识：Senparc - 20260909
+    修改描述：v0.4.0 运行来源新增 chat（Chat 触发器聊天会话）
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -415,6 +418,7 @@ public sealed class NeuCharWorkflowRunCoordinator
     {
         "webhook" => "webhook",
         "interval" => "interval",
+        "chat" => "chat",
         _ => "manual"
     };
 }

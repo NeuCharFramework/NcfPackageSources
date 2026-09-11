@@ -22,6 +22,9 @@
     修改标识：Senparc - 20260829
     修改描述：v0.3.0 新增工作流分析查询与管理端可视化
 
+    修改标识：Senparc - 20260909
+    修改描述：v0.4.0 新增 Chat 触发器：聊天会话、消息发送与运行状态查询
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -63,6 +66,7 @@ public sealed class NeuCharWorkflowAppService
     private readonly XncfModuleService _xncfModuleService;
     private readonly IWorkflowHumanInteractionBridge _humanInteractionBridge;
     private readonly NeuCharWorkflowHumanInputService _humanInputService;
+    private readonly NeuCharWorkflowChatSessionService _chatSessionService;
     private readonly IAgentWorkflowReferenceValidator? _agentWorkflowReferenceValidator;
 
     public NeuCharWorkflowAppService(
@@ -77,6 +81,7 @@ public sealed class NeuCharWorkflowAppService
         XncfModuleService xncfModuleService,
         IWorkflowHumanInteractionBridge humanInteractionBridge,
         NeuCharWorkflowHumanInputService humanInputService,
+        NeuCharWorkflowChatSessionService chatSessionService,
         IEnumerable<IAgentWorkflowReferenceValidator>? agentWorkflowReferenceValidators = null)
     {
         _workflowService = workflowService;
@@ -90,6 +95,7 @@ public sealed class NeuCharWorkflowAppService
         _xncfModuleService = xncfModuleService;
         _humanInteractionBridge = humanInteractionBridge;
         _humanInputService = humanInputService;
+        _chatSessionService = chatSessionService;
         _agentWorkflowReferenceValidator = agentWorkflowReferenceValidators?.FirstOrDefault();
     }
 
@@ -234,6 +240,7 @@ public sealed class NeuCharWorkflowAppService
         {
             "interval" => "interval",
             "webhook" => "webhook",
+            "chat" => "chat",
             "manual" or null or "" => "manual",
             _ => null
         };
@@ -263,6 +270,9 @@ public sealed class NeuCharWorkflowAppService
             triggerConfigJson = triggerType switch
             {
                 "webhook" => NeuCharWorkflowWebhookConfig.Normalize(
+                    request.TriggerConfigJson,
+                    workflow.TriggerConfigJson).ToJson(),
+                "chat" => NeuCharWorkflowChatConfig.Normalize(
                     request.TriggerConfigJson,
                     workflow.TriggerConfigJson).ToJson(),
                 "interval" => request.TriggerConfigJson ?? "{}",
@@ -828,6 +838,242 @@ public sealed class NeuCharWorkflowAppService
         return WorkflowWebhookTriggerResult.Accepted(workflow.Id, runId);
     }
 
+    /// <summary>
+    /// 打开聊天页面前的引导数据：标题、欢迎语、访客标识与历史消息。
+    /// </summary>
+    public async Task<WorkflowChatBootstrapResult> GetChatBootstrapAsync(
+        int workflowId,
+        string participantKey,
+        CancellationToken cancellationToken = default)
+    {
+        if (!IsValidParticipantKey(participantKey))
+        {
+            return WorkflowChatBootstrapResult.BadRequest("会话标识无效。");
+        }
+        var access = await GetChatAccessAsync(workflowId, participantKey, cancellationToken).ConfigureAwait(false);
+        if (!access.Ok)
+        {
+            return WorkflowChatBootstrapResult.From(access);
+        }
+        var workflow = access.Workflow!;
+        var config = access.Config!;
+        var messages = _chatSessionService.GetMessages(workflowId, participantKey)
+            .Select(z => new WorkflowChatMessage(z.Role, z.Content, z.Timestamp))
+            .ToList();
+        var greeting = string.IsNullOrWhiteSpace(config.Greeting)
+            ? $"你好！我是「{workflow.Name}」，发送消息即可启动工作流。"
+            : config.Greeting;
+        return WorkflowChatBootstrapResult.Ok(
+            workflowId,
+            config.Title ?? workflow.Name,
+            greeting,
+            access.IsGuest,
+            _chatSessionService.HasPendingRun(workflowId, participantKey),
+            _chatSessionService.GetPendingRun(workflowId, participantKey),
+            messages);
+    }
+
+    /// <summary>
+    /// 发送一条聊天消息并启动一次工作流运行；同一会话同一时间只允许一个进行中的运行。
+    /// </summary>
+    public async Task<WorkflowChatSendResult> SendChatMessageAsync(
+        int workflowId,
+        string participantKey,
+        string message,
+        CancellationToken cancellationToken = default)
+    {
+        if (!IsValidParticipantKey(participantKey))
+        {
+            return WorkflowChatSendResult.BadRequest("会话标识无效。");
+        }
+        var normalizedMessage = message?.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedMessage))
+        {
+            return WorkflowChatSendResult.BadRequest("消息内容不能为空。");
+        }
+        if (normalizedMessage.Length > 8_000)
+        {
+            return WorkflowChatSendResult.BadRequest("消息内容不能超过 8000 个字符。");
+        }
+        var access = await GetChatAccessAsync(workflowId, participantKey, cancellationToken).ConfigureAwait(false);
+        if (!access.Ok)
+        {
+            return WorkflowChatSendResult.From(access);
+        }
+        if (_chatSessionService.HasPendingRun(workflowId, participantKey))
+        {
+            return WorkflowChatSendResult.Conflict("上一条消息还在处理中，请等待完成后再发送。");
+        }
+        var workflow = access.Workflow!;
+        _chatSessionService.AddMessage(workflowId, participantKey, NeuCharWorkflowChatSessionService.RoleUser, normalizedMessage);
+        if (!_runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, normalizedMessage, out var runId, out var error, "chat"))
+        {
+            return WorkflowChatSendResult.Conflict(error);
+        }
+        _chatSessionService.SetPendingRun(workflowId, participantKey, runId);
+        return WorkflowChatSendResult.Accepted(workflowId, runId);
+    }
+
+    /// <summary>
+    /// 查询聊天会话关联的运行状态；运行结束后把最终输出或错误写入会话历史。
+    /// </summary>
+    public async Task<WorkflowChatRunResult> GetChatRunStatusAsync(
+        int workflowId,
+        string participantKey,
+        Guid runId,
+        long afterSequence,
+        CancellationToken cancellationToken = default)
+    {
+        if (!IsValidParticipantKey(participantKey))
+        {
+            return WorkflowChatRunResult.BadRequest("会话标识无效。");
+        }
+        if (runId == Guid.Empty)
+        {
+            return WorkflowChatRunResult.BadRequest("运行标识无效。");
+        }
+        var access = await GetChatAccessAsync(workflowId, participantKey, cancellationToken).ConfigureAwait(false);
+        if (!access.Ok)
+        {
+            return WorkflowChatRunResult.From(access);
+        }
+        if (!_chatSessionService.HasPendingRunMatching(workflowId, participantKey, runId))
+        {
+            return WorkflowChatRunResult.NotFound();
+        }
+        var workflow = access.Workflow!;
+        var snapshot = _runCoordinator.GetSnapshot(runId, workflow.AdminUserId, afterSequence);
+        if (snapshot == null)
+        {
+            // 运行可能已被协调器的内存上限回收；释放会话占位，让用户可以重新发送。
+            var lostMessage = "运行状态已丢失，请重新发送消息。";
+            _chatSessionService.AddMessage(workflowId, participantKey, NeuCharWorkflowChatSessionService.RoleError, lostMessage);
+            _chatSessionService.ClearPendingRun(workflowId, participantKey, runId);
+            return WorkflowChatRunResult.Failed(workflowId, runId, lostMessage);
+        }
+        if (snapshot.Running)
+        {
+            var last = snapshot.Events.LastOrDefault();
+            return WorkflowChatRunResult.InProgress(
+                workflowId,
+                runId,
+                last?.Message ?? string.Empty,
+                last?.Sequence ?? 0);
+        }
+        var succeeded = snapshot.Succeeded == true;
+        if (succeeded)
+        {
+            _chatSessionService.AddMessage(
+                workflowId,
+                participantKey,
+                NeuCharWorkflowChatSessionService.RoleAssistant,
+                NormalizeChatOutput(snapshot.FinalOutput));
+        }
+        else
+        {
+            var errorText = string.IsNullOrWhiteSpace(snapshot.ErrorMessage)
+                ? "工作流执行失败。"
+                : snapshot.ErrorMessage.Trim();
+            _chatSessionService.AddMessage(workflowId, participantKey, NeuCharWorkflowChatSessionService.RoleError, errorText);
+        }
+        _chatSessionService.ClearPendingRun(workflowId, participantKey, runId);
+        return succeeded
+            ? WorkflowChatRunResult.Succeeded(workflowId, runId, NormalizeChatOutput(snapshot.FinalOutput))
+            : WorkflowChatRunResult.Failed(workflowId, runId, snapshot.ErrorMessage);
+    }
+
+    /// <summary>
+    /// 清空当前聊天会话（历史消息与进行中的运行关联），工作流运行本身不会被中止。
+    /// </summary>
+    public async Task<WorkflowChatResult> ResetChatSessionAsync(
+        int workflowId,
+        string participantKey,
+        CancellationToken cancellationToken = default)
+    {
+        if (!IsValidParticipantKey(participantKey))
+        {
+            return WorkflowChatResult.BadRequest("会话标识无效。");
+        }
+        var access = await GetChatAccessAsync(workflowId, participantKey, cancellationToken).ConfigureAwait(false);
+        if (!access.Ok)
+        {
+            return WorkflowChatResult.From(access);
+        }
+        _chatSessionService.Reset(workflowId, participantKey);
+        return WorkflowChatResult.Ok();
+    }
+
+    /// <summary>
+    /// Chat 访问校验：模块、工作流启用状态、触发方式、配置与访客权限。
+    /// </summary>
+    private async Task<WorkflowChatAccess> GetChatAccessAsync(
+        int workflowId,
+        string participantKey,
+        CancellationToken cancellationToken)
+    {
+        if (!await IsModuleEnabledAsync().ConfigureAwait(false))
+        {
+            return WorkflowChatAccess.Conflict("NeuChar Workflow 模块未安装或未开启。");
+        }
+        var workflow = await _workflowService.GetObjectAsync(z => z.Id == workflowId).ConfigureAwait(false);
+        if (workflow == null)
+        {
+            return WorkflowChatAccess.NotFound();
+        }
+        if (!workflow.Enabled || !string.Equals(workflow.TriggerType, "chat", StringComparison.OrdinalIgnoreCase))
+        {
+            return WorkflowChatAccess.Conflict("工作流未启用 Chat 触发。");
+        }
+        NeuCharWorkflowChatConfig config;
+        try
+        {
+            config = NeuCharWorkflowChatConfig.ParseStored(workflow.TriggerConfigJson);
+        }
+        catch (InvalidOperationException)
+        {
+            return WorkflowChatAccess.ServerError("Chat 配置无效，请在 Workflow 页面重新保存。");
+        }
+        var isGuest = participantKey.StartsWith("guest:", StringComparison.Ordinal);
+        if (isGuest && !config.AllowGuest)
+        {
+            return WorkflowChatAccess.Unauthorized();
+        }
+        return WorkflowChatAccess.Success(workflow, config, isGuest);
+    }
+
+    private static bool IsValidParticipantKey(string? participantKey)
+    {
+        var normalized = participantKey?.Trim();
+        if (string.IsNullOrWhiteSpace(normalized) || normalized.Length > 256)
+        {
+            return false;
+        }
+        var index = normalized.IndexOf(':');
+        return index is > 1 and < 256
+            && (normalized[..index] == "user" || normalized[..index] == "guest");
+    }
+
+    private static string NormalizeChatOutput(string? output)
+    {
+        var normalized = (output ?? string.Empty).Trim();
+        if (normalized.Length >= 2 && normalized.StartsWith('"') && normalized.EndsWith('"'))
+        {
+            try
+            {
+                var parsed = JsonSerializer.Deserialize<string>(normalized);
+                if (parsed != null)
+                {
+                    return parsed;
+                }
+            }
+            catch (JsonException)
+            {
+                // 不是有效的 JSON 字符串时保留原始文本。
+            }
+        }
+        return normalized.Length == 0 ? "工作流已完成。" : normalized;
+    }
+
     private async Task ValidateWorkflowAsync(WorkflowEntity workflow, CancellationToken cancellationToken)
     {
         NeuCharWorkflowGraph graph;
@@ -1260,6 +1506,115 @@ public sealed record WorkflowWebhookTriggerResult(
     public static WorkflowWebhookTriggerResult Unauthorized() => new(401, "Webhook 访问密钥无效。");
     public static WorkflowWebhookTriggerResult BadRequest(string error, IReadOnlyList<string> missing) => new(400, error, MissingParameters: missing);
     public static WorkflowWebhookTriggerResult Accepted(int workflowId, Guid runId) => new(202, WorkflowId: workflowId, RunId: runId);
+}
+
+/// <summary>
+/// Chat 会话中的一条历史消息。
+/// </summary>
+public sealed record WorkflowChatMessage(
+    string Role,
+    string Content,
+    DateTimeOffset Timestamp);
+
+/// <summary>
+/// Chat 访问校验结果：只有 Ok 时才会携带工作流与配置。
+/// </summary>
+public sealed record WorkflowChatAccess(
+    bool Ok,
+    int StatusCode,
+    string? ErrorMessage = null,
+    WorkflowEntity? Workflow = null,
+    NeuCharWorkflowChatConfig? Config = null,
+    bool IsGuest = false)
+{
+    public static WorkflowChatAccess Success(WorkflowEntity workflow, NeuCharWorkflowChatConfig config, bool isGuest)
+        => new(true, 200, Workflow: workflow, Config: config, IsGuest: isGuest);
+    public static WorkflowChatAccess NotFound() => new(false, 404, "工作流不存在。");
+    public static WorkflowChatAccess Conflict(string? error) => new(false, 409, error);
+    public static WorkflowChatAccess Unauthorized() => new(false, 401, "该工作流未开启访客访问，请先登录。");
+    public static WorkflowChatAccess ServerError(string? error) => new(false, 500, error);
+}
+
+/// <summary>
+/// 聊天页面引导数据的返回结果。
+/// </summary>
+public sealed record WorkflowChatBootstrapResult(
+    int StatusCode,
+    string? ErrorMessage = null,
+    int? WorkflowId = null,
+    string? Title = null,
+    string? Greeting = null,
+    bool IsGuest = false,
+    bool HasPendingRun = false,
+    Guid? PendingRunId = null,
+    IReadOnlyList<WorkflowChatMessage>? Messages = null)
+{
+    public static WorkflowChatBootstrapResult NotFound() => new(404, "工作流不存在。");
+    public static WorkflowChatBootstrapResult BadRequest(string error) => new(400, error);
+    public static WorkflowChatBootstrapResult From(WorkflowChatAccess access) => new(access.StatusCode, access.ErrorMessage);
+    public static WorkflowChatBootstrapResult Ok(
+        int workflowId,
+        string title,
+        string greeting,
+        bool isGuest,
+        bool hasPendingRun,
+        Guid? pendingRunId,
+        IReadOnlyList<WorkflowChatMessage> messages)
+        => new(200, WorkflowId: workflowId, Title: title, Greeting: greeting, IsGuest: isGuest, HasPendingRun: hasPendingRun, PendingRunId: pendingRunId, Messages: messages);
+}
+
+/// <summary>
+/// 聊天消息发送结果；202 表示已接受并返回运行标识。
+/// </summary>
+public sealed record WorkflowChatSendResult(
+    int StatusCode,
+    string? ErrorMessage = null,
+    int? WorkflowId = null,
+    Guid? RunId = null)
+{
+    public static WorkflowChatSendResult NotFound() => new(404, "工作流不存在。");
+    public static WorkflowChatSendResult BadRequest(string error) => new(400, error);
+    public static WorkflowChatSendResult Conflict(string? error) => new(409, error);
+    public static WorkflowChatSendResult From(WorkflowChatAccess access) => new(access.StatusCode, access.ErrorMessage);
+    public static WorkflowChatSendResult Accepted(int workflowId, Guid runId) => new(202, WorkflowId: workflowId, RunId: runId);
+}
+
+/// <summary>
+/// 聊天运行状态查询结果；200 且 Running=false 时，FinalOutput 与 RunError 必有且仅有一个有值。
+/// </summary>
+public sealed record WorkflowChatRunResult(
+    int StatusCode,
+    string? ErrorMessage = null,
+    int? WorkflowId = null,
+    Guid? RunId = null,
+    bool Running = false,
+    string? FinalOutput = null,
+    string? RunError = null,
+    string? LastNodeMessage = null,
+    long LastSequence = 0)
+{
+    public static WorkflowChatRunResult NotFound() => new(404, "运行任务不存在或不属于当前会话。");
+    public static WorkflowChatRunResult BadRequest(string error) => new(400, error);
+    public static WorkflowChatRunResult From(WorkflowChatAccess access) => new(access.StatusCode, access.ErrorMessage);
+    public static WorkflowChatRunResult InProgress(int workflowId, Guid runId, string lastNodeMessage, long lastSequence)
+        => new(200, WorkflowId: workflowId, RunId: runId, Running: true, LastNodeMessage: lastNodeMessage, LastSequence: lastSequence);
+    public static WorkflowChatRunResult Succeeded(int workflowId, Guid runId, string finalOutput)
+        => new(200, WorkflowId: workflowId, RunId: runId, FinalOutput: finalOutput);
+    public static WorkflowChatRunResult Failed(int workflowId, Guid runId, string? error)
+        => new(200, WorkflowId: workflowId, RunId: runId, RunError: error);
+}
+
+/// <summary>
+/// Chat 会话重置结果。
+/// </summary>
+public sealed record WorkflowChatResult(
+    int StatusCode,
+    string? ErrorMessage = null)
+{
+    public static WorkflowChatResult NotFound() => new(404, "工作流不存在。");
+    public static WorkflowChatResult BadRequest(string error) => new(400, error);
+    public static WorkflowChatResult From(WorkflowChatAccess access) => new(access.StatusCode, access.ErrorMessage);
+    public static WorkflowChatResult Ok() => new(200);
 }
 
 public sealed class WorkflowInputException : InvalidOperationException
