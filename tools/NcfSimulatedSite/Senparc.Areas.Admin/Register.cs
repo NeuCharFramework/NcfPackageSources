@@ -277,6 +277,9 @@ namespace Senparc.Areas.Admin
             services.AddScoped<INeuBellWebHookRepository, NeuBellWebHookRepository>();
             services.AddScoped<INeuBellWebHookService, NeuBellWebHookService>();
             services.AddScoped<NeuBellWebHookService>();
+            services.AddScoped<INeuBellWebHookLogRepository, NeuBellWebHookLogRepository>();
+            services.AddScoped<INeuBellWebHookLogService, NeuBellWebHookLogService>();
+            services.AddScoped<NeuBellWebHookLogService>();
             services.AddHttpClient(NeuBellWebHookDispatcher.HttpClientName, client =>
                 client.Timeout = TimeSpan.FromSeconds(15));
             services.AddSingleton<NeuBellWebHookDispatcher>();
