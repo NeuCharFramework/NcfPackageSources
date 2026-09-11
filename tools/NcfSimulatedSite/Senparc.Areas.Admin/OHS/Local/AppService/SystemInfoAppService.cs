@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：SystemInfoAppService.cs
@@ -68,6 +68,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly IStringLocalizer<AdminResource> _localizer;
         private readonly NeuBellTestProvider _neuBellTestProvider;
         private readonly INeuBellPublisher _neuBellPublisher;
+        private readonly NeuBellWebHookDispatcher _neuBellWebHookDispatcher;
+        private readonly INeuBellWebHookService _neuBellWebHookService;
 
         public SystemInfoAppService(
             IServiceProvider serviceProvider,
@@ -76,7 +78,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             IBaseObjectCacheStrategy cacheStrategy,
             IStringLocalizer<AdminResource> localizer,
             NeuBellTestProvider neuBellTestProvider,
-            INeuBellPublisher neuBellPublisher) : base(serviceProvider)
+            INeuBellPublisher neuBellPublisher,
+            NeuBellWebHookDispatcher neuBellWebHookDispatcher,
+            INeuBellWebHookService neuBellWebHookService) : base(serviceProvider)
         {
             _systemConfigService = systemConfigService;
             _adminAuthConfigService = adminAuthConfigService;
@@ -84,6 +88,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             _localizer = localizer;
             _neuBellTestProvider = neuBellTestProvider;
             _neuBellPublisher = neuBellPublisher;
+            _neuBellWebHookDispatcher = neuBellWebHookDispatcher;
+            _neuBellWebHookService = neuBellWebHookService;
         }
 
 
@@ -237,9 +243,33 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
                     logger.Append($"已消费 {consumedCount} 条 NeuBell 测试提醒，Footer 弹窗和徽标将被清除。");
                 }
+                else if (string.Equals(request?.Action, NeuBellTest_Request.WebHookTestAction, StringComparison.OrdinalIgnoreCase))
+                {
+                    var webHooks = await _neuBellWebHookService.GetEnabledListAsync().ConfigureAwait(false);
+                    if (webHooks.Count == 0)
+                    {
+                        logger.Append("当前没有启用中的 NeuBell WebHook。请先在页脚“纽铃”抽屉的“WebHook 设置”中添加并启用至少一个端点。");
+                    }
+                    else
+                    {
+                        logger.Append($"开始向 {webHooks.Count} 个启用中的 WebHook 端点发送 test 事件…");
+                        var successCount = 0;
+                        foreach (var webHook in webHooks)
+                        {
+                            var (success, message) = await _neuBellWebHookDispatcher
+                                .SendTestAsync(webHook).ConfigureAwait(false);
+                            if (success)
+                            {
+                                successCount++;
+                            }
+                            logger.Append($"[{(success ? "成功" : "失败")}] {webHook.Name}（{webHook.WebHookUrl}）：{message}");
+                        }
+                        logger.Append($"WebHook 测试完成：{successCount}/{webHooks.Count} 个端点响应成功。");
+                    }
+                }
                 else
                 {
-                    logger.Append("不支持的操作，请选择“发送提醒”、“消费最新一条”或“消费全部提醒”。");
+                    logger.Append("不支持的操作，请选择“发送提醒”、“消费最新一条”、“消费全部提醒”或“发送 WebHook 测试”。");
                 }
 
                 return logger.GetLogs();
