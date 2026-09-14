@@ -25,10 +25,15 @@
     修改标识：Senparc - 20260909
     修改描述：v0.4.0 新增 Chat 触发器：聊天会话、消息发送与运行状态查询
 
+    修改标识：Senparc - 20260913
+    修改描述：v0.4.0 Chat 历史落库持久化，支持跨主机重启恢复
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Senparc.Xncf.AgentsManager.Abstractions;
 using Senparc.Xncf.NeuCharWorkflow.Application.Events;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
@@ -67,7 +72,9 @@ public sealed class NeuCharWorkflowAppService
     private readonly IWorkflowHumanInteractionBridge _humanInteractionBridge;
     private readonly NeuCharWorkflowHumanInputService _humanInputService;
     private readonly NeuCharWorkflowChatSessionService _chatSessionService;
+    private readonly NeuCharWorkflowChatMessageService _chatMessageService;
     private readonly IAgentWorkflowReferenceValidator? _agentWorkflowReferenceValidator;
+    private readonly ILogger<NeuCharWorkflowAppService> _logger;
 
     public NeuCharWorkflowAppService(
         NeuCharWorkflowService workflowService,
@@ -82,7 +89,9 @@ public sealed class NeuCharWorkflowAppService
         IWorkflowHumanInteractionBridge humanInteractionBridge,
         NeuCharWorkflowHumanInputService humanInputService,
         NeuCharWorkflowChatSessionService chatSessionService,
-        IEnumerable<IAgentWorkflowReferenceValidator>? agentWorkflowReferenceValidators = null)
+        NeuCharWorkflowChatMessageService chatMessageService,
+        IEnumerable<IAgentWorkflowReferenceValidator>? agentWorkflowReferenceValidators = null,
+        ILogger<NeuCharWorkflowAppService>? logger = null)
     {
         _workflowService = workflowService;
         _workflowVersionService = workflowVersionService;
@@ -96,6 +105,8 @@ public sealed class NeuCharWorkflowAppService
         _humanInteractionBridge = humanInteractionBridge;
         _humanInputService = humanInputService;
         _chatSessionService = chatSessionService;
+        _chatMessageService = chatMessageService;
+        _logger = logger ?? NullLogger<NeuCharWorkflowAppService>.Instance;
         _agentWorkflowReferenceValidator = agentWorkflowReferenceValidators?.FirstOrDefault();
     }
 
@@ -772,6 +783,7 @@ public sealed class NeuCharWorkflowAppService
         {
             await _executionLogService.DeleteObjectAsync(log).ConfigureAwait(false);
         }
+        await SafeDeleteChatMessagesByWorkflowAsync(workflow.Id).ConfigureAwait(false);
         await _workflowService.DeleteObjectAsync(workflow).ConfigureAwait(false);
         await _eventPublisher.PublishAsync(workflow.Id, "deleted", adminUserId, cancellationToken).ConfigureAwait(false);
     }
@@ -857,9 +869,14 @@ public sealed class NeuCharWorkflowAppService
         }
         var workflow = access.Workflow!;
         var config = access.Config!;
-        var messages = _chatSessionService.GetMessages(workflowId, participantKey)
+        IReadOnlyList<WorkflowChatMessage> messages = _chatSessionService.GetMessages(workflowId, participantKey)
             .Select(z => new WorkflowChatMessage(z.Role, z.Content, z.Timestamp))
             .ToList();
+        if (messages.Count == 0)
+        {
+            // 进程内没有历史（例如 Host 刚重启），从数据库恢复并写回会话。
+            messages = await RestoreChatHistoryAsync(workflowId, participantKey, cancellationToken).ConfigureAwait(false);
+        }
         var greeting = string.IsNullOrWhiteSpace(config.Greeting)
             ? $"你好！我是「{workflow.Name}」，发送消息即可启动工作流。"
             : config.Greeting;
@@ -911,6 +928,8 @@ public sealed class NeuCharWorkflowAppService
             return WorkflowChatSendResult.Conflict(error);
         }
         _chatSessionService.SetPendingRun(workflowId, participantKey, runId);
+        await SafePersistChatMessageAsync(workflowId, participantKey,
+            NeuCharWorkflowChatSessionService.RoleUser, normalizedMessage, runId, cancellationToken).ConfigureAwait(false);
         return WorkflowChatSendResult.Accepted(workflowId, runId);
     }
 
@@ -949,6 +968,8 @@ public sealed class NeuCharWorkflowAppService
             var lostMessage = "运行状态已丢失，请重新发送消息。";
             _chatSessionService.AddMessage(workflowId, participantKey, NeuCharWorkflowChatSessionService.RoleError, lostMessage);
             _chatSessionService.ClearPendingRun(workflowId, participantKey, runId);
+            await SafePersistChatMessageAsync(workflowId, participantKey,
+                NeuCharWorkflowChatSessionService.RoleError, lostMessage, runId, cancellationToken).ConfigureAwait(false);
             return WorkflowChatRunResult.Failed(workflowId, runId, lostMessage);
         }
         if (snapshot.Running)
@@ -968,6 +989,9 @@ public sealed class NeuCharWorkflowAppService
                 participantKey,
                 NeuCharWorkflowChatSessionService.RoleAssistant,
                 NormalizeChatOutput(snapshot.FinalOutput));
+            await SafePersistChatMessageAsync(workflowId, participantKey,
+                NeuCharWorkflowChatSessionService.RoleAssistant, NormalizeChatOutput(snapshot.FinalOutput), runId, cancellationToken)
+                .ConfigureAwait(false);
         }
         else
         {
@@ -975,6 +999,8 @@ public sealed class NeuCharWorkflowAppService
                 ? "工作流执行失败。"
                 : snapshot.ErrorMessage.Trim();
             _chatSessionService.AddMessage(workflowId, participantKey, NeuCharWorkflowChatSessionService.RoleError, errorText);
+            await SafePersistChatMessageAsync(workflowId, participantKey,
+                NeuCharWorkflowChatSessionService.RoleError, errorText, runId, cancellationToken).ConfigureAwait(false);
         }
         _chatSessionService.ClearPendingRun(workflowId, participantKey, runId);
         return succeeded
@@ -1000,6 +1026,7 @@ public sealed class NeuCharWorkflowAppService
             return WorkflowChatResult.From(access);
         }
         _chatSessionService.Reset(workflowId, participantKey);
+        await SafeDeleteChatMessagesByParticipantAsync(workflowId, participantKey, cancellationToken).ConfigureAwait(false);
         return WorkflowChatResult.Ok();
     }
 
@@ -1039,6 +1066,94 @@ public sealed class NeuCharWorkflowAppService
             return WorkflowChatAccess.Unauthorized();
         }
         return WorkflowChatAccess.Success(workflow, config, isGuest);
+    }
+
+    /// <summary>
+    /// Host 重启后从数据库恢复会话历史并写回内存会话；
+    /// 持久化失败时降级为空历史，不阻断聊天功能本身。
+    /// </summary>
+    private async Task<IReadOnlyList<WorkflowChatMessage>> RestoreChatHistoryAsync(
+        int workflowId,
+        string participantKey,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var persisted = await _chatMessageService
+                .GetHistoryAsync(workflowId, NeuCharWorkflowChatSessionService.HashParticipant(participantKey), cancellationToken)
+                .ConfigureAwait(false);
+            if (persisted.Count == 0)
+            {
+                return new List<WorkflowChatMessage>();
+            }
+            _chatSessionService.SeedMessages(
+                workflowId,
+                participantKey,
+                persisted
+                    .Select(z => new WorkflowChatSessionMessage(z.Role, z.Content, z.AddTime.ToUniversalTime()))
+                    .ToList());
+            return _chatSessionService.GetMessages(workflowId, participantKey)
+                .Select(z => new WorkflowChatMessage(z.Role, z.Content, z.Timestamp))
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "恢复 NeuChar Workflow Chat 历史失败：WorkflowId={WorkflowId}。", workflowId);
+            return new List<WorkflowChatMessage>();
+        }
+    }
+
+    private async Task SafePersistChatMessageAsync(
+        int workflowId,
+        string participantKey,
+        string role,
+        string content,
+        Guid runId,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _chatMessageService.SaveObjectAsync(
+                new NeuCharWorkflowChatMessage(
+                    workflowId,
+                    NeuCharWorkflowChatSessionService.HashParticipant(participantKey),
+                    role,
+                    content,
+                    runId)).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "保存 NeuChar Workflow Chat 消息失败：WorkflowId={WorkflowId}，Role={Role}。", workflowId, role);
+        }
+    }
+
+    private async Task SafeDeleteChatMessagesByParticipantAsync(
+        int workflowId,
+        string participantKey,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _chatMessageService
+                .DeleteByParticipantAsync(workflowId, NeuCharWorkflowChatSessionService.HashParticipant(participantKey), cancellationToken)
+                .ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "清除 NeuChar Workflow Chat 消息失败：WorkflowId={WorkflowId}。", workflowId);
+        }
+    }
+
+    private async Task SafeDeleteChatMessagesByWorkflowAsync(int workflowId)
+    {
+        try
+        {
+            await _chatMessageService.DeleteByWorkflowAsync(workflowId).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "删除 NeuChar Workflow Chat 消息失败：WorkflowId={WorkflowId}。", workflowId);
+        }
     }
 
     private static bool IsValidParticipantKey(string? participantKey)

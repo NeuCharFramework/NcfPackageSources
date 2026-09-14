@@ -25,11 +25,15 @@
     修改标识：Senparc - 20260909
     修改描述：v0.4.0 新增 Chat 触发器（chat-trigger），支持登录用户与访客通过聊天页面启动工作流
 
+    修改标识：Senparc - 20260913
+    修改描述：v0.4.0 宿主服务定期清理超过保留期的 Chat 消息
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Senparc.CO2NET;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
@@ -3564,6 +3568,7 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<NeuCharWorkflowHostedService> _logger;
+    private static DateTime _lastChatCleanupAt = DateTime.MinValue;
 
     public NeuCharWorkflowHostedService(
         IServiceScopeFactory scopeFactory,
@@ -3589,6 +3594,7 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
                 }
                 var workflowService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowService>();
                 var runCoordinator = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowRunCoordinator>();
+                await CleanupExpiredChatMessagesAsync(scope.ServiceProvider).ConfigureAwait(false);
                 var now = DateTime.UtcNow;
                 var workflows = await workflowService.GetFullListAsync(
                     z => z.Enabled && z.TriggerType == "interval" && z.NextRunAt != null && z.NextRunAt <= now,
@@ -3610,6 +3616,29 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
             {
                 _logger.LogError(ex, "扫描 NeuChar Workflow 失败，将在下一个周期重试。");
             }
+        }
+    }
+
+    /// <summary>
+    /// 每天最多一次清理超过保留期的 Chat 消息；清理失败只记录日志，不影响定时触发。
+    /// </summary>
+    private async Task CleanupExpiredChatMessagesAsync(IServiceProvider serviceProvider)
+    {
+        var nowLocal = SystemTime.Now.DateTime;
+        if (nowLocal - _lastChatCleanupAt < TimeSpan.FromHours(24))
+        {
+            return;
+        }
+        _lastChatCleanupAt = nowLocal;
+        try
+        {
+            var chatMessageService = serviceProvider.GetRequiredService<NeuCharWorkflowChatMessageService>();
+            await chatMessageService.DeleteExpiredAsync(
+                nowLocal.AddDays(-NeuCharWorkflowChatMessageService.RetentionDays)).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "清理 NeuChar Workflow Chat 过期消息失败，将在明天重试。");
         }
     }
 }

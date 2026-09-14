@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260913
+    修改描述：v0.4.0 新增 Chat 消息持久化索引映射
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +46,8 @@ public partial class Register : IXncfDatabase
             .HasIndex(z => new { z.WorkflowId, z.Revision });
         modelBuilder.Entity<NeuCharWorkflowExecutionLog>()
             .HasIndex(z => new { z.WorkflowId, z.StartedAt });
+        modelBuilder.Entity<NeuCharWorkflowChatMessage>()
+            .HasIndex(z => new { z.WorkflowId, z.ParticipantKeyHash });
     }
 
     public void AddXncfDatabaseModule(IServiceCollection services)

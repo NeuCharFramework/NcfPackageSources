@@ -7,6 +7,9 @@
     创建标识：Senparc - 20260909
     创建描述：v0.4.0 新增 Chat 触发器
 
+    修改标识：Senparc - 20260913
+    修改描述：v0.4.0 Chat 会话支持参与者 SHA256 摘要与历史消息注入
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -36,6 +39,13 @@ public sealed class NeuCharWorkflowChatSessionService
     public const string RoleUser = "user";
     public const string RoleAssistant = "assistant";
     public const string RoleError = "error";
+
+    /// <summary>
+    /// 计算参与者标识的哈希（去除首尾空白后的 SHA256 十六进制值）。
+    /// 会话键与数据库持久化使用同一算法，确保重启恢复时能定位到原会话。
+    /// </summary>
+    public static string HashParticipant(string participantKey) =>
+        Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(participantKey.Trim())));
 
     private const int Capacity = 500;
     private const int MaxMessagesPerSession = 200;
@@ -232,7 +242,39 @@ public sealed class NeuCharWorkflowChatSessionService
     }
 
     private static string BuildKey(int workflowId, string participantKey) =>
-        $"{workflowId}:{Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(participantKey.Trim())))}";
+        $"{workflowId}:{HashParticipant(participantKey)}";
+
+    /// <summary>
+    /// Host 重启后把数据库恢复的历史消息写回内存会话；
+    /// 仅当会话当前没有任何消息时写入，避免覆盖本进程内新产生的消息。
+    /// </summary>
+    public void SeedMessages(
+        int workflowId,
+        string participantKey,
+        IReadOnlyList<WorkflowChatSessionMessage> messages)
+    {
+        if (workflowId <= 0 || string.IsNullOrWhiteSpace(participantKey) || messages == null || messages.Count == 0)
+        {
+            return;
+        }
+        var session = GetOrCreate(workflowId, participantKey);
+        lock (session.SyncRoot)
+        {
+            if (session.Messages.Count > 0)
+            {
+                return;
+            }
+            foreach (var message in messages)
+            {
+                session.Messages.Add(message);
+                while (session.Messages.Count > MaxMessagesPerSession)
+                {
+                    session.Messages.RemoveAt(0);
+                }
+            }
+            session.LastActiveAt = DateTimeOffset.UtcNow;
+        }
+    }
 
     private sealed class ChatSession
     {

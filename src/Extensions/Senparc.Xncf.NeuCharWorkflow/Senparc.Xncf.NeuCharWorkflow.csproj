@@ -25,6 +25,7 @@
       3、新增匿名聊天 API：bootstrap、发送消息、运行状态轮询与会话重置
       4、访客身份使用 HttpOnly 会话 Cookie，登录用户使用 Claims 身份，二者互不混用
       5、管理端设计器新增 Chat 触发器配置与聊天页面入口
+      6、Chat 消息持久化：历史跨主机重启恢复，30 天保留期，随会话重置与工作流删除清理
     </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>
