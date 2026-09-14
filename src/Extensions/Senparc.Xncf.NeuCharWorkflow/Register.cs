@@ -22,6 +22,9 @@
     修改标识：Senparc - 20260909
     修改描述：v0.4.0 新增 Chat 触发器：聊天页面、会话服务与匿名访问
 
+    修改标识：Senparc - 20260913
+    修改描述：v0.4.0 注册 Chat 消息仓储与服务依赖注入
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -91,9 +94,11 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         services.AddScoped<INeuCharWorkflowRepository, NeuCharWorkflowRepository>();
         services.AddScoped<INeuCharWorkflowVersionRepository, NeuCharWorkflowVersionRepository>();
         services.AddScoped<INeuCharWorkflowExecutionLogRepository, NeuCharWorkflowExecutionLogRepository>();
+        services.AddScoped<INeuCharWorkflowChatMessageRepository, NeuCharWorkflowChatMessageRepository>();
         services.AddScoped<NeuCharWorkflowService>();
         services.AddScoped<NeuCharWorkflowVersionService>();
         services.AddScoped<NeuCharWorkflowExecutionLogService>();
+        services.AddScoped<NeuCharWorkflowChatMessageService>();
         services.AddScoped<NeuCharWorkflowFunctionService>();
         services.AddScoped<NeuCharWorkflowAnalyticsService>();
         services.AddDataProtection();

@@ -21,3 +21,11 @@ public sealed class NeuBellWebHookRepository : ClientRepositoryBase<NeuBellWebHo
     private NeuBellWebHookRepository() : base(null) { }
     public NeuBellWebHookRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }
+
+public interface INeuBellWebHookLogRepository : IClientRepositoryBase<NeuBellWebHookLog> { }
+
+public sealed class NeuBellWebHookLogRepository : ClientRepositoryBase<NeuBellWebHookLog>, INeuBellWebHookLogRepository
+{
+    private NeuBellWebHookLogRepository() : base(null) { }
+    public NeuBellWebHookLogRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
+}

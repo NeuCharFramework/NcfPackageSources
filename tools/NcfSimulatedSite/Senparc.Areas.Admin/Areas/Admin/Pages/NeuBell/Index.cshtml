@@ -74,6 +74,59 @@
         <p>点击右上角“新增 WebHook”，配置一个外部 WebAPI 通知端点。</p>
     </div>
 
+    <section class="neubell-log-section">
+        <div class="neubell-log-head">
+            <h3><i class="fa fa-list"></i> 请求日志</h3>
+            <small>创建 NeuBell 时按参数触发的通知、设置页“测试”与后台监测的变更通知，均在此记录请求数据与结果。</small>
+            <span class="neubell-log-actions">
+                <el-button size="mini" icon="el-icon-refresh" @@click="loadLogs">刷新</el-button>
+                <el-button size="mini" type="danger" plain icon="el-icon-delete" @@click="clearLogs">清空（保留 50 条）</el-button>
+            </span>
+        </div>
+        <el-table :data="logRows" border size="mini" style="width: 100%" v-loading="logLoading">
+            <el-table-column label="时间" width="160">
+                <template slot-scope="scope">{{ formatTime(scope.row.addTime) }}</template>
+            </el-table-column>
+            <el-table-column label="类型" width="120">
+                <template slot-scope="scope">
+                    <el-tag size="mini" :type="kindTagType(scope.row.eventKind)">{{ kindLabel(scope.row.eventKind) }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="WebHook 地址" prop="webHookUrl" min-width="220" show-overflow-tooltip></el-table-column>
+            <el-table-column label="Provider" prop="providerId" min-width="140" show-overflow-tooltip></el-table-column>
+            <el-table-column label="状态" width="90" align="center">
+                <template slot-scope="scope">
+                    <el-tag size="mini" :type="statusTagType(scope.row.status)">{{ statusLabel(scope.row.status) }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="HTTP" width="70" align="center">
+                <template slot-scope="scope">{{ scope.row.statusCode || '—' }}</template>
+            </el-table-column>
+            <el-table-column label="耗时" width="80" align="center">
+                <template slot-scope="scope">{{ scope.row.status === 'sending' ? '—' : (scope.row.elapsedMilliseconds + ' ms') }}</template>
+            </el-table-column>
+            <el-table-column label="结果" prop="result" min-width="160" show-overflow-tooltip></el-table-column>
+            <el-table-column label="操作" width="150" align="center" fixed="right">
+                <template slot-scope="scope">
+                    <el-button size="mini" type="text" icon="el-icon-document" @@click="showPayload(scope.row)">报文</el-button>
+                    <el-button size="mini" type="text" icon="el-icon-delete" @@click="removeLog(scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div v-if="!logLoading && logRows.length === 0" class="neubell-log-empty">暂无请求日志。</div>
+    </section>
+
+    <el-dialog title="WebHook 请求报文" :visible.sync="payloadVisible" width="640px">
+        <div class="neubell-payload-meta" v-if="payloadRow">
+            <el-tag size="mini" :type="statusTagType(payloadRow.status)">{{ statusLabel(payloadRow.status) }}</el-tag>
+            <span class="neubell-payload-url">{{ payloadRow.webHookUrl }}</span>
+        </div>
+        <pre class="neubell-payload" v-loading="payloadLoading">{{ payloadText }}</pre>
+        <span slot="footer">
+            <el-button @@click="payloadVisible = false">关闭</el-button>
+        </span>
+    </el-dialog>
+
     <el-dialog :title="form.id ? '编辑 WebHook' : '新增 WebHook'" :visible.sync="formDialogVisible"
                width="560px" :close-on-click-modal="false">
         <el-form label-width="110px">

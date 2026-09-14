@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Areas.Admin.Domain.Models;
 
@@ -11,9 +12,11 @@ using Senparc.Areas.Admin.Domain.Models;
 namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
 {
     [DbContext(typeof(AdminSenparcEntities_SqlServer))]
-    partial class AdminSenparcEntities_SqlServerModelSnapshot : ModelSnapshot
+    [Migration("20260911075432_Add_NeuBellWebHookLog")]
+    partial class Add_NeuBellWebHookLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -333,154 +336,6 @@ namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
                         .IsUnique();
 
                     b.ToTable("ADMIN_AdminChatSessionWorkflow");
-                });
-
-            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatTrajectory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<DateTime?>("FinishedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ForkFromSequence")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LastError")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LastSequence")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Mode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ModelIdentifier")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int?>("ParentTrajectoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("SessionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SessionStateJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SessionId", "UserId", "AddTime");
-
-                    b.ToTable("ADMIN_AdminChatTrajectory");
-                });
-
-            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatTrajectoryEvent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CorrelationId")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("EventType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsReplayable")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime>("OccurredAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("PayloadJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("Sequence")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Source")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TrajectoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TrajectoryId", "Sequence")
-                        .IsUnique();
-
-                    b.ToTable("ADMIN_AdminChatTrajectoryEvent");
                 });
 
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuBellWebHook", b =>
@@ -1013,33 +868,6 @@ namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
                         .IsRequired();
 
                     b.Navigation("Session");
-                });
-
-            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatTrajectory", b =>
-                {
-                    b.HasOne("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatSession", "Session")
-                        .WithMany()
-                        .HasForeignKey("SessionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Session");
-                });
-
-            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatTrajectoryEvent", b =>
-                {
-                    b.HasOne("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatTrajectory", "Trajectory")
-                        .WithMany("Events")
-                        .HasForeignKey("TrajectoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Trajectory");
-                });
-
-            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatTrajectory", b =>
-                {
-                    b.Navigation("Events");
                 });
 #pragma warning restore 612, 618
         }

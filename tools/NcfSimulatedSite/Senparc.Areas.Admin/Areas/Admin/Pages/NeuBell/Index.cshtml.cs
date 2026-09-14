@@ -1,9 +1,9 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：Index.cshtml.cs
     文件功能描述：NeuBell WebHook（WebAPI）设置页：
-    通知端点 CRUD、测试发送、Provider 目录
+    通知端点 CRUD、测试发送、Provider 目录、请求日志（每次请求的数据与结果）
 
     创建标识：Senparc - 20260906
 
@@ -30,11 +30,13 @@ public class IndexModel(
     NeuBellWebHookService webHookService,
     NeuBellWebHookDispatcher webHookDispatcher,
     NeuBellProviderCatalog providerCatalog,
+    NeuBellWebHookLogService webHookLogService,
     IAdminWorkContextProvider adminWorkContextProvider) : BaseAdminPageModel(serviceProvider)
 {
     private readonly NeuBellWebHookService _webHookService = webHookService;
     private readonly NeuBellWebHookDispatcher _webHookDispatcher = webHookDispatcher;
     private readonly NeuBellProviderCatalog _providerCatalog = providerCatalog;
+    private readonly NeuBellWebHookLogService _webHookLogService = webHookLogService;
     private readonly IAdminWorkContextProvider _adminWorkContextProvider = adminWorkContextProvider;
 
     /// <summary>
@@ -153,9 +155,71 @@ public class IndexModel(
             return Ok(false, "WebHook 不存在");
         }
 
-        var (success, message) = await _webHookDispatcher.SendTestAsync(webHook, HttpContext.RequestAborted)
-            .ConfigureAwait(false);
+        var adminUserId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
+        var (success, message) = await _webHookDispatcher.SendTestAsync(
+            webHook, adminUserId, HttpContext.RequestAborted).ConfigureAwait(false);
         return Ok(new { success, message });
+    }
+
+    /// <summary>
+    /// 请求日志列表（最近 take 条，按时间倒序；payload 单独按需加载）
+    /// </summary>
+    public async Task<IActionResult> OnGetLogListAsync(int take = 200)
+    {
+        take = Math.Clamp(take <= 0 ? 200 : take, 1, 500);
+        var list = await _webHookLogService.GetFullListAsync(
+            z => true, z => z.AddTime, OrderingType.Descending).ConfigureAwait(false);
+        return Ok(list
+            .Take(take)
+            .Select(ToLogDto)
+            .ToList());
+    }
+
+    /// <summary>
+    /// 单条日志的完整请求报文
+    /// </summary>
+    public async Task<IActionResult> OnGetLogPayloadAsync(int id)
+    {
+        if (id <= 0)
+        {
+            return Ok(false, "日志 Id 无效");
+        }
+        var log = await _webHookLogService.GetObjectAsync(z => z.Id == id).ConfigureAwait(false);
+        if (log == null)
+        {
+            return Ok(false, "日志不存在");
+        }
+        return Ok(new { id = log.Id, payload = log.Payload });
+    }
+
+    /// <summary>
+    /// 删除单条日志
+    /// </summary>
+    public async Task<IActionResult> OnPostDeleteLogAsync([FromBody] WebHookIdRequest request)
+    {
+        if (request == null || request.Id <= 0)
+        {
+            return Ok(false, "日志 Id 无效");
+        }
+        await _webHookLogService.DeleteObjectAsync(z => z.Id == request.Id).ConfigureAwait(false);
+        return Ok(true);
+    }
+
+    /// <summary>
+    /// 清空日志（保留最近 keep 条）
+    /// </summary>
+    public async Task<IActionResult> OnPostClearLogsAsync([FromBody] WebHookKeepRequest request)
+    {
+        var keep = request == null || request.Keep < 0 ? 0 : Math.Min(request.Keep, 500);
+        var list = await _webHookLogService.GetFullListAsync(
+            z => true, z => z.AddTime, OrderingType.Descending).ConfigureAwait(false);
+        var removed = 0;
+        foreach (var log in list.Skip(keep))
+        {
+            await _webHookLogService.DeleteObjectAsync(z => z.Id == log.Id).ConfigureAwait(false);
+            removed++;
+        }
+        return Ok(new { removed });
     }
 
     private static object ToDto(NeuBellWebHook item)
@@ -176,6 +240,25 @@ public class IndexModel(
         };
     }
 
+    private static object ToLogDto(NeuBellWebHookLog item)
+    {
+        return new
+        {
+            item.Id,
+            item.EventKind,
+            item.WebHookUrl,
+            item.ProviderId,
+            item.Title,
+            item.Status,
+            item.Result,
+            item.StatusCode,
+            item.ElapsedMilliseconds,
+            item.AdminUserId,
+            item.AddTime,
+            item.FinishTime
+        };
+    }
+
     public sealed class WebHookSaveRequest
     {
         public int Id { get; set; }
@@ -191,5 +274,10 @@ public class IndexModel(
     public sealed class WebHookIdRequest
     {
         public int Id { get; set; }
+    }
+
+    public sealed class WebHookKeepRequest
+    {
+        public int Keep { get; set; }
     }
 }

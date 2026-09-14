@@ -548,6 +548,83 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
                     b.ToTable("ADMIN_NeuBellWebHook");
                 });
 
+            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuBellWebHookLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("AdminUserId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<long>("ElapsedMilliseconds")
+                        .HasColumnType("NUMBER(19)");
+
+                    b.Property<string>("EventKind")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)");
+
+                    b.Property<DateTime?>("FinishTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("Payload")
+                        .HasColumnType("NCLOB");
+
+                    b.Property<string>("ProviderId")
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("Result")
+                        .HasMaxLength(2000)
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)");
+
+                    b.Property<int?>("StatusCode")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(500)");
+
+                    b.Property<string>("WebHookUrl")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("NVARCHAR2(1000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddTime");
+
+                    b.ToTable("ADMIN_NeuBellWebHookLog");
+                });
+
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharExecutionLog", b =>
                 {
                     b.Property<int>("Id")

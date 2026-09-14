@@ -117,6 +117,11 @@ namespace Senparc.Areas.Admin.Domain.Models
         /// </summary>
         public DbSet<NeuBellWebHook> NeuBellWebHooks { get; set; }
 
+        /// <summary>
+        /// 纽铃 WebHook 请求日志（每次请求的数据与结果）
+        /// </summary>
+        public DbSet<NeuBellWebHookLog> NeuBellWebHookLogs { get; set; }
+
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
 
         #endregion
@@ -156,6 +161,8 @@ namespace Senparc.Areas.Admin.Domain.Models
                 .HasIndex(z => z.PageKey);
             modelBuilder.Entity<NeuBellWebHook>()
                 .HasIndex(z => z.ProviderFilter);
+            modelBuilder.Entity<NeuBellWebHookLog>()
+                .HasIndex(z => z.AddTime);
 
             var providerName = Database.ProviderName ?? string.Empty;
             var largeTextType = providerName.Contains("Oracle", StringComparison.OrdinalIgnoreCase)
@@ -191,6 +198,8 @@ namespace Senparc.Areas.Admin.Domain.Models
             SetLargeText<AdminChatTrajectoryEvent>(modelBuilder, largeTextType,
                 nameof(AdminChatTrajectoryEvent.Content),
                 nameof(AdminChatTrajectoryEvent.PayloadJson));
+            SetLargeText<NeuBellWebHookLog>(modelBuilder, largeTextType,
+                nameof(NeuBellWebHookLog.Payload));
         }
 
         private static void SetLargeText<TEntity>(

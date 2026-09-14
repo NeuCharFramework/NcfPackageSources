@@ -548,6 +548,83 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
                     b.ToTable("ADMIN_NeuBellWebHook");
                 });
 
+            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuBellWebHookLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<int>("AdminUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("ElapsedMilliseconds")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("EventKind")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime?>("FinishTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Payload")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProviderId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Result")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<int?>("StatusCode")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("WebHookUrl")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddTime");
+
+                    b.ToTable("ADMIN_NeuBellWebHookLog");
+                });
+
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharExecutionLog", b =>
                 {
                     b.Property<int>("Id")

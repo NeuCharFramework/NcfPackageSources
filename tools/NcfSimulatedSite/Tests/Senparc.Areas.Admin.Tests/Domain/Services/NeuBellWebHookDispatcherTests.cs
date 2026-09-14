@@ -7,6 +7,9 @@
 
     创建标识：Senparc - 20260906
 
+    修改标识：Senparc - 20260911
+    修改描述：v0.7.1 新增 WebHook 请求日志（NeuBellWebHookLog）测试
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Concurrent;
@@ -29,7 +32,7 @@ public class NeuBellWebHookDispatcherTests
     [TestMethod]
     public async Task ObserveAsync_FirstObservation_ShouldEstablishBaselineWithoutDispatch()
     {
-        var (dispatcher, handler, _) = CreateDispatcher(new()
+        var (dispatcher, handler, _, _) = CreateDispatcher(new()
         {
             CreateHook("hook-a", "https://example.com/hook-a")
         });
@@ -45,7 +48,7 @@ public class NeuBellWebHookDispatcherTests
     [TestMethod]
     public async Task ObserveAsync_AddedItems_ShouldDispatchOnlyToMatchingHooks()
     {
-        var (dispatcher, handler, _) = CreateDispatcher(new()
+        var (dispatcher, handler, _, _) = CreateDispatcher(new()
         {
             CreateHook("hook-all", "https://example.com/hook-all", secret: "secret-a"),
             CreateHook("hook-other", "https://example.com/hook-other", providerFilter: "provider-b"),
@@ -77,7 +80,7 @@ public class NeuBellWebHookDispatcherTests
     [TestMethod]
     public async Task ObserveAsync_RemovedItems_ShouldDispatchRemovalNotification()
     {
-        var (dispatcher, handler, _) = CreateDispatcher(new()
+        var (dispatcher, handler, _, _) = CreateDispatcher(new()
         {
             CreateHook("hook-all", "https://example.com/hook-all")
         });
@@ -95,7 +98,7 @@ public class NeuBellWebHookDispatcherTests
     [TestMethod]
     public async Task ObserveAsync_NoChange_ShouldNotDispatch()
     {
-        var (dispatcher, handler, _) = CreateDispatcher(new()
+        var (dispatcher, handler, _, _) = CreateDispatcher(new()
         {
             CreateHook("hook-all", "https://example.com/hook-all")
         });
@@ -111,7 +114,7 @@ public class NeuBellWebHookDispatcherTests
     [TestMethod]
     public async Task ObserveAsync_ExpectedProviderMissingThisRound_ShouldKeepBaseline()
     {
-        var (dispatcher, handler, _) = CreateDispatcher(new()
+        var (dispatcher, handler, _, _) = CreateDispatcher(new()
         {
             CreateHook("hook-all", "https://example.com/hook-all")
         });
@@ -136,7 +139,7 @@ public class NeuBellWebHookDispatcherTests
     [TestMethod]
     public async Task ObserveAsync_ProviderNoLongerExpected_ShouldFireRemoval()
     {
-        var (dispatcher, handler, _) = CreateDispatcher(new()
+        var (dispatcher, handler, _, _) = CreateDispatcher(new()
         {
             CreateHook("hook-all", "https://example.com/hook-all")
         });
@@ -154,7 +157,7 @@ public class NeuBellWebHookDispatcherTests
     [TestMethod]
     public async Task ObserveAsync_NullExpectedProviders_ShouldNotJudgeRemoval()
     {
-        var (dispatcher, handler, _) = CreateDispatcher(new()
+        var (dispatcher, handler, _, _) = CreateDispatcher(new()
         {
             CreateHook("hook-all", "https://example.com/hook-all")
         });
@@ -171,7 +174,7 @@ public class NeuBellWebHookDispatcherTests
     [TestMethod]
     public async Task SendTestAsync_ShouldPostTestEventWithoutItems()
     {
-        var (dispatcher, handler, _) = CreateDispatcher(new());
+        var (dispatcher, handler, _, _) = CreateDispatcher(new());
         var webHook = CreateHook("hook-all", "https://example.com/hook-test", providerFilter: "provider-a", secret: "s3cr3t");
 
         var (success, message) = await dispatcher.SendTestAsync(webHook);
@@ -188,7 +191,7 @@ public class NeuBellWebHookDispatcherTests
     [TestMethod]
     public async Task SendTestAsync_InvalidUrl_ShouldFailWithoutRequest()
     {
-        var (dispatcher, handler, _) = CreateDispatcher(new());
+        var (dispatcher, handler, _, _) = CreateDispatcher(new());
         var webHook = CreateHook("bad", "ftp://example.com/hook");
 
         var (success, message) = await dispatcher.SendTestAsync(webHook);
@@ -263,6 +266,101 @@ public class NeuBellWebHookDispatcherTests
         Assert.IsFalse(filtered.MatchesProvider("provider-b"));
     }
 
+    [TestMethod]
+    public async Task NotifyItemCreatedAsync_ValidUrl_ShouldSendRequestAndLogSuccess()
+    {
+        var (dispatcher, handler, _, logFake) = CreateDispatcher(new());
+
+        var task = dispatcher.NotifyItemCreatedAsync(
+            "https://example.com/item-hook", "provider-a", "任务一", "这是任务一的摘要", adminUserId: 7);
+
+        // 快速落日志：调用方无需等待 HTTP 即可完成
+        Assert.IsTrue(await logFake.WaitUntilPendingAsync(1), "应快速创建“发送中”日志");
+        var pending = logFake.Pending.Single();
+        Assert.AreEqual(NeuBellWebHookDispatcher.EventKindItemCreated, pending.EventKind);
+        Assert.AreEqual("https://example.com/item-hook", pending.WebHookUrl);
+        Assert.AreEqual("任务一", pending.Title);
+        Assert.AreEqual(7, pending.AdminUserId);
+        // 报文为 JSON（非 ASCII 可能被 \uXXXX 转义），按 JSON 语义校验
+        using (var pendingDoc = JsonDocument.Parse(pending.Payload))
+        {
+            Assert.AreEqual("NeuBell", pendingDoc.RootElement.GetProperty("source").GetString());
+            Assert.AreEqual(NeuBellWebHookDispatcher.EventKindItemCreated,
+                pendingDoc.RootElement.GetProperty("kind").GetString());
+            Assert.AreEqual("provider-a", pendingDoc.RootElement.GetProperty("providerId").GetString());
+            Assert.AreEqual("任务一", pendingDoc.RootElement.GetProperty("item").GetProperty("title").GetString());
+            Assert.AreEqual("这是任务一的摘要",
+                pendingDoc.RootElement.GetProperty("item").GetProperty("summary").GetString());
+        }
+
+        var (queued, message) = await task;
+        Assert.IsTrue(queued);
+        Assert.AreEqual(1, handler.Requests.Count);
+        var captured = handler.Requests.Single();
+        Assert.AreEqual("https://example.com/item-hook", captured.Url);
+        Assert.IsTrue(captured.Body.Contains("provider-a"));
+        using (var bodyDoc = JsonDocument.Parse(captured.Body))
+        {
+            Assert.AreEqual(NeuBellWebHookDispatcher.EventKindItemCreated,
+                bodyDoc.RootElement.GetProperty("kind").GetString());
+            Assert.AreEqual("任务一", bodyDoc.RootElement.GetProperty("item").GetProperty("title").GetString());
+        }
+
+        Assert.IsTrue(await logFake.WaitUntilCompletedAsync(1), "请求完成后应更新日志");
+        var completed = logFake.Completed.Single();
+        Assert.AreEqual(pending.Id, completed.LogId);
+        Assert.IsTrue(completed.Success);
+        Assert.AreEqual(200, completed.StatusCode);
+        Assert.IsTrue(completed.ElapsedMilliseconds >= 0);
+        _ = message;
+    }
+
+    [TestMethod]
+    public async Task NotifyItemCreatedAsync_InvalidUrl_ShouldLogFailureWithoutHttp()
+    {
+        var (dispatcher, handler, _, logFake) = CreateDispatcher(new());
+
+        var (queued, message) = await dispatcher.NotifyItemCreatedAsync(
+            "not-a-url", "provider-a", "任务一", "摘要", adminUserId: 0);
+
+        Assert.IsFalse(queued);
+        Assert.IsFalse(string.IsNullOrEmpty(message));
+        Assert.AreEqual(0, handler.Requests.Count, "无效地址不应发起 HTTP 请求");
+        Assert.IsTrue(await logFake.WaitUntilCompletedAsync(1), "无效地址也应记录失败日志");
+        var completed = logFake.Completed.Single();
+        Assert.IsFalse(completed.Success);
+        var failedPending = logFake.Pending.Single();
+        Assert.AreEqual(NeuBellWebHookDispatcher.EventKindItemCreated, failedPending.EventKind);
+        using var failedDoc = JsonDocument.Parse(failedPending.Payload);
+        Assert.AreEqual("任务一", failedDoc.RootElement.GetProperty("item").GetProperty("title").GetString());
+    }
+
+    [TestMethod]
+    public async Task SendTestAsync_ShouldLogTestKindWithRequestResult()
+    {
+        var (dispatcher, handler, _, logFake) = CreateDispatcher(new());
+        var webHook = CreateHook("hook-a", "https://example.com/hook-a");
+
+        var (success, _) = await dispatcher.SendTestAsync(webHook, adminUserId: 3);
+
+        Assert.IsTrue(success);
+        Assert.AreEqual(1, handler.Requests.Count);
+        using (var bodyDoc = JsonDocument.Parse(handler.Requests.Single().Body))
+        {
+            Assert.AreEqual(NeuBellWebHookDispatcher.EventKindTest,
+                bodyDoc.RootElement.GetProperty("kind").GetString());
+        }
+        Assert.IsTrue(await logFake.WaitUntilCompletedAsync(1));
+        var testPending = logFake.Pending.Single();
+        Assert.AreEqual(NeuBellWebHookDispatcher.EventKindTest, testPending.EventKind);
+        using (var testDoc = JsonDocument.Parse(testPending.Payload))
+        {
+            Assert.AreEqual(NeuBellWebHookDispatcher.EventKindTest,
+                testDoc.RootElement.GetProperty("kind").GetString());
+        }
+        Assert.IsTrue(logFake.Completed.Single().Success);
+    }
+
     private static NeuBellWebHook CreateHook(
         string name,
         string url,
@@ -296,19 +394,133 @@ public class NeuBellWebHookDispatcherTests
                 .ToList());
     }
 
-    private static (NeuBellWebHookDispatcher dispatcher, CaptureHandler handler, FakeNeuBellWebHookService fake)
+    private static (NeuBellWebHookDispatcher dispatcher, CaptureHandler handler, FakeNeuBellWebHookService fake,
+            FakeNeuBellWebHookLogService logFake)
         CreateDispatcher(List<NeuBellWebHook> webHooks)
     {
         var handler = new CaptureHandler();
         var fake = new FakeNeuBellWebHookService(webHooks);
+        var logFake = new FakeNeuBellWebHookLogService();
         var services = new ServiceCollection();
         services.AddScoped<INeuBellWebHookService>(_ => fake);
+        services.AddScoped<INeuBellWebHookLogService>(_ => logFake);
         var provider = services.BuildServiceProvider();
         var dispatcher = new NeuBellWebHookDispatcher(
             provider,
             new FakeHttpClientFactory(handler),
             NullLogger<NeuBellWebHookDispatcher>.Instance);
-        return (dispatcher, handler, fake);
+        return (dispatcher, handler, fake, logFake);
+    }
+
+    private sealed class FakeNeuBellWebHookLogService : INeuBellWebHookLogService
+    {
+        public sealed class PendingLog
+        {
+            public int Id { get; init; }
+            public string EventKind { get; init; }
+            public string WebHookUrl { get; init; }
+            public string Title { get; init; }
+            public string Payload { get; init; }
+            public int AdminUserId { get; init; }
+        }
+
+        public sealed class CompletedLog
+        {
+            public int LogId { get; init; }
+            public bool Success { get; init; }
+            public int? StatusCode { get; init; }
+            public long ElapsedMilliseconds { get; init; }
+        }
+
+        private int _nextId;
+
+        public List<PendingLog> Pending { get; } = new();
+        public List<CompletedLog> Completed { get; } = new();
+
+        public Task<NeuBellWebHookLog> CreatePendingAsync(
+            string eventKind,
+            string webHookUrl,
+            string providerId,
+            string title,
+            string payload,
+            int adminUserId)
+        {
+            var log = new NeuBellWebHookLog(eventKind, webHookUrl, providerId, title, payload, adminUserId);
+            log.Id = Interlocked.Increment(ref _nextId);
+            lock (Pending)
+            {
+                Pending.Add(new PendingLog
+                {
+                    Id = log.Id,
+                    EventKind = eventKind,
+                    WebHookUrl = webHookUrl,
+                    Title = title,
+                    Payload = payload,
+                    AdminUserId = adminUserId
+                });
+            }
+            return Task.FromResult(log);
+        }
+
+        public Task CompleteAsync(
+            int logId,
+            bool success,
+            string result,
+            int? statusCode,
+            long elapsedMilliseconds)
+        {
+            lock (Completed)
+            {
+                Completed.Add(new CompletedLog
+                {
+                    LogId = logId,
+                    Success = success,
+                    StatusCode = statusCode,
+                    ElapsedMilliseconds = elapsedMilliseconds
+                });
+            }
+            return Task.CompletedTask;
+        }
+
+        public async Task<bool> WaitUntilPendingAsync(int expectedCount, int timeoutMilliseconds = 5000)
+        {
+            var start = Environment.TickCount64;
+            while (true)
+            {
+                lock (Pending)
+                {
+                    if (Pending.Count >= expectedCount)
+                    {
+                        return true;
+                    }
+                }
+                if (Environment.TickCount64 - start > timeoutMilliseconds)
+                {
+                    return false;
+                }
+                await Task.Delay(25).ConfigureAwait(false);
+            }
+        }
+
+        public async Task<bool> WaitUntilCompletedAsync(int expectedCount, int timeoutMilliseconds = 5000)
+        {
+            var start = Environment.TickCount64;
+            while (true)
+            {
+                lock (Completed)
+                {
+                    if (Completed.Count >= expectedCount)
+                    {
+                        return true;
+                    }
+                }
+                if (Environment.TickCount64 - start > timeoutMilliseconds)
+                {
+                    return false;
+                }
+                await Task.Delay(25).ConfigureAwait(false);
+            }
+        }
     }
 
     private sealed class FakeNeuBellWebHookService : INeuBellWebHookService

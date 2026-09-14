@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------
     文件名：Index.js
     文件功能描述：NeuBell WebHook（WebAPI）设置页：
-    通知端点 CRUD、启用开关、测试发送
+    通知端点 CRUD、启用开关、测试发送、请求日志（请求数据与结果）
 ----------------------------------------------------------------*/
 // 统一响应解包
 window.NeuBellWebHookUi = {
@@ -27,7 +27,13 @@ new Vue({
             form: {
                 id: 0, name: '', webHookUrl: '', providerFilter: '', secret: '',
                 notifyOnAdd: true, notifyOnRemove: true, isEnabled: true, showSecret: false
-            }
+            },
+            logRows: [],
+            logLoading: false,
+            payloadVisible: false,
+            payloadLoading: false,
+            payloadText: '',
+            payloadRow: null
         };
     },
     computed: {
@@ -40,6 +46,7 @@ new Vue({
     },
     created() {
         this.load();
+        this.loadLogs();
     },
     methods: {
         async load() {
@@ -153,6 +160,105 @@ new Vue({
             if (response && response.data && response.data.success) {
                 this.$message.success('已删除');
                 await this.load();
+            }
+        },
+        async loadLogs() {
+            this.logLoading = true;
+            try {
+                const response = await service.get('/Admin/NeuBell/Index?handler=LogList&take=200');
+                const rows = NeuBellWebHookUi.unwrap(response);
+                this.logRows = Array.isArray(rows) ? rows : [];
+            } finally {
+                this.logLoading = false;
+            }
+        },
+        kindLabel(kind) {
+            switch (kind) {
+                case 'item-created': return '创建通知';
+                case 'items-changed': return '变更通知';
+                case 'test': return '测试';
+                default: return kind || '—';
+            }
+        },
+        kindTagType(kind) {
+            switch (kind) {
+                case 'item-created': return 'primary';
+                case 'items-changed': return 'warning';
+                case 'test': return 'info';
+                default: return 'info';
+            }
+        },
+        statusLabel(status) {
+            switch (status) {
+                case 'sending': return '发送中';
+                case 'success': return '成功';
+                case 'failed': return '失败';
+                default: return status || '—';
+            }
+        },
+        statusTagType(status) {
+            switch (status) {
+                case 'sending': return 'info';
+                case 'success': return 'success';
+                case 'failed': return 'danger';
+                default: return 'info';
+            }
+        },
+        formatTime(value) {
+            if (!value) {
+                return '—';
+            }
+            const date = new Date(value);
+            if (isNaN(date.getTime())) {
+                return String(value);
+            }
+            const pad = n => String(n).padStart(2, '0');
+            return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate())
+                + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes()) + ':' + pad(date.getSeconds());
+        },
+        async showPayload(row) {
+            this.payloadRow = row;
+            this.payloadText = '加载中…';
+            this.payloadVisible = true;
+            this.payloadLoading = true;
+            try {
+                const response = await service.get('/Admin/NeuBell/Index?handler=LogPayload&id=' + row.id);
+                const body = response && response.data;
+                const data = body && body.data;
+                let text = (data && data.payload) || '（无报文）';
+                try {
+                    text = JSON.stringify(JSON.parse(text), null, 2);
+                } catch (error) {
+                    // 非 JSON 时原样展示
+                }
+                this.payloadText = text;
+            } finally {
+                this.payloadLoading = false;
+            }
+        },
+        async removeLog(row) {
+            try {
+                await this.$confirm('确定删除这条请求日志？', '删除日志', { type: 'warning' });
+            } catch (error) {
+                return;
+            }
+            const response = await service.post('/Admin/NeuBell/Index?handler=DeleteLog', { id: row.id });
+            if (response && response.data && response.data.success) {
+                this.$message.success('已删除');
+                await this.loadLogs();
+            }
+        },
+        async clearLogs() {
+            try {
+                await this.$confirm('确定清空请求日志？将保留最近 50 条。', '清空日志', { type: 'warning' });
+            } catch (error) {
+                return;
+            }
+            const response = await service.post('/Admin/NeuBell/Index?handler=ClearLogs', { keep: 50 });
+            const body = response && response.data;
+            if (body && body.success) {
+                this.$message.success('已清空' + ((body.data && body.data.removed != null) ? '（删除 ' + body.data.removed + ' 条）' : ''));
+                await this.loadLogs();
             }
         }
     }

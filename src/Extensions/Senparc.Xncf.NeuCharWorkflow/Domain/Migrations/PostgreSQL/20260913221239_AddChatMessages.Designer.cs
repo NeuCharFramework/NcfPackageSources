@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Senparc.Xncf.NeuCharWorkflow.Models;
@@ -11,9 +12,11 @@ using Senparc.Xncf.NeuCharWorkflow.Models;
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Migrations.PostgreSQL
 {
     [DbContext(typeof(NeuCharWorkflowSenparcEntities_PostgreSQL))]
-    partial class NeuCharWorkflowSenparcEntities_PostgreSQLModelSnapshot : ModelSnapshot
+    [Migration("20260913221239_AddChatMessages")]
+    partial class AddChatMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
