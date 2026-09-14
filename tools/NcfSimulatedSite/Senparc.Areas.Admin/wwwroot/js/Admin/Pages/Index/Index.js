@@ -6,7 +6,7 @@ var app = new Vue({
       loading: false,
       refreshTable: true,
       xncfStat: {},
-      xncfOpeningList: {},
+      xncfOpeningList: [],
       chartData: [],
       todayLogData: [],
       hostMetrics: {
@@ -156,7 +156,8 @@ var app = new Vue({
       }
     },
     pivotBlockModuleLabel(moduleUid) {
-      const item = (this.xncfOpeningList || []).find(z => z.uid === moduleUid);
+      const openingModules = Array.isArray(this.xncfOpeningList) ? this.xncfOpeningList : [];
+      const item = openingModules.find(z => z.uid === moduleUid);
       return item ? item.menuName : moduleUid;
     },
     openPivotBlock(block) {
@@ -535,7 +536,8 @@ var app = new Vue({
     //开放模块数据
     async getXncfOpening() {
       let xncfOpeningList = await service.get('/Admin/Index?handler=XncfOpening');
-      this.xncfOpeningList = xncfOpeningList.data.data;
+      const data = xncfOpeningList && xncfOpeningList.data && xncfOpeningList.data.data;
+      this.xncfOpeningList = Array.isArray(data) ? data : [];
     },
     //点击打开模块
     navigateTo(uid) {
