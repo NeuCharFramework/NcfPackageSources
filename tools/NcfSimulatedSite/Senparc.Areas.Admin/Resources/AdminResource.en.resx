@@ -313,6 +313,7 @@
   <data name="AdminChat.ModeSimple" xml:space="preserve"><value>Chat</value></data>
   <data name="AdminChat.ModeHarness" xml:space="preserve"><value>Harness</value></data>
   <data name="AdminChat.HarnessSteps" xml:space="preserve"><value>Harness Steps</value></data>
+  <data name="AdminChat.TrajectoryNotFound" xml:space="preserve"><value>Trajectory was not found.</value></data>
   <data name="AdminChat.NewSessionDescription" xml:space="preserve"><value>Enter a question and select reference modules to start a conversation</value></data>
   <data name="AdminChat.ComputePower" xml:space="preserve"><value>AI model</value></data>
   <data name="AdminChat.DeleteConfirm" xml:space="preserve"><value>Delete this conversation?</value></data>

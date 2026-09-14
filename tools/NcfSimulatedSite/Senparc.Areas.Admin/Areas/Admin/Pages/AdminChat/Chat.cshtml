@@ -94,6 +94,13 @@
                                 @@click="toggleManageMode">
                                 {{ isManageMode ? ncfT('AdminChat.Done') : ncfT('AdminChat.Manage') }}
                             </el-button>
+                            <el-button
+                                size="mini"
+                                type="text"
+                                title="任务轨迹"
+                                @@click="openTrajectoryDialog">
+                                <i class="fa fa-road"></i>
+                            </el-button>
                         </div>
                     </div>
                     <div class="chat-modules" v-if="currentSessionModules.length > 0">
@@ -247,6 +254,24 @@
                                     </div>
                                 </el-collapse-item>
                             </el-collapse>
+                        </div>
+                        <div class="message-trajectory-actions" v-if="message.roleType === 1 && !isManageMode && message.trajectoryId">
+                            <el-button type="text" size="mini" @@click="openTrajectory(message.trajectoryId)">
+                                <i class="fa fa-road"></i> 轨迹
+                            </el-button>
+                            <el-button type="text" size="mini" @@click="resumeTrajectory(message.trajectoryId)">
+                                <i class="fa fa-play"></i> 恢复
+                            </el-button>
+                            <el-button type="text" size="mini" @@click="forkTrajectory(message.trajectoryId)">
+                                <i class="fa fa-code-fork"></i> 分叉
+                            </el-button>
+                        </div>
+                        <div class="message-trajectory-approvals" v-if="message.roleType === 1 && !isManageMode && message.pendingApprovals && message.pendingApprovals.length > 0">
+                            <div v-for="approval in message.pendingApprovals" :key="approval.requestId" class="trajectory-approval-item">
+                                <span><i class="fa fa-shield"></i> {{ approval.toolName }}</span>
+                                <el-button type="success" size="mini" @@click="respondApproval(message.trajectoryId, approval, true)">允许</el-button>
+                                <el-button type="danger" plain size="mini" @@click="respondApproval(message.trajectoryId, approval, false)">拒绝</el-button>
+                            </div>
                         </div>
                         <div class="message-actions" v-if="message.roleType === 1 && !isManageMode">
                             <el-button 
@@ -426,6 +451,77 @@
             </div>
         </el-main>
     </el-container>
+    <el-dialog
+        title="Harness 任务轨迹"
+        :visible.sync="trajectoryDialogVisible"
+        width="760px"
+        custom-class="trajectory-dialog">
+        <div class="trajectory-toolbar">
+            <el-input
+                v-model="trajectorySearchText"
+                clearable
+                size="small"
+                placeholder="检索轨迹、工具或结果"
+                @@keyup.enter.native="searchTrajectories">
+                <el-button slot="append" icon="el-icon-search" @@click="searchTrajectories"></el-button>
+            </el-input>
+        </div>
+        <div class="trajectory-list" v-loading="trajectoryLoading">
+            <div
+                v-for="trajectory in trajectoryList"
+                :key="trajectory.id"
+                :class="['trajectory-list-item', { active: selectedTrajectory && selectedTrajectory.id === trajectory.id }]"
+                @@click="openTrajectory(trajectory.id)">
+                <div>
+                    <strong>{{ trajectory.title }}</strong>
+                    <span class="trajectory-status">{{ trajectoryStatusLabel(trajectory.status) }}</span>
+                </div>
+                <small>#{{ trajectory.id }} · {{ trajectory.lastSequence }} events · {{ formatTime(trajectory.startedAt) }}</small>
+            </div>
+            <div v-if="trajectoryList.length === 0 && !trajectoryLoading" class="trajectory-empty">暂无 Harness 轨迹</div>
+        </div>
+        <div class="trajectory-detail" v-if="selectedTrajectory" v-loading="trajectoryDetailLoading">
+            <div class="trajectory-detail-head">
+                <div>
+                    <strong>{{ selectedTrajectory.title }}</strong>
+                    <span class="trajectory-status">{{ trajectoryStatusLabel(selectedTrajectory.status) }}</span>
+                </div>
+                <div class="trajectory-detail-actions">
+                    <el-button size="mini" @@click="toggleTrajectoryReplay">
+                        <i :class="replayPlaying ? 'fa fa-pause' : 'fa fa-play-circle'"></i>
+                        {{ replayPlaying ? '暂停回放' : '回放' }}
+                    </el-button>
+                    <el-button size="mini" type="primary" @@click="resumeSelectedTrajectory">
+                        <i class="fa fa-play"></i> 恢复
+                    </el-button>
+                    <el-button size="mini" @@click="forkSelectedTrajectory">
+                        <i class="fa fa-code-fork"></i> 分叉
+                    </el-button>
+                </div>
+            </div>
+            <div class="trajectory-replay-banner" v-if="replayEvent">
+                <span>回放事件 #{{ replayEvent.sequence }} · {{ replayEvent.eventType }}</span>
+                <strong v-if="replayEvent.name">{{ replayEvent.name }}</strong>
+                <div v-if="replayEvent.content">{{ replayEvent.content }}</div>
+            </div>
+            <el-timeline class="trajectory-timeline">
+                <el-timeline-item
+                    v-for="event in selectedTrajectoryEvents"
+                    :key="event.id"
+                    :timestamp="formatTime(event.occurredAt)"
+                    placement="top">
+                    <div class="trajectory-event">
+                        <div class="trajectory-event-title">
+                            <span>#{{ event.sequence }} {{ event.eventType }}</span>
+                            <strong v-if="event.name">{{ event.name }}</strong>
+                        </div>
+                        <div class="trajectory-event-content" v-if="event.content">{{ event.content }}</div>
+                        <pre class="trajectory-event-payload" v-if="event.payloadJson">{{ formatTrajectoryPayload(event.payloadJson) }}</pre>
+                    </div>
+                </el-timeline-item>
+            </el-timeline>
+        </div>
+    </el-dialog>
 </div>
 
 @section scripts {

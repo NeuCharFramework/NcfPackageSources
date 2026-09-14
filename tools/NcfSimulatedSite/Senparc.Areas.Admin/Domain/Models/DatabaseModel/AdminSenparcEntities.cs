@@ -78,6 +78,16 @@ namespace Senparc.Areas.Admin.Domain.Models
         public DbSet<AdminChatSessionWorkflow> AdminChatSessionWorkflows { get; set; }
 
         /// <summary>
+        /// Admin Chat Harness trajectories.
+        /// </summary>
+        public DbSet<AdminChatTrajectory> AdminChatTrajectories { get; set; }
+
+        /// <summary>
+        /// Append-only Admin Chat Harness trajectory events.
+        /// </summary>
+        public DbSet<AdminChatTrajectoryEvent> AdminChatTrajectoryEvents { get; set; }
+
+        /// <summary>
         /// 系统级 NeuCharPivot 配置
         /// </summary>
         public DbSet<NeuCharPivotConfiguration> NeuCharPivotConfigurations { get; set; }
@@ -137,6 +147,11 @@ namespace Senparc.Areas.Admin.Domain.Models
             modelBuilder.Entity<AdminChatSessionWorkflow>()
                 .HasIndex(z => new { z.SessionId, z.WorkflowId })
                 .IsUnique();
+            modelBuilder.Entity<AdminChatTrajectory>()
+                .HasIndex(z => new { z.SessionId, z.UserId, z.AddTime });
+            modelBuilder.Entity<AdminChatTrajectoryEvent>()
+                .HasIndex(z => new { z.TrajectoryId, z.Sequence })
+                .IsUnique();
             modelBuilder.Entity<NeuCharPivotBoard>()
                 .HasIndex(z => z.PageKey);
             modelBuilder.Entity<NeuBellWebHook>()
@@ -170,6 +185,12 @@ namespace Senparc.Areas.Admin.Domain.Models
             SetLargeText<NeuCharPivotBoard>(modelBuilder, largeTextType,
                 nameof(NeuCharPivotBoard.Description),
                 nameof(NeuCharPivotBoard.BlocksJson));
+            SetLargeText<AdminChatTrajectory>(modelBuilder, largeTextType,
+                nameof(AdminChatTrajectory.SessionStateJson),
+                nameof(AdminChatTrajectory.LastError));
+            SetLargeText<AdminChatTrajectoryEvent>(modelBuilder, largeTextType,
+                nameof(AdminChatTrajectoryEvent.Content),
+                nameof(AdminChatTrajectoryEvent.PayloadJson));
         }
 
         private static void SetLargeText<TEntity>(

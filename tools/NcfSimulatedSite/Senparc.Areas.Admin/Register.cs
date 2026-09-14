@@ -228,10 +228,14 @@ namespace Senparc.Areas.Admin
             services.AddScoped<IAdminChatMessageRepository, AdminChatMessageRepository>();
             services.AddScoped<IAdminChatSessionModuleRepository, AdminChatSessionModuleRepository>();
             services.AddScoped<IAdminChatSessionWorkflowRepository, AdminChatSessionWorkflowRepository>();
+            services.AddScoped<IAdminChatTrajectoryRepository, AdminChatTrajectoryRepository>();
+            services.AddScoped<IAdminChatTrajectoryEventRepository, AdminChatTrajectoryEventRepository>();
             services.AddScoped<AdminChatSessionService>();
             services.AddScoped<AdminChatMessageService>();
             services.AddScoped<AdminChatSessionModuleService>();
             services.AddScoped<AdminChatSessionWorkflowService>();
+            services.AddScoped<AdminChatTrajectoryService>();
+            services.AddScoped<AdminChatTrajectoryEventService>();
             services.AddScoped<AdminChatAiService>();
 
             // ChatAgent / NeuCharPivot：系统表、声明式 UI、Function 安全执行和 EventBus 协调。

@@ -4,20 +4,23 @@
 
 如果你狠狠心，也可以将此模块删除，这不会影响系统的正常运行，只不过你无法再进入管理后台。当然对黑客来说也一样。
 
-## Admin Chat：Harness 模式（MAF 长任务）
+## Admin Chat：Native MAF Harness 与 Trajectory
 
 管理后台 Admin Chat 支持两种运行模式，可在输入框下方切换：
 
-- **普通对话（Simple）**：单轮问答，保持既有体验（默认）。
-- **长任务（Harness）**：基于 Microsoft Agent Framework（MAF）的多步骤自主执行。在同一 `Agent`/`AgentSession` 上反复运行“计划 → 调用工具 → 观察 → 继续”，直到模型输出完成标记 `[[DONE]]`、达到最大步数或超时，适合较复杂的长任务。
+- **普通对话（Simple）**：单轮问答，保持既有体验。
+- **长任务（Harness）**：使用 `Microsoft.Agents.AI.Harness` 原生 `HarnessAgent`，内置工具调用、上下文压缩、Todo、plan/execute 和人工审批。
 
 关键实现：
 
-- `AdminChatAiService.GenerateHarnessResponseAsync(...)`：构建与 Simple 模式一致的 MAF Agent（复用共享的工具构建 `BuildAdminChatFunctionsAsync`，含模块 FunctionRender 与工作流工具），并在 `AdminChatHarnessExecutor` 中按步驱动执行。
-- `AdminChatHarnessExecutor`：与具体模型无关的可测试执行器，负责步数预算、超时控制、控制标记（`[[CONTINUE]]` / `[[DONE]]`）识别、步骤记录与标记清洗。
-- `ChatMessageInputDto.Mode`（`AdminChatMode.Simple/Harness`）：请求级模式开关；`SendMessageResponse.HarnessSteps` 返回执行步骤供前端展示。
+- `AdminChatAiService.GenerateNativeHarnessResponseAsync(...)`：通过 `Senparc.AI.AgentKernel.BuildHarnessAgentAsync(...)` 构建原生 MAF Harness，并注入会话模块 FunctionRender 与 Workflow 工具。
+- `AdminChatTrajectory` / `AdminChatTrajectoryEvent`：以追加事件方式保存 request、assistant、tool、approval、resume、fork、error 等轨迹。
+- `GetTrajectoryAsync`、`ResumeTrajectoryAsync`、`ForkTrajectoryAsync`、`SearchTrajectoriesAsync`：提供回放、恢复、分叉和检索能力。
+- `ChatMessageInputDto.Mode`（`AdminChatMode.Simple/Harness`）：请求级模式开关；Admin Chat 页面默认选择 Harness，普通对话仍可手动切换。
 
-前端在 `Areas/Admin/Pages/AdminChat/Chat.cshtml` 提供模式切换与“执行步骤”折叠面板。相关单元测试见 `Tests/Senparc.Areas.Admin.Tests/Domain/Services/AdminChatHarnessExecutorTests.cs`。
+前端在 `Areas/Admin/Pages/AdminChat/Chat.cshtml` 提供模式切换、轨迹抽屉、事件回放、恢复、分叉和工具审批按钮。数据库迁移名为 `Add_AdminChatHarnessTrajectory`，覆盖 SQLite、SQL Server、MySQL、Oracle、PostgreSQL 和 DM。
+
+详细发布和真实包安装说明见 `docs/Admin-Chat-Harness-Trajectory.md` 与 Senparc.AI 仓库的 `docs/AgentKernel-Harness-Release.md`。
 
 ## NeuBell WebHook（WebAPI）通知设置
 

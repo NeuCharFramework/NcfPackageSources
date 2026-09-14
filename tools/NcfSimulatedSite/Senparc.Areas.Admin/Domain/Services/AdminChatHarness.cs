@@ -14,6 +14,7 @@ using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
@@ -94,6 +95,117 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// 全部步骤记录（用于前端展示长任务执行过程）。
         /// </summary>
         public IReadOnlyList<AdminChatHarnessStep> Steps { get; set; } = Array.Empty<AdminChatHarnessStep>();
+
+        /// <summary>
+        /// Durable Trajectory identifier for native MAF Harness runs.
+        /// </summary>
+        public int TrajectoryId { get; set; }
+
+        /// <summary>
+        /// Native Harness trajectory status.
+        /// </summary>
+        public AdminChatTrajectoryStatus Status { get; set; }
+
+        /// <summary>
+        /// Native Harness trajectory events returned for the current request.
+        /// </summary>
+        public IReadOnlyList<AdminChatTrajectoryEventDto> TrajectoryEvents { get; set; } = Array.Empty<AdminChatTrajectoryEventDto>();
+
+        /// <summary>
+        /// Tool approvals waiting for explicit user confirmation.
+        /// </summary>
+        public IReadOnlyList<AdminChatApprovalRequestDto> PendingApprovals { get; set; } = Array.Empty<AdminChatApprovalRequestDto>();
+    }
+
+    /// <summary>
+    /// Safe API projection of one stored Trajectory event.
+    /// </summary>
+    public sealed class AdminChatTrajectoryEventDto
+    {
+        public int Id { get; set; }
+        public int Sequence { get; set; }
+        public string EventType { get; set; }
+        public string Source { get; set; }
+        public string Name { get; set; }
+        public string Content { get; set; }
+        public string PayloadJson { get; set; }
+        public DateTime OccurredAt { get; set; }
+        public string CorrelationId { get; set; }
+        public bool IsReplayable { get; set; }
+
+        public static AdminChatTrajectoryEventDto CreateFromEntity(AdminChatTrajectoryEvent entity)
+        {
+            if (entity == null)
+            {
+                return null;
+            }
+
+            return new AdminChatTrajectoryEventDto
+            {
+                Id = entity.Id,
+                Sequence = entity.Sequence,
+                EventType = entity.EventType,
+                Source = entity.Source,
+                Name = entity.Name,
+                Content = entity.Content,
+                PayloadJson = entity.PayloadJson,
+                OccurredAt = entity.OccurredAt,
+                CorrelationId = entity.CorrelationId,
+                IsReplayable = entity.IsReplayable
+            };
+        }
+    }
+
+    /// <summary>
+    /// A pending MAF tool approval rendered for the Admin Chat user.
+    /// </summary>
+    public sealed class AdminChatApprovalRequestDto
+    {
+        public string RequestId { get; set; }
+        public string ToolCallId { get; set; }
+        public string ToolName { get; set; }
+        public string ArgumentsJson { get; set; }
+    }
+
+    /// <summary>
+    /// Safe API projection of a durable Harness Trajectory.
+    /// </summary>
+    public sealed class AdminChatTrajectoryDto
+    {
+        public int Id { get; set; }
+        public int SessionId { get; set; }
+        public AdminChatMode Mode { get; set; }
+        public AdminChatTrajectoryStatus Status { get; set; }
+        public string Title { get; set; }
+        public int? ParentTrajectoryId { get; set; }
+        public int? ForkFromSequence { get; set; }
+        public DateTime StartedAt { get; set; }
+        public DateTime? FinishedAt { get; set; }
+        public int LastSequence { get; set; }
+        public string ModelIdentifier { get; set; }
+
+        public static AdminChatTrajectoryDto CreateFromEntity(AdminChatTrajectory entity)
+        {
+            if (entity == null)
+            {
+                return null;
+            }
+
+            return new AdminChatTrajectoryDto
+            {
+                Id = entity.Id,
+                SessionId = entity.SessionId,
+                Mode = entity.Mode,
+                Status = entity.Status,
+                Title = entity.Title,
+                ParentTrajectoryId = entity.ParentTrajectoryId,
+                ForkFromSequence = entity.ForkFromSequence,
+                StartedAt = entity.StartedAt,
+                FinishedAt = entity.FinishedAt,
+                LastSequence = entity.LastSequence,
+                ModelIdentifier = entity.ModelIdentifier
+            };
+        }
     }
 
     /// <summary>
