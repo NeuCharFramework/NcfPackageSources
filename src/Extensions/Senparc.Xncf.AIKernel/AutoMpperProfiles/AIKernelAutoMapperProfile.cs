@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：AIKernelAutoMapperProfile.cs
@@ -36,6 +36,9 @@ namespace Senparc.Xncf.AIKernel.AutoMapperProfiles
             CreateMap<AIVectorDto, AIVector>();
 
             CreateMap<AIVector_CreateOrEditRequest, AIVector>();
+
+            CreateMap<AITokenUsage, AITokenUsageDto>();
+            CreateMap<AITokenUsageDto, AITokenUsage>();
             // CreateMap<AIModel, AIModel_GetDetailResponse>();
             // CreateMap<AIModel, AIModel_GetIdAndNameResponse>();
         }

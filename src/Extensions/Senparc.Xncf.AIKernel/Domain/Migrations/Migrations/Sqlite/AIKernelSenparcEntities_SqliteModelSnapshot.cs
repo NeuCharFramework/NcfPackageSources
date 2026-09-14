@@ -96,6 +96,84 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.Sqlite
                     b.ToTable("Senparc_AIKernel_AIModel");
                 });
 
+            modelBuilder.Entity("Senparc.Xncf.AIKernel.Models.AITokenUsage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AiPlatform")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("CachedInputTokens")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ConfigModelType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("DeploymentName")
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DurationMs")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ErrorNote")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("InputTokens")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ModelAlias")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ModelId")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("OutputTokens")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("ReasoningTokens")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Source")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("TotalTokens")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_AIKernel_AITokenUsage");
+                });
+
             modelBuilder.Entity("Senparc.Xncf.AIKernel.Models.AIVector", b =>
                 {
                     b.Property<int>("Id")

@@ -1,3 +1,4 @@
+using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Core.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -87,5 +88,10 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         /// </summary>
         [Required]
         public string Content { get; set; }
+
+        /// <summary>
+        /// 运行模式：Simple（普通单轮对话，默认）或 Harness（MAF 长任务）。
+        /// </summary>
+        public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
     }
 }

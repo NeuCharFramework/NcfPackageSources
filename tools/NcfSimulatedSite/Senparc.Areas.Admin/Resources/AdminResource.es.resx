@@ -588,4 +588,5 @@
   <data name="Menu.ConfigEmpty" xml:space="preserve">
     <value>No hay menús o páginas para ordenar</value>
   </data>
+  <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>Configuración de WebHook</value></data>
 </root>

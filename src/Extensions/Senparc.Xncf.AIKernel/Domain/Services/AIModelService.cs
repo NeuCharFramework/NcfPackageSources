@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：AIModelService.cs
@@ -40,6 +40,9 @@
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+using System.Diagnostics;
+using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI;
 using Senparc.AI.AgentKernel;
@@ -61,6 +64,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AIKernel.Domain.Services
@@ -257,7 +261,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="senparcAiSetting"></param>
         /// <param name="prompt"></param>
         /// <returns></returns>
-        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate, PromptConfigParameter promptConfigParameter = null, AgentSession agentSession = null)
+        public async Task<SenparcKernelAiResult<string>> RunModelsync(SenparcAiSetting senparcAiSetting, string prompt, string systemMessage, string promptTemplate, PromptConfigParameter promptConfigParameter = null, AgentSession agentSession = null, Action<AgentResponseUpdate> inStreamItemProcessing = null)
         {
             if (senparcAiSetting == null)
             {
@@ -293,13 +297,246 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 .BuildKernelWithAgentSessionAsync();
 
             //var request = iWantToRun.CreateRequest(prompt);
-            var aiResult = await iWantToRun.RunChatAsync(prompt, agentSession);
+            var aiResult = await iWantToRun.RunChatAsync(prompt, agentSession, inStreamItemProcessing);
             return aiResult;
         }
 
         private static AgentAiHandler CreateModelAgentHandler(SenparcAiSetting senparcAiSetting)
         {
             return new AgentAiHandler(senparcAiSetting);
+        }
+
+        /// <summary>
+        /// 运行模型并记录 Token 监控（含异步进度）。
+        /// <para>
+        /// 与 <see cref="RunModelsync"/> 相比，本方法会以流式方式运行，并在运行过程中通过
+        /// <see cref="AITokenMonitorService"/> 发布 <see cref="AITokenProgressEvent"/>（异步进度），
+        /// 运行结束后捕获 <c>UsageDetails</c> 并通过 <see cref="AITokenUsageService"/> 持久化记录。
+        /// </para>
+        /// </summary>
+        /// <param name="aiModel">要运行的模型</param>
+        /// <param name="prompt">用户提示词</param>
+        /// <param name="systemMessage">系统消息（可选）</param>
+        /// <param name="promptConfigParameter">模型参数（可选）</param>
+        /// <param name="monitor">Token 监控服务（异步进度 + 实时聚合）</param>
+        /// <param name="progress">可选的进度回调（在监控服务之上再通知调用方）</param>
+        /// <param name="source">调用来源标记</param>
+        /// <param name="cancellationToken">取消令牌</param>
+        /// <returns>模型运行结果（含 Usage）</returns>
+        public async Task<SenparcKernelAiResult<string>> RunModelWithMonitorAsync(
+            AIModelDto aiModel,
+            string prompt,
+            string systemMessage,
+            PromptConfigParameter promptConfigParameter,
+            AITokenMonitorService monitor,
+            IProgress<AITokenProgressEvent> progress = null,
+            string source = "Monitor",
+            Guid? runId = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (aiModel == null)
+            {
+                throw new SenparcAiException("AIModelDto 不能为空");
+            }
+            if (monitor == null)
+            {
+                throw new SenparcAiException("AITokenMonitorService 不能为空");
+            }
+
+            promptConfigParameter ??= new PromptConfigParameter()
+            {
+                MaxTokens = 2000,
+                Temperature = 0.7,
+                TopP = 0.5,
+            };
+
+            var actualRunId = runId ?? Guid.NewGuid();
+            var stopwatch = Stopwatch.StartNew();
+            var senparcAiSetting = BuildSenparcAiSetting(aiModel);
+
+            var agentAiHandler = CreateModelAgentHandler(senparcAiSetting);
+            var chatOptions = new ChatClientAgentOptions()
+            {
+                ChatOptions = new Microsoft.Extensions.AI.ChatOptions()
+                {
+                    Instructions = systemMessage,
+                    MaxOutputTokens = promptConfigParameter.MaxTokens,
+                    Temperature = (float?)promptConfigParameter.Temperature,
+                    TopP = (float?)promptConfigParameter.TopP,
+                    StopSequences = promptConfigParameter.StopSequences ?? new List<string>()
+                },
+                ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions())
+            };
+
+            var iWantToRun = await agentAiHandler.IWantTo(senparcAiSetting)
+                .ConfigChatModel("SenparcNCF", chatOptions)
+                .BuildKernelWithAgentSessionAsync();
+
+            var outputText = new StringBuilder();
+            var lastPublish = DateTime.MinValue;
+            var lastUsage = new AITokenUsageSnapshot();
+            const int MinPublishIntervalMs = 100;
+
+            void Publish(AITokenProgressStatus status, AITokenUsageSnapshot usage, string error, bool force = false)
+            {
+                var now = DateTime.Now;
+                if (!force && (now - lastPublish).TotalMilliseconds < MinPublishIntervalMs)
+                {
+                    return;
+                }
+                lastPublish = now;
+                var evt = new AITokenProgressEvent
+                {
+                    RunId = actualRunId,
+                    ModelAlias = aiModel.Alias,
+                    ModelId = aiModel.ModelId,
+                    Status = status,
+                    InputTokens = usage.InputTokens,
+                    OutputTokens = usage.OutputTokens,
+                    TotalTokens = usage.TotalTokens,
+                    OutputPreview = TruncatePreview(outputText.ToString()),
+                    ElapsedMs = (int)stopwatch.ElapsedMilliseconds,
+                    Error = error
+                };
+                monitor.PublishProgress(evt);
+                try
+                {
+                    progress?.Report(evt);
+                }
+                catch
+                {
+                    // 忽略调用方回调异常，避免影响主流程
+                }
+            }
+
+            Publish(AITokenProgressStatus.Running, AITokenUsageSnapshot.Empty, null, force: true);
+
+            SenparcKernelAiResult<string> aiResult = null;
+            bool success = false;
+            string error = null;
+            try
+            {
+                aiResult = await iWantToRun.RunChatAsync(prompt, null, (AgentResponseUpdate update) =>
+                {
+                    if (update?.Text != null)
+                    {
+                        outputText.Append(update.Text);
+                    }
+                    var usageContent = update?.Contents?.FirstOrDefault(z => z is UsageContent) as UsageContent;
+                    if (usageContent?.Details != null)
+                    {
+                        lastUsage = BuildUsageSnapshot(usageContent.Details);
+                    }
+                    else
+                    {
+                        // 流式过程中没有精确 usage 时，用已生成文本长度估算输出 Token（约 4 字符 ≈ 1 token）
+                        lastUsage.OutputTokens = (long)Math.Ceiling(outputText.Length / 4.0);
+                        lastUsage.TotalTokens = lastUsage.InputTokens + lastUsage.OutputTokens;
+                    }
+                    Publish(AITokenProgressStatus.Running, lastUsage, null);
+                });
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                success = false;
+                error = ex.Message;
+                throw;
+            }
+            finally
+            {
+                stopwatch.Stop();
+
+                // 运行结束后，用结果中的精确 Usage 覆盖估算值
+                var finalUsage = BuildUsageSnapshot(aiResult?.Result?.Usage);
+                if (finalUsage.IsEmpty && !lastUsage.IsEmpty)
+                {
+                    finalUsage = lastUsage;
+                }
+                finalUsage.Normalize();
+
+                var finalStatus = success ? AITokenProgressStatus.Completed : AITokenProgressStatus.Failed;
+                var finalEvt = new AITokenProgressEvent
+                {
+                    RunId = actualRunId,
+                    ModelAlias = aiModel.Alias,
+                    ModelId = aiModel.ModelId,
+                    Status = finalStatus,
+                    InputTokens = finalUsage.InputTokens,
+                    OutputTokens = finalUsage.OutputTokens,
+                    TotalTokens = finalUsage.TotalTokens,
+                    OutputPreview = TruncatePreview(outputText.Length > 0 ? outputText.ToString() : (aiResult?.OutputString ?? string.Empty)),
+                    ElapsedMs = (int)stopwatch.ElapsedMilliseconds,
+                    Error = error
+                };
+                monitor.PublishProgress(finalEvt);
+                try
+                {
+                    progress?.Report(finalEvt);
+                }
+                catch
+                {
+                    // 忽略
+                }
+
+                // 实时聚合
+                monitor.Record(aiModel.Alias, finalUsage, (int)stopwatch.ElapsedMilliseconds, success);
+
+                // 持久化记录
+                try
+                {
+                    var usageService = this._serviceProvider.GetService<AITokenUsageService>();
+                    if (usageService != null)
+                    {
+                        await usageService.RecordAsync(
+                            aiModel.Alias,
+                            aiModel.ModelId,
+                            aiModel.DeploymentName,
+                            aiModel.AiPlatform,
+                            aiModel.ConfigModelType,
+                            finalUsage,
+                            (int)stopwatch.ElapsedMilliseconds,
+                            success,
+                            source,
+                            error);
+                    }
+                }
+                catch
+                {
+                    // 持久化失败不应影响模型运行结果返回
+                }
+            }
+
+            return aiResult;
+        }
+
+        /// <summary>
+        /// 从 <see cref="UsageDetails"/> 构建 Token 使用快照
+        /// </summary>
+        public static AITokenUsageSnapshot BuildUsageSnapshot(UsageDetails usage)
+        {
+            var snapshot = new AITokenUsageSnapshot();
+            if (usage == null)
+            {
+                return snapshot;
+            }
+            snapshot.InputTokens = usage.InputTokenCount ?? 0;
+            snapshot.OutputTokens = usage.OutputTokenCount ?? 0;
+            snapshot.TotalTokens = usage.TotalTokenCount ?? 0;
+            snapshot.CachedInputTokens = usage.CachedInputTokenCount ?? 0;
+            snapshot.ReasoningTokens = usage.ReasoningTokenCount ?? 0;
+            snapshot.Normalize();
+            return snapshot;
+        }
+
+        private static string TruncatePreview(string text, int maxLength = 200)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return string.Empty;
+            }
+            text = text.Replace("\r", " ").Replace("\n", " ");
+            return text.Length <= maxLength ? text : text.Substring(0, maxLength) + "...";
         }
 
         public async Task<string> UpdateModelsFromNeuCharAsync(NeuCharGetModelJsonResult modelResult, int developerId, string apiKey)

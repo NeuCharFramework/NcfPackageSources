@@ -444,7 +444,8 @@ window.ChatLauncherMixin = {
           initialMessage: this.chatInputText.trim(),
           aiModelId: this.normalizeAiModelId(this.launcherAiModelId),
           moduleUids: this.selectedModules.map((item) => item.uid),
-          workflowIds: this.selectedWorkflows.map((item) => item.id)
+          workflowIds: this.selectedWorkflows.map((item) => item.id),
+          mode: 1
         };
 
         const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateSessionAsync', requestData);

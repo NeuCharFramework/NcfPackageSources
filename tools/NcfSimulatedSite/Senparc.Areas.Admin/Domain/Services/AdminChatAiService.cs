@@ -33,6 +33,7 @@ using Microsoft.SemanticKernel;
 using Senparc.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.AgentKernel;
+using Senparc.AI.AgentKernel.Harness;
 using Senparc.AI.AgentKernel.Handlers;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Services.AIPlugins;
@@ -49,6 +50,8 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Agents.AI;
 using Microsoft.AspNetCore.Routing.Constraints;
@@ -56,6 +59,10 @@ using Microsoft.Extensions.AI;
 using Senparc.AI.AgentKernel.IWantToExtensions;
 using Senparc.AI.AgentKernel.Extensions;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using MafFunctionCallContent = Microsoft.Extensions.AI.FunctionCallContent;
+using MafFunctionResultContent = Microsoft.Extensions.AI.FunctionResultContent;
+using MafToolApprovalRequestContent = Microsoft.Extensions.AI.ToolApprovalRequestContent;
+using MafToolApprovalResponseContent = Microsoft.Extensions.AI.ToolApprovalResponseContent;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
@@ -80,6 +87,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         private readonly AdminChatMessageService _messageService;
         private readonly AdminChatSessionModuleService _sessionModuleService;
         private readonly AdminChatSessionWorkflowService _sessionWorkflowService;
+        private readonly AdminChatTrajectoryService _trajectoryService;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<AdminChatAiService> _logger;
 
@@ -94,12 +102,14 @@ namespace Senparc.Areas.Admin.Domain.Services
             AdminChatMessageService messageService,
             AdminChatSessionModuleService sessionModuleService,
             AdminChatSessionWorkflowService sessionWorkflowService,
+            AdminChatTrajectoryService trajectoryService,
             IServiceProvider serviceProvider,
             ILogger<AdminChatAiService> logger)
         {
             _messageService = messageService;
             _sessionModuleService = sessionModuleService;
             _sessionWorkflowService = sessionWorkflowService;
+            _trajectoryService = trajectoryService;
             _serviceProvider = serviceProvider;
             _logger = logger;
         }
@@ -132,6 +142,681 @@ namespace Senparc.Areas.Admin.Domain.Services
 
 
             var functionInvocationEnabled = generationOptions?.AllowFunctionInvocation != false;
+            var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, functionInvocationEnabled);
+            var aiFunctions = build.Functions;
+            var moduleUids = modules.Where(z => !z.XncfModuleUid.IsNullOrEmpty()).Select(z => z.XncfModuleUid).ToList();
+            var importedFunctionCount = build.ImportedFunctionCount;
+            var importedWorkflowCount = build.ImportedWorkflowCount;
+            var importedPluginNames = build.PluginNames;
+            var importedFunctionSignatures = build.Signatures;
+            var loadedFunctionDebugLines = build.DebugLines;
+
+
+#pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+            var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
+            {
+                ChatOptions = new ChatOptions()
+                {
+                    Instructions = generationOptions?.SystemInstructions ?? BuildSystemMessage(modules),
+                    MaxOutputTokens = Math.Clamp(generationOptions?.MaxOutputTokens ?? 2000, 256, 8000),
+                    TopP = 0.9f,
+                    Temperature = Math.Clamp(generationOptions?.Temperature ?? 0.6f, 0f, 1.5f),
+                    AllowMultipleToolCalls = aiFunctions.Count > 0,
+                    Tools = aiFunctions.Count > 0 ? aiFunctions.Cast<AITool>().ToList() : null
+                },
+                ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
+                {
+                    ChatReducer = new MessageCountingChatReducer(20)
+                })
+            }
+                ).BuildKernelWithAgentSessionAsync();
+#pragma warning restore MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+
+
+            if (importedFunctionCount == 0)
+            {
+                _logger.LogWarning(
+                    "AdminChat 未注入任何 FunctionRender 函数：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, SelectedWorkflowCount={WorkflowCount}",
+                    sessionId,
+                    userId,
+                    moduleUids.Count,
+                    string.Join(",", moduleUids),
+                    importedWorkflowCount);
+            }
+            else
+            {
+                if (showLoadedFunctionsInConsole)
+                {
+                    WriteLoadedFunctionsToConsole(sessionId, userId, loadedFunctionDebugLines);
+                }
+            }
+
+            _logger.LogInformation(
+                "AdminChat FunctionCalling 插件加载完成：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, Plugins={Plugins}, Functions={Functions}, Workflows={Workflows}, FunctionList={FunctionList}",
+                sessionId,
+                userId,
+                moduleUids.Count,
+                string.Join(",", moduleUids),
+                string.Join(",", importedPluginNames),
+                importedFunctionCount,
+                importedWorkflowCount,
+                string.Join(" | ", importedFunctionSignatures));
+
+            var prompt = BuildUserPrompt(messages, userMessage);
+
+            // 使用 FunctionChoiceBehavior.Auto() 让 AI 根据需要自动调用 ModuleAssistantPlugin 函数
+            //var executionSettings = new PromptExecutionSettings
+            //{
+            //    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+            //};
+
+            // TODO: 测试 MAF 中是否自动开启工具调用
+            // 当调用方提供回调时，使用 AgentKernel 已有的流式回调；没有回调时保留原有整包路径。
+            var streamedOutput = new StringBuilder();
+            var hasStreamedChunk = false;
+            var skResult = onChunk == null
+                ? await iWantToRun.RunChatAsync(prompt)
+                : await ExecuteRunnerWithSessionRetryAsync(
+                    iWantToRun,
+                    prompt,
+                    update =>
+                    {
+                        var updateText = update?.Text;
+                        if (string.IsNullOrEmpty(updateText))
+                        {
+                            return;
+                        }
+
+                        streamedOutput.Append(updateText);
+                        hasStreamedChunk = true;
+                        onChunk(updateText);
+                    });
+
+            var result = string.IsNullOrWhiteSpace(skResult?.OutputString)
+                ? streamedOutput.ToString().Trim()
+                : skResult.OutputString.Trim();
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                _logger.LogWarning("AI 返回空内容：SessionId={SessionId}, UserId={UserId}", sessionId, userId);
+                result = "抱歉，我暂时没有生成有效回复，请稍后再试。";
+            }
+
+            // 某些模型/网关不提供增量内容，但仍返回最终文本。为流式客户端补发一个完整片段，
+            // 这样界面不会一直停留在“正在回复”状态。
+            if (onChunk != null && !hasStreamedChunk)
+            {
+                onChunk(result);
+            }
+
+            return (result, modelIdentifier);
+        }
+
+        /// <summary>
+        /// Compatibility wrapper for the former prompt-marker Harness implementation.
+        /// </summary>
+        [Obsolete("Use GenerateNativeHarnessResponseAsync for the native Microsoft Agent Framework Harness.")]
+        public async Task<(string response, string modelIdentifier, AdminChatHarnessResult harness)> GenerateHarnessResponseAsync(
+            int sessionId,
+            int userId,
+            string userMessage,
+            int aiModelId = 0,
+            Action<AdminChatHarnessStep> onStep = null,
+            int maxSteps = 0,
+            TimeSpan? timeout = null,
+            CancellationToken cancellationToken = default)
+        {
+            var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
+
+            var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
+            var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
+            var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
+
+            var agentAiHandler = new AgentAiHandler(setting);
+            var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, functionInvocationEnabled: true);
+
+            var effectiveMaxSteps = maxSteps > 0 ? maxSteps : 8;
+            var effectiveTimeout = timeout ?? TimeSpan.FromSeconds(120);
+
+#pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+            var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChatHarness-{userId}-{sessionId}", new ChatClientAgentOptions()
+            {
+                ChatOptions = new ChatOptions()
+                {
+                    Instructions = BuildSystemMessage(modules) + AdminChatHarnessExecutor.BuildProtocolInstructions(),
+                    MaxOutputTokens = 4000,
+                    TopP = 0.9f,
+                    Temperature = 0.4f,
+                    AllowMultipleToolCalls = build.Functions.Count > 0,
+                    Tools = build.Functions.Count > 0 ? build.Functions.Cast<AITool>().ToList() : null
+                },
+                ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
+                {
+                    ChatReducer = new MessageCountingChatReducer(20)
+                })
+            }
+                ).BuildKernelWithAgentSessionAsync();
+#pragma warning restore MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+
+            var firstTurnPrompt = BuildUserPrompt(messages, userMessage) + AdminChatHarnessExecutor.BuildStartTail();
+            var continuePrompt = AdminChatHarnessExecutor.BuildContinuePrompt();
+
+            var executor = new AdminChatHarnessExecutor
+            {
+                MaxSteps = effectiveMaxSteps,
+                Timeout = effectiveTimeout,
+                TurnExecutor = async (step, prompt, ct) =>
+                {
+                    var session = iWantToRun.Kernel?.AgentSession;
+                    var text = await ExecuteHarnessTurnAsync(iWantToRun, session, prompt, ct);
+                    return string.IsNullOrWhiteSpace(text) ? string.Empty : text;
+                }
+            };
+
+            var result = await executor.RunAsync(firstTurnPrompt, continuePrompt, onStep, cancellationToken);
+            return (result.FinalText, modelIdentifier, result);
+        }
+
+        private static async Task<string> ExecuteHarnessTurnAsync(
+            IWantToRun runner,
+            AgentSession session,
+            string prompt,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await runner.RunChatResponseAsync(prompt, session, options: null, cancellationToken: cancellationToken).ConfigureAwait(false);
+                return response?.Text?.Trim() ?? string.Empty;
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch when (session != null)
+            {
+                var response = await runner.RunChatResponseAsync(prompt, agentSession: null, options: null, cancellationToken: cancellationToken).ConfigureAwait(false);
+                return response?.Text?.Trim() ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Native Microsoft Agent Framework Harness execution with durable Trajectory events.
+        /// </summary>
+        public async Task<(string response, string modelIdentifier, AdminChatHarnessResult harness)> GenerateNativeHarnessResponseAsync(
+            int sessionId,
+            int userId,
+            string userMessage,
+            int aiModelId = 0,
+            int maxIterations = 32,
+            TimeSpan? timeout = null,
+            CancellationToken cancellationToken = default)
+        {
+            var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
+            var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
+            var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
+            var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
+            var agentAiHandler = new AgentAiHandler(setting);
+            var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, true);
+            var trajectory = await _trajectoryService.CreateAsync(
+                sessionId,
+                userId,
+                userMessage,
+                AdminChatMode.Harness,
+                modelIdentifier);
+
+            await _trajectoryService.AppendAsync(
+                trajectory,
+                "request",
+                "user",
+                "message",
+                userMessage,
+                JsonSerializer.Serialize(new { sessionId, userId, aiModelId }));
+
+            var iWantToRun = agentAiHandler.IWantTo(setting)
+                .ConfigChatModel($"AdminChatHarness-{userId}-{sessionId}", new ChatClientAgentOptions())
+                .BuildKernel();
+
+            var harnessAgent = await iWantToRun.BuildHarnessAgentAsync(
+                new AgentKernelHarnessOptions
+                {
+                    MaxContextWindowTokens = 32_768,
+                    MaxOutputTokens = 4_000,
+                    HarnessOptions = new Microsoft.Agents.AI.HarnessAgentOptions
+                    {
+                        Name = $"AdminChatHarness-{sessionId}",
+                        Description = "NeuCharFramework Admin Chat long-running task agent",
+                        ChatOptions = new ChatOptions
+                        {
+                            Instructions = BuildSystemMessage(modules),
+                            Tools = build.Functions.Count > 0 ? build.Functions.Cast<AITool>().ToList() : null,
+                            MaxOutputTokens = 4_000,
+                            TopP = 0.9f,
+                            Temperature = 0.4f
+                        },
+                        DisableFileAccess = true,
+                        DisableFileMemory = true,
+                        DisableAgentSkillsProvider = true,
+                        DisableWebSearch = true,
+                        MaximumIterationsPerRequest = Math.Max(1, maxIterations)
+                    }
+                },
+                cancellationToken: cancellationToken);
+
+            var result = await ExecuteNativeHarnessAsync(
+                trajectory,
+                harnessAgent,
+                BuildUserPrompt(messages, userMessage),
+                timeout ?? TimeSpan.FromMinutes(10),
+                cancellationToken);
+
+            return (result.FinalText, modelIdentifier, result);
+        }
+
+        /// <summary>
+        /// Continues a durable Harness session from its last persisted MAF session state.
+        /// </summary>
+        public async Task<(string response, string modelIdentifier, AdminChatHarnessResult harness)> ResumeNativeHarnessResponseAsync(
+            int trajectoryId,
+            int userId,
+            string instruction,
+            int aiModelId = 0,
+            int maxIterations = 32,
+            TimeSpan? timeout = null,
+            CancellationToken cancellationToken = default)
+        {
+            var trajectory = await _trajectoryService.GetAsync(trajectoryId, userId)
+                ?? throw new NcfExceptionBase("未找到可恢复的 Harness Trajectory。");
+            var (harnessAgent, modelIdentifier) = await BuildNativeHarnessAgentAsync(
+                trajectory.SessionId,
+                userId,
+                aiModelId,
+                maxIterations,
+                ParseSessionState(trajectory.SessionStateJson),
+                cancellationToken);
+
+            var prompt = string.IsNullOrWhiteSpace(instruction)
+                ? "请继续执行上一次尚未完成的任务，先检查当前进度，再继续执行。"
+                : instruction.Trim();
+            await _trajectoryService.AppendAsync(
+                trajectory,
+                "resume",
+                "user",
+                "instruction",
+                prompt,
+                JsonSerializer.Serialize(new { trajectoryId }));
+
+            var result = await ExecuteNativeHarnessAsync(
+                trajectory,
+                harnessAgent,
+                prompt,
+                timeout ?? TimeSpan.FromMinutes(10),
+                cancellationToken);
+            return (result.FinalText, modelIdentifier, result);
+        }
+
+        /// <summary>
+        /// Creates a new Harness branch from a stored Trajectory point.
+        /// </summary>
+        public async Task<(string response, string modelIdentifier, AdminChatHarnessResult harness)> ForkNativeHarnessResponseAsync(
+            int trajectoryId,
+            int userId,
+            int forkFromSequence,
+            string instruction,
+            int aiModelId = 0,
+            int maxIterations = 32,
+            TimeSpan? timeout = null,
+            CancellationToken cancellationToken = default)
+        {
+            var parent = await _trajectoryService.GetAsync(trajectoryId, userId)
+                ?? throw new NcfExceptionBase("未找到要分叉的 Harness Trajectory。");
+            var events = await _trajectoryService.GetEventsAsync(
+                trajectoryId,
+                userId,
+                forkFromSequence > 0 ? forkFromSequence + 1 : null,
+                pageSize: 200);
+            var forkContext = BuildForkContext(events);
+            var title = string.IsNullOrWhiteSpace(instruction)
+                ? $"分叉：{parent.Title}"
+                : instruction.Trim();
+            var branch = await _trajectoryService.CreateAsync(
+                parent.SessionId,
+                userId,
+                title,
+                AdminChatMode.Harness,
+                parent.ModelIdentifier,
+                parent.Id,
+                forkFromSequence > 0 ? forkFromSequence : null);
+            var (harnessAgent, modelIdentifier) = await BuildNativeHarnessAgentAsync(
+                parent.SessionId,
+                userId,
+                aiModelId,
+                maxIterations,
+                serializedSession: null,
+                cancellationToken);
+
+            var prompt = $"这是从 Trajectory #{parent.Id} 的事件 #{forkFromSequence} 分叉出来的新分支。\n"
+                + "以下是分叉点之前的执行轨迹摘要，请在此基础上独立完成新任务：\n"
+                + forkContext
+                + "\n\n新任务："
+                + (string.IsNullOrWhiteSpace(instruction) ? "继续完成原任务。" : instruction.Trim());
+            await _trajectoryService.AppendAsync(
+                branch,
+                "fork",
+                "user",
+                "instruction",
+                instruction,
+                JsonSerializer.Serialize(new
+                {
+                    parentTrajectoryId = parent.Id,
+                    forkFromSequence,
+                    context = forkContext
+                }));
+
+            var result = await ExecuteNativeHarnessAsync(
+                branch,
+                harnessAgent,
+                prompt,
+                timeout ?? TimeSpan.FromMinutes(10),
+                cancellationToken);
+            return (result.FinalText, modelIdentifier, result);
+        }
+
+        /// <summary>
+        /// Resolves one native MAF tool approval and continues the persisted Harness session.
+        /// </summary>
+        public async Task<(string response, string modelIdentifier, AdminChatHarnessResult harness)> RespondNativeHarnessApprovalAsync(
+            int trajectoryId,
+            int userId,
+            string requestId,
+            string toolCallId,
+            string toolName,
+            string argumentsJson,
+            bool approved,
+            string reason = null,
+            int aiModelId = 0,
+            int maxIterations = 32,
+            TimeSpan? timeout = null,
+            CancellationToken cancellationToken = default)
+        {
+            var trajectory = await _trajectoryService.GetAsync(trajectoryId, userId)
+                ?? throw new NcfExceptionBase("未找到待审批的 Harness Trajectory。");
+            var (harnessAgent, modelIdentifier) = await BuildNativeHarnessAgentAsync(
+                trajectory.SessionId,
+                userId,
+                aiModelId,
+                maxIterations,
+                ParseSessionState(trajectory.SessionStateJson),
+                cancellationToken);
+
+            var arguments = string.IsNullOrWhiteSpace(argumentsJson)
+                ? new Dictionary<string, object>()
+                : JsonSerializer.Deserialize<Dictionary<string, object>>(argumentsJson)
+                    ?? new Dictionary<string, object>();
+            var toolCall = new MafFunctionCallContent(toolCallId ?? string.Empty, toolName ?? string.Empty, arguments);
+            var responseContent = new MafToolApprovalResponseContent(requestId ?? string.Empty, approved, toolCall)
+            {
+                Reason = reason
+            };
+            await _trajectoryService.AppendAsync(
+                trajectory,
+                "approval.response",
+                "user",
+                toolName,
+                reason,
+                JsonSerializer.Serialize(new { requestId, toolCallId, toolName, approved, arguments }));
+
+            var result = await ExecuteNativeHarnessAsync(
+                trajectory,
+                harnessAgent,
+                string.Empty,
+                timeout ?? TimeSpan.FromMinutes(10),
+                cancellationToken,
+                [new ChatMessage(ChatRole.User, [responseContent])]);
+            return (result.FinalText, modelIdentifier, result);
+        }
+
+        private async Task<(AgentKernelHarness harnessAgent, string modelIdentifier)> BuildNativeHarnessAgentAsync(
+            int sessionId,
+            int userId,
+            int aiModelId,
+            int maxIterations,
+            JsonElement? serializedSession,
+            CancellationToken cancellationToken)
+        {
+            var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
+            var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
+            var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
+            var agentAiHandler = new AgentAiHandler(setting);
+            var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, true);
+            var iWantToRun = agentAiHandler.IWantTo(setting)
+                .ConfigChatModel($"AdminChatHarness-{userId}-{sessionId}", new ChatClientAgentOptions())
+                .BuildKernel();
+
+            var harnessAgent = await iWantToRun.BuildHarnessAgentAsync(
+                new AgentKernelHarnessOptions
+                {
+                    MaxContextWindowTokens = 32_768,
+                    MaxOutputTokens = 4_000,
+                    HarnessOptions = new Microsoft.Agents.AI.HarnessAgentOptions
+                    {
+                        Name = $"AdminChatHarness-{sessionId}",
+                        Description = "NeuCharFramework Admin Chat long-running task agent",
+                        ChatOptions = new ChatOptions
+                        {
+                            Instructions = BuildSystemMessage(modules),
+                            Tools = build.Functions.Count > 0 ? build.Functions.Cast<AITool>().ToList() : null,
+                            MaxOutputTokens = 4_000,
+                            TopP = 0.9f,
+                            Temperature = 0.4f
+                        },
+                        DisableFileAccess = true,
+                        DisableFileMemory = true,
+                        DisableAgentSkillsProvider = true,
+                        DisableWebSearch = true,
+                        MaximumIterationsPerRequest = Math.Max(1, maxIterations)
+                    }
+                },
+                serializedSession: serializedSession,
+                cancellationToken: cancellationToken);
+            return (harnessAgent, modelIdentifier);
+        }
+
+        private static JsonElement? ParseSessionState(string sessionStateJson)
+        {
+            if (string.IsNullOrWhiteSpace(sessionStateJson))
+            {
+                return null;
+            }
+
+            using var document = JsonDocument.Parse(sessionStateJson);
+            return document.RootElement.Clone();
+        }
+
+        private static string BuildForkContext(IReadOnlyList<AdminChatTrajectoryEvent> events)
+        {
+            if (events == null || events.Count == 0)
+            {
+                return "(分叉点之前没有可用事件。)";
+            }
+
+            var text = string.Join(
+                "\n",
+                events.Select(item =>
+                    $"#{item.Sequence} [{item.EventType}] {item.Name ?? item.Source ?? "event"}: {item.Content ?? item.PayloadJson ?? string.Empty}"));
+            return text.Length > 12_000 ? text.Substring(text.Length - 12_000) : text;
+        }
+
+        private async Task<AdminChatHarnessResult> ExecuteNativeHarnessAsync(
+            AdminChatTrajectory trajectory,
+            AgentKernelHarness harnessAgent,
+            string prompt,
+            TimeSpan timeout,
+            CancellationToken cancellationToken,
+            IEnumerable<ChatMessage> messages = null)
+        {
+            var output = new StringBuilder();
+            var pendingApprovals = new List<AdminChatApprovalRequestDto>();
+            var trajectoryEvents = new List<AdminChatTrajectoryEventDto>();
+            using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            timeoutCts.CancelAfter(timeout);
+
+            try
+            {
+                await foreach (var update in harnessAgent.RunStreaming(
+                                   messages ?? [new ChatMessage(ChatRole.User, prompt)],
+                                   cancellationToken: timeoutCts.Token)
+                               .WithCancellation(timeoutCts.Token)
+                               .ConfigureAwait(false))
+                {
+                    if (!string.IsNullOrEmpty(update.Text))
+                    {
+                        output.Append(update.Text);
+                        var textEvent = await _trajectoryService.AppendAsync(
+                            trajectory,
+                            "assistant.text",
+                            "assistant",
+                            null,
+                            update.Text,
+                            null);
+                        trajectoryEvents.Add(AdminChatTrajectoryEventDto.CreateFromEntity(textEvent));
+                    }
+
+                    foreach (var content in update.Contents ?? Array.Empty<AIContent>())
+                    {
+                        var eventInfo = await AppendTrajectoryContentAsync(
+                            trajectory,
+                            content,
+                            update.Text,
+                            pendingApprovals);
+                        if (eventInfo != null)
+                        {
+                            trajectoryEvents.Add(eventInfo);
+                        }
+                    }
+                }
+
+                var sessionState = await harnessAgent.SerializeSessionAsync(cancellationToken: timeoutCts.Token);
+                await _trajectoryService.UpdateSessionStateAsync(trajectory, sessionState.GetRawText());
+                if (pendingApprovals.Count > 0)
+                {
+                    await _trajectoryService.MarkWaitingForApprovalAsync(trajectory);
+                }
+                else
+                {
+                    await _trajectoryService.MarkCompletedAsync(trajectory);
+                }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                trajectory.Cancel();
+                await _trajectoryService.SaveObjectAsync(trajectory);
+                throw;
+            }
+            catch (OperationCanceledException)
+            {
+                trajectory.Cancel();
+                await _trajectoryService.SaveObjectAsync(trajectory);
+            }
+            catch (Exception ex)
+            {
+                await _trajectoryService.MarkFailedAsync(trajectory, ex);
+                throw;
+            }
+
+            return new AdminChatHarnessResult
+            {
+                FinalText = output.ToString().Trim(),
+                Completed = trajectory.Status == AdminChatTrajectoryStatus.Completed,
+                Status = trajectory.Status,
+                TrajectoryId = trajectory.Id,
+                TrajectoryEvents = trajectoryEvents,
+                PendingApprovals = pendingApprovals
+            };
+        }
+
+        private async Task<AdminChatTrajectoryEventDto> AppendTrajectoryContentAsync(
+            AdminChatTrajectory trajectory,
+            AIContent content,
+            string updateText,
+            List<AdminChatApprovalRequestDto> pendingApprovals)
+        {
+            if (content == null)
+            {
+                return null;
+            }
+
+            var eventType = content.GetType().Name;
+            var source = "agent";
+            var name = content.GetType().Name;
+            var payload = SerializeContent(content);
+
+            if (content is MafFunctionCallContent functionCall)
+            {
+                eventType = "tool.call";
+                source = "tool";
+                name = functionCall.Name;
+                payload = SerializeContent(new { functionCall.CallId, functionCall.Name, functionCall.Arguments });
+            }
+            else if (content is MafFunctionResultContent functionResult)
+            {
+                eventType = "tool.result";
+                source = "tool";
+                payload = SerializeContent(new { functionResult.CallId, functionResult.Result });
+            }
+            else if (content is MafToolApprovalRequestContent approvalRequest)
+            {
+                eventType = "approval.request";
+                source = "approval";
+                var approvalFunctionCall = approvalRequest.ToolCall as MafFunctionCallContent;
+                name = approvalFunctionCall?.Name ?? approvalRequest.ToolCall.GetType().Name;
+                pendingApprovals.Add(new AdminChatApprovalRequestDto
+                {
+                    RequestId = approvalRequest.RequestId,
+                    ToolCallId = approvalRequest.ToolCall.CallId,
+                    ToolName = name,
+                    ArgumentsJson = approvalFunctionCall == null
+                        ? "{}"
+                        : SerializeContent(approvalFunctionCall.Arguments)
+                });
+            }
+            else if (content is MafToolApprovalResponseContent approvalResponse)
+            {
+                eventType = "approval.response";
+                source = "approval";
+                name = (approvalResponse.ToolCall as MafFunctionCallContent)?.Name
+                    ?? approvalResponse.ToolCall.GetType().Name;
+            }
+
+            var item = await _trajectoryService.AppendAsync(
+                trajectory,
+                eventType,
+                source,
+                name,
+                updateText,
+                payload);
+            return AdminChatTrajectoryEventDto.CreateFromEntity(item);
+        }
+
+        private static string SerializeContent(object content)
+        {
+            try
+            {
+                return JsonSerializer.Serialize(content);
+            }
+            catch
+            {
+                return content?.ToString();
+            }
+        }
+
+        private async Task<AdminChatFunctionBuild> BuildAdminChatFunctionsAsync(
+            SenparcAiSetting setting,
+            AgentAiHandler agentAiHandler,
+            int sessionId,
+            int userId,
+            List<AdminChatSessionModule> modules,
+            List<AdminChatSessionWorkflow> workflows,
+            bool functionInvocationEnabled)
+        {
             var modulePlugin = new ModuleAssistantPlugin(modules);
             var aiFunctions = functionInvocationEnabled
                 ? agentAiHandler.GetAITools(modulePlugin)
@@ -269,105 +954,25 @@ namespace Senparc.Areas.Admin.Domain.Services
                     _logger.LogWarning(ex, "导入 AdminChat Workflow Function Calling 工具失败：SessionId={SessionId}", sessionId);
                 }
             }
-
-
-#pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
-            var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
+            return new AdminChatFunctionBuild
             {
-                ChatOptions = new ChatOptions()
-                {
-                    Instructions = generationOptions?.SystemInstructions ?? BuildSystemMessage(modules),
-                    MaxOutputTokens = Math.Clamp(generationOptions?.MaxOutputTokens ?? 2000, 256, 8000),
-                    TopP = 0.9f,
-                    Temperature = Math.Clamp(generationOptions?.Temperature ?? 0.6f, 0f, 1.5f),
-                    AllowMultipleToolCalls = aiFunctions.Count > 0,
-                    Tools = aiFunctions.Count > 0 ? aiFunctions.Cast<AITool>().ToList() : null
-                },
-                ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
-                {
-                    ChatReducer = new MessageCountingChatReducer(20)
-                })
-            }
-                ).BuildKernelWithAgentSessionAsync();
-#pragma warning restore MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+                Functions = aiFunctions,
+                PluginNames = importedPluginNames,
+                ImportedFunctionCount = importedFunctionCount,
+                ImportedWorkflowCount = importedWorkflowCount,
+                Signatures = importedFunctionSignatures,
+                DebugLines = loadedFunctionDebugLines
+            };
+        }
 
-
-            if (importedFunctionCount == 0)
-            {
-                _logger.LogWarning(
-                    "AdminChat 未注入任何 FunctionRender 函数：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, SelectedWorkflowCount={WorkflowCount}",
-                    sessionId,
-                    userId,
-                    moduleUids.Count,
-                    string.Join(",", moduleUids),
-                    importedWorkflowCount);
-            }
-            else
-            {
-                if (showLoadedFunctionsInConsole)
-                {
-                    WriteLoadedFunctionsToConsole(sessionId, userId, loadedFunctionDebugLines);
-                }
-            }
-
-            _logger.LogInformation(
-                "AdminChat FunctionCalling 插件加载完成：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, Plugins={Plugins}, Functions={Functions}, Workflows={Workflows}, FunctionList={FunctionList}",
-                sessionId,
-                userId,
-                moduleUids.Count,
-                string.Join(",", moduleUids),
-                string.Join(",", importedPluginNames),
-                importedFunctionCount,
-                importedWorkflowCount,
-                string.Join(" | ", importedFunctionSignatures));
-
-            var prompt = BuildUserPrompt(messages, userMessage);
-
-            // 使用 FunctionChoiceBehavior.Auto() 让 AI 根据需要自动调用 ModuleAssistantPlugin 函数
-            //var executionSettings = new PromptExecutionSettings
-            //{
-            //    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
-            //};
-
-            // TODO: 测试 MAF 中是否自动开启工具调用
-            // 当调用方提供回调时，使用 AgentKernel 已有的流式回调；没有回调时保留原有整包路径。
-            var streamedOutput = new StringBuilder();
-            var hasStreamedChunk = false;
-            var skResult = onChunk == null
-                ? await iWantToRun.RunChatAsync(prompt)
-                : await ExecuteRunnerWithSessionRetryAsync(
-                    iWantToRun,
-                    prompt,
-                    update =>
-                    {
-                        var updateText = update?.Text;
-                        if (string.IsNullOrEmpty(updateText))
-                        {
-                            return;
-                        }
-
-                        streamedOutput.Append(updateText);
-                        hasStreamedChunk = true;
-                        onChunk(updateText);
-                    });
-
-            var result = string.IsNullOrWhiteSpace(skResult?.OutputString)
-                ? streamedOutput.ToString().Trim()
-                : skResult.OutputString.Trim();
-            if (string.IsNullOrWhiteSpace(result))
-            {
-                _logger.LogWarning("AI 返回空内容：SessionId={SessionId}, UserId={UserId}", sessionId, userId);
-                result = "抱歉，我暂时没有生成有效回复，请稍后再试。";
-            }
-
-            // 某些模型/网关不提供增量内容，但仍返回最终文本。为流式客户端补发一个完整片段，
-            // 这样界面不会一直停留在“正在回复”状态。
-            if (onChunk != null && !hasStreamedChunk)
-            {
-                onChunk(result);
-            }
-
-            return (result, modelIdentifier);
+        private sealed class AdminChatFunctionBuild
+        {
+            public List<AIFunction> Functions { get; set; }
+            public HashSet<string> PluginNames { get; set; }
+            public int ImportedFunctionCount { get; set; }
+            public int ImportedWorkflowCount { get; set; }
+            public List<string> Signatures { get; set; }
+            public List<string> DebugLines { get; set; }
         }
 
         private static async Task<SenparcKernelAiResult<string>> ExecuteRunnerWithSessionRetryAsync(

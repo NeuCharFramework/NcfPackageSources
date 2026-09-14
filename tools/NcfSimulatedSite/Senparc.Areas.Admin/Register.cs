@@ -228,10 +228,14 @@ namespace Senparc.Areas.Admin
             services.AddScoped<IAdminChatMessageRepository, AdminChatMessageRepository>();
             services.AddScoped<IAdminChatSessionModuleRepository, AdminChatSessionModuleRepository>();
             services.AddScoped<IAdminChatSessionWorkflowRepository, AdminChatSessionWorkflowRepository>();
+            services.AddScoped<IAdminChatTrajectoryRepository, AdminChatTrajectoryRepository>();
+            services.AddScoped<IAdminChatTrajectoryEventRepository, AdminChatTrajectoryEventRepository>();
             services.AddScoped<AdminChatSessionService>();
             services.AddScoped<AdminChatMessageService>();
             services.AddScoped<AdminChatSessionModuleService>();
             services.AddScoped<AdminChatSessionWorkflowService>();
+            services.AddScoped<AdminChatTrajectoryService>();
+            services.AddScoped<AdminChatTrajectoryEventService>();
             services.AddScoped<AdminChatAiService>();
 
             // ChatAgent / NeuCharPivot：系统表、声明式 UI、Function 安全执行和 EventBus 协调。
@@ -272,6 +276,18 @@ namespace Senparc.Areas.Admin
             services.AddSingleton<NeuCharPivotNeuBellProvider>();
             services.AddSingleton<Senparc.Ncf.Shared.Abstractions.NeuBell.INeuBellProvider>(
                 serviceProvider => serviceProvider.GetRequiredService<NeuCharPivotNeuBellProvider>());
+
+            // 纽铃 WebHook：用户可配置 WebAPI 地址，纽铃条目新增/移除时异步通知。
+            services.AddScoped<INeuBellWebHookRepository, NeuBellWebHookRepository>();
+            services.AddScoped<INeuBellWebHookService, NeuBellWebHookService>();
+            services.AddScoped<NeuBellWebHookService>();
+            services.AddScoped<INeuBellWebHookLogRepository, NeuBellWebHookLogRepository>();
+            services.AddScoped<INeuBellWebHookLogService, NeuBellWebHookLogService>();
+            services.AddScoped<NeuBellWebHookLogService>();
+            services.AddHttpClient(NeuBellWebHookDispatcher.HttpClientName, client =>
+                client.Timeout = TimeSpan.FromSeconds(15));
+            services.AddSingleton<NeuBellWebHookDispatcher>();
+            services.AddHostedService<NeuBellWebHookMonitorService>();
 
             return base.AddXncfModule(services, configuration, env);
         }

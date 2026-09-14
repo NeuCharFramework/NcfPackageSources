@@ -307,6 +307,11 @@
   <data name="AdminChat.SendHint" xml:space="preserve"><value>Ctrl + Enter 或 Cmd + Enter 发送</value></data>
   <data name="AdminChat.Send" xml:space="preserve"><value>发送</value></data>
   <data name="AdminChat.Thinking" xml:space="preserve"><value>正在思考中...</value></data>
+
+  <data name="AdminChat.ModeSimple" xml:space="preserve"><value>普通对话</value></data>
+  <data name="AdminChat.ModeHarness" xml:space="preserve"><value>长任务</value></data>
+  <data name="AdminChat.HarnessSteps" xml:space="preserve"><value>执行步骤</value></data>
+  <data name="AdminChat.TrajectoryNotFound" xml:space="preserve"><value>未找到任务轨迹。</value></data>
   <data name="AdminChat.NewSessionDescription" xml:space="preserve"><value>输入问题并选择引用模块，开始新的对话会话</value></data>
   <data name="AdminChat.ComputePower" xml:space="preserve"><value>AI 算力</value></data>
   <data name="AdminChat.DeleteConfirm" xml:space="preserve"><value>确定要删除这个会话吗？</value></data>
@@ -740,4 +745,5 @@
   <data name="Menu.ConfigEmpty" xml:space="preserve">
     <value>暂无可排序的菜单或页面</value>
   </data>
+  <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>WebHook 设置</value></data>
 </root>

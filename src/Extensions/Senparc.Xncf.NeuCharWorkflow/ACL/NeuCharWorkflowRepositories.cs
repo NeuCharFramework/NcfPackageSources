@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260913
+    修改描述：v0.4.0 新增 Chat 消息持久化仓储
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Repository;
@@ -22,6 +25,7 @@ namespace Senparc.Xncf.NeuCharWorkflow.ACL;
 public interface INeuCharWorkflowRepository : IClientRepositoryBase<WorkflowEntity> { }
 public interface INeuCharWorkflowVersionRepository : IClientRepositoryBase<NeuCharWorkflowVersion> { }
 public interface INeuCharWorkflowExecutionLogRepository : IClientRepositoryBase<NeuCharWorkflowExecutionLog> { }
+public interface INeuCharWorkflowChatMessageRepository : IClientRepositoryBase<NeuCharWorkflowChatMessage> { }
 
 public sealed class NeuCharWorkflowRepository : ClientRepositoryBase<WorkflowEntity>, INeuCharWorkflowRepository
 {
@@ -39,4 +43,10 @@ public sealed class NeuCharWorkflowExecutionLogRepository : ClientRepositoryBase
 {
     private NeuCharWorkflowExecutionLogRepository() : base(null!) { }
     public NeuCharWorkflowExecutionLogRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
+}
+
+public sealed class NeuCharWorkflowChatMessageRepository : ClientRepositoryBase<NeuCharWorkflowChatMessage>, INeuCharWorkflowChatMessageRepository
+{
+    private NeuCharWorkflowChatMessageRepository() : base(null!) { }
+    public NeuCharWorkflowChatMessageRepository(INcfDbData ncfDbData) : base(ncfDbData) { }
 }

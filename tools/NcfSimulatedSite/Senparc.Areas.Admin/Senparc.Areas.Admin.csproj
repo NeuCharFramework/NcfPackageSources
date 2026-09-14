@@ -60,7 +60,7 @@
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 		<DocumentationFile>../Senparc.Web/App_Data/ApiDocXml/Senparc.Areas.Admin.XML</DocumentationFile>
 		<Configurations>Debug;Release;Debug-Dapr;ModifyPublish;ModifyPublish</Configurations>
-		<NoWarn>$(NoWarn);MEAI001</NoWarn>
+			<NoWarn>$(NoWarn);MEAI001;MAAI001</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -76,6 +76,11 @@
 
 		<None Remove="Areas\Admin\Pages\Dto\**" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>

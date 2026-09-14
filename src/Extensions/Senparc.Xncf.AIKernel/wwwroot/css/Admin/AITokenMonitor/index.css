@@ -1,0 +1,64 @@
+.token-stat {
+    position: relative;
+    overflow: hidden;
+    padding: 10px;
+    height: 110px;
+    border: 1px solid #E4E4E4;
+    border-radius: 5px;
+    background: #FFF;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 300ms ease-in-out;
+}
+
+    .token-stat .icon {
+        font-size: 40px;
+        color: #BAB8B8;
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .token-stat .count {
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .token-stat .tit {
+        color: #BAB8B8;
+        font-size: 16px;
+        margin-bottom: 0;
+    }
+
+.charts-container {
+    height: 320px;
+}
+
+.progress-panel {
+    margin-top: 10px;
+    padding: 14px;
+    border: 1px dashed #dcdfe6;
+    border-radius: 5px;
+    background: #fafafa;
+}
+
+.progress-kpi {
+    color: #909399;
+    font-size: 13px;
+    margin-right: 6px;
+}
+
+.progress-preview {
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    background: #f0f2f5;
+    color: #606266;
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 120px;
+    overflow-y: auto;
+}

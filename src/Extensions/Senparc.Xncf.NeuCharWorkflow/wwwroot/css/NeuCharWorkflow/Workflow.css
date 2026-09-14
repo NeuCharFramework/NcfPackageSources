@@ -196,6 +196,9 @@
 .webhook-config-row > label { color: #606978; font-size: 12px; white-space: nowrap; }
 .webhook-config-row > .el-select { width: 180px; flex: 0 0 auto; }
 .webhook-config-row > .el-input { width: 270px; flex: 0 1 270px; }
+.workflow-chat-config .webhook-config-row { flex-wrap: wrap; }
+.workflow-chat-config .webhook-config-row > .el-textarea { flex: 1 1 100%; }
+.workflow-chat-config .webhook-config-row > .el-input { flex: 1 1 auto; width: auto; min-width: 180px; }
 .webhook-parameters-heading { display: flex; margin-top: 7px; align-items: center; justify-content: space-between; color: #606978; font-size: 12px; }
 .webhook-parameters { display: grid; max-height: 130px; margin-top: 4px; gap: 5px; overflow-y: auto; }
 .webhook-parameter-row { display: grid; grid-template-columns: minmax(120px, 1fr) auto minmax(160px, 1.3fr) auto; align-items: center; gap: 7px; }

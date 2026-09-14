@@ -103,6 +103,86 @@ namespace Senparc.Xncf.AIKernel.Domain.Migrations.Migrations.MySql
                     b.ToTable("Senparc_AIKernel_AIModel");
                 });
 
+            modelBuilder.Entity("Senparc.Xncf.AIKernel.Models.AITokenUsage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<int>("AiPlatform")
+                        .HasColumnType("int");
+
+                    b.Property<long>("CachedInputTokens")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ConfigModelType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DeploymentName")
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<int>("DurationMs")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ErrorNote")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<long>("InputTokens")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ModelAlias")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("ModelId")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<long>("OutputTokens")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ReasoningTokens")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<string>("Source")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("TotalTokens")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_AIKernel_AITokenUsage");
+                });
+
             modelBuilder.Entity("Senparc.Xncf.AIKernel.Models.AIVector", b =>
                 {
                     b.Property<int>("Id")

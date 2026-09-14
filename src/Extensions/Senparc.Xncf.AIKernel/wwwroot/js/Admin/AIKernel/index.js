@@ -8,6 +8,8 @@ var app = new Vue({
             },
             tableLoading: true,
             tableData: [],
+            keyword: "",
+            stats: { totalCalls: 0, successCount: 0, errorCount: 0, totalTokens: 0, averageDurationMs: 0 },
             neuCharAiModelList: [
                 "text-davinci-003",
                 "gpt-4",
@@ -133,7 +135,32 @@ var app = new Vue({
             return modelList;
         },
         async init() {
-            await this.getDataList();
+            await Promise.all([this.getDataList(), this.loadStats()]);
+        },
+        async loadStats() {
+            try {
+                await service.post('/api/Senparc.Xncf.AIKernel/AITokenMonitorAppService/Xncf.AIKernel_AITokenMonitorAppService.GetStatsAsync', {})
+                    .then(res => {
+                        this.stats = (res.data && res.data.data) || this.stats;
+                    });
+            } catch (e) {
+                console.error("loadStats error", e);
+            }
+        },
+        search() {
+            this.page.page = 1;
+            this.getDataList();
+        },
+        formatNumber(value) {
+            return Number(value || 0).toLocaleString();
+        },
+        usageShare(row) {
+            const totals = this.tableData
+                .map(r => (r.usage && r.usage.totalTokens) || 0)
+                .concat([1]);
+            const max = Math.max.apply(null, totals);
+            const total = (row.usage && row.usage.totalTokens) || 0;
+            return Math.max(1, Math.round(total / max * 100));
         },
         async handleSizeChange(val) {
             this.page.size = val;
@@ -148,6 +175,7 @@ var app = new Vue({
             await service.post('/api/Senparc.Xncf.AIKernel/AIModelAppService/Xncf.AIKernel_AIModelAppService.GetPagedListAsync', {
                 "page": this.page.page,
                 "size": this.page.size,
+                "alias": this.keyword || undefined,
             })
                 .then(res => {
                     console.log(res)
@@ -211,6 +239,7 @@ var app = new Vue({
                         });
                         if (res.data.success) {
                             this.getDataList()
+                            this.loadStats()
                             this.clearAddForm()
                             this.addFormDialogVisible = false;
                         }
@@ -233,6 +262,7 @@ var app = new Vue({
                                 message: res.data.data // display success message from res.data.data  
                             });
                             this.getDataList()
+                            this.loadStats()
                             this.clearNeuCharForm()
                             this.neuCharFormDialogVisible = false;
                         } else {
@@ -310,6 +340,7 @@ var app = new Vue({
                         if (res.data.success) {
                             this.clearEditForm()
                             this.getDataList()
+                            this.loadStats()
                             this.editFormDialogVisible = false;
                         }
                     })
@@ -349,6 +380,7 @@ var app = new Vue({
                             this.page.page--;
                             this.getDataList();
                         }
+                        this.loadStats();
                     })
                 })
             }).catch(() => {

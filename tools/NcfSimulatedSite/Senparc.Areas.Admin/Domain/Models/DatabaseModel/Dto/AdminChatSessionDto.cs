@@ -13,6 +13,7 @@
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
+using Senparc.Areas.Admin.Domain.Services;
 using System;
 using System.Collections.Generic;
 
@@ -114,6 +115,11 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         /// 选中的 Workflow Id 列表
         /// </summary>
         public List<int> WorkflowIds { get; set; }
+
+        /// <summary>
+        /// 初始消息运行模式；页面默认发送 Harness。
+        /// </summary>
+        public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
 
         public CreateChatSessionInputDto()
         {

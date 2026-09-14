@@ -53,6 +53,7 @@ using Microsoft.AspNetCore.Localization;
 using Senparc.Web.Controllers;
 using Senparc.Ncf.XncfBase;
 using Senparc.Web.Infrastructure.Database;
+using Senparc.Web.Infrastructure.Security;
 
 var databaseUpgradeOptions = DatabaseUpgradeCommandLineOptions.Parse(args);
 void ReportDatabaseUpgradeProgress(string message)
@@ -74,6 +75,10 @@ ReportDatabaseUpgradeProgress("NCF 服务注册完成，正在注册基础服务
 
 //添加 ServiceDefaults
 builder.AddServiceDefaults();
+
+// 注册 Cloudflare 及类似站点防护配置与限流器（是否生效由 appsettings 的 CloudflareProtect.Enabled 决定）
+builder.Services.Configure<CloudflareProtectOptions>(builder.Configuration.GetSection(CloudflareProtectOptions.SectionName));
+builder.Services.AddSingleton<FixedWindowRateLimiter>();
 ReportDatabaseUpgradeProgress("基础服务注册完成，正在注册 Dapr……");
 
 // Keep the platform default TLS certificate validation. A global callback that
@@ -119,6 +124,9 @@ app.UseRequestLocalization(localizationOptions);
 
 // 先完成模块和数据库注册，但延迟启动后台线程，避免旧架构上的后台任务反复失败。
 app.UseNcf<BySettingDatabaseConfiguration>(startBackgroundThreads: false);
+
+// Cloudflare 及类似站点防护：配置启用后自站点打开（首个请求）起立即生效
+app.UseCloudflareProtect();
 ReportDatabaseUpgradeProgress("XNCF 模块注册完成，正在检查数据库状态……");
 /*  UseNcf<TDatabaseConfiguration>() 泛型类型说明
  *                

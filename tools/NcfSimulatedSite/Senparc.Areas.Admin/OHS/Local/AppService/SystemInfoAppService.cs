@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：SystemInfoAppService.cs
@@ -68,6 +68,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly IStringLocalizer<AdminResource> _localizer;
         private readonly NeuBellTestProvider _neuBellTestProvider;
         private readonly INeuBellPublisher _neuBellPublisher;
+        private readonly NeuBellWebHookDispatcher _neuBellWebHookDispatcher;
 
         public SystemInfoAppService(
             IServiceProvider serviceProvider,
@@ -76,7 +77,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             IBaseObjectCacheStrategy cacheStrategy,
             IStringLocalizer<AdminResource> localizer,
             NeuBellTestProvider neuBellTestProvider,
-            INeuBellPublisher neuBellPublisher) : base(serviceProvider)
+            INeuBellPublisher neuBellPublisher,
+            NeuBellWebHookDispatcher neuBellWebHookDispatcher) : base(serviceProvider)
         {
             _systemConfigService = systemConfigService;
             _adminAuthConfigService = adminAuthConfigService;
@@ -84,6 +86,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             _localizer = localizer;
             _neuBellTestProvider = neuBellTestProvider;
             _neuBellPublisher = neuBellPublisher;
+            _neuBellWebHookDispatcher = neuBellWebHookDispatcher;
         }
 
 
@@ -212,7 +215,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return response;
         }
 
-        [FunctionRender("纽铃可见提醒测试", "发送或消费可在 Admin Footer 弹窗与徽标中看到的纽铃测试提醒", typeof(Register))]
+        [FunctionRender("纽铃可见提醒测试", "发送或消费可在 Admin Footer 弹窗与徽标中看到的纽铃测试提醒；发送提醒时可填 WebHook 地址，创建成功后异步请求该地址并记录请求数据与结果", typeof(Register))]
         public async Task<StringAppResponse> TriggerNeuBellTest(NeuBellTest_Request request)
         {
             return await this.GetStringResponseAsync(async (_, logger) =>
@@ -222,6 +225,24 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     var pendingCount = _neuBellTestProvider.Send();
                     await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
                     logger.Append($"已发送 NeuBell 测试提醒，当前待消费数量：{pendingCount}。请观察 Admin Footer 的弹窗和徽标。");
+
+                    // 创建 NeuBell 时按参数触发 WebHook 通知：fire-and-forget，不阻塞 Function 响应
+                    var webHookUrl = (request.WebHookUrl ?? string.Empty).Trim();
+                    if (webHookUrl.Length > 0)
+                    {
+                        var adminUserId = GetCurrentAdminUserInfoId();
+                        var notifyTask = _neuBellWebHookDispatcher.NotifyItemCreatedAsync(
+                            webHookUrl,
+                            NeuBellTestProvider.ProviderIdValue,
+                            "NeuBell 测试提醒",
+                            "由 Function 发送的测试提醒（NeuBell 创建通知）。",
+                            adminUserId);
+                        // 观察任务异常，避免 fire-and-forget 成为未观察的异常
+                        notifyTask.ContinueWith(
+                            antecedent => antecedent.Exception,
+                            CancellationToken.None);
+                        logger.Append("已加入 WebHook 发送队列（异步请求，不阻塞当前操作）；请求数据与结果可在页脚“纽铃”抽屉 → “WebHook 设置”的“请求日志”列表中查看。");
+                    }
                 }
                 else if (string.Equals(request?.Action, NeuBellTest_Request.ConsumeOneAction, StringComparison.OrdinalIgnoreCase))
                 {
