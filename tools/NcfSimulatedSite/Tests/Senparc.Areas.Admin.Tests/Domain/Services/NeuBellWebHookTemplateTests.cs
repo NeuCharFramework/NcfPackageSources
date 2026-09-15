@@ -73,6 +73,8 @@ public class NeuBellWebHookTemplateTests
         using var doc = JsonDocument.Parse(rendered);
         Assert.AreEqual("任务 一&二", doc.RootElement.GetProperty("text").GetString());
         Assert.AreEqual(1, doc.RootElement.GetProperty("raw").GetProperty("a").GetInt32());
+        StringAssert.Contains(rendered, "任务 一&二");
+        Assert.IsFalse(rendered.Contains("\\u4EFB", StringComparison.OrdinalIgnoreCase));
     }
 
     [TestMethod]
@@ -139,5 +141,22 @@ public class NeuBellWebHookTemplateTests
         var tokens = NewTokens();
         Assert.AreEqual(string.Empty, NeuBellWebHookTemplate.RenderBody(null, tokens, out var contentType));
         Assert.IsNull(contentType);
+    }
+
+    [TestMethod]
+    public void RenderBody_ShouldSupportOperationStateTokens()
+    {
+        var tokens = NewTokens();
+        tokens[NeuBellWebHookTemplate.TokenOperation] = "added";
+        tokens[NeuBellWebHookTemplate.TokenOperationStatus] = "新增";
+
+        var rendered = NeuBellWebHookTemplate.RenderBody(
+            "{\"operation\":\"{{operation}}\",\"operationStatus\":\"{{operationStatus}}\"}",
+            tokens,
+            out _);
+
+        using var doc = JsonDocument.Parse(rendered);
+        Assert.AreEqual("added", doc.RootElement.GetProperty("operation").GetString());
+        Assert.AreEqual("新增", doc.RootElement.GetProperty("operationStatus").GetString());
     }
 }

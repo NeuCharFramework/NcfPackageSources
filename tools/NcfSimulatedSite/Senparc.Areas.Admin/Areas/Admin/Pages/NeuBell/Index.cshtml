@@ -166,8 +166,14 @@
                 <div class="neubell-token-help">
                     <p><b>占位符</b>（与 Workflow 文本模板同格式，<code>{{name}}</code>）：</p>
                     <p><code>{{kind}}</code> 事件类型（item-created / items-changed / test）·
-                       <code>{{provider}}</code> ProviderId · <code>{{providerName}}</code> Provider 名称 ·
-                       <code>{{time}}</code> 通知时间（ISO 8601）· <code>{{payload}}</code> 完整默认 JSON 报文</p>
+                       <code>{{action}}</code> 动作值 · <code>{{actionName}}</code> 动作名称 ·
+                       <code>{{actionStatus}}</code> 动作结果（success / empty）·
+                       <code>{{operation}}</code> 机器可读操作状态（created / added / removed / changed / none）·
+                       <code>{{operationStatus}}</code> 操作状态说明（创建 / 新增 / 移除 / 变更 / 无变化）·
+                       <code>{{payload}}</code> 完整默认 JSON 报文</p>
+                    <p><code>{{provider}}</code> ProviderId · <code>{{providerName}}</code> Provider 名称 ·
+                       <code>{{time}}</code> 通知时间（ISO 8601）· <code>{{moduleUid}}</code> 模块 UID ·
+                       <code>{{tenantId}}</code> 租户标识（无租户时为空）</p>
                     <p><code>{{id}}</code> 条目 Id · <code>{{title}}</code> 条目标题 · <code>{{summary}}</code> 条目摘要 ·
                        <code>{{link}}</code> 条目链接（配置站点根地址时为绝对链接）· <code>{{status}}</code> 严重程度 ·
                        <code>{{count}}</code> 数量 · <code>{{updated}}</code> 条目更新时间</p>

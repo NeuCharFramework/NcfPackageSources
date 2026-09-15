@@ -33,6 +33,10 @@ namespace Senparc.Ncf.XncfBase
         /// 单个布尔，对应 <c>bool</c> / <c>bool?</c>，前端渲染为单个复选框。
         /// </summary>
         CheckBox = 4,
+        /// <summary>
+        /// 多行文本，对应字符串类参数，前端渲染为 textarea。
+        /// </summary>
+        TextArea = 5,
     }
 
     /// <summary>

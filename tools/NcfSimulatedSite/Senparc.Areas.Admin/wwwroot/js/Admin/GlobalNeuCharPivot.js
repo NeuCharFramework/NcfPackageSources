@@ -68,6 +68,13 @@
                                     v-model="values[parameterName(parameter)]"
                                     :type="parameter.parameterType === 3 ? 'password' : 'text'"
                                     :maxlength="parameter.maxLength || 500"></el-input>
+                                <el-input
+                                    v-else-if="parameter.parameterType === 5"
+                                    v-model="values[parameterName(parameter)]"
+                                    type="textarea"
+                                    :rows="8"
+                                    :maxlength="parameter.maxLength || 20000"
+                                    show-word-limit></el-input>
                                 <el-select
                                     v-else-if="parameter.parameterType === 1"
                                     v-model="values[parameterName(parameter)]"

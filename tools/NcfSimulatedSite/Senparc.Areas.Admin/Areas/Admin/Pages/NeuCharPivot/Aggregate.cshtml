@@ -117,6 +117,7 @@
                                         <div v-for="parameter in getParameters(fn)" :key="parameter.name" class="neuchar-parameter">
                                             <label>{{parameter.title || parameter.name}} <em v-if="parameter.required">*</em></label>
                                             <el-input v-if="parameter.parameterType===0 || parameter.parameterType===3" :type="parameter.parameterType===3?'password':'text'" v-model="inputs[fn.id][parameter.name]" :maxlength="parameter.maxLength || 500"></el-input>
+                                            <el-input v-else-if="parameter.parameterType===5" type="textarea" :rows="6" v-model="inputs[fn.id][parameter.name]" :maxlength="parameter.maxLength || 20000" show-word-limit></el-input>
                                             <el-select v-else-if="parameter.parameterType===1" v-model="inputs[fn.id][parameter.name]" :filterable="parameter.filterable" :allow-create="parameter.allowCreate">
                                                 <el-option v-for="option in parameter.options" :key="option.value" :label="option.text" :value="option.value"></el-option>
                                             </el-select>

@@ -219,48 +219,88 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return response;
         }
 
-        [FunctionRender("纽铃可见提醒测试", "发送或消费可在 Admin Footer 弹窗与徽标中看到的纽铃测试提醒；发送提醒时可填 WebHook 地址，创建成功后异步请求该地址并记录请求数据与结果", typeof(Register))]
+        [FunctionRender("纽铃可见提醒测试", "发送或消费可在 Admin Footer 弹窗与徽标中看到的纽铃测试提醒；发送提醒时可配置 WebHook 地址、请求方式和多行 Body 模板，创建成功后异步请求并记录请求数据与结果", typeof(Register))]
         public async Task<StringAppResponse> TriggerNeuBellTest(NeuBellTest_Request request)
         {
             return await this.GetStringResponseAsync(async (_, logger) =>
             {
+                void QueueWebHook(NeuBellWebHookOperation operation)
+                {
+                    var webHookUrl = (request?.WebHookUrl ?? string.Empty).Trim();
+                    if (webHookUrl.Length == 0)
+                    {
+                        return;
+                    }
+
+                    var notifyTask = _neuBellWebHookDispatcher.NotifyOperationAsync(
+                        webHookUrl,
+                        NeuBellWebHook.NormalizeHttpMethod(request.WebHookMethod),
+                        operation,
+                        GetCurrentAdminUserInfoId(),
+                        request.WebHookBody);
+                    notifyTask.ContinueWith(
+                        antecedent => antecedent.Exception,
+                        CancellationToken.None);
+                    logger.Append("已加入 WebHook 发送队列（异步请求，不阻塞当前操作）；请求数据与结果可在页脚“纽铃”抽屉 → “WebHook 设置”的“请求日志”列表中查看。");
+                }
+
                 if (string.Equals(request?.Action, NeuBellTest_Request.SendAction, StringComparison.OrdinalIgnoreCase))
                 {
                     var neuBellItem = _neuBellTestProvider.SendAndGetItem();
                     await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
                     logger.Append($"已发送 NeuBell 测试提醒，当前待消费数量：{_neuBellTestProvider.PendingCount}。请观察 Admin Footer 的弹窗和徽标。");
 
-                    // 创建 NeuBell 时按参数触发 WebHook 通知：fire-and-forget，不阻塞 Function 响应
-                    var webHookUrl = (request.WebHookUrl ?? string.Empty).Trim();
-                    if (webHookUrl.Length > 0)
+                    QueueWebHook(new NeuBellWebHookOperation
                     {
-                        var adminUserId = GetCurrentAdminUserInfoId();
-                        var notifyTask = _neuBellWebHookDispatcher.NotifyItemCreatedAsync(
-                            webHookUrl,
-                            NeuBellWebHook.NormalizeHttpMethod(request.WebHookMethod),
-                            neuBellItem,
-                            "NeuBell 测试",
-                            adminUserId);
-                        // 观察任务异常，避免 fire-and-forget 成为未观察的异常
-                        notifyTask.ContinueWith(
-                            antecedent => antecedent.Exception,
-                            CancellationToken.None);
-                        logger.Append("已加入 WebHook 发送队列（异步请求，不阻塞当前操作）；请求数据与结果可在页脚“纽铃”抽屉 → “WebHook 设置”的“请求日志”列表中查看。");
-                    }
+                        EventKind = NeuBellWebHookDispatcher.EventKindItemCreated,
+                        Action = NeuBellTest_Request.SendAction,
+                        ActionName = "发送提醒",
+                        ActionStatus = "success",
+                        ProviderId = NeuBellTestProvider.ProviderIdValue,
+                        ProviderName = NeuBellTestProvider.ItemTitle,
+                        ModuleUid = Register.ModuleUid,
+                        Added = new[] { neuBellItem }
+                    });
                 }
                 else if (string.Equals(request?.Action, NeuBellTest_Request.ConsumeOneAction, StringComparison.OrdinalIgnoreCase))
                 {
-                    var consumedCount = _neuBellTestProvider.ConsumeLatest();
+                    var consumedItem = _neuBellTestProvider.ConsumeLatestAndGetItem();
+                    var consumedCount = consumedItem == null ? 0 : 1;
                     await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
                     logger.Append(consumedCount > 0
                         ? "已消费最新 1 条 NeuBell 测试提醒，Footer 徽标将减少。"
                         : "当前没有可消费的 NeuBell 测试提醒。" );
+                    QueueWebHook(new NeuBellWebHookOperation
+                    {
+                        EventKind = NeuBellWebHookDispatcher.EventKindItemsChanged,
+                        Action = NeuBellTest_Request.ConsumeOneAction,
+                        ActionName = "消费最新一条",
+                        ActionStatus = consumedCount > 0 ? "success" : "empty",
+                        ProviderId = NeuBellTestProvider.ProviderIdValue,
+                        ProviderName = NeuBellTestProvider.ItemTitle,
+                        ModuleUid = Register.ModuleUid,
+                        Removed = consumedItem == null
+                            ? Array.Empty<NeuBellItem>()
+                            : new[] { consumedItem }
+                    });
                 }
                 else if (string.Equals(request?.Action, NeuBellTest_Request.ConsumeAllAction, StringComparison.OrdinalIgnoreCase))
                 {
-                    var consumedCount = _neuBellTestProvider.ConsumeAll();
+                    var consumedItems = _neuBellTestProvider.ConsumeAllAndGetItems();
+                    var consumedCount = consumedItems.Count;
                     await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
                     logger.Append($"已消费 {consumedCount} 条 NeuBell 测试提醒，Footer 弹窗和徽标将被清除。");
+                    QueueWebHook(new NeuBellWebHookOperation
+                    {
+                        EventKind = NeuBellWebHookDispatcher.EventKindItemsChanged,
+                        Action = NeuBellTest_Request.ConsumeAllAction,
+                        ActionName = "消费全部提醒",
+                        ActionStatus = consumedCount > 0 ? "success" : "empty",
+                        ProviderId = NeuBellTestProvider.ProviderIdValue,
+                        ProviderName = NeuBellTestProvider.ItemTitle,
+                        ModuleUid = Register.ModuleUid,
+                        Removed = consumedItems
+                    });
                 }
                 else
                 {

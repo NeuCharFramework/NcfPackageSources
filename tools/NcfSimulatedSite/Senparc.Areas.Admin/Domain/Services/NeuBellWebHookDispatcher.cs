@@ -26,6 +26,7 @@ using System.Net.Http;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,6 +55,24 @@ public sealed class NeuBellWebHookChange
 }
 
 /// <summary>
+/// 一次由调用方明确触发的 NeuBell 操作，用于立即发送 WebHook。
+/// </summary>
+public sealed record NeuBellWebHookOperation
+{
+    public string EventKind { get; init; }
+    public string Action { get; init; }
+    public string ActionName { get; init; }
+    public string ActionStatus { get; init; }
+    public string ProviderId { get; init; }
+    public string ProviderName { get; init; }
+    public string ModuleUid { get; init; }
+    public string TenantId { get; init; }
+    public DateTimeOffset OccurredAt { get; init; } = DateTimeOffset.Now;
+    public IReadOnlyList<NeuBellItem> Added { get; init; } = Array.Empty<NeuBellItem>();
+    public IReadOnlyList<NeuBellItem> Removed { get; init; } = Array.Empty<NeuBellItem>();
+}
+
+/// <summary>
 /// 纽铃 WebHook 调度器（Singleton）。
 /// 每次 <see cref="ObserveAsync"/> 会以 Provider 为单位对比条目集合，
 /// 得出新增（added）与移除（removed）的条目，并按 WebHook 设置异步通知。
@@ -67,7 +86,10 @@ public sealed class NeuBellWebHookDispatcher
     public const string EventKindItemsChanged = "items-changed";
     public const string EventKindTest = "test";
 
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
 
     private readonly ConcurrentDictionary<string, ProviderObservation> _observations
         = new(StringComparer.OrdinalIgnoreCase);
@@ -230,7 +252,17 @@ public sealed class NeuBellWebHookDispatcher
             Removed = Array.Empty<NeuBellItem>()
         }, test: true);
 
-        var tokens = BuildTestTokens(webHook, payload);
+        var testOperation = new NeuBellWebHookOperation
+        {
+            EventKind = EventKindTest,
+            Action = "test",
+            ActionName = "测试",
+            ActionStatus = "success",
+            ProviderId = webHook.ProviderFilter,
+            ProviderName = webHook.Name,
+            OccurredAt = DateTimeOffset.Now
+        };
+        var tokens = BuildOperationTokens(testOperation, payload);
         var renderedUrl = NeuBellWebHookTemplate.RenderUrl(webHook.WebHookUrl, tokens);
         if (!NeuBellWebHook.TryValidateUrl(renderedUrl, out var urlError))
         {
@@ -451,29 +483,68 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 创建 NeuBell 时按调用方传入的 WebHook 地址发送一次通知（item-created）。
-    /// 地址支持 {{占位符}}（渲染值来自传入的条目）；本方法只负责快速返回，
-    /// 实际 HTTP 请求在后台 fire-and-forget 执行，不阻塞调用方（Function 响应）。
+    /// 创建 NeuBell 时按调用方传入的 WebHook 地址发送一次通知（兼容入口）。
     /// </summary>
     public Task<(bool queued, string message)> NotifyItemCreatedAsync(
         string webHookUrl,
         string httpMethod,
         NeuBellItem item,
         string providerName,
-        int adminUserId)
+        int adminUserId,
+        string bodyTemplate = null)
+    {
+        return NotifyOperationAsync(
+            webHookUrl,
+            httpMethod,
+            new NeuBellWebHookOperation
+            {
+                EventKind = EventKindItemCreated,
+                Action = "send",
+                ActionName = "发送提醒",
+                ActionStatus = "success",
+                ProviderId = providerName,
+                ProviderName = providerName,
+                Added = item == null ? Array.Empty<NeuBellItem>() : new[] { item }
+            },
+            adminUserId,
+            bodyTemplate);
+    }
+
+    /// <summary>
+    /// 按调用方传入的 WebHook 地址发送一次 NeuBell 操作通知。
+    /// 地址、请求方式和 Body 模板均来自调用方；实际 HTTP 请求在后台执行。
+    /// </summary>
+    public Task<(bool queued, string message)> NotifyOperationAsync(
+        string webHookUrl,
+        string httpMethod,
+        NeuBellWebHookOperation operation,
+        int adminUserId,
+        string bodyTemplate = null)
     {
         return Task.Run(async () =>
         {
             var method = NeuBellWebHook.NormalizeHttpMethod(httpMethod);
             var urlTemplate = (webHookUrl ?? string.Empty).Trim();
-            var payload = BuildItemCreatedPayload(item, providerName);
+            operation ??= new NeuBellWebHookOperation
+            {
+                EventKind = EventKindItemsChanged,
+                Action = "unknown",
+                ActionName = "未知操作",
+                ActionStatus = "failed"
+            };
+            var eventKind = string.IsNullOrWhiteSpace(operation.EventKind)
+                ? EventKindItemsChanged
+                : operation.EventKind;
+            var payload = string.Equals(eventKind, EventKindItemCreated, StringComparison.OrdinalIgnoreCase)
+                ? BuildItemCreatedPayload(operation)
+                : BuildOperationPayload(operation with { EventKind = eventKind });
 
             // 模板地址本身不合法（占位符之外的部分无法解析）：不发送，仅记录失败日志
             if (!NeuBellWebHook.TryValidateUrlTemplate(urlTemplate, out var templateError))
             {
                 var failedLogId = await CreatePendingLogAsync(
-                    EventKindItemCreated, method, TruncateLogUrl(urlTemplate), providerName,
-                    item?.Title ?? string.Empty, payload, adminUserId).ConfigureAwait(false);
+                    eventKind, method, TruncateLogUrl(urlTemplate), operation.ProviderId,
+                    GetOperationLogTitle(operation), payload, adminUserId).ConfigureAwait(false);
                 if (failedLogId != null)
                 {
                     await CompleteLogAsync(failedLogId.Value, false, templateError, null, 0).ConfigureAwait(false);
@@ -481,16 +552,16 @@ public sealed class NeuBellWebHookDispatcher
                 return (false, templateError);
             }
 
-            var tokens = BuildItemCreatedTokens(item, providerName, payload);
+            var tokens = BuildOperationTokens(operation with { EventKind = eventKind }, payload);
             var renderedUrl = NeuBellWebHookTemplate.RenderUrl(urlTemplate, tokens);
 
             // 渲染后的真实地址必须仍是合法的 http/https 绝对地址，否则只记失败日志、不发送
             if (!NeuBellWebHook.TryValidateUrl(renderedUrl, out var urlError))
             {
-                var (failedBody, _) = BuildRequestBody(method, null, tokens, payload);
+                var (failedBody, _) = BuildRequestBody(method, bodyTemplate, tokens, payload);
                 var failedLogId = await CreatePendingLogAsync(
-                    EventKindItemCreated, method, TruncateLogUrl(renderedUrl), providerName,
-                    item?.Title ?? string.Empty, failedBody ?? string.Empty, adminUserId).ConfigureAwait(false);
+                    eventKind, method, TruncateLogUrl(renderedUrl), operation.ProviderId,
+                    GetOperationLogTitle(operation), failedBody ?? string.Empty, adminUserId).ConfigureAwait(false);
                 if (failedLogId != null)
                 {
                     await CompleteLogAsync(failedLogId.Value, false, urlError, null, 0).ConfigureAwait(false);
@@ -498,10 +569,10 @@ public sealed class NeuBellWebHookDispatcher
                 return (false, urlError);
             }
 
-            var (body, contentType) = BuildRequestBody(method, null, tokens, payload);
+            var (body, contentType) = BuildRequestBody(method, bodyTemplate, tokens, payload);
             var logId = await CreatePendingLogAsync(
-                EventKindItemCreated, method, TruncateLogUrl(renderedUrl), providerName,
-                item?.Title ?? string.Empty, body ?? string.Empty, adminUserId).ConfigureAwait(false);
+                eventKind, method, TruncateLogUrl(renderedUrl), operation.ProviderId,
+                GetOperationLogTitle(operation), body ?? string.Empty, adminUserId).ConfigureAwait(false);
 
             await _outboundGate.WaitAsync().ConfigureAwait(false);
             try
@@ -514,7 +585,7 @@ public sealed class NeuBellWebHookDispatcher
                 }
                 if (!success)
                 {
-                    _logger.LogWarning("NeuBell WebHook 创建通知失败：{Message}（{Url}）", message, renderedUrl);
+                    _logger.LogWarning("NeuBell WebHook 操作通知失败：{Message}（{Url}）", message, renderedUrl);
                 }
                 return (true, "已发送");
             }
@@ -526,16 +597,25 @@ public sealed class NeuBellWebHookDispatcher
     }
 
     /// <summary>
-    /// 构建 item-created 报文（创建 NeuBell 时按参数触发的单次通知）
+    /// 构建 item-created 报文（保留 item 结构以兼容已有接收方）。
     /// </summary>
-    private static string BuildItemCreatedPayload(NeuBellItem item, string providerName)
+    private static string BuildItemCreatedPayload(NeuBellWebHookOperation operation)
     {
+        var item = operation.Added.FirstOrDefault() ?? operation.Removed.FirstOrDefault();
         return JsonSerializer.Serialize(new
         {
             source = "NeuBell",
             kind = EventKindItemCreated,
-            providerId = providerName,
-            occurredAt = DateTimeOffset.Now,
+            action = operation.Action,
+            actionName = operation.ActionName,
+            actionStatus = operation.ActionStatus,
+            operation = "created",
+            operationStatus = "创建",
+            providerId = operation.ProviderId,
+            providerName = operation.ProviderName,
+            moduleUid = operation.ModuleUid,
+            tenantId = operation.TenantId,
+            occurredAt = operation.OccurredAt,
             item = new
             {
                 id = item?.Id,
@@ -546,6 +626,27 @@ public sealed class NeuBellWebHookDispatcher
                 count = item?.Count ?? 0,
                 updated = item?.UpdatedAt
             }
+        }, JsonOptions);
+    }
+
+    private static string BuildOperationPayload(NeuBellWebHookOperation operation)
+    {
+        return JsonSerializer.Serialize(new
+        {
+            source = "NeuBell",
+            kind = operation.EventKind,
+            action = operation.Action,
+            actionName = operation.ActionName,
+            actionStatus = operation.ActionStatus,
+            operation = GetOperation(operation.Added, operation.Removed),
+            operationStatus = GetOperationStatus(operation.Added, operation.Removed),
+            providerId = operation.ProviderId,
+            providerName = operation.ProviderName,
+            moduleUid = operation.ModuleUid,
+            tenantId = operation.TenantId,
+            occurredAt = operation.OccurredAt,
+            added = operation.Added,
+            removed = operation.Removed
         }, JsonOptions);
     }
 
@@ -589,62 +690,114 @@ public sealed class NeuBellWebHookDispatcher
         NeuBellWebHookChange change,
         string defaultPayload)
     {
-        var tokens = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        return BuildOperationTokens(new NeuBellWebHookOperation
         {
-            [NeuBellWebHookTemplate.TokenPayload] = defaultPayload,
-            ["kind"] = EventKindItemsChanged,
-            ["provider"] = change.ProviderId ?? string.Empty,
-            ["providerName"] = string.IsNullOrWhiteSpace(change.DisplayName)
+            EventKind = EventKindItemsChanged,
+            Action = "monitor",
+            ActionName = "后台监测",
+            ActionStatus = GetChangeOperation(change),
+            ProviderId = change.ProviderId,
+            ProviderName = string.IsNullOrWhiteSpace(change.DisplayName)
                 ? change.ProviderId ?? string.Empty
                 : change.DisplayName,
-            ["time"] = change.OccurredAt.ToString("o"),
-            ["addedCount"] = change.Added.Count.ToString(),
-            ["removedCount"] = change.Removed.Count.ToString(),
-            ["addedTitles"] = string.Join("、", change.Added.Select(item => item.Title)),
-            ["removedTitles"] = string.Join("、", change.Removed.Select(item => item.Title))
-        };
-        // 条目占位符取第一条新增（无新增时取第一条移除）
-        var item = change.Added.FirstOrDefault() ?? change.Removed.FirstOrDefault();
-        AddItemTokens(tokens, item);
-        return tokens;
+            ModuleUid = change.ModuleUid,
+            TenantId = change.TenantId,
+            OccurredAt = change.OccurredAt,
+            Added = change.Added,
+            Removed = change.Removed
+        }, defaultPayload);
     }
 
     /// <summary>
-    /// 构建 item-created 事件的占位符数据
+    /// 构建统一操作事件的占位符数据
     /// </summary>
-    private Dictionary<string, string> BuildItemCreatedTokens(
-        NeuBellItem item,
-        string providerName,
+    private Dictionary<string, string> BuildOperationTokens(
+        NeuBellWebHookOperation operation,
         string defaultPayload)
     {
+        var operationValue = string.Equals(operation.EventKind, EventKindTest, StringComparison.OrdinalIgnoreCase)
+            ? "test"
+            : string.Equals(operation.EventKind, EventKindItemCreated, StringComparison.OrdinalIgnoreCase)
+                ? "created"
+                : GetOperation(operation.Added, operation.Removed);
+        var operationStatus = string.Equals(operation.EventKind, EventKindTest, StringComparison.OrdinalIgnoreCase)
+            ? "测试"
+            : string.Equals(operation.EventKind, EventKindItemCreated, StringComparison.OrdinalIgnoreCase)
+                ? "创建"
+                : GetOperationStatus(operation.Added, operation.Removed);
         var tokens = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             [NeuBellWebHookTemplate.TokenPayload] = defaultPayload,
-            ["kind"] = EventKindItemCreated,
-            ["provider"] = providerName ?? string.Empty,
-            ["providerName"] = providerName ?? string.Empty,
-            ["time"] = DateTimeOffset.Now.ToString("o"),
-            ["count"] = "1"
+            ["kind"] = operation.EventKind ?? string.Empty,
+            ["action"] = operation.Action ?? string.Empty,
+            ["actionName"] = operation.ActionName ?? string.Empty,
+            ["actionStatus"] = operation.ActionStatus ?? string.Empty,
+            ["provider"] = operation.ProviderId ?? string.Empty,
+            ["providerName"] = operation.ProviderName ?? operation.ProviderId ?? string.Empty,
+            ["time"] = operation.OccurredAt.ToString("o"),
+            [NeuBellWebHookTemplate.TokenOperation] = operationValue,
+            [NeuBellWebHookTemplate.TokenOperationStatus] = operationStatus,
+            ["moduleUid"] = operation.ModuleUid ?? string.Empty,
+            ["tenantId"] = operation.TenantId ?? string.Empty,
+            ["addedCount"] = operation.Added.Count.ToString(),
+            ["removedCount"] = operation.Removed.Count.ToString(),
+            ["addedTitles"] = string.Join("、", operation.Added.Select(item => item.Title)),
+            ["removedTitles"] = string.Join("、", operation.Removed.Select(item => item.Title))
         };
-        AddItemTokens(tokens, item);
+        AddItemTokens(tokens, operation.Added.FirstOrDefault() ?? operation.Removed.FirstOrDefault());
         return tokens;
     }
 
-    /// <summary>
-    /// 构建 test 事件的占位符数据
-    /// </summary>
-    private static Dictionary<string, string> BuildTestTokens(
-        NeuBellWebHook webHook,
-        string defaultPayload)
+    private static string GetOperation(
+        IReadOnlyList<NeuBellItem> added,
+        IReadOnlyList<NeuBellItem> removed)
     {
-        return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        var hasAdded = added is { Count: > 0 };
+        var hasRemoved = removed is { Count: > 0 };
+        if (hasAdded && hasRemoved)
         {
-            [NeuBellWebHookTemplate.TokenPayload] = defaultPayload,
-            ["kind"] = EventKindTest,
-            ["provider"] = webHook.ProviderFilter ?? string.Empty,
-            ["providerName"] = webHook.Name ?? string.Empty,
-            ["time"] = DateTimeOffset.Now.ToString("o")
+            return "changed";
+        }
+        if (hasAdded)
+        {
+            return "added";
+        }
+        if (hasRemoved)
+        {
+            return "removed";
+        }
+        return "none";
+    }
+
+    private static string GetOperationStatus(
+        IReadOnlyList<NeuBellItem> added,
+        IReadOnlyList<NeuBellItem> removed)
+    {
+        return GetOperation(added, removed) switch
+        {
+            "added" => "新增",
+            "removed" => "移除",
+            "changed" => "变更",
+            _ => "无变化"
         };
+    }
+
+    private static string GetOperationLogTitle(NeuBellWebHookOperation operation)
+    {
+        return operation.Added.FirstOrDefault()?.Title
+            ?? operation.Removed.FirstOrDefault()?.Title
+            ?? operation.ActionName
+            ?? string.Empty;
+    }
+
+    private static string GetChangeOperation(NeuBellWebHookChange change)
+    {
+        return GetOperation(change.Added, change.Removed);
+    }
+
+    private static string GetChangeOperationStatus(NeuBellWebHookChange change)
+    {
+        return GetOperationStatus(change.Added, change.Removed);
     }
 
     private void AddItemTokens(
@@ -682,10 +835,21 @@ public sealed class NeuBellWebHookDispatcher
     /// </summary>
     public static string BuildPayload(NeuBellWebHookChange change, bool test)
     {
+        var operation = test
+            ? "test"
+            : GetChangeOperation(change);
+        var operationStatus = test
+            ? "测试"
+            : GetChangeOperationStatus(change);
         return JsonSerializer.Serialize(new
         {
             source = "NeuBell",
             kind = test ? EventKindTest : EventKindItemsChanged,
+            action = test ? "test" : "monitor",
+            actionName = test ? "测试" : "后台监测",
+            actionStatus = test ? "success" : operation,
+            operation,
+            operationStatus,
             providerId = change.ProviderId,
             moduleUid = change.ModuleUid,
             displayName = change.DisplayName,
