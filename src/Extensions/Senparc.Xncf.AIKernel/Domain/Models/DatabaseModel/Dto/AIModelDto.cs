@@ -10,12 +10,16 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+
 ----------------------------------------------------------------*/
 
 using System;
 using Senparc.AI;
 using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AIKernel.Models;
+using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 
 namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
 {
@@ -91,6 +95,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public bool Show { get;  set; }
         
+        /// <summary>
+        /// Token 使用统计
+        /// </summary>
+        public AITokenModelUsage Usage { get; set; }
+
         public AIModelDto()
         {
         }

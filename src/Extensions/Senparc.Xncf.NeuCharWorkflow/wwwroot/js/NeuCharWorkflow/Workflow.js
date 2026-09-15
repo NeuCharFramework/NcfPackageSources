@@ -307,7 +307,7 @@ new Vue({
             canvasSafeInsets: { left: 0, right: 0 },
             canvasZoom: 1,
             canvasViewport: { width: 0, height: 0, scrollLeft: 0, scrollTop: 0, left: 0, right: 0, bottom: 0, windowWidth: 0, windowHeight: 0 },
-            form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, runningCount: 0, graph: { nodes: [], edges: [], variables: [], layout: { direction: 'vertical' } } },
+            form: { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], chatTitle: '', chatGreeting: '', chatAllowGuest: true, autoSaveMinutes: 3, revision: 0, runningCount: 0, graph: { nodes: [], edges: [], variables: [], layout: { direction: 'vertical' } } },
             saveState: {
                 saving: false,
                 lastSavedSignature: '',
@@ -501,6 +501,11 @@ new Vue({
                 ? `${window.location.origin}/api/Senparc.Xncf.NeuCharWorkflow/neuchar-workflow/webhook/${this.form.id}`
                 : '';
         },
+        chatUrl() {
+            return this.form.id
+                ? `${window.location.origin}/api/Senparc.Xncf.NeuCharWorkflow/neuchar-workflow/chat/${this.form.id}/page`
+                : '';
+        },
         templateEditorTitle() {
             return this.templateEditor.fieldLabel
                 ? `编辑${this.templateEditor.fieldLabel}`
@@ -670,11 +675,12 @@ new Vue({
             const triggerType = String(item && item.triggerType || '').toLowerCase();
             if (triggerType === 'interval') return '定时';
             if (triggerType === 'webhook') return 'Webhook';
+            if (triggerType === 'chat') return 'Chat';
             return '手动';
         },
         workflowTriggerTagType(item) {
             const triggerType = String(item && item.triggerType || '').toLowerCase();
-            return triggerType === 'interval' ? 'warning' : triggerType === 'webhook' ? 'primary' : 'info';
+            return triggerType === 'interval' ? 'warning' : triggerType === 'webhook' ? 'primary' : triggerType === 'chat' ? 'success' : 'info';
         },
         workflowNextRunDate(item) {
             if (!item || !item.nextRunAt) return null;
@@ -706,7 +712,7 @@ new Vue({
             return `下次执行：${nextRun.getFullYear()}-${pad(nextRun.getMonth() + 1)}-${pad(nextRun.getDate())} ${pad(nextRun.getHours())}:${pad(nextRun.getMinutes())}`;
         },
         emptyForm() {
-            return { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], autoSaveMinutes: 3, revision: 0, runningCount: 0, graph: { nodes: [], edges: [], variables: [], layout: { direction: 'vertical' } } };
+            return { id: 0, name: '', description: '', enabled: false, triggerType: 'manual', intervalSeconds: 300, webhookMethod: 'any', webhookToken: '', webhookParameters: [], chatTitle: '', chatGreeting: '', chatAllowGuest: true, autoSaveMinutes: 3, revision: 0, runningCount: 0, graph: { nodes: [], edges: [], variables: [], layout: { direction: 'vertical' } } };
         },
         ensureGraphLayout(graph) {
             const target = graph || { nodes: [], edges: [] };
@@ -1041,6 +1047,9 @@ new Vue({
                         required: !!parameter.required,
                         description: parameter.description || ''
                     })),
+                    chatTitle: String(trigger.title || ''),
+                    chatGreeting: String(trigger.greeting || ''),
+                    chatAllowGuest: trigger.allowGuest !== false,
                     autoSaveMinutes: Number(item.autoSaveMinutes ?? 3),
                     revision: Number(item.revision || 0)
                 };
@@ -1069,11 +1078,14 @@ new Vue({
             if (this.editingLocked) return;
             const type = this.form.triggerType === 'interval'
                 ? 'interval-trigger'
-                : this.form.triggerType === 'webhook' ? 'webhook-trigger' : 'manual-trigger';
+                : this.form.triggerType === 'webhook'
+                    ? 'webhook-trigger'
+                    : this.form.triggerType === 'chat' ? 'chat-trigger' : 'manual-trigger';
+            const labels = { 'manual-trigger': '手动触发', 'interval-trigger': '间隔触发', 'webhook-trigger': 'Webhook 触发', 'chat-trigger': 'Chat 触发' };
             const existing = this.form.graph.nodes.find(node => String(node.type).endsWith('trigger'));
             if (existing) {
                 existing.type = type;
-                existing.name = type === 'interval-trigger' ? '间隔触发' : type === 'webhook-trigger' ? 'Webhook 触发' : '手动触发';
+                existing.name = labels[type] || '手动触发';
                 existing.config = existing.config || {};
                 if (type === 'webhook-trigger') {
                     existing.config.webhookParameters = (this.form.webhookParameters || []).map(parameter => ({ name: parameter.name, required: !!parameter.required, description: parameter.description || '' }));
@@ -1081,7 +1093,7 @@ new Vue({
                     delete existing.config.webhookParameters;
                 }
             } else {
-                const trigger = { id: this.makeId('trigger'), type, name: type === 'interval-trigger' ? '间隔触发' : type === 'webhook-trigger' ? 'Webhook 触发' : '手动触发', x: 430, y: 60, config: type === 'webhook-trigger' ? { webhookParameters: [] } : {} };
+                const trigger = { id: this.makeId('trigger'), type, name: labels[type] || '手动触发', x: 430, y: 60, config: type === 'webhook-trigger' ? { webhookParameters: [] } : {} };
                 this.form.graph.nodes.unshift(trigger);
                 this.setSelectedNodes([trigger]);
             }
@@ -2479,6 +2491,7 @@ new Vue({
             if (node.type === 'interval-trigger') return `每 ${this.form.intervalSeconds} 秒`;
             if (node.type === 'webhook-trigger') return '等待外部 Webhook 请求';
             if (node.type === 'manual-trigger') return '由用户手动运行';
+            if (node.type === 'chat-trigger') return '用户通过聊天页面发送消息启动';
             if (node.type === 'delay') return `${node.config.seconds || 0} 秒`;
             if (node.type === 'loop') return this.isTemplateValue(node.config?.count)
                 ? `按语法动态计算次数`
@@ -2760,7 +2773,7 @@ new Vue({
                     ? parameters.filter(parameter => String(parameter.name || '').trim()).map(parameter => ({ path: `$.${String(parameter.name).trim()}`, label: parameter.name, typeName: 'any', isArray: false, requiresIndex: false }))
                     : [{ path: '$', label: 'Webhook 输入', typeName: 'object', isArray: false, requiresIndex: false }];
             }
-            if (['manual-trigger', 'interval-trigger', 'webhook-trigger', 'agent', 'agent-group', 'a2a', 'sub-workflow', 'human-input'].includes(node.type)) return [{ path: '$', label: '文本输出', typeName: 'string', isArray: false, requiresIndex: false }];
+            if (['manual-trigger', 'interval-trigger', 'webhook-trigger', 'chat-trigger', 'agent', 'agent-group', 'a2a', 'sub-workflow', 'human-input'].includes(node.type)) return [{ path: '$', label: '文本输出', typeName: 'string', isArray: false, requiresIndex: false }];
             const incoming = this.form.graph.edges.find(edge => edge.target === node.id);
             const source = incoming && this.form.graph.nodes.find(item => item.id === incoming.source);
             return source ? this.nodeOutputFields(source, visited) : [{ path: '$', label: '节点输出', typeName: 'any', isArray: false, requiresIndex: false }];
@@ -3414,7 +3427,7 @@ new Vue({
             const triggers = this.form.graph.nodes.filter(node => String(node.type).endsWith('trigger'));
             if (triggers.length !== 1) return '工作流必须且只能包含一个触发器。';
             const trigger = triggers[0];
-            if (!['manual-trigger', 'interval-trigger', 'webhook-trigger'].includes(trigger.type)) return '触发器节点类型无效。';
+            if (!['manual-trigger', 'interval-trigger', 'webhook-trigger', 'chat-trigger'].includes(trigger.type)) return '触发器节点类型无效。';
             if (this.form.triggerType === 'webhook') {
                 if (!['any', 'get', 'post'].includes(String(this.form.webhookMethod || '').toLowerCase())) return 'Webhook 请求方法无效。';
                 const names = new Set();
@@ -3426,6 +3439,10 @@ new Vue({
                     names.add(key);
                     if (String(parameter.description || '').length > 500) return `Webhook 参数“${name}”的说明不能超过 500 个字符。`;
                 }
+            }
+            if (this.form.triggerType === 'chat') {
+                if (String(this.form.chatTitle || '').length > 100) return 'Chat 标题不能超过 100 个字符。';
+                if (String(this.form.chatGreeting || '').length > 500) return 'Chat 欢迎语不能超过 500 个字符。';
             }
             const disconnected = this.getDisconnectedNodes();
             if (requireRunnable && disconnected.length) return '画布中仍有未连接到触发器的节点。';
@@ -3539,16 +3556,27 @@ new Vue({
                     }))
                 };
             }
+            if (this.form.triggerType === 'chat') {
+                return {
+                    title: String(this.form.chatTitle || '').trim(),
+                    greeting: String(this.form.chatGreeting || '').trim(),
+                    allowGuest: !!this.form.chatAllowGuest
+                };
+            }
             return {};
         },
-        async copyText(value) {
+        async copyText(value, title = 'Webhook') {
             if (!value) return;
             try {
                 await navigator.clipboard.writeText(value);
-                this.$notify({ title: 'Webhook', message: '已复制到剪贴板。', type: 'success' });
+                this.$notify({ title, message: '已复制到剪贴板。', type: 'success' });
             } catch {
-                this.$notify({ title: 'Webhook', message: '复制失败，请手动复制。', type: 'warning' });
+                this.$notify({ title, message: '复制失败，请手动复制。', type: 'warning' });
             }
+        },
+        openChatPage() {
+            if (!this.chatUrl) return;
+            window.open(this.chatUrl, '_blank', 'noopener');
         },
         setAutoSaveEnabled(enabled) {
             this.form.autoSaveMinutes = enabled
@@ -3647,6 +3675,9 @@ new Vue({
                 required: !!parameter.required,
                 description: parameter.description || ''
             }));
+            this.form.chatTitle = String(trigger.title ?? this.form.chatTitle ?? '');
+            this.form.chatGreeting = String(trigger.greeting ?? this.form.chatGreeting ?? '');
+            if (typeof trigger.allowGuest === 'boolean') this.form.chatAllowGuest = trigger.allowGuest;
             if (saved.runningCount !== undefined && saved.runningCount !== null) {
                 this.form.runningCount = Math.max(0, Number(saved.runningCount) || 0);
             }

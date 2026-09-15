@@ -10,6 +10,12 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260913
+    修改描述：v0.4.0 新增 Chat 消息持久化实体，会话历史可跨主机重启恢复
+
+    修改标识：Senparc - 20260915
+    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -227,6 +233,35 @@ public class NeuCharWorkflowExecutionLog : EntityBase<int>
         Error = Truncate(error, 8000);
         ReplayEventsJson = replayEventsJson;
         SetUpdateTime();
+    }
+
+    private static string? Truncate(string? value, int length) =>
+        string.IsNullOrEmpty(value) || value.Length <= length ? value : value[..length];
+}
+
+[Table(Register.DATABASE_PREFIX + nameof(NeuCharWorkflowChatMessage))]
+[Serializable]
+public class NeuCharWorkflowChatMessage : EntityBase<int>
+{
+    public int WorkflowId { get; private set; }
+    /// <summary>参与者标识（user:xxx 或 guest:令牌）的 SHA256 十六进制摘要；只保存摘要，不保存原始令牌。</summary>
+    [MaxLength(64)] public string ParticipantKeyHash { get; private set; } = string.Empty;
+    /// <summary>消息角色：user、assistant 或 error。</summary>
+    [MaxLength(16)] public string Role { get; private set; } = "user";
+    /// <summary>消息内容，已在服务端截断到 8000 个字符。</summary>
+    public string Content { get; private set; } = string.Empty;
+    /// <summary>该消息关联的工作流运行；未启动运行的消息为空。</summary>
+    public Guid? RunId { get; private set; }
+
+    private NeuCharWorkflowChatMessage() { }
+
+    public NeuCharWorkflowChatMessage(int workflowId, string participantKeyHash, string role, string content, Guid? runId)
+    {
+        WorkflowId = workflowId;
+        ParticipantKeyHash = Truncate(participantKeyHash, 64) ?? string.Empty;
+        Role = Truncate(role, 16) ?? "user";
+        Content = Truncate(content, 8000) ?? string.Empty;
+        RunId = runId;
     }
 
     private static string? Truncate(string? value, int length) =>

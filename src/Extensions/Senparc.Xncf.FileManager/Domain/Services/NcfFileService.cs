@@ -10,11 +10,15 @@
     修改标识：Senparc - 20260813
     修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.7.0 优化文件管理、标签与回收站交互
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
+using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Repository;
@@ -83,6 +87,159 @@ public class NcfFileService : ServiceBase<NcfFile>
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Aggregates enterprise-document (knowledge-base) usage for the admin dashboard.
+    /// </summary>
+    public async Task<object> GetDashboardStatsAsync(DateTime? startDate = null, DateTime? endDate = null)
+    {
+        var scope = NcfFileResourceScope.KnowledgeBase;
+        var files = await GetObjectListAsync(
+            0,
+            0,
+            z => z.ResourceScope == scope,
+            z => z.UploadTime,
+            OrderingType.Ascending,
+            null);
+
+        var end = (endDate ?? DateTime.Today).Date;
+        var start = (startDate ?? end.AddDays(-6)).Date;
+        if (start > end)
+        {
+            (start, end) = (end, start);
+        }
+
+        // Cap trend points to avoid huge payloads for long ranges.
+        var daySpan = (int)(end - start).TotalDays + 1;
+        if (daySpan > 366)
+        {
+            start = end.AddDays(-365);
+            daySpan = 366;
+        }
+
+        var trend = new List<object>(daySpan);
+        for (var day = start; day <= end; day = day.AddDays(1))
+        {
+            var dayEnd = day.AddDays(1);
+            var cum = files.Where(f => f.UploadTime < dayEnd).ToList();
+            trend.Add(new
+            {
+                date = day.ToString("MM-dd"),
+                fullDate = day.ToString("yyyy-MM-dd"),
+                fileCount = cum.Count,
+                totalSizeBytes = cum.Sum(f => f.FileSize)
+            });
+        }
+
+        static string CategoryOf(NcfFile file)
+        {
+            var ext = (file.FileExtension ?? string.Empty).Trim().ToLowerInvariant();
+            if (ext is ".jpg" or ".jpeg" or ".png" or ".gif" or ".webp" or ".bmp" or ".ico" or ".avif")
+                return "图片";
+            if (ext is ".mp4" or ".avi" or ".mov" or ".wmv" or ".mkv" or ".webm")
+                return "视频";
+            if (ext is ".mp3" or ".wav" or ".flac" or ".aac" or ".ogg" or ".m4a")
+                return "音频";
+            if (file.FileType is FileType.Text or FileType.Word or FileType.PowerPoint or FileType.Excel or FileType.Code
+                || ext is ".pdf" or ".doc" or ".docx" or ".xls" or ".xlsx" or ".ppt" or ".pptx" or ".txt" or ".md" or ".json" or ".xml" or ".csv")
+                return "文档";
+            return "其他";
+        }
+
+        var groups = files
+            .GroupBy(CategoryOf)
+            .Select(g => new { name = g.Key, count = g.Count(), sizeBytes = g.Sum(x => x.FileSize) })
+            .ToList();
+
+        var colors = new Dictionary<string, string>
+        {
+            ["文档"] = "#95de64",
+            ["图片"] = "#597ef7",
+            ["视频"] = "#ffd666",
+            ["音频"] = "#ff9c6e",
+            ["其他"] = "#91d5ff"
+        };
+
+        var order = new[] { "文档", "图片", "视频", "音频", "其他" };
+        var sizeSlices = order.Select(name =>
+        {
+            var g = groups.FirstOrDefault(x => x.name == name);
+            var bytes = g?.sizeBytes ?? 0L;
+            return new
+            {
+                name,
+                value = Math.Round(bytes / (1024d * 1024d), 2), // MB for chart readability
+                sizeBytes = bytes,
+                color = colors[name]
+            };
+        }).Where(x => x.sizeBytes > 0 || x.name == "文档" || x.name == "其他").ToList();
+
+        var countSlices = order.Select(name =>
+        {
+            var g = groups.FirstOrDefault(x => x.name == name);
+            return new
+            {
+                name,
+                value = g?.count ?? 0,
+                color = colors[name]
+            };
+        }).Where(x => x.value > 0 || x.name == "文档" || x.name == "其他").ToList();
+
+        var totalBytes = files.Sum(f => f.FileSize);
+        var totalCount = files.Count;
+        var systemName = ResolveSystemName();
+
+        string FormatSize(long bytes)
+        {
+            if (bytes < 1024) return $"{bytes}B";
+            if (bytes < 1024 * 1024) return $"{bytes / 1024d:F2}KB";
+            if (bytes < 1024L * 1024 * 1024) return $"{bytes / (1024d * 1024d):F2}MB";
+            return $"{bytes / (1024d * 1024d * 1024d):F2}GB";
+        }
+
+        return new
+        {
+            statsCutoff = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+            systemName,
+            totalCount,
+            totalSizeBytes = totalBytes,
+            totalSizeLabel = FormatSize(totalBytes),
+            enterpriseUsed = FormatSize(totalBytes),
+            orgUsages = new[]
+            {
+                new { name = systemName, size = FormatSize(totalBytes) },
+                new { name = "企业文档根目录", size = FormatSize(0) },
+                new { name = "知识库资料", size = FormatSize(totalBytes) }
+            },
+            sizeTotalLabel = FormatSize(totalBytes).Replace(" ", ""),
+            countTotalLabel = totalCount.ToString(),
+            sizeSlices,
+            countSlices,
+            capacityTrend = trend
+        };
+    }
+
+    /// <summary>
+    /// Reads the configured site name from SystemConfig (via FullSystemConfigCache).
+    /// </summary>
+    private string ResolveSystemName()
+    {
+        try
+        {
+            var cache = _serviceProvider.GetService<FullSystemConfigCache>();
+            var systemName = cache?.Data?.SystemName;
+            if (!string.IsNullOrWhiteSpace(systemName))
+            {
+                return systemName.Trim();
+            }
+        }
+        catch (Exception ex)
+        {
+            SenparcTrace.BaseExceptionLog(ex);
+        }
+
+        return "NCF";
     }
 
     /// <summary>
@@ -292,6 +449,29 @@ public class NcfFileService : ServiceBase<NcfFile>
     }
 
     /// <summary>
+    /// Resolves a validated physical path for direct file serving (e.g. PhysicalFileResult),
+    /// avoiding chunked Transfer-Encoding on HTTP/2 responses.
+    /// </summary>
+    public async Task<(NcfFile File, string FullPath)?> TryGetPhysicalPathAsync(int id, bool requirePublicSiteAsset = false)
+    {
+        var file = await GetObjectAsync(z => z.Id == id);
+        if (file == null || (requirePublicSiteAsset &&
+                             (file.ResourceScope != NcfFileResourceScope.SiteAsset ||
+                              file.AccessLevel != NcfFileAccessLevel.Public)))
+        {
+            return null;
+        }
+
+        var fullPath = ResolvePhysicalPath(file);
+        if (!File.Exists(fullPath))
+        {
+            return null;
+        }
+
+        return (file, fullPath);
+    }
+
+    /// <summary>
     /// Reads and extracts plain text only from knowledge-base sources.
     /// </summary>
     public async Task<NcfFileTextExtractionResult> GetExtractedTextAsync(int id)
@@ -305,6 +485,27 @@ public class NcfFileService : ServiceBase<NcfFile>
         if (file.ResourceScope != NcfFileResourceScope.KnowledgeBase)
         {
             throw new InvalidOperationException("站点静态资源不能作为知识库来源。");
+        }
+
+        var fileInfo = await GetFileBytes(id);
+        if (fileInfo.FileBytes.Length == 0)
+        {
+            throw new FileNotFoundException($"文件物理内容不存在：{file.FileName}");
+        }
+
+        return NcfFileTextExtractor.Extract(fileInfo.FileBytes, file.FileExtension, file.FileName);
+    }
+
+    /// <summary>
+    /// Extracts preview text for admin inline preview. Unlike knowledge-base ingestion,
+    /// this does not enforce the KnowledgeBase resource scope restriction.
+    /// </summary>
+    public async Task<NcfFileTextExtractionResult> GetPreviewTextAsync(int id)
+    {
+        var file = await GetObjectAsync(z => z.Id == id);
+        if (file == null)
+        {
+            throw new FileNotFoundException($"文件记录不存在：{id}");
         }
 
         var fileInfo = await GetFileBytes(id);

@@ -126,3 +126,4 @@ tools/NcfDesktopApp.GUI/publish-self-contained.pre-package-*
 tools/NcfSimulatedSite/Senparc.Web/wwwroot/NcfPackages/
 .cursor/scratchpad.md
 upgrade-senparc-packages/
+.venv_translate

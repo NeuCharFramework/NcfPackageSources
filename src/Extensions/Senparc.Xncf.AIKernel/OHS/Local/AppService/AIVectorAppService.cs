@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -108,6 +111,28 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                             total,
                             vectorList.Select(m => new AIVectorDto(m))
                         );
+                    });
+        }
+
+        /// <summary>
+        /// 分页获取供其他管理页面选择的 AIVector 基本信息。
+        /// 不返回连接字符串、备注等配置敏感字段。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<PagedResponse<AIVectorSelectionResponse>>> GetSelectionListAsync(AIVector_GetListRequest request)
+        {
+            return await this
+                .GetResponseAsync<AppResponseBase<PagedResponse<AIVectorSelectionResponse>>, PagedResponse<AIVectorSelectionResponse>>(
+                    async (response, logger) =>
+                    {
+                        var where = GetListWhere(request);
+
+                        var vectorList = await _aIVectorService.GetObjectListAsync(request.Page, request.Size, where, request.Order);
+                        var total = await _aIVectorService.GetCountAsync(where);
+
+                        return new PagedResponse<AIVectorSelectionResponse>(
+                            total,
+                            vectorList.Select(m => new AIVectorSelectionResponse(m)));
                     });
         }
 

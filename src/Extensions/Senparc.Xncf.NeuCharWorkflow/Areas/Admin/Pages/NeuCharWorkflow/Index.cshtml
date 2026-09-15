@@ -97,7 +97,7 @@
                 <div class="workflow-command-bar">
                     <div class="workflow-command-identity">
                         <el-input v-model="form.name" size="small" :disabled="editingLocked" maxlength="200" placeholder="工作流名称"></el-input>
-                        <el-tag size="mini" effect="plain">{{form.triggerType==='webhook'?'Webhook':(form.triggerType==='interval'?'间隔触发':'手动触发')}}</el-tag>
+                        <el-tag size="mini" effect="plain">{{form.triggerType==='webhook'?'Webhook':(form.triggerType==='interval'?'间隔触发':(form.triggerType==='chat'?'Chat 触发':'手动触发'))}}</el-tag>
                         <span :class="['workflow-save-status',{'is-dirty':saveDirty,'is-error':saveState.status==='error'}]" :title="saveStatusText">{{saveStatusText}}</span>
                     </div>
                     <div class="workflow-command-actions" aria-label="工作流快捷操作">
@@ -117,6 +117,11 @@
                                    size="small"
                                    icon="el-icon-tickets"
                                    @@click="openWorkflowTasks">任务</el-button>
+                        <el-button v-if="form.id && form.triggerType==='chat'"
+                                   size="small"
+                                   icon="el-icon-chat-dot-round"
+                                   title="打开 Chat 聊天页面（登录用户与访客均可访问）"
+                                   @@click="openChatPage">聊天页面</el-button>
                         <el-button v-if="form.id"
                                    size="small"
                                    icon="el-icon-data-analysis"
@@ -202,6 +207,7 @@
                                     <el-option label="手动触发" value="manual"></el-option>
                                     <el-option label="间隔触发" value="interval"></el-option>
                                     <el-option label="Webhook" value="webhook"></el-option>
+                                    <el-option label="Chat 触发" value="chat"></el-option>
                                 </el-select>
                             </el-form-item>
                             <el-form-item v-if="form.triggerType==='interval'" label="间隔秒数">
@@ -315,6 +321,28 @@
                                 </div>
                             </div>
                             <div v-else class="webhook-parameters-empty">未配置参数：接收全部 Query、Form 与 JSON 字段。</div>
+                        </div>
+
+                        <div v-if="form.triggerType==='chat'" class="workflow-webhook-config workflow-chat-config">
+                            <div class="webhook-config-heading">
+                                <strong>Chat 触发配置</strong>
+                            </div>
+                            <div class="webhook-config-row">
+                                <label>页面标题</label>
+                                <el-input v-model="form.chatTitle" :disabled="editingLocked" size="small" maxlength="100" placeholder="留空时使用工作流名称"></el-input>
+                                <el-checkbox v-model="form.chatAllowGuest" :disabled="editingLocked">允许访客（未登录）</el-checkbox>
+                            </div>
+                            <div class="webhook-config-row">
+                                <label>欢迎语</label>
+                                <el-input v-model="form.chatGreeting" :disabled="editingLocked" size="small" type="textarea" :rows="2" maxlength="500" placeholder="首次打开聊天页面时显示的问候语，留空时使用默认文案"></el-input>
+                            </div>
+                            <div class="webhook-config-row">
+                                <label>聊天页面</label>
+                                <el-input v-model="chatUrl" size="small" readonly placeholder="保存后可访问"></el-input>
+                                <el-button size="small" icon="el-icon-document-copy" :disabled="!form.id" @@click="copyText(chatUrl,'Chat')">复制 URL</el-button>
+                                <el-button size="small" type="primary" plain icon="el-icon-chat-dot-round" :disabled="!form.id" @@click="openChatPage">打开</el-button>
+                            </div>
+                            <div class="webhook-parameters-empty">用户发送的每条消息都会作为输入启动一次工作流运行；关闭“允许访客”后仅登录用户可以聊天。</div>
                         </div>
                     </el-form>
                     <span slot="footer" class="dialog-footer">

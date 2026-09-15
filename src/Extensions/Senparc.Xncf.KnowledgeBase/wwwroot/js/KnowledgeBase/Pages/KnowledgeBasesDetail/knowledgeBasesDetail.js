@@ -116,7 +116,6 @@ var app = new Vue({
 
         //TODO:初始化设置选中的字段
         that.checkedColumns = that.colData.filter(item => item.istrue).map(item => item.title);
-        console.log(`that.checkedColumns --- ${JSON.stringify(that.checkedColumns)}`)
     },
     watch:
     {
@@ -133,7 +132,6 @@ var app = new Vue({
         },
         'checkedColumns': function (val) {
           //debugger
-          console.log(val);
           let arr = this.checkBoxGroup.filter(i => !val.includes(i));
           this.colData.filter(i => {
             if (arr.indexOf(i.title) != -1) {
@@ -148,10 +146,8 @@ var app = new Vue({
     methods:
     {
         handleChange(value) {
-            console.log(value);
         },
         handleRemove(file, fileList) {
-            log(file, fileList,2);
         },
         handlePictureCardPreview(file) {
             let that = this
@@ -162,8 +158,6 @@ var app = new Vue({
             let that = this
             // 上传成功
             that.fileList = fileList;
-            log('上传成功',fileList.length,2);
-            log('res',res,2);
 
             if (res.code == 200)
             {
@@ -196,7 +190,6 @@ var app = new Vue({
             let that = this
             //that.uid = resizeUrl().uid
             let { pageIndex, pageSize, keyword, orderField } = that.listQuery;
-            log('orderField',orderField,1);
             if (orderField == '' || orderField == undefined)
             {
                 orderField = 'AddTime Desc';
@@ -229,7 +222,6 @@ var app = new Vue({
             //获取分类列表数据
             await service.get('/Admin/KnowledgeBasesDetail/Index?handler=KnowledgeBasesDetailCategory').then(res => {
                 that.categoryData = res.data.data.list;
-                log('categoryData',res,2);
             });
         },
         // 编辑 // 新增知识库管理详情 // 增加下一级
@@ -313,7 +305,6 @@ var app = new Vue({
                         ContentType: parseInt(that.dialog.data.contentType),
                         Content: that.dialog.data.content
                     };
-                    console.log('add-' + JSON.stringify(data));
                     service.post("/Admin/KnowledgeBasesDetail/Edit?handler=Save", data).then(res => {
                         if (res.data.success)
                         {
@@ -350,23 +341,17 @@ var app = new Vue({
         handleSelectionChange(val) {
             let that = this
             that.multipleSelection = val;
-            console.log(`that.multipleSelection----${JSON.stringify(that.multipleSelection)}`);
             if (that.multipleSelection.length == 1) {
                 //that.newsId = that.multipleSelection[0].id;
                 //that.dialogVote.data.newsId = that.multipleSelection[0].id;
-                //console.log(`that.newsId----${that.newsId}`);
             }
         },
         handleDbClick(row, column, event) {
             let that = this
             //that.multipleSelection = val;
-            console.log(`row----${JSON.stringify(row)}`);
-            console.log(`column----${JSON.stringify(column)}`);
-            console.log(`event----${JSON.stringify(event)}`);
             //if (that.multipleSelection.length == 1) {
             //  //that.newsId = that.multipleSelection[0].id;
             //  //that.dialogVote.data.newsId = that.multipleSelection[0].id;
-            //  //console.log(`that.newsId----${that.newsId}`);
             //}
             that.detailDialog.visible = true;
         },
@@ -375,7 +360,6 @@ var app = new Vue({
             //获取选中数据
             //that.templateSelection = row;
             that.multipleSelection = row;
-            log('multipleSelection', row, 2)
             //that.newsId = that.multipleSelection.id;
             //that.dialogVote.data.newsId = that.multipleSelection.id;
         },
@@ -437,7 +421,6 @@ var app = new Vue({
 
         },
         onSubmit() {
-          console.log('submit!');
         }
     }
-}); 
+});

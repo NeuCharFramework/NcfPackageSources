@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
-		<Version>0.38.0</Version>
+		<Version>0.39.0</Version>
 		<PackageReleaseNotes>
 			[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
 			[2026-07-02] v0.21.5 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -53,6 +53,9 @@
 			[2026-08-29] v0.38.0 增强发布下载页的来源选择与完整性提示
 			1、新增自动、本地和 GitHub 下载源选择，支持用户按场景切换发布来源
 			2、展示发布包 MD5 指纹并补充多语言提示，帮助用户核验下载内容
+			[2026-09-15] v0.39.0 新增宿主安全防护与 MySQL 数据库集成
+			1、新增 Cloudflare 防护中间件和固定窗口限流，支持宿主按配置限制高频请求
+			2、接入 MySQL 数据库项目引用，保持模拟站点多数据库运行组合完整
 		</PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>
@@ -97,6 +100,7 @@
 		<!--<ProjectReference Include="..\..\..\..\NcfPackageSources\src\Extensions\Senparc.Xncf.PromptRange\Senparc.Xncf.PromptRange.ForNcf.csproj" />-->
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Database.Sqlite\Senparc.Ncf.Database.Sqlite.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Database.SqlServer\Senparc.Ncf.Database.SqlServer.csproj" />
+		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Database.MySql\Senparc.Ncf.Database.MySql.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit\Senparc.Xncf.DatabaseToolkit.csproj" />

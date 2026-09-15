@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
 
-    <Version>0.0.11</Version>
+    <Version>0.0.12</Version>
     <PackageReleaseNotes>
       [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
       1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -66,6 +66,8 @@
       [2026-08-29] v0.0.11 Dependency updates from Senparc.Ncf.Core.Tests to 0.0.9; Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
       1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.9
       2、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
+      [2026-09-15] v0.0.12 同步上游模块版本并保持宿主兼容
+      1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
     </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -12,6 +12,9 @@
 
     修改标识：Senparc - 20260717
     修改描述：v0.14.0-preview5 为 AIKernel 模块接入统一资源本地化并优化功能文案
+
+    修改标识：Senparc - 20260915
+    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
 
 ----------------------------------------------------------------*/
 
@@ -108,6 +111,9 @@ namespace Senparc.Xncf.AIKernel
             //services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
             //Console.WriteLine("======================services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();================");
             services.AddScoped<AgentAiHandler>();
+
+            // Token 监控服务（进程内单例，用于实时聚合与异步进度）
+            services.AddSingleton<Senparc.Xncf.AIKernel.Domain.Services.AITokenMonitorService>();
 
             services.AddAutoMapper(config =>
             {

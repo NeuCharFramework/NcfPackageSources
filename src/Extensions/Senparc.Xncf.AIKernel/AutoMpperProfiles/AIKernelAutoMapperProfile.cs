@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：AIKernelAutoMapperProfile.cs
@@ -9,6 +9,9 @@
     
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260915
+    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
 
 ----------------------------------------------------------------*/
 
@@ -36,6 +39,9 @@ namespace Senparc.Xncf.AIKernel.AutoMapperProfiles
             CreateMap<AIVectorDto, AIVector>();
 
             CreateMap<AIVector_CreateOrEditRequest, AIVector>();
+
+            CreateMap<AITokenUsage, AITokenUsageDto>();
+            CreateMap<AITokenUsageDto, AITokenUsage>();
             // CreateMap<AIModel, AIModel_GetDetailResponse>();
             // CreateMap<AIModel, AIModel_GetIdAndNameResponse>();
         }

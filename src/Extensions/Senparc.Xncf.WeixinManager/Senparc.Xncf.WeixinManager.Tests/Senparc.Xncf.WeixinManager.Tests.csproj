@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.10</Version>
+    <Version>0.0.11</Version>
     <PackageReleaseNotes>
 [2026-07-07] v0.0.1 Dependency updates from upstream modules
 1、Dependency update from Senparc.Xncf.WeixinManager to 0.22.3-preview2
@@ -19,8 +19,9 @@
 1、更新微信管理模块测试依赖以兼容当前基础库版本
 [2026-08-29] v0.0.10 Dependency updates from Senparc.Xncf.WeixinManager to 0.24.5
 1、Dependency update from Senparc.Xncf.WeixinManager to 0.24.5
+[2026-09-15] v0.0.11 同步上游模块版本并保持宿主兼容
+1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
     </PackageReleaseNotes>
-
     <IsPackable>false</IsPackable>
 
     <Configurations>Debug;Release;Test</Configurations>

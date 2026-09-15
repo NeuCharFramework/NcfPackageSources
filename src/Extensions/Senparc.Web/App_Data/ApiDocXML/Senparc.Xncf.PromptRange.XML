@@ -1,0 +1,1942 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Senparc.Xncf.PromptRange</name>
+    </assembly>
+    <members>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyApi">
+            <summary>
+            Expose AppService as WebApi
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAppService.MyCustomApi(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.Api_MyCustomApiRequest)">
+            <summary>
+            Customize Post type and complex parameters, while testing exception throwing and custom status codes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService">
+            <summary>
+            LLM Model Management AppService
+            TODO: Permission verification required
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService.Add(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest)">
+             <summary>
+            Add model
+             </summary>
+             <param name="request"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService.Modify(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlmModel_ModifyRequest)">
+             <summary>
+            edit model
+             </summary>
+             <param name="request"></param>
+             <returns></returns>
+             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService.GetLlmModelList(System.Int32,System.Int32,System.String)">
+            <summary>
+            Get model
+            </summary>
+            <param name="pageIndex"></param>
+            <param name="pageSize"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.LlmModelAppService.BatchDelete(System.Collections.Generic.List{System.Int32})">
+             <summary>
+            Model delete
+             </summary>
+             <param name="ids"></param>
+             <returns></returns>
+             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService">
+             <summary>
+            PromptItem Management AppService
+             TODO: Permission verification required
+             </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.#ctor(System.IServiceProvider,Senparc.Xncf.PromptRange.Domain.Services.PromptItemService,Senparc.Xncf.PromptRange.Domain.Services.PromptResultService)">
+            <inheritdoc />
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.Add(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest)" -->
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetIdAndName(System.String)">
+            <summary>
+            List the ids and names of all promptItems under the shooting range name
+            </summary>
+            <param name="rangeName">Range name (required)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetIdAndName(System.Int32)">
+            <summary>
+            Based on the shooting range ID, query the id and name of all promptItems in it
+            </summary>
+            <param name="rangeId">Range ID (required)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetRangeNameList">
+            <summary>
+            List the RangeName of all promptItems
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.Get(System.Int32)">
+            <summary>
+            Get all information of PromptItem based on primary key ID
+            </summary>
+            <param name="id">Primary key ID </param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.GetTacticTree(System.String)">
+            <summary>
+            Get version tree
+            </summary>
+            <param name="rangeName">Range name</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.DeleteAsync(System.Int32)">
+            <summary>
+            Delete all information of PromptItem based on primary key ID
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.UpdateExpectedResults(System.Int32,System.String)">
+             <summary>
+            Set AI automatic scoring standard interface
+             </summary>
+             <param name="promptItemId"></param>
+             <param name="expectedResults"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.UploadPluginsAsync(Microsoft.AspNetCore.Http.IFormFile)">
+             <summary>
+            Upload plugin interface
+             </summary>
+             <param name="zipFile"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptItemAppService.ExportPluginsAsync(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_ExportRequest)">
+            <summary>
+            Export range as plugin
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService">
+             <summary>
+            PromptRange Management AppService
+             TODO: Permission verification required
+             </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.AddAsync(System.String)">
+            <summary>
+            Get shooting range list details (add reverse chronological order)
+            </summary>
+            <param name="alias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.GetListAsync">
+            <summary>
+            Get shooting range list details (add reverse chronological order)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.GetPromptRangeTree">
+            <summary>
+            Get the tree structure of PromptRange
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.ChangeAliasAsync(System.Int32,System.String)">
+            <summary>
+            Modify custom shooting range code
+            </summary>
+            <param name="rangeId"></param>
+            <param name="alias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptRangeAppService.DeleteAsync(System.Int32)">
+            <summary>
+            Delete range based on ID
+            </summary>
+            <param name="rangeId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService">
+             <summary>
+            PromptResult Management AppService
+             TODO: Permission verification required
+             </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.HumanScore(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_HumanScoreRequest)">
+            <summary>
+            Manual scoring
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.RobotScore(System.Int32,System.Collections.Generic.List{System.String},System.Boolean)">
+            <summary>
+            automatic scoring
+            Accept a promptItemId, then find all promptResults, and then score
+            </summary>
+            <param name="promptResultId"></param>
+            <param name="expectedResultList"></param>
+            <param name="isRefresh"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.GetByItemId(System.Int32)">
+            <summary>
+            Get the corresponding result list based on the target channel ID
+            </summary>
+            <param name="promptItemId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.GenerateWithItemId(System.Int32,System.Int32,System.String)">
+            <summary>
+            generate results
+            </summary>
+            <param name="promptItemId">Target ID</param>
+            <param name="numsOfResults">Number of bursts</param>
+            <param name="userMessage">User message (optional, if empty and the first result is Chat mode, obtained from the conversation record of the first result)</param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.GetChatHistory(System.Int32)">
+            <summary>
+            Get the conversation record based on PromptResultId
+            </summary>
+            <param name="promptResultId">ID of PromptResult</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.GetChatHistoryWithPrompt(System.Int32)">
+            <summary>
+            Get the conversation history and Prompt content based on PromptResultId
+            </summary>
+            <param name="promptResultId">ID of PromptResult</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.ContinueChat(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_ContinueChatRequest)">
+            <summary>
+            Continue chatting: Append the conversation record to the existing PromptResult
+            </summary>
+            <param name="request">Continue chat request</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.PromptResultAppService.UpdateChatFeedback(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_UpdateChatFeedbackRequest)">
+            <summary>
+            Update user feedback of conversation records (Like/Unlike)
+            </summary>
+            <param name="request">Update feedback request</param>
+            <returns></returns>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.OHS.Local.AppService.StatisticAppService">
+            <summary>
+            Interface service for transmitting statistical data
+            TODO: Permission verification required
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAuthorizeAttribute">
+            <summary>
+            API permission verification feature
+            Supports multiple authentication schemes: Cookie (AdminAuthorize) and JWT (Bearer)
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAuthorizeAttribute.#ctor">
+             <summary>
+            Default constructor, supports two authentication methods: Cookie and JWT
+             </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.OHS.Local.AppService.ApiAuthorizeAttribute.#ctor(System.String)">
+            <summary>
+            Constructor with strategy
+            </summary>
+            <param name="policy">Authorization policy name (such as "AdminOnly")</param>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.Alias">
+            <summary>
+            code name
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.DeploymentName">
+             <summary>
+            name
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.Endpoint">
+             <summary>
+            Endpoint (required)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.ModelType">
+            <summary>
+            Model type (required), for example: OpenAI, Azure OpenAI, HuggingFace
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.ApiKey">
+            <summary>
+            ApiKey
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.LlModel_AddRequest.OrganizationId">
+            <summary>
+            OrganizationId
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.TopP">
+            <summary>
+            TopP
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.Temperature">
+            <summary>
+            temperature
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.MaxToken">
+             <summary>
+            Maximum number of Tokens
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.FrequencyPenalty">
+            <summary>
+            frequency penalty
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.StopSequences">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.NumsOfResults">
+             <summary>
+            number of bursts
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.isAIGrade">
+            <summary>
+            Whether to enable "ai scoring criteria"
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.UserMessage">
+            <summary>
+            User messages in conversation mode (optional)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest.ChatHistory">
+            <summary>
+            Continue historical conversation in chat mode (optional)
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.ChatHistoryItem">
+             <summary>
+            conversation history items
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.ChatHistoryItem.Role">
+            <summary>
+            Role: 'user' or 'assistant'
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.ChatHistoryItem.Content">
+            <summary>
+            message content
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptRange_AddRequest.Alias">
+            <summary>
+            Shooting range code (user-defined)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptRange_AddRequest.RangeName">
+            <summary>
+            Shooting range name (from version number generation)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptRange_AddRequest.ExpectedResultsJson">
+             <summary>
+            Expected result Json
+             </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_ContinueChatRequest">
+            <summary>
+            continue chat request
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_ContinueChatRequest.PromptResultId">
+             <summary>
+            PromptResult ID
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_ContinueChatRequest.UserMessage">
+             <summary>
+            user messages
+             </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_UpdateChatFeedbackRequest">
+            <summary>
+            Update conversation feedback request
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_UpdateChatFeedbackRequest.ChatId">
+             <summary>
+            Conversation record ID
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptResult_UpdateChatFeedbackRequest.Feedback">
+            <summary>
+            Feedback: Like (true), Unlike (false), Cancel feedback (null)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.LlmModel_GetPageItemResponse.Alias">
+            <summary>
+            model name
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.LlmModel_GetPageItemResponse.Developer">
+            <summary>
+            username
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.RangeId">
+             <summary>
+            shooting range ID
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.NickName">
+            <summary>
+            Nick name
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.FullVersion">
+             <summary>
+            Full version number
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.MaxToken">
+             <summary>
+            Maximum number of Tokens
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.Temperature">
+            <summary>
+            temperature
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.TopP">
+            <summary>
+            TopP
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.FrequencyPenalty">
+            <summary>
+            frequency penalty
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.StopSequences">
+            <summary>
+            stop sequence (JSON array)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.Note">
+            <summary>
+            Note
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.EvalAvgScore">
+            <summary>
+            evaluation parameters, average score
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.EvalMaxScore">
+             <summary>
+            evaluation parameters
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptItem_AddResponse.ExpectedResultsJson">
+             <summary>
+            Expected result Json
+             </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptResult_ChatHistoryWithPromptResponse">
+             <summary>
+            Conversation history and prompt content response
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptResult_ChatHistoryWithPromptResponse.ChatHistory">
+             <summary>
+            conversation history
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.PromptResult_ChatHistoryWithPromptResponse.PromptContent">
+             <summary>
+            Prompt content(SystemMessage)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.Response.Statistic_TodayTacticResponse.DataPoints">
+            <summary>
+            x,y,z
+            
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.Id">
+            <summary>
+            primary key ID
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.NickName">
+            <summary>
+            Nick name
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.RangeName">
+             <summary>
+            shooting range name
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.FullVersion">
+             <summary>
+            Full version number
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.EvalAvgScore">
+            <summary>
+            evaluation parameters, average score
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.EvalMaxScore">
+             <summary>
+            evaluation parameters
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetIdAndNameResponse.IsDraft">
+            <summary>
+            Is it a draft?
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.NickName">
+            <summary>
+            Nick name
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.MaxToken">
+             <summary>
+            Maximum number of Tokens
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.Temperature">
+            <summary>
+            temperature
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.TopP">
+            <summary>
+            TopP
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.FrequencyPenalty">
+            <summary>
+            frequency penalty
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.StopSequences">
+            <summary>
+            stop sequence (JSON array)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.FullVersion">
+             <summary>
+            Full version number
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.Note">
+            <summary>
+            Note
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.IsShare">
+            <summary>
+            Whether to share
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.EvalAvgScore">
+            <summary>
+            evaluation parameters, average score
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.EvalMaxScore">
+             <summary>
+            evaluation parameters
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.ExpectedResultsJson">
+             <summary>
+            Expected result Json
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.Prefix">
+            <summary>
+            prefix
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.Suffix">
+            <summary>
+            suffix
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.OHS.Local.PL.response.PromptItem_GetResponse.VariableDictJson">
+             <summary>
+            parameter dictionary (JSON)
+             </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Dm.Add_PromptResultChat">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Dm.Add_PromptResultChat.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Dm.Add_PromptResultChat.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Dm.Add_PromptResultChat.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Dm.Add_PromptResult_SystemMessage">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Dm.Add_PromptResult_SystemMessage.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Dm.Add_PromptResult_SystemMessage.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Dm.Add_PromptResult_SystemMessage.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2024">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2024.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2024.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.Init2024.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.UseDecimal">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.UseDecimal.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.UseDecimal.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Migrations.SqlServer.UseDecimal.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_IsAIGrade">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_IsAIGrade.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_IsAIGrade.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_IsAIGrade.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_PromotResultChat">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_PromotResultChat.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_PromotResultChat.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_PromotResultChat.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_PromptResult_SystemMessage">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_PromptResult_SystemMessage.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_PromptResult_SystemMessage.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_PromptResult_SystemMessage.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Init">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Init.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Init.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Add_PromptResultChat">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Add_PromptResultChat.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Add_PromptResultChat.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Add_PromptResultChat.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Add_PromptResult_SystemMessage">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Add_PromptResult_SystemMessage.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Add_PromptResult_SystemMessage.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Add_PromptResult_SystemMessage.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Init">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Init.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Init.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Add_PromptResultChat">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Add_PromptResultChat.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Add_PromptResultChat.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Add_PromptResultChat.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Add_PromptResult_SystemMessage">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Add_PromptResult_SystemMessage.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Add_PromptResult_SystemMessage.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Add_PromptResult_SystemMessage.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Init">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Init.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Init.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Add_PromptResultChat">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Add_PromptResultChat.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Add_PromptResultChat.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Add_PromptResultChat.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Add_PromptResult_SystemMessage">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Add_PromptResult_SystemMessage.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Add_PromptResult_SystemMessage.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Add_PromptResult_SystemMessage.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Init">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Init.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Init.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_IsAIGrade">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_IsAIGrade.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_IsAIGrade.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_IsAIGrade.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptResultChat">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptResultChat.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptResultChat.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptResultChat.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptResultChat_AddTime">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptResultChat_AddTime.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptResultChat_AddTime.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptResultChat_AddTime.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptResult_SystemMessage">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptResult_SystemMessage.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptResult_SystemMessage.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptResult_SystemMessage.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto.Constants">
+            <summary>
+            Global constant configuration
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel">
+             <summary>
+            LlmModel database entity
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel.Alias">
+            <summary>
+            code name
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel.DeploymentName">
+             <summary>
+            name (required)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel.Endpoint">
+             <summary>
+            Endpoint (required)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel.ModelType">
+            <summary>
+            Model type (required), for example: OpenAI, Azure OpenAI, HuggingFace
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel.OrganizationId">
+             <summary>
+            OrganizationId (optional)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel.ApiKey">
+             <summary>
+            ApiKey (optional)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel.ApiVersion">
+             <summary>
+            ApiVersion (optional)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel.Note">
+             <summary>
+            Note (optional)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel.MaxToken">
+             <summary>
+            MaxToken (optional)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel.IsShared">
+            <summary>
+            Whether to share
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.LlModel.Show">
+            <summary>
+            Whether to display
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Mapping.PromptResultChatConfigurationMapping">
+             <summary>
+            PromptResultChat entity configuration mapping
+             </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem">
+             <summary>
+            PromptItem: Prompt configuration for each different version
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.RangeId">
+             <summary>
+            rangeID
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.NickName">
+            <summary>
+            Nick name
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.Content">
+             <summary>
+            Prompt content
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.ModelId">
+            <summary>
+            AiModel.Id of the AI ​​model
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.TopP">
+            <summary>
+            TopP
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.Temperature">
+            <summary>
+            temperature
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.MaxToken">
+             <summary>
+            Maximum number of Tokens
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.FrequencyPenalty">
+            <summary>
+            frequency penalty
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.StopSequences">
+            <summary>
+            stop sequence (JSON array)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.EvalAvgScore">
+            <summary>
+            evaluation parameters, average score
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.EvalMaxScore">
+             <summary>
+            evaluation parameters
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.ExpectedResultsJson">
+             <summary>
+            Expected result Json
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.FullVersion">
+            <summary>
+            <para>Version number, in the format Name-Tactic-Aiming</para> 
+            <example>2023.12.14.1-T1.1-A123</example>
+            <para>Name: <inheritdoc cref="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.RangeName"/></para>
+            <para>Tactic: <inheritdoc cref="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.Tactic"/></para>
+            <para>Aiming: <inheritdoc cref="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.Aiming"/></para>
+            is Tx where x is the branch number, str, 1.1.1 is allowed. . .
+            Aiming is Ax where x is the number of shooting times, int
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.RangeName">
+            <summary>
+            Range name -> should use the name in PromptRange
+            <para>The format is yyyy.MM.dd.x, where x is the serial number generated on the day, int</para>
+            <example>Example 1
+                <code>2023.12.14.1</code>
+            </example>
+            <example>Example 2
+                <code>2023.12.14.123</code>
+            </example>
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.Tactic">
+            <summary>
+            Target lane name
+            <para>The format is x.x.x..., where x is the branch number</para>
+            <para>In the complete version number, -T should be used to connect Name</para>
+            
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.Aiming">
+            <summary>
+            <para>is the number of target shooting, int</para>
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.ParentTac">
+            <summary>
+            Parent Tactic, can be an empty string
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.Prefix">
+            <summary>
+            prefix
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.Suffix">
+            <summary>
+            suffix
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.VariableDictJson">
+            <summary>
+            Request parameter key-value pair JSON 
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.Note">
+             <summary>
+            Note (optional)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.LastRunTime">
+             <summary>
+            Last run time
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.IsShare">
+            <summary>
+            Is it public?
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.IsPromptVersion(System.String)">
+            <summary>
+            Determine whether it is Version format
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.IsValidVersionSegment(System.String,System.String)">
+            <summary>
+            Determine whether Version can match the prefix
+            </summary>
+            <param name="compareString"></param>
+            <param name="inputString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.#ctor(Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto,System.String,System.String)">
+            <summary>
+            used when importing
+            </summary>
+            <param name="promptRange"></param>
+            <param name="nickName"></param>
+            <param name="tactic"></param>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.UpdateModelParam(System.Single,System.Single,System.Int32,System.Single,System.Single,System.String,System.String)">
+            <summary>
+            Update the model parameters used
+            </summary>
+            <param name="topP"></param>
+            <param name="temperature"></param>
+            <param name="maxToken"></param>
+            <param name="frequencyPenalty"></param>
+            <param name="presencePenalty"></param>
+            <param name="stopSequences"></param>
+            <param name="variableDictJson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.GetInputValiableObject">
+            <summary>
+            Get the <see cref="T:Microsoft.SemanticKernel.InputVariable"/> object from <see cref="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.VariableDictJson"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.GetAvailableName">
+            <summary>
+            Return this property when <see cref="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.NickName"/> is present, otherwise use <see cref="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.FullVersion"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.GetVersionObject(System.String)">
+            <summary>
+            Get RangeName, Tactic, Aim parameters based on FullVersion string
+            </summary>
+            <param name="fullVersion"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem.GetParentTasticFromTastic(System.String)">
+            <summary>
+            Determine the previous level Tastic from the Tastic string. If it is already the top level, return ""
+            </summary>
+            <param name="tastic"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange">
+             <summary>
+            PromptRange shooting range
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange.Alias">
+            <summary>
+            Shooting range code (user-defined)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange.RangeName">
+            <summary>
+            Shooting range name (from version number generation)
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange.GetAvailableName">
+            <summary>
+            Return this property when <see cref="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange.Alias"/> is present, otherwise use <see cref="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRange.RangeName"/>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRangeSenparcEntities.PromptItems">
+            <summary>
+            PromptItems entity in database
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRangeSenparcEntities.PromptResults">
+            <summary>
+            PromptResult entity in database
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRangeSenparcEntities.LlmModels">
+             <summary>
+            LlmModel entity in database
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptRangeSenparcEntities.PromptResultChats">
+            <summary>
+            PromptResultChat entity in database
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult">
+            <summary>
+            PromptResult: PromptItem’s target shooting result
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.LlmModelId">
+             <summary>
+            LlmModelId and add the LlmModel class as a property
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.ResultString">
+             <summary>
+            result string
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.CostTime">
+            <summary>
+            Time spent, unit: milliseconds
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.RobotScore">
+            <summary>
+            Robot scoring, 0-10 points
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.HumanScore">
+            <summary>
+            Human rating, 0-10 points
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.FinalScore">
+            <summary>
+            final score
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.TestType">
+            <summary>
+            Test type, the enumeration includes: text, graphics, sound
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.PromptCostToken">
+            <summary>
+            PromptCostToken
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.ResultCostToken">
+            <summary>
+            ResultCostToken
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.TotalCostToken">
+            <summary>
+            TotalCostToken
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.PromptItemId">
+             <summary>
+            PromptItem and add PromptItem class as attribute
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.PromptItemVersion">
+            <summary>
+            PromptItemVersion 
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.Mode">
+            <summary>
+            Target practice mode: Chat (chat mode) or Single (single test mode), can be empty (compatible with old data)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.SystemMessage">
+            <summary>
+            SystemMessage (Prompt content, final content after completing parameter replacement)
+            Used in conversation mode to ensure that even if the Prompt content or parameters change, the historically used SystemMessage can be traced
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.ManualScoring(System.Decimal)">
+             <summary>
+            update manual rating
+             </summary>
+             <param name="score"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.RobotScoring(System.Decimal)">
+             <summary>
+            Update automatic machine ratings
+             </summary>
+             <param name="score"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResult.FinalScoring(System.Decimal)">
+             <summary>
+            update final score
+             </summary>
+             <param name="score"></param>
+             <returns></returns>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.TestType">
+             <summary>
+            Test type enum
+             </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.TestType.Text">
+            <summary>
+            Word
+            </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.TestType.Graph">
+             <summary>
+            graphics
+             </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.TestType.Voice">
+            <summary>
+            sound
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.ResultMode">
+            <summary>
+            Targeting mode enumeration
+            </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.ResultMode.Single">
+             <summary>
+            Single test mode
+             </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.ResultMode.Chat">
+             <summary>
+            chat mode
+             </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat">
+             <summary>
+            PromptResultChat: Conversation history for PromptResult
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat.PromptResultId">
+             <summary>
+            ID of PromptResult (foreign key)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat.RoleType">
+            <summary>
+            Dialogue role type: User or Assistant
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat.Content">
+             <summary>
+            Conversation content
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat.Sequence">
+            <summary>
+            Conversation order (order within the same PromptResult, starting from 1)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat.UserFeedback">
+            <summary>
+            User feedback: Like (true), Unlike (false), No feedback (null)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat.UserScore">
+            <summary>
+            User rating (0-10 points, optional)
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat.#ctor(System.Int32,Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.ChatRoleType,System.String,System.Int32)">
+             <summary>
+            Constructor
+             </summary>
+             <param name="promptResultId">ID of PromptResult</param>
+             <param name="roleType">Dialogue role type</param>
+             <param name="content">Conversation content</param>
+             <param name="sequence">Conversation sequence</param>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat.#ctor(Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultChatDto)">
+             <summary>
+            Create entities from DTO
+             </summary>
+             <param name="dto"></param>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat.UpdateUserFeedback(System.Nullable{System.Boolean})">
+             <summary>
+            Update user feedback
+             </summary>
+             <param name="feedback">Like (true), Unlike (false), Cancel feedback (null)</param>
+             <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat.UpdateUserScore(System.Nullable{System.Decimal})">
+             <summary>
+            update user ratings
+             </summary>
+             <param name="score">Score (0-10 points), null means cancel the score</param>
+             <returns></returns>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.ChatRoleType">
+            <summary>
+            Dialogue character type enumeration
+            </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.ChatRoleType.User">
+             <summary>
+            user
+             </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.ChatRoleType.Assistant">
+            <summary>
+            Assistant (AI)
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.AddPromptItemAsync(Senparc.Xncf.PromptRange.OHS.Local.PL.Request.PromptItem_AddRequest)">
+            <summary>
+            Newly added, during target practice
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetHistoryScoreAsync(System.Int32)">
+            <summary>
+            Score trend chart (based on time)
+            TODO Change to display the trend chart of all promptItems with average scores in the shooting range
+            </summary>
+            <param name="promptItemId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetWithVersionAsync(System.String,System.Boolean)">
+            <summary>
+            Get a certain version of PromptItem and model information, support:
+            <para>Precise search, such as: 2024.01.06.3-T1-A2</para>
+            <para>Target fuzzy search: Enter the shooting range and target information, such as: 2024.01.06.3-T1</para>
+            <para>Fuzzy search of shooting range: enter only the shooting range number, such as: 2024.01.06.3</para>
+            </summary>
+            <param name="promptRangeVersion"></param>
+            <param name="isAvg">When fuzzy search, whether to use the average highest score, if it is false, then directly take the highest score</param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetBestPromptAsync(System.String,System.Boolean)">
+            <summary>
+            Get a certain version of PromptItem and model information, support:
+            <para>Precise search, such as: 2024.01.06.3-T1-A2</para>
+            <para>Target fuzzy search: Enter the shooting range and target information, such as: 2024.01.06.3-T1</para>
+            <para>Fuzzy search of shooting range: enter only the shooting range number, such as: 2024.01.06.3</para>
+            </summary>
+            <param name="promptRangeVersion"></param>
+            <param name="isAvg">When fuzzy search, whether to use the average highest score, if it is false, then directly take the highest score</param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetPromptConfigParameterFromAiSetting(Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto)">
+            <summary>
+            Get model parameters according to configuration
+            </summary>
+            <param name="promptItem"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GenerateTacticTreeAsync(System.Collections.Generic.List{Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem},System.String)">
+            <summary>
+            Enter the shooting range name to build all version trees in the shooting range
+            </summary>
+            <param name="rangeName">Range name</param>
+            <returns >Version tree</returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetPromptRangeTreeList(System.Boolean,System.Boolean,System.String)">
+            <summary>
+            Returns a PromptRange with a tree structure
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.ExportPluginsAsync(System.Int32,System.Collections.Generic.List{System.Int32})">
+            <summary>
+            Based on the shooting range ID, export all the shooting ranges under the shooting range and return to the folder path
+            </summary>
+            <param name="rangeId"></param>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.ExportPluginWithItemAsync(Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptItem,System.String)">
+             <summary>
+            Export the specified single target lane and return the folder path
+             </summary>
+             <param name="promptItem"></param>
+             <param name="rangePath"></param>
+             <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptItemService.GetRangePath(Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto)">
+            <summary>
+            Based on the shooting range, generate a folder and return the folder path
+            </summary>
+            <param name="range"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Services.PromptResultChatService">
+            <summary>
+            PromptResultChat Service
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultChatService.GetByPromptResultIdAsync(System.Int32)">
+            <summary>
+            Get all conversation records based on PromptResultId
+            </summary>
+            <param name="promptResultId">ID of PromptResult</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultChatService.AddChatMessagesAsync(System.Int32,System.Collections.Generic.List{Senparc.Xncf.PromptRange.Domain.Services.ChatMessageDto},System.Nullable{System.Int32})">
+            <summary>
+            Add conversation records in batches
+            </summary>
+            <param name="promptResultId">ID of PromptResult</param>
+            <param name="chatMessages">Conversation message list, format: [{role: 'user'|'assistant', content: string}]</param>
+            <param name="startSequence">Start sequence number, if it is null, start from the existing maximum sequence number + 1, if it is 1, start from the beginning</param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultChatService.UpdateUserFeedbackAsync(System.Int32,System.Nullable{System.Boolean})">
+             <summary>
+            Update user feedback
+             </summary>
+             <param name="chatId">Conversation record ID</param>
+             <param name="feedback">Like (true), Unlike (false), Cancel feedback (null)</param>
+             <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultChatService.UpdateUserScoreAsync(System.Int32,System.Nullable{System.Decimal})">
+             <summary>
+            update user ratings
+             </summary>
+             <param name="chatId">Conversation record ID</param>
+             <param name="score">Score (0-10 points), null means cancel the score</param>
+             <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultChatService.DeleteByPromptResultIdAsync(System.Int32)">
+            <summary>
+            Delete all conversation records of the specified PromptResult
+            </summary>
+            <param name="promptResultId">ID of PromptResult</param>
+            <returns></returns>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Domain.Services.ChatMessageDto">
+            <summary>
+            Conversation message DTO (for batch addition)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Services.ChatMessageDto.Role">
+            <summary>
+            Role: 'user' or 'assistant'
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Domain.Services.ChatMessageDto.Content">
+            <summary>
+            message content
+            </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.ContinueChatAsync(System.Int32,System.String)">
+            <summary>
+            Continue chatting: Append the conversation record to the existing PromptResult without creating a new PromptResult
+            </summary>
+            <param name="promptResultId">Existing PromptResult ID</param>
+            <param name="userMessage">User message</param>
+            <returns>Returns newly added conversation records (user messages and AI replies)</returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.BuildSenparcAiSetting(Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto.AIModelDto)">
+            <summary>
+            Construct SenparcAiSetting, used in two places
+            </summary>
+            <param name="llModel"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.RobotScoringAsync(System.Int32,System.Boolean,System.Collections.Generic.List{System.String})">
+             <summary>
+            AI scoring
+             </summary>
+             <param name="promptResultId"></param>
+             <param name="isRefresh"></param>
+             <param name="expectedResultList"></param>
+             <returns></returns>
+             <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptResultService.UpdateEvalScoreAsync(System.Int32)">
+            <summary>
+            Update the average score and maximum score of promptItem
+            </summary>
+            <param name="promptItemId"></param>
+            <returns></returns>
+            <exception cref="T:Senparc.Ncf.Core.Exceptions.NcfExceptionBase"></exception>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetPromptResultAsync``1(Senparc.AI.Interfaces.ISenparcAiSetting,System.String,Senparc.AI.Kernel.Entities.SenparcAiArguments,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.String,Microsoft.SemanticKernel.IPromptTemplateFactory,System.IServiceProvider,Microsoft.SemanticKernel.KernelFunction[])">
+            <summary>
+            Based on the input Version, NickName and other rules, find the best quality among the associated PromptItems
+            <para>When explicitly specified, an exact hit will occur; </para>
+            <para>When Version is a fuzzy query, find the best one among the lower-level PromptItems</para>
+            <para>When there are multiple NickNames, find the best one with the same name</para>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="senparcAiSetting"></param>
+            <param name="input"></param>
+            <param name="context"></param>
+            <param name="pluginCollection"></param>
+            <param name="pluginDir"></param>
+            <param name="promptTemplateFactory"></param>
+            <param name="services"></param>
+            <param name="functionPiple"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Domain.Services.PromptService.GetAvaliableFunctionName(System.String)">
+            <summary>
+            Provides a name that functionName can use
+            <para>If special characters appear, an error may occur: A function name can contain only ASCII letters, digits, and underscores: '2024.05.17.1-T1.1-A3' is not a valid name. (Parameter 'value')</para>
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.Id">
+             <summary>
+            ID primary key
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.DeploymentName">
+             <summary>
+            name (required)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.ModelType">
+             <summary>
+            Type of model
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.Endpoint">
+             <summary>
+            Endpoint (required)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.OrganizationId">
+             <summary>
+            OrganizationId (optional)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.ApiKey">
+             <summary>
+            ApiKey (optional)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.ApiVersion">
+             <summary>
+            ApiVersion (optional)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.Note">
+             <summary>
+            Note (optional)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.MaxToken">
+             <summary>
+            MaxToken (optional)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.IsShared">
+            <summary>
+            Whether to share
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.LlModelDto.Show">
+            <summary>
+            Whether to display
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.RangeId">
+             <summary>
+            shooting range ID
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.NickName">
+            <summary>
+            Nick name
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.Content">
+             <summary>
+            Prompt content
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.TopP">
+            <summary>
+            TopP
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.Temperature">
+            <summary>
+            temperature
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.MaxToken">
+             <summary>
+            Maximum number of Tokens
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.FrequencyPenalty">
+            <summary>
+            frequency penalty
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.StopSequences">
+            <summary>
+            stop sequence (JSON array) 
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.EvalAvgScore">
+            <summary>
+            evaluation parameters, average score
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.EvalMaxScore">
+             <summary>
+            evaluation parameters
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.ExpectedResultsJson">
+             <summary>
+            Expected result Json
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.isAIGrade">
+            <summary>
+            Whether to enable "ai scoring criteria"
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.Aiming">
+            <summary>
+            <para>is the number of target shooting, int</para>
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.ParentTac">
+            <summary>
+            Parent Tactic, can be an empty string
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.Note">
+             <summary>
+            Note (optional)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.LastRunTime">
+             <summary>
+            Last run time
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptItemDto.IsShare">
+            <summary>
+            Is it public?
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto.Id">
+            <summary>
+            primary key ID
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto.Alias">
+            <summary>
+            Shooting range code (user-defined)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptRangeDto.RangeName">
+            <summary>
+            Shooting range name (from version number generation)
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultChatDto">
+            <summary>
+            PromptResultChat DTO
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultChatDto.Id">
+             <summary>
+            ID primary key
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultChatDto.PromptResultId">
+             <summary>
+            ID of PromptResult (foreign key)
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultChatDto.RoleType">
+            <summary>
+            Dialogue role type: User or Assistant
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultChatDto.Content">
+             <summary>
+            Conversation content
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultChatDto.Sequence">
+            <summary>
+            Conversation order (order within the same PromptResult, starting from 1)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultChatDto.UserFeedback">
+            <summary>
+            User feedback: Like (true), Unlike (false), No feedback (null)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultChatDto.UserScore">
+            <summary>
+            User rating (0-10 points, optional)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultChatDto.AddTime">
+             <summary>
+            Creation time
+             </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultChatDto.#ctor">
+             <summary>
+            Constructor
+             </summary>
+        </member>
+        <member name="M:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultChatDto.#ctor(Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.PromptResultChat)">
+             <summary>
+            Create DTO from entity
+             </summary>
+             <param name="entity"></param>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.Id">
+             <summary>
+            ID primary key
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.LlmModelId">
+             <summary>
+            Id of LlmModel
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.LlModel">
+            <summary>
+            LlmModel type LlmModel
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.PromptItemId">
+             <summary>
+            PromptItem of type PromptItem
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.PromptItemVersion">
+             <summary>
+            PromptItemVersion of type string
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.ResultString">
+             <summary>
+            result string
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.CostTime">
+            <summary>
+            Time spent, unit: milliseconds
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.RobotScore">
+            <summary>
+            Robot scoring, 0-100 points
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.HumanScore">
+            <summary>
+            Human scoring, 0-100 points
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.FinalScore">
+            <summary>
+            final score
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.RobotTestExceptedResult">
+            <summary>
+            Robot test expected results
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.IsRobotTestExactlyEquat">
+            <summary>
+            Whether the robot test results are exactly equal
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.TestType">
+            <summary>
+            Test type, the enumeration includes: text, graphics, sound
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.PromptCostToken">
+            <summary>
+            Prompt the number of Tokens spent
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.ResultCostToken">
+            <summary>
+            The number of Tokens spent as a result
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.TotalCostToken">
+             <summary>
+            Total number of Tokens spent
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.Mode">
+            <summary>
+            Target practice mode: Chat (chat mode) or Single (single test mode), can be empty (compatible with old data)
+            </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto.PromptResultDto.SystemMessage">
+            <summary>
+            SystemMessage (Prompt content, final content after completing parameter replacement)
+            Used in conversation mode to ensure that even if the Prompt content or parameters change, the historically used SystemMessage can be traced
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_Dm">
+            <summary>
+            Design-time DbContext creation (Code-First database migration is only used during development and will not be executed in the production environment)
+            <para>1. Switch to Debug mode</para>
+            <para>2. Run: PM> add-migration [update name] -c PromptRangeSenparcEntities_Dm -o Domain/Migrations/Migrations.Dm </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_MySql">
+            <summary>
+            Design-time DbContext creation (Code-First database migration is only used during development and will not be executed in the production environment)
+            <para>1. Switch to Debug mode</para>
+            <para>2. Run: PM> add-migration [update name] -c PromptRangeSenparcEntities_MySql -o Domain/Migrations/Migrations.MySql </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_Oracle">
+            <summary>
+            Design-time DbContext creation (Code-First database migration is only used during development and will not be executed in the production environment)
+            <para>1. Switch to Debug mode</para>
+            <para>2. Run: PM> add-migration [update name] -c PromptRangeSenparcEntities_Oracle -o Domain/Migrations/Migrations.Oracle </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_PostgreSQL">
+            <summary>
+            Design-time DbContext creation (Code-First database migration is only used during development and will not be executed in the production environment)
+            <para>1. Switch to Debug mode</para>
+            <para>2. Run: PM> add-migration [update name] -c PromptRangeSenparcEntities_PostgreSQL -o Migrations/Migrations.PostgreSQL </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_Sqlite">
+            <summary>
+            Design-time DbContext creation (Code-First database migration is only used during development and will not be executed in the production environment)
+            <para>1. Switch to Debug mode</para>
+            <para>2. Run: PM> add-migration [update name] -c PromptRangeSenparcEntities_Sqlite -o Domain/Migrations/Migrations.Sqlite </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactory_SqlServer">
+            <summary>
+            Design-time DbContext creation (Code-First database migration is only used during development and will not be executed in the production environment)
+            <para>1. Switch to Debug mode</para>
+            <para>2. Run: PM> add-migration [update name] -c PromptRangeSenparcEntities_SqlServer -o Domain/Migrations/Migrations.SqlServer </para>
+            </summary>
+        </member>
+        <member name="T:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactoryConfig">
+             <summary>
+            Public configuration for SenparcDbContextFactory
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Models.SenparcDbContextFactoryConfig.RootDirectoryPath">
+            <summary>
+            is used to find the App_Data folder to find the database connection string configuration information
+            </summary>
+        </member>
+        <member name="F:Senparc.Xncf.PromptRange.Register.DATABASE_PREFIX">
+             <summary>
+            database prefix
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Register.DatabaseUniquePrefix">
+             <summary>
+            database prefix
+             </summary>
+        </member>
+        <member name="P:Senparc.Xncf.PromptRange.Register.TryGetXncfDatabaseDbContextType">
+            <summary>
+            Dynamically obtain database context
+            </summary>
+        </member>
+    </members>
+</doc>

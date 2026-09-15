@@ -16,10 +16,14 @@
     修改标识：Senparc - 20260813
     修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.7.0 优化文件管理、标签与回收站交互
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
@@ -29,6 +33,7 @@ using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.FileManager.Domain.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
@@ -71,7 +76,23 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
                 Math.Clamp(pageSize, 1, 100),
                 folderId,
                 resourceScope);
-            return Ok(result);
+            // PagedList<T> inherits List<T>; serializing it alone becomes a bare JSON
+            // array and drops TotalCount. Return an explicit page envelope for the UI.
+            return Ok(new
+            {
+                items = result.ToList(),
+                totalCount = result.TotalCount,
+                pageIndex = result.PageIndex,
+                pageCount = result.PageCount
+            });
+        }
+
+        public async Task<IActionResult> OnGetDashboardStatsAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null)
+        {
+            var stats = await _fileService.GetDashboardStatsAsync(startDate, endDate);
+            return Ok(stats);
         }
 
         public async Task<IActionResult> OnGetFoldersAsync(
@@ -187,22 +208,112 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return Ok(true);
         }
 
+        public record EmptyRecycleRequest(List<int> Ids);
+
+        /// <summary>
+        /// Permanently deletes files currently held in the recycle bin UI.
+        /// Missing ids are treated as already removed.
+        /// </summary>
+        public async Task<IActionResult> OnPostEmptyRecycleAsync([FromBody] EmptyRecycleRequest request)
+        {
+            var ids = (request?.Ids ?? new List<int>())
+                .Where(id => id > 0)
+                .Distinct()
+                .ToList();
+
+            if (ids.Count == 0)
+            {
+                return Ok(new { deletedCount = 0, failedIds = Array.Empty<int>(), message = "回收站为空" });
+            }
+
+            var failedIds = new List<int>();
+            var deletedCount = 0;
+            string lastError = null;
+
+            foreach (var id in ids)
+            {
+                try
+                {
+                    await _fileService.DeleteFileAsync(id);
+                    deletedCount++;
+                }
+                catch (Exception ex)
+                {
+                    failedIds.Add(id);
+                    lastError = ex.Message;
+                }
+            }
+
+            return Ok(new
+            {
+                deletedCount,
+                failedIds,
+                message = failedIds.Count == 0
+                    ? "一键清空成功"
+                    : $"已删除 {deletedCount} 个，失败 {failedIds.Count} 个" + (string.IsNullOrEmpty(lastError) ? "" : $"：{lastError}")
+            });
+        }
+
         public async Task<IActionResult> OnGetDownloadAsync(int id)
         {
-            var fileInfo = await _fileService.OpenReadAsync(id);
-
-            if (fileInfo == null)
+            var located = await _fileService.TryGetPhysicalPathAsync(id);
+            if (located == null)
             {
                 return NotFound();
             }
 
-            return new FileStreamResult(
-                fileInfo.Stream,
-                string.IsNullOrWhiteSpace(fileInfo.File.ContentType) ? "application/octet-stream" : fileInfo.File.ContentType)
+            var (file, fullPath) = located.Value;
+            var contentType = string.IsNullOrWhiteSpace(file.ContentType)
+                ? "application/octet-stream"
+                : file.ContentType;
+
+            return PhysicalFile(fullPath, contentType, file.FileName);
+        }
+
+        public async Task<IActionResult> OnGetPreviewAsync(int id)
+        {
+            var located = await _fileService.TryGetPhysicalPathAsync(id);
+            if (located == null)
             {
-                FileDownloadName = fileInfo.File.FileName,
-                EnableRangeProcessing = true
-            };
+                return NotFound();
+            }
+
+            var (file, fullPath) = located.Value;
+            var contentType = string.IsNullOrWhiteSpace(file.ContentType)
+                ? "application/octet-stream"
+                : file.ContentType;
+
+            Response.Headers[HeaderNames.ContentDisposition] = new ContentDispositionHeaderValue("inline")
+            {
+                FileNameStar = file.FileName
+            }.ToString();
+
+            return PhysicalFile(fullPath, contentType);
+        }
+
+        public async Task<IActionResult> OnGetPreviewContentAsync(int id)
+        {
+            try
+            {
+                var result = await _fileService.GetPreviewTextAsync(id);
+                return Ok(new
+                {
+                    content = result.Text,
+                    extension = result.Extension
+                });
+            }
+            catch (NotSupportedException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (FileNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidDataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         public record CreateFolderRequest

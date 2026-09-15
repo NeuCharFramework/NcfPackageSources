@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -48,13 +51,43 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
     public class AIModelAppService : AppServiceBase
     {
         private readonly AIModelService _aIModelService;
+        private readonly AITokenUsageService _aITokenUsageService;
 
 
         public AIModelAppService(
             IServiceProvider serviceProvider,
-            AIModelService aIModelService) : base(serviceProvider)
+            AIModelService aIModelService,
+            AITokenUsageService aITokenUsageService) : base(serviceProvider)
         {
             _aIModelService = aIModelService;
+            _aITokenUsageService = aITokenUsageService;
+        }
+
+        private async Task FillModelUsageAsync(IEnumerable<AIModelDto> dtos)
+        {
+            if (dtos == null)
+            {
+                return;
+            }
+
+            var usageMap = await _aITokenUsageService.GetModelUsageMapAsync();
+            if (usageMap == null)
+            {
+                return;
+            }
+
+            foreach (var dto in dtos)
+            {
+                if (dto == null || dto.Alias.IsNullOrWhiteSpace())
+                {
+                    continue;
+                }
+
+                if (usageMap.TryGetValue(dto.Alias, out var usage))
+                {
+                    dto.Usage = usage;
+                }
+            }
         }
 
         protected virtual Expression<Func<AIModel, bool>> GetListWhere(AIModel_GetListRequest request)
@@ -103,10 +136,35 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
 
                         var total = await _aIModelService.GetCountAsync(where);
 
+                        var modelDtos = modelList.Select(m => new AIModelDto(m)).ToList();
+                        await FillModelUsageAsync(modelDtos);
+
                         return new PagedResponse<AIModelDto>(
                             total,
-                            modelList.Select(m => new AIModelDto(m))
+                            modelDtos
                         );
+                    });
+        }
+
+        /// <summary>
+        /// 分页获取供其他管理页面选择的 AIModel 基本信息。
+        /// 不返回 ApiKey、Endpoint、OrganizationId 等配置敏感字段。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<PagedResponse<AIModelSelectionResponse>>> GetSelectionListAsync(AIModel_GetListRequest request)
+        {
+            return await this
+                .GetResponseAsync<AppResponseBase<PagedResponse<AIModelSelectionResponse>>, PagedResponse<AIModelSelectionResponse>>(
+                    async (response, logger) =>
+                    {
+                        var where = GetListWhere(request);
+
+                        var modelList = await _aIModelService.GetObjectListAsync(request.Page, request.Size, where, request.Order);
+                        var total = await _aIModelService.GetCountAsync(where);
+
+                        return new PagedResponse<AIModelSelectionResponse>(
+                            total,
+                            modelList.Select(m => new AIModelSelectionResponse(m)));
                     });
         }
 
@@ -126,6 +184,8 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
                     var modelList = (await _aIModelService.GetFullListAsync(where, request.Order))
                         .Select(m => new AIModelDto(m))
                         .ToList();
+
+                    await FillModelUsageAsync(modelList);
 
                     return modelList;
                 });

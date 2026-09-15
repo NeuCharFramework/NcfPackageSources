@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.7.2 修复知识库管理端敏感信息泄露并优化检索交互
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Trace;
@@ -70,6 +73,9 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                 // 知识库内嵌上传只能创建资料文件，绝不能借此写入可公开的站点资源区。
                 var result = await ncfFileService.UploadFileAsync(file, NcfFileResourceScope.KnowledgeBase);
                 return result.Id.ToString();
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "资料上传失败，请稍后重试。";
             });
         }
 

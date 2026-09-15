@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260829
     修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -145,7 +148,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
 
-        [FunctionRender("设置数字管", "设置数字管显示", typeof(Register))]
+        [FunctionRender("设置数字管", "设置数字管显示", typeof(Register), AllowAiInvocation = false)]
         public async Task<AppResponseBase<AdminUserInfo_SetDigitalPipeResponse>> SetDigitalPipeAsync(AdminUserInfo_SetDigitalPipeRequest request)
         {
             return await this.GetResponseAsync<AppResponseBase<AdminUserInfo_SetDigitalPipeResponse>, AdminUserInfo_SetDigitalPipeResponse>(async (response, logger) =>

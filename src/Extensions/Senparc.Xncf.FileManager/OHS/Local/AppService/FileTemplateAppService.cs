@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.7.0 优化文件管理、标签与回收站交互
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;
@@ -124,6 +127,9 @@ namespace Senparc.Xncf.FileManager.OHS.Local.AppService
                     PageIndex = listDto.PageIndex
                 };
                 return result;
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "资料列表加载失败，请稍后重试。";
             });
         }
 

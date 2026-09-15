@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.7.2 修复知识库管理端敏感信息泄露并优化检索交互
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -83,9 +86,12 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                 }
                 catch (Exception ex)
                 {
-                    logger.Append($"召回测试失败：{ex.Message}");
+                    logger.Append("召回测试失败。");
                     throw;
                 }
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "召回测试失败，请检查配置后重试。";
             });
         }
     }
