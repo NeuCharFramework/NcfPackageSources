@@ -67,6 +67,7 @@
 		[2026-09-15] v0.7.2 修复知识库管理端敏感信息泄露并优化检索交互
 		1、移除前端响应日志中的密钥和连接配置暴露，收敛返回信息范围
 		2、优化知识库、详情页与召回测试页面的数据加载和交互稳定性
+		3、优化知识库模块注册与管理端状态展示
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
