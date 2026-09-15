@@ -23,6 +23,7 @@
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using Senparc.CO2NET;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
@@ -32,6 +33,7 @@ using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.FileManager.Domain.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
@@ -254,20 +256,64 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
 
         public async Task<IActionResult> OnGetDownloadAsync(int id)
         {
-            var fileInfo = await _fileService.OpenReadAsync(id);
-
-            if (fileInfo == null)
+            var located = await _fileService.TryGetPhysicalPathAsync(id);
+            if (located == null)
             {
                 return NotFound();
             }
 
-            return new FileStreamResult(
-                fileInfo.Stream,
-                string.IsNullOrWhiteSpace(fileInfo.File.ContentType) ? "application/octet-stream" : fileInfo.File.ContentType)
+            var (file, fullPath) = located.Value;
+            var contentType = string.IsNullOrWhiteSpace(file.ContentType)
+                ? "application/octet-stream"
+                : file.ContentType;
+
+            return PhysicalFile(fullPath, contentType, file.FileName);
+        }
+
+        public async Task<IActionResult> OnGetPreviewAsync(int id)
+        {
+            var located = await _fileService.TryGetPhysicalPathAsync(id);
+            if (located == null)
             {
-                FileDownloadName = fileInfo.File.FileName,
-                EnableRangeProcessing = true
-            };
+                return NotFound();
+            }
+
+            var (file, fullPath) = located.Value;
+            var contentType = string.IsNullOrWhiteSpace(file.ContentType)
+                ? "application/octet-stream"
+                : file.ContentType;
+
+            Response.Headers[HeaderNames.ContentDisposition] = new ContentDispositionHeaderValue("inline")
+            {
+                FileNameStar = file.FileName
+            }.ToString();
+
+            return PhysicalFile(fullPath, contentType);
+        }
+
+        public async Task<IActionResult> OnGetPreviewContentAsync(int id)
+        {
+            try
+            {
+                var result = await _fileService.GetPreviewTextAsync(id);
+                return Ok(new
+                {
+                    content = result.Text,
+                    extension = result.Extension
+                });
+            }
+            catch (NotSupportedException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (FileNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidDataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         public record CreateFolderRequest

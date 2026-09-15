@@ -449,6 +449,29 @@ public class NcfFileService : ServiceBase<NcfFile>
     }
 
     /// <summary>
+    /// Resolves a validated physical path for direct file serving (e.g. PhysicalFileResult),
+    /// avoiding chunked Transfer-Encoding on HTTP/2 responses.
+    /// </summary>
+    public async Task<(NcfFile File, string FullPath)?> TryGetPhysicalPathAsync(int id, bool requirePublicSiteAsset = false)
+    {
+        var file = await GetObjectAsync(z => z.Id == id);
+        if (file == null || (requirePublicSiteAsset &&
+                             (file.ResourceScope != NcfFileResourceScope.SiteAsset ||
+                              file.AccessLevel != NcfFileAccessLevel.Public)))
+        {
+            return null;
+        }
+
+        var fullPath = ResolvePhysicalPath(file);
+        if (!File.Exists(fullPath))
+        {
+            return null;
+        }
+
+        return (file, fullPath);
+    }
+
+    /// <summary>
     /// Reads and extracts plain text only from knowledge-base sources.
     /// </summary>
     public async Task<NcfFileTextExtractionResult> GetExtractedTextAsync(int id)
@@ -462,6 +485,27 @@ public class NcfFileService : ServiceBase<NcfFile>
         if (file.ResourceScope != NcfFileResourceScope.KnowledgeBase)
         {
             throw new InvalidOperationException("站点静态资源不能作为知识库来源。");
+        }
+
+        var fileInfo = await GetFileBytes(id);
+        if (fileInfo.FileBytes.Length == 0)
+        {
+            throw new FileNotFoundException($"文件物理内容不存在：{file.FileName}");
+        }
+
+        return NcfFileTextExtractor.Extract(fileInfo.FileBytes, file.FileExtension, file.FileName);
+    }
+
+    /// <summary>
+    /// Extracts preview text for admin inline preview. Unlike knowledge-base ingestion,
+    /// this does not enforce the KnowledgeBase resource scope restriction.
+    /// </summary>
+    public async Task<NcfFileTextExtractionResult> GetPreviewTextAsync(int id)
+    {
+        var file = await GetObjectAsync(z => z.Id == id);
+        if (file == null)
+        {
+            throw new FileNotFoundException($"文件记录不存在：{id}");
         }
 
         var fileInfo = await GetFileBytes(id);

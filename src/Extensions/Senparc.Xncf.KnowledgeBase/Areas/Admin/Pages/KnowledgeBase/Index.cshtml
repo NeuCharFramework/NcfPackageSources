@@ -1,310 +1,568 @@
 @page
 @model Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase.IndexModel
 @{
-    ViewData["Title"] = "知识库管理列表页面";
+    ViewData["Title"] = "知识库管理";
     Layout = "_Layout_Vue";
 }
 
 @section Style {
-    <link href="~/css/KnowledgeBase/KnowledgeBase/KnowledgeBase.css" rel="stylesheet" />
+    <link href="~/css/KnowledgeBase/KnowledgeBase/KnowledgeBase.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/KnowledgeBase/RecallTest/RecallTest.css" rel="stylesheet" asp-append-version="true" />
+    <style>
+        /* 兜底布局：即使外链 CSS 未刷新，也避免主区域高度为 0 的白屏 */
+        .el-main.admin-content:has(.knowledge-base-layout),
+        .admin-content:has(.knowledge-base-layout) {
+            display: block !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            height: calc(100vh - 96px) !important;
+            min-height: 480px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+            background: #fff !important;
+        }
+        .admin-content:has(.knowledge-base-layout) .ifram-wrapper {
+            display: block !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 480px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+        }
+        .knowledge-base-layout {
+            display: flex !important;
+            flex-direction: row !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 480px !important;
+            background: #fff !important;
+            overflow: hidden !important;
+        }
+    </style>
 }
 
 @section breadcrumbs {
     <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
     <el-breadcrumb-item>知识库管理</el-breadcrumb-item>
-    <el-breadcrumb-item>知识库管理列表</el-breadcrumb-item>
 }
 
-<div>
-    <div class="admin-role">
-        <el-alert title="新手操作顺序：新建知识库并配置 Embedding 与向量库 → 在“配置”中关联资料 → 点击“向量化” → 到“召回测试”核验结果。"
-                  type="info" :closable="false" show-icon style="margin-bottom: 12px;">
-        </el-alert>
-        <el-row class="filter-condition" :gutter="8">
-            <el-col :span="2"></el-col>
-            <el-col :span="5"><el-input v-model="keyword" placeholder="请输入关键字" size="mini"></el-input></el-col>
-            <el-col :span="2" class="operator_button">
-                <el-button type="primary" size="mini" @@click="handleSearch()">查询</el-button>
-                <el-button type="primary" size="mini" @@click="resetCondition()">重置</el-button>
-            </el-col>
-        </el-row>
-        <div class="filter-container">
-            <el-row type="flex" class="row-bg" justify="end">
-                <el-col :span="23">
-                    <el-button class="filter-item" size="mini" type="primary" icon="el-icon-plus" @@click="handleEdit('','','add')">新增</el-button>
-                </el-col>
-                <el-col :span="1">
-                    <!-- 筛选按钮 -->
-                    <el-popover placement="bottom" title="筛选列" trigger="click" width="40">
+<div class="knowledge-base-layout">
+    @* 左栏 15%：分类导航 *@
+    <div class="knowledge-base-layout-left">
+        <nav class="knowledge-base-nav-panel">
+            <ul class="knowledge-base-nav-list">
+                <li class="knowledge-base-nav-item" :class="{ 'is-active': activeNavKey === 'list' }" @@click="onNavClick('list')">
+                    <i class="el-icon-notebook-2"></i><span>知识库列表</span>
+                </li>
+                <li class="knowledge-base-nav-item" :class="{ 'is-active': activeNavKey === 'recall' }" @@click="onNavClick('recall')">
+                    <i class="el-icon-search"></i><span>召回测试</span>
+                </li>
+                <li class="knowledge-base-nav-item is-divider"></li>
+                <li class="knowledge-base-nav-item" :class="{ 'is-active': activeNavKey === 'guide' }" @@click="onNavClick('guide')">
+                    <i class="el-icon-question"></i><span>使用指南</span>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    @* 主区域 85% *@
+    <div class="knowledge-base-layout-main">
+        @* —— 知识库列表 —— *@
+        <div class="kb-list-panel" v-show="activeNavKey === 'list' || !activeNavKey">
+            <div class="kb-top-bar">
+                <div class="kb-top-search">
+                    <el-input v-model="keyword"
+                              size="small"
+                              placeholder="搜索知识库名称"
+                              prefix-icon="el-icon-search"
+                              clearable
+                              @@keyup.enter.native="handleSearch()">
+                    </el-input>
+                </div>
+                <div class="kb-top-actions">
+                    <el-button size="small" icon="el-icon-refresh" @@click="handleSearch()" title="刷新"></el-button>
+                    <el-popover placement="bottom" title="筛选列" trigger="click" width="140">
                         <el-checkbox-group v-model="checkedColumns" size="mini">
                             <el-checkbox v-for="item in checkBoxGroup" :key="item" :label="item" :value="item"></el-checkbox>
                         </el-checkbox-group>
-                        <div title="筛选列" class="filter-table-col" slot="reference">
-                            <i class="el-icon-s-operation"></i>
-                        </div>
+                        <el-button slot="reference" size="small" icon="el-icon-s-operation" title="筛选列"></el-button>
                     </el-popover>
-                </el-col>
-            </el-row>
-        </div>
-        <el-table :data="tableData" style="width:100%;" size="mini" max-height="700" row-key="id" border highlight-current-row ref="multipleTable" @@selection-change="handleSelectionChange" @@row-dblclick="handleDbClick">
-            <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column v-if="colData[0].istrue" prop="embeddingModelId" align="left" label="Embedding模型Id" sortable :filters="filterTableHeader.embeddingModelId" :filter-method="filterHandler"></el-table-column>
-
-            <el-table-column v-if="colData[1].istrue" prop="vectorDBId" align="left" label="向量数据库Id" sortable :filters="filterTableHeader.vectorDBId" :filter-method="filterHandler"></el-table-column>
-
-            <el-table-column v-if="colData[2].istrue" prop="chatModelId" align="left" label="对话模型Id" sortable :filters="filterTableHeader.chatModelId" :filter-method="filterHandler"></el-table-column>
-
-            <el-table-column v-if="colData[3].istrue" prop="name" align="left" label="名称" sortable :filters="filterTableHeader.name" :filter-method="filterHandler"></el-table-column>
-
-            <el-table-column v-if="colData[4].istrue" prop="content" align="left" label="内容" sortable :filters="filterTableHeader.content" :filter-method="filterHandler"></el-table-column>
-
-            <el-table-column align="center"
-                             label="添加时间" sortable>
-                <template slot-scope="scope">
-                    {{formaTableTime(scope.row.addTime)}}
-                </template>
-            </el-table-column>
-            <el-table-column label="操作" align="center" fixed="right" width="350">
-                <template slot-scope="scope">
-                    <el-button size="mini"
-                               type="primary"
-                               @@click="handleElVisibleOpenBtn('drawerGroup',scope.row)">配置</el-button>
-                    <el-button size="mini"
-                               type="primary"
-                               @@click="handleEmbeddingBtn('embedding',scope.row)">向量化</el-button>
-                    <el-button size="mini"
-                               type="primary"
-                               @@click="handleEdit(scope.$index, scope.row,'edit')">编辑</el-button>
-                    <el-popconfirm placement="top" title="确认删除此知识库管理吗？" @@on-confirm="handleDelete(scope.$index, scope.row)">
-                        <el-button size="mini" type="danger" slot="reference">删除</el-button>
-                    </el-popconfirm>
-                </template>
-            </el-table-column>
-        </el-table>
-
-        <pagination :total="paginationQuery.total"
-                    :page.sync="listQuery.pageIndex"
-                    :limit.sync="listQuery.pageSize"
-                    @@pagination="getList"></pagination>
-        <!--编辑、新增-->
-        <el-dialog :title="dialog.title"
-                   :visible.sync="dialog.visible"
-                   :close-on-click-modal="false"
-                   width="600px">
-            <el-form ref="dataForm"
-                     :rules="dialog.rules"
-                     :model="dialog.data"
-                     :disabled="dialog.disabled"
-                     size="mini"
-                     label-position="left"
-                     label-width="150px"
-                     style="max-width: 600px; margin-left:50px;">
-                <el-form-item label="名称" prop="name">
-                    <el-input size="mini" v-model="dialog.data.name" clearable placeholder="请输入名称" />
-                </el-form-item>
-
-                <el-form-item label="选择Embedding模型">
-                    <el-cascader v-model="selectDefaultEmbeddingModel"
-                                 :options="embeddingModelData"
-                                 @@change="selectEmbeddingModel"
-                                 clearable
-                                 filterable
-                                 :props="{label:'alias',value:'id'}">
-                    </el-cascader>
-                </el-form-item>
-
-                <el-form-item label="Embedding模型Id" prop="embeddingModelId" class="hidden">
-                    <el-input size="mini" v-model="dialog.data.embeddingModelId" clearable placeholder="请输入Embedding模型Id" />
-                </el-form-item>
-
-                <el-form-item label="选择向量数据库">
-                    <el-cascader v-model="selectDefaultVectorDB"
-                                 :options="vectorDBData"
-                                 @@change="selectVectorDB"
-                                 clearable
-                                 filterable
-                                 :props="{label:'alias',value:'id'}">
-                    </el-cascader>
-                </el-form-item>
-
-                <el-form-item label="向量数据库Id" prop="vectorDBId" class="hidden">
-                    <el-input size="mini" v-model="dialog.data.vectorDBId" clearable placeholder="请输入向量数据库Id" />
-                </el-form-item>
-
-                <el-form-item label="选择对话模型">
-                    <el-cascader v-model="selectDefaultChatModel"
-                                 :options="chatModelData"
-                                 @@change="selectChatModel"
-                                 clearable
-                                 filterable
-                                 :props="{label:'alias',value:'id'}">
-                    </el-cascader>
-                </el-form-item>
-
-                <el-form-item label="对话模型Id" prop="chatModelId" class="hidden">
-                    <el-input size="mini" v-model="dialog.data.chatModelId" clearable placeholder="请输入对话模型Id" />
-                </el-form-item>
-
-                <el-form-item label="内容" prop="content">
-                    <el-input type="textarea" size="mini" v-model="dialog.data.content" clearable placeholder="请输入内容" />
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button size="mini" @@click="dialog.visible=false">取消</el-button>
-                <el-button size="mini" :loading="dialog.updateLoading" :disabled="dialog.disabled" type="primary" @@click="updateData">确认</el-button>
-            </div>
-        </el-dialog>
-
-        @* 抽屉 新增|编辑 知识库关联 *@
-        <el-drawer :visible.sync="visible.drawerGroup" direction="rtl" :with-header="false" :wrapper-closable="false"
-                   :close-on-press-escape="false" size="960px">
-            <div class="drawerRtl">
-                @* 内容中的头（包括标题和关闭图标） *@
-                <div class="drawerRtl__header">
-                    <div class="drawerRtl__header__title">管理知识库资料</div>
-                    <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerGroup')">&times;</div>
+                    <el-button type="primary" size="small" icon="el-icon-plus" @@click="handleEdit('','','add')">新建知识库</el-button>
                 </div>
-                @* 内容中的主体内容 *@
-                <div class="drawerRtl__body">
-                    <el-form v-if="visible.drawerGroup" ref="groupELForm" :model="groupForm" :rules="groupFormRules"
-                             :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
-                        <el-form-item label="内容类型">
-                            <el-select size="mini" v-model="groupForm.contentType" placeholder="请选择内容类型">
-                                <el-option v-for="item in contentTypeData" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-alert v-if="groupForm.contentType === 2"
-                                  title="保存资料关联后，已构建的向量会失效；请返回列表点击“向量化”后再进行召回测试。"
-                                  type="warning" :closable="false" show-icon style="margin-bottom: 16px;">
-                        </el-alert>
-                        <el-form-item v-if="groupForm.contentType === 2" label="选择知识库资料" prop="files">
-                            <div class="groupFMB">
-                                <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
-                                    <div class="df-wn flex-ac" style="gap: 10px;">
-                                        <el-input v-model="fileQueryList.filter" size="small"
-                                                  placeholder="按文件名搜索" style="width:auto;"></el-input>
-                                        <el-button size="small" icon="el-icon-search"
-                                                   @@click="handleConfigFileSearch">搜索</el-button>
+            </div>
+
+            <el-alert class="kb-guide-alert"
+                      title="新手操作顺序：新建知识库并配置 Embedding 与向量库 → 在“配置”中关联资料 → 点击“向量化” → 到“召回测试”核验结果。"
+                      type="info" :closable="false" show-icon>
+            </el-alert>
+
+            <div class="kb-table-wrap">
+                <el-table :data="tableData"
+                          style="width:100%;"
+                          size="small"
+                          row-key="id"
+                          border
+                          stripe
+                          highlight-current-row
+                          ref="multipleTable"
+                          @@selection-change="handleSelectionChange"
+                          @@row-dblclick="handleDbClick">
+                    <template slot="empty">
+                        <div class="kb-empty">
+                            <i class="el-icon-notebook-2"></i>
+                            <strong>暂无知识库</strong>
+                            <el-button type="primary" size="mini" @@click="handleEdit('','','add')">新建知识库</el-button>
+                        </div>
+                    </template>
+                    <el-table-column type="selection" width="48"></el-table-column>
+                    <el-table-column label="名称" min-width="200" sortable prop="name" :filters="filterTableHeader.name" :filter-method="filterHandler">
+                        <template slot-scope="scope">
+                            <div class="kb-name-cell">
+                                <span class="kb-name-main" :title="scope.row.name">{{ scope.row.name }}</span>
+                                <span class="kb-name-sub" v-if="scope.row.content" :title="scope.row.content">{{ scope.row.content }}</span>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="向量化状态" width="120" align="center">
+                        <template slot-scope="scope">
+                            <el-tag v-if="isKnowledgeBaseReady(scope.row)" size="mini" type="success" class="kb-status-tag">已向量化</el-tag>
+                            <el-tag v-else size="mini" type="info" class="kb-status-tag">未向量化</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column v-if="colData[0].istrue" prop="embeddingModelId" align="left" label="Embedding模型Id" width="140" sortable :filters="filterTableHeader.embeddingModelId" :filter-method="filterHandler"></el-table-column>
+                    <el-table-column v-if="colData[1].istrue" prop="vectorDBId" align="left" label="向量数据库Id" width="130" sortable :filters="filterTableHeader.vectorDBId" :filter-method="filterHandler"></el-table-column>
+                    <el-table-column v-if="colData[2].istrue" prop="chatModelId" align="left" label="对话模型Id" width="120" sortable :filters="filterTableHeader.chatModelId" :filter-method="filterHandler"></el-table-column>
+                    <el-table-column v-if="colData[4].istrue" prop="content" align="left" label="内容" min-width="160" show-overflow-tooltip sortable :filters="filterTableHeader.content" :filter-method="filterHandler"></el-table-column>
+                    <el-table-column align="center" label="添加时间" width="170" sortable>
+                        <template slot-scope="scope">
+                            {{ formaTableTime(scope.row.addTime) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" align="center" fixed="right" width="300">
+                        <template slot-scope="scope">
+                            <el-button size="mini" type="primary" @@click="handleElVisibleOpenBtn('drawerGroup', scope.row)">配置</el-button>
+                            <el-button size="mini" type="success" @@click="handleEmbeddingBtn('embedding', scope.row)">向量化</el-button>
+                            <el-dropdown trigger="click" @@command="handleRowCommand($event, scope.row)">
+                                <el-button size="mini" type="text">更多<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item command="edit" icon="el-icon-edit">编辑</el-dropdown-item>
+                                    <el-dropdown-item command="recall" icon="el-icon-search">召回测试</el-dropdown-item>
+                                    <el-dropdown-item command="delete" divided icon="el-icon-delete">删除</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+
+            <div class="kb-pagination">
+                <el-pagination :total="paginationQuery.total"
+                               :current-page.sync="listQuery.pageIndex"
+                               :page-size.sync="listQuery.pageSize"
+                               :page-sizes="[10, 20, 50, 100]"
+                               layout="total, sizes, prev, pager, next, jumper"
+                               @@size-change="getList"
+                               @@current-change="getList">
+                </el-pagination>
+            </div>
+        </div>
+
+        @* —— 召回测试 —— *@
+        <div class="kb-recall-panel" v-show="activeNavKey === 'recall'">
+            <div class="recall-test-page">
+                <div class="recall-test-wrap">
+                    <div class="recall-test-heading">
+                        <div>
+                            <h1>召回测试</h1>
+                            <p>用一个真实问题检查知识库返回了哪些资料片段。相似度分数用于排序参考，不等同于“召回率”。</p>
+                        </div>
+                        <el-button size="small" icon="el-icon-setting" @@click="visible.searchSettingsDrawer = true">检索设置</el-button>
+                    </div>
+
+                    <el-alert class="recall-test-guide" type="info" :closable="false" show-icon
+                              title="使用步骤：选择已完成向量化的知识库 → 输入用户会问的问题 → 查看来源和相似度 → 不理想时回到“配置”调整资料并重新向量化。">
+                    </el-alert>
+
+                    <div class="recall-test-layout">
+                        <section class="recall-test-left">
+                            <el-card shadow="never">
+                                <div slot="header" class="panel-heading"><span>发起一次测试</span></div>
+                                <div class="knowledge-base-select-row">
+                                    <label class="kb-select-label">知识库</label>
+                                    <el-select v-model="selectedKnowledgeBaseId" filterable clearable placeholder="搜索并选择已向量化的知识库" class="kb-select">
+                                        <el-option v-for="item in recallKnowledgeBaseList" :key="item.id" :label="item.label" :value="item.id" :disabled="!item.ready"></el-option>
+                                    </el-select>
+                                </div>
+                                <p class="field-tip" v-if="selectedKnowledgeBase">{{ selectedKnowledgeBase.ready ? '该知识库已完成向量化，可以开始测试。' : '该知识库尚未向量化，请先执行向量化。' }}</p>
+
+                                <div class="query-box">
+                                    <div class="query-box-header">
+                                        <label class="query-label">测试问题</label>
+                                        <span class="char-count">{{ recallContent.length }}/200</span>
+                                    </div>
+                                    <el-input type="textarea" v-model="recallContent" :maxlength="200" :rows="8"
+                                              placeholder="例如：如何创建一个新的知识库？" class="query-textarea"></el-input>
+                                    <p class="field-tip">尽量输入真实用户会问的完整问题，避免只输入一个关键词。</p>
+                                    <div class="query-actions">
+                                        <span>本次最多返回 {{ topK }} 个片段</span>
+                                        <el-button type="primary" icon="el-icon-video-play" @@click="doRecall" :loading="recallLoading">开始测试</el-button>
                                     </div>
                                 </div>
-                                <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
-                                    <div class="df-wn flex-ac" style="gap: 10px;">
-                                        <el-button size="small" type="primary" icon="el-icon-upload2"
-                                                   @@click="handleElVisibleOpenBtn('dialogFile')">上传知识库资料</el-button>
-                                        <el-button size="small" icon="el-icon-close"
-                                                   @@click="clearConfigFileSelection">清空选择</el-button>
-                                    </div>
+                            </el-card>
+                        </section>
+
+                        <section class="recall-test-right">
+                            <el-card shadow="never" class="result-panel">
+                                <div slot="header" class="panel-heading">
+                                    <span>测试结果 <em v-if="recallResults.length">{{ recallResults.length }} 个片段</em></span>
+                                    <span v-if="lastElapsedMilliseconds != null" class="result-duration">耗时 {{ lastElapsedMilliseconds }} ms</span>
                                 </div>
-                                <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
-                                    <span class="groupFMB_ma_label">已选择资料:</span>
-                                    <div class="groupFMB_ma_list">
-                                        <div class="df flex-ac flex-js" style="gap:10px">
-                                            <div v-for="(item,index) in groupForm.files" :key="item.id"
-                                                 class="df-wn flex-ac groupFMB_ma_list_item">
-                                                <span class="groupFMB_ma_list_item_text">{{ item.name }}</span>
-                                                <i class="el-icon-close cursorPointer"
-                                                   @@click="groupMembersCancel(item,index)"></i>
-                                            </div>
+                                <div v-if="recallResults.length" class="recall-cards">
+                                    <article v-for="item in recallResults" :key="item.rank" class="recall-card">
+                                        <div class="recall-card-meta">
+                                            <strong>第 {{ item.rank }} 条</strong>
+                                            <el-tag size="mini" type="info">相似度 {{ formatScore(item.score) }}</el-tag>
+                                        </div>
+                                        <p class="recall-card-content">{{ item.content }}</p>
+                                        <div class="recall-card-source"><i class="el-icon-document"></i> 来源：{{ item.sourceName || '未提供来源名称' }}</div>
+                                        <div class="recall-card-actions">
+                                            <a v-if="item.sourceLink" :href="item.sourceLink" target="_blank" rel="noopener noreferrer">打开来源 <i class="el-icon-top-right"></i></a>
+                                            <el-button type="text" size="mini" @@click="openParagraphDetail(item)">查看全文</el-button>
+                                        </div>
+                                    </article>
+                                </div>
+                                <div v-else class="empty-result"><i class="el-icon-search"></i><strong>还没有测试结果</strong><span>选择知识库并输入问题后，结果会显示在这里。</span></div>
+                            </el-card>
+                        </section>
+                    </div>
+
+                    <section class="records-section">
+                        <div class="records-title">本页测试记录</div>
+                        <el-table :data="recordPageList" size="small" border>
+                            <el-table-column prop="queryContent" label="测试问题" min-width="220" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="knowledgeBaseName" label="知识库" min-width="150" show-overflow-tooltip></el-table-column>
+                            <el-table-column prop="resultCount" label="返回片段" width="100" align="center"></el-table-column>
+                            <el-table-column label="最高相似度" width="120" align="center"><template slot-scope="scope">{{ formatScore(scope.row.highestScore) }}</template></el-table-column>
+                            <el-table-column prop="time" label="测试时间" width="170" align="center"></el-table-column>
+                        </el-table>
+                        <el-pagination class="records-pagination" :current-page.sync="recordPage" :page-sizes="[5, 10, 15, 20]"
+                                       :page-size.sync="recordPageSize" :total="recordTotal" layout="total, sizes, prev, pager, next"
+                                       @@size-change="handleRecordSizeChange" @@current-change="handleRecordPageChange">
+                        </el-pagination>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        @* —— 使用指南 —— *@
+        <div class="kb-guide-panel" v-show="activeNavKey === 'guide'">
+            <div class="kb-guide-card">
+                <h3>知识库使用指南</h3>
+                <ol>
+                    <li>点击「新建知识库」，填写名称并选择 Embedding 模型、向量数据库与对话模型。</li>
+                    <li>在列表中点击「配置」，关联文本内容或上传/勾选资料文件，确认保存关联。</li>
+                    <li>点击「向量化」，等待进度完成；成功后状态会显示为「已向量化」。</li>
+                    <li>切换到左侧「召回测试」，选择该知识库并输入真实问题，核验召回来源与相似度。</li>
+                    <li>若结果不理想，回到「配置」调整资料后重新向量化再测。</li>
+                </ol>
+                <div class="kb-guide-tip">提示：修改资料关联后，已构建的向量会失效，请务必重新执行向量化。</div>
+            </div>
+        </div>
+    </div>
+
+    @* ========== 全局弹层：新增/编辑、配置、上传、向量化（各导航共用） ========== *@
+    <el-dialog :title="dialog.title"
+               custom-class="kb-edit-dialog"
+               :visible.sync="dialog.visible"
+               :close-on-click-modal="false"
+               width="520px"
+               append-to-body>
+        <el-form ref="dataForm"
+                 class="kb-edit-form"
+                 :rules="dialog.rules"
+                 :model="dialog.data"
+                 :disabled="dialog.disabled"
+                 size="small"
+                 label-position="right"
+                 label-width="120px">
+            <el-form-item label="名称" prop="name">
+                <el-input v-model="dialog.data.name" clearable placeholder="请输入知识库名称" />
+            </el-form-item>
+
+            <el-form-item label="Embedding模型" prop="embeddingModelId">
+                <el-select v-model="dialog.data.embeddingModelId"
+                           class="kb-edit-select"
+                           popper-class="kb-edit-select-dropdown"
+                           clearable
+                           filterable
+                           placeholder="请选择 Embedding 模型"
+                           style="width: 100%;">
+                    <el-option v-for="item in embeddingModelData"
+                               :key="item.id"
+                               :label="formatSelectLabel(item, '模型')"
+                               :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item label="向量数据库" prop="vectorDBId">
+                <el-select v-model="dialog.data.vectorDBId"
+                           class="kb-edit-select"
+                           popper-class="kb-edit-select-dropdown"
+                           clearable
+                           filterable
+                           placeholder="请选择 Redis 或 Qdrant 向量库"
+                           style="width: 100%;">
+                    <el-option v-for="item in vectorDBData"
+                               :key="item.id"
+                               :label="formatSelectLabel(item, '向量库')"
+                               :value="item.id">
+                    </el-option>
+                </el-select>
+                <div v-if="!vectorDBData.length" class="kb-edit-form-inline-tip">当前没有可用的持久化向量库。请先在 AIKernel 中配置 Redis 或 Qdrant（Memory 内存库不可用于知识库）。</div>
+            </el-form-item>
+
+            <el-form-item label="对话模型" prop="chatModelId">
+                <el-select v-model="dialog.data.chatModelId"
+                           class="kb-edit-select"
+                           popper-class="kb-edit-select-dropdown"
+                           clearable
+                           filterable
+                           placeholder="请选择对话模型"
+                           style="width: 100%;">
+                    <el-option v-for="item in chatModelData"
+                               :key="item.id"
+                               :label="formatSelectLabel(item, '模型')"
+                               :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item label="内容" prop="content">
+                <el-input type="textarea"
+                          v-model="dialog.data.content"
+                          :rows="4"
+                          clearable
+                          placeholder="请输入内容（可选）" />
+            </el-form-item>
+
+            <p class="kb-edit-form-tip">* 向量库仅支持 Redis / Qdrant；Memory 无法跨请求持久化。保存后可在「配置」中关联资料并执行向量化。</p>
+        </el-form>
+        <div slot="footer" class="kb-edit-dialog-footer">
+            <el-button class="kb-btn-cancel" size="small" @@click="dialog.visible=false">取消</el-button>
+            <el-button class="kb-btn-confirm" size="small" :loading="dialog.updateLoading" :disabled="dialog.disabled" @@click="updateData">确定</el-button>
+        </div>
+    </el-dialog>
+
+    @* 抽屉 新增|编辑 知识库关联 *@
+    <el-drawer :visible.sync="visible.drawerGroup" direction="rtl" :with-header="false" :wrapper-closable="false"
+               :close-on-press-escape="false" size="960px" append-to-body>
+        <div class="drawerRtl">
+            <div class="drawerRtl__header">
+                <div class="drawerRtl__header__title">管理知识库资料</div>
+                <div class="drawerRtl__header__close" @@click="handleElVisibleClose('drawerGroup')">&times;</div>
+            </div>
+            <div class="drawerRtl__body">
+                <el-form v-if="visible.drawerGroup" ref="groupELForm" :model="groupForm" :rules="groupFormRules"
+                         :size="elSize" label-position="left" label-width="130px" class="drawerForm-container">
+                    <el-form-item label="内容类型">
+                        <el-select size="mini" v-model="groupForm.contentType" placeholder="请选择内容类型">
+                            <el-option v-for="item in contentTypeData" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-alert v-if="groupForm.contentType === 2"
+                              title="保存资料关联后，已构建的向量会失效；请返回列表点击“向量化”后再进行召回测试。"
+                              type="warning" :closable="false" show-icon style="margin-bottom: 16px;">
+                    </el-alert>
+                    <el-form-item v-if="groupForm.contentType === 2" label="选择知识库资料" prop="files">
+                        <div class="groupFMB">
+                            <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
+                                <div class="df-wn flex-ac" style="gap: 10px;">
+                                    <el-input v-model="fileQueryList.filter" size="small"
+                                              placeholder="按文件名搜索" style="width:auto;"></el-input>
+                                    <el-button size="small" icon="el-icon-search"
+                                               @@click="handleConfigFileSearch">搜索</el-button>
+                                </div>
+                            </div>
+                            <div class="df-wn flex-ac flex-jsb" style="gap: 10px;margin-bottom: 10px;">
+                                <div class="df-wn flex-ac" style="gap: 10px;">
+                                    <el-button size="small" type="primary" icon="el-icon-upload2"
+                                               @@click="handleElVisibleOpenBtn('dialogFile')">上传知识库资料</el-button>
+                                    <el-button size="small" icon="el-icon-close"
+                                               @@click="clearConfigFileSelection">清空选择</el-button>
+                                </div>
+                            </div>
+                            <div class="df-wn flex-as flex-js" style="gap: 10px;margin-bottom: 10px;">
+                                <span class="groupFMB_ma_label">已选择资料:</span>
+                                <div class="groupFMB_ma_list">
+                                    <div class="df flex-ac flex-js" style="gap:10px">
+                                        <div v-for="(item,index) in groupForm.files" :key="item.id"
+                                             class="df-wn flex-ac groupFMB_ma_list_item">
+                                            <span class="groupFMB_ma_list_item_text">{{ item.name }}</span>
+                                            <i class="el-icon-close cursorPointer"
+                                               @@click="groupMembersCancel(item,index)"></i>
                                         </div>
                                     </div>
                                 </div>
-                                <el-table ref="groupAgentTable" key="groupAgentTable" :data="fileList" max-height="380"
-                                          style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
-                                          @@selection-change="handleConfigFileSelectionChange">
-                                    <el-table-column type="selection" width="30"></el-table-column>
-                                    <el-table-column prop="fileName" label="可关联资料" width="200"
-                                                     show-overflow-tooltip></el-table-column>
-                                    <el-table-column prop="fileSize" label="文件大小" width="100">
-                                    </el-table-column>
-                                    <el-table-column label="上传时间" width="130" align="center">
-                                        <template slot-scope="scope">
-                                            {{ formaTableTime(scope.row.uploadTime) }}
-                                        </template>
-                                    </el-table-column>
-                              @*       <el-table-column prop="description" label="描述" min-width="100">
-                                    </el-table-column> *@
-                                    <el-table-column fixed="right" label="操作" width="130">
-                                        <template slot-scope="{ row }">
-                                            <el-button size="small"
-                                                       @@click="removeConfigFileSelection(row)">取消选择</el-button>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                                <div class="df-wn flex-ac flex-jsb" style="margin-top:10px;flex-wrap:wrap;gap:8px;">
-                                    <span class="el-pagination__total" style="margin-right:12px;">当前已选 {{ groupForm.files.length }} 份资料</span>
-                                    <el-pagination :current-page.sync="fileQueryList.pageIndex"
-                                                   :page-size="fileQueryList.pageSize"
-                                                   :page-sizes="[10, 20, 50,100]"
-                                                   :total="fileListTotal"
-                                                   layout="total, sizes, prev, pager, next, jumper"
-                                                   @@size-change="handleConfigFileSizeChange"
-                                                   @@current-change="handleConfigFilePageChange">
-                                    </el-pagination>
-                                </div>
                             </div>
-                        </el-form-item>
-                        <el-form-item v-if="groupForm.contentType === 1 || groupForm.contentType === 3" label="内容">
-                            <el-input type="textarea" v-model="groupForm.content" :rows="4" placeholder="请填写"></el-input>
-                        </el-form-item>
-                    </el-form>
+                            <el-table ref="groupAgentTable" key="groupAgentTable" :data="fileList" max-height="380"
+                                      style="width: 100%;margin-bottom: 10px;border: 1px solid rgba(229, 229, 229, 1);"
+                                      @@selection-change="handleConfigFileSelectionChange">
+                                <el-table-column type="selection" width="30"></el-table-column>
+                                <el-table-column prop="fileName" label="可关联资料" width="200"
+                                                 show-overflow-tooltip></el-table-column>
+                                <el-table-column prop="fileSize" label="文件大小" width="100">
+                                </el-table-column>
+                                <el-table-column label="上传时间" width="130" align="center">
+                                    <template slot-scope="scope">
+                                        {{ formaTableTime(scope.row.uploadTime) }}
+                                    </template>
+                                </el-table-column>
+                                <el-table-column fixed="right" label="操作" width="130">
+                                    <template slot-scope="{ row }">
+                                        <el-button size="small"
+                                                   @@click="removeConfigFileSelection(row)">取消选择</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <div class="df-wn flex-ac flex-jsb" style="margin-top:10px;flex-wrap:wrap;gap:8px;">
+                                <span class="el-pagination__total" style="margin-right:12px;">当前已选 {{ groupForm.files.length }} 份资料</span>
+                                <el-pagination :current-page.sync="fileQueryList.pageIndex"
+                                               :page-size="fileQueryList.pageSize"
+                                               :page-sizes="[10, 20, 50,100]"
+                                               :total="fileListTotal"
+                                               layout="total, sizes, prev, pager, next, jumper"
+                                               @@size-change="handleConfigFileSizeChange"
+                                               @@current-change="handleConfigFilePageChange">
+                                </el-pagination>
+                            </div>
+                        </div>
+                    </el-form-item>
+                    <el-form-item v-if="groupForm.contentType === 1 || groupForm.contentType === 3" label="内容">
+                        <el-input type="textarea" v-model="groupForm.content" :rows="4" placeholder="请填写"></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div class="drawerRtl__footer text-right">
+                <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">取消</el-button>
+                <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">确认</el-button>
+            </div>
+        </div>
+    </el-drawer>
+
+    @* 配置页内上传 *@
+    <el-dialog title="上传知识库资料"
+               :visible.sync="visible.dialogFile"
+               width="480px"
+               :close-on-click-modal="false"
+               append-to-body
+               @@close="handleDialogFileClose">
+        <el-upload class="upload-demo"
+                   ref="configUploadRef"
+                   action="/api/Senparc.Xncf.KnowledgeBase/CommonService/Xncf.KnowledgeBase_CommonService.UploadAsync"
+                   :auto-upload="true"
+                   :multiple="true"
+                   :show-file-list="true"
+                   :on-success="configUploadSuccess"
+                   :on-error="configUploadError"
+                   :file-list="configUploadFileList">
+            <el-button slot="trigger" size="small" type="primary">选择资料文件</el-button>
+            <div slot="tip" class="el-upload__tip">仅支持可安全提取的文本和 Office 文件。上传后会自动勾选；仍需点击当前抽屉的“确认”才会关联到知识库。</div>
+        </el-upload>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="mini" @@click="visible.dialogFile = false">关闭</el-button>
+        </div>
+    </el-dialog>
+
+    @* 向量化进度：右下角浮动任务面板（非阻塞） *@
+    <div class="kb-embedding-float" v-show="visible.embeddingProgress" :class="{ 'is-collapsed': embeddingPanelCollapsed, 'is-success': embeddingProgressStatus === 'success', 'is-error': embeddingProgressStatus === 'exception' }">
+        <div class="kb-embedding-float__header" @@click="embeddingPanelCollapsed = !embeddingPanelCollapsed">
+            <div class="kb-embedding-float__summary">
+                <el-progress type="circle"
+                             :percentage="embeddingProgressPercent"
+                             :width="28"
+                             :stroke-width="3"
+                             :status="embeddingProgressStatus"
+                             :show-text="true">
+                </el-progress>
+                <span class="kb-embedding-float__summary-text">
+                    <template v-if="embeddingProgressStatus === 'success'">处理完成 {{ embeddingDoneCount }}/{{ embeddingTotalCount }}</template>
+                    <template v-else-if="embeddingProgressStatus === 'exception'">处理失败 {{ embeddingDoneCount }}/{{ embeddingTotalCount }}</template>
+                    <template v-else>正在处理 {{ embeddingDoneCount }}/{{ embeddingTotalCount }}</template>
+                </span>
+            </div>
+            <i class="kb-embedding-float__toggle" :class="embeddingPanelCollapsed ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
+        </div>
+        <div class="kb-embedding-float__body" v-show="!embeddingPanelCollapsed">
+            <div class="kb-embedding-float__task">
+                <span class="kb-embedding-float__task-name" :title="embeddingTaskName">{{ embeddingTaskName || '知识库向量化' }}</span>
+                <div class="kb-embedding-float__task-bar">
+                    <el-progress :percentage="embeddingProgressPercent"
+                                 :status="embeddingProgressStatus"
+                                 :stroke-width="6"
+                                 :show-text="false">
+                    </el-progress>
                 </div>
-                @* 内容中固定的footer *@
-                <div class="drawerRtl__footer text-right">
-                    <el-button :size="elSize" @@click="handleElVisibleClose('drawerGroup')">取消</el-button>
-                    <el-button :size="elSize" type="primary" @@click="handleElVisibleSubmit('drawerGroup')">确认</el-button>
-                </div>
+                <span class="kb-embedding-float__task-pct">{{ embeddingProgressPercent }}%</span>
             </div>
-        </el-drawer>
-
-        @* 配置页内上传：仅创建知识库用途的文件，随后由当前抽屉保存关联。 *@
-        <el-dialog title="上传知识库资料"
-                   :visible.sync="visible.dialogFile"
-                   width="480px"
-                   :close-on-click-modal="false"
-                   @@close="handleDialogFileClose">
-            <el-upload class="upload-demo"
-                       ref="configUploadRef"
-                       action="/api/Senparc.Xncf.KnowledgeBase/CommonService/Xncf.KnowledgeBase_CommonService.UploadAsync"
-                       :auto-upload="true"
-                       :multiple="true"
-                       :show-file-list="true"
-                       :on-success="configUploadSuccess"
-                       :on-error="configUploadError"
-                       :file-list="configUploadFileList">
-                <el-button slot="trigger" size="small" type="primary">选择资料文件</el-button>
-                <div slot="tip" class="el-upload__tip">仅支持可安全提取的文本和 Office 文件。上传后会自动勾选；仍需点击当前抽屉的“确认”才会关联到知识库。</div>
-            </el-upload>
-            <div slot="footer" class="dialog-footer">
-                <el-button size="mini" @@click="visible.dialogFile = false">关闭</el-button>
-            </div>
-        </el-dialog>
-
-        @* 向量化进度弹窗 *@
-        <el-dialog title="向量化进度"
-                   :visible.sync="visible.embeddingProgress"
-                   width="420px"
-                   :close-on-click-modal="false"
-                   :close-on-press-escape="false"
-                   :show-close="false">
-            <div class="embedding-progress-body">
-                <el-progress :percentage="embeddingProgressPercent" :status="embeddingProgressStatus"></el-progress>
-                <p class="embedding-progress-text">{{ embeddingProgressText }}</p>
-            </div>
-        </el-dialog>
-
-        @* 向量化结果展示弹窗 *@
-        <el-dialog title="向量化结果"
-                   :visible.sync="visible.embeddingResult"
-                   width="560px"
-                   @@close="embeddingResultText = ''">
-            <div class="embedding-result-body">
-                <pre class="embedding-result-pre">{{ embeddingResultText }}</pre>
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" size="small" @@click="visible.embeddingResult = false; getList()">确定</el-button>
-            </div>
-        </el-dialog>
+            <p class="kb-embedding-float__hint">{{ embeddingProgressText }}</p>
+        </div>
     </div>
+
+    @* 向量化结果：右下角结果提示卡片 *@
+    <div class="kb-embedding-result-toast"
+         v-show="visible.embeddingResult"
+         :class="{ 'is-error': embeddingResultCard.isError }">
+        <i class="kb-embedding-result-toast__close el-icon-close" @@click="closeEmbeddingResultToast"></i>
+        <div class="kb-embedding-result-toast__row">
+            <span class="kb-embedding-result-toast__icon" :class="embeddingResultCard.isError ? 'is-error' : 'is-success'">
+                <i :class="embeddingResultCard.isError ? 'el-icon-close' : 'el-icon-check'"></i>
+            </span>
+            <div class="kb-embedding-result-toast__content">
+                <div class="kb-embedding-result-toast__title">{{ embeddingResultCard.title }}</div>
+                <div class="kb-embedding-result-toast__meta">
+                    您于 {{ embeddingResultCard.timeText }} 发起的 【{{ embeddingResultCard.taskName }}】
+                </div>
+                <div class="kb-embedding-result-toast__stats">
+                    共处理 <em class="is-total">{{ embeddingResultCard.total }}</em> 条，
+                    成功 <em class="is-ok">{{ embeddingResultCard.success }}</em> 条，
+                    失败 <em class="is-fail">{{ embeddingResultCard.fail }}</em> 条
+                </div>
+                <div class="kb-embedding-result-toast__detail" v-if="embeddingResultCard.detail">{{ embeddingResultCard.detail }}</div>
+            </div>
+        </div>
+    </div>
+
+    @* 召回：检索设置 *@
+    <el-drawer title="检索设置" :visible.sync="visible.searchSettingsDrawer" direction="rtl" size="380px" append-to-body>
+        <div class="search-settings-body">
+            <div class="search-settings-item">
+                <div class="search-settings-label">检索方式</div>
+                <div class="search-method-display"><i class="el-icon-connection"></i> 语义向量检索</div>
+                <p class="search-method-tip">系统将问题和资料片段转换为向量后按语义相近程度排序。不同模型和向量库的分数范围可能不同，因此不要把它当作固定百分比或召回率。</p>
+            </div>
+            <div class="search-settings-item">
+                <div class="search-settings-label">返回片段数量（Top K）</div>
+                <p class="search-method-tip">先从 5 开始。结果太少可提高，结果太杂可降低；本设置只影响当前页面后续测试。</p>
+                <div class="topk-row">
+                    <el-slider v-model="topK" :min="1" :max="20" :step="1" show-stops></el-slider>
+                    <el-input-number v-model="topK" :min="1" :max="20" :step="1" size="small" controls-position="right"></el-input-number>
+                </div>
+            </div>
+        </div>
+        <div class="search-settings-footer"><el-button type="primary" size="small" @@click="visible.searchSettingsDrawer = false">完成</el-button></div>
+    </el-drawer>
+
+    @* 召回：片段详情 *@
+    <el-dialog title="召回片段详情" :visible.sync="visible.paragraphDetailDialog" width="620px" append-to-body @@close="paragraphDetailItem = null">
+        <template v-if="paragraphDetailItem">
+            <div class="paragraph-detail-meta">第 {{ paragraphDetailItem.rank }} 条 · 相似度 {{ formatScore(paragraphDetailItem.score) }}</div>
+            <div class="paragraph-detail-source">来源：{{ paragraphDetailItem.sourceName || '未提供来源名称' }}</div>
+            <div class="paragraph-detail-content">{{ paragraphDetailItem.content || '—' }}</div>
+        </template>
+    </el-dialog>
 </div>
 @section scripts
 {
