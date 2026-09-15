@@ -25,6 +25,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
@@ -61,6 +64,7 @@ using Senparc.AI.AgentKernel.Extensions;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using MafFunctionCallContent = Microsoft.Extensions.AI.FunctionCallContent;
 using MafFunctionResultContent = Microsoft.Extensions.AI.FunctionResultContent;
+using MafTextContent = Microsoft.Extensions.AI.TextContent;
 using MafToolApprovalRequestContent = Microsoft.Extensions.AI.ToolApprovalRequestContent;
 using MafToolApprovalResponseContent = Microsoft.Extensions.AI.ToolApprovalResponseContent;
 
@@ -348,7 +352,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             int aiModelId = 0,
             int maxIterations = 32,
             TimeSpan? timeout = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            Action<AdminChatLiveEvent> onLiveEvent = null)
         {
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
@@ -406,7 +411,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 harnessAgent,
                 BuildUserPrompt(messages, userMessage),
                 timeout ?? TimeSpan.FromMinutes(10),
-                cancellationToken);
+                cancellationToken,
+                onLiveEvent: onLiveEvent);
 
             return (result.FinalText, modelIdentifier, result);
         }
@@ -421,7 +427,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             int aiModelId = 0,
             int maxIterations = 32,
             TimeSpan? timeout = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            Action<AdminChatLiveEvent> onLiveEvent = null)
         {
             var trajectory = await _trajectoryService.GetAsync(trajectoryId, userId)
                 ?? throw new NcfExceptionBase("未找到可恢复的 Harness Trajectory。");
@@ -449,7 +456,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 harnessAgent,
                 prompt,
                 timeout ?? TimeSpan.FromMinutes(10),
-                cancellationToken);
+                cancellationToken,
+                onLiveEvent: onLiveEvent);
             return (result.FinalText, modelIdentifier, result);
         }
 
@@ -459,12 +467,14 @@ namespace Senparc.Areas.Admin.Domain.Services
         public async Task<(string response, string modelIdentifier, AdminChatHarnessResult harness)> ForkNativeHarnessResponseAsync(
             int trajectoryId,
             int userId,
+            int branchSessionId,
             int forkFromSequence,
             string instruction,
             int aiModelId = 0,
             int maxIterations = 32,
             TimeSpan? timeout = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            Action<AdminChatLiveEvent> onLiveEvent = null)
         {
             var parent = await _trajectoryService.GetAsync(trajectoryId, userId)
                 ?? throw new NcfExceptionBase("未找到要分叉的 Harness Trajectory。");
@@ -478,7 +488,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 ? $"分叉：{parent.Title}"
                 : instruction.Trim();
             var branch = await _trajectoryService.CreateAsync(
-                parent.SessionId,
+                branchSessionId,
                 userId,
                 title,
                 AdminChatMode.Harness,
@@ -486,7 +496,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 parent.Id,
                 forkFromSequence > 0 ? forkFromSequence : null);
             var (harnessAgent, modelIdentifier) = await BuildNativeHarnessAgentAsync(
-                parent.SessionId,
+                branchSessionId,
                 userId,
                 aiModelId,
                 maxIterations,
@@ -516,7 +526,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 harnessAgent,
                 prompt,
                 timeout ?? TimeSpan.FromMinutes(10),
-                cancellationToken);
+                cancellationToken,
+                onLiveEvent: onLiveEvent);
             return (result.FinalText, modelIdentifier, result);
         }
 
@@ -535,7 +546,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             int aiModelId = 0,
             int maxIterations = 32,
             TimeSpan? timeout = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            Action<AdminChatLiveEvent> onLiveEvent = null)
         {
             var trajectory = await _trajectoryService.GetAsync(trajectoryId, userId)
                 ?? throw new NcfExceptionBase("未找到待审批的 Harness Trajectory。");
@@ -570,7 +582,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 string.Empty,
                 timeout ?? TimeSpan.FromMinutes(10),
                 cancellationToken,
-                [new ChatMessage(ChatRole.User, [responseContent])]);
+                [new ChatMessage(ChatRole.User, [responseContent])],
+                onLiveEvent);
             return (result.FinalText, modelIdentifier, result);
         }
 
@@ -651,9 +664,12 @@ namespace Senparc.Areas.Admin.Domain.Services
             string prompt,
             TimeSpan timeout,
             CancellationToken cancellationToken,
-            IEnumerable<ChatMessage> messages = null)
+            IEnumerable<ChatMessage> messages = null,
+            Action<AdminChatLiveEvent> onLiveEvent = null)
         {
             var output = new StringBuilder();
+            var phaseText = new StringBuilder();
+            var phaseKey = string.Empty;
             var pendingApprovals = new List<AdminChatApprovalRequestDto>();
             var trajectoryEvents = new List<AdminChatTrajectoryEventDto>();
             using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -670,28 +686,106 @@ namespace Senparc.Areas.Admin.Domain.Services
                     if (!string.IsNullOrEmpty(update.Text))
                     {
                         output.Append(update.Text);
-                        var textEvent = await _trajectoryService.AppendAsync(
-                            trajectory,
-                            "assistant.text",
-                            "assistant",
-                            null,
-                            update.Text,
-                            null);
-                        trajectoryEvents.Add(AdminChatTrajectoryEventDto.CreateFromEntity(textEvent));
+                        if (string.IsNullOrEmpty(phaseKey))
+                        {
+                            phaseKey = $"assistant-phase-{Guid.NewGuid():N}";
+                        }
+
+                        phaseText.Append(update.Text);
+                        onLiveEvent?.Invoke(new AdminChatLiveEvent
+                        {
+                            TrajectoryId = trajectory.Id,
+                            Kind = "assistant-phase",
+                            Text = phaseText.ToString(),
+                            TrajectoryEvent = CreateLiveAssistantPhase(trajectory, phaseKey, phaseText.ToString()),
+                            PendingApprovals = pendingApprovals.ToList()
+                        });
                     }
 
                     foreach (var content in update.Contents ?? Array.Empty<AIContent>())
                     {
+                        if (content is MafTextContent textContent)
+                        {
+                            // Providers may expose the same streamed text through both update.Text
+                            // and TextContent. Do not create a second trajectory item for the duplicate.
+                            if (string.IsNullOrEmpty(update.Text)
+                                && !string.IsNullOrEmpty(textContent.Text))
+                            {
+                                output.Append(textContent.Text);
+                                if (string.IsNullOrEmpty(phaseKey))
+                                {
+                                    phaseKey = $"assistant-phase-{Guid.NewGuid():N}";
+                                }
+
+                                phaseText.Append(textContent.Text);
+                                onLiveEvent?.Invoke(new AdminChatLiveEvent
+                                {
+                                    TrajectoryId = trajectory.Id,
+                                    Kind = "assistant-phase",
+                                    Text = phaseText.ToString(),
+                                    TrajectoryEvent = CreateLiveAssistantPhase(
+                                        trajectory,
+                                        phaseKey,
+                                        phaseText.ToString()),
+                                    PendingApprovals = pendingApprovals.ToList()
+                                });
+                            }
+
+                            continue;
+                        }
+
+                        var completedTextEvent = await FlushAssistantPhaseAsync(
+                            trajectory,
+                            phaseKey,
+                            phaseText,
+                            trajectoryEvents);
+                        if (completedTextEvent != null)
+                        {
+                            onLiveEvent?.Invoke(new AdminChatLiveEvent
+                            {
+                                TrajectoryId = trajectory.Id,
+                                Kind = "trajectory-event",
+                                Text = completedTextEvent.Content,
+                                TrajectoryEvent = completedTextEvent,
+                                PendingApprovals = pendingApprovals.ToList()
+                            });
+                        }
+                        phaseKey = string.Empty;
+
                         var eventInfo = await AppendTrajectoryContentAsync(
                             trajectory,
                             content,
-                            update.Text,
+                            null,
                             pendingApprovals);
                         if (eventInfo != null)
                         {
                             trajectoryEvents.Add(eventInfo);
+                            onLiveEvent?.Invoke(new AdminChatLiveEvent
+                            {
+                                TrajectoryId = trajectory.Id,
+                                Kind = "trajectory-event",
+                                TrajectoryEvent = eventInfo,
+                                PendingApprovals = pendingApprovals.ToList()
+                            });
                         }
                     }
+                }
+
+                var finalTextEvent = await FlushAssistantPhaseAsync(
+                    trajectory,
+                    phaseKey,
+                    phaseText,
+                    trajectoryEvents);
+                if (finalTextEvent != null)
+                {
+                    onLiveEvent?.Invoke(new AdminChatLiveEvent
+                    {
+                        TrajectoryId = trajectory.Id,
+                        Kind = "trajectory-event",
+                        Text = finalTextEvent.Content,
+                        TrajectoryEvent = finalTextEvent,
+                        PendingApprovals = pendingApprovals.ToList()
+                    });
                 }
 
                 var sessionState = await harnessAgent.SerializeSessionAsync(cancellationToken: timeoutCts.Token);
@@ -704,6 +798,12 @@ namespace Senparc.Areas.Admin.Domain.Services
                 {
                     await _trajectoryService.MarkCompletedAsync(trajectory);
                 }
+                onLiveEvent?.Invoke(new AdminChatLiveEvent
+                {
+                    TrajectoryId = trajectory.Id,
+                    Kind = "trajectory-complete",
+                    PendingApprovals = pendingApprovals.ToList()
+                });
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -728,8 +828,50 @@ namespace Senparc.Areas.Admin.Domain.Services
                 Completed = trajectory.Status == AdminChatTrajectoryStatus.Completed,
                 Status = trajectory.Status,
                 TrajectoryId = trajectory.Id,
+                TrajectorySequence = trajectory.LastSequence,
                 TrajectoryEvents = trajectoryEvents,
                 PendingApprovals = pendingApprovals
+            };
+        }
+
+        private async Task<AdminChatTrajectoryEventDto> FlushAssistantPhaseAsync(
+            AdminChatTrajectory trajectory,
+            string phaseKey,
+            StringBuilder phaseText,
+            List<AdminChatTrajectoryEventDto> trajectoryEvents)
+        {
+            if (phaseText == null || phaseText.Length == 0)
+            {
+                return null;
+            }
+
+            var textEvent = await _trajectoryService.AppendAsync(
+                trajectory,
+                "assistant.text",
+                "assistant",
+                null,
+                phaseText.ToString(),
+                null,
+                phaseKey);
+            var textEventDto = AdminChatTrajectoryEventDto.CreateFromEntity(textEvent);
+            trajectoryEvents.Add(textEventDto);
+            phaseText.Clear();
+            return textEventDto;
+        }
+
+        private static AdminChatTrajectoryEventDto CreateLiveAssistantPhase(
+            AdminChatTrajectory trajectory,
+            string phaseKey,
+            string content)
+        {
+            return new AdminChatTrajectoryEventDto
+            {
+                Sequence = trajectory.LastSequence + 1,
+                EventType = "assistant.text",
+                Source = "assistant",
+                Content = content,
+                CorrelationId = phaseKey,
+                IsReplayable = true
             };
         }
 

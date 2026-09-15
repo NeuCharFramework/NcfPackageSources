@@ -15,6 +15,8 @@
 
 - `AdminChatAiService.GenerateNativeHarnessResponseAsync(...)`：通过 `Senparc.AI.AgentKernel.BuildHarnessAgentAsync(...)` 构建原生 MAF Harness，并注入会话模块 FunctionRender 与 Workflow 工具。
 - `AdminChatTrajectory` / `AdminChatTrajectoryEvent`：以追加事件方式保存 request、assistant、tool、approval、resume、fork、error 等轨迹。
+- `AdminChatMessage.TrajectoryId` / `TrajectorySequence`：将 assistant 消息与轨迹持久关联，刷新后仍可执行轨迹操作。
+- `AdminChatStreamController`：Simple 与 Harness 共用 SSE；Harness 会实时推送 assistant 文本、工具调用、工具结果和审批状态。
 - `GetTrajectoryAsync`、`ResumeTrajectoryAsync`、`ForkTrajectoryAsync`、`SearchTrajectoriesAsync`：提供回放、恢复、分叉和检索能力。
 - `ChatMessageInputDto.Mode`（`AdminChatMode.Simple/Harness`）：请求级模式开关；Admin Chat 页面默认选择 Harness，普通对话仍可手动切换。
 

@@ -20,6 +20,9 @@
     修改标识：Senparc - 20260914
     修改描述：新增 WebHookMethod 参数（GET/POST/PUT），WebHook 地址支持 {{title}} 等占位符
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase;

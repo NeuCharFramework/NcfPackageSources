@@ -22,6 +22,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.6.0 新增管理端 Chat 会话工作流能力
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
@@ -100,9 +103,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
                 }
 
-                var title = string.IsNullOrEmpty(request.InitialMessage) 
+                var titleSource = string.IsNullOrEmpty(request.Title) ? request.InitialMessage : request.Title;
+                var title = string.IsNullOrEmpty(titleSource)
                     ? _localizer["AdminChat.NewConversation"] 
-                    : (request.InitialMessage.Length > 50 ? request.InitialMessage.Substring(0, 50) + "..." : request.InitialMessage);
+                    : (titleSource.Length > 50 ? titleSource.Substring(0, 50) + "..." : titleSource);
 
                 var session = await _sessionService.CreateSessionAsync(title, userId);
 
@@ -146,41 +150,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                             .ToList());
                 }
 
-                if (!string.IsNullOrEmpty(request.InitialMessage))
-                {
-                    await _messageService.AddMessageAsync(
-                        session.Id,
-                        ChatMessageRoleType.User,
-                        request.InitialMessage);
-
-                    string aiResponse;
-                    string modelIdentifier;
-                    if (request.Mode == AdminChatMode.Harness)
-                    {
-                        (aiResponse, modelIdentifier, _) = await _chatAiService.GenerateNativeHarnessResponseAsync(
-                            session.Id,
-                            userId,
-                            request.InitialMessage,
-                            request.AiModelId);
-                    }
-                    else
-                    {
-                        (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(session.Id, userId, request.InitialMessage, request.AiModelId);
-                    }
-                    await _messageService.AddMessageAsync(
-                        session.Id,
-                        ChatMessageRoleType.Assistant,
-                        aiResponse,
-                        modelIdentifier);
-                }
-
                 logger.Append($"创建会话: SessionId={session.Id}, UserId={userId}");
                 await PublishSyncEventAsync(userId, session.Id, "session-created");
 
                 return new CreateSessionResponse
                 {
                     SessionId = session.Id,
-                    Title = session.Title
+                    Title = session.Title,
+                    InitialMessage = request.InitialMessage,
+                    Mode = request.Mode
                 };
             });
         }
@@ -324,7 +302,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     request.SessionId,
                     ChatMessageRoleType.Assistant,
                     aiResponse,
-                    modelIdentifier);
+                    modelIdentifier,
+                    harness?.TrajectoryId,
+                    harness?.TrajectorySequence);
 
                 logger.Append($"发送消息: SessionId={request.SessionId}, MessageId={userMessage.Id}, Mode={mode}");
                 await PublishSyncEventAsync(userId, request.SessionId, "messages-changed");
@@ -336,6 +316,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     Mode = mode,
                     HarnessSteps = harness?.Steps,
                     TrajectoryId = harness?.TrajectoryId ?? 0,
+                    TrajectorySequence = harness?.TrajectorySequence ?? 0,
                     TrajectoryStatus = harness?.Status ?? default,
                     TrajectoryEvents = harness?.TrajectoryEvents,
                     PendingApprovals = harness?.PendingApprovals
@@ -407,7 +388,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 return new GetTrajectoryResponse
                 {
                     Trajectory = AdminChatTrajectoryDto.CreateFromEntity(trajectory),
-                    Events = events.Select(AdminChatTrajectoryEventDto.CreateFromEntity).ToList()
+                    Events = AdminChatTrajectoryEventDto.CollapseAssistantTextChunks(
+                        events.Select(AdminChatTrajectoryEventDto.CreateFromEntity)).ToList()
                 };
             });
         }
@@ -492,12 +474,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     trajectory.SessionId,
                     ChatMessageRoleType.Assistant,
                     aiResponse,
-                    modelIdentifier);
+                    modelIdentifier,
+                    harness.TrajectoryId,
+                    harness.TrajectorySequence);
                 await _sessionService.UpdateLastMessageTimeAsync(trajectory.SessionId);
                 await PublishSyncEventAsync(userId, trajectory.SessionId, "messages-changed");
 
                 return new SendTrajectoryResponse
                 {
+                    SessionId = trajectory.SessionId,
                     UserMessage = AdminChatMessageDto.CreateFromEntity(userMessage),
                     AssistantMessage = AdminChatMessageDto.CreateFromEntity(assistantMessage),
                     Harness = harness
@@ -521,26 +506,51 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     throw new NcfExceptionBase(_localizer["AdminChat.TrajectoryNotFound"]);
                 }
 
+                var branchTitle = string.IsNullOrWhiteSpace(request.Instruction)
+                    ? $"分叉：{parent.Title}"
+                    : (request.Instruction.Length > 50
+                        ? request.Instruction.Substring(0, 50) + "..."
+                        : request.Instruction);
+                var branchSession = await _sessionService.CreateSessionAsync(branchTitle, userId);
+                var parentModules = await _sessionModuleService.GetSessionModulesAsync(parent.SessionId);
+                await _sessionModuleService.AddModulesToSessionAsync(
+                    branchSession.Id,
+                    parentModules.Select(module => (
+                        module.XncfModuleUid,
+                        module.ModuleName,
+                        module.ModuleVersion)).ToList());
+                var parentWorkflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(parent.SessionId);
+                await _sessionWorkflowService.AddWorkflowsToSessionAsync(
+                    branchSession.Id,
+                    parentWorkflows.Select(workflow => (
+                        workflow.WorkflowId,
+                        workflow.WorkflowName,
+                        workflow.WorkflowDescription)));
+
                 var userMessage = await _messageService.AddMessageAsync(
-                    parent.SessionId,
+                    branchSession.Id,
                     ChatMessageRoleType.User,
                     request.Instruction ?? string.Empty);
                 var (aiResponse, modelIdentifier, harness) = await _chatAiService.ForkNativeHarnessResponseAsync(
                     parent.Id,
                     userId,
+                    branchSession.Id,
                     request.ForkFromSequence,
                     request.Instruction,
                     request.AiModelId);
                 var assistantMessage = await _messageService.AddMessageAsync(
-                    parent.SessionId,
+                    branchSession.Id,
                     ChatMessageRoleType.Assistant,
                     aiResponse,
-                    modelIdentifier);
-                await _sessionService.UpdateLastMessageTimeAsync(parent.SessionId);
-                await PublishSyncEventAsync(userId, parent.SessionId, "messages-changed");
+                    modelIdentifier,
+                    harness.TrajectoryId,
+                    harness.TrajectorySequence);
+                await _sessionService.UpdateLastMessageTimeAsync(branchSession.Id);
+                await PublishSyncEventAsync(userId, branchSession.Id, "messages-changed");
 
                 return new SendTrajectoryResponse
                 {
+                    SessionId = branchSession.Id,
                     UserMessage = AdminChatMessageDto.CreateFromEntity(userMessage),
                     AssistantMessage = AdminChatMessageDto.CreateFromEntity(assistantMessage),
                     Harness = harness
@@ -578,12 +588,15 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     trajectory.SessionId,
                     ChatMessageRoleType.Assistant,
                     aiResponse,
-                    modelIdentifier);
+                    modelIdentifier,
+                    harness.TrajectoryId,
+                    harness.TrajectorySequence);
                 await _sessionService.UpdateLastMessageTimeAsync(trajectory.SessionId);
                 await PublishSyncEventAsync(userId, trajectory.SessionId, "messages-changed");
 
                 return new SendTrajectoryResponse
                 {
+                    SessionId = trajectory.SessionId,
                     AssistantMessage = AdminChatMessageDto.CreateFromEntity(assistantMessage),
                     Harness = harness
                 };
@@ -1053,6 +1066,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     {
         public int SessionId { get; set; }
         public string Title { get; set; }
+        public string InitialMessage { get; set; }
+        public AdminChatMode Mode { get; set; }
     }
 
     /// <summary>
@@ -1099,6 +1114,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         /// Native MAF Harness Trajectory status.
         /// </summary>
         public AdminChatTrajectoryStatus TrajectoryStatus { get; set; }
+
+        public int TrajectorySequence { get; set; }
 
         /// <summary>
         /// Events produced during the current Harness request.
@@ -1166,6 +1183,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
     public class SendTrajectoryResponse
     {
+        public int SessionId { get; set; }
         public AdminChatMessageDto UserMessage { get; set; }
         public AdminChatMessageDto AssistantMessage { get; set; }
         public AdminChatHarnessResult Harness { get; set; }

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260914
     修改描述：v0.7.1 Add/Update 支持请求方式（GET/POST/PUT）与请求体模板（{{占位符}}）
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.ACL.Repository;

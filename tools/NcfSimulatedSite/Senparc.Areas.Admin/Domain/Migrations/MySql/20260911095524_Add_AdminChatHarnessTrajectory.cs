@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20260911095524_Add_AdminChatHarnessTrajectory.cs
+    文件功能描述：20260911095524_Add_AdminChatHarnessTrajectory 相关功能实现
+
+
+    创建标识：Senparc - 20211128
+
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
+----------------------------------------------------------------*/
+using System;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 

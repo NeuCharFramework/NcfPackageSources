@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.7.0 优化文件资源在线预览与安全发布路径
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authorization;
@@ -40,16 +43,16 @@ public sealed class FileAssetController : ControllerBase
     [HttpGet("{id:int}/{fingerprint?}")]
     public async Task<IActionResult> Get(int id, string fingerprint = null)
     {
-        var result = await _fileService.OpenReadAsync(id, requirePublicSiteAsset: true);
-        if (result == null)
+        var located = await _fileService.TryGetPhysicalPathAsync(id, requirePublicSiteAsset: true);
+        if (located == null)
         {
             return NotFound();
         }
 
-        var contentHash = result.File.ContentHash;
+        var (file, fullPath) = located.Value;
+        var contentHash = file.ContentHash;
         if (string.IsNullOrWhiteSpace(contentHash) || contentHash.Length < 16)
         {
-            await result.Stream.DisposeAsync();
             return NotFound();
         }
 
@@ -57,14 +60,12 @@ public sealed class FileAssetController : ControllerBase
         var fingerprintMatches = hasFingerprint && contentHash.StartsWith(fingerprint, StringComparison.OrdinalIgnoreCase);
         if (hasFingerprint && (!fingerprintMatches || fingerprint.Length < 12))
         {
-            await result.Stream.DisposeAsync();
             return NotFound();
         }
 
         var etag = $"\"{contentHash}\"";
         if (Request.Headers.IfNoneMatch.ToString().Contains(etag, StringComparison.Ordinal))
         {
-            await result.Stream.DisposeAsync();
             return StatusCode(304);
         }
 
@@ -74,11 +75,10 @@ public sealed class FileAssetController : ControllerBase
             ? "public,max-age=31536000,immutable"
             : "no-store";
 
-        return new FileStreamResult(
-            result.Stream,
-            string.IsNullOrWhiteSpace(result.File.ContentType) ? "application/octet-stream" : result.File.ContentType)
-        {
-            EnableRangeProcessing = true
-        };
+        var contentType = string.IsNullOrWhiteSpace(file.ContentType)
+            ? "application/octet-stream"
+            : file.ContentType;
+
+        return PhysicalFile(fullPath, contentType);
     }
 }

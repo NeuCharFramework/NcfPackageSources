@@ -4,6 +4,9 @@
     文件名：SelectionResponse.cs
     文件功能描述：AIKernel 选择器安全响应模型
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.AIKernel.Models;

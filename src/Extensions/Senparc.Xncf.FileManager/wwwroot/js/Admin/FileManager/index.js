@@ -69,6 +69,18 @@
                 },
                 fileTagStorageKey: 'ncf.fileManager.fileTags',
                 fileTagMap: {},
+                filePreviewDialog: {
+                    visible: false,
+                    loading: false,
+                    fileName: '',
+                    mode: '',
+                    url: '',
+                    content: '',
+                    html: '',
+                    slides: [],
+                    error: '',
+                    row: null
+                },
                 guideDialogVisible: false,
                 treeFilter: '',
                 fileSearchKeyword: '',
@@ -1374,6 +1386,7 @@
             },
             handleRowCommand: function (command, row) {
                 if (command === 'download') return this.downloadFile(row);
+                if (command === 'preview') return this.previewFile(row);
                 if (command === 'togglePublish') return this.setPublication(row, row.accessLevel !== 100);
                 if (command === 'copyUrl') return this.copyPublicUrl(row);
                 if (command === 'editNote') return this.showNoteDialog(row);
@@ -1762,6 +1775,151 @@
                 }
             },
             downloadFile: function (row) { window.location.assign(pageUrl + '?handler=Download&id=' + encodeURIComponent(row.id)); },
+            buildPreviewUrl: function (id) {
+                return pageUrl + '?handler=Preview&id=' + encodeURIComponent(id);
+            },
+            getPreviewKind: function (fileName) {
+                const ext = String(fileName || '').split('.').pop().toLowerCase();
+                const imageExt = { png: 1, jpg: 1, jpeg: 1, gif: 1, webp: 1, avif: 1, bmp: 1, svg: 1, ico: 1 };
+                const textExt = { txt: 1, log: 1, csv: 1, tsv: 1, json: 1, xml: 1, yaml: 1, yml: 1, sql: 1, cs: 1, js: 1, ts: 1, css: 1, html: 1, htm: 1 };
+                if (ext === 'pdf') return 'pdf';
+                if (imageExt[ext]) return 'image';
+                if (ext === 'md' || ext === 'markdown') return 'markdown';
+                if (textExt[ext]) return 'text';
+                if (ext === 'docx') return 'docx';
+                if (ext === 'xlsx') return 'xlsx';
+                if (ext === 'pptx') return 'pptx';
+                if (ext === 'doc' || ext === 'xls' || ext === 'ppt') return 'legacy-office';
+                return 'unsupported';
+            },
+            fetchPreviewArrayBuffer: async function (id) {
+                const response = await axios.get(this.buildPreviewUrl(id), { responseType: 'arraybuffer' });
+                return response.data;
+            },
+            fetchPreviewTextContent: async function (id) {
+                const response = await axios.get(pageUrl + '?handler=PreviewContent&id=' + encodeURIComponent(id));
+                const payload = unwrap(response);
+                return (payload && payload.content) || '';
+            },
+            renderMarkdownHtml: function (text) {
+                if (typeof marked !== 'undefined' && marked.parse) {
+                    return marked.parse(text || '');
+                }
+                return (text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+            },
+            splitSlideText: function (text) {
+                return String(text || '').split(/\n\s*\n+/).map(function (part) { return part.trim(); }).filter(Boolean);
+            },
+            onFileRowDblClick: function (row) {
+                if (!row || row.id == null) return;
+                this.previewFile(row);
+            },
+            onFilePreviewClosed: function () {
+                this.filePreviewDialog = {
+                    visible: false,
+                    loading: false,
+                    fileName: '',
+                    mode: '',
+                    url: '',
+                    content: '',
+                    html: '',
+                    slides: [],
+                    error: '',
+                    row: null
+                };
+            },
+            previewFile: async function (row) {
+                if (!row || row.id == null) {
+                    this.$message.warning('当前项无法预览');
+                    return;
+                }
+                const fileName = row.fileName || row.name || '未命名文件';
+                const kind = this.getPreviewKind(fileName);
+                const previewUrl = this.buildPreviewUrl(row.id);
+                this.filePreviewDialog = {
+                    visible: true,
+                    loading: true,
+                    fileName: fileName,
+                    mode: kind,
+                    url: '',
+                    content: '',
+                    html: '',
+                    slides: [],
+                    error: '',
+                    row: row
+                };
+                try {
+                    if (kind === 'pdf' || kind === 'image') {
+                        this.filePreviewDialog.url = previewUrl;
+                        this.filePreviewDialog.mode = kind;
+                        return;
+                    }
+                    if (kind === 'legacy-office') {
+                        this.filePreviewDialog.mode = 'error';
+                        this.filePreviewDialog.error = '旧版 Office 格式（.doc/.xls/.ppt）暂不支持在线预览，请下载后查看。';
+                        return;
+                    }
+                    if (kind === 'unsupported') {
+                        this.filePreviewDialog.mode = 'error';
+                        this.filePreviewDialog.error = '该文件类型暂不支持在线预览，请尝试下载后查看。';
+                        return;
+                    }
+                    if (kind === 'docx' && typeof mammoth !== 'undefined') {
+                        const arrayBuffer = await this.fetchPreviewArrayBuffer(row.id);
+                        const result = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+                        this.filePreviewDialog.mode = 'html';
+                        this.filePreviewDialog.html = result.value || '<p>文档为空</p>';
+                        return;
+                    }
+                    if (kind === 'xlsx' && typeof XLSX !== 'undefined') {
+                        const arrayBuffer = await this.fetchPreviewArrayBuffer(row.id);
+                        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                        const sheetName = workbook.SheetNames && workbook.SheetNames[0];
+                        if (!sheetName) {
+                            this.filePreviewDialog.mode = 'error';
+                            this.filePreviewDialog.error = 'Excel 文件中没有可预览的工作表。';
+                            return;
+                        }
+                        this.filePreviewDialog.mode = 'excel';
+                        this.filePreviewDialog.html = XLSX.utils.sheet_to_html(workbook.Sheets[sheetName]);
+                        return;
+                    }
+                    if (kind === 'markdown') {
+                        const arrayBuffer = await this.fetchPreviewArrayBuffer(row.id);
+                        const text = new TextDecoder('utf-8').decode(arrayBuffer);
+                        this.filePreviewDialog.mode = 'markdown';
+                        this.filePreviewDialog.content = text;
+                        this.filePreviewDialog.html = this.renderMarkdownHtml(text);
+                        return;
+                    }
+                    if (kind === 'text') {
+                        const arrayBuffer = await this.fetchPreviewArrayBuffer(row.id);
+                        this.filePreviewDialog.mode = 'text';
+                        this.filePreviewDialog.content = new TextDecoder('utf-8').decode(arrayBuffer);
+                        return;
+                    }
+                    if (kind === 'pptx') {
+                        const text = await this.fetchPreviewTextContent(row.id);
+                        const slides = this.splitSlideText(text);
+                        this.filePreviewDialog.mode = 'slides';
+                        this.filePreviewDialog.slides = slides.length ? slides : [text];
+                        return;
+                    }
+                    if (kind === 'docx' || kind === 'xlsx') {
+                        const text = await this.fetchPreviewTextContent(row.id);
+                        this.filePreviewDialog.mode = 'text';
+                        this.filePreviewDialog.content = text;
+                        return;
+                    }
+                    this.filePreviewDialog.mode = 'error';
+                    this.filePreviewDialog.error = '暂不支持该文件类型的在线预览。';
+                } catch (error) {
+                    this.filePreviewDialog.mode = 'error';
+                    this.filePreviewDialog.error = '预览失败：' + errorMessage(error);
+                } finally {
+                    this.filePreviewDialog.loading = false;
+                }
+            },
             deleteFile: async function (row) {
                 try {
                     const shortName = String(row.fileName || '').replace(/\.[^.]+$/, '') || row.fileName;

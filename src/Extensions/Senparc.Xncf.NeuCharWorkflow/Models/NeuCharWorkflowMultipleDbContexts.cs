@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260913
     修改描述：v0.4.0 Oracle/Dm 长文本列类型映射：Chat 内容与回放 JSON 使用 CLOB
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

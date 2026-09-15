@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20260831033946_Add_NeuCharPivotBoard.cs
+    文件功能描述：20260831033946_Add_NeuCharPivotBoard 相关功能实现
+
+
+    创建标识：Senparc - 20211114
+
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
+----------------------------------------------------------------*/
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 

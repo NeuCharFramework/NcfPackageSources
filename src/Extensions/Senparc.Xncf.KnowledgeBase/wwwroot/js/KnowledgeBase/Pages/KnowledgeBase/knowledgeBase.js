@@ -5,6 +5,7 @@ var app = new Vue({
             callback();
         };
         return {
+            activeNavKey: 'list', // list | recall | guide
             defaultMSG: null,
             editorData: '',
             elSize: 'medium', // el 组件尺寸大小 默认为空  medium、small、mini
@@ -14,12 +15,42 @@ var app = new Vue({
                 dialogFile: false,   // 配置抽屉内「新建文件」上传弹框
                 embeddingProgress: false,  // 向量化进度弹窗
                 embeddingResult: false,    // 向量化结果展示弹窗
+                searchSettingsDrawer: false,
+                paragraphDetailDialog: false,
             },
+            // 召回测试
+            selectedKnowledgeBaseId: null,
+            recallContent: '',
+            topK: 5,
+            recallLoading: false,
+            recallResults: [],
+            lastElapsedMilliseconds: null,
+            recordList: [],
+            recordPage: 1,
+            recordPageSize: 5,
+            paragraphDetailItem: null,
+            recallKbOptions: [], // 召回下拉用的全量知识库（独立于列表分页）
             embeddingProgressPercent: 0,
             embeddingProgressStatus: '',   // '' | success | exception
             embeddingProgressText: '正在准备...',
             embeddingResultText: '',
+            embeddingTaskName: '',
+            embeddingDoneCount: 0,
+            embeddingTotalCount: 1,
+            embeddingPanelCollapsed: false,
+            embeddingStartedAt: null,
+            embeddingResultCard: {
+                isError: false,
+                title: '',
+                timeText: '',
+                taskName: '',
+                total: 0,
+                success: 0,
+                fail: 0,
+                detail: ''
+            },
             _embeddingTimer: null,
+            _embeddingResultTimer: null,
             configUploadFileList: [], // 新建文件弹框内的上传列表（仅展示用，关闭时清空）
             form:
             {
@@ -45,6 +76,7 @@ var app = new Vue({
             embeddingModelData: [],
             selectDefaultVectorDB: [],
             vectorDBData: [],
+            vectorDBDataAll: [],
             selectDefaultChatModel: [],
             chatModelData: [],
             page: {
@@ -56,7 +88,8 @@ var app = new Vue({
                 embeddingModelId: [],
                 vectorDBId: [],
                 chatModelId: [],
-                name: []
+                name: [],
+                content: []
             },
             colData: [
                 { title: "Embedding模型Id", istrue: false },
@@ -102,17 +135,25 @@ var app = new Vue({
             dialogVisible: false,
             dialog:
             {
-                title: '新增知识库管理',
+                title: '添加知识库',
                 visible: false,
                 data:
                 {
-                    id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
+                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: ''
                 },
                 rules:
                 {
                     name:
                         [
-                            { required: true, message: "知识库管理名称为必填项", trigger: "blur" }
+                            { required: true, message: "请输入知识库名称", trigger: "blur" }
+                        ],
+                    embeddingModelId:
+                        [
+                            { required: true, message: "请选择 Embedding 模型", trigger: "change" }
+                        ],
+                    vectorDBId:
+                        [
+                            { required: true, message: "请选择向量数据库", trigger: "change" }
                         ]
                 },
                 updateLoading: false,
@@ -125,7 +166,7 @@ var app = new Vue({
                 visible: false,
                 data:
                 {
-                    id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
+                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: ''
                 },
                 rules:
                 {
@@ -184,6 +225,32 @@ var app = new Vue({
             fileNamesToSelect: [], // 打开配置时待选中的文件名（从 KnowledgeBaseItem 回显用）
         }
     },
+    computed: {
+        recallKnowledgeBaseList() {
+            const source = (this.recallKbOptions && this.recallKbOptions.length)
+                ? this.recallKbOptions
+                : (this.tableData || []);
+            return source.map(item => {
+                const ready = this.isKnowledgeBaseReady(item);
+                return {
+                    id: item.id,
+                    name: item.name || ('知识库-' + item.id),
+                    ready: ready,
+                    label: (item.name || ('知识库-' + item.id)) + (ready ? '' : '（尚未向量化）')
+                };
+            });
+        },
+        selectedKnowledgeBase() {
+            return this.recallKnowledgeBaseList.find(item => Number(item.id) === Number(this.selectedKnowledgeBaseId)) || null;
+        },
+        recordTotal() {
+            return this.recordList.length;
+        },
+        recordPageList() {
+            const start = (this.recordPage - 1) * this.recordPageSize;
+            return this.recordList.slice(start, start + this.recordPageSize);
+        }
+    },
     created: function () {
         let that = this
         that.initializeKnowledgeBaseNavigation()
@@ -191,7 +258,6 @@ var app = new Vue({
         that.getEmbeddingModelList();
         that.getVectorDBList();
         that.getChatModelList();
-        //debugger
         // 获取文件数据
         that.getFileListData('file');
 
@@ -204,14 +270,13 @@ var app = new Vue({
             // 关闭dialog，清空
             if (!val) {
                 this.dialog.data = {
-                    id: '', embeddingModelId: '', vectorDBId: '', chatModelId: '', name: '', content: ''
+                    id: '', embeddingModelId: null, vectorDBId: null, chatModelId: null, name: '', content: ''
                 };
                 this.dialog.updateLoading = false;
                 this.dialog.disabled = false;
             }
         },
         'checkedColumns': function (val) {
-            //debugger
             let arr = this.checkBoxGroup.filter(i => !val.includes(i));
             this.colData.filter(i => {
                 if (arr.indexOf(i.title) != -1) {
@@ -221,10 +286,194 @@ var app = new Vue({
                 }
             });
             this.reload = Math.random()
+        },
+        recordList: function () {
+            const maxPage = Math.max(1, Math.ceil(this.recordTotal / this.recordPageSize));
+            if (this.recordPage > maxPage) this.recordPage = maxPage;
         }
     },
     methods:
     {
+        onNavClick(key) {
+            this.activeNavKey = key;
+            if (key === 'recall') {
+                this.loadRecallKnowledgeBaseList();
+            }
+        },
+        formatSelectLabel(item, fallbackPrefix) {
+            if (!item) {
+                return '';
+            }
+            return item.alias || item.name || ((fallbackPrefix || '选项') + '-' + item.id);
+        },
+        isKnowledgeBaseReady(row) {
+            return !!(row && row.vectorCollectionName && row.embeddedTime);
+        },
+        onEmbeddingResultConfirm() {
+            this.closeEmbeddingResultToast();
+        },
+        closeEmbeddingResultToast() {
+            if (this._embeddingResultTimer) {
+                clearTimeout(this._embeddingResultTimer);
+                this._embeddingResultTimer = null;
+            }
+            this.visible.embeddingResult = false;
+            this.embeddingResultText = '';
+            this.getList();
+            if (this.activeNavKey === 'recall' || (this.recallKbOptions && this.recallKbOptions.length)) {
+                this.loadRecallKnowledgeBaseList();
+            }
+        },
+        formatEmbeddingTime(dateObj) {
+            var d = dateObj instanceof Date ? dateObj : new Date();
+            var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+            return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate())
+                + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+        },
+        parseEmbeddingResultStats(message) {
+            var text = String(message || '');
+            var totalMatch = text.match(/总计[:：]\s*(\d+)/);
+            var successMatch = text.match(/成功[:：]\s*(\d+)/);
+            var failMatch = text.match(/失败[:：]\s*(\d+)/);
+            var total = totalMatch ? parseInt(totalMatch[1], 10) : 0;
+            var success = successMatch ? parseInt(successMatch[1], 10) : (total || 0);
+            var fail = failMatch ? parseInt(failMatch[1], 10) : 0;
+            if (!total && success) {
+                total = success + fail;
+            }
+            return { total: total, success: success, fail: fail };
+        },
+        showEmbeddingResultToast(options) {
+            var that = this;
+            var opts = options || {};
+            var stats = that.parseEmbeddingResultStats(opts.message || '');
+            if (opts.total != null) stats.total = opts.total;
+            if (opts.success != null) stats.success = opts.success;
+            if (opts.fail != null) stats.fail = opts.fail;
+            if (!stats.total && !opts.isError) {
+                stats.total = 1;
+                stats.success = 1;
+                stats.fail = 0;
+            }
+            that.embeddingResultCard = {
+                isError: !!opts.isError,
+                title: opts.title || (opts.isError ? '向量化任务执行失败!' : '向量化请求已经执行完毕!'),
+                timeText: that.formatEmbeddingTime(opts.startedAt || that.embeddingStartedAt || new Date()),
+                taskName: opts.taskName || that.embeddingTaskName || '知识库向量化',
+                total: stats.total,
+                success: stats.success,
+                fail: stats.fail,
+                detail: opts.detail || ''
+            };
+            that.embeddingResultText = opts.message || '';
+            that.visible.embeddingProgress = false;
+            that.visible.embeddingResult = true;
+            if (that._embeddingResultTimer) {
+                clearTimeout(that._embeddingResultTimer);
+            }
+            that._embeddingResultTimer = setTimeout(function () {
+                that.closeEmbeddingResultToast();
+            }, 12000);
+        },
+        async loadRecallKnowledgeBaseList() {
+            try {
+                const res = await service.get('/Admin/KnowledgeBase/Index?handler=KnowledgeBases&pageIndex=1&pageSize=200&keyword=&orderField=AddTime%20Desc');
+                const payload = res && res.data && res.data.data ? res.data.data : {};
+                this.recallKbOptions = Array.isArray(payload.list) ? payload.list : [];
+            } catch (e) {
+                console.error(e);
+                this.$message.error('无法获取知识库列表，请稍后重试');
+            }
+        },
+        handleRowCommand(command, row) {
+            if (command === 'edit') {
+                this.handleEdit(0, row, 'edit');
+            } else if (command === 'recall') {
+                this.selectedKnowledgeBaseId = row && row.id != null ? Number(row.id) : null;
+                this.activeNavKey = 'recall';
+                this.loadRecallKnowledgeBaseList();
+            } else if (command === 'delete') {
+                this.$confirm('确认删除此知识库管理吗？', '删除确认', {
+                    confirmButtonText: '删除',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.handleDelete(0, row);
+                }).catch(() => {});
+            }
+        },
+        formatScore(score) {
+            const value = Number(score);
+            return Number.isFinite(value) ? value.toFixed(4) : '—';
+        },
+        handleRecordSizeChange(value) {
+            this.recordPageSize = value;
+            this.recordPage = 1;
+        },
+        handleRecordPageChange(value) {
+            this.recordPage = value;
+        },
+        openParagraphDetail(item) {
+            this.paragraphDetailItem = item;
+            this.visible.paragraphDetailDialog = true;
+        },
+        async doRecall() {
+            const knowledgeBase = this.selectedKnowledgeBase;
+            const content = (this.recallContent || '').trim();
+            const recallUrl = '/api/Senparc.Xncf.KnowledgeBase/RecallTestAppService/Xncf.KnowledgeBase_RecallTestAppService.RecallTest';
+            if (!knowledgeBase) {
+                this.$message.warning('请先选择知识库');
+                return;
+            }
+            if (!knowledgeBase.ready) {
+                this.$message.warning('该知识库尚未向量化，请先执行“向量化”');
+                return;
+            }
+            if (!content) {
+                this.$message.warning('请输入要测试的问题');
+                return;
+            }
+
+            this.recallLoading = true;
+            this.recallResults = [];
+            this.lastElapsedMilliseconds = null;
+            try {
+                const response = await service.post(recallUrl, {
+                    id: Number(knowledgeBase.id),
+                    content: content,
+                    topK: this.topK
+                });
+                const body = response && response.data;
+                const results = body && Object.prototype.hasOwnProperty.call(body, 'data') ? body.data : body;
+                if (!Array.isArray(results)) throw new Error('服务未返回有效的召回结果');
+
+                this.recallResults = results.map(function (item, index) {
+                    return Object.assign({}, item, {
+                        rank: item.rank || index + 1,
+                        content: item.content || '',
+                        sourceName: item.sourceName || '',
+                        sourceLink: item.sourceLink || ''
+                    });
+                });
+                this.lastElapsedMilliseconds = this.recallResults.length ? this.recallResults[0].elapsedMilliseconds : null;
+                const scores = this.recallResults.map(item => Number(item.score)).filter(Number.isFinite);
+                this.recordList.unshift({
+                    queryContent: content,
+                    knowledgeBaseName: knowledgeBase.name,
+                    resultCount: this.recallResults.length,
+                    highestScore: scores.length ? Math.max.apply(null, scores) : null,
+                    time: new Date().toLocaleString('zh-CN', { hour12: false })
+                });
+                this.recordPage = 1;
+                this.$message.success(this.recallResults.length ? '召回测试完成，请核对来源与内容。' : '测试完成，但没有返回匹配片段。');
+            } catch (error) {
+                const response = error && error.response && error.response.data;
+                const msg = (response && (response.errorMessage || response.message || response.title)) || (error && error.message) || '请求未完成，请检查知识库和模型配置。';
+                this.$notify({ title: '召回未完成', message: msg, type: 'error', duration: 6000 });
+            } finally {
+                this.recallLoading = false;
+            }
+        },
         initializeKnowledgeBaseNavigation() {
             const query = new URLSearchParams(window.location.search || '')
             const knowledgeBaseId = Number(query.get('knowledgeBaseId') || 0)
@@ -352,8 +601,54 @@ var app = new Vue({
             }
             await axios.post('/api/Senparc.Xncf.AIKernel/AIVectorAppService/Xncf.AIKernel_AIVectorAppService.GetSelectionListAsync', param)
                 .then(res => {
-                    that.vectorDBData = res.data.data.data;
+                    const list = (res.data && res.data.data && res.data.data.data) || [];
+                    // KnowledgeBase 仅支持可持久化的 Redis / Qdrant；Memory 等内存库后端会直接拒绝
+                    that.vectorDBData = (Array.isArray(list) ? list : []).filter(item => that.isSupportedVectorDb(item));
+                    that.vectorDBDataAll = Array.isArray(list) ? list : [];
                 })
+        },
+        isSupportedVectorDb(item) {
+            if (!item) {
+                return false;
+            }
+            var typeVal = item.vectorDBType != null ? item.vectorDBType : item.VectorDBType;
+            var typeName = String(typeVal == null ? '' : typeVal).toLowerCase();
+            var alias = String(item.alias || item.Alias || item.name || item.Name || '').toLowerCase();
+
+            if (typeName === 'memory' || typeName === 'volatileinmemory' || typeName === '0') {
+                return false;
+            }
+            if (alias === 'memory' || alias.indexOf('memory') >= 0) {
+                return false;
+            }
+            if (typeName === 'redis' || typeName === 'qdrant') {
+                return true;
+            }
+            if (alias.indexOf('redis') >= 0 || alias.indexOf('qdrant') >= 0) {
+                return true;
+            }
+            if (typeof typeVal === 'number') {
+                return typeVal !== 0;
+            }
+            return true;
+        },
+        resolveSaveResponse(res) {
+            var body = res && res.data;
+            if (!body) {
+                return { ok: false, message: '保存失败：未收到服务端响应' };
+            }
+            var payload = body;
+            if (body.data && typeof body.data === 'object' && !Array.isArray(body.data)) {
+                if (Object.prototype.hasOwnProperty.call(body.data, 'success')
+                    || Object.prototype.hasOwnProperty.call(body.data, 'Success')) {
+                    payload = body.data;
+                }
+            }
+            var success = payload.success === true || payload.Success === true;
+            var message = payload.msg || payload.Msg || body.msg || body.Msg
+                || body.exception || body.Exception
+                || (success ? '知识库保存成功' : '保存失败，请检查数据');
+            return { ok: success, message: String(message) };
         },
         async getChatModelList() {
             let that = this
@@ -506,7 +801,7 @@ var app = new Vue({
                 that.categoryData = res.data.data.list;
             });
         },
-        // 编辑 // 新增知识库管理（文件在配置中上传，此处不再使用文件列表）
+        // 编辑 // 新增知识库（下拉直接绑定 dialog.data.*Id）
         handleEdit(index, row, flag) {
             let that = this;
             that.dialog.visible = false;
@@ -515,19 +810,15 @@ var app = new Vue({
             });
 
             if (flag === 'add') {
-                // 新增 - 初始化空数据
-                that.dialog.title = '新增知识库管理';
+                that.dialog.title = '添加知识库';
                 that.dialog.data = {
                     id: 0,
-                    embeddingModelId: 0,
-                    vectorDBId: 0,
-                    chatModelId: 0,
+                    embeddingModelId: null,
+                    vectorDBId: null,
+                    chatModelId: null,
                     name: '',
                     content: ''
                 };
-                that.selectDefaultEmbeddingModel = [];
-                that.selectDefaultVectorDB = [];
-                that.selectDefaultChatModel = [];
                 that.dialogImageUrl = '';
                 return;
             }
@@ -536,26 +827,15 @@ var app = new Vue({
             let { id, embeddingModelId, vectorDBId, chatModelId, name, content } = row;
             that.dialog.data = {
                 id: id || 0,
-                embeddingModelId: embeddingModelId || 0,
-                vectorDBId: vectorDBId || 0,
-                chatModelId: chatModelId || 0,
+                embeddingModelId: embeddingModelId ? parseInt(embeddingModelId, 10) : null,
+                vectorDBId: vectorDBId ? parseInt(vectorDBId, 10) : null,
+                chatModelId: chatModelId ? parseInt(chatModelId, 10) : null,
                 name: name || '',
                 content: content || ''
             };
 
-            // 设置下拉框默认值
-            if (that.dialog.data.embeddingModelId) {
-                that.selectDefaultEmbeddingModel = [parseInt(that.dialog.data.embeddingModelId)];
-            }
-            if (that.dialog.data.vectorDBId) {
-                that.selectDefaultVectorDB = [parseInt(that.dialog.data.vectorDBId)];
-            }
-            if (that.dialog.data.chatModelId) {
-                that.selectDefaultChatModel = [parseInt(that.dialog.data.chatModelId)];
-            }
-
             if (flag === 'edit') {
-                that.dialog.title = '编辑知识库管理';
+                that.dialog.title = '编辑知识库';
             }
         },
         // 设置父级菜单默认显示 递归
@@ -661,49 +941,56 @@ var app = new Vue({
         // 更新新增、编辑（文件改为在「配置」中上传并关联，此处不再传文件）
         updateData() {
             let that = this;
-            that.dialog.updateLoading = true;
             that.$refs['dataForm'].validate(valid => {
-                if (valid) {
-                    let data = {
-                        id: that.dialog.data.id || 0,
-                        embeddingModelId: parseInt(that.dialog.data.embeddingModelId) || 0,
-                        vectorDBId: parseInt(that.dialog.data.vectorDBId) || 0,
-                        chatModelId: parseInt(that.dialog.data.chatModelId) || 0,
-                        name: that.dialog.data.name,
-                        content: that.dialog.data.content || '',
-                        NcfFileIds: null
-                    };
-                    service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
-                        // res.data 是后端返回的对象：{success: true, data: true, msg: "保存成功"}
-                        if (res.data && res.data.data.success && res.data.data.data === true) {
-                            that.getList();
-                            that.$notify({
-                                title: "成功",
-                                message: res.data.msg || "知识库保存成功",
-                                type: "success",
-                                duration: 2000
-                            });
-                            that.dialog.visible = false;
-                            that.dialog.updateLoading = false;
-                        } else {
-                            that.$notify({
-                                title: "失败",
-                                message: (res.data && res.data.msg) || "保存失败，请检查数据",
-                                type: "error",
-                                duration: 3000
-                            });
-                            that.dialog.updateLoading = false;
-                        }
-                    }).catch(err => {
-                        that.$notify({
-                            title: "错误",
-                            message: "保存出错，请稍后重试。",
-                            type: "error",
-                            duration: 3000
-                        });
-                        that.dialog.updateLoading = false;
-                    });
+                if (!valid) {
+                    return;
                 }
+                that.dialog.updateLoading = true;
+                let data = {
+                    id: that.dialog.data.id || 0,
+                    embeddingModelId: parseInt(that.dialog.data.embeddingModelId, 10) || 0,
+                    vectorDBId: parseInt(that.dialog.data.vectorDBId, 10) || 0,
+                    chatModelId: parseInt(that.dialog.data.chatModelId, 10) || 0,
+                    name: that.dialog.data.name,
+                    content: that.dialog.data.content || '',
+                    NcfFileIds: null
+                };
+                console.log('保存知识库数据：' + JSON.stringify(data));
+                service.post("/Admin/KnowledgeBase/Edit?handler=Save", data).then(res => {
+                    console.log('保存响应：', res);
+                    const result = that.resolveSaveResponse(res);
+                    if (result.ok) {
+                        that.getList();
+                        that.$notify({
+                            title: "成功",
+                            message: result.message || "知识库保存成功",
+                            type: "success",
+                            duration: 2000
+                        });
+                        that.dialog.visible = false;
+                    } else {
+                        that.$notify({
+                            title: "失败",
+                            message: result.message || "保存失败，请检查数据",
+                            type: "error",
+                            duration: 5000
+                        });
+                    }
+                    that.dialog.updateLoading = false;
+                }).catch(err => {
+                    console.error('保存错误：', err);
+                    const response = err && err.response && err.response.data;
+                    const message = (response && (response.msg || response.Msg || response.message || response.Message || response.exception))
+                        || (err && err.message)
+                        || '保存出错，请稍后重试';
+                    that.$notify({
+                        title: "错误",
+                        message: String(message),
+                        type: "error",
+                        duration: 5000
+                    });
+                    that.dialog.updateLoading = false;
+                });
             });
         },
         // 删除
@@ -799,11 +1086,14 @@ var app = new Vue({
         },
         handleSearch() {
             let that = this
+            that.listQuery.pageIndex = 1;
             that.getList();
         },
         resetCondition() {
             let that = this
             that.keyword = '';
+            that.listQuery.pageIndex = 1;
+            that.getList();
         },
         setRecommendFormat(row, column, cellValue, index) {
             if (cellValue) {
@@ -844,6 +1134,12 @@ var app = new Vue({
                     that.embeddingProgressPercent = 0;
                     that.embeddingProgressStatus = '';
                     that.embeddingProgressText = '正在准备...';
+                    that.embeddingTaskName = item && item.name ? item.name : ('知识库-' + (item && item.id ? item.id : ''));
+                    that.embeddingDoneCount = 0;
+                    that.embeddingTotalCount = 1;
+                    that.embeddingPanelCollapsed = false;
+                    that.embeddingStartedAt = new Date();
+                    that.visible.embeddingResult = false;
                     that.visible.embeddingProgress = true;
 
                     var progressVal = 0;
@@ -855,7 +1151,7 @@ var app = new Vue({
                     }, 400);
 
                     const serviceURL = '/api/Senparc.Xncf.KnowledgeBase/KnowledgeBaseAppService/Xncf.KnowledgeBase_KnowledgeBaseAppService.EmbeddingKnowledgeBase';
-                    const dataTemp = { id: item?.id ?? '' };
+                    const dataTemp = { id: item && item.id != null ? item.id : '' };
 
                     service.post(serviceURL, dataTemp).then(res => {
                         if (that._embeddingTimer) {
@@ -864,29 +1160,37 @@ var app = new Vue({
                         }
                         that.embeddingProgressPercent = 100;
                         that.embeddingProgressStatus = 'success';
+                        that.embeddingDoneCount = 1;
                         that.embeddingProgressText = '向量化完成';
 
                         var body = res && res.data;
                         var success = body && (body.success === true);
                         var resultMessage = (body && body.data != null) ? (typeof body.data === 'string' ? body.data : (body.data.data != null ? body.data.data : '')) : '';
-                        if (success && resultMessage) {
+                        if (success) {
                             setTimeout(function () {
-                                that.visible.embeddingProgress = false;
-                                that.embeddingResultText = resultMessage;
-                                that.visible.embeddingResult = true;
-                            }, 400);
-                        } else if (success) {
-                            setTimeout(function () {
-                                that.visible.embeddingProgress = false;
-                                that.embeddingResultText = '知识库「' + (item.name || '') + '」向量化已完成。';
-                                that.visible.embeddingResult = true;
-                            }, 400);
+                                that.showEmbeddingResultToast({
+                                    isError: false,
+                                    title: '向量化请求已经执行完毕!',
+                                    taskName: that.embeddingTaskName,
+                                    startedAt: that.embeddingStartedAt,
+                                    message: resultMessage || ('知识库「' + (item.name || '') + '」向量化已完成。')
+                                });
+                            }, 500);
                         } else {
                             that.embeddingProgressStatus = 'exception';
                             that.embeddingProgressText = '向量化失败，请稍后重试。';
                             setTimeout(function () {
-                                that.visible.embeddingProgress = false;
-                                that.$notify({ title: '向量化失败', message: that.embeddingProgressText, type: 'error', duration: 5000 });
+                                that.showEmbeddingResultToast({
+                                    isError: true,
+                                    title: '向量化任务执行失败!',
+                                    taskName: that.embeddingTaskName,
+                                    startedAt: that.embeddingStartedAt,
+                                    total: 1,
+                                    success: 0,
+                                    fail: 1,
+                                    detail: that.embeddingProgressText,
+                                    message: that.embeddingProgressText
+                                });
                             }, 800);
                         }
                     }).catch(err => {
@@ -898,12 +1202,16 @@ var app = new Vue({
                         that.embeddingProgressPercent = Math.max(that.embeddingProgressPercent, 50);
                         that.embeddingProgressText = '处理出错，请稍后重试。';
                         setTimeout(function () {
-                            that.visible.embeddingProgress = false;
-                            that.$notify({
-                                title: '错误',
-                                message: '向量化处理出错，请检查配置后重试',
-                                type: 'error',
-                                duration: 5000
+                            that.showEmbeddingResultToast({
+                                isError: true,
+                                title: '向量化任务执行失败!',
+                                taskName: that.embeddingTaskName,
+                                startedAt: that.embeddingStartedAt,
+                                total: 1,
+                                success: 0,
+                                fail: 1,
+                                detail: err.message || '向量化处理出错，请检查配置',
+                                message: err.message || '向量化处理出错，请检查配置'
                             });
                         }, 800);
                     });

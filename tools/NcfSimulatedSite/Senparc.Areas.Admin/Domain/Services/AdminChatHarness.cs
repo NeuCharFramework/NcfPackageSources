@@ -6,10 +6,14 @@
 
     创建标识：Senparc - 20260906
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
 ----------------------------------------------------------------*/
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -101,6 +105,8 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// </summary>
         public int TrajectoryId { get; set; }
 
+        public int TrajectorySequence { get; set; }
+
         /// <summary>
         /// Native Harness trajectory status.
         /// </summary>
@@ -154,6 +160,70 @@ namespace Senparc.Areas.Admin.Domain.Services
                 IsReplayable = entity.IsReplayable
             };
         }
+
+        /// <summary>
+        /// Coalesces legacy consecutive assistant text chunks for display and replay.
+        /// New events already use one event per assistant phase.
+        /// </summary>
+        public static IReadOnlyList<AdminChatTrajectoryEventDto> CollapseAssistantTextChunks(
+            IEnumerable<AdminChatTrajectoryEventDto> events)
+        {
+            var result = new List<AdminChatTrajectoryEventDto>();
+            AdminChatTrajectoryEventDto current = null;
+
+            foreach (var item in events ?? Enumerable.Empty<AdminChatTrajectoryEventDto>())
+            {
+                if (IsLegacyTextContentEvent(item))
+                {
+                    // Older runs persisted TextContent beside assistant.text for every chunk.
+                    // Ignore it while keeping the current assistant phase open.
+                    continue;
+                }
+
+                if (item?.EventType == "assistant.text")
+                {
+                    if (current != null
+                        && current.EventType == "assistant.text"
+                        && string.IsNullOrEmpty(current.CorrelationId)
+                        && string.IsNullOrEmpty(item.CorrelationId))
+                    {
+                        current.Content = (current.Content ?? string.Empty) + (item.Content ?? string.Empty);
+                        current.PayloadJson = item.PayloadJson ?? current.PayloadJson;
+                        current.OccurredAt = item.OccurredAt;
+                        continue;
+                    }
+
+                    current = new AdminChatTrajectoryEventDto
+                    {
+                        Id = item.Id,
+                        Sequence = item.Sequence,
+                        EventType = item.EventType,
+                        Source = item.Source,
+                        Name = item.Name,
+                        Content = item.Content,
+                        PayloadJson = item.PayloadJson,
+                        OccurredAt = item.OccurredAt,
+                        CorrelationId = item.CorrelationId,
+                        IsReplayable = item.IsReplayable
+                    };
+                    result.Add(current);
+                    continue;
+                }
+
+                current = null;
+                result.Add(item);
+            }
+
+            return result;
+        }
+
+        private static bool IsLegacyTextContentEvent(AdminChatTrajectoryEventDto item)
+        {
+            return item != null
+                && (string.Equals(item.EventType, "TextContent", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(item.EventType, "Microsoft.Extensions.AI.TextContent", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(item.EventType, "text", StringComparison.OrdinalIgnoreCase));
+        }
     }
 
     /// <summary>
@@ -165,6 +235,15 @@ namespace Senparc.Areas.Admin.Domain.Services
         public string ToolCallId { get; set; }
         public string ToolName { get; set; }
         public string ArgumentsJson { get; set; }
+    }
+
+    public sealed class AdminChatLiveEvent
+    {
+        public int TrajectoryId { get; set; }
+        public string Kind { get; set; }
+        public string Text { get; set; }
+        public AdminChatTrajectoryEventDto TrajectoryEvent { get; set; }
+        public IReadOnlyList<AdminChatApprovalRequestDto> PendingApprovals { get; set; } = Array.Empty<AdminChatApprovalRequestDto>();
     }
 
     /// <summary>

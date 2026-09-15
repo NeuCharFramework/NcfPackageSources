@@ -13,6 +13,9 @@
     修改描述：v0.7.1 WebHook 增强：请求方式（GET/POST/PUT）、请求体模板与 {{占位符}}
     （与 Workflow 文本模板同格式）、请求日志记录请求方式与渲染后的实际请求数据
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.Domain.Services;

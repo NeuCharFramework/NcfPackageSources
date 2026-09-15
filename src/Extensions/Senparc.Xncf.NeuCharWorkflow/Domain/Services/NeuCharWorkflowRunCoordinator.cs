@@ -22,6 +22,9 @@
     修改标识：Senparc - 20260909
     修改描述：v0.4.0 运行来源新增 chat（Chat 触发器聊天会话）
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

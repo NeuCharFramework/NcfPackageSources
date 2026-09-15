@@ -7,6 +7,9 @@
     创建标识：Senparc - 20260906
     修改描述：v0.7.1 新增 NeuBell WebHook（WebAPI）通知设置迁移
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
 ----------------------------------------------------------------*/
 
 using System;
