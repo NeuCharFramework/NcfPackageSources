@@ -164,6 +164,9 @@ namespace Senparc.Areas.Admin.Domain.Models
                 .HasIndex(z => z.PageKey);
             modelBuilder.Entity<NeuBellWebHook>()
                 .HasIndex(z => z.ProviderFilter);
+            modelBuilder.Entity<NeuBellWebHook>()
+                .Property(z => z.HttpMethod)
+                .HasDefaultValue(NeuBellWebHook.MethodPost);
             modelBuilder.Entity<NeuBellWebHookLog>()
                 .HasIndex(z => z.AddTime);
 
@@ -201,6 +204,8 @@ namespace Senparc.Areas.Admin.Domain.Models
             SetLargeText<AdminChatTrajectoryEvent>(modelBuilder, largeTextType,
                 nameof(AdminChatTrajectoryEvent.Content),
                 nameof(AdminChatTrajectoryEvent.PayloadJson));
+            SetLargeText<NeuBellWebHook>(modelBuilder, largeTextType,
+                nameof(NeuBellWebHook.BodyTemplate));
             SetLargeText<NeuBellWebHookLog>(modelBuilder, largeTextType,
                 nameof(NeuBellWebHookLog.Payload));
         }

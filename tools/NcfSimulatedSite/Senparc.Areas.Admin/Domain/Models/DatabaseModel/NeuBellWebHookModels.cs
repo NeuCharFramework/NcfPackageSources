@@ -9,11 +9,16 @@
 
     创建标识：Senparc - 20260906
 
+    修改标识：Senparc - 20260914
+    修改描述：v0.7.1 WebHook 增强：请求方式（GET/POST/PUT）、请求体模板与 {{占位符}}
+    （与 Workflow 文本模板同格式）、请求日志记录请求方式与渲染后的实际请求数据
+
     修改标识：Senparc - 20260915
     修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
 
 ----------------------------------------------------------------*/
 
+using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Core.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -55,6 +60,21 @@ public class NeuBellWebHook : EntityBase<int>
     public string Secret { get; private set; }
 
     /// <summary>
+    /// 请求方式：GET / POST / PUT（默认 POST）。GET 请求不发送请求体，
+    /// 数据通过地址中的 {{占位符}} 传递；签名仅对携带请求体的请求生效。
+    /// </summary>
+    [Required, MaxLength(10)]
+    public string HttpMethod { get; private set; }
+
+    /// <summary>
+    /// 可选请求体模板：支持 {{占位符}}（与 Workflow 文本模板同格式）。
+    /// 留空时使用系统默认的结构化 JSON 报文；模板以 { 或 [ 开头时按 JSON 处理
+    /// （字符串占位符自动做 JSON 转义，{{payload}} 原样嵌入），否则按纯文本处理。
+    /// GET 请求不发送请求体，本设置不生效。
+    /// </summary>
+    public string BodyTemplate { get; private set; }
+
+    /// <summary>
     /// 条目新增（added）时是否通知
     /// </summary>
     public bool NotifyOnAdd { get; private set; }
@@ -79,11 +99,25 @@ public class NeuBellWebHook : EntityBase<int>
         WebHookUrl = webHookUrl?.Trim() ?? string.Empty;
         ProviderFilter = string.Empty;
         Secret = string.Empty;
+        HttpMethod = MethodPost;
+        BodyTemplate = string.Empty;
         NotifyOnAdd = true;
         NotifyOnRemove = true;
         IsEnabled = true;
         AdminUserId = adminUserId;
     }
+
+    /// <summary>
+    /// 支持的请求方式
+    /// </summary>
+    public const string MethodGet = "GET";
+    public const string MethodPost = "POST";
+    public const string MethodPut = "PUT";
+
+    /// <summary>
+    /// 请求体模板最大长度（字符）
+    /// </summary>
+    public const int MaxBodyTemplateLength = 20000;
 
     public void UpdateInfo(
         string name,
@@ -92,7 +126,9 @@ public class NeuBellWebHook : EntityBase<int>
         string secret,
         bool notifyOnAdd,
         bool notifyOnRemove,
-        bool isEnabled)
+        bool isEnabled,
+        string httpMethod = null,
+        string bodyTemplate = null)
     {
         if (!string.IsNullOrWhiteSpace(name))
         {
@@ -107,7 +143,41 @@ public class NeuBellWebHook : EntityBase<int>
         NotifyOnAdd = notifyOnAdd;
         NotifyOnRemove = notifyOnRemove;
         IsEnabled = isEnabled;
+        if (httpMethod != null)
+        {
+            HttpMethod = NormalizeHttpMethod(httpMethod);
+        }
+        if (bodyTemplate != null)
+        {
+            BodyTemplate = bodyTemplate;
+        }
         SetUpdateTime();
+    }
+
+    /// <summary>
+    /// 规范化请求方式（不区分大小写；空值回退 POST；非法值回退 POST）
+    /// </summary>
+    public static string NormalizeHttpMethod(string input)
+    {
+        var value = (input ?? string.Empty).Trim().ToUpperInvariant();
+        return value is MethodGet or MethodPut ? value : MethodPost;
+    }
+
+    /// <summary>
+    /// 校验请求方式（返回用户可读的错误信息）
+    /// </summary>
+    public static bool TryValidateHttpMethod(string input, out string normalized, out string error)
+    {
+        var value = (input ?? string.Empty).Trim().ToUpperInvariant();
+        normalized = value;
+        if (value.Length == 0 || value is MethodGet or MethodPost or MethodPut)
+        {
+            normalized = NormalizeHttpMethod(input);
+            error = null;
+            return true;
+        }
+        error = $"请求方式必须是 GET、POST 或 PUT（当前为“{input?.Trim()}”）";
+        return false;
     }
 
     /// <summary>
@@ -130,6 +200,23 @@ public class NeuBellWebHook : EntityBase<int>
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// 校验“可包含 {{占位符}}”的 WebHook 地址模板：
+    /// 先将合法占位符替换为探测值再按绝对 http/https 地址校验；
+    /// 发送前 Dispatcher 会对渲染后的真实地址再次校验。
+    /// </summary>
+    public static bool TryValidateUrlTemplate(string url, out string error)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            error = "WebHook 地址不能为空";
+            return false;
+        }
+
+        var masked = NeuBellWebHookTemplate.MaskTokens(url.Trim());
+        return TryValidateUrl(masked, out error);
     }
 
     /// <summary>
@@ -159,6 +246,12 @@ public class NeuBellWebHookLog : EntityBase<int>
     /// </summary>
     [Required, MaxLength(50)]
     public string EventKind { get; private set; }
+
+    /// <summary>
+    /// 实际使用的请求方式（GET / POST / PUT）
+    /// </summary>
+    [MaxLength(10)]
+    public string HttpMethod { get; private set; }
 
     /// <summary>
     /// 请求地址
@@ -219,6 +312,7 @@ public class NeuBellWebHookLog : EntityBase<int>
 
     public NeuBellWebHookLog(
         string eventKind,
+        string httpMethod,
         string webHookUrl,
         string providerId,
         string title,
@@ -226,6 +320,7 @@ public class NeuBellWebHookLog : EntityBase<int>
         int adminUserId)
     {
         EventKind = (eventKind ?? string.Empty).Trim();
+        HttpMethod = httpMethod ?? string.Empty;
         WebHookUrl = (webHookUrl ?? string.Empty).Trim();
         ProviderId = (providerId ?? string.Empty).Trim();
         Title = (title ?? string.Empty).Trim();

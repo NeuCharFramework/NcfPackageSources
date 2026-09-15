@@ -497,8 +497,18 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Sqlite
                     b.Property<int>("AdminUserId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("BodyTemplate")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("HttpMethod")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(10)
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("POST");
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("INTEGER");
@@ -573,6 +583,10 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Sqlite
 
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("HttpMethod")
+                        .HasMaxLength(10)
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TEXT");

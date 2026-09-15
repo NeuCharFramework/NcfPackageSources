@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：NeuBellWebHookLogService.cs
@@ -6,6 +6,9 @@
     记录每一次发往 WebHook（WebAPI）的请求数据与结果
 
     创建标识：Senparc - 20260910
+
+    修改标识：Senparc - 20260914
+    修改描述：v0.7.1 请求日志新增 HttpMethod（实际请求方式）记录
 
     修改标识：Senparc - 20260915
     修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
@@ -29,6 +32,7 @@ public interface INeuBellWebHookLogService
     /// </summary>
     Task<NeuBellWebHookLog> CreatePendingAsync(
         string eventKind,
+        string httpMethod,
         string webHookUrl,
         string providerId,
         string title,
@@ -60,6 +64,7 @@ public sealed class NeuBellWebHookLogService : BaseClientService<NeuBellWebHookL
 
     public async Task<NeuBellWebHookLog> CreatePendingAsync(
         string eventKind,
+        string httpMethod,
         string webHookUrl,
         string providerId,
         string title,
@@ -68,6 +73,7 @@ public sealed class NeuBellWebHookLogService : BaseClientService<NeuBellWebHookL
     {
         var log = new NeuBellWebHookLog(
             eventKind,
+            httpMethod,
             webHookUrl,
             providerId,
             title,

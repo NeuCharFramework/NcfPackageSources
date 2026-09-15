@@ -520,8 +520,17 @@ namespace Senparc.Areas.Admin.Domain.Migrations.MySql
                     b.Property<int>("AdminUserId")
                         .HasColumnType("int");
 
+                    b.Property<string>("BodyTemplate")
+                        .HasColumnType("longtext");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("HttpMethod")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasDefaultValue("POST")
+                        .HasColumnType("varchar(10)");
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("tinyint(1)");
@@ -592,6 +601,10 @@ namespace Senparc.Areas.Admin.Domain.Migrations.MySql
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<string>("HttpMethod")
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
                     b.Property<DateTime?>("FinishTime")
                         .HasColumnType("datetime(6)");

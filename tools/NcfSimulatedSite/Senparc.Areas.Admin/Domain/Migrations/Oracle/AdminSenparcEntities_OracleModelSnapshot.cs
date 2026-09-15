@@ -520,8 +520,18 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
                     b.Property<int>("AdminUserId")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<string>("BodyTemplate")
+                        .HasColumnType("NCLOB");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("HttpMethod")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(10)
+                        .HasColumnType("NVARCHAR2(10)")
+                        .HasDefaultValue("POST");
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("NUMBER(1)");
@@ -598,6 +608,10 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
 
                     b.Property<bool>("Flag")
                         .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("HttpMethod")
+                        .HasMaxLength(10)
+                        .HasColumnType("NVARCHAR2(10)");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP(7)");
