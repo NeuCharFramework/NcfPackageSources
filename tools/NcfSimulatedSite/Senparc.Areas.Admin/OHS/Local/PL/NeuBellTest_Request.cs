@@ -17,6 +17,9 @@
     修改描述：新增 WebHookUrl 参数，发送提醒（创建 NeuBell）时可指定 WebHook 地址异步通知，
     请求数据与结果记录到 WebHook 请求日志列表
 
+    修改标识：Senparc - 20260914
+    修改描述：新增 WebHookMethod 参数（GET/POST/PUT），WebHook 地址支持 {{title}} 等占位符
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase;
@@ -39,9 +42,13 @@ public sealed class NeuBellTest_Request : FunctionAppRequestBase
     [FunctionParameterUi(ParameterType.DropDownList, nameof(ActionOptions))]
     public string Action { get; set; } = SendAction;
 
-    [Description("WebHook 地址（可选）")]
+    [Description("WebHook 地址（可选），支持 {{title}} 等占位符，渲染值自动 URL 编码")]
     [MaxLength(1000)]
     public string WebHookUrl { get; set; }
+
+    [Description("WebHook 请求方式（可选）：POST / GET / PUT，默认 POST；GET 不发送请求体，数据通过地址占位符传递")]
+    [MaxLength(10)]
+    public string WebHookMethod { get; set; }
 
     [JsonIgnore]
     public SelectionList ActionOptions { get; set; } = new(

@@ -7,6 +7,11 @@
 
     创建标识：Senparc - 20260906
 
+    修改标识：Senparc - 20260914
+    修改描述：v0.7.1 WebHook 增强：支持 GET/POST/PUT 请求方式、请求体模板与 {{占位符}}
+    渲染（与 Workflow 文本模板同格式）、发送前对渲染后地址二次校验、
+    修复变更通知日志在成功后仍被标记“请求未完成”的问题
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -67,17 +72,22 @@ public sealed class NeuBellWebHookDispatcher
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<NeuBellWebHookDispatcher> _logger;
 
+    // 可选站点根地址：把条目的相对 DetailUrl（{{link}}）拼成绝对链接
+    private readonly string _linkBaseUrl;
+
     // 限制并发出站请求，避免 Provider 抖动时打爆下游 WebAPI
     private readonly SemaphoreSlim _outboundGate = new(4, 4);
 
     public NeuBellWebHookDispatcher(
         IServiceProvider serviceProvider,
         IHttpClientFactory httpClientFactory,
-        ILogger<NeuBellWebHookDispatcher> logger)
+        ILogger<NeuBellWebHookDispatcher> logger,
+        string linkBaseUrl = null)
     {
         _serviceProvider = serviceProvider;
         _httpClientFactory = httpClientFactory;
         _logger = logger;
+        _linkBaseUrl = (linkBaseUrl ?? string.Empty).Trim();
     }
 
     /// <summary>
@@ -188,6 +198,7 @@ public sealed class NeuBellWebHookDispatcher
 
     /// <summary>
     /// 测试发送：向指定 WebHook 发送一条 test 事件（管理页“测试”按钮用，同步等待结果）。
+    /// 地址与请求体支持 {{占位符}}（渲染后的真实数据记入日志）。
     /// 请求数据与结果会记录到 NeuBellWebHookLog 列表。
     /// </summary>
     public async Task<(bool success, string message)> SendTestAsync(
@@ -199,11 +210,12 @@ public sealed class NeuBellWebHookDispatcher
         {
             return (false, "WebHook 不存在");
         }
-        if (!NeuBellWebHook.TryValidateUrl(webHook.WebHookUrl, out var urlError))
+        if (!NeuBellWebHook.TryValidateUrlTemplate(webHook.WebHookUrl, out var templateError))
         {
-            return (false, urlError);
+            return (false, templateError);
         }
 
+        var method = NeuBellWebHook.NormalizeHttpMethod(webHook.HttpMethod);
         var payload = BuildPayload(new NeuBellWebHookChange
         {
             ProviderId = webHook.ProviderFilter,
@@ -215,12 +227,22 @@ public sealed class NeuBellWebHookDispatcher
             Removed = Array.Empty<NeuBellItem>()
         }, test: true);
 
+        var tokens = BuildTestTokens(webHook, payload);
+        var renderedUrl = NeuBellWebHookTemplate.RenderUrl(webHook.WebHookUrl, tokens);
+        if (!NeuBellWebHook.TryValidateUrl(renderedUrl, out var urlError))
+        {
+            return (false, urlError);
+        }
+
+        var (body, contentType) = BuildRequestBody(method, webHook.BodyTemplate, tokens, payload);
         var logId = await CreatePendingLogAsync(
-            EventKindTest, webHook.WebHookUrl, webHook.ProviderFilter, webHook.Name, payload, adminUserId)
+            EventKindTest, method, TruncateLogUrl(renderedUrl), webHook.ProviderFilter, webHook.Name,
+            body ?? string.Empty, adminUserId)
             .ConfigureAwait(false);
 
         var (success, message, statusCode, elapsed) = await SendCoreAsync(
-            webHook.WebHookUrl, webHook.Secret, payload, cancellationToken).ConfigureAwait(false);
+            renderedUrl, webHook.Secret, body, method, contentType, cancellationToken)
+            .ConfigureAwait(false);
 
         if (logId != null)
         {
@@ -258,21 +280,50 @@ public sealed class NeuBellWebHookDispatcher
         }
 
         var payload = BuildPayload(change, test: false);
+        var tokens = BuildChangeTokens(change, payload);
         foreach (var webHook in webHooks)
         {
             await _outboundGate.WaitAsync(cancellationToken).ConfigureAwait(false);
             _ = Task.Run(async () =>
             {
                 int? logId = null;
+                var completed = false;
                 try
                 {
+                    var method = NeuBellWebHook.NormalizeHttpMethod(webHook.HttpMethod);
+                    var renderedUrl = NeuBellWebHookTemplate.RenderUrl(webHook.WebHookUrl, tokens);
+
+                    // 渲染后的真实地址必须仍是合法的 http/https 绝对地址，否则只记失败日志、不发送
+                    if (!NeuBellWebHook.TryValidateUrl(renderedUrl, out var urlError))
+                    {
+                        logId = await CreatePendingLogAsync(
+                            EventKindItemsChanged, method, TruncateLogUrl(renderedUrl), change.ProviderId,
+                            webHook.Name, string.Empty, 0).ConfigureAwait(false);
+                        if (logId != null)
+                        {
+                            await CompleteLogAsync(logId.Value, false, urlError, null, 0).ConfigureAwait(false);
+                        }
+                        completed = true;
+                        _logger.LogWarning(
+                            "NeuBell WebHook [{Name}] 渲染后的地址无效，已跳过：{Message}", webHook.Name, urlError);
+                        return;
+                    }
+
+                    var (body, contentType) = BuildRequestBody(method, webHook.BodyTemplate, tokens, payload);
                     logId = await CreatePendingLogAsync(
-                        EventKindItemsChanged, webHook.WebHookUrl, change.ProviderId, webHook.Name, payload, 0)
+                        EventKindItemsChanged, method, TruncateLogUrl(renderedUrl), change.ProviderId,
+                        webHook.Name, body ?? string.Empty, 0)
                         .ConfigureAwait(false);
 
                     var (success, message, statusCode, elapsed) = await SendCoreAsync(
-                        webHook.WebHookUrl, webHook.Secret, payload, CancellationToken.None)
+                        renderedUrl, webHook.Secret, body, method, contentType, CancellationToken.None)
                         .ConfigureAwait(false);
+                    if (logId != null)
+                    {
+                        await CompleteLogAsync(logId.Value, success, message, statusCode, elapsed)
+                            .ConfigureAwait(false);
+                        completed = true;
+                    }
                     if (!success)
                     {
                         _logger.LogWarning(
@@ -285,7 +336,8 @@ public sealed class NeuBellWebHookDispatcher
                 }
                 finally
                 {
-                    if (logId != null)
+                    // 仅在日志已创建但请求未走到“完成”路径（异常/被中断）时兜底标记失败
+                    if (logId != null && !completed)
                     {
                         await CompleteLogAsync(logId.Value, false, "请求未完成", null, 0).ConfigureAwait(false);
                     }
@@ -295,37 +347,33 @@ public sealed class NeuBellWebHookDispatcher
         }
     }
 
-    private async Task<(bool success, string message)> PostAsync(
-        NeuBellWebHook webHook,
-        string payload,
-        CancellationToken cancellationToken)
-    {
-        var (success, message, statusCode, _) = await SendCoreAsync(
-            webHook.WebHookUrl,
-            webHook.Secret,
-            payload,
-            cancellationToken).ConfigureAwait(false);
-        return (success, message);
-    }
-
     /// <summary>
-    /// 实际发送（返回 HTTP 状态码与耗时），不记录日志
+    /// 实际发送（返回 HTTP 状态码与耗时），不记录日志。
+    /// GET 请求不携带请求体与签名；其他方法携带 body（默认 application/json）。
     /// </summary>
     private async Task<(bool success, string message, int? statusCode, long elapsedMilliseconds)> SendCoreAsync(
         string url,
         string secret,
-        string payload,
+        string body,
+        string method,
+        string contentType,
         CancellationToken cancellationToken)
     {
         var stopwatch = Stopwatch.StartNew();
         try
         {
             var client = _httpClientFactory.CreateClient(HttpClientName);
-            using var request = new HttpRequestMessage(HttpMethod.Post, url);
-            request.Content = new StringContent(payload, Encoding.UTF8, "application/json");
-            if (!string.IsNullOrWhiteSpace(secret))
+            using var request = new HttpRequestMessage(new HttpMethod(method), url);
+            var hasBody = !string.IsNullOrEmpty(body)
+                && !string.Equals(method, NeuBellWebHook.MethodGet, StringComparison.OrdinalIgnoreCase);
+            if (hasBody)
             {
-                request.Headers.TryAddWithoutValidation("X-NeuBell-Signature", SignPayload(secret, payload));
+                request.Content = new StringContent(body, Encoding.UTF8, contentType ?? "application/json");
+                // 签名覆盖实际发出的请求体字节
+                if (!string.IsNullOrWhiteSpace(secret))
+                {
+                    request.Headers.TryAddWithoutValidation("X-NeuBell-Signature", SignPayload(secret, body));
+                }
             }
 
             using var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -354,6 +402,7 @@ public sealed class NeuBellWebHookDispatcher
     /// </summary>
     private async Task<int?> CreatePendingLogAsync(
         string eventKind,
+        string httpMethod,
         string webHookUrl,
         string providerId,
         string title,
@@ -365,7 +414,8 @@ public sealed class NeuBellWebHookDispatcher
             using var scope = _serviceProvider.CreateScope();
             var logService = scope.ServiceProvider.GetRequiredService<INeuBellWebHookLogService>();
             var log = await logService.CreatePendingAsync(
-                eventKind, webHookUrl, providerId, title, payload, adminUserId).ConfigureAwait(false);
+                eventKind, httpMethod, webHookUrl, providerId, title, payload, adminUserId)
+                .ConfigureAwait(false);
             return log?.Id;
         }
         catch (Exception ex)
@@ -399,26 +449,45 @@ public sealed class NeuBellWebHookDispatcher
 
     /// <summary>
     /// 创建 NeuBell 时按调用方传入的 WebHook 地址发送一次通知（item-created）。
-    /// 本方法只负责快速落一条“发送中”日志后立即返回，实际 HTTP 请求在后台
-    /// fire-and-forget 执行，不阻塞调用方（Function 响应）。
+    /// 地址支持 {{占位符}}（渲染值来自传入的条目）；本方法只负责快速返回，
+    /// 实际 HTTP 请求在后台 fire-and-forget 执行，不阻塞调用方（Function 响应）。
     /// </summary>
     public Task<(bool queued, string message)> NotifyItemCreatedAsync(
         string webHookUrl,
-        string providerId,
-        string itemTitle,
-        string itemSummary,
+        string httpMethod,
+        NeuBellItem item,
+        string providerName,
         int adminUserId)
     {
         return Task.Run(async () =>
         {
-            var url = (webHookUrl ?? string.Empty).Trim();
+            var method = NeuBellWebHook.NormalizeHttpMethod(httpMethod);
+            var urlTemplate = (webHookUrl ?? string.Empty).Trim();
+            var payload = BuildItemCreatedPayload(item, providerName);
 
-            // 无效地址：不发送，但仍记录一条失败日志，便于在列表中排查
-            if (!NeuBellWebHook.TryValidateUrl(url, out var urlError))
+            // 模板地址本身不合法（占位符之外的部分无法解析）：不发送，仅记录失败日志
+            if (!NeuBellWebHook.TryValidateUrlTemplate(urlTemplate, out var templateError))
             {
-                var failedPayload = BuildItemCreatedPayload(providerId, itemTitle, itemSummary);
                 var failedLogId = await CreatePendingLogAsync(
-                    EventKindItemCreated, url, providerId, itemTitle, failedPayload, adminUserId).ConfigureAwait(false);
+                    EventKindItemCreated, method, TruncateLogUrl(urlTemplate), providerName,
+                    item?.Title ?? string.Empty, payload, adminUserId).ConfigureAwait(false);
+                if (failedLogId != null)
+                {
+                    await CompleteLogAsync(failedLogId.Value, false, templateError, null, 0).ConfigureAwait(false);
+                }
+                return (false, templateError);
+            }
+
+            var tokens = BuildItemCreatedTokens(item, providerName, payload);
+            var renderedUrl = NeuBellWebHookTemplate.RenderUrl(urlTemplate, tokens);
+
+            // 渲染后的真实地址必须仍是合法的 http/https 绝对地址，否则只记失败日志、不发送
+            if (!NeuBellWebHook.TryValidateUrl(renderedUrl, out var urlError))
+            {
+                var (failedBody, _) = BuildRequestBody(method, null, tokens, payload);
+                var failedLogId = await CreatePendingLogAsync(
+                    EventKindItemCreated, method, TruncateLogUrl(renderedUrl), providerName,
+                    item?.Title ?? string.Empty, failedBody ?? string.Empty, adminUserId).ConfigureAwait(false);
                 if (failedLogId != null)
                 {
                     await CompleteLogAsync(failedLogId.Value, false, urlError, null, 0).ConfigureAwait(false);
@@ -426,22 +495,23 @@ public sealed class NeuBellWebHookDispatcher
                 return (false, urlError);
             }
 
-            var payload = BuildItemCreatedPayload(providerId, itemTitle, itemSummary);
+            var (body, contentType) = BuildRequestBody(method, null, tokens, payload);
             var logId = await CreatePendingLogAsync(
-                EventKindItemCreated, url, providerId, itemTitle, payload, adminUserId).ConfigureAwait(false);
+                EventKindItemCreated, method, TruncateLogUrl(renderedUrl), providerName,
+                item?.Title ?? string.Empty, body ?? string.Empty, adminUserId).ConfigureAwait(false);
 
             await _outboundGate.WaitAsync().ConfigureAwait(false);
             try
             {
                 var (success, message, statusCode, elapsed) = await SendCoreAsync(
-                    url, null, payload, CancellationToken.None).ConfigureAwait(false);
+                    renderedUrl, null, body, method, contentType, CancellationToken.None).ConfigureAwait(false);
                 if (logId != null)
                 {
                     await CompleteLogAsync(logId.Value, success, message, statusCode, elapsed).ConfigureAwait(false);
                 }
                 if (!success)
                 {
-                    _logger.LogWarning("NeuBell WebHook 创建通知失败：{Message}（{Url}）", message, url);
+                    _logger.LogWarning("NeuBell WebHook 创建通知失败：{Message}（{Url}）", message, renderedUrl);
                 }
                 return (true, "已发送");
             }
@@ -455,23 +525,153 @@ public sealed class NeuBellWebHookDispatcher
     /// <summary>
     /// 构建 item-created 报文（创建 NeuBell 时按参数触发的单次通知）
     /// </summary>
-    private static string BuildItemCreatedPayload(
-        string providerId,
-        string itemTitle,
-        string itemSummary)
+    private static string BuildItemCreatedPayload(NeuBellItem item, string providerName)
     {
         return JsonSerializer.Serialize(new
         {
             source = "NeuBell",
             kind = EventKindItemCreated,
-            providerId = providerId,
+            providerId = providerName,
             occurredAt = DateTimeOffset.Now,
             item = new
             {
-                title = itemTitle,
-                summary = itemSummary
+                id = item?.Id,
+                title = item?.Title,
+                summary = item?.Summary,
+                link = item?.DetailUrl,
+                status = item?.Severity,
+                count = item?.Count ?? 0,
+                updated = item?.UpdatedAt
             }
         }, JsonOptions);
+    }
+
+    /// <summary>
+    /// 按请求方式与模板计算实际发送的请求体（GET 返回 null 表示不发送请求体）。
+    /// bodyTemplate 非空时走模板渲染，否则使用默认结构化 JSON 报文。
+    /// </summary>
+    private static (string body, string contentType) BuildRequestBody(
+        string method,
+        string bodyTemplate,
+        IReadOnlyDictionary<string, string> tokens,
+        string defaultPayload)
+    {
+        if (string.Equals(method, NeuBellWebHook.MethodGet, StringComparison.OrdinalIgnoreCase))
+        {
+            return (null, null);
+        }
+        if (string.IsNullOrWhiteSpace(bodyTemplate))
+        {
+            return (defaultPayload, "application/json");
+        }
+        return (NeuBellWebHookTemplate.RenderBody(bodyTemplate, tokens, out var contentType), contentType);
+    }
+
+    /// <summary>
+    /// 日志中的地址超过 1000 字符（MaxLength）时截断
+    /// </summary>
+    private static string TruncateLogUrl(string url)
+    {
+        if (string.IsNullOrEmpty(url) || url.Length <= 1000)
+        {
+            return url ?? string.Empty;
+        }
+        return url[..997] + "…";
+    }
+
+    /// <summary>
+    /// 构建 items-changed 事件的占位符数据
+    /// </summary>
+    private Dictionary<string, string> BuildChangeTokens(
+        NeuBellWebHookChange change,
+        string defaultPayload)
+    {
+        var tokens = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            [NeuBellWebHookTemplate.TokenPayload] = defaultPayload,
+            ["kind"] = EventKindItemsChanged,
+            ["provider"] = change.ProviderId ?? string.Empty,
+            ["providerName"] = string.IsNullOrWhiteSpace(change.DisplayName)
+                ? change.ProviderId ?? string.Empty
+                : change.DisplayName,
+            ["time"] = change.OccurredAt.ToString("o"),
+            ["addedCount"] = change.Added.Count.ToString(),
+            ["removedCount"] = change.Removed.Count.ToString(),
+            ["addedTitles"] = string.Join("、", change.Added.Select(item => item.Title)),
+            ["removedTitles"] = string.Join("、", change.Removed.Select(item => item.Title))
+        };
+        // 条目占位符取第一条新增（无新增时取第一条移除）
+        var item = change.Added.FirstOrDefault() ?? change.Removed.FirstOrDefault();
+        AddItemTokens(tokens, item);
+        return tokens;
+    }
+
+    /// <summary>
+    /// 构建 item-created 事件的占位符数据
+    /// </summary>
+    private Dictionary<string, string> BuildItemCreatedTokens(
+        NeuBellItem item,
+        string providerName,
+        string defaultPayload)
+    {
+        var tokens = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            [NeuBellWebHookTemplate.TokenPayload] = defaultPayload,
+            ["kind"] = EventKindItemCreated,
+            ["provider"] = providerName ?? string.Empty,
+            ["providerName"] = providerName ?? string.Empty,
+            ["time"] = DateTimeOffset.Now.ToString("o"),
+            ["count"] = "1"
+        };
+        AddItemTokens(tokens, item);
+        return tokens;
+    }
+
+    /// <summary>
+    /// 构建 test 事件的占位符数据
+    /// </summary>
+    private static Dictionary<string, string> BuildTestTokens(
+        NeuBellWebHook webHook,
+        string defaultPayload)
+    {
+        return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            [NeuBellWebHookTemplate.TokenPayload] = defaultPayload,
+            ["kind"] = EventKindTest,
+            ["provider"] = webHook.ProviderFilter ?? string.Empty,
+            ["providerName"] = webHook.Name ?? string.Empty,
+            ["time"] = DateTimeOffset.Now.ToString("o")
+        };
+    }
+
+    private void AddItemTokens(
+        Dictionary<string, string> tokens,
+        NeuBellItem item)
+    {
+        if (item == null)
+        {
+            return;
+        }
+        tokens["id"] = item.Id ?? string.Empty;
+        tokens["title"] = item.Title ?? string.Empty;
+        tokens["summary"] = item.Summary ?? string.Empty;
+        tokens["link"] = ToAbsoluteLink(item.DetailUrl);
+        tokens["status"] = item.Severity ?? string.Empty;
+        tokens["count"] = (item.Count).ToString();
+        tokens["updated"] = item.UpdatedAt.ToString("o");
+    }
+
+    /// <summary>
+    /// 把条目的相对链接拼成绝对链接（配置了站点根地址时）
+    /// </summary>
+    private string ToAbsoluteLink(string detailUrl)
+    {
+        var url = detailUrl ?? string.Empty;
+        if (url.Length == 0 || _linkBaseUrl.Length == 0 || !url.StartsWith("/", StringComparison.Ordinal))
+        {
+            return url;
+        }
+        return _linkBaseUrl.TrimEnd('/') + url;
     }
 
     /// <summary>

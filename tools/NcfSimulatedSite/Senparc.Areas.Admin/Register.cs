@@ -64,6 +64,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Logging;
+using System.Net.Http;
 using Senparc.Areas.Admin.ACL;
 using Senparc.Areas.Admin.ACL.Repository;
 using Senparc.Areas.Admin.Domain;
@@ -286,7 +289,12 @@ namespace Senparc.Areas.Admin
             services.AddScoped<NeuBellWebHookLogService>();
             services.AddHttpClient(NeuBellWebHookDispatcher.HttpClientName, client =>
                 client.Timeout = TimeSpan.FromSeconds(15));
-            services.AddSingleton<NeuBellWebHookDispatcher>();
+            services.AddSingleton<NeuBellWebHookDispatcher>(serviceProvider =>
+                new NeuBellWebHookDispatcher(
+                    serviceProvider,
+                    serviceProvider.GetRequiredService<IHttpClientFactory>(),
+                    serviceProvider.GetRequiredService<ILogger<NeuBellWebHookDispatcher>>(),
+                    configuration["NeuBellWebHook:BaseUrl"]));
             services.AddHostedService<NeuBellWebHookMonitorService>();
 
             return base.AddXncfModule(services, configuration, env);

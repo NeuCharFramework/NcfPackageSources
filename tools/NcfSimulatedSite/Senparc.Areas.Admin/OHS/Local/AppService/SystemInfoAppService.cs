@@ -43,6 +43,7 @@ using Senparc.Ncf.Core.Cache.Extensions;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Utility;
+using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Areas.Admin.OHS.PL;
 using Senparc.Areas.Admin;
@@ -222,9 +223,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             {
                 if (string.Equals(request?.Action, NeuBellTest_Request.SendAction, StringComparison.OrdinalIgnoreCase))
                 {
-                    var pendingCount = _neuBellTestProvider.Send();
+                    var neuBellItem = _neuBellTestProvider.SendAndGetItem();
                     await _neuBellPublisher.NotifyChangedAsync(NeuBellTestProvider.ProviderIdValue).ConfigureAwait(false);
-                    logger.Append($"已发送 NeuBell 测试提醒，当前待消费数量：{pendingCount}。请观察 Admin Footer 的弹窗和徽标。");
+                    logger.Append($"已发送 NeuBell 测试提醒，当前待消费数量：{_neuBellTestProvider.PendingCount}。请观察 Admin Footer 的弹窗和徽标。");
 
                     // 创建 NeuBell 时按参数触发 WebHook 通知：fire-and-forget，不阻塞 Function 响应
                     var webHookUrl = (request.WebHookUrl ?? string.Empty).Trim();
@@ -233,9 +234,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                         var adminUserId = GetCurrentAdminUserInfoId();
                         var notifyTask = _neuBellWebHookDispatcher.NotifyItemCreatedAsync(
                             webHookUrl,
-                            NeuBellTestProvider.ProviderIdValue,
-                            "NeuBell 测试提醒",
-                            "由 Function 发送的测试提醒（NeuBell 创建通知）。",
+                            NeuBellWebHook.NormalizeHttpMethod(request.WebHookMethod),
+                            neuBellItem,
+                            "NeuBell 测试",
                             adminUserId);
                         // 观察任务异常，避免 fire-and-forget 成为未观察的异常
                         notifyTask.ContinueWith(

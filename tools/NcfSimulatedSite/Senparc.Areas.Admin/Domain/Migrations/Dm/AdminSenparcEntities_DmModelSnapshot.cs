@@ -491,8 +491,18 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Dm
                     b.Property<int>("AdminUserId")
                         .HasColumnType("INT");
 
+                    b.Property<string>("BodyTemplate")
+                        .HasColumnType("NVARCHAR2(32767)");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("BIT");
+
+                    b.Property<string>("HttpMethod")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(10)
+                        .HasColumnType("NVARCHAR2(10)")
+                        .HasDefaultValue("POST");
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("BIT");
@@ -568,6 +578,10 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Dm
 
                     b.Property<bool>("Flag")
                         .HasColumnType("BIT");
+
+                    b.Property<string>("HttpMethod")
+                        .HasMaxLength(10)
+                        .HasColumnType("NVARCHAR2(10)");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP");

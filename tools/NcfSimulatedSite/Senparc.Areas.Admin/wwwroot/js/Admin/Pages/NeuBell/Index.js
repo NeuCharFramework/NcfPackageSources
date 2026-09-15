@@ -1,7 +1,7 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     文件名：Index.js
     文件功能描述：NeuBell WebHook（WebAPI）设置页：
-    通知端点 CRUD、启用开关、测试发送、请求日志（请求数据与结果）
+    通知端点 CRUD（含请求方式/请求体模板/占位符）、启用开关、测试发送、请求日志（请求数据与结果）
 ----------------------------------------------------------------*/
 // 统一响应解包
 window.NeuBellWebHookUi = {
@@ -25,7 +25,8 @@ new Vue({
             formDialogVisible: false,
             formSaving: false,
             form: {
-                id: 0, name: '', webHookUrl: '', providerFilter: '', secret: '',
+                id: 0, name: '', webHookUrl: '', httpMethod: 'POST', bodyTemplate: '',
+                providerFilter: '', secret: '',
                 notifyOnAdd: true, notifyOnRemove: true, isEnabled: true, showSecret: false
             },
             logRows: [],
@@ -40,7 +41,7 @@ new Vue({
         filteredItems() {
             const keyword = (this.keyword || '').trim().toLowerCase();
             return this.items.filter(item => !keyword
-                || [item.name, item.webHookUrl, item.providerFilter]
+                || [item.name, item.webHookUrl, item.httpMethod, item.providerFilter]
                     .some(value => String(value || '').toLowerCase().includes(keyword)));
         }
     },
@@ -67,7 +68,8 @@ new Vue({
         },
         openCreate() {
             this.form = {
-                id: 0, name: '', webHookUrl: '', providerFilter: '', secret: '',
+                id: 0, name: '', webHookUrl: '', httpMethod: 'POST', bodyTemplate: '',
+                providerFilter: '', secret: '',
                 notifyOnAdd: true, notifyOnRemove: true, isEnabled: true, showSecret: false
             };
             this.formDialogVisible = true;
@@ -77,6 +79,8 @@ new Vue({
                 id: row.id,
                 name: row.name || '',
                 webHookUrl: row.webHookUrl || '',
+                httpMethod: row.httpMethod || 'POST',
+                bodyTemplate: row.bodyTemplate || '',
                 providerFilter: row.providerFilter || '',
                 secret: '',
                 notifyOnAdd: !!row.notifyOnAdd,
@@ -97,7 +101,16 @@ new Vue({
             }
             const url = String(this.form.webHookUrl).trim();
             if (!/^https?:\/\//i.test(url)) {
-                this.$message.warning('WebHook 地址必须是合法的 http/https 绝对地址');
+                this.$message.warning('WebHook 地址必须是合法的 http/https 地址（支持 {{占位符}}）');
+                return;
+            }
+            const method = String(this.form.httpMethod || 'POST').trim().toUpperCase();
+            if (!['POST', 'GET', 'PUT'].includes(method)) {
+                this.$message.warning('请求方式必须是 GET、POST 或 PUT');
+                return;
+            }
+            if (String(this.form.bodyTemplate || '').length > 20000) {
+                this.$message.warning('请求体模板过长（最多 20000 个字符）');
                 return;
             }
             if (!this.form.notifyOnAdd && !this.form.notifyOnRemove) {
@@ -124,6 +137,8 @@ new Vue({
                 id: row.id,
                 name: row.name,
                 webHookUrl: row.webHookUrl,
+                httpMethod: row.httpMethod || 'POST',
+                bodyTemplate: row.bodyTemplate || '',
                 providerFilter: row.providerFilter,
                 secret: '',
                 notifyOnAdd: row.notifyOnAdd,

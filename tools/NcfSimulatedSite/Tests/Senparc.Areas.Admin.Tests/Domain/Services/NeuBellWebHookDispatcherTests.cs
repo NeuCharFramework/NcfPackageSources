@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：NeuBellWebHookDispatcherTests.cs
@@ -9,6 +9,10 @@
 
     修改标识：Senparc - 20260911
     修改描述：v0.7.1 新增 WebHook 请求日志（NeuBellWebHookLog）测试
+
+    修改标识：Senparc - 20260914
+    修改描述：v0.7.1 适配请求方式（GET/POST/PUT）、请求体模板与 {{占位符}} 渲染；
+    新增 GET 无请求体/无签名、模板渲染、渲染后地址二次校验与日志成功状态回归测试
 
 ----------------------------------------------------------------*/
 
@@ -272,7 +276,11 @@ public class NeuBellWebHookDispatcherTests
         var (dispatcher, handler, _, logFake) = CreateDispatcher(new());
 
         var task = dispatcher.NotifyItemCreatedAsync(
-            "https://example.com/item-hook", "provider-a", "任务一", "这是任务一的摘要", adminUserId: 7);
+            "https://example.com/item-hook",
+            "POST",
+            new NeuBellItem("item-1", "任务一", "这是任务一的摘要", 1, "info", "/detail", DateTimeOffset.UtcNow),
+            "provider-a",
+            adminUserId: 7);
 
         // 快速落日志：调用方无需等待 HTTP 即可完成
         Assert.IsTrue(await logFake.WaitUntilPendingAsync(1), "应快速创建“发送中”日志");
@@ -298,12 +306,15 @@ public class NeuBellWebHookDispatcherTests
         Assert.AreEqual(1, handler.Requests.Count);
         var captured = handler.Requests.Single();
         Assert.AreEqual("https://example.com/item-hook", captured.Url);
+        Assert.AreEqual("POST", captured.Method);
         Assert.IsTrue(captured.Body.Contains("provider-a"));
         using (var bodyDoc = JsonDocument.Parse(captured.Body))
         {
             Assert.AreEqual(NeuBellWebHookDispatcher.EventKindItemCreated,
                 bodyDoc.RootElement.GetProperty("kind").GetString());
             Assert.AreEqual("任务一", bodyDoc.RootElement.GetProperty("item").GetProperty("title").GetString());
+            Assert.AreEqual("item-1", bodyDoc.RootElement.GetProperty("item").GetProperty("id").GetString());
+            Assert.AreEqual("info", bodyDoc.RootElement.GetProperty("item").GetProperty("status").GetString());
         }
 
         Assert.IsTrue(await logFake.WaitUntilCompletedAsync(1), "请求完成后应更新日志");
@@ -321,7 +332,11 @@ public class NeuBellWebHookDispatcherTests
         var (dispatcher, handler, _, logFake) = CreateDispatcher(new());
 
         var (queued, message) = await dispatcher.NotifyItemCreatedAsync(
-            "not-a-url", "provider-a", "任务一", "摘要", adminUserId: 0);
+            "not-a-url",
+            "POST",
+            new NeuBellItem("item-1", "任务一", "摘要", 1, "info", "/detail", DateTimeOffset.UtcNow),
+            "provider-a",
+            adminUserId: 0);
 
         Assert.IsFalse(queued);
         Assert.IsFalse(string.IsNullOrEmpty(message));
@@ -361,13 +376,172 @@ public class NeuBellWebHookDispatcherTests
         Assert.IsTrue(logFake.Completed.Single().Success);
     }
 
+    [TestMethod]
+    public async Task SendTestAsync_GetMethod_ShouldNotSendBodyOrSignature()
+    {
+        var (dispatcher, handler, _, logFake) = CreateDispatcher(new());
+        var webHook = CreateHook(
+            "hook-get",
+            "https://example.com/hook?kind={{kind}}&provider={{provider}}",
+            providerFilter: "provider-a",
+            secret: "s3cr3t",
+            httpMethod: "GET");
+
+        var (success, message) = await dispatcher.SendTestAsync(webHook, adminUserId: 3);
+
+        Assert.IsTrue(success, message);
+        Assert.AreEqual(1, handler.Requests.Count);
+        var captured = handler.Requests.Single();
+        Assert.AreEqual("GET", captured.Method);
+        Assert.AreEqual(string.Empty, captured.Body, "GET 不应携带请求体");
+        Assert.IsNull(captured.ContentType, "GET 不应携带请求体");
+        Assert.IsNull(captured.Signature, "无请求体的请求不应携带签名");
+        Assert.AreEqual("https://example.com/hook?kind=test&provider=provider-a", captured.Url);
+
+        var pending = logFake.Pending.Single();
+        Assert.AreEqual("GET", pending.HttpMethod);
+        Assert.AreEqual(string.Empty, pending.Payload, "GET 请求日志的报文应为空字符串");
+        Assert.IsTrue(logFake.Completed.Single().Success);
+    }
+
+    [TestMethod]
+    public async Task ObserveAsync_CustomBodyTemplate_ShouldRenderTemplateAndUseJsonContentType()
+    {
+        var (dispatcher, handler, _, logFake) = CreateDispatcher(new()
+        {
+            CreateHook(
+                "hook-tmpl",
+                "https://example.com/hook-tmpl",
+                httpMethod: "POST",
+                bodyTemplate: "{\"text\": \"[NeuBell] {{title}}（{{status}}）\"}")
+        });
+
+        await dispatcher.ObserveAsync(new[] { Snapshot("provider-a") }, new[] { "provider-a" });
+        await dispatcher.ObserveAsync(
+            new[] { Snapshot("provider-a", ("item-1", "任务一")) }, new[] { "provider-a" });
+
+        await handler.WaitUntilAsync(1);
+        var captured = handler.Requests.Single();
+        Assert.AreEqual("POST", captured.Method);
+        Assert.AreEqual("application/json", captured.ContentType);
+        using var bodyDoc = JsonDocument.Parse(captured.Body);
+        Assert.AreEqual("[NeuBell] 任务一（info）", bodyDoc.RootElement.GetProperty("text").GetString());
+
+        var pending = logFake.Pending.Single();
+        Assert.AreEqual("POST", pending.HttpMethod);
+        using var logDoc = JsonDocument.Parse(pending.Payload);
+        Assert.AreEqual("[NeuBell] 任务一（info）", logDoc.RootElement.GetProperty("text").GetString());
+        // 回归：成功发送后日志应标记成功，而不是“请求未完成”
+        Assert.IsTrue(await logFake.WaitUntilCompletedAsync(1));
+        var completed = logFake.Completed.Single();
+        Assert.IsTrue(completed.Success, $"成功发送应记录为 success（实际：{completed.StatusCode}）");
+    }
+
+    [TestMethod]
+    public async Task ObserveAsync_TemplatedUrl_ShouldRenderPercentEncodedUrl()
+    {
+        var (dispatcher, handler, _, logFake) = CreateDispatcher(new()
+        {
+            CreateHook("hook-url-tmpl", "https://example.com/hook/{{kind}}/{{title}}")
+        });
+
+        await dispatcher.ObserveAsync(new[] { Snapshot("provider-a") }, new[] { "provider-a" });
+        await dispatcher.ObserveAsync(
+            new[] { Snapshot("provider-a", ("item-1", "任务一")) }, new[] { "provider-a" });
+
+        await handler.WaitUntilAsync(1);
+        var captured = handler.Requests.Single();
+        Assert.AreEqual("https://example.com/hook/items-changed/%E4%BB%BB%E5%8A%A1%E4%B8%80", captured.Url);
+        var pending = logFake.Pending.Single();
+        Assert.AreEqual("https://example.com/hook/items-changed/%E4%BB%BB%E5%8A%A1%E4%B8%80", pending.WebHookUrl);
+    }
+
+    [TestMethod]
+    public async Task ObserveAsync_InvalidRenderedUrl_ShouldLogFailureWithoutHttp()
+    {
+        // 模板本身合法（占位符被掩码为 x 后可解析），但渲染后成为无主机的非法地址
+        var (dispatcher, handler, _, logFake) = CreateDispatcher(new()
+        {
+            CreateHook("hook-bad-render", "https://{{unknownToken}}/hook")
+        });
+
+        await dispatcher.ObserveAsync(new[] { Snapshot("provider-a") }, new[] { "provider-a" });
+        await dispatcher.ObserveAsync(
+            new[] { Snapshot("provider-a", ("item-1", "任务一")) }, new[] { "provider-a" });
+
+        Assert.IsTrue(await logFake.WaitUntilCompletedAsync(1), "渲染后地址无效应记录失败日志");
+        var completed = logFake.Completed.Single();
+        Assert.IsFalse(completed.Success);
+        Assert.AreEqual(0, handler.Requests.Count, "渲染后地址无效不应发起 HTTP 请求");
+    }
+
+    [TestMethod]
+    public async Task NotifyItemCreatedAsync_TemplatedUrl_ShouldRenderItemTokens()
+    {
+        var (dispatcher, handler, _, logFake) = CreateDispatcher(new());
+
+        var (queued, _) = await dispatcher.NotifyItemCreatedAsync(
+            "https://example.com/hook?title={{title}}&status={{status}}",
+            "GET",
+            new NeuBellItem("item-9", "任务九", "摘要", 3, "warning", "/Admin/Index", DateTimeOffset.UtcNow),
+            "NeuBell 测试",
+            adminUserId: 5);
+
+        Assert.IsTrue(queued);
+        Assert.AreEqual(1, handler.Requests.Count);
+        var captured = handler.Requests.Single();
+        Assert.AreEqual("GET", captured.Method);
+        Assert.AreEqual("https://example.com/hook?title=%E4%BB%BB%E5%8A%A1%E4%B9%9D&status=warning", captured.Url);
+        Assert.AreEqual(string.Empty, captured.Body);
+        Assert.IsNull(captured.Signature);
+        var pending = logFake.Pending.Single();
+        Assert.AreEqual("GET", pending.HttpMethod);
+        Assert.AreEqual(5, pending.AdminUserId);
+        Assert.IsTrue(logFake.Completed.Single().Success);
+    }
+
+    [TestMethod]
+    public void TryValidateHttpMethod_ShouldNormalizeAndRejectInvalid()
+    {
+        Assert.IsTrue(NeuBellWebHook.TryValidateHttpMethod("post", out var normalized, out var error));
+        Assert.AreEqual(NeuBellWebHook.MethodPost, normalized);
+        Assert.IsNull(error);
+
+        Assert.IsTrue(NeuBellWebHook.TryValidateHttpMethod(" get ", out normalized, out _));
+        Assert.AreEqual(NeuBellWebHook.MethodGet, normalized);
+
+        Assert.IsTrue(NeuBellWebHook.TryValidateHttpMethod(null, out normalized, out _));
+        Assert.AreEqual(NeuBellWebHook.MethodPost, normalized, "空值应回退 POST");
+
+        Assert.IsTrue(NeuBellWebHook.TryValidateHttpMethod("", out normalized, out _));
+        Assert.AreEqual(NeuBellWebHook.MethodPost, normalized);
+
+        Assert.IsFalse(NeuBellWebHook.TryValidateHttpMethod("DELETE", out _, out error));
+        StringAssert.Contains(error, "GET、POST 或 PUT");
+
+        Assert.AreEqual(NeuBellWebHook.MethodPost, NeuBellWebHook.NormalizeHttpMethod("bogus"));
+        Assert.AreEqual(NeuBellWebHook.MethodPut, NeuBellWebHook.NormalizeHttpMethod("put"));
+    }
+
+    [TestMethod]
+    public void TryValidateUrlTemplate_ShouldAcceptPlaceholdersAndRejectInvalidScheme()
+    {
+        Assert.IsTrue(NeuBellWebHook.TryValidateUrlTemplate("https://example.com/hook/{{kind}}/{{title}}", out _));
+        Assert.IsTrue(NeuBellWebHook.TryValidateUrlTemplate("https://example.com/hook?provider={{provider}}", out _));
+        Assert.IsFalse(NeuBellWebHook.TryValidateUrlTemplate("ftp://example.com/hook/{{kind}}", out var ftpError));
+        StringAssert.Contains(ftpError, "http/https");
+        Assert.IsFalse(NeuBellWebHook.TryValidateUrlTemplate("   ", out _));
+    }
+
     private static NeuBellWebHook CreateHook(
         string name,
         string url,
         string providerFilter = null,
         string secret = null,
         bool notifyOnAdd = true,
-        bool notifyOnRemove = true)
+        bool notifyOnRemove = true,
+        string httpMethod = null,
+        string bodyTemplate = null)
     {
         var webHook = new NeuBellWebHook(name, url, adminUserId: 1);
         webHook.UpdateInfo(
@@ -377,7 +551,9 @@ public class NeuBellWebHookDispatcherTests
             secret ?? string.Empty,
             notifyOnAdd,
             notifyOnRemove,
-            isEnabled: true);
+            isEnabled: true,
+            httpMethod,
+            bodyTemplate);
         return webHook;
     }
 
@@ -418,6 +594,7 @@ public class NeuBellWebHookDispatcherTests
         {
             public int Id { get; init; }
             public string EventKind { get; init; }
+            public string HttpMethod { get; init; }
             public string WebHookUrl { get; init; }
             public string Title { get; init; }
             public string Payload { get; init; }
@@ -439,13 +616,14 @@ public class NeuBellWebHookDispatcherTests
 
         public Task<NeuBellWebHookLog> CreatePendingAsync(
             string eventKind,
+            string httpMethod,
             string webHookUrl,
             string providerId,
             string title,
             string payload,
             int adminUserId)
         {
-            var log = new NeuBellWebHookLog(eventKind, webHookUrl, providerId, title, payload, adminUserId);
+            var log = new NeuBellWebHookLog(eventKind, httpMethod, webHookUrl, providerId, title, payload, adminUserId);
             log.Id = Interlocked.Increment(ref _nextId);
             lock (Pending)
             {
@@ -453,6 +631,7 @@ public class NeuBellWebHookDispatcherTests
                 {
                     Id = log.Id,
                     EventKind = eventKind,
+                    HttpMethod = httpMethod,
                     WebHookUrl = webHookUrl,
                     Title = title,
                     Payload = payload,
@@ -558,7 +737,9 @@ public class NeuBellWebHookDispatcherTests
         public sealed class CapturedRequest
         {
             public string Url { get; init; }
+            public string Method { get; init; }
             public string Body { get; init; }
+            public string ContentType { get; init; }
             public string Signature { get; init; }
         }
 
@@ -575,8 +756,11 @@ public class NeuBellWebHookDispatcherTests
                 : await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             _requests.Enqueue(new CapturedRequest
             {
-                Url = request.RequestUri?.ToString(),
+                // AbsoluteUri 保留 URL 的原始百分号编码（ToString 会解码）
+                Url = request.RequestUri?.AbsoluteUri,
+                Method = request.Method.Method,
                 Body = body,
+                ContentType = request.Content?.Headers.ContentType?.MediaType,
                 Signature = request.Headers.TryGetValues("X-NeuBell-Signature", out var values)
                     ? string.Join(",", values)
                     : null

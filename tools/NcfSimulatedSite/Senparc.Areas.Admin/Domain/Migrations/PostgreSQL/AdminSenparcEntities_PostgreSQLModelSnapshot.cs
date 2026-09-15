@@ -501,8 +501,18 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
                     b.Property<int>("AdminUserId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("BodyTemplate")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("HttpMethod")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasDefaultValue("POST");
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("boolean");
@@ -579,6 +589,10 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
 
                     b.Property<bool>("Flag")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("HttpMethod")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("timestamp without time zone");
