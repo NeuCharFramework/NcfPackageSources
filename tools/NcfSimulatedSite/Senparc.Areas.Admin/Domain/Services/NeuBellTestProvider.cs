@@ -46,6 +46,18 @@ public sealed class NeuBellTestProvider : INeuBellProvider, INeuBellConsumablePr
 
     private sealed record Reminder(string Id, DateTimeOffset CreatedAt);
 
+    private static NeuBellItem ToNeuBellItem(Reminder reminder)
+    {
+        return new NeuBellItem(
+            reminder.Id,
+            ItemTitle,
+            ItemSummary,
+            1,
+            ItemSeverity,
+            ItemDetailUrl,
+            reminder.CreatedAt);
+    }
+
     public string ProviderId => ProviderIdValue;
 
     public string ModuleUid => Register.ModuleUid;
@@ -95,37 +107,47 @@ public sealed class NeuBellTestProvider : INeuBellProvider, INeuBellConsumablePr
                 _pendingReminders.Add(reminder);
             }
         }
-        return new NeuBellItem(
-            reminder.Id,
-            ItemTitle,
-            ItemSummary,
-            1,
-            ItemSeverity,
-            ItemDetailUrl,
-            reminder.CreatedAt);
+        return ToNeuBellItem(reminder);
     }
 
     public int ConsumeLatest()
     {
+        return ConsumeLatestAndGetItem() == null ? 0 : 1;
+    }
+
+    public NeuBellItem ConsumeLatestAndGetItem()
+    {
+        Reminder reminder;
         lock (_syncRoot)
         {
             if (_pendingReminders.Count == 0)
             {
-                return 0;
+                return null;
             }
-            _pendingReminders.RemoveAt(_pendingReminders.Count - 1);
-            return 1;
+            var index = _pendingReminders.Count - 1;
+            reminder = _pendingReminders[index];
+            _pendingReminders.RemoveAt(index);
         }
+        return ToNeuBellItem(reminder);
     }
 
     public int ConsumeAll()
     {
+        return ConsumeAllAndGetItems().Count;
+    }
+
+    public IReadOnlyList<NeuBellItem> ConsumeAllAndGetItems()
+    {
+        Reminder[] reminders;
         lock (_syncRoot)
         {
-            var consumedCount = _pendingReminders.Count;
+            reminders = _pendingReminders.ToArray();
             _pendingReminders.Clear();
-            return consumedCount;
         }
+        return reminders
+            .OrderByDescending(item => item.CreatedAt)
+            .Select(ToNeuBellItem)
+            .ToArray();
     }
 
     public ValueTask<int> ConsumeItemAsync(

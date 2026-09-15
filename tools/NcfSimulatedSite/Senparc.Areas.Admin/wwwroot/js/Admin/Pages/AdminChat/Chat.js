@@ -176,15 +176,24 @@ var chatApp = new Vue({
       const event = this.replayEvent;
       if (!event) return;
 
-      const container = this.$el.querySelector('.trajectory-timeline');
+      const container = this.$refs.trajectoryTimeline;
       const target = this.$el.querySelector(`#${this.trajectoryEventDomId(event.sequence)}`);
       if (!container || !target) return;
 
-      const targetTop = target.offsetTop - (container.clientHeight - target.offsetHeight) / 2;
-      container.scrollTo({
-        top: Math.max(0, targetTop),
-        behavior: 'smooth'
-      });
+      const containerRect = container.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const targetTop = container.scrollTop
+        + targetRect.top
+        - containerRect.top
+        - (container.clientHeight - targetRect.height) / 2;
+      const maxScrollTop = Math.max(0, container.scrollHeight - container.clientHeight);
+      const nextScrollTop = Math.max(0, Math.min(targetTop, maxScrollTop));
+
+      if (typeof container.scrollTo === 'function') {
+        container.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
+      } else {
+        container.scrollTop = nextScrollTop;
+      }
     },
 
     async loadTrajectoryList() {

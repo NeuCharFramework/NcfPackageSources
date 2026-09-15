@@ -82,6 +82,13 @@ namespace Senparc.Ncf.XncfBase.Functions.Tests
             });
         }
 
+        public class SetMultilineConfigFunctionAppRequest : FunctionAppRequestBase
+        {
+            [System.ComponentModel.Description("Body||支持多行输入")]
+            [FunctionParameterUi(ParameterType.TextArea)]
+            public string Body { get; set; }
+        }
+
         [FunctionRender("设置参数", "设置备份间隔时间、备份文件路径等参数", typeof(TestModuleRegister))]
         public async Task<StringAppResponse> SetConfig(SetConfigFunctionAppRequest request)
         {
@@ -97,6 +104,15 @@ namespace Senparc.Ncf.XncfBase.Functions.Tests
             return await this.GetStringResponseAsync(async (response, logger) =>
             {
                 return request.AgentName;
+            });
+        }
+
+        [FunctionRender("设置多行参数", "测试多行文本参数元数据", typeof(TestModuleRegister))]
+        public async Task<StringAppResponse> SetMultilineConfig(SetMultilineConfigFunctionAppRequest request)
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+                return request.Body;
             });
         }
     }
@@ -134,6 +150,20 @@ namespace Senparc.Ncf.XncfBase.Functions.Tests
             Assert.AreEqual(2, agentName.SelectionList.Items.Count);
             Assert.IsTrue(agentName.Filterable);
             Assert.IsTrue(agentName.AllowCreate);
+        }
+
+        [TestMethod()]
+        public void GetFunctionParameterInfoWithTextAreaUiAttributeTest()
+        {
+            var functionBag = Senparc.Ncf.XncfBase.Register.FunctionRenderCollection[typeof(TestModuleRegister)].Values
+                .First(z => z.MethodInfo.Name == nameof(TestFunctionAppService.SetMultilineConfig));
+
+            var result = FunctionHelper.GetFunctionParameterInfoAsync(base._serviceProvider, functionBag, true).GetAwaiter().GetResult();
+            var body = result.First(z => z.Name == nameof(TestFunctionAppService.SetMultilineConfigFunctionAppRequest.Body));
+
+            Assert.AreEqual(ParameterType.TextArea, body.ParameterType);
+            Assert.AreEqual("Body", body.Title);
+            Assert.AreEqual("支持多行输入", body.Description);
         }
 
         [TestMethod()]

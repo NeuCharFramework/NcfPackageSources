@@ -240,6 +240,10 @@ public class NeuBellWebHookDispatcherTests
         var root = document.RootElement;
         Assert.AreEqual("NeuBell", root.GetProperty("source").GetString());
         Assert.AreEqual("test", root.GetProperty("kind").GetString());
+        Assert.AreEqual("test", root.GetProperty("action").GetString());
+        Assert.AreEqual("success", root.GetProperty("actionStatus").GetString());
+        Assert.AreEqual("test", root.GetProperty("operation").GetString());
+        Assert.AreEqual("测试", root.GetProperty("operationStatus").GetString());
         Assert.AreEqual(0, root.GetProperty("added").GetArrayLength());
         Assert.AreEqual(0, root.GetProperty("removed").GetArrayLength());
     }
@@ -295,11 +299,15 @@ public class NeuBellWebHookDispatcherTests
             Assert.AreEqual("NeuBell", pendingDoc.RootElement.GetProperty("source").GetString());
             Assert.AreEqual(NeuBellWebHookDispatcher.EventKindItemCreated,
                 pendingDoc.RootElement.GetProperty("kind").GetString());
+            Assert.AreEqual("created", pendingDoc.RootElement.GetProperty("operation").GetString());
+            Assert.AreEqual("创建", pendingDoc.RootElement.GetProperty("operationStatus").GetString());
             Assert.AreEqual("provider-a", pendingDoc.RootElement.GetProperty("providerId").GetString());
             Assert.AreEqual("任务一", pendingDoc.RootElement.GetProperty("item").GetProperty("title").GetString());
             Assert.AreEqual("这是任务一的摘要",
                 pendingDoc.RootElement.GetProperty("item").GetProperty("summary").GetString());
         }
+        StringAssert.Contains(pending.Payload, "任务一");
+        Assert.IsFalse(pending.Payload.Contains("\\u4EFB", StringComparison.OrdinalIgnoreCase));
 
         var (queued, message) = await task;
         Assert.IsTrue(queued);
@@ -373,6 +381,48 @@ public class NeuBellWebHookDispatcherTests
             Assert.AreEqual(NeuBellWebHookDispatcher.EventKindTest,
                 testDoc.RootElement.GetProperty("kind").GetString());
         }
+        Assert.IsTrue(logFake.Completed.Single().Success);
+    }
+
+    [TestMethod]
+    public async Task NotifyOperationAsync_ConsumeAction_ShouldSendRemovedItemsAndActionState()
+    {
+        var (dispatcher, handler, _, logFake) = CreateDispatcher(new());
+        var removed = new NeuBellItem(
+            "item-consumed",
+            "已消费提醒",
+            "消费摘要",
+            1,
+            "warning",
+            "/detail",
+            DateTimeOffset.UtcNow);
+
+        var (queued, message) = await dispatcher.NotifyOperationAsync(
+            "https://example.com/consume-hook",
+            "POST",
+            new NeuBellWebHookOperation
+            {
+                EventKind = NeuBellWebHookDispatcher.EventKindItemsChanged,
+                Action = "consume-one",
+                ActionName = "消费最新一条",
+                ActionStatus = "success",
+                ProviderId = "admin-neubell-test",
+                ProviderName = "NeuBell 测试",
+                Removed = new[] { removed }
+            },
+            adminUserId: 7,
+            bodyTemplate: "{\n  \"action\": \"{{action}}\",\n  \"actionStatus\": \"{{actionStatus}}\",\n  \"operationStatus\": \"{{operationStatus}}\",\n  \"title\": \"{{title}}\"\n}");
+
+        Assert.IsTrue(queued, message);
+        Assert.AreEqual(1, handler.Requests.Count);
+        var captured = handler.Requests.Single();
+        using var bodyDoc = JsonDocument.Parse(captured.Body);
+        Assert.AreEqual("consume-one", bodyDoc.RootElement.GetProperty("action").GetString());
+        Assert.AreEqual("success", bodyDoc.RootElement.GetProperty("actionStatus").GetString());
+        Assert.AreEqual("移除", bodyDoc.RootElement.GetProperty("operationStatus").GetString());
+        Assert.AreEqual("已消费提醒", bodyDoc.RootElement.GetProperty("title").GetString());
+        StringAssert.Contains(captured.Body, "移除");
+        Assert.IsTrue(await logFake.WaitUntilCompletedAsync(1));
         Assert.IsTrue(logFake.Completed.Single().Success);
     }
 
@@ -497,6 +547,33 @@ public class NeuBellWebHookDispatcherTests
         var pending = logFake.Pending.Single();
         Assert.AreEqual("GET", pending.HttpMethod);
         Assert.AreEqual(5, pending.AdminUserId);
+        Assert.IsTrue(logFake.Completed.Single().Success);
+    }
+
+    [TestMethod]
+    public async Task NotifyItemCreatedAsync_CustomBodyTemplate_ShouldRenderMultilineBodyAndOperationTokens()
+    {
+        var (dispatcher, handler, _, logFake) = CreateDispatcher(new());
+
+        var (queued, message) = await dispatcher.NotifyItemCreatedAsync(
+            "https://example.com/item-hook",
+            "POST",
+            new NeuBellItem("item-10", "任务十", "摘要", 1, "warning", "/detail", DateTimeOffset.UtcNow),
+            "NeuBell 测试",
+            adminUserId: 5,
+            bodyTemplate: "{\n  \"title\": \"{{title}}\",\n  \"operation\": \"{{operation}}\",\n  \"operationStatus\": \"{{operationStatus}}\",\n  \"payload\": {{payload}}\n}");
+
+        Assert.IsTrue(queued, message);
+        Assert.AreEqual(1, handler.Requests.Count);
+        var captured = handler.Requests.Single();
+        Assert.AreEqual("POST", captured.Method);
+        Assert.AreEqual("application/json", captured.ContentType);
+        using var bodyDoc = JsonDocument.Parse(captured.Body);
+        Assert.AreEqual("任务十", bodyDoc.RootElement.GetProperty("title").GetString());
+        Assert.AreEqual("created", bodyDoc.RootElement.GetProperty("operation").GetString());
+        Assert.AreEqual("创建", bodyDoc.RootElement.GetProperty("operationStatus").GetString());
+        Assert.AreEqual("item-created", bodyDoc.RootElement.GetProperty("payload").GetProperty("kind").GetString());
+        Assert.IsTrue(await logFake.WaitUntilCompletedAsync(1));
         Assert.IsTrue(logFake.Completed.Single().Success);
     }
 

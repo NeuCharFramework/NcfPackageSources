@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace Senparc.Areas.Admin.Domain.Services;
@@ -26,15 +27,24 @@ namespace Senparc.Areas.Admin.Domain.Services;
 /// </summary>
 public static class NeuBellWebHookTemplate
 {
+    private static readonly JsonSerializerOptions JsonStringOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    };
+
     /// <summary>
     /// 默认完整 JSON 报文对应的占位符（在请求体模板中原样嵌入为 JSON 片段）
     /// </summary>
     public const string TokenPayload = "payload";
+    public const string TokenOperation = "operation";
+    public const string TokenOperationStatus = "operationStatus";
 
     private static readonly string[] KnownTokens =
     {
         TokenPayload,
-        "kind", "provider", "providerName", "time",
+        "kind", "action", "actionName", "actionStatus",
+        "provider", "providerName", "time",
+        TokenOperation, TokenOperationStatus, "moduleUid", "tenantId",
         "id", "title", "summary", "link", "status", "count", "updated",
         "addedCount", "removedCount", "addedTitles", "removedTitles"
     };
@@ -96,7 +106,7 @@ public static class NeuBellWebHookTemplate
             if (jsonMode && name != TokenPayload)
             {
                 // 借助 JsonSerializer 做 JSON 字符串转义（取去掉首尾引号的部分）
-                return JsonSerializer.Serialize(value)[1..^1];
+                return JsonSerializer.Serialize(value, JsonStringOptions)[1..^1];
             }
             return value;
         });
