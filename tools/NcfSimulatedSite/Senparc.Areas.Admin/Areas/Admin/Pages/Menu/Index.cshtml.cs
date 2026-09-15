@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：Index.cshtml.cs
+    文件功能描述：Index.cshtml 相关功能实现
+
+
+    创建标识：Senparc - 20200724
+
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
+----------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;
 using System.Linq;

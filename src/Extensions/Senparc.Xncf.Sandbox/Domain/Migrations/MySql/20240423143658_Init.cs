@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20240423143658_Init.cs
+    文件功能描述：20240423143658_Init 相关功能实现
+
+
+    创建标识：Senparc - 20260808
+
+    修改标识：Senparc - 20260915
+    修改描述：v0.3.1 补充 Sandbox 数据库迁移并保持工作区边界兼容
+
+----------------------------------------------------------------*/
 using System;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;

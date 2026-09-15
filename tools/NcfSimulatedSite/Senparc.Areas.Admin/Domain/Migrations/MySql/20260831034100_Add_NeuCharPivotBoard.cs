@@ -8,6 +8,9 @@
     创建标识：Senparc - 20260831
     修改描述：v0.7.0 新增 NeuCharPivotBoard（Provit 面板）迁移
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
 ----------------------------------------------------------------*/
 
 using System;

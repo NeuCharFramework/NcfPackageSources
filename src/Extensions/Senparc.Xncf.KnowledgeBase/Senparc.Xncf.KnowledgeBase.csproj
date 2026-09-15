@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.1</Version>
+    <Version>0.7.2</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -64,6 +64,9 @@
 		[2026-08-29] v0.7.1 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10; Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
 		1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
 		2、Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
+		[2026-09-15] v0.7.2 修复知识库管理端敏感信息泄露并优化检索交互
+		1、移除前端响应日志中的密钥和连接配置暴露，收敛返回信息范围
+		2、优化知识库、详情页与召回测试页面的数据加载和交互稳定性
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

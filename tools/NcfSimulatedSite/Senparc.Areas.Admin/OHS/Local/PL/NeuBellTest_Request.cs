@@ -17,6 +17,9 @@
     修改描述：新增 WebHookUrl 参数，发送提醒（创建 NeuBell）时可指定 WebHook 地址异步通知，
     请求数据与结果记录到 WebHook 请求日志列表
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase;
