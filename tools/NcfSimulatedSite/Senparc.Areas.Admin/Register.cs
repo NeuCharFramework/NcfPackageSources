@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.cs
@@ -42,6 +42,9 @@
 
     修改标识：Senparc - 20260829
     修改描述：v0.7.0 新增 NeuCharPivot 全局浮动调用与工作流分析管理能力
+
+    修改标识：Senparc - 20260915
+    修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
 
 ----------------------------------------------------------------*/
 
@@ -228,10 +231,14 @@ namespace Senparc.Areas.Admin
             services.AddScoped<IAdminChatMessageRepository, AdminChatMessageRepository>();
             services.AddScoped<IAdminChatSessionModuleRepository, AdminChatSessionModuleRepository>();
             services.AddScoped<IAdminChatSessionWorkflowRepository, AdminChatSessionWorkflowRepository>();
+            services.AddScoped<IAdminChatTrajectoryRepository, AdminChatTrajectoryRepository>();
+            services.AddScoped<IAdminChatTrajectoryEventRepository, AdminChatTrajectoryEventRepository>();
             services.AddScoped<AdminChatSessionService>();
             services.AddScoped<AdminChatMessageService>();
             services.AddScoped<AdminChatSessionModuleService>();
             services.AddScoped<AdminChatSessionWorkflowService>();
+            services.AddScoped<AdminChatTrajectoryService>();
+            services.AddScoped<AdminChatTrajectoryEventService>();
             services.AddScoped<AdminChatAiService>();
 
             // ChatAgent / NeuCharPivot：系统表、声明式 UI、Function 安全执行和 EventBus 协调。
@@ -239,10 +246,12 @@ namespace Senparc.Areas.Admin
             services.AddScoped<INeuCharPivotFunctionRepository, NeuCharPivotFunctionRepository>();
             services.AddScoped<INeuCharPivotLoopTaskRepository, NeuCharPivotLoopTaskRepository>();
             services.AddScoped<INeuCharExecutionLogRepository, NeuCharExecutionLogRepository>();
+            services.AddScoped<INeuCharPivotBoardRepository, NeuCharPivotBoardRepository>();
             services.AddScoped<NeuCharPivotConfigurationService>();
             services.AddScoped<NeuCharPivotFunctionService>();
             services.AddScoped<NeuCharPivotLoopTaskService>();
             services.AddScoped<NeuCharExecutionLogService>();
+            services.AddScoped<NeuCharPivotBoardService>();
             services.AddScoped<NeuCharFunctionService>();
             services.AddScoped<NeuCharPivotService>();
             services.AddScoped<NeuCharPivotGlobalAccessService>();
@@ -270,6 +279,18 @@ namespace Senparc.Areas.Admin
             services.AddSingleton<NeuCharPivotNeuBellProvider>();
             services.AddSingleton<Senparc.Ncf.Shared.Abstractions.NeuBell.INeuBellProvider>(
                 serviceProvider => serviceProvider.GetRequiredService<NeuCharPivotNeuBellProvider>());
+
+            // 纽铃 WebHook：用户可配置 WebAPI 地址，纽铃条目新增/移除时异步通知。
+            services.AddScoped<INeuBellWebHookRepository, NeuBellWebHookRepository>();
+            services.AddScoped<INeuBellWebHookService, NeuBellWebHookService>();
+            services.AddScoped<NeuBellWebHookService>();
+            services.AddScoped<INeuBellWebHookLogRepository, NeuBellWebHookLogRepository>();
+            services.AddScoped<INeuBellWebHookLogService, NeuBellWebHookLogService>();
+            services.AddScoped<NeuBellWebHookLogService>();
+            services.AddHttpClient(NeuBellWebHookDispatcher.HttpClientName, client =>
+                client.Timeout = TimeSpan.FromSeconds(15));
+            services.AddSingleton<NeuBellWebHookDispatcher>();
+            services.AddHostedService<NeuBellWebHookMonitorService>();
 
             return base.AddXncfModule(services, configuration, env);
         }

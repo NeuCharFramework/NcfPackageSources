@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -202,5 +202,95 @@
   </data>
   <data name="Frontend.013" xml:space="preserve">
     <value>必须至少设置一个 Chat 类型的模型才能自动打分（在 AIKernel 模块中）||At least one chat model must be configured in AIKernel for automatic scoring.</value>
+  </data>
+  <data name="Area.AIKernel.TokenMonitor" xml:space="preserve">
+    <value>Token 监控</value>
+  </data>
+  <data name="TokenMonitor.Title" xml:space="preserve">
+    <value>Token 监控</value>
+  </data>
+  <data name="TokenMonitor.TotalTokens" xml:space="preserve">
+    <value>总 Token 数</value>
+  </data>
+  <data name="TokenMonitor.TotalCalls" xml:space="preserve">
+    <value>调用次数</value>
+  </data>
+  <data name="TokenMonitor.SuccessError" xml:space="preserve">
+    <value>成功 / 失败</value>
+  </data>
+  <data name="TokenMonitor.AverageDuration" xml:space="preserve">
+    <value>平均耗时</value>
+  </data>
+  <data name="TokenMonitor.InputTokens" xml:space="preserve">
+    <value>输入 Token</value>
+  </data>
+  <data name="TokenMonitor.OutputTokens" xml:space="preserve">
+    <value>输出 Token</value>
+  </data>
+  <data name="TokenMonitor.RunMonitor" xml:space="preserve">
+    <value>运行并监控</value>
+  </data>
+  <data name="TokenMonitor.Model" xml:space="preserve">
+    <value>模型</value>
+  </data>
+  <data name="TokenMonitor.Prompt" xml:space="preserve">
+    <value>提示词</value>
+  </data>
+  <data name="TokenMonitor.Run" xml:space="preserve">
+    <value>运行</value>
+  </data>
+  <data name="TokenMonitor.Elapsed" xml:space="preserve">
+    <value>耗时</value>
+  </data>
+  <data name="TokenMonitor.Status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="TokenMonitor.OutputPreview" xml:space="preserve">
+    <value>输出预览</value>
+  </data>
+  <data name="TokenMonitor.Source" xml:space="preserve">
+    <value>来源</value>
+  </data>
+  <data name="TokenMonitor.Success" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="TokenMonitor.Failed" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="TokenMonitor.Refresh" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="TokenMonitor.SelectModel" xml:space="preserve">
+    <value>请选择模型</value>
+  </data>
+  <data name="TokenMonitor.InputPrompt" xml:space="preserve">
+    <value>请输入提示词</value>
+  </data>
+  <data name="TokenMonitor.RunDone" xml:space="preserve">
+    <value>运行完成</value>
+  </data>
+  <data name="TokenMonitor.Running" xml:space="preserve">
+    <value>运行中</value>
+  </data>
+  <data name="TokenMonitor.Completed" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="TokenMonitor.DailyTitle" xml:space="preserve">
+    <value>最近 7 天 Token 使用</value>
+  </data>
+  <data name="TokenMonitor.ModelTitle" xml:space="preserve">
+    <value>按模型 Token 使用</value>
+  </data>
+  <data name="TokenMonitor.ConfirmDelete" xml:space="preserve">
+    <value>确定删除该 Token 使用记录吗？</value>
+  </data>
+  <data name="TokenMonitor.LastUsed" xml:space="preserve">
+    <value>最近使用</value>
+  </data>
+  <data name="TokenMonitor.SearchPlaceholder" xml:space="preserve">
+    <value>输入模型代号进行搜索</value>
+  </data>
+  <data name="TokenMonitor.Search" xml:space="preserve">
+    <value>搜索</value>
   </data>
 </root>

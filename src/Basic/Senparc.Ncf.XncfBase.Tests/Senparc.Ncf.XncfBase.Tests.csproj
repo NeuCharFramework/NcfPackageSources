@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.12</Version>
+		<Version>0.0.13</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 升级 Senparc.AI.AgentKernel 并完成兼容性适配，补充项目依赖与工程配置优化
     1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -36,8 +36,9 @@
     1、更新基础模块与测试扩展依赖，保持当前功能回归验证可用
     [2026-08-29] v0.0.12 Dependency updates from Senparc.Ncf.Core.Tests to 0.0.9
     1、Dependency update from Senparc.Ncf.Core.Tests to 0.0.9
+    [2026-09-15] v0.0.13 同步上游模块版本并保持宿主兼容
+    1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
 		</PackageReleaseNotes>
-
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
 		<Configurations>Debug;Release;TemplateRelease</Configurations>

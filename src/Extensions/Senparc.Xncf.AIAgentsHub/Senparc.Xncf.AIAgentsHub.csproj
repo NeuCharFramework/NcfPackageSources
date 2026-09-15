@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.13.7</Version>
+    <Version>0.13.8</Version>
     <AssemblyName>Senparc.Xncf.AIAgentsHub</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIAgentsHub</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -103,6 +103,8 @@
 			2、更新 AIKernel 依赖，保持 Agents Hub 的模型与 Agent 执行能力兼容
 			[2026-08-29] v0.13.7 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
 			1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
+			[2026-09-15] v0.13.8 同步上游模块版本并保持宿主兼容
+			1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

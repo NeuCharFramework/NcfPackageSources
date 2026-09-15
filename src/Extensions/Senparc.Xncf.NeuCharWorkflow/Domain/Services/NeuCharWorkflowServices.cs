@@ -21,6 +21,12 @@
     修改标识：Senparc - 20260829
     修改描述：v0.3.0 新增工作流分析查询与管理端可视化
 
+    修改标识：Senparc - 20260913
+    修改描述：v0.4.0 新增 Chat 消息服务：历史查询、清理与 30 天保留期
+
+    修改标识：Senparc - 20260915
+    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -357,6 +363,99 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
         return logs.FirstOrDefault(log =>
             string.Equals(log.ReplaySnapshotHash, snapshotHash, StringComparison.Ordinal) &&
             !string.IsNullOrWhiteSpace(log.ReplaySnapshotJson));
+    }
+}
+
+/// <summary>
+/// Chat 消息持久化服务。消息历史保存到数据库，Host 重启后可恢复；
+/// 保留期为 <see cref="RetentionDays"/> 天，过期消息由托管服务定期清理。
+/// </summary>
+public sealed class NeuCharWorkflowChatMessageService : WorkflowClientServiceBase<NeuCharWorkflowChatMessage>
+{
+    /// <summary>Chat 消息保留期（天）。</summary>
+    public const int RetentionDays = 30;
+    /// <summary>单次恢复写入内存会话的最大历史条数。</summary>
+    public const int MaxHistoryCount = 200;
+
+    public NeuCharWorkflowChatMessageService(
+        INeuCharWorkflowChatMessageRepository repository,
+        IServiceProvider serviceProvider)
+        : base(repository, serviceProvider) { }
+
+    /// <summary>
+    /// 按发送顺序返回指定会话最近 <see cref="MaxHistoryCount"/> 条持久化消息。
+    /// </summary>
+    public async Task<IReadOnlyList<NeuCharWorkflowChatMessage>> GetHistoryAsync(
+        int workflowId,
+        string participantKeyHash,
+        CancellationToken cancellationToken = default)
+    {
+        if (workflowId <= 0 || string.IsNullOrWhiteSpace(participantKeyHash))
+        {
+            return Array.Empty<NeuCharWorkflowChatMessage>();
+        }
+        var messages = await GetObjectListAsync(
+            1,
+            MaxHistoryCount,
+            z => z.WorkflowId == workflowId && z.ParticipantKeyHash == participantKeyHash,
+            z => z.Id,
+            OrderingType.Descending).ConfigureAwait(false);
+        return messages
+            .OrderBy(z => z.Id)
+            .Take(MaxHistoryCount)
+            .ToList();
+    }
+
+    /// <summary>删除单个会话的全部持久化消息（会话重置时调用）。</summary>
+    public async Task DeleteByParticipantAsync(int workflowId, string participantKeyHash, CancellationToken cancellationToken = default)
+    {
+        if (workflowId <= 0 || string.IsNullOrWhiteSpace(participantKeyHash))
+        {
+            return;
+        }
+        var messages = await GetFullListAsync(
+            z => z.WorkflowId == workflowId && z.ParticipantKeyHash == participantKeyHash,
+            z => z.Id,
+            OrderingType.Ascending).ConfigureAwait(false);
+        foreach (var message in messages)
+        {
+            await DeleteObjectAsync(message).ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>删除工作流的全部 Chat 消息（工作流删除时调用，与版本和执行日志清理保持一致）。</summary>
+    public async Task DeleteByWorkflowAsync(int workflowId, CancellationToken cancellationToken = default)
+    {
+        if (workflowId <= 0)
+        {
+            return;
+        }
+        var messages = await GetFullListAsync(
+            z => z.WorkflowId == workflowId,
+            z => z.Id,
+            OrderingType.Ascending).ConfigureAwait(false);
+        foreach (var message in messages)
+        {
+            await DeleteObjectAsync(message).ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// 清理超过保留期的消息并返回删除条数；cap 限制单轮删除数量，避免重启后一次性大量删除。
+    /// </summary>
+    public async Task<int> DeleteExpiredAsync(DateTime cutoff, int cap = 1000, CancellationToken cancellationToken = default)
+    {
+        var expired = await GetFullListAsync(
+            z => z.AddTime < cutoff,
+            z => z.Id,
+            OrderingType.Ascending).ConfigureAwait(false);
+        var count = 0;
+        foreach (var message in expired.Take(cap))
+        {
+            await DeleteObjectAsync(message).ConfigureAwait(false);
+            count++;
+        }
+        return count;
     }
 }
 

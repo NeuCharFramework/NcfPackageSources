@@ -1,0 +1,169 @@
+@page
+@model Senparc.Xncf.AIKernel.Areas.AITokenMonitor.Pages.Index
+@{
+    ViewData["Title"] = XR["TokenMonitor.Title"];
+    Layout = "_Layout_Vue";
+}
+
+@section Style {
+    <link href="~/css/Admin/AITokenMonitor/index.css" rel="stylesheet" />
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>@XR["Area.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Module.AIKernel.MenuName"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["TokenMonitor.Title"]</el-breadcrumb-item>
+}
+
+<div>
+    <!-- 统计卡片 -->
+    <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="6">
+            <div class="xncf-stat-item token-stat">
+                <span class="count">{{ stats.totalTokens || 0 }}</span>
+                <div class="icon"><i class="fa fa-coins"></i></div>
+                <p class="tit">@XR["TokenMonitor.TotalTokens"]</p>
+            </div>
+        </el-col>
+        <el-col :span="6">
+            <div class="xncf-stat-item token-stat">
+                <span class="count">{{ stats.totalCalls || 0 }}</span>
+                <div class="icon"><i class="fa fa-list-alt"></i></div>
+                <p class="tit">@XR["TokenMonitor.TotalCalls"]</p>
+            </div>
+        </el-col>
+        <el-col :span="6">
+            <div class="xncf-stat-item token-stat">
+                <span class="count">{{ stats.successCount || 0 }} / {{ stats.errorCount || 0 }}</span>
+                <div class="icon"><i class="fa fa-check-circle"></i></div>
+                <p class="tit">@XR["TokenMonitor.SuccessError"]</p>
+            </div>
+        </el-col>
+        <el-col :span="6">
+            <div class="xncf-stat-item token-stat">
+                <span class="count">{{ (stats.averageDurationMs || 0).toFixed(0) }} ms</span>
+                <div class="icon"><i class="fa fa-clock-o"></i></div>
+                <p class="tit">@XR["TokenMonitor.AverageDuration"]</p>
+            </div>
+        </el-col>
+    </el-row>
+
+    <!-- 图表区 -->
+    <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="12">
+            <el-card class="box-card">
+                <div id="dailyChart" class="charts-container"></div>
+            </el-card>
+        </el-col>
+        <el-col :span="12">
+            <el-card class="box-card">
+                <div id="modelChart" class="charts-container"></div>
+            </el-card>
+        </el-col>
+    </el-row>
+
+    <!-- 运行并监控 -->
+    <el-card class="box-card" style="margin-bottom: 10px">
+        <div slot="header"><span><i class="fa fa-play-circle"></i> @XR["TokenMonitor.RunMonitor"]</span></div>
+        <el-form :inline="true" :model="runForm" ref="runForm" label-width="90px">
+            <el-form-item label="@XR["TokenMonitor.Model"]" prop="modelId">
+                <el-select v-model="runForm.modelId" placeholder="@XR["Vector.SelectPlaceholder"]" style="width: 260px">
+                    <el-option v-for="m in modelList" :key="m.id" :label="m.alias" :value="m.id"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="@XR["TokenMonitor.Prompt"]" prop="prompt">
+                <el-input v-model="runForm.prompt" style="width: 420px"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" icon="el-icon-video-play" :loading="runLoading" @@click="runWithMonitor">@XR["TokenMonitor.Run"]</el-button>
+            </el-form-item>
+        </el-form>
+
+        <!-- 异步进度面板 -->
+        <div v-if="runLoading || progressEvents.length > 0" class="progress-panel">
+            <el-progress :percentage="progressPercent" :status="progressStatus" :stroke-width="18" style="margin-bottom: 12px"></el-progress>
+            <el-row :gutter="10" style="margin-bottom: 8px">
+                <el-col :span="6"><span class="progress-kpi">@XR["TokenMonitor.InputTokens"]</span> <b>{{ liveUsage.inputTokens }}</b></el-col>
+                <el-col :span="6"><span class="progress-kpi">@XR["TokenMonitor.OutputTokens"]</span> <b>{{ liveUsage.outputTokens }}</b></el-col>
+                <el-col :span="6"><span class="progress-kpi">@XR["TokenMonitor.TotalTokens"]</span> <b>{{ liveUsage.totalTokens }}</b></el-col>
+                <el-col :span="6"><span class="progress-kpi">@XR["TokenMonitor.Elapsed"]</span> <b>{{ liveUsage.elapsedMs }} ms</b></el-col>
+            </el-row>
+            <div class="progress-preview" v-if="liveUsage.preview">{{ liveUsage.preview }}</div>
+            <el-table :data="progressEvents" size="mini" border style="margin-top: 8px" max-height="220">
+                <el-table-column prop="status" label="@XR["TokenMonitor.Status"]" width="120">
+                    <template slot-scope="scope">
+                        <el-tag size="mini" :type="scope.row.status===1?'success':(scope.row.status===2?'danger':'info')">{{ statusText(scope.row.status) }}</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="inputTokens" label="@XR["TokenMonitor.InputTokens"]" width="100"></el-table-column>
+                <el-table-column prop="outputTokens" label="@XR["TokenMonitor.OutputTokens"]" width="100"></el-table-column>
+                <el-table-column prop="totalTokens" label="@XR["TokenMonitor.TotalTokens"]" width="100"></el-table-column>
+                <el-table-column prop="elapsedMs" label="@XR["TokenMonitor.Elapsed"]" width="100">
+                    <template slot-scope="scope">{{ scope.row.elapsedMs }} ms</template>
+                </el-table-column>
+                <el-table-column prop="outputPreview" label="@XR["TokenMonitor.OutputPreview"]"></el-table-column>
+            </el-table>
+        </div>
+    </el-card>
+
+    <!-- 记录表 -->
+    <div class="filter-container" style="margin-bottom: 10px">
+        <el-button size="small" icon="el-icon-refresh" @@click="refreshAll">@XR["TokenMonitor.Refresh"]</el-button>
+    </div>
+    <el-table :data="tableData" v-loading="tableLoading" border>
+        <el-table-column prop="modelAlias" label="@XR["Vector.Alias"]" width="auto"></el-table-column>
+        <el-table-column prop="modelId" label="@XR["Model.Name"]" width="auto"></el-table-column>
+        <el-table-column prop="aiPlatform" label="@XR["Model.Platform"]" width="auto">
+            <template slot-scope="scope">
+                <span v-if="scope.row.aiPlatform===4">NeuCharAI</span>
+                <span v-else-if="scope.row.aiPlatform===8">OpenAI</span>
+                <span v-else-if="scope.row.aiPlatform===16">AzureOpenAI</span>
+                <span v-else-if="scope.row.aiPlatform===32">HuggingFace</span>
+                <span v-else-if="scope.row.aiPlatform===128">FastAPI</span>
+                <span v-else-if="scope.row.aiPlatform===256">Ollama</span>
+                <span v-else-if="scope.row.aiPlatform===512">DeepSeek</span>
+                <span v-else type="danger">@XR["Model.Unknown"]</span>
+            </template>
+        </el-table-column>
+        <el-table-column prop="inputTokens" label="@XR["TokenMonitor.InputTokens"]" width="auto"></el-table-column>
+        <el-table-column prop="outputTokens" label="@XR["TokenMonitor.OutputTokens"]" width="auto"></el-table-column>
+        <el-table-column prop="totalTokens" label="@XR["TokenMonitor.TotalTokens"]" width="auto"></el-table-column>
+        <el-table-column prop="durationMs" label="@XR["TokenMonitor.Elapsed"]" width="auto">
+            <template slot-scope="scope">{{ scope.row.durationMs }} ms</template>
+        </el-table-column>
+        <el-table-column prop="status" label="@XR["TokenMonitor.Status"]" width="auto">
+            <template slot-scope="scope">
+                <el-tag size="mini" :type="scope.row.status===0?'success':'danger'">{{ scope.row.status===0 ? ncfT('AIKernel.TokenMonitor.Success') : ncfT('AIKernel.TokenMonitor.Failed') }}</el-tag>
+            </template>
+        </el-table-column>
+        <el-table-column prop="source" label="@XR["TokenMonitor.Source"]" width="auto"></el-table-column>
+        <el-table-column prop="addTime" label="@XR["Vector.AddTime"]" width="auto">
+            <template slot-scope="scope">
+                {{ dateformatter(scope.row.addTime) }}
+            </template>
+        </el-table-column>
+        <el-table-column label="@XR["Vector.Actions"]" width="auto">
+            <template slot-scope="scope">
+                <el-button type="danger" size="mini" @@click="deleteRecord(scope.row)">@XR["Vector.Delete"]</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <div class="pagination-container">
+        <el-pagination @@current-change="handleCurrentChange"
+                       @@size-change="handleSizeChange"
+                       :current-page="page.page"
+                       :page-sizes="[10, 20, 30, 40]"
+                       :page-size="page.size"
+                       layout="sizes, prev, next, jumper"
+                       :total="total"
+                       background
+                       style="margin-top: 20px">
+        </el-pagination>
+    </div>
+</div>
+
+@section scripts {
+    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
+    <script src="~/lib/echarts/dist/echarts.js"></script>
+    <script src="~/js/Admin/AITokenMonitor/index.js"></script>
+}

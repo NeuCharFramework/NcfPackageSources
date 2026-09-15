@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <PackageType>Template</PackageType>
     <PackageVersion>0.14.0</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
@@ -67,6 +67,9 @@
       2、模板新增不读取业务或敏感数据的 EventBus 回环自检功能
       3、模板包改由模拟站点权威母版完整同步，并修正 Database 与 Sample 的文件排除关系
       [2026-08-04] v0.14.0 新增 EventBus 请求-响应演示
+      [2026-09-15] v0.1.1 修正模板 README 文件名大小写与打包路径
+      1、将模板根目录 README.md 纳入正确的排除和打包配置
+      2、避免大小写敏感文件系统下模板包缺少说明文件
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
@@ -98,7 +101,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Remove="readme.md" />
+    <None Remove="README.md" />
     <None Remove="templates\template1\ACL\readme.md" />
     <None Remove="templates\template1\Domain\readme.md" />
     <None Remove="templates\template1\OHS\Local\readme.md" />
@@ -107,7 +110,7 @@
     <None Remove="templates\template1\readme.md" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="readme.md" Pack="true" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />

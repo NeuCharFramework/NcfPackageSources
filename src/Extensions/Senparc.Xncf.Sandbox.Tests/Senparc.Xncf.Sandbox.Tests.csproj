@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.4</Version>
+    <Version>0.0.5</Version>
     <PackageReleaseNotes>
       [2026-08-13] v0.0.1 Dependency update from Senparc.Xncf.Sandbox to 0.1.1-preview2
       [2026-08-15] v0.0.2 增加 Sandbox 预览路径回归测试
@@ -14,6 +14,8 @@
       [2026-08-29] v0.0.4 Dependency updates from Senparc.Xncf.Sandbox to 0.3.0
       1、Dependency update from Senparc.Xncf.Sandbox to 0.3.0
       2、补充工作区根目录、子路径和相邻目录边界的回归测试
+      [2026-09-15] v0.0.5 同步上游模块版本并保持宿主兼容
+      1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
     </PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>

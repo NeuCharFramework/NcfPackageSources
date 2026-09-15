@@ -19,6 +19,15 @@
     修改标识：Senparc - 20260829
     修改描述：v0.3.0 新增工作流分析查询与管理端可视化
 
+    修改标识：Senparc - 20260909
+    修改描述：v0.4.0 新增 Chat 触发器：聊天页面、会话服务与匿名访问
+
+    修改标识：Senparc - 20260913
+    修改描述：v0.4.0 注册 Chat 消息仓储与服务依赖注入
+
+    修改标识：Senparc - 20260915
+    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -88,9 +97,11 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         services.AddScoped<INeuCharWorkflowRepository, NeuCharWorkflowRepository>();
         services.AddScoped<INeuCharWorkflowVersionRepository, NeuCharWorkflowVersionRepository>();
         services.AddScoped<INeuCharWorkflowExecutionLogRepository, NeuCharWorkflowExecutionLogRepository>();
+        services.AddScoped<INeuCharWorkflowChatMessageRepository, NeuCharWorkflowChatMessageRepository>();
         services.AddScoped<NeuCharWorkflowService>();
         services.AddScoped<NeuCharWorkflowVersionService>();
         services.AddScoped<NeuCharWorkflowExecutionLogService>();
+        services.AddScoped<NeuCharWorkflowChatMessageService>();
         services.AddScoped<NeuCharWorkflowFunctionService>();
         services.AddScoped<NeuCharWorkflowAnalyticsService>();
         services.AddDataProtection();
@@ -99,6 +110,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
         services.AddSingleton<INeuBellProvider>(serviceProvider =>
             serviceProvider.GetRequiredService<NeuCharWorkflowNeuBellProvider>());
         services.AddSingleton<NeuCharWorkflowHumanInputService>();
+        services.AddSingleton<NeuCharWorkflowChatSessionService>();
         services.AddScoped<NeuCharWorkflowEngine>();
         services.AddSingleton<NeuCharWorkflowRunCoordinator>();
         // 仅在没有外部执行模块提供桥接时注册空实现。AgentsManager 无论先于或后于

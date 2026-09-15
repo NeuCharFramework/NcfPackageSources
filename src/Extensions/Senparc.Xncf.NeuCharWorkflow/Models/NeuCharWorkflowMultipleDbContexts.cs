@@ -10,6 +10,12 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20260913
+    修改描述：v0.4.0 Oracle/Dm 长文本列类型映射：Chat 内容与回放 JSON 使用 CLOB
+
+    修改标识：Senparc - 20260915
+    修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +24,7 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.Database;
 using System;
+using Senparc.Xncf.NeuCharWorkflow.Domain.Models.DatabaseModel;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Models;
 
@@ -49,12 +56,33 @@ public sealed class NeuCharWorkflowSenparcEntities_PostgreSQL : NeuCharWorkflowS
 public sealed class NeuCharWorkflowSenparcEntities_Oracle : NeuCharWorkflowSenparcEntities
 {
     public NeuCharWorkflowSenparcEntities_Oracle(DbContextOptions<NeuCharWorkflowSenparcEntities_Oracle> options) : base(options) { }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // Chat 内容最多 8000 个字符，Oracle 默认的 NVARCHAR2(2000) 不足以承载，使用 NCLOB。
+        modelBuilder.Entity<NeuCharWorkflowChatMessage>().Property(z => z.Content).HasColumnType("NCLOB");
+
+        // 回放 JSON 体积不可预估，AddExecutionReplay 迁移在 Oracle 中使用的就是 CLOB，这里保持一致，避免迁移收缩列类型。
+        modelBuilder.Entity<NeuCharWorkflowExecutionLog>().Property(z => z.ReplaySnapshotJson).HasColumnType("CLOB");
+        modelBuilder.Entity<NeuCharWorkflowExecutionLog>().Property(z => z.ReplayEventsJson).HasColumnType("CLOB");
+    }
 }
 
 [MultipleMigrationDbContext(MultipleDatabaseType.Dm, typeof(Register))]
 public sealed class NeuCharWorkflowSenparcEntities_Dm : NeuCharWorkflowSenparcEntities
 {
     public NeuCharWorkflowSenparcEntities_Dm(DbContextOptions<NeuCharWorkflowSenparcEntities_Dm> options) : base(options) { }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // 回放 JSON 体积不可预估，AddExecutionReplay 迁移在 Dm 中使用的就是 CLOB，这里保持一致，避免迁移收缩列类型。
+        modelBuilder.Entity<NeuCharWorkflowExecutionLog>().Property(z => z.ReplaySnapshotJson).HasColumnType("CLOB");
+        modelBuilder.Entity<NeuCharWorkflowExecutionLog>().Property(z => z.ReplayEventsJson).HasColumnType("CLOB");
+    }
 }
 
 // 设计时工厂确保每种受支持数据库生成独立、由本 XNCF 所有的 EF Migration。

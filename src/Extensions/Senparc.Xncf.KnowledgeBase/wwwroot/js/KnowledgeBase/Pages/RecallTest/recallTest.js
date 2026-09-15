@@ -8,8 +8,7 @@
   }
 
   function errorMessage(error) {
-    const response = error && error.response && error.response.data;
-    return (response && (response.errorMessage || response.message || response.title)) || (error && error.message) || '请求未完成，请检查知识库和模型配置。';
+    return '请求未完成，请检查知识库和模型配置。';
   }
 
   new Vue({

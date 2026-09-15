@@ -7,3 +7,16 @@
 .align-items-center{
     align-items: center;
 }
+
+.usage-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.usage-progress {
+    width: 120px;
+    margin-top: 4px;
+}
+.usage-zero {
+    color: #C0C4CC;
+}

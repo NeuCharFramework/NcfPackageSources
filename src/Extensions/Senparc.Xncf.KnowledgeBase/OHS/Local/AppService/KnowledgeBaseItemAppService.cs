@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
 
+    修改标识：Senparc - 20260915
+    修改描述：v0.7.2 修复知识库管理端敏感信息泄露并优化检索交互
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Trace;
@@ -92,6 +95,9 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                         knowledgeBase.Content));
                 }
                 return result;
+            }, exceptionHandler: (_, response, _) =>
+            {
+                response.ErrorMessage = "知识库资料加载失败，请稍后重试。";
             });
         }
 

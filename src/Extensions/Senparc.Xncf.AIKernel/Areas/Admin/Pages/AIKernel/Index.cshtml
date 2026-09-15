@@ -7,6 +7,7 @@
 
 @section Style {
     <link href="~/css/Admin/AIKernel/index.css" rel="stylesheet" />
+    <link href="~/css/Admin/AITokenMonitor/index.css" rel="stylesheet" />
 }
 
 @section breadcrumbs {
@@ -16,9 +17,46 @@
 }
 
 <div>
+    <!-- 使用概览统计卡片 -->
+    <el-row :gutter="10" style="margin-bottom: 10px">
+        <el-col :span="6">
+            <div class="xncf-stat-item token-stat">
+                <span class="count">{{ formatNumber(stats.totalTokens) }}</span>
+                <div class="icon"><i class="fa fa-coins"></i></div>
+                <p class="tit">@XR["TokenMonitor.TotalTokens"]</p>
+            </div>
+        </el-col>
+        <el-col :span="6">
+            <div class="xncf-stat-item token-stat">
+                <span class="count">{{ formatNumber(stats.totalCalls) }}</span>
+                <div class="icon"><i class="fa fa-list-alt"></i></div>
+                <p class="tit">@XR["TokenMonitor.TotalCalls"]</p>
+            </div>
+        </el-col>
+        <el-col :span="6">
+            <div class="xncf-stat-item token-stat">
+                <span class="count">{{ formatNumber(stats.successCount) }} / {{ formatNumber(stats.errorCount) }}</span>
+                <div class="icon"><i class="fa fa-check-circle"></i></div>
+                <p class="tit">@XR["TokenMonitor.SuccessError"]</p>
+            </div>
+        </el-col>
+        <el-col :span="6">
+            <div class="xncf-stat-item token-stat">
+                <span class="count">{{ (stats.averageDurationMs || 0).toFixed(0) }} ms</span>
+                <div class="icon"><i class="fa fa-clock-o"></i></div>
+                <p class="tit">@XR["TokenMonitor.AverageDuration"]</p>
+            </div>
+        </el-col>
+    </el-row>
+
     <div class="filter-container">
         <el-button type="primary" icon="el-icon-plus" size="small" @@click="addModel">@XR["Vector.Add"]</el-button>
         <el-button type="primary" icon="el-icon-plus" size="small" @@click="addNeuCharModel">@XR["Model.ImportNeuChar"]</el-button>
+        <el-button type="primary" plain icon="el-icon-tachometer" size="small" tag="a" href="@Url.Content("~/Admin/AITokenMonitor/Index")">@XR["Area.AIKernel.TokenMonitor"]</el-button>
+        <el-input v-model="keyword" size="small" style="width: 220px; margin-left: 10px"
+                  :placeholder="ncfT('AIKernel.TokenMonitor.SearchPlaceholder')" clearable
+                  @@clear="search" @@keyup.enter.native="search"></el-input>
+        <el-button type="primary" icon="el-icon-search" size="small" @@click="search">@XR["TokenMonitor.Search"]</el-button>
     </div>
 
     <el-table :data="tableData" v-loading="tableLoading" border>
@@ -73,6 +111,30 @@
         <el-table-column prop="addTime" label="@XR["Vector.AddTime"]" width="auto">
             <template slot-scope="scope">
                 {{ dateformatter(scope.row.addTime) }}
+            </template>
+        </el-table-column>
+        @* Token 使用 *@
+        <el-table-column prop="usage.calls" label="@XR["TokenMonitor.TotalCalls"]" width="auto" align="right">
+            <template slot-scope="scope">
+                <span :class="{ 'usage-zero': !scope.row.usage || scope.row.usage.calls === 0 }">{{ formatNumber(scope.row.usage && scope.row.usage.calls) }}</span>
+            </template>
+        </el-table-column>
+        <el-table-column prop="usage.totalTokens" label="@XR["TokenMonitor.TotalTokens"]" width="auto" align="right" min-width="150">
+            <template slot-scope="scope">
+                <div class="usage-cell">
+                    <span :class="{ 'usage-zero': !scope.row.usage || scope.row.usage.totalTokens === 0 }">{{ formatNumber(scope.row.usage && scope.row.usage.totalTokens) }}</span>
+                    <el-progress v-if="scope.row.usage && scope.row.usage.totalTokens > 0"
+                                 :percentage="usageShare(scope.row)"
+                                 :stroke-width="6"
+                                 :show-text="false"
+                                 class="usage-progress"></el-progress>
+                </div>
+            </template>
+        </el-table-column>
+        <el-table-column prop="usage.lastUseTime" label="@XR["TokenMonitor.LastUsed"]" width="auto">
+            <template slot-scope="scope">
+                <span v-if="scope.row.usage && scope.row.usage.lastUseTime">{{ dateformatter(scope.row.usage.lastUseTime) }}</span>
+                <span v-else class="usage-zero">—</span>
             </template>
         </el-table-column>
         @* 操作 *@
