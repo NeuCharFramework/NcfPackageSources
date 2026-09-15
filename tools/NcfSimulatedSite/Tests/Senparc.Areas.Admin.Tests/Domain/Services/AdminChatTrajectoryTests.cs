@@ -61,4 +61,50 @@ public class AdminChatTrajectoryTests
         Assert.AreEqual(20, message.TrajectoryId);
         Assert.AreEqual(12, message.TrajectorySequence);
     }
+
+    [TestMethod]
+    public void CollapseAssistantTextChunks_ShouldMergeOnlyAdjacentLegacyTextEvents()
+    {
+        var events = new[]
+        {
+            new AdminChatTrajectoryEventDto
+            {
+                Id = 1,
+                Sequence = 1,
+                EventType = "assistant.text",
+                Content = "正在",
+                OccurredAt = DateTime.Parse("2026-09-15T10:00:00")
+            },
+            new AdminChatTrajectoryEventDto
+            {
+                Id = 2,
+                Sequence = 2,
+                EventType = "assistant.text",
+                Content = "整理工具结果",
+                OccurredAt = DateTime.Parse("2026-09-15T10:00:01")
+            },
+            new AdminChatTrajectoryEventDto
+            {
+                Id = 3,
+                Sequence = 3,
+                EventType = "tool.call",
+                Name = "InspectDatabase"
+            },
+            new AdminChatTrajectoryEventDto
+            {
+                Id = 4,
+                Sequence = 4,
+                EventType = "assistant.text",
+                Content = "下一阶段",
+                CorrelationId = "phase-2"
+            }
+        };
+
+        var collapsed = AdminChatTrajectoryEventDto.CollapseAssistantTextChunks(events);
+
+        Assert.AreEqual(3, collapsed.Count);
+        Assert.AreEqual("正在整理工具结果", collapsed[0].Content);
+        Assert.AreEqual("tool.call", collapsed[1].EventType);
+        Assert.AreEqual("下一阶段", collapsed[2].Content);
+    }
 }

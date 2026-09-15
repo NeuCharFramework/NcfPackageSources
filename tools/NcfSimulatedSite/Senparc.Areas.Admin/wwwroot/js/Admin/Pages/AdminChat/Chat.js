@@ -127,6 +127,21 @@ var chatApp = new Vue({
       }[status] || '未知状态';
     },
 
+    trajectoryEventLabel(eventType) {
+      return {
+        'request': '任务请求',
+        'resume': '恢复任务',
+        'fork': '创建分支',
+        'assistant.text': '阶段输出',
+        'tool.call': '调用工具',
+        'tool.result': '工具结果',
+        'approval.request': '等待确认',
+        'approval.response': '确认结果',
+        'error': '执行错误',
+        'cancelled': '已取消'
+      }[eventType] || eventType || '执行事件';
+    },
+
     canResumeMessage(message) {
       if (!message || !message.trajectoryId) return false;
       const trajectory = this.trajectoryList.find(item => item.id === message.trajectoryId);
@@ -424,12 +439,27 @@ var chatApp = new Vue({
         return;
       }
 
+      if (eventName === 'assistant-phase') {
+        if (payload && payload.trajectoryId) {
+          this.liveTrajectoryId = payload.trajectoryId;
+        }
+        if (payload && payload.trajectoryEvent) {
+          this.upsertLiveTrajectoryEvent(payload.trajectoryEvent);
+          this.liveStatusText = '正在组织当前阶段…';
+        }
+        return;
+      }
+
       if (eventName === 'trajectory-event') {
         if (payload && payload.trajectoryId) {
           this.liveTrajectoryId = payload.trajectoryId;
         }
         if (payload && payload.trajectoryEvent) {
-          this.liveTrajectoryEvents.push(payload.trajectoryEvent);
+          if (payload.trajectoryEvent.eventType === 'assistant.text') {
+            this.upsertLiveTrajectoryEvent(payload.trajectoryEvent);
+          } else {
+            this.liveTrajectoryEvents.push(payload.trajectoryEvent);
+          }
           const eventType = payload.trajectoryEvent.eventType || '';
           this.liveStatusText = {
             'tool.call': '正在调用工具…',
@@ -460,6 +490,19 @@ var chatApp = new Vue({
 
       if (eventName === 'error') {
         throw new Error(payload && payload.message ? payload.message : '对话执行失败');
+      }
+    },
+
+    upsertLiveTrajectoryEvent(event) {
+      const key = event.correlationId || `${event.eventType || 'event'}-${event.sequence || 0}`;
+      const index = this.liveTrajectoryEvents.findIndex((item) => {
+        const itemKey = item.correlationId || `${item.eventType || 'event'}-${item.sequence || 0}`;
+        return itemKey === key;
+      });
+      if (index >= 0) {
+        this.liveTrajectoryEvents.splice(index, 1, event);
+      } else {
+        this.liveTrajectoryEvents.push(event);
       }
     },
 

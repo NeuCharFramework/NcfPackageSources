@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -155,6 +156,55 @@ namespace Senparc.Areas.Admin.Domain.Services
                 CorrelationId = entity.CorrelationId,
                 IsReplayable = entity.IsReplayable
             };
+        }
+
+        /// <summary>
+        /// Coalesces legacy consecutive assistant text chunks for display and replay.
+        /// New events already use one event per assistant phase.
+        /// </summary>
+        public static IReadOnlyList<AdminChatTrajectoryEventDto> CollapseAssistantTextChunks(
+            IEnumerable<AdminChatTrajectoryEventDto> events)
+        {
+            var result = new List<AdminChatTrajectoryEventDto>();
+            AdminChatTrajectoryEventDto current = null;
+
+            foreach (var item in events ?? Enumerable.Empty<AdminChatTrajectoryEventDto>())
+            {
+                if (item?.EventType == "assistant.text")
+                {
+                    if (current != null
+                        && current.EventType == "assistant.text"
+                        && string.IsNullOrEmpty(current.CorrelationId)
+                        && string.IsNullOrEmpty(item.CorrelationId))
+                    {
+                        current.Content = (current.Content ?? string.Empty) + (item.Content ?? string.Empty);
+                        current.PayloadJson = item.PayloadJson ?? current.PayloadJson;
+                        current.OccurredAt = item.OccurredAt;
+                        continue;
+                    }
+
+                    current = new AdminChatTrajectoryEventDto
+                    {
+                        Id = item.Id,
+                        Sequence = item.Sequence,
+                        EventType = item.EventType,
+                        Source = item.Source,
+                        Name = item.Name,
+                        Content = item.Content,
+                        PayloadJson = item.PayloadJson,
+                        OccurredAt = item.OccurredAt,
+                        CorrelationId = item.CorrelationId,
+                        IsReplayable = item.IsReplayable
+                    };
+                    result.Add(current);
+                    continue;
+                }
+
+                current = null;
+                result.Add(item);
+            }
+
+            return result;
         }
     }
 

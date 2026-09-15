@@ -529,6 +529,14 @@
   border-left: 3px solid #667eea;
 }
 
+.live-run-panel {
+  border-left: none;
+}
+
+.live-run-panel .message-text {
+  border-left: none;
+}
+
 .message-actions {
   margin-top: 8px;
   display: flex;
@@ -934,7 +942,7 @@
 }
 
 .live-run-panel {
-  border-left: 3px solid #409eff;
+  border-left: none;
   background: #f7fbff;
 }
 
@@ -985,6 +993,8 @@
   margin-top: 3px;
   color: #606266;
   font-size: 12px;
+  max-height: 180px;
+  overflow: auto;
   white-space: pre-wrap;
 }
 

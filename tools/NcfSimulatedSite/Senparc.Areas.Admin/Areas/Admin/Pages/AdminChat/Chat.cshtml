@@ -317,9 +317,9 @@
                         </div>
                         <el-collapse v-if="liveTrajectoryEvents.length > 0" class="live-trajectory-collapse">
                             <el-collapse-item title="查看实时执行过程">
-                                <div v-for="event in liveTrajectoryEvents" :key="`live-${event.id || event.sequence}`" class="live-trajectory-event">
+                                <div v-for="event in liveTrajectoryEvents" :key="`live-${event.correlationId || event.id || event.sequence}`" class="live-trajectory-event">
                                     <div class="live-trajectory-event-title">
-                                        <span>#{{ event.sequence }} {{ event.eventType }}</span>
+                                        <span>{{ trajectoryEventLabel(event.eventType) }}</span>
                                         <strong v-if="event.name">{{ event.name }}</strong>
                                     </div>
                                     <div v-if="event.content" class="live-trajectory-event-content">{{ event.content }}</div>
@@ -382,16 +382,18 @@
                         </div>
 
                         <div class="chat-entrance-input-wrapper">
-                            <div class="chat-module-picker" style="margin-bottom:16px;">
-                                <div class="chat-module-picker-header">
-                                    <span class="chat-module-picker-title">@AR["AdminChat.ComputePower"]</span>
-                                </div>
+                            <div class="chat-launcher-controls">
+                                <div class="launcher-control launcher-control-model">
+                                    <div class="launcher-control-label">
+                                        <i class="fa fa-bolt"></i>
+                                        <span>@AR["AdminChat.ComputePower"]</span>
+                                    </div>
                                 <el-select
                                     v-model="launcherAiModelId"
                                     class="chat-ai-model-select"
                                     :loading="loadingAiModelOptions"
                                     placeholder="@AR["AdminChat.SelectModel"]"
-                                    style="width:100%;">
+                                    >
                                     <el-option
                                         v-for="item in aiModelOptions"
                                         :key="`launcher-${item.id}`"
@@ -403,19 +405,22 @@
                                         </div>
                                     </el-option>
                                 </el-select>
-                            </div>
-                            <div class="chat-module-picker" style="margin-bottom:16px;">
-                                <div class="chat-module-picker-header">
-                                    <span class="chat-module-picker-title">执行模式</span>
                                 </div>
-                                <el-radio-group v-model="launcherChatMode" size="small" class="launcher-mode-toggle">
+
+                                <div class="launcher-control launcher-control-mode">
+                                    <div class="launcher-control-label">
+                                        <i class="fa fa-sliders"></i>
+                                        <span>执行模式</span>
+                                    </div>
+                                    <el-radio-group v-model="launcherChatMode" size="small" class="launcher-mode-toggle">
                                     <el-radio-button label="harness">
                                         <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
                                     </el-radio-button>
                                     <el-radio-button label="simple">
                                         <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
                                     </el-radio-button>
-                                </el-radio-group>
+                                    </el-radio-group>
+                                </div>
                             </div>
 
                             <el-input
@@ -440,16 +445,24 @@
                             </el-button>
                         </div>
 
-                        <div class="chat-module-picker">
+                        <div class="chat-module-picker chat-reference-picker">
                             <div class="chat-module-picker-header">
-                                <span class="chat-module-picker-title">@AR["Admin.Home.ReferenceModules"]</span>
+                                <div class="chat-reference-title">
+                                    <span class="chat-module-picker-title">@AR["Admin.Home.ReferenceModules"]</span>
+                                    <span class="chat-reference-count" v-if="selectedModules.length + selectedWorkflows.length > 0">
+                                        {{ selectedModules.length + selectedWorkflows.length }}
+                                    </span>
+                                    <span class="chat-reference-optional">可选</span>
+                                </div>
                                 <div class="chat-module-picker-actions">
-                                    <el-button size="mini" type="primary" icon="el-icon-plus" @@click="openModuleSelector">@AR["Admin.Home.AddReferenceModule"]</el-button>
-                                    <el-button size="mini" @@click="clearSelectedModules" v-if="selectedModules.length > 0">@AR["Admin.Home.Clear"]</el-button>
+                                    <el-button size="mini" type="primary" plain icon="el-icon-plus" @@click="openModuleSelector">@AR["Admin.Home.AddReferenceModule"]</el-button>
+                                    <el-button size="mini" type="text" @@click="clearSelectedModules" v-if="selectedModules.length > 0 || selectedWorkflows.length > 0">
+                                        <i class="fa fa-eraser"></i> @AR["Admin.Home.Clear"]
+                                    </el-button>
                                 </div>
                             </div>
 
-                            <div v-if="selectedModules.length > 0" class="chat-module-selected-list">
+                            <div v-if="selectedModules.length > 0 || selectedWorkflows.length > 0" class="chat-module-selected-list">
                                 <el-tag
                                     v-for="module in selectedModules"
                                     :key="module.uid"
@@ -473,7 +486,10 @@
                                     <span class="module-tag-name">{{workflow.name}}</span>
                                 </el-tag>
                             </div>
-                            <div v-if="selectedModules.length === 0 && selectedWorkflows.length === 0" class="chat-module-selected-empty">@AR["Admin.Home.EmptyReference"]</div>
+                            <div v-else class="chat-module-selected-empty">
+                                <i class="fa fa-lightbulb-o"></i>
+                                <span>不引用模块也可以直接开始</span>
+                            </div>
                         </div>
 
                         @await Html.PartialAsync("~/Areas/Admin/Pages/Shared/_ChatModuleSelectorDialog.cshtml")
@@ -543,7 +559,7 @@
                     placement="top">
                     <div class="trajectory-event">
                         <div class="trajectory-event-title">
-                            <span>#{{ event.sequence }} {{ event.eventType }}</span>
+                            <span>#{{ event.sequence }} {{ trajectoryEventLabel(event.eventType) }}</span>
                             <strong v-if="event.name">{{ event.name }}</strong>
                         </div>
                         <div class="trajectory-event-content" v-if="event.content">{{ event.content }}</div>

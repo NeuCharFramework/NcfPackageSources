@@ -664,6 +664,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             Action<AdminChatLiveEvent> onLiveEvent = null)
         {
             var output = new StringBuilder();
+            var phaseText = new StringBuilder();
+            var phaseKey = string.Empty;
             var pendingApprovals = new List<AdminChatApprovalRequestDto>();
             var trajectoryEvents = new List<AdminChatTrajectoryEventDto>();
             using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -680,31 +682,46 @@ namespace Senparc.Areas.Admin.Domain.Services
                     if (!string.IsNullOrEmpty(update.Text))
                     {
                         output.Append(update.Text);
-                        var textEvent = await _trajectoryService.AppendAsync(
-                            trajectory,
-                            "assistant.text",
-                            "assistant",
-                            null,
-                            update.Text,
-                            null);
-                        var textEventDto = AdminChatTrajectoryEventDto.CreateFromEntity(textEvent);
-                        trajectoryEvents.Add(textEventDto);
+                        if (string.IsNullOrEmpty(phaseKey))
+                        {
+                            phaseKey = $"assistant-phase-{Guid.NewGuid():N}";
+                        }
+
+                        phaseText.Append(update.Text);
                         onLiveEvent?.Invoke(new AdminChatLiveEvent
                         {
                             TrajectoryId = trajectory.Id,
-                            Kind = "trajectory-event",
-                            Text = update.Text,
-                            TrajectoryEvent = textEventDto,
+                            Kind = "assistant-phase",
+                            Text = phaseText.ToString(),
+                            TrajectoryEvent = CreateLiveAssistantPhase(trajectory, phaseKey, phaseText.ToString()),
                             PendingApprovals = pendingApprovals.ToList()
                         });
                     }
 
                     foreach (var content in update.Contents ?? Array.Empty<AIContent>())
                     {
+                        var completedTextEvent = await FlushAssistantPhaseAsync(
+                            trajectory,
+                            phaseKey,
+                            phaseText,
+                            trajectoryEvents);
+                        if (completedTextEvent != null)
+                        {
+                            onLiveEvent?.Invoke(new AdminChatLiveEvent
+                            {
+                                TrajectoryId = trajectory.Id,
+                                Kind = "trajectory-event",
+                                Text = completedTextEvent.Content,
+                                TrajectoryEvent = completedTextEvent,
+                                PendingApprovals = pendingApprovals.ToList()
+                            });
+                        }
+                        phaseKey = string.Empty;
+
                         var eventInfo = await AppendTrajectoryContentAsync(
                             trajectory,
                             content,
-                            update.Text,
+                            null,
                             pendingApprovals);
                         if (eventInfo != null)
                         {
@@ -718,6 +735,23 @@ namespace Senparc.Areas.Admin.Domain.Services
                             });
                         }
                     }
+                }
+
+                var finalTextEvent = await FlushAssistantPhaseAsync(
+                    trajectory,
+                    phaseKey,
+                    phaseText,
+                    trajectoryEvents);
+                if (finalTextEvent != null)
+                {
+                    onLiveEvent?.Invoke(new AdminChatLiveEvent
+                    {
+                        TrajectoryId = trajectory.Id,
+                        Kind = "trajectory-event",
+                        Text = finalTextEvent.Content,
+                        TrajectoryEvent = finalTextEvent,
+                        PendingApprovals = pendingApprovals.ToList()
+                    });
                 }
 
                 var sessionState = await harnessAgent.SerializeSessionAsync(cancellationToken: timeoutCts.Token);
@@ -763,6 +797,47 @@ namespace Senparc.Areas.Admin.Domain.Services
                 TrajectorySequence = trajectory.LastSequence,
                 TrajectoryEvents = trajectoryEvents,
                 PendingApprovals = pendingApprovals
+            };
+        }
+
+        private async Task<AdminChatTrajectoryEventDto> FlushAssistantPhaseAsync(
+            AdminChatTrajectory trajectory,
+            string phaseKey,
+            StringBuilder phaseText,
+            List<AdminChatTrajectoryEventDto> trajectoryEvents)
+        {
+            if (phaseText == null || phaseText.Length == 0)
+            {
+                return null;
+            }
+
+            var textEvent = await _trajectoryService.AppendAsync(
+                trajectory,
+                "assistant.text",
+                "assistant",
+                null,
+                phaseText.ToString(),
+                null,
+                phaseKey);
+            var textEventDto = AdminChatTrajectoryEventDto.CreateFromEntity(textEvent);
+            trajectoryEvents.Add(textEventDto);
+            phaseText.Clear();
+            return textEventDto;
+        }
+
+        private static AdminChatTrajectoryEventDto CreateLiveAssistantPhase(
+            AdminChatTrajectory trajectory,
+            string phaseKey,
+            string content)
+        {
+            return new AdminChatTrajectoryEventDto
+            {
+                Sequence = trajectory.LastSequence + 1,
+                EventType = "assistant.text",
+                Source = "assistant",
+                Content = content,
+                CorrelationId = phaseKey,
+                IsReplayable = true
             };
         }
 

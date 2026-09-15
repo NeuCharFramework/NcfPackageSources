@@ -134,6 +134,9 @@ public sealed class AdminChatStreamController : ControllerBase
                     case "token":
                         await WriteEventAsync("token", new { text = liveEvent.Text }, cancellationToken);
                         break;
+                    case "assistant-phase":
+                        await WriteEventAsync("assistant-phase", liveEvent, cancellationToken);
+                        break;
                     case "trajectory-event":
                         await WriteEventAsync("trajectory-event", liveEvent, cancellationToken);
                         break;

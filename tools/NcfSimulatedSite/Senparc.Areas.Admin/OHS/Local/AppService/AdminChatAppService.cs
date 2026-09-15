@@ -385,7 +385,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 return new GetTrajectoryResponse
                 {
                     Trajectory = AdminChatTrajectoryDto.CreateFromEntity(trajectory),
-                    Events = events.Select(AdminChatTrajectoryEventDto.CreateFromEntity).ToList()
+                    Events = AdminChatTrajectoryEventDto.CollapseAssistantTextChunks(
+                        events.Select(AdminChatTrajectoryEventDto.CreateFromEntity)).ToList()
                 };
             });
         }
