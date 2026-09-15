@@ -165,6 +165,12 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Dm
                     b.Property<int>("TenantId")
                         .HasColumnType("INT");
 
+                    b.Property<int?>("TrajectoryId")
+                        .HasColumnType("INT");
+
+                    b.Property<int?>("TrajectorySequence")
+                        .HasColumnType("INT");
+
                     b.Property<int>("UserFeedback")
                         .HasColumnType("INT");
 

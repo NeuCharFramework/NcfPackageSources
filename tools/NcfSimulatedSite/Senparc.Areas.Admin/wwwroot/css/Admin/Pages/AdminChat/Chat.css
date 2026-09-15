@@ -714,6 +714,18 @@
   padding: 5px 10px;
 }
 
+.launcher-mode-toggle {
+  width: 100%;
+}
+
+.launcher-mode-toggle .el-radio-button {
+  width: 50%;
+}
+
+.launcher-mode-toggle .el-radio-button__inner {
+  width: 100%;
+}
+
 .message-harness-steps {
   margin-top: 8px;
   border: 1px solid #ebeef5;
@@ -919,4 +931,65 @@
   color: #606266;
   font-size: 11px;
   white-space: pre-wrap;
+}
+
+.live-run-panel {
+  border-left: 3px solid #409eff;
+  background: #f7fbff;
+}
+
+.live-run-status {
+  margin-left: 8px;
+  color: #409eff;
+  font-size: 12px;
+}
+
+.live-answer-preview {
+  min-height: 22px;
+  white-space: pre-wrap;
+}
+
+.live-trajectory-collapse {
+  margin-top: 8px;
+  border-top: 1px solid #dfeeff;
+}
+
+.live-trajectory-collapse .el-collapse-item__header {
+  height: 30px;
+  background: transparent;
+  color: #409eff;
+  font-size: 12px;
+}
+
+.live-trajectory-event {
+  padding: 5px 0;
+  border-bottom: 1px dashed #dfeeff;
+}
+
+.live-trajectory-event:last-child {
+  border-bottom: none;
+}
+
+.live-trajectory-event-title {
+  display: flex;
+  gap: 8px;
+  color: #606266;
+  font-size: 12px;
+}
+
+.live-trajectory-event-title strong {
+  color: #303133;
+}
+
+.live-trajectory-event-content {
+  margin-top: 3px;
+  color: #606266;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
+.live-approval-hint {
+  margin-top: 7px;
+  color: #e6a23c;
+  font-size: 12px;
 }

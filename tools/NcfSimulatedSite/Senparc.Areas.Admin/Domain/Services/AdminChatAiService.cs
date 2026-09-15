@@ -348,7 +348,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             int aiModelId = 0,
             int maxIterations = 32,
             TimeSpan? timeout = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            Action<AdminChatLiveEvent> onLiveEvent = null)
         {
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
@@ -406,7 +407,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 harnessAgent,
                 BuildUserPrompt(messages, userMessage),
                 timeout ?? TimeSpan.FromMinutes(10),
-                cancellationToken);
+                cancellationToken,
+                onLiveEvent: onLiveEvent);
 
             return (result.FinalText, modelIdentifier, result);
         }
@@ -421,7 +423,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             int aiModelId = 0,
             int maxIterations = 32,
             TimeSpan? timeout = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            Action<AdminChatLiveEvent> onLiveEvent = null)
         {
             var trajectory = await _trajectoryService.GetAsync(trajectoryId, userId)
                 ?? throw new NcfExceptionBase("未找到可恢复的 Harness Trajectory。");
@@ -449,7 +452,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 harnessAgent,
                 prompt,
                 timeout ?? TimeSpan.FromMinutes(10),
-                cancellationToken);
+                cancellationToken,
+                onLiveEvent: onLiveEvent);
             return (result.FinalText, modelIdentifier, result);
         }
 
@@ -459,12 +463,14 @@ namespace Senparc.Areas.Admin.Domain.Services
         public async Task<(string response, string modelIdentifier, AdminChatHarnessResult harness)> ForkNativeHarnessResponseAsync(
             int trajectoryId,
             int userId,
+            int branchSessionId,
             int forkFromSequence,
             string instruction,
             int aiModelId = 0,
             int maxIterations = 32,
             TimeSpan? timeout = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            Action<AdminChatLiveEvent> onLiveEvent = null)
         {
             var parent = await _trajectoryService.GetAsync(trajectoryId, userId)
                 ?? throw new NcfExceptionBase("未找到要分叉的 Harness Trajectory。");
@@ -478,7 +484,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 ? $"分叉：{parent.Title}"
                 : instruction.Trim();
             var branch = await _trajectoryService.CreateAsync(
-                parent.SessionId,
+                branchSessionId,
                 userId,
                 title,
                 AdminChatMode.Harness,
@@ -486,7 +492,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 parent.Id,
                 forkFromSequence > 0 ? forkFromSequence : null);
             var (harnessAgent, modelIdentifier) = await BuildNativeHarnessAgentAsync(
-                parent.SessionId,
+                branchSessionId,
                 userId,
                 aiModelId,
                 maxIterations,
@@ -516,7 +522,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 harnessAgent,
                 prompt,
                 timeout ?? TimeSpan.FromMinutes(10),
-                cancellationToken);
+                cancellationToken,
+                onLiveEvent: onLiveEvent);
             return (result.FinalText, modelIdentifier, result);
         }
 
@@ -535,7 +542,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             int aiModelId = 0,
             int maxIterations = 32,
             TimeSpan? timeout = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            Action<AdminChatLiveEvent> onLiveEvent = null)
         {
             var trajectory = await _trajectoryService.GetAsync(trajectoryId, userId)
                 ?? throw new NcfExceptionBase("未找到待审批的 Harness Trajectory。");
@@ -570,7 +578,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 string.Empty,
                 timeout ?? TimeSpan.FromMinutes(10),
                 cancellationToken,
-                [new ChatMessage(ChatRole.User, [responseContent])]);
+                [new ChatMessage(ChatRole.User, [responseContent])],
+                onLiveEvent);
             return (result.FinalText, modelIdentifier, result);
         }
 
@@ -651,7 +660,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             string prompt,
             TimeSpan timeout,
             CancellationToken cancellationToken,
-            IEnumerable<ChatMessage> messages = null)
+            IEnumerable<ChatMessage> messages = null,
+            Action<AdminChatLiveEvent> onLiveEvent = null)
         {
             var output = new StringBuilder();
             var pendingApprovals = new List<AdminChatApprovalRequestDto>();
@@ -677,7 +687,16 @@ namespace Senparc.Areas.Admin.Domain.Services
                             null,
                             update.Text,
                             null);
-                        trajectoryEvents.Add(AdminChatTrajectoryEventDto.CreateFromEntity(textEvent));
+                        var textEventDto = AdminChatTrajectoryEventDto.CreateFromEntity(textEvent);
+                        trajectoryEvents.Add(textEventDto);
+                        onLiveEvent?.Invoke(new AdminChatLiveEvent
+                        {
+                            TrajectoryId = trajectory.Id,
+                            Kind = "trajectory-event",
+                            Text = update.Text,
+                            TrajectoryEvent = textEventDto,
+                            PendingApprovals = pendingApprovals.ToList()
+                        });
                     }
 
                     foreach (var content in update.Contents ?? Array.Empty<AIContent>())
@@ -690,6 +709,13 @@ namespace Senparc.Areas.Admin.Domain.Services
                         if (eventInfo != null)
                         {
                             trajectoryEvents.Add(eventInfo);
+                            onLiveEvent?.Invoke(new AdminChatLiveEvent
+                            {
+                                TrajectoryId = trajectory.Id,
+                                Kind = "trajectory-event",
+                                TrajectoryEvent = eventInfo,
+                                PendingApprovals = pendingApprovals.ToList()
+                            });
                         }
                     }
                 }
@@ -704,6 +730,12 @@ namespace Senparc.Areas.Admin.Domain.Services
                 {
                     await _trajectoryService.MarkCompletedAsync(trajectory);
                 }
+                onLiveEvent?.Invoke(new AdminChatLiveEvent
+                {
+                    TrajectoryId = trajectory.Id,
+                    Kind = "trajectory-complete",
+                    PendingApprovals = pendingApprovals.ToList()
+                });
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -728,6 +760,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 Completed = trajectory.Status == AdminChatTrajectoryStatus.Completed,
                 Status = trajectory.Status,
                 TrajectoryId = trajectory.Id,
+                TrajectorySequence = trajectory.LastSequence,
                 TrajectoryEvents = trajectoryEvents,
                 PendingApprovals = pendingApprovals
             };

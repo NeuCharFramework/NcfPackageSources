@@ -48,6 +48,16 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         public string ModelIdentifier { get; private set; }
 
         /// <summary>
+        /// Native Harness Trajectory associated with this assistant message.
+        /// </summary>
+        public int? TrajectoryId { get; private set; }
+
+        /// <summary>
+        /// The last Trajectory event represented by this assistant message.
+        /// </summary>
+        public int? TrajectorySequence { get; private set; }
+
+        /// <summary>
         /// 导航属性：关联的会话
         /// </summary>
         [ForeignKey(nameof(SessionId))]
@@ -66,7 +76,14 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         /// <param name="content">消息内容</param>
         /// <param name="sequence">消息序号</param>
         /// <param name="modelIdentifier">模型标识符（可选）</param>
-        public AdminChatMessage(int sessionId, ChatMessageRoleType roleType, string content, int sequence, string modelIdentifier = null)
+        public AdminChatMessage(
+            int sessionId,
+            ChatMessageRoleType roleType,
+            string content,
+            int sequence,
+            string modelIdentifier = null,
+            int? trajectoryId = null,
+            int? trajectorySequence = null)
         {
             SessionId = sessionId;
             RoleType = roleType;
@@ -74,6 +91,8 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
             Sequence = sequence;
             UserFeedback = MessageFeedbackType.None;
             ModelIdentifier = modelIdentifier;
+            TrajectoryId = trajectoryId;
+            TrajectorySequence = trajectorySequence;
         }
 
         /// <summary>
@@ -95,6 +114,13 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
                 Content = newContent;
                 base.SetUpdateTime();
             }
+        }
+
+        public void SetTrajectory(int? trajectoryId, int? trajectorySequence)
+        {
+            TrajectoryId = trajectoryId;
+            TrajectorySequence = trajectorySequence;
+            base.SetUpdateTime();
         }
     }
 

@@ -40,6 +40,10 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public string ModelIdentifier { get; set; }
 
+        public int? TrajectoryId { get; set; }
+
+        public int? TrajectorySequence { get; set; }
+
         /// <summary>
         /// 从实体映射到 DTO
         /// </summary>
@@ -62,7 +66,9 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
                 Content = entity.Content,
                 Sequence = entity.Sequence,
                 UserFeedback = entity.UserFeedback,
-                ModelIdentifier = entity.ModelIdentifier
+                ModelIdentifier = entity.ModelIdentifier,
+                TrajectoryId = entity.TrajectoryId,
+                TrajectorySequence = entity.TrajectorySequence
             };
         }
     }

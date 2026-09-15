@@ -101,6 +101,8 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// </summary>
         public int TrajectoryId { get; set; }
 
+        public int TrajectorySequence { get; set; }
+
         /// <summary>
         /// Native Harness trajectory status.
         /// </summary>
@@ -165,6 +167,15 @@ namespace Senparc.Areas.Admin.Domain.Services
         public string ToolCallId { get; set; }
         public string ToolName { get; set; }
         public string ArgumentsJson { get; set; }
+    }
+
+    public sealed class AdminChatLiveEvent
+    {
+        public int TrajectoryId { get; set; }
+        public string Kind { get; set; }
+        public string Text { get; set; }
+        public AdminChatTrajectoryEventDto TrajectoryEvent { get; set; }
+        public IReadOnlyList<AdminChatApprovalRequestDto> PendingApprovals { get; set; } = Array.Empty<AdminChatApprovalRequestDto>();
     }
 
     /// <summary>

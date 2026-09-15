@@ -45,4 +45,20 @@ public class AdminChatTrajectoryTests
         Assert.AreEqual(8, branch.ForkFromSequence);
         Assert.AreEqual(AdminChatTrajectoryStatus.Running, branch.Status);
     }
+
+    [TestMethod]
+    public void AssistantMessage_ShouldKeepTrajectoryAssociation()
+    {
+        var message = new AdminChatMessage(
+            sessionId: 7,
+            roleType: ChatMessageRoleType.Assistant,
+            content: "结果",
+            sequence: 4,
+            modelIdentifier: "test-model",
+            trajectoryId: 20,
+            trajectorySequence: 12);
+
+        Assert.AreEqual(20, message.TrajectoryId);
+        Assert.AreEqual(12, message.TrajectorySequence);
+    }
 }

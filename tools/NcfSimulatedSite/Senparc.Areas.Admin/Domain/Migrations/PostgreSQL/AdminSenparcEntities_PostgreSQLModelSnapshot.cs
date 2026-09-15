@@ -169,6 +169,12 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("TrajectoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("TrajectorySequence")
+                        .HasColumnType("integer");
+
                     b.Property<int>("UserFeedback")
                         .HasColumnType("integer");
 

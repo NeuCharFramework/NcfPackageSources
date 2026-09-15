@@ -158,6 +158,12 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Sqlite
                     b.Property<int>("TenantId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("TrajectoryId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("TrajectorySequence")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("UserFeedback")
                         .HasColumnType("INTEGER");
 

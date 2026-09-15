@@ -169,6 +169,12 @@ namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TrajectoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TrajectorySequence")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserFeedback")
                         .HasColumnType("int");
 

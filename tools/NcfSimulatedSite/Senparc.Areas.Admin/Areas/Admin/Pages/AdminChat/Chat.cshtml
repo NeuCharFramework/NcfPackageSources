@@ -259,10 +259,10 @@
                             <el-button type="text" size="mini" @@click="openTrajectory(message.trajectoryId)">
                                 <i class="fa fa-road"></i> 轨迹
                             </el-button>
-                            <el-button type="text" size="mini" @@click="resumeTrajectory(message.trajectoryId)">
+                            <el-button v-if="canResumeMessage(message)" type="text" size="mini" @@click="resumeTrajectory(message.trajectoryId)">
                                 <i class="fa fa-play"></i> 恢复
                             </el-button>
-                            <el-button type="text" size="mini" @@click="forkTrajectory(message.trajectoryId)">
+                            <el-button type="text" size="mini" @@click="forkTrajectory(message.trajectoryId, message.trajectorySequence)">
                                 <i class="fa fa-code-fork"></i> 分叉
                             </el-button>
                         </div>
@@ -297,19 +297,37 @@
                     <p>@AR["AdminChat.StartPrompt"]</p>
                 </div>
 
-                <div v-if="isAIResponding" class="message-item message-assistant ai-thinking">
+                <div v-if="isAIResponding" class="message-item message-assistant ai-thinking live-run-panel">
                     <div class="message-avatar">
                         <i class="fa fa-robot"></i>
                     </div>
                     <div class="message-content">
                         <div class="message-meta">
                             <span class="message-role">@AR["AdminChat.RoleAssistant"]</span>
+                            <span class="live-run-status">{{ liveStatusText || (chatMode === 'harness' ? '正在规划任务…' : '正在生成回答…') }}</span>
                         </div>
-                        <div class="message-text">
+                        <div class="message-text" v-if="liveAssistantText">
+                            <div class="live-answer-preview" v-html="formatMessageContent(liveAssistantText)"></div>
+                        </div>
+                        <div class="message-text" v-else>
                             <span class="typing-indicator">
                                 <span></span><span></span><span></span>
                             </span>
                             @AR["AdminChat.Thinking"]
+                        </div>
+                        <el-collapse v-if="liveTrajectoryEvents.length > 0" class="live-trajectory-collapse">
+                            <el-collapse-item title="查看实时执行过程">
+                                <div v-for="event in liveTrajectoryEvents" :key="`live-${event.id || event.sequence}`" class="live-trajectory-event">
+                                    <div class="live-trajectory-event-title">
+                                        <span>#{{ event.sequence }} {{ event.eventType }}</span>
+                                        <strong v-if="event.name">{{ event.name }}</strong>
+                                    </div>
+                                    <div v-if="event.content" class="live-trajectory-event-content">{{ event.content }}</div>
+                                </div>
+                            </el-collapse-item>
+                        </el-collapse>
+                        <div v-if="livePendingApprovals.length > 0" class="live-approval-hint">
+                            <i class="fa fa-shield"></i> 等待工具确认
                         </div>
                     </div>
                 </div>
@@ -385,6 +403,19 @@
                                         </div>
                                     </el-option>
                                 </el-select>
+                            </div>
+                            <div class="chat-module-picker" style="margin-bottom:16px;">
+                                <div class="chat-module-picker-header">
+                                    <span class="chat-module-picker-title">执行模式</span>
+                                </div>
+                                <el-radio-group v-model="launcherChatMode" size="small" class="launcher-mode-toggle">
+                                    <el-radio-button label="harness">
+                                        <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
+                                    </el-radio-button>
+                                    <el-radio-button label="simple">
+                                        <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
+                                    </el-radio-button>
+                                </el-radio-group>
                             </div>
 
                             <el-input

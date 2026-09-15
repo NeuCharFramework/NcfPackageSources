@@ -102,6 +102,11 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         public string InitialMessage { get; set; }
 
         /// <summary>
+        /// 会话标题；用于延迟首条消息发送的启动流程。
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
         /// 选中的 AIModelId，0 表示系统级 SenparcAiSetting
         /// </summary>
         public int AiModelId { get; set; }

@@ -60,7 +60,10 @@ The Admin module includes migrations for:
 - PostgreSQL
 - DM
 
-The migration name is `Add_AdminChatHarnessTrajectory`. Apply it through the normal NCF migration mechanism for the selected provider.
+Apply these migrations through the normal NCF migration mechanism for the selected provider:
+
+- `Add_AdminChatHarnessTrajectory`
+- `Add_AdminChatMessageTrajectory`
 
 The migration creates:
 
@@ -68,6 +71,8 @@ The migration creates:
 - `ADMIN_AdminChatTrajectoryEvent`
 
 It also creates the session/user and trajectory/sequence indexes.
+
+`Add_AdminChatMessageTrajectory` adds the persisted `TrajectoryId` and `TrajectorySequence` fields to assistant messages. These fields are what allow trajectory, resume, and fork actions to remain available after refreshing the page.
 
 ## API Surface
 
