@@ -170,6 +170,13 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             foreach (var item in events ?? Enumerable.Empty<AdminChatTrajectoryEventDto>())
             {
+                if (IsLegacyTextContentEvent(item))
+                {
+                    // Older runs persisted TextContent beside assistant.text for every chunk.
+                    // Ignore it while keeping the current assistant phase open.
+                    continue;
+                }
+
                 if (item?.EventType == "assistant.text")
                 {
                     if (current != null
@@ -205,6 +212,14 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
 
             return result;
+        }
+
+        private static bool IsLegacyTextContentEvent(AdminChatTrajectoryEventDto item)
+        {
+            return item != null
+                && (string.Equals(item.EventType, "TextContent", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(item.EventType, "Microsoft.Extensions.AI.TextContent", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(item.EventType, "text", StringComparison.OrdinalIgnoreCase));
         }
     }
 

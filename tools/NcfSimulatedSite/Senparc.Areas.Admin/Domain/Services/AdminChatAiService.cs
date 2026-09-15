@@ -61,6 +61,7 @@ using Senparc.AI.AgentKernel.Extensions;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using MafFunctionCallContent = Microsoft.Extensions.AI.FunctionCallContent;
 using MafFunctionResultContent = Microsoft.Extensions.AI.FunctionResultContent;
+using MafTextContent = Microsoft.Extensions.AI.TextContent;
 using MafToolApprovalRequestContent = Microsoft.Extensions.AI.ToolApprovalRequestContent;
 using MafToolApprovalResponseContent = Microsoft.Extensions.AI.ToolApprovalResponseContent;
 
@@ -700,6 +701,36 @@ namespace Senparc.Areas.Admin.Domain.Services
 
                     foreach (var content in update.Contents ?? Array.Empty<AIContent>())
                     {
+                        if (content is MafTextContent textContent)
+                        {
+                            // Providers may expose the same streamed text through both update.Text
+                            // and TextContent. Do not create a second trajectory item for the duplicate.
+                            if (string.IsNullOrEmpty(update.Text)
+                                && !string.IsNullOrEmpty(textContent.Text))
+                            {
+                                output.Append(textContent.Text);
+                                if (string.IsNullOrEmpty(phaseKey))
+                                {
+                                    phaseKey = $"assistant-phase-{Guid.NewGuid():N}";
+                                }
+
+                                phaseText.Append(textContent.Text);
+                                onLiveEvent?.Invoke(new AdminChatLiveEvent
+                                {
+                                    TrajectoryId = trajectory.Id,
+                                    Kind = "assistant-phase",
+                                    Text = phaseText.ToString(),
+                                    TrajectoryEvent = CreateLiveAssistantPhase(
+                                        trajectory,
+                                        phaseKey,
+                                        phaseText.ToString()),
+                                    PendingApprovals = pendingApprovals.ToList()
+                                });
+                            }
+
+                            continue;
+                        }
+
                         var completedTextEvent = await FlushAssistantPhaseAsync(
                             trajectory,
                             phaseKey,

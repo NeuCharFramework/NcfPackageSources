@@ -929,6 +929,22 @@
   line-height: 1.5;
 }
 
+.trajectory-event {
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 8px 10px;
+  transition: background-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.trajectory-event:hover {
+  background: #f5f9ff;
+}
+
+.trajectory-event.is-replay-current {
+  background: #edf5ff;
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.22);
+}
+
 .trajectory-event-payload {
   max-height: 130px;
   margin: 6px 0 0;

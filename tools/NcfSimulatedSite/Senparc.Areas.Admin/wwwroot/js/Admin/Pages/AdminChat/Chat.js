@@ -157,6 +157,36 @@ var chatApp = new Vue({
       }
     },
 
+    trajectoryEventDomId(sequence) {
+      return `admin-chat-trajectory-event-${sequence}`;
+    },
+
+    moveToReplayIndex(index) {
+      if (!this.selectedTrajectoryEvents.length) return;
+      this.replayIndex = Math.max(0, Math.min(index, this.selectedTrajectoryEvents.length - 1));
+      this.$nextTick(() => this.scrollToReplayEvent());
+    },
+
+    selectReplayEvent(index) {
+      this.stopTrajectoryReplay(false);
+      this.moveToReplayIndex(index);
+    },
+
+    scrollToReplayEvent() {
+      const event = this.replayEvent;
+      if (!event) return;
+
+      const container = this.$el.querySelector('.trajectory-timeline');
+      const target = this.$el.querySelector(`#${this.trajectoryEventDomId(event.sequence)}`);
+      if (!container || !target) return;
+
+      const targetTop = target.offsetTop - (container.clientHeight - target.offsetHeight) / 2;
+      container.scrollTo({
+        top: Math.max(0, targetTop),
+        behavior: 'smooth'
+      });
+    },
+
     async loadTrajectoryList() {
       if (!this.currentSessionId) return;
       this.trajectoryLoading = true;
@@ -187,7 +217,7 @@ var chatApp = new Vue({
         if (response.data && response.data.success && response.data.data) {
           this.selectedTrajectory = response.data.data.trajectory;
           this.selectedTrajectoryEvents = response.data.data.events || [];
-          this.stopTrajectoryReplay();
+          this.stopTrajectoryReplay(true);
         }
       } catch (error) {
         console.error('加载 Harness 轨迹详情失败:', error);
@@ -253,24 +283,30 @@ var chatApp = new Vue({
 
     startTrajectoryReplay() {
       if (!this.selectedTrajectoryEvents.length) return;
-      this.stopTrajectoryReplay();
-      this.replayIndex = 0;
+      this.stopTrajectoryReplay(false);
+      if (this.replayIndex < 0 || this.replayIndex >= this.selectedTrajectoryEvents.length - 1) {
+        this.replayIndex = 0;
+      }
+      this.moveToReplayIndex(this.replayIndex);
       this.replayPlaying = true;
       this.replayTimer = window.setInterval(() => {
         if (this.replayIndex >= this.selectedTrajectoryEvents.length - 1) {
-          this.stopTrajectoryReplay();
+          this.stopTrajectoryReplay(false);
           return;
         }
-        this.replayIndex += 1;
+        this.moveToReplayIndex(this.replayIndex + 1);
       }, 650);
     },
 
-    stopTrajectoryReplay() {
+    stopTrajectoryReplay(resetPosition = false) {
       if (this.replayTimer) {
         window.clearInterval(this.replayTimer);
         this.replayTimer = null;
       }
       this.replayPlaying = false;
+      if (resetPosition) {
+        this.replayIndex = -1;
+      }
     },
 
     askTrajectoryInstruction(title, defaultValue) {

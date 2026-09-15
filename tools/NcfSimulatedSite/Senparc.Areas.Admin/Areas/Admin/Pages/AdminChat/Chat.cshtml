@@ -413,11 +413,11 @@
                                         <span>执行模式</span>
                                     </div>
                                     <el-radio-group v-model="launcherChatMode" size="small" class="launcher-mode-toggle">
-                                    <el-radio-button label="harness">
-                                        <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
-                                    </el-radio-button>
                                     <el-radio-button label="simple">
                                         <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
+                                    </el-radio-button>
+                                    <el-radio-button label="harness">
+                                        <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
                                     </el-radio-button>
                                     </el-radio-group>
                                 </div>
@@ -554,10 +554,13 @@
             <el-timeline class="trajectory-timeline">
                 <el-timeline-item
                     v-for="event in selectedTrajectoryEvents"
-                    :key="event.id"
+                    :key="event.id || event.sequence"
                     :timestamp="formatTime(event.occurredAt)"
                     placement="top">
-                    <div class="trajectory-event">
+                    <div
+                        :id="trajectoryEventDomId(event.sequence)"
+                        :class="['trajectory-event', { 'is-replay-current': replayEvent && replayEvent.sequence === event.sequence }]"
+                        @@click="selectReplayEvent(selectedTrajectoryEvents.indexOf(event))">
                         <div class="trajectory-event-title">
                             <span>#{{ event.sequence }} {{ trajectoryEventLabel(event.eventType) }}</span>
                             <strong v-if="event.name">{{ event.name }}</strong>

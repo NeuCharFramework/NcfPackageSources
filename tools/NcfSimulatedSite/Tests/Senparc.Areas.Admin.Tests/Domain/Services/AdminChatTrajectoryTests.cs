@@ -79,21 +79,36 @@ public class AdminChatTrajectoryTests
             {
                 Id = 2,
                 Sequence = 2,
+                EventType = "TextContent",
+                Content = "TextContent",
+                PayloadJson = "{\"Text\":\"TextContent\"}"
+            },
+            new AdminChatTrajectoryEventDto
+            {
+                Id = 3,
+                Sequence = 3,
                 EventType = "assistant.text",
                 Content = "整理工具结果",
                 OccurredAt = DateTime.Parse("2026-09-15T10:00:01")
             },
             new AdminChatTrajectoryEventDto
             {
-                Id = 3,
-                Sequence = 3,
+                Id = 4,
+                Sequence = 4,
                 EventType = "tool.call",
                 Name = "InspectDatabase"
             },
             new AdminChatTrajectoryEventDto
             {
-                Id = 4,
-                Sequence = 4,
+                Id = 5,
+                Sequence = 5,
+                EventType = "TextContent",
+                Content = "重复文本"
+            },
+            new AdminChatTrajectoryEventDto
+            {
+                Id = 6,
+                Sequence = 6,
                 EventType = "assistant.text",
                 Content = "下一阶段",
                 CorrelationId = "phase-2"
