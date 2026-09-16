@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.17.1</Version>
+    <Version>0.17.2</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -160,7 +160,9 @@
 		[2026-09-15] v0.17.1 适配 Agent Framework Harness 依赖并保持代理执行兼容
 		1、升级 AgentKernel 依赖并接入 Microsoft Agents AI Harness 包
 		2、保持代理工作流执行、工具交互与历史状态处理兼容
-    </PackageReleaseNotes>
+		[2026-09-16] v0.17.2 升级 Senparc.Weixin.Work 依赖以保持企业微信兼容
+		1、升级 Senparc.Weixin.Work 至 3.32.4，保持代理管理模块的企业微信能力兼容
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
@@ -178,7 +180,7 @@
     <PackageReference Include="Microsoft.Agents.AI.A2A" Version="1.8.0-preview.260528.1" />
     <PackageReference Include="Senparc.AI.Agents" Version="$(SenparcAiAgentsVersion)" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
-    <PackageReference Include="Senparc.Weixin.Work" Version="3.32.1" />
+    <PackageReference Include="Senparc.Weixin.Work" Version="3.32.4" />
   </ItemGroup>
   <!--<ItemGroup>
 		<PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.15.2-preview1" />

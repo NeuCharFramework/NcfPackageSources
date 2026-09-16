@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net8.0</TargetFrameworks>
-		<Version>0.0.9</Version>
+		<Version>0.0.10</Version>
 		<PackageReleaseNotes>
 		  [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
 		  1、Dependency update from Senparc.Xncf.ChangeNamespace to 0.22.0-preview2
@@ -16,7 +16,8 @@
 		  1、递归更新上游项目依赖，保持 Senparc.Xncf.ChangeNamespace.Tests 与当前版本组合兼容
 		  [2026-08-29] v0.0.9 Dependency updates from Senparc.Xncf.ChangeNamespace to 0.22.8
 		  1、Dependency update from Senparc.Xncf.ChangeNamespace to 0.22.8
-		</PackageReleaseNotes>
+		  [2026-09-16] v0.0.10 Dependency updates from upstream modules
+</PackageReleaseNotes>
 
 		<IsPackable>false</IsPackable>
 

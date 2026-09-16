@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.3.8</Version>
+		<Version>0.3.9</Version>
 		<AssemblyName>Senparc.Xncf.Accounts</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Accounts</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -44,7 +44,8 @@
 			1、递归更新上游项目依赖，保持 Senparc.Xncf.Accounts 与当前版本组合兼容
 			[2026-08-29] v0.3.8 Dependency updates from Senparc.Ncf.DatabasePlant to 0.21.10
 			1、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.10
-		</PackageReleaseNotes>
+			[2026-09-16] v0.3.9 Dependency updates from Senparc.Aspire.AppHost to 0.0.15; Senparc.Web to 0.39.1
+</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
 		<UserSecretsId>09f08471-c710-42f1-9f6b-936794838320</UserSecretsId>

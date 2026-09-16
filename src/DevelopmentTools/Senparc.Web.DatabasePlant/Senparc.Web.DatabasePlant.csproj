@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.14</Version>
+		<Version>0.0.15</Version>
 		<PackageReleaseNotes>
 		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -28,7 +28,8 @@
 		  1、Dependency update from Senparc.Xncf.AgentsManager to 0.17.0
 		  [2026-09-15] v0.0.14 同步上游模块版本并保持宿主兼容
 		  1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
-		</PackageReleaseNotes>
+		  [2026-09-16] v0.0.15 Dependency updates from upstream modules
+</PackageReleaseNotes>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
