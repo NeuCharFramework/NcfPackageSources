@@ -63,7 +63,7 @@ public class AdminChatTrajectoryTests
     }
 
     [TestMethod]
-    public void CollapseAssistantTextChunks_ShouldMergeOnlyAdjacentLegacyTextEvents()
+    public void CollapseAssistantTextChunks_ShouldMergeAdjacentAssistantAndReasoningChunks()
     {
         var events = new[]
         {
@@ -109,9 +109,15 @@ public class AdminChatTrajectoryTests
             {
                 Id = 6,
                 Sequence = 6,
-                EventType = "assistant.text",
-                Content = "下一阶段",
-                CorrelationId = "phase-2"
+                EventType = "TextReasoningContent",
+                PayloadJson = "{\"$type\":\"reasoning\",\"Text\":\"The\"}"
+            },
+            new AdminChatTrajectoryEventDto
+            {
+                Id = 7,
+                Sequence = 7,
+                EventType = "TextReasoningContent",
+                PayloadJson = "{\"$type\":\"reasoning\",\"Text\":\" user\"}"
             }
         };
 
@@ -120,6 +126,7 @@ public class AdminChatTrajectoryTests
         Assert.AreEqual(3, collapsed.Count);
         Assert.AreEqual("正在整理工具结果", collapsed[0].Content);
         Assert.AreEqual("tool.call", collapsed[1].EventType);
-        Assert.AreEqual("下一阶段", collapsed[2].Content);
+        Assert.AreEqual("The user", collapsed[2].Content);
+        Assert.AreEqual("{\"$type\":\"reasoning\",\"Text\":\" user\"}", collapsed[2].PayloadJson);
     }
 }

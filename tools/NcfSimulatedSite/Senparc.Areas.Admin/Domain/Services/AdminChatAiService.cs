@@ -65,6 +65,7 @@ using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using MafFunctionCallContent = Microsoft.Extensions.AI.FunctionCallContent;
 using MafFunctionResultContent = Microsoft.Extensions.AI.FunctionResultContent;
 using MafTextContent = Microsoft.Extensions.AI.TextContent;
+using MafTextReasoningContent = Microsoft.Extensions.AI.TextReasoningContent;
 using MafToolApprovalRequestContent = Microsoft.Extensions.AI.ToolApprovalRequestContent;
 using MafToolApprovalResponseContent = Microsoft.Extensions.AI.ToolApprovalResponseContent;
 
@@ -675,6 +676,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var output = new StringBuilder();
             var phaseText = new StringBuilder();
             var phaseKey = string.Empty;
+            var phaseEventType = string.Empty;
             var pendingApprovals = new List<AdminChatApprovalRequestDto>();
             var trajectoryEvents = new List<AdminChatTrajectoryEventDto>();
             using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -690,19 +692,49 @@ namespace Senparc.Areas.Admin.Domain.Services
                 {
                     if (!string.IsNullOrEmpty(update.Text))
                     {
+                        if (!string.IsNullOrEmpty(phaseEventType)
+                            && !string.Equals(phaseEventType, "assistant.text", StringComparison.Ordinal))
+                        {
+                            var completedReasoningEvent = await FlushAssistantPhaseAsync(
+                                trajectory,
+                                phaseKey,
+                                phaseText,
+                                trajectoryEvents,
+                                phaseEventType);
+                            if (completedReasoningEvent != null)
+                            {
+                                onLiveEvent?.Invoke(new AdminChatLiveEvent
+                                {
+                                    TrajectoryId = trajectory.Id,
+                                    Kind = "trajectory-event",
+                                    Text = completedReasoningEvent.Content,
+                                    TrajectoryEvent = completedReasoningEvent,
+                                    PendingApprovals = pendingApprovals.ToList()
+                                });
+                            }
+
+                            phaseKey = string.Empty;
+                            phaseEventType = string.Empty;
+                        }
+
                         output.Append(update.Text);
                         if (string.IsNullOrEmpty(phaseKey))
                         {
                             phaseKey = $"assistant-phase-{Guid.NewGuid():N}";
                         }
 
+                        phaseEventType = "assistant.text";
                         phaseText.Append(update.Text);
                         onLiveEvent?.Invoke(new AdminChatLiveEvent
                         {
                             TrajectoryId = trajectory.Id,
                             Kind = "assistant-phase",
                             Text = phaseText.ToString(),
-                            TrajectoryEvent = CreateLiveAssistantPhase(trajectory, phaseKey, phaseText.ToString()),
+                            TrajectoryEvent = CreateLiveAssistantPhase(
+                                trajectory,
+                                phaseKey,
+                                phaseText.ToString(),
+                                phaseEventType),
                             PendingApprovals = pendingApprovals.ToList()
                         });
                     }
@@ -716,12 +748,38 @@ namespace Senparc.Areas.Admin.Domain.Services
                             if (string.IsNullOrEmpty(update.Text)
                                 && !string.IsNullOrEmpty(textContent.Text))
                             {
+                                if (!string.IsNullOrEmpty(phaseEventType)
+                                    && !string.Equals(phaseEventType, "assistant.text", StringComparison.Ordinal))
+                                {
+                                    var completedReasoningEvent = await FlushAssistantPhaseAsync(
+                                        trajectory,
+                                        phaseKey,
+                                        phaseText,
+                                        trajectoryEvents,
+                                        phaseEventType);
+                                    if (completedReasoningEvent != null)
+                                    {
+                                        onLiveEvent?.Invoke(new AdminChatLiveEvent
+                                        {
+                                            TrajectoryId = trajectory.Id,
+                                            Kind = "trajectory-event",
+                                            Text = completedReasoningEvent.Content,
+                                            TrajectoryEvent = completedReasoningEvent,
+                                            PendingApprovals = pendingApprovals.ToList()
+                                        });
+                                    }
+
+                                    phaseKey = string.Empty;
+                                    phaseEventType = string.Empty;
+                                }
+
                                 output.Append(textContent.Text);
                                 if (string.IsNullOrEmpty(phaseKey))
                                 {
                                     phaseKey = $"assistant-phase-{Guid.NewGuid():N}";
                                 }
 
+                                phaseEventType = "assistant.text";
                                 phaseText.Append(textContent.Text);
                                 onLiveEvent?.Invoke(new AdminChatLiveEvent
                                 {
@@ -731,7 +789,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                                     TrajectoryEvent = CreateLiveAssistantPhase(
                                         trajectory,
                                         phaseKey,
-                                        phaseText.ToString()),
+                                        phaseText.ToString(),
+                                        phaseEventType),
                                     PendingApprovals = pendingApprovals.ToList()
                                 });
                             }
@@ -739,11 +798,62 @@ namespace Senparc.Areas.Admin.Domain.Services
                             continue;
                         }
 
+                        if (content is MafTextReasoningContent reasoningContent
+                            && !string.IsNullOrEmpty(reasoningContent.Text))
+                        {
+                            if (!string.IsNullOrEmpty(phaseEventType)
+                                && !string.Equals(phaseEventType, "TextReasoningContent", StringComparison.Ordinal))
+                            {
+                                var completedAssistantEvent = await FlushAssistantPhaseAsync(
+                                    trajectory,
+                                    phaseKey,
+                                    phaseText,
+                                    trajectoryEvents,
+                                    phaseEventType);
+                                if (completedAssistantEvent != null)
+                                {
+                                    onLiveEvent?.Invoke(new AdminChatLiveEvent
+                                    {
+                                        TrajectoryId = trajectory.Id,
+                                        Kind = "trajectory-event",
+                                        Text = completedAssistantEvent.Content,
+                                        TrajectoryEvent = completedAssistantEvent,
+                                        PendingApprovals = pendingApprovals.ToList()
+                                    });
+                                }
+
+                                phaseKey = string.Empty;
+                                phaseEventType = string.Empty;
+                            }
+
+                            if (string.IsNullOrEmpty(phaseKey))
+                            {
+                                phaseKey = $"assistant-reasoning-{Guid.NewGuid():N}";
+                            }
+
+                            phaseEventType = "TextReasoningContent";
+                            phaseText.Append(reasoningContent.Text);
+                            onLiveEvent?.Invoke(new AdminChatLiveEvent
+                            {
+                                TrajectoryId = trajectory.Id,
+                                Kind = "assistant-phase",
+                                Text = phaseText.ToString(),
+                                TrajectoryEvent = CreateLiveAssistantPhase(
+                                    trajectory,
+                                    phaseKey,
+                                    phaseText.ToString(),
+                                    phaseEventType),
+                                PendingApprovals = pendingApprovals.ToList()
+                            });
+                            continue;
+                        }
+
                         var completedTextEvent = await FlushAssistantPhaseAsync(
                             trajectory,
                             phaseKey,
                             phaseText,
-                            trajectoryEvents);
+                            trajectoryEvents,
+                            phaseEventType);
                         if (completedTextEvent != null)
                         {
                             onLiveEvent?.Invoke(new AdminChatLiveEvent
@@ -756,6 +866,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                             });
                         }
                         phaseKey = string.Empty;
+                        phaseEventType = string.Empty;
 
                         var eventInfo = await AppendTrajectoryContentAsync(
                             trajectory,
@@ -780,7 +891,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                     trajectory,
                     phaseKey,
                     phaseText,
-                    trajectoryEvents);
+                    trajectoryEvents,
+                    phaseEventType);
                 if (finalTextEvent != null)
                 {
                     onLiveEvent?.Invoke(new AdminChatLiveEvent
@@ -843,7 +955,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             AdminChatTrajectory trajectory,
             string phaseKey,
             StringBuilder phaseText,
-            List<AdminChatTrajectoryEventDto> trajectoryEvents)
+            List<AdminChatTrajectoryEventDto> trajectoryEvents,
+            string phaseEventType = "assistant.text")
         {
             if (phaseText == null || phaseText.Length == 0)
             {
@@ -852,9 +965,11 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             var textEvent = await _trajectoryService.AppendAsync(
                 trajectory,
-                "assistant.text",
+                string.IsNullOrEmpty(phaseEventType) ? "assistant.text" : phaseEventType,
                 "assistant",
-                null,
+                string.Equals(phaseEventType, "TextReasoningContent", StringComparison.Ordinal)
+                    ? "TextReasoningContent"
+                    : null,
                 phaseText.ToString(),
                 null,
                 phaseKey);
@@ -867,13 +982,17 @@ namespace Senparc.Areas.Admin.Domain.Services
         private static AdminChatTrajectoryEventDto CreateLiveAssistantPhase(
             AdminChatTrajectory trajectory,
             string phaseKey,
-            string content)
+            string content,
+            string eventType = "assistant.text")
         {
             return new AdminChatTrajectoryEventDto
             {
                 Sequence = trajectory.LastSequence + 1,
-                EventType = "assistant.text",
+                EventType = string.IsNullOrEmpty(eventType) ? "assistant.text" : eventType,
                 Source = "assistant",
+                Name = string.Equals(eventType, "TextReasoningContent", StringComparison.Ordinal)
+                    ? "TextReasoningContent"
+                    : null,
                 Content = content,
                 CorrelationId = phaseKey,
                 IsReplayable = true
@@ -894,6 +1013,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var eventType = content.GetType().Name;
             var source = "agent";
             var name = content.GetType().Name;
+            var contentText = updateText;
             var payload = SerializeContent(content);
 
             if (content is MafFunctionCallContent functionCall)
@@ -932,13 +1052,20 @@ namespace Senparc.Areas.Admin.Domain.Services
                 name = (approvalResponse.ToolCall as MafFunctionCallContent)?.Name
                     ?? approvalResponse.ToolCall.GetType().Name;
             }
+            else if (content is MafTextReasoningContent reasoningContent)
+            {
+                eventType = "TextReasoningContent";
+                source = "assistant";
+                name = "TextReasoningContent";
+                contentText = reasoningContent.Text;
+            }
 
             var item = await _trajectoryService.AppendAsync(
                 trajectory,
                 eventType,
                 source,
                 name,
-                updateText,
+                contentText,
                 payload);
             return AdminChatTrajectoryEventDto.CreateFromEntity(item);
         }
