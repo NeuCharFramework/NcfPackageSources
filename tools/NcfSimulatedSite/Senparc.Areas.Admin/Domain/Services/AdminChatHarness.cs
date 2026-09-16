@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -162,7 +163,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// Coalesces legacy consecutive assistant text chunks for display and replay.
+        /// Coalesces legacy consecutive assistant/reasoning text chunks for display and replay.
         /// New events already use one event per assistant phase.
         /// </summary>
         public static IReadOnlyList<AdminChatTrajectoryEventDto> CollapseAssistantTextChunks(
@@ -180,14 +181,16 @@ namespace Senparc.Areas.Admin.Domain.Services
                     continue;
                 }
 
-                if (item?.EventType == "assistant.text")
+                if (IsTextPhaseEvent(item))
                 {
                     if (current != null
-                        && current.EventType == "assistant.text"
-                        && string.IsNullOrEmpty(current.CorrelationId)
-                        && string.IsNullOrEmpty(item.CorrelationId))
+                        && string.Equals(current.EventType, item.EventType, StringComparison.OrdinalIgnoreCase)
+                        && (string.IsNullOrEmpty(current.CorrelationId)
+                            && string.IsNullOrEmpty(item.CorrelationId)
+                            || !string.IsNullOrEmpty(current.CorrelationId)
+                            && string.Equals(current.CorrelationId, item.CorrelationId, StringComparison.Ordinal)))
                     {
-                        current.Content = (current.Content ?? string.Empty) + (item.Content ?? string.Empty);
+                        current.Content = GetText(current) + GetText(item);
                         current.PayloadJson = item.PayloadJson ?? current.PayloadJson;
                         current.OccurredAt = item.OccurredAt;
                         continue;
@@ -200,7 +203,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                         EventType = item.EventType,
                         Source = item.Source,
                         Name = item.Name,
-                        Content = item.Content,
+                        Content = GetText(item),
                         PayloadJson = item.PayloadJson,
                         OccurredAt = item.OccurredAt,
                         CorrelationId = item.CorrelationId,
@@ -223,6 +226,45 @@ namespace Senparc.Areas.Admin.Domain.Services
                 && (string.Equals(item.EventType, "TextContent", StringComparison.OrdinalIgnoreCase)
                     || string.Equals(item.EventType, "Microsoft.Extensions.AI.TextContent", StringComparison.OrdinalIgnoreCase)
                     || string.Equals(item.EventType, "text", StringComparison.OrdinalIgnoreCase));
+        }
+
+        private static bool IsTextPhaseEvent(AdminChatTrajectoryEventDto item)
+        {
+            return item != null
+                && (string.Equals(item.EventType, "assistant.text", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(item.EventType, "TextReasoningContent", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(item.EventType, "Microsoft.Extensions.AI.TextReasoningContent", StringComparison.OrdinalIgnoreCase));
+        }
+
+        private static string GetText(AdminChatTrajectoryEventDto item)
+        {
+            if (!string.IsNullOrEmpty(item?.Content))
+            {
+                return item.Content;
+            }
+
+            if (string.IsNullOrEmpty(item?.PayloadJson))
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                using var payload = JsonDocument.Parse(item.PayloadJson);
+                if (payload.RootElement.ValueKind == JsonValueKind.Object
+                    && (payload.RootElement.TryGetProperty("Text", out var text)
+                        || payload.RootElement.TryGetProperty("text", out text))
+                    && text.ValueKind == JsonValueKind.String)
+                {
+                    return text.GetString() ?? string.Empty;
+                }
+            }
+            catch (JsonException)
+            {
+                // Keep malformed legacy payloads unchanged.
+            }
+
+            return string.Empty;
         }
     }
 
