@@ -126,7 +126,8 @@ public sealed class AdminChatStreamController : ControllerBase
             userId,
             content,
             request.AiModelId,
-            liveEvents.Writer);
+            liveEvents.Writer,
+            cancellationToken);
 
         try
         {
@@ -198,36 +199,38 @@ public sealed class AdminChatStreamController : ControllerBase
         int userId,
         string content,
         int aiModelId,
-        ChannelWriter<AdminChatLiveEvent> writer)
-    {
-        try
+        ChannelWriter<AdminChatLiveEvent> writer,
+        CancellationToken cancellationToken)
         {
-            var result = await _chatAiService.GenerateResponseAsync(
-                sessionId,
-                userId,
-                content,
-                aiModelId,
-                chunk => writer.TryWrite(new AdminChatLiveEvent
-                {
-                    Kind = "token",
-                    Text = chunk
-                }));
-            return new AdminChatStreamResult
+            try
             {
-                Response = result.response,
-                ModelIdentifier = result.modelIdentifier
-            };
+                var result = await _chatAiService.GenerateResponseAsync(
+                    sessionId,
+                    userId,
+                    content,
+                    aiModelId,
+                    chunk => writer.TryWrite(new AdminChatLiveEvent
+                    {
+                        Kind = "token",
+                        Text = chunk
+                    }),
+                    cancellationToken: cancellationToken);
+                return new AdminChatStreamResult
+                {
+                    Response = result.response,
+                    ModelIdentifier = result.modelIdentifier
+                };
+            }
+            catch (Exception ex)
+            {
+                writer.TryComplete(ex);
+                throw;
+            }
+            finally
+            {
+                writer.TryComplete();
+            }
         }
-        catch (Exception ex)
-        {
-            writer.TryComplete(ex);
-            throw;
-        }
-        finally
-        {
-            writer.TryComplete();
-        }
-    }
 
     private async Task<AdminChatStreamResult> GenerateHarnessResponseAsync(
         int sessionId,
