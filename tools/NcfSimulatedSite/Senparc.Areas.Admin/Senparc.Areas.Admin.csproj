@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.8.0</Version>
+		<Version>0.9.0</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -57,7 +57,11 @@
     1、新增 Admin Chat Harness 执行、轨迹记录以及 Replay、Resume、Fork 和工具审批交互
     2、完善 Admin Chat 消息轨迹持久化、NeuBell WebHook 配置和请求结果日志
     3、增加 NeuCharPivot 管理页面、菜单排序和前端交互优化，并补齐多数据库迁移
-		</PackageReleaseNotes>
+    [2026-09-16] v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+    1、支持 Admin Chat 请求取消、推理内容流式展示及轨迹回放兼容
+    2、扩展 NeuBell WebHook 的 GET/POST/PUT 请求、请求体模板、URL 校验与请求日志
+    3、同步管理端页面交互、配置说明及多数据库迁移
+</PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

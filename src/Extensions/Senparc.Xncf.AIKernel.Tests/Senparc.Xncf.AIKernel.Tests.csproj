@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <PackageReleaseNotes>
       [2026-09-05] v0.0.1 新增 AIKernel Token 监控单元测试
       1、覆盖 AITokenUsageSnapshot 归一化与空值判断
@@ -12,7 +12,8 @@
       [2026-09-15] v0.0.1 补充 AIKernel Token 监控回归测试
       1、覆盖 Token 快照、进度事件、实时聚合和异步订阅的核心行为
       2、验证模型维度、日期维度、完成终止与并发安全场景
-    </PackageReleaseNotes>
+      [2026-09-16] v0.0.2 Dependency updates from upstream modules
+</PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>

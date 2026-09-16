@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.3.1</Version>
+    <Version>0.3.2</Version>
     <AssemblyName>Senparc.Xncf.Sandbox</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -37,7 +37,8 @@
       [2026-09-15] v0.3.1 补充 Sandbox 数据库迁移并保持工作区边界兼容
       1、补充 Sandbox 模块迁移文件，支持当前数据库初始化流程
       2、保持工作区文件树和路径边界校验行为稳定
-    </PackageReleaseNotes>
+      [2026-09-16] v0.3.2 Dependency updates from Senparc.Web to 0.39.1
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <Nullable>enable</Nullable>

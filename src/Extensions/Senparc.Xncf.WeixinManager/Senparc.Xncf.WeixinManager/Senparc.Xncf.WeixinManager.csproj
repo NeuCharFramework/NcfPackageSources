@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.24.6</Version>
+    <Version>0.24.7</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -104,7 +104,10 @@
 		[2026-09-15] v0.24.6 适配共享 AI 依赖与 Harness 版本
 		1、同步 AgentKernel 及 Microsoft Agents AI Harness 依赖
 		2、保持微信管理模块宿主集成兼容
-    </PackageReleaseNotes>
+		[2026-09-16] v0.24.7 升级微信相关组件至当前兼容版本
+		1、同步 Senparc.Weixin.AspNet、MP、Open、TenPay、Work 与 WxOpen 等组件版本
+		2、保持微信管理模块在当前 .NET 10 宿主中的运行兼容
+</PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
@@ -141,13 +144,13 @@
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
     <!--<PackageReference Include="Senparc.Weixin.All" Version="2025.10.24" />-->
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />-->
-    <PackageReference Include="Senparc.Weixin.AspNet" Version="1.6.6" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.25.1" />
-    <PackageReference Include="Senparc.Weixin.MP.Middleware" Version="1.5.5" />
-    <PackageReference Include="Senparc.Weixin.Open" Version="4.24.4" />
-    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.20.0" />
-    <PackageReference Include="Senparc.Weixin.Work" Version="3.32.1" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.28.1" />
+    <PackageReference Include="Senparc.Weixin.AspNet" Version="1.6.7" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.25.3" />
+    <PackageReference Include="Senparc.Weixin.MP.Middleware" Version="1.5.7" />
+    <PackageReference Include="Senparc.Weixin.Open" Version="4.24.5" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.20.1" />
+    <PackageReference Include="Senparc.Weixin.Work" Version="3.32.4" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.28.3" />
     <!-- 由于 Npgsql 生成代码有依赖，因此此处暂时引用 -->
     <!--<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />-->
     <!--<PackageReference Include="Senparc.Ncf.Database.PostgreSQL" Version="0.12.8.3-preview1" />

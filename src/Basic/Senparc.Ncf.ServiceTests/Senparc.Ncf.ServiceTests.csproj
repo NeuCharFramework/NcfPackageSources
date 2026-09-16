@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.11</Version>
+    <Version>0.0.12</Version>
     <PackageReleaseNotes>
 [2026-07-07] v0.0.1 Dependency updates from upstream modules
 1、Dependency update from Senparc.Xncf.PromptRange to 0.16.5-preview4
@@ -30,7 +30,8 @@
 2、Dependency update from Senparc.Ncf.UnitTestExtension to 0.3.23
 [2026-09-15] v0.0.11 同步上游模块版本并保持宿主兼容
 1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
-    </PackageReleaseNotes>
+[2026-09-16] v0.0.12 Dependency updates from upstream modules
+</PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.16.0</Version>
+    <Version>0.16.1</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -107,7 +107,9 @@
 		1、新增 Token 用量记录、进度聚合、按模型与日期统计及后台监控页面
 		2、增加 AIModel 与 AIVector 选择列表接口，完善模型映射和多数据库迁移
 		3、适配 Senparc.AI AgentKernel 与 Microsoft Agents AI Harness 依赖版本
-    </PackageReleaseNotes>
+		[2026-09-16] v0.16.1 适配 Senparc.NeuChar.App 1.6.0 依赖
+		1、升级 Senparc.NeuChar.App 至 1.6.0，保持 AI 模块与宿主应用的兼容
+</PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -156,7 +158,7 @@
     <EmbeddedResource Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <None Remove="Domain\Models\DatabaseModel\Mapping\**" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
-    <PackageReference Include="Senparc.NeuChar.App" Version="1.5.6" />
+    <PackageReference Include="Senparc.NeuChar.App" Version="1.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
