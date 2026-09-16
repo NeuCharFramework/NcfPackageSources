@@ -1,6 +1,6 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
-  
+
     文件名：Register.cs
     文件功能描述：模块注册与初始化逻辑
 
@@ -46,6 +46,9 @@
     修改标识：Senparc - 20260915
     修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
 
+    修改标识：Senparc - 20260916
+    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+
 ----------------------------------------------------------------*/
 
 /* 
@@ -67,6 +70,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http;
+using Microsoft.Extensions.Logging;
+using System.Net.Http;
 using Senparc.Areas.Admin.ACL;
 using Senparc.Areas.Admin.ACL.Repository;
 using Senparc.Areas.Admin.Domain;
@@ -289,7 +295,12 @@ namespace Senparc.Areas.Admin
             services.AddScoped<NeuBellWebHookLogService>();
             services.AddHttpClient(NeuBellWebHookDispatcher.HttpClientName, client =>
                 client.Timeout = TimeSpan.FromSeconds(15));
-            services.AddSingleton<NeuBellWebHookDispatcher>();
+            services.AddSingleton<NeuBellWebHookDispatcher>(serviceProvider =>
+                new NeuBellWebHookDispatcher(
+                    serviceProvider,
+                    serviceProvider.GetRequiredService<IHttpClientFactory>(),
+                    serviceProvider.GetRequiredService<ILogger<NeuBellWebHookDispatcher>>(),
+                    configuration["NeuBellWebHook:BaseUrl"]));
             services.AddHostedService<NeuBellWebHookMonitorService>();
 
             return base.AddXncfModule(services, configuration, env);

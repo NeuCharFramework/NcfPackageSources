@@ -355,10 +355,19 @@
                             <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
                         </el-radio-button>
                     </el-radio-group>
-                    <el-button 
-                        type="primary" 
+                    <el-button
+                        v-if="isSending"
+                        type="danger"
+                        icon="el-icon-close"
+                        :loading="isStopping"
+                        :disabled="isStopping"
+                        @@click="stopCurrentRequest">
+                        终止
+                    </el-button>
+                    <el-button
+                        v-else
+                        type="primary"
                         icon="el-icon-s-promotion"
-                        :loading="isSending"
                         :disabled="!currentSessionId || !inputMessage || inputMessage.trim().length === 0"
                         @@click="sendMessage">
                         @AR["AdminChat.Send"]
@@ -462,29 +471,31 @@
                                 </div>
                             </div>
 
-                            <div v-if="selectedModules.length > 0 || selectedWorkflows.length > 0" class="chat-module-selected-list">
-                                <el-tag
-                                    v-for="module in selectedModules"
-                                    :key="module.uid"
-                                    closable
-                                    @@close="removeModule(module.uid)"
-                                    type="info"
-                                    class="module-tag">
-                                    <i :class="module.icon" aria-hidden="true"></i>
-                                    <span class="module-tag-name">{{module.name}}</span>
-                                </el-tag>
-                            </div>
-                            <div v-if="selectedWorkflows.length > 0" class="chat-module-selected-list">
-                                <el-tag
-                                    v-for="workflow in selectedWorkflows"
-                                    :key="`selected-workflow-${workflow.id}`"
-                                    closable
-                                    @@close="removeWorkflow(workflow.id)"
-                                    type="success"
-                                    class="module-tag">
-                                    <i class="fa fa-random" aria-hidden="true"></i>
-                                    <span class="module-tag-name">{{workflow.name}}</span>
-                                </el-tag>
+                            <div v-if="selectedModules.length > 0 || selectedWorkflows.length > 0" class="chat-reference-tags">
+                                <div v-if="selectedModules.length > 0" class="chat-module-selected-list chat-reference-tag-row">
+                                    <el-tag
+                                        v-for="module in selectedModules"
+                                        :key="module.uid"
+                                        closable
+                                        @@close="removeModule(module.uid)"
+                                        type="info"
+                                        class="module-tag">
+                                        <i :class="module.icon" aria-hidden="true"></i>
+                                        <span class="module-tag-name">{{module.name}}</span>
+                                    </el-tag>
+                                </div>
+                                <div v-if="selectedWorkflows.length > 0" class="chat-module-selected-list chat-reference-tag-row chat-workflow-tag-row">
+                                    <el-tag
+                                        v-for="workflow in selectedWorkflows"
+                                        :key="`selected-workflow-${workflow.id}`"
+                                        closable
+                                        @@close="removeWorkflow(workflow.id)"
+                                        type="success"
+                                        class="module-tag">
+                                        <i class="fa fa-random" aria-hidden="true"></i>
+                                        <span class="module-tag-name">{{workflow.name}}</span>
+                                    </el-tag>
+                                </div>
                             </div>
                             <div v-else class="chat-module-selected-empty">
                                 <i class="fa fa-lightbulb-o"></i>
@@ -551,25 +562,27 @@
                 <strong v-if="replayEvent.name">{{ replayEvent.name }}</strong>
                 <div v-if="replayEvent.content">{{ replayEvent.content }}</div>
             </div>
-            <el-timeline class="trajectory-timeline">
-                <el-timeline-item
-                    v-for="event in selectedTrajectoryEvents"
-                    :key="event.id || event.sequence"
-                    :timestamp="formatTime(event.occurredAt)"
-                    placement="top">
-                    <div
-                        :id="trajectoryEventDomId(event.sequence)"
-                        :class="['trajectory-event', { 'is-replay-current': replayEvent && replayEvent.sequence === event.sequence }]"
-                        @@click="selectReplayEvent(selectedTrajectoryEvents.indexOf(event))">
-                        <div class="trajectory-event-title">
-                            <span>#{{ event.sequence }} {{ trajectoryEventLabel(event.eventType) }}</span>
-                            <strong v-if="event.name">{{ event.name }}</strong>
+            <div ref="trajectoryTimeline" class="trajectory-timeline">
+                <el-timeline>
+                    <el-timeline-item
+                        v-for="event in selectedTrajectoryEvents"
+                        :key="event.id || event.sequence"
+                        :timestamp="formatTime(event.occurredAt)"
+                        placement="top">
+                        <div
+                            :id="trajectoryEventDomId(event.sequence)"
+                            :class="['trajectory-event', { 'is-replay-current': replayEvent && replayEvent.sequence === event.sequence }]"
+                            @@click="selectReplayEvent(selectedTrajectoryEvents.indexOf(event))">
+                            <div class="trajectory-event-title">
+                                <span>#{{ event.sequence }} {{ trajectoryEventLabel(event.eventType) }}</span>
+                                <strong v-if="event.name">{{ event.name }}</strong>
+                            </div>
+                            <div class="trajectory-event-content" v-if="event.content">{{ event.content }}</div>
+                            <pre class="trajectory-event-payload" v-if="event.payloadJson">{{ formatTrajectoryPayload(event.payloadJson) }}</pre>
                         </div>
-                        <div class="trajectory-event-content" v-if="event.content">{{ event.content }}</div>
-                        <pre class="trajectory-event-payload" v-if="event.payloadJson">{{ formatTrajectoryPayload(event.payloadJson) }}</pre>
-                    </div>
-                </el-timeline-item>
-            </el-timeline>
+                    </el-timeline-item>
+                </el-timeline>
+            </div>
         </div>
     </el-dialog>
 </div>

@@ -12,6 +12,9 @@
     修改标识：Senparc - 20260915
     修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
 
+    修改标识：Senparc - 20260916
+    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -126,7 +129,8 @@ public sealed class AdminChatStreamController : ControllerBase
             userId,
             content,
             request.AiModelId,
-            liveEvents.Writer);
+            liveEvents.Writer,
+            cancellationToken);
 
         try
         {
@@ -198,36 +202,38 @@ public sealed class AdminChatStreamController : ControllerBase
         int userId,
         string content,
         int aiModelId,
-        ChannelWriter<AdminChatLiveEvent> writer)
-    {
-        try
+        ChannelWriter<AdminChatLiveEvent> writer,
+        CancellationToken cancellationToken)
         {
-            var result = await _chatAiService.GenerateResponseAsync(
-                sessionId,
-                userId,
-                content,
-                aiModelId,
-                chunk => writer.TryWrite(new AdminChatLiveEvent
-                {
-                    Kind = "token",
-                    Text = chunk
-                }));
-            return new AdminChatStreamResult
+            try
             {
-                Response = result.response,
-                ModelIdentifier = result.modelIdentifier
-            };
+                var result = await _chatAiService.GenerateResponseAsync(
+                    sessionId,
+                    userId,
+                    content,
+                    aiModelId,
+                    chunk => writer.TryWrite(new AdminChatLiveEvent
+                    {
+                        Kind = "token",
+                        Text = chunk
+                    }),
+                    cancellationToken: cancellationToken);
+                return new AdminChatStreamResult
+                {
+                    Response = result.response,
+                    ModelIdentifier = result.modelIdentifier
+                };
+            }
+            catch (Exception ex)
+            {
+                writer.TryComplete(ex);
+                throw;
+            }
+            finally
+            {
+                writer.TryComplete();
+            }
         }
-        catch (Exception ex)
-        {
-            writer.TryComplete(ex);
-            throw;
-        }
-        finally
-        {
-            writer.TryComplete();
-        }
-    }
 
     private async Task<AdminChatStreamResult> GenerateHarnessResponseAsync(
         int sessionId,

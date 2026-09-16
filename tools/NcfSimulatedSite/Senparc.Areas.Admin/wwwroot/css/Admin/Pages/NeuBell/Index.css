@@ -108,3 +108,31 @@
     word-break: break-all;
 }
 
+
+/* v0.7.1 占位符说明帮助块 */
+.neubell-token-help {
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: #f5f7fa;
+    border-left: 3px solid #409eff;
+    border-radius: 2px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #606266;
+}
+
+.neubell-token-help p {
+    margin: 2px 0;
+}
+
+.neubell-token-help code {
+    background: #ecf5ff;
+    color: #409eff;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: Consolas, Monaco, monospace;
+}
+
+.neubell-token-notes {
+    color: #909399;
+}

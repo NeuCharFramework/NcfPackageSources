@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.26.1</Version>
+    <Version>0.27.0</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -84,7 +84,10 @@
 			1、完善模块注册生命周期和函数参数解析，保持基础模块与多数据库日志能力兼容
 			[2026-08-29] v0.26.1 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
 			1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
-    </PackageReleaseNotes>
+			[2026-09-16] v0.27.0 新增 TextArea 函数参数类型并支持多行文本渲染
+			1、扩展 ParameterType，支持多行字符串参数并保持既有参数值兼容
+			2、同步工作流、NeuCharPivot 与模块执行页面的 textarea 输入交互
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

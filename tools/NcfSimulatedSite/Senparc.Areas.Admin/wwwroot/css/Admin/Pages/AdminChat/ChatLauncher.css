@@ -102,6 +102,22 @@
   gap: 6px;
 }
 
+.chat-reference-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 30px;
+}
+
+.chat-reference-tag-row {
+  width: 100%;
+}
+
+.chat-workflow-tag-row {
+  padding-top: 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
 .chat-reference-picker .chat-module-selected-list .module-tag.el-tag {
   height: 30px;
   padding: 0 8px;

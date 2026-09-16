@@ -203,6 +203,7 @@
                                                 <div class="pivot-parameter" v-for="parameter in getPivotParameters(getPivotFunction(layoutFunction.functionKey))" :key="parameter.name">
                                                     <label>{{parameter.title || parameter.name}} <em v-if="parameter.required">*</em></label>
                                                     <el-input v-if="parameter.parameterType===0 || parameter.parameterType===3" :type="parameter.parameterType===3?'password':'text'" v-model="pivot.inputs[getPivotFunction(layoutFunction.functionKey).id][parameter.name]" :maxlength="parameter.maxLength || 500"></el-input>
+                                                    <el-input v-else-if="parameter.parameterType===5" type="textarea" :rows="6" v-model="pivot.inputs[getPivotFunction(layoutFunction.functionKey).id][parameter.name]" :maxlength="parameter.maxLength || 20000" show-word-limit></el-input>
                                                     <el-select v-else-if="parameter.parameterType===1" v-model="pivot.inputs[getPivotFunction(layoutFunction.functionKey).id][parameter.name]" :filterable="parameter.filterable" :allow-create="parameter.allowCreate">
                                                         <el-option v-for="option in parameter.options" :key="option.value" :label="option.text" :value="option.value"></el-option>
                                                     </el-select>
@@ -273,6 +274,12 @@
                           v-model="runData[item.name].value" 
                           :maxlength="item.maxLength===0 ? 500 : item.maxLength"
                           :type="item.parameterType===3 ? 'password' : 'text'"></el-input>
+                <el-input v-else-if="item.parameterType===5"
+                          type="textarea"
+                          :rows="8"
+                          v-model="runData[item.name].value"
+                          :maxlength="item.maxLength===0 ? 20000 : item.maxLength"
+                          show-word-limit></el-input>
                 <el-checkbox v-if="item.parameterType===4" v-model="runData[item.name].value"></el-checkbox>
                 <el-select v-if="item.parameterType===1"
                            v-model="runData[item.name].value"

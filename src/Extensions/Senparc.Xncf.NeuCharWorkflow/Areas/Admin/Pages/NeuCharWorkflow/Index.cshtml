@@ -814,6 +814,14 @@
                                                           :disabled="editingLocked"
                                                           v-model="selectedNode.config.parameters[parameter.name]"
                                                           placeholder="手动输入"></el-input>
+                                                <el-input v-else-if="parameter.parameterType===5"
+                                                          type="textarea"
+                                                          :rows="8"
+                                                          :disabled="editingLocked"
+                                                          v-model="selectedNode.config.parameters[parameter.name]"
+                                                          placeholder="手动输入"
+                                                          show-word-limit
+                                                          :maxlength="parameter.maxLength || 20000"></el-input>
                                                 <el-select v-else-if="parameter.parameterType===1"
                                                            v-model="selectedNode.config.parameters[parameter.name]"
                                                            :disabled="editingLocked"

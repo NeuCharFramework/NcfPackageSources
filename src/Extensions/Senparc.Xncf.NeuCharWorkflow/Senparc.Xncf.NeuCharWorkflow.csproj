@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.0</Version>
+    <Version>0.4.1</Version>
     <PackageReleaseNotes>
       [2026-08-13] v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
       1、支持版本与自动保存、Webhook 触发、并行节点和执行回放
@@ -29,7 +29,9 @@
       [2026-09-15] v0.4.0 增强 Chat 触发器消息持久化与恢复能力
       1、支持聊天消息跨主机重启恢复，并按会话生命周期清理历史记录
       2、完善运行占位、状态轮询、会话重置与工作流删除时的数据一致性
-    </PackageReleaseNotes>
+      [2026-09-16] v0.4.1 支持工作流参数的多行文本输入
+      1、在工作流节点参数编辑界面增加 TextArea 控件及长度限制
+</PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

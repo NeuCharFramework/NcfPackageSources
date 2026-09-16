@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.5</Version>
+    <Version>0.19.6</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -130,7 +130,8 @@
       [2026-09-15] v0.19.5 适配共享 AI 依赖与 Harness 版本
       1、同步 AgentKernel 及 Microsoft Agents AI Harness 依赖
       2、保持 PromptRange 宿主集成与模型调用兼容
-    </PackageReleaseNotes>
+      [2026-09-16] v0.19.6 Dependency updates from Senparc.IntegrationSample to 0.0.13; Senparc.Xncf.AIAgentsHub to 0.13.9; Senparc.Xncf.AgentsManager to 0.17.2; Senparc.Xncf.AgentsManagerTests to 0.0.15; Senparc.Xncf.WeixinManager to 0.24.7; Senparc.Web to 0.39.1
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">

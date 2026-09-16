@@ -28,6 +28,9 @@
     修改标识：Senparc - 20260915
     修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
 
+    修改标识：Senparc - 20260916
+    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -164,6 +167,9 @@ namespace Senparc.Areas.Admin.Domain.Models
                 .HasIndex(z => z.PageKey);
             modelBuilder.Entity<NeuBellWebHook>()
                 .HasIndex(z => z.ProviderFilter);
+            modelBuilder.Entity<NeuBellWebHook>()
+                .Property(z => z.HttpMethod)
+                .HasDefaultValue(NeuBellWebHook.MethodPost);
             modelBuilder.Entity<NeuBellWebHookLog>()
                 .HasIndex(z => z.AddTime);
 
@@ -201,6 +207,8 @@ namespace Senparc.Areas.Admin.Domain.Models
             SetLargeText<AdminChatTrajectoryEvent>(modelBuilder, largeTextType,
                 nameof(AdminChatTrajectoryEvent.Content),
                 nameof(AdminChatTrajectoryEvent.PayloadJson));
+            SetLargeText<NeuBellWebHook>(modelBuilder, largeTextType,
+                nameof(NeuBellWebHook.BodyTemplate));
             SetLargeText<NeuBellWebHookLog>(modelBuilder, largeTextType,
                 nameof(NeuBellWebHookLog.Payload));
         }

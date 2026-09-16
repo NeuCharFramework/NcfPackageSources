@@ -1,14 +1,17 @@
 ﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
-  
+
     文件名：FunctionParameterInfo.cs
     文件功能描述：FunctionParameterInfo 相关实现
-    
-    
+
+
     创建标识：Senparc - 20200724
-    
+
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20260916
+    修改描述：v0.27.0 新增 TextArea 函数参数类型并支持多行文本渲染
 
 ----------------------------------------------------------------*/
 
@@ -33,6 +36,10 @@ namespace Senparc.Ncf.XncfBase
         /// 单个布尔，对应 <c>bool</c> / <c>bool?</c>，前端渲染为单个复选框。
         /// </summary>
         CheckBox = 4,
+        /// <summary>
+        /// 多行文本，对应字符串类参数，前端渲染为 textarea。
+        /// </summary>
+        TextArea = 5,
     }
 
     /// <summary>

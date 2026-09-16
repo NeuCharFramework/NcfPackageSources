@@ -28,6 +28,8 @@ var chatApp = new Vue({
       loadingSessions: false,
       loadingMessages: false,
       isSending: false,
+      isStopping: false,
+      activeRequestController: null,
       isAIResponding: false,
       liveAssistantText: '',
       liveTrajectoryEvents: [],
@@ -85,6 +87,12 @@ var chatApp = new Vue({
           this.sendMessage();
         }
       });
+    }
+  },
+  beforeDestroy() {
+    if (this.activeRequestController) {
+      this.activeRequestController.abort();
+      this.activeRequestController = null;
     }
   },
   methods: {
@@ -176,15 +184,24 @@ var chatApp = new Vue({
       const event = this.replayEvent;
       if (!event) return;
 
-      const container = this.$el.querySelector('.trajectory-timeline');
+      const container = this.$refs.trajectoryTimeline;
       const target = this.$el.querySelector(`#${this.trajectoryEventDomId(event.sequence)}`);
       if (!container || !target) return;
 
-      const targetTop = target.offsetTop - (container.clientHeight - target.offsetHeight) / 2;
-      container.scrollTo({
-        top: Math.max(0, targetTop),
-        behavior: 'smooth'
-      });
+      const containerRect = container.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const targetTop = container.scrollTop
+        + targetRect.top
+        - containerRect.top
+        - (container.clientHeight - targetRect.height) / 2;
+      const maxScrollTop = Math.max(0, container.scrollHeight - container.clientHeight);
+      const nextScrollTop = Math.max(0, Math.min(targetTop, maxScrollTop));
+
+      if (typeof container.scrollTo === 'function') {
+        container.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
+      } else {
+        container.scrollTop = nextScrollTop;
+      }
     },
 
     async loadTrajectoryList() {
@@ -542,7 +559,7 @@ var chatApp = new Vue({
       }
     },
 
-    async consumeAdminChatStream(requestData, tempMessageId) {
+    async consumeAdminChatStream(requestData, tempMessageId, signal) {
       const response = await fetch('/api/Senparc.Areas.Admin/AdminChatStream/send', {
         method: 'POST',
         credentials: 'same-origin',
@@ -550,7 +567,8 @@ var chatApp = new Vue({
           'Content-Type': 'application/json',
           'X-Requested-With': 'XMLHttpRequest'
         },
-        body: JSON.stringify(requestData)
+        body: JSON.stringify(requestData),
+        signal
       });
       if (!response.ok || !response.body) {
         throw new Error(`流式接口请求失败 (${response.status})`);
@@ -592,7 +610,16 @@ var chatApp = new Vue({
       if (!streamDone) throw new Error('流式接口未正常结束');
     },
 
+    stopCurrentRequest() {
+      if (!this.activeRequestController || !this.isSending) return;
+
+      this.isStopping = true;
+      this.activeRequestController.abort();
+    },
+
     async sendMessage() {
+      if (this.isSending) return;
+
       if (!this.inputMessage || this.inputMessage.trim().length === 0) {
         this.$message.warning(ncfT('AdminChat.InputRequired'));
         return;
@@ -606,8 +633,13 @@ var chatApp = new Vue({
       const messageContent = this.inputMessage.trim();
       this.inputMessage = '';
       this.isSending = true;
+      this.isStopping = false;
       this.isAIResponding = true;
       this.resetLiveRun();
+      const requestController = typeof AbortController !== 'undefined'
+        ? new AbortController()
+        : null;
+      this.activeRequestController = requestController;
 
       // 乐观渲染：立即显示“我”的消息，避免等待接口返回期间出现空白。
       const tempMessageId = `temp-${Date.now()}`;
@@ -631,16 +663,34 @@ var chatApp = new Vue({
           mode: this.chatMode === 'harness' ? 1 : 0
         };
 
-        await this.consumeAdminChatStream(requestData, tempMessageId);
+        await this.consumeAdminChatStream(
+          requestData,
+          tempMessageId,
+          requestController ? requestController.signal : undefined
+        );
         await this.loadSessionList();
         await this.loadTrajectoryList();
         this.$nextTick(() => this.scrollToBottom());
       } catch (error) {
-        console.error('发送消息异常:', error);
-        this.$message.error(ncfT('AdminChat.SendFailedRetry'));
-        this.messageList = this.messageList.filter((item) => item.id !== tempMessageId);
-        this.inputMessage = messageContent;
+        const wasAborted = (error && error.name === 'AbortError')
+          || (requestController && requestController.signal.aborted);
+        if (wasAborted) {
+          this.messageList = this.messageList.filter((item) => item.id !== tempMessageId);
+          this.inputMessage = messageContent;
+          await this.loadSessionDetail();
+          await this.loadTrajectoryList();
+          this.$message.info('本次请求已终止');
+        } else {
+          console.error('发送消息异常:', error);
+          this.$message.error(ncfT('AdminChat.SendFailedRetry'));
+          this.messageList = this.messageList.filter((item) => item.id !== tempMessageId);
+          this.inputMessage = messageContent;
+        }
       } finally {
+        if (this.activeRequestController === requestController) {
+          this.activeRequestController = null;
+        }
+        this.isStopping = false;
         this.isSending = false;
         this.isAIResponding = false;
       }

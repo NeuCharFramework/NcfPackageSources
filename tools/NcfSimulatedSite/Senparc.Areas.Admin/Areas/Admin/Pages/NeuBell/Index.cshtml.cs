@@ -7,8 +7,14 @@
 
     创建标识：Senparc - 20260906
 
+    修改标识：Senparc - 20260914
+    修改描述：v0.7.1 支持请求方式（GET/POST/PUT）与请求体模板（{{占位符}}）保存与展示
+
     修改标识：Senparc - 20260915
     修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
+
+    修改标识：Senparc - 20260916
+    修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
 
 ----------------------------------------------------------------*/
 
@@ -105,7 +111,9 @@ public class IndexModel(
                 request.Secret,
                 request.NotifyOnAdd,
                 request.NotifyOnRemove,
-                request.IsEnabled).ConfigureAwait(false);
+                request.IsEnabled,
+                request.HttpMethod,
+                request.BodyTemplate).ConfigureAwait(false);
             if (!success)
             {
                 return Ok(false, message);
@@ -121,7 +129,9 @@ public class IndexModel(
             request.Secret,
             request.NotifyOnAdd,
             request.NotifyOnRemove,
-            adminUserId).ConfigureAwait(false);
+            adminUserId,
+            request.HttpMethod,
+            request.BodyTemplate).ConfigureAwait(false);
         if (!addSuccess)
         {
             return Ok(false, addMessage);
@@ -232,6 +242,8 @@ public class IndexModel(
             item.Id,
             item.Name,
             item.WebHookUrl,
+            item.HttpMethod,
+            item.BodyTemplate,
             item.ProviderFilter,
             hasSecret = !string.IsNullOrWhiteSpace(item.Secret),
             item.NotifyOnAdd,
@@ -249,6 +261,7 @@ public class IndexModel(
         {
             item.Id,
             item.EventKind,
+            item.HttpMethod,
             item.WebHookUrl,
             item.ProviderId,
             item.Title,
@@ -267,6 +280,8 @@ public class IndexModel(
         public int Id { get; set; }
         public string Name { get; set; }
         public string WebHookUrl { get; set; }
+        public string HttpMethod { get; set; }
+        public string BodyTemplate { get; set; }
         public string ProviderFilter { get; set; }
         public string Secret { get; set; }
         public bool NotifyOnAdd { get; set; } = true;
