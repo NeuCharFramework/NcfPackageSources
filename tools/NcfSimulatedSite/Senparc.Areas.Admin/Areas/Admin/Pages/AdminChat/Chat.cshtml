@@ -355,10 +355,19 @@
                             <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
                         </el-radio-button>
                     </el-radio-group>
-                    <el-button 
-                        type="primary" 
+                    <el-button
+                        v-if="isSending"
+                        type="danger"
+                        icon="el-icon-close"
+                        :loading="isStopping"
+                        :disabled="isStopping"
+                        @@click="stopCurrentRequest">
+                        终止
+                    </el-button>
+                    <el-button
+                        v-else
+                        type="primary"
                         icon="el-icon-s-promotion"
-                        :loading="isSending"
                         :disabled="!currentSessionId || !inputMessage || inputMessage.trim().length === 0"
                         @@click="sendMessage">
                         @AR["AdminChat.Send"]

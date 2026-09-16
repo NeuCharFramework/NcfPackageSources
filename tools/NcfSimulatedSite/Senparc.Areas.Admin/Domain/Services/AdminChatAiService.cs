@@ -132,7 +132,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             string userMessage,
             int aiModelId = 0,
             Action<string> onChunk = null,
-            AdminChatGenerationOptions generationOptions = null)
+            AdminChatGenerationOptions generationOptions = null,
+            CancellationToken cancellationToken = default)
         {
             var showLoadedFunctionsInConsole = true;//是否输出 function 的 schema 信息到控制台，便于调试和验证 Function Calling 功能是否正确加载了函数
 
@@ -216,11 +217,16 @@ namespace Senparc.Areas.Admin.Domain.Services
 
             // TODO: 测试 MAF 中是否自动开启工具调用
             // 当调用方提供回调时，使用 AgentKernel 已有的流式回调；没有回调时保留原有整包路径。
-            var streamedOutput = new StringBuilder();
             var hasStreamedChunk = false;
-            var skResult = onChunk == null
-                ? await iWantToRun.RunChatAsync(prompt)
-                : await ExecuteRunnerWithSessionRetryAsync(
+            string responseText;
+            if (onChunk == null)
+            {
+                var skResult = await iWantToRun.RunChatAsync(prompt);
+                responseText = skResult?.OutputString;
+            }
+            else
+            {
+                responseText = await ExecuteRunnerWithSessionRetryAsync(
                     iWantToRun,
                     prompt,
                     update =>
@@ -231,14 +237,13 @@ namespace Senparc.Areas.Admin.Domain.Services
                             return;
                         }
 
-                        streamedOutput.Append(updateText);
                         hasStreamedChunk = true;
                         onChunk(updateText);
-                    });
+                    },
+                    cancellationToken);
+            }
 
-            var result = string.IsNullOrWhiteSpace(skResult?.OutputString)
-                ? streamedOutput.ToString().Trim()
-                : skResult.OutputString.Trim();
+            var result = responseText?.Trim() ?? string.Empty;
             if (string.IsNullOrWhiteSpace(result))
             {
                 _logger.LogWarning("AI 返回空内容：SessionId={SessionId}, UserId={UserId}", sessionId, userId);
@@ -1117,19 +1122,47 @@ namespace Senparc.Areas.Admin.Domain.Services
             public List<string> DebugLines { get; set; }
         }
 
-        private static async Task<SenparcKernelAiResult<string>> ExecuteRunnerWithSessionRetryAsync(
+        private static async Task<string> ExecuteRunnerWithSessionRetryAsync(
             IWantToRun runner,
             string prompt,
-            Action<AgentResponseUpdate> onUpdate)
+            Action<AgentResponseUpdate> onUpdate,
+            CancellationToken cancellationToken)
         {
             var session = runner?.Kernel?.AgentSession;
+
+            async Task<string> RunStreamingAsync(AgentSession agentSession)
+            {
+                var output = new StringBuilder();
+                await foreach (var update in runner.RunChatStreamingAsync(
+                                   prompt,
+                                   agentSession,
+                                   options: null,
+                                   cancellationToken: cancellationToken)
+                               .WithCancellation(cancellationToken)
+                               .ConfigureAwait(false))
+                {
+                    if (!string.IsNullOrEmpty(update?.Text))
+                    {
+                        output.Append(update.Text);
+                    }
+
+                    onUpdate?.Invoke(update);
+                }
+
+                return output.ToString();
+            }
+
             try
             {
-                return await runner.RunChatAsync(prompt, session, onUpdate);
+                return await RunStreamingAsync(session);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
             }
             catch when (session != null)
             {
-                return await runner.RunChatAsync(prompt, null, onUpdate);
+                return await RunStreamingAsync(null);
             }
         }
 
