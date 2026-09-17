@@ -45,6 +45,7 @@ using Senparc.Xncf.KnowledgeBase.Domain.Services;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
@@ -892,6 +893,21 @@ public sealed class AgentTemplateRunner
                         functionKey,
                         functionBag.FunctionRenderAttribute.Name),
                     description: functionBag.FunctionRenderAttribute.Description);
+                try
+                {
+                    var parameterInfos = await FunctionHelper.GetFunctionParameterInfoAsync(
+                        _serviceProvider,
+                        functionBag,
+                        true).ConfigureAwait(false);
+                    function = new FunctionRenderSchemaAIFunction(function, parameterInfos);
+                }
+                catch (Exception metadataException)
+                {
+                    SenparcTrace.SendCustomLog(
+                        "AgentsManager.ImportFunctionRenderMetadata",
+                        $"Agent={template.Id}; Binding={binding.Key}; {metadataException.Message}");
+                }
+
                 AIFunction diagnosticFunction = new DiagnosticAIFunction(
                     function,
                     template.Id,

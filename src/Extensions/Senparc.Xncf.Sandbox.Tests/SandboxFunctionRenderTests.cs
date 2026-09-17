@@ -1,7 +1,9 @@
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Application.AppServices;
+using Senparc.Xncf.Sandbox.Application.DTOs.Request;
 
 namespace Senparc.Xncf.Sandbox.Tests;
 
@@ -31,5 +33,21 @@ public class SandboxFunctionRenderTests
                 method.GetCustomAttribute<FunctionRenderAttribute>()!.AllowAiInvocation,
                 $"FunctionRender method is not AI callable: {methodName}");
         }
+    }
+
+    [TestMethod]
+    public void CreateRequestTemplateOptions_ExposeProtocolValues()
+    {
+        var request = new Sandbox_CreateRequest();
+
+        CollectionAssert.AreEqual(
+            new[]
+            {
+                SandboxTemplateKeys.PythonExec,
+                SandboxTemplateKeys.CsharpExec,
+                SandboxTemplateKeys.JupyterPython,
+                SandboxTemplateKeys.JupyterCsharp
+            },
+            request.TemplateOptions.Items.Select(item => item.Value).ToArray());
     }
 }

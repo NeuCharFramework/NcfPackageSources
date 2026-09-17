@@ -50,6 +50,7 @@ using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Ncf.XncfBase.Functions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -1164,11 +1165,30 @@ namespace Senparc.Areas.Admin.Domain.Services
                             var kernelFunction = KernelFunctionFactory.CreateFromMethod(functionBag.MethodInfo, plugin, options);
                             kernelFunctions.Add(kernelFunction);
 
+                            IReadOnlyList<FunctionParameterInfo> parameterInfos;
+                            try
+                            {
+                                parameterInfos = await FunctionHelper.GetFunctionParameterInfoAsync(
+                                    _serviceProvider,
+                                    functionBag,
+                                    true).ConfigureAwait(false);
+                            }
+                            catch (Exception metadataException)
+                            {
+                                _logger.LogWarning(
+                                    metadataException,
+                                    "读取 FunctionRender 参数选项失败，将使用基础 schema：Plugin={PluginType}, Method={MethodName}",
+                                    pluginType.FullName,
+                                    functionBag.MethodInfo.Name);
+                                parameterInfos = Array.Empty<FunctionParameterInfo>();
+                            }
+
                             aiFunctions.Add(AdminChatFunctionToolFactory.Create(
                                 method: functionBag.MethodInfo,
                                 target: plugin,
                                 name: BuildFunctionToolName(pluginName, options.FunctionName),
-                                description: options.Description));
+                                description: options.Description,
+                                parameterInfos: parameterInfos));
                         }
                         catch (Exception ex)
                         {
