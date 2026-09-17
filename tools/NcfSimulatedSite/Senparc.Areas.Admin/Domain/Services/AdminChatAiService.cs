@@ -398,14 +398,9 @@ namespace Senparc.Areas.Admin.Domain.Services
                     {
                         Name = $"AdminChatHarness-{sessionId}",
                         Description = "NeuCharFramework Admin Chat long-running task agent",
-                        ChatOptions = new ChatOptions
-                        {
-                            Instructions = BuildSystemMessage(modules),
-                            Tools = build.Functions.Count > 0 ? build.Functions.Cast<AITool>().ToList() : null,
-                            MaxOutputTokens = 4_000,
-                            TopP = 0.9f,
-                            Temperature = 0.4f
-                        },
+                        ChatOptions = BuildHarnessChatOptions(
+                            modules,
+                            build.Functions),
                         DisableFileAccess = true,
                         DisableFileMemory = true,
                         DisableAgentSkillsProvider = true,
@@ -592,7 +587,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 timeout ?? TimeSpan.FromMinutes(10),
                 cancellationToken,
                 [new ChatMessage(ChatRole.User, [responseContent])],
-                onLiveEvent);
+                onLiveEvent: onLiveEvent);
             return (result.FinalText, modelIdentifier, result);
         }
 
@@ -622,14 +617,9 @@ namespace Senparc.Areas.Admin.Domain.Services
                     {
                         Name = $"AdminChatHarness-{sessionId}",
                         Description = "NeuCharFramework Admin Chat long-running task agent",
-                        ChatOptions = new ChatOptions
-                        {
-                            Instructions = BuildSystemMessage(modules),
-                            Tools = build.Functions.Count > 0 ? build.Functions.Cast<AITool>().ToList() : null,
-                            MaxOutputTokens = 4_000,
-                            TopP = 0.9f,
-                            Temperature = 0.4f
-                        },
+                        ChatOptions = BuildHarnessChatOptions(
+                            modules,
+                            build.Functions),
                         DisableFileAccess = true,
                         DisableFileMemory = true,
                         DisableAgentSkillsProvider = true,
@@ -640,6 +630,24 @@ namespace Senparc.Areas.Admin.Domain.Services
                 serializedSession: serializedSession,
                 cancellationToken: cancellationToken);
             return (harnessAgent, modelIdentifier);
+        }
+
+        private static ChatOptions BuildHarnessChatOptions(
+            List<AdminChatSessionModule> modules,
+            IReadOnlyCollection<AIFunction> functions)
+        {
+            var chatOptions = new ChatOptions
+            {
+                Instructions = BuildSystemMessage(modules),
+                Tools = functions != null && functions.Count > 0
+                    ? functions.Cast<AITool>().ToList()
+                    : null,
+                MaxOutputTokens = 4_000,
+                TopP = 0.9f,
+                Temperature = 0.4f
+            };
+
+            return chatOptions;
         }
 
         private static JsonElement? ParseSessionState(string sessionStateJson)

@@ -70,7 +70,6 @@
 		<Configurations>Debug;Release;Debug-Dapr;ModifyPublish;ModifyPublish</Configurations>
 			<NoWarn>$(NoWarn);MEAI001;MAAI001</NoWarn>
 	</PropertyGroup>
-
 	<ItemGroup>
 		<!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
 
