@@ -4,6 +4,12 @@
     文件名：FunctionRenderAiSchemaBuilder.cs
     文件功能描述：FunctionRender AI schema 元数据扩展
 
+
+    创建标识：Senparc - 20260918
+
+    修改标识：Senparc - 20260917
+    修改描述：v0.28.0 增强 FunctionRender AI schema 的选择元数据支持
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.Functions;

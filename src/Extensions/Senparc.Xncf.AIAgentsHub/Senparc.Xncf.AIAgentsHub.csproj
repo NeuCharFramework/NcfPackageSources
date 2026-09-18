@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.13.9</Version>
+    <Version>0.13.10</Version>
     <AssemblyName>Senparc.Xncf.AIAgentsHub</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIAgentsHub</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -106,6 +106,9 @@
 			[2026-09-15] v0.13.8 同步上游模块版本并保持宿主兼容
 			1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
 			[2026-09-16] v0.13.9 Dependency updates from Senparc.IntegrationSample to 0.0.13
+			[2026-09-17] v0.13.10 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0; Senparc.Xncf.AIKernel to 0.16.2; Senparc.Xncf.PromptRange to 0.19.7
+			1、同步受影响的基础库、AI 模块或宿主项目版本
+			2、保持项目引用链与当前功能兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

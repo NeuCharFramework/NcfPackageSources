@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>-->
-    <Version>0.27.0</Version>
+    <Version>0.28.0</Version>
     <LangVersion>10.0</LangVersion>
     <AssemblyName>Senparc.Ncf.XncfBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.XncfBase</RootNamespace>
@@ -87,6 +87,9 @@
 			[2026-09-16] v0.27.0 新增 TextArea 函数参数类型并支持多行文本渲染
 			1、扩展 ParameterType，支持多行字符串参数并保持既有参数值兼容
 			2、同步工作流、NeuCharPivot 与模块执行页面的 textarea 输入交互
+			[2026-09-17] v0.28.0 增强 FunctionRender 的 AI schema 选择元数据支持
+			1、为 FunctionRender AI schema 注入 SelectionList 选项与显示文本元数据
+			2、保持原有函数调用和参数处理兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>0.4.5</Version>
+    <Version>0.4.6</Version>
     <AssemblyName>Senparc.Xncf.DesktopBridge</AssemblyName>
     <RootNamespace>Senparc.Xncf.DesktopBridge</RootNamespace>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
@@ -55,6 +55,9 @@
       [2026-08-29] v0.4.4 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
       1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
       [2026-09-16] v0.4.5 Dependency updates from Senparc.Web to 0.39.1
+      [2026-09-17] v0.4.6 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+      1、同步受影响的基础库、AI 模块或宿主项目版本
+      2、保持项目引用链与当前功能兼容
 </PackageReleaseNotes>
   </PropertyGroup>
 

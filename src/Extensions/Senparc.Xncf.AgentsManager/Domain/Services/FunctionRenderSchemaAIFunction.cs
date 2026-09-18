@@ -4,6 +4,12 @@
     文件名：FunctionRenderSchemaAIFunction.cs
     文件功能描述：Agent FunctionRender schema 元数据包装
 
+
+    创建标识：Senparc - 20260918
+
+    修改标识：Senparc - 20260917
+    修改描述：v0.18.0 包装 FunctionRender AI 函数并扩展 schema 元数据
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;

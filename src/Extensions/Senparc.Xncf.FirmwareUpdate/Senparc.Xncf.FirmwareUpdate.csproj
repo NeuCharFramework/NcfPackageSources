@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.6</Version>
+    <Version>0.4.7</Version>
     <AssemblyName>Senparc.Xncf.FirmwareUpdate</AssemblyName>
     <RootNamespace>Senparc.Xncf.FirmwareUpdate</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -42,6 +42,9 @@
       1、增强发布包镜像同步过程的状态记录和失败诊断
       2、保持 NCF 与 NcfDesktop 发布元数据同步行为兼容
       [2026-09-16] v0.4.6 Dependency updates from Senparc.Web to 0.39.1
+      [2026-09-17] v0.4.7 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+      1、同步受影响的基础库、AI 模块或宿主项目版本
+      2、保持项目引用链与当前功能兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

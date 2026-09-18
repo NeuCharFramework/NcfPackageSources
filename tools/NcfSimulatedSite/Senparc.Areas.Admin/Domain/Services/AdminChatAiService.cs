@@ -31,6 +31,9 @@
     修改标识：Senparc - 20260916
     修改描述：v0.9.0 增强 Admin Chat 取消与推理轨迹，并扩展 NeuBell WebHook 请求能力
 
+    修改标识：Senparc - 20260917
+    修改描述：v0.10.0 增强 Admin Chat FunctionRender 参数元数据与工具调用兼容
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;

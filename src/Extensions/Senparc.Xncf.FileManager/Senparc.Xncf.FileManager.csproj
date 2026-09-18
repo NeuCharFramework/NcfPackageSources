@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.1</Version>
+    <Version>0.7.2</Version>
     <AssemblyName>Senparc.Xncf.FileManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.FileManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -61,6 +61,9 @@
       2、完善文件上传、模板、批量操作与回收站清理的前后端处理
       3、优化文件资源在线预览控制器与安全发布访问路径
       [2026-09-16] v0.7.1 Dependency updates from Senparc.Xncf.KnowledgeBase to 0.7.3; Senparc.Web to 0.39.1
+      [2026-09-17] v0.7.2 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+      1、同步受影响的基础库、AI 模块或宿主项目版本
+      2、保持项目引用链与当前功能兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

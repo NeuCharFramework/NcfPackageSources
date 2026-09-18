@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Version>0.12.11</Version>
+    <Version>0.12.12</Version>
     <AssemblyName>Senparc.Xncf.EmailExtension</AssemblyName>
     <RootNamespace>Senparc.Xncf.EmailExtension</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -36,6 +36,9 @@
 				[2026-08-29] v0.12.10 Dependency updates from Senparc.Ncf.XncfBase to 0.26.1
 				1、Dependency update from Senparc.Ncf.XncfBase to 0.26.1
 				[2026-09-16] v0.12.11 Dependency updates from upstream modules
+				[2026-09-17] v0.12.12 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+				1、同步受影响的基础库、AI 模块或宿主项目版本
+				2、保持项目引用链与当前功能兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
