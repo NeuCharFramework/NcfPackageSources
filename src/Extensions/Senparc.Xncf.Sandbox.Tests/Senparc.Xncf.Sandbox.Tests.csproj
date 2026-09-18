@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.6</Version>
+    <Version>0.0.7</Version>
     <PackageReleaseNotes>
       [2026-08-13] v0.0.1 Dependency update from Senparc.Xncf.Sandbox to 0.1.1-preview2
       [2026-08-15] v0.0.2 增加 Sandbox 预览路径回归测试
@@ -17,6 +17,9 @@
       [2026-09-15] v0.0.5 同步上游模块版本并保持宿主兼容
       1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
       [2026-09-16] v0.0.6 Dependency updates from upstream modules
+      [2026-09-17] v0.0.7 补充 Sandbox FunctionRender 与协议参数测试
+      1、覆盖持久化实验室操作的 AI 可调用函数注册行为
+      2、验证请求模板选项能够暴露协议值
 </PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.17.2</Version>
+    <Version>0.18.0</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -162,6 +162,9 @@
 		2、保持代理工作流执行、工具交互与历史状态处理兼容
 		[2026-09-16] v0.17.2 升级 Senparc.Weixin.Work 依赖以保持企业微信兼容
 		1、升级 Senparc.Weixin.Work 至 3.32.4，保持代理管理模块的企业微信能力兼容
+		[2026-09-17] v0.18.0 增强 Agent FunctionRender 工具的 AI schema 元数据能力
+		1、为 AgentTemplate 注册的 FunctionRender 工具注入参数元数据与选择项 schema
+		2、升级共享 Senparc.AI.AgentKernel 至 0.1.14-preview5 并保持代理执行兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

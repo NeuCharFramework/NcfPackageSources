@@ -21,6 +21,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
+    修改标识：Senparc - 20260917
+    修改描述：v0.18.0 为 Agent FunctionRender 工具注入参数元数据并保持调用兼容
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -45,6 +48,7 @@ using Senparc.Xncf.KnowledgeBase.Domain.Services;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
@@ -892,6 +896,21 @@ public sealed class AgentTemplateRunner
                         functionKey,
                         functionBag.FunctionRenderAttribute.Name),
                     description: functionBag.FunctionRenderAttribute.Description);
+                try
+                {
+                    var parameterInfos = await FunctionHelper.GetFunctionParameterInfoAsync(
+                        _serviceProvider,
+                        functionBag,
+                        true).ConfigureAwait(false);
+                    function = new FunctionRenderSchemaAIFunction(function, parameterInfos);
+                }
+                catch (Exception metadataException)
+                {
+                    SenparcTrace.SendCustomLog(
+                        "AgentsManager.ImportFunctionRenderMetadata",
+                        $"Agent={template.Id}; Binding={binding.Key}; {metadataException.Message}");
+                }
+
                 AIFunction diagnosticFunction = new DiagnosticAIFunction(
                     function,
                     template.Id,

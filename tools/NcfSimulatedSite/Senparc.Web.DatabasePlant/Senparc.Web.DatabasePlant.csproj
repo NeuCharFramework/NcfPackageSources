@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
 
-    <Version>0.0.13</Version>
+    <Version>0.0.14</Version>
     <PackageReleaseNotes>
       [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
       1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -29,6 +29,9 @@
       [2026-09-15] v0.0.12 同步上游模块版本并保持宿主兼容
       1、更新项目依赖组合，兼容当前窗口内的 Senparc.Areas.Admin 及相关模块能力
       [2026-09-16] v0.0.13 Dependency updates from upstream modules
+      [2026-09-17] v0.0.14 Dependency updates from Senparc.Areas.Admin to 0.10.0; Senparc.Ncf.XncfBase to 0.28.0; Senparc.Xncf.AIKernel to 0.16.2; Senparc.Xncf.AgentsManager to 0.18.0; Senparc.Xncf.KnowledgeBase to 0.7.4; Senparc.Xncf.MCP to 0.5.5; Senparc.Xncf.PromptRange to 0.19.7; Senparc.Xncf.WeixinManager to 0.24.8; Senparc.Xncf.XncfBuilder to 0.41.4
+      1、同步受影响的基础库、AI 模块或宿主项目版本
+      2、保持项目引用链与当前功能兼容
 </PackageReleaseNotes>
     <Configurations>Debug;Release;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
   </PropertyGroup>
