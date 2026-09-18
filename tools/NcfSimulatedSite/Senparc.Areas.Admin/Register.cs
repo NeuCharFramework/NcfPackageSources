@@ -76,6 +76,7 @@ using System.Net.Http;
 using Senparc.Areas.Admin.ACL;
 using Senparc.Areas.Admin.ACL.Repository;
 using Senparc.Areas.Admin.Domain;
+using Senparc.Areas.Admin.Domain.Cache;
 using Senparc.Areas.Admin.Domain.Dto;
 //using Senparc.Areas.Admin.Authorization;
 using Senparc.Areas.Admin.Domain.Models;
@@ -262,6 +263,10 @@ namespace Senparc.Areas.Admin
             services.AddScoped<NeuCharPivotService>();
             services.AddScoped<NeuCharPivotGlobalAccessService>();
             services.AddScoped<NeuCharPivotGlobalFunctionService>();
+            // Function 全局 Provit 数据库访问策略（DB 覆盖代码属性），缓存参考 FullSystemConfigCache 范式
+            services.AddScoped<INeuCharFunctionProvitAccessRepository, NeuCharFunctionProvitAccessRepository>();
+            services.AddScoped<FullNeuCharFunctionProvitAccessCache>();
+            services.AddScoped<NeuCharFunctionProvitAccessService>();
             services.AddDataProtection();
             services.AddScoped<NeuCharParameterProtector>();
             services.AddScoped<ChatAgentNeuCharPivotComposer>();
@@ -519,6 +524,7 @@ namespace Senparc.Areas.Admin
                 options.Conventions.AuthorizePage("/", NcfAuthorizationPolicyNames.AdminOnly);//必须登录
                 options.Conventions.AuthorizePage("/AdminChat/Chat", NcfAuthorizationPolicyNames.AdminOnly);//聊天页面必须登录
                 options.Conventions.AuthorizePage("/NeuCharPivot/Aggregate", NcfAuthorizationPolicyNames.AdminOnly);
+                options.Conventions.AuthorizePage("/NeuCharPivot/Access", NcfAuthorizationPolicyNames.AdminOnly);
                 options.Conventions.AllowAnonymousToPage("/Login");//允许匿名
 
                 //更多：https://learn.microsoft.com/en-us/aspnet/core/security/authorization/razor-pages-authorization?view=aspnetcore-8.0

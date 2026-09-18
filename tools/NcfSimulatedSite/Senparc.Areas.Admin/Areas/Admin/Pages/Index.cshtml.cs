@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Index.cshtml.cs
@@ -344,6 +344,17 @@ namespace Senparc.Areas.Admin.Pages
                     MenuName = "面板",
                     Url = "/Admin/NeuCharPivot/Board",
                     Icon = "fa fa-th-large",
+                    Id = (index++).ToString(),
+                    ParentId = pivotMenu.Id
+                });
+            }
+            if (!dest.Any(z => string.Equals(z.Url, "/Admin/NeuCharPivot/Access", StringComparison.OrdinalIgnoreCase)))
+            {
+                dest.Add(new SysMenuDto
+                {
+                    MenuName = "访问控制",
+                    Url = "/Admin/NeuCharPivot/Access",
+                    Icon = "fa fa-user-shield",
                     Id = (index++).ToString(),
                     ParentId = pivotMenu.Id
                 });
