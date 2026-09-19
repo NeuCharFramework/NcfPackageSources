@@ -170,6 +170,139 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
                     b.ToTable("WeixinManager_UserTag_WeixinUser");
                 });
 
+            modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinClawAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("BaseUrl")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("BotTokenProtected")
+                        .HasMaxLength(4096)
+                        .HasColumnType("character varying(4096)");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("GetUpdatesBuf")
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
+
+                    b.Property<string>("IlinkBotId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("IlinkUserId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime?>("LastConnectedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTime?>("LastMessageAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PromptRangeCode")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IlinkBotId");
+
+                    b.ToTable("WeixinManager_WeixinClawAccount");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinClawMessageReceipt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("MessageId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime>("ReceivedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<long>("Seq")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("WeixinClawAccountId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WeixinClawAccountId", "MessageId", "Seq")
+                        .IsUnique();
+
+                    b.ToTable("WeixinManager_WeixinClawMessageReceipt");
+                });
+
             modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinUser", b =>
                 {
                     b.Property<int>("Id")

@@ -9,6 +9,22 @@
 - Provides `WeixinService`, `XncfMpMessageHandler`, and template base types for module integrations.
 - Uses Senparc.Weixin APIs and NCF's multi-database context conventions.
 
+## Personal Weixin Bot
+
+The module also supports the personal Weixin Bot channel used by Tencent's
+[openclaw-weixin protocol](https://github.com/Tencent/openclaw-weixin). It implements
+the iLink HTTP JSON protocol directly and does not require the OpenClaw runtime.
+
+- Open `/Admin/WeixinManager/WeixinClaw` to scan a QR code and connect an account.
+- Polls inbound text messages with a persisted `get_updates_buf` cursor.
+- Stores `message_id + seq` receipts for idempotent processing.
+- Protects bot tokens with ASP.NET Data Protection.
+- Exposes `IWeixinClawMessageHandler` for Admin Chat, NeuBell, or custom routing.
+- Exposes `WeixinClawMessageService.SendTextAsync()` for outbound text.
+
+The first phase handles text messages and QR login. Media transfer and concrete
+Admin Chat routing should be implemented by an upper-layer handler.
+
 ## Installation
 
 ```xml
