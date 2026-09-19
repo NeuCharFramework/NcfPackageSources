@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.Sandbox.Application.AppServices;
@@ -16,7 +16,8 @@ public class SandboxFunctionRenderTests
             "LabExec",
             "LabUploadFile",
             "LabDownloadFile",
-            "LabListFiles"
+            "LabListFiles",
+            "LabCreateNotebook"
         };
 
         var methods = typeof(SandboxAppService)
@@ -31,5 +32,17 @@ public class SandboxFunctionRenderTests
                 method.GetCustomAttribute<FunctionRenderAttribute>()!.AllowAiInvocation,
                 $"FunctionRender method is not AI callable: {methodName}");
         }
+    }
+
+    [TestMethod]
+    public void AliasAndCreateFunctions_AreRegistered()
+    {
+        var methods = typeof(SandboxAppService)
+            .GetMethods(BindingFlags.Public | BindingFlags.Instance)
+            .Where(method => method.GetCustomAttribute<FunctionRenderAttribute>() != null)
+            .ToDictionary(method => method.Name, StringComparer.Ordinal);
+
+        Assert.IsTrue(methods.ContainsKey("Create"), "Missing FunctionRender method: Create");
+        Assert.IsTrue(methods.ContainsKey("UpdateAlias"), "Missing FunctionRender method: UpdateAlias");
     }
 }

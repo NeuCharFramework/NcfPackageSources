@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.3.2</Version>
+    <Version>0.3.3</Version>
     <AssemblyName>Senparc.Xncf.Sandbox</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -38,6 +38,13 @@
       1、补充 Sandbox 模块迁移文件，支持当前数据库初始化流程
       2、保持工作区文件树和路径边界校验行为稳定
       [2026-09-16] v0.3.2 Dependency updates from Senparc.Web to 0.39.1
+      [2026-09-18] v0.3.3 增强 JupyterLab 外部控制与会话管理
+      1、创建 JupyterLab 容器支持可选附加端口映射（loopback 或外部 0.0.0.0 绑定），容器内 Web 站点可被外部访问
+      2、新增 创建 Notebook Function：在 Lab 工作区生成 Python / C#（dotnet-interactive）.ipynb 文件
+      3、执行 Lab 命令支持可选标准输入内容（docker exec -i），可向终端程序/REPL 批量提交指令
+      4、每用户沙箱并发上限由 2 提高到 10（全局上限由 20 提高到 50）
+      5、会话支持可选别名（创建时设置或随时修改/清除），管理页列表展示别名与附加端口并提供重命名入口
+      6、新增 SandboxSession.Alias / ExtraPorts 持久化列（含六种数据库迁移），别名与端口记录不随容器销毁清除
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
