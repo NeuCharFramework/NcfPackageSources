@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：SandboxOrchestrator.cs
@@ -20,6 +20,9 @@
 
     修改标识：Senparc - 20260829
     修改描述：v0.3.0 强化沙箱工作区边界校验与会话路径隔离
+
+    修改标识：Senparc - 20260918
+    修改描述：v0.3.3 支持会话别名、附加端口映射与交互式标准输入
 
 ----------------------------------------------------------------*/
 
@@ -98,11 +101,27 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         SandboxNcfPreviewRuntimeOptions? ncfPreview = null,
         int? ttlMinutes = null,
         bool keepAlive = false,
+        string? alias = null,
+        string? extraPortMappings = null,
         CancellationToken cancellationToken = default)
     {
         if (!SandboxTemplateCatalog.TryGet(templateKey, out var template))
         {
             throw new InvalidOperationException($"未知模板：{templateKey}");
+        }
+
+        var normalizedAlias = (alias ?? string.Empty).Trim();
+        if (normalizedAlias.Length > 128)
+        {
+            throw new InvalidOperationException("别名不能超过 128 个字符。");
+        }
+
+        var parsedExtraPorts = SandboxPortMappings.Parse(extraPortMappings, _quota.MaxExtraPortMappings);
+        if (parsedExtraPorts.Count > 0
+            && !string.Equals(template.Key, SandboxTemplateKeys.JupyterPython, StringComparison.OrdinalIgnoreCase)
+            && !string.Equals(template.Key, SandboxTemplateKeys.JupyterCsharp, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("附加端口映射仅支持 JupyterLab 模板。");
         }
 
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -144,6 +163,11 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             var ttlMessage = FormatTtlMessage(expires);
 
             var entity = new SandboxSession(sessionId, ownerUserId, template.Key, runtime.Kind, cpu, memory, expires);
+            if (normalizedAlias.Length > 0)
+            {
+                entity.SetAlias(normalizedAlias);
+            }
+
             await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
 
             try
@@ -175,10 +199,16 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                             CpuLimit = cpu,
                             MemoryMb = memory,
                             WorkspaceDirectory = workspace,
-                            NcfPreview = ncfPreview
+                            NcfPreview = ncfPreview,
+                            ExtraPortMappings = parsedExtraPorts
                         },
                         cancellationToken)
                     .ConfigureAwait(false);
+
+                if (!string.IsNullOrWhiteSpace(created.ExtraPorts))
+                {
+                    entity.SetExtraPorts(created.ExtraPorts);
+                }
 
                 // 列表链接直接使用 Docker 为该容器分配的本机端口；NCF 预览仍通过站点代理访问。
                 var accessUrl = string.Equals(template.Key, SandboxTemplateKeys.NcfPreview, StringComparison.OrdinalIgnoreCase)
@@ -265,6 +295,41 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
     }
 
+    public async Task<SandboxSessionInfo> UpdateAliasAsync(
+        string sessionId,
+        string? alias,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(sessionId))
+        {
+            throw new InvalidOperationException("SessionId 不能为空。");
+        }
+
+        var normalizedAlias = (alias ?? string.Empty).Trim();
+        if (normalizedAlias.Length > 128)
+        {
+            throw new InvalidOperationException("别名不能超过 128 个字符。");
+        }
+
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
+            var entity = await sessionService.GetBySessionIdAsync(sessionId.Trim()).ConfigureAwait(false)
+                         ?? throw new InvalidOperationException("会话不存在。");
+
+            entity.SetAlias(normalizedAlias.Length == 0 ? null : normalizedAlias);
+            await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
+            _logger.LogInformation("Sandbox session alias updated: SessionId={SessionId}", entity.SessionId);
+            return ToInfo(entity);
+        }
+        finally
+        {
+            _gate.Release();
+        }
+    }
+
     public async Task<SandboxExecResult> ExecAsync(
         string sessionId,
         string code,
@@ -311,6 +376,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         string command,
         string? workingDirectory = null,
         int timeoutSeconds = 30,
+        string? stdinContent = null,
         CancellationToken cancellationToken = default)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -328,6 +394,13 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         {
             throw new InvalidOperationException(
                 $"Lab 命令不能超过 {_quota.MaxInteractiveCommandCharacters} 个字符。");
+        }
+
+        var normalizedStdin = stdinContent ?? string.Empty;
+        if (normalizedStdin.Length > _quota.MaxInteractiveStdinCharacters)
+        {
+            throw new InvalidOperationException(
+                $"标准输入内容不能超过 {_quota.MaxInteractiveStdinCharacters} 个字符。");
         }
 
         var timeout = timeoutSeconds <= 0 ? 30 : timeoutSeconds;
@@ -352,7 +425,8 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                     Command = normalizedCommand,
                     WorkingDirectory = containerWorkingDirectory,
                     Timeout = TimeSpan.FromSeconds(timeout),
-                    MaxOutputCharacters = _quota.MaxInteractiveOutputCharacters
+                    MaxOutputCharacters = _quota.MaxInteractiveOutputCharacters,
+                    StdinContent = normalizedStdin.Length == 0 ? null : normalizedStdin
                 },
                 cancellationToken)
             .ConfigureAwait(false);
@@ -534,7 +608,9 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                     CreatedAtUtc = info.CreatedAtUtc,
                     ExpiresAtUtc = info.ExpiresAtUtc,
                     IsTtlUnlimited = info.IsTtlUnlimited,
-                    LastActivityAtUtc = info.LastActivityAtUtc
+                    LastActivityAtUtc = info.LastActivityAtUtc,
+                    Alias = info.Alias,
+                    ExtraPorts = info.ExtraPorts
                 };
             }
         }

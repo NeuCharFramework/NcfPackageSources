@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：SandboxRequests.cs
@@ -16,6 +16,9 @@
 
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
+    修改标识：Senparc - 20260918
+    修改描述：v0.3.3 增加别名、附加端口映射、Notebook 创建与交互式标准输入请求
 
 ----------------------------------------------------------------*/
 
@@ -67,6 +70,14 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
 
     [Description("永久保持||勾选后不自动过期；须由管理员手动销毁")]
     public bool KeepAlive { get; set; }
+
+    [MaxLength(128)]
+    [Description("别名||可选，用于在列表中识别会话，最长 128 个字符")]
+    public string Alias { get; set; } = string.Empty;
+
+    [MaxLength(512)]
+    [Description("附加端口映射||可选，仅 JupyterLab 模板有效；多条以分号分隔：3000（自动 loopback 宿主端口）/ 9000:3000（指定 loopback）/ *:3000（自动外部端口）/ *:9000:3000（指定外部端口），最多 8 条")]
+    public string ExtraPortMappings { get; set; } = string.Empty;
 }
 
 public class Sandbox_SessionIdRequest : FunctionAppRequestBase
@@ -105,6 +116,10 @@ public class Sandbox_LabCommandRequest : FunctionAppRequestBase
 
     [Description("超时（秒）||单次命令最长执行时间，默认 30 秒，最多 120 秒")]
     public int TimeoutSeconds { get; set; } = 30;
+
+    [MaxLength(32_768)]
+    [Description("标准输入||可选；填写后命令以 docker exec -i 执行，该内容会逐行写入程序 stdin（可向终端程序/REPL 批量提交指令），最长 32768 个字符")]
+    public string StdinContent { get; set; } = string.Empty;
 }
 
 public class Sandbox_LabUploadFileRequest : FunctionAppRequestBase
@@ -160,6 +175,56 @@ public class Sandbox_LabListFilesRequest : FunctionAppRequestBase
 
     [Description("最多返回数量||留空或 0 使用系统默认上限")]
     public int MaxItems { get; set; }
+}
+
+public class Sandbox_LabCreateNotebookRequest : FunctionAppRequestBase
+{
+    [Required]
+    [MaxLength(64)]
+    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    public string SessionId { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(512)]
+    [Description("工作区文件路径||必须以 .ipynb 结尾，例如 notebooks/demo.ipynb")]
+    public string RelativePath { get; set; } = string.Empty;
+
+    [Required]
+    [Description("内核语言||python 使用 Python 3 内核；csharp 使用 dotnet-interactive C# .NET SDK 内核")]
+    [FunctionParameterUi(ParameterType.DropDownList, nameof(LanguageOptions))]
+    public string Language { get; set; } = "python";
+
+    [JsonIgnore]
+    [Newtonsoft.Json.JsonIgnore]
+    public SelectionList LanguageOptions { get; } = new SelectionList(SelectionType.DropDownList, new[]
+    {
+        new SelectionItem("python", "Python 3", "标准 Python 3 内核", true),
+        new SelectionItem("csharp", "C# .NET SDK", "dotnet-interactive C# 内核（需 C# Jupyter 镜像）")
+    });
+
+    [MaxLength(200)]
+    [Description("标题||可选；填写后作为首个 Markdown 单元（一级标题）")]
+    public string Title { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(100_000)]
+    [Description("单元内容||百分号格式：独立一行 # %% 分隔代码单元；# %% [markdown] 之后的内容为 Markdown 单元；首个标记之前默认是第一个代码单元")]
+    public string Cells { get; set; } = string.Empty;
+
+    [Description("覆盖已有文件||关闭后，目标文件存在时操作失败")]
+    public bool Overwrite { get; set; } = true;
+}
+
+public class Sandbox_UpdateAliasRequest : FunctionAppRequestBase
+{
+    [Required]
+    [MaxLength(64)]
+    [Description("SessionId")]
+    public string SessionId { get; set; } = string.Empty;
+
+    [MaxLength(128)]
+    [Description("别名||留空表示清除别名；最长 128 个字符")]
+    public string Alias { get; set; } = string.Empty;
 }
 
 public class Sandbox_ListRequest : FunctionAppRequestBase

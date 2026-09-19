@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.XncfBase.Attributes;
@@ -18,6 +18,8 @@ public class Sandbox_SandboxSessionConfigurationMapping : ConfigurationMappingWi
         builder.Property(e => e.AccessUrl).HasMaxLength(500);
         builder.Property(e => e.AccessToken).HasMaxLength(128);
         builder.Property(e => e.StatusMessage).HasMaxLength(1000);
+        builder.Property(e => e.Alias).HasMaxLength(128);
+        builder.Property(e => e.ExtraPorts).HasMaxLength(500);
         builder.Property(e => e.AdminRemark).HasMaxLength(300);
         builder.Property(e => e.Remark).HasMaxLength(300);
         builder.HasIndex(e => e.SessionId).IsUnique();

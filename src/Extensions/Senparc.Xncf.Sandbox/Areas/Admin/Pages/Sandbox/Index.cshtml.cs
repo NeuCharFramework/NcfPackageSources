@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
 
+    修改标识：Senparc - 20260918
+    修改描述：v0.3.3 管理页支持会话别名维护
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -91,6 +94,12 @@ public class Index : Senparc.Ncf.AreaBase.Admin.AdminXncfModulePageModelBase
                 request.KeepAlive)
             .ConfigureAwait(false);
 
+        return new JsonResult(new { success = true, session });
+    }
+
+    public async Task<IActionResult> OnPostUpdateAliasAsync([FromForm] string sessionId, [FromForm] string alias)
+    {
+        var session = await _orchestrator.UpdateAliasAsync(sessionId.Trim(), alias).ConfigureAwait(false);
         return new JsonResult(new { success = true, session });
     }
 }

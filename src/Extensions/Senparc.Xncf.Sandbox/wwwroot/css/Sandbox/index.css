@@ -1,4 +1,4 @@
-[v-cloak] {
+﻿[v-cloak] {
     display: none;
 }
 
@@ -408,6 +408,38 @@
 }
 
 .ttlDialogHint {
+    color: #718297;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.aliasName {
+    color: #2c6078;
+    font-weight: 500;
+}
+
+.extraPortsText {
+    color: #66798f;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.aliasDialog {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.aliasSessionId {
+    overflow: hidden;
+    color: #66798f;
+    font-family: monospace;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.aliasDialogHint {
     color: #718297;
     font-size: 12px;
     line-height: 1.55;

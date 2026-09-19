@@ -16,7 +16,7 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.MySql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
                         modelBuilder.Entity("Senparc.Xncf.Sandbox.Domain.Models.DatabaseModel.SandboxSession", b =>
@@ -40,11 +40,21 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.MySql
                         .HasMaxLength(300)
                         .HasColumnType("varchar(1000)");
 
+                    b.Property<string>("Alias")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
+
+
                     b.Property<double>("CpuLimit")
                         .HasColumnType("double");
 
                     b.Property<DateTime>("ExpiresAtUtc")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ExtraPorts")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
 
                     b.Property<bool>("Flag")
                         .HasColumnType("tinyint(1)");
