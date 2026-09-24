@@ -106,10 +106,14 @@ public sealed class WeixinClawLoginService
                     return ToStatus(session);
                 }
 
+                var effectiveBaseUrl = string.IsNullOrWhiteSpace(response.BaseUrl)
+                    ? session.ApiBaseUrl
+                    : response.BaseUrl;
+
                 var account = new WeixinClawAccountDto
                 {
                     Name = session.Name,
-                    BaseUrl = response.BaseUrl,
+                    BaseUrl = effectiveBaseUrl,
                     BotToken = response.BotToken,
                     IlinkBotId = response.IlinkBotId,
                     IlinkUserId = response.IlinkUserId,
@@ -123,7 +127,7 @@ public sealed class WeixinClawLoginService
                     accountService.ProtectToken(response.BotToken),
                     response.IlinkBotId,
                     response.IlinkUserId,
-                    WeixinClawApi.NormalizeBaseUrl(response.BaseUrl));
+                    WeixinClawApi.NormalizeBaseUrl(effectiveBaseUrl));
                 await accountService.SaveObjectAsync(saved).ConfigureAwait(false);
 
                 session.Status = "confirmed";

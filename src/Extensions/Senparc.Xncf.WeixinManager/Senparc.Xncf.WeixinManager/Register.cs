@@ -143,8 +143,9 @@ namespace Senparc.Xncf.WeixinManager
                 typeof(WeixinClawAccount),
                 typeof(MpAccount)
             };
-            types.ToList().AddRange(dropTableKeys);
-            types = types.Distinct().ToArray();
+            var dropTypes = types.ToList();
+            dropTypes.AddRange(dropTableKeys);
+            types = dropTypes.Distinct().ToArray();
             //指定需要删除的数据实体
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, types);
 
