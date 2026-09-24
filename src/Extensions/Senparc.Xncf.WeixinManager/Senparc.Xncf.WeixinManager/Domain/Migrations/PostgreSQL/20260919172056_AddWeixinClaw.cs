@@ -70,7 +70,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.PostgreSQL
                 column: "IlinkBotId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WeixinManager_WeixinClawMessageReceipt_WeixinClawAccountId_~",
+                name: "IX_WeixinManager_WeixinClawMessageReceipt_WeixinClawAccountId_MessageId_Seq",
                 table: "WeixinManager_WeixinClawMessageReceipt",
                 columns: new[] { "WeixinClawAccountId", "MessageId", "Seq" },
                 unique: true);

@@ -124,6 +124,7 @@ public sealed class WeixinClawHostedService : BackgroundService
 
                 var receiptService = scope.ServiceProvider.GetRequiredService<WeixinClawMessageReceiptService>();
                 var dispatcher = scope.ServiceProvider.GetRequiredService<WeixinClawMessageDispatcher>();
+                var handledMessage = false;
                 foreach (var message in response.Msgs ?? Enumerable.Empty<WeixinClawMessage>())
                 {
                     var messageId = string.IsNullOrWhiteSpace(message.MessageId)
@@ -138,6 +139,8 @@ public sealed class WeixinClawHostedService : BackgroundService
                     {
                         continue;
                     }
+
+                    handledMessage = true;
 
                     var text = string.Join(
                         Environment.NewLine,
@@ -177,7 +180,14 @@ public sealed class WeixinClawHostedService : BackgroundService
                 {
                     account.SetCursor(response.GetUpdatesBuf);
                 }
-                account.MarkRunning();
+                if (handledMessage)
+                {
+                    account.MarkMessageReceived();
+                }
+                else
+                {
+                    account.MarkRunning();
+                }
                 await accountService.SaveObjectAsync(account).ConfigureAwait(false);
             }
         }
