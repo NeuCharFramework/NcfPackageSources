@@ -134,6 +134,11 @@ public sealed class WeixinClawHostedService : BackgroundService
                         continue;
                     }
 
+                    if (!await receiptService.TryCreateAsync(account.Id, messageId, message.Seq).ConfigureAwait(false))
+                    {
+                        continue;
+                    }
+
                     var text = string.Join(
                         Environment.NewLine,
                         (message.ItemList ?? new())
@@ -141,23 +146,31 @@ public sealed class WeixinClawHostedService : BackgroundService
                             .Select(z => z.TextItem.Text));
                     if (message.MessageType == 1 && !string.IsNullOrWhiteSpace(text))
                     {
-                        await dispatcher.DispatchAsync(new WeixinClawMessageReceivedContext(
-                            account.Id,
-                            account.Name,
-                            messageId,
-                            message.Seq,
-                            message.FromUserId,
-                            message.ToUserId,
-                            message.GroupId,
-                            message.ContextToken,
-                            text,
-                            message.CreateTimeMs > 0
-                                ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs)
-                                : DateTimeOffset.UtcNow), stoppingToken).ConfigureAwait(false);
+                        try
+                        {
+                            await dispatcher.DispatchAsync(new WeixinClawMessageReceivedContext(
+                                account.Id,
+                                account.Name,
+                                messageId,
+                                message.Seq,
+                                message.FromUserId,
+                                message.ToUserId,
+                                message.GroupId,
+                                message.ContextToken,
+                                text,
+                                message.CreateTimeMs > 0
+                                    ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs)
+                                    : DateTimeOffset.UtcNow), stoppingToken).ConfigureAwait(false);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(
+                                ex,
+                                "个人微信 Claw 账号 {AccountId} 分发消息 {MessageId} 失败。",
+                                account.Id,
+                                messageId);
+                        }
                     }
-
-                    await receiptService.SaveObjectAsync(
-                        new WeixinClawMessageReceipt(account.Id, messageId, message.Seq)).ConfigureAwait(false);
                 }
 
                 if (response.GetUpdatesBuf != null)
