@@ -208,7 +208,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                     var messageId = string.IsNullOrWhiteSpace(message.MessageId)
                         ? "seq:" + message.Seq
                         : message.MessageId;
-                    if (await receiptService.ExistsAsync(account.Id, messageId, message.Seq).ConfigureAwait(false))
+                    if (!await receiptService.TryCreateAsync(account.Id, messageId, message.Seq).ConfigureAwait(false))
                     {
                         continue;
                     }
@@ -221,10 +221,6 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                         message.MessageType,
                         message.ItemList?.Count ?? 0,
                         !string.IsNullOrWhiteSpace(message.ContextToken));
-                    if (!await receiptService.TryCreateAsync(account.Id, messageId, message.Seq).ConfigureAwait(false))
-                    {
-                        continue;
-                    }
 
                     handledMessage = true;
 
