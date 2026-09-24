@@ -64,13 +64,23 @@ public class WeixinClawMessageReceiptService : ServiceBase<WeixinClawMessageRece
     {
         for (Exception current = exception; current != null; current = current.InnerException)
         {
-            if (HasDuplicateErrorCode(current) || HasDuplicateConstraintName(current.Message))
+            if (HasDuplicateErrorCode(current)
+                || HasDuplicateConstraintName(current.Message)
+                || HasGenericDuplicateReceiptMessage(current.Message))
             {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private static bool HasGenericDuplicateReceiptMessage(string message)
+    {
+        return !string.IsNullOrWhiteSpace(message)
+            && message.Contains("WeixinClawMessageReceipt", StringComparison.OrdinalIgnoreCase)
+            && (message.Contains("duplicate", StringComparison.OrdinalIgnoreCase)
+                || message.Contains("unique", StringComparison.OrdinalIgnoreCase));
     }
 
     private static bool HasDuplicateConstraintName(string message)
