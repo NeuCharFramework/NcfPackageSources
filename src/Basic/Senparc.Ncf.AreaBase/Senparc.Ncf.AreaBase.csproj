@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.23.7</Version>
+    <Version>0.23.8</Version>
     <AssemblyName>Senparc.Ncf.AreaBase</AssemblyName>
     <RootNamespace>Senparc.Ncf.AreaBase</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -65,6 +65,9 @@
 				3、Dependency update from Senparc.Ncf.Service to 0.23.9-preview9
 				4、Dependency update from Senparc.Ncf.XncfBase to 0.26.1
 				[2026-09-16] v0.23.7 Dependency updates from Senparc.Xncf.AIKernel to 0.16.1; Senparc.Xncf.AgentsManager to 0.17.2; Senparc.Xncf.NeuCharWorkflow to 0.4.1; Senparc.Xncf.WeixinManager to 0.24.7; [5970]Senparc.Xncf.SystemManager to 0.15.9; Senparc.Areas.Admin to 0.9.0; Senparc.Xncf.Installer to 0.5.7; Template_OrgName.Xncf.Template_XncfName to 1.1.8
+				[2026-09-17] v0.23.8 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+				1、同步受影响的基础库、AI 模块或宿主项目版本
+				2、保持项目引用链与当前功能兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -1,0 +1,202 @@
+@page
+@model Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager.WeixinClaw.IndexModel
+@{
+    ViewData["Title"] = "个人微信 Bot";
+    Layout = "_Layout_Vue";
+}
+@section HeaderContent {
+    <style>
+        .claw-toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .claw-table { width: 100%; border-collapse: collapse; background: #fff; }
+        .claw-table th, .claw-table td { padding: 10px 12px; border-bottom: 1px solid #ebeef5; text-align: left; vertical-align: top; }
+        .claw-table th { color: #606266; font-weight: 600; }
+        .claw-status { color: #67c23a; }
+        .claw-status.error { color: #f56c6c; }
+        .claw-status.off { color: #909399; }
+        .claw-panel { padding: 16px; background: #fff; border: 1px solid #ebeef5; margin-top: 16px; }
+        .claw-qr { width: 240px; height: 240px; object-fit: contain; border: 1px solid #ebeef5; background: #fff; }
+        .claw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+        .claw-field label { display: block; margin-bottom: 5px; color: #606266; }
+        .claw-field input, .claw-field textarea { width: 100%; box-sizing: border-box; }
+        .claw-muted { color: #909399; font-size: 12px; }
+        @@media (max-width: 720px) {
+            .claw-table { display: block; overflow-x: auto; white-space: nowrap; }
+        }
+    </style>
+}
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>微信管理</el-breadcrumb-item>
+    <el-breadcrumb-item>个人微信 Bot</el-breadcrumb-item>
+}
+<div id="claw-app">
+    <el-container>
+        <el-header class="module-header">
+            <span class="start-title"><i class="fa fa-wechat"></i>&nbsp;个人微信 Bot</span>
+        </el-header>
+        <el-main>
+            <div class="claw-toolbar">
+                <el-button type="primary" icon="el-icon-camera" @@click="startLogin">扫码连接</el-button>
+                <el-button icon="el-icon-refresh" @@click="loadAccounts">刷新</el-button>
+            </div>
+
+            <table class="claw-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>状态</th>
+                        <th>iLink 账号</th>
+                        <th>最近连接</th>
+                        <th>最近消息</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in accounts" :key="item.id">
+                        <td>{{item.name}}<div class="claw-muted">#{{item.id}}</div></td>
+                        <td :class="['claw-status', item.status==='错误'?'error':(item.status==='已停用'?'off':'')]">
+                            {{item.status || '未连接'}}
+                            <div class="claw-muted" v-if="item.lastError">{{item.lastError}}</div>
+                        </td>
+                        <td>{{item.ilinkBotId || '-'}}</td>
+                        <td>{{item.lastConnectedAt || '-'}}</td>
+                        <td>{{item.lastMessageAt || '-'}}</td>
+                        <td>
+                            <el-button size="mini" icon="el-icon-edit" @@click="edit(item)">编辑</el-button>
+                            <el-button size="mini" icon="el-icon-chat-dot-round" @@click="openSend(item)">发送</el-button>
+                            <el-button size="mini" type="danger" icon="el-icon-delete" @@click="remove(item)">删除</el-button>
+                        </td>
+                    </tr>
+                    <tr v-if="accounts.length===0"><td colspan="6" class="claw-muted">尚未连接个人微信。</td></tr>
+                </tbody>
+            </table>
+
+            <div class="claw-panel" v-if="editor.visible">
+                <h4>{{editor.form.id ? '编辑个人微信账号' : '添加个人微信账号'}}</h4>
+                <div class="claw-grid">
+                    <div class="claw-field">
+                        <label>名称</label>
+                        <el-input v-model="editor.form.name" placeholder="例如：我的个人微信"></el-input>
+                    </div>
+                    <div class="claw-field">
+                        <label>iLink Base URL</label>
+                        <el-input v-model="editor.form.baseUrl" placeholder="https://ilinkai.weixin.qq.com"></el-input>
+                    </div>
+                    <div class="claw-field">
+                        <label>bot token</label>
+                        <el-input v-model="editor.form.botToken" type="password" show-password placeholder="留空表示保留现有 token"></el-input>
+                    </div>
+                    <div class="claw-field">
+                        <label>PromptRangeCode</label>
+                        <el-input v-model="editor.form.promptRangeCode" placeholder="由上层 handler 使用，可留空"></el-input>
+                    </div>
+                </div>
+                <p class="claw-muted">token 只在服务端以 Data Protection 保护形式保存，页面不会回显。</p>
+                <el-checkbox v-model="editor.form.enabled">启用长轮询</el-checkbox>
+                <div class="claw-toolbar" style="margin-top:12px">
+                    <el-button type="primary" icon="el-icon-check" @@click="save">保存</el-button>
+                    <el-button icon="el-icon-close" @@click="editor.visible=false">取消</el-button>
+                </div>
+            </div>
+
+            <div class="claw-panel" v-if="login.visible">
+                <h4>扫描二维码连接个人微信</h4>
+                <div class="claw-grid">
+                    <div>
+                        <img class="claw-qr" :src="login.qrcodeImageContent" alt="微信登录二维码">
+                    </div>
+                    <div>
+                        <p>请使用微信扫描二维码，并在手机上确认登录。</p>
+                        <p>状态：<strong>{{login.status}}</strong></p>
+                        <p class="claw-muted" v-if="login.error">{{login.error}}</p>
+                        <el-button icon="el-icon-refresh" @@click="pollLogin" v-if="login.status!=='confirmed'">刷新状态</el-button>
+                        <el-button icon="el-icon-close" @@click="login.visible=false">关闭</el-button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="claw-panel" v-if="sender.visible">
+                <h4>发送个人微信消息</h4>
+                <div class="claw-grid">
+                    <div class="claw-field">
+                        <label>目标 iLink User ID</label>
+                        <el-input v-model="sender.toUserId" placeholder="从入站消息 context 获取"></el-input>
+                    </div>
+                    <div class="claw-field">
+                        <label>Context Token（可选）</label>
+                        <el-input v-model="sender.contextToken"></el-input>
+                    </div>
+                    <div class="claw-field" style="grid-column: 1 / -1">
+                        <label>消息</label>
+                        <el-input v-model="sender.text" type="textarea" :rows="4"></el-input>
+                    </div>
+                </div>
+                <div class="claw-toolbar" style="margin-top:12px">
+                    <el-button type="primary" icon="el-icon-s-promotion" @@click="send">发送</el-button>
+                    <el-button icon="el-icon-close" @@click="sender.visible=false">取消</el-button>
+                </div>
+            </div>
+        </el-main>
+    </el-container>
+</div>
+@section scripts {
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    accounts: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Accounts)),
+                    editor: { visible: false, form: {} },
+                    login: { visible: false, sessionId: '', qrcodeImageContent: '', status: '', error: '' },
+                    sender: { visible: false, accountId: 0, toUserId: '', contextToken: '', text: '' }
+                };
+            },
+            methods: {
+                async loadAccounts() {
+                    const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=Ajax');
+                    this.accounts = res.data.data.list || [];
+                },
+                edit(item) {
+                    this.editor.form = Object.assign({}, item, { botToken: '' });
+                    this.editor.visible = true;
+                },
+                async save() {
+                    await service.post('/Admin/WeixinManager/WeixinClaw?handler=Save', this.editor.form);
+                    this.editor.visible = false;
+                    await this.loadAccounts();
+                },
+                async remove(item) {
+                    await service.post('/Admin/WeixinManager/WeixinClaw?handler=Delete', [item.id]);
+                    await this.loadAccounts();
+                },
+                async startLogin() {
+                    const res = await service.post('/Admin/WeixinManager/WeixinClaw?handler=StartLogin', {
+                        name: '个人微信',
+                        promptRangeCode: ''
+                    });
+                    this.login = Object.assign({ visible: true }, res.data.data);
+                    this.login.visible = true;
+                    this.pollLogin();
+                },
+                async pollLogin() {
+                    if (!this.login.sessionId || this.login.status === 'confirmed') return;
+                    const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=LoginStatus&sessionId=' + encodeURIComponent(this.login.sessionId));
+                    this.login = Object.assign(this.login, res.data.data);
+                    this.login.visible = true;
+                    if (this.login.status !== 'confirmed' && this.login.status !== 'expired' && this.login.status !== 'error') {
+                        setTimeout(() => this.pollLogin(), 2500);
+                    } else if (this.login.status === 'confirmed') {
+                        await this.loadAccounts();
+                    }
+                },
+                openSend(item) {
+                    this.sender = { visible: true, accountId: item.id, toUserId: '', contextToken: '', text: '' };
+                },
+                async send() {
+                    await service.post('/Admin/WeixinManager/WeixinClaw?handler=Send', this.sender);
+                    this.sender.visible = false;
+                }
+            }
+        });
+    </script>
+}

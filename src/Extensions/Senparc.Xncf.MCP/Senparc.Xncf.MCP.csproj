@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.4</Version>
+    <Version>0.5.5</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -69,6 +69,9 @@
       1、同步共享 AI 依赖版本和 Harness 包引用
       2、保持 MCP 工具调用与宿主模块的兼容性
       [2026-09-16] v0.5.4 Dependency updates from Senparc.Xncf.AgentsManager to 0.17.2; Senparc.Web to 0.39.1
+      [2026-09-17] v0.5.5 适配共享 AgentKernel 预览依赖版本
+      1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
+      2、保持 MCP 工具调用与宿主模块兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

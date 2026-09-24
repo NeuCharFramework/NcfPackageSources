@@ -30,6 +30,8 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
         public DbSet<WeixinUser> WeixinUsers { get; set; }
         public DbSet<UserTag> UserTags { get; set; }
         public DbSet<UserTag_WeixinUser> UserTags_WeixinUsers { get; set; }
+        public DbSet<WeixinClawAccount> WeixinClawAccounts { get; set; }
+        public DbSet<WeixinClawMessageReceipt> WeixinClawMessageReceipts { get; set; }
 
         public WeixinSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {

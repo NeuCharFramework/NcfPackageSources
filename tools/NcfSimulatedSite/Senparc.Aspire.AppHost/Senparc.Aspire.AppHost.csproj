@@ -4,7 +4,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.15</Version>
+    <Version>0.0.16</Version>
     <PackageReleaseNotes>
         [2026-07-01] v0.0.1 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
         [2026-07-02] v0.0.1 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
@@ -47,6 +47,9 @@
         [2026-09-16] v0.0.15 调整 Aspire 宿主项目引用并移除重复安装器接口依赖
         1、移除重复的 Senparc.Xncf.Installer.Interface 项目引用，保持安装器宿主依赖单一
         2、同步本地启动配置，保持 Aspire 开发环境启动地址与环境变量可用
+        [2026-09-17] v0.0.16 Dependency updates from Senparc.Areas.Admin to 0.10.0; Senparc.Ncf.XncfBase to 0.28.0; Senparc.Web to 0.39.2; Senparc.Xncf.AIKernel to 0.16.2; Senparc.Xncf.AgentsManager to 0.18.0; Senparc.Xncf.Installer to 0.5.8; Senparc.Xncf.KnowledgeBase to 0.7.4; Senparc.Xncf.MCP to 0.5.5; Senparc.Xncf.PromptRange to 0.19.7; Senparc.Xncf.WeixinManager to 0.24.8; Senparc.Xncf.XncfBuilder to 0.41.4
+        1、同步受影响的基础库、AI 模块或宿主项目版本
+        2、保持项目引用链与当前功能兼容
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

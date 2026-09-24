@@ -167,6 +167,137 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Dm
                     b.ToTable("WeixinManager_UserTag_WeixinUser");
                 });
 
+            modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinClawAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("BaseUrl")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("BotTokenProtected")
+                        .HasMaxLength(4096)
+                        .HasColumnType("NVARCHAR2(4096)");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("BIT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("BIT");
+
+                    b.Property<string>("GetUpdatesBuf")
+                        .HasMaxLength(100000)
+                        .HasColumnType("clob");
+
+                    b.Property<string>("IlinkBotId")
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
+
+                    b.Property<string>("IlinkUserId")
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
+
+                    b.Property<DateTime?>("LastConnectedAt")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(2000)
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<DateTime?>("LastMessageAt")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<string>("PromptRangeCode")
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("NVARCHAR2(50)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IlinkBotId");
+
+                    b.ToTable("WeixinManager_WeixinClawAccount");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinClawMessageReceipt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("BIT");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("MessageId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
+
+                    b.Property<DateTime>("ReceivedAt")
+                        .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<long>("Seq")
+                        .HasColumnType("BIGINT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INT");
+
+                    b.Property<int>("WeixinClawAccountId")
+                        .HasColumnType("INT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WeixinClawAccountId", "MessageId", "Seq")
+                        .IsUnique();
+
+                    b.ToTable("WeixinManager_WeixinClawMessageReceipt");
+                });
+
             modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinUser", b =>
                 {
                     b.Property<int>("Id")

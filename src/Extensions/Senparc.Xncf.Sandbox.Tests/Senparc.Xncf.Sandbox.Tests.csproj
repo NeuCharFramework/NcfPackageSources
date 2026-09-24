@@ -20,6 +20,9 @@
       [2026-09-18] v0.0.7 同步上游模块 v0.3.3 能力
       1、新增附加端口映射解析、Notebook 构建器与配额默认值回归测试
       2、补充 LabCreateNotebook / UpdateAlias Function 注册与会话别名状态回归测试
+      [2026-09-17] v0.0.7 补充 Sandbox FunctionRender 与协议参数测试
+      1、覆盖持久化实验室操作的 AI 可调用函数注册行为
+      2、验证请求模板选项能够暴露协议值
 </PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>

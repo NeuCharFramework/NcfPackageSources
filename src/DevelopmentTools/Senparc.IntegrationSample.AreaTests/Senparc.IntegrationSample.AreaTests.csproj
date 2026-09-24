@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.10</Version>
+    <Version>0.0.11</Version>
     <PackageReleaseNotes>
       [2026-07-17] v0.0.1 同步上游项目版本并适配统一本地化能力
       1、Dependency update from Senparc.Ncf.Core to 0.25.0-preview2
@@ -22,6 +22,9 @@
       [2026-08-29] v0.0.9 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
       1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
       [2026-09-16] v0.0.10 Dependency updates from Senparc.IntegrationSample to 0.0.13
+      [2026-09-17] v0.0.11 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+      1、同步受影响的基础库、AI 模块或宿主项目版本
+      2、保持项目引用链与当前功能兼容
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

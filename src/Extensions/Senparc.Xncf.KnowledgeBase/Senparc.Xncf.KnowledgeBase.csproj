@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.3</Version>
+    <Version>0.7.4</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -69,6 +69,9 @@
 		2、优化知识库、详情页与召回测试页面的数据加载和交互稳定性
 		3、优化知识库模块注册与管理端状态展示
 		[2026-09-16] v0.7.3 Dependency updates from Senparc.Xncf.AgentsManager to 0.17.2; Senparc.Web to 0.39.1
+		[2026-09-17] v0.7.4 适配共享 AgentKernel 预览依赖版本
+		1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
+		2、保持知识库模块与共享 AI 工具调用兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

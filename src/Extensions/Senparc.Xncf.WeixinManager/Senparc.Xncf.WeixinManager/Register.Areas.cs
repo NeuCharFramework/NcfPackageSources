@@ -40,6 +40,7 @@ namespace Senparc.Xncf.WeixinManager
              new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/Index"), WeixinManagerResource.Get("Area.Home", "首页"),"fa fa-laptop"),
              new AreaPageMenuItem(GetAreaUrl("/swagger"), WeixinManagerResource.Get("Area.ApiDocumentation", "Web API Swagger"),"fa fa-file-code-o"),
              new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/MpAccount"), WeixinManagerResource.Get("Area.WeixinManager.OfficialAccounts", "公众号管理"),"fa fa-comments"),
+             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/WeixinClaw"), "个人微信 Bot","fa fa-wechat"),
              new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/WeixinUser"), WeixinManagerResource.Get("Area.WeixinManager.Users", "用户管理"),"fa fa-users"),
         };
 

@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.2.0</Version>
+		<Version>0.2.1</Version>
 		<AssemblyName>Senparc.Xncf.Installer.Interface</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer.Interface</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -36,6 +36,9 @@
 			[2026-09-16] v0.2.0 移除已迁移的安装 DTO，收敛接口包公开模型边界
 			1、移除已迁移至安装器域模型的安装请求、响应及模块注册 DTO
 			2、保留安装器接口客户端与配置能力，明确接口包的公开职责
+			[2026-09-17] v0.2.1 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+			1、同步受影响的基础库、AI 模块或宿主项目版本
+			2、保持项目引用链与当前功能兼容
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
