@@ -202,6 +202,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 var dispatcher = scope.ServiceProvider.GetRequiredService<WeixinClawMessageDispatcher>();
                 var handledMessage = false;
                 var mediaService = scope.ServiceProvider.GetRequiredService<WeixinClawMediaService>();
+                var handledMessage = false;
                 foreach (var message in response.Msgs ?? Enumerable.Empty<WeixinClawMessage>())
                 {
                     var hasMessageId = !string.IsNullOrWhiteSpace(message.MessageId);
@@ -223,6 +224,8 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                         message.MessageType,
                         message.ItemList?.Count ?? 0,
                         !string.IsNullOrWhiteSpace(message.ContextToken));
+
+                    handledMessage = true;
 
                     var text = string.Join(
                         Environment.NewLine,
