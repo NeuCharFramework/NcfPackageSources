@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.WeixinManager.Domain.Models.VD.Admin.WeixinManager;
@@ -17,16 +18,19 @@ public class IndexModel : BaseAdminWeixinManagerModel
     private readonly WeixinClawAccountService _accountService;
     private readonly WeixinClawLoginService _loginService;
     private readonly WeixinClawMessageService _messageService;
+    private readonly ILogger<IndexModel> _logger;
 
     public IndexModel(
         Lazy<XncfModuleService> xncfModuleService,
         WeixinClawAccountService accountService,
         WeixinClawLoginService loginService,
-        WeixinClawMessageService messageService) : base(xncfModuleService)
+        WeixinClawMessageService messageService,
+        ILogger<IndexModel> logger) : base(xncfModuleService)
     {
         _accountService = accountService;
         _loginService = loginService;
         _messageService = messageService;
+        _logger = logger;
     }
 
     public async Task OnGetAsync()
@@ -48,6 +52,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "启动个人微信 Claw 二维码登录失败。");
             return BadRequest(new { msg = ex.Message });
         }
     }
