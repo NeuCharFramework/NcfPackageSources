@@ -87,6 +87,24 @@ public class WeixinClawProtocolTests
         Assert.IsTrue(handler.Request.RequestUri.Query.Contains("qrcode=redirected-qr"));
     }
 
+    [TestMethod]
+    public async Task GetQrCodeStatusAsync_UsesHttpsRedirectHostBaseUrl()
+    {
+        var handler = new CapturingHandler("""{"status":"wait"}""");
+        using var httpClient = new HttpClient(handler);
+        var api = new WeixinClawApi(httpClient);
+
+        var response = await api.GetQrCodeStatusAsync(
+            "redirect-host-qr",
+            baseUrl: "https://redirect-host.example.test",
+            cancellationToken: CancellationToken.None);
+
+        Assert.AreEqual("wait", response.Status);
+        Assert.AreEqual("redirect-host.example.test", handler.Request.RequestUri.Host);
+        Assert.AreEqual("/ilink/bot/get_qrcode_status", handler.Request.RequestUri.AbsolutePath);
+        Assert.IsTrue(handler.Request.RequestUri.Query.Contains("qrcode=redirect-host-qr"));
+    }
+
     private sealed class CapturingHandler : HttpMessageHandler
     {
         private readonly string _response;

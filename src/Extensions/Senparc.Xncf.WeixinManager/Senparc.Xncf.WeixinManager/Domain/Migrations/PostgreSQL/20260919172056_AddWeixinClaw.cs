@@ -62,6 +62,12 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.PostgreSQL
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WeixinManager_WeixinClawMessageReceipt", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WeixinManager_WeixinClawMessageReceipt_WeixinManager_WeixinClawAccount_WeixinClawAccountId",
+                        column: x => x.WeixinClawAccountId,
+                        principalTable: "WeixinManager_WeixinClawAccount",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

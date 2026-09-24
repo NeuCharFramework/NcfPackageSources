@@ -130,11 +130,6 @@ public sealed class WeixinClawHostedService : BackgroundService
                     var messageId = string.IsNullOrWhiteSpace(message.MessageId)
                         ? "seq:" + message.Seq
                         : message.MessageId;
-                    if (await receiptService.ExistsAsync(account.Id, messageId, message.Seq).ConfigureAwait(false))
-                    {
-                        continue;
-                    }
-
                     if (!await receiptService.TryCreateAsync(account.Id, messageId, message.Seq).ConfigureAwait(false))
                     {
                         continue;

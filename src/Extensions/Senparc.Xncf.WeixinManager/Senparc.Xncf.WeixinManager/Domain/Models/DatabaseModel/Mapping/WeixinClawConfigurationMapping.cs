@@ -20,5 +20,9 @@ public class WeixinClawMessageReceiptConfigurationMapping : ConfigurationMapping
     {
         base.Configure(builder);
         builder.HasIndex(z => new { z.WeixinClawAccountId, z.MessageId, z.Seq }).IsUnique();
+        builder.HasOne<WeixinClawAccount>()
+            .WithMany()
+            .HasForeignKey(z => z.WeixinClawAccountId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
