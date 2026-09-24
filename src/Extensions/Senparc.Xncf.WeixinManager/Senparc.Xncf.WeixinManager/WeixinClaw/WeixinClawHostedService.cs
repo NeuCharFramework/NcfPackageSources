@@ -220,6 +220,10 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                         message.MessageType,
                         message.ItemList?.Count ?? 0,
                         !string.IsNullOrWhiteSpace(message.ContextToken));
+                    if (!await receiptService.TryCreateAsync(account.Id, messageId, message.Seq).ConfigureAwait(false))
+                    {
+                        continue;
+                    }
 
                     var text = string.Join(
                         Environment.NewLine,
@@ -236,44 +240,52 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                     if (message.MessageType == 1
                         && (!string.IsNullOrWhiteSpace(text) || mediaItems.Count > 0))
                     {
-                        var protectedContextToken = accountService.ProtectContextToken(message.ContextToken);
-                        account.MarkMessageReceived(
-                            message.FromUserId,
-                            protectedContextToken);
-                        await accountService.SaveObjectAsync(account).ConfigureAwait(false);
-                        await recordService.AddInboundAsync(
-                            account.Id,
-                            messageId,
-                            message.Seq,
-                            message.FromUserId,
-                            message.ToUserId,
-                            protectedContextToken,
-                            message.RunId,
-                            message.MessageType,
-                            message.MessageState,
-                            WeixinClawMessageContent.Serialize(text, mediaItems),
-                            message.CreateTimeMs > 0
-                                ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs).UtcDateTime
-                                : DateTime.UtcNow).ConfigureAwait(false);
+                        try
+                        {
+                            var protectedContextToken = accountService.ProtectContextToken(message.ContextToken);
+                            account.MarkMessageReceived(
+                                message.FromUserId,
+                                protectedContextToken);
+                            await accountService.SaveObjectAsync(account).ConfigureAwait(false);
+                            await recordService.AddInboundAsync(
+                                account.Id,
+                                messageId,
+                                message.Seq,
+                                message.FromUserId,
+                                message.ToUserId,
+                                protectedContextToken,
+                                message.RunId,
+                                message.MessageType,
+                                message.MessageState,
+                                WeixinClawMessageContent.Serialize(text, mediaItems),
+                                message.CreateTimeMs > 0
+                                    ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs).UtcDateTime
+                                    : DateTime.UtcNow).ConfigureAwait(false);
 
-                        await dispatcher.DispatchAsync(new WeixinClawMessageReceivedContext(
-                            account.Id,
-                            account.Name,
-                            messageId,
-                            message.Seq,
-                            message.FromUserId,
-                            message.ToUserId,
-                            message.GroupId,
-                            message.ContextToken,
-                            message.RunId,
-                            text,
-                            message.CreateTimeMs > 0
-                                ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs)
-                                : DateTimeOffset.UtcNow), stoppingToken).ConfigureAwait(false);
+                            await dispatcher.DispatchAsync(new WeixinClawMessageReceivedContext(
+                                account.Id,
+                                account.Name,
+                                messageId,
+                                message.Seq,
+                                message.FromUserId,
+                                message.ToUserId,
+                                message.GroupId,
+                                message.ContextToken,
+                                message.RunId,
+                                text,
+                                message.CreateTimeMs > 0
+                                    ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs)
+                                    : DateTimeOffset.UtcNow), stoppingToken).ConfigureAwait(false);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(
+                                ex,
+                                "个人微信 Claw 账号 {AccountId} 分发消息 {MessageId} 失败。",
+                                account.Id,
+                                messageId);
+                        }
                     }
-
-                    await receiptService.SaveObjectAsync(
-                        new WeixinClawMessageReceipt(account.Id, messageId, message.Seq)).ConfigureAwait(false);
                 }
 
                 if (response.GetUpdatesBuf != null)
