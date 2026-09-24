@@ -60,11 +60,11 @@ public sealed class WeixinClawLoginService
         {
             session.Status = "expired";
             session.Error = "二维码已过期，请重新获取。";
-            return ToStatus(session);
+            return CompleteSession(session);
         }
         if (session.Status == "confirmed")
         {
-            return ToStatus(session);
+            return CompleteSession(session);
         }
 
         await session.PollLock.WaitAsync(cancellationToken).ConfigureAwait(false);
@@ -74,11 +74,11 @@ public sealed class WeixinClawLoginService
             {
                 session.Status = "expired";
                 session.Error = "二维码已过期，请重新获取。";
-                return ToStatus(session);
+                return CompleteSession(session);
             }
             if (session.Status == "confirmed")
             {
-                return ToStatus(session);
+                return CompleteSession(session);
             }
 
             var response = await _api.GetQrCodeStatusAsync(
@@ -103,7 +103,7 @@ public sealed class WeixinClawLoginService
                 {
                     session.Status = "error";
                     session.Error = "登录成功响应缺少 bot token 或账号标识。";
-                    return ToStatus(session);
+                    return CompleteSession(session);
                 }
 
                 var effectiveBaseUrl = string.IsNullOrWhiteSpace(response.BaseUrl)
@@ -135,10 +135,16 @@ public sealed class WeixinClawLoginService
                 session.AccountBotId = response.IlinkBotId;
                 session.AccountUserId = response.IlinkUserId;
                 session.Error = null;
+                return CompleteSession(session);
             }
             else if (session.Status is "expired" or "verify_code_blocked" or "scanned_but_redirect" or "binded_redirect")
             {
                 session.Error = "当前二维码状态：" + session.Status;
+            }
+
+            if (session.Status == "error")
+            {
+                return CompleteSession(session);
             }
 
             return ToStatus(session);
@@ -160,6 +166,13 @@ public sealed class WeixinClawLoginService
             session.AccountUserId,
             session.StartedAt,
             session.Error);
+    }
+
+    private WeixinClawLoginStatus CompleteSession(LoginSession session)
+    {
+        var status = ToStatus(session);
+        _sessions.TryRemove(session.Id, out _);
+        return status;
     }
 
     private sealed class LoginSession

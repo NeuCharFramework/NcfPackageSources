@@ -127,10 +127,12 @@ public sealed class WeixinClawHostedService : BackgroundService
                 var handledMessage = false;
                 foreach (var message in response.Msgs ?? Enumerable.Empty<WeixinClawMessage>())
                 {
-                    var messageId = string.IsNullOrWhiteSpace(message.MessageId)
-                        ? "seq:" + message.Seq
-                        : message.MessageId;
-                    if (!await receiptService.TryCreateAsync(account.Id, messageId, message.Seq).ConfigureAwait(false))
+                    var hasMessageId = !string.IsNullOrWhiteSpace(message.MessageId);
+                    var messageId = hasMessageId
+                        ? message.MessageId
+                        : "seq:" + message.Seq;
+                    var receiptSeq = hasMessageId ? message.Seq : 0;
+                    if (!await receiptService.TryCreateAsync(account.Id, messageId, receiptSeq).ConfigureAwait(false))
                     {
                         continue;
                     }
