@@ -364,6 +364,7 @@
                     editor: { visible: false, form: {} },
                     login: { visible: false, sessionId: '', qrcodeImageContent: '', qrcodeUrl: '', status: '', error: '' },
                     loginPollHandle: null,
+                    loginPollInFlight: false,
                     sender: { visible: false, accountId: 0, toUserId: '', contextToken: '', replyToRecordId: null, text: '' },
                     chat: { visible: false, accountId: 0, accountName: '', peerUserId: '', sessions: [], messages: [], loading: false, sending: false, nearBottom: true, newCount: 0, mediaFile: null, mediaKind: 'file' },
                     currentAccount: null,
@@ -446,18 +447,26 @@
                         this.clearLoginPoll();
                         return;
                     }
+                    if (this.loginPollInFlight) {
+                        return;
+                    }
 
-                    const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=LoginStatus&sessionId=' + encodeURIComponent(this.login.sessionId));
-                    this.login = Object.assign(this.login, res.data.data);
-                    this.login.visible = true;
-                    if (this.login.status !== 'confirmed' && this.login.status !== 'expired' && this.login.status !== 'error') {
-                        this.clearLoginPoll();
-                        this.loginPollHandle = setTimeout(() => this.pollLogin(), 2500);
-                    } else if (this.login.status === 'confirmed') {
-                        this.clearLoginPoll();
-                        await this.loadAccounts();
-                    } else {
-                        this.clearLoginPoll();
+                    this.loginPollInFlight = true;
+                    try {
+                        const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=LoginStatus&sessionId=' + encodeURIComponent(this.login.sessionId));
+                        this.login = Object.assign(this.login, res.data.data);
+                        this.login.visible = true;
+                        if (this.login.status !== 'confirmed' && this.login.status !== 'expired' && this.login.status !== 'error') {
+                            this.clearLoginPoll();
+                            this.loginPollHandle = setTimeout(() => this.pollLogin(), 2500);
+                        } else if (this.login.status === 'confirmed') {
+                            this.clearLoginPoll();
+                            await this.loadAccounts();
+                        } else {
+                            this.clearLoginPoll();
+                        }
+                    } finally {
+                        this.loginPollInFlight = false;
                     }
                 },
                 closeLogin() {
