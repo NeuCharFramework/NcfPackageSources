@@ -72,7 +72,8 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Sqlite
             migrationBuilder.CreateIndex(
                 name: "IX_WeixinManager_WeixinClawAccount_IlinkBotId",
                 table: "WeixinManager_WeixinClawAccount",
-                column: "IlinkBotId");
+                column: "IlinkBotId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_WeixinManager_WeixinClawMessageReceipt_WeixinClawAccountId_MessageId_Seq",

@@ -10,7 +10,7 @@ public class WeixinClawConfigurationMapping : ConfigurationMappingWithIdBase<Wei
     public override void Configure(EntityTypeBuilder<WeixinClawAccount> builder)
     {
         base.Configure(builder);
-        builder.HasIndex(z => z.IlinkBotId);
+        builder.HasIndex(z => z.IlinkBotId).IsUnique();
     }
 }
 
