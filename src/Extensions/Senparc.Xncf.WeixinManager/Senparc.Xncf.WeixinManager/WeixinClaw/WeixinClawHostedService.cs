@@ -202,6 +202,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 var recordService = scope.ServiceProvider.GetRequiredService<WeixinClawMessageRecordService>();
                 var dispatcher = scope.ServiceProvider.GetRequiredService<WeixinClawMessageDispatcher>();
                 var mediaService = scope.ServiceProvider.GetRequiredService<WeixinClawMediaService>();
+                var handledMessage = false;
                 foreach (var message in response.Msgs ?? Enumerable.Empty<WeixinClawMessage>())
                 {
                     var messageId = string.IsNullOrWhiteSpace(message.MessageId)
@@ -224,6 +225,8 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                     {
                         continue;
                     }
+
+                    handledMessage = true;
 
                     var text = string.Join(
                         Environment.NewLine,
@@ -292,7 +295,14 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 {
                     account.SetCursor(response.GetUpdatesBuf);
                 }
-                account.MarkRunning();
+                if (handledMessage)
+                {
+                    account.MarkMessageReceived();
+                }
+                else
+                {
+                    account.MarkRunning();
+                }
                 await accountService.SaveObjectAsync(account).ConfigureAwait(false);
             }
         }
