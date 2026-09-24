@@ -96,10 +96,10 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.MySql
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "WeixinManager_WeixinClawAccount");
+                name: "WeixinManager_WeixinClawMessageReceipt");
 
             migrationBuilder.DropTable(
-                name: "WeixinManager_WeixinClawMessageReceipt");
+                name: "WeixinManager_WeixinClawAccount");
         }
     }
 }

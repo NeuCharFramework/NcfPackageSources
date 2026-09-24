@@ -50,6 +50,8 @@ public class WeixinClawProtocolTests
         Assert.AreEqual("132105", handler.Request.Headers.GetValues("iLink-App-ClientVersion").Single());
         Assert.IsTrue(handler.Request.Headers.Contains("X-WECHAT-UIN"));
         StringAssert.Contains(handler.Body, "\"get_updates_buf\":\"old-cursor\"");
+        StringAssert.Contains(handler.Body, "\"channel_version\":\"0.1.0\"");
+        StringAssert.Contains(handler.Body, "\"bot_agent\":\"NCF-WeixinManager/0.1.0\"");
         StringAssert.Contains(handler.Request.RequestUri.AbsolutePath, "/ilink/bot/getupdates");
     }
 

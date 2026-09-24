@@ -67,63 +67,82 @@ public sealed class WeixinClawLoginService
             return ToStatus(session);
         }
 
-        var response = await _api.GetQrCodeStatusAsync(
-            session.Qrcode,
-            baseUrl: session.ApiBaseUrl,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
-        session.Status = response.Status ?? "wait";
-
-        if (string.Equals(response.Status, "scanned_but_redirect", StringComparison.OrdinalIgnoreCase) &&
-            !string.IsNullOrWhiteSpace(response.RedirectHost))
+        await session.PollLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
         {
-            session.ApiBaseUrl = response.RedirectHost.StartsWith("http", StringComparison.OrdinalIgnoreCase)
-                ? response.RedirectHost
-                : "https://" + response.RedirectHost;
-        }
-
-        if (string.Equals(response.Status, "confirmed", StringComparison.OrdinalIgnoreCase))
-        {
-            if (string.IsNullOrWhiteSpace(response.BotToken) ||
-                string.IsNullOrWhiteSpace(response.IlinkBotId) ||
-                string.IsNullOrWhiteSpace(response.IlinkUserId))
+            if (DateTimeOffset.UtcNow - session.StartedAt > TimeSpan.FromMinutes(10))
             {
-                session.Status = "error";
-                session.Error = "登录成功响应缺少 bot token 或账号标识。";
+                session.Status = "expired";
+                session.Error = "二维码已过期，请重新获取。";
+                return ToStatus(session);
+            }
+            if (session.Status == "confirmed")
+            {
                 return ToStatus(session);
             }
 
-            var account = new WeixinClawAccountDto
+            var response = await _api.GetQrCodeStatusAsync(
+                session.Qrcode,
+                baseUrl: session.ApiBaseUrl,
+                cancellationToken: cancellationToken).ConfigureAwait(false);
+            session.Status = response.Status ?? "wait";
+
+            if (string.Equals(response.Status, "scanned_but_redirect", StringComparison.OrdinalIgnoreCase) &&
+                !string.IsNullOrWhiteSpace(response.RedirectHost))
             {
-                Name = session.Name,
-                BaseUrl = response.BaseUrl,
-                BotToken = response.BotToken,
-                IlinkBotId = response.IlinkBotId,
-                IlinkUserId = response.IlinkUserId,
-                PromptRangeCode = session.PromptRangeCode,
-                Enabled = true
-            };
-            using var scope = _scopeFactory.CreateScope();
-            var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
-            var saved = await accountService.SaveSettingsAsync(account).ConfigureAwait(false);
-            saved.SetAuthenticated(
-                accountService.ProtectToken(response.BotToken),
-                response.IlinkBotId,
-                response.IlinkUserId,
-                WeixinClawApi.NormalizeBaseUrl(response.BaseUrl));
-            await accountService.SaveObjectAsync(saved).ConfigureAwait(false);
+                session.ApiBaseUrl = response.RedirectHost.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                    ? response.RedirectHost
+                    : "https://" + response.RedirectHost;
+            }
 
-            session.Status = "confirmed";
-            session.AccountId = saved.Id;
-            session.AccountBotId = response.IlinkBotId;
-            session.AccountUserId = response.IlinkUserId;
-            session.Error = null;
+            if (string.Equals(response.Status, "confirmed", StringComparison.OrdinalIgnoreCase))
+            {
+                if (string.IsNullOrWhiteSpace(response.BotToken) ||
+                    string.IsNullOrWhiteSpace(response.IlinkBotId) ||
+                    string.IsNullOrWhiteSpace(response.IlinkUserId))
+                {
+                    session.Status = "error";
+                    session.Error = "登录成功响应缺少 bot token 或账号标识。";
+                    return ToStatus(session);
+                }
+
+                var account = new WeixinClawAccountDto
+                {
+                    Name = session.Name,
+                    BaseUrl = response.BaseUrl,
+                    BotToken = response.BotToken,
+                    IlinkBotId = response.IlinkBotId,
+                    IlinkUserId = response.IlinkUserId,
+                    PromptRangeCode = session.PromptRangeCode,
+                    Enabled = true
+                };
+                using var scope = _scopeFactory.CreateScope();
+                var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
+                var saved = await accountService.SaveSettingsAsync(account).ConfigureAwait(false);
+                saved.SetAuthenticated(
+                    accountService.ProtectToken(response.BotToken),
+                    response.IlinkBotId,
+                    response.IlinkUserId,
+                    WeixinClawApi.NormalizeBaseUrl(response.BaseUrl));
+                await accountService.SaveObjectAsync(saved).ConfigureAwait(false);
+
+                session.Status = "confirmed";
+                session.AccountId = saved.Id;
+                session.AccountBotId = response.IlinkBotId;
+                session.AccountUserId = response.IlinkUserId;
+                session.Error = null;
+            }
+            else if (session.Status is "expired" or "verify_code_blocked" or "scanned_but_redirect" or "binded_redirect")
+            {
+                session.Error = "当前二维码状态：" + session.Status;
+            }
+
+            return ToStatus(session);
         }
-        else if (session.Status is "expired" or "verify_code_blocked" or "scanned_but_redirect" or "binded_redirect")
+        finally
         {
-            session.Error = "当前二维码状态：" + session.Status;
+            session.PollLock.Release();
         }
-
-        return ToStatus(session);
     }
 
     private static WeixinClawLoginStatus ToStatus(LoginSession session)
@@ -153,6 +172,7 @@ public sealed class WeixinClawLoginService
         public int? AccountId { get; set; }
         public string AccountBotId { get; set; }
         public string AccountUserId { get; set; }
+        public SemaphoreSlim PollLock { get; } = new(1, 1);
     }
 }
 
