@@ -239,28 +239,28 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                     if (message.MessageType == 1
                         && (!string.IsNullOrWhiteSpace(text) || mediaItems.Count > 0))
                     {
-                        var protectedContextToken = accountService.ProtectContextToken(message.ContextToken);
-                        account.MarkMessageReceived(
-                            message.FromUserId,
-                            protectedContextToken);
-                        await accountService.SaveObjectAsync(account).ConfigureAwait(false);
-                        await recordService.AddInboundAsync(
-                            account.Id,
-                            messageId,
-                            message.Seq,
-                            message.FromUserId,
-                            message.ToUserId,
-                            protectedContextToken,
-                            message.RunId,
-                            message.MessageType,
-                            message.MessageState,
-                            WeixinClawMessageContent.Serialize(text, mediaItems),
-                            message.CreateTimeMs > 0
-                                ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs).UtcDateTime
-                                : DateTime.UtcNow).ConfigureAwait(false);
-
                         try
                         {
+                            var protectedContextToken = accountService.ProtectContextToken(message.ContextToken);
+                            account.MarkMessageReceived(
+                                message.FromUserId,
+                                protectedContextToken);
+                            await accountService.SaveObjectAsync(account).ConfigureAwait(false);
+                            await recordService.AddInboundAsync(
+                                account.Id,
+                                messageId,
+                                message.Seq,
+                                message.FromUserId,
+                                message.ToUserId,
+                                protectedContextToken,
+                                message.RunId,
+                                message.MessageType,
+                                message.MessageState,
+                                WeixinClawMessageContent.Serialize(text, mediaItems),
+                                message.CreateTimeMs > 0
+                                    ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs).UtcDateTime
+                                    : DateTime.UtcNow).ConfigureAwait(false);
+
                             await dispatcher.DispatchAsync(new WeixinClawMessageReceivedContext(
                                 account.Id,
                                 account.Name,
