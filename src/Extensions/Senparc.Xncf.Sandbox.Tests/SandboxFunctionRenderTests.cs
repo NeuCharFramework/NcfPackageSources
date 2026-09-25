@@ -36,6 +36,7 @@ public class SandboxFunctionRenderTests
         }
     }
 
+    [TestMethod]
     public void AliasAndCreateFunctions_AreRegistered()
     {
         var methods = typeof(SandboxAppService)
