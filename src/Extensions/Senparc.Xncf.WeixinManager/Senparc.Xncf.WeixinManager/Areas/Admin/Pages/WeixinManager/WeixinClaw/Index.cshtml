@@ -179,13 +179,20 @@
                 },
                 async startLogin() {
                     this.clearLoginPoll();
-                    const res = await service.post('/Admin/WeixinManager/WeixinClaw?handler=StartLogin', {
-                        name: '个人微信',
-                        promptRangeCode: ''
-                    });
-                    this.login = Object.assign({ visible: true }, res.data.data);
-                    this.login.visible = true;
-                    this.pollLogin();
+                    try {
+                        const res = await service.post('/Admin/WeixinManager/WeixinClaw?handler=StartLogin', {
+                            name: '个人微信',
+                            promptRangeCode: ''
+                        });
+                        this.login = Object.assign({ visible: true }, res.data.data);
+                        this.login.visible = true;
+                        this.pollLogin();
+                    } catch (error) {
+                        const message = error && error.response && error.response.data && error.response.data.msg
+                            ? error.response.data.msg
+                            : (error && error.message) || '启动个人微信登录失败';
+                        this.$message.error(message);
+                    }
                 },
                 async pollLogin() {
                     if (!this.login.sessionId || this.login.status === 'confirmed') {
