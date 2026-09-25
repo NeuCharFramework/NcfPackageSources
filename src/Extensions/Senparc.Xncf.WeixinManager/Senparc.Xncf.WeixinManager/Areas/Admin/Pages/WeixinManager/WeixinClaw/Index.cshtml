@@ -108,6 +108,11 @@
                     <div>
                         <p>请使用微信扫描二维码，并在手机上确认登录。</p>
                         <p>状态：<strong>{{login.status}}</strong></p>
+                        <div class="claw-field" v-if="login.status==='verify_code_blocked'">
+                            <label>验证代码</label>
+                            <el-input v-model="login.verifyCode" placeholder="输入微信要求的验证代码后点击刷新状态"
+                                @@keyup.enter.native="pollLogin"></el-input>
+                        </div>
                         <p class="claw-muted" v-if="login.error">{{login.error}}</p>
                         <el-button icon="el-icon-refresh" @@click="pollLogin" v-if="login.status!=='confirmed'">刷新状态</el-button>
                         <el-button icon="el-icon-close" @@click="login.visible=false">关闭</el-button>
@@ -147,7 +152,7 @@
                 return {
                     accounts: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Accounts)),
                     editor: { visible: false, form: {} },
-                    login: { visible: false, sessionId: '', qrcodeImageContent: '', status: '', error: '' },
+                    login: { visible: false, sessionId: '', qrcodeImageContent: '', status: '', error: '', verifyCode: '' },
                     sender: { visible: false, accountId: 0, toUserId: '', contextToken: '', text: '' }
                 };
             },
@@ -161,9 +166,14 @@
                     this.editor.visible = true;
                 },
                 async save() {
-                    await service.post('/Admin/WeixinManager/WeixinClaw?handler=Save', this.editor.form);
-                    this.editor.visible = false;
-                    await this.loadAccounts();
+                    try {
+                        await service.post('/Admin/WeixinManager/WeixinClaw?handler=Save', this.editor.form);
+                        this.editor.visible = false;
+                        await this.loadAccounts();
+                    } catch (error) {
+                        const message = error && error.response && error.response.data && error.response.data.msg;
+                        if (message) this.$message.error(message);
+                    }
                 },
                 async remove(item) {
                     await service.post('/Admin/WeixinManager/WeixinClaw?handler=Delete', [item.id]);
@@ -187,21 +197,36 @@
                 },
                 async pollLogin() {
                     if (!this.login.sessionId || this.login.status === 'confirmed') return;
-                    const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=LoginStatus&sessionId=' + encodeURIComponent(this.login.sessionId));
-                    this.login = Object.assign(this.login, res.data.data);
-                    this.login.visible = true;
-                    if (this.login.status !== 'confirmed' && this.login.status !== 'expired' && this.login.status !== 'error') {
-                        setTimeout(() => this.pollLogin(), 2500);
-                    } else if (this.login.status === 'confirmed') {
-                        await this.loadAccounts();
+                    try {
+                        const url = '/Admin/WeixinManager/WeixinClaw?handler=LoginStatus&sessionId=' + encodeURIComponent(this.login.sessionId)
+                            + (this.login.verifyCode ? '&verifyCode=' + encodeURIComponent(this.login.verifyCode) : '');
+                        const res = await service.get(url);
+                        this.login = Object.assign(this.login, res.data.data);
+                        this.login.visible = true;
+                        if (this.login.status !== 'confirmed' && this.login.status !== 'expired' && this.login.status !== 'error') {
+                            setTimeout(() => this.pollLogin(), 2500);
+                        } else if (this.login.status === 'confirmed') {
+                            await this.loadAccounts();
+                        }
+                    } catch (error) {
+                        const message = error && error.response && error.response.data && error.response.data.msg
+                            ? error.response.data.msg
+                            : '查询登录状态失败，可点击“刷新状态”重试';
+                        this.login.error = message;
                     }
                 },
                 openSend(item) {
                     this.sender = { visible: true, accountId: item.id, toUserId: '', contextToken: '', text: '' };
                 },
                 async send() {
-                    await service.post('/Admin/WeixinManager/WeixinClaw?handler=Send', this.sender);
-                    this.sender.visible = false;
+                    try {
+                        await service.post('/Admin/WeixinManager/WeixinClaw?handler=Send', this.sender);
+                        this.$message.success('消息已发送');
+                        this.sender.visible = false;
+                    } catch (error) {
+                        const message = error && error.response && error.response.data && error.response.data.msg;
+                        if (message) this.$message.error(message);
+                    }
                 }
             }
         });

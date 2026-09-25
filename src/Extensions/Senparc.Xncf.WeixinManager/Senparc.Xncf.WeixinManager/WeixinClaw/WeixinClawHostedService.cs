@@ -101,18 +101,27 @@ public sealed class WeixinClawHostedService : BackgroundService
                     try
                     {
                         await api.NotifyStartAsync(baseUrl, token, stoppingToken).ConfigureAwait(false);
+                        notifiedStart = true;
                     }
                     catch (Exception ex)
                     {
                         _logger.LogDebug(ex, "通知个人微信 Claw 启动失败，继续尝试拉取消息。");
                     }
-                    notifiedStart = true;
                 }
-                var response = await api.GetUpdatesAsync(
-                    baseUrl,
-                    token,
-                    account.GetUpdatesBuf,
-                    stoppingToken).ConfigureAwait(false);
+                WeixinClawGetUpdatesResponse response;
+                try
+                {
+                    response = await api.GetUpdatesAsync(
+                        baseUrl,
+                        token,
+                        account.GetUpdatesBuf,
+                        stoppingToken).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException) when (!stoppingToken.IsCancellationRequested)
+                {
+                    // 长轮询客户端超时或网络抖动：直接开始下一轮，不标记账号错误
+                    continue;
+                }
 
                 if (response.Ret != 0)
                 {
@@ -154,6 +163,7 @@ public sealed class WeixinClawHostedService : BackgroundService
                             message.CreateTimeMs > 0
                                 ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs)
                                 : DateTimeOffset.UtcNow), stoppingToken).ConfigureAwait(false);
+                        account.MarkMessageReceived();
                     }
 
                     await receiptService.SaveObjectAsync(

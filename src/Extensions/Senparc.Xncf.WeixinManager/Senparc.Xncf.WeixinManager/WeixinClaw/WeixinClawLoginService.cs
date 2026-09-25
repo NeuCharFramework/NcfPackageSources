@@ -3,6 +3,7 @@ using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.WeixinManager.Domain.Services;
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,15 +11,20 @@ namespace Senparc.Xncf.WeixinManager.WeixinClaw;
 
 public sealed class WeixinClawLoginService
 {
-    private readonly WeixinClawApi _api;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ConcurrentDictionary<string, LoginSession> _sessions = new();
 
+    // 单例服务不能直接持有 Scoped 的 WeixinClawApi（AddHttpClient<T> 注册为 Scoped），
+    // 否则 HttpClient handler 无法轮换。每次调用从独立作用域解析。
+    private WeixinClawApi CreateApi()
+    {
+        using var scope = _scopeFactory.CreateScope();
+        return scope.ServiceProvider.GetRequiredService<WeixinClawApi>();
+    }
+
     public WeixinClawLoginService(
-        WeixinClawApi api,
         IServiceScopeFactory scopeFactory)
     {
-        _api = api;
         _scopeFactory = scopeFactory;
     }
 
@@ -27,7 +33,12 @@ public sealed class WeixinClawLoginService
         string promptRangeCode,
         CancellationToken cancellationToken = default)
     {
-        var qr = await _api.GetQrCodeAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        foreach (var expired in _sessions.Where(z => DateTimeOffset.UtcNow - z.Value.StartedAt > TimeSpan.FromMinutes(10)).ToList())
+        {
+            _sessions.TryRemove(expired.Key, out _);
+        }
+
+        var qr = await CreateApi().GetQrCodeAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(qr.Qrcode) || string.IsNullOrWhiteSpace(qr.QrcodeImageContent))
         {
             throw new InvalidOperationException("微信 Claw 服务没有返回有效二维码。");
@@ -50,6 +61,7 @@ public sealed class WeixinClawLoginService
 
     public async Task<WeixinClawLoginStatus> PollAsync(
         string sessionId,
+        string verifyCode = null,
         CancellationToken cancellationToken = default)
     {
         if (!_sessions.TryGetValue(sessionId, out var session))
@@ -67,8 +79,9 @@ public sealed class WeixinClawLoginService
             return ToStatus(session);
         }
 
-        var response = await _api.GetQrCodeStatusAsync(
+        var response = await CreateApi().GetQrCodeStatusAsync(
             session.Qrcode,
+            verifyCode,
             baseUrl: session.ApiBaseUrl,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         session.Status = response.Status ?? "wait";
