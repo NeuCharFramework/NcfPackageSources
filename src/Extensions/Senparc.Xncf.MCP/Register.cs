@@ -17,6 +17,8 @@
 
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.FileProviders;
+using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -123,6 +125,7 @@ namespace Senparc.Xncf.MCP
 
             services.AddScoped<MCPEndpointAppService>();
             services.AddScoped<MCPEndpointService>();
+            services.AddScoped<McpConnectionTestService>();
 
             services.AddAutoMapper(z =>
             {
@@ -137,6 +140,11 @@ namespace Senparc.Xncf.MCP
         {
             // var ncfMcpServerService = new McpServerService();
             // ncfMcpServerService.Start();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+            });
 
             if (app is IEndpointRouteBuilder endpoints)
             {

@@ -28,6 +28,7 @@ var app = new Vue({
         dialogTaskEvaluation: false, // 任务评价页面
         dialogMcpTools: false, // MCP工具列表对话框
         drawerFunctionBindings: false, // FunctionRender / Workflow 绑定
+        drawerMcpSelect: false, // 从 MCP 列表选择
       },
       taskStateText: {
         0: '等待',  // 等待 Waiting stand #3376cd
@@ -527,6 +528,11 @@ var app = new Vue({
       mcpEndpointUrlValue: '',
       mcpEndpointEditMode: false,
       mcpEndpointOriginalName: '',
+      mcpSelectLoading: false, // 从 MCP 列表选择：加载中
+      mcpSelectSearch: '', // 从 MCP 列表选择：搜索关键字
+      mcpSelectMessage: '', // 从 MCP 列表选择：提示信息
+      mcpModuleAvailable: false, // 从 MCP 列表选择：MCP 模块是否可用
+      mcpEndpointOptions: [], // 从 MCP 列表选择：可选端点列表
       currentMcpTools: [], // 当前查看的MCP工具列表
       agentListViewMode: 'panel',
       agentStatisticMetric: 'totalTokens',
@@ -623,6 +629,17 @@ var app = new Vue({
         console.error('Failed to parse mcpEndpoints:', e);
         return {};
       }
+    },
+    // 从 MCP 列表选择：按关键字过滤可选端点
+    filteredMcpEndpointOptions() {
+      const options = Array.isArray(this.mcpEndpointOptions) ? this.mcpEndpointOptions : []
+      const keyword = String(this.mcpSelectSearch || '').trim().toLowerCase()
+      if (!keyword) return options
+      return options.filter(item => [
+        item.name,
+        item.endpoint,
+        item.description
+      ].some(value => String(value || '').toLowerCase().includes(keyword)))
     },
     agentStatisticMetricOption() {
       return this.agentStatisticMetricOptions.find(item => item.value === this.agentStatisticMetric)
@@ -6330,6 +6347,86 @@ var app = new Vue({
       this.mcpEndpointUrlValue = '';
       this.mcpEndpointEditMode = false;
       this.mcpEndpointOriginalName = '';
+    },
+    
+    // 打开“从 MCP 列表选择”抽屉（端点数据经 EventBus 从 MCP 模块获取）
+    openMcpSelectDrawer() {
+      this.visible.drawerMcpSelect = true;
+      this.mcpSelectSearch = '';
+      this.loadMcpEndpointOptions();
+    },
+    
+    // 通过 AgentTemplateAppService.GetMcpEndpointOptions 获取 MCP 模块登记的端点列表
+    async loadMcpEndpointOptions() {
+      this.mcpSelectLoading = true;
+      this.mcpModuleAvailable = false;
+      this.mcpSelectMessage = '';
+      this.mcpEndpointOptions = [];
+      try {
+        const response = await serviceAM.get(
+          '/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.GetMcpEndpointOptions');
+        const data = response && response.data ? response.data : {};
+        if (!data.success) {
+          this.mcpSelectMessage = data.errorMessage || '获取 MCP 列表失败';
+          return;
+        }
+        const result = data.data || {};
+        this.mcpModuleAvailable = !!result.mcpModuleAvailable;
+        this.mcpSelectMessage = result.message || '';
+        this.mcpEndpointOptions = Array.isArray(result.options) ? result.options : [];
+      } catch (error) {
+        console.error('获取 MCP 列表失败:', error);
+        this.mcpSelectMessage = (error && error.message) || '获取 MCP 列表失败';
+      } finally {
+        this.mcpSelectLoading = false;
+      }
+    },
+    
+    // 判断某个 MCP 列表选项是否已在当前配置中（按名称或 URL 匹配）
+    isMcpOptionSelected(option) {
+      if (!option) return false;
+      const endpoints = this.parsedMcpEndpoints || {};
+      const name = String(option.name || '').trim();
+      if (name && endpoints[name]) return true;
+      const url = String(option.endpoint || '').trim();
+      if (!url) return false;
+      return Object.keys(endpoints).some(key => {
+        const value = endpoints[key] || {};
+        return String(value.url || value.endpoint || '').trim() === url;
+      });
+    },
+    
+    // 勾选/取消勾选 MCP 列表选项，同步写入 agentForm.mcpEndpoints（与其他端点合并，不覆盖）
+    toggleMcpSelect(option, selected) {
+      if (!option) return;
+      const name = String(option.name || '').trim();
+      const url = String(option.endpoint || '').trim();
+      const endpoints = this.parsedMcpEndpoints || {};
+      
+      if (selected) {
+        if (!name || !url) {
+          this.$message.warning('该端点缺少名称或 URL，无法添加');
+          return;
+        }
+        endpoints[name] = { url };
+        this.agentForm.mcpEndpoints = JSON.stringify(endpoints);
+        this.$message.success('已添加 MCP 端点：' + name);
+        return;
+      }
+      
+      const keysToRemove = Object.keys(endpoints).filter(key => {
+        if (name && key === name) return true;
+        if (url) {
+          const value = endpoints[key] || {};
+          if (String(value.url || value.endpoint || '').trim() === url) return true;
+        }
+        return false;
+      });
+      if (!keysToRemove.length) return;
+      keysToRemove.forEach(key => delete endpoints[key]);
+      this.agentForm.mcpEndpoints = Object.keys(endpoints).length > 0
+        ? JSON.stringify(endpoints)
+        : '';
     },
     
     // 删除 Endpoint

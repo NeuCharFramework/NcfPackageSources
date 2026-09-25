@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：MCPEndpointAppService.cs
@@ -17,6 +17,8 @@
 
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Shared.Abstractions.Events;
+using Senparc.Xncf.MCP.Abstractions.Events;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Xncf.MCP.Domain.Services;
@@ -134,6 +136,8 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                     request.Id > 0 ? "✓ MCP Endpoint“{0}”已更新" : "✓ MCP Endpoint“{0}”已创建",
                     endpoint.Name));
 
+                await PublishEndpointsUpdatedAsync(request.Id > 0 ? "EndpointUpdated" : "EndpointCreated");
+
                 return logger.ToString();
             });
         }
@@ -159,34 +163,72 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 await _mcpEndpointService.DeleteObjectAsync(endpoint);
                 logger.Append(McpResource.Format("MCP.Endpoint.Deleted", "✓ MCP Endpoint“{0}”已删除", endpoint.Name));
 
+                await PublishEndpointsUpdatedAsync("EndpointDeleted");
+
                 return logger.ToString();
             });
         }
 
         /// <summary>
-        /// 测试 MCP Endpoint
+        /// 测试 MCP Endpoint（真实连接 MCP Server 并返回工具列表）
         /// </summary>
-        public async Task<StringAppResponse> TestEndpoint(MCPEndpointTestRequest request)
+        public async Task<AppResponseBase<McpConnectionTestResult>> TestEndpoint(MCPEndpointTestRequest request)
         {
-            return await this.GetStringResponseAsync(async (response, logger) =>
+            return await this.GetResponseAsync<McpConnectionTestResult>(async (response, logger) =>
             {
                 if (request.Id <= 0)
                 {
-                    return McpResource.Get("MCP.Endpoint.InvalidId");
+                    throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase(McpResource.Get("MCP.Endpoint.InvalidId"));
                 }
 
                 var result = await _mcpEndpointService.TestEndpointAsync(request.Id);
-                
-                if (result)
+
+                logger.Append(result.Success
+                    ? $"✓ {result.StatusMessage}"
+                    : $"✗ {result.StatusMessage}");
+
+                return result;
+            });
+        }
+
+        /// <summary>
+        /// 发布 MCP Endpoint 变更通知事件，供订阅模块（如 AgentsManager）刷新缓存的列表
+        /// </summary>
+        private async Task PublishEndpointsUpdatedAsync(string updateReason)
+        {
+            var eventBus = GetService<IEventBus>();
+            if (eventBus == null)
+            {
+                return;
+            }
+
+            var count = (await _mcpEndpointService.GetFullListAsync(x => true)).Count;
+            await eventBus.PublishAsync(new McpEndpointsUpdatedEvent(updateReason, count));
+        }
+
+        /// <summary>
+        /// 对尚未保存的端点配置执行连接测试（可视化配置前验证地址可用性）
+        /// </summary>
+        public async Task<AppResponseBase<McpConnectionTestResult>> TestConnection(MCPEndpointTestConnectionRequest request)
+        {
+            return await this.GetResponseAsync<McpConnectionTestResult>(async (response, logger) =>
+            {
+                if (string.IsNullOrWhiteSpace(request.Endpoint))
                 {
-                    logger.Append(McpResource.Get("MCP.Endpoint.TestSucceeded"));
-                }
-                else
-                {
-                    logger.Append(McpResource.Get("MCP.Endpoint.TestFailed"));
+                    throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase(McpResource.Get("MCP.Endpoint.AddressRequired"));
                 }
 
-                return logger.ToString();
+                var tester = base.GetRequiredService<McpConnectionTestService>();
+                var result = await tester.TestAsync(
+                    string.IsNullOrWhiteSpace(request.Name) ? "MCP-Test" : request.Name,
+                    request.Endpoint,
+                    MCPEndpointService.ExtractBearerToken(request.AuthConfig));
+
+                logger.Append(result.Success
+                    ? $"✓ {result.StatusMessage}"
+                    : $"✗ {result.StatusMessage}");
+
+                return result;
             });
         }
     }
@@ -205,6 +247,9 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
         public bool Enabled { get; set; }
         public DateTime? LastTestedTime { get; set; }
         public bool? LastTestResult { get; set; }
+        public int? LastToolCount { get; set; }
+        public string? AuthConfig { get; set; }
+        public string? ExtraConfig { get; set; }
 
         public static MCPEndpointDto FromEntity(MCPEndpoint entity)
         {
@@ -218,7 +263,10 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 Description = entity.Description,
                 Enabled = entity.Enabled,
                 LastTestedTime = entity.LastTestedTime,
-                LastTestResult = entity.LastTestResult
+                LastTestResult = entity.LastTestResult,
+                LastToolCount = entity.LastToolCount,
+                AuthConfig = entity.AuthConfig,
+                ExtraConfig = entity.ExtraConfig
             };
         }
     }
@@ -281,5 +329,24 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     {
         [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.IdTest")]
         public int Id { get; set; }
+    }
+
+    /// <summary>
+    /// 对未保存的端点配置执行连接测试请求
+    /// </summary>
+    public class MCPEndpointTestConnectionRequest
+    {
+        [MaxLength(100)]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Name")]
+        public string Name { get; set; }
+
+        [Required]
+        [MaxLength(500)]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.Address")]
+        public string Endpoint { get; set; }
+
+        [MaxLength(1000)]
+        [LocalizedDescription(typeof(McpResource), "Parameter.MCP.Endpoint.AuthConfig")]
+        public string AuthConfig { get; set; }
     }
 }

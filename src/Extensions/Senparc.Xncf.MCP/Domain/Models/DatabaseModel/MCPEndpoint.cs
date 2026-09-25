@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：MCPEndpoint.cs
@@ -92,5 +92,15 @@ namespace Senparc.Xncf.MCP.Models.DatabaseModel
         /// true: 成功, false: 失败
         /// </summary>
         public bool? LastTestResult { get; set; }
+
+        /// <summary>
+        /// 最近一次测试发现并缓存的工具（Function）快照 JSON
+        /// </summary>
+        public string? LastToolsJson { get; set; }
+
+        /// <summary>
+        /// 最近一次测试发现的工具（Function）数量
+        /// </summary>
+        public int? LastToolCount { get; set; }
     }
 }
