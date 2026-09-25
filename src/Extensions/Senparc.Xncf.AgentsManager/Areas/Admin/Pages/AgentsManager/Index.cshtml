@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model Senparc.Xncf.AgentsManager.Areas.AgentsManager.Pages.Index
 @using Senparc.Xncf.AgentsManager.Models.DatabaseModel
 @{
@@ -1716,6 +1716,8 @@
                         
                         <div class="mcp-endpoint-add" v-if="!mcpEndpointInputVisible">
                             <el-button class="button-new-endpoint" size="small" @@click="showMcpEndpointInput">+ 添加 MCP Endpoint</el-button>
+                            <el-button class="button-new-endpoint" size="small" type="primary" plain icon="el-icon-s-order"
+                                @@click="openMcpSelectDrawer">从 MCP 列表选择</el-button>
                         </div>
                         
                         <div v-if="mcpEndpointInputVisible" class="mcp-endpoint-input-form">
@@ -1813,6 +1815,57 @@
         <div class="drawerRtl__footer text-right">
             <span class="function-binding-footer-summary">{{ functionBindingSummary }}</span>
             <el-button :size="elSize" type="primary" @@click="visible.drawerFunctionBindings = false">完成</el-button>
+        </div>
+    </div>
+</el-drawer>
+@* 抽屉 从 MCP 列表选择 Endpoint（经 EventBus 查询 MCP 模块） *@
+<el-drawer :visible.sync="visible.drawerMcpSelect" direction="rtl" :with-header="false"
+    :wrapper-closable="true" size="620px">
+    <div class="drawerRtl mcp-select-drawer">
+        <div class="drawerRtl__header">
+            <div class="drawerRtl__header__title">
+                从 MCP 列表选择
+                <span class="function-binding-drawer__agent">{{ agentForm.name || '新智能体' }}</span>
+            </div>
+            <div class="drawerRtl__header__close" @@click="visible.drawerMcpSelect = false">&times;</div>
+        </div>
+        <div class="drawerRtl__body" v-loading="mcpSelectLoading">
+            <el-alert v-if="mcpModuleAvailable && mcpEndpointOptions.length" type="info" :closable="false" show-icon
+                title="以下端点来自 MCP 模块的登记列表，勾选后会以“名称 + URL”方式加入当前配置，可随时移除。"
+                style="margin-bottom:12px;"></el-alert>
+            <el-alert v-else-if="!mcpModuleAvailable && !mcpSelectLoading" type="warning" :closable="false" show-icon
+                :title="mcpSelectMessage || 'MCP 模块不可用，请使用手动输入方式添加 Endpoint。'"
+                style="margin-bottom:12px;"></el-alert>
+            <el-input v-model="mcpSelectSearch" clearable prefix-icon="el-icon-search"
+                placeholder="搜索名称、URL 或说明" style="margin-bottom:12px;"></el-input>
+            <div v-if="!filteredMcpEndpointOptions.length && !mcpSelectLoading" class="function-binding-empty">
+                当前没有可选择的 MCP 端点。
+            </div>
+            <div v-else class="function-binding-option-list">
+                <div v-for="option in filteredMcpEndpointOptions"
+                    :key="option.id"
+                    class="function-binding-option mcp-select-option">
+                    <el-checkbox :value="isMcpOptionSelected(option)"
+                        @@change="toggleMcpSelect(option, $event)">
+                        <span class="function-binding-option__name">{{ option.name }}</span>
+                        <span class="function-binding-option__meta">
+                            <template v-if="option.endpointType">{{ option.endpointType }} · </template>
+                            <template v-if="option.lastTestResult === true">已连通</template>
+                            <template v-else-if="option.lastTestResult === false">测试失败</template>
+                            <template v-else>未测试</template>
+                            <template v-if="option.lastToolCount"> · 工具 {{ option.lastToolCount }}</template>
+                        </span>
+                    </el-checkbox>
+                    <div class="mcp-select-option__endpoint">{{ option.endpoint }}</div>
+                    <div v-if="option.description" class="function-binding-option__description">
+                        {{ option.description }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="drawerRtl__footer text-right">
+            <span class="function-binding-footer-summary">当前已配置 {{ Object.keys(parsedMcpEndpoints).length }} 个 Endpoint</span>
+            <el-button :size="elSize" type="primary" @@click="visible.drawerMcpSelect = false">完成</el-button>
         </div>
     </div>
 </el-drawer>
@@ -2300,6 +2353,8 @@
                 
                 <div class="mcp-endpoint-add" v-if="!mcpEndpointInputVisible">
                     <el-button class="button-new-endpoint" size="small" @@click="showMcpEndpointInput">+ 添加 MCP Endpoint</el-button>
+                    <el-button class="button-new-endpoint" size="small" type="primary" plain icon="el-icon-s-order"
+                        @@click="openMcpSelectDrawer">从 MCP 列表选择</el-button>
                 </div>
                 
                 <div v-if="mcpEndpointInputVisible" class="mcp-endpoint-input-form">

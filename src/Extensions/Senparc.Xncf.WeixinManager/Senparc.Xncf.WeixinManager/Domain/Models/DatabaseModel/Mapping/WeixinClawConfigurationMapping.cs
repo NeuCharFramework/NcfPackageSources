@@ -10,7 +10,7 @@ public class WeixinClawConfigurationMapping : ConfigurationMappingWithIdBase<Wei
     public override void Configure(EntityTypeBuilder<WeixinClawAccount> builder)
     {
         base.Configure(builder);
-        builder.HasIndex(z => z.IlinkBotId);
+        builder.HasIndex(z => z.IlinkBotId).IsUnique();
     }
 }
 
@@ -20,5 +20,9 @@ public class WeixinClawMessageReceiptConfigurationMapping : ConfigurationMapping
     {
         base.Configure(builder);
         builder.HasIndex(z => new { z.WeixinClawAccountId, z.MessageId, z.Seq }).IsUnique();
+        builder.HasOne<WeixinClawAccount>()
+            .WithMany()
+            .HasForeignKey(z => z.WeixinClawAccountId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

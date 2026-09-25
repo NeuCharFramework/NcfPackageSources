@@ -50,6 +50,8 @@ public class WeixinClawProtocolTests
         Assert.AreEqual("132105", handler.Request.Headers.GetValues("iLink-App-ClientVersion").Single());
         Assert.IsTrue(handler.Request.Headers.Contains("X-WECHAT-UIN"));
         StringAssert.Contains(handler.Body, "\"get_updates_buf\":\"old-cursor\"");
+        StringAssert.Contains(handler.Body, "\"channel_version\":\"0.1.0\"");
+        StringAssert.Contains(handler.Body, "\"bot_agent\":\"NCF-WeixinManager/0.1.0\"");
         StringAssert.Contains(handler.Request.RequestUri.AbsolutePath, "/ilink/bot/getupdates");
     }
 
@@ -65,6 +67,42 @@ public class WeixinClawProtocolTests
         Assert.AreEqual("wait", response.Status);
         Assert.IsFalse(handler.Request.Headers.Contains("Authorization"));
         Assert.IsTrue(handler.Request.RequestUri.Query.Contains("qrcode=qr%20value"));
+    }
+
+    [TestMethod]
+    public async Task GetQrCodeStatusAsync_UsesProvidedRedirectBaseUrl()
+    {
+        var handler = new CapturingHandler("""{"status":"confirmed"}""");
+        using var httpClient = new HttpClient(handler);
+        var api = new WeixinClawApi(httpClient);
+
+        var response = await api.GetQrCodeStatusAsync(
+            "redirected-qr",
+            baseUrl: "https://redirect.example.test/bot-gateway/",
+            cancellationToken: CancellationToken.None);
+
+        Assert.AreEqual("confirmed", response.Status);
+        Assert.AreEqual("redirect.example.test", handler.Request.RequestUri.Host);
+        Assert.AreEqual("/bot-gateway/ilink/bot/get_qrcode_status", handler.Request.RequestUri.AbsolutePath);
+        Assert.IsTrue(handler.Request.RequestUri.Query.Contains("qrcode=redirected-qr"));
+    }
+
+    [TestMethod]
+    public async Task GetQrCodeStatusAsync_UsesHttpsRedirectHostBaseUrl()
+    {
+        var handler = new CapturingHandler("""{"status":"wait"}""");
+        using var httpClient = new HttpClient(handler);
+        var api = new WeixinClawApi(httpClient);
+
+        var response = await api.GetQrCodeStatusAsync(
+            "redirect-host-qr",
+            baseUrl: "https://redirect-host.example.test",
+            cancellationToken: CancellationToken.None);
+
+        Assert.AreEqual("wait", response.Status);
+        Assert.AreEqual("redirect-host.example.test", handler.Request.RequestUri.Host);
+        Assert.AreEqual("/ilink/bot/get_qrcode_status", handler.Request.RequestUri.AbsolutePath);
+        Assert.IsTrue(handler.Request.RequestUri.Query.Contains("qrcode=redirect-host-qr"));
     }
 
     private sealed class CapturingHandler : HttpMessageHandler

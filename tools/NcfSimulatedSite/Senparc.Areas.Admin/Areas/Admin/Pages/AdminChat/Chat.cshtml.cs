@@ -1,8 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Core.WorkContext.Provider;
+using Senparc.Ncf.Service;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Senparc.Areas.Admin.Pages.AdminChat
@@ -45,6 +47,11 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
         public int CurrentUserId { get; set; }
 
         /// <summary>
+        /// 当前用户是否为超级管理员（administrator 角色）：超级管理员可打开用量统计面板
+        /// </summary>
+        public bool IsSuperAdmin { get; set; }
+
+        /// <summary>
         /// 模块 UID 列表（逗号分隔的字符串）
         /// </summary>
         [BindProperty(SupportsGet = true)]
@@ -52,7 +59,10 @@ namespace Senparc.Areas.Admin.Pages.AdminChat
 
         public async Task<IActionResult> OnGetAsync()
         {
-            CurrentUserId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
+            var adminWorkContext = _adminWorkContextProvider.GetAdminWorkContext();
+            CurrentUserId = adminWorkContext.AdminUserId;
+            IsSuperAdmin = (adminWorkContext.RoleCodes ?? Enumerable.Empty<string>())
+                .Any(role => string.Equals(role?.Trim(), Config.SYSROLE_ADMINISTRATOR_ROLE_CODE, System.StringComparison.OrdinalIgnoreCase));
 
             if (SessionId > 0)
             {

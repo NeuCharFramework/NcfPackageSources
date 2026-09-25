@@ -33,7 +33,6 @@
 
     修改标识：Senparc - 20260917
     修改描述：v0.10.0 增强 Admin Chat FunctionRender 参数元数据与工具调用兼容
-
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;

@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：SandboxAppService.cs
@@ -16,6 +16,9 @@
 
     修改标识：Senparc - 20260829
     修改描述：补充 Lab 文件列举的树状 Data 和执行日志
+
+    修改标识：Senparc - 20260918
+    修改描述：v0.3.3 增加 Notebook 创建、别名修改与交互式标准输入 Function
 
 ----------------------------------------------------------------*/
 
@@ -60,10 +63,22 @@ public class SandboxAppService : AppServiceBase
                     templateKey: request.TemplateKey,
                     preferredRuntime: runtime,
                     ttlMinutes: request.TtlMinutes,
-                    keepAlive: request.KeepAlive)
+                    keepAlive: request.KeepAlive,
+                    alias: request.Alias,
+                    extraPortMappings: request.ExtraPortMappings)
                 .ConfigureAwait(false);
             logger.Append($"SessionId={info.SessionId}, Status={info.Status}");
             logger.Append(FormatTtl(info));
+            if (!string.IsNullOrWhiteSpace(info.Alias))
+            {
+                logger.Append($"Alias={info.Alias}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(info.ExtraPorts))
+            {
+                logger.Append($"ExtraPorts={info.ExtraPorts}");
+            }
+
             if (!string.IsNullOrWhiteSpace(info.AccessUrl))
             {
                 logger.Append($"AccessUrl={info.AccessUrl}");
@@ -136,7 +151,8 @@ public class SandboxAppService : AppServiceBase
                     request.SessionId,
                     request.Command,
                     request.WorkingDirectory,
-                    request.TimeoutSeconds)
+                    request.TimeoutSeconds,
+                    request.StdinContent)
                 .ConfigureAwait(false);
             logger.Append($"Lab SessionId={request.SessionId}, ExitCode={result.ExitCode}");
             response.Data = JsonSerializer.Serialize(new
@@ -245,6 +261,81 @@ public class SandboxAppService : AppServiceBase
     }
 
     [FunctionRender(
+        "创建 Notebook",
+        "在运行中的 JupyterLab 工作区创建 Python 或 C# .ipynb 文件",
+        typeof(Register),
+        AllowAiInvocation = true)]
+    public async Task<StringAppResponse> LabCreateNotebook(Sandbox_LabCreateNotebookRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            var relativePath = (request.RelativePath ?? string.Empty).Trim();
+            if (!relativePath.EndsWith(".ipynb", StringComparison.OrdinalIgnoreCase))
+            {
+                response.Success = false;
+                response.ErrorMessage = "RelativePath 必须以 .ipynb 结尾。";
+                return null;
+            }
+
+            string language;
+            try
+            {
+                language = SandboxNotebookBuilder.NormalizeLanguage(request.Language);
+            }
+            catch (InvalidOperationException ex)
+            {
+                response.Success = false;
+                response.ErrorMessage = ex.Message;
+                return null;
+            }
+
+            string notebookJson;
+            try
+            {
+                notebookJson = SandboxNotebookBuilder.Build(language, request.Title, request.Cells);
+            }
+            catch (InvalidOperationException ex)
+            {
+                response.Success = false;
+                response.ErrorMessage = ex.Message;
+                return null;
+            }
+
+            var file = await _orchestrator.UploadWorkspaceFileAsync(
+                    request.SessionId,
+                    relativePath,
+                    Encoding.UTF8.GetBytes(notebookJson),
+                    request.Overwrite)
+                .ConfigureAwait(false);
+            logger.Append($"Notebook created: SessionId={request.SessionId}, Path={file.RelativePath}, Language={language}, Bytes={file.Length}");
+            response.Data = JsonSerializer.Serialize(new
+            {
+                sessionId = request.SessionId,
+                language,
+                file.RelativePath,
+                file.Length,
+                file.LastWriteTimeUtc
+            });
+            return null;
+        });
+    }
+
+    [FunctionRender("修改别名", "为沙箱会话设置或清除别名（留空清除）", typeof(Register))]
+    public async Task<StringAppResponse> UpdateAlias(Sandbox_UpdateAliasRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            var info = await _orchestrator.UpdateAliasAsync(
+                    request.SessionId,
+                    request.Alias)
+                .ConfigureAwait(false);
+            logger.Append($"已更新 {info.SessionId} 的别名：{info.Alias ?? "(已清除)"}");
+            response.Data = FormatSession(info);
+            return null;
+        });
+    }
+
+    [FunctionRender(
         "销毁沙箱",
         "停止并清理指定会话",
         typeof(Register),
@@ -292,10 +383,12 @@ public class SandboxAppService : AppServiceBase
     {
         return
             $"SessionId: {WebUtility.HtmlEncode(info.SessionId)}<br/>" +
+            $"Alias: {WebUtility.HtmlEncode(info.Alias ?? "-")}<br/>" +
             $"Template: {WebUtility.HtmlEncode(info.TemplateKey)}<br/>" +
             $"Runtime: {info.RuntimeKind}<br/>" +
             $"Status: {info.Status}<br/>" +
             $"HostPort(loopback): {info.HostPort?.ToString() ?? "-"}<br/>" +
+            $"ExtraPorts: {WebUtility.HtmlEncode(info.ExtraPorts ?? "-")}<br/>" +
             $"Url(proxy): {WebUtility.HtmlEncode(info.AccessUrl ?? "-")}<br/>" +
             $"{FormatTtl(info)}<br/>" +
             $"Message: {WebUtility.HtmlEncode(info.StatusMessage ?? "-")}";

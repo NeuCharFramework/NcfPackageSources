@@ -17,7 +17,7 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.SqlServer
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -43,11 +43,21 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.SqlServer
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<string>("Alias")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+
                     b.Property<double>("CpuLimit")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("ExpiresAtUtc")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("ExtraPorts")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
 
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");

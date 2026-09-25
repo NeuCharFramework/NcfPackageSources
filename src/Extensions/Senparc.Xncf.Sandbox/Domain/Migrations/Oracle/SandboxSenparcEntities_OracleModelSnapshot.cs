@@ -17,7 +17,7 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.Oracle
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -43,11 +43,21 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.Oracle
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(2000)");
 
+                    b.Property<string>("Alias")
+                        .HasMaxLength(128)
+                        .HasColumnType("NVARCHAR2(2000)");
+
+
                     b.Property<double>("CpuLimit")
                         .HasColumnType("BINARY_DOUBLE");
 
                     b.Property<DateTime>("ExpiresAtUtc")
                         .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("ExtraPorts")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(2000)");
+
 
                     b.Property<bool>("Flag")
                         .HasColumnType("NUMBER(1)");

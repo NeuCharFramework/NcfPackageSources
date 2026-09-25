@@ -737,6 +737,67 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
                     b.ToTable("ADMIN_NeuCharExecutionLog");
                 });
 
+            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharFunctionProvitAccess", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccessMode")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("AllowedPermissionCodes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("AllowedRoleCodes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("AllowedUserIds")
+                        .HasMaxLength(2000)
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("FunctionKey")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("ModuleUid")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleUid", "FunctionKey")
+                        .IsUnique();
+
+                    b.ToTable("ADMIN_NeuCharFunctionProvitAccess");
+                });
+
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharPivotBoard", b =>
                 {
                     b.Property<int>("Id")

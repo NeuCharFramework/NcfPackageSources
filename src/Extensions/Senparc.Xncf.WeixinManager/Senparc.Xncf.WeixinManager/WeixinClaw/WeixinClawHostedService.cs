@@ -124,15 +124,20 @@ public sealed class WeixinClawHostedService : BackgroundService
 
                 var receiptService = scope.ServiceProvider.GetRequiredService<WeixinClawMessageReceiptService>();
                 var dispatcher = scope.ServiceProvider.GetRequiredService<WeixinClawMessageDispatcher>();
+                var handledMessage = false;
                 foreach (var message in response.Msgs ?? Enumerable.Empty<WeixinClawMessage>())
                 {
-                    var messageId = string.IsNullOrWhiteSpace(message.MessageId)
-                        ? "seq:" + message.Seq
-                        : message.MessageId;
-                    if (await receiptService.ExistsAsync(account.Id, messageId, message.Seq).ConfigureAwait(false))
+                    var hasMessageId = !string.IsNullOrWhiteSpace(message.MessageId);
+                    var messageId = hasMessageId
+                        ? message.MessageId
+                        : "seq:" + message.Seq;
+                    var receiptSeq = hasMessageId ? message.Seq : 0;
+                    if (!await receiptService.TryCreateAsync(account.Id, messageId, receiptSeq).ConfigureAwait(false))
                     {
                         continue;
                     }
+
+                    handledMessage = true;
 
                     var text = string.Join(
                         Environment.NewLine,
@@ -141,30 +146,45 @@ public sealed class WeixinClawHostedService : BackgroundService
                             .Select(z => z.TextItem.Text));
                     if (message.MessageType == 1 && !string.IsNullOrWhiteSpace(text))
                     {
-                        await dispatcher.DispatchAsync(new WeixinClawMessageReceivedContext(
-                            account.Id,
-                            account.Name,
-                            messageId,
-                            message.Seq,
-                            message.FromUserId,
-                            message.ToUserId,
-                            message.GroupId,
-                            message.ContextToken,
-                            text,
-                            message.CreateTimeMs > 0
-                                ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs)
-                                : DateTimeOffset.UtcNow), stoppingToken).ConfigureAwait(false);
+                        try
+                        {
+                            await dispatcher.DispatchAsync(new WeixinClawMessageReceivedContext(
+                                account.Id,
+                                account.Name,
+                                messageId,
+                                message.Seq,
+                                message.FromUserId,
+                                message.ToUserId,
+                                message.GroupId,
+                                message.ContextToken,
+                                text,
+                                message.CreateTimeMs > 0
+                                    ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs)
+                                    : DateTimeOffset.UtcNow), stoppingToken).ConfigureAwait(false);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(
+                                ex,
+                                "个人微信 Claw 账号 {AccountId} 分发消息 {MessageId} 失败。",
+                                account.Id,
+                                messageId);
+                        }
                     }
-
-                    await receiptService.SaveObjectAsync(
-                        new WeixinClawMessageReceipt(account.Id, messageId, message.Seq)).ConfigureAwait(false);
                 }
 
                 if (response.GetUpdatesBuf != null)
                 {
                     account.SetCursor(response.GetUpdatesBuf);
                 }
-                account.MarkRunning();
+                if (handledMessage)
+                {
+                    account.MarkMessageReceived();
+                }
+                else
+                {
+                    account.MarkRunning();
+                }
                 await accountService.SaveObjectAsync(account).ConfigureAwait(false);
             }
         }

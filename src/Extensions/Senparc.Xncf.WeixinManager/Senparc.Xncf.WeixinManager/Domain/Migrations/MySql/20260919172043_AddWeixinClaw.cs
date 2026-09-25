@@ -77,16 +77,23 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.MySql
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WeixinManager_WeixinClawMessageReceipt", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WeixinManager_WeixinClawMessageReceipt_WeixinManager_WeixinClawAccount_WeixinClawAccountId",
+                        column: x => x.WeixinClawAccountId,
+                        principalTable: "WeixinManager_WeixinClawAccount",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WeixinManager_WeixinClawAccount_IlinkBotId",
                 table: "WeixinManager_WeixinClawAccount",
-                column: "IlinkBotId");
+                column: "IlinkBotId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_WeixinManager_WeixinClawMessageReceipt_WeixinClawAccountId_M~",
+                name: "IX_WeixinManager_WeixinClawMessageReceipt_WeixinClawAccountId_MessageId_Seq",
                 table: "WeixinManager_WeixinClawMessageReceipt",
                 columns: new[] { "WeixinClawAccountId", "MessageId", "Seq" },
                 unique: true);
@@ -96,10 +103,10 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.MySql
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "WeixinManager_WeixinClawAccount");
+                name: "WeixinManager_WeixinClawMessageReceipt");
 
             migrationBuilder.DropTable(
-                name: "WeixinManager_WeixinClawMessageReceipt");
+                name: "WeixinManager_WeixinClawAccount");
         }
     }
 }

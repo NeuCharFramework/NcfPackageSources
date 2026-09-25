@@ -61,6 +61,82 @@ namespace Senparc.Xncf.MCP.Domain.Migrations.MySql
 
                     b.ToTable("Senparc_MCP_Color");
                 });
+
+            modelBuilder.Entity("Senparc.Xncf.MCP.Models.DatabaseModel.MCPEndpoint", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<string>("AuthConfig")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Endpoint")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("EndpointType")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("ExtraConfig")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool?>("LastTestResult")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("LastTestedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("LastToolCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastToolsJson")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("ProtocolVersion")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Senparc_MCP_MCPEndpoint");
+                });
 #pragma warning restore 612, 618
         }
     }

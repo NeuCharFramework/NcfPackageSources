@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：AdminChatAppService.cs
@@ -27,6 +27,7 @@
 
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
+using Senparc.Areas.Admin.Domain;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto;
 using Senparc.Areas.Admin.Domain.Services;
@@ -64,6 +65,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly AdminChatSessionWorkflowService _sessionWorkflowService;
         private readonly AdminChatTrajectoryService _trajectoryService;
         private readonly AdminChatAiService _chatAiService;
+        private readonly AdminUserInfoService _adminUserInfoService;
         private readonly IStringLocalizer<AdminResource> _localizer;
         private readonly IEventBus _eventBus;
 
@@ -75,6 +77,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             AdminChatSessionWorkflowService sessionWorkflowService,
             AdminChatTrajectoryService trajectoryService,
             AdminChatAiService chatAiService,
+            AdminUserInfoService adminUserInfoService,
             IStringLocalizer<AdminResource> localizer) : base(serviceProvider)
         {
             _sessionService = sessionService;
@@ -83,6 +86,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             _sessionWorkflowService = sessionWorkflowService;
             _trajectoryService = trajectoryService;
             _chatAiService = chatAiService;
+            _adminUserInfoService = adminUserInfoService;
             _localizer = localizer;
             _eventBus = serviceProvider.GetService<IEventBus>();
         }
@@ -246,6 +250,63 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 logger.Append($"删除会话: SessionId={sessionId}, UserId={userId}");
                 await PublishSyncEventAsync(userId, sessionId, "session-deleted");
                 return _localizer["AdminChat.DeleteSessionSuccess"];
+            });
+        }
+
+        /// <summary>
+        /// 【超级管理员】按用户统计 AdminChat 使用量：仅返回各账号的会话/消息数量与最后活跃时间，不返回任何会话或消息内容。
+        /// <para>普通账号仅能访问自己的会话；超级管理员（administrator 角色）通过本接口做用量监控。</para>
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<GetUserSessionStatsResponse>> GetUserSessionStatsAsync()
+        {
+            return await this.GetResponseAsync<AppResponseBase<GetUserSessionStatsResponse>, GetUserSessionStatsResponse>(async (response, logger) =>
+            {
+                var currentUserId = GetCurrentAdminUserInfoId();
+                if (currentUserId <= 0)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
+                }
+
+                if (!IsCurrentAdminSuperAdmin())
+                {
+                    logger.Append($"拒绝非超级管理员访问用户统计: UserId={currentUserId}");
+                    throw new NcfExceptionBase(_localizer["AdminChat.SuperAdminOnly"]);
+                }
+
+                var sessionStats = await _sessionService.GetUserSessionStatsAsync();
+                var messageCounts = await _messageService.GetMessageCountByUserAsync();
+                var messageCountMap = messageCounts.ToDictionary(x => x.UserId, x => x.Count);
+
+                var userIds = sessionStats.Select(s => s.UserId).ToList();
+                var users = _adminUserInfoService.GetAdminUserInfo(userIds);
+                var userMap = users.ToDictionary(u => u.Id);
+
+                var items = sessionStats
+                    .OrderByDescending(s => s.LastActiveTime)
+                    .Select(s =>
+                    {
+                        userMap.TryGetValue(s.UserId, out var user);
+                        return new AdminChatUserStatDto
+                        {
+                            UserId = s.UserId,
+                            UserName = user?.UserName,
+                            RealName = user?.RealName,
+                            TotalSessionCount = s.TotalSessionCount,
+                            ActiveSessionCount = s.ActiveSessionCount,
+                            ArchivedSessionCount = s.ArchivedSessionCount,
+                            DeletedSessionCount = s.DeletedSessionCount,
+                            MessageCount = messageCountMap.TryGetValue(s.UserId, out var count) ? count : 0,
+                            LastActiveTime = s.LastActiveTime
+                        };
+                    })
+                    .ToList();
+
+                logger.Append($"超级管理员用户统计: CurrentUserId={currentUserId}, UserCount={items.Count}");
+                return new GetUserSessionStatsResponse
+                {
+                    Stats = items
+                };
             });
         }
 
@@ -611,13 +672,20 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         {
             return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
             {
-                var success = await _messageService.SetMessageFeedbackAsync(messageId, feedback);
+                var userId = GetCurrentAdminUserInfoId();
+                if (userId <= 0)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
+                }
+
+                //归属校验：消息所属会话必须属于当前用户，防止跨账号越权设置反馈
+                var success = await _messageService.SetMessageFeedbackAsync(messageId, userId, feedback);
                 if (!success)
                 {
                     throw new NcfExceptionBase(_localizer["AdminChat.MessageNotFound"]);
                 }
 
-                logger.Append($"设置反馈: MessageId={messageId}, Feedback={feedback}");
+                logger.Append($"设置反馈: MessageId={messageId}, UserId={userId}, Feedback={feedback}");
                 return _localizer["AdminChat.SetFeedbackSuccess"];
             });
         }
@@ -1077,6 +1145,30 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     {
         public List<AdminChatSessionDto> Sessions { get; set; }
         public int TotalCount { get; set; }
+    }
+
+    /// <summary>
+    /// 【超级管理员】单账号 AdminChat 用量统计（仅数量，不含内容）
+    /// </summary>
+    public class AdminChatUserStatDto
+    {
+        public int UserId { get; set; }
+        public string UserName { get; set; }
+        public string RealName { get; set; }
+        public int TotalSessionCount { get; set; }
+        public int ActiveSessionCount { get; set; }
+        public int ArchivedSessionCount { get; set; }
+        public int DeletedSessionCount { get; set; }
+        public int MessageCount { get; set; }
+        public DateTime LastActiveTime { get; set; }
+    }
+
+    /// <summary>
+    /// 【超级管理员】用户用量统计响应
+    /// </summary>
+    public class GetUserSessionStatsResponse
+    {
+        public List<AdminChatUserStatDto> Stats { get; set; } = new List<AdminChatUserStatDto>();
     }
 
     /// <summary>

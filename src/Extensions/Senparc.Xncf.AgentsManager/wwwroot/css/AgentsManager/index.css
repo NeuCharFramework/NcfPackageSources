@@ -3044,6 +3044,20 @@ height:100%;
 }
 
 /* MCP Endpoints 相关样式 */
+/* 从 MCP 列表选择抽屉 */
+.mcp-select-drawer .mcp-select-option__endpoint {
+    margin: 4px 0 0 24px;
+    color: #606266;
+    font-size: 12px;
+    line-height: 1.4;
+    font-family: Consolas, Menlo, monospace;
+    word-break: break-all;
+}
+
+.mcp-select-option .el-checkbox__label {
+    justify-content: flex-start;
+}
+
 .mcp-endpoints-container {
     border: 1px solid #EBEEF5;
     border-radius: 4px;

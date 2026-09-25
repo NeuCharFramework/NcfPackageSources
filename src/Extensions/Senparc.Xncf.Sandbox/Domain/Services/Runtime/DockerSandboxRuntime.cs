@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：DockerSandboxRuntime.cs
@@ -14,6 +14,9 @@
 
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
+    修改标识：Senparc - 20260918
+    修改描述：v0.3.3 支持创建时附加端口映射与交互式标准输入
 
 ----------------------------------------------------------------*/
 
@@ -85,6 +88,11 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         var image = _imageResolver.Resolve(request.Template.Key, request.Template.Image);
         _logger.LogInformation("Sandbox interactive image resolved: template={Template} image={Image}", request.Template.Key, image);
 
+        var resolvedExtraPorts = ResolveExtraPortMappings(
+            request.ExtraPortMappings,
+            request.Template.ContainerPort,
+            hostPort);
+
         // base_url 与 Jupyter 路径一致；列表链接使用本机映射端口和 token 直达容器。
         var baseUrl = SandboxJupyterPaths.GetBaseUrl(request.SessionId);
         var args = new List<string>
@@ -108,6 +116,12 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             "--ServerApp.disable_check_xsrf=True",
             "--ServerApp.root_dir=/home/jovyan/work"
         };
+        foreach (var extraPort in resolvedExtraPorts)
+        {
+            var insertAt = args.IndexOf(image);
+            args.Insert(insertAt, "-p");
+            args.Insert(insertAt + 1, extraPort.ToDisplayString());
+        }
 
         var createTimeout = _dockerOptions.GetInteractiveCreateTimeout();
         _logger.LogInformation(
@@ -134,7 +148,10 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             HostPort = hostPort,
             AccessUrl = SandboxJupyterPaths.GetDirectLabEntryUrl(request.SessionId, hostPort, token),
             AccessToken = token,
-            Message = "JupyterLab 已启动；请使用本机映射端口打开。"
+            Message = "JupyterLab 已启动；请使用本机映射端口打开。",
+            ExtraPorts = resolvedExtraPorts.Count == 0
+                ? null
+                : string.Join(";", resolvedExtraPorts.Select(z => z.ToDisplayString()))
         };
     }
 
@@ -351,28 +368,39 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         var maxOutputCharacters = request.MaxOutputCharacters <= 0
             ? 32_000
             : request.MaxOutputCharacters;
-        var args = new[]
+        var hasStdin = !string.IsNullOrEmpty(request.StdinContent);
+        var args = new List<string>
         {
-            "exec",
+            "exec"
+        };
+        if (hasStdin)
+        {
+            args.Add("-i");
+        }
+
+        args.AddRange(new[]
+        {
             "--workdir", request.WorkingDirectory,
             request.RuntimeHandle,
             "/bin/sh",
             "-lc",
             request.Command
-        };
+        });
 
         _logger.LogInformation(
-            "Sandbox interactive command starting: session={SessionId} container={RuntimeHandle} workdir={WorkingDirectory}",
+            "Sandbox interactive command starting: session={SessionId} container={RuntimeHandle} workdir={WorkingDirectory} stdin={HasStdin}",
             request.SessionId,
             request.RuntimeHandle,
-            request.WorkingDirectory);
+            request.WorkingDirectory,
+            hasStdin);
 
         var run = await RunDockerAsync(
                 args,
                 null,
                 timeout,
                 cancellationToken,
-                maxOutputCharacters)
+                maxOutputCharacters,
+                hasStdin ? request.StdinContent : null)
             .ConfigureAwait(false);
 
         return new SandboxExecResult
@@ -452,6 +480,50 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         </Project>
         """;
 
+    private static IReadOnlyList<SandboxPortMapping> ResolveExtraPortMappings(
+        IReadOnlyList<SandboxPortMapping>? extraPortMappings,
+        int mainContainerPort,
+        int mainHostPort)
+    {
+        if (extraPortMappings is not { Count: > 0 })
+        {
+            return Array.Empty<SandboxPortMapping>();
+        }
+
+        var takenHostPorts = new HashSet<int> { mainHostPort };
+        var resolved = new List<SandboxPortMapping>();
+        foreach (var mapping in extraPortMappings)
+        {
+            var hostPort = mapping.HostPort;
+            if (hostPort == 0)
+            {
+                hostPort = GetFreeTcpPortExcluding(takenHostPorts);
+            }
+            else if (!takenHostPorts.Add(hostPort))
+            {
+                throw new InvalidOperationException($"宿主端口已被占用或重复：{hostPort}");
+            }
+
+            resolved.Add(mapping with { HostPort = hostPort });
+        }
+
+        return resolved;
+    }
+
+    private static int GetFreeTcpPortExcluding(HashSet<int> taken)
+    {
+        for (var attempt = 0; attempt < 16; attempt++)
+        {
+            var port = GetFreeTcpPort();
+            if (taken.Add(port))
+            {
+                return port;
+            }
+        }
+
+        throw new InvalidOperationException("无法为附加端口分配空闲宿主端口，请显式指定 hostPort:containerPort。");
+    }
+
     private static int GetFreeTcpPort()
     {
         var listener = new TcpListener(IPAddress.Loopback, 0);
@@ -519,13 +591,16 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         string? workingDirectory,
         TimeSpan timeout,
         CancellationToken cancellationToken,
-        int maxOutputCharacters = 0)
+        int maxOutputCharacters = 0,
+        string? stdin = null)
     {
+        var hasStdin = !string.IsNullOrEmpty(stdin);
         var psi = new ProcessStartInfo
         {
             FileName = "docker",
             RedirectStandardOutput = true,
             RedirectStandardError = true,
+            RedirectStandardInput = hasStdin,
             UseShellExecute = false,
             CreateNoWindow = true,
             WorkingDirectory = workingDirectory ?? Environment.CurrentDirectory
@@ -563,6 +638,28 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
 
         using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeoutCts.CancelAfter(timeout);
+
+        // 写入使用与超时联动的取消令牌：若目标程序不读取 stdin，超时到点后写入被取消并进入统一超时处理。
+        if (hasStdin)
+        {
+            try
+            {
+                var standardInput = process.StandardInput;
+                if (stdin is string stdinText)
+                {
+                    await standardInput.WriteAsync(stdinText.AsMemory(), timeoutCts.Token).ConfigureAwait(false);
+                    await standardInput.WriteAsync(Environment.NewLine.AsMemory(), timeoutCts.Token).ConfigureAwait(false);
+                }
+
+                await standardInput.FlushAsync(timeoutCts.Token).ConfigureAwait(false);
+                standardInput.Close();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug(ex, "Writing stdin to docker process failed (process may have exited early).");
+            }
+        }
+
         try
         {
             await process.WaitForExitAsync(timeoutCts.Token).ConfigureAwait(false);

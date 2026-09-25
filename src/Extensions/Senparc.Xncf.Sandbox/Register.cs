@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：Register.cs
@@ -17,6 +17,9 @@
 
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
+    修改标识：Senparc - 20260918
+    修改描述：v0.3.3 同步模块版本号（附加端口映射、Notebook 创建、别名与配额提升）
 
 ----------------------------------------------------------------*/
 
@@ -48,7 +51,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Uid => "BDF12490-AA0B-41B4-ADB3-63155ED95A93";
 
-    public override string Version => "0.1.0-preview1";
+    public override string Version => "0.3.3";
 
     public override string MenuName => SandboxResource.Get("Module.Sandbox.MenuName", "沙箱环境");
 

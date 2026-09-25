@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：SandboxRuntimeModels.cs
@@ -12,6 +12,9 @@
 
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
+    修改标识：Senparc - 20260918
+    修改描述：v0.3.3 提高会话配额并增加附加端口映射与交互式标准输入
 
 ----------------------------------------------------------------*/
 
@@ -46,6 +49,10 @@ public sealed class SandboxCreateRuntimeRequest
     /// never by a browser or an AI-provided shell command.
     /// </summary>
     public SandboxNcfPreviewRuntimeOptions? NcfPreview { get; init; }
+    /// <summary>
+    /// 可选的附加端口映射（仅 Jupyter 交互式模板）。HostPort 为 0 表示由运行时自动分配。
+    /// </summary>
+    public IReadOnlyList<SandboxPortMapping>? ExtraPortMappings { get; init; }
 }
 
 public sealed class SandboxNcfPreviewRuntimeOptions
@@ -65,6 +72,10 @@ public sealed class SandboxCreateRuntimeResult
     public string? AccessUrl { get; init; }
     public string? AccessToken { get; init; }
     public string? Message { get; init; }
+    /// <summary>
+    /// 解析完成后的附加端口映射（用于持久化展示）；无则为空。
+    /// </summary>
+    public string? ExtraPorts { get; init; }
 }
 
 public sealed class SandboxExecRequest
@@ -92,6 +103,23 @@ public sealed class SandboxInteractiveExecRequest
     public required string WorkingDirectory { get; init; }
     public TimeSpan Timeout { get; init; } = TimeSpan.FromSeconds(30);
     public int MaxOutputCharacters { get; init; } = 32_000;
+    /// <summary>
+    /// 可选的标准输入内容；提供时通过 docker exec -i 写入并关闭 stdin，
+    /// 用于向交互式程序（REPL/终端程序）批量提交指令。
+    /// </summary>
+    public string? StdinContent { get; init; }
+}
+
+/// <summary>
+/// 单条附加端口映射。HostPort 为 0 表示运行时自动分配空闲端口。
+/// </summary>
+public sealed record SandboxPortMapping(int HostPort, int ContainerPort, bool ExposeExternally)
+{
+    /// <summary>
+    /// 持久化/展示格式：loopback 为 127.0.0.1:host:container，外部为 0.0.0.0:host:container。
+    /// </summary>
+    public string ToDisplayString() =>
+        $"{(ExposeExternally ? "0.0.0.0" : "127.0.0.1")}:{HostPort}:{ContainerPort}";
 }
 
 public sealed class SandboxWorkspaceFileInfo
@@ -109,14 +137,16 @@ public sealed class SandboxWorkspaceFileContent
 
 public sealed class SandboxQuotaPolicy
 {
-    public int MaxSessionsPerUser { get; init; } = 2;
-    public int MaxGlobalSessions { get; init; } = 20;
+    public int MaxSessionsPerUser { get; init; } = 10;
+    public int MaxGlobalSessions { get; init; } = 50;
     public double DefaultCpuLimit { get; init; } = 0.5;
     public int DefaultMemoryMb { get; init; } = 512;
     public TimeSpan DefaultTtl { get; init; } = TimeSpan.FromMinutes(45);
     public TimeSpan MaxTtl { get; init; } = TimeSpan.FromHours(4);
     public int MaxInteractiveCommandSeconds { get; init; } = 120;
     public int MaxInteractiveCommandCharacters { get; init; } = 8_000;
+    public int MaxInteractiveStdinCharacters { get; init; } = 32_000;
+    public int MaxExtraPortMappings { get; init; } = 8;
     public int MaxInteractiveOutputCharacters { get; init; } = 32_000;
     public long MaxWorkspaceFileBytes { get; init; } = 3L * 1024 * 1024;
     public long MaxWorkspaceReadBytes { get; init; } = 2L * 1024 * 1024;

@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Domain.Models.DatabaseModel;
 using Senparc.Xncf.Sandbox.Domain.Services;
@@ -81,5 +81,49 @@ public class SandboxSessionStateTests
             DateTime.UtcNow.AddHours(1));
         failedSession.MarkFailed("creation failure");
         Assert.IsTrue(failedSession.CanDeleteRecord());
+    }
+
+    [TestMethod]
+    public void SetAlias_NormalizesAndClearsEmpty()
+    {
+        var session = new SandboxSession(
+            "session-alias",
+            1,
+            SandboxTemplateKeys.JupyterPython,
+            SandboxRuntimeKind.Docker,
+            0.5,
+            512,
+            DateTime.UtcNow.AddHours(1));
+
+        session.SetAlias("  my-lab  ");
+        Assert.AreEqual("my-lab", session.Alias);
+        Assert.AreEqual("my-lab", session.ToInfo().Alias);
+
+        session.SetAlias("   ");
+        Assert.IsNull(session.Alias);
+        Assert.IsNull(session.ToInfo().Alias);
+    }
+
+    [TestMethod]
+    public void SetExtraPorts_TruncatesAndPropagatesToInfo()
+    {
+        var session = new SandboxSession(
+            "session-ports",
+            1,
+            SandboxTemplateKeys.JupyterPython,
+            SandboxRuntimeKind.Docker,
+            0.5,
+            512,
+            DateTime.UtcNow.AddHours(1));
+
+        session.SetExtraPorts("127.0.0.1:49152:3000;0.0.0.0:9000:4000");
+        Assert.AreEqual("127.0.0.1:49152:3000;0.0.0.0:9000:4000", session.ExtraPorts);
+        Assert.AreEqual("127.0.0.1:49152:3000;0.0.0.0:9000:4000", session.ToInfo().ExtraPorts);
+
+        session.SetExtraPorts(new string('x', 600));
+        Assert.AreEqual(500, session.ExtraPorts!.Length);
+
+        session.SetExtraPorts("  ");
+        Assert.IsNull(session.ExtraPorts);
     }
 }

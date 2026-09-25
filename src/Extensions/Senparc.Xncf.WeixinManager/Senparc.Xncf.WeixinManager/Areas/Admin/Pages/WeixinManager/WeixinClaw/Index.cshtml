@@ -110,7 +110,7 @@
                         <p>状态：<strong>{{login.status}}</strong></p>
                         <p class="claw-muted" v-if="login.error">{{login.error}}</p>
                         <el-button icon="el-icon-refresh" @@click="pollLogin" v-if="login.status!=='confirmed'">刷新状态</el-button>
-                        <el-button icon="el-icon-close" @@click="login.visible=false">关闭</el-button>
+                        <el-button icon="el-icon-close" @@click="closeLogin">关闭</el-button>
                     </div>
                 </div>
             </div>
@@ -142,16 +142,24 @@
 @section scripts {
     <script>
         new Vue({
-            el: '#app',
+            el: '#claw-app',
             data() {
                 return {
                     accounts: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Accounts)),
                     editor: { visible: false, form: {} },
                     login: { visible: false, sessionId: '', qrcodeImageContent: '', status: '', error: '' },
+                    loginPollHandle: null,
+                    loginPollInFlight: false,
                     sender: { visible: false, accountId: 0, toUserId: '', contextToken: '', text: '' }
                 };
             },
             methods: {
+                clearLoginPoll() {
+                    if (this.loginPollHandle) {
+                        clearTimeout(this.loginPollHandle);
+                        this.loginPollHandle = null;
+                    }
+                },
                 async loadAccounts() {
                     const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=Ajax');
                     this.accounts = res.data.data.list || [];
@@ -170,6 +178,7 @@
                     await this.loadAccounts();
                 },
                 async startLogin() {
+                    this.clearLoginPoll();
                     try {
                         const res = await service.post('/Admin/WeixinManager/WeixinClaw?handler=StartLogin', {
                             name: '个人微信',
@@ -186,15 +195,35 @@
                     }
                 },
                 async pollLogin() {
-                    if (!this.login.sessionId || this.login.status === 'confirmed') return;
-                    const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=LoginStatus&sessionId=' + encodeURIComponent(this.login.sessionId));
-                    this.login = Object.assign(this.login, res.data.data);
-                    this.login.visible = true;
-                    if (this.login.status !== 'confirmed' && this.login.status !== 'expired' && this.login.status !== 'error') {
-                        setTimeout(() => this.pollLogin(), 2500);
-                    } else if (this.login.status === 'confirmed') {
-                        await this.loadAccounts();
+                    if (!this.login.sessionId || this.login.status === 'confirmed') {
+                        this.clearLoginPoll();
+                        return;
                     }
+                    if (this.loginPollInFlight) {
+                        return;
+                    }
+
+                    this.loginPollInFlight = true;
+                    try {
+                        const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=LoginStatus&sessionId=' + encodeURIComponent(this.login.sessionId));
+                        this.login = Object.assign(this.login, res.data.data);
+                        this.login.visible = true;
+                        if (this.login.status !== 'confirmed' && this.login.status !== 'expired' && this.login.status !== 'error') {
+                            this.clearLoginPoll();
+                            this.loginPollHandle = setTimeout(() => this.pollLogin(), 2500);
+                        } else if (this.login.status === 'confirmed') {
+                            this.clearLoginPoll();
+                            await this.loadAccounts();
+                        } else {
+                            this.clearLoginPoll();
+                        }
+                    } finally {
+                        this.loginPollInFlight = false;
+                    }
+                },
+                closeLogin() {
+                    this.clearLoginPoll();
+                    this.login.visible = false;
                 },
                 openSend(item) {
                     this.sender = { visible: true, accountId: item.id, toUserId: '', contextToken: '', text: '' };

@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：SandboxSession.cs
@@ -14,6 +14,9 @@
 
     修改标识：Senparc - 20260822
     修改描述：v0.2.0 增强沙箱预览、Jupyter 工作区与会话生命周期管理
+
+    修改标识：Senparc - 20260918
+    修改描述：v0.3.3 增加会话别名与附加端口映射持久化
 
 ----------------------------------------------------------------*/
 
@@ -67,6 +70,12 @@ public class SandboxSession : EntityBase<int>
 
     [MaxLength(1000)]
     public string? StatusMessage { get; private set; }
+
+    [MaxLength(128)]
+    public string? Alias { get; private set; }
+
+    [MaxLength(500)]
+    public string? ExtraPorts { get; private set; }
 
     private SandboxSession()
     {
@@ -149,6 +158,20 @@ public class SandboxSession : EntityBase<int>
             && string.IsNullOrWhiteSpace(RuntimeHandle);
     }
 
+    public void SetAlias(string? alias)
+    {
+        var normalized = (alias ?? string.Empty).Trim();
+        Alias = normalized.Length == 0 ? null : Truncate(normalized, 128);
+        Touch();
+    }
+
+    public void SetExtraPorts(string? extraPorts)
+    {
+        var normalized = (extraPorts ?? string.Empty).Trim();
+        ExtraPorts = normalized.Length == 0 ? null : Truncate(normalized, 500);
+        Touch();
+    }
+
     public void SetExpiresAtUtc(DateTime newExpiresAtUtc)
     {
         ExpiresAtUtc = newExpiresAtUtc;
@@ -176,7 +199,9 @@ public class SandboxSession : EntityBase<int>
             CreatedAtUtc = new DateTimeOffset(AddTime.ToUniversalTime()),
             ExpiresAtUtc = new DateTimeOffset(ExpiresAtUtc, TimeSpan.Zero),
             IsTtlUnlimited = SandboxTtlPolicy.IsUnlimited(ExpiresAtUtc),
-            LastActivityAtUtc = new DateTimeOffset(LastActivityAtUtc, TimeSpan.Zero)
+            LastActivityAtUtc = new DateTimeOffset(LastActivityAtUtc, TimeSpan.Zero),
+            Alias = Alias,
+            ExtraPorts = ExtraPorts
         };
     }
 
