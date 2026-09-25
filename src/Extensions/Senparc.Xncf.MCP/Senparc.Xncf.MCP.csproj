@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.5</Version>
+    <Version>0.5.6</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -72,6 +72,11 @@
       [2026-09-17] v0.5.5 适配共享 AgentKernel 预览依赖版本
       1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
       2、保持 MCP 工具调用与宿主模块兼容
+      [2026-09-24] v0.5.6 可视化 MCP 端点管理：配置记录、列表、连接测试与工具查看
+      1、管理端提供 MCP 端点列表、新增/编辑/删除、启用开关与 Bearer Token 配置
+      2、连接测试基于 Senparc.AI.AgentKernel 建立真实连接，展示可展开的 Function 工具列表、参数与 inputSchema
+      3、新增 Senparc.Xncf.MCP.Abstractions 契约包，通过 EventBus 提供 QueryMcpEndpoints 请求/响应与端点变更事件
+      4、MCPEndpoint 实体记录最近测试结果与工具数量，并补齐 5 个数据库提供方的 EF 迁移
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -80,12 +85,19 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.AI" Version="10.5.1" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
     <EmbeddedResource Include="wwwroot\**\*" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Senparc.Xncf.MCP.Abstractions\Senparc.Xncf.MCP.Abstractions.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />

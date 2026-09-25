@@ -2,113 +2,50 @@
     Copyright (C) 2026 Senparc
   
     文件名：MCPEndpointEvents.cs
-    文件功能描述：MCPEndpointEvents 相关实现
-    
-    
+    文件功能描述：MCP Endpoint 跨模块 EventBus 契约（请求-响应 + 变更通知）
+
+
     创建标识：Senparc - 20260327
     
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20260924
+    修改描述：v0.1.0 迁移到 IntegrationRequest/IntegrationResponse 标准契约，
+    支持 AgentsManager 通过 IEventBusRequestClient 查询 MCP Endpoint 列表
+
 ----------------------------------------------------------------*/
 
-using Senparc.Ncf.Shared.Abstractions.Events;
 using System;
-using System.Collections.Generic;
+using Senparc.Ncf.Shared.Abstractions.Events;
 
 namespace Senparc.Xncf.MCP.Abstractions.Events
 {
-    /// <summary>
-    /// MCP Endpoint 查询请求事件
-    /// AgentsManager 发送此事件来请求 MCP 模块返回可用的 Endpoints
-    /// </summary>
-    public class QueryMCPEndpointsEvent : IIntegrationEvent
-    {
-        /// <summary>
-        /// 事件 ID（用于追踪响应）
-        /// </summary>
-        public string RequestId { get; set; } = Guid.NewGuid().ToString();
-
-        /// <summary>
-        /// 是否仅返回已启用的端点
-        /// </summary>
-        public bool OnlyEnabled { get; set; } = true;
-
-        public DateTime CreatedOn => DateTime.UtcNow;
-
-        public string CorrelationId { get; set; }
-
-        public string CausationId { get; set; }
-    }
 
     /// <summary>
-    /// MCP Endpoint 更新事件
-    /// MCP 模块发送此事件通知端点的更新
+    /// 请求通过 EventBus 获取 MCP 模块中登记的 Endpoint 列表。
+    /// AgentsManager 等模块在“从列表选择 MCP”时使用该请求。
     /// </summary>
-    public class MCPEndpointsUpdatedEvent : IIntegrationEvent
-    {
-        /// <summary>
-        /// 端点列表 JSON（包含所有有效端点的信息）
-        /// 格式：
-        /// [
-        ///   {
-        ///     "id": 1,
-        ///     "name": "endpoint1",
-        ///     "endpoint": "http://...",
-        ///     "enabled": true,
-        ///     ...
-        ///   }
-        /// ]
-        /// </summary>
-        public string EndpointsJson { get; set; }
-
-        /// <summary>
-        /// 更新的端点数量
-        /// </summary>
-        public int EndpointCount { get; set; }
-
-        /// <summary>
-        /// 触发更新的原因
-        /// 例如: "Created", "Updated", "Deleted", "Enabled", "Disabled"
-        /// </summary>
-        public string UpdateReason { get; set; }
-
-        public DateTime CreatedOn => DateTime.UtcNow;
-
-        public string CorrelationId { get; set; }
-
-        public string CausationId { get; set; }
-    }
+    /// <param name="OnlyEnabled">为 true 时仅返回已启用的 Endpoint。</param>
+    public sealed record QueryMcpEndpointsRequest(bool OnlyEnabled = true)
+        : IntegrationRequest<QueryMcpEndpointsResponse>;
 
     /// <summary>
-    /// MCP Endpoint 创建事件
+    /// <see cref="QueryMcpEndpointsRequest"/> 的响应。
     /// </summary>
-    public class MCPEndpointCreatedEvent : IIntegrationEvent
-    {
-        public int EndpointId { get; set; }
-        public string Name { get; set; }
-        public string Endpoint { get; set; }
-
-        public DateTime CreatedOn => DateTime.UtcNow;
-
-        public string CorrelationId { get; set; }
-
-        public string CausationId { get; set; }
-    }
+    public sealed record QueryMcpEndpointsResponse(
+        Guid RequestId,
+        bool Success,
+        string? Message,
+        McpEndpointInfo[] Endpoints)
+        : IntegrationResponse(RequestId);
 
     /// <summary>
-    /// MCP Endpoint 启用/禁用事件
+    /// MCP Endpoint 发生增删改或启用状态变化时的通知事件。
+    /// 订阅模块可以借此刷新缓存的列表。
     /// </summary>
-    public class MCPEndpointStatusChangedEvent : IIntegrationEvent
-    {
-        public int EndpointId { get; set; }
-        public string Name { get; set; }
-        public bool IsEnabled { get; set; }
-
-        public DateTime CreatedOn => DateTime.UtcNow;
-
-        public string CorrelationId { get; set; }
-
-        public string CausationId { get; set; }
-    }
+    public sealed record McpEndpointsUpdatedEvent(
+        string UpdateReason,
+        int EndpointCount)
+        : IntegrationEvent;
 }
