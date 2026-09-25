@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -49,10 +48,10 @@ public sealed class WeixinClawApi
         CancellationToken cancellationToken = default)
     {
         var endpoint = $"ilink/bot/get_bot_qrcode?bot_type={Uri.EscapeDataString(botType)}";
-        using var request = CreateRequest(HttpMethod.Post, baseUrl, endpoint, includeAuthorization: false);
-        request.Content = JsonContent.Create(
-            new { local_token_list = Array.Empty<string>() },
-            options: WeixinClawProtocol.JsonOptions);
+        // QR login is an unauthenticated POST, but the iLink protocol still
+        // requires AuthorizationType and X-WECHAT-UIN on JSON POST requests.
+        using var request = CreateRequest(HttpMethod.Post, baseUrl, endpoint, includeAuthorization: true);
+        request.Content = CreateJsonContent(new { local_token_list = Array.Empty<string>() });
         using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeoutSource.CancelAfter(TimeSpan.FromSeconds(15));
         return await SendAsync<WeixinClawQrCodeResponse>(request, timeoutSource.Token).ConfigureAwait(false);
@@ -200,7 +199,7 @@ public sealed class WeixinClawApi
             endpoint,
             includeAuthorization: true,
             botToken);
-        request.Content = JsonContent.Create(body, options: WeixinClawProtocol.JsonOptions);
+        request.Content = CreateJsonContent(body);
         using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeoutSource.CancelAfter(timeout);
         return await SendAsync<T>(request, timeoutSource.Token).ConfigureAwait(false);
@@ -252,6 +251,14 @@ public sealed class WeixinClawApi
         }
 
         return result;
+    }
+
+    private static HttpContent CreateJsonContent(object body)
+    {
+        var content = new ByteArrayContent(
+            Encoding.UTF8.GetBytes(JsonSerializer.Serialize(body, WeixinClawProtocol.JsonOptions)));
+        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        return content;
     }
 
     public static string NormalizeBaseUrl(string baseUrl)
