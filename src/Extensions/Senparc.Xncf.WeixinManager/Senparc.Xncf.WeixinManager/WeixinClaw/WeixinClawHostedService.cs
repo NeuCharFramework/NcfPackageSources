@@ -219,12 +219,12 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                     try
                     {
                         await api.NotifyStartAsync(baseUrl, token, stoppingToken).ConfigureAwait(false);
+                        notifiedStart = true;
                     }
                     catch (Exception ex)
                     {
                         _logger.LogDebug(ex, "通知个人微信 Claw 启动失败，继续尝试拉取消息。");
                     }
-                    notifiedStart = true;
                 }
                 WeixinClawGetUpdatesResponse response;
                 try

@@ -73,7 +73,7 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
         var account = await _accountService.GetObjectAsync(z => z.Id == accountId).ConfigureAwait(false);
         if (account == null)
         {
-            throw new InvalidOperationException("个人微信账号不存在或已删除。");
+            throw new InvalidOperationException($"个人微信账号不存在或已删除：{accountId}");
         }
 
         var token = _accountService.UnprotectToken(account);

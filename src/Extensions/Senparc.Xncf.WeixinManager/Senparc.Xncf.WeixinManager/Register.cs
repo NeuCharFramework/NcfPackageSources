@@ -116,6 +116,7 @@ namespace Senparc.Xncf.WeixinManager
             services.AddScoped<IWeixinClawMessageSender>(serviceProvider =>
                 serviceProvider.GetRequiredService<WeixinClawMessageService>());
             services.AddScoped<WeixinClawMessageDispatcher>();
+            services.AddScoped<IWeixinClawMessageHandler, WeixinClawAiMessageHandler>();
             services.AddSingleton<WeixinClawLoginService>();
             services.AddSingleton<IHttpMessageHandlerBuilderFilter, WeixinClawHttpMessageHandlerBuilderFilter>();
             services.AddHttpClient<WeixinClawApi>();

@@ -133,3 +133,29 @@ test('destroying the page clears account, message and QR polling timers', () => 
     h.options.beforeDestroy.call(h.model);
     assert.deepEqual(h.cleared, [1, 2, 99]);
 });
+
+test('QR polling forwards verification codes without overlapping requests', async () => {
+    let complete;
+    const h = harness(() => new Promise(resolve => { complete = resolve; }));
+    h.model.login.sessionId = 'session 1';
+    h.model.login.verifyCode = '123 456';
+    const pending = h.model.pollLogin();
+    await h.model.pollLogin();
+    assert.equal(h.requests.length, 1);
+    assert.match(h.requests[0].url, /sessionId=session%201&verifyCode=123%20456$/);
+    complete({ data: { data: { status: 'wait' } } });
+    await pending;
+    assert.equal(h.model.loginPollInFlight, false);
+    assert.equal(h.model.loginPollHandle, 99);
+});
+
+test('QR polling failures remain visible and release the in-flight guard', async () => {
+    const h = harness(async () => { throw { response: { data: { msg: 'Verification failed' } } }; });
+    h.model.login.sessionId = 'session';
+    h.model.loginPollHandle = 99;
+    await h.model.pollLogin();
+    assert.equal(h.model.login.error, 'Verification failed');
+    assert.equal(h.model.loginPollInFlight, false);
+    assert.equal(h.model.loginPollHandle, null);
+    assert.deepEqual(h.cleared, [99]);
+});
