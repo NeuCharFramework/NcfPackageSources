@@ -89,11 +89,11 @@ public class IndexModel : BaseAdminWeixinManagerModel
         }
     }
 
-    public async Task<IActionResult> OnGetLoginStatusAsync(string sessionId)
+    public async Task<IActionResult> OnGetLoginStatusAsync(string sessionId, string verifyCode = null)
     {
         try
         {
-            return Ok(await _loginService.PollAsync(sessionId).ConfigureAwait(false));
+            return Ok(await _loginService.PollAsync(sessionId, verifyCode).ConfigureAwait(false));
         }
         catch (Exception ex)
         {

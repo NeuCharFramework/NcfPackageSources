@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.24.8</Version>
+    <Version>0.24.9</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -110,6 +110,11 @@
 		[2026-09-17] v0.24.8 适配共享 AgentKernel 预览依赖版本
 		1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
 		2、保持微信管理模块宿主集成兼容
+		[2026-09-26] v0.24.9 补齐个人微信 Claw AI 自动回复链路并修复消息处理问题
+		1、新增 WeixinClawAiMessageHandler：按账号 PromptRangeCode 自动 AI 回复一对一文本消息（群组消息不自动回复）
+		2、修复长轮询超时被误判为账号错误、NotifyStart 失败不重试、LastMessageAt 未更新的问题
+		3、修复 WeixinClawLoginService 单例捕获 Scoped 客户端的 DI 生命周期问题，并清理过期登录会话
+		4、登录面板补齐验证代码（verify_code）输入与错误提示，保存/发送失败时显示服务端原因
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

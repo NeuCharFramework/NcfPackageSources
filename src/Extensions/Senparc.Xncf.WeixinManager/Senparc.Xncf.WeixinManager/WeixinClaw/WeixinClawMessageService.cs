@@ -37,9 +37,8 @@ public sealed class WeixinClawMessageService
         var account = await _accountService.GetObjectAsync(z => z.Id == accountId).ConfigureAwait(false);
         if (account == null)
         {
-            throw new InvalidOperationException("个人微信账号未连接或 token 无法解密。");
+            throw new InvalidOperationException($"个人微信账号不存在：{accountId}");
         }
-
         var token = _accountService.UnprotectToken(account);
         if (string.IsNullOrWhiteSpace(token))
         {

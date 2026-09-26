@@ -103,6 +103,7 @@ namespace Senparc.Xncf.WeixinManager
             services.AddScoped<WeixinClawMessageReceiptService>();
             services.AddScoped<WeixinClawMessageService>();
             services.AddScoped<WeixinClawMessageDispatcher>();
+            services.AddScoped<IWeixinClawMessageHandler, WeixinClawAiMessageHandler>();
             services.AddSingleton<WeixinClawLoginService>();
             services.AddHttpClient<WeixinClawApi>();
             services.AddHostedService<WeixinClawHostedService>();
