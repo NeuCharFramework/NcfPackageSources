@@ -77,6 +77,7 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                     ChatModelId = request.ChatModelId,
                     Name = request.Name,
                     Content = request.Content,
+                    RetrievalConfig = request.RetrievalConfig,
                     NcfFileIds = request.NcfFileIds
                 };
                 await knowledgeBasesService.CreateOrUpdateAsync(dto);

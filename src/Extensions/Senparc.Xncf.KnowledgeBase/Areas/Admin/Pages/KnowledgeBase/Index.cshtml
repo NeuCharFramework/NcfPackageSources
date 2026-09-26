@@ -224,6 +224,11 @@
                                         <div class="recall-card-meta">
                                             <strong>第 {{ item.rank }} 条</strong>
                                             <el-tag size="mini" type="info">相似度 {{ formatScore(item.score) }}</el-tag>
+                                            <template v-if="item.rerankMode && item.rerankMode !== 'None'">
+                                                <el-tag size="mini" type="warning">{{ item.rerankMode === 'Llm' ? 'LLM 重排' : '词法重排' }}</el-tag>
+                                                <el-tag size="mini" type="success" v-if="item.rerankScore != null">重排分 {{ formatScore(item.rerankScore) }}</el-tag>
+                                                <el-tag size="mini" v-if="item.originalRank && item.originalRank !== item.rank">原排名 #{{ item.originalRank }}</el-tag>
+                                            </template>
                                         </div>
                                         <p class="recall-card-content">{{ item.content }}</p>
                                         <div class="recall-card-source"><i class="el-icon-document"></i> 来源：{{ item.sourceName || '未提供来源名称' }}</div>
@@ -277,7 +282,7 @@
                custom-class="kb-edit-dialog"
                :visible.sync="dialog.visible"
                :close-on-click-modal="false"
-               width="520px"
+               width="640px"
                append-to-body>
         <el-form ref="dataForm"
                  class="kb-edit-form"
@@ -340,6 +345,73 @@
                 </el-select>
             </el-form-item>
 
+            <el-divider content-position="left">检索与切片</el-divider>
+
+            <el-form-item label="切片策略" prop="retrievalConfig.chunkingStrategy">
+                <el-select v-model="dialog.data.retrievalConfig.chunkingStrategy"
+                           class="kb-edit-select"
+                           placeholder="请选择切片策略"
+                           style="width: 100%;">
+                    <el-option label="固定长度（默认）" value="Fixed"></el-option>
+                    <el-option label="递归结构化（长文推荐）" value="Recursive"></el-option>
+                    <el-option label="按段落" value="Paragraph"></el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item label="切片大小 / 重叠" prop="retrievalConfig.chunkSize">
+                <div class="kb-chunk-size-row">
+                    <el-input-number v-model="dialog.data.retrievalConfig.chunkSize"
+                                     :min="100" :max="8000" :step="100" size="small" controls-position="right"></el-input-number>
+                    <span class="kb-chunk-size-unit">字符 · 重叠</span>
+                    <el-input-number v-model="dialog.data.retrievalConfig.chunkOverlap"
+                                     :min="0" :max="4000" :step="20" size="small" controls-position="right"></el-input-number>
+                    <span class="kb-chunk-size-unit">字符</span>
+                </div>
+            </el-form-item>
+
+            <el-form-item label="重排（Re-ranking）" prop="retrievalConfig.rerankMode">
+                <el-select v-model="dialog.data.retrievalConfig.rerankMode"
+                           class="kb-edit-select"
+                           placeholder="请选择重排模式"
+                           style="width: 100%;">
+                    <el-option label="关闭（默认）" value="None"></el-option>
+                    <el-option label="词法混合（无额外模型调用）" value="Lexical"></el-option>
+                    <el-option label="LLM 重排（使用对话模型）" value="Llm"></el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item v-if="dialog.data.retrievalConfig.rerankMode === 'Llm'" label="重排模型">
+                <el-select v-model="dialog.data.retrievalConfig.rerankModelId"
+                           class="kb-edit-select"
+                           clearable
+                           filterable
+                           placeholder="留空则使用本知识库的对话模型"
+                           style="width: 100%;">
+                    <el-option v-for="item in chatModelData"
+                               :key="item.id"
+                               :label="formatSelectLabel(item, '模型')"
+                               :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+
+            <el-form-item v-if="dialog.data.retrievalConfig.rerankMode !== 'None'" label="重排候选数">
+                <div class="kb-chunk-size-row">
+                    <el-input-number v-model="dialog.data.retrievalConfig.rerankCandidateCount"
+                                     :min="5" :max="100" :step="5" size="small" controls-position="right"></el-input-number>
+                    <span class="kb-chunk-size-unit">个候选（先取候选再重排出 Top K）</span>
+                </div>
+            </el-form-item>
+
+            <el-form-item v-if="dialog.data.retrievalConfig.rerankMode === 'Lexical'" label="词法权重">
+                <div class="kb-chunk-size-row">
+                    <el-slider v-model="dialog.data.retrievalConfig.lexicalWeight"
+                               :min="0" :max="1" :step="0.05"
+                               style="width: 180px;"></el-slider>
+                    <span class="kb-chunk-size-unit">{{ dialog.data.retrievalConfig.lexicalWeight }}（词法分数在融合得分中的占比）</span>
+                </div>
+            </el-form-item>
+
             <el-form-item label="内容" prop="content">
                 <el-input type="textarea"
                           v-model="dialog.data.content"
@@ -348,7 +420,7 @@
                           placeholder="请输入内容（可选）" />
             </el-form-item>
 
-            <p class="kb-edit-form-tip">* 向量库仅支持 Redis / Qdrant；Memory 无法跨请求持久化。保存后可在「配置」中关联资料并执行向量化。</p>
+            <p class="kb-edit-form-tip">* 向量库仅支持 Redis / Qdrant；Memory 无法跨请求持久化。保存后可在「配置」中关联资料并执行向量化。<br />* 修改「切片策略 / 大小 / 重叠」需重新保存内容或资料并重新向量化后生效；「重排」配置保存后立即对召回生效，不影响已构建的向量。</p>
         </el-form>
         <div slot="footer" class="kb-edit-dialog-footer">
             <el-button class="kb-btn-cancel" size="small" @@click="dialog.visible=false">取消</el-button>
@@ -551,6 +623,16 @@
                     <el-input-number v-model="topK" :min="1" :max="20" :step="1" size="small" controls-position="right"></el-input-number>
                 </div>
             </div>
+            <div class="search-settings-item">
+                <div class="search-settings-label">重排（本次测试）</div>
+                <el-select v-model="recallRerankMode" size="small" style="width: 100%;">
+                    <el-option label="跟随知识库设置" value=""></el-option>
+                    <el-option label="关闭" value="None"></el-option>
+                    <el-option label="词法混合" value="Lexical"></el-option>
+                    <el-option label="LLM 重排" value="Llm"></el-option>
+                </el-select>
+                <p class="search-method-tip" v-if="selectedKnowledgeBase">当前知识库配置：{{ recallRerankSummary }}</p>
+            </div>
         </div>
         <div class="search-settings-footer"><el-button type="primary" size="small" @@click="visible.searchSettingsDrawer = false">完成</el-button></div>
     </el-drawer>
@@ -558,7 +640,9 @@
     @* 召回：片段详情 *@
     <el-dialog title="召回片段详情" :visible.sync="visible.paragraphDetailDialog" width="620px" append-to-body @@close="paragraphDetailItem = null">
         <template v-if="paragraphDetailItem">
-            <div class="paragraph-detail-meta">第 {{ paragraphDetailItem.rank }} 条 · 相似度 {{ formatScore(paragraphDetailItem.score) }}</div>
+            <div class="paragraph-detail-meta">第 {{ paragraphDetailItem.rank }} 条 · 相似度 {{ formatScore(paragraphDetailItem.score) }}
+                <template v-if="paragraphDetailItem.rerankMode && paragraphDetailItem.rerankMode !== 'None' && paragraphDetailItem.originalRank && paragraphDetailItem.originalRank !== paragraphDetailItem.rank"> · 重排前第 {{ paragraphDetailItem.originalRank }} 条</template>
+            </div>
             <div class="paragraph-detail-source">来源：{{ paragraphDetailItem.sourceName || '未提供来源名称' }}</div>
             <div class="paragraph-detail-content">{{ paragraphDetailItem.content || '—' }}</div>
         </template>

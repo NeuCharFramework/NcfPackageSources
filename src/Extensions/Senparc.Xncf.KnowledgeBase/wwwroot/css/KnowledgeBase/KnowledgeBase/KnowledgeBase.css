@@ -756,3 +756,15 @@
 .text-right {
     text-align: right;
 }
+
+.kb-chunk-size-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.kb-chunk-size-unit {
+    color: #909399;
+    font-size: 12px;
+}

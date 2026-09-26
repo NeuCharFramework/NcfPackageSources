@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
 {
@@ -74,6 +75,30 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel
         /// 内容
         /// </summary>
         public string Content { get; set; }
+
+        /// <summary>
+        /// 检索配置（JSON）。null 表示使用与旧版一致的默认配置。
+        /// </summary>
+        [MaxLength(2000)]
+        public string RetrievalConfigJson { get; set; }
+
+        /// <summary>
+        /// 读取检索配置；未配置或 JSON 非法时返回与旧版行为一致的默认配置。
+        /// </summary>
+        public KnowledgeBaseRetrievalConfig GetRetrievalConfig()
+        {
+            return KnowledgeBaseRetrievalConfig.FromJson(RetrievalConfigJson);
+        }
+
+        /// <summary>
+        /// 保存检索配置；与默认值完全一致时存 null（与旧数据形态保持一致）。
+        /// </summary>
+        public void SetRetrievalConfig(KnowledgeBaseRetrievalConfig config)
+        {
+            RetrievalConfigJson = config == null || config.IsDefault()
+                ? null
+                : config.Clone().Sanitized().ToJson();
+        }
 
         /// <summary>
         /// 当前已发布的向量集合名称。仅在整批向量化成功后更新。

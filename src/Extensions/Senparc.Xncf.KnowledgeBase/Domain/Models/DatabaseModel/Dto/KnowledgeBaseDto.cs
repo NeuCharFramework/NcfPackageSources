@@ -17,6 +17,7 @@
 
 
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -66,6 +67,11 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         public string VectorCollectionName { get; set; }
 
         public DateTime? EmbeddedTime { get; set; }
+
+        /// <summary>
+        /// 检索配置（切片策略 + 重排）。null 表示使用默认（与旧版一致）。
+        /// </summary>
+        public KnowledgeBaseRetrievalConfig RetrievalConfig { get; set; }
 
     }
 
