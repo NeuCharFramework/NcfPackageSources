@@ -128,6 +128,11 @@ namespace Senparc.Areas.Admin.Domain.Models
         /// </summary>
         public DbSet<NeuBellWebHookLog> NeuBellWebHookLogs { get; set; }
 
+        /// <summary>
+        /// 个人微信 Claw 与 Admin Chat 的上层绑定。
+        /// </summary>
+        public DbSet<WeixinClawAdminBinding> WeixinClawAdminBindings { get; set; }
+
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
 
         #endregion
@@ -172,6 +177,11 @@ namespace Senparc.Areas.Admin.Domain.Models
                 .HasDefaultValue(NeuBellWebHook.MethodPost);
             modelBuilder.Entity<NeuBellWebHookLog>()
                 .HasIndex(z => z.AddTime);
+            modelBuilder.Entity<WeixinClawAdminBinding>()
+                .HasIndex(z => new { z.AccountId, z.FromUserId, z.GroupId })
+                .IsUnique();
+            modelBuilder.Entity<WeixinClawAdminBinding>()
+                .HasIndex(z => new { z.Enabled, z.EnableNeuBell });
 
             var providerName = Database.ProviderName ?? string.Empty;
             var largeTextType = providerName.Contains("Oracle", StringComparison.OrdinalIgnoreCase)

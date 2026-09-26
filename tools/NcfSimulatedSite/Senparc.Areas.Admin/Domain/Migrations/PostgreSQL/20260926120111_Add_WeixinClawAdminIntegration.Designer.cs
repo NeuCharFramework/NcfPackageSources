@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Senparc.Areas.Admin.Domain.Models;
@@ -11,9 +12,11 @@ using Senparc.Areas.Admin.Domain.Models;
 namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
 {
     [DbContext(typeof(AdminSenparcEntities_PostgreSQL))]
-    partial class AdminSenparcEntities_PostgreSQLModelSnapshot : ModelSnapshot
+    [Migration("20260926120111_Add_WeixinClawAdminIntegration")]
+    partial class Add_WeixinClawAdminIntegration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1068,21 +1071,6 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
 
                     b.Property<int>("Mode")
                         .HasColumnType("integer");
-
-                    b.Property<string>("PendingApprovalArgumentsJson")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PendingApprovalRequestId")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<string>("PendingApprovalToolCallId")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<string>("PendingApprovalToolName")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)

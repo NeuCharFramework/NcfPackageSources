@@ -81,6 +81,7 @@ using Senparc.Areas.Admin.Domain.Dto;
 using Senparc.Areas.Admin.Domain.Models;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Services;
+using Senparc.Areas.Admin.WeixinClawIntegration;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.AreaBase.Admin.Filters;
@@ -206,6 +207,8 @@ namespace Senparc.Areas.Admin
             //services.AddScoped(typeof(AuthenticationAsyncPageFilterAttribute));
 
             services.Configure<JwtSettings>(JwtSettings.Position_Backend, configuration.GetSection(JwtSettings.Position_Backend));// 配置管理后台jwt
+            services.Configure<WeixinClawAdminIntegrationOptions>(
+                configuration.GetSection(WeixinClawAdminIntegrationOptions.SectionName));
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -246,6 +249,11 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatTrajectoryService>();
             services.AddScoped<AdminChatTrajectoryEventService>();
             services.AddScoped<AdminChatAiService>();
+            services.AddScoped<IWeixinClawAdminBindingRepository, WeixinClawAdminBindingRepository>();
+            services.AddScoped<WeixinClawAdminBindingService>();
+            services.AddScoped<AdminWeixinClawMessageHandler>();
+            services.AddScoped<Senparc.Xncf.WeixinManager.WeixinClaw.IWeixinClawMessageHandler>(
+                serviceProvider => serviceProvider.GetRequiredService<AdminWeixinClawMessageHandler>());
 
             // ChatAgent / NeuCharPivot：系统表、声明式 UI、Function 安全执行和 EventBus 协调。
             services.AddScoped<INeuCharPivotConfigurationRepository, NeuCharPivotConfigurationRepository>();
@@ -302,6 +310,7 @@ namespace Senparc.Areas.Admin
                     serviceProvider.GetRequiredService<ILogger<NeuBellWebHookDispatcher>>(),
                     configuration["NeuBellWebHook:BaseUrl"]));
             services.AddHostedService<NeuBellWebHookMonitorService>();
+            services.AddHostedService<WeixinClawNeuBellPushHostedService>();
 
             return base.AddXncfModule(services, configuration, env);
         }

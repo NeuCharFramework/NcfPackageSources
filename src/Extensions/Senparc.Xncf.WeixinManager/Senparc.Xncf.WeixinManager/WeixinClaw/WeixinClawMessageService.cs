@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.WeixinManager.WeixinClaw;
 
-public sealed class WeixinClawMessageService
+public sealed class WeixinClawMessageService : IWeixinClawMessageSender
 {
     private readonly WeixinClawAccountService _accountService;
     private readonly WeixinClawApi _api;
@@ -35,8 +35,13 @@ public sealed class WeixinClawMessageService
         }
 
         var account = await _accountService.GetObjectAsync(z => z.Id == accountId).ConfigureAwait(false);
+        if (account == null)
+        {
+            throw new InvalidOperationException("个人微信账号不存在或已删除。");
+        }
+
         var token = _accountService.UnprotectToken(account);
-        if (account == null || string.IsNullOrWhiteSpace(token))
+        if (string.IsNullOrWhiteSpace(token))
         {
             throw new InvalidOperationException("个人微信账号未连接或 token 无法解密。");
         }
