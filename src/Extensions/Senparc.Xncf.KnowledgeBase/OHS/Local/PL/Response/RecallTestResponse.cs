@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+﻿﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：RecallTestResponse.cs
@@ -31,8 +31,19 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Response
         /// <summary>当前测试中的返回顺序，从 1 开始。</summary>
         public int Rank { get; set; }
 
+        /// <summary>
+        /// 重排前的向量原始顺序（未开启重排时与 Rank 相同），从 1 开始。
+        /// </summary>
+        public int OriginalRank { get; set; }
+
         /// <summary>向量库返回的相似度分数，仅适合在同一检索配置下比较。</summary>
         public double? Score { get; set; }
+
+        /// <summary>重排融合得分（0-1，越大越相关）；未开启重排时为 null。</summary>
+        public double? RerankScore { get; set; }
+
+        /// <summary>本次实际生效的重排模式：None / Lexical / Llm。</summary>
+        public string RerankMode { get; set; }
 
         public string Content { get; set; }
         public int ContentLength { get; set; }

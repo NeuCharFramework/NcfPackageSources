@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.4</Version>
+    <Version>0.8.0</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -72,6 +72,12 @@
 		[2026-09-17] v0.7.4 适配共享 AgentKernel 预览依赖版本
 		1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
 		2、保持知识库模块与共享 AI 工具调用兼容
+		[2026-09-26] v0.8.0 检索能力升级：可配置切片策略与 Re-ranking（向下兼容）
+		1、新增知识库级检索配置（切片策略/大小/重叠、重排模式/模型/候选数/词法权重），默认值与旧版行为完全一致
+		2、切片支持三种策略：固定长度（旧版行为）、递归结构化（段落→行→句读→字符，中英文友好）、按段落（短段落自动合并）
+		3、召回支持词法混合重排（本地计算，无额外模型调用）与 LLM 重排（复用知识库对话模型，超时/解析失败自动回退词法混合）
+		4、召回测试页支持按次覆盖重排模式，结果展示重排分与原始排名；Agent RAG 上下文自动应用知识库重排配置
+		5、补齐六类数据库迁移与快照（RetrievalConfigJson）
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

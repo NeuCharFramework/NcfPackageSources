@@ -49,6 +49,8 @@ using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 using Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Response;
+using Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval;
+using NcfTextChunker = Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval.TextChunker;
 using Senparc.Xncf.KnowledgeBase.Services;
 using System;
 using System.Collections.Generic;
@@ -161,6 +163,13 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
 
             await ValidateConfigurationAsync(dto.EmbeddingModelId, dto.VectorDBId);
 
+            // 检索配置（切片策略 + 重排）：null 或与默认一致时不落库，保持旧数据形态
+            var retrievalConfig = dto.RetrievalConfig?.Clone().Sanitized();
+            if (retrievalConfig != null && retrievalConfig.IsDefault())
+            {
+                retrievalConfig = null;
+            }
+
             KnowledgeBase.Models.DatabaseModel.KnowledgeBase knowledgeBase;
             if (dto.Id == 0)
             {
@@ -172,6 +181,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                     ?? throw new NcfExceptionBase($"知识库不存在：{dto.Id}");
                 knowledgeBase.Update(dto);
             }
+            knowledgeBase.SetRetrievalConfig(retrievalConfig);
 
             await SaveObjectAsync(knowledgeBase);
             await SyncInlineContentAsync(knowledgeBase, dto.Content);
@@ -223,7 +233,7 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 return;
             }
 
-            var chunks = SplitText(content.Trim(), 800, 120);
+            var chunks = NcfTextChunker.Split(content.Trim(), knowledgeBase.GetRetrievalConfig());
             for (var index = 0; index < chunks.Count; index++)
             {
                 await _knowledgeBaseDetailService.SaveObjectAsync(new KnowledgeBaseItem(
@@ -365,8 +375,8 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
                 await _knowledgeBaseDetailService.DeleteObjectAsync(existingItem);
             }
 
-            // 3. 文本切片
-            var chunks = SplitText(content, 800, 120);
+            // 3. 文本切片（策略与大小跟随知识库检索配置；未配置时与旧版 800/120 一致）
+            var chunks = NcfTextChunker.Split(content, knowledgeBase.GetRetrievalConfig());
 
             // 4. 保存切片到 KnowledgeBasesDetail
             int chunkIndex = 0;
@@ -460,7 +470,21 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
         /// <param name="knowledgeBaseId"></param>
         /// <param name="tags">当前 Embedding 记录的 Tag</param>
         /// <returns></returns>
-        public async Task<List<RecallTestResponse>> RecallTestAsync(int knowledgeBaseId, string content, int topK = 5)
+        public Task<List<RecallTestResponse>> RecallTestAsync(int knowledgeBaseId, string content, int topK = 5)
+        {
+            return RecallTestAsync(knowledgeBaseId, content, topK, null);
+        }
+
+        /// <summary>
+        /// 召回测试。支持知识库级重排配置（词法混合 / LLM）；
+        /// 未配置重排时行为与旧版完全一致（向量 TopK 直接返回）。
+        /// </summary>
+        /// <param name="options">单次调用覆盖项；null 表示完全跟随知识库配置</param>
+        public async Task<List<RecallTestResponse>> RecallTestAsync(
+            int knowledgeBaseId,
+            string content,
+            int topK = 5,
+            RecallOptions options = null)
         {
             var knowledgeBase = await base.GetObjectAsync(z => z.Id == knowledgeBaseId);
             if (knowledgeBase == null)
@@ -484,29 +508,136 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             }
 
             topK = Math.Clamp(topK, 1, 20);
+            var config = knowledgeBase.GetRetrievalConfig();
+            var effectiveMode = ResolveRerankMode(config, options);
+            var candidateCount = ResolveCandidateCount(config, options, effectiveMode, topK);
+
             var runner = await BuildEmbeddingRunnerAsync(knowledgeBase, knowledgeBase.VectorCollectionName);
             var store = runner.CreateTextSearchStore();
             IEnumerable<TextSearchDocument> vectorResult = null;
             var stopwatch = Stopwatch.StartNew();
             await ExecuteWithRetryAsync(async () =>
             {
-                vectorResult = await store.SearchAsync(content, topK);
+                vectorResult = await store.SearchAsync(content, candidateCount);
             }, "知识库召回");
             stopwatch.Stop();
+            var recallTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            return (vectorResult ?? Array.Empty<TextSearchDocument>())
-                .Select((item, index) => new RecallTestResponse
+            var vectorItems = (vectorResult ?? Array.Empty<TextSearchDocument>()).ToList();
+            if (effectiveMode == RerankModes.None || vectorItems.Count <= 1)
+            {
+                return vectorItems
+                    .Take(topK)
+                    .Select((item, index) => new RecallTestResponse
+                    {
+                        Rank = index + 1,
+                        OriginalRank = index + 1,
+                        Score = item.Score,
+                        RerankScore = null,
+                        RerankMode = effectiveMode,
+                        Content = item.Text,
+                        ContentLength = item.Text?.Length ?? 0,
+                        SourceName = string.IsNullOrWhiteSpace(item.SourceName) ? "未命名来源" : item.SourceName,
+                        SourceLink = GetSafeSourceLink(item.SourceLink),
+                        RecallTime = recallTime,
+                        ElapsedMilliseconds = stopwatch.ElapsedMilliseconds
+                    })
+                    .ToList();
+            }
+
+            // 候选池评分：归一化向量分数 + 词法分数按配置权重融合
+            var vectorScores = vectorItems.Select(z => z.Score ?? 0d).ToArray();
+            var lexicalScores = vectorItems.Select(z => LexicalReranker.Score(content, z.Text)).ToArray();
+            var normalizedVector = LexicalReranker.NormalizeScores(vectorScores);
+            var fusedScores = new double[vectorItems.Count];
+            for (var i = 0; i < vectorItems.Count; i++)
+            {
+                fusedScores[i] = LexicalReranker.Fuse(normalizedVector[i], lexicalScores[i], config.LexicalWeight);
+            }
+            var finalOrder = Enumerable.Range(0, vectorItems.Count)
+                .OrderByDescending(i => fusedScores[i])
+                .ThenBy(i => i)
+                .ToArray();
+
+            if (effectiveMode == RerankModes.Llm)
+            {
+                var rerankModelId = options?.RerankModelId ?? config.RerankModelId;
+                if (rerankModelId <= 0)
                 {
-                    Rank = index + 1,
-                    Score = item.Score,
-                    Content = item.Text,
-                    ContentLength = item.Text?.Length ?? 0,
-                    SourceName = string.IsNullOrWhiteSpace(item.SourceName) ? "未命名来源" : item.SourceName,
-                    SourceLink = GetSafeSourceLink(item.SourceLink),
-                    RecallTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    ElapsedMilliseconds = stopwatch.ElapsedMilliseconds
+                    rerankModelId = knowledgeBase.ChatModelId;
+                }
+                if (rerankModelId > 0)
+                {
+                    var reranker = new LlmReranker(_aIModelService);
+                    var outcome = await reranker
+                        .RankAsync(content, vectorItems.Select(z => z.Text).ToList(), rerankModelId)
+                        .ConfigureAwait(false);
+                    if (outcome.Fallback)
+                    {
+                        SenparcTrace.SendCustomLog(
+                            "KnowledgeBase.LlmRerank.Fallback",
+                            $"知识库 #{knowledgeBaseId} LLM 重排回退到词法混合：{outcome.FallbackReason}");
+                    }
+                    else
+                    {
+                        finalOrder = outcome.Order;
+                    }
+                }
+            }
+
+            return finalOrder
+                .Take(topK)
+                .Select((originalIndex, rank) =>
+                {
+                    var item = vectorItems[originalIndex];
+                    return new RecallTestResponse
+                    {
+                        Rank = rank + 1,
+                        OriginalRank = originalIndex + 1,
+                        Score = item.Score,
+                        RerankScore = Math.Round(fusedScores[originalIndex], 6),
+                        RerankMode = effectiveMode,
+                        Content = item.Text,
+                        ContentLength = item.Text?.Length ?? 0,
+                        SourceName = string.IsNullOrWhiteSpace(item.SourceName) ? "未命名来源" : item.SourceName,
+                        SourceLink = GetSafeSourceLink(item.SourceLink),
+                        RecallTime = recallTime,
+                        ElapsedMilliseconds = stopwatch.ElapsedMilliseconds
+                    };
                 })
                 .ToList();
+        }
+
+        private static string ResolveRerankMode(KnowledgeBaseRetrievalConfig config, RecallOptions options)
+        {
+            if (options != null && !string.IsNullOrWhiteSpace(options.RerankMode))
+            {
+                if (RerankModes.TryParse(options.RerankMode, out var overrideMode))
+                {
+                    return overrideMode;
+                }
+            }
+            return config.RerankMode;
+        }
+
+        private static int ResolveCandidateCount(
+            KnowledgeBaseRetrievalConfig config,
+            RecallOptions options,
+            string effectiveMode,
+            int topK)
+        {
+            if (effectiveMode == RerankModes.None)
+            {
+                return topK;
+            }
+
+            var pool = options?.CandidateCount ?? config.RerankCandidateCount;
+            if (pool <= 0)
+            {
+                pool = config.RerankCandidateCount;
+            }
+
+            return Math.Clamp(Math.Max(topK, pool), topK, 100);
         }
 
         private static string GetSafeSourceLink(string sourceLink)
@@ -524,9 +655,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             int knowledgeBaseId,
             string query,
             int topK = 5,
-            int maxCharacters = 6000)
+            int maxCharacters = 6000,
+            RecallOptions options = null)
         {
-            var results = await RecallTestAsync(knowledgeBaseId, query, topK);
+            var results = await RecallTestAsync(knowledgeBaseId, query, topK, options);
             if (results.Count == 0)
             {
                 return string.Empty;
@@ -627,33 +759,6 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Services
             throw new NcfExceptionBase($"{operationName}在 {maxAttempts} 次尝试后失败：{lastException?.Message}", lastException);
         }
 
-
-        /// <summary>
-        /// 简单的文本切片算法
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="chunkSize"></param>
-        /// <param name="overlap"></param>
-        /// <returns></returns>
-        private List<string> SplitText(string text, int chunkSize, int overlap)
-        {
-            var chunks = new List<string>();
-            if (string.IsNullOrEmpty(text)) return chunks;
-
-            // 简单按字符数切分，后续可以优化为按 Token 或段落切分
-            for (int i = 0; i < text.Length; i += (chunkSize - overlap))
-            {
-                int length = Math.Min(chunkSize, text.Length - i);
-                if (length <= 0) break;
-
-                chunks.Add(text.Substring(i, length));
-
-                // 防止死循环（如果 overlap >= chunkSize）
-                if (chunkSize - overlap <= 0) break;
-            }
-
-            return chunks;
-        }
     }
 
     //public class Record

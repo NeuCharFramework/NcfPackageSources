@@ -118,6 +118,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Dm
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<string>("RetrievalConfigJson")
+                        .HasMaxLength(2000)
+                        .HasColumnType("NVARCHAR2(2000)");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("INT");
 

@@ -68,6 +68,11 @@
                             <div class="recall-card-meta">
                                 <strong>第 {{ item.rank }} 条</strong>
                                 <el-tag size="mini" type="info">相似度 {{ formatScore(item.score) }}</el-tag>
+                                <template v-if="item.rerankMode && item.rerankMode !== 'None'">
+                                    <el-tag size="mini" type="warning">{{ item.rerankMode === 'Llm' ? 'LLM 重排' : '词法重排' }}</el-tag>
+                                    <el-tag size="mini" type="success" v-if="item.rerankScore != null">重排分 {{ formatScore(item.rerankScore) }}</el-tag>
+                                    <el-tag size="mini" v-if="item.originalRank && item.originalRank !== item.rank">原排名 #{{ item.originalRank }}</el-tag>
+                                </template>
                             </div>
                             <p class="recall-card-content">{{ item.content }}</p>
                             <div class="recall-card-source"><i class="el-icon-document"></i> 来源：{{ item.sourceName || '未提供来源名称' }}</div>
@@ -119,7 +124,9 @@
 
     <el-dialog title="召回片段详情" :visible.sync="visible.paragraphDetailDialog" width="620px" @@close="paragraphDetailItem = null">
         <template v-if="paragraphDetailItem">
-            <div class="paragraph-detail-meta">第 {{ paragraphDetailItem.rank }} 条 · 相似度 {{ formatScore(paragraphDetailItem.score) }}</div>
+            <div class="paragraph-detail-meta">第 {{ paragraphDetailItem.rank }} 条 · 相似度 {{ formatScore(paragraphDetailItem.score) }}
+                <template v-if="paragraphDetailItem.rerankMode && paragraphDetailItem.rerankMode !== 'None' && paragraphDetailItem.originalRank && paragraphDetailItem.originalRank !== paragraphDetailItem.rank"> · 重排前第 {{ paragraphDetailItem.originalRank }} 条</template>
+            </div>
             <div class="paragraph-detail-source">来源：{{ paragraphDetailItem.sourceName || '未提供来源名称' }}</div>
             <div class="paragraph-detail-content">{{ paragraphDetailItem.content || '—' }}</div>
         </template>

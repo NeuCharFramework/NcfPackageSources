@@ -32,6 +32,7 @@ using Senparc.Ncf.Service;
 using Senparc.Ncf.Utility;
 using Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request;
 using Senparc.Xncf.KnowledgeBase.Domain.Services;
+using Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 using Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Response;
@@ -79,9 +80,16 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.AppService
                 try
                 {
                     var topK = request.TopK <= 0 ? 5 : Math.Min(20, Math.Max(1, request.TopK));
+                    var options = string.IsNullOrWhiteSpace(request.RerankMode)
+                        ? null
+                        : new RecallOptions
+                        {
+                            RerankMode = request.RerankMode,
+                            CandidateCount = request.CandidateCount > 0 ? request.CandidateCount : (int?)null
+                        };
                     // 查询文本可能含业务内容，只记录可诊断的元信息，避免写入控制台和日志。
-                    logger.Append($"开始召回测试：知识库 #{request.Id}，TopK={topK}。");
-                    var result = await knowledgeBaseService.RecallTestAsync(request.Id, request.Content, topK);
+                    logger.Append($"开始召回测试：知识库 #{request.Id}，TopK={topK}，重排={options?.RerankMode ?? "跟随知识库配置"}。");
+                    var result = await knowledgeBaseService.RecallTestAsync(request.Id, request.Content, topK, options);
                     return result;
                 }
                 catch (Exception ex)

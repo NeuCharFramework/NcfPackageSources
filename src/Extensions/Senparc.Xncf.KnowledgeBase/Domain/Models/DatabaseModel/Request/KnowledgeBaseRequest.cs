@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
@@ -45,6 +46,11 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Models.DatabaseModel.Request
         public string Name { get; set; }
 
         public string Content { get; set; }
+
+        /// <summary>
+        /// 检索配置（切片策略 + 重排）。null 表示使用默认（与旧版一致）。
+        /// </summary>
+        public KnowledgeBaseRetrievalConfig RetrievalConfig { get; set; }
 
         /// <summary>
         /// null 表示不修改文件关联，空集合表示清空。

@@ -35,6 +35,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Models;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Utility;
+using Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 using Senparc.Xncf.KnowledgeBase.Services;
 using Senparc.Xncf.KnowledgeBase.Domain.Services;
@@ -90,6 +91,7 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
                             _.Content,
                             _.EmbeddedTime,
                             _.VectorCollectionName,
+                            RetrievalConfig = KnowledgeBaseRetrievalConfig.FromJson(_.RetrievalConfigJson),
                             _.AddTime
                         })
                     });

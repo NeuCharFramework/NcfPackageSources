@@ -31,5 +31,15 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request
         /// 召回片段数量 Top K，默认 5，范围 1-20
         /// </summary>
         public int TopK { get; set; } = 5;
+
+        /// <summary>
+        /// 本次测试的重排模式覆盖：None / Lexical / Llm；空表示跟随知识库配置。
+        /// </summary>
+        public string RerankMode { get; set; }
+
+        /// <summary>
+        /// 本次测试的重排候选池覆盖；≤0 表示跟随知识库配置。
+        /// </summary>
+        public int CandidateCount { get; set; }
     }
 }

@@ -112,6 +112,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.Sqlite
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("RetrievalConfigJson")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("INTEGER");
 

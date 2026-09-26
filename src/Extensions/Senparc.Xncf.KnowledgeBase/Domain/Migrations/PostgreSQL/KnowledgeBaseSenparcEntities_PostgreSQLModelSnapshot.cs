@@ -121,6 +121,10 @@ namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.PostgreSQL
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
+                    b.Property<string>("RetrievalConfigJson")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
 
