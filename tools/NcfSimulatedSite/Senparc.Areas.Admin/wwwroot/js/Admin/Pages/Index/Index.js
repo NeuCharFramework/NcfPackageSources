@@ -18,6 +18,12 @@ var app = new Vue({
       hostMetricsTimer: null,
       hostMetricsChart: null,
       hostMetricsResizeHandler: null,
+      // 资源监控（后台 10 秒级记录，CO2NET 缓存最多 24 小时，非线性时间轴）
+      resourceMonitorError: '',
+      resourceMonitorLoading: false,
+      resourceMonitorTimer: null,
+      resourceMonitorChart: null,
+      resourceMonitorZoomed: false,
       agentsOverview: {
         available: false
       },
@@ -39,6 +45,8 @@ var app = new Vue({
     this.fetchTodayLogData();
     this.fetchHostMetrics();
     this.startHostMetricsPolling();
+    this.fetchResourceMonitor();
+    this.startResourceMonitorPolling();
     this.fetchAgentsOverview();
     this.startAgentsOverviewPolling();
     this.loadPivotBoard();
@@ -56,6 +64,14 @@ var app = new Vue({
     if (this.hostMetricsTimer) {
       window.clearInterval(this.hostMetricsTimer);
       this.hostMetricsTimer = null;
+    }
+    if (this.resourceMonitorTimer) {
+      window.clearInterval(this.resourceMonitorTimer);
+      this.resourceMonitorTimer = null;
+    }
+    if (this.resourceMonitorChart) {
+      this.resourceMonitorChart.dispose();
+      this.resourceMonitorChart = null;
     }
     if (this.agentsOverviewTimer) {
       window.clearInterval(this.agentsOverviewTimer);
@@ -207,11 +223,75 @@ var app = new Vue({
         cpu: this.toNullableNumber(metrics.cpuUsagePercent),
         processCpu: this.toNullableNumber(metrics.processCpuUsagePercent),
         memory: this.toNullableNumber(metrics.memoryUsagePercent),
+        processMemory: this.computeProcessMemoryPercent(metrics),
         receiveMbps: this.bytesPerSecondToMbps(metrics.networkReceiveBytesPerSecond),
         sendMbps: this.bytesPerSecondToMbps(metrics.networkSendBytesPerSecond)
       });
       if (this.hostMetricsHistory.length > 30) {
         this.hostMetricsHistory.splice(0, this.hostMetricsHistory.length - 30);
+      }
+    },
+    // 当前 Web 进程工作集占物理内存百分比（用于折线图与对比条）
+    computeProcessMemoryPercent(metrics) {
+      const processBytes = this.toNullableNumber(metrics.processWorkingSetBytes);
+      const totalBytes = this.toNullableNumber(metrics.memoryTotalBytes);
+      if (processBytes === null || totalBytes === null || totalBytes <= 0) {
+        return null;
+      }
+      return this.normalizePercent(processBytes / totalBytes * 100);
+    },
+    startResourceMonitorPolling() {
+      if (this.resourceMonitorTimer) {
+        window.clearInterval(this.resourceMonitorTimer);
+      }
+      // 与后台采样间隔一致（10 秒）：页面可见时轮询，隐藏时自动跳过
+      this.resourceMonitorTimer = window.setInterval(() => this.fetchResourceMonitor(), 10000);
+    },
+    async fetchResourceMonitor() {
+      if (this.resourceMonitorLoading || document.hidden) {
+        return;
+      }
+      this.resourceMonitorLoading = true;
+      try {
+        const response = await service.get('/api/Senparc.Areas.Admin/StatAppService/Areas.Admin_StatAppService.GetResourceMonitor');
+        const data = response && response.data && response.data.data;
+        if (!data || typeof data.now !== 'number') {
+          throw new Error(ncfT('Admin.Home.ResourceMonitorUnavailable'));
+        }
+        this.resourceMonitorError = '';
+        if (!this.resourceMonitorChart) {
+          const chartElement = document.getElementById('resourceMonitorChart');
+          if (chartElement && window.ResourceMonitorChart) {
+            this.resourceMonitorChart = window.ResourceMonitorChart.create(chartElement, {
+              i18n: {
+                now: ncfT('Admin.Home.ResourceMonitorNow'),
+                empty: ncfT('Admin.Home.ResourceMonitorEmpty'),
+                cpuHost: ncfT('Admin.Home.HostCpu'),
+                cpuWeb: ncfT('Admin.Home.HostProcessCpu'),
+                memHost: ncfT('Admin.Home.HostMemory'),
+                memWeb: ncfT('Admin.Home.WebProcessMemory')
+              },
+              onZoomChange: (zoomed) => {
+                this.resourceMonitorZoomed = zoomed;
+              }
+            });
+          }
+        }
+        if (this.resourceMonitorChart) {
+          this.resourceMonitorChart.update(data);
+        }
+      } catch (error) {
+        this.resourceMonitorError = (error && error.message)
+          ? error.message
+          : ncfT('Admin.Home.ResourceMonitorUnavailable');
+        console.warn('Resource monitor refresh failed:', error);
+      } finally {
+        this.resourceMonitorLoading = false;
+      }
+    },
+    resetResourceMonitorZoom() {
+      if (this.resourceMonitorChart) {
+        this.resourceMonitorChart.reset();
       }
     },
     updateHostMetricsChart() {
@@ -252,7 +332,24 @@ var app = new Vue({
           text: ncfT('Admin.Home.HostMetricsChart'),
           textStyle: { fontSize: 15, fontWeight: 500 }
         },
-        tooltip: { trigger: 'axis' },
+        tooltip: {
+          trigger: 'axis',
+          formatter: function (params) {
+            if (!params || !params.length) {
+              return '';
+            }
+            var lines = [params[0].name];
+            params.forEach(function (p) {
+              if (p.value === null || p.value === undefined || p.value === '-') {
+                return;
+              }
+              // 系列顺序：Host CPU / Web CPU / Host 内存 / Web 内存 / 下行 / 上行
+              var unit = p.seriesIndex >= 4 ? ' Mbps' : '%';
+              lines.push(p.marker + ' ' + p.seriesName + ': ' + Number(p.value).toFixed(1) + unit);
+            });
+            return lines.join('<br>');
+          }
+        },
         legend: {
           top: 2,
           right: 8,
@@ -261,6 +358,7 @@ var app = new Vue({
             ncfT('Admin.Home.HostCpu'),
             ncfT('Admin.Home.HostProcessCpu'),
             ncfT('Admin.Home.HostMemory'),
+            ncfT('Admin.Home.WebProcessMemory'),
             ncfT('Admin.Home.HostNetworkReceive'),
             ncfT('Admin.Home.HostNetworkSend')
           ]
@@ -289,7 +387,8 @@ var app = new Vue({
           showSymbol: false,
           data: this.hostMetricsHistory.map(item => item.cpu),
           lineStyle: { color: '#8c52ff' },
-          itemStyle: { color: '#8c52ff' }
+          itemStyle: { color: '#8c52ff' },
+          areaStyle: { color: '#8c52ff', opacity: 0.05 }
         }, {
           name: ncfT('Admin.Home.HostProcessCpu'),
           type: 'line',
@@ -305,7 +404,16 @@ var app = new Vue({
           showSymbol: false,
           data: this.hostMetricsHistory.map(item => item.memory),
           lineStyle: { color: '#67c23a' },
-          itemStyle: { color: '#67c23a' }
+          itemStyle: { color: '#67c23a' },
+          areaStyle: { color: '#67c23a', opacity: 0.05 }
+        }, {
+          name: ncfT('Admin.Home.WebProcessMemory'),
+          type: 'line',
+          smooth: true,
+          showSymbol: false,
+          data: this.hostMetricsHistory.map(item => item.processMemory),
+          lineStyle: { color: '#f56c6c', type: 'dashed' },
+          itemStyle: { color: '#f56c6c' }
         }, {
           name: ncfT('Admin.Home.HostNetworkReceive'),
           type: 'line',

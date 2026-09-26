@@ -278,6 +278,10 @@ namespace Senparc.Areas.Admin
             // 不保存历史记录，也不写入任何缓存。
             services.AddSingleton<HostMetricsCollector>();
 
+            // Admin 首页资源监控：后台每 10 秒采样，按 10s/1min/5min 三个时间分档写入
+            // CO2NET 对象缓存（最多保留 24 小时），UI 未打开时记录依然持续。
+            services.AddHostedService<ResourceMonitorRecorder>();
+
             // 纽铃 Footer 聚合、全局缓存与实时变更流。Provider 虽随 DLL 注册，
             // 但是否执行仍由 NeuBellProviderCatalog 按 XNCF 安装/开放状态决定。
             services.AddSingleton<NeuBellChangeNotifier>();

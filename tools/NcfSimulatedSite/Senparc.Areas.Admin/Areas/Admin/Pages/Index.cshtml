@@ -1,4 +1,4 @@
-@page
+﻿@page
 
 @model Senparc.Areas.Admin.Pages.IndexModel
 @{
@@ -354,6 +354,86 @@
 
         .host-metrics-error {
             color: #f56c6c;
+        }
+
+        .resource-monitor-section {
+            margin-top: 18px;
+        }
+
+        .resource-monitor-card .el-card__header {
+            padding: 12px 16px;
+        }
+
+        .resource-monitor-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .resource-monitor-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #303133;
+        }
+
+        .resource-monitor-title .fa {
+            color: #8c52ff;
+        }
+
+        .resource-monitor-meta {
+            color: #b1b3b8;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .resource-monitor-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .resource-monitor-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #909399;
+            font-size: 12px;
+        }
+
+        .resource-monitor-chart {
+            position: relative;
+            height: 340px;
+            margin-top: 4px;
+            cursor: crosshair;
+            user-select: none;
+        }
+
+        .rm-empty {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #909399;
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        .rm-select-overlay {
+            position: absolute;
+            display: none;
+            background: rgba(140, 82, 255, 0.12);
+            border: 1px solid rgba(140, 82, 255, 0.55);
+            border-radius: 2px;
+            pointer-events: none;
         }
 
         @@media screen and (max-width: 768px) {
@@ -1303,6 +1383,37 @@
     </el-card>
 </div>
 
+<!-- 资源监控：后台每 10 秒记录，CO2NET 缓存最多 24 小时；非线性时间轴 + 框选放大 -->
+<div class="resource-monitor-section">
+    <el-card class="resource-monitor-card">
+        <div slot="header" class="resource-monitor-header">
+            <div class="resource-monitor-title">
+                <i class="fa fa-line-chart"></i>
+                <span>@AR["Admin.Home.ResourceMonitor"]</span>
+                <span class="resource-monitor-meta">@AR["Admin.Home.ResourceMonitorRealtime"]</span>
+            </div>
+            <div class="resource-monitor-actions">
+                <span class="resource-monitor-hint">
+                    <i class="fa fa-mouse-pointer"></i>
+                    @AR["Admin.Home.ResourceMonitorHint"]
+                </span>
+                <span v-if="resourceMonitorError" class="host-metrics-error">
+                    <i class="fa fa-exclamation-circle"></i> {{resourceMonitorError}}
+                </span>
+                <el-button v-if="resourceMonitorZoomed"
+                           size="mini"
+                           type="primary"
+                           plain
+                           icon="el-icon-refresh-left"
+                           @@click="resetResourceMonitorZoom">
+                    @AR["Admin.Home.ResourceMonitorReset"]
+                </el-button>
+            </div>
+        </div>
+        <div id="resourceMonitorChart" class="resource-monitor-chart"></div>
+    </el-card>
+</div>
+
 <!-- AI 对话使用 Footer 的弹出会话，首页仅保留紧凑入口，避免挤占运行概览。 -->
 <section id="ai-chat-entrance" class="quick-ai-entrance">
     <el-card class="quick-ai-card" :body-style="{ padding: '18px 22px' }">
@@ -1406,5 +1517,6 @@
 
 @section scripts {
     <script src="~/lib/echarts/dist/echarts.js"></script>
+    <script src="~/js/Admin/Pages/Index/ResourceMonitor.js" asp-append-version="true"></script>
     <script src="~/js/Admin/Pages/Index/Index.js" asp-append-version="true"></script>
 }
