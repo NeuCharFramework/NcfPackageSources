@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.10.0</Version>
+		<Version>0.11.0</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -64,6 +64,11 @@
     [2026-09-17] v0.10.0 增强 Admin Chat FunctionRender 工具调用与参数 schema
     1、支持实例 FunctionRender 方法绑定，并将选择项与显示文本写入 AI schema
     2、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5，保持后台 Chat 工具调用兼容
+    [2026-09-26] v0.11.0 管理员登录新增图形验证码（连续 2 次密码错误后启用），增强防爆破防护
+    1、新增 LoginCaptchaService：纯 SVG 高干扰验证码（逐字符旋转/位移/字号/颜色 + 干扰曲线与噪点），无第三方依赖
+    2、同一账号连续密码错误达到 2 次后登录必须通过图形验证码校验；验证码一次性、2 分钟时效，存于 CO2NET 对象缓存
+    3、登录页支持按用户名预判是否需要验证码、点击图片刷新，验证码错误/密码错误时服务端直接下发新验证码
+    4、补齐 6 语言资源（zh/en/ja/fr/es/ru）验证码相关文案
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

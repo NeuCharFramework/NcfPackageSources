@@ -506,6 +506,10 @@
   <data name="AdminChat.CreateSessionFailedRetry" xml:space="preserve"><value>Не удалось создать сеанс. Повторите попытку позже.</value></data>
   <data name="Admin.Login.Error.LoginFailed" xml:space="preserve"><value>Ошибка входа</value></data>
   <data name="Admin.Login.Error.LoginRetry" xml:space="preserve"><value>Ошибка входа, повторите попытку</value></data>
+  <data name="Admin.Login.CaptchaPlaceholder" xml:space="preserve"><value>Введите код подтверждения</value></data>
+  <data name="Admin.Login.CaptchaRequired" xml:space="preserve"><value>Введите код с изображения</value></data>
+  <data name="Admin.Login.CaptchaRefresh" xml:space="preserve"><value>Нажмите на изображение, чтобы обновить</value></data>
+  <data name="Admin.Login.Error.CaptchaInvalid" xml:space="preserve"><value>Неверный код подтверждения, повторите попытку</value></data>
   <data name="Admin.Login.Support" xml:space="preserve"><value>Техническая поддержка:</value></data>
   <data name="Admin.Login.VisitWebsite" xml:space="preserve"><value>Открыть официальный сайт</value></data>
   <data name="Admin.Session.InvalidUser" xml:space="preserve"><value>Текущая учетная запись недействительна, JWT нельзя продлить. Войдите снова.</value></data>

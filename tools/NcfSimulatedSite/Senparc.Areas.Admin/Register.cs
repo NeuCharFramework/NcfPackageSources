@@ -231,6 +231,8 @@ namespace Senparc.Areas.Admin
             services.AddScoped<IAdminAuthConfigRepository, AdminAuthConfigRepository>();
             services.AddScoped<InstallerService>();
             services.AddScoped<AdminAuthConfigService>();
+            // 管理员登录图形验证码（纯 SVG 生成 + CO2NET 缓存，无第三方依赖）
+            services.AddScoped<LoginCaptchaService>();
             services.AddScoped<IDesktopAdminAuthTokenIssuer, DesktopAdminAuthTokenIssuer>();
 
             // 聊天功能相关服务注册

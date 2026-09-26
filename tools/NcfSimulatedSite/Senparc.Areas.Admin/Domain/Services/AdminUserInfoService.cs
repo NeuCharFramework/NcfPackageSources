@@ -248,6 +248,18 @@ namespace Senparc.Areas.Admin.Domain
         //}
 
         /// <summary>
+        /// 获取当前用户的连续登录失败次数（用于判断是否需要图形验证码，与 TryLoginAsync 的计数共用同一缓存键）
+        /// </summary>
+        /// <param name="userName">规范化用户名（AdminUserInfo.UserName）</param>
+        /// <returns></returns>
+        public async Task<int> GetFailedLoginCountAsync(string userName)
+        {
+            var cache = CO2NET.Cache.CacheStrategyFactory.GetObjectCacheStrategyInstance();
+            var failedCount = await cache.GetAsync<int>($"FailedLogin:{userName}");
+            return failedCount;
+        }
+
+        /// <summary>
         /// 如果密码正确，则尝试登录
         /// </summary>
         /// <param name="adminUserInfo"></param>

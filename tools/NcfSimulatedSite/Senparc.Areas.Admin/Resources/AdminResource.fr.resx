@@ -506,6 +506,10 @@
   <data name="AdminChat.CreateSessionFailedRetry" xml:space="preserve"><value>Échec de la création de la session. Réessayez plus tard.</value></data>
   <data name="Admin.Login.Error.LoginFailed" xml:space="preserve"><value>Échec de la connexion</value></data>
   <data name="Admin.Login.Error.LoginRetry" xml:space="preserve"><value>Échec de la connexion, veuillez réessayer</value></data>
+  <data name="Admin.Login.CaptchaPlaceholder" xml:space="preserve"><value>Veuillez saisir le code de vérification</value></data>
+  <data name="Admin.Login.CaptchaRequired" xml:space="preserve"><value>Veuillez saisir le code de vérification de l'image</value></data>
+  <data name="Admin.Login.CaptchaRefresh" xml:space="preserve"><value>Cliquez sur l'image pour actualiser</value></data>
+  <data name="Admin.Login.Error.CaptchaInvalid" xml:space="preserve"><value>Code de vérification incorrect, veuillez réessayer</value></data>
   <data name="Admin.Login.Support" xml:space="preserve"><value>Assistance technique :</value></data>
   <data name="Admin.Login.VisitWebsite" xml:space="preserve"><value>Visiter le site officiel</value></data>
   <data name="Admin.Session.InvalidUser" xml:space="preserve"><value>L’identité de l’utilisateur est invalide ; le JWT ne peut pas être renouvelé. Reconnectez-vous.</value></data>
