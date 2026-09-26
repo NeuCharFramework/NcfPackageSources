@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -235,6 +235,14 @@
   <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>Передача</value></data>
   <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>API метрик хоста вернул недопустимые данные</value></data>
   <data name="Admin.Home.HostMetricsUnavailable" xml:space="preserve"><value>Метрики хоста временно недоступны</value></data>
+  <data name="Admin.Home.WebProcessMemory" xml:space="preserve"><value>Память процесса Web</value></data>
+  <data name="Admin.Home.ResourceMonitor" xml:space="preserve"><value>Монитор ресурсов (последние 24 часа)</value></data>
+  <data name="Admin.Home.ResourceMonitorRealtime" xml:space="preserve"><value>Запись каждые 10 с в фоне · кэш до 24 ч</value></data>
+  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>Слева — дальше, справа — сейчас · растяните рамку, чтобы приблизить диапазон</value></data>
+  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>Сбросить к 24 часам</value></data>
+  <data name="Admin.Home.ResourceMonitorEmpty" xml:space="preserve"><value>Фоновая запись запускается (~10 с) или в этом диапазоне пока нет данных</value></data>
+  <data name="Admin.Home.ResourceMonitorUnavailable" xml:space="preserve"><value>Сейчас нельзя получить данные монитора ресурсов</value></data>
+  <data name="Admin.Home.ResourceMonitorNow" xml:space="preserve"><value>сейчас</value></data>
   <data name="Admin.Home.InstalledModules" xml:space="preserve"><value>Установленные модули</value></data>
   <data name="Admin.Home.PendingUpdates" xml:space="preserve"><value>Модули, ожидающие обновления</value></data>
   <data name="Admin.Home.NewModules" xml:space="preserve"><value>Найдены новые модули</value></data>

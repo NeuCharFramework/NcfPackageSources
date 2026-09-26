@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -235,6 +235,14 @@
   <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>Envoi</value></data>
   <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>L’API des métriques de l’hôte a renvoyé des données invalides</value></data>
   <data name="Admin.Home.HostMetricsUnavailable" xml:space="preserve"><value>Les métriques de l’hôte sont temporairement indisponibles</value></data>
+  <data name="Admin.Home.WebProcessMemory" xml:space="preserve"><value>Mémoire du processus Web</value></data>
+  <data name="Admin.Home.ResourceMonitor" xml:space="preserve"><value>Moniteur de ressources (24 dernières heures)</value></data>
+  <data name="Admin.Home.ResourceMonitorRealtime" xml:space="preserve"><value>Enregistré toutes les 10 s en arrière-plan · cache jusqu'à 24 h</value></data>
+  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>Gauche = plus loin, droite = maintenant · glisser pour sélectionner un intervalle et zoomer</value></data>
+  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>Réinitialiser 24 h</value></data>
+  <data name="Admin.Home.ResourceMonitorEmpty" xml:space="preserve"><value>Démarrage de l'enregistrement (~10 s), ou aucune donnée dans cet intervalle</value></data>
+  <data name="Admin.Home.ResourceMonitorUnavailable" xml:space="preserve"><value>Impossible de récupérer les données du moniteur de ressources</value></data>
+  <data name="Admin.Home.ResourceMonitorNow" xml:space="preserve"><value>maintenant</value></data>
   <data name="Admin.Home.InstalledModules" xml:space="preserve"><value>Modules installés</value></data>
   <data name="Admin.Home.PendingUpdates" xml:space="preserve"><value>Modules à mettre à jour</value></data>
   <data name="Admin.Home.NewModules" xml:space="preserve"><value>Nouveaux modules</value></data>

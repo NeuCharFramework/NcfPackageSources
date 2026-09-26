@@ -237,6 +237,14 @@
   <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>Send</value></data>
   <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>The host metrics endpoint returned invalid data</value></data>
   <data name="Admin.Home.HostMetricsUnavailable" xml:space="preserve"><value>Host metrics are temporarily unavailable</value></data>
+  <data name="Admin.Home.WebProcessMemory" xml:space="preserve"><value>Web process memory</value></data>
+  <data name="Admin.Home.ResourceMonitor" xml:space="preserve"><value>Resource Monitor (last 24 hours)</value></data>
+  <data name="Admin.Home.ResourceMonitorRealtime" xml:space="preserve"><value>Recorded every 10 s in background · cached up to 24 h</value></data>
+  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>Left = far, right = now · drag to box-select a range and zoom</value></data>
+  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>Reset 24 h</value></data>
+  <data name="Admin.Home.ResourceMonitorEmpty" xml:space="preserve"><value>Background recorder warming up (~10 s), or no data in this range</value></data>
+  <data name="Admin.Home.ResourceMonitorUnavailable" xml:space="preserve"><value>Cannot fetch resource monitor data right now</value></data>
+  <data name="Admin.Home.ResourceMonitorNow" xml:space="preserve"><value>now</value></data>
   <data name="Admin.Home.InstalledModules" xml:space="preserve"><value>Installed modules</value></data>
   <data name="Admin.Home.PendingUpdates" xml:space="preserve"><value>Modules pending update</value></data>
   <data name="Admin.Home.NewModules" xml:space="preserve"><value>New modules found</value></data>

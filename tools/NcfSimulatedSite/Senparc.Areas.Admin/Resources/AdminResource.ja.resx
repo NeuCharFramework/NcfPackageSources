@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
@@ -235,6 +235,14 @@
   <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>送信</value></data>
   <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>ホスト指標 API から無効なデータが返されました</value></data>
   <data name="Admin.Home.HostMetricsUnavailable" xml:space="preserve"><value>ホスト指標を一時的に取得できません</value></data>
+  <data name="Admin.Home.WebProcessMemory" xml:space="preserve"><value>Web プロセスメモリ</value></data>
+  <data name="Admin.Home.ResourceMonitor" xml:space="preserve"><value>リソースモニター（直近 24 時間）</value></data>
+  <data name="Admin.Home.ResourceMonitorRealtime" xml:space="preserve"><value>バックグラウンドで 10 秒ごとに記録 · キャッシュは最大 24 時間</value></data>
+  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>左ほど過去・右が現在・ドラッグで範囲を選択し拡大</value></data>
+  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>24 時間にリセット</value></data>
+  <data name="Admin.Home.ResourceMonitorEmpty" xml:space="preserve"><value>バックグラウンド記録の準備中（約 10 秒）、またはこの範囲にデータはまだありません</value></data>
+  <data name="Admin.Home.ResourceMonitorUnavailable" xml:space="preserve"><value>リソースモニターデータを取得できません</value></data>
+  <data name="Admin.Home.ResourceMonitorNow" xml:space="preserve"><value>現在</value></data>
   <data name="Admin.Home.InstalledModules" xml:space="preserve"><value>インストール済みモジュール</value></data>
   <data name="Admin.Home.PendingUpdates" xml:space="preserve"><value>更新待ちモジュール</value></data>
   <data name="Admin.Home.NewModules" xml:space="preserve"><value>新しいモジュール</value></data>
