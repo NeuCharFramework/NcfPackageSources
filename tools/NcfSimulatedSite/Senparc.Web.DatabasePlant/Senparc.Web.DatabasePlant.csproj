@@ -36,14 +36,18 @@
     <Configurations>Debug;Release;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Senparc.Xncf.Swagger" Version="0.20.4-preview8" />
     <!--<ProjectReference Include="..\..\..\..\NcfPackageSources\src\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.ForNcf.csproj" />-->
-    <!-- <ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" /> -->
-    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.21.9" />
+    <ProjectReference Include="..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
+    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.21.12" />
     <ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" />
     <!-- <ProjectReference Include="..\..\..\..\NcfPackageSources\src\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" /> -->
     <!-- <ProjectReference Include="..\..\..\..\NcfPackageSources\src\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" /> -->

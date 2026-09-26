@@ -58,7 +58,10 @@
                             {{item.status || '未连接'}}
                             <div class="claw-muted" v-if="item.lastError">{{item.lastError}}</div>
                         </td>
-                        <td>{{item.ilinkBotId || '-'}}</td>
+                        <td>
+                            <div>{{item.ilinkBotId || '-'}}</div>
+                            <div class="claw-muted">{{item.ilinkUserId || '-'}}</div>
+                        </td>
                         <td>{{item.lastConnectedAt || '-'}}</td>
                         <td>{{item.lastMessageAt || '-'}}</td>
                         <td>
@@ -107,6 +110,9 @@
                     </div>
                     <div>
                         <p>请使用微信扫描二维码，并在手机上确认登录。</p>
+                        <p class="claw-muted" v-if="login.qrcodeUrl">
+                            二维码内容：<a :href="login.qrcodeUrl" target="_blank" rel="noopener noreferrer">打开链接</a>
+                        </p>
                         <p>状态：<strong>{{login.status}}</strong></p>
                         <div class="claw-field" v-if="login.status==='verify_code_blocked'">
                             <label>验证代码</label>
@@ -125,7 +131,7 @@
                 <div class="claw-grid">
                     <div class="claw-field">
                         <label>目标 iLink User ID</label>
-                        <el-input v-model="sender.toUserId" placeholder="从入站消息 context 获取"></el-input>
+                        <el-input v-model="sender.toUserId" placeholder="默认发送到当前个人微信"></el-input>
                     </div>
                     <div class="claw-field">
                         <label>Context Token（可选）</label>
@@ -152,7 +158,7 @@
                 return {
                     accounts: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Accounts)),
                     editor: { visible: false, form: {} },
-                    login: { visible: false, sessionId: '', qrcodeImageContent: '', status: '', error: '', verifyCode: '' },
+                    login: { visible: false, sessionId: '', qrcodeImageContent: '', qrcodeUrl: '', status: '', error: '', verifyCode: '' },
                     loginPollHandle: null,
                     loginPollInFlight: false,
                     sender: { visible: false, accountId: 0, toUserId: '', contextToken: '', text: '' }
@@ -243,7 +249,13 @@
                     this.login.visible = false;
                 },
                 openSend(item) {
-                    this.sender = { visible: true, accountId: item.id, toUserId: '', contextToken: '', text: '' };
+                    this.sender = {
+                        visible: true,
+                        accountId: item.id,
+                        toUserId: item.ilinkUserId || '',
+                        contextToken: '',
+                        text: ''
+                    };
                 },
                 async send() {
                     try {

@@ -51,7 +51,8 @@ public sealed class WeixinClawLoginService
             Name = string.IsNullOrWhiteSpace(name) ? "个人微信" : name.Trim(),
             PromptRangeCode = promptRangeCode?.Trim(),
             Qrcode = qr.Qrcode,
-            QrcodeImageContent = qr.QrcodeImageContent,
+            QrcodeImageContent = WeixinClawQrCodeRenderer.RenderDataUri(qr.QrcodeImageContent),
+            QrcodeUrl = qr.QrcodeImageContent,
             ApiBaseUrl = WeixinClawProtocol.DefaultBaseUrl,
             StartedAt = DateTimeOffset.UtcNow,
             Status = "wait"
@@ -66,7 +67,7 @@ public sealed class WeixinClawLoginService
     {
         if (!_sessions.TryGetValue(sessionId, out var session))
         {
-            return new WeixinClawLoginStatus(sessionId, "expired", null, null, null, null, null, "登录会话不存在或已过期。");
+            return new WeixinClawLoginStatus(sessionId, "expired", null, null, null, null, null, "登录会话不存在或已过期。", null);
         }
         if (DateTimeOffset.UtcNow - session.StartedAt > TimeSpan.FromMinutes(10))
         {
@@ -178,7 +179,8 @@ public sealed class WeixinClawLoginService
             session.AccountBotId,
             session.AccountUserId,
             session.StartedAt,
-            session.Error);
+            session.Error,
+            session.QrcodeUrl);
     }
 
     private WeixinClawLoginStatus CompleteSession(LoginSession session)
@@ -195,6 +197,7 @@ public sealed class WeixinClawLoginService
         public string PromptRangeCode { get; set; }
         public string Qrcode { get; set; }
         public string QrcodeImageContent { get; set; }
+        public string QrcodeUrl { get; set; }
         public string ApiBaseUrl { get; set; }
         public DateTimeOffset StartedAt { get; set; }
         public string Status { get; set; }
@@ -214,4 +217,5 @@ public sealed record WeixinClawLoginStatus(
     string AccountBotId,
     string AccountUserId,
     DateTimeOffset? StartedAt,
-    string Error);
+    string Error,
+    string QrcodeUrl);

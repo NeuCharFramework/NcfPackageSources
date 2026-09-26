@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http;
 using Microsoft.OpenApi;
 using ModelContextProtocol.Protocol;
 using Senparc.AI.Interfaces;
@@ -102,9 +103,12 @@ namespace Senparc.Xncf.WeixinManager
             services.AddScoped<WeixinClawAccountService>();
             services.AddScoped<WeixinClawMessageReceiptService>();
             services.AddScoped<WeixinClawMessageService>();
+            services.AddScoped<IWeixinClawMessageSender>(serviceProvider =>
+                serviceProvider.GetRequiredService<WeixinClawMessageService>());
             services.AddScoped<WeixinClawMessageDispatcher>();
             services.AddScoped<IWeixinClawMessageHandler, WeixinClawAiMessageHandler>();
             services.AddSingleton<WeixinClawLoginService>();
+            services.AddSingleton<IHttpMessageHandlerBuilderFilter, WeixinClawHttpMessageHandlerBuilderFilter>();
             services.AddHttpClient<WeixinClawApi>();
             services.AddHostedService<WeixinClawHostedService>();
             services.AddScoped<PromptItemService>();

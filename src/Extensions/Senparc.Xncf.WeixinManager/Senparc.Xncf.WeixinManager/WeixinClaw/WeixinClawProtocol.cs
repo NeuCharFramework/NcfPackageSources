@@ -53,8 +53,15 @@ public sealed class WeixinClawApi
         using var request = CreateRequest(HttpMethod.Post, baseUrl, endpoint, includeAuthorization: true);
         request.Content = CreateJsonContent(new { local_token_list = Array.Empty<string>() });
         using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        timeoutSource.CancelAfter(TimeSpan.FromSeconds(15));
-        return await SendAsync<WeixinClawQrCodeResponse>(request, timeoutSource.Token).ConfigureAwait(false);
+        timeoutSource.CancelAfter(TimeSpan.FromSeconds(30));
+        try
+        {
+            return await SendAsync<WeixinClawQrCodeResponse>(request, timeoutSource.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException ex) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw new TimeoutException("iLink 二维码请求超过 30 秒仍未返回。", ex);
+        }
     }
 
     public async Task<WeixinClawQrCodeStatusResponse> GetQrCodeStatusAsync(

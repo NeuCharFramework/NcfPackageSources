@@ -74,6 +74,20 @@ public class WeixinClawProtocolTests
     }
 
     [TestMethod]
+    public void WeixinClawQrCodeRenderer_ReturnsPngDataUri()
+    {
+        var dataUri = WeixinClawQrCodeRenderer.RenderDataUri(
+            "https://liteapp.weixin.qq.com/q/7GiQu1?qrcode=test&bot_type=3");
+
+        StringAssert.StartsWith(dataUri, "data:image/png;base64,");
+        var png = Convert.FromBase64String(dataUri["data:image/png;base64,".Length..]);
+        CollectionAssert.AreEqual(
+            new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A },
+            png[..8]);
+        Assert.IsTrue(png.Length > 100);
+    }
+
+    [TestMethod]
     public async Task GetQrCodeAsync_IncludesPostProtocolHeadersWithoutBearerToken()
     {
         var handler = new CapturingHandler(
