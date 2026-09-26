@@ -530,6 +530,10 @@
   <data name="AdminChat.CreateSessionFailedRetry" xml:space="preserve"><value>创建会话失败，请稍后重试</value></data>
   <data name="Admin.Login.Error.LoginFailed" xml:space="preserve"><value>登录失败</value></data>
   <data name="Admin.Login.Error.LoginRetry" xml:space="preserve"><value>登录失败，请重试</value></data>
+  <data name="Admin.Login.CaptchaPlaceholder" xml:space="preserve"><value>请输入验证码</value></data>
+  <data name="Admin.Login.CaptchaRequired" xml:space="preserve"><value>请输入图形验证码</value></data>
+  <data name="Admin.Login.CaptchaRefresh" xml:space="preserve"><value>看不清？点击图片刷新</value></data>
+  <data name="Admin.Login.Error.CaptchaInvalid" xml:space="preserve"><value>验证码错误，请重试</value></data>
   <data name="Admin.Login.Support" xml:space="preserve"><value>技术支持：</value></data>
   <data name="Admin.Login.VisitWebsite" xml:space="preserve"><value>点击进入官网</value></data>
   <data name="Admin.Session.InvalidUser" xml:space="preserve"><value>当前用户身份无效，无法续期 JWT。请重新登录。</value></data>

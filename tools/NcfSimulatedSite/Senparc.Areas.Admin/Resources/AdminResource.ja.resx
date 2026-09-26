@@ -506,6 +506,10 @@
   <data name="AdminChat.CreateSessionFailedRetry" xml:space="preserve"><value>セッションの作成に失敗しました。後でもう一度お試しください。</value></data>
   <data name="Admin.Login.Error.LoginFailed" xml:space="preserve"><value>ログインに失敗しました</value></data>
   <data name="Admin.Login.Error.LoginRetry" xml:space="preserve"><value>ログインに失敗しました。もう一度お試しください</value></data>
+  <data name="Admin.Login.CaptchaPlaceholder" xml:space="preserve"><value>認証コードを入力してください</value></data>
+  <data name="Admin.Login.CaptchaRequired" xml:space="preserve"><value>画像認証コードを入力してください</value></data>
+  <data name="Admin.Login.CaptchaRefresh" xml:space="preserve"><value>画像をクリックして更新</value></data>
+  <data name="Admin.Login.Error.CaptchaInvalid" xml:space="preserve"><value>認証コードが正しくありません。もう一度お試しください</value></data>
   <data name="Admin.Login.Support" xml:space="preserve"><value>技術サポート：</value></data>
   <data name="Admin.Login.VisitWebsite" xml:space="preserve"><value>公式サイトを開く</value></data>
   <data name="Admin.Session.InvalidUser" xml:space="preserve"><value>現在のユーザー ID が無効なため、JWT を更新できません。もう一度ログインしてください。</value></data>

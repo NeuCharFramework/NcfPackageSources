@@ -513,6 +513,10 @@
   <data name="AdminChat.CreateSessionFailedRetry" xml:space="preserve"><value>Failed to create the session. Please try again later.</value></data>
   <data name="Admin.Login.Error.LoginFailed" xml:space="preserve"><value>Login failed</value></data>
   <data name="Admin.Login.Error.LoginRetry" xml:space="preserve"><value>Login failed, please try again</value></data>
+  <data name="Admin.Login.CaptchaPlaceholder" xml:space="preserve"><value>Please enter the captcha</value></data>
+  <data name="Admin.Login.CaptchaRequired" xml:space="preserve"><value>Please enter the image captcha</value></data>
+  <data name="Admin.Login.CaptchaRefresh" xml:space="preserve"><value>Click the image to refresh</value></data>
+  <data name="Admin.Login.Error.CaptchaInvalid" xml:space="preserve"><value>The captcha is incorrect, please try again</value></data>
   <data name="Admin.Login.Support" xml:space="preserve"><value>Technical support:</value></data>
   <data name="Admin.Login.VisitWebsite" xml:space="preserve"><value>Visit the official website</value></data>
   <data name="Admin.Session.InvalidUser" xml:space="preserve"><value>The current user identity is invalid, so the JWT cannot be renewed. Please log in again.</value></data>
