@@ -31,16 +31,17 @@ Admin Chat、NeuBell 或 Workflow。
 ```
 
 `DefaultAdminUserId` 是 Admin 管理员记录 Id，`DefaultAccountId` 是 WeixinClaw
-账号记录 Id；不要填写微信用户 Id。保存配置并重启宿主后，在目标个人微信中发送
-`/bind 绑定码`。绑定成功后，绑定关系会保存到 `ADMIN_WeixinClawAdminBinding`，
-绑定码不会保存到数据库。
+账号记录 Id；不要填写微信用户 Id。`BootstrapCode` 是管理员自行设置的绑定密钥，
+不是微信生成的验证码，也不会保存到数据库。保存配置并重启宿主后，在目标个人微信中发送
+`/bind 绑定码`。绑定完成后建议更换或清空该配置。未绑定会话发送 `/help` 会收到同样的配置说明。
 
 ### 可用能力
 
 - `/help`、`/status`：查看帮助、账号和绑定状态。
 - `/bell`：读取当前管理员可见的 NeuBell 提醒；NeuBell 发生变化时，系统也会主动推送到已绑定会话。
 - `/chat <内容>`：复用 Admin Chat 的 Simple 会话，消息和 AI 回复会保存到 Admin Chat 历史。
-- `/workflow [WorkflowId] <输入>`：只执行当前管理员已拥有且已启用的 Workflow。
+- `/workflow`：列出当前管理员可用的 Workflow 及其 WorkflowId。
+- `/workflow <WorkflowId> <输入>`：只执行当前管理员已拥有且已启用的 Workflow。
 - `/harness <任务>`：显式启用 `EnableHarness=true` 后使用 Admin Chat Harness；工具审批使用 `/approve` 和 `/reject`。
 - `/unbind`：解除当前微信会话绑定。
 

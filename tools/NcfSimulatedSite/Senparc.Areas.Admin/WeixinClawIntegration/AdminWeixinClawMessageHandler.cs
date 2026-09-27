@@ -103,6 +103,16 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
 
         if (binding == null)
         {
+            if (string.Equals(command, "help", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(command, "bind", StringComparison.OrdinalIgnoreCase))
+            {
+                await ReplyAsync(
+                    context,
+                    BuildUnboundHelp(prefix),
+                    cancellationToken).ConfigureAwait(false);
+                return;
+            }
+
             await ReplyAsync(
                 context,
                 $"此微信会话尚未绑定 Admin。请发送 {prefix}bind <绑定码> 完成绑定。",
@@ -176,7 +186,10 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
     {
         if (_options.DefaultAdminUserId <= 0 || _options.DefaultAccountId <= 0)
         {
-            await ReplyAsync(context, "Admin 尚未配置 DefaultAdminUserId 和 DefaultAccountId。", cancellationToken).ConfigureAwait(false);
+            await ReplyAsync(
+                context,
+                "Admin 尚未完成微信集成配置。管理员需要在 Senparc.Web 的配置节 WeixinClawAdminIntegration 中填写 DefaultAdminUserId、DefaultAccountId 和 BootstrapCode。",
+                cancellationToken).ConfigureAwait(false);
             return;
         }
 
@@ -189,7 +202,10 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         if (string.IsNullOrWhiteSpace(_options.BootstrapCode)
             || !string.Equals(argument?.Trim(), _options.BootstrapCode.Trim(), StringComparison.Ordinal))
         {
-            await ReplyAsync(context, "绑定码不正确。请在 Admin 配置中设置 WeixinClawAdminIntegration:BootstrapCode。", cancellationToken).ConfigureAwait(false);
+            await ReplyAsync(
+                context,
+                "绑定码不正确。绑定码不是微信生成的验证码，而是管理员在 Senparc.Web 配置节 WeixinClawAdminIntegration:BootstrapCode 中自行设置的一次性字符串。",
+                cancellationToken).ConfigureAwait(false);
             return;
         }
 
@@ -397,7 +413,10 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
             var names = available.Count == 0
                 ? "当前没有可用 Workflow。"
                 : string.Join(Environment.NewLine, available.Select(item => $"{item.Id}: {item.Name}"));
-            await ReplyAsync(context, "请指定 WorkflowId。可用列表：" + Environment.NewLine + names, cancellationToken).ConfigureAwait(false);
+            await ReplyAsync(
+                context,
+                "可用 Workflow 列表如下。下一次请发送 /workflow <WorkflowId> <输入> 执行指定 Workflow：" + Environment.NewLine + names,
+                cancellationToken).ConfigureAwait(false);
             return;
         }
 
@@ -536,6 +555,17 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
             lines.Add($"{prefix}approve / {prefix}reject - 继续或拒绝待审批任务");
         }
         return string.Join(Environment.NewLine, lines);
+    }
+
+    private string BuildUnboundHelp(string prefix)
+    {
+        return string.Join(
+            Environment.NewLine,
+            "当前微信会话尚未绑定 Admin。",
+            "1. 管理员在 Senparc.Web 配置节 WeixinClawAdminIntegration 中设置 BootstrapCode。",
+            $"2. 将该配置值作为绑定码发送：{prefix}bind <绑定码>",
+            $"3. 绑定成功后发送 {prefix}help 查看 Admin Chat、NeuBell 和 Workflow 功能。",
+            "绑定码由系统管理员自行设置，不是微信扫码页面生成的验证码；绑定完成后建议更换或清空配置。");
     }
 
     private async Task ReplyAsync(
