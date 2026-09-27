@@ -299,23 +299,6 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                     if (message.MessageType == 1
                         && (!string.IsNullOrWhiteSpace(text) || mediaItems.Count > 0))
                     {
-                        account.MarkMessageReceived(
-                            message.FromUserId,
-                            accountService.ProtectContextToken(message.ContextToken));
-                        await accountService.SaveObjectAsync(account).ConfigureAwait(false);
-                        await recordService.AddInboundAsync(
-                            account.Id,
-                            messageId,
-                            message.Seq,
-                            message.FromUserId,
-                            message.ToUserId,
-                            message.MessageType,
-                            message.MessageState,
-                            text,
-                            message.CreateTimeMs > 0
-                                ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs).UtcDateTime
-                                : DateTime.UtcNow).ConfigureAwait(false);
-
                         try
                         {
                             var protectedContextToken = accountService.ProtectContextToken(message.ContextToken);
