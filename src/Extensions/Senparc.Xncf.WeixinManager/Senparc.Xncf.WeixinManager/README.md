@@ -20,7 +20,12 @@ the iLink HTTP JSON protocol directly and does not require the OpenClaw runtime.
 - Stores `message_id + seq` receipts for idempotent processing.
 - Protects bot tokens with ASP.NET Data Protection.
 - Exposes `IWeixinClawMessageHandler` for Admin Chat, NeuBell, or custom routing.
-- Exposes `WeixinClawMessageService.SendTextAsync()` for outbound text.
+- Exposes `IWeixinClawMessageSender` / `WeixinClawMessageService.SendTextAsync()` for outbound text.
+- Persists the latest inbound user and protected `context_token`, so the Admin page can send a reply after
+  the phone sends at least one message. The page reports an actionable error instead of treating a
+  context-less send as delivered.
+- Persists inbound and outbound text records in `WeixinManager_WeixinClawMessageRecord`; the Admin page
+  provides a polling conversation window and shows `sending`, `sent`, and `failed` states.
 
 The first phase handles text messages and QR login. Media transfer and concrete
 Admin Chat routing should be implemented by an upper-layer handler.

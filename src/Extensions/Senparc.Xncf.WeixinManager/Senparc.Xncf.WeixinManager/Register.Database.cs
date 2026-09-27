@@ -34,6 +34,7 @@ namespace Senparc.Xncf.WeixinManager
             modelBuilder.ApplyConfiguration(new UserTagConfigurationMapping());
             modelBuilder.ApplyConfiguration(new WeixinClawConfigurationMapping());
             modelBuilder.ApplyConfiguration(new WeixinClawMessageReceiptConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new WeixinClawMessageRecordConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)
@@ -45,6 +46,7 @@ namespace Senparc.Xncf.WeixinManager
             //services.AddScoped<WeixinUser>();
             services.AddScoped<WeixinUserDto>();
             services.AddScoped<WeixinClawAccountDto>();
+            services.AddScoped<WeixinClawMessageRecordDto>();
 
             //services.AddScoped<UserTag>();
             //services.AddScoped<UserTag_WeixinUser>();

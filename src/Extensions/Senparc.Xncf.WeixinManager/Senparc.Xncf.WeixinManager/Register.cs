@@ -102,6 +102,7 @@ namespace Senparc.Xncf.WeixinManager
             services.AddScoped<MpAccountService>();
             services.AddScoped<WeixinClawAccountService>();
             services.AddScoped<WeixinClawMessageReceiptService>();
+            services.AddScoped<WeixinClawMessageRecordService>();
             services.AddScoped<WeixinClawMessageService>();
             services.AddScoped<IWeixinClawMessageSender>(serviceProvider =>
                 serviceProvider.GetRequiredService<WeixinClawMessageService>());
@@ -142,6 +143,7 @@ namespace Senparc.Xncf.WeixinManager
             var types = new[]
             {
                 typeof(WeixinClawMessageReceipt),
+                typeof(WeixinClawMessageRecord),
                 typeof(UserTag_WeixinUser),
                 typeof(UserTag),
                 typeof(WeixinUser),

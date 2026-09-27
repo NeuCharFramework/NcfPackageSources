@@ -117,9 +117,16 @@ public sealed class WeixinClawHostedService : BackgroundService
                         account.GetUpdatesBuf,
                         stoppingToken).ConfigureAwait(false);
                 }
-                catch (OperationCanceledException) when (!stoppingToken.IsCancellationRequested)
+                catch (Exception ex) when (IsExpectedLongPollTimeout(ex, stoppingToken))
                 {
-                    // 长轮询客户端超时或网络抖动：直接开始下一轮，不标记账号错误
+                    // 宿主仍可能带着通用 30 秒 Polly 超时。被取消的 getupdates
+                    // 只是一次空轮询，不应记成账号错误。
+                    _logger.LogDebug(
+                        "个人微信 Claw 账号 {AccountId} 长轮询达到宿主超时边界，继续下一轮：{ExceptionType}",
+                        account.Id,
+                        ex.GetType().FullName);
+                    account.MarkRunning();
+                    await accountService.SaveObjectAsync(account).ConfigureAwait(false);
                     continue;
                 }
 
@@ -132,6 +139,7 @@ public sealed class WeixinClawHostedService : BackgroundService
                 }
 
                 var receiptService = scope.ServiceProvider.GetRequiredService<WeixinClawMessageReceiptService>();
+                var recordService = scope.ServiceProvider.GetRequiredService<WeixinClawMessageRecordService>();
                 var dispatcher = scope.ServiceProvider.GetRequiredService<WeixinClawMessageDispatcher>();
                 var handledMessage = false;
                 foreach (var message in response.Msgs ?? Enumerable.Empty<WeixinClawMessage>())
@@ -147,6 +155,14 @@ public sealed class WeixinClawHostedService : BackgroundService
                     }
 
                     handledMessage = true;
+                    _logger.LogInformation(
+                        "个人微信 Claw 账号 {AccountId} 收到消息：MessageId={MessageId}, Seq={Seq}, MessageType={MessageType}, ItemCount={ItemCount}, HasContextToken={HasContextToken}",
+                        account.Id,
+                        messageId,
+                        message.Seq,
+                        message.MessageType,
+                        message.ItemList?.Count ?? 0,
+                        !string.IsNullOrWhiteSpace(message.ContextToken));
 
                     var text = string.Join(
                         Environment.NewLine,
@@ -155,6 +171,23 @@ public sealed class WeixinClawHostedService : BackgroundService
                             .Select(z => z.TextItem.Text));
                     if (message.MessageType == 1 && !string.IsNullOrWhiteSpace(text))
                     {
+                        account.MarkMessageReceived(
+                            message.FromUserId,
+                            accountService.ProtectContextToken(message.ContextToken));
+                        await accountService.SaveObjectAsync(account).ConfigureAwait(false);
+                        await recordService.AddInboundAsync(
+                            account.Id,
+                            messageId,
+                            message.Seq,
+                            message.FromUserId,
+                            message.ToUserId,
+                            message.MessageType,
+                            message.MessageState,
+                            text,
+                            message.CreateTimeMs > 0
+                                ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs).UtcDateTime
+                                : DateTime.UtcNow).ConfigureAwait(false);
+
                         try
                         {
                             await dispatcher.DispatchAsync(new WeixinClawMessageReceivedContext(
@@ -170,7 +203,6 @@ public sealed class WeixinClawHostedService : BackgroundService
                                 message.CreateTimeMs > 0
                                     ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs)
                                     : DateTimeOffset.UtcNow), stoppingToken).ConfigureAwait(false);
-                            account.MarkMessageReceived();
                         }
                         catch (Exception ex)
                         {
@@ -187,11 +219,7 @@ public sealed class WeixinClawHostedService : BackgroundService
                 {
                     account.SetCursor(response.GetUpdatesBuf);
                 }
-                if (handledMessage)
-                {
-                    account.MarkMessageReceived();
-                }
-                else
+                if (!handledMessage)
                 {
                     account.MarkRunning();
                 }
@@ -236,5 +264,29 @@ public sealed class WeixinClawHostedService : BackgroundService
                 }
             }
         }
+    }
+
+    private static bool IsExpectedLongPollTimeout(
+        Exception exception,
+        CancellationToken stoppingToken)
+    {
+        if (stoppingToken.IsCancellationRequested)
+        {
+            return false;
+        }
+
+        for (var current = exception; current != null; current = current.InnerException)
+        {
+            if (current is TaskCanceledException
+                || string.Equals(
+                    current.GetType().FullName,
+                    "Polly.Timeout.TimeoutRejectedException",
+                    StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

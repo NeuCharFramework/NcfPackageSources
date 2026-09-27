@@ -222,6 +222,14 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Oracle
                     b.Property<DateTime?>("LastMessageAt")
                         .HasColumnType("TIMESTAMP(7)");
 
+                    b.Property<string>("LastMessageContextTokenProtected")
+                        .HasMaxLength(4096)
+                        .HasColumnType("NCLOB");
+
+                    b.Property<string>("LastMessageFromUserId")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP(7)");
 
@@ -301,6 +309,92 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Oracle
                         .IsUnique();
 
                     b.ToTable("WeixinManager_WeixinClawMessageReceipt");
+                });
+
+            modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinClawMessageRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("ClientId")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("Direction")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)");
+
+                    b.Property<string>("Error")
+                        .HasMaxLength(2000)
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<string>("FromUserId")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("MessageId")
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR2(200)");
+
+                    b.Property<int>("MessageState")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("MessageType")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<long?>("Seq")
+                        .HasColumnType("NUMBER(19)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("NVARCHAR2(30)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)");
+
+                    b.Property<string>("ToUserId")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("WeixinClawAccountId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WeixinClawAccountId", "CreatedAt");
+
+                    b.HasIndex("WeixinClawAccountId", "Direction", "MessageId");
+
+                    b.ToTable("WeixinManager_WeixinClawMessageRecord");
                 });
 
             modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinUser", b =>

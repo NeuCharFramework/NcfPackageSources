@@ -19,6 +19,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
     private readonly WeixinClawMessageReceiptService _receiptService;
     private readonly WeixinClawLoginService _loginService;
     private readonly WeixinClawMessageService _messageService;
+    private readonly WeixinClawMessageRecordService _recordService;
     private readonly ILogger<IndexModel> _logger;
 
     public IndexModel(
@@ -27,12 +28,14 @@ public class IndexModel : BaseAdminWeixinManagerModel
         WeixinClawMessageReceiptService receiptService,
         WeixinClawLoginService loginService,
         WeixinClawMessageService messageService,
+        WeixinClawMessageRecordService recordService,
         ILogger<IndexModel> logger) : base(xncfModuleService)
     {
         _accountService = accountService;
         _receiptService = receiptService;
         _loginService = loginService;
         _messageService = messageService;
+        _recordService = recordService;
         _logger = logger;
     }
 
@@ -44,6 +47,15 @@ public class IndexModel : BaseAdminWeixinManagerModel
     public async Task<IActionResult> OnGetAjaxAsync()
     {
         return Ok(new { list = await _accountService.GetDtosAsync().ConfigureAwait(false) });
+    }
+
+    public async Task<IActionResult> OnGetMessagesAsync(int accountId, int take = 100)
+    {
+        return Ok(new
+        {
+            accountId,
+            list = await _recordService.GetRecentDtosAsync(accountId, take).ConfigureAwait(false)
+        });
     }
 
     public async Task<IActionResult> OnPostSaveAsync([FromBody] WeixinClawAccountDto dto)
@@ -105,12 +117,19 @@ public class IndexModel : BaseAdminWeixinManagerModel
     {
         try
         {
-            await _messageService.SendTextAsync(
+            var result = await _messageService.SendTextWithResultAsync(
                 request.AccountId,
                 request.ToUserId,
                 request.Text,
                 request.ContextToken).ConfigureAwait(false);
-            return Ok(new { sent = true });
+            return Ok(new
+            {
+                sent = true,
+                recordId = result.RecordId,
+                messageId = result.MessageId,
+                targetUserId = result.TargetUserId,
+                contextTokenUsed = result.ContextTokenUsed
+            });
         }
         catch (Exception ex)
         {
