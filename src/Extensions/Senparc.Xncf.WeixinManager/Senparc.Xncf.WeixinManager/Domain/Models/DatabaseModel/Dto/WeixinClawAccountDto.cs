@@ -31,4 +31,6 @@ public class WeixinClawAccountDto : DtoBase
     public string LastError { get; set; }
     public string LastMessageAt { get; set; }
     public string LastConnectedAt { get; set; }
+    public string LastMessageFromUserId { get; set; }
+    public bool HasMessageContext { get; set; }
 }

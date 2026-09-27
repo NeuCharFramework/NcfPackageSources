@@ -149,6 +149,41 @@ public class WeixinClawProtocolTests
     }
 
     [TestMethod]
+    public async Task SendMessageAsync_IncludesRecipientAndContextToken()
+    {
+        var handler = new CapturingHandler("""{"ret":0,"message_id":"out-1"}""");
+        using var httpClient = new HttpClient(handler);
+        var api = new WeixinClawApi(httpClient);
+
+        var response = await api.SendMessageAsync(
+            "https://ilink.example.test",
+            "bot-secret",
+            new WeixinClawMessage
+            {
+                ToUserId = "user@im.wechat",
+                ClientId = "client-1",
+                MessageType = 2,
+                MessageState = 2,
+                ContextToken = "ctx-1",
+                ItemList =
+                [
+                    new WeixinClawMessageItem
+                    {
+                        Type = 1,
+                        TextItem = new WeixinClawTextItem { Text = "hi" }
+                    }
+                ]
+            });
+
+        Assert.AreEqual(0, response.Ret);
+        Assert.AreEqual("out-1", response.MessageId);
+        StringAssert.Contains(handler.Body, "\"to_user_id\":\"user@im.wechat\"");
+        StringAssert.Contains(handler.Body, "\"context_token\":\"ctx-1\"");
+        StringAssert.Contains(handler.Body, "\"message_state\":2");
+        StringAssert.Contains(handler.Request.RequestUri.AbsolutePath, "/ilink/bot/sendmessage");
+    }
+
+    [TestMethod]
     public async Task GetQrCodeStatusAsync_UsesUnauthenticatedLongPollRequest()
     {
         var handler = new CapturingHandler("""{"status":"wait"}""");

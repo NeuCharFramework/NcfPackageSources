@@ -73,8 +73,22 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
 
         var prefix = NormalizePrefix(_options.CommandPrefix);
         var isCommand = text.StartsWith(prefix, StringComparison.Ordinal);
+        var binding = await _bindingService.GetBindingAsync(
+            context.AccountId,
+            context.FromUserId,
+            context.GroupId).ConfigureAwait(false);
         if (_options.RequireCommandPrefix && !isCommand)
         {
+            if (binding == null
+                && _options.DefaultAccountId == context.AccountId
+                && _options.DefaultAdminUserId > 0
+                && !string.IsNullOrWhiteSpace(_options.BootstrapCode))
+            {
+                await ReplyAsync(
+                    context,
+                    $"此微信会话尚未绑定 Admin。请发送 {prefix}bind <绑定码> 完成绑定。",
+                    cancellationToken).ConfigureAwait(false);
+            }
             return;
         }
 
@@ -87,10 +101,6 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
             return;
         }
 
-        var binding = await _bindingService.GetBindingAsync(
-            context.AccountId,
-            context.FromUserId,
-            context.GroupId).ConfigureAwait(false);
         if (binding == null)
         {
             await ReplyAsync(

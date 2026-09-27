@@ -38,6 +38,12 @@ public class WeixinClawAccount : EntityBase<int>
     [MaxLength(2000)]
     public string LastError { get; private set; }
 
+    [MaxLength(300)]
+    public string LastMessageFromUserId { get; private set; }
+
+    [MaxLength(4096)]
+    public string LastMessageContextTokenProtected { get; private set; }
+
     public DateTime? LastMessageAt { get; private set; }
 
     public DateTime? LastConnectedAt { get; private set; }
@@ -93,8 +99,10 @@ public class WeixinClawAccount : EntityBase<int>
         SetUpdateTime();
     }
 
-    public void MarkMessageReceived()
+    public void MarkMessageReceived(string fromUserId = null, string contextTokenProtected = null)
     {
+        LastMessageFromUserId = fromUserId;
+        LastMessageContextTokenProtected = contextTokenProtected;
         LastMessageAt = DateTime.UtcNow;
         LastError = null;
         Status = "运行中";

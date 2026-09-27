@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase;
 
 #nullable disable
 
-namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
+namespace Senparc.Xncf.WeixinManager.Domain.Migrations.PostgreSQL
 {
     [DbContext(typeof(WeixinSenparcEntities_PostgreSQL))]
-    partial class WeixinSenparcEntities_PostgreSQLModelSnapshot : ModelSnapshot
+    [Migration("20260926153526_AddWeixinClawMessageContext")]
+    partial class AddWeixinClawMessageContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -309,92 +312,6 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
                         .IsUnique();
 
                     b.ToTable("WeixinManager_WeixinClawMessageReceipt");
-                });
-
-            modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinClawMessageRecord", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<string>("ClientId")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Direction")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("Error")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("FromUserId")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("MessageId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int>("MessageState")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("MessageType")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<long?>("Seq")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ToUserId")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<int>("WeixinClawAccountId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WeixinClawAccountId", "CreatedAt");
-
-                    b.HasIndex("WeixinClawAccountId", "Direction", "MessageId");
-
-                    b.ToTable("WeixinManager_WeixinClawMessageRecord");
                 });
 
             modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinUser", b =>

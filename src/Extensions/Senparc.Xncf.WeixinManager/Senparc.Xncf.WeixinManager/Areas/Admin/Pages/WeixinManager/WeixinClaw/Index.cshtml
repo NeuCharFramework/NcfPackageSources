@@ -19,6 +19,16 @@
         .claw-field label { display: block; margin-bottom: 5px; color: #606266; }
         .claw-field input, .claw-field textarea { width: 100%; box-sizing: border-box; }
         .claw-muted { color: #909399; font-size: 12px; }
+        .claw-chat { min-height: 260px; max-height: 520px; overflow-y: auto; padding: 12px; background: #f5f7fa; }
+        .claw-message { display: flex; flex-direction: column; margin: 8px 0; max-width: 82%; }
+        .claw-message.inbound { align-items: flex-start; }
+        .claw-message.outbound { align-items: flex-end; margin-left: auto; }
+        .claw-message-meta { color: #909399; font-size: 12px; margin-bottom: 3px; }
+        .claw-message-body { padding: 9px 12px; border-radius: 6px; white-space: pre-wrap; word-break: break-word; }
+        .claw-message.inbound .claw-message-body { background: #fff; border: 1px solid #ebeef5; }
+        .claw-message.outbound .claw-message-body { background: #409eff; color: #fff; }
+        .claw-message.failed .claw-message-body { background: #fef0f0; color: #f56c6c; border: 1px solid #fbc4c4; }
+        .claw-message-error { color: #f56c6c; font-size: 12px; margin-top: 3px; }
         @@media (max-width: 720px) {
             .claw-table { display: block; overflow-x: auto; white-space: nowrap; }
         }
@@ -61,18 +71,47 @@
                         <td>
                             <div>{{item.ilinkBotId || '-'}}</div>
                             <div class="claw-muted">{{item.ilinkUserId || '-'}}</div>
+                            <div class="claw-muted" v-if="item.lastMessageFromUserId">
+                                最近发送人：{{item.lastMessageFromUserId}}
+                            </div>
                         </td>
                         <td>{{item.lastConnectedAt || '-'}}</td>
                         <td>{{item.lastMessageAt || '-'}}</td>
                         <td>
                             <el-button size="mini" icon="el-icon-edit" @@click="edit(item)">编辑</el-button>
-                            <el-button size="mini" icon="el-icon-chat-dot-round" @@click="openSend(item)">发送</el-button>
+                            <el-button size="mini" icon="el-icon-chat-dot-round" @@click="openChat(item)">对话</el-button>
                             <el-button size="mini" type="danger" icon="el-icon-delete" @@click="remove(item)">删除</el-button>
                         </td>
                     </tr>
                     <tr v-if="accounts.length===0"><td colspan="6" class="claw-muted">尚未连接个人微信。</td></tr>
                 </tbody>
             </table>
+
+            <div class="claw-panel" v-if="chat.visible">
+                <h4>微信 ClawBot 对话：{{chat.accountName}}</h4>
+                <div class="claw-toolbar">
+                    <el-button size="mini" icon="el-icon-refresh" @@click="loadMessages">刷新消息</el-button>
+                    <span class="claw-muted" v-if="chat.loading">正在读取消息...</span>
+                    <span class="claw-muted" v-else>每 3 秒自动刷新</span>
+                </div>
+                <div class="claw-chat">
+                    <div v-if="chat.messages.length===0" class="claw-muted">
+                        尚无会话记录。请在手机端向“微信 ClawBot”发送文字。
+                    </div>
+                    <div v-for="message in chat.messages"
+                         :key="message.id"
+                         :class="['claw-message', message.direction, message.status==='failed'?'failed':'']">
+                        <div class="claw-message-meta">
+                            {{message.direction==='inbound'?'手机':'系统'}} · {{formatMessageTime(message.createdAt)}}
+                            <span v-if="message.status==='sending'"> · 发送中</span>
+                            <span v-if="message.status==='sent'"> · 已提交</span>
+                            <span v-if="message.status==='failed'"> · 失败</span>
+                        </div>
+                        <div class="claw-message-body">{{message.text}}</div>
+                        <div class="claw-message-error" v-if="message.error">{{message.error}}</div>
+                    </div>
+                </div>
+            </div>
 
             <div class="claw-panel" v-if="editor.visible">
                 <h4>{{editor.form.id ? '编辑个人微信账号' : '添加个人微信账号'}}</h4>
@@ -129,8 +168,8 @@
                         <el-input v-model="sender.toUserId" placeholder="默认发送到当前个人微信"></el-input>
                     </div>
                     <div class="claw-field">
-                        <label>Context Token（可选）</label>
-                        <el-input v-model="sender.contextToken"></el-input>
+                        <label>Context Token（自动使用最近入站消息）</label>
+                        <el-input v-model="sender.contextToken" placeholder="留空将自动使用最近一条手机消息的上下文"></el-input>
                     </div>
                     <div class="claw-field" style="grid-column: 1 / -1">
                         <label>消息</label>
@@ -154,13 +193,44 @@
                     accounts: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Accounts)),
                     editor: { visible: false, form: {} },
                     login: { visible: false, sessionId: '', qrcodeImageContent: '', qrcodeUrl: '', status: '', error: '' },
-                    sender: { visible: false, accountId: 0, toUserId: '', contextToken: '', text: '' }
+                    sender: { visible: false, accountId: 0, toUserId: '', contextToken: '', text: '' },
+                    chat: { visible: false, accountId: 0, accountName: '', messages: [], loading: false },
+                    accountRefreshTimer: null,
+                    messageRefreshTimer: null,
+                    accountLoaded: false
                 };
+            },
+            mounted() {
+                this.accountRefreshTimer = setInterval(() => this.loadAccounts(), 3000);
+            },
+            beforeDestroy() {
+                if (this.accountRefreshTimer) clearInterval(this.accountRefreshTimer);
+                if (this.messageRefreshTimer) clearInterval(this.messageRefreshTimer);
             },
             methods: {
                 async loadAccounts() {
                     const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=Ajax');
-                    this.accounts = res.data.data.list || [];
+                    const nextAccounts = res.data.data.list || [];
+                    if (this.accountLoaded) {
+                        nextAccounts.forEach(next => {
+                            const previous = this.accounts.find(item => item.id === next.id);
+                            if (previous && previous.lastMessageAt && next.lastMessageAt
+                                && previous.lastMessageAt !== next.lastMessageAt
+                                ) {
+                                this.$notify({
+                                    title: '收到微信消息',
+                                    message: next.name + ' 收到一条新的手机消息',
+                                    type: 'success',
+                                    duration: 3500
+                                });
+                            }
+                        });
+                    }
+                    this.accounts = nextAccounts;
+                    this.accountLoaded = true;
+                    if (this.chat.visible && this.chat.accountId > 0) {
+                        await this.loadMessages();
+                    }
                 },
                 edit(item) {
                     this.editor.form = Object.assign({}, item, { botToken: '' });
@@ -210,10 +280,52 @@
                         contextToken: '',
                         text: ''
                     };
+                    if (!item.hasMessageContext) {
+                        this.$message.info('请先在手机端向微信 ClawBot 发送一条文字消息，系统会自动保存回复所需上下文。');
+                    }
+                },
+                openChat(item) {
+                    this.chat.visible = true;
+                    this.chat.accountId = item.id;
+                    this.chat.accountName = item.name;
+                    this.openSend(item);
+                    this.loadMessages();
+                    if (this.messageRefreshTimer) clearInterval(this.messageRefreshTimer);
+                    this.messageRefreshTimer = setInterval(() => this.loadMessages(), 3000);
+                },
+                async loadMessages() {
+                    if (!this.chat.accountId) return;
+                    this.chat.loading = true;
+                    try {
+                        const res = await service.get(
+                            '/Admin/WeixinManager/WeixinClaw?handler=Messages&accountId='
+                            + encodeURIComponent(this.chat.accountId) + '&take=200');
+                        this.chat.messages = res.data.data.list || [];
+                    } finally {
+                        this.chat.loading = false;
+                    }
+                },
+                formatMessageTime(value) {
+                    if (!value) return '-';
+                    const date = new Date(value);
+                    return isNaN(date.getTime()) ? value : date.toLocaleString();
                 },
                 async send() {
-                    await service.post('/Admin/WeixinManager/WeixinClaw?handler=Send', this.sender);
-                    this.sender.visible = false;
+                    try {
+                        const res = await service.post('/Admin/WeixinManager/WeixinClaw?handler=Send', this.sender);
+                        const result = res.data.data || {};
+                        this.$message.success(
+                            result.contextTokenUsed
+                                ? '消息已提交，已使用最近微信会话上下文。'
+                                : '消息已提交到微信 Claw。');
+                        await this.loadMessages();
+                        await this.loadAccounts();
+                    } catch (error) {
+                        const message = error && error.response && error.response.data && error.response.data.msg
+                            ? error.response.data.msg
+                            : (error && error.message) || '发送个人微信消息失败';
+                        this.$message.error(message);
+                    }
                 }
             }
         });

@@ -108,11 +108,28 @@ public sealed class WeixinClawHostedService : BackgroundService
                     }
                     notifiedStart = true;
                 }
-                var response = await api.GetUpdatesAsync(
-                    baseUrl,
-                    token,
-                    account.GetUpdatesBuf,
-                    stoppingToken).ConfigureAwait(false);
+                WeixinClawGetUpdatesResponse response;
+                try
+                {
+                    response = await api.GetUpdatesAsync(
+                        baseUrl,
+                        token,
+                        account.GetUpdatesBuf,
+                        stoppingToken).ConfigureAwait(false);
+                }
+                catch (Exception ex) when (IsExpectedLongPollTimeout(ex, stoppingToken))
+                {
+                    // The host may still have a generic 30-second Polly timeout in
+                    // an already-running process. A canceled getupdates request is
+                    // an empty poll, not an account failure.
+                    _logger.LogDebug(
+                        "个人微信 Claw 账号 {AccountId} 长轮询达到宿主超时边界，继续下一轮：{ExceptionType}",
+                        account.Id,
+                        ex.GetType().FullName);
+                    account.MarkRunning();
+                    await accountService.SaveObjectAsync(account).ConfigureAwait(false);
+                    continue;
+                }
 
                 if (response.Ret != 0)
                 {
@@ -123,6 +140,7 @@ public sealed class WeixinClawHostedService : BackgroundService
                 }
 
                 var receiptService = scope.ServiceProvider.GetRequiredService<WeixinClawMessageReceiptService>();
+                var recordService = scope.ServiceProvider.GetRequiredService<WeixinClawMessageRecordService>();
                 var dispatcher = scope.ServiceProvider.GetRequiredService<WeixinClawMessageDispatcher>();
                 foreach (var message in response.Msgs ?? Enumerable.Empty<WeixinClawMessage>())
                 {
@@ -134,6 +152,15 @@ public sealed class WeixinClawHostedService : BackgroundService
                         continue;
                     }
 
+                    _logger.LogInformation(
+                        "个人微信 Claw 账号 {AccountId} 收到消息：MessageId={MessageId}, Seq={Seq}, MessageType={MessageType}, ItemCount={ItemCount}, HasContextToken={HasContextToken}",
+                        account.Id,
+                        messageId,
+                        message.Seq,
+                        message.MessageType,
+                        message.ItemList?.Count ?? 0,
+                        !string.IsNullOrWhiteSpace(message.ContextToken));
+
                     var text = string.Join(
                         Environment.NewLine,
                         (message.ItemList ?? new())
@@ -141,6 +168,23 @@ public sealed class WeixinClawHostedService : BackgroundService
                             .Select(z => z.TextItem.Text));
                     if (message.MessageType == 1 && !string.IsNullOrWhiteSpace(text))
                     {
+                        account.MarkMessageReceived(
+                            message.FromUserId,
+                            accountService.ProtectContextToken(message.ContextToken));
+                        await accountService.SaveObjectAsync(account).ConfigureAwait(false);
+                        await recordService.AddInboundAsync(
+                            account.Id,
+                            messageId,
+                            message.Seq,
+                            message.FromUserId,
+                            message.ToUserId,
+                            message.MessageType,
+                            message.MessageState,
+                            text,
+                            message.CreateTimeMs > 0
+                                ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs).UtcDateTime
+                                : DateTime.UtcNow).ConfigureAwait(false);
+
                         await dispatcher.DispatchAsync(new WeixinClawMessageReceivedContext(
                             account.Id,
                             account.Name,
@@ -206,5 +250,29 @@ public sealed class WeixinClawHostedService : BackgroundService
                 }
             }
         }
+    }
+
+    private static bool IsExpectedLongPollTimeout(
+        Exception exception,
+        CancellationToken stoppingToken)
+    {
+        if (stoppingToken.IsCancellationRequested)
+        {
+            return false;
+        }
+
+        for (var current = exception; current != null; current = current.InnerException)
+        {
+            if (current is TaskCanceledException
+                || string.Equals(
+                    current.GetType().FullName,
+                    "Polly.Timeout.TimeoutRejectedException",
+                    StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

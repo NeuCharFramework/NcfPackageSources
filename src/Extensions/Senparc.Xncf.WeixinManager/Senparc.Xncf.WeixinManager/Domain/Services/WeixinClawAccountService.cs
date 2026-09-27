@@ -14,6 +14,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Services;
 public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IServiceBase<WeixinClawAccount>
 {
     private readonly IDataProtector _tokenProtector;
+    private readonly IDataProtector _contextTokenProtector;
 
     public WeixinClawAccountService(
         IRepositoryBase<WeixinClawAccount> repo,
@@ -22,6 +23,8 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
     {
         _tokenProtector = dataProtectionProvider.CreateProtector(
             "Senparc.Xncf.WeixinManager.WeixinClaw.BotToken.v1");
+        _contextTokenProtector = dataProtectionProvider.CreateProtector(
+            "Senparc.Xncf.WeixinManager.WeixinClaw.ContextToken.v1");
     }
 
     public async Task<List<WeixinClawAccountDto>> GetDtosAsync()
@@ -44,7 +47,10 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
             Status = account.Status,
             LastError = account.LastError,
             LastMessageAt = account.LastMessageAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"),
-            LastConnectedAt = account.LastConnectedAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
+            LastConnectedAt = account.LastConnectedAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"),
+            LastMessageFromUserId = account.LastMessageFromUserId,
+            HasMessageContext = !string.IsNullOrWhiteSpace(account.LastMessageFromUserId)
+                && !string.IsNullOrWhiteSpace(account.LastMessageContextTokenProtected)
         };
     }
 
@@ -63,6 +69,30 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
         try
         {
             return _tokenProtector.Unprotect(account.BotTokenProtected);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public string ProtectContextToken(string contextToken)
+    {
+        return string.IsNullOrWhiteSpace(contextToken)
+            ? null
+            : _contextTokenProtector.Protect(contextToken.Trim());
+    }
+
+    public string UnprotectContextToken(WeixinClawAccount account)
+    {
+        if (account == null || string.IsNullOrWhiteSpace(account.LastMessageContextTokenProtected))
+        {
+            return null;
+        }
+
+        try
+        {
+            return _contextTokenProtector.Unprotect(account.LastMessageContextTokenProtected);
         }
         catch
         {

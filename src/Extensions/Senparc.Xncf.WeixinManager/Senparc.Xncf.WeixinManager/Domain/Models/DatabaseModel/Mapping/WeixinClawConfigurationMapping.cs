@@ -22,3 +22,14 @@ public class WeixinClawMessageReceiptConfigurationMapping : ConfigurationMapping
         builder.HasIndex(z => new { z.WeixinClawAccountId, z.MessageId, z.Seq }).IsUnique();
     }
 }
+
+public class WeixinClawMessageRecordConfigurationMapping
+    : ConfigurationMappingWithIdBase<WeixinClawMessageRecord, int>
+{
+    public override void Configure(EntityTypeBuilder<WeixinClawMessageRecord> builder)
+    {
+        base.Configure(builder);
+        builder.HasIndex(z => new { z.WeixinClawAccountId, z.CreatedAt });
+        builder.HasIndex(z => new { z.WeixinClawAccountId, z.Direction, z.MessageId });
+    }
+}
