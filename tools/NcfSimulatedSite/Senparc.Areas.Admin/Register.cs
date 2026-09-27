@@ -389,6 +389,7 @@ namespace Senparc.Areas.Admin
         {
             new AreaPageMenuItem(GetAreaUrl("/Admin/Menu/Index"), T("Admin.Area.MenuManagement", "菜单管理"),"fa fa-bug"),
             new AreaPageMenuItem(GetAreaUrl("/Admin/SenparcTrace/Index"), T("Admin.Area.TraceLog", "SenparcTrace 日志"),"fa fa-calendar-o"),
+            new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinClaw/Index"), "个人微信集成", "fa fa-wechat"),
         };//Admin比较特殊，不需要全部输出
 
 

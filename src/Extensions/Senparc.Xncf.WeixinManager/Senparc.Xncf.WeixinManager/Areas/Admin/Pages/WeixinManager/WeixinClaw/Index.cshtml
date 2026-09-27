@@ -168,8 +168,13 @@
                         <el-input v-model="sender.toUserId" placeholder="默认发送到当前个人微信"></el-input>
                     </div>
                     <div class="claw-field">
-                        <label>Context Token（自动使用最近入站消息）</label>
-                        <el-input v-model="sender.contextToken" placeholder="留空将自动使用最近一条手机消息的上下文"></el-input>
+                        <label>微信会话上下文</label>
+                        <div class="claw-muted" v-if="sender.contextTokenAvailable">
+                            已自动保存最近一条手机消息的会话上下文，发送时由服务端自动使用。
+                        </div>
+                        <div class="claw-muted" v-else>
+                            尚未取得上下文。请先在手机端向“微信 ClawBot”发送一条文字消息。
+                        </div>
                     </div>
                     <div class="claw-field" style="grid-column: 1 / -1">
                         <label>消息</label>
@@ -276,8 +281,9 @@
                     this.sender = {
                         visible: true,
                         accountId: item.id,
-                        toUserId: item.ilinkUserId || '',
+                        toUserId: item.lastMessageFromUserId || '',
                         contextToken: '',
+                        contextTokenAvailable: !!item.hasMessageContext,
                         text: ''
                     };
                     if (!item.hasMessageContext) {
