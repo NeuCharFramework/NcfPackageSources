@@ -20,7 +20,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using System;
 using System.Collections.Generic;
 
-namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
+namespace Senparc.Xncf.AgentsManager.Application.Dtos
 {
     public class ChatGroupHistory_GetListResponse
     {

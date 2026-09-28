@@ -46,7 +46,7 @@ using System.Web.Mvc;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using System.Text.Json.Serialization;
 
-namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
+namespace Senparc.Xncf.AgentsManager.Application.Dtos
 {
     public class ChatGroup_ManageChatGroupRequest : FunctionAppRequestBase
     {
@@ -234,7 +234,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         /// <summary>
         /// 最大对话轮数
         /// </summary>
-        public int ChatMaxRound { get; set; } = ChatGroupService.ChatMaxRound;
+        public int ChatMaxRound { get; set; } = ChatGroupService.DefaultChatMaxRound;
 
         /// <summary>
         /// 可选：业务关联 ID（例如 Prompt 优化的 RequestId），用于在执行上下文中关联工具调用

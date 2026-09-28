@@ -65,7 +65,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto
 
         public bool IncludeHumanParticipant { get; set; }
 
-        public int ChatMaxRound { get; set; } = ChatGroupService.ChatMaxRound;
+        public int ChatMaxRound { get; set; } = ChatGroupService.DefaultChatMaxRound;
 
 
         public bool Score { get; set; }

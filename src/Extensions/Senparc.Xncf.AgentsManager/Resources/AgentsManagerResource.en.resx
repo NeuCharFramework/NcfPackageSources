@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -185,5 +185,35 @@
   </data>
   <data name="Agents.Plugin.Translate.Instructions" xml:space="preserve">
     <value>You are a professional translator fluent in {0}. Translate the user's text accurately and output only the translation.</value>
+  </data>
+  <data name="Agents.Error.MissingRunRequest" xml:space="preserve">
+    <value>No chat group run request was provided.</value>
+  </data>
+  <data name="Agents.Error.InvalidChatGroup" xml:space="preserve">
+    <value>No valid chat group was selected.</value>
+  </data>
+  <data name="Agents.Error.MissingTaskName" xml:space="preserve">
+    <value>The task name is missing.</value>
+  </data>
+  <data name="Agents.Error.MissingPromptCommand" xml:space="preserve">
+    <value>The task prompt is missing.</value>
+  </data>
+  <data name="Agents.Error.ChatGroupNotFound" xml:space="preserve">
+    <value>Chat group not found: {0}</value>
+  </data>
+  <data name="Agents.Error.ChatGroupDisabled" xml:space="preserve">
+    <value>Chat group "{0}" is disabled and cannot start new execution tasks.</value>
+  </data>
+  <data name="Agents.Error.AiModelNotFound" xml:space="preserve">
+    <value>The selected AI model does not exist: {0}</value>
+  </data>
+  <data name="Agents.Error.NoEnabledAgents" xml:space="preserve">
+    <value>Chat group [{0}] has no enabled agents available.</value>
+  </data>
+  <data name="Agents.Error.MultiAgentMinMembers" xml:space="preserve">
+    <value>Chat group [{0}] needs at least two enabled agents for multi-agent collaboration.</value>
+  </data>
+  <data name="Agents.Error.AdminAgentNotFound" xml:space="preserve">
+    <value>No valid admin agent (ID: {1}) was found in chat group [{0}].</value>
   </data>
 </root>

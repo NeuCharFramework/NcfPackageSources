@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：ChatTaskStreamHub.cs
@@ -47,12 +47,16 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services;
 
 public sealed class ChatTaskStreamHub
 {
+    private const int MaxBufferedEvents = 2000;
+    private static readonly TimeSpan StaleGroupTtl = TimeSpan.FromMinutes(30);
+
     private sealed class StreamGroup
     {
         public readonly object Sync = new();
-        public readonly List<ChatTaskStreamEvent> Buffer = new();
+        public readonly Queue<ChatTaskStreamEvent> Buffer = new();
         public readonly ConcurrentDictionary<Guid, Channel<ChatTaskStreamEvent>> Subscribers = new();
         public bool IsComplete;
+        public DateTimeOffset LastEventAt = DateTimeOffset.Now;
     }
 
     private readonly ConcurrentDictionary<int, StreamGroup> _streams = new();
@@ -75,7 +79,11 @@ public sealed class ChatTaskStreamHub
         List<ChatTaskStreamEvent> bufferedEvents;
         lock (group.Sync)
         {
-            bufferedEvents = new List<ChatTaskStreamEvent>(group.Buffer);
+            bufferedEvents = new List<ChatTaskStreamEvent>(group.Buffer.Count);
+            foreach (var bufferedEvent in group.Buffer)
+            {
+                bufferedEvents.Add(bufferedEvent);
+            }
         }
 
         DateTimeOffset? previousBufferedTimestamp = null;
@@ -109,6 +117,7 @@ public sealed class ChatTaskStreamHub
         {
             group.Subscribers.TryRemove(subscriptionId, out _);
             CleanupStreamIfFinished(chatTaskId, group);
+            SweepStaleGroups();
         }
     }
 
@@ -122,7 +131,12 @@ public sealed class ChatTaskStreamHub
         var group = _streams.GetOrAdd(item.ChatTaskId, _ => new StreamGroup());
         lock (group.Sync)
         {
-            group.Buffer.Add(item);
+            group.Buffer.Enqueue(item);
+            while (group.Buffer.Count > MaxBufferedEvents)
+            {
+                group.Buffer.Dequeue();
+            }
+            group.LastEventAt = DateTimeOffset.Now;
             if (IsTerminalStatusEvent(item))
             {
                 group.IsComplete = true;
@@ -135,6 +149,7 @@ public sealed class ChatTaskStreamHub
             {
                 CleanupStreamIfFinished(item.ChatTaskId, group);
             }
+            SweepStaleGroups();
             return;
         }
 
@@ -207,6 +222,33 @@ public sealed class ChatTaskStreamHub
         }
 
         _streams.TryRemove(chatTaskId, out _);
+    }
+
+    private void SweepStaleGroups()
+    {
+        var now = DateTimeOffset.Now;
+        foreach (var pair in _streams)
+        {
+            var group = pair.Value;
+            if (group.IsComplete || !group.Subscribers.IsEmpty)
+            {
+                continue;
+            }
+
+            if ((now - group.LastEventAt) < StaleGroupTtl)
+            {
+                continue;
+            }
+
+            if (_streams.TryGetValue(pair.Key, out var current) && ReferenceEquals(current, group))
+            {
+                foreach (var subscriber in current.Subscribers)
+                {
+                    subscriber.Value.Writer.TryComplete();
+                }
+                _streams.TryRemove(pair.Key, out _);
+            }
+        }
     }
 }
 

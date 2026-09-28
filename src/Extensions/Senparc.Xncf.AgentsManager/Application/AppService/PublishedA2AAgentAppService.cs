@@ -21,7 +21,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
-using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AgentsManager.Application.Dtos;
 using Senparc.Xncf.AgentsManager.OHS.Remote.Controllers;
 using Senparc.Xncf.AreaBase.Admin.Filters;
 using System;

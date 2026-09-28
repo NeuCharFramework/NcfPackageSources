@@ -36,7 +36,6 @@ using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
-using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -180,7 +179,7 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 return new WorkflowObjectExecutionResult(false, null, "Agent 组不存在或未启用。");
             }
 
-            var groupRun = await _groupService.RunChatGroupAwaitWithResultAsync(new ChatGroup_RunGroupRequest
+            var groupRun = await _groupService.RunChatGroupAwaitWithResultAsync(new ChatGroupRunCommand
             {
                 ChatGroupId = groupId,
                 AiModelId = request.AiModelId,
@@ -213,9 +212,9 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                     GetIntegerParameter(
                         request,
                         WorkflowObjectExecutionParameters.ChatMaxRound,
-                        ChatGroupService.ChatMaxRound),
+                        ChatGroupService.DefaultChatMaxRound),
                     1,
-                    50),
+                    ChatGroupService.MaxEffectiveChatRounds),
                 CancellationToken = cancellationToken
             }).ConfigureAwait(false);
             var reference = new WorkflowObjectExecutionReference(

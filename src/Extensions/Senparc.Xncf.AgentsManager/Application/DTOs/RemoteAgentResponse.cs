@@ -17,7 +17,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
+namespace Senparc.Xncf.AgentsManager.Application.Dtos
 {
     public class RemoteAgent_GetListResponse
     {

@@ -1,4 +1,4 @@
-# Senparc.Xncf.AgentsManager
+﻿# Senparc.Xncf.AgentsManager
 
 `Senparc.Xncf.AgentsManager` is an NCF module for managing reusable AI-agent templates, chat groups, tasks, collaboration graphs, prompt optimization, and usage records.
 
@@ -18,8 +18,11 @@
 ## Installation
 
 ```xml
-<PackageReference Include="Senparc.Xncf.AgentsManager" Version="0.13.0-preview8" />
+<PackageReference Include="Senparc.Xncf.AgentsManager" Version="0.18.1" />
 ```
+
+> 注：`Register.cs` 中的 `Version`（如 `0.3.22`）是 XNCF 模块注册版本号，仅用于模块安装/升级检测，
+> 与 NuGet 包版本（见 csproj 的 `<Version>`，当前 `0.18.1`）相互独立，请勿混淆。
 
 ## Key API
 

@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
+namespace Senparc.Xncf.AgentsManager.Application.Dtos
 {
     public class ChatGroup_GetListResponse
     {
