@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.OHS.Local.AppService;
-using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AgentsManager.Application.Dtos;
 using Senparc.Xncf.PromptRange.Domain.Services;
 
 namespace Senparc.Xncf.AgentsManagerTests.Application;
@@ -112,6 +112,7 @@ public class AgentTemplateStatusTests : AgentsManagerTestBase
     [TestMethod]
     public async Task AgentTemplateRunner_ShouldUseManualPromptAsInstructions()
     {
+        RequireRealAiBackend(nameof(AgentTemplateRunner_ShouldUseManualPromptAsInstructions));
         Assert.IsFalse(AgentTemplateRunner.IsPromptRangeReference(ManualPrompt));
 
         var template = new AgentTemplate(

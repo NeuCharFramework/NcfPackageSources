@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：ChatGroupService.cs
@@ -76,7 +76,6 @@ using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
-using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using Senparc.Xncf.AIKernel.Domain.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
@@ -94,11 +93,6 @@ using System.Threading;
 using ChatMessage = Microsoft.Extensions.AI.ChatMessage;
 
 namespace Senparc.Xncf.AgentsManager.Domain.Services;
-
-public class McpEndpoint
-{
-    public string url { get; set; }
-}
 
 /// <summary>同步等待 ChatGroup 结束时返回的持久化任务引用。</summary>
 public sealed record ChatGroupRunResult(
@@ -152,14 +146,31 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         public required string Message { get; init; }
     }
 
-    public static int ChatMaxRound = 20;
-    public static List<Task> TaskList = new List<Task>();
+    /// <summary>
+    /// 默认最大对话轮数（可被调用方覆盖）。
+    /// </summary>
+    public const int DefaultChatMaxRound = 20;
+
+    /// <summary>
+    /// 有效对话轮数下限（保证多 Agent 至少完成一轮交叉对话）。
+    /// </summary>
+    public const int MinEffectiveChatRounds = 2;
+
+    /// <summary>
+    /// 有效对话轮数上限（防止配置错误导致长循环）。
+    /// </summary>
+    public const int MaxEffectiveChatRounds = 50;
+
+    private const int DefaultMaxOutputTokens = 2000;
+    private const float DefaultTemperature = 0.3f;
+    private const float DefaultTopP = 0.3f;
 
     private readonly IBaseObjectCacheStrategy _cache;
     private readonly ChatTaskStreamHub _chatTaskStreamHub;
     private readonly HumanInTheLoopRequestStore _humanInTheLoopRequestStore;
     private readonly AgentsManagerNeuBellProvider _agentsManagerNeuBellProvider;
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ChatTaskCancellationRegistry _cancellationRegistry;
 
     public ChatGroupService(
         IRepositoryBase<ChatGroup> repo,
@@ -168,7 +179,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         ChatTaskStreamHub chatTaskStreamHub,
         HumanInTheLoopRequestStore humanInTheLoopRequestStore,
         AgentsManagerNeuBellProvider agentsManagerNeuBellProvider,
-        IServiceScopeFactory scopeFactory)
+        IServiceScopeFactory scopeFactory,
+        ChatTaskCancellationRegistry cancellationRegistry)
         : base(repo, serviceProvider)
     {
         _cache = cache;
@@ -176,28 +188,19 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         _humanInTheLoopRequestStore = humanInTheLoopRequestStore;
         _agentsManagerNeuBellProvider = agentsManagerNeuBellProvider;
         _scopeFactory = scopeFactory;
+        _cancellationRegistry = cancellationRegistry;
     }
 
     /// <summary>
     /// 在独立进程中运行 ChatGroup（UI 界面中进行，不等待完成）
     /// </summary>
-    public Task RunChatGroupInThread(ChatGroup_RunGroupRequest request)
+    public Task RunChatGroupInThread(ChatGroupRunCommand request)
     {
         ValidateRunRequest(request);
         var task = RunChatGroupExecutionCoreAsync(request);
 
-        lock (TaskList)
-        {
-            TaskList.Add(task);
-        }
-
         _ = task.ContinueWith(completedTask =>
         {
-            lock (TaskList)
-            {
-                TaskList.Remove(completedTask);
-            }
-
             if (completedTask.IsFaulted && completedTask.Exception != null)
             {
                 SenparcTrace.BaseExceptionLog(completedTask.Exception.GetBaseException());
@@ -207,33 +210,37 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return Task.CompletedTask;
     }
 
-    private static void ValidateRunRequest(ChatGroup_RunGroupRequest request)
+    private static void ValidateRunRequest(ChatGroupRunCommand request)
     {
         if (request == null)
         {
-            throw new NcfExceptionBase("未提供聊天组启动请求。");
+            throw new NcfExceptionBase(AgentsManagerResource.Get(
+                "Agents.Error.MissingRunRequest", "未提供聊天组启动请求。"));
         }
 
         if (request.ChatGroupId <= 0)
         {
-            throw new NcfExceptionBase("未选择有效的聊天组。");
+            throw new NcfExceptionBase(AgentsManagerResource.Get(
+                "Agents.Error.InvalidChatGroup", "未选择有效的聊天组。"));
         }
 
         if (string.IsNullOrWhiteSpace(request.Name))
         {
-            throw new NcfExceptionBase("未填写任务标题。");
+            throw new NcfExceptionBase(AgentsManagerResource.Get(
+                "Agents.Error.MissingTaskName", "未填写任务标题。"));
         }
 
         if (string.IsNullOrWhiteSpace(request.PromptCommand))
         {
-            throw new NcfExceptionBase("未填写任务描述。");
+            throw new NcfExceptionBase(AgentsManagerResource.Get(
+                "Agents.Error.MissingPromptCommand", "未填写任务描述。"));
         }
     }
 
     /// <summary>
     /// 运行 ChatGroup 直至本轮对话结束（用于 Prompt 优化等需同步等待的场景）
     /// </summary>
-    public Task RunChatGroupAwaitAsync(ChatGroup_RunGroupRequest request)
+    public Task RunChatGroupAwaitAsync(ChatGroupRunCommand request)
     {
         return RunChatGroupExecutionCoreAsync(request);
     }
@@ -241,14 +248,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     /// <summary>
     /// 同步运行并返回本次创建的 ChatTask，供跨模块调用方定位完整的持久化会话。
     /// </summary>
-    public Task<ChatGroupRunResult> RunChatGroupAwaitWithResultAsync(ChatGroup_RunGroupRequest request)
+    public Task<ChatGroupRunResult> RunChatGroupAwaitWithResultAsync(ChatGroupRunCommand request)
     {
         return RunChatGroupExecutionCoreAsync(request);
     }
 
-    private async Task<ChatGroupRunResult> RunChatGroupExecutionCoreAsync(ChatGroup_RunGroupRequest request)
+    private async Task<ChatGroupRunResult> RunChatGroupExecutionCoreAsync(ChatGroupRunCommand request)
     {
-        var cancellationToken = request.CancellationToken;
+        CancellationToken cancellationToken = request.CancellationToken;
         cancellationToken.ThrowIfCancellationRequested();
 
         IDisposable activeOptimizationScope = null;
@@ -280,9 +287,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 request.RequireHumanApproval,
                 request.IncludeHumanParticipant);
             var effectiveWorkflowTurns = Math.Clamp(
-                request.ChatMaxRound > 0 ? request.ChatMaxRound : ChatMaxRound,
-                2,
-                50);
+                request.ChatMaxRound > 0 ? request.ChatMaxRound : DefaultChatMaxRound,
+                MinEffectiveChatRounds,
+                MaxEffectiveChatRounds);
 
             var chatGroupMemberService = services.GetRequiredService<ChatGroupMemberService>();
             var chatGroupRemoteMemberService = services.GetRequiredService<ChatGroupRemoteMemberService>();
@@ -297,12 +304,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             var chatGroup = await chatGroupService.GetObjectAsync(x => x.Id == groupId);
             if (chatGroup == null)
             {
-                throw new NcfExceptionBase($"聊天组不存在：{groupId}");
+                throw new NcfExceptionBase(AgentsManagerResource.Format(
+                    "Agents.Error.ChatGroupNotFound", "聊天组不存在：{0}", groupId));
             }
 
             if (!chatGroup.Enable)
             {
-                throw new NcfExceptionBase($"聊天组“{chatGroup.Name}”已停用，不能创建新的执行任务。");
+                throw new NcfExceptionBase(AgentsManagerResource.Format(
+                    "Agents.Error.ChatGroupDisabled", "聊天组“{0}”已停用，不能创建新的执行任务。", chatGroup.Name));
             }
 
             var groupMembers = await chatGroupMemberService.GetFullListAsync(
@@ -384,6 +393,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             await chatTaskService.SetStatus(ChatTask_Status.Chatting, chatTask);
             chatTaskDto = chatTaskService.Mapping<ChatTaskDto>(chatTask);
 
+            // 注册按任务维度的取消源（与调用方外部令牌链接）。
+            // ForceStop 通过 ChatTaskCancellationRegistry 取消该令牌，
+            // 工作流运行与进行中的模型调用可立即中断。
+            cancellationToken = _cancellationRegistry.Register(chatTask.Id, cancellationToken);
+
             runningKey = chatTaskService.GetChatTaskRunCacheKey(chatTask.Id);
             await _cache.SetAsync(runningKey, new RunningChatTaskDto { ChatTaskDto = chatTaskDto });
             PublishStatusEvent(chatTask.Id, ChatTask_Status.Chatting);
@@ -399,7 +413,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var aiModel = await aiModelService.GetObjectAsync(z => z.Id == aiModelId);
                 if (aiModel == null)
                 {
-                    throw new NcfExceptionBase($"当前选择的 AI 模型不存在：{aiModelId}");
+                    throw new NcfExceptionBase(AgentsManagerResource.Format(
+                    "Agents.Error.AiModelNotFound", "当前选择的 AI 模型不存在：{0}", aiModelId));
                 }
 
                 var aiModelDto = aiModelService.Mapper.Map<AIModelDto>(aiModel);
@@ -408,7 +423,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             else if (senparcAiSetting is SenparcAiSetting defaultSetting)
             {
                 // 与 PromptRange 保持一致：将系统默认设置映射为 AIModel 再构建，统一 Endpoint/Deployment 归一化。
-                var defaultModel = BuildModelDtoFromSetting(defaultSetting, "AgentsManager.RequestDefault");
+                var defaultModel = AgentModelFallbackResolver.BuildModelDtoFromSetting(defaultSetting, "AgentsManager.RequestDefault");
                 if (defaultModel != null)
                 {
                     senparcAiSetting = aiModelService.BuildSenparcAiSetting(defaultModel);
@@ -528,9 +543,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         DefaultSetting = senparcAiSetting,
                         UseTemplateModelSettings = personality,
                         UseTemplatePromptParameters = personality,
-                        MaxOutputTokens = 2000,
-                        Temperature = 0.3f,
-                        TopP = 0.3f,
+                        MaxOutputTokens = DefaultMaxOutputTokens,
+                        Temperature = DefaultTemperature,
+                        TopP = DefaultTopP,
                         DiagnosticId = $"chat-task-{chatTask.Id}",
                         AdminUserId = int.TryParse(request.HumanRecipientUserId, out var adminUserId)
                             ? adminUserId
@@ -596,11 +611,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             if (runtimeContexts.Count == 0)
             {
-                throw new NcfExceptionBase($"聊天组【{chatGroup.Name}】没有可用的启用智能体。");
+                throw new NcfExceptionBase(AgentsManagerResource.Format(
+                    "Agents.Error.NoEnabledAgents", "聊天组【{0}】没有可用的启用智能体。", chatGroup.Name));
             }
 
             var adminContext = runtimeContexts.FirstOrDefault(z => z.LocalAgentTemplateId == chatGroup.AdminAgentTemplateId)
-                ?? throw new NcfExceptionBase($"聊天组【{chatGroup.Name}】未找到有效群主智能体（ID：{chatGroup.AdminAgentTemplateId}）。");
+                ?? throw new NcfExceptionBase(AgentsManagerResource.Format(
+                    "Agents.Error.AdminAgentNotFound", "聊天组【{0}】未找到有效群主智能体（ID：{1}）。", chatGroup.Name, chatGroup.AdminAgentTemplateId));
 
             var enterContext = runtimeContexts.FirstOrDefault(z => z.LocalAgentTemplateId == chatGroup.EnterAgentTemplateId)
                 ?? adminContext;
@@ -657,7 +674,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             if (multiAgentContexts.Count < 2)
             {
-                throw new NcfExceptionBase($"聊天组【{chatGroup.Name}】多智能体协作至少需要两个启用智能体。");
+                throw new NcfExceptionBase(AgentsManagerResource.Format(
+                    "Agents.Error.MultiAgentMinMembers", "聊天组【{0}】多智能体协作至少需要两个启用智能体。", chatGroup.Name));
             }
 
             #region Microsoft Agent Framework 多智能体工作流
@@ -673,10 +691,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         {
                             var latestText = history?
                                 .Reverse()
-                                .Select(ExtractChatMessageText)
+                                .Select(ChatGroupTextHelpers.ExtractChatMessageText)
                                 .FirstOrDefault(z => !string.IsNullOrWhiteSpace(z));
 
-                            return IsExitSignal(latestText);
+                            return ChatGroupTextHelpers.IsExitSignal(latestText);
                         });
 
                     manager.MaximumIterationCount = effectiveWorkflowTurns;
@@ -695,39 +713,23 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             var contextByExecutorId = BuildRuntimeContextIndex(runtimeContexts);
 
-            string activeResponseKey = null;
-            string activeExecutorId = null;
-            var activeResponseText = new StringBuilder();
-            UsageDetails activeUsageDetails = null;
-            DateTime? activeResponseStartedAt = null;
-            var roundIndex = 0;
-            var shouldExit = false;
-            var roundLimitReached = false;
-            var finalizedResponseKeys = new HashSet<string>(StringComparer.Ordinal);
-            var streamedResponseKeys = new HashSet<string>(StringComparer.Ordinal);
-            var observedWorkflowEventTypes = new HashSet<string>(StringComparer.Ordinal);
-            var workflowPendingRequests = new List<PendingHumanRequest>();
-            var workflowFailed = false;
-            var workflowFailureReason = string.Empty;
-            var toolInvocationFailed = false;
-            var toolFailureExecutorId = string.Empty;
-            var pendingToolNamesByCallId = new Dictionary<string, string>(StringComparer.Ordinal);
+            var state = new ChatGroupRunState();
 
             bool CanAcceptNextAgentResponse()
             {
-                if (CanPersistNextChatRound(roundIndex, effectiveWorkflowTurns))
+                if (CanPersistNextChatRound(state.RoundIndex, effectiveWorkflowTurns))
                 {
                     return true;
                 }
 
-                if (!roundLimitReached)
+                if (!state.RoundLimitReached)
                 {
                     logger.AppendLine(
                         $"[{chatGroup.Name}] 已达到最大对话轮数（{effectiveWorkflowTurns}），不再记录后续 Agent 输出。");
-                    roundLimitReached = true;
+                    state.RoundLimitReached = true;
                 }
 
-                shouldExit = true;
+                state.ShouldExit = true;
                 return false;
             }
 
@@ -752,12 +754,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 responseKey ??= Guid.NewGuid().ToString("n");
 
                 if (!string.IsNullOrWhiteSpace(responseKey)
-                    && finalizedResponseKeys.Contains(responseKey))
+                    && state.FinalizedResponseKeys.Contains(responseKey))
                 {
                     return;
                 }
 
-                roundIndex += 1;
+                state.RoundIndex += 1;
                 var responseMilliseconds = responseStartedAt.HasValue
                     ? Math.Max(0, (int)Math.Round((DateTime.Now - responseStartedAt.Value).TotalMilliseconds))
                     : 0;
@@ -765,13 +767,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var usageSnapshot = BuildUsageSnapshot(
                     usageDetails,
                     responseMilliseconds,
-                    roundIndex,
+                    state.RoundIndex,
                     responseKey);
 
                 if (TryResolveRuntimeContext(contextByExecutorId, executorId, out var speakerContext))
                 {
                     if (!string.IsNullOrWhiteSpace(responseKey)
-                        && !streamedResponseKeys.Contains(responseKey))
+                        && !state.StreamedResponseKeys.Contains(responseKey))
                     {
                         await PublishSyntheticChunkEventsAsync(
                             chatTask.Id,
@@ -779,10 +781,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                             speakerContext.Agent.Name,
                             responseKey,
                             normalizedText,
-                            roundIndex,
+                            state.RoundIndex,
                             speakerContext.ParticipantKey,
                             speakerContext.ParticipantKind);
-                        streamedResponseKeys.Add(responseKey);
+                        state.StreamedResponseKeys.Add(responseKey);
                     }
 
                     var history = await SaveAgentMessageAsync(
@@ -815,39 +817,39 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                 if (!string.IsNullOrWhiteSpace(responseKey))
                 {
-                    finalizedResponseKeys.Add(responseKey);
+                    state.FinalizedResponseKeys.Add(responseKey);
                 }
 
-                if (IsExitSignal(normalizedText))
+                if (ChatGroupTextHelpers.IsExitSignal(normalizedText))
                 {
-                    shouldExit = true;
+                    state.ShouldExit = true;
                 }
             }
 
             async Task FlushActiveResponseAsync()
             {
-                if (activeResponseText.Length == 0 || string.IsNullOrWhiteSpace(activeExecutorId))
+                if (state.ActiveResponseText.Length == 0 || string.IsNullOrWhiteSpace(state.ActiveExecutorId))
                 {
-                    activeResponseText.Clear();
-                    activeResponseKey = null;
-                    activeExecutorId = null;
-                    activeUsageDetails = null;
-                    activeResponseStartedAt = null;
+                    state.ActiveResponseText.Clear();
+                    state.ActiveResponseKey = null;
+                    state.ActiveExecutorId = null;
+                    state.ActiveUsageDetails = null;
+                    state.ActiveResponseStartedAt = null;
                     return;
                 }
 
                 await PersistAgentResponseAsync(
-                    activeResponseKey,
-                    activeExecutorId,
-                    activeResponseText.ToString(),
-                    activeUsageDetails,
-                    activeResponseStartedAt);
+                    state.ActiveResponseKey,
+                    state.ActiveExecutorId,
+                    state.ActiveResponseText.ToString(),
+                    state.ActiveUsageDetails,
+                    state.ActiveResponseStartedAt);
 
-                activeResponseText.Clear();
-                activeResponseKey = null;
-                activeExecutorId = null;
-                activeUsageDetails = null;
-                activeResponseStartedAt = null;
+                state.ActiveResponseText.Clear();
+                state.ActiveResponseKey = null;
+                state.ActiveExecutorId = null;
+                state.ActiveUsageDetails = null;
+                state.ActiveResponseStartedAt = null;
             }
 
             bool TryCaptureToolInvocationFailure(
@@ -863,15 +865,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 }
 
                 var root = failure.Exception.GetBaseException();
-                var toolName = pendingToolNamesByCallId.TryGetValue(failure.CallId ?? string.Empty, out var knownToolName)
+                var toolName = state.PendingToolNamesByCallId.TryGetValue(failure.CallId ?? string.Empty, out var knownToolName)
                     ? knownToolName
                     : "Function";
-                toolInvocationFailed = true;
-                workflowFailed = true;
-                toolFailureExecutorId = executorId ?? string.Empty;
-                workflowFailureReason =
+                state.ToolInvocationFailed = true;
+                state.WorkflowFailed = true;
+                state.ToolFailureExecutorId = executorId ?? string.Empty;
+                state.WorkflowFailureReason =
                     $"工具“{toolName}”执行失败：{root.GetType().Name}: {root.Message}";
-                logger.AppendLine($"[{chatGroup.Name}] {workflowFailureReason}");
+                logger.AppendLine($"[{chatGroup.Name}] {state.WorkflowFailureReason}");
                 SenparcTrace.SendCustomLog(
                     "AgentsManager.ToolInvocation.WorkflowFailed",
                     $"Group={chatGroup.Id}; Task={chatTask.Id}; Executor={executorId}; " +
@@ -891,7 +893,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var idleSuperStepCount = 0;
                 var startNextSuperStepWithTurnToken = true;
 
-                while (!shouldExit)
+                while (!state.ShouldExit)
                 {
                     var keepRunning = await _cache.GetAsync<RunningChatTaskDto>(runningKey);
                     if (keepRunning == null)
@@ -953,7 +955,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                             updateEvent.Update.Contents,
                                             updateEvent.ExecutorId))
                                     {
-                                        shouldExit = true;
+                                        state.ShouldExit = true;
                                         break;
                                     }
 
@@ -967,36 +969,36 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                                     if (string.IsNullOrWhiteSpace(responseId))
                                     {
-                                        responseId = string.Equals(activeExecutorId, updateEvent.ExecutorId, StringComparison.OrdinalIgnoreCase)
-                                            && !string.IsNullOrWhiteSpace(activeResponseKey)
-                                            ? activeResponseKey
+                                        responseId = string.Equals(state.ActiveExecutorId, updateEvent.ExecutorId, StringComparison.OrdinalIgnoreCase)
+                                            && !string.IsNullOrWhiteSpace(state.ActiveResponseKey)
+                                            ? state.ActiveResponseKey
                                             : Guid.NewGuid().ToString("n");
                                     }
 
-                                    if (!string.Equals(activeResponseKey, responseId, StringComparison.Ordinal))
+                                    if (!string.Equals(state.ActiveResponseKey, responseId, StringComparison.Ordinal))
                                     {
                                         await FlushActiveResponseAsync();
-                                        activeResponseKey = responseId;
-                                        activeExecutorId = updateEvent.ExecutorId;
-                                        activeUsageDetails = null;
-                                        activeResponseStartedAt = DateTime.Now;
+                                        state.ActiveResponseKey = responseId;
+                                        state.ActiveExecutorId = updateEvent.ExecutorId;
+                                        state.ActiveUsageDetails = null;
+                                        state.ActiveResponseStartedAt = DateTime.Now;
                                     }
 
-                                    var updateText = ExtractAgentResponseUpdateText(updateEvent.Update);
+                                    var updateText = ChatGroupTextHelpers.ExtractAgentResponseUpdateText(updateEvent.Update);
                                     if (!string.IsNullOrEmpty(updateText))
                                     {
-                                        activeResponseText.Append(updateText);
+                                        state.ActiveResponseText.Append(updateText);
 
                                         if (TryResolveRuntimeContext(contextByExecutorId, updateEvent.ExecutorId, out var streamContext))
                                         {
-                                            streamedResponseKeys.Add(responseId);
+                                            state.StreamedResponseKeys.Add(responseId);
                                             PublishChunkEvent(
                                                 chatTask.Id,
                                                 streamContext.LocalAgentTemplateId,
                                                 streamContext.Agent.Name,
                                                 responseId,
                                                 updateText,
-                                                roundIndex + 1,
+                                                state.RoundIndex + 1,
                                                 streamContext.ParticipantKey,
                                                 streamContext.ParticipantKind);
                                         }
@@ -1006,7 +1008,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                         .FirstOrDefault(z => z is UsageContent) as UsageContent;
                                     if (usageContent?.Details != null)
                                     {
-                                        activeUsageDetails = usageContent.Details;
+                                        state.ActiveUsageDetails = usageContent.Details;
                                     }
 
                                     break;
@@ -1023,7 +1025,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                             response.Messages.SelectMany(z => z.Contents),
                                             executorId))
                                     {
-                                        shouldExit = true;
+                                        state.ShouldExit = true;
                                         break;
                                     }
 
@@ -1035,24 +1037,24 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                     var responseId = response.ResponseId;
                                     if (string.IsNullOrWhiteSpace(responseId))
                                     {
-                                        responseId = string.Equals(activeExecutorId, executorId, StringComparison.OrdinalIgnoreCase)
-                                            && !string.IsNullOrWhiteSpace(activeResponseKey)
-                                            ? activeResponseKey
+                                        responseId = string.Equals(state.ActiveExecutorId, executorId, StringComparison.OrdinalIgnoreCase)
+                                            && !string.IsNullOrWhiteSpace(state.ActiveResponseKey)
+                                            ? state.ActiveResponseKey
                                             : Guid.NewGuid().ToString("n");
                                     }
 
-                                    var responseText = ExtractAgentResponseText(response);
+                                    var responseText = ChatGroupTextHelpers.ExtractAgentResponseText(response);
 
-                                    if (string.Equals(activeResponseKey, responseId, StringComparison.Ordinal))
+                                    if (string.Equals(state.ActiveResponseKey, responseId, StringComparison.Ordinal))
                                     {
-                                        if (activeUsageDetails == null && response.Usage != null)
+                                        if (state.ActiveUsageDetails == null && response.Usage != null)
                                         {
-                                            activeUsageDetails = response.Usage;
+                                            state.ActiveUsageDetails = response.Usage;
                                         }
 
-                                        if (activeResponseText.Length == 0 && !string.IsNullOrWhiteSpace(responseText))
+                                        if (state.ActiveResponseText.Length == 0 && !string.IsNullOrWhiteSpace(responseText))
                                         {
-                                            activeResponseText.Append(responseText);
+                                            state.ActiveResponseText.Append(responseText);
                                         }
 
                                         await FlushActiveResponseAsync();
@@ -1085,7 +1087,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                                     outputResponse.Messages.SelectMany(z => z.Contents),
                                                     executorId))
                                                 {
-                                                    shouldExit = true;
+                                                    state.ShouldExit = true;
                                                     break;
                                                 }
 
@@ -1104,7 +1106,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                                 await PersistAgentResponseAsync(
                                                     outputResponseId,
                                                     executorId,
-                                                    ExtractAgentResponseText(outputResponse),
+                                                    ChatGroupTextHelpers.ExtractAgentResponseText(outputResponse),
                                                     outputResponse.Usage,
                                                     DateTime.Now);
                                                 break;
@@ -1115,7 +1117,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                                     outputUpdate.Contents,
                                                     executorId))
                                                 {
-                                                    shouldExit = true;
+                                                    state.ShouldExit = true;
                                                     break;
                                                 }
 
@@ -1129,35 +1131,35 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                                                 if (string.IsNullOrWhiteSpace(responseId))
                                                 {
-                                                    responseId = string.Equals(activeExecutorId, executorId, StringComparison.OrdinalIgnoreCase)
-                                                        && !string.IsNullOrWhiteSpace(activeResponseKey)
-                                                        ? activeResponseKey
+                                                    responseId = string.Equals(state.ActiveExecutorId, executorId, StringComparison.OrdinalIgnoreCase)
+                                                        && !string.IsNullOrWhiteSpace(state.ActiveResponseKey)
+                                                        ? state.ActiveResponseKey
                                                         : Guid.NewGuid().ToString("n");
                                                 }
 
-                                                if (!string.Equals(activeResponseKey, responseId, StringComparison.Ordinal))
+                                                if (!string.Equals(state.ActiveResponseKey, responseId, StringComparison.Ordinal))
                                                 {
                                                     await FlushActiveResponseAsync();
-                                                    activeResponseKey = responseId;
-                                                    activeExecutorId = executorId;
-                                                    activeUsageDetails = null;
-                                                    activeResponseStartedAt = DateTime.Now;
+                                                    state.ActiveResponseKey = responseId;
+                                                    state.ActiveExecutorId = executorId;
+                                                    state.ActiveUsageDetails = null;
+                                                    state.ActiveResponseStartedAt = DateTime.Now;
                                                 }
 
-                                                var updateText = ExtractAgentResponseUpdateText(outputUpdate);
+                                                var updateText = ChatGroupTextHelpers.ExtractAgentResponseUpdateText(outputUpdate);
                                                 if (!string.IsNullOrEmpty(updateText))
                                                 {
-                                                    activeResponseText.Append(updateText);
+                                                    state.ActiveResponseText.Append(updateText);
                                                     if (TryResolveRuntimeContext(contextByExecutorId, executorId, out var streamContext))
                                                     {
-                                                        streamedResponseKeys.Add(responseId);
+                                                        state.StreamedResponseKeys.Add(responseId);
                                                         PublishChunkEvent(
                                                             chatTask.Id,
                                                             streamContext.LocalAgentTemplateId,
                                                             streamContext.Agent.Name,
                                                             responseId,
                                                             updateText,
-                                                            roundIndex + 1,
+                                                            state.RoundIndex + 1,
                                                             streamContext.ParticipantKey,
                                                             streamContext.ParticipantKind);
                                                     }
@@ -1166,7 +1168,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                                 if (outputUpdate.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent outputUsage
                                                     && outputUsage.Details != null)
                                                 {
-                                                    activeUsageDetails = outputUsage.Details;
+                                                    state.ActiveUsageDetails = outputUsage.Details;
                                                 }
                                             }
                                             break;
@@ -1180,7 +1182,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                             await PersistAgentResponseAsync(
                                                 Guid.NewGuid().ToString("n"),
                                                 executorId,
-                                                ExtractChatMessageText(outputMessage),
+                                                ChatGroupTextHelpers.ExtractChatMessageText(outputMessage),
                                                 null,
                                                 DateTime.Now);
                                             break;
@@ -1207,10 +1209,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                     var approvalRequest = requestInfoEvent.Request?.Data.As<ToolApprovalRequestContent>();
                                     if (approvalRequest == null)
                                     {
-                                        workflowFailed = true;
-                                        workflowFailureReason = "多智能体工作流产生了当前未支持的外部请求。";
-                                        logger.AppendLine($"[{chatGroup.Name}] {workflowFailureReason}");
-                                        shouldExit = true;
+                                        state.WorkflowFailed = true;
+                                        state.WorkflowFailureReason = "多智能体工作流产生了当前未支持的外部请求。";
+                                        logger.AppendLine($"[{chatGroup.Name}] {state.WorkflowFailureReason}");
+                                        state.ShouldExit = true;
                                         break;
                                     }
 
@@ -1224,7 +1226,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                     if (approvalRequest.ToolCall is FunctionCallContent functionCall
                                         && !string.IsNullOrWhiteSpace(functionCall.CallId))
                                     {
-                                        pendingToolNamesByCallId[functionCall.CallId] =
+                                        state.PendingToolNamesByCallId[functionCall.CallId] =
                                             functionCall.Name ?? pending.ToolName;
                                     }
                                     var approvalCallId = approvalRequest.ToolCall is FunctionCallContent requestedFunctionCall
@@ -1239,24 +1241,24 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                         pending,
                                         chatTask.Id,
                                         request.HumanRecipientUserId).ConfigureAwait(false);
-                                    workflowPendingRequests.Add(pending);
+                                    state.WorkflowPendingRequests.Add(pending);
                                     await SetChatTaskStatusInIsolatedScopeAsync(
                                         chatTask,
                                         ChatTask_Status.Paused).ConfigureAwait(false);
                                     PublishStatusEvent(chatTask.Id, ChatTask_Status.Paused);
-                                    PublishHumanRequestEvent(chatTask.Id, pending.ToDto(), roundIndex + 1);
+                                    PublishHumanRequestEvent(chatTask.Id, pending.ToDto(), state.RoundIndex + 1);
                                     workflowRequestReceived = true;
                                     break;
                                 }
                             case WorkflowErrorEvent workflowError:
-                                workflowFailed = true;
-                                workflowFailureReason = workflowError.Exception?.Message
+                                state.WorkflowFailed = true;
+                                state.WorkflowFailureReason = workflowError.Exception?.Message
                                     ?? "Workflow execution failed.";
-                                logger.AppendLine($"[{chatGroup.Name}] 工作流错误：{workflowFailureReason}");
-                                shouldExit = true;
+                                logger.AppendLine($"[{chatGroup.Name}] 工作流错误：{state.WorkflowFailureReason}");
+                                state.ShouldExit = true;
                                 break;
                             case ExecutorFailedEvent executorFailed:
-                                workflowFailed = true;
+                                state.WorkflowFailed = true;
                                 var executorFailureDetails = executorFailed.Data?.ToString() ?? string.Empty;
                                 SenparcTrace.SendCustomLog(
                                     "AgentsManager.ChatGroup.ExecutorFailure",
@@ -1271,17 +1273,17 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                     "AgentsManager.ChatGroup.ModelRequestFailure",
                                     $"Group={chatGroup.Id}; Task={chatTask.Id}; " +
                                     modelFailureDiagnostics);
-                                workflowFailureReason = FormatExecutorFailureReason(
+                                state.WorkflowFailureReason = FormatExecutorFailureReason(
                                     executorFailed.ExecutorId,
                                     executorFailureDetails,
                                     contextByExecutorId);
-                                logger.AppendLine($"[{chatGroup.Name}] 执行器错误：{workflowFailureReason}");
-                                shouldExit = true;
+                                logger.AppendLine($"[{chatGroup.Name}] 执行器错误：{state.WorkflowFailureReason}");
+                                state.ShouldExit = true;
                                 break;
                             default:
                                 {
                                     var eventTypeName = workflowEvent.GetType().Name;
-                                    if (observedWorkflowEventTypes.Add(eventTypeName))
+                                    if (state.ObservedWorkflowEventTypes.Add(eventTypeName))
                                     {
                                         logger.AppendLine($"[{chatGroup.Name}] 收到事件：{eventTypeName}");
                                     }
@@ -1289,22 +1291,22 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                 break;
                         }
 
-                        if (shouldExit || workflowRequestReceived)
+                        if (state.ShouldExit || workflowRequestReceived)
                         {
                             break;
                         }
                     }
 
-                    if (shouldExit)
+                    if (state.ShouldExit)
                     {
                         break;
                     }
 
                     var runStatus = await run.GetStatusAsync();
-                    if (workflowPendingRequests.Count > 0)
+                    if (state.WorkflowPendingRequests.Count > 0)
                     {
                         var externalResponses = new List<ExternalResponse>();
-                        foreach (var pending in workflowPendingRequests)
+                        foreach (var pending in state.WorkflowPendingRequests)
                         {
                             SenparcTrace.SendCustomLog(
                                 "AgentsManager.HIL.ToolApproval.WaitingForDecision",
@@ -1323,7 +1325,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                             PublishHumanResolvedEvent(chatTask.Id, pending.RequestId, decision);
                         }
 
-                        workflowPendingRequests.Clear();
+                        state.WorkflowPendingRequests.Clear();
                         foreach (var externalResponse in externalResponses)
                         {
                             var responseContent = externalResponse.Data.As<ToolApprovalResponseContent>();
@@ -1361,10 +1363,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                     if (runStatus == RunStatus.PendingRequests)
                     {
-                        workflowFailed = true;
-                        workflowFailureReason = "多智能体工作流等待了未登记的外部响应。";
-                        logger.AppendLine($"[{chatGroup.Name}] {workflowFailureReason}");
-                        shouldExit = true;
+                        state.WorkflowFailed = true;
+                        state.WorkflowFailureReason = "多智能体工作流等待了未登记的外部响应。";
+                        logger.AppendLine($"[{chatGroup.Name}] {state.WorkflowFailureReason}");
+                        state.ShouldExit = true;
                         break;
                     }
 
@@ -1396,12 +1398,12 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             }
             catch (Exception workflowEx)
             {
-                workflowFailed = true;
-                workflowFailureReason = workflowEx.Message;
+                state.WorkflowFailed = true;
+                state.WorkflowFailureReason = workflowEx.Message;
                 SenparcTrace.SendCustomLog(
                     "AgentsManager.ChatGroup.WorkflowExecutionFailure",
                     $"Group={chatGroup.Id}; Task={chatTask.Id}; {workflowEx}");
-                logger.AppendLine($"[{chatGroup.Name}] 工作流执行异常：{workflowFailureReason}");
+                logger.AppendLine($"[{chatGroup.Name}] 工作流执行异常：{state.WorkflowFailureReason}");
             }
             finally
             {
@@ -1413,14 +1415,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 await FlushActiveResponseAsync();
             }
 
-            if (toolInvocationFailed)
+            if (state.ToolInvocationFailed)
             {
-                var failureNotice = $"系统提示：{workflowFailureReason}";
+                var failureNotice = $"系统提示：{state.WorkflowFailureReason}";
                 await PersistAgentResponseAsync(
                     Guid.NewGuid().ToString("n"),
-                    string.IsNullOrWhiteSpace(toolFailureExecutorId)
+                    string.IsNullOrWhiteSpace(state.ToolFailureExecutorId)
                         ? enterContext.Agent.Name
-                        : toolFailureExecutorId,
+                        : state.ToolFailureExecutorId,
                     failureNotice,
                     null,
                     DateTime.Now);
@@ -1434,17 +1436,17 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 return CreateRunResult(chatTask, chatGroup);
             }
 
-            if (roundIndex == 0 || workflowFailed)
+            if (state.RoundIndex == 0 || state.WorkflowFailed)
             {
                 if (hasRemoteParticipants || hasHumanParticipants)
                 {
                     // 本地顺序回退依赖 IWantToRun，不能把远程 A2A Agent 错当作本地模型执行。
                     // 这里保留已有消息并明确结束原因，避免在故障时意外丢弃远程参与者。
-                    var remoteFallbackNotice = workflowFailed
-                        ? $"系统提示：混合 Agent 编排失败（{workflowFailureReason}），未执行顺序回退以避免跳过远程或 Human 参与者。"
+                    var remoteFallbackNotice = state.WorkflowFailed
+                        ? $"系统提示：混合 Agent 编排失败（{state.WorkflowFailureReason}），未执行顺序回退以避免跳过远程或 Human 参与者。"
                         : "系统提示：混合 Agent 编排未返回可展示内容，未执行顺序回退以避免跳过远程或 Human 参与者。";
                     logger.AppendLine($"[{chatGroup.Name}] {remoteFallbackNotice}");
-                    if (workflowFailed)
+                    if (state.WorkflowFailed)
                     {
                         await PersistAgentResponseAsync(
                             Guid.NewGuid().ToString("n"),
@@ -1456,7 +1458,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 }
                 else
                 {
-                if (workflowFailed)
+                if (state.WorkflowFailed)
                 {
                     logger.AppendLine($"[{chatGroup.Name}] 多智能体工作流中断，自动降级为顺序轮转回退执行。");
                 }
@@ -1478,15 +1480,15 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     runningKey,
                     chatTask,
                     chatTaskService,
-                    Math.Max(1, roundIndex + 1),
+                    Math.Max(1, state.RoundIndex + 1),
                     effectiveWorkflowTurns,
                     cancellationToken,
                     request.CorrelationId,
                     request.HumanRecipientUserId);
 
-                if (!hasFallbackOutput && workflowFailed)
+                if (!hasFallbackOutput && state.WorkflowFailed)
                 {
-                    var fallbackNotice = $"系统提示：多智能体编排失败（{workflowFailureReason}），且降级执行未返回可显示文本。";
+                    var fallbackNotice = $"系统提示：多智能体编排失败（{state.WorkflowFailureReason}），且降级执行未返回可显示文本。";
                     await PersistAgentResponseAsync(
                         Guid.NewGuid().ToString("n"),
                         enterContext.Agent.Name,
@@ -1550,6 +1552,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
         finally
         {
+            if (chatTask != null)
+            {
+                _cancellationRegistry.Unregister(chatTask.Id);
+            }
+
             scope.Dispose();
             activeOptimizationScope?.Dispose();
 
@@ -1751,22 +1758,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                || failureDetails.Contains("allowed timeout", StringComparison.OrdinalIgnoreCase)
                || failureDetails.Contains("HttpClient.Timeout", StringComparison.OrdinalIgnoreCase)
                || failureDetails.Contains("timed out", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static bool IsExitSignal(string text)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            return false;
-        }
-
-        var normalized = text.Trim();
-        normalized = normalized.TrimEnd('.', '!', '?', ';', ':', '。', '！', '？', '；', '：', ']', '>');
-        normalized = normalized.TrimStart('[', '<');
-
-        return normalized.Equals("exit", StringComparison.OrdinalIgnoreCase)
-               || normalized.Equals("结束", StringComparison.OrdinalIgnoreCase)
-               || normalized.Equals("退出", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool HasConfiguredChatModel(ISenparcAiSetting setting)
@@ -1988,7 +1979,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         {
             var onUpdate = new Action<AgentResponseUpdate>(update =>
             {
-                var updateText = ExtractAgentResponseUpdateText(update);
+                var updateText = ChatGroupTextHelpers.ExtractAgentResponseUpdateText(update);
                 if (!string.IsNullOrEmpty(updateText))
                 {
                     streamedOutput.Append(updateText);
@@ -2040,7 +2031,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 resultUsage = result?.Result?.Usage;
             }
 
-            if (ContainsServiceFailureSignature(output))
+            if (AgentModelFallbackResolver.ContainsServiceFailureSignature(output))
             {
                 throw new NcfExceptionBase(output.Trim());
             }
@@ -2094,7 +2085,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 {
                     HasOutput = true,
                     OutputText = output,
-                    ShouldExit = IsExitSignal(output)
+                    ShouldExit = ChatGroupTextHelpers.IsExitSignal(output)
                 };
             }
 
@@ -2107,7 +2098,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         }
         catch (Exception ex)
         {
-            if (ContainsForbiddenStatus(ex) && !agentContext.RequireHumanApproval)
+            if (AgentModelFallbackResolver.ContainsForbiddenStatus(ex) && !agentContext.RequireHumanApproval)
             {
                 var fallbackResult = await TryRunSingleAgentForbiddenFallbackAsync(
                     agentContext,
@@ -2165,7 +2156,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     {
                         HasOutput = true,
                         OutputText = fallbackResult.Output,
-                        ShouldExit = IsExitSignal(fallbackResult.Output)
+                        ShouldExit = ChatGroupTextHelpers.IsExitSignal(fallbackResult.Output)
                     };
                 }
 
@@ -2177,7 +2168,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             logger.AppendLine($"[{chatGroup.Name}] 单智能体执行异常：{ex.Message}");
 
-            var errorMessage = BuildAgentExecutionFailureMessage(ex);
+            var errorMessage = ChatGroupTextHelpers.BuildAgentExecutionFailureMessage(ex);
             var usageSnapshot = BuildUsageSnapshot(
                 null,
                 Math.Max(0, (int)Math.Round((DateTime.Now - responseStartedAt).TotalMilliseconds)),
@@ -2253,7 +2244,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 cancellationToken: cancellationToken))
             {
                 onUpdate?.Invoke(update);
-                var updateText = ExtractAgentResponseUpdateText(update);
+                var updateText = ChatGroupTextHelpers.ExtractAgentResponseUpdateText(update);
                 if (!string.IsNullOrWhiteSpace(updateText))
                 {
                     output.Append(updateText);
@@ -2342,7 +2333,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         string scene)
     {
         var currentSetting = agentContext.Setting ?? (Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting);
-        var currentModel = BuildModelDtoFromSetting(currentSetting, "AgentsManager.Current");
+        var currentModel = AgentModelFallbackResolver.BuildModelDtoFromSetting(currentSetting, "AgentsManager.Current");
         var fallbackErrors = new List<string>();
 
         if (currentSetting != null)
@@ -2351,7 +2342,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             {
                 SenparcTrace.SendCustomLog(
                     "AgentsManager.AI.StreamFallback",
-                    $"{scene} 开始尝试回退（同模型非流式）。Model={BuildModelDiagnosticInfo(currentModel)}");
+                    $"{scene} 开始尝试回退（同模型非流式）。Model={AgentModelFallbackResolver.BuildModelDiagnosticInfo(currentModel)}");
 
                 var sameModelDirectResult = await RunSingleAgentWithSettingAsync(
                     agentContext,
@@ -2363,7 +2354,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 {
                     SenparcTrace.SendCustomLog(
                         "AgentsManager.AI.StreamFallback",
-                        $"{scene} 403 后回退成功（同模型非流式）。Model={BuildModelDiagnosticInfo(currentModel)}");
+                        $"{scene} 403 后回退成功（同模型非流式）。Model={AgentModelFallbackResolver.BuildModelDiagnosticInfo(currentModel)}");
 
                     return new SingleAgentForbiddenFallbackResult
                     {
@@ -2378,17 +2369,17 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             }
             catch (Exception sameModelEx)
             {
-                fallbackErrors.Add($"同模型非流式回退失败：{FlattenExceptionMessages(sameModelEx)}");
+                fallbackErrors.Add($"同模型非流式回退失败：{AgentModelFallbackResolver.FlattenExceptionMessages(sameModelEx)}");
             }
         }
 
-        if (TryBuildAlternateDeploymentModel(currentModel, out var deploymentModel) && deploymentModel != null)
+        if (AgentModelFallbackResolver.TryBuildAlternateDeploymentModel(currentModel, out var deploymentModel) && deploymentModel != null)
         {
             try
             {
                 SenparcTrace.SendCustomLog(
                     "AgentsManager.AI.DeploymentFallback",
-                    $"{scene} 开始尝试回退（DeploymentName=ModelId）。Current={BuildModelDiagnosticInfo(currentModel)}; Fallback={BuildModelDiagnosticInfo(deploymentModel)}");
+                    $"{scene} 开始尝试回退（DeploymentName=ModelId）。Current={AgentModelFallbackResolver.BuildModelDiagnosticInfo(currentModel)}; Fallback={AgentModelFallbackResolver.BuildModelDiagnosticInfo(deploymentModel)}");
 
                 var deploymentSetting = aiModelService.BuildSenparcAiSetting(deploymentModel);
                 var deploymentResult = await RunSingleAgentWithSettingAsync(
@@ -2401,7 +2392,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 {
                     SenparcTrace.SendCustomLog(
                         "AgentsManager.AI.DeploymentFallback",
-                        $"{scene} 403 回退成功（DeploymentName=ModelId）。Current={BuildModelDiagnosticInfo(currentModel)}; Fallback={BuildModelDiagnosticInfo(deploymentModel)}");
+                        $"{scene} 403 回退成功（DeploymentName=ModelId）。Current={AgentModelFallbackResolver.BuildModelDiagnosticInfo(currentModel)}; Fallback={AgentModelFallbackResolver.BuildModelDiagnosticInfo(deploymentModel)}");
 
                     return new SingleAgentForbiddenFallbackResult
                     {
@@ -2416,21 +2407,21 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             }
             catch (Exception deploymentEx)
             {
-                fallbackErrors.Add($"Deployment 回退失败：{FlattenExceptionMessages(deploymentEx)}");
+                fallbackErrors.Add($"Deployment 回退失败：{AgentModelFallbackResolver.FlattenExceptionMessages(deploymentEx)}");
             }
         }
 
         var defaultSetting = Senparc.AI.Config.SenparcAiSetting as SenparcAiSetting;
-        if (defaultSetting != null && CanUseDefaultChatFallback(defaultSetting))
+        if (defaultSetting != null && AgentModelFallbackResolver.CanUseDefaultChatFallback(defaultSetting))
         {
-            var defaultModel = BuildModelDtoFromSetting(defaultSetting, "AgentsManager.SystemDefault");
-            if (!IsSameChatConfig(currentModel, defaultModel))
+            var defaultModel = AgentModelFallbackResolver.BuildModelDtoFromSetting(defaultSetting, "AgentsManager.SystemDefault");
+            if (!AgentModelFallbackResolver.IsSameChatConfig(currentModel, defaultModel))
             {
                 try
                 {
                     SenparcTrace.SendCustomLog(
                         "AgentsManager.AI.DefaultFallback",
-                        $"{scene} 开始尝试回退（SystemDefault）。Current={BuildModelDiagnosticInfo(currentModel)}; Default={BuildModelDiagnosticInfo(defaultModel)}");
+                        $"{scene} 开始尝试回退（SystemDefault）。Current={AgentModelFallbackResolver.BuildModelDiagnosticInfo(currentModel)}; Default={AgentModelFallbackResolver.BuildModelDiagnosticInfo(defaultModel)}");
 
                     var defaultResult = await RunSingleAgentWithSettingAsync(
                         agentContext,
@@ -2442,7 +2433,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     {
                         SenparcTrace.SendCustomLog(
                             "AgentsManager.AI.DefaultFallback",
-                            $"{scene} 403 回退成功（SystemDefault）。Current={BuildModelDiagnosticInfo(currentModel)}; Default={BuildModelDiagnosticInfo(defaultModel)}");
+                            $"{scene} 403 回退成功（SystemDefault）。Current={AgentModelFallbackResolver.BuildModelDiagnosticInfo(currentModel)}; Default={AgentModelFallbackResolver.BuildModelDiagnosticInfo(defaultModel)}");
 
                         return new SingleAgentForbiddenFallbackResult
                         {
@@ -2457,7 +2448,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 }
                 catch (Exception defaultEx)
                 {
-                    fallbackErrors.Add($"系统默认模型回退失败：{FlattenExceptionMessages(defaultEx)}");
+                    fallbackErrors.Add($"系统默认模型回退失败：{AgentModelFallbackResolver.FlattenExceptionMessages(defaultEx)}");
                 }
             }
         }
@@ -2485,10 +2476,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         var output = runResult?.OutputString;
         if (string.IsNullOrWhiteSpace(output) && runResult?.Result != null)
         {
-            output = ExtractAgentResponseText(runResult.Result);
+            output = ChatGroupTextHelpers.ExtractAgentResponseText(runResult.Result);
         }
 
-        if (ContainsServiceFailureSignature(output))
+        if (AgentModelFallbackResolver.ContainsServiceFailureSignature(output))
         {
             throw new NcfExceptionBase(output.Trim());
         }
@@ -2587,9 +2578,9 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         int roundIndex,
         string responseId)
     {
-        var promptTokens = ClampToInt(usage?.InputTokenCount ?? 0);
-        var completionTokens = ClampToInt(usage?.OutputTokenCount ?? 0);
-        var totalTokens = ClampToInt(usage?.TotalTokenCount ?? 0);
+        var promptTokens = ChatGroupTextHelpers.ClampToInt(usage?.InputTokenCount ?? 0);
+        var completionTokens = ChatGroupTextHelpers.ClampToInt(usage?.OutputTokenCount ?? 0);
+        var totalTokens = ChatGroupTextHelpers.ClampToInt(usage?.TotalTokenCount ?? 0);
         if (totalTokens <= 0)
         {
             totalTokens = promptTokens + completionTokens;
@@ -2604,92 +2595,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             RoundIndex = Math.Max(0, roundIndex),
             ResponseId = responseId
         };
-    }
-
-    private static int ClampToInt(long value)
-    {
-        if (value <= 0)
-        {
-            return 0;
-        }
-
-        return value > int.MaxValue ? int.MaxValue : (int)value;
-    }
-
-    private static string ExtractAgentResponseText(AgentResponse response)
-    {
-        if (response == null)
-        {
-            return string.Empty;
-        }
-
-        if (!string.IsNullOrWhiteSpace(response.Text))
-        {
-            return response.Text;
-        }
-
-        if (response.Messages == null || response.Messages.Count == 0)
-        {
-            return string.Empty;
-        }
-
-        var messageTexts = response.Messages
-            .Select(ExtractChatMessageText)
-            .Where(z => !string.IsNullOrWhiteSpace(z))
-            .ToList();
-
-        return messageTexts.Count == 0
-            ? string.Empty
-            : string.Join(Environment.NewLine, messageTexts);
-    }
-
-    private static string ExtractChatMessageText(ChatMessage chatMessage)
-    {
-        if (chatMessage == null)
-        {
-            return string.Empty;
-        }
-
-        var textSegments = chatMessage.Contents?
-            .OfType<TextContent>()
-            .Select(z => z.Text)
-            .Where(z => !string.IsNullOrWhiteSpace(z))
-            .ToList();
-
-        if (textSegments?.Count > 0)
-        {
-            return string.Join(Environment.NewLine, textSegments);
-        }
-
-        return chatMessage.ToString() ?? string.Empty;
-    }
-
-    private static string ExtractAgentResponseUpdateText(AgentResponseUpdate update)
-    {
-        if (update == null)
-        {
-            return string.Empty;
-        }
-
-        if (!string.IsNullOrWhiteSpace(update.Text))
-        {
-            return update.Text;
-        }
-
-        var textSegments = update.Contents?
-            .OfType<TextContent>()
-            .Select(z => z.Text)
-            .Where(z => !string.IsNullOrWhiteSpace(z))
-            .ToList();
-
-        if (textSegments?.Count > 0)
-        {
-            return string.Join(Environment.NewLine, textSegments);
-        }
-
-        // 只认真实文本内容，避免把 ToString() 结果误判为“已流式输出”，
-        // 从而错过后续 synthetic chunk 回退。
-        return string.Empty;
     }
 
     private async Task PublishSyntheticChunkEventsAsync(
@@ -2707,7 +2612,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             return;
         }
 
-        var chunkList = SplitStreamText(text).ToList();
+        var chunkList = ChatGroupTextHelpers.SplitStreamText(text).ToList();
         if (chunkList.Count == 0)
         {
             return;
@@ -2731,74 +2636,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 await Task.Delay(28);
             }
         }
-    }
-
-    private static IEnumerable<string> SplitStreamText(string text, int maxChunkLength = 24)
-    {
-        if (string.IsNullOrEmpty(text))
-        {
-            yield break;
-        }
-
-        var buffer = new StringBuilder();
-        foreach (var ch in text)
-        {
-            buffer.Append(ch);
-            if (ShouldBreakStreamChunk(ch, buffer.Length, maxChunkLength))
-            {
-                yield return buffer.ToString();
-                buffer.Clear();
-            }
-        }
-
-        if (buffer.Length > 0)
-        {
-            yield return buffer.ToString();
-        }
-    }
-
-    private static bool ShouldBreakStreamChunk(char ch, int currentLength, int maxChunkLength)
-    {
-        if (currentLength >= maxChunkLength)
-        {
-            return true;
-        }
-
-        return ch is '\n' or '。' or '！' or '？' or '!' or '?' or ';' or '；' or '，' or ',';
-    }
-
-    private static string BuildAgentExecutionFailureMessage(Exception ex)
-    {
-        var raw = ex?.Message ?? "未知错误";
-        var normalized = raw
-            .Replace('\r', ' ')
-            .Replace('\n', ' ')
-            .Trim();
-
-        if (normalized.Length > 240)
-        {
-            normalized = normalized[..240];
-        }
-
-        if (normalized.Contains("Status: 403", StringComparison.OrdinalIgnoreCase)
-            || normalized.Contains("Forbidden", StringComparison.OrdinalIgnoreCase))
-        {
-            return "系统提示：AI 服务返回 403（Forbidden），当前任务无法继续。请检查模型权限、API Key 或所选模型可用性。";
-        }
-
-        if (normalized.Contains("Status: 401", StringComparison.OrdinalIgnoreCase)
-            || normalized.Contains("Unauthorized", StringComparison.OrdinalIgnoreCase))
-        {
-            return "系统提示：AI 服务认证失败（401），请检查 API Key / Endpoint 配置。";
-        }
-
-        if (normalized.Contains("model is required", StringComparison.OrdinalIgnoreCase))
-        {
-            return "系统提示：Ollama 未配置模型名称。请在 AIKernel 模型配置中填写 ModelId，" +
-                   "或在启动任务时选择有效模型。";
-        }
-
-        return $"系统提示：AI 服务调用失败，任务已中断。原因：{normalized}";
     }
 
     private static ChatClientAgentOptions CloneAgentOptions(ChatClientAgentOptions options)
@@ -2838,225 +2675,6 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             StopSequences = chatOptions.StopSequences?.ToList() ?? new List<string>(),
             Tools = chatOptions.Tools?.ToList()
         };
-    }
-
-    private static bool ContainsForbiddenStatus(Exception ex)
-    {
-        if (ex == null)
-        {
-            return false;
-        }
-
-        var chain = FlattenExceptionMessages(ex);
-        if (chain.Contains("Status: 403 (Forbidden)", StringComparison.OrdinalIgnoreCase)
-            || chain.Contains("StatusCode: 403", StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        var has403 = chain.Contains("403", StringComparison.OrdinalIgnoreCase);
-        var hasForbidden = chain.Contains("forbidden", StringComparison.OrdinalIgnoreCase)
-                           || chain.Contains("禁止", StringComparison.OrdinalIgnoreCase)
-                           || chain.Contains("拒绝", StringComparison.OrdinalIgnoreCase);
-
-        return has403 && hasForbidden;
-    }
-
-    private static bool ContainsServiceFailureSignature(string? text)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            return false;
-        }
-
-        var normalized = text.Trim();
-        var has403 = normalized.Contains("Status: 403", StringComparison.OrdinalIgnoreCase)
-                     || normalized.Contains("StatusCode: 403", StringComparison.OrdinalIgnoreCase);
-        var has401 = normalized.Contains("Status: 401", StringComparison.OrdinalIgnoreCase)
-                     || normalized.Contains("StatusCode: 401", StringComparison.OrdinalIgnoreCase);
-        var hasServiceFailed = normalized.Contains("Service request failed", StringComparison.OrdinalIgnoreCase)
-                               || normalized.Contains("ClientResultException", StringComparison.OrdinalIgnoreCase);
-
-        if (hasServiceFailed && (has403 || has401))
-        {
-            return true;
-        }
-
-        return normalized.StartsWith("Status: 403", StringComparison.OrdinalIgnoreCase)
-               || normalized.StartsWith("Status: 401", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static string FlattenExceptionMessages(Exception ex)
-    {
-        if (ex == null)
-        {
-            return string.Empty;
-        }
-
-        var sb = new StringBuilder();
-        var current = ex;
-        var depth = 0;
-        while (current != null && depth < 8)
-        {
-            if (depth > 0)
-            {
-                sb.Append(" -> ");
-            }
-
-            sb.Append('[');
-            sb.Append(current.GetType().Name);
-            sb.Append("] ");
-            sb.Append(current.Message?.Trim());
-
-            current = current.InnerException;
-            depth++;
-        }
-
-        return sb.ToString();
-    }
-
-    private static bool CanUseDefaultChatFallback(SenparcAiSetting? defaultSetting)
-    {
-        if (defaultSetting == null || defaultSetting.AiPlatform == AiPlatform.UnSet)
-        {
-            return false;
-        }
-
-        if (string.IsNullOrWhiteSpace(defaultSetting.ModelName?.Chat))
-        {
-            return false;
-        }
-
-        if (defaultSetting.AiPlatform != AiPlatform.Ollama && string.IsNullOrWhiteSpace(defaultSetting.ApiKey))
-        {
-            return false;
-        }
-
-        return defaultSetting.AiPlatform switch
-        {
-            AiPlatform.OpenAI => true,
-            AiPlatform.Ollama => !string.IsNullOrWhiteSpace(defaultSetting.OllamaEndpoint),
-            _ => !string.IsNullOrWhiteSpace(defaultSetting.Endpoint)
-        };
-    }
-
-    private static AIModelDto? BuildModelDtoFromSetting(SenparcAiSetting? setting, string alias)
-    {
-        if (setting == null)
-        {
-            return null;
-        }
-
-        var apiVersion = setting.AiPlatform switch
-        {
-            AiPlatform.AzureOpenAI => setting.AzureOpenAIApiVersion,
-            AiPlatform.NeuCharAI => setting.NeuCharAIApiVersion,
-            _ => null
-        };
-
-        return new AIModelDto
-        {
-            Id = 0,
-            Alias = alias,
-            AiPlatform = setting.AiPlatform,
-            ConfigModelType = ConfigModelType.Chat,
-            ModelId = setting.ModelName?.Chat,
-            DeploymentName = setting.DeploymentName ?? setting.ModelName?.Chat,
-            Endpoint = setting.Endpoint,
-            ApiKey = setting.ApiKey,
-            ApiVersion = apiVersion
-        };
-    }
-
-    private static bool IsSameChatConfig(AIModelDto? left, AIModelDto? right)
-    {
-        if (left == null || right == null)
-        {
-            return false;
-        }
-
-        return left.AiPlatform == right.AiPlatform
-               && string.Equals(
-                   NormalizeEndpointForDiagnostics(left.AiPlatform, left.Endpoint),
-                   NormalizeEndpointForDiagnostics(right.AiPlatform, right.Endpoint),
-                   StringComparison.OrdinalIgnoreCase)
-               && string.Equals(left.ModelId, right.ModelId, StringComparison.OrdinalIgnoreCase)
-               && string.Equals(left.DeploymentName, right.DeploymentName, StringComparison.OrdinalIgnoreCase)
-               && string.Equals(left.ApiKey, right.ApiKey, StringComparison.Ordinal);
-    }
-
-    private static bool TryBuildAlternateDeploymentModel(AIModelDto? model, out AIModelDto? fallbackModel)
-    {
-        fallbackModel = null;
-        if (model == null)
-        {
-            return false;
-        }
-
-        if (model.AiPlatform != AiPlatform.AzureOpenAI && model.AiPlatform != AiPlatform.NeuCharAI)
-        {
-            return false;
-        }
-
-        if (string.IsNullOrWhiteSpace(model.ModelId))
-        {
-            return false;
-        }
-
-        if (string.Equals(model.DeploymentName, model.ModelId, StringComparison.OrdinalIgnoreCase))
-        {
-            return false;
-        }
-
-        fallbackModel = new AIModelDto
-        {
-            Id = model.Id,
-            Alias = $"{model.Alias ?? "Model"}_DeploymentAsModelId",
-            DeploymentName = model.ModelId,
-            ModelId = model.ModelId,
-            Endpoint = model.Endpoint,
-            AiPlatform = model.AiPlatform,
-            ConfigModelType = model.ConfigModelType,
-            OrganizationId = model.OrganizationId,
-            ApiKey = model.ApiKey,
-            ApiVersion = model.ApiVersion,
-            Note = model.Note,
-            MaxToken = model.MaxToken,
-            IsShared = model.IsShared,
-            Show = model.Show
-        };
-        return true;
-    }
-
-    private static string BuildModelDiagnosticInfo(AIModelDto? model)
-    {
-        if (model == null)
-        {
-            return "模型配置为空（AIModelDto == null）";
-        }
-
-        var endpoint = NormalizeEndpointForDiagnostics(model.AiPlatform, model.Endpoint);
-        var apiKeyStatus = string.IsNullOrWhiteSpace(model.ApiKey)
-            ? "empty"
-            : $"set(len:{model.ApiKey.Length})";
-
-        return $"AIModelDbId={model.Id}, ConfigType={model.ConfigModelType}, ModelId={model.ModelId ?? "(null)"}, Alias={model.Alias ?? "(null)"}, Platform={model.AiPlatform}, Deployment={model.DeploymentName ?? "(null)"}, Endpoint={endpoint ?? "(null)"}, ApiVersion={model.ApiVersion ?? "(null)"}, ApiKey={apiKeyStatus}";
-    }
-
-    private static string NormalizeEndpointForDiagnostics(AiPlatform platform, string endpoint)
-    {
-        if (string.IsNullOrWhiteSpace(endpoint))
-        {
-            return endpoint;
-        }
-
-        var normalized = endpoint.Trim();
-        if (platform == AiPlatform.NeuCharAI && !normalized.EndsWith("/", StringComparison.Ordinal))
-        {
-            normalized += "/";
-        }
-
-        return normalized;
     }
 
     private void PublishChunkEvent(

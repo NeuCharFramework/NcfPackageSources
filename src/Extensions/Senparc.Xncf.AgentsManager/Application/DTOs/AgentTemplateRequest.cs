@@ -41,7 +41,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
+namespace Senparc.Xncf.AgentsManager.Application.Dtos
 {
     public class AgentTemplate_ManageRequest : FunctionAppRequestBase
     {

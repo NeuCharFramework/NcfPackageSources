@@ -202,7 +202,18 @@ public sealed class AgentsManagerHumanInteractionService
 
     private static async Task NotifyNeuBellChangedAsync()
     {
-        var publisher = SenparcDI.GetServiceProvider(true).GetService<INeuBellPublisher>();
+        // NeuBell 变更通知只是尽力而为的 UI 刷新提示：全局服务提供者不可用时
+        // （例如非完整 DI 的测试环境）跳过通知，不能影响人工审批主流程。
+        INeuBellPublisher publisher = null;
+        try
+        {
+            publisher = SenparcDI.GetServiceProvider(true).GetService<INeuBellPublisher>();
+        }
+        catch
+        {
+            // 忽略全局服务提供者不可用，直接跳过通知。
+        }
+
         if (publisher != null)
         {
             await publisher.NotifyChangedAsync(AgentsManagerNeuBellProvider.ProviderIdValue).ConfigureAwait(false);

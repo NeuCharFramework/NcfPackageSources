@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -782,5 +782,35 @@
   </data>
   <data name="Frontend.331" xml:space="preserve">
     <value>删除任务完成：成功 {0} 条||删除任务完成：成功 {0} 条</value>
+  </data>
+  <data name="Agents.Error.MissingRunRequest" xml:space="preserve">
+    <value>未提供聊天组启动请求。</value>
+  </data>
+  <data name="Agents.Error.InvalidChatGroup" xml:space="preserve">
+    <value>未选择有效的聊天组。</value>
+  </data>
+  <data name="Agents.Error.MissingTaskName" xml:space="preserve">
+    <value>未填写任务标题。</value>
+  </data>
+  <data name="Agents.Error.MissingPromptCommand" xml:space="preserve">
+    <value>未填写任务描述。</value>
+  </data>
+  <data name="Agents.Error.ChatGroupNotFound" xml:space="preserve">
+    <value>聊天组不存在：{0}</value>
+  </data>
+  <data name="Agents.Error.ChatGroupDisabled" xml:space="preserve">
+    <value>聊天组“{0}”已停用，不能创建新的执行任务。</value>
+  </data>
+  <data name="Agents.Error.AiModelNotFound" xml:space="preserve">
+    <value>当前选择的 AI 模型不存在：{0}</value>
+  </data>
+  <data name="Agents.Error.NoEnabledAgents" xml:space="preserve">
+    <value>聊天组【{0}】没有可用的启用智能体。</value>
+  </data>
+  <data name="Agents.Error.MultiAgentMinMembers" xml:space="preserve">
+    <value>聊天组【{0}】多智能体协作至少需要两个启用智能体。</value>
+  </data>
+  <data name="Agents.Error.AdminAgentNotFound" xml:space="preserve">
+    <value>聊天组【{0}】未找到有效群主智能体（ID：{1}）。</value>
   </data>
 </root>

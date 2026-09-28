@@ -20,7 +20,7 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
-using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AgentsManager.Application.Dtos;
 using Senparc.Xncf.AreaBase.Admin.Filters;
 using System;
 using System.Collections.Generic;

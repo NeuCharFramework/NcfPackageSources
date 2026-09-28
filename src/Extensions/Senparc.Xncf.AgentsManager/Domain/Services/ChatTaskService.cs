@@ -19,10 +19,12 @@
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Trace;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
+using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AgentsManager.Domain.Models.Usage;
 using System;
@@ -33,8 +35,17 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
 {
     public class ChatTaskService : ServiceBase<ChatTask>
     {
-        public ChatTaskService(IRepositoryBase<ChatTask> repo, IServiceProvider serviceProvider) : base(repo, serviceProvider)
+        private readonly ChatTaskCancellationRegistry _cancellationRegistry;
+        private readonly HumanInTheLoopRequestStore _humanInTheLoopRequestStore;
+
+        public ChatTaskService(
+            IRepositoryBase<ChatTask> repo,
+            IServiceProvider serviceProvider,
+            ChatTaskCancellationRegistry cancellationRegistry,
+            HumanInTheLoopRequestStore humanInTheLoopRequestStore) : base(repo, serviceProvider)
         {
+            _cancellationRegistry = cancellationRegistry;
+            _humanInTheLoopRequestStore = humanInTheLoopRequestStore;
         }
 
         /// <summary>
@@ -64,7 +75,51 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             chatTask.ChangeStatus(status);
             await base.SaveObjectAsync(chatTask);
 
-            //TODO 检查是否所有任务已经完成，如果完成则设置 ChatGroup 状态为闲置状态
+            await TryFinishChatGroupIfAllTasksSettledAsync(chatTask);
+        }
+
+        /// <summary>
+        /// 当任务进入终态（完成/取消/失败）时，检查同一 ChatGroup 下是否还有未结束的任务；
+        /// 若没有，则将 ChatGroup 状态由 Running 置为 Finished。
+        /// 群组状态同步属于尽力而为：失败只记录日志，不影响任务状态更新主流程。
+        /// </summary>
+        private async Task TryFinishChatGroupIfAllTasksSettledAsync(ChatTask chatTask)
+        {
+            if (chatTask.ChatGroupId <= 0)
+            {
+                return;
+            }
+
+            if (chatTask.Status != ChatTask_Status.Finished
+                && chatTask.Status != ChatTask_Status.Cancelled
+                && chatTask.Status != ChatTask_Status.Failed)
+            {
+                return;
+            }
+
+            var unsettledCount = await base.GetCountAsync(z => z.ChatGroupId == chatTask.ChatGroupId
+                && (z.Status == ChatTask_Status.Waiting
+                    || z.Status == ChatTask_Status.Chatting
+                    || z.Status == ChatTask_Status.Paused));
+            if (unsettledCount > 0)
+            {
+                return;
+            }
+
+            try
+            {
+                var chatGroupService = _serviceProvider.GetRequiredService<ChatGroupService>();
+                var chatGroup = await chatGroupService.GetObjectAsync(z => z.Id == chatTask.ChatGroupId);
+                if (chatGroup != null && chatGroup.State == ChatGroupState.Running)
+                {
+                    chatGroup.Finish();
+                    await chatGroupService.SaveObjectAsync(chatGroup);
+                }
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.BaseExceptionLog(ex);
+            }
         }
 
         public async Task SetArchiveStatus(ChatTask chatTask, bool isArchived)
@@ -79,16 +134,28 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
         }
 
         /// <summary>
-        /// 关闭未完成的任务
+        /// 关闭长时间未结束的孤儿任务（Chatting 与 Paused）。
+        /// 仍在运行的任务（存在进程内取消源）会被跳过，避免误杀正在执行或正在等待人工审批的任务；
+        /// 被关闭任务的 Human-in-the-Loop 待处理请求会一并取消。
         /// </summary>
-        /// <param name="beforeStartDateTime">只是筛选在此时间之前的未完成（Chatting 任务）</param>
+        /// <param name="beforeStartDateTime">只筛选在此时间之前开始的任务</param>
         /// <returns></returns>
         public async Task CloseUnfinishedTasksAsync(DateTime beforeStartDateTime)
         {
-            var unfinishTasks = await base.GetObjectListAsync(0, 0, z => z.StartTime < beforeStartDateTime && z.Status == ChatTask_Status.Chatting, z => z.Id, Ncf.Core.Enums.OrderingType.Ascending);
+            var unfinishTasks = await base.GetObjectListAsync(0, 0,
+                z => z.StartTime < beforeStartDateTime
+                     && (z.Status == ChatTask_Status.Chatting || z.Status == ChatTask_Status.Paused),
+                z => z.Id, Ncf.Core.Enums.OrderingType.Ascending);
             foreach (var unfinishedTask in unfinishTasks)
             {
+                if (_cancellationRegistry.IsRegistered(unfinishedTask.Id))
+                {
+                    // 当前进程仍有该任务的运行上下文（可能正在等待人工审批），不处理。
+                    continue;
+                }
+
                 SenparcTrace.SendCustomLog($"处理未完成任务({unfinishedTask.Id})", $"任务：{unfinishedTask.Name}，开始时间：{unfinishedTask.StartTime}，状态：{unfinishedTask.Status}");
+                _humanInTheLoopRequestStore.CancelForTask(unfinishedTask.Id);
                 unfinishedTask.ChangeStatus(ChatTask_Status.Cancelled);
                 await base.SaveObjectAsync(unfinishedTask);
                 SenparcTrace.SendCustomLog($"处理未完成任务({unfinishedTask.Id})", $"处理完成，当前状态：{unfinishedTask.Status}");

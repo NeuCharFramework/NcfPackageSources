@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core;
@@ -183,6 +183,27 @@ namespace Senparc.Xncf.AgentsManagerTests
         {
         }
 
+        /// <summary>
+        /// 当没有可用的真实 AI 后端（SenparcAiSetting 的 Endpoint/ApiKey 仍为占位符或为空）时跳过测试。
+        /// 需要真实模型调用或构建真实 Kernel 的测试应在开头调用本方法，避免在无凭据的 CI/本地环境失败。
+        /// </summary>
+        protected void RequireRealAiBackend(string testName)
+        {
+            var setting = Senparc.AI.Config.SenparcAiSetting;
+            var endpoint = setting?.Endpoint;
+            var apiKey = setting?.ApiKey;
+            var endpointUsable = !string.IsNullOrWhiteSpace(endpoint)
+                && !endpoint.Contains('<', StringComparison.Ordinal)
+                && Uri.TryCreate(endpoint, UriKind.Absolute, out _);
+            var keyUsable = !string.IsNullOrWhiteSpace(apiKey)
+                && !apiKey.Contains('<', StringComparison.Ordinal);
+            if (!endpointUsable || !keyUsable)
+            {
+                Assert.Inconclusive(
+                    $"{testName} 需要可用的 AI 后端（SenparcAiSetting.Endpoint/ApiKey 当前为占位符），已跳过。");
+            }
+        }
+
         [TestMethod]
         public void PublishedA2AAgent_PublicAgentKey_IsNormalizedAndValidated()
         {
@@ -356,6 +377,7 @@ namespace Senparc.Xncf.AgentsManagerTests
         [TestMethod]
         public async Task PublishedA2AAgent_Build_InheritsPromptExecutionParameters()
         {
+            RequireRealAiBackend(nameof(PublishedA2AAgent_Build_InheritsPromptExecutionParameters));
             var templateService = _serviceProvider.GetRequiredService<AgentsTemplateService>();
             var template = await templateService.GetObjectAsync(z => z.Name == "产品经理机器人");
             Assert.IsNotNull(template);
@@ -380,6 +402,7 @@ namespace Senparc.Xncf.AgentsManagerTests
         [TestMethod]
         public async Task AgentTemplateRunner_EmptyOutputRetry_OverridesPromptMaxTokenOnce()
         {
+            RequireRealAiBackend(nameof(AgentTemplateRunner_EmptyOutputRetry_OverridesPromptMaxTokenOnce));
             var templateService = _serviceProvider.GetRequiredService<AgentsTemplateService>();
             var template = await templateService.GetObjectAsync(z => z.Name == "产品经理机器人");
             Assert.IsNotNull(template);
@@ -401,11 +424,7 @@ namespace Senparc.Xncf.AgentsManagerTests
         [TestMethod]
         public void PublishedA2AAgent_DeploymentNameFallback_KeepsTheSameModelBoundary()
         {
-            var fallbackMethod = typeof(AgentTemplateRunner).GetMethod(
-                "TryBuildAlternateDeploymentModel",
-                BindingFlags.NonPublic | BindingFlags.Static);
-            Assert.IsNotNull(fallbackMethod);
-
+            // 回退解析已抽取到共享的 AgentModelFallbackResolver（AgentTemplateRunner 与 ChatGroupService 共用）。
             var source = new AIModelDto
             {
                 Id = 8,
@@ -418,10 +437,8 @@ namespace Senparc.Xncf.AgentsManagerTests
                 ApiKey = "test-key",
                 ApiVersion = "2025-04-01-preview"
             };
-            object?[] arguments = { source, null };
 
-            Assert.IsTrue((bool)fallbackMethod.Invoke(null, arguments)!);
-            var fallback = arguments[1] as AIModelDto;
+            Assert.IsTrue(AgentModelFallbackResolver.TryBuildAlternateDeploymentModel(source, out var fallback));
             Assert.IsNotNull(fallback);
             Assert.AreEqual(source.ModelId, fallback.DeploymentName);
             Assert.AreEqual(source.ModelId, fallback.ModelId);
@@ -542,7 +559,18 @@ namespace Senparc.Xncf.AgentsManagerTests
 
             Assert.IsNotNull(result);
             Assert.AreEqual("/team/openai/deployments/deepseek-chat/chat/completions", result.AbsolutePath);
-            Assert.AreEqual("api-version=2022-12-01&trace=1", result.Query.TrimStart('?'));
+
+            // Query 参数顺序在 HTTP 上没有语义，只验证参数值：
+            // api-version 被替换为 2022-12-01 且只出现一次，trace 参数保持原值。
+            var parameters = result.Query.TrimStart('?')
+                .Split('&', StringSplitOptions.RemoveEmptyEntries)
+                .ToList();
+            var apiVersions = parameters
+                .Where(z => z.StartsWith("api-version=", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            Assert.AreEqual(1, apiVersions.Count);
+            Assert.AreEqual("api-version=2022-12-01", apiVersions[0]);
+            Assert.IsTrue(parameters.Contains("trace=1"));
         }
 
         [TestMethod]
@@ -692,23 +720,15 @@ namespace Senparc.Xncf.AgentsManagerTests
         [TestMethod]
         public void PublishedA2AAgent_NeuCharLegacyApiVersionFallback_IsAvailableWhenSdkVersionIsConfigured()
         {
-            var candidatesMethod = typeof(AgentTemplateRunner).GetMethod(
-                "GetApiVersionCompatibilityFallbacks",
-                BindingFlags.NonPublic | BindingFlags.Static);
-            Assert.IsNotNull(candidatesMethod);
-
-            var candidates = candidatesMethod.Invoke(
-                null,
-                new object[]
+            // API 版本兼容候选已抽取到共享的 AgentModelFallbackResolver。
+            var candidates = AgentModelFallbackResolver.GetApiVersionCompatibilityFallbacks(
+                new AIModelDto
                 {
-                    new AIModelDto
-                    {
-                        AiPlatform = Senparc.AI.AiPlatform.NeuCharAI,
-                        Endpoint = "https://www.neuchar.com/developer/",
-                        ApiVersion = "2025-04-01-preview"
-                    },
-                    null!
-                }) as System.Collections.IEnumerable;
+                    AiPlatform = Senparc.AI.AiPlatform.NeuCharAI,
+                    Endpoint = "https://www.neuchar.com/developer/",
+                    ApiVersion = "2025-04-01-preview"
+                },
+                null);
 
             Assert.IsNotNull(candidates);
             var hasLegacyDefault = false;

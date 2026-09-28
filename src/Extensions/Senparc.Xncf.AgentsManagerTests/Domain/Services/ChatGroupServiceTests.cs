@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
-using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AgentsManager.Application.Dtos;
 using Senparc.Xncf.AgentsManagerTests;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using System;
@@ -20,6 +20,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests
         [TestMethod()]
         public async Task RunChatGroupInThreadTestAsync()
         {
+            RequireRealAiBackend(nameof(RunChatGroupInThreadTestAsync));
             var chatGroupService = base._serviceProvider.GetRequiredService<ChatGroupService>();
             var chatGroup = await chatGroupService.GetObjectAsync(z => z.Name == "测试项目");
             Assert.IsNotNull(chatGroup);
@@ -28,7 +29,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.Tests
             var aiModel = await aiModelService.GetObjectAsync(z => true);
 
             // 测试启动聊天组
-            await chatGroupService.RunChatGroupInThread(new ChatGroup_RunGroupRequest()
+            await chatGroupService.RunChatGroupInThread(new ChatGroupRunCommand()
             {
                 ChatGroupId = chatGroup.Id,
                 AiModelId = aiModel.Id,

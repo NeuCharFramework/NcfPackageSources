@@ -151,6 +151,7 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<PromptOptimizationKernelFallbackService>();
             services.AddScoped<PromptOptimizationService>(); // 注册 PromptOptimizationService
             services.AddSingleton<ChatTaskStreamHub>();
+            services.AddSingleton<ChatTaskCancellationRegistry>();
             services.AddSingleton<HumanInTheLoopRequestStore>();
             services.AddSingleton<AgentsManagerNeuBellProvider>();
             services.AddSingleton<AgentsManagerHumanInteractionService>();
