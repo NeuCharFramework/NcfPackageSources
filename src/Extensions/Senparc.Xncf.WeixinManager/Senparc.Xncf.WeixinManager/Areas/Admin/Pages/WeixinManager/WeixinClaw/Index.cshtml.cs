@@ -19,6 +19,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
     private readonly WeixinClawLoginService _loginService;
     private readonly WeixinClawMessageService _messageService;
     private readonly WeixinClawMessageRecordService _recordService;
+    private readonly WeixinClawBindingProfileService _bindingProfileService;
     private readonly ILogger<IndexModel> _logger;
 
     public IndexModel(
@@ -27,12 +28,14 @@ public class IndexModel : BaseAdminWeixinManagerModel
         WeixinClawLoginService loginService,
         WeixinClawMessageService messageService,
         WeixinClawMessageRecordService recordService,
+        WeixinClawBindingProfileService bindingProfileService,
         ILogger<IndexModel> logger) : base(xncfModuleService)
     {
         _accountService = accountService;
         _loginService = loginService;
         _messageService = messageService;
         _recordService = recordService;
+        _bindingProfileService = bindingProfileService;
         _logger = logger;
     }
 
@@ -53,6 +56,43 @@ public class IndexModel : BaseAdminWeixinManagerModel
             accountId,
             list = await _recordService.GetRecentDtosAsync(accountId, take).ConfigureAwait(false)
         });
+    }
+
+    public async Task<IActionResult> OnGetBindingProfilesAsync(int accountId)
+    {
+        return Ok(new
+        {
+            accountId,
+            list = await _bindingProfileService.GetDtosAsync(accountId).ConfigureAwait(false)
+        });
+    }
+
+    public async Task<IActionResult> OnPostSaveBindingProfileAsync(
+        [FromBody] WeixinClawBindingProfileDto dto)
+    {
+        try
+        {
+            return Ok(new
+            {
+                profile = await _bindingProfileService.SaveAsync(dto).ConfigureAwait(false)
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "保存个人微信 Claw 绑定配置失败。");
+            return BadRequest(new { msg = ex.Message });
+        }
+    }
+
+    public async Task<IActionResult> OnPostDeleteBindingProfileAsync([FromBody] int id)
+    {
+        var profile = await _bindingProfileService.GetObjectAsync(item => item.Id == id).ConfigureAwait(false);
+        if (profile != null)
+        {
+            await _bindingProfileService.DeleteObjectAsync(profile).ConfigureAwait(false);
+        }
+
+        return Ok(new { deleted = true });
     }
 
     public async Task<IActionResult> OnPostSaveAsync([FromBody] WeixinClawAccountDto dto)
@@ -117,7 +157,8 @@ public class IndexModel : BaseAdminWeixinManagerModel
                 request.AccountId,
                 request.ToUserId,
                 request.Text,
-                request.ContextToken).ConfigureAwait(false);
+                request.ContextToken,
+                request.ReplyToRecordId).ConfigureAwait(false);
             return Ok(new
             {
                 sent = true,
@@ -145,5 +186,6 @@ public class IndexModel : BaseAdminWeixinManagerModel
         public string ToUserId { get; set; }
         public string Text { get; set; }
         public string ContextToken { get; set; }
+        public int? ReplyToRecordId { get; set; }
     }
 }

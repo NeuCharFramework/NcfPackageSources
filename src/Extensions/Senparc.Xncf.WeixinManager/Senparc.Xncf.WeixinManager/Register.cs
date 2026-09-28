@@ -103,6 +103,9 @@ namespace Senparc.Xncf.WeixinManager
             services.AddScoped<WeixinClawAccountService>();
             services.AddScoped<WeixinClawMessageReceiptService>();
             services.AddScoped<WeixinClawMessageRecordService>();
+            services.AddScoped<WeixinClawBindingProfileService>();
+            services.AddScoped<IWeixinClawBindingProfileResolver>(
+                serviceProvider => serviceProvider.GetRequiredService<WeixinClawBindingProfileService>());
             services.AddScoped<WeixinClawMessageService>();
             services.AddScoped<IWeixinClawMessageSender>(serviceProvider =>
                 serviceProvider.GetRequiredService<WeixinClawMessageService>());
@@ -143,6 +146,7 @@ namespace Senparc.Xncf.WeixinManager
             {
                 typeof(WeixinClawMessageReceipt),
                 typeof(WeixinClawMessageRecord),
+                typeof(WeixinClawBindingProfile),
                 typeof(UserTag_WeixinUser),
                 typeof(UserTag),
                 typeof(WeixinUser),

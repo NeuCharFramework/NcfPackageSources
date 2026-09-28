@@ -250,6 +250,76 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.Sqlite
                     b.ToTable("WeixinManager_WeixinClawAccount");
                 });
 
+            modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinClawBindingProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AdminUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AiModelId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("BindingCodeHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("EnableNeuBell")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("EnableWorkflow")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Mode")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("WeixinClawAccountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("WorkflowId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WeixinClawAccountId", "BindingCodeHash")
+                        .IsUnique();
+
+                    b.HasIndex("WeixinClawAccountId", "Enabled");
+
+                    b.ToTable("WeixinManager_WeixinClawBindingProfile");
+                });
+
             modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinClawMessageReceipt", b =>
                 {
                     b.Property<int>("Id")
@@ -313,6 +383,10 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.Sqlite
 
                     b.Property<string>("ClientId")
                         .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ContextTokenProtected")
+                        .HasMaxLength(4096)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")

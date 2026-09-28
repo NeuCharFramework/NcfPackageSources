@@ -33,18 +33,14 @@
             </div>
         </div>
         <div class="status-item">
-            <div class="status-label">微信账号 Id</div>
-            <div class="status-value">@Model.PageData.DefaultAccountId</div>
+            <div class="status-label">当前 Admin 用户 Id</div>
+            <div class="status-value">@Model.PageData.CurrentAdminUserId</div>
         </div>
         <div class="status-item">
-            <div class="status-label">Admin 用户 Id</div>
-            <div class="status-value">@Model.PageData.DefaultAdminUserId</div>
-        </div>
-        <div class="status-item">
-            <div class="status-label">绑定码配置</div>
+            <div class="status-label">数据库绑定配置</div>
             <div class="status-value">
-                <el-tag type="@(Model.PageData.BootstrapCodeConfigured ? "success" : "danger")">
-                    @(Model.PageData.BootstrapCodeConfigured ? "已配置" : "未配置")
+                <el-tag type="@(Model.PageData.BindingProfileCount > 0 ? "success" : "danger")">
+                    @Model.PageData.BindingProfileCount 条启用
                 </el-tag>
             </div>
         </div>
@@ -52,10 +48,10 @@
 
     <div class="guide">
         <div><strong>首次绑定</strong></div>
-        <div>在 <code>Senparc.Web/appsettings.json</code> 或安全配置源中设置：</div>
-        <div><code>WeixinClawAdminIntegration:DefaultAccountId</code>、<code>DefaultAdminUserId</code>、<code>BootstrapCode</code></div>
-        <div><code>BootstrapCode</code> 由管理员自行设置，不是微信验证码，也不会显示在页面或保存到数据库；绑定完成后建议更换或清空。</div>
-        <div>配置并重启后，在手机端发送 <code>@(Model.PageData.CommandPrefix)bind &lt;绑定码&gt;</code>。</div>
+        <div>在微信管理模块页面打开“绑定配置”，为每个微信账号创建绑定配置：</div>
+        <div>配置名称、AdminUserId、绑定码、WorkflowId 及 NeuBell/Workflow 权限。</div>
+        <div>绑定码只保存为不可逆哈希；创建或修改后，将绑定码发送给目标微信用户。</div>
+        <div>在手机端发送 <code>@(Model.PageData.CommandPrefix)bind &lt;绑定码&gt;</code>。</div>
         <div>微信通道页面：<a href="/Admin/WeixinManager/WeixinClaw">个人微信 Bot</a></div>
     </div>
 

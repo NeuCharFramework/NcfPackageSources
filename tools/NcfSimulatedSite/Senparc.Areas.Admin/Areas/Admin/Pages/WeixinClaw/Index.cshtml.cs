@@ -6,6 +6,7 @@ using Senparc.Areas.Admin.WeixinClawIntegration;
 using Senparc.Ncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Core.WorkContext.Provider;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using Senparc.Xncf.WeixinManager.Domain.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,10 +17,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages.WeixinClaw;
 public sealed class IndexModel(
     IServiceProvider serviceProvider,
     IOptions<WeixinClawAdminIntegrationOptions> options,
+    WeixinClawBindingProfileService bindingProfileService,
     IAdminWorkContextProvider adminWorkContextProvider) : BaseAdminPageModel(serviceProvider)
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly WeixinClawAdminIntegrationOptions _options = options.Value;
+    private readonly WeixinClawBindingProfileService _bindingProfileService = bindingProfileService;
     private readonly IAdminWorkContextProvider _adminWorkContextProvider = adminWorkContextProvider;
 
     public WeixinClawIntegrationPageDto PageData { get; private set; } = new();
@@ -27,10 +30,9 @@ public sealed class IndexModel(
     public async Task<IActionResult> OnGetAsync()
     {
         var currentAdminUserId = _adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
-        var workflowUserId = _options.DefaultAdminUserId > 0
-            ? _options.DefaultAdminUserId
-            : currentAdminUserId;
+        var workflowUserId = currentAdminUserId;
         var workflowProvider = _serviceProvider.GetService<IWorkflowFunctionCallingProvider>();
+        var bindingProfiles = await _bindingProfileService.GetAllDtosAsync().ConfigureAwait(false);
         var workflows = workflowProvider == null || workflowUserId <= 0
             ? Array.Empty<WorkflowFunctionCallingDescriptor>()
             : await workflowProvider.GetAvailableAsync(workflowUserId, HttpContext.RequestAborted)
@@ -39,10 +41,8 @@ public sealed class IndexModel(
         PageData = new WeixinClawIntegrationPageDto
         {
             Enabled = _options.Enabled,
-            DefaultAccountId = _options.DefaultAccountId,
-            DefaultAdminUserId = _options.DefaultAdminUserId,
             CurrentAdminUserId = currentAdminUserId,
-            BootstrapCodeConfigured = !string.IsNullOrWhiteSpace(_options.BootstrapCode),
+            BindingProfileCount = bindingProfiles.Count(item => item.Enabled),
             RequireCommandPrefix = _options.RequireCommandPrefix,
             EnableNeuBell = _options.EnableNeuBell,
             EnableWorkflow = _options.EnableWorkflow,
@@ -65,10 +65,8 @@ public sealed class IndexModel(
     public sealed class WeixinClawIntegrationPageDto
     {
         public bool Enabled { get; set; }
-        public int DefaultAccountId { get; set; }
-        public int DefaultAdminUserId { get; set; }
         public int CurrentAdminUserId { get; set; }
-        public bool BootstrapCodeConfigured { get; set; }
+        public int BindingProfileCount { get; set; }
         public bool RequireCommandPrefix { get; set; }
         public bool EnableNeuBell { get; set; }
         public bool EnableWorkflow { get; set; }

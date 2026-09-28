@@ -2,85 +2,86 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase;
 
 #nullable disable
 
-namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
+namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Dm
 {
-    [DbContext(typeof(WeixinSenparcEntities_PostgreSQL))]
-    partial class WeixinSenparcEntities_PostgreSQLModelSnapshot : ModelSnapshot
+    [DbContext(typeof(WeixinSenparcEntities_Dm))]
+    [Migration("20260928035005_AddWeixinClawMessageRecordContextToken")]
+    partial class AddWeixinClawMessageRecordContextToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn)
                 .HasAnnotation("ProductVersion", "8.0.10")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.MpAccount", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("AppId")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("AppSecret")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("EncodingAESKey")
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("NVARCHAR2(500)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Logo")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("NVARCHAR2(200)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("PromptRangeCode")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Token")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("NVARCHAR2(500)");
 
                     b.HasKey("Id");
 
@@ -91,42 +92,41 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("Count")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<int>("MpAccountId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TagId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -138,30 +138,30 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
             modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.UserTag_WeixinUser", b =>
                 {
                     b.Property<int>("UserTagId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("WeixinUserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.HasKey("UserTagId", "WeixinUserId");
 
@@ -174,85 +174,84 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("BaseUrl")
                         .IsRequired()
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("BotTokenProtected")
                         .HasMaxLength(4096)
-                        .HasColumnType("character varying(4096)");
+                        .HasColumnType("NVARCHAR2(4096)");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<string>("GetUpdatesBuf")
                         .HasMaxLength(100000)
-                        .HasColumnType("character varying(100000)");
+                        .HasColumnType("clob");
 
                     b.Property<string>("IlinkBotId")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("NVARCHAR2(200)");
 
                     b.Property<string>("IlinkUserId")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("NVARCHAR2(200)");
 
                     b.Property<DateTime?>("LastConnectedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("LastError")
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<DateTime?>("LastMessageAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("LastMessageContextTokenProtected")
                         .HasMaxLength(4096)
-                        .HasColumnType("character varying(4096)");
+                        .HasColumnType("NVARCHAR2(4096)");
 
                     b.Property<string>("LastMessageFromUserId")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("PromptRangeCode")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -265,71 +264,69 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("AdminUserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("AiModelId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("BindingCodeHash")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("NVARCHAR2(128)");
 
                     b.Property<bool>("EnableNeuBell")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("EnableWorkflow")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<int>("Mode")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                        .HasColumnType("NVARCHAR2(150)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("WeixinClawAccountId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int?>("WorkflowId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("WeixinClawAccountId", "BindingCodeHash")
                         .IsUnique();
 
-                    b.HasIndex("WeixinClawAccountId", "Enabled")
-                        .HasDatabaseName("IX_WeixinManager_WeixinClawBindingProfile_WeixinClawAccountId~1");
+                    b.HasIndex("WeixinClawAccountId", "Enabled");
 
                     b.ToTable("WeixinManager_WeixinClawBindingProfile");
                 });
@@ -338,43 +335,42 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("MessageId")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("NVARCHAR2(200)");
 
                     b.Property<DateTime>("ReceivedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<long>("Seq")
-                        .HasColumnType("bigint");
+                        .HasColumnType("BIGINT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("WeixinClawAccountId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -388,82 +384,81 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("ClientId")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("ContextTokenProtected")
                         .HasMaxLength(4096)
-                        .HasColumnType("character varying(4096)");
+                        .HasColumnType("NVARCHAR2(4096)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("Direction")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("NVARCHAR2(20)");
 
                     b.Property<string>("Error")
                         .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<string>("FromUserId")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("MessageId")
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("NVARCHAR2(200)");
 
                     b.Property<int>("MessageState")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("MessageType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<long?>("Seq")
-                        .HasColumnType("bigint");
+                        .HasColumnType("BIGINT");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
+                        .HasColumnType("NVARCHAR2(30)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("ToUserId")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("WeixinClawAccountId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.HasKey("Id");
 
@@ -478,78 +473,77 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INT")
+                        .HasAnnotation("Dm:ValueGenerationStrategy", DmValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("City")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Country")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
+                        .HasColumnType("BIT");
 
                     b.Property<int>("Groupid")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("HeadImgUrl")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Language")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TIMESTAMP");
 
                     b.Property<int>("MpAccountId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("NickName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("OpenId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Province")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<long>("Qr_Scene")
-                        .HasColumnType("bigint");
+                        .HasColumnType("BIGINT");
 
                     b.Property<string>("Qr_Scene_Str")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<string>("Remark")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<int>("Sex")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<int>("Subscribe")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("Subscribe_Scene")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.Property<long>("Subscribe_Time")
-                        .HasColumnType("bigint");
+                        .HasColumnType("BIGINT");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("integer");
+                        .HasColumnType("INT");
 
                     b.Property<string>("UnionId")
-                        .HasColumnType("text");
+                        .HasColumnType("NVARCHAR2(32767)");
 
                     b.HasKey("Id");
 

@@ -33,7 +33,7 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
             toUserId,
             text,
             contextToken,
-            cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<WeixinClawSendTextResult> SendTextWithResultAsync(
@@ -41,6 +41,7 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
         string toUserId,
         string text,
         string contextToken = null,
+        int? replyToRecordId = null,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -60,9 +61,13 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
             throw new InvalidOperationException("个人微信账号未连接或 token 无法解密。");
         }
 
-        var targetUserId = string.IsNullOrWhiteSpace(toUserId)
+        var replyRecord = replyToRecordId.HasValue
+            ? await _recordService.GetInboundRecordAsync(accountId, replyToRecordId.Value).ConfigureAwait(false)
+            : null;
+        var targetUserId = replyRecord?.FromUserId
+            ?? (string.IsNullOrWhiteSpace(toUserId)
             ? account.LastMessageFromUserId ?? account.IlinkUserId
-            : toUserId.Trim();
+            : toUserId.Trim());
         if (string.IsNullOrWhiteSpace(targetUserId))
         {
             throw new ArgumentException(
@@ -71,6 +76,11 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
         }
 
         var effectiveContextToken = contextToken;
+        if (replyRecord != null)
+        {
+            effectiveContextToken = _accountService.UnprotectContextToken(
+                replyRecord.ContextTokenProtected);
+        }
         if (string.IsNullOrWhiteSpace(effectiveContextToken)
             && string.Equals(
                 targetUserId,

@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase;
 
 #nullable disable
 
-namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
+namespace Senparc.Xncf.WeixinManager.Domain.Migrations.PostgreSQL
 {
     [DbContext(typeof(WeixinSenparcEntities_PostgreSQL))]
-    partial class WeixinSenparcEntities_PostgreSQLModelSnapshot : ModelSnapshot
+    [Migration("20260927164222_AddWeixinClawBindingProfiles")]
+    partial class AddWeixinClawBindingProfiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -402,10 +405,6 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.PostgreSQL
                     b.Property<string>("ClientId")
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
-
-                    b.Property<string>("ContextTokenProtected")
-                        .HasMaxLength(4096)
-                        .HasColumnType("character varying(4096)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");

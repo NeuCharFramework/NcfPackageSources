@@ -25,6 +25,7 @@ public sealed class WeixinClawMessageRecordService
         long seq,
         string fromUserId,
         string toUserId,
+        string contextTokenProtected,
         int messageType,
         int messageState,
         string text,
@@ -38,6 +39,7 @@ public sealed class WeixinClawMessageRecordService
             fromUserId,
             toUserId,
             null,
+            contextTokenProtected,
             messageType,
             messageState,
             "received",
@@ -64,6 +66,7 @@ public sealed class WeixinClawMessageRecordService
             fromUserId,
             toUserId,
             clientId,
+            null,
             messageType,
             messageState,
             "sending",
@@ -109,6 +112,16 @@ public sealed class WeixinClawMessageRecordService
 
         record.MarkFailed(error);
         await SaveObjectAsync(record).ConfigureAwait(false);
+    }
+
+    public async Task<WeixinClawMessageRecord> GetInboundRecordAsync(
+        int accountId,
+        int recordId)
+    {
+        return await GetObjectAsync(item =>
+            item.Id == recordId
+            && item.WeixinClawAccountId == accountId
+            && item.Direction == WeixinClawMessageDirection.Inbound).ConfigureAwait(false);
     }
 
     private static WeixinClawMessageRecordDto ToDto(WeixinClawMessageRecord item)

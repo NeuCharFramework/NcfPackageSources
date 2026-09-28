@@ -29,6 +29,7 @@
         .claw-message.outbound .claw-message-body { background: #409eff; color: #fff; }
         .claw-message.failed .claw-message-body { background: #fef0f0; color: #f56c6c; border: 1px solid #fbc4c4; }
         .claw-message-error { color: #f56c6c; font-size: 12px; margin-top: 3px; }
+        .claw-binding-code { letter-spacing: 1px; }
         @@media (max-width: 720px) {
             .claw-table { display: block; overflow-x: auto; white-space: nowrap; }
         }
@@ -80,12 +81,86 @@
                         <td>
                             <el-button size="mini" icon="el-icon-edit" @@click="edit(item)">编辑</el-button>
                             <el-button size="mini" icon="el-icon-chat-dot-round" @@click="openChat(item)">对话</el-button>
+                            <el-button size="mini" icon="el-icon-key" @@click="openBindings(item)">绑定配置</el-button>
                             <el-button size="mini" type="danger" icon="el-icon-delete" @@click="remove(item)">删除</el-button>
                         </td>
                     </tr>
                     <tr v-if="accounts.length===0"><td colspan="6" class="claw-muted">尚未连接个人微信。</td></tr>
                 </tbody>
             </table>
+
+            <div class="claw-panel" v-if="bindings.visible">
+                <h4>绑定配置：{{bindings.accountName}}</h4>
+                <p class="claw-muted">
+                    绑定码只保存为不可逆哈希。创建或修改时请将绑定码交给对应用户；
+                    手机命令为 <code>/bind 绑定码</code>，不再使用 appsettings 中的单一绑定码。
+                </p>
+                <table class="claw-table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>AdminUserId</th>
+                            <th>WorkflowId</th>
+                            <th>功能</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in bindings.items" :key="item.id">
+                            <td>{{item.name}}</td>
+                            <td>{{item.adminUserId}}</td>
+                            <td>{{item.workflowId || '-'}}</td>
+                            <td>
+                                <span v-if="item.enableNeuBell">NeuBell </span>
+                                <span v-if="item.enableWorkflow">Workflow</span>
+                            </td>
+                            <td>{{item.enabled ? '启用' : '停用'}}</td>
+                            <td>
+                                <el-button size="mini" icon="el-icon-edit" @@click="editBinding(item)">编辑</el-button>
+                                <el-button size="mini" type="danger" icon="el-icon-delete" @@click="removeBinding(item)">删除</el-button>
+                            </td>
+                        </tr>
+                        <tr v-if="bindings.items.length===0">
+                            <td colspan="6" class="claw-muted">当前账号尚未配置绑定码。</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="claw-grid" style="margin-top:12px">
+                    <div class="claw-field">
+                        <label>配置名称</label>
+                        <el-input v-model="bindings.form.name" placeholder="例如：主管理员"></el-input>
+                    </div>
+                    <div class="claw-field">
+                        <label>绑定码</label>
+                        <el-input v-model="bindings.form.bindingCode" class="claw-binding-code"
+                                  type="password" show-password
+                                  :placeholder="bindings.form.id ? '留空表示保留原绑定码' : '创建时必须填写'"></el-input>
+                    </div>
+                    <div class="claw-field">
+                        <label>AdminUserId</label>
+                        <el-input-number v-model="bindings.form.adminUserId" :min="1" controls-position="right"></el-input-number>
+                    </div>
+                    <div class="claw-field">
+                        <label>WorkflowId（可选）</label>
+                        <el-input-number v-model="bindings.form.workflowId" :min="0" controls-position="right"></el-input-number>
+                    </div>
+                    <div class="claw-field">
+                        <label>AIModelId（可选）</label>
+                        <el-input-number v-model="bindings.form.aiModelId" :min="0" controls-position="right"></el-input-number>
+                    </div>
+                </div>
+                <div class="claw-toolbar" style="margin-top:12px">
+                    <el-checkbox v-model="bindings.form.enableNeuBell">允许 NeuBell</el-checkbox>
+                    <el-checkbox v-model="bindings.form.enableWorkflow">允许 Workflow</el-checkbox>
+                    <el-checkbox v-model="bindings.form.enabled">启用绑定</el-checkbox>
+                </div>
+                <div class="claw-toolbar">
+                    <el-button type="primary" icon="el-icon-check" @@click="saveBinding">保存绑定配置</el-button>
+                    <el-button icon="el-icon-plus" @@click="newBinding">新建绑定配置</el-button>
+                    <el-button icon="el-icon-close" @@click="bindings.visible=false">关闭</el-button>
+                </div>
+            </div>
 
             <div class="claw-panel" v-if="chat.visible">
                 <h4>微信 ClawBot 对话：{{chat.accountName}}</h4>
@@ -198,8 +273,9 @@
                     accounts: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Accounts)),
                     editor: { visible: false, form: {} },
                     login: { visible: false, sessionId: '', qrcodeImageContent: '', qrcodeUrl: '', status: '', error: '' },
-                    sender: { visible: false, accountId: 0, toUserId: '', contextToken: '', text: '' },
+                    sender: { visible: false, accountId: 0, toUserId: '', contextToken: '', replyToRecordId: null, text: '' },
                     chat: { visible: false, accountId: 0, accountName: '', messages: [], loading: false },
+                    bindings: { visible: false, accountId: 0, accountName: '', items: [], form: {} },
                     accountRefreshTimer: null,
                     messageRefreshTimer: null,
                     accountLoaded: false
@@ -284,6 +360,7 @@
                         toUserId: item.lastMessageFromUserId || '',
                         contextToken: '',
                         contextTokenAvailable: !!item.hasMessageContext,
+                        replyToRecordId: null,
                         text: ''
                     };
                     if (!item.hasMessageContext) {
@@ -299,6 +376,69 @@
                     if (this.messageRefreshTimer) clearInterval(this.messageRefreshTimer);
                     this.messageRefreshTimer = setInterval(() => this.loadMessages(), 3000);
                 },
+                emptyBindingForm() {
+                    return {
+                        id: 0,
+                        accountId: this.bindings.accountId,
+                        name: '',
+                        adminUserId: 0,
+                        workflowId: null,
+                        aiModelId: 0,
+                        mode: 0,
+                        enableNeuBell: true,
+                        enableWorkflow: true,
+                        enabled: true,
+                        bindingCode: ''
+                    };
+                },
+                async openBindings(item) {
+                    this.bindings.visible = true;
+                    this.bindings.accountId = item.id;
+                    this.bindings.accountName = item.name;
+                    this.newBinding();
+                    await this.loadBindingProfiles();
+                },
+                newBinding() {
+                    this.bindings.form = this.emptyBindingForm();
+                },
+                editBinding(item) {
+                    this.bindings.form = Object.assign({}, item, {
+                        accountId: this.bindings.accountId,
+                        bindingCode: ''
+                    });
+                },
+                async loadBindingProfiles() {
+                    const res = await service.get(
+                        '/Admin/WeixinManager/WeixinClaw?handler=BindingProfiles&accountId='
+                        + encodeURIComponent(this.bindings.accountId));
+                    this.bindings.items = res.data.data.list || [];
+                },
+                async saveBinding() {
+                    try {
+                        await service.post(
+                            '/Admin/WeixinManager/WeixinClaw?handler=SaveBindingProfile',
+                            this.bindings.form);
+                        this.$message.success('绑定配置已保存。');
+                        await this.loadBindingProfiles();
+                        this.newBinding();
+                    } catch (error) {
+                        const message = error && error.response && error.response.data && error.response.data.msg
+                            ? error.response.data.msg
+                            : (error && error.message) || '保存绑定配置失败';
+                        this.$message.error(message);
+                    }
+                },
+                async removeBinding(item) {
+                    try {
+                        await service.post(
+                            '/Admin/WeixinManager/WeixinClaw?handler=DeleteBindingProfile',
+                            item.id);
+                        await this.loadBindingProfiles();
+                        this.newBinding();
+                    } catch (error) {
+                        this.$message.error('删除绑定配置失败');
+                    }
+                },
                 async loadMessages() {
                     if (!this.chat.accountId) return;
                     this.chat.loading = true;
@@ -307,6 +447,14 @@
                             '/Admin/WeixinManager/WeixinClaw?handler=Messages&accountId='
                             + encodeURIComponent(this.chat.accountId) + '&take=200');
                         this.chat.messages = res.data.data.list || [];
+                        const latestInbound = this.chat.messages
+                            .filter(message => message.direction === 'inbound')
+                            .slice(-1)[0];
+                        if (latestInbound && this.sender.accountId === this.chat.accountId) {
+                            this.sender.replyToRecordId = latestInbound.id;
+                            this.sender.toUserId = latestInbound.fromUserId || this.sender.toUserId;
+                            this.sender.contextTokenAvailable = true;
+                        }
                     } finally {
                         this.chat.loading = false;
                     }

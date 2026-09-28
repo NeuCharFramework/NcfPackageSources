@@ -10,9 +10,6 @@ public sealed class WeixinClawAdminIntegrationOptions
     public const string SectionName = "WeixinClawAdminIntegration";
 
     public bool Enabled { get; set; } = true;
-    public int DefaultAdminUserId { get; set; }
-    public int DefaultAccountId { get; set; }
-    public string BootstrapCode { get; set; } = string.Empty;
     public string CommandPrefix { get; set; } = "/";
     public bool RequireCommandPrefix { get; set; } = true;
     public bool AllowPlainChat { get; set; } = true;

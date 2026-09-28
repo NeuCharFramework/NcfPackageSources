@@ -11,11 +11,13 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.WeixinManager.WeixinClaw;
 
-public sealed class WeixinClawHostedService : BackgroundService
+public sealed class WeixinClawHostedService : IHostedService, IDisposable
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<WeixinClawHostedService> _logger;
     private readonly ConcurrentDictionary<int, Task> _runningAccounts = new();
+    private readonly CancellationTokenSource _stoppingCts = new();
+    private Task _runningTask;
 
     public WeixinClawHostedService(
         IServiceScopeFactory scopeFactory,
@@ -25,48 +27,104 @@ public sealed class WeixinClawHostedService : BackgroundService
         _logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public Task StartAsync(CancellationToken cancellationToken)
     {
-        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
-        while (await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false))
-        {
-            try
-            {
-                using var scope = _scopeFactory.CreateScope();
-                var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
-                var accounts = await accountService.GetFullListAsync(
-                    z => z.Enabled && !string.IsNullOrWhiteSpace(z.BotTokenProtected),
-                    z => z.Id,
-                    Senparc.Ncf.Core.Enums.OrderingType.Ascending).ConfigureAwait(false);
+        _runningTask = Task.Run(() => RunAsync(_stoppingCts.Token), CancellationToken.None);
+        return Task.CompletedTask;
+    }
 
-                foreach (var account in accounts)
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        _stoppingCts.Cancel();
+        if (_runningTask == null)
+        {
+            return;
+        }
+
+        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutCts.CancelAfter(TimeSpan.FromSeconds(5));
+        try
+        {
+            await _runningTask.WaitAsync(timeoutCts.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("个人微信 Claw 长轮询已发出停止信号，主站继续退出。");
+        }
+
+        var accountTasks = _runningAccounts.Values
+            .Where(task => !task.IsCompleted)
+            .ToArray();
+        if (accountTasks.Length == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            await Task.WhenAll(accountTasks).WaitAsync(timeoutCts.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation(
+                "个人微信 Claw 账号任务未在停止等待窗口内全部结束，主站继续退出：Count={Count}",
+                accountTasks.Length);
+        }
+    }
+
+    private async Task RunAsync(CancellationToken stoppingToken)
+    {
+        try
+        {
+            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+            while (await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false))
+            {
+                try
                 {
-                    if (_runningAccounts.TryAdd(account.Id, Task.CompletedTask))
+                    using var scope = _scopeFactory.CreateScope();
+                    var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
+                    var accounts = await accountService.GetFullListAsync(
+                        z => z.Enabled && !string.IsNullOrWhiteSpace(z.BotTokenProtected),
+                        z => z.Id,
+                        Senparc.Ncf.Core.Enums.OrderingType.Ascending).ConfigureAwait(false);
+
+                    foreach (var account in accounts)
                     {
-                        var task = RunAccountAsync(account.Id, stoppingToken);
-                        _runningAccounts[account.Id] = task;
-                        _ = task.ContinueWith(
-                            _ => _runningAccounts.TryRemove(account.Id, out _),
-                            CancellationToken.None,
-                            TaskContinuationOptions.ExecuteSynchronously,
-                            TaskScheduler.Default);
+                        if (_runningAccounts.TryAdd(account.Id, Task.CompletedTask))
+                        {
+                            var task = RunAccountAsync(account.Id, stoppingToken);
+                            _runningAccounts[account.Id] = task;
+                            _ = task.ContinueWith(
+                                _ => _runningAccounts.TryRemove(account.Id, out _),
+                                CancellationToken.None,
+                                TaskContinuationOptions.ExecuteSynchronously,
+                                TaskScheduler.Default);
+                        }
+                    }
+
+                    foreach (var item in _runningAccounts.Where(z => z.Value.IsCompleted).ToList())
+                    {
+                        _runningAccounts.TryRemove(item.Key, out _);
                     }
                 }
-
-                foreach (var item in _runningAccounts.Where(z => z.Value.IsCompleted).ToList())
+                catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
                 {
-                    _runningAccounts.TryRemove(item.Key, out _);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "扫描个人微信 Claw 账号失败。");
                 }
             }
-            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
-            {
-                break;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "扫描个人微信 Claw 账号失败。");
-            }
         }
+        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+        {
+        }
+    }
+
+    public void Dispose()
+    {
+        _stoppingCts.Dispose();
     }
 
     private async Task RunAccountAsync(int accountId, CancellationToken stoppingToken)
@@ -178,6 +236,7 @@ public sealed class WeixinClawHostedService : BackgroundService
                             message.Seq,
                             message.FromUserId,
                             message.ToUserId,
+                            accountService.ProtectContextToken(message.ContextToken),
                             message.MessageType,
                             message.MessageState,
                             text,
@@ -236,13 +295,16 @@ public sealed class WeixinClawHostedService : BackgroundService
         }
         finally
         {
-            if (!string.IsNullOrWhiteSpace(baseUrl) && !string.IsNullOrWhiteSpace(token))
+            if (!stoppingToken.IsCancellationRequested
+                && !string.IsNullOrWhiteSpace(baseUrl)
+                && !string.IsNullOrWhiteSpace(token))
             {
                 try
                 {
+                    using var notifyTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(2));
                     using var scope = _scopeFactory.CreateScope();
                     var api = scope.ServiceProvider.GetRequiredService<WeixinClawApi>();
-                    await api.NotifyStopAsync(baseUrl, token, CancellationToken.None).ConfigureAwait(false);
+                    await api.NotifyStopAsync(baseUrl, token, notifyTimeout.Token).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

@@ -18,9 +18,6 @@ Admin Chat、NeuBell 或 Workflow。
 ```json
 "WeixinClawAdminIntegration": {
   "Enabled": true,
-  "DefaultAdminUserId": 1,
-  "DefaultAccountId": 1,
-  "BootstrapCode": "请替换为一次性绑定码",
   "CommandPrefix": "/",
   "RequireCommandPrefix": true,
   "AllowPlainChat": true,
@@ -30,10 +27,11 @@ Admin Chat、NeuBell 或 Workflow。
 }
 ```
 
-`DefaultAdminUserId` 是 Admin 管理员记录 Id，`DefaultAccountId` 是 WeixinClaw
-账号记录 Id；不要填写微信用户 Id。`BootstrapCode` 是管理员自行设置的绑定密钥，
-不是微信生成的验证码，也不会保存到数据库。保存配置并重启宿主后，在目标个人微信中发送
-`/bind 绑定码`。绑定完成后建议更换或清空该配置。未绑定会话发送 `/help` 会收到同样的配置说明。
+绑定配置不再使用 appsettings 中的单一绑定码。请打开
+`/Admin/WeixinManager/WeixinClaw`，在对应账号的“绑定配置”中创建记录，填写
+`AdminUserId`、绑定码、WorkflowId 及功能权限。绑定码只保存 SHA-256 哈希，
+不会回显；保存后将绑定码发送给目标微信用户。用户发送 `/bind 绑定码` 完成绑定。
+未绑定会话发送 `/help` 会收到配置入口说明。
 
 ### 可用能力
 

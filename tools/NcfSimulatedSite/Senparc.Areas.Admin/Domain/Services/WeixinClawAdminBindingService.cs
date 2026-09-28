@@ -43,7 +43,10 @@ public sealed class WeixinClawAdminBindingService : BaseClientService<WeixinClaw
         string groupId,
         int adminUserId,
         bool enableNeuBell,
-        bool enableWorkflow)
+        bool enableWorkflow,
+        int? workflowId = null,
+        int aiModelId = 0,
+        int mode = 0)
     {
         var normalizedUserId = fromUserId?.Trim() ?? string.Empty;
         var normalizedGroupId = groupId?.Trim() ?? string.Empty;
@@ -55,9 +58,9 @@ public sealed class WeixinClawAdminBindingService : BaseClientService<WeixinClaw
         if (existing != null)
         {
             existing.SetRouting(
-                existing.Mode,
-                existing.AiModelId,
-                existing.WorkflowId,
+                mode,
+                aiModelId,
+                workflowId,
                 enableNeuBell,
                 enableWorkflow);
             await SaveObjectAsync(existing).ConfigureAwait(false);
@@ -69,6 +72,12 @@ public sealed class WeixinClawAdminBindingService : BaseClientService<WeixinClaw
             fromUserId,
             groupId,
             adminUserId,
+            enableNeuBell,
+            enableWorkflow);
+        binding.SetRouting(
+            mode,
+            aiModelId,
+            workflowId,
             enableNeuBell,
             enableWorkflow);
         await SaveObjectAsync(binding).ConfigureAwait(false);
