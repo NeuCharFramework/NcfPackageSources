@@ -85,14 +85,19 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
 
     public string UnprotectContextToken(WeixinClawAccount account)
     {
-        if (account == null || string.IsNullOrWhiteSpace(account.LastMessageContextTokenProtected))
+        return UnprotectContextToken(account?.LastMessageContextTokenProtected);
+    }
+
+    public string UnprotectContextToken(string protectedContextToken)
+    {
+        if (string.IsNullOrWhiteSpace(protectedContextToken))
         {
             return null;
         }
 
         try
         {
-            return _contextTokenProtector.Unprotect(account.LastMessageContextTokenProtected);
+            return _contextTokenProtector.Unprotect(protectedContextToken);
         }
         catch
         {

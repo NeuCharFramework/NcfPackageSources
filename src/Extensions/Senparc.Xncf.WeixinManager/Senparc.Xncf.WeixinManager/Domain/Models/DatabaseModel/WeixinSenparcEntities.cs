@@ -33,6 +33,7 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
         public DbSet<WeixinClawAccount> WeixinClawAccounts { get; set; }
         public DbSet<WeixinClawMessageReceipt> WeixinClawMessageReceipts { get; set; }
         public DbSet<WeixinClawMessageRecord> WeixinClawMessageRecords { get; set; }
+        public DbSet<WeixinClawBindingProfile> WeixinClawBindingProfiles { get; set; }
 
         public WeixinSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {

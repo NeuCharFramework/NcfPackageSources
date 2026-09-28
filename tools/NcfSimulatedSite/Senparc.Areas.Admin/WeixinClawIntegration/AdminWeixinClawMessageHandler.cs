@@ -4,6 +4,7 @@ using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using Senparc.Xncf.WeixinManager.Domain.Services;
 using Senparc.Xncf.WeixinManager.WeixinClaw;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace Senparc.Areas.Admin.WeixinClawIntegration;
 public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
 {
     private readonly IWeixinClawMessageSender _sender;
+    private readonly IWeixinClawBindingProfileResolver _bindingProfileResolver;
+    private readonly WeixinClawBindingProfileService _bindingProfileService;
     private readonly WeixinClawAdminBindingService _bindingService;
     private readonly AdminChatSessionService _sessionService;
     private readonly AdminChatMessageService _messageService;
@@ -33,6 +36,8 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
 
     public AdminWeixinClawMessageHandler(
         IWeixinClawMessageSender sender,
+        IWeixinClawBindingProfileResolver bindingProfileResolver,
+        WeixinClawBindingProfileService bindingProfileService,
         WeixinClawAdminBindingService bindingService,
         AdminChatSessionService sessionService,
         AdminChatMessageService messageService,
@@ -44,6 +49,8 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         IWorkflowFunctionCallingProvider workflowProvider = null)
     {
         _sender = sender;
+        _bindingProfileResolver = bindingProfileResolver;
+        _bindingProfileService = bindingProfileService;
         _bindingService = bindingService;
         _sessionService = sessionService;
         _messageService = messageService;
@@ -80,9 +87,7 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         if (_options.RequireCommandPrefix && !isCommand)
         {
             if (binding == null
-                && _options.DefaultAccountId == context.AccountId
-                && _options.DefaultAdminUserId > 0
-                && !string.IsNullOrWhiteSpace(_options.BootstrapCode))
+                && await HasBindingProfilesAsync(context.AccountId).ConfigureAwait(false))
             {
                 await ReplyAsync(
                     context,
@@ -184,27 +189,15 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         string argument,
         CancellationToken cancellationToken)
     {
-        if (_options.DefaultAdminUserId <= 0 || _options.DefaultAccountId <= 0)
+        var profile = await _bindingProfileResolver.ResolveAsync(
+            context.AccountId,
+            argument,
+            cancellationToken).ConfigureAwait(false);
+        if (profile == null)
         {
             await ReplyAsync(
                 context,
-                "Admin 尚未完成微信集成配置。管理员需要在 Senparc.Web 的配置节 WeixinClawAdminIntegration 中填写 DefaultAdminUserId、DefaultAccountId 和 BootstrapCode。",
-                cancellationToken).ConfigureAwait(false);
-            return;
-        }
-
-        if (_options.DefaultAccountId != context.AccountId)
-        {
-            await ReplyAsync(context, "此个人微信账号未被配置为 Admin 集成账号。", cancellationToken).ConfigureAwait(false);
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(_options.BootstrapCode)
-            || !string.Equals(argument?.Trim(), _options.BootstrapCode.Trim(), StringComparison.Ordinal))
-        {
-            await ReplyAsync(
-                context,
-                "绑定码不正确。绑定码不是微信生成的验证码，而是管理员在 Senparc.Web 配置节 WeixinClawAdminIntegration:BootstrapCode 中自行设置的一次性字符串。",
+                "绑定码无效，或当前微信账号没有启用对应的数据库绑定配置。请管理员打开 Admin → 个人微信集成或微信管理 → 个人微信 Bot → 绑定配置进行检查。",
                 cancellationToken).ConfigureAwait(false);
             return;
         }
@@ -213,9 +206,12 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
             context.AccountId,
             context.FromUserId,
             context.GroupId,
-            _options.DefaultAdminUserId,
-            _options.EnableNeuBell,
-            _options.EnableWorkflow).ConfigureAwait(false);
+            profile.AdminUserId,
+            profile.EnableNeuBell && _options.EnableNeuBell,
+            profile.EnableWorkflow && _options.EnableWorkflow,
+            profile.WorkflowId,
+            profile.AiModelId,
+            profile.Mode).ConfigureAwait(false);
         await ReplyAsync(
             context,
             $"绑定成功。发送 {NormalizePrefix(_options.CommandPrefix)}help 查看可用功能。",
@@ -547,7 +543,8 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         };
         if (binding.EnableWorkflow && _options.EnableWorkflow)
         {
-            lines.Add($"{prefix}workflow [WorkflowId] <输入> - 执行已授权 Workflow");
+            lines.Add($"{prefix}workflow - 列出可用 Workflow 和 WorkflowId");
+            lines.Add($"{prefix}workflow <WorkflowId> <输入> - 执行指定 Workflow");
         }
         if (_options.EnableHarness)
         {
@@ -562,10 +559,16 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
         return string.Join(
             Environment.NewLine,
             "当前微信会话尚未绑定 Admin。",
-            "1. 管理员在 Senparc.Web 配置节 WeixinClawAdminIntegration 中设置 BootstrapCode。",
-            $"2. 将该配置值作为绑定码发送：{prefix}bind <绑定码>",
+            "1. 管理员在 Admin → 个人微信集成或微信管理 → 个人微信 Bot → 绑定配置中创建绑定配置。",
+            $"2. 将配置中的绑定码发送：{prefix}bind <绑定码>",
             $"3. 绑定成功后发送 {prefix}help 查看 Admin Chat、NeuBell 和 Workflow 功能。",
-            "绑定码由系统管理员自行设置，不是微信扫码页面生成的验证码；绑定完成后建议更换或清空配置。");
+            "绑定码只保存为不可逆哈希；管理员需要在创建或修改时记住它。");
+    }
+
+    private async Task<bool> HasBindingProfilesAsync(int accountId)
+    {
+        return (await _bindingProfileService.GetDtosAsync(accountId).ConfigureAwait(false))
+            .Any(item => item.Enabled);
     }
 
     private async Task ReplyAsync(

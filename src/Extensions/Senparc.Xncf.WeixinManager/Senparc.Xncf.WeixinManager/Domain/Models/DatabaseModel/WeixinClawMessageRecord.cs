@@ -28,6 +28,9 @@ public sealed class WeixinClawMessageRecord : EntityBase<int>
     [MaxLength(300)]
     public string ClientId { get; private set; }
 
+    [MaxLength(4096)]
+    public string ContextTokenProtected { get; private set; }
+
     public int MessageType { get; private set; }
     public int MessageState { get; private set; }
 
@@ -55,6 +58,7 @@ public sealed class WeixinClawMessageRecord : EntityBase<int>
         string fromUserId,
         string toUserId,
         string clientId,
+        string contextTokenProtected,
         int messageType,
         int messageState,
         string status,
@@ -68,6 +72,7 @@ public sealed class WeixinClawMessageRecord : EntityBase<int>
         FromUserId = fromUserId;
         ToUserId = toUserId;
         ClientId = clientId;
+        ContextTokenProtected = contextTokenProtected;
         MessageType = messageType;
         MessageState = messageState;
         Status = status?.Trim() ?? string.Empty;

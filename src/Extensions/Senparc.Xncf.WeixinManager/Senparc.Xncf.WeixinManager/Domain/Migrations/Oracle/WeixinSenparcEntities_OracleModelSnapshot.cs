@@ -261,6 +261,78 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Oracle
                     b.ToTable("WeixinManager_WeixinClawAccount");
                 });
 
+            modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinClawBindingProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("AdminUserId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("AiModelId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("BindingCodeHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("NVARCHAR2(128)");
+
+                    b.Property<bool>("EnableNeuBell")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<bool>("EnableWorkflow")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("NUMBER(1)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<int>("Mode")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR2(150)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int>("WeixinClawAccountId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<int?>("WorkflowId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WeixinClawAccountId", "BindingCodeHash")
+                        .IsUnique();
+
+                    b.HasIndex("WeixinClawAccountId", "Enabled");
+
+                    b.ToTable("WeixinManager_WeixinClawBindingProfile");
+                });
+
             modelBuilder.Entity("Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.WeixinClawMessageReceipt", b =>
                 {
                     b.Property<int>("Id")
@@ -329,6 +401,10 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Oracle
                     b.Property<string>("ClientId")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<string>("ContextTokenProtected")
+                        .HasMaxLength(4096)
+                        .HasColumnType("NCLOB");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TIMESTAMP(7)");
