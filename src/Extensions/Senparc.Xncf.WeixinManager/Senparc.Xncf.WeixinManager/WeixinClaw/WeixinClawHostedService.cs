@@ -93,14 +93,6 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 "个人微信 Claw 账号任务未在停止等待窗口内全部结束，主站继续退出：Count={Count}",
                 accountTasks.Length);
         }
-        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
-        {
-        }
-    }
-
-    public void Dispose()
-    {
-        _stoppingCts.Dispose();
     }
 
     private async Task RunAsync(CancellationToken stoppingToken)

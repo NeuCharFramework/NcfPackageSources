@@ -610,6 +610,11 @@
                         } else if (newCount > 0) {
                             this.chat.newCount += newCount;
                         }
+                        if (forceBottom || this.chat.nearBottom) {
+                            this.$nextTick(() => this.jumpToLatest());
+                        } else if (newCount > 0) {
+                            this.chat.newCount += newCount;
+                        }
                     } finally {
                         this.chat.loading = false;
                     }
