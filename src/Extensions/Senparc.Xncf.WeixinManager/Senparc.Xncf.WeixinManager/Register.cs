@@ -103,6 +103,7 @@ namespace Senparc.Xncf.WeixinManager
             services.AddScoped<WeixinClawAccountService>();
             services.AddScoped<WeixinClawMessageReceiptService>();
             services.AddScoped<WeixinClawMessageRecordService>();
+            services.AddScoped<WeixinClawMediaService>();
             services.AddScoped<WeixinClawBindingProfileService>();
             services.AddScoped<IWeixinClawBindingProfileResolver>(
                 serviceProvider => serviceProvider.GetRequiredService<WeixinClawBindingProfileService>());

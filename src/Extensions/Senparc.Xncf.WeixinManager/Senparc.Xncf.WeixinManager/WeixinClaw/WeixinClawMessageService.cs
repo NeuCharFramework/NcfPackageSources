@@ -26,6 +26,7 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
         string toUserId,
         string text,
         string contextToken = null,
+        string runId = null,
         CancellationToken cancellationToken = default)
     {
         await SendTextWithResultAsync(
@@ -33,6 +34,7 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
             toUserId,
             text,
             contextToken,
+            runId: runId,
             cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 
@@ -42,6 +44,7 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
         string text,
         string contextToken = null,
         int? replyToRecordId = null,
+        string runId = null,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -76,6 +79,7 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
         }
 
         var effectiveContextToken = contextToken;
+        runId = replyRecord?.RunId ?? runId;
         if (replyRecord != null)
         {
             effectiveContextToken = _accountService.UnprotectContextToken(
@@ -103,6 +107,7 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
             MessageType = 2,
             MessageState = 2,
             ContextToken = effectiveContextToken,
+            RunId = runId,
             ItemList =
             [
                 new WeixinClawMessageItem
@@ -131,6 +136,15 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
             if (result.Ret != 0)
             {
                 var error = $"发送个人微信消息失败：{result.Ret} {result.Errmsg}";
+                await _recordService.MarkFailedAsync(record.Id, error).ConfigureAwait(false);
+                throw new InvalidOperationException(error);
+            }
+
+            if (string.IsNullOrWhiteSpace(result.MessageId))
+            {
+                var error =
+                    "iLink 已返回 ret=0，但没有返回 message_id；消息未确认进入下行队列，手机端可能不会显示。"
+                    + "请重新发送一条手机消息后再回复，或重新扫码绑定账号。";
                 await _recordService.MarkFailedAsync(record.Id, error).ConfigureAwait(false);
                 throw new InvalidOperationException(error);
             }

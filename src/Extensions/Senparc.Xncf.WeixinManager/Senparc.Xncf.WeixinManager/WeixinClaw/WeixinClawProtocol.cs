@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Senparc.Xncf.WeixinManager.WeixinClaw;
 
@@ -35,6 +36,7 @@ public static class WeixinClawProtocol
 
 public sealed class WeixinClawApi
 {
+    public const string DefaultCdnBaseUrl = "https://novac2c.cdn.weixin.qq.com/c2c";
     private readonly HttpClient _httpClient;
 
     public WeixinClawApi(HttpClient httpClient)
@@ -118,6 +120,58 @@ public sealed class WeixinClawApi
             botToken,
             TimeSpan.FromSeconds(15),
             cancellationToken);
+    }
+
+    public Task<WeixinClawGetUploadUrlResponse> GetUploadUrlAsync(
+        string baseUrl,
+        string botToken,
+        WeixinClawGetUploadUrlRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        request.BaseInfo ??= CreateBaseInfo();
+        return PostAsync<WeixinClawGetUploadUrlResponse>(
+            baseUrl,
+            "ilink/bot/getuploadurl",
+            request,
+            botToken,
+            TimeSpan.FromSeconds(15),
+            cancellationToken);
+    }
+
+    public async Task<string> UploadMediaAsync(
+        string uploadFullUrl,
+        string uploadParam,
+        string fileKey,
+        byte[] encryptedBytes,
+        CancellationToken cancellationToken = default)
+    {
+        var url = !string.IsNullOrWhiteSpace(uploadFullUrl)
+            ? uploadFullUrl
+            : $"{DefaultCdnBaseUrl}/upload?encrypted_query_param={Uri.EscapeDataString(uploadParam ?? string.Empty)}&filekey={Uri.EscapeDataString(fileKey)}";
+        using var request = new HttpRequestMessage(HttpMethod.Post, url)
+        {
+            Content = new ByteArrayContent(encryptedBytes)
+        };
+        request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+        using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutSource.CancelAfter(TimeSpan.FromSeconds(60));
+        using var response = await _httpClient.SendAsync(
+            request,
+            HttpCompletionOption.ResponseHeadersRead,
+            timeoutSource.Token).ConfigureAwait(false);
+        if (!response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync(timeoutSource.Token).ConfigureAwait(false);
+            throw new HttpRequestException(
+                $"微信媒体上传失败：{(int)response.StatusCode} {LimitForError(content)}");
+        }
+
+        if (!response.Headers.TryGetValues("x-encrypted-param", out var values))
+        {
+            throw new InvalidOperationException("微信媒体上传响应缺少 x-encrypted-param。");
+        }
+
+        return values.FirstOrDefault();
     }
 
     public Task<WeixinClawGetConfigResponse> GetConfigAsync(
@@ -362,6 +416,44 @@ public sealed class WeixinClawGetConfigResponse
     public string TypingTicket { get; set; }
 }
 
+public sealed class WeixinClawGetUploadUrlRequest
+{
+    [JsonPropertyName("filekey")]
+    public string FileKey { get; set; }
+
+    [JsonPropertyName("media_type")]
+    public int MediaType { get; set; }
+
+    [JsonPropertyName("to_user_id")]
+    public string ToUserId { get; set; }
+
+    [JsonPropertyName("rawsize")]
+    public int RawSize { get; set; }
+    [JsonPropertyName("rawfilemd5")]
+    public string RawFileMd5 { get; set; }
+    [JsonPropertyName("filesize")]
+    public int FileSize { get; set; }
+    [JsonPropertyName("no_need_thumb")]
+    public bool NoNeedThumb { get; set; } = true;
+    [JsonPropertyName("aeskey")]
+    public string AesKey { get; set; }
+
+    [JsonPropertyName("base_info")]
+    public WeixinClawBaseInfo BaseInfo { get; set; }
+}
+
+public sealed class WeixinClawGetUploadUrlResponse
+{
+    [JsonPropertyName("upload_param")]
+    public string UploadParam { get; set; }
+
+    [JsonPropertyName("upload_full_url")]
+    public string UploadFullUrl { get; set; }
+
+    [JsonPropertyName("thumb_upload_param")]
+    public string ThumbUploadParam { get; set; }
+}
+
 public sealed class WeixinClawEmptyResponse
 {
     public int Ret { get; set; }
@@ -405,6 +497,9 @@ public sealed class WeixinClawMessage
 
     [JsonPropertyName("context_token")]
     public string ContextToken { get; set; }
+
+    [JsonPropertyName("run_id")]
+    public string RunId { get; set; }
 }
 
 public sealed class WeixinClawMessageItem
@@ -413,11 +508,61 @@ public sealed class WeixinClawMessageItem
 
     [JsonPropertyName("text_item")]
     public WeixinClawTextItem TextItem { get; set; }
+
+    [JsonPropertyName("image_item")]
+    public WeixinClawImageItem ImageItem { get; set; }
+
+    [JsonPropertyName("voice_item")]
+    public WeixinClawVoiceItem VoiceItem { get; set; }
+
+    [JsonPropertyName("file_item")]
+    public WeixinClawFileItem FileItem { get; set; }
 }
 
 public sealed class WeixinClawTextItem
 {
     public string Text { get; set; }
+}
+
+public sealed class WeixinClawCdnMedia
+{
+    [JsonPropertyName("encrypt_query_param")]
+    public string EncryptQueryParam { get; set; }
+
+    [JsonPropertyName("aes_key")]
+    public string AesKey { get; set; }
+
+    [JsonPropertyName("encrypt_type")]
+    public int EncryptType { get; set; } = 1;
+}
+
+public sealed class WeixinClawImageItem
+{
+    public WeixinClawCdnMedia Media { get; set; }
+    [JsonPropertyName("mid_size")]
+    public int MidSize { get; set; }
+    [JsonPropertyName("hd_size")]
+    public int HdSize { get; set; }
+}
+
+public sealed class WeixinClawVoiceItem
+{
+    public WeixinClawCdnMedia Media { get; set; }
+    [JsonPropertyName("encode_type")]
+    public int EncodeType { get; set; }
+    [JsonPropertyName("sample_rate")]
+    public int SampleRate { get; set; }
+    [JsonPropertyName("bits_per_sample")]
+    public int BitsPerSample { get; set; }
+    public int Playtime { get; set; }
+}
+
+public sealed class WeixinClawFileItem
+{
+    public WeixinClawCdnMedia Media { get; set; }
+    [JsonPropertyName("file_name")]
+    public string FileName { get; set; }
+    public string Len { get; set; }
 }
 
 public sealed class StringOrNumberConverter : JsonConverter<string>

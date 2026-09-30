@@ -442,6 +442,10 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.MySql
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
+                    b.Property<string>("RunId")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
                     b.Property<long?>("Seq")
                         .HasColumnType("bigint");
 

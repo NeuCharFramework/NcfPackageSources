@@ -13,6 +13,7 @@ public sealed record WeixinClawMessageReceivedContext(
     string ToUserId,
     string GroupId,
     string ContextToken,
+    string RunId,
     string Text,
     DateTimeOffset CreatedAt);
 
@@ -34,5 +35,6 @@ public interface IWeixinClawMessageSender
         string toUserId,
         string text,
         string contextToken = null,
+        string runId = null,
         CancellationToken cancellationToken = default);
 }

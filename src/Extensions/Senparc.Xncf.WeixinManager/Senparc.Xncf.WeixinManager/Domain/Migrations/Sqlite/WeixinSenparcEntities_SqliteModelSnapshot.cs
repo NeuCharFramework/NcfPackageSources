@@ -425,6 +425,10 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.Sqlite
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("RunId")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
                     b.Property<long?>("Seq")
                         .HasColumnType("INTEGER");
 
