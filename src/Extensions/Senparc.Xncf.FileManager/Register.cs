@@ -104,6 +104,7 @@ namespace Senparc.Xncf.FileManager
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddScoped<ColorAppService>();
+            services.AddScoped<IFileManagerGateway, NcfFileManagerGateway>();
             
             services.AddAutoMapper(z =>
             {
