@@ -17,8 +17,10 @@ public static class WeixinClawProtocol
 {
     public const string DefaultBaseUrl = "https://ilinkai.weixin.qq.com";
     public const string AppId = "bot";
-    public const string ChannelVersion = "0.1.0";
-    public const int ClientVersion = (2 << 16) | (4 << 8) | 9;
+    // Keep the wire compatibility marker aligned with the current official
+    // openclaw-weixin protocol while using bot_agent to identify NCF.
+    public const string ChannelVersion = "2.4.8";
+    public const int ClientVersion = (2 << 16) | (4 << 8) | 8;
 
     public static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -172,6 +174,39 @@ public sealed class WeixinClawApi
         }
 
         return values.FirstOrDefault();
+    }
+
+    public async Task<byte[]> DownloadMediaAsync(
+        WeixinClawCdnMedia media,
+        CancellationToken cancellationToken = default)
+    {
+        if (media == null || string.IsNullOrWhiteSpace(media.EncryptQueryParam))
+        {
+            throw new InvalidOperationException("微信媒体缺少 encrypt_query_param。");
+        }
+
+        var url =
+            $"{DefaultCdnBaseUrl}/download?encrypted_query_param={Uri.EscapeDataString(media.EncryptQueryParam)}";
+        using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutSource.CancelAfter(TimeSpan.FromSeconds(60));
+        using var response = await _httpClient.GetAsync(
+            url,
+            HttpCompletionOption.ResponseHeadersRead,
+            timeoutSource.Token).ConfigureAwait(false);
+        if (!response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync(timeoutSource.Token).ConfigureAwait(false);
+            throw new HttpRequestException(
+                $"微信媒体下载失败：{(int)response.StatusCode} {LimitForError(content)}");
+        }
+
+        var encrypted = await response.Content.ReadAsByteArrayAsync(timeoutSource.Token).ConfigureAwait(false);
+        if (media.EncryptType == 0 || string.IsNullOrWhiteSpace(media.AesKey))
+        {
+            return encrypted;
+        }
+
+        return DecryptAesEcb(encrypted, ParseAesKey(media.AesKey));
     }
 
     public Task<WeixinClawGetConfigResponse> GetConfigAsync(
@@ -343,6 +378,38 @@ public sealed class WeixinClawApi
         }
 
         return content.Length <= 500 ? content : content[..500];
+    }
+
+    private static byte[] ParseAesKey(string value)
+    {
+        var decoded = Convert.FromBase64String(value);
+        if (decoded.Length == 16)
+        {
+            return decoded;
+        }
+
+        var text = Encoding.ASCII.GetString(decoded);
+        if (text.Length == 32 && text.All(IsHex))
+        {
+            return Convert.FromHexString(text);
+        }
+
+        throw new InvalidOperationException("微信媒体 AES key 不是有效的 16 字节密钥。");
+    }
+
+    private static bool IsHex(char value) =>
+        value is >= '0' and <= '9'
+            or >= 'a' and <= 'f'
+            or >= 'A' and <= 'F';
+
+    private static byte[] DecryptAesEcb(byte[] encrypted, byte[] key)
+    {
+        using var aes = System.Security.Cryptography.Aes.Create();
+        aes.Key = key;
+        aes.Mode = System.Security.Cryptography.CipherMode.ECB;
+        aes.Padding = System.Security.Cryptography.PaddingMode.PKCS7;
+        using var decryptor = aes.CreateDecryptor();
+        return decryptor.TransformFinalBlock(encrypted, 0, encrypted.Length);
     }
 }
 

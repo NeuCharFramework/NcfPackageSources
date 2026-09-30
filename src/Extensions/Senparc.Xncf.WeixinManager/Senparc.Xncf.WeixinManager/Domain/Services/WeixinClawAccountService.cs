@@ -56,7 +56,9 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
 
     public string ProtectToken(string token)
     {
-        return string.IsNullOrWhiteSpace(token) ? null : _tokenProtector.Protect(token.Trim());
+        return string.IsNullOrWhiteSpace(token)
+            ? null
+            : _tokenProtector.Protect(NormalizeToken(token));
     }
 
     public string UnprotectToken(WeixinClawAccount account)
@@ -68,7 +70,7 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
 
         try
         {
-            return _tokenProtector.Unprotect(account.BotTokenProtected);
+            return NormalizeToken(_tokenProtector.Unprotect(account.BotTokenProtected));
         }
         catch
         {
@@ -103,6 +105,15 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
         {
             return null;
         }
+    }
+
+    private static string NormalizeToken(string token)
+    {
+        var value = token?.Trim();
+        return value != null
+            && value.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
+            ? value["Bearer ".Length..].Trim()
+            : value;
     }
 
     public async Task<WeixinClawAccount> SaveSettingsAsync(WeixinClawAccountDto dto)

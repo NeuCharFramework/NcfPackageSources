@@ -2,6 +2,7 @@ using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.WeixinManager.WeixinClaw;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,10 +111,13 @@ public sealed class WeixinClawMessageRecordService
             .Select(group =>
             {
                 var latest = group.OrderByDescending(item => item.CreatedAt).First();
+                var latestContent = WeixinClawMessageContent.Parse(latest.Text);
                 return new WeixinClawConversationDto
                 {
                     PeerUserId = group.Key,
-                    LastText = latest.Text,
+                    LastText = latestContent.MediaItems.Count > 0 && string.IsNullOrWhiteSpace(latestContent.Text)
+                        ? $"[{string.Join("、", latestContent.MediaItems.Select(item => item.Kind))}]"
+                        : latestContent.Text,
                     LastStatus = latest.Status,
                     LastCreatedAt = latest.CreatedAt,
                     MessageCount = group.Count()
@@ -159,6 +163,7 @@ public sealed class WeixinClawMessageRecordService
 
     private static WeixinClawMessageRecordDto ToDto(WeixinClawMessageRecord item)
     {
+        var content = WeixinClawMessageContent.Parse(item.Text);
         return new WeixinClawMessageRecordDto
         {
             Id = item.Id,
@@ -169,9 +174,17 @@ public sealed class WeixinClawMessageRecordService
             ToUserId = item.ToUserId,
             Status = item.Status,
             MessageType = item.MessageType,
-            Text = item.Text,
+            Text = content.Text,
             Error = item.Error,
-            CreatedAt = item.CreatedAt
+            CreatedAt = item.CreatedAt,
+            MediaItems = content.MediaItems.Select(media => new WeixinClawMessageMediaDto
+            {
+                Kind = media.Kind,
+                Name = media.Name,
+                ContentType = media.ContentType,
+                Size = media.Size,
+                Error = media.Error
+            }).ToList()
         };
     }
 }

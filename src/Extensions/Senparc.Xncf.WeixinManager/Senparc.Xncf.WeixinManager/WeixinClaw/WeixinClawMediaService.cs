@@ -1,6 +1,7 @@
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.WeixinManager.Domain.Services;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -22,15 +23,69 @@ public sealed class WeixinClawMediaService
     private readonly WeixinClawAccountService _accountService;
     private readonly WeixinClawMessageRecordService _recordService;
     private readonly WeixinClawApi _api;
+    private readonly WeixinClawMediaStorageService _storage;
 
     public WeixinClawMediaService(
         WeixinClawAccountService accountService,
         WeixinClawMessageRecordService recordService,
-        WeixinClawApi api)
+        WeixinClawApi api,
+        WeixinClawMediaStorageService storage)
     {
         _accountService = accountService;
         _recordService = recordService;
         _api = api;
+        _storage = storage;
+    }
+
+    public async Task<List<WeixinClawStoredMedia>> DownloadInboundAsync(
+        int accountId,
+        string identity,
+        IReadOnlyList<WeixinClawMessageItem> items,
+        CancellationToken cancellationToken = default)
+    {
+        var storedItems = new List<WeixinClawStoredMedia>();
+        var index = 0;
+        foreach (var item in items ?? Array.Empty<WeixinClawMessageItem>())
+        {
+            var media = GetInboundMedia(item, out var kind, out var name);
+            if (media == null)
+            {
+                continue;
+            }
+
+            var displayName = string.IsNullOrWhiteSpace(name)
+                ? DefaultFileName(kind, item)
+                : Path.GetFileName(name);
+            var stored = new WeixinClawStoredMedia
+            {
+                Kind = kind,
+                Name = displayName,
+                ContentType = GuessContentType(kind, displayName, null),
+                Size = 0
+            };
+            try
+            {
+                var bytes = await _api.DownloadMediaAsync(media, cancellationToken).ConfigureAwait(false);
+                stored.Size = bytes.LongLength;
+                stored.ContentType = GuessContentType(kind, displayName, bytes);
+                stored.StorageKey = await _storage.SaveAsync(
+                    accountId,
+                    identity,
+                    index,
+                    displayName,
+                    bytes,
+                    cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                stored.Error = ex.Message;
+            }
+
+            storedItems.Add(stored);
+            index++;
+        }
+
+        return storedItems;
     }
 
     public async Task<WeixinClawSendTextResult> SendAsync(
@@ -168,6 +223,23 @@ public sealed class WeixinClawMediaService
             $"[{kind}] {displayName}").ConfigureAwait(false);
         try
         {
+            var storedMedia = new WeixinClawStoredMedia
+            {
+                Kind = kind.ToString().ToLowerInvariant(),
+                Name = displayName,
+                ContentType = GuessContentType(kind.ToString(), displayName, bytes),
+                Size = bytes.LongLength,
+                StorageKey = await _storage.SaveAsync(
+                    accountId,
+                    record.Id.ToString(),
+                    0,
+                    displayName,
+                    bytes,
+                    cancellationToken).ConfigureAwait(false)
+            };
+            record.SetText(WeixinClawMessageContent.Serialize(null, [storedMedia]));
+            await _recordService.SaveObjectAsync(record).ConfigureAwait(false);
+
             var response = await _api.SendMessageAsync(
                 account.BaseUrl,
                 botToken,
@@ -190,6 +262,73 @@ public sealed class WeixinClawMediaService
             await _recordService.MarkFailedAsync(record.Id, ex.Message).ConfigureAwait(false);
             throw;
         }
+    }
+
+    private static WeixinClawCdnMedia GetInboundMedia(
+        WeixinClawMessageItem item,
+        out string kind,
+        out string name)
+    {
+        kind = null;
+        name = null;
+        if (item == null)
+        {
+            return null;
+        }
+
+        switch (item.Type)
+        {
+            case 2 when item.ImageItem?.Media != null:
+                kind = "image";
+                return item.ImageItem.Media;
+            case 3 when item.VoiceItem?.Media != null:
+                kind = "voice";
+                return item.VoiceItem.Media;
+            case 4 when item.FileItem?.Media != null:
+                kind = "file";
+                name = item.FileItem.FileName;
+                return item.FileItem.Media;
+            default:
+                return null;
+        }
+    }
+
+    private static string DefaultFileName(string kind, WeixinClawMessageItem item)
+    {
+        return kind switch
+        {
+            "image" => "微信图片.jpg",
+            "voice" => item?.VoiceItem?.EncodeType == 6 ? "微信语音.silk" : "微信语音.bin",
+            _ => "微信文件.bin"
+        };
+    }
+
+    private static string GuessContentType(string kind, string fileName, byte[] bytes)
+    {
+        if (bytes?.Length >= 12)
+        {
+            if (bytes[0] == 0xFF && bytes[1] == 0xD8 && bytes[2] == 0xFF) return "image/jpeg";
+            if (bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && bytes[3] == 0x47) return "image/png";
+            if (bytes[0] == 0x47 && bytes[1] == 0x49 && bytes[2] == 0x46) return "image/gif";
+            if (Encoding.ASCII.GetString(bytes, 0, 4) == "RIFF"
+                && Encoding.ASCII.GetString(bytes, 8, 4) == "WEBP") return "image/webp";
+        }
+
+        var extension = Path.GetExtension(fileName)?.ToLowerInvariant();
+        return extension switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".gif" => "image/gif",
+            ".webp" => "image/webp",
+            ".mp3" => "audio/mpeg",
+            ".wav" => "audio/wav",
+            ".m4a" => "audio/mp4",
+            ".mp4" => "video/mp4",
+            ".pdf" => "application/pdf",
+            ".txt" => "text/plain",
+            _ => kind == "voice" ? "audio/silk" : "application/octet-stream"
+        };
     }
 
     private static byte[] EncryptAesEcb(byte[] plain, byte[] key)
