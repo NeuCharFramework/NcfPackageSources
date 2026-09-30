@@ -17,7 +17,7 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.PostgreSQL
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -43,11 +43,21 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.PostgreSQL
                         .HasMaxLength(300)
                         .HasColumnType("text");
 
+                    b.Property<string>("Alias")
+                        .HasMaxLength(128)
+                        .HasColumnType("text");
+
+
                     b.Property<double>("CpuLimit")
                         .HasColumnType("double precision");
 
                     b.Property<DateTime>("ExpiresAtUtc")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ExtraPorts")
+                        .HasMaxLength(500)
+                        .HasColumnType("text");
+
 
                     b.Property<bool>("Flag")
                         .HasColumnType("boolean");

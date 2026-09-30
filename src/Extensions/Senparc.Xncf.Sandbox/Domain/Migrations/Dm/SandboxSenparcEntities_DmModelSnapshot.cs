@@ -42,11 +42,21 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.Dm
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(2000)");
 
+                    b.Property<string>("Alias")
+                        .HasMaxLength(128)
+                        .HasColumnType("NVARCHAR2(2000)");
+
+
                     b.Property<double>("CpuLimit")
                         .HasColumnType("DOUBLE");
 
                     b.Property<DateTime>("ExpiresAtUtc")
                         .HasColumnType("TIMESTAMP");
+
+                    b.Property<string>("ExtraPorts")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(2000)");
+
 
                     b.Property<bool>("Flag")
                         .HasColumnType("BIT");

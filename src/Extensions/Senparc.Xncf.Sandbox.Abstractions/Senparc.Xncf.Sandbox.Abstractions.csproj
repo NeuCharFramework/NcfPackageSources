@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <AssemblyName>Senparc.Xncf.Sandbox.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox.Abstractions</RootNamespace>
     <Nullable>enable</Nullable>
@@ -26,6 +26,8 @@
       3、新增 JupyterCsharp 模板键，支持 C# Jupyter 沙箱跨模块识别
       4、SandboxSessionInfo 增加 IsTtlUnlimited，标识永久保持会话
       5、新增 C# Jupyter 模板键、预览工作区契约和永久 TTL 状态标识
+      [2026-09-18] v0.3.0 SandboxSessionInfo 增加 Alias 与 ExtraPorts 契约字段
+      1、Alias 用于会话别名的跨模块展示；ExtraPorts 为创建时解析后的附加端口映射展示串
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

@@ -133,6 +133,11 @@ namespace Senparc.Areas.Admin.Domain.Models
         /// </summary>
         public DbSet<WeixinClawAdminBinding> WeixinClawAdminBindings { get; set; }
 
+        /// <summary>
+        /// Function 全局 Provit（全局 Pivot 浮动调用）数据库访问策略映射
+        /// </summary>
+        public DbSet<NeuCharFunctionProvitAccess> NeuCharFunctionProvitAccesses { get; set; }
+
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
 
         #endregion
@@ -182,6 +187,9 @@ namespace Senparc.Areas.Admin.Domain.Models
                 .IsUnique();
             modelBuilder.Entity<WeixinClawAdminBinding>()
                 .HasIndex(z => new { z.Enabled, z.EnableNeuBell });
+            modelBuilder.Entity<NeuCharFunctionProvitAccess>()
+                .HasIndex(z => new { z.ModuleUid, z.FunctionKey })
+                .IsUnique();
 
             var providerName = Database.ProviderName ?? string.Empty;
             var largeTextType = providerName.Contains("Oracle", StringComparison.OrdinalIgnoreCase)

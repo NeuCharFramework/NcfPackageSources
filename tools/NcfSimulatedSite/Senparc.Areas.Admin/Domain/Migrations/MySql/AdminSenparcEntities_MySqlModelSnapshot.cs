@@ -721,6 +721,67 @@ namespace Senparc.Areas.Admin.Domain.Migrations.MySql
                     b.ToTable("ADMIN_NeuCharExecutionLog");
                 });
 
+            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharFunctionProvitAccess", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccessMode")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<string>("AllowedPermissionCodes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<string>("AllowedRoleCodes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<string>("AllowedUserIds")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("FunctionKey")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ModuleUid")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleUid", "FunctionKey")
+                        .IsUnique();
+
+                    b.ToTable("ADMIN_NeuCharFunctionProvitAccess");
+                });
+
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.NeuCharPivotBoard", b =>
                 {
                     b.Property<int>("Id")

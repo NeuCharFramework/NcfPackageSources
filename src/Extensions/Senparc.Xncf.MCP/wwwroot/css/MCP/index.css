@@ -1,0 +1,22 @@
+.mcp-admin-page { padding: 12px 4px; }
+.mcp-admin-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.mcp-admin-toolbar .mcp-admin-toolbar__title { font-size: 16px; font-weight: 600; }
+.mcp-test-status-cell { line-height: 1.6; }
+.mcp-test-status-cell .mcp-test-time { color: #909399; font-size: 12px; }
+.mcp-tool-table { margin: 8px 0 16px; }
+.mcp-tool-params { margin: 0 0 10px 8px; }
+.mcp-tool-desc { color: #606266; }
+.mcp-schema-pre {
+    max-height: 360px;
+    overflow: auto;
+    background: #f5f7fa;
+    border: 1px solid #e4e7ed;
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+.mcp-form-test-block { margin-top: 4px; }
+.mcp-endpoint-url { word-break: break-all; }

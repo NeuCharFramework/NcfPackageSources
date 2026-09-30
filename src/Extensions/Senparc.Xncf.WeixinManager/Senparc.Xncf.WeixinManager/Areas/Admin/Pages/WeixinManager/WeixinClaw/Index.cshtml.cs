@@ -18,6 +18,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
     public List<WeixinClawAccountDto> Accounts { get; private set; } = new();
 
     private readonly WeixinClawAccountService _accountService;
+    private readonly WeixinClawMessageReceiptService _receiptService;
     private readonly WeixinClawLoginService _loginService;
     private readonly WeixinClawMessageService _messageService;
     private readonly WeixinClawMessageRecordService _recordService;
@@ -29,6 +30,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
     public IndexModel(
         Lazy<XncfModuleService> xncfModuleService,
         WeixinClawAccountService accountService,
+        WeixinClawMessageReceiptService receiptService,
         WeixinClawLoginService loginService,
         WeixinClawMessageService messageService,
         WeixinClawMessageRecordService recordService,
@@ -38,6 +40,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
         ILogger<IndexModel> logger) : base(xncfModuleService)
     {
         _accountService = accountService;
+        _receiptService = receiptService;
         _loginService = loginService;
         _messageService = messageService;
         _recordService = recordService;
@@ -177,6 +180,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
             var account = await _accountService.GetObjectAsync(z => z.Id == id).ConfigureAwait(false);
             if (account != null)
             {
+                await _receiptService.DeleteObjectAsync(z => z.WeixinClawAccountId == id).ConfigureAwait(false);
                 await _accountService.DeleteObjectAsync(account).ConfigureAwait(false);
             }
         }

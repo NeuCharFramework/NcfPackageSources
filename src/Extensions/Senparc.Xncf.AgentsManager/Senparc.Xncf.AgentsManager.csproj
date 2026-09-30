@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.18.0</Version>
+    <Version>0.18.1</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -165,6 +165,10 @@
 		[2026-09-17] v0.18.0 增强 Agent FunctionRender 工具的 AI schema 元数据能力
 		1、为 AgentTemplate 注册的 FunctionRender 工具注入参数元数据与选择项 schema
 		2、升级共享 Senparc.AI.AgentKernel 至 0.1.14-preview5 并保持代理执行兼容
+		[2026-09-24] v0.18.1 支持从 MCP 列表选择 Endpoint（EventBus 跨模块查询）
+		1、新增 GetMcpEndpointOptions 接口，通过 EventBus 向 Senparc.Xncf.MCP 模块查询已登记端点
+		2、Agent 与群组配置提供“从 MCP 列表选择”抽屉，复用 Function 绑定选择样式，支持搜索与勾选
+		3、MCP 模块不可用或未响应时自动降级为手动输入并给出提示
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -224,6 +228,7 @@
     <ProjectReference Include="..\Senparc.Xncf.SenMapic\Senparc.Xncf.SenMapic.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder\Senparc.Xncf.XncfBuilder.csproj" AdditionalProperties="UseCheckedInXncfBuilderGeneratedCode=true" />
     <ProjectReference Include="..\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.MCP.Abstractions\Senparc.Xncf.MCP.Abstractions.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.KnowledgeBase\Senparc.Xncf.KnowledgeBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.AgentsManager.Abstractions\Senparc.Xncf.AgentsManager.Abstractions.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.NeuCharWorkflow.Abstractions\Senparc.Xncf.NeuCharWorkflow.Abstractions.csproj" />

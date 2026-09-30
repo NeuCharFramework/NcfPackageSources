@@ -15,7 +15,7 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.Sqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
                         modelBuilder.Entity("Senparc.Xncf.Sandbox.Domain.Models.DatabaseModel.SandboxSession", b =>
                 {
@@ -38,11 +38,21 @@ namespace Senparc.Xncf.Sandbox.Domain.Migrations.Sqlite
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Alias")
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
+
+
                     b.Property<double>("CpuLimit")
                         .HasColumnType("REAL");
 
                     b.Property<DateTime>("ExpiresAtUtc")
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("ExtraPorts")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
 
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
