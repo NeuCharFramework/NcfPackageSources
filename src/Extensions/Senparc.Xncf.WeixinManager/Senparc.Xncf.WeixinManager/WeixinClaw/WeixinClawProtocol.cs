@@ -252,6 +252,39 @@ public sealed class WeixinClawApi
         return DecryptAesEcb(encrypted, ParseAesKey(media.AesKey));
     }
 
+    public async Task<byte[]> DownloadMediaAsync(
+        WeixinClawCdnMedia media,
+        CancellationToken cancellationToken = default)
+    {
+        if (media == null || string.IsNullOrWhiteSpace(media.EncryptQueryParam))
+        {
+            throw new InvalidOperationException("微信媒体缺少 encrypt_query_param。");
+        }
+
+        var url =
+            $"{DefaultCdnBaseUrl}/download?encrypted_query_param={Uri.EscapeDataString(media.EncryptQueryParam)}";
+        using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutSource.CancelAfter(TimeSpan.FromSeconds(60));
+        using var response = await _httpClient.GetAsync(
+            url,
+            HttpCompletionOption.ResponseHeadersRead,
+            timeoutSource.Token).ConfigureAwait(false);
+        if (!response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync(timeoutSource.Token).ConfigureAwait(false);
+            throw new HttpRequestException(
+                $"微信媒体下载失败：{(int)response.StatusCode} {LimitForError(content)}");
+        }
+
+        var encrypted = await response.Content.ReadAsByteArrayAsync(timeoutSource.Token).ConfigureAwait(false);
+        if (media.EncryptType == 0 || string.IsNullOrWhiteSpace(media.AesKey))
+        {
+            return encrypted;
+        }
+
+        return DecryptAesEcb(encrypted, ParseAesKey(media.AesKey));
+    }
+
     public Task<WeixinClawGetConfigResponse> GetConfigAsync(
         string baseUrl,
         string botToken,
