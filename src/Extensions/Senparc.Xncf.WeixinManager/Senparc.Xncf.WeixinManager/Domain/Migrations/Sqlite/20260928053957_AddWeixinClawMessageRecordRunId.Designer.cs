@@ -2,17 +2,20 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.WeixinManager.Domain.Models.MultipleDatabase;
 
 #nullable disable
 
-namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Migrations.Sqlite
+namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Sqlite
 {
     [DbContext(typeof(WeixinSenparcEntities_Sqlite))]
-    partial class WeixinSenparcEntities_SqliteModelSnapshot : ModelSnapshot
+    [Migration("20260928053957_AddWeixinClawMessageRecordRunId")]
+    partial class AddWeixinClawMessageRecordRunId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");

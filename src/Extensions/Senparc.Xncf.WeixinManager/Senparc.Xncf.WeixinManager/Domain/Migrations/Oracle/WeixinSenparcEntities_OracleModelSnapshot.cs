@@ -442,6 +442,10 @@ namespace Senparc.Xncf.WeixinManager.Domain.Migrations.Oracle
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<string>("RunId")
+                        .HasMaxLength(300)
+                        .HasColumnType("NVARCHAR2(300)");
+
                     b.Property<long?>("Seq")
                         .HasColumnType("NUMBER(19)");
 

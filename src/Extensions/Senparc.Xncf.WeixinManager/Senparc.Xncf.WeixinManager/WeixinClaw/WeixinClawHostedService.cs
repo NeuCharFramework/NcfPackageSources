@@ -237,6 +237,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                             message.FromUserId,
                             message.ToUserId,
                             accountService.ProtectContextToken(message.ContextToken),
+                            message.RunId,
                             message.MessageType,
                             message.MessageState,
                             text,
@@ -253,6 +254,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                             message.ToUserId,
                             message.GroupId,
                             message.ContextToken,
+                            message.RunId,
                             text,
                             message.CreateTimeMs > 0
                                 ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs)

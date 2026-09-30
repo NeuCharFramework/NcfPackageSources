@@ -120,6 +120,8 @@ public class WeixinClawProtocolTests
                   "seq": 7,
                   "message_id": 18446744073709551615,
                   "message_type": 1,
+                  "context_token": "ctx-7",
+                  "run_id": "run-7",
                   "item_list": [
                     { "type": 1, "text_item": { "text": "hello" } }
                   ]
@@ -139,6 +141,8 @@ public class WeixinClawProtocolTests
         Assert.AreEqual("next-cursor", response.GetUpdatesBuf);
         Assert.AreEqual("18446744073709551615", response.Msgs[0].MessageId);
         Assert.AreEqual("hello", response.Msgs[0].ItemList[0].TextItem.Text);
+        Assert.AreEqual("ctx-7", response.Msgs[0].ContextToken);
+        Assert.AreEqual("run-7", response.Msgs[0].RunId);
         Assert.AreEqual("Bearer bot-secret", handler.Request.Headers.Authorization.ToString());
         Assert.AreEqual("ilink_bot_token", handler.Request.Headers.GetValues("AuthorizationType").Single());
         Assert.AreEqual("bot", handler.Request.Headers.GetValues("iLink-App-Id").Single());
@@ -165,6 +169,7 @@ public class WeixinClawProtocolTests
                 MessageType = 2,
                 MessageState = 2,
                 ContextToken = "ctx-1",
+                RunId = "run-1",
                 ItemList =
                 [
                     new WeixinClawMessageItem
@@ -180,6 +185,7 @@ public class WeixinClawProtocolTests
         StringAssert.Contains(handler.Body, "\"to_user_id\":\"user@im.wechat\"");
         StringAssert.Contains(handler.Body, "\"context_token\":\"ctx-1\"");
         StringAssert.Contains(handler.Body, "\"message_state\":2");
+        StringAssert.Contains(handler.Body, "\"run_id\":\"run-1\"");
         StringAssert.Contains(handler.Request.RequestUri.AbsolutePath, "/ilink/bot/sendmessage");
     }
 

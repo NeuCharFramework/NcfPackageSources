@@ -26,6 +26,7 @@ public sealed class WeixinClawMessageRecordService
         string fromUserId,
         string toUserId,
         string contextTokenProtected,
+        string runId,
         int messageType,
         int messageState,
         string text,
@@ -40,6 +41,7 @@ public sealed class WeixinClawMessageRecordService
             toUserId,
             null,
             contextTokenProtected,
+            runId,
             messageType,
             messageState,
             "received",
@@ -67,6 +69,7 @@ public sealed class WeixinClawMessageRecordService
             toUserId,
             clientId,
             null,
+            null,
             messageType,
             messageState,
             "sending",
@@ -77,16 +80,46 @@ public sealed class WeixinClawMessageRecordService
 
     public async Task<List<WeixinClawMessageRecordDto>> GetRecentDtosAsync(
         int accountId,
+        string peerUserId = null,
         int take = 100)
     {
         take = Math.Clamp(take, 1, 500);
         var records = await GetFullListAsync(
-            item => item.WeixinClawAccountId == accountId,
+            item => item.WeixinClawAccountId == accountId
+                && (string.IsNullOrWhiteSpace(peerUserId)
+                    || item.FromUserId == peerUserId
+                    || item.ToUserId == peerUserId),
             "CreatedAt DESC").ConfigureAwait(false);
         return records
             .Take(take)
             .OrderBy(item => item.CreatedAt)
             .Select(ToDto)
+            .ToList();
+    }
+
+    public async Task<List<WeixinClawConversationDto>> GetConversationsAsync(int accountId)
+    {
+        var records = await GetFullListAsync(
+            item => item.WeixinClawAccountId == accountId,
+            "CreatedAt DESC").ConfigureAwait(false);
+        return records
+            .GroupBy(item => item.Direction == WeixinClawMessageDirection.Inbound
+                ? item.FromUserId
+                : item.ToUserId)
+            .Where(group => !string.IsNullOrWhiteSpace(group.Key))
+            .Select(group =>
+            {
+                var latest = group.OrderByDescending(item => item.CreatedAt).First();
+                return new WeixinClawConversationDto
+                {
+                    PeerUserId = group.Key,
+                    LastText = latest.Text,
+                    LastStatus = latest.Status,
+                    LastCreatedAt = latest.CreatedAt,
+                    MessageCount = group.Count()
+                };
+            })
+            .OrderByDescending(item => item.LastCreatedAt)
             .ToList();
     }
 

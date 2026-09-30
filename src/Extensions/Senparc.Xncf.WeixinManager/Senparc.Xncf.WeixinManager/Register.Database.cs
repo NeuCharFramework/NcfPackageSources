@@ -48,6 +48,7 @@ namespace Senparc.Xncf.WeixinManager
             services.AddScoped<WeixinUserDto>();
             services.AddScoped<WeixinClawAccountDto>();
             services.AddScoped<WeixinClawMessageRecordDto>();
+            services.AddScoped<WeixinClawConversationDto>();
             services.AddScoped<WeixinClawBindingProfileDto>();
 
             //services.AddScoped<UserTag>();

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Dto;
@@ -7,6 +8,7 @@ using Senparc.Xncf.WeixinManager.Domain.Services;
 using Senparc.Xncf.WeixinManager.WeixinClaw;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager.WeixinClaw;
@@ -20,6 +22,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
     private readonly WeixinClawMessageService _messageService;
     private readonly WeixinClawMessageRecordService _recordService;
     private readonly WeixinClawBindingProfileService _bindingProfileService;
+    private readonly WeixinClawMediaService _mediaService;
     private readonly ILogger<IndexModel> _logger;
 
     public IndexModel(
@@ -29,6 +32,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
         WeixinClawMessageService messageService,
         WeixinClawMessageRecordService recordService,
         WeixinClawBindingProfileService bindingProfileService,
+        WeixinClawMediaService mediaService,
         ILogger<IndexModel> logger) : base(xncfModuleService)
     {
         _accountService = accountService;
@@ -36,6 +40,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
         _messageService = messageService;
         _recordService = recordService;
         _bindingProfileService = bindingProfileService;
+        _mediaService = mediaService;
         _logger = logger;
     }
 
@@ -49,12 +54,21 @@ public class IndexModel : BaseAdminWeixinManagerModel
         return Ok(new { list = await _accountService.GetDtosAsync().ConfigureAwait(false) });
     }
 
-    public async Task<IActionResult> OnGetMessagesAsync(int accountId, int take = 100)
+    public async Task<IActionResult> OnGetMessagesAsync(int accountId, string peerUserId = null, int take = 100)
     {
         return Ok(new
         {
             accountId,
-            list = await _recordService.GetRecentDtosAsync(accountId, take).ConfigureAwait(false)
+            list = await _recordService.GetRecentDtosAsync(accountId, peerUserId, take).ConfigureAwait(false)
+        });
+    }
+
+    public async Task<IActionResult> OnGetConversationsAsync(int accountId)
+    {
+        return Ok(new
+        {
+            accountId,
+            list = await _recordService.GetConversationsAsync(accountId).ConfigureAwait(false)
         });
     }
 
@@ -170,6 +184,48 @@ public class IndexModel : BaseAdminWeixinManagerModel
         }
         catch (Exception ex)
         {
+            return BadRequest(new { msg = ex.Message });
+        }
+    }
+
+    public async Task<IActionResult> OnPostSendMediaAsync(
+        int accountId,
+        IFormFile file,
+        int? replyToRecordId,
+        int mediaKind = 3)
+    {
+        try
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest(new { msg = "请选择要发送的媒体文件。" });
+            }
+
+            await using var stream = file.OpenReadStream();
+            using var memory = new MemoryStream();
+            await stream.CopyToAsync(memory, HttpContext.RequestAborted).ConfigureAwait(false);
+            var kind = Enum.IsDefined(typeof(WeixinClawMediaKind), mediaKind)
+                ? (WeixinClawMediaKind)mediaKind
+                : WeixinClawMediaKind.File;
+            var result = await _mediaService.SendAsync(
+                accountId,
+                file.FileName,
+                file.ContentType,
+                memory.ToArray(),
+                kind,
+                replyToRecordId: replyToRecordId,
+                cancellationToken: HttpContext.RequestAborted).ConfigureAwait(false);
+            return Ok(new
+            {
+                sent = true,
+                recordId = result.RecordId,
+                messageId = result.MessageId,
+                targetUserId = result.TargetUserId
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "发送个人微信 Claw 媒体失败。");
             return BadRequest(new { msg = ex.Message });
         }
     }

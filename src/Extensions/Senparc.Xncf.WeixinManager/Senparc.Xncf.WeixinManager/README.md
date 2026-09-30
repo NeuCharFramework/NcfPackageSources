@@ -21,14 +21,24 @@ the iLink HTTP JSON protocol directly and does not require the OpenClaw runtime.
 - Protects bot tokens with ASP.NET Data Protection.
 - Exposes `IWeixinClawMessageHandler` for Admin Chat, NeuBell, or custom routing.
 - Exposes `IWeixinClawMessageSender` / `WeixinClawMessageService.SendTextAsync()` for outbound text.
+- Supports outbound images, files, and voice files through `getuploadurl`, the iLink CDN upload
+  flow, and `sendmessage`.
 - Persists the latest inbound user and protected `context_token`, so the Admin page can send a reply after
   the phone sends at least one message. The page reports an actionable error instead of treating a
   context-less send as delivered.
 - Persists inbound and outbound text records in `WeixinManager_WeixinClawMessageRecord`; the Admin page
-  provides a polling conversation window and shows `sending`, `sent`, and `failed` states.
+  provides a polling conversation window and shows `sending`, `sent`, and `failed` states. The window
+  also supports image, file, and voice-file uploads.
 
-The first phase handles text messages and QR login. Media transfer and concrete
-Admin Chat routing should be implemented by an upper-layer handler.
+Media sends use the most recent inbound conversation context automatically. If no phone message has
+been received yet, the UI asks the operator to send one first. A successful HTTP response is only
+treated as submitted when iLink returns a `message_id`; `ret=0` without `message_id` is recorded as
+failed because it does not confirm that the message entered the downlink queue. Native voice bubbles
+depend on the receiving Weixin client accepting the supplied encoding metadata; file upload remains
+the fallback for unsupported voice formats.
+
+Concrete Admin Chat, NeuBell, Workflow, and Harness routing is implemented by the upper-layer Admin
+integration rather than this channel module.
 
 ## Installation
 

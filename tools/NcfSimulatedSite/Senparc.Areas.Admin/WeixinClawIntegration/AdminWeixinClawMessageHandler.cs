@@ -584,6 +584,7 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
                 context.FromUserId,
                 chunk,
                 context.ContextToken,
+                context.RunId,
                 cancellationToken).ConfigureAwait(false);
         }
     }

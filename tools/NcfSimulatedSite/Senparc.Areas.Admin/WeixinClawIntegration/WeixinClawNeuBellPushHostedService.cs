@@ -104,7 +104,7 @@ public sealed class WeixinClawNeuBellPushHostedService : BackgroundService
                 binding.FromUserId,
                 message,
                 binding.ContextToken,
-                cancellationToken).ConfigureAwait(false);
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }
