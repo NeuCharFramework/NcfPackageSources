@@ -100,6 +100,12 @@ public sealed class WeixinClawMessageRecord : EntityBase<int>
         Error = error?.Length > 2000 ? error[..2000] : error;
         SetUpdateTime();
     }
+
+    public void SetText(string text)
+    {
+        Text = text ?? string.Empty;
+        SetUpdateTime();
+    }
 }
 
 public static class WeixinClawMessageDirection

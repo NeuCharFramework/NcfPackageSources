@@ -43,6 +43,12 @@
         .claw-message.outbound .claw-message-body { background: #409eff; color: #fff; }
         .claw-message.failed .claw-message-body { background: #fef0f0; color: #f56c6c; border: 1px solid #fbc4c4; }
         .claw-message-error { color: #f56c6c; font-size: 12px; margin-top: 3px; }
+        .claw-media-list { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+        .claw-media-card { padding: 8px; border: 1px solid #dcdfe6; border-radius: 6px; background: #fff; max-width: 360px; }
+        .claw-message.outbound .claw-media-card { border-color: #b3d8ff; }
+        .claw-media-image { display: block; max-width: 320px; max-height: 260px; object-fit: contain; cursor: zoom-in; }
+        .claw-media-audio, .claw-media-video { display: block; max-width: 320px; }
+        .claw-media-link { color: #409eff; word-break: break-all; }
         .claw-binding-code { letter-spacing: 1px; }
         @@media (max-width: 720px) {
             .claw-table { display: block; overflow-x: auto; white-space: nowrap; }
@@ -54,7 +60,7 @@
     <el-breadcrumb-item>微信管理</el-breadcrumb-item>
     <el-breadcrumb-item>个人微信 Bot</el-breadcrumb-item>
 }
-<div id="claw-app">
+<div>
     <el-container>
         <el-header class="module-header">
             <span class="start-title"><i class="fa fa-wechat"></i>&nbsp;个人微信 Bot</span>
@@ -215,7 +221,39 @@
                                     <span v-if="message.status==='sent'"> · 已提交</span>
                                     <span v-if="message.status==='failed'"> · 失败</span>
                                 </div>
-                                <div class="claw-message-body">{{message.text}}</div>
+                                <div class="claw-message-body" v-if="message.text">{{message.text}}</div>
+                                <div class="claw-media-list" v-if="message.mediaItems && message.mediaItems.length">
+                                    <div class="claw-media-card" v-for="(media, mediaIndex) in message.mediaItems"
+                                         :key="message.id + '-' + mediaIndex">
+                                        <img v-if="media.kind === 'image' && media.url"
+                                             class="claw-media-image"
+                                             :src="media.url"
+                                             :alt="media.name || '微信图片'"
+                                             @@click="openMedia(media.url)">
+                                        <audio v-else-if="media.kind === 'voice' && media.url && media.contentType !== 'audio/silk'"
+                                               class="claw-media-audio"
+                                               controls
+                                               preload="metadata"
+                                               :src="media.url"></audio>
+                                        <video v-else-if="media.kind === 'video' && media.url"
+                                               class="claw-media-video"
+                                               controls
+                                               preload="metadata"
+                                               :src="media.url"></video>
+                                        <a v-if="media.url && (media.kind === 'file' || media.kind === 'voice' || !media.contentType)"
+                                           class="claw-media-link"
+                                           :href="media.url"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           :download="media.name">
+                                            <i class="el-icon-document"></i>
+                                            {{media.name || media.kind || '下载媒体'}}
+                                            <span v-if="media.size">（{{formatFileSize(media.size)}}）</span>
+                                        </a>
+                                        <div class="claw-muted" v-if="media.error">{{media.error}}</div>
+                                        <div class="claw-muted" v-if="!media.url && !media.error">媒体文件尚未准备好。</div>
+                                    </div>
+                                </div>
                                 <div class="claw-message-error" v-if="message.error">{{message.error}}</div>
                             </div>
                         </div>
@@ -326,7 +364,7 @@
                     editor: { visible: false, form: {} },
                     login: { visible: false, sessionId: '', qrcodeImageContent: '', qrcodeUrl: '', status: '', error: '' },
                     sender: { visible: false, accountId: 0, toUserId: '', contextToken: '', replyToRecordId: null, text: '' },
-                    chat: { visible: false, accountId: 0, accountName: '', peerUserId: '', sessions: [], messages: [], loading: false, sending: false, nearBottom: true, newCount: 0, mediaFile: null },
+                    chat: { visible: false, accountId: 0, accountName: '', peerUserId: '', sessions: [], messages: [], loading: false, sending: false, nearBottom: true, newCount: 0, mediaFile: null, mediaKind: 'file' },
                     currentAccount: null,
                     bindings: { visible: false, accountId: 0, accountName: '', items: [], form: {} },
                     accountRefreshTimer: null,
@@ -541,6 +579,16 @@
                     if (!value) return '-';
                     const date = new Date(value);
                     return isNaN(date.getTime()) ? value : date.toLocaleString();
+                },
+                formatFileSize(value) {
+                    const size = Number(value) || 0;
+                    if (size < 1024) return size + ' B';
+                    if (size < 1024 * 1024) return (size / 1024).toFixed(1) + ' KB';
+                    if (size < 1024 * 1024 * 1024) return (size / 1024 / 1024).toFixed(1) + ' MB';
+                    return (size / 1024 / 1024 / 1024).toFixed(1) + ' GB';
+                },
+                openMedia(url) {
+                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
                 },
                 handleChatScroll() {
                     const element = this.$refs.chatScroll;

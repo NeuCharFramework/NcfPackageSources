@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -100,7 +101,7 @@ public class WeixinClawProtocolTests
         Assert.AreEqual("qr", response.Qrcode);
         Assert.AreEqual("ilink_bot_token", handler.Request.Headers.GetValues("AuthorizationType").Single());
         Assert.AreEqual("bot", handler.Request.Headers.GetValues("iLink-App-Id").Single());
-        Assert.AreEqual("132105", handler.Request.Headers.GetValues("iLink-App-ClientVersion").Single());
+        Assert.AreEqual("132104", handler.Request.Headers.GetValues("iLink-App-ClientVersion").Single());
         Assert.IsTrue(handler.Request.Headers.Contains("X-WECHAT-UIN"));
         Assert.IsFalse(handler.Request.Headers.Contains("Authorization"));
         Assert.AreEqual("application/json", handler.Request.Content.Headers.ContentType?.ToString());
@@ -146,7 +147,7 @@ public class WeixinClawProtocolTests
         Assert.AreEqual("Bearer bot-secret", handler.Request.Headers.Authorization.ToString());
         Assert.AreEqual("ilink_bot_token", handler.Request.Headers.GetValues("AuthorizationType").Single());
         Assert.AreEqual("bot", handler.Request.Headers.GetValues("iLink-App-Id").Single());
-        Assert.AreEqual("132105", handler.Request.Headers.GetValues("iLink-App-ClientVersion").Single());
+        Assert.AreEqual("132104", handler.Request.Headers.GetValues("iLink-App-ClientVersion").Single());
         Assert.IsTrue(handler.Request.Headers.Contains("X-WECHAT-UIN"));
         StringAssert.Contains(handler.Body, "\"get_updates_buf\":\"old-cursor\"");
         StringAssert.Contains(handler.Request.RequestUri.AbsolutePath, "/ilink/bot/getupdates");
@@ -190,6 +191,37 @@ public class WeixinClawProtocolTests
     }
 
     [TestMethod]
+    public async Task DownloadMediaAsync_DecryptsAesEcbPayload()
+    {
+        var key = Enumerable.Range(1, 16).Select(value => (byte)value).ToArray();
+        var plain = Encoding.UTF8.GetBytes("media-content");
+        byte[] encrypted;
+        using (var aes = Aes.Create())
+        {
+            aes.Key = key;
+            aes.Mode = CipherMode.ECB;
+            aes.Padding = PaddingMode.PKCS7;
+            using var encryptor = aes.CreateEncryptor();
+            encrypted = encryptor.TransformFinalBlock(plain, 0, plain.Length);
+        }
+
+        var handler = new CapturingHandler(encrypted);
+        using var httpClient = new HttpClient(handler);
+        var api = new WeixinClawApi(httpClient);
+
+        var result = await api.DownloadMediaAsync(new WeixinClawCdnMedia
+        {
+            EncryptQueryParam = "download-param",
+            AesKey = Convert.ToBase64String(key),
+            EncryptType = 1
+        });
+
+        CollectionAssert.AreEqual(plain, result);
+        Assert.IsTrue(handler.Request.RequestUri.AbsolutePath.EndsWith("/c2c/download"));
+        Assert.IsTrue(handler.Request.RequestUri.Query.Contains("encrypted_query_param=download-param"));
+    }
+
+    [TestMethod]
     public async Task GetQrCodeStatusAsync_UsesUnauthenticatedLongPollRequest()
     {
         var handler = new CapturingHandler("""{"status":"wait"}""");
@@ -206,10 +238,16 @@ public class WeixinClawProtocolTests
     private sealed class CapturingHandler : HttpMessageHandler
     {
         private readonly string _response;
+        private readonly byte[] _binaryResponse;
 
         public CapturingHandler(string response)
         {
             _response = response;
+        }
+
+        public CapturingHandler(byte[] response)
+        {
+            _binaryResponse = response;
         }
 
         public HttpRequestMessage Request { get; private set; }
@@ -225,7 +263,9 @@ public class WeixinClawProtocolTests
                 : await request.Content.ReadAsStringAsync(cancellationToken);
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(_response, Encoding.UTF8, "application/json")
+                Content = _binaryResponse == null
+                    ? new StringContent(_response, Encoding.UTF8, "application/json")
+                    : new ByteArrayContent(_binaryResponse)
             };
         }
     }

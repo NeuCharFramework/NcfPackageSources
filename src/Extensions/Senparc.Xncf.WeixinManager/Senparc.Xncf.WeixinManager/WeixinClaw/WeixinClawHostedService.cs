@@ -5,6 +5,7 @@ using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.WeixinManager.Domain.Services;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -200,6 +201,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 var receiptService = scope.ServiceProvider.GetRequiredService<WeixinClawMessageReceiptService>();
                 var recordService = scope.ServiceProvider.GetRequiredService<WeixinClawMessageRecordService>();
                 var dispatcher = scope.ServiceProvider.GetRequiredService<WeixinClawMessageDispatcher>();
+                var mediaService = scope.ServiceProvider.GetRequiredService<WeixinClawMediaService>();
                 foreach (var message in response.Msgs ?? Enumerable.Empty<WeixinClawMessage>())
                 {
                     var messageId = string.IsNullOrWhiteSpace(message.MessageId)
@@ -224,11 +226,20 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                         (message.ItemList ?? new())
                             .Where(z => z.Type == 1 && !string.IsNullOrWhiteSpace(z.TextItem?.Text))
                             .Select(z => z.TextItem.Text));
-                    if (message.MessageType == 1 && !string.IsNullOrWhiteSpace(text))
+                    var mediaItems = message.MessageType == 1
+                        ? await mediaService.DownloadInboundAsync(
+                            account.Id,
+                            messageId,
+                            message.ItemList,
+                            stoppingToken).ConfigureAwait(false)
+                        : new List<WeixinClawStoredMedia>();
+                    if (message.MessageType == 1
+                        && (!string.IsNullOrWhiteSpace(text) || mediaItems.Count > 0))
                     {
+                        var protectedContextToken = accountService.ProtectContextToken(message.ContextToken);
                         account.MarkMessageReceived(
                             message.FromUserId,
-                            accountService.ProtectContextToken(message.ContextToken));
+                            protectedContextToken);
                         await accountService.SaveObjectAsync(account).ConfigureAwait(false);
                         await recordService.AddInboundAsync(
                             account.Id,
@@ -236,11 +247,11 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                             message.Seq,
                             message.FromUserId,
                             message.ToUserId,
-                            accountService.ProtectContextToken(message.ContextToken),
+                            protectedContextToken,
                             message.RunId,
                             message.MessageType,
                             message.MessageState,
-                            text,
+                            WeixinClawMessageContent.Serialize(text, mediaItems),
                             message.CreateTimeMs > 0
                                 ? DateTimeOffset.FromUnixTimeMilliseconds(message.CreateTimeMs).UtcDateTime
                                 : DateTime.UtcNow).ConfigureAwait(false);

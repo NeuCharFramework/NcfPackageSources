@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Senparc.Xncf.WeixinManager.Domain.Services;
 using System;
 using System.Threading;
@@ -10,15 +11,18 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
     private readonly WeixinClawAccountService _accountService;
     private readonly WeixinClawMessageRecordService _recordService;
     private readonly WeixinClawApi _api;
+    private readonly ILogger<WeixinClawMessageService> _logger;
 
     public WeixinClawMessageService(
         WeixinClawAccountService accountService,
         WeixinClawMessageRecordService recordService,
-        WeixinClawApi api)
+        WeixinClawApi api,
+        ILogger<WeixinClawMessageService> logger)
     {
         _accountService = accountService;
         _recordService = recordService;
         _api = api;
+        _logger = logger;
     }
 
     public async Task SendTextAsync(
@@ -133,6 +137,14 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
                 token,
                 message,
                 cancellationToken).ConfigureAwait(false);
+            _logger.LogInformation(
+                "个人微信 Claw 出站文字请求已返回：AccountId={AccountId}, TargetUserId={TargetUserId}, Ret={Ret}, MessageIdPresent={MessageIdPresent}, ContextTokenUsed={ContextTokenUsed}, RunIdPresent={RunIdPresent}",
+                accountId,
+                targetUserId,
+                result.Ret,
+                !string.IsNullOrWhiteSpace(result.MessageId),
+                contextTokenUsed,
+                !string.IsNullOrWhiteSpace(runId));
             if (result.Ret != 0)
             {
                 var error = $"发送个人微信消息失败：{result.Ret} {result.Errmsg}";

@@ -23,6 +23,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
     private readonly WeixinClawMessageRecordService _recordService;
     private readonly WeixinClawBindingProfileService _bindingProfileService;
     private readonly WeixinClawMediaService _mediaService;
+    private readonly WeixinClawMediaStorageService _mediaStorage;
     private readonly ILogger<IndexModel> _logger;
 
     public IndexModel(
@@ -33,6 +34,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
         WeixinClawMessageRecordService recordService,
         WeixinClawBindingProfileService bindingProfileService,
         WeixinClawMediaService mediaService,
+        WeixinClawMediaStorageService mediaStorage,
         ILogger<IndexModel> logger) : base(xncfModuleService)
     {
         _accountService = accountService;
@@ -41,6 +43,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
         _recordService = recordService;
         _bindingProfileService = bindingProfileService;
         _mediaService = mediaService;
+        _mediaStorage = mediaStorage;
         _logger = logger;
     }
 
@@ -56,11 +59,55 @@ public class IndexModel : BaseAdminWeixinManagerModel
 
     public async Task<IActionResult> OnGetMessagesAsync(int accountId, string peerUserId = null, int take = 100)
     {
+        var list = await _recordService.GetRecentDtosAsync(accountId, peerUserId, take)
+            .ConfigureAwait(false);
+        foreach (var record in list)
+        {
+            for (var index = 0; index < record.MediaItems.Count; index++)
+            {
+                record.MediaItems[index].Url =
+                    $"/Admin/WeixinManager/WeixinClaw?handler=Media&recordId={record.Id}&index={index}";
+            }
+        }
+
         return Ok(new
         {
             accountId,
-            list = await _recordService.GetRecentDtosAsync(accountId, peerUserId, take).ConfigureAwait(false)
+            list
         });
+    }
+
+    public async Task<IActionResult> OnGetMediaAsync(int recordId, int index = 0)
+    {
+        if (index < 0)
+        {
+            return BadRequest(new { msg = "媒体索引无效。" });
+        }
+
+        var record = await _recordService.GetObjectAsync(item => item.Id == recordId)
+            .ConfigureAwait(false);
+        if (record == null)
+        {
+            return NotFound();
+        }
+
+        var content = WeixinClawMessageContent.Parse(record.Text);
+        if (index >= content.MediaItems.Count)
+        {
+            return NotFound();
+        }
+
+        var media = content.MediaItems[index];
+        if (!_mediaStorage.TryGetFile(media.StorageKey, out var path))
+        {
+            return NotFound();
+        }
+
+        return PhysicalFile(
+            path,
+            string.IsNullOrWhiteSpace(media.ContentType)
+                ? "application/octet-stream"
+                : media.ContentType);
     }
 
     public async Task<IActionResult> OnGetConversationsAsync(int accountId)

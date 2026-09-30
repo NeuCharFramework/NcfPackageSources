@@ -23,6 +23,8 @@ the iLink HTTP JSON protocol directly and does not require the OpenClaw runtime.
 - Exposes `IWeixinClawMessageSender` / `WeixinClawMessageService.SendTextAsync()` for outbound text.
 - Supports outbound images, files, and voice files through `getuploadurl`, the iLink CDN upload
   flow, and `sendmessage`.
+- Downloads inbound image, voice, and file media from the iLink CDN, decrypts it, and stores it
+  under the host `App_Data/WeixinClawMedia` directory for authenticated conversation display.
 - Persists the latest inbound user and protected `context_token`, so the Admin page can send a reply after
   the phone sends at least one message. The page reports an actionable error instead of treating a
   context-less send as delivered.
