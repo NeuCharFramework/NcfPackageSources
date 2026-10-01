@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.15.0-preview2 为 Tenant 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20261002
+    修改描述：通过现有租户缓存为后台作用域提供类型化租户信息
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -44,6 +47,7 @@ using Senparc.Ncf.Core.MultiTenant;
 using AutoMapper;
 using Senparc.Xncf.Tenant.Domain.DatabaseModel.AutoMapper;
 using Senparc.Ncf.Database;
+using Senparc.Xncf.Tenant.Domain.Services;
 
 namespace Senparc.Xncf.Tenant
 {
@@ -89,6 +93,7 @@ namespace Senparc.Xncf.Tenant
             services.AddScoped<ITenantInfoDbData, TenantInfoDbData>();
             services.AddScoped<TenantInfoRepository>();
             services.AddScoped<IClientRepositoryBase<TenantInfo>, TenantInfoRepository>();
+            services.AddScoped<IBackgroundTenantProvider, BackgroundTenantProvider>();
 
             //引入当前系统
             services.AddAutoMapper(z => z.AddProfile<TenantInfoProfile>());

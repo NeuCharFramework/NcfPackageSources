@@ -67,7 +67,7 @@
     }
     else
     {
-        <el-table :data='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PageData.Workflows))' border style="width:100%">
+        <el-table :data="workflows" border style="width:100%">
             <el-table-column prop="id" label="WorkflowID" width="130"></el-table-column>
             <el-table-column prop="name" label="名称" min-width="180"></el-table-column>
             <el-table-column prop="description" label="描述" min-width="300"></el-table-column>
@@ -79,3 +79,18 @@
         </el-table>
     }
 </div>
+
+@section scripts {
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    workflows: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                        Model.PageData.Workflows,
+                        new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)))
+                };
+            }
+        });
+    </script>
+}

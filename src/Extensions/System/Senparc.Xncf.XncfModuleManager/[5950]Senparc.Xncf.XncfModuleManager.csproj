@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.15.10</Version>
+    <Version>0.15.11</Version>
     <AssemblyName>Senparc.Xncf.XncfModuleManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfModuleManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -17,6 +17,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
+		[2026-10-01] 模块菜单权限通过现有 SysRolePermissionService 保存，取消直接数据库写入
       v0.1.0 创世
       v0.2 重新分离 DDD 架构，重构数据库
       v0.3.3.1 添加 Oracle 数据库迁移代码

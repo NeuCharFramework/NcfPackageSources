@@ -44,6 +44,9 @@ public interface IFileManagerGateway
 
 public sealed record FileManagerImportRequestedEvent(
     int TenantId,
+    int AccountId,
+    string MessageId,
+    string StorageKey,
     byte[] Content,
     string FileName,
     string ContentType,
@@ -53,6 +56,10 @@ public sealed record FileManagerImportRequestedEvent(
 
 public sealed record FileManagerImportCompletedEvent(
     Guid RequestId,
+    int TenantId,
+    int AccountId,
+    string MessageId,
+    string StorageKey,
     bool Success,
     string ErrorMessage,
     FileManagerImportResult Result)

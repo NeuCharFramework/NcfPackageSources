@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.26.0 增强 XNCF 基础注册与函数参数处理能力
 
+    修改标识：Senparc - 20261002
+    修改描述：注册统一后台租户作用域工厂
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -415,6 +418,7 @@ namespace Senparc.Ncf.XncfBase
 
             //多租户
             services.AddScoped<RequestTenantInfo>();//TODO:需要动态识别，当前请求缓存中读取并转换
+            services.AddSingleton<IBackgroundTenantScopeFactory, BackgroundTenantScopeFactory>();
 
             //注册 Senarc.Ncf.Service 中的服务
             services.AddScoped<SysButtonService>();

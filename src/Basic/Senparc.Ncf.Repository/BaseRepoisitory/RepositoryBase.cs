@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261001
+    修改描述：增加已跟踪实体按指定字段保存的通用能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -719,6 +722,43 @@ namespace Senparc.Ncf.Repository
 
             BaseDB.BaseDataContext.Set<T>().AddRange(addList);
             await this.SaveChangesAsync();
+        }
+
+        public virtual async Task SavePropertiesAsync(T obj, params string[] propertyNames)
+        {
+            if (obj == null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+            if (propertyNames == null || propertyNames.Length == 0)
+            {
+                throw new ArgumentException("At least one property is required.", nameof(propertyNames));
+            }
+
+            var context = BaseDB.BaseDataContext;
+            var entry = context.Entry(obj);
+            if (entry.State == EntityState.Detached || entry.State == EntityState.Added || entry.State == EntityState.Deleted)
+            {
+                throw new InvalidOperationException("Only tracked, persisted entities support partial updates.");
+            }
+
+            var properties = new HashSet<string>(propertyNames, StringComparer.Ordinal);
+            foreach (var name in properties)
+            {
+                var property = entry.Metadata.FindProperty(name);
+                if (property == null || property.IsPrimaryKey())
+                {
+                    throw new ArgumentException($"Property '{name}' is not an updatable mapped property.", nameof(propertyNames));
+                }
+            }
+
+            context.ChangeTracker.DetectChanges();
+            foreach (var property in entry.Properties)
+            {
+                property.IsModified = properties.Contains(property.Metadata.Name);
+            }
+
+            await SaveChangesAsync().ConfigureAwait(false);
         }
 
         /// <summary>

@@ -18,6 +18,10 @@ public class WeixinClawFileManagerBridgeTests
         var requestClient = new StubRequestClient(request =>
             new FileManagerImportCompletedEvent(
                 request.RequestId,
+                request.TenantId,
+                request.AccountId,
+                request.MessageId,
+                request.StorageKey,
                 true,
                 null,
                 new FileManagerImportResult(
@@ -32,7 +36,8 @@ public class WeixinClawFileManagerBridgeTests
         var media = new WeixinClawStoredMedia
         {
             Name = "invoice.pdf",
-            ContentType = "application/pdf"
+            ContentType = "application/pdf",
+            StorageKey = "media/account-9/message-1/invoice.pdf"
         };
 
         await bridge.ImportAsync(
@@ -45,6 +50,9 @@ public class WeixinClawFileManagerBridgeTests
         Assert.AreEqual(42, media.FileManagerFileId);
         Assert.IsNull(media.FileManagerError);
         Assert.AreEqual(7, requestClient.LastRequest.TenantId);
+        Assert.AreEqual(9, requestClient.LastRequest.AccountId);
+        Assert.AreEqual("message-1", requestClient.LastRequest.MessageId);
+        Assert.AreEqual("media/account-9/message-1/invoice.pdf", requestClient.LastRequest.StorageKey);
         Assert.AreEqual(FileManagerResourceKind.PrivateAttachment, requestClient.LastRequest.ResourceKind);
     }
 
@@ -54,6 +62,10 @@ public class WeixinClawFileManagerBridgeTests
         var requestClient = new StubRequestClient(request =>
             new FileManagerImportCompletedEvent(
                 request.RequestId,
+                request.TenantId,
+                request.AccountId,
+                request.MessageId,
+                request.StorageKey,
                 false,
                 "FileManager is unavailable.",
                 null));
@@ -63,7 +75,8 @@ public class WeixinClawFileManagerBridgeTests
         var media = new WeixinClawStoredMedia
         {
             Name = "photo.jpg",
-            ContentType = "image/jpeg"
+            ContentType = "image/jpeg",
+            StorageKey = "media/account-5/message-2/photo.jpg"
         };
 
         await bridge.ImportAsync(

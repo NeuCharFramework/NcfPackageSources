@@ -1,9 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Core.MultiTenant;
-using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.WeixinManager.Domain.Services;
 using System;
 using System.Collections.Concurrent;
@@ -17,16 +15,19 @@ namespace Senparc.Xncf.WeixinManager.WeixinClaw;
 public sealed class WeixinClawHostedService : IHostedService, IDisposable
 {
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly IBackgroundTenantScopeFactory _tenantScopeFactory;
     private readonly ILogger<WeixinClawHostedService> _logger;
-    private readonly ConcurrentDictionary<(int TenantId, int AccountId), Task> _runningAccounts = new();
+    private readonly ConcurrentDictionary<(int TenantId, int AccountId), RunningAccount> _runningAccounts = new();
     private readonly CancellationTokenSource _stoppingCts = new();
     private Task _runningTask;
 
     public WeixinClawHostedService(
         IServiceScopeFactory scopeFactory,
+        IBackgroundTenantScopeFactory tenantScopeFactory,
         ILogger<WeixinClawHostedService> logger)
     {
         _scopeFactory = scopeFactory;
+        _tenantScopeFactory = tenantScopeFactory;
         _logger = logger;
     }
 
@@ -56,7 +57,8 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         }
 
         var accountTasks = _runningAccounts.Values
-            .Where(task => !task.IsCompleted)
+            .Select(z => z.Task)
+            .Where(task => task != null && !task.IsCompleted)
             .ToArray();
         if (accountTasks.Length == 0)
         {
@@ -84,39 +86,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
             {
                 try
                 {
-                    using var scope = _scopeFactory.CreateScope();
-                    var dbContext = scope.ServiceProvider.GetRequiredService<WeixinSenparcEntities>();
-                    var accounts = await dbContext.WeixinClawAccounts
-                        .IgnoreQueryFilters()
-                        .AsNoTracking()
-                        .Where(z => !z.Flag
-                            && z.Enabled
-                            && !string.IsNullOrWhiteSpace(z.BotTokenProtected))
-                        .OrderBy(z => z.TenantId)
-                        .ThenBy(z => z.Id)
-                        .Select(z => new { z.TenantId, z.Id })
-                        .ToListAsync(stoppingToken)
-                        .ConfigureAwait(false);
-
-                    foreach (var account in accounts)
-                    {
-                        var key = (account.TenantId, account.Id);
-                        if (_runningAccounts.TryAdd(key, Task.CompletedTask))
-                        {
-                            var task = RunAccountAsync(account.TenantId, account.Id, stoppingToken);
-                            _runningAccounts[key] = task;
-                            _ = task.ContinueWith(
-                                _ => _runningAccounts.TryRemove(key, out _),
-                                CancellationToken.None,
-                                TaskContinuationOptions.ExecuteSynchronously,
-                                TaskScheduler.Default);
-                        }
-                    }
-
-                    foreach (var item in _runningAccounts.Where(z => z.Value.IsCompleted).ToList())
-                    {
-                        _runningAccounts.TryRemove(item.Key, out _);
-                    }
+                    await ScanAccountsAsync(stoppingToken).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
                 {
@@ -138,6 +108,52 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         _stoppingCts.Dispose();
     }
 
+    private async Task ScanAccountsAsync(CancellationToken stoppingToken)
+    {
+        var accounts = new List<(int TenantId, int AccountId)>();
+        await _tenantScopeFactory.ForEachEnabledTenantAsync(async (services, cancellationToken) =>
+        {
+            var accountService = services.GetRequiredService<WeixinClawAccountService>();
+            accounts.AddRange(await accountService.GetPollingAccountsAsync(cancellationToken).ConfigureAwait(false));
+        }, stoppingToken).ConfigureAwait(false);
+
+        var activeKeys = new HashSet<(int TenantId, int AccountId)>();
+        foreach (var account in accounts)
+        {
+            var key = (account.TenantId, account.AccountId);
+            activeKeys.Add(key);
+            if (_runningAccounts.ContainsKey(key))
+            {
+                continue;
+            }
+
+            var accountState = new RunningAccount(stoppingToken);
+            if (_runningAccounts.TryAdd(key, accountState))
+            {
+                accountState.Task = RunAccountAndCleanupAsync(key, accountState);
+            }
+            else
+            {
+                accountState.Dispose();
+            }
+        }
+
+        CancelStaleAccounts(activeKeys);
+    }
+
+    private async Task RunAccountAndCleanupAsync((int TenantId, int AccountId) key, RunningAccount state)
+    {
+        try
+        {
+            await RunAccountAsync(key.TenantId, key.AccountId, state.Token).ConfigureAwait(false);
+        }
+        finally
+        {
+            _runningAccounts.TryRemove(new KeyValuePair<(int TenantId, int AccountId), RunningAccount>(key, state));
+            state.Dispose();
+        }
+    }
+
     private async Task RunAccountAsync(
         int tenantId,
         int accountId,
@@ -150,9 +166,12 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                using var scope = _scopeFactory.CreateScope();
+                using var scope = await _tenantScopeFactory.TryCreateScopeAsync(tenantId, stoppingToken).ConfigureAwait(false);
+                if (scope == null)
+                {
+                    return;
+                }
                 var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
-                accountService.SetTenantInfo(CreateTenantInfo(tenantId));
                 var account = await accountService.GetObjectAsync(z => z.Id == accountId).ConfigureAwait(false);
                 if (account == null || !account.Enabled)
                 {
@@ -328,14 +347,16 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
             _logger.LogError(ex, "个人微信 Claw 账号 {AccountId} 长轮询失败。", accountId);
             try
             {
-                using var scope = _scopeFactory.CreateScope();
-                var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
-                accountService.SetTenantInfo(CreateTenantInfo(tenantId));
-                var account = await accountService.GetObjectAsync(z => z.Id == accountId).ConfigureAwait(false);
-                if (account != null)
+                using var scope = await _tenantScopeFactory.TryCreateScopeAsync(tenantId, stoppingToken).ConfigureAwait(false);
+                if (scope != null)
                 {
-                    account.MarkError(ex.Message);
-                    await accountService.SaveObjectAsync(account).ConfigureAwait(false);
+                    var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
+                    var account = await accountService.GetObjectAsync(z => z.Id == accountId).ConfigureAwait(false);
+                    if (account != null)
+                    {
+                        account.MarkError(ex.Message);
+                        await accountService.SaveObjectAsync(account).ConfigureAwait(false);
+                    }
                 }
             }
             catch (Exception updateException)
@@ -364,11 +385,15 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         }
     }
 
-    private static RequestTenantInfo CreateTenantInfo(int tenantId)
+    private void CancelStaleAccounts(HashSet<(int TenantId, int AccountId)> activeKeys)
     {
-        var tenantInfo = new RequestTenantInfo { Id = tenantId };
-        tenantInfo.TryMatch(tenantId > 0);
-        return tenantInfo;
+        foreach (var item in _runningAccounts)
+        {
+            if (item.Value.Task?.IsCompleted == true || !activeKeys.Contains(item.Key))
+            {
+                item.Value.Cancel();
+            }
+        }
     }
 
     private static bool IsExpectedLongPollTimeout(
@@ -393,5 +418,71 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         }
 
         return false;
+    }
+
+    private sealed class RunningAccount : IDisposable
+    {
+        private readonly object _sync = new();
+        private readonly CancellationTokenSource _cancellationTokenSource;
+        private readonly CancellationTokenRegistration _stoppingRegistration;
+        private bool _disposeRequested;
+        private int _cancelOperations;
+
+        public RunningAccount(CancellationToken stoppingToken)
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+            Token = _cancellationTokenSource.Token;
+            _stoppingRegistration = stoppingToken.Register(Cancel);
+        }
+
+        public CancellationToken Token { get; }
+
+        public Task Task { get; set; }
+
+        public void Cancel()
+        {
+            lock (_sync)
+            {
+                if (_disposeRequested)
+                {
+                    return;
+                }
+                _cancelOperations++;
+            }
+
+            try
+            {
+                _cancellationTokenSource.Cancel();
+            }
+            finally
+            {
+                lock (_sync)
+                {
+                    _cancelOperations--;
+                    if (_disposeRequested && _cancelOperations == 0)
+                    {
+                        _cancellationTokenSource.Dispose();
+                    }
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            lock (_sync)
+            {
+                if (_disposeRequested)
+                {
+                    return;
+                }
+                _disposeRequested = true;
+                if (_cancelOperations == 0)
+                {
+                    _cancellationTokenSource.Dispose();
+                }
+            }
+            // Shutdown callbacks may be waiting to enter Cancel(), so unregister outside the lock.
+            _stoppingRegistration.Dispose();
+        }
     }
 }

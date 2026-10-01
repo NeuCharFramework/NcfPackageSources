@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.14</Version>
+    <Version>0.0.16</Version>
     <PackageReleaseNotes>
+[2026-10-02] 覆盖后台租户作用域初始化、停用、单租户模式及账号任务取消释放并发
+[2026-10-01] 补充 Repository 查询租户隔离、软删除、分页、取消及局部更新回归测试
 [2026-10-01] v0.0.14 补充 RequestHeader 租户授权回归测试
 1、覆盖匹配声明、跨租户切换、重复请求头和混合认证凭据
 [2026-07-07] v0.0.1 Dependency updates from upstream modules

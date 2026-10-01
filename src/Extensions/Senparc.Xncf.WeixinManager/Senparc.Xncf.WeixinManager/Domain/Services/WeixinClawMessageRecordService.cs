@@ -161,6 +161,54 @@ public sealed class WeixinClawMessageRecordService
             && item.Direction == WeixinClawMessageDirection.Inbound).ConfigureAwait(false);
     }
 
+    public async Task<bool> TryUpdateInboundMediaImportAsync(
+        int accountId,
+        string messageId,
+        string storageKey,
+        int? fileManagerFileId,
+        string fileManagerError)
+    {
+        if (string.IsNullOrWhiteSpace(messageId) || string.IsNullOrWhiteSpace(storageKey))
+        {
+            return false;
+        }
+
+        var record = await GetObjectAsync(item =>
+            item.WeixinClawAccountId == accountId
+            && item.Direction == WeixinClawMessageDirection.Inbound
+            && item.MessageId == messageId).ConfigureAwait(false);
+        if (record == null)
+        {
+            return false;
+        }
+
+        var content = WeixinClawMessageContent.Parse(record.Text);
+        if (content.ParseError || content.MediaItems.Count == 0)
+        {
+            return false;
+        }
+
+        var media = content.MediaItems.FirstOrDefault(item =>
+            string.Equals(item.StorageKey, storageKey, StringComparison.Ordinal));
+        if (media == null)
+        {
+            return false;
+        }
+
+        var normalizedError = string.IsNullOrWhiteSpace(fileManagerError) ? null : fileManagerError;
+        if (media.FileManagerFileId == fileManagerFileId
+            && string.Equals(media.FileManagerError, normalizedError, StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        media.FileManagerFileId = fileManagerFileId;
+        media.FileManagerError = normalizedError;
+        record.SetText(WeixinClawMessageContent.Serialize(content.Text, content.MediaItems));
+        await SaveObjectAsync(record).ConfigureAwait(false);
+        return true;
+    }
+
     private static WeixinClawMessageRecordDto ToDto(WeixinClawMessageRecord item)
     {
         var content = WeixinClawMessageContent.Parse(item.Text);
