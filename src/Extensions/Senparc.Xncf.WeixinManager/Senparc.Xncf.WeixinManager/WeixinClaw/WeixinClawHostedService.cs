@@ -1,6 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.WeixinManager.Domain.Services;
 using System;
@@ -16,7 +18,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<WeixinClawHostedService> _logger;
-    private readonly ConcurrentDictionary<int, Task> _runningAccounts = new();
+    private readonly ConcurrentDictionary<(int TenantId, int AccountId), Task> _runningAccounts = new();
     private readonly CancellationTokenSource _stoppingCts = new();
     private Task _runningTask;
 
@@ -83,20 +85,28 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 try
                 {
                     using var scope = _scopeFactory.CreateScope();
-                    var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
-                    var accounts = await accountService.GetFullListAsync(
-                        z => z.Enabled && !string.IsNullOrWhiteSpace(z.BotTokenProtected),
-                        z => z.Id,
-                        Senparc.Ncf.Core.Enums.OrderingType.Ascending).ConfigureAwait(false);
+                    var dbContext = scope.ServiceProvider.GetRequiredService<WeixinSenparcEntities>();
+                    var accounts = await dbContext.WeixinClawAccounts
+                        .IgnoreQueryFilters()
+                        .AsNoTracking()
+                        .Where(z => !z.Flag
+                            && z.Enabled
+                            && !string.IsNullOrWhiteSpace(z.BotTokenProtected))
+                        .OrderBy(z => z.TenantId)
+                        .ThenBy(z => z.Id)
+                        .Select(z => new { z.TenantId, z.Id })
+                        .ToListAsync(stoppingToken)
+                        .ConfigureAwait(false);
 
                     foreach (var account in accounts)
                     {
-                        if (_runningAccounts.TryAdd(account.Id, Task.CompletedTask))
+                        var key = (account.TenantId, account.Id);
+                        if (_runningAccounts.TryAdd(key, Task.CompletedTask))
                         {
-                            var task = RunAccountAsync(account.Id, stoppingToken);
-                            _runningAccounts[account.Id] = task;
+                            var task = RunAccountAsync(account.TenantId, account.Id, stoppingToken);
+                            _runningAccounts[key] = task;
                             _ = task.ContinueWith(
-                                _ => _runningAccounts.TryRemove(account.Id, out _),
+                                _ => _runningAccounts.TryRemove(key, out _),
                                 CancellationToken.None,
                                 TaskContinuationOptions.ExecuteSynchronously,
                                 TaskScheduler.Default);
@@ -128,7 +138,10 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         _stoppingCts.Dispose();
     }
 
-    private async Task RunAccountAsync(int accountId, CancellationToken stoppingToken)
+    private async Task RunAccountAsync(
+        int tenantId,
+        int accountId,
+        CancellationToken stoppingToken)
     {
         string baseUrl = null;
         string token = null;
@@ -139,6 +152,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
             {
                 using var scope = _scopeFactory.CreateScope();
                 var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
+                accountService.SetTenantInfo(CreateTenantInfo(tenantId));
                 var account = await accountService.GetObjectAsync(z => z.Id == accountId).ConfigureAwait(false);
                 if (account == null || !account.Enabled)
                 {
@@ -182,6 +196,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                     // an already-running process. A canceled getupdates request is
                     // an empty poll, not an account failure.
                     _logger.LogDebug(
+                        ex,
                         "个人微信 Claw 账号 {AccountId} 长轮询达到宿主超时边界，继续下一轮：{ExceptionType}",
                         account.Id,
                         ex.GetType().FullName);
@@ -233,6 +248,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                             .Select(z => z.TextItem.Text));
                     var mediaItems = message.MessageType == 1
                         ? await mediaService.DownloadInboundAsync(
+                            tenantId,
                             account.Id,
                             messageId,
                             message.ItemList,
@@ -314,6 +330,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
             {
                 using var scope = _scopeFactory.CreateScope();
                 var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
+                accountService.SetTenantInfo(CreateTenantInfo(tenantId));
                 var account = await accountService.GetObjectAsync(z => z.Id == accountId).ConfigureAwait(false);
                 if (account != null)
                 {
@@ -345,6 +362,13 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 }
             }
         }
+    }
+
+    private static RequestTenantInfo CreateTenantInfo(int tenantId)
+    {
+        var tenantInfo = new RequestTenantInfo { Id = tenantId };
+        tenantInfo.TryMatch(tenantId > 0);
+        return tenantInfo;
     }
 
     private static bool IsExpectedLongPollTimeout(

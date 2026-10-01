@@ -25,6 +25,9 @@ the iLink HTTP JSON protocol directly and does not require the OpenClaw runtime.
   flow, and `sendmessage`.
 - Downloads inbound image, voice, and file media from the iLink CDN, decrypts it, and stores it
   under the host `App_Data/WeixinClawMedia` directory for authenticated conversation display.
+- Requests a tenant-scoped private-attachment import through the FileManager Abstractions EventBus
+  contract. The message record keeps the resulting FileManager file ID; if FileManager is unavailable,
+  the original Weixin conversation copy remains usable and the import error is recorded separately.
 - Persists the latest inbound user and protected `context_token`, so the Admin page can send a reply after
   the phone sends at least one message. The page reports an actionable error instead of treating a
   context-less send as delivered.
@@ -45,7 +48,7 @@ integration rather than this channel module.
 ## Installation
 
 ```xml
-<PackageReference Include="Senparc.Xncf.WeixinManager" Version="0.26.0-preview3" />
+<PackageReference Include="Senparc.Xncf.WeixinManager" Version="0.24.9" />
 ```
 
 ## Key API

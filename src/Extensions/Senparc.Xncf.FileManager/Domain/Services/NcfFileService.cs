@@ -275,9 +275,7 @@ public class NcfFileService : ServiceBase<NcfFile>
         var fileExtension = NcfFileResourcePolicy.NormalizeExtension(originalFileName);
         if (!NcfFileResourcePolicy.IsAllowedExtension(resourceScope, fileExtension))
         {
-            throw new InvalidOperationException(resourceScope == NcfFileResourceScope.KnowledgeBase
-                ? "知识库文件仅支持可安全提取的文本和 Office Open XML 格式。"
-                : "站点静态资源仅支持图片、音视频和字体格式；不接受 HTML、SVG、JavaScript 或压缩包。" );
+            throw new InvalidOperationException(GetUnsupportedExtensionMessage(resourceScope));
         }
 
         if (string.IsNullOrWhiteSpace(originalFileName))
@@ -361,9 +359,7 @@ public class NcfFileService : ServiceBase<NcfFile>
         var fileExtension = NcfFileResourcePolicy.NormalizeExtension(originalFileName);
         if (!NcfFileResourcePolicy.IsAllowedExtension(resourceScope, fileExtension))
         {
-            throw new InvalidOperationException(resourceScope == NcfFileResourceScope.KnowledgeBase
-                ? "知识库文件仅支持可安全提取的文本和 Office Open XML 格式。"
-                : "站点静态资源仅支持图片、音视频和字体格式；不接受 HTML、SVG、JavaScript 或压缩包。");
+            throw new InvalidOperationException(GetUnsupportedExtensionMessage(resourceScope));
         }
 
         if (string.IsNullOrWhiteSpace(originalFileName))
@@ -733,6 +729,17 @@ public class NcfFileService : ServiceBase<NcfFile>
         {
             throw new ArgumentOutOfRangeException(nameof(resourceScope));
         }
+    }
+
+    private static string GetUnsupportedExtensionMessage(NcfFileResourceScope resourceScope)
+    {
+        return resourceScope switch
+        {
+            NcfFileResourceScope.KnowledgeBase => "知识库文件仅支持可安全提取的文本和 Office Open XML 格式。",
+            NcfFileResourceScope.SiteAsset => "站点静态资源仅支持图片、音视频和字体格式；不接受 HTML、SVG、JavaScript 或压缩包。",
+            NcfFileResourceScope.PrivateAttachment => "私有附件的文件格式不在安全允许列表中。",
+            _ => "不支持当前文件资源用途。"
+        };
     }
 
     private static FileType GetFileType(string extension)

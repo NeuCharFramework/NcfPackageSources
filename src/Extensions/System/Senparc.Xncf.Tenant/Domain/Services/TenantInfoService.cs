@@ -71,6 +71,10 @@ namespace Senparc.Xncf.Tenant.Domain.Services
                     {
                         tenantKey = headerTenantKey[0].ToUpper();
                     }
+                    else if (httpContext.User?.Identity?.IsAuthenticated == true)
+                    {
+                        tenantKey = httpContext.User.FindFirst("TenantKey")?.Value?.ToUpper();
+                    }
                     break;
                 case TenantRule.LoginInput:
                     {

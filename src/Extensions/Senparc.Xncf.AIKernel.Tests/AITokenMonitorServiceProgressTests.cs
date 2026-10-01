@@ -19,6 +19,22 @@ public class AITokenMonitorServiceProgressTests
     }
 
     [TestMethod]
+    public async Task RunProgress_DoesNotCrossTenantBoundaries()
+    {
+        var service = new AITokenMonitorService();
+        var runId = Guid.NewGuid();
+        service.PublishProgress(CreateEvent(runId, 5, AITokenProgressStatus.Completed), tenantId: 1);
+
+        Assert.IsNull(service.GetLatestProgress(runId, tenantId: 2));
+        Assert.AreEqual(0, service.GetBufferedProgress(runId, tenantId: 2).Count);
+        Assert.AreEqual(5, service.GetLatestProgress(runId, tenantId: 1).OutputTokens);
+        await Assert.ThrowsExceptionAsync<InvalidOperationException>(async () =>
+        {
+            await foreach (var _ in service.SubscribeAsync(runId, tenantId: 2)) { }
+        });
+    }
+
+    [TestMethod]
     public void GetLatestProgress_UnknownRun_ReturnsNull()
     {
         Assert.IsNull(new AITokenMonitorService().GetLatestProgress(Guid.NewGuid()));

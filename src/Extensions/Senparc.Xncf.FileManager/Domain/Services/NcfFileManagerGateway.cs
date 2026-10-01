@@ -31,20 +31,18 @@ public sealed class NcfFileManagerGateway : IFileManagerGateway
         FileManagerImportRequest request,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(request);
+
         if (!await IsAvailableAsync(cancellationToken).ConfigureAwait(false))
         {
             throw new InvalidOperationException("Senparc.Xncf.FileManager 尚未安装或未开放。");
-        }
-
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request));
         }
 
         var scope = request.ResourceKind switch
         {
             FileManagerResourceKind.KnowledgeBase => NcfFileResourceScope.KnowledgeBase,
             FileManagerResourceKind.SiteAsset => NcfFileResourceScope.SiteAsset,
+            FileManagerResourceKind.PrivateAttachment => NcfFileResourceScope.PrivateAttachment,
             _ => throw new ArgumentOutOfRangeException(nameof(request.ResourceKind))
         };
         var file = await _fileService.UploadStreamAsync(

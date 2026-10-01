@@ -24,20 +24,24 @@ public sealed class WeixinClawMediaService
     private readonly WeixinClawMessageRecordService _recordService;
     private readonly WeixinClawApi _api;
     private readonly WeixinClawMediaStorageService _storage;
+    private readonly WeixinClawFileManagerBridge _fileManagerBridge;
 
     public WeixinClawMediaService(
         WeixinClawAccountService accountService,
         WeixinClawMessageRecordService recordService,
         WeixinClawApi api,
-        WeixinClawMediaStorageService storage)
+        WeixinClawMediaStorageService storage,
+        WeixinClawFileManagerBridge fileManagerBridge)
     {
         _accountService = accountService;
         _recordService = recordService;
         _api = api;
         _storage = storage;
+        _fileManagerBridge = fileManagerBridge;
     }
 
     public async Task<List<WeixinClawStoredMedia>> DownloadInboundAsync(
+        int tenantId,
         int accountId,
         string identity,
         IReadOnlyList<WeixinClawMessageItem> items,
@@ -73,6 +77,13 @@ public sealed class WeixinClawMediaService
                     identity,
                     index,
                     displayName,
+                    bytes,
+                    cancellationToken).ConfigureAwait(false);
+                await _fileManagerBridge.ImportAsync(
+                    tenantId,
+                    accountId,
+                    identity,
+                    stored,
                     bytes,
                     cancellationToken).ConfigureAwait(false);
             }
