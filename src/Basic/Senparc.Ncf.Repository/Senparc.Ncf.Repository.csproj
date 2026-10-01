@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.9-preview9</Version>
+    <Version>0.20.10-preview9</Version>
     <AssemblyName>Senparc.Ncf.Repository</AssemblyName>
     <RootNamespace>Senparc.Ncf.Repository</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -17,6 +17,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
+		[2026-10-01] 支持已跟踪实体按指定字段保存，统一封装局部更新能力
 				v0.1.0 创世
 				v0.4.100 添加 include 方法
 				v0.11.6 优化 DeleteAllAsync() 方法，提供 deleteItemAction 参数

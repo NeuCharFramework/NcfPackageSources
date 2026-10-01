@@ -37,6 +37,9 @@ public sealed class WeixinClawFileManagerBridge
             var response = await _requestClient.RequestAsync(
                 new FileManagerImportRequestedEvent(
                     tenantId,
+                    accountId,
+                    messageId,
+                    media.StorageKey,
                     content,
                     media.Name,
                     media.ContentType,

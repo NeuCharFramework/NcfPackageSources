@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261001
+    修改描述：模块菜单权限通过现有权限服务保存，取消直接操作 DbContext
+
 ----------------------------------------------------------------*/
 
 
@@ -29,7 +32,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xncf.XncfModuleManager.Models;
-using Senparc.Xncf.SystemCore.Domain.Database;
 
 namespace Senparc.Xncf.XncfModuleManager.Domain.Services
 {
@@ -169,13 +171,8 @@ namespace Senparc.Xncf.XncfModuleManager.Domain.Services
                     RoleCode = sysRole?.RoleCode ?? administratorRoleCode,
                     PermissionId = sysMemu.Id
                 };
-                //SenparcEntities db = _serviceProvider.GetService<SenparcEntities>();
-
-                //XncfModuleManagerSenparcEntities db = _serviceProvider.GetService<XncfModuleManagerSenparcEntities>();
-                BasePoolEntities db = _serviceProvider.GetService<BasePoolEntities>();
-
-                db.Set<SysRolePermission>().Add(new SysRolePermission(sysPermissionDto));
-                await db.SaveChangesAsync();
+                var permissionService = _serviceProvider.GetRequiredService<SysRolePermissionService>();
+                await permissionService.SaveObjectAsync(new SysRolePermission(sysPermissionDto)).ConfigureAwait(false);
                 var updateMenuDto = new UpdateMenuId_XncfModuleDto(register.Uid, sysMemu.Id);
                 await base.UpdateMenuIdAsync(updateMenuDto).ConfigureAwait(false);
             }

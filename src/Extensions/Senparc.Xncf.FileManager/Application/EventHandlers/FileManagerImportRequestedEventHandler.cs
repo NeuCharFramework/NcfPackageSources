@@ -68,6 +68,10 @@ public sealed class FileManagerImportRequestedEventHandler
                 cancellationToken).ConfigureAwait(false);
             response = new FileManagerImportCompletedEvent(
                 @event.RequestId,
+                @event.TenantId,
+                @event.AccountId,
+                @event.MessageId,
+                @event.StorageKey,
                 true,
                 null,
                 result);
@@ -82,6 +86,10 @@ public sealed class FileManagerImportRequestedEventHandler
                 @event.FileName);
             response = new FileManagerImportCompletedEvent(
                 @event.RequestId,
+                @event.TenantId,
+                @event.AccountId,
+                @event.MessageId,
+                @event.StorageKey,
                 false,
                 ex.Message,
                 null);

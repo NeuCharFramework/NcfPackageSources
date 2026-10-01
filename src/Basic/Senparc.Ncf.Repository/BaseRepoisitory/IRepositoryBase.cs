@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261001
+    修改描述：开放已跟踪实体按指定字段保存的通用接口
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -89,6 +92,11 @@ namespace Senparc.Ncf.Repository
         /// <param name="obj"></param>
         /// <returns></returns>
         Task SaveAsync(T obj);
+
+        /// <summary>
+        /// 仅保存已跟踪实体的指定字段，避免覆盖未参与本次业务更新的字段。
+        /// </summary>
+        Task SavePropertiesAsync(T obj, params string[] propertyNames);
 
         /// <summary>
         /// 

@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.2</Version>
+    <Version>0.4.3</Version>
     <PackageReleaseNotes>
+    [2026-10-01] 使用现有 Repository 查询能力，运行状态通过基础仓储局部更新
       [2026-08-13] v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
       1、支持版本与自动保存、Webhook 触发、并行节点和执行回放
       2、增强模板绑定、输出 schema、表达式评估与 NeuBell 任务管理

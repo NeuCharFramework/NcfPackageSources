@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
@@ -7,6 +8,7 @@ using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.WeixinManager.Domain.Services;
@@ -31,6 +33,18 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
     {
         var accounts = await GetFullListAsync(z => true, z => z.Id, OrderingType.Ascending).ConfigureAwait(false);
         return accounts.Select(ToDto).ToList();
+    }
+
+    public async Task<List<(int TenantId, int AccountId)>> GetPollingAccountsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var accounts = await RepositoryBase.GeAll(z => z.Id, OrderingType.Ascending)
+            .AsNoTracking()
+            .Where(z => z.Enabled && !string.IsNullOrWhiteSpace(z.BotTokenProtected))
+            .Select(z => new { z.TenantId, z.Id })
+            .ToListAsync(cancellationToken)
+            .ConfigureAwait(false);
+        return accounts.Select(z => (z.TenantId, z.Id)).ToList();
     }
 
     public WeixinClawAccountDto ToDto(WeixinClawAccount account)
