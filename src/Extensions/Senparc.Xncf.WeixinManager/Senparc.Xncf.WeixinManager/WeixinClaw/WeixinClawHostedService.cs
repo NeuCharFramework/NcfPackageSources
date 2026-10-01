@@ -198,7 +198,6 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                     return;
                 }
                 var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
-                accountService.SetTenantInfo(CreateTenantInfo(tenantId));
                 var account = await accountService.GetObjectAsync(z => z.Id == accountId).ConfigureAwait(false);
                 if (account == null || !account.Enabled)
                 {
