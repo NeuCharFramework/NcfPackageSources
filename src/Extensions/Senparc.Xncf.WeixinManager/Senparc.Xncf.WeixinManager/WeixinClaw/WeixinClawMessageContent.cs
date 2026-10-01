@@ -72,6 +72,10 @@ public sealed class WeixinClawStoredMedia
 
     public string StorageKey { get; set; }
 
+    public int? FileManagerFileId { get; set; }
+
+    public string FileManagerError { get; set; }
+
     public string Error { get; set; }
 
     [JsonIgnore]

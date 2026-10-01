@@ -8,6 +8,7 @@
 - Provides model and vector application services with paging, create, edit, and delete operations.
 - Builds `SenparcAiSetting` values and runs model requests through the configured Senparc AI runtime.
 - Monitors AI token usage with real-time in-process aggregation (`AITokenMonitorService`) and persistent, queryable usage records (`AITokenUsageService`).
+- Separates real-time token totals and run-progress buffers by the resolved tenant; monitor endpoints read only the current tenant's partition.
 - Publishes per-run token progress as asynchronous events consumable via `IAsyncEnumerable` (`SubscribeAsync`), with buffered replay for late subscribers.
 - Surfaces token usage on the AI model list page: overview cards (total tokens / calls / success-error / average duration), per-model usage columns (calls, total tokens with relative bar, last used), alias search, and a shortcut to the Token Monitor page.
 - Synchronizes model metadata from NeuChar services when explicitly requested.

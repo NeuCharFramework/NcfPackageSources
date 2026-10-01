@@ -346,6 +346,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 throw new SenparcAiException("AITokenMonitorService 不能为空");
             }
 
+            var tenantId = TenantMonitorScope.GetTenantId(_serviceProvider);
             promptConfigParameter ??= new PromptConfigParameter()
             {
                 MaxTokens = 2000,
@@ -401,7 +402,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     ElapsedMs = (int)stopwatch.ElapsedMilliseconds,
                     Error = error
                 };
-                monitor.PublishProgress(evt);
+                monitor.PublishProgress(evt, tenantId);
                 try
                 {
                     progress?.Report(evt);
@@ -472,7 +473,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     ElapsedMs = (int)stopwatch.ElapsedMilliseconds,
                     Error = error
                 };
-                monitor.PublishProgress(finalEvt);
+                monitor.PublishProgress(finalEvt, tenantId);
                 try
                 {
                     progress?.Report(finalEvt);
@@ -483,7 +484,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 }
 
                 // 实时聚合
-                monitor.Record(aiModel.Alias, finalUsage, (int)stopwatch.ElapsedMilliseconds, success);
+                monitor.Record(aiModel.Alias, finalUsage, (int)stopwatch.ElapsedMilliseconds, success, tenantId);
 
                 // 持久化记录
                 try

@@ -24,3 +24,12 @@
 - `SenparcEntitiesMultiTenant` is the multi-tenant database context.
 
 Choose and document the tenant-resolution source, fail closed when a tenant cannot be resolved, and ensure every business query applies the resolved tenant boundary.
+
+When using `TenantRule.RequestHeader`, anonymous requests can select a tenant by sending
+`TenantKey`. Requests authenticated with the NCF admin cookie must present the same
+tenant key as their authenticated `TenantKey` claim; accounts without a tenant claim
+cannot switch tenants. When the header is absent, a signed-in tenant user retains
+the tenant from their cookie claim rather than falling back to the default tenant.
+Requests with an `Authorization` header and `TenantKey` are
+rejected until their authentication scheme is explicitly bound to a tenant. A trusted
+proxy should strip client-supplied tenant headers if it injects its own.

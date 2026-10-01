@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Senparc.Ncf.Shared.Abstractions.Events;
 
 namespace Senparc.Xncf.FileManager.Abstractions;
 
@@ -13,7 +14,8 @@ public static class FileManagerModuleContract
 public enum FileManagerResourceKind
 {
     KnowledgeBase = 100,
-    SiteAsset = 200
+    SiteAsset = 200,
+    PrivateAttachment = 300
 }
 
 public sealed record FileManagerImportRequest(
@@ -39,3 +41,19 @@ public interface IFileManagerGateway
         FileManagerImportRequest request,
         CancellationToken cancellationToken = default);
 }
+
+public sealed record FileManagerImportRequestedEvent(
+    int TenantId,
+    byte[] Content,
+    string FileName,
+    string ContentType,
+    string Description,
+    FileManagerResourceKind ResourceKind = FileManagerResourceKind.PrivateAttachment)
+    : IntegrationRequest<FileManagerImportCompletedEvent>;
+
+public sealed record FileManagerImportCompletedEvent(
+    Guid RequestId,
+    bool Success,
+    string ErrorMessage,
+    FileManagerImportResult Result)
+    : IntegrationResponse(RequestId);

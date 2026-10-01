@@ -58,17 +58,11 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
         /// <returns></returns>
         private async Task<List<TenantInfo>> GetEnabledListAsync()
         {
-            List<TenantInfo> list = null;
-            try
-            {
-                _senparcEntitiesMultiTenant.SetMultiTenantEnable(false);//TODO:此处有线程安全问题，TenantInfos不具备多租户属性可以直接查询
-                list = await _senparcEntitiesMultiTenant.Set<TenantInfo>().Where(z => z.Enable).ToListAsync();
-            }
-            finally
-            {
-                _senparcEntitiesMultiTenant.ResetMultiTenantEnable();
-            }
-            return list;
+            // TenantInfo is a global registry implementing IIgnoreMulitTenant, so its
+            // query does not require mutating the scoped DbContext's tenant filter state.
+            return await _senparcEntitiesMultiTenant.Set<TenantInfo>()
+                .Where(z => z.Enable)
+                .ToListAsync();
         }
 
 

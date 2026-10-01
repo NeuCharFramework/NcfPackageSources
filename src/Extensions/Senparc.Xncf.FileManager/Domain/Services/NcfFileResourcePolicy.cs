@@ -17,6 +17,7 @@ using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Senparc.Xncf.FileManager.Domain.Services;
 
@@ -41,10 +42,23 @@ public static class NcfFileResourcePolicy
         ".woff", ".woff2", ".ttf", ".otf"
     };
 
+    private static readonly HashSet<string> PrivateAttachmentExtensions = new(
+        KnowledgeBaseExtensions
+            .Concat(SiteAssetExtensions)
+            .Concat(new[]
+            {
+                ".pdf", ".doc", ".xls", ".ppt",
+                ".zip", ".7z", ".rar",
+                ".amr", ".m4a", ".mov"
+            }),
+        StringComparer.OrdinalIgnoreCase);
+
     private static readonly FileExtensionContentTypeProvider ContentTypeProvider = new();
 
     public static bool IsValidScope(NcfFileResourceScope scope) =>
-        scope is NcfFileResourceScope.KnowledgeBase or NcfFileResourceScope.SiteAsset;
+        scope is NcfFileResourceScope.KnowledgeBase
+            or NcfFileResourceScope.SiteAsset
+            or NcfFileResourceScope.PrivateAttachment;
 
     public static string NormalizeExtension(string fileName)
     {
@@ -57,6 +71,7 @@ public static class NcfFileResourcePolicy
         {
             NcfFileResourceScope.KnowledgeBase => KnowledgeBaseExtensions.Contains(extension),
             NcfFileResourceScope.SiteAsset => SiteAssetExtensions.Contains(extension),
+            NcfFileResourceScope.PrivateAttachment => PrivateAttachmentExtensions.Contains(extension),
             _ => false
         };
     }
@@ -94,6 +109,7 @@ public static class NcfFileResourcePolicy
         {
             NcfFileResourceScope.KnowledgeBase => "knowledge-base",
             NcfFileResourceScope.SiteAsset => "site-assets",
+            NcfFileResourceScope.PrivateAttachment => "private-attachments",
             _ => throw new ArgumentOutOfRangeException(nameof(scope))
         };
     }

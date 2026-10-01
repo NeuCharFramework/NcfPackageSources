@@ -24,6 +24,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Utility;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using System;
 using Senparc.Ncf.Core.Utility;
 using System.IO;
@@ -176,7 +177,16 @@ namespace Senparc.Ncf.Core.Config
         /// <summary>
         /// 手动设置安装状态-结束
         /// </summary>
-        public static async void SetInstallFinished()
+        [Obsolete($"Use {nameof(SetInstallFinishedAsync)} so persistence failures can be observed.")]
+        public static void SetInstallFinished()
+        {
+            SetInstallFinishedAsync().GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// 手动设置安装状态-结束
+        /// </summary>
+        public static async Task SetInstallFinishedAsync()
         {
             _isInstalling = false;
             var filePath = Server.GetMapPath("~/App_Data/install-finished.txt");

@@ -172,4 +172,28 @@ public class AITokenMonitorServiceRecordTests
         Assert.AreEqual(1, stats.ByModel.Count);
         Assert.AreEqual(threadCount * perThread, stats.ByModel[0].Calls);
     }
+
+    [TestMethod]
+    public void GetLiveStats_SeparatesTotalsModelsAndDaysByTenant()
+    {
+        var service = new AITokenMonitorService();
+        service.Record("tenant-a-model", new AITokenUsageSnapshot { InputTokens = 4 }, 10, true, tenantId: 1);
+        service.Record("tenant-b-model", new AITokenUsageSnapshot { InputTokens = 7 }, 20, false, tenantId: 2);
+
+        var tenantA = service.GetLiveStats(1, tenantId: 1);
+        var tenantB = service.GetLiveStats(1, tenantId: 2);
+        var other = service.GetLiveStats(1, tenantId: 3);
+
+        Assert.AreEqual(1, tenantA.TotalCalls);
+        Assert.AreEqual(4, tenantA.TotalTokens);
+        Assert.AreEqual(1, tenantA.SuccessCount);
+        Assert.AreEqual("tenant-a-model", tenantA.ByModel.Single().ModelAlias);
+        Assert.AreEqual(4, tenantA.Daily.Single().TotalTokens);
+        Assert.AreEqual(7, tenantB.TotalTokens);
+        Assert.AreEqual(1, tenantB.ErrorCount);
+        Assert.AreEqual("tenant-b-model", tenantB.ByModel.Single().ModelAlias);
+        Assert.AreEqual(7, tenantB.Daily.Single().TotalTokens);
+        Assert.AreEqual(0, other.TotalCalls);
+        Assert.AreEqual(0, other.ByModel.Count);
+    }
 }

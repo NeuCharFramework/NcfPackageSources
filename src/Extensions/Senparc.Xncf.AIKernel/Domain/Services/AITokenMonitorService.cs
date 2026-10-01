@@ -35,16 +35,20 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
     {
         #region 实时聚合
 
-        private long _totalCalls;
-        private long _successCount;
-        private long _errorCount;
-        private long _totalInputTokens;
-        private long _totalOutputTokens;
-        private long _totalTokens;
-        private long _totalDurationMs;
+        private sealed class TenantAgg
+        {
+            public long TotalCalls;
+            public long SuccessCount;
+            public long ErrorCount;
+            public long TotalInputTokens;
+            public long TotalOutputTokens;
+            public long TotalTokens;
+            public long TotalDurationMs;
+            public readonly ConcurrentDictionary<string, ModelAgg> ModelAggs = new(StringComparer.OrdinalIgnoreCase);
+            public readonly ConcurrentDictionary<string, DailyAgg> DailyAggs = new(StringComparer.Ordinal);
+        }
 
-        private readonly ConcurrentDictionary<string, ModelAgg> _modelAggs = new(StringComparer.OrdinalIgnoreCase);
-        private readonly ConcurrentDictionary<string, DailyAgg> _dailyAggs = new(StringComparer.Ordinal);
+        private readonly ConcurrentDictionary<int, TenantAgg> _tenantAggs = new();
 
         private sealed class ModelAgg
         {
@@ -70,6 +74,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
 
         private sealed class RunState
         {
+            public int TenantId;
             public readonly object Sync = new();
             public readonly List<AITokenProgressEvent> Buffer = new();
             public readonly ConcurrentDictionary<Guid, Channel<AITokenProgressEvent>> Subscribers = new();
@@ -92,8 +97,9 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <param name="snapshot">Token 使用快照</param>
         /// <param name="durationMs">调用耗时（毫秒）</param>
         /// <param name="success">是否成功</param>
-        public void Record(string modelAlias, AITokenUsageSnapshot snapshot, int durationMs, bool success)
+        public void Record(string modelAlias, AITokenUsageSnapshot snapshot, int durationMs, bool success, int tenantId = 0)
         {
+            var tenant = _tenantAggs.GetOrAdd(tenantId, _ => new TenantAgg());
             var input = Math.Max(0, snapshot?.InputTokens ?? 0);
             var output = Math.Max(0, snapshot?.OutputTokens ?? 0);
             var total = Math.Max(0, snapshot?.TotalTokens ?? 0);
@@ -103,22 +109,22 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
             var ms = Math.Max(0, durationMs);
 
-            Interlocked.Increment(ref _totalCalls);
-            Interlocked.Add(ref _totalInputTokens, input);
-            Interlocked.Add(ref _totalOutputTokens, output);
-            Interlocked.Add(ref _totalTokens, total);
-            Interlocked.Add(ref _totalDurationMs, ms);
+            Interlocked.Increment(ref tenant.TotalCalls);
+            Interlocked.Add(ref tenant.TotalInputTokens, input);
+            Interlocked.Add(ref tenant.TotalOutputTokens, output);
+            Interlocked.Add(ref tenant.TotalTokens, total);
+            Interlocked.Add(ref tenant.TotalDurationMs, ms);
             if (success)
             {
-                Interlocked.Increment(ref _successCount);
+                Interlocked.Increment(ref tenant.SuccessCount);
             }
             else
             {
-                Interlocked.Increment(ref _errorCount);
+                Interlocked.Increment(ref tenant.ErrorCount);
             }
 
             var key = string.IsNullOrWhiteSpace(modelAlias) ? "(unknown)" : modelAlias;
-            var modelAgg = _modelAggs.GetOrAdd(key, _ => new ModelAgg());
+            var modelAgg = tenant.ModelAggs.GetOrAdd(key, _ => new ModelAgg());
             lock (modelAgg.Sync)
             {
                 modelAgg.Calls += 1;
@@ -128,7 +134,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
 
             var dayKey = DateTime.Now.ToString("yyyy-MM-dd");
-            var dailyAgg = _dailyAggs.GetOrAdd(dayKey, _ => new DailyAgg());
+            var dailyAgg = tenant.DailyAggs.GetOrAdd(dayKey, _ => new DailyAgg());
             lock (dailyAgg.Sync)
             {
                 dailyAgg.Calls += 1;
@@ -142,40 +148,45 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// 获取当前实时聚合统计。
         /// </summary>
         /// <param name="dailyDays">按天聚合保留的天数（默认 7 天）</param>
-        public AITokenMonitorStats GetLiveStats(int dailyDays = 7)
+        public AITokenMonitorStats GetLiveStats(int dailyDays = 7, int tenantId = 0)
         {
+            _tenantAggs.TryGetValue(tenantId, out var tenant);
+            var totalCalls = tenant == null ? 0 : Interlocked.Read(ref tenant.TotalCalls);
             var stats = new AITokenMonitorStats
             {
-                TotalCalls = Interlocked.Read(ref _totalCalls),
-                SuccessCount = Interlocked.Read(ref _successCount),
-                ErrorCount = Interlocked.Read(ref _errorCount),
-                TotalInputTokens = Interlocked.Read(ref _totalInputTokens),
-                TotalOutputTokens = Interlocked.Read(ref _totalOutputTokens),
-                TotalTokens = Interlocked.Read(ref _totalTokens),
-                AverageDurationMs = Interlocked.Read(ref _totalCalls) > 0
-                    ? (double)Interlocked.Read(ref _totalDurationMs) / Interlocked.Read(ref _totalCalls)
+                TotalCalls = totalCalls,
+                SuccessCount = tenant == null ? 0 : Interlocked.Read(ref tenant.SuccessCount),
+                ErrorCount = tenant == null ? 0 : Interlocked.Read(ref tenant.ErrorCount),
+                TotalInputTokens = tenant == null ? 0 : Interlocked.Read(ref tenant.TotalInputTokens),
+                TotalOutputTokens = tenant == null ? 0 : Interlocked.Read(ref tenant.TotalOutputTokens),
+                TotalTokens = tenant == null ? 0 : Interlocked.Read(ref tenant.TotalTokens),
+                AverageDurationMs = totalCalls > 0
+                    ? (double)Interlocked.Read(ref tenant.TotalDurationMs) / totalCalls
                     : 0
             };
 
-            foreach (var pair in _modelAggs)
+            if (tenant != null)
             {
-                var agg = pair.Value;
-                long calls, input, output, total;
-                lock (agg.Sync)
+                foreach (var pair in tenant.ModelAggs)
                 {
-                    calls = agg.Calls;
-                    input = agg.InputTokens;
-                    output = agg.OutputTokens;
-                    total = agg.TotalTokens;
+                    var agg = pair.Value;
+                    long calls, input, output, total;
+                    lock (agg.Sync)
+                    {
+                        calls = agg.Calls;
+                        input = agg.InputTokens;
+                        output = agg.OutputTokens;
+                        total = agg.TotalTokens;
+                    }
+                    stats.ByModel.Add(new AITokenModelStat
+                    {
+                        ModelAlias = pair.Key,
+                        Calls = calls,
+                        InputTokens = input,
+                        OutputTokens = output,
+                        TotalTokens = total
+                    });
                 }
-                stats.ByModel.Add(new AITokenModelStat
-                {
-                    ModelAlias = pair.Key,
-                    Calls = calls,
-                    InputTokens = input,
-                    OutputTokens = output,
-                    TotalTokens = total
-                });
             }
             stats.ByModel.Sort((a, b) => b.TotalTokens.CompareTo(a.TotalTokens));
 
@@ -184,7 +195,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 var day = DateTime.Now.Date.AddDays(-i);
                 var key = day.ToString("yyyy-MM-dd");
                 long dcalls = 0, dinput = 0, dout = 0, dtotal = 0;
-                if (_dailyAggs.TryGetValue(key, out var agg))
+                if (tenant != null && tenant.DailyAggs.TryGetValue(key, out var agg))
                 {
                     lock (agg.Sync)
                     {
@@ -213,7 +224,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <summary>
         /// 发布一次进度事件（写入缓冲并广播给所有订阅者）。
         /// </summary>
-        public void PublishProgress(AITokenProgressEvent progress)
+        public void PublishProgress(AITokenProgressEvent progress, int tenantId = 0)
         {
             if (progress == null)
             {
@@ -221,7 +232,11 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
             progress.Timestamp = DateTime.Now;
 
-            var run = _runs.GetOrAdd(progress.RunId, _ => new RunState());
+            var run = _runs.GetOrAdd(progress.RunId, _ => new RunState { TenantId = tenantId });
+            if (run.TenantId != tenantId)
+            {
+                throw new InvalidOperationException("Token monitor run belongs to another tenant.");
+            }
             List<AITokenProgressEvent> buffered;
             lock (run.Sync)
             {
@@ -266,9 +281,9 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <summary>
         /// 获取某次运行的最新进度（用于轮询式异步进度）。
         /// </summary>
-        public AITokenProgressEvent GetLatestProgress(Guid runId)
+        public AITokenProgressEvent GetLatestProgress(Guid runId, int tenantId = 0)
         {
-            if (_runs.TryGetValue(runId, out var run))
+            if (_runs.TryGetValue(runId, out var run) && run.TenantId == tenantId)
             {
                 lock (run.Sync)
                 {
@@ -284,9 +299,9 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         /// <summary>
         /// 获取某次运行的全部缓冲进度（用于重放）。
         /// </summary>
-        public IReadOnlyList<AITokenProgressEvent> GetBufferedProgress(Guid runId)
+        public IReadOnlyList<AITokenProgressEvent> GetBufferedProgress(Guid runId, int tenantId = 0)
         {
-            if (_runs.TryGetValue(runId, out var run))
+            if (_runs.TryGetValue(runId, out var run) && run.TenantId == tenantId)
             {
                 lock (run.Sync)
                 {
@@ -305,14 +320,19 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         public async IAsyncEnumerable<AITokenProgressEvent> SubscribeAsync(
             Guid runId,
             bool replayBuffered = true,
-            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            [EnumeratorCancellation] CancellationToken cancellationToken = default,
+            int tenantId = 0)
         {
             if (runId == Guid.Empty)
             {
                 yield break;
             }
 
-            var run = _runs.GetOrAdd(runId, _ => new RunState());
+            var run = _runs.GetOrAdd(runId, _ => new RunState { TenantId = tenantId });
+            if (run.TenantId != tenantId)
+            {
+                throw new InvalidOperationException("Token monitor run belongs to another tenant.");
+            }
             var subscriptionId = Guid.NewGuid();
             var channel = Channel.CreateUnbounded<AITokenProgressEvent>();
             run.Subscribers[subscriptionId] = channel;

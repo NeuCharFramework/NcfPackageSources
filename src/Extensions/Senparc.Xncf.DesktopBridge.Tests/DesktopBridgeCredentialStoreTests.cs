@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Xncf.DesktopBridge.Services;
 
 namespace Senparc.Xncf.DesktopBridge.Tests;
@@ -66,5 +67,31 @@ public sealed class DesktopBridgeCredentialStoreTests
 
         Assert.AreEqual("invalid", poll.Status);
         Assert.IsFalse(store.Approve(Guid.NewGuid(), "admin"));
+    }
+
+    [TestMethod]
+    public void Revoke_NotifiesNeuBellObservers()
+    {
+        var publisher = new RecordingNeuBellPublisher();
+        var store = new DesktopBridgeCredentialStore(null, publisher);
+        var pairing = store.CreatePairingRequest("测试工作台", "127.0.0.1");
+        Assert.IsTrue(store.Approve(pairing.RequestId, "admin"));
+        var session = store.GetSessions().Single();
+        var notificationsBeforeRevoke = publisher.NotificationCount;
+
+        Assert.IsTrue(store.Revoke(session.SessionId));
+
+        Assert.AreEqual(notificationsBeforeRevoke + 1, publisher.NotificationCount);
+    }
+
+    private sealed class RecordingNeuBellPublisher : INeuBellPublisher
+    {
+        public int NotificationCount { get; private set; }
+
+        public ValueTask NotifyChangedAsync(string providerId, CancellationToken cancellationToken = default)
+        {
+            NotificationCount++;
+            return ValueTask.CompletedTask;
+        }
     }
 }

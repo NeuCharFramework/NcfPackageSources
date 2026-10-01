@@ -155,7 +155,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         {
             return await this.GetResponseAsync<AITokenMonitorStats>(async (response, logger) =>
             {
-                return _aITokenMonitorService.GetLiveStats(7);
+                return _aITokenMonitorService.GetLiveStats(7, TenantMonitorScope.GetTenantId(ServiceProvider));
             });
         }
 
@@ -235,7 +235,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         {
             return await this.GetResponseAsync<AITokenProgressEvent>(async (response, logger) =>
             {
-                var progress = _aITokenMonitorService.GetLatestProgress(request.RunId);
+                var progress = _aITokenMonitorService.GetLatestProgress(request.RunId, TenantMonitorScope.GetTenantId(ServiceProvider));
                 return progress;
             });
         }
@@ -248,7 +248,7 @@ namespace Senparc.Xncf.AIKernel.OHS.Local.AppService
         {
             return await this.GetResponseAsync<List<AITokenProgressEvent>>(async (response, logger) =>
             {
-                var buffered = _aITokenMonitorService.GetBufferedProgress(request.RunId);
+                var buffered = _aITokenMonitorService.GetBufferedProgress(request.RunId, TenantMonitorScope.GetTenantId(ServiceProvider));
                 return buffered.ToList();
             });
         }

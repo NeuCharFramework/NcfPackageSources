@@ -12,13 +12,17 @@
 
 ----------------------------------------------------------------*/
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.Tenant.Domain.Services;
 using System;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.Tenant.OHS.Remote
@@ -56,6 +60,7 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
                 {
                     //没有数据库，跳过
                     await _next(context);
+                    return;
                 }
 
                 var enableMultiTenant = SiteConfig.SenparcCoreSetting.EnableMultiTenant;
@@ -71,6 +76,40 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
                 var urlPath = context.Request.Path.ToString();
                 if (!FirstRunAndInstalling && enableMultiTenant)
                 {
+                    if (SiteConfig.SenparcCoreSetting.TenantRule == TenantRule.RequestHeader)
+                    {
+                        var hasTenantHeader = context.Request.Headers.TryGetValue("TenantKey", out var tenantKeys);
+                        // This middleware runs before UseAuthentication in the host.
+                        var schemeProvider = context.RequestServices.GetService<IAuthenticationSchemeProvider>();
+                        var adminScheme = schemeProvider == null
+                            ? null
+                            : await schemeProvider.GetSchemeAsync(SiteConfig.NcfAdminAuthorizeScheme);
+                        var cookie = adminScheme == null
+                            ? null
+                            : await context.AuthenticateAsync(SiteConfig.NcfAdminAuthorizeScheme);
+                        if (hasTenantHeader
+                            && !TenantHeaderAccessPolicy.IsHeaderAllowed(
+                                tenantKeys.ToArray(),
+                                context.Request.Headers.ContainsKey("Authorization"),
+                                cookie?.Succeeded == true ? cookie.Principal : null,
+                                context.User))
+                        {
+                            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                            return;
+                        }
+
+                        if (cookie?.Succeeded == true)
+                        {
+                            if (cookie.Principal.FindAll("TenantKey").Skip(1).Any())
+                            {
+                                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                                return;
+                            }
+
+                            context.User = cookie.Principal;
+                        }
+                    }
+
                     var serviceProvider = context.RequestServices;
                     var tenantInfoService = serviceProvider.GetRequiredService<TenantInfoService>();
                     var requestTenantInfo = await tenantInfoService.SetScopedRequestTenantInfoAsync(context);//设置当前 Request 的 RequestTenantInfo 参数
@@ -95,6 +134,32 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
 
             await _next(context);
             //Console.WriteLine("TenantMiddleware finished");
+        }
+    }
+
+    public static class TenantHeaderAccessPolicy
+    {
+        public static bool IsHeaderAllowed(
+            string[] tenantKeys,
+            bool hasAuthorizationHeader,
+            ClaimsPrincipal cookiePrincipal,
+            ClaimsPrincipal requestPrincipal)
+        {
+            return tenantKeys?.Length == 1
+                && !string.IsNullOrWhiteSpace(tenantKeys[0])
+                && !hasAuthorizationHeader
+                && (cookiePrincipal == null || HasTenantAccess(cookiePrincipal, tenantKeys[0]))
+                && (requestPrincipal?.Identity?.IsAuthenticated != true
+                    || HasTenantAccess(requestPrincipal, tenantKeys[0]));
+        }
+
+        public static bool HasTenantAccess(ClaimsPrincipal principal, string tenantKey)
+        {
+            var tenantClaims = principal?.FindAll("TenantKey").ToArray();
+            return principal?.Identity?.IsAuthenticated == true
+                && tenantClaims?.Length == 1
+                && !string.IsNullOrWhiteSpace(tenantKey)
+                && string.Equals(tenantClaims[0].Value, tenantKey, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

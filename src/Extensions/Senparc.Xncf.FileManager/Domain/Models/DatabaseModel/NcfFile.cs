@@ -57,7 +57,7 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
         public NcfFileResourceScope ResourceScope { get; set; } = NcfFileResourceScope.KnowledgeBase;
 
         /// <summary>
-        /// 仅站点静态资源允许发布为公开访问；知识库源文件始终保持私有。
+        /// 仅站点静态资源允许发布为公开访问；知识库源文件和外部私有附件始终保持私有。
         /// </summary>
         public NcfFileAccessLevel AccessLevel { get; set; } = NcfFileAccessLevel.Private;
 
@@ -77,7 +77,10 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
         KnowledgeBase = 100,
 
         /// <summary>站点可引用的图片、音视频和字体等静态资源。</summary>
-        SiteAsset = 200
+        SiteAsset = 200,
+
+        /// <summary>由微信等外部模块导入且不可公开发布的私有附件。</summary>
+        PrivateAttachment = 300
     }
 
     public enum NcfFileAccessLevel
