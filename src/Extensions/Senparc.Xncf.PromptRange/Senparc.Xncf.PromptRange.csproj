@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.7</Version>
+    <Version>0.19.8</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -134,7 +134,9 @@
       [2026-09-17] v0.19.7 适配共享 AgentKernel 预览依赖版本
       1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
       2、保持 PromptRange 工具调用与模型集成兼容
-</PackageReleaseNotes>
+      [2026-10-05] v0.19.8 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+      1、Updated Senparc.Xncf.PromptRange project behavior and integration for the latest feature and reliability improvements.
+      2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">

@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：NeuCharPivotGlobalFunctionService.cs
@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260917
     修改描述：v0.9.1 新增 Function 全局 Provit 数据库访问策略（DB 覆盖代码属性），
     支持按用户/角色/权限码绑定，策略缓存在 FullNeuCharFunctionProvitAccessCache
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
 ----------------------------------------------------------------*/
 

@@ -1,4 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：Index.cshtml.cs
+    文件功能描述：Index.cshtml.cs implementation and project behavior.
+
+
+    创建标识：Senparc - 20241028
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Pipelines.Sockets.Unofficial.Buffers;
 using Senparc.Areas.Admin.Domain;

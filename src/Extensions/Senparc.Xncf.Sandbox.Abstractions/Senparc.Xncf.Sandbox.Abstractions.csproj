@@ -28,7 +28,9 @@
       5、新增 C# Jupyter 模板键、预览工作区契约和永久 TTL 状态标识
       [2026-09-18] v0.3.0 SandboxSessionInfo 增加 Alias 与 ExtraPorts 契约字段
       1、Alias 用于会话别名的跨模块展示；ExtraPorts 为创建时解析后的附加端口映射展示串
-    </PackageReleaseNotes>
+    
+      [2026-10-05] v0.3.0 feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota
+      1、Updated Senparc.Xncf.Sandbox.Abstractions project behavior and integration for the latest feature and reliability improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

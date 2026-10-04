@@ -14,6 +14,9 @@
     修改描述：v0.1.0 迁移到 IntegrationRequest/IntegrationResponse 标准契约，
     支持 AgentsManager 通过 IEventBusRequestClient 查询 MCP Endpoint 列表
 
+    修改标识：Senparc - 20261005
+    修改描述：v0.1.0 0.1.0 feat: add MCP endpoint selection feature in AgentsManager
+
 ----------------------------------------------------------------*/
 
 using System;

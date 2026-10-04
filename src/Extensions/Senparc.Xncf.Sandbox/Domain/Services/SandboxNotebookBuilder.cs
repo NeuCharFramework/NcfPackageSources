@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：SandboxNotebookBuilder.cs
@@ -7,6 +7,9 @@
     创建标识：Senparc - 20260918
     修改标识：Senparc - 20260918
     修改描述：v0.3.3 新增 Notebook 构建器（Python / C# 内核）
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
 ----------------------------------------------------------------*/
 
