@@ -27,6 +27,9 @@
     修改标识：Senparc - 20260915
     修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
 
+    修改标识：Senparc - 20261001
+    修改描述：通过现有 Repository 查询能力访问数据，运行状态按指定字段保存
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -68,7 +71,7 @@ public sealed class NeuCharWorkflowService : WorkflowClientServiceBase<WorkflowE
         int adminUserId,
         CancellationToken cancellationToken = default)
     {
-        return await BaseData.BaseDB.BaseDataContext.Set<WorkflowEntity>()
+        return await RepositoryBase.GeAll(z => z.Id, OrderingType.Ascending)
             .AsNoTracking()
             .Where(z => z.AdminUserId == adminUserId)
             .Select(z => new { z.Id, z.Name })
@@ -76,20 +79,11 @@ public sealed class NeuCharWorkflowService : WorkflowClientServiceBase<WorkflowE
             .ConfigureAwait(false);
     }
 
-    private async Task SaveRuntimePropertiesAsync(WorkflowEntity workflow, params string[] propertyNames)
+    private Task SaveRuntimePropertiesAsync(WorkflowEntity workflow, params string[] propertyNames)
     {
         ArgumentNullException.ThrowIfNull(workflow);
 
-        var context = BaseData.BaseDB.BaseDataContext;
-        var entry = context.Entry(workflow);
-        context.ChangeTracker.DetectChanges();
-        var runtimeProperties = propertyNames.ToHashSet(StringComparer.Ordinal);
-        foreach (var property in entry.Properties)
-        {
-            property.IsModified = runtimeProperties.Contains(property.Metadata.Name);
-        }
-
-        await context.SaveChangesAsync().ConfigureAwait(false);
+        return RepositoryBase.SavePropertiesAsync(workflow, propertyNames);
     }
 }
 
@@ -134,7 +128,7 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
             return Array.Empty<string>();
         }
 
-        return await BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+        return await RepositoryBase.GeAll(z => z.StartedAt, OrderingType.Descending)
             .AsNoTracking()
             .Where(z => z.WorkflowId == workflowId &&
                         z.Succeeded == true &&
@@ -162,7 +156,7 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
         }
 
         var ids = workflowIds.Distinct().ToList();
-        var query = BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+        var query = RepositoryBase.GeAll(z => z.Id, OrderingType.Descending)
             .AsNoTracking()
             .Where(z => ids.Contains(z.WorkflowId));
         if (fromUtc.HasValue)
@@ -221,7 +215,7 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
         }
 
         var ids = workflowIds.Distinct().ToList();
-        var query = BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+        var query = RepositoryBase.GeAll(z => z.Id, OrderingType.Ascending)
             .AsNoTracking()
             .Where(z => ids.Contains(z.WorkflowId));
         if (fromUtc.HasValue)
@@ -258,7 +252,7 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
         }
 
         var ids = workflowIds.Distinct().ToList();
-        var query = BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+        var query = RepositoryBase.GeAll(z => z.StartedAt, OrderingType.Descending)
             .AsNoTracking()
             .Where(z => ids.Contains(z.WorkflowId));
         if (fromUtc.HasValue)
@@ -310,7 +304,7 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
             return Task.FromResult(0);
         }
 
-        return BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+        return RepositoryBase.GeAll(z => z.Id, OrderingType.Ascending)
             .AsNoTracking()
             .CountAsync(
                 z => z.WorkflowId == workflowId && z.FinishedAt == null,
@@ -327,7 +321,7 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
         }
 
         var suffix = $"-run-{runId:N}";
-        return await BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+        return await RepositoryBase.GeAll(z => z.Id, OrderingType.Descending)
             .Where(z => z.FinishedAt == null && z.CorrelationId.EndsWith(suffix))
             .OrderByDescending(z => z.Id)
             .FirstOrDefaultAsync(cancellationToken)
@@ -343,7 +337,7 @@ public sealed class NeuCharWorkflowExecutionLogService : WorkflowClientServiceBa
             return Task.FromResult<NeuCharWorkflowExecutionLog?>(null);
         }
 
-        return BaseData.BaseDB.BaseDataContext.Set<NeuCharWorkflowExecutionLog>()
+        return RepositoryBase.GeAll(z => z.Id, OrderingType.Ascending)
             .FirstOrDefaultAsync(
                 z => z.Id == executionLogId && z.FinishedAt == null,
                 cancellationToken);

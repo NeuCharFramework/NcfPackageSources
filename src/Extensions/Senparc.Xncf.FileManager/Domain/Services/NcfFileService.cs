@@ -13,11 +13,15 @@
     修改标识：Senparc - 20260915
     修改描述：v0.7.0 优化文件管理、标签与回收站交互
 
+    修改标识：Senparc - 20261005
+    修改描述：v0.7.3 0.7.3 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
+using Senparc.Xncf.FileManager.Abstractions;
 using Senparc.Ncf.Core.Cache;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
@@ -30,6 +34,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.FileManager.Domain.Services;
@@ -273,9 +278,7 @@ public class NcfFileService : ServiceBase<NcfFile>
         var fileExtension = NcfFileResourcePolicy.NormalizeExtension(originalFileName);
         if (!NcfFileResourcePolicy.IsAllowedExtension(resourceScope, fileExtension))
         {
-            throw new InvalidOperationException(resourceScope == NcfFileResourceScope.KnowledgeBase
-                ? "知识库文件仅支持可安全提取的文本和 Office Open XML 格式。"
-                : "站点静态资源仅支持图片、音视频和字体格式；不接受 HTML、SVG、JavaScript 或压缩包。" );
+            throw new InvalidOperationException(GetUnsupportedExtensionMessage(resourceScope));
         }
 
         if (string.IsNullOrWhiteSpace(originalFileName))
@@ -307,6 +310,97 @@ public class NcfFileService : ServiceBase<NcfFile>
                 FileExtension = fileExtension,
                 FileType = GetFileType(fileExtension),
                 ContentType = NcfFileResourcePolicy.GetContentType(fileExtension),
+                ContentHash = contentHash,
+                ResourceScope = resourceScope,
+                AccessLevel = NcfFileAccessLevel.Private,
+                UploadTime = now,
+                FolderId = folderId
+            };
+
+            await SaveObjectAsync(ncfFile);
+            return ncfFile;
+        }
+        catch (Exception ex)
+        {
+            if (File.Exists(physicalPath))
+            {
+                File.Delete(physicalPath);
+            }
+            SenparcTrace.BaseExceptionLog(ex);
+            throw;
+        }
+    }
+
+    public async Task<NcfFile> UploadStreamAsync(
+        Stream content,
+        string fileName,
+        string contentType,
+        long length,
+        NcfFileResourceScope resourceScope,
+        int? folderId = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (content == null || !content.CanRead)
+        {
+            throw new ArgumentException("上传内容不能为空。", nameof(content));
+        }
+
+        if (length <= 0)
+        {
+            throw new ArgumentException("上传文件不能为空。", nameof(length));
+        }
+
+        if (length > MaxFileSizeBytes)
+        {
+            throw new InvalidOperationException($"单个文件不能超过 {MaxFileSizeBytes / 1024 / 1024} MB。");
+        }
+
+        EnsureValidScope(resourceScope);
+        await ValidateFolderAsync(folderId, resourceScope);
+
+        var originalFileName = Path.GetFileName((fileName ?? string.Empty).Replace('\\', '/'));
+        var fileExtension = NcfFileResourcePolicy.NormalizeExtension(originalFileName);
+        if (!NcfFileResourcePolicy.IsAllowedExtension(resourceScope, fileExtension))
+        {
+            throw new InvalidOperationException(GetUnsupportedExtensionMessage(resourceScope));
+        }
+
+        if (string.IsNullOrWhiteSpace(originalFileName))
+        {
+            originalFileName = $"upload{fileExtension}";
+        }
+        if (originalFileName.Length > 250)
+        {
+            originalFileName = originalFileName[..250];
+        }
+
+        if (content.CanSeek)
+        {
+            content.Position = 0;
+        }
+
+        var now = DateTime.Now;
+        var datePath = string.Join('/', NcfFileResourcePolicy.GetStorageRoot(resourceScope), now.Year.ToString(), now.Month.ToString("00"));
+        var fullPath = Path.Combine(_baseFilePath, datePath.Replace('/', Path.DirectorySeparatorChar));
+        Directory.CreateDirectory(fullPath);
+
+        var storageFileName = Guid.NewGuid().ToString("N");
+        var physicalPath = Path.Combine(fullPath, storageFileName + fileExtension);
+
+        try
+        {
+            var contentHash = await CopyAndHashAsync(content, physicalPath, cancellationToken);
+            var ncfFile = new NcfFile
+            {
+                FileName = originalFileName,
+                StorageFileName = storageFileName,
+                FilePath = datePath,
+                FileSize = length,
+                FileExtension = fileExtension,
+                FileType = GetFileType(fileExtension),
+                ContentType = string.IsNullOrWhiteSpace(contentType)
+                    ? NcfFileResourcePolicy.GetContentType(fileExtension)
+                    : contentType,
                 ContentHash = contentHash,
                 ResourceScope = resourceScope,
                 AccessLevel = NcfFileAccessLevel.Private,
@@ -569,10 +663,19 @@ public class NcfFileService : ServiceBase<NcfFile>
 
     private static async Task<string> CopyAndHashAsync(IFormFile file, string physicalPath)
     {
+        await using var input = file.OpenReadStream();
+        return await CopyAndHashAsync(input, physicalPath, CancellationToken.None);
+    }
+
+    private static async Task<string> CopyAndHashAsync(
+        Stream input,
+        string physicalPath,
+        CancellationToken cancellationToken)
+    {
         using var sha256 = SHA256.Create();
         await using var output = new FileStream(physicalPath, FileMode.CreateNew, FileAccess.Write, FileShare.None, 64 * 1024, useAsync: true);
         await using var hashStream = new CryptoStream(output, sha256, CryptoStreamMode.Write, leaveOpen: false);
-        await file.CopyToAsync(hashStream);
+        await input.CopyToAsync(hashStream, cancellationToken);
         hashStream.FlushFinalBlock();
         return Convert.ToHexString(sha256.Hash!);
     }
@@ -629,6 +732,17 @@ public class NcfFileService : ServiceBase<NcfFile>
         {
             throw new ArgumentOutOfRangeException(nameof(resourceScope));
         }
+    }
+
+    private static string GetUnsupportedExtensionMessage(NcfFileResourceScope resourceScope)
+    {
+        return resourceScope switch
+        {
+            NcfFileResourceScope.KnowledgeBase => "知识库文件仅支持可安全提取的文本和 Office Open XML 格式。",
+            NcfFileResourceScope.SiteAsset => "站点静态资源仅支持图片、音视频和字体格式；不接受 HTML、SVG、JavaScript 或压缩包。",
+            NcfFileResourceScope.PrivateAttachment => "私有附件的文件格式不在安全允许列表中。",
+            _ => "不支持当前文件资源用途。"
+        };
     }
 
     private static FileType GetFileType(string extension)

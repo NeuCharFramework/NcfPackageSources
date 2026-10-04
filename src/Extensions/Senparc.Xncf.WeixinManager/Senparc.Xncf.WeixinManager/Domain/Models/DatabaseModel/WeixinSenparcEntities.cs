@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：WeixinSenparcEntities.cs
@@ -9,6 +9,9 @@
     
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
 ----------------------------------------------------------------*/
 
@@ -30,6 +33,10 @@ namespace Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel
         public DbSet<WeixinUser> WeixinUsers { get; set; }
         public DbSet<UserTag> UserTags { get; set; }
         public DbSet<UserTag_WeixinUser> UserTags_WeixinUsers { get; set; }
+        public DbSet<WeixinClawAccount> WeixinClawAccounts { get; set; }
+        public DbSet<WeixinClawMessageReceipt> WeixinClawMessageReceipts { get; set; }
+        public DbSet<WeixinClawMessageRecord> WeixinClawMessageRecords { get; set; }
+        public DbSet<WeixinClawBindingProfile> WeixinClawBindingProfiles { get; set; }
 
         public WeixinSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {

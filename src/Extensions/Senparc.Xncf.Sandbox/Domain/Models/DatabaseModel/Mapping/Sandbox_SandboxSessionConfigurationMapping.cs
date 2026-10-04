@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：Sandbox_SandboxSessionConfigurationMapping.cs
+    文件功能描述：Sandbox_SandboxSessionConfigurationMapping.cs implementation and project behavior.
+
+
+    创建标识：Senparc - 20260808
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+
+----------------------------------------------------------------*/
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Senparc.Ncf.Core.Models.DataBaseModel;
@@ -18,6 +32,8 @@ public class Sandbox_SandboxSessionConfigurationMapping : ConfigurationMappingWi
         builder.Property(e => e.AccessUrl).HasMaxLength(500);
         builder.Property(e => e.AccessToken).HasMaxLength(128);
         builder.Property(e => e.StatusMessage).HasMaxLength(1000);
+        builder.Property(e => e.Alias).HasMaxLength(128);
+        builder.Property(e => e.ExtraPorts).HasMaxLength(500);
         builder.Property(e => e.AdminRemark).HasMaxLength(300);
         builder.Property(e => e.Remark).HasMaxLength(300);
         builder.HasIndex(e => e.SessionId).IsUnique();

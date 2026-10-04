@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>0.4.6</Version>
+    <Version>0.4.7</Version>
     <AssemblyName>Senparc.Xncf.DesktopBridge</AssemblyName>
     <RootNamespace>Senparc.Xncf.DesktopBridge</RootNamespace>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
@@ -19,6 +19,8 @@
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <PackageReleaseNotes>
+      [2026-10-01] v0.4.7 修复桌面会话撤销后的状态通知
+      1、撤销成功后立即发布 NeuBell 变更通知，避免管理界面保留过期会话状态
       [2026-07-25] v0.1.0-preview1 新增 NCF 桌面状态桥接能力
       1、使用逆变事件处理器的闭合服务映射旁路观察 EventBus，不改变原事件消费行为
       2、避免开放泛型实现被 NCF 扫描为无效 DI 描述符，确保站点容器可正常构建
@@ -58,7 +60,9 @@
       [2026-09-17] v0.4.6 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
       1、同步受影响的基础库、AI 模块或宿主项目版本
       2、保持项目引用链与当前功能兼容
-</PackageReleaseNotes>
+      [2026-10-05] v0.4.7 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+      1、Updated Senparc.Xncf.DesktopBridge project behavior and integration for the latest feature and reliability improvements.
+      2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

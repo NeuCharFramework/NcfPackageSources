@@ -10,10 +10,12 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261001
+    修改描述：通过现有 TenantInfoRepository 查询租户缓存数据
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core.Cache;
@@ -23,6 +25,9 @@ using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Xncf.Tenant.Domain.DatabaseModel;
 using Senparc.Xncf.Tenant.Domain.DataBaseModel;
 using Senparc.Xncf.Tenant.Domain.Models;
+using Senparc.Xncf.Tenant.ACL.Repository;
+using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,6 +54,7 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
 
 
         private IMapper _mapper;
+        private readonly IRepositoryBase<TenantInfo> _tenantInfoRepository;
         private SenparcEntitiesMultiTenant _senparcEntitiesMultiTenant => base._db.BaseDataContext as SenparcEntitiesMultiTenant;
         //private SenparcEntitiesBase _senparcEntitiesBase => base._db.BaseDataContext as SenparcEntitiesBase;
 
@@ -58,28 +64,32 @@ namespace Senparc.Xncf.Tenant.Domain.Cache
         /// <returns></returns>
         private async Task<List<TenantInfo>> GetEnabledListAsync()
         {
-            List<TenantInfo> list = null;
-            try
-            {
-                _senparcEntitiesMultiTenant.SetMultiTenantEnable(false);//TODO:此处有线程安全问题，TenantInfos不具备多租户属性可以直接查询
-                list = await _senparcEntitiesMultiTenant.Set<TenantInfo>().Where(z => z.Enable).ToListAsync();
-            }
-            finally
-            {
-                _senparcEntitiesMultiTenant.ResetMultiTenantEnable();
-            }
-            return list;
+            return await _tenantInfoRepository.GetObjectListAsync(
+                z => z.Enable, z => z.Id, OrderingType.Ascending, 0, 0).ConfigureAwait(false);
         }
 
 
-        public FullTenantInfoCache(TenantInfoDbData db, IMapper mapper, SenparcEntitiesMultiTenant senparcEntitiesMultiTenantBase)
-            : this(CACHE_KEY, db, 1440)
+        public FullTenantInfoCache(TenantInfoDbData db, IMapper mapper, SenparcEntitiesMultiTenant senparcEntitiesMultiTenantBase,
+            TenantInfoRepository tenantInfoRepository)
+            : this(CACHE_KEY, db, 1440, tenantInfoRepository)
         {
             _mapper = mapper;
         }
 
-        public FullTenantInfoCache(string CACHE_KEY, INcfDbData db, int timeOut) : base(CACHE_KEY, db)
+        public FullTenantInfoCache(TenantInfoDbData db, IMapper mapper, SenparcEntitiesMultiTenant senparcEntitiesMultiTenantBase)
+            : this(db, mapper, senparcEntitiesMultiTenantBase, new TenantInfoRepository(db))
         {
+        }
+
+        public FullTenantInfoCache(string CACHE_KEY, INcfDbData db, int timeOut)
+            : this(CACHE_KEY, db, timeOut, new ClientRepositoryBase<TenantInfo>(db))
+        {
+        }
+
+        private FullTenantInfoCache(string CACHE_KEY, INcfDbData db, int timeOut, IRepositoryBase<TenantInfo> tenantInfoRepository)
+            : base(CACHE_KEY, db)
+        {
+            _tenantInfoRepository = tenantInfoRepository;
             base.TimeOut = timeOut;
         }
 

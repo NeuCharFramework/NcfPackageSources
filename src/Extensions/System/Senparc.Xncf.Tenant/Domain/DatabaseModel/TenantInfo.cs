@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：TenantInfo.cs
@@ -9,6 +9,9 @@
     
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.15.11 0.15.11 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
 
 ----------------------------------------------------------------*/
 
@@ -57,6 +60,10 @@ namespace Senparc.Xncf.Tenant.Domain.DataBaseModel
 
         /// <summary>
         /// 此属性已经取消和数据库的映射
+        /// <para>TenantInfos 表（租户注册表）不存储 TenantId 列（迁移历史中不存在该列）；
+        /// 租户注册表本身是全局表（实现 IIgnoreMulitTenant，不受租户查询过滤器约束），
+        /// 因此通过 new 遮蔽基类 EntityBase 的 int TenantId 并标记 [NotMapped]，
+        /// 防止 EF Core 将基类 TenantId 映射到 TenantInfos 表导致运行时“列不存在”错误</para>
         /// </summary>
         [NotMapped]
         new public string TenantId { get; private set; }

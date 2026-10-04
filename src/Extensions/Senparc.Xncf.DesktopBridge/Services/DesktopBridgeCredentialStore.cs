@@ -223,6 +223,7 @@ public sealed class DesktopBridgeCredentialStore
                 pairing.SessionExpiresAt = null;
             }
 
+            NotifyNeuBellChanged();
             return true;
         }
     }

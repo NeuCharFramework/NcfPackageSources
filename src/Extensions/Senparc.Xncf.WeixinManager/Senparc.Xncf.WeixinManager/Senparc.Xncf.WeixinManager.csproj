@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <!--<Project Sdk="Microsoft.NET.Sdk.Razor">-->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.24.8</Version>
+    <Version>0.24.13</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -29,6 +29,10 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</PackageProjectUrl>
     <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
+		[2026-10-04] v0.24.13 支持微信 SILK 语音缓存解码和视频播放、Range 请求，修复首屏连接状态加载并移除重复发送面板
+		[2026-10-03] v0.24.12 修复微信 Claw 下行 JSON 字段大小写、可选响应字段、媒体密钥编码及轮询会话上下文丢失，按官方 2.4.9 协议补充契约和发送链路测试
+		[2026-10-02] 微信后台轮询复用统一租户作用域，移除反射及重复上下文设置并完善任务取消释放
+		[2026-10-01] 个人微信后台按租户作用域调用账号服务和现有 Repository 查询，保留统一软删除过滤
 		v0.1 创世
 		v0.2 完成公众号管理、用户管理等功能
 		v0.3 优化UI，匹配新版本NCF
@@ -110,6 +114,9 @@
 		[2026-09-17] v0.24.8 适配共享 AgentKernel 预览依赖版本
 		1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
 		2、保持微信管理模块宿主集成兼容
+		[2026-10-01] v0.24.9 接入 FileManager 私有附件导入
+		1、Weixin Bot 收到媒体文件后通过 Abstractions EventBus 请求保存到 FileManager
+		2、修复后台轮询在多租户模式下的账号发现和租户上下文传播
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -139,10 +146,16 @@
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />-->
     <!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.6" />-->
     <!--<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="2.0.0-preview1-final" />-->
-    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-		</PackageReference>-->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="QRCoder" Version="1.8.0" />
+    <PackageReference Include="DrAbc.SilkSharp" Version="2.0.8" />
     <PackageReference Include="Senparc.AI.Kernel" Version="$(SenparcAiKernelVersion)" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
     <!--<PackageReference Include="Senparc.Weixin.All" Version="2025.10.24" />-->
@@ -197,6 +210,7 @@
     <None Include="App_Data\Database\SenparcConfig.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Senparc.Xncf.FileManager.Abstractions\Senparc.Xncf.FileManager.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Core\Senparc.Ncf.Core.csproj" />
     <ProjectReference Include="..\..\..\Basic\Senparc.Ncf.Database.PostgreSQL\Senparc.Ncf.Database.PostgreSQL.csproj" />

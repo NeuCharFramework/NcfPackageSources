@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.15.10</Version>
+    <Version>0.15.14</Version>
     <AssemblyName>Senparc.Xncf.Tenant</AssemblyName>
     <RootNamespace>Senparc.Xncf.Tenant</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -17,6 +17,13 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
+		[2026-10-02] 基于现有启用租户缓存提供类型化后台租户信息
+		[2026-10-01] 租户缓存查询复用现有 TenantInfoRepository，保留独立租户数据库启动机制
+				[2026-10-01] v0.15.12 移除租户缓存刷新时的共享过滤器状态切换
+				1、TenantInfo 全局注册表查询直接依赖 IIgnoreMulitTenant，避免并发请求观察到临时禁用的租户过滤状态
+				[2026-10-01] v0.15.11 加固 RequestHeader 模式租户授权
+				1、已认证管理员仅可使用与可信租户声明一致的 TenantKey
+				2、无请求头时保留已认证用户的租户上下文，避免回退到默认租户
 				v0.1.0 创世
 				v0.2.2 添加 services.AddMultiTenant(); 等注册过程到此模块
 				v0.3.3.1 添加 Oracle 数据库迁移代码

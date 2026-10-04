@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http;
 using Microsoft.OpenApi;
 using ModelContextProtocol.Protocol;
 using Senparc.AI.Interfaces;
@@ -49,6 +50,7 @@ using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.WeixinManager.Domain.Models.AutoMapper;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.WeixinManager.Domain.Services;
+using Senparc.Xncf.WeixinManager.WeixinClaw;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
@@ -70,7 +72,7 @@ namespace Senparc.Xncf.WeixinManager
         public override string Uid => "EB84CB21-AC22-406E-0001-000000000001";
 
 
-        public override string Version => "0.21.1";
+        public override string Version => "0.24.13";
 
 
         public override string MenuName => WeixinManagerResource.Get("Module.WeixinManager.MenuName", "微信管理");
@@ -96,7 +98,28 @@ namespace Senparc.Xncf.WeixinManager
             services.AddScoped<IAiHandler, AgentAiHandler>();
             services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
             services.AddAutoMapper(z => z.AddProfile<WeixinManagerProfile>());
+            services.AddDataProtection();
             services.AddScoped<MpAccountService>();
+            services.AddScoped<WeixinClawAccountService>();
+            services.AddScoped<WeixinClawMessageReceiptService>();
+            services.AddScoped<WeixinClawMessageRecordService>();
+            services.AddScoped<WeixinClawMediaStorageService>();
+            services.AddScoped<WeixinClawMediaPlaybackService>();
+            services.Configure<WeixinClawHostedServiceOptions>(
+                configuration.GetSection(WeixinClawHostedServiceOptions.SectionName));
+            services.AddScoped<WeixinClawFileManagerBridge>();
+            services.AddScoped<WeixinClawMediaService>();
+            services.AddScoped<WeixinClawBindingProfileService>();
+            services.AddScoped<IWeixinClawBindingProfileResolver>(
+                serviceProvider => serviceProvider.GetRequiredService<WeixinClawBindingProfileService>());
+            services.AddScoped<WeixinClawMessageService>();
+            services.AddScoped<IWeixinClawMessageSender>(serviceProvider =>
+                serviceProvider.GetRequiredService<WeixinClawMessageService>());
+            services.AddScoped<WeixinClawMessageDispatcher>();
+            services.AddSingleton<WeixinClawLoginService>();
+            services.AddSingleton<IHttpMessageHandlerBuilderFilter, WeixinClawHttpMessageHandlerBuilderFilter>();
+            services.AddHttpClient<WeixinClawApi>();
+            services.AddHostedService<WeixinClawHostedService>();
             services.AddScoped<PromptItemService>();
 
             var autoCreateApi = false;//是否自动生成API
@@ -125,9 +148,22 @@ namespace Senparc.Xncf.WeixinManager
             //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             //按照删除顺序排序
-            var types = new[] { typeof(UserTag_WeixinUser), typeof(UserTag), typeof(WeixinUser), typeof(MpAccount) };
-            types.ToList().AddRange(dropTableKeys);
-            types = types.Distinct().ToArray();
+            var types = new[]
+            {
+                typeof(WeixinClawMessageReceipt),
+                typeof(WeixinClawMessageRecord),
+                typeof(WeixinClawBindingProfile),
+                typeof(UserTag_WeixinUser),
+                typeof(UserTag),
+                typeof(WeixinUser),
+                typeof(WeixinClawAccount),
+                typeof(MpAccount)
+            };
+            var dropTypes = dropTableKeys
+                .Where(z => !types.Contains(z))
+                .ToList();
+            dropTypes.AddRange(types);
+            types = dropTypes.ToArray();
             //指定需要删除的数据实体
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, types);
 
@@ -332,5 +368,3 @@ namespace Senparc.Xncf.WeixinManager
 
     }
 }
-
-

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261005
+    修改描述：v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -92,5 +95,15 @@ namespace Senparc.Xncf.MCP.Models.DatabaseModel
         /// true: 成功, false: 失败
         /// </summary>
         public bool? LastTestResult { get; set; }
+
+        /// <summary>
+        /// 最近一次测试发现并缓存的工具（Function）快照 JSON
+        /// </summary>
+        public string? LastToolsJson { get; set; }
+
+        /// <summary>
+        /// 最近一次测试发现的工具（Function）数量
+        /// </summary>
+        public int? LastToolCount { get; set; }
     }
 }

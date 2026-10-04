@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：MCPEndpointService.cs
@@ -10,14 +10,20 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261003
+    修改描述：v0.5.7 端点连接测试传递传输类型及请求取消信号
+
 ----------------------------------------------------------------*/
 
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.MCP.Models.DatabaseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.MCP.Domain.Services
@@ -58,33 +64,77 @@ namespace Senparc.Xncf.MCP.Domain.Services
         }
 
         /// <summary>
-        /// 测试端点连接
+        /// 测试端点连接（真实连接 MCP Server 并读取工具列表）
         /// </summary>
-        public async Task<bool> TestEndpointAsync(int endpointId)
+        public async Task<McpConnectionTestResult> TestEndpointAsync(int endpointId, CancellationToken cancellationToken = default)
         {
             var endpoint = await this.GetObjectAsync(x => x.Id == endpointId);
             if (endpoint == null)
             {
-                return false;
+                return new McpConnectionTestResult
+                {
+                    Success = false,
+                    Status = 404,
+                    StatusMessage = "端点不存在"
+                };
+            }
+
+            return await TestEndpointCoreAsync(endpoint, cancellationToken);
+        }
+
+        /// <summary>
+        /// 对指定端点执行真实连接测试，并持久化测试记录
+        /// </summary>
+        public async Task<McpConnectionTestResult> TestEndpointCoreAsync(MCPEndpoint endpoint, CancellationToken cancellationToken = default)
+        {
+            var tester = ServiceProvider.GetRequiredService<McpConnectionTestService>();
+            string? bearerToken = ExtractBearerToken(endpoint.AuthConfig);
+
+            var result = await tester.TestAsync(endpoint.Name, endpoint.Endpoint, bearerToken,
+                endpointType: endpoint.EndpointType, cancellationToken: cancellationToken);
+
+            endpoint.LastTestedTime = DateTime.Now;
+            endpoint.LastTestResult = result.Success;
+            endpoint.LastToolCount = result.ToolCount;
+            endpoint.LastToolsJson = result.Success ? JsonSerializer.Serialize(result.Tools) : null;
+
+            await this.SaveObjectAsync(endpoint);
+            return result;
+        }
+
+        /// <summary>
+        /// 从 AuthConfig JSON 中提取 Bearer Token（约定字段：token / accessToken / apiKey）
+        /// </summary>
+        internal static string? ExtractBearerToken(string? authConfigJson)
+        {
+            if (string.IsNullOrWhiteSpace(authConfigJson))
+            {
+                return null;
             }
 
             try
             {
-                // TODO: 实现实际的端点连接测试逻辑
-                // 这里应该根据 EndpointType 调用相应的测试方法
-                endpoint.LastTestedTime = DateTime.Now;
-                endpoint.LastTestResult = true;
-                
-                await this.SaveObjectAsync(endpoint);
-                return true;
+                using var doc = JsonDocument.Parse(authConfigJson);
+                var root = doc.RootElement;
+                foreach (var key in new[] { "token", "accessToken", "bearerToken", "apiKey" })
+                {
+                    if (root.TryGetProperty(key, out var value) && value.ValueKind == JsonValueKind.String)
+                    {
+                        var token = value.GetString();
+                        if (!string.IsNullOrWhiteSpace(token))
+                        {
+                            return token;
+                        }
+                    }
+                }
             }
             catch
             {
-                endpoint.LastTestedTime = DateTime.Now;
-                endpoint.LastTestResult = false;
-                await this.SaveObjectAsync(endpoint);
-                return false;
+                // AuthConfig 不是 JSON 时直接作为 token 使用
+                return authConfigJson;
             }
+
+            return null;
         }
     }
 }

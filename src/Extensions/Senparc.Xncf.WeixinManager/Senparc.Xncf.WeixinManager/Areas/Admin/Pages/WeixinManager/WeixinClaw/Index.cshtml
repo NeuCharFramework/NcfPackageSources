@@ -1,0 +1,689 @@
+@page
+@model Senparc.Xncf.WeixinManager.Areas.Admin.Pages.WeixinManager.WeixinClaw.IndexModel
+@{
+    ViewData["Title"] = "个人微信 Bot";
+    Layout = "_Layout_Vue";
+}
+@section HeaderContent {
+    <style>
+        .claw-toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .claw-table { width: 100%; border-collapse: collapse; background: #fff; }
+        .claw-table th, .claw-table td { padding: 10px 12px; border-bottom: 1px solid #ebeef5; text-align: left; vertical-align: top; }
+        .claw-table th { color: #606266; font-weight: 600; }
+        .claw-status { color: #67c23a; }
+        .claw-status.error { color: #f56c6c; }
+        .claw-status.off { color: #909399; }
+        .claw-panel { padding: 16px; background: #fff; border: 1px solid #ebeef5; margin-top: 16px; }
+        .claw-qr { width: 240px; height: 240px; object-fit: contain; border: 1px solid #ebeef5; background: #fff; }
+        .claw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+        .claw-field label { display: block; margin-bottom: 5px; color: #606266; }
+        .claw-field input, .claw-field textarea { width: 100%; box-sizing: border-box; }
+        .claw-muted { color: #909399; font-size: 12px; }
+        .claw-chat { min-height: 260px; max-height: 520px; overflow-y: auto; padding: 12px; background: #f5f7fa; }
+        .claw-workbench { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 12px; }
+        .claw-sessions { border: 1px solid #ebeef5; background: #fff; min-height: 300px; max-height: 620px; overflow-y: auto; }
+        .claw-session { padding: 11px 12px; border-bottom: 1px solid #ebeef5; cursor: pointer; }
+        .claw-session:hover, .claw-session.active { background: #ecf5ff; }
+        .claw-session-peer { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .claw-session-preview { color: #909399; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 4px; }
+        .claw-session-time { color: #c0c4cc; font-size: 11px; margin-top: 4px; }
+        .claw-chat-column { min-width: 0; }
+        .claw-new-messages { position: sticky; bottom: 8px; display: block; width: max-content; margin: -38px auto 8px; z-index: 2; }
+        .claw-media-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+        @@media (max-width: 820px) {
+            .claw-workbench { grid-template-columns: 1fr; }
+            .claw-sessions { max-height: 220px; }
+        }
+        .claw-message { display: flex; flex-direction: column; margin: 8px 0; max-width: 82%; }
+        .claw-message.inbound { align-items: flex-start; }
+        .claw-message.outbound { align-items: flex-end; margin-left: auto; }
+        .claw-message-meta { color: #909399; font-size: 12px; margin-bottom: 3px; }
+        .claw-message-body { padding: 9px 12px; border-radius: 6px; white-space: pre-wrap; word-break: break-word; }
+        .claw-message.inbound .claw-message-body { background: #fff; border: 1px solid #ebeef5; }
+        .claw-message.outbound .claw-message-body { background: #409eff; color: #fff; }
+        .claw-message.failed .claw-message-body { background: #fef0f0; color: #f56c6c; border: 1px solid #fbc4c4; }
+        .claw-message-error { color: #f56c6c; font-size: 12px; margin-top: 3px; }
+        .claw-media-list { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+        .claw-media-card { padding: 8px; border: 1px solid #dcdfe6; border-radius: 6px; background: #fff; max-width: 360px; }
+        .claw-message.outbound .claw-media-card { border-color: #b3d8ff; }
+        .claw-media-image { display: block; max-width: 320px; max-height: 260px; object-fit: contain; cursor: zoom-in; }
+        .claw-media-audio, .claw-media-video { display: block; max-width: 320px; }
+        .claw-media-link { color: #409eff; word-break: break-all; }
+        .claw-binding-code { letter-spacing: 1px; }
+        @@media (max-width: 720px) {
+            .claw-table { display: block; overflow-x: auto; white-space: nowrap; }
+        }
+    </style>
+}
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>微信管理</el-breadcrumb-item>
+    <el-breadcrumb-item>个人微信 Bot</el-breadcrumb-item>
+}
+<div>
+    <el-container>
+        <el-header class="module-header">
+            <span class="start-title"><i class="fa fa-wechat"></i>&nbsp;个人微信 Bot</span>
+        </el-header>
+        <el-main>
+            <div class="claw-toolbar">
+                <el-button type="primary" icon="el-icon-camera" @@click="startLogin">扫码连接</el-button>
+                <el-button icon="el-icon-refresh" @@click="loadAccounts">刷新</el-button>
+            </div>
+            <div class="claw-message-error" v-if="accountLoadError">{{accountLoadError}}</div>
+
+            <table class="claw-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>状态</th>
+                        <th>iLink 账号</th>
+                        <th>最近连接</th>
+                        <th>最近消息</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in accounts" :key="item.id">
+                        <td>{{item.name}}<div class="claw-muted">#{{item.id}}</div></td>
+                        <td :class="['claw-status', item.status==='错误'?'error':(item.status==='已停用'?'off':'')]">
+                            {{item.status || '未连接'}}
+                            <div class="claw-muted" v-if="item.lastError">{{item.lastError}}</div>
+                        </td>
+                        <td>
+                            <div>{{item.ilinkBotId || '-'}}</div>
+                            <div class="claw-muted">{{item.ilinkUserId || '-'}}</div>
+                            <div class="claw-muted" v-if="item.lastMessageFromUserId">
+                                最近发送人：{{item.lastMessageFromUserId}}
+                            </div>
+                        </td>
+                        <td>{{item.lastConnectedAt || '-'}}</td>
+                        <td>{{item.lastMessageAt || '-'}}</td>
+                        <td>
+                            <el-button size="mini" icon="el-icon-edit" @@click="edit(item)">编辑</el-button>
+                            <el-button size="mini" icon="el-icon-chat-dot-round" @@click="openChat(item)">对话</el-button>
+                            <el-button size="mini" icon="el-icon-key" @@click="openBindings(item)">绑定配置</el-button>
+                            <el-button size="mini" type="danger" icon="el-icon-delete" @@click="remove(item)">删除</el-button>
+                        </td>
+                    </tr>
+                    <tr v-if="accounts.length===0"><td colspan="6" class="claw-muted">尚未连接个人微信。</td></tr>
+                </tbody>
+            </table>
+
+            <div class="claw-panel" v-if="bindings.visible">
+                <h4>绑定配置：{{bindings.accountName}}</h4>
+                <p class="claw-muted">
+                    绑定码只保存为不可逆哈希。创建或修改时请将绑定码交给对应用户；
+                    手机命令为 <code>/bind 绑定码</code>，不再使用 appsettings 中的单一绑定码。
+                </p>
+                <table class="claw-table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>AdminUserId</th>
+                            <th>WorkflowId</th>
+                            <th>功能</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in bindings.items" :key="item.id">
+                            <td>{{item.name}}</td>
+                            <td>{{item.adminUserId}}</td>
+                            <td>{{item.workflowId || '-'}}</td>
+                            <td>
+                                <span v-if="item.enableNeuBell">NeuBell </span>
+                                <span v-if="item.enableWorkflow">Workflow</span>
+                            </td>
+                            <td>{{item.enabled ? '启用' : '停用'}}</td>
+                            <td>
+                                <el-button size="mini" icon="el-icon-edit" @@click="editBinding(item)">编辑</el-button>
+                                <el-button size="mini" type="danger" icon="el-icon-delete" @@click="removeBinding(item)">删除</el-button>
+                            </td>
+                        </tr>
+                        <tr v-if="bindings.items.length===0">
+                            <td colspan="6" class="claw-muted">当前账号尚未配置绑定码。</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="claw-grid" style="margin-top:12px">
+                    <div class="claw-field">
+                        <label>配置名称</label>
+                        <el-input v-model="bindings.form.name" placeholder="例如：主管理员"></el-input>
+                    </div>
+                    <div class="claw-field">
+                        <label>绑定码</label>
+                        <el-input v-model="bindings.form.bindingCode" class="claw-binding-code"
+                                  type="password" show-password
+                                  :placeholder="bindings.form.id ? '留空表示保留原绑定码' : '创建时必须填写'"></el-input>
+                    </div>
+                    <div class="claw-field">
+                        <label>AdminUserId</label>
+                        <el-input-number v-model="bindings.form.adminUserId" :min="1" controls-position="right"></el-input-number>
+                    </div>
+                    <div class="claw-field">
+                        <label>WorkflowId（可选）</label>
+                        <el-input-number v-model="bindings.form.workflowId" :min="0" controls-position="right"></el-input-number>
+                    </div>
+                    <div class="claw-field">
+                        <label>AIModelId（可选）</label>
+                        <el-input-number v-model="bindings.form.aiModelId" :min="0" controls-position="right"></el-input-number>
+                    </div>
+                </div>
+                <div class="claw-toolbar" style="margin-top:12px">
+                    <el-checkbox v-model="bindings.form.enableNeuBell">允许 NeuBell</el-checkbox>
+                    <el-checkbox v-model="bindings.form.enableWorkflow">允许 Workflow</el-checkbox>
+                    <el-checkbox v-model="bindings.form.enabled">启用绑定</el-checkbox>
+                </div>
+                <div class="claw-toolbar">
+                    <el-button type="primary" icon="el-icon-check" @@click="saveBinding">保存绑定配置</el-button>
+                    <el-button icon="el-icon-plus" @@click="newBinding">新建绑定配置</el-button>
+                    <el-button icon="el-icon-close" @@click="bindings.visible=false">关闭</el-button>
+                </div>
+            </div>
+
+            <div class="claw-panel" v-if="chat.visible">
+                <h4>微信 ClawBot 对话：{{chat.accountName}}</h4>
+                <div class="claw-workbench">
+                    <aside class="claw-sessions">
+                        <div class="claw-session"
+                             :class="{active: !chat.peerUserId}"
+                             @@click="selectConversation(null)">
+                            <div class="claw-session-peer">全部消息</div>
+                            <div class="claw-session-preview">当前账号全部收发记录</div>
+                        </div>
+                        <div v-for="session in chat.sessions"
+                             :key="session.peerUserId"
+                             class="claw-session"
+                             :class="{active: chat.peerUserId === session.peerUserId}"
+                             @@click="selectConversation(session.peerUserId)">
+                            <div class="claw-session-peer">{{session.peerUserId}}</div>
+                            <div class="claw-session-preview">{{session.lastText}}</div>
+                            <div class="claw-session-time">{{formatMessageTime(session.lastCreatedAt)}} · {{session.messageCount}} 条</div>
+                        </div>
+                    </aside>
+                    <section class="claw-chat-column">
+                        <div class="claw-toolbar">
+                            <span class="claw-muted">当前会话：{{chat.peerUserId || '全部消息'}}</span>
+                            <el-button size="mini" icon="el-icon-refresh" @@click="loadMessages">刷新</el-button>
+                            <el-button size="mini" icon="el-icon-setting" @@click="openBindings(currentAccount)">绑定配置</el-button>
+                        </div>
+                        <div ref="chatScroll" class="claw-chat" @@scroll="handleChatScroll">
+                            <div v-if="chat.messages.length===0" class="claw-muted">
+                                尚无会话记录。请在手机端向“微信 ClawBot”发送文字。
+                            </div>
+                            <div v-for="message in chat.messages"
+                                 :key="message.id"
+                                 :class="['claw-message', message.direction, message.status==='failed'?'failed':'']">
+                                <div class="claw-message-meta">
+                                    {{message.direction==='inbound'?'手机':'系统'}} · {{formatMessageTime(message.createdAt)}}
+                                    <span v-if="message.status==='sending'"> · 发送中</span>
+                                    <span v-if="message.status==='sent'"> · 已提交</span>
+                                    <span v-if="message.status==='failed'"> · 失败</span>
+                                </div>
+                                <div class="claw-message-body" v-if="message.text">{{message.text}}</div>
+                                <div class="claw-media-list" v-if="message.mediaItems && message.mediaItems.length">
+                                    <div class="claw-media-card" v-for="(media, mediaIndex) in message.mediaItems"
+                                         :key="message.id + '-' + mediaIndex">
+                                        <img v-if="media.kind === 'image' && media.url"
+                                             class="claw-media-image"
+                                             :src="media.url"
+                                             :alt="media.name || '微信图片'"
+                                             @@click="openMedia(media.url)">
+                                        <audio v-else-if="media.kind === 'voice' && media.playbackUrl"
+                                               class="claw-media-audio"
+                                               controls
+                                               preload="metadata"
+                                               :src="media.playbackUrl"
+                                               @@loadedmetadata="mediaPlaybackReady(media)"
+                                               @@error="mediaPlaybackFailed(media)"></audio>
+                                        <video v-else-if="media.kind === 'video' && media.playbackUrl"
+                                               class="claw-media-video"
+                                               controls
+                                               preload="metadata"
+                                               :src="media.playbackUrl"
+                                               @@loadedmetadata="mediaPlaybackReady(media)"
+                                               @@error="mediaPlaybackFailed(media)"></video>
+                                        <a v-if="media.url && (media.kind === 'file' || media.kind === 'voice' || media.kind === 'video' || !media.contentType)"
+                                           class="claw-media-link"
+                                           :href="media.url"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           :download="media.name">
+                                            <i class="el-icon-document"></i>
+                                            {{media.name || media.kind || '下载媒体'}}
+                                            <span v-if="media.size">（{{formatFileSize(media.size)}}）</span>
+                                        </a>
+                                        <div class="claw-muted" v-if="media.error">{{media.error}}</div>
+                                        <div class="claw-message-error" v-if="mediaPlaybackErrors[media.playbackUrl]">{{mediaPlaybackErrors[media.playbackUrl]}}</div>
+                                        <div class="claw-muted" v-if="!media.url && !media.error">媒体文件尚未准备好。</div>
+                                    </div>
+                                </div>
+                                <div class="claw-message-error" v-if="message.error">{{message.error}}</div>
+                            </div>
+                        </div>
+                        <el-button v-if="chat.newCount > 0 && !chat.nearBottom"
+                                   class="claw-new-messages"
+                                   size="mini" type="primary" round
+                                   @@click="jumpToLatest">{{chat.newCount}} 条新消息</el-button>
+                        <div class="claw-media-actions">
+                            <input ref="mediaFile" type="file" style="display:none" @@change="onMediaSelected">
+                            <el-button size="mini" icon="el-icon-picture" @@click="chooseMedia('image')">图片</el-button>
+                            <el-button size="mini" icon="el-icon-document" @@click="chooseMedia('file')">文件</el-button>
+                            <el-button size="mini" icon="el-icon-microphone" @@click="chooseMedia('voice')">语音文件（SILK / MP3）</el-button>
+                            <span class="claw-muted" v-if="chat.mediaFile">{{chat.mediaFile.name}}</span>
+                        </div>
+                        <div class="claw-toolbar" style="margin-top:10px">
+                            <el-input v-model="composer.text" type="textarea" :rows="3"
+                                      placeholder="输入消息，发送到当前微信会话"></el-input>
+                            <el-button type="primary" icon="el-icon-s-promotion" :loading="chat.sending"
+                                       @@click="send">发送</el-button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="claw-panel" v-if="editor.visible">
+                <h4>{{editor.form.id ? '编辑个人微信账号' : '添加个人微信账号'}}</h4>
+                <div class="claw-grid">
+                    <div class="claw-field">
+                        <label>名称</label>
+                        <el-input v-model="editor.form.name" placeholder="例如：我的个人微信"></el-input>
+                    </div>
+                    <div class="claw-field">
+                        <label>iLink Base URL</label>
+                        <el-input v-model="editor.form.baseUrl" placeholder="https://ilinkai.weixin.qq.com"></el-input>
+                    </div>
+                    <div class="claw-field">
+                        <label>bot token</label>
+                        <el-input v-model="editor.form.botToken" type="password" show-password placeholder="留空表示保留现有 token"></el-input>
+                    </div>
+                    <div class="claw-field">
+                        <label>PromptRangeCode</label>
+                        <el-input v-model="editor.form.promptRangeCode" placeholder="由上层 handler 使用，可留空"></el-input>
+                    </div>
+                </div>
+                <p class="claw-muted">token 只在服务端以 Data Protection 保护形式保存，页面不会回显。</p>
+                <el-checkbox v-model="editor.form.enabled">启用长轮询</el-checkbox>
+                <div class="claw-toolbar" style="margin-top:12px">
+                    <el-button type="primary" icon="el-icon-check" @@click="save">保存</el-button>
+                    <el-button icon="el-icon-close" @@click="editor.visible=false">取消</el-button>
+                </div>
+            </div>
+
+            <div class="claw-panel" v-if="login.visible">
+                <h4>扫描二维码连接个人微信</h4>
+                <div class="claw-grid">
+                    <div>
+                        <img class="claw-qr" :src="login.qrcodeImageContent" alt="微信登录二维码">
+                    </div>
+                    <div>
+                        <p>请使用微信扫描二维码，并在手机上确认登录。</p>
+                        <p class="claw-muted" v-if="login.qrcodeUrl">
+                            二维码内容：<a :href="login.qrcodeUrl" target="_blank" rel="noopener noreferrer">打开链接</a>
+                        </p>
+                        <p>状态：<strong>{{login.status}}</strong></p>
+                        <p class="claw-muted" v-if="login.error">{{login.error}}</p>
+                        <el-button icon="el-icon-refresh" @@click="pollLogin" v-if="login.status!=='confirmed'">刷新状态</el-button>
+                        <el-button icon="el-icon-close" @@click="closeLogin">关闭</el-button>
+                    </div>
+                </div>
+            </div>
+
+        </el-main>
+    </el-container>
+</div>
+@section scripts {
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    accounts: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Accounts, new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web))),
+                    editor: { visible: false, form: {} },
+                    login: { visible: false, sessionId: '', qrcodeImageContent: '', qrcodeUrl: '', status: '', error: '' },
+                    loginPollHandle: null,
+                    loginPollInFlight: false,
+                    composer: { accountId: 0, toUserId: '', replyToRecordId: null, text: '' },
+                    chat: { visible: false, accountId: 0, accountName: '', peerUserId: '', sessions: [], messages: [], loading: false, sending: false, nearBottom: true, newCount: 0, mediaFile: null, mediaKind: 'file' },
+                    currentAccount: null,
+                    bindings: { visible: false, accountId: 0, accountName: '', items: [], form: {} },
+                    accountRefreshTimer: null,
+                    messageRefreshTimer: null,
+                    accountLoaded: false,
+                    accountLoading: false,
+                    accountLoadError: '',
+                    mediaPlaybackErrors: {}
+                };
+            },
+            mounted() {
+                this.loadAccounts();
+                this.accountRefreshTimer = setInterval(() => this.loadAccounts(), 3000);
+            },
+            beforeDestroy() {
+                if (this.accountRefreshTimer) clearInterval(this.accountRefreshTimer);
+                if (this.messageRefreshTimer) clearInterval(this.messageRefreshTimer);
+                this.clearLoginPoll();
+            },
+            methods: {
+                clearLoginPoll() {
+                    if (this.loginPollHandle) {
+                        clearTimeout(this.loginPollHandle);
+                        this.loginPollHandle = null;
+                    }
+                },
+                async loadAccounts() {
+                    if (this.accountLoading) return;
+                    this.accountLoading = true;
+                    try {
+                        const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=Ajax');
+                        const nextAccounts = res.data.data.list || [];
+                        if (this.accountLoaded) {
+                            nextAccounts.forEach(next => {
+                                const previous = this.accounts.find(item => item.id === next.id);
+                                if (previous && previous.lastMessageAt && next.lastMessageAt
+                                    && previous.lastMessageAt !== next.lastMessageAt) {
+                                    this.$notify({
+                                        title: '收到微信消息',
+                                        message: next.name + ' 收到一条新的手机消息',
+                                        type: 'success',
+                                        duration: 3500
+                                    });
+                                }
+                            });
+                        }
+                        this.accounts = nextAccounts;
+                        this.accountLoaded = true;
+                        this.accountLoadError = '';
+                        if (this.chat.visible && this.chat.accountId > 0) {
+                            await this.loadMessages();
+                        }
+                    } catch (error) {
+                        const message = error.response?.data?.msg || error.message || '刷新微信连接状态失败';
+                        if (this.accountLoadError !== message) this.$message.error(message);
+                        this.accountLoadError = message;
+                    } finally {
+                        this.accountLoading = false;
+                    }
+                },
+                edit(item) {
+                    this.editor.form = Object.assign({}, item, { botToken: '' });
+                    this.editor.visible = true;
+                },
+                async save() {
+                    await service.post('/Admin/WeixinManager/WeixinClaw?handler=Save', this.editor.form);
+                    this.editor.visible = false;
+                    await this.loadAccounts();
+                },
+                async remove(item) {
+                    await service.post('/Admin/WeixinManager/WeixinClaw?handler=Delete', [item.id]);
+                    await this.loadAccounts();
+                },
+                async startLogin() {
+                    this.clearLoginPoll();
+                    try {
+                        const res = await service.post('/Admin/WeixinManager/WeixinClaw?handler=StartLogin', {
+                            name: '个人微信',
+                            promptRangeCode: ''
+                        });
+                        this.login = Object.assign({ visible: true }, res.data.data);
+                        this.login.visible = true;
+                        this.pollLogin();
+                    } catch (error) {
+                        const message = error && error.response && error.response.data && error.response.data.msg
+                            ? error.response.data.msg
+                            : (error && error.message) || '启动个人微信登录失败';
+                        this.$message.error(message);
+                    }
+                },
+                async pollLogin() {
+                    if (!this.login.sessionId || this.login.status === 'confirmed') {
+                        this.clearLoginPoll();
+                        return;
+                    }
+                    if (this.loginPollInFlight) {
+                        return;
+                    }
+
+                    this.loginPollInFlight = true;
+                    try {
+                        const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=LoginStatus&sessionId=' + encodeURIComponent(this.login.sessionId));
+                        this.login = Object.assign(this.login, res.data.data);
+                        this.login.visible = true;
+                        if (this.login.status !== 'confirmed' && this.login.status !== 'expired' && this.login.status !== 'error') {
+                            this.clearLoginPoll();
+                            this.loginPollHandle = setTimeout(() => this.pollLogin(), 2500);
+                        } else if (this.login.status === 'confirmed') {
+                            this.clearLoginPoll();
+                            await this.loadAccounts();
+                        } else {
+                            this.clearLoginPoll();
+                        }
+                    } finally {
+                        this.loginPollInFlight = false;
+                    }
+                },
+                closeLogin() {
+                    this.clearLoginPoll();
+                    this.login.visible = false;
+                },
+                resetComposer(item) {
+                    this.composer = {
+                        accountId: item.id,
+                        toUserId: item.lastMessageFromUserId || '',
+                        replyToRecordId: null,
+                        text: ''
+                    };
+                    if (!item.hasMessageContext) {
+                        this.$message.info('请先在手机端向微信 ClawBot 发送一条文字消息，系统会自动保存回复所需上下文。');
+                    }
+                },
+                openChat(item) {
+                    this.mediaPlaybackErrors = {};
+                    this.currentAccount = item;
+                    this.chat.visible = true;
+                    this.chat.accountId = item.id;
+                    this.chat.accountName = item.name;
+                    this.chat.peerUserId = item.lastMessageFromUserId || '';
+                    this.resetComposer(item);
+                    this.loadConversations().then(() => this.loadMessages(true));
+                    if (this.messageRefreshTimer) clearInterval(this.messageRefreshTimer);
+                    this.messageRefreshTimer = setInterval(() => this.loadMessages(), 3000);
+                },
+                async loadConversations() {
+                    const res = await service.get(
+                        '/Admin/WeixinManager/WeixinClaw?handler=Conversations&accountId='
+                        + encodeURIComponent(this.chat.accountId));
+                    this.chat.sessions = res.data.data.list || [];
+                },
+                async selectConversation(peerUserId) {
+                    this.chat.peerUserId = peerUserId || '';
+                    this.chat.newCount = 0;
+                    this.chat.nearBottom = true;
+                    this.resetComposer(Object.assign({}, this.currentAccount, { lastMessageFromUserId: this.chat.peerUserId }));
+                    await this.loadMessages(true);
+                },
+                emptyBindingForm() {
+                    return {
+                        id: 0,
+                        accountId: this.bindings.accountId,
+                        name: '',
+                        adminUserId: 0,
+                        workflowId: null,
+                        aiModelId: 0,
+                        mode: 0,
+                        enableNeuBell: true,
+                        enableWorkflow: true,
+                        enabled: true,
+                        bindingCode: ''
+                    };
+                },
+                async openBindings(item) {
+                    this.bindings.visible = true;
+                    this.bindings.accountId = item.id;
+                    this.bindings.accountName = item.name;
+                    this.newBinding();
+                    await this.loadBindingProfiles();
+                },
+                newBinding() {
+                    this.bindings.form = this.emptyBindingForm();
+                },
+                editBinding(item) {
+                    this.bindings.form = Object.assign({}, item, {
+                        accountId: this.bindings.accountId,
+                        bindingCode: ''
+                    });
+                },
+                async loadBindingProfiles() {
+                    const res = await service.get(
+                        '/Admin/WeixinManager/WeixinClaw?handler=BindingProfiles&accountId='
+                        + encodeURIComponent(this.bindings.accountId));
+                    this.bindings.items = res.data.data.list || [];
+                },
+                async saveBinding() {
+                    try {
+                        await service.post(
+                            '/Admin/WeixinManager/WeixinClaw?handler=SaveBindingProfile',
+                            this.bindings.form);
+                        this.$message.success('绑定配置已保存。');
+                        await this.loadBindingProfiles();
+                        this.newBinding();
+                    } catch (error) {
+                        const message = error && error.response && error.response.data && error.response.data.msg
+                            ? error.response.data.msg
+                            : (error && error.message) || '保存绑定配置失败';
+                        this.$message.error(message);
+                    }
+                },
+                async removeBinding(item) {
+                    try {
+                        await service.post(
+                            '/Admin/WeixinManager/WeixinClaw?handler=DeleteBindingProfile',
+                            item.id);
+                        await this.loadBindingProfiles();
+                        this.newBinding();
+                    } catch (error) {
+                        this.$message.error('删除绑定配置失败');
+                    }
+                },
+                async loadMessages(forceBottom) {
+                    if (!this.chat.accountId) return;
+                    this.chat.loading = true;
+                    try {
+                        const res = await service.get(
+                            '/Admin/WeixinManager/WeixinClaw?handler=Messages&accountId='
+                            + encodeURIComponent(this.chat.accountId)
+                            + '&peerUserId=' + encodeURIComponent(this.chat.peerUserId || '')
+                            + '&take=200');
+                        const nextMessages = res.data.data.list || [];
+                        const oldLastId = this.chat.messages.length ? this.chat.messages[this.chat.messages.length - 1].id : 0;
+                        const newCount = nextMessages.filter(message => message.id > oldLastId).length;
+                        this.chat.messages = nextMessages;
+                        const latestInbound = this.chat.messages
+                            .filter(message => message.direction === 'inbound')
+                            .slice(-1)[0];
+                        if (latestInbound && this.composer.accountId === this.chat.accountId) {
+                            this.composer.replyToRecordId = latestInbound.id;
+                            this.composer.toUserId = latestInbound.fromUserId || this.composer.toUserId;
+                        }
+                        if (forceBottom || this.chat.nearBottom) {
+                            this.$nextTick(() => this.jumpToLatest());
+                        } else if (newCount > 0) {
+                            this.chat.newCount += newCount;
+                        }
+                    } finally {
+                        this.chat.loading = false;
+                    }
+                },
+                formatMessageTime(value) {
+                    if (!value) return '-';
+                    const date = new Date(value);
+                    return isNaN(date.getTime()) ? value : date.toLocaleString();
+                },
+                formatFileSize(value) {
+                    const size = Number(value) || 0;
+                    if (size < 1024) return size + ' B';
+                    if (size < 1024 * 1024) return (size / 1024).toFixed(1) + ' KB';
+                    if (size < 1024 * 1024 * 1024) return (size / 1024 / 1024).toFixed(1) + ' MB';
+                    return (size / 1024 / 1024 / 1024).toFixed(1) + ' GB';
+                },
+                openMedia(url) {
+                    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                },
+                mediaPlaybackFailed(media) {
+                    this.$set(this.mediaPlaybackErrors, media.playbackUrl, '媒体无法播放。可下载原始文件；语音转换错误请查看服务日志，视频需使用浏览器支持的编码。');
+                },
+                mediaPlaybackReady(media) {
+                    this.$delete(this.mediaPlaybackErrors, media.playbackUrl);
+                },
+                handleChatScroll() {
+                    const element = this.$refs.chatScroll;
+                    if (!element) return;
+                    this.chat.nearBottom =
+                        element.scrollHeight - element.scrollTop - element.clientHeight < 48;
+                    if (this.chat.nearBottom) {
+                        this.chat.newCount = 0;
+                    }
+                },
+                jumpToLatest() {
+                    const element = this.$refs.chatScroll;
+                    if (!element) return;
+                    element.scrollTop = element.scrollHeight;
+                    this.chat.nearBottom = true;
+                    this.chat.newCount = 0;
+                },
+                chooseMedia(kind) {
+                    this.chat.mediaKind = kind;
+                    this.$refs.mediaFile.value = '';
+                    this.$refs.mediaFile.click();
+                },
+                onMediaSelected(event) {
+                    this.chat.mediaFile = event.target.files && event.target.files[0]
+                        ? event.target.files[0]
+                        : null;
+                },
+                async sendMedia() {
+                    if (!this.chat.mediaFile) return;
+                    const form = new FormData();
+                    form.append('accountId', this.chat.accountId);
+                    form.append('replyToRecordId', this.composer.replyToRecordId || '');
+                    form.append('mediaKind', this.chat.mediaKind === 'image' ? '1' : (this.chat.mediaKind === 'voice' ? '4' : '3'));
+                    form.append('file', this.chat.mediaFile);
+                    await service.post('/Admin/WeixinManager/WeixinClaw?handler=SendMedia', form);
+                    this.chat.mediaFile = null;
+                    await this.loadMessages(true);
+                },
+                async send() {
+                    if (this.chat.mediaFile) {
+                        try {
+                            await this.sendMedia();
+                            this.$message.success('媒体消息已提交。');
+                        } catch (error) {
+                            this.$message.error(error.response?.data?.msg || error.message || '媒体发送失败');
+                        }
+                        return;
+                    }
+                    try {
+                        this.chat.sending = true;
+                        const res = await service.post('/Admin/WeixinManager/WeixinClaw?handler=Send', this.composer);
+                        const result = res.data.data || {};
+                        this.$message.success(
+                            result.contextTokenUsed
+                                ? '消息已提交，已使用最近微信会话上下文。'
+                                : '消息已提交到微信 Claw。');
+                        await this.loadMessages();
+                        await this.loadAccounts();
+                    } catch (error) {
+                        const message = error && error.response && error.response.data && error.response.data.msg
+                            ? error.response.data.msg
+                            : (error && error.message) || '发送个人微信消息失败';
+                        this.$message.error(message);
+                    } finally {
+                        this.chat.sending = false;
+                    }
+                }
+            }
+        });
+    </script>
+}

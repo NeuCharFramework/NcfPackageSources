@@ -36,6 +36,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
+    修改标识：Senparc - 20261005
+    修改描述：v0.18.1 0.18.1 feat: add MCP endpoint selection feature in AgentsManager
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;
@@ -46,6 +49,9 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Shared.Abstractions.Events;
+using Senparc.Xncf.MCP.Abstractions;
+using Senparc.Xncf.MCP.Abstractions.Events;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.WorkContext.Provider;
@@ -974,6 +980,58 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 };
 
         /// <summary>
+        /// 通过 EventBus 向 MCP 模块查询已登记的 MCP Endpoint 列表，
+        /// 供 Agent 配置界面以“从列表选择”方式关联 MCP（替代手动输入）。
+        /// 仅依赖 Senparc.Xncf.MCP.Abstractions 契约；MCP 模块未安装/未响应时返回空列表与提示。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = CO2NET.WebApi.ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<McpEndpointOptionsResponse>> GetMcpEndpointOptions()
+        {
+            return await this.GetResponseAsync<McpEndpointOptionsResponse>(async (response, logger) =>
+            {
+                var result = new McpEndpointOptionsResponse
+                {
+                    McpModuleAvailable = false,
+                    Options = new List<McpEndpointInfo>()
+                };
+
+                var requestClient = GetService<IEventBusRequestClient>();
+                if (requestClient == null)
+                {
+                    result.Message = "当前环境未启用 EventBus，无法获取 MCP 列表，请使用手动输入方式。";
+                    logger.Append(result.Message);
+                    return result;
+                }
+
+                try
+                {
+                    var responseEvent = await requestClient.RequestAsync<QueryMcpEndpointsResponse>(
+                        new QueryMcpEndpointsRequest(OnlyEnabled: true),
+                        TimeSpan.FromSeconds(5),
+                        this.CancellationToken);
+
+                    result.McpModuleAvailable = true;
+                    result.Options = responseEvent?.Endpoints?.ToList() ?? new List<McpEndpointInfo>();
+                    result.Message = responseEvent?.Message
+                        ?? $"已从 MCP 模块获取 {result.Options.Count} 个可用端点。";
+                    logger.Append(result.Message);
+                }
+                catch (TimeoutException)
+                {
+                    result.Message = "MCP 模块未响应（可能未安装或尚未启动），请使用手动输入方式。";
+                    logger.Append(result.Message);
+                }
+                catch (Exception ex)
+                {
+                    result.Message = $"获取 MCP 列表失败：{ex.Message}，请使用手动输入方式。";
+                    logger.Append(result.Message);
+                }
+
+                return result;
+            });
+        }
+
+        /// <summary>
         /// 获取所有已注册的 AI Plugin 类型
         /// </summary>
         /// <returns></returns>
@@ -1215,5 +1273,20 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
         /// 参数描述
         /// </summary>
         public string Description { get; set; }
+    }
+
+    /// <summary>
+    /// “从列表选择 MCP”接口的响应：MCP 模块是否可用 + 端点选项列表。
+    /// </summary>
+    public class McpEndpointOptionsResponse
+    {
+        /// <summary>MCP 模块是否在线（EventBus 有响应）。</summary>
+        public bool McpModuleAvailable { get; set; }
+
+        /// <summary>提示信息（例如“MCP 模块未安装”）。</summary>
+        public string Message { get; set; }
+
+        /// <summary>可选的 MCP Endpoint 列表。</summary>
+        public List<McpEndpointInfo> Options { get; set; }
     }
 }

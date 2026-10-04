@@ -127,3 +127,4 @@ tools/NcfSimulatedSite/Senparc.Web/wwwroot/NcfPackages/
 .cursor/scratchpad.md
 upgrade-senparc-packages/
 .venv_translate
+tools/NcfSimulatedSite/Senparc.Web/App_Data/WeixinClawMedia/**

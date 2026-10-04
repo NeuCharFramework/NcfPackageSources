@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.5.8</Version>
+		<Version>0.5.10</Version>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -18,6 +18,10 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
 		<PackageReleaseNotes>
+			[2026-10-01] v0.5.10 等待安装初始化与完成标记持久化
+			1、菜单权限初始化及 install-finished 文件写入失败会显式终止安装流程
+			[2026-10-01] v0.5.9 修复数据库连接配置保存失败的错误处理
+			1、保存失败时记录并重新抛出异常，仅在持久化成功后清除数据库配置缓存
 			v0.3 创世
 			[2026-07-02] v0.3.1 增强多智能体群聊流程、容错与任务调度能力，优化 AgentsManager 前端界面与历史消息展示效果
 			1、增强多智能体群聊流程、容错与任务调度能力

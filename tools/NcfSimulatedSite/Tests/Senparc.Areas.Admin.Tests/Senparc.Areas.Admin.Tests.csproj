@@ -2,8 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.13</Version>
+    <Version>0.0.18</Version>
     <PackageReleaseNotes>
+[2026-10-04] 覆盖本站 MCP 发布发现、只读展示及数据库示例清理迁移
+[2026-10-03] 覆盖 MCP 端点 API 注册、列表增删改查、连接测试和客户端错误处理
+[2026-10-02] 覆盖后台租户作用域初始化、停用、单租户模式及账号任务取消释放并发
+[2026-10-01] 补充 Repository 查询租户隔离、软删除、分页、取消及局部更新回归测试
+[2026-10-01] v0.0.14 补充 RequestHeader 租户授权回归测试
+1、覆盖匹配声明、跨租户切换、重复请求头和混合认证凭据
 [2026-07-07] v0.0.1 Dependency updates from upstream modules
 1、Dependency update from Senparc.Areas.Admin to 0.0.5
 [2026-07-17] v0.0.2 同步上游项目版本并适配统一本地化能力
@@ -73,6 +79,7 @@
     <ProjectReference Include="..\..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
     <ProjectReference Include="..\..\..\..\src\Basic\Senparc.Ncf.UnitTestExtension\Senparc.Ncf.UnitTestExtension.csproj" />
     <ProjectReference Include="..\..\..\..\src\Extensions\Senparc.Xncf.NeuCharWorkflow\Senparc.Xncf.NeuCharWorkflow.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Extensions\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
   </ItemGroup>
 
 </Project>

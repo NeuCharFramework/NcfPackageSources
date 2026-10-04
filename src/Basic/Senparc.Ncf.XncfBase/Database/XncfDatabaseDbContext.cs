@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：XncfDatabaseDbContext.cs
@@ -9,6 +9,9 @@
     
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.28.1 0.28.1 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
 
 ----------------------------------------------------------------*/
 
@@ -26,6 +29,7 @@ using Senparc.Ncf.Database.MultipleMigrationDbContext;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Ncf.XncfBase.Database
@@ -145,10 +149,86 @@ namespace Senparc.Ncf.XncfBase.Database
         }
 
 
+        /// <summary>
+        /// 全局查询过滤器
+        /// <para>与 SenparcEntitiesDbContextBase.SetGlobalQuery 保持一致：启用多租户时，对实现 IMultiTenancy 且未实现 IIgnoreMulitTenant 的实体追加 TenantId 过滤</para>
+        /// </summary>
         public void SetGlobalQuery<T>(ModelBuilder builder) where T : EntityBase
         {
-            builder.Entity<T>().HasQueryFilter(z => !z.Flag);
+            var entityBuilder = builder.Entity<T>();//.HasQueryFilter(z => !z.Flag);
+
+            //多租户
+            if (this.EnableMultiTenant && typeof(IMultiTenancy).IsAssignableFrom(typeof(T)) && !(typeof(IIgnoreMulitTenant).IsAssignableFrom(typeof(T))))
+            {
+                //多租户 + 软删除
+                entityBuilder.HasQueryFilter(z => z.TenantId == TenantInfo.Id && !z.Flag);
+            }
+            else
+            {
+                //仅软删除
+                entityBuilder.HasQueryFilter(z => !z.Flag);
+            }
         }
+
+        /// <summary>
+        /// 设置当前 DbContext 是否启用多租户上下文
+        /// </summary>
+        /// <param name="enable"></param>
+        public void SetMultiTenantEnable(bool enable)
+        {
+            EnableMultiTenant = enable;
+        }
+
+        /// <summary>
+        /// 多租户状态重置为 SiteConfig.SenparcCoreSetting.EnableMultiTenant
+        /// </summary>
+        public void ResetMultiTenantEnable()
+        {
+            SetMultiTenantEnable(SiteConfig.SenparcCoreSetting.EnableMultiTenant);
+        }
+
+        #region 多租户 SaveChanges 处理
+
+        public override int SaveChanges()
+        {
+            //处理多租户
+            AddTenantId();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            //处理多租户
+            AddTenantId();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        /// <summary>
+        /// 自动添加多租户Id（与 SenparcEntitiesDbContextBase.AddTenandId 行为一致）
+        /// </summary>
+        private void AddTenantId()
+        {
+            if (this.EnableMultiTenant)
+            {
+                ChangeTracker.DetectChanges(); // 
+                var addedEntities = this.ChangeTracker
+                                            .Entries()
+                                            .Where(z => z.State == EntityState.Added)
+                                            .Select(z => z.Entity)
+                                            .ToList();
+
+                RequestTenantInfo requestTenantInfo = TenantInfo;
+                foreach (var entity in addedEntities)
+                {
+                    if (!(entity is IIgnoreMulitTenant) && (entity is IMultiTenancy multiTenantEntity))
+                    {
+                        multiTenantEntity.TenantId = requestTenantInfo.Id;
+                    }
+                }
+            }
+        }
+
+        #endregion
 
         public void ResetMigrate()
         {

@@ -1,8 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.3</Version>
+    <Version>0.0.4</Version>
     <PackageReleaseNotes>
+      [2026-10-01] v0.0.4 补充 AI Token 监控租户隔离回归测试
+      1、覆盖实时统计及运行进度的跨租户隔离
       [2026-09-05] v0.0.1 新增 AIKernel Token 监控单元测试
       1、覆盖 AITokenUsageSnapshot 归一化与空值判断
       2、覆盖 AITokenProgressEvent 完成状态判定
@@ -16,7 +18,9 @@
       [2026-09-17] v0.0.3 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0; Senparc.Xncf.AIKernel to 0.16.2
       1、同步受影响的基础库、AI 模块或宿主项目版本
       2、保持项目引用链与当前功能兼容
-</PackageReleaseNotes>
+      [2026-10-05] v0.0.4 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+      1、Updated Senparc.Xncf.AIKernel.Tests project behavior and integration for the latest feature and reliability improvements.
+      2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>

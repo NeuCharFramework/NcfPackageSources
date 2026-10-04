@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.Database.cs
@@ -9,6 +9,9 @@
     
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
 ----------------------------------------------------------------*/
 
@@ -32,6 +35,10 @@ namespace Senparc.Xncf.WeixinManager
             modelBuilder.ApplyConfiguration(new UserTag_WeixinUserConfigurationMapping());
             modelBuilder.ApplyConfiguration(new WeixinUserConfigurationMapping());
             modelBuilder.ApplyConfiguration(new UserTagConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new WeixinClawConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new WeixinClawMessageReceiptConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new WeixinClawMessageRecordConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new WeixinClawBindingProfileConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)
@@ -42,6 +49,10 @@ namespace Senparc.Xncf.WeixinManager
 
             //services.AddScoped<WeixinUser>();
             services.AddScoped<WeixinUserDto>();
+            services.AddScoped<WeixinClawAccountDto>();
+            services.AddScoped<WeixinClawMessageRecordDto>();
+            services.AddScoped<WeixinClawConversationDto>();
+            services.AddScoped<WeixinClawBindingProfileDto>();
 
             //services.AddScoped<UserTag>();
             //services.AddScoped<UserTag_WeixinUser>();

@@ -34,6 +34,9 @@
     修改标识：Senparc - 20260917
     修改描述：v0.10.0 增强 Admin Chat FunctionRender 参数元数据与工具调用兼容
 
+    修改标识：Senparc - 20261005
+    修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;

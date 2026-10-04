@@ -253,7 +253,16 @@ namespace Senparc.Ncf.Service
         /// <summary>
         /// 初始化菜单及其权限
         /// </summary>
-        public async void Init(RequestTenantInfo requestTenantInfo, int adminUserInfoId)
+        [Obsolete($"Use {nameof(InitAsync)} so initialization failures can be observed.")]
+        public void Init(RequestTenantInfo requestTenantInfo, int adminUserInfoId)
+        {
+            InitAsync(requestTenantInfo, adminUserInfoId).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// 初始化菜单及其权限
+        /// </summary>
+        public async Task InitAsync(RequestTenantInfo requestTenantInfo, int adminUserInfoId)
         {
             this.SetTenantInfoForAllServices(requestTenantInfo);
 
