@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261003
+    修改描述：v0.5.7 端点连接测试传递传输类型及请求取消信号
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.MCP.Domain.Services
@@ -62,7 +66,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
         /// <summary>
         /// 测试端点连接（真实连接 MCP Server 并读取工具列表）
         /// </summary>
-        public async Task<McpConnectionTestResult> TestEndpointAsync(int endpointId)
+        public async Task<McpConnectionTestResult> TestEndpointAsync(int endpointId, CancellationToken cancellationToken = default)
         {
             var endpoint = await this.GetObjectAsync(x => x.Id == endpointId);
             if (endpoint == null)
@@ -75,18 +79,19 @@ namespace Senparc.Xncf.MCP.Domain.Services
                 };
             }
 
-            return await TestEndpointCoreAsync(endpoint);
+            return await TestEndpointCoreAsync(endpoint, cancellationToken);
         }
 
         /// <summary>
         /// 对指定端点执行真实连接测试，并持久化测试记录
         /// </summary>
-        public async Task<McpConnectionTestResult> TestEndpointCoreAsync(MCPEndpoint endpoint)
+        public async Task<McpConnectionTestResult> TestEndpointCoreAsync(MCPEndpoint endpoint, CancellationToken cancellationToken = default)
         {
             var tester = ServiceProvider.GetRequiredService<McpConnectionTestService>();
             string? bearerToken = ExtractBearerToken(endpoint.AuthConfig);
 
-            var result = await tester.TestAsync(endpoint.Name, endpoint.Endpoint, bearerToken);
+            var result = await tester.TestAsync(endpoint.Name, endpoint.Endpoint, bearerToken,
+                endpointType: endpoint.EndpointType, cancellationToken: cancellationToken);
 
             endpoint.LastTestedTime = DateTime.Now;
             endpoint.LastTestResult = result.Success;

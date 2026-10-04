@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.WeixinManager.Domain.Services;
 using System;
@@ -16,6 +17,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IBackgroundTenantScopeFactory _tenantScopeFactory;
+    private readonly WeixinClawHostedServiceOptions _options;
     private readonly ILogger<WeixinClawHostedService> _logger;
     private readonly ConcurrentDictionary<(int TenantId, int AccountId), RunningAccount> _runningAccounts = new();
     private readonly CancellationTokenSource _stoppingCts = new();
@@ -24,10 +26,12 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
     public WeixinClawHostedService(
         IServiceScopeFactory scopeFactory,
         IBackgroundTenantScopeFactory tenantScopeFactory,
+        IOptions<WeixinClawHostedServiceOptions> options,
         ILogger<WeixinClawHostedService> logger)
     {
         _scopeFactory = scopeFactory;
         _tenantScopeFactory = tenantScopeFactory;
+        _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
         _logger = logger;
     }
 
@@ -46,7 +50,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         }
 
         using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        timeoutCts.CancelAfter(TimeSpan.FromSeconds(5));
+        timeoutCts.CancelAfter(_options.GetShutdownWait());
         try
         {
             await _runningTask.WaitAsync(timeoutCts.Token).ConfigureAwait(false);
@@ -81,7 +85,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
     {
         try
         {
-            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+            using var timer = new PeriodicTimer(_options.GetScanInterval());
             while (await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false))
             {
                 try
@@ -118,6 +122,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         }, stoppingToken).ConfigureAwait(false);
 
         var activeKeys = new HashSet<(int TenantId, int AccountId)>();
+        var startedCount = 0;
         foreach (var account in accounts)
         {
             var key = (account.TenantId, account.AccountId);
@@ -130,6 +135,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
             var accountState = new RunningAccount(stoppingToken);
             if (_runningAccounts.TryAdd(key, accountState))
             {
+                startedCount++;
                 accountState.Task = RunAccountAndCleanupAsync(key, accountState);
             }
             else
@@ -138,7 +144,13 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
             }
         }
 
-        CancelStaleAccounts(activeKeys);
+        var canceledCount = CancelStaleAccounts(activeKeys);
+        _logger.LogDebug(
+            "个人微信 Claw 扫描完成：Discovered={DiscoveredCount}, Active={ActiveCount}, Started={StartedCount}, Canceled={CanceledCount}",
+            accounts.Count,
+            _runningAccounts.Count,
+            startedCount,
+            canceledCount);
     }
 
     private async Task RunAccountAndCleanupAsync((int TenantId, int AccountId) key, RunningAccount state)
@@ -228,7 +240,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 {
                     account.MarkError($"{response.Errcode ?? response.Ret}: {response.Errmsg}");
                     await accountService.SaveObjectAsync(account).ConfigureAwait(false);
-                    await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken).ConfigureAwait(false);
+                    await Task.Delay(_options.GetErrorRetryDelay(), stoppingToken).ConfigureAwait(false);
                     continue;
                 }
 
@@ -236,7 +248,6 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 var recordService = scope.ServiceProvider.GetRequiredService<WeixinClawMessageRecordService>();
                 var dispatcher = scope.ServiceProvider.GetRequiredService<WeixinClawMessageDispatcher>();
                 var mediaService = scope.ServiceProvider.GetRequiredService<WeixinClawMediaService>();
-                var handledMessage = false;
                 foreach (var message in response.Msgs ?? Enumerable.Empty<WeixinClawMessage>())
                 {
                     var hasMessageId = !string.IsNullOrWhiteSpace(message.MessageId);
@@ -257,8 +268,6 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                         message.MessageType,
                         message.ItemList?.Count ?? 0,
                         !string.IsNullOrWhiteSpace(message.ContextToken));
-
-                    handledMessage = true;
 
                     var text = string.Join(
                         Environment.NewLine,
@@ -328,14 +337,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 {
                     account.SetCursor(response.GetUpdatesBuf);
                 }
-                if (handledMessage)
-                {
-                    account.MarkMessageReceived();
-                }
-                else
-                {
-                    account.MarkRunning();
-                }
+                account.MarkRunning();
                 await accountService.SaveObjectAsync(account).ConfigureAwait(false);
             }
         }
@@ -372,7 +374,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
             {
                 try
                 {
-                    using var notifyTimeout = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+                    using var notifyTimeout = new CancellationTokenSource(_options.GetNotifyStopTimeout());
                     using var scope = _scopeFactory.CreateScope();
                     var api = scope.ServiceProvider.GetRequiredService<WeixinClawApi>();
                     await api.NotifyStopAsync(baseUrl, token, notifyTimeout.Token).ConfigureAwait(false);
@@ -385,15 +387,19 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
         }
     }
 
-    private void CancelStaleAccounts(HashSet<(int TenantId, int AccountId)> activeKeys)
+    private int CancelStaleAccounts(HashSet<(int TenantId, int AccountId)> activeKeys)
     {
+        var canceledCount = 0;
         foreach (var item in _runningAccounts)
         {
             if (item.Value.Task?.IsCompleted == true || !activeKeys.Contains(item.Key))
             {
                 item.Value.Cancel();
+                canceledCount++;
             }
         }
+
+        return canceledCount;
     }
 
     private static bool IsExpectedLongPollTimeout(

@@ -70,6 +70,7 @@
                 <el-button type="primary" icon="el-icon-camera" @@click="startLogin">扫码连接</el-button>
                 <el-button icon="el-icon-refresh" @@click="loadAccounts">刷新</el-button>
             </div>
+            <div class="claw-message-error" v-if="accountLoadError">{{accountLoadError}}</div>
 
             <table class="claw-table">
                 <thead>
@@ -230,17 +231,21 @@
                                              :src="media.url"
                                              :alt="media.name || '微信图片'"
                                              @@click="openMedia(media.url)">
-                                        <audio v-else-if="media.kind === 'voice' && media.url && media.contentType !== 'audio/silk'"
+                                        <audio v-else-if="media.kind === 'voice' && media.playbackUrl"
                                                class="claw-media-audio"
                                                controls
                                                preload="metadata"
-                                               :src="media.url"></audio>
-                                        <video v-else-if="media.kind === 'video' && media.url"
+                                               :src="media.playbackUrl"
+                                               @@loadedmetadata="mediaPlaybackReady(media)"
+                                               @@error="mediaPlaybackFailed(media)"></audio>
+                                        <video v-else-if="media.kind === 'video' && media.playbackUrl"
                                                class="claw-media-video"
                                                controls
                                                preload="metadata"
-                                               :src="media.url"></video>
-                                        <a v-if="media.url && (media.kind === 'file' || media.kind === 'voice' || !media.contentType)"
+                                               :src="media.playbackUrl"
+                                               @@loadedmetadata="mediaPlaybackReady(media)"
+                                               @@error="mediaPlaybackFailed(media)"></video>
+                                        <a v-if="media.url && (media.kind === 'file' || media.kind === 'voice' || media.kind === 'video' || !media.contentType)"
                                            class="claw-media-link"
                                            :href="media.url"
                                            target="_blank"
@@ -251,6 +256,7 @@
                                             <span v-if="media.size">（{{formatFileSize(media.size)}}）</span>
                                         </a>
                                         <div class="claw-muted" v-if="media.error">{{media.error}}</div>
+                                        <div class="claw-message-error" v-if="mediaPlaybackErrors[media.playbackUrl]">{{mediaPlaybackErrors[media.playbackUrl]}}</div>
                                         <div class="claw-muted" v-if="!media.url && !media.error">媒体文件尚未准备好。</div>
                                     </div>
                                 </div>
@@ -265,11 +271,11 @@
                             <input ref="mediaFile" type="file" style="display:none" @@change="onMediaSelected">
                             <el-button size="mini" icon="el-icon-picture" @@click="chooseMedia('image')">图片</el-button>
                             <el-button size="mini" icon="el-icon-document" @@click="chooseMedia('file')">文件</el-button>
-                            <el-button size="mini" icon="el-icon-microphone" @@click="chooseMedia('voice')">语音文件</el-button>
+                            <el-button size="mini" icon="el-icon-microphone" @@click="chooseMedia('voice')">语音文件（SILK / MP3）</el-button>
                             <span class="claw-muted" v-if="chat.mediaFile">{{chat.mediaFile.name}}</span>
                         </div>
                         <div class="claw-toolbar" style="margin-top:10px">
-                            <el-input v-model="sender.text" type="textarea" :rows="3"
+                            <el-input v-model="composer.text" type="textarea" :rows="3"
                                       placeholder="输入消息，发送到当前微信会话"></el-input>
                             <el-button type="primary" icon="el-icon-s-promotion" :loading="chat.sending"
                                        @@click="send">发送</el-button>
@@ -325,32 +331,6 @@
                 </div>
             </div>
 
-            <div class="claw-panel" v-if="sender.visible">
-                <h4>发送个人微信消息</h4>
-                <div class="claw-grid">
-                    <div class="claw-field">
-                        <label>目标 iLink User ID</label>
-                        <el-input v-model="sender.toUserId" placeholder="默认发送到当前个人微信"></el-input>
-                    </div>
-                    <div class="claw-field">
-                        <label>微信会话上下文</label>
-                        <div class="claw-muted" v-if="sender.contextTokenAvailable">
-                            已自动保存最近一条手机消息的会话上下文，发送时由服务端自动使用。
-                        </div>
-                        <div class="claw-muted" v-else>
-                            尚未取得上下文。请先在手机端向“微信 ClawBot”发送一条文字消息。
-                        </div>
-                    </div>
-                    <div class="claw-field" style="grid-column: 1 / -1">
-                        <label>消息</label>
-                        <el-input v-model="sender.text" type="textarea" :rows="4"></el-input>
-                    </div>
-                </div>
-                <div class="claw-toolbar" style="margin-top:12px">
-                    <el-button type="primary" icon="el-icon-s-promotion" @@click="send">发送</el-button>
-                    <el-button icon="el-icon-close" @@click="sender.visible=false">取消</el-button>
-                </div>
-            </div>
         </el-main>
     </el-container>
 </div>
@@ -360,26 +340,31 @@
             el: '#app',
             data() {
                 return {
-                    accounts: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Accounts)),
+                    accounts: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Accounts, new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web))),
                     editor: { visible: false, form: {} },
                     login: { visible: false, sessionId: '', qrcodeImageContent: '', qrcodeUrl: '', status: '', error: '' },
                     loginPollHandle: null,
                     loginPollInFlight: false,
-                    sender: { visible: false, accountId: 0, toUserId: '', contextToken: '', replyToRecordId: null, text: '' },
+                    composer: { accountId: 0, toUserId: '', replyToRecordId: null, text: '' },
                     chat: { visible: false, accountId: 0, accountName: '', peerUserId: '', sessions: [], messages: [], loading: false, sending: false, nearBottom: true, newCount: 0, mediaFile: null, mediaKind: 'file' },
                     currentAccount: null,
                     bindings: { visible: false, accountId: 0, accountName: '', items: [], form: {} },
                     accountRefreshTimer: null,
                     messageRefreshTimer: null,
-                    accountLoaded: false
+                    accountLoaded: false,
+                    accountLoading: false,
+                    accountLoadError: '',
+                    mediaPlaybackErrors: {}
                 };
             },
             mounted() {
+                this.loadAccounts();
                 this.accountRefreshTimer = setInterval(() => this.loadAccounts(), 3000);
             },
             beforeDestroy() {
                 if (this.accountRefreshTimer) clearInterval(this.accountRefreshTimer);
                 if (this.messageRefreshTimer) clearInterval(this.messageRefreshTimer);
+                this.clearLoginPoll();
             },
             methods: {
                 clearLoginPoll() {
@@ -389,27 +374,37 @@
                     }
                 },
                 async loadAccounts() {
-                    const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=Ajax');
-                    const nextAccounts = res.data.data.list || [];
-                    if (this.accountLoaded) {
-                        nextAccounts.forEach(next => {
-                            const previous = this.accounts.find(item => item.id === next.id);
-                            if (previous && previous.lastMessageAt && next.lastMessageAt
-                                && previous.lastMessageAt !== next.lastMessageAt
-                                ) {
-                                this.$notify({
-                                    title: '收到微信消息',
-                                    message: next.name + ' 收到一条新的手机消息',
-                                    type: 'success',
-                                    duration: 3500
-                                });
-                            }
-                        });
-                    }
-                    this.accounts = nextAccounts;
-                    this.accountLoaded = true;
-                    if (this.chat.visible && this.chat.accountId > 0) {
-                        await this.loadMessages();
+                    if (this.accountLoading) return;
+                    this.accountLoading = true;
+                    try {
+                        const res = await service.get('/Admin/WeixinManager/WeixinClaw?handler=Ajax');
+                        const nextAccounts = res.data.data.list || [];
+                        if (this.accountLoaded) {
+                            nextAccounts.forEach(next => {
+                                const previous = this.accounts.find(item => item.id === next.id);
+                                if (previous && previous.lastMessageAt && next.lastMessageAt
+                                    && previous.lastMessageAt !== next.lastMessageAt) {
+                                    this.$notify({
+                                        title: '收到微信消息',
+                                        message: next.name + ' 收到一条新的手机消息',
+                                        type: 'success',
+                                        duration: 3500
+                                    });
+                                }
+                            });
+                        }
+                        this.accounts = nextAccounts;
+                        this.accountLoaded = true;
+                        this.accountLoadError = '';
+                        if (this.chat.visible && this.chat.accountId > 0) {
+                            await this.loadMessages();
+                        }
+                    } catch (error) {
+                        const message = error.response?.data?.msg || error.message || '刷新微信连接状态失败';
+                        if (this.accountLoadError !== message) this.$message.error(message);
+                        this.accountLoadError = message;
+                    } finally {
+                        this.accountLoading = false;
                     }
                 },
                 edit(item) {
@@ -473,13 +468,10 @@
                     this.clearLoginPoll();
                     this.login.visible = false;
                 },
-                openSend(item) {
-                    this.sender = {
-                        visible: true,
+                resetComposer(item) {
+                    this.composer = {
                         accountId: item.id,
                         toUserId: item.lastMessageFromUserId || '',
-                        contextToken: '',
-                        contextTokenAvailable: !!item.hasMessageContext,
                         replyToRecordId: null,
                         text: ''
                     };
@@ -488,12 +480,13 @@
                     }
                 },
                 openChat(item) {
+                    this.mediaPlaybackErrors = {};
                     this.currentAccount = item;
                     this.chat.visible = true;
                     this.chat.accountId = item.id;
                     this.chat.accountName = item.name;
                     this.chat.peerUserId = item.lastMessageFromUserId || '';
-                    this.openSend(item);
+                    this.resetComposer(item);
                     this.loadConversations().then(() => this.loadMessages(true));
                     if (this.messageRefreshTimer) clearInterval(this.messageRefreshTimer);
                     this.messageRefreshTimer = setInterval(() => this.loadMessages(), 3000);
@@ -508,7 +501,7 @@
                     this.chat.peerUserId = peerUserId || '';
                     this.chat.newCount = 0;
                     this.chat.nearBottom = true;
-                    this.openSend(Object.assign({}, this.currentAccount, { lastMessageFromUserId: this.chat.peerUserId }));
+                    this.resetComposer(Object.assign({}, this.currentAccount, { lastMessageFromUserId: this.chat.peerUserId }));
                     await this.loadMessages(true);
                 },
                 emptyBindingForm() {
@@ -590,10 +583,9 @@
                         const latestInbound = this.chat.messages
                             .filter(message => message.direction === 'inbound')
                             .slice(-1)[0];
-                        if (latestInbound && this.sender.accountId === this.chat.accountId) {
-                            this.sender.replyToRecordId = latestInbound.id;
-                            this.sender.toUserId = latestInbound.fromUserId || this.sender.toUserId;
-                            this.sender.contextTokenAvailable = true;
+                        if (latestInbound && this.composer.accountId === this.chat.accountId) {
+                            this.composer.replyToRecordId = latestInbound.id;
+                            this.composer.toUserId = latestInbound.fromUserId || this.composer.toUserId;
                         }
                         if (forceBottom || this.chat.nearBottom) {
                             this.$nextTick(() => this.jumpToLatest());
@@ -618,6 +610,12 @@
                 },
                 openMedia(url) {
                     if (url) window.open(url, '_blank', 'noopener,noreferrer');
+                },
+                mediaPlaybackFailed(media) {
+                    this.$set(this.mediaPlaybackErrors, media.playbackUrl, '媒体无法播放。可下载原始文件；语音转换错误请查看服务日志，视频需使用浏览器支持的编码。');
+                },
+                mediaPlaybackReady(media) {
+                    this.$delete(this.mediaPlaybackErrors, media.playbackUrl);
                 },
                 handleChatScroll() {
                     const element = this.$refs.chatScroll;
@@ -649,7 +647,7 @@
                     if (!this.chat.mediaFile) return;
                     const form = new FormData();
                     form.append('accountId', this.chat.accountId);
-                    form.append('replyToRecordId', this.sender.replyToRecordId || '');
+                    form.append('replyToRecordId', this.composer.replyToRecordId || '');
                     form.append('mediaKind', this.chat.mediaKind === 'image' ? '1' : (this.chat.mediaKind === 'voice' ? '4' : '3'));
                     form.append('file', this.chat.mediaFile);
                     await service.post('/Admin/WeixinManager/WeixinClaw?handler=SendMedia', form);
@@ -668,7 +666,7 @@
                     }
                     try {
                         this.chat.sending = true;
-                        const res = await service.post('/Admin/WeixinManager/WeixinClaw?handler=Send', this.sender);
+                        const res = await service.post('/Admin/WeixinManager/WeixinClaw?handler=Send', this.composer);
                         const result = res.data.data || {};
                         this.$message.success(
                             result.contextTokenUsed

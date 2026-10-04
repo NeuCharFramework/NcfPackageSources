@@ -3,13 +3,16 @@
 
     文件名：McpConnectionTestService.cs
     文件功能描述：MCP Endpoint 连接测试与工具（Function）发现服务。
-    使用 Senparc.AI.AgentKernel 的 McpToolsetBuilder 建立真实连接并读取远端工具列表。
+    使用 ModelContextProtocol 客户端建立真实连接并读取远端工具列表。
 
 
     创建标识：Senparc - 20260924
 
     修改标识：Senparc - 20260924
     修改描述：v0.5.6 新增基于 Senparc.AI.AgentKernel 的 MCP 连接测试与工具发现
+
+    修改标识：Senparc - 20261003
+    修改描述：v0.5.7 按端点类型连接并为初始化及工具发现设置可取消的整体超时
 
 ----------------------------------------------------------------*/
 
@@ -19,8 +22,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Senparc.AI.AgentKernel.Mcp;
-using Senparc.AI.Interfaces;
+using ModelContextProtocol.Client;
 
 namespace Senparc.Xncf.MCP.Domain.Services
 {
@@ -85,7 +87,7 @@ namespace Senparc.Xncf.MCP.Domain.Services
     }
 
     /// <summary>
-    /// 使用 <see cref="McpToolsetBuilder"/>（Senparc.AI.AgentKernel）对 MCP Endpoint 发起真实连接，
+    /// 使用 <see cref="McpClient"/> 对 MCP Endpoint 发起真实连接，
     /// 并读取远端返回的工具（Function）列表。
     /// </summary>
     public class McpConnectionTestService
@@ -97,53 +99,57 @@ namespace Senparc.Xncf.MCP.Domain.Services
         /// <param name="endpointUrl">端点 URI。</param>
         /// <param name="bearerToken">可选 Bearer Token。</param>
         /// <param name="timeoutSeconds">整体超时秒数。</param>
+        /// <param name="endpointType">端点类型；未指定时自动检测 HTTP 传输。</param>
+        /// <param name="cancellationToken">请求取消信号。</param>
         public async Task<McpConnectionTestResult> TestAsync(
             string name,
             string endpointUrl,
             string? bearerToken = null,
-            int timeoutSeconds = 15)
+            int timeoutSeconds = 15,
+            string? endpointType = null,
+            CancellationToken cancellationToken = default)
         {
             timeoutSeconds = Math.Max(3, Math.Min(120, timeoutSeconds));
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            timeout.CancelAfter(TimeSpan.FromSeconds(timeoutSeconds));
 
             try
             {
-                if (!Uri.TryCreate(endpointUrl, UriKind.Absolute, out var uri))
+                if (!Uri.TryCreate(endpointUrl, UriKind.Absolute, out var uri)
+                    || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
                 {
-                    return Fail(400, $"端点地址不是有效的绝对 URL：{endpointUrl}");
+                    return Fail(400, $"端点地址必须是有效的 HTTP/HTTPS URL：{endpointUrl}");
                 }
 
-                var option = new McpServerOption
+                var mode = endpointType?.Trim().ToLowerInvariant() switch
+                {
+                    null or "" => HttpTransportMode.AutoDetect,
+                    "sse" => HttpTransportMode.Sse,
+                    "http" => HttpTransportMode.StreamableHttp,
+                    _ => (HttpTransportMode?)null
+                };
+                if (mode == null)
+                {
+                    return Fail(400, $"连接测试不支持端点类型：{endpointType}，请选择 sse 或 http");
+                }
+
+                var options = new HttpClientTransportOptions
                 {
                     Name = string.IsNullOrWhiteSpace(name) ? "MCP-Test" : name,
-                    ServerName = string.IsNullOrWhiteSpace(name) ? "MCP-Test" : name,
-                    SseUrl = uri.ToString(),
-                    LocalSseUrl = uri.ToString(),
-                    RequirePublicUrl = false,
-                    AuthorizationBearerToken = bearerToken
+                    Endpoint = uri,
+                    TransportMode = mode.Value,
+                    ConnectionTimeout = TimeSpan.FromSeconds(timeoutSeconds),
+                    AdditionalHeaders = string.IsNullOrWhiteSpace(bearerToken)
+                        ? null
+                        : new Dictionary<string, string> { ["Authorization"] = $"Bearer {bearerToken}" }
                 };
 
-                // McpToolsetBuilder.PrepareAsync 内部会：
-                // 1) 通过 HttpClientTransport 建立到端点的真实连接
-                // 2) 调用 ListToolsAsync 读取远端工具
-                // LocalFunctionProxy 模式会保留 RuntimeMcpClient，使用 await using 确保释放
-                await using var result = await McpToolsetBuilder.PrepareAsync(option, uri.ToString());
-
-                var tools = (result.DiscoveredMcpTools ?? Array.Empty<ModelContextProtocol.Client.McpClientTool>())
-                    .Where(z => z != null)
+                await using var transport = new HttpClientTransport(options);
+                await using var client = await McpClient.CreateAsync(transport, cancellationToken: timeout.Token);
+                var discoveredTools = await client.ListToolsAsync(cancellationToken: timeout.Token);
+                var tools = discoveredTools
                     .Select(MapTool)
-                    .Where(z => z != null)
                     .ToList();
-
-                if (!string.IsNullOrWhiteSpace(result.ToolDiscoveryError))
-                {
-                    return new McpConnectionTestResult
-                    {
-                        Success = false,
-                        Status = 500,
-                        StatusMessage = $"连接成功，但读取工具列表失败：{result.ToolDiscoveryError}",
-                        Tools = tools
-                    };
-                }
 
                 return new McpConnectionTestResult
                 {
@@ -153,46 +159,29 @@ namespace Senparc.Xncf.MCP.Domain.Services
                     Tools = tools
                 };
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
             {
                 return Fail(408, $"连接超时（超过 {timeoutSeconds} 秒），请检查端点地址是否可访问");
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 return Fail(500, $"连接失败：{ex.Message}");
             }
         }
 
-        private static McpToolInfo? MapTool(ModelContextProtocol.Client.McpClientTool tool)
+        private static McpToolInfo MapTool(McpClientTool tool)
         {
-            try
+            var schema = tool.ProtocolTool?.InputSchema.ValueKind == JsonValueKind.Object
+                ? tool.ProtocolTool.InputSchema
+                : tool.JsonSchema;
+            return new McpToolInfo
             {
-                var info = new McpToolInfo
-                {
-                    Name = tool.Name,
-                    Description = tool.ProtocolTool?.Description ?? tool.Description,
-                    Title = tool.Title,
-                    InputSchemaJson = tool.JsonSchema.ValueKind == JsonValueKind.Undefined
-                        ? null
-                        : tool.JsonSchema.GetRawText()
-                };
-
-                if (tool.ProtocolTool?.InputSchema.ValueKind == JsonValueKind.Object)
-                {
-                    info.InputSchemaJson = tool.ProtocolTool.InputSchema.GetRawText();
-                }
-
-                info.Parameters = ParseParameters(tool.JsonSchema);
-                return info;
-            }
-            catch
-            {
-                return new McpToolInfo
-                {
-                    Name = tool.Name,
-                    Description = tool.Description
-                };
-            }
+                Name = tool.Name,
+                Description = tool.ProtocolTool?.Description ?? tool.Description,
+                Title = tool.Title,
+                InputSchemaJson = schema.ValueKind == JsonValueKind.Undefined ? null : schema.GetRawText(),
+                Parameters = ParseParameters(schema)
+            };
         }
 
         /// <summary>

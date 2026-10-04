@@ -2,6 +2,7 @@ using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.WeixinManager.Domain.Services;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -117,6 +118,14 @@ public sealed class WeixinClawMediaService
         {
             throw new InvalidOperationException("媒体文件不能超过 50 MB。");
         }
+        if (!Enum.IsDefined(kind))
+        {
+            throw new ArgumentOutOfRangeException(nameof(kind), "不支持的微信媒体类型。");
+        }
+        var displayName = string.IsNullOrWhiteSpace(fileName) ? "微信媒体" : Path.GetFileName(fileName);
+        var voiceEncodeType = kind == WeixinClawMediaKind.Voice
+            ? GetVoiceEncodeType(displayName, contentType)
+            : 0;
 
         var account = await _accountService.GetObjectAsync(item => item.Id == accountId)
             .ConfigureAwait(false)
@@ -130,12 +139,18 @@ public sealed class WeixinClawMediaService
         var replyRecord = replyToRecordId.HasValue
             ? await _recordService.GetInboundRecordAsync(accountId, replyToRecordId.Value).ConfigureAwait(false)
             : null;
+        if (replyToRecordId.HasValue && replyRecord == null)
+        {
+            throw new InvalidOperationException("指定的入站消息不存在或不属于当前账号。");
+        }
         var targetUserId = replyRecord?.FromUserId
             ?? (string.IsNullOrWhiteSpace(toUserId)
                 ? account.LastMessageFromUserId ?? account.IlinkUserId
                 : toUserId.Trim());
         var contextToken = replyRecord == null
-            ? _accountService.UnprotectContextToken(account)
+            ? (string.Equals(targetUserId, account.LastMessageFromUserId, StringComparison.Ordinal)
+                ? _accountService.UnprotectContextToken(account)
+                : null)
             : _accountService.UnprotectContextToken(replyRecord.ContextTokenProtected);
         if (string.IsNullOrWhiteSpace(targetUserId) || string.IsNullOrWhiteSpace(contextToken))
         {
@@ -178,30 +193,25 @@ public sealed class WeixinClawMediaService
         {
             EncryptQueryParam = encryptedQueryParam,
             // Official plugin sends the base64 representation of the hex AES key.
-            AesKey = Convert.ToBase64String(aesKey),
+            AesKey = Convert.ToBase64String(Encoding.ASCII.GetBytes(aesKeyHex)),
             EncryptType = 1
         };
 
         var item = new WeixinClawMessageItem { Type = (int)GetMessageItemType(kind) };
-        var displayName = string.IsNullOrWhiteSpace(fileName) ? "微信媒体" : Path.GetFileName(fileName);
         switch (kind)
         {
             case WeixinClawMediaKind.Image:
                 item.ImageItem = new WeixinClawImageItem
                 {
                     Media = media,
-                    MidSize = encrypted.Length,
-                    HdSize = encrypted.Length
+                    MidSize = encrypted.Length
                 };
                 break;
             case WeixinClawMediaKind.Voice:
                 item.VoiceItem = new WeixinClawVoiceItem
                 {
                     Media = media,
-                    EncodeType = GetVoiceEncodeType(displayName, contentType),
-                    SampleRate = 16000,
-                    BitsPerSample = 16,
-                    Playtime = 0
+                    EncodeType = voiceEncodeType
                 };
                 break;
             default:
@@ -209,7 +219,7 @@ public sealed class WeixinClawMediaService
                 {
                     Media = media,
                     FileName = displayName,
-                    Len = bytes.Length.ToString()
+                    Len = bytes.Length.ToString(CultureInfo.InvariantCulture)
                 };
                 break;
         }
@@ -256,15 +266,6 @@ public sealed class WeixinClawMediaService
                 botToken,
                 message,
                 cancellationToken).ConfigureAwait(false);
-            if (response.Ret != 0 || string.IsNullOrWhiteSpace(response.MessageId))
-            {
-                var error = response.Ret != 0
-                    ? $"媒体发送失败：{response.Ret} {response.Errmsg}"
-                    : "iLink 接受媒体请求但没有返回 message_id，未确认进入下行队列。";
-                await _recordService.MarkFailedAsync(record.Id, error).ConfigureAwait(false);
-                throw new InvalidOperationException(error);
-            }
-
             await _recordService.MarkSentAsync(record.Id, response.MessageId).ConfigureAwait(false);
             return new WeixinClawSendTextResult(record.Id, response.MessageId, targetUserId, true);
         }
@@ -299,6 +300,9 @@ public sealed class WeixinClawMediaService
                 kind = "file";
                 name = item.FileItem.FileName;
                 return item.FileItem.Media;
+            case 5 when item.VideoItem?.Media != null:
+                kind = "video";
+                return item.VideoItem.Media;
             default:
                 return null;
         }
@@ -310,37 +314,13 @@ public sealed class WeixinClawMediaService
         {
             "image" => "微信图片.jpg",
             "voice" => item?.VoiceItem?.EncodeType == 6 ? "微信语音.silk" : "微信语音.bin",
+            "video" => "微信视频.mp4",
             _ => "微信文件.bin"
         };
     }
 
     private static string GuessContentType(string kind, string fileName, byte[] bytes)
-    {
-        if (bytes?.Length >= 12)
-        {
-            if (bytes[0] == 0xFF && bytes[1] == 0xD8 && bytes[2] == 0xFF) return "image/jpeg";
-            if (bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && bytes[3] == 0x47) return "image/png";
-            if (bytes[0] == 0x47 && bytes[1] == 0x49 && bytes[2] == 0x46) return "image/gif";
-            if (Encoding.ASCII.GetString(bytes, 0, 4) == "RIFF"
-                && Encoding.ASCII.GetString(bytes, 8, 4) == "WEBP") return "image/webp";
-        }
-
-        var extension = Path.GetExtension(fileName)?.ToLowerInvariant();
-        return extension switch
-        {
-            ".jpg" or ".jpeg" => "image/jpeg",
-            ".png" => "image/png",
-            ".gif" => "image/gif",
-            ".webp" => "image/webp",
-            ".mp3" => "audio/mpeg",
-            ".wav" => "audio/wav",
-            ".m4a" => "audio/mp4",
-            ".mp4" => "video/mp4",
-            ".pdf" => "application/pdf",
-            ".txt" => "text/plain",
-            _ => kind == "voice" ? "audio/silk" : "application/octet-stream"
-        };
-    }
+        => WeixinClawMediaFormat.GetContentType(kind, fileName, bytes);
 
     private static byte[] EncryptAesEcb(byte[] plain, byte[] key)
     {
@@ -354,10 +334,17 @@ public sealed class WeixinClawMediaService
 
     private static int GetVoiceEncodeType(string fileName, string contentType)
     {
-        var value = (fileName + " " + contentType).ToLowerInvariant();
-        if (value.Contains("silk")) return 6;
-        if (value.Contains("mp3") || value.Contains("mpeg")) return 7;
-        return 8;
+        var extension = Path.GetExtension(fileName).ToLowerInvariant();
+        if (extension == ".silk") return 6;
+        if (extension == ".mp3") return 7;
+        var mimeType = contentType?.Split(';')[0].Trim().ToLowerInvariant();
+        if (string.IsNullOrEmpty(extension))
+        {
+            if (mimeType is "audio/silk" or "audio/x-silk") return 6;
+            if (mimeType is "audio/mpeg" or "audio/mp3") return 7;
+        }
+        throw new InvalidOperationException(
+            "语音消息仅支持 SILK 或 MP3；其他音频格式请使用文件发送，不能标记为 OGG-Speex。");
     }
 
     private static WeixinClawMessageItemType GetMessageItemType(WeixinClawMediaKind kind) =>

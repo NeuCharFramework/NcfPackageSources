@@ -26,5 +26,6 @@ public sealed class WeixinClawMessageMediaDto
     public string ContentType { get; set; }
     public long Size { get; set; }
     public string Url { get; set; }
+    public string PlaybackUrl { get; set; }
     public string Error { get; set; }
 }

@@ -72,7 +72,7 @@ namespace Senparc.Xncf.WeixinManager
         public override string Uid => "EB84CB21-AC22-406E-0001-000000000001";
 
 
-        public override string Version => "0.24.9";
+        public override string Version => "0.24.12";
 
 
         public override string MenuName => WeixinManagerResource.Get("Module.WeixinManager.MenuName", "微信管理");
@@ -104,6 +104,9 @@ namespace Senparc.Xncf.WeixinManager
             services.AddScoped<WeixinClawMessageReceiptService>();
             services.AddScoped<WeixinClawMessageRecordService>();
             services.AddScoped<WeixinClawMediaStorageService>();
+            services.AddScoped<WeixinClawMediaPlaybackService>();
+            services.Configure<WeixinClawHostedServiceOptions>(
+                configuration.GetSection(WeixinClawHostedServiceOptions.SectionName));
             services.AddScoped<WeixinClawFileManagerBridge>();
             services.AddScoped<WeixinClawMediaService>();
             services.AddScoped<WeixinClawBindingProfileService>();
@@ -365,5 +368,3 @@ namespace Senparc.Xncf.WeixinManager
 
     }
 }
-
-

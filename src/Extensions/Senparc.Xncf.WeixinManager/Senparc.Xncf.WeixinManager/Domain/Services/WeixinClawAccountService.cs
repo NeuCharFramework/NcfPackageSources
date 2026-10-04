@@ -96,7 +96,7 @@ public class WeixinClawAccountService : ServiceBase<WeixinClawAccount>, IService
     {
         return string.IsNullOrWhiteSpace(contextToken)
             ? null
-            : _contextTokenProtector.Protect(contextToken.Trim());
+            : _contextTokenProtector.Protect(contextToken);
     }
 
     public string UnprotectContextToken(WeixinClawAccount account)

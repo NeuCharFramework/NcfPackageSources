@@ -71,6 +71,10 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
         var replyRecord = replyToRecordId.HasValue
             ? await _recordService.GetInboundRecordAsync(accountId, replyToRecordId.Value).ConfigureAwait(false)
             : null;
+        if (replyToRecordId.HasValue && replyRecord == null)
+        {
+            throw new InvalidOperationException("指定的入站消息不存在或不属于当前账号。");
+        }
         var targetUserId = replyRecord?.FromUserId
             ?? (string.IsNullOrWhiteSpace(toUserId)
             ? account.LastMessageFromUserId ?? account.IlinkUserId
@@ -145,22 +149,6 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
                 !string.IsNullOrWhiteSpace(result.MessageId),
                 contextTokenUsed,
                 !string.IsNullOrWhiteSpace(runId));
-            if (result.Ret != 0)
-            {
-                var error = $"发送个人微信消息失败：{result.Ret} {result.Errmsg}";
-                await _recordService.MarkFailedAsync(record.Id, error).ConfigureAwait(false);
-                throw new InvalidOperationException(error);
-            }
-
-            if (string.IsNullOrWhiteSpace(result.MessageId))
-            {
-                var error =
-                    "iLink 已返回 ret=0，但没有返回 message_id；消息未确认进入下行队列，手机端可能不会显示。"
-                    + "请重新发送一条手机消息后再回复，或重新扫码绑定账号。";
-                await _recordService.MarkFailedAsync(record.Id, error).ConfigureAwait(false);
-                throw new InvalidOperationException(error);
-            }
-
             await _recordService.MarkSentAsync(record.Id, result.MessageId).ConfigureAwait(false);
             return new WeixinClawSendTextResult(
                 record.Id,

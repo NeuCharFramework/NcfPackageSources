@@ -25,6 +25,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
     private readonly WeixinClawBindingProfileService _bindingProfileService;
     private readonly WeixinClawMediaService _mediaService;
     private readonly WeixinClawMediaStorageService _mediaStorage;
+    private readonly WeixinClawMediaPlaybackService _mediaPlayback;
     private readonly ILogger<IndexModel> _logger;
 
     public IndexModel(
@@ -37,6 +38,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
         WeixinClawBindingProfileService bindingProfileService,
         WeixinClawMediaService mediaService,
         WeixinClawMediaStorageService mediaStorage,
+        WeixinClawMediaPlaybackService mediaPlayback,
         ILogger<IndexModel> logger) : base(xncfModuleService)
     {
         _accountService = accountService;
@@ -47,6 +49,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
         _bindingProfileService = bindingProfileService;
         _mediaService = mediaService;
         _mediaStorage = mediaStorage;
+        _mediaPlayback = mediaPlayback;
         _logger = logger;
     }
 
@@ -70,6 +73,10 @@ public class IndexModel : BaseAdminWeixinManagerModel
             {
                 record.MediaItems[index].Url =
                     $"/Admin/WeixinManager/WeixinClaw?handler=Media&recordId={record.Id}&index={index}";
+                if (record.MediaItems[index].Kind is "voice" or "video")
+                {
+                    record.MediaItems[index].PlaybackUrl = record.MediaItems[index].Url + "&playback=true";
+                }
             }
         }
 
@@ -80,7 +87,7 @@ public class IndexModel : BaseAdminWeixinManagerModel
         });
     }
 
-    public async Task<IActionResult> OnGetMediaAsync(int recordId, int index = 0)
+    public async Task<IActionResult> OnGetMediaAsync(int recordId, int index = 0, bool playback = false)
     {
         if (index < 0)
         {
@@ -106,11 +113,26 @@ public class IndexModel : BaseAdminWeixinManagerModel
             return NotFound();
         }
 
-        return PhysicalFile(
-            path,
-            string.IsNullOrWhiteSpace(media.ContentType)
-                ? "application/octet-stream"
-                : media.ContentType);
+        var contentType = string.IsNullOrWhiteSpace(media.ContentType)
+            ? "application/octet-stream"
+            : media.ContentType;
+        if (playback)
+        {
+            try
+            {
+                var playable = await _mediaPlayback.GetPlayableFileAsync(
+                    path, media.Kind, contentType, HttpContext.RequestAborted).ConfigureAwait(false);
+                path = playable.Path;
+                contentType = playable.ContentType;
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or IOException)
+            {
+                _logger.LogError(ex, "准备微信媒体播放失败：RecordId={RecordId}, Index={Index}", recordId, index);
+                return BadRequest(new { msg = "微信媒体无法准备播放，请下载原始文件或查看服务日志。" });
+            }
+        }
+
+        return new PhysicalFileResult(path, contentType) { EnableRangeProcessing = true };
     }
 
     public async Task<IActionResult> OnGetConversationsAsync(int accountId)
@@ -255,9 +277,11 @@ public class IndexModel : BaseAdminWeixinManagerModel
             await using var stream = file.OpenReadStream();
             using var memory = new MemoryStream();
             await stream.CopyToAsync(memory, HttpContext.RequestAborted).ConfigureAwait(false);
-            var kind = Enum.IsDefined(typeof(WeixinClawMediaKind), mediaKind)
-                ? (WeixinClawMediaKind)mediaKind
-                : WeixinClawMediaKind.File;
+            if (!Enum.IsDefined(typeof(WeixinClawMediaKind), mediaKind))
+            {
+                throw new ArgumentOutOfRangeException(nameof(mediaKind), "不支持的微信媒体类型。");
+            }
+            var kind = (WeixinClawMediaKind)mediaKind;
             var result = await _mediaService.SendAsync(
                 accountId,
                 file.FileName,
