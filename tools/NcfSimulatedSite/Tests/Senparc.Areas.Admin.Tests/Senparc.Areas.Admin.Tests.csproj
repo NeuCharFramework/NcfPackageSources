@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.16</Version>
+    <Version>0.0.17</Version>
     <PackageReleaseNotes>
+[2026-10-03] 覆盖 MCP 端点 API 注册、列表增删改查、连接测试和客户端错误处理
 [2026-10-02] 覆盖后台租户作用域初始化、停用、单租户模式及账号任务取消释放并发
 [2026-10-01] 补充 Repository 查询租户隔离、软删除、分页、取消及局部更新回归测试
 [2026-10-01] v0.0.14 补充 RequestHeader 租户授权回归测试
@@ -77,6 +78,7 @@
     <ProjectReference Include="..\..\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
     <ProjectReference Include="..\..\..\..\src\Basic\Senparc.Ncf.UnitTestExtension\Senparc.Ncf.UnitTestExtension.csproj" />
     <ProjectReference Include="..\..\..\..\src\Extensions\Senparc.Xncf.NeuCharWorkflow\Senparc.Xncf.NeuCharWorkflow.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Extensions\Senparc.Xncf.MCP\Senparc.Xncf.MCP.csproj" />
   </ItemGroup>
 
 </Project>

@@ -19,12 +19,13 @@ public static class WeixinClawProtocol
     public const string AppId = "bot";
     // Keep the wire compatibility marker aligned with the current official
     // openclaw-weixin protocol while using bot_agent to identify NCF.
-    public const string ChannelVersion = "2.4.8";
-    public const int ClientVersion = (2 << 16) | (4 << 8) | 8;
+    public const string ChannelVersion = "2.4.9";
+    public const int ClientVersion = (2 << 16) | (4 << 8) | 9;
 
     public static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         NumberHandling = JsonNumberHandling.AllowReadingFromString
     };
 
@@ -32,7 +33,8 @@ public static class WeixinClawProtocol
     {
         Span<byte> bytes = stackalloc byte[4];
         RandomNumberGenerator.Fill(bytes);
-        return Convert.ToBase64String(Encoding.UTF8.GetBytes(BitConverter.ToUInt32(bytes).ToString()));
+        return Convert.ToBase64String(Encoding.UTF8.GetBytes(
+            BitConverter.ToUInt32(bytes).ToString(CultureInfo.InvariantCulture)));
     }
 }
 
@@ -105,23 +107,42 @@ public sealed class WeixinClawApi
             cancellationToken);
     }
 
-    public Task<WeixinClawSendMessageResponse> SendMessageAsync(
+    public async Task<WeixinClawSendMessageResponse> SendMessageAsync(
         string baseUrl,
         string botToken,
         WeixinClawMessage message,
         CancellationToken cancellationToken = default)
     {
-        return PostAsync<WeixinClawSendMessageResponse>(
+        ArgumentNullException.ThrowIfNull(message);
+        var response = await PostAsync<WeixinClawSendMessageResponse>(
             baseUrl,
             "ilink/bot/sendmessage",
             new
             {
-                msg = message,
+                // The shared inbound model contains server-only identifiers and timestamps.
+                msg = new
+                {
+                    from_user_id = "",
+                    to_user_id = message.ToUserId,
+                    client_id = message.ClientId,
+                    message_type = message.MessageType,
+                    message_state = message.MessageState,
+                    item_list = message.ItemList,
+                    context_token = message.ContextToken,
+                    run_id = message.RunId
+                },
                 base_info = CreateBaseInfo()
             },
             botToken,
             TimeSpan.FromSeconds(15),
-            cancellationToken);
+            cancellationToken).ConfigureAwait(false);
+        if (response.Ret is int ret && ret != 0)
+        {
+            throw new InvalidOperationException(
+                $"发送个人微信消息失败：{ret} {response.Errmsg}");
+        }
+
+        return response;
     }
 
     public Task<WeixinClawGetUploadUrlResponse> GetUploadUrlAsync(
@@ -173,20 +194,28 @@ public sealed class WeixinClawApi
             throw new InvalidOperationException("微信媒体上传响应缺少 x-encrypted-param。");
         }
 
-        return values.FirstOrDefault();
+        var downloadParam = values.FirstOrDefault();
+        if (string.IsNullOrWhiteSpace(downloadParam))
+        {
+            throw new InvalidOperationException("微信媒体上传响应的 x-encrypted-param 为空。");
+        }
+
+        return downloadParam;
     }
 
     public async Task<byte[]> DownloadMediaAsync(
         WeixinClawCdnMedia media,
         CancellationToken cancellationToken = default)
     {
-        if (media == null || string.IsNullOrWhiteSpace(media.EncryptQueryParam))
+        if (media == null
+            || (string.IsNullOrWhiteSpace(media.EncryptQueryParam) && string.IsNullOrWhiteSpace(media.FullUrl)))
         {
-            throw new InvalidOperationException("微信媒体缺少 encrypt_query_param。");
+            throw new InvalidOperationException("微信媒体缺少 encrypt_query_param 或 full_url。");
         }
 
-        var url =
-            $"{DefaultCdnBaseUrl}/download?encrypted_query_param={Uri.EscapeDataString(media.EncryptQueryParam)}";
+        var url = !string.IsNullOrWhiteSpace(media.FullUrl)
+            ? media.FullUrl
+            : $"{DefaultCdnBaseUrl}/download?encrypted_query_param={Uri.EscapeDataString(media.EncryptQueryParam)}";
         using var timeoutSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeoutSource.CancelAfter(TimeSpan.FromSeconds(60));
         using var response = await _httpClient.GetAsync(
@@ -470,7 +499,7 @@ public sealed class WeixinClawSendMessageResponse
     [JsonConverter(typeof(StringOrNumberConverter))]
     public string MessageId { get; set; }
 
-    public int Ret { get; set; }
+    public int? Ret { get; set; }
     public string Errmsg { get; set; }
 }
 
@@ -529,6 +558,7 @@ public sealed class WeixinClawEmptyResponse
 
 public sealed class WeixinClawMessage
 {
+    [JsonPropertyName("seq")]
     public long Seq { get; set; }
 
     [JsonPropertyName("message_id")]
@@ -571,6 +601,7 @@ public sealed class WeixinClawMessage
 
 public sealed class WeixinClawMessageItem
 {
+    [JsonPropertyName("type")]
     public int Type { get; set; }
 
     [JsonPropertyName("text_item")]
@@ -584,15 +615,22 @@ public sealed class WeixinClawMessageItem
 
     [JsonPropertyName("file_item")]
     public WeixinClawFileItem FileItem { get; set; }
+
+    [JsonPropertyName("video_item")]
+    public WeixinClawVideoItem VideoItem { get; set; }
 }
 
 public sealed class WeixinClawTextItem
 {
+    [JsonPropertyName("text")]
     public string Text { get; set; }
 }
 
 public sealed class WeixinClawCdnMedia
 {
+    [JsonPropertyName("full_url")]
+    public string FullUrl { get; set; }
+
     [JsonPropertyName("encrypt_query_param")]
     public string EncryptQueryParam { get; set; }
 
@@ -605,31 +643,52 @@ public sealed class WeixinClawCdnMedia
 
 public sealed class WeixinClawImageItem
 {
+    [JsonPropertyName("media")]
     public WeixinClawCdnMedia Media { get; set; }
     [JsonPropertyName("mid_size")]
     public int MidSize { get; set; }
     [JsonPropertyName("hd_size")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int HdSize { get; set; }
 }
 
 public sealed class WeixinClawVoiceItem
 {
+    [JsonPropertyName("media")]
     public WeixinClawCdnMedia Media { get; set; }
     [JsonPropertyName("encode_type")]
     public int EncodeType { get; set; }
     [JsonPropertyName("sample_rate")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int SampleRate { get; set; }
     [JsonPropertyName("bits_per_sample")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int BitsPerSample { get; set; }
+    [JsonPropertyName("playtime")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int Playtime { get; set; }
 }
 
 public sealed class WeixinClawFileItem
 {
+    [JsonPropertyName("media")]
     public WeixinClawCdnMedia Media { get; set; }
     [JsonPropertyName("file_name")]
     public string FileName { get; set; }
+    [JsonPropertyName("len")]
     public string Len { get; set; }
+}
+
+public sealed class WeixinClawVideoItem
+{
+    [JsonPropertyName("media")]
+    public WeixinClawCdnMedia Media { get; set; }
+
+    [JsonPropertyName("video_size")]
+    public long VideoSize { get; set; }
+
+    [JsonPropertyName("play_length")]
+    public int PlayLength { get; set; }
 }
 
 public sealed class StringOrNumberConverter : JsonConverter<string>

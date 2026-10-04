@@ -1,11 +1,13 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Xncf.WeixinManager.WeixinClaw;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -101,12 +103,14 @@ public class WeixinClawProtocolTests
         Assert.AreEqual("qr", response.Qrcode);
         Assert.AreEqual("ilink_bot_token", handler.Request.Headers.GetValues("AuthorizationType").Single());
         Assert.AreEqual("bot", handler.Request.Headers.GetValues("iLink-App-Id").Single());
-        Assert.AreEqual("132104", handler.Request.Headers.GetValues("iLink-App-ClientVersion").Single());
+        Assert.AreEqual("132105", handler.Request.Headers.GetValues("iLink-App-ClientVersion").Single());
         Assert.IsTrue(handler.Request.Headers.Contains("X-WECHAT-UIN"));
         Assert.IsFalse(handler.Request.Headers.Contains("Authorization"));
         Assert.AreEqual("application/json", handler.Request.Content.Headers.ContentType?.ToString());
-        StringAssert.Contains(handler.Body, "\"local_token_list\":[]");
-        Assert.IsFalse(handler.Body.Contains("base_info", StringComparison.Ordinal));
+        AssertJsonBody("""{"local_token_list":[]}""", handler.Body);
+        Assert.AreEqual(HttpMethod.Post, handler.Request.Method);
+        Assert.AreEqual("/ilink/bot/get_bot_qrcode", handler.Request.RequestUri.AbsolutePath);
+        Assert.AreEqual("?bot_type=3", handler.Request.RequestUri.Query);
     }
 
     [TestMethod]
@@ -147,11 +151,14 @@ public class WeixinClawProtocolTests
         Assert.AreEqual("Bearer bot-secret", handler.Request.Headers.Authorization.ToString());
         Assert.AreEqual("ilink_bot_token", handler.Request.Headers.GetValues("AuthorizationType").Single());
         Assert.AreEqual("bot", handler.Request.Headers.GetValues("iLink-App-Id").Single());
-        Assert.AreEqual("132104", handler.Request.Headers.GetValues("iLink-App-ClientVersion").Single());
+        Assert.AreEqual("132105", handler.Request.Headers.GetValues("iLink-App-ClientVersion").Single());
         Assert.IsTrue(handler.Request.Headers.Contains("X-WECHAT-UIN"));
-        StringAssert.Contains(handler.Body, "\"get_updates_buf\":\"old-cursor\"");
-        StringAssert.Contains(handler.Body, "\"channel_version\":\"0.1.0\"");
-        StringAssert.Contains(handler.Body, "\"bot_agent\":\"NCF-WeixinManager/0.1.0\"");
+        AssertJsonBody(
+            """
+            {"get_updates_buf":"old-cursor",
+             "base_info":{"channel_version":"2.4.9","bot_agent":"NCF-WeixinManager/2.4.9"}}
+            """,
+            handler.Body);
         StringAssert.Contains(handler.Request.RequestUri.AbsolutePath, "/ilink/bot/getupdates");
     }
 
@@ -185,11 +192,279 @@ public class WeixinClawProtocolTests
 
         Assert.AreEqual(0, response.Ret);
         Assert.AreEqual("out-1", response.MessageId);
-        StringAssert.Contains(handler.Body, "\"to_user_id\":\"user@im.wechat\"");
-        StringAssert.Contains(handler.Body, "\"context_token\":\"ctx-1\"");
-        StringAssert.Contains(handler.Body, "\"message_state\":2");
-        StringAssert.Contains(handler.Body, "\"run_id\":\"run-1\"");
-        StringAssert.Contains(handler.Request.RequestUri.AbsolutePath, "/ilink/bot/sendmessage");
+        AssertJsonBody(
+            """
+            {
+              "msg":{
+                "from_user_id":"","to_user_id":"user@im.wechat","client_id":"client-1",
+                "message_type":2,"message_state":2,"context_token":"ctx-1","run_id":"run-1",
+                "item_list":[{"type":1,"text_item":{"text":"hi"}}]
+              },
+              "base_info":{"channel_version":"2.4.9","bot_agent":"NCF-WeixinManager/2.4.9"}
+            }
+            """,
+            handler.Body);
+        Assert.AreEqual("/ilink/bot/sendmessage", handler.Request.RequestUri.AbsolutePath);
+        AssertPostHeaders(handler.Request);
+    }
+
+    [TestMethod]
+    public async Task SendMessageAsync_OmitsInboundFieldsAndNullItemsWithoutChangingTextOrContext()
+    {
+        var handler = new CapturingHandler("""{"ret":0}""");
+        using var httpClient = new HttpClient(handler);
+        var api = new WeixinClawApi(httpClient);
+
+        var response = await api.SendMessageAsync(
+            "https://ilink.example.test",
+            "bot-secret",
+            new WeixinClawMessage
+            {
+                Seq = 99,
+                MessageId = "inbound-1",
+                FromUserId = "inbound-user",
+                CreateTimeMs = 12345,
+                SessionId = "server-session",
+                GroupId = "server-group",
+                ToUserId = "user@im.wechat",
+                ClientId = "client-1",
+                MessageType = 2,
+                MessageState = 2,
+                ContextToken = " ctx+/= ",
+                ItemList = [new() { Type = 1, TextItem = new() { Text = "你好 \"微信\"\nClaw 👋" } }]
+            });
+
+        Assert.AreEqual(0, response.Ret);
+        Assert.IsNull(response.MessageId);
+        AssertJsonBody(
+            """
+            {
+              "msg":{
+                "from_user_id":"","to_user_id":"user@im.wechat","client_id":"client-1",
+                "message_type":2,"message_state":2,"context_token":" ctx+/= ",
+                "item_list":[{"type":1,"text_item":{"text":"你好 \"微信\"\nClaw 👋"}}]
+              },
+              "base_info":{"channel_version":"2.4.9","bot_agent":"NCF-WeixinManager/2.4.9"}
+            }
+            """,
+            handler.Body);
+    }
+
+    [DataTestMethod]
+    [DataRow("""{"ret":-14,"errmsg":"session expired"}""", "-14")]
+    [DataRow("""{"ret":1,"errmsg":"invalid message"}""", "invalid message")]
+    public async Task SendMessageAsync_RejectsBusinessErrors(string responseJson, string error)
+    {
+        var handler = new CapturingHandler(responseJson);
+        using var httpClient = new HttpClient(handler);
+        var api = new WeixinClawApi(httpClient);
+
+        var exception = await Assert.ThrowsExceptionAsync<InvalidOperationException>(() =>
+            api.SendMessageAsync("https://ilink.example.test", "bot-secret", new WeixinClawMessage()));
+
+        StringAssert.Contains(exception.Message, error);
+    }
+
+    [TestMethod]
+    public async Task SendMessageAsync_PreservesUint64ServerMessageId()
+    {
+        var handler = new CapturingHandler("""{"ret":0,"message_id":18446744073709551615}""");
+        using var httpClient = new HttpClient(handler);
+        var response = await new WeixinClawApi(httpClient).SendMessageAsync(
+            "https://ilink.example.test", "bot-secret", new WeixinClawMessage());
+
+        Assert.AreEqual("18446744073709551615", response.MessageId);
+    }
+
+    [DataTestMethod]
+    [DataRow("{}")]
+    [DataRow("""{"message_id":"out-1"}""")]
+    public async Task SendMessageAsync_AllowsOfficialOptionalRetWithoutInventingZero(string responseJson)
+    {
+        var handler = new CapturingHandler(responseJson);
+        using var httpClient = new HttpClient(handler);
+        var response = await new WeixinClawApi(httpClient).SendMessageAsync(
+            "https://ilink.example.test", "bot-secret", new WeixinClawMessage());
+
+        Assert.IsNull(response.Ret);
+    }
+
+    [DataTestMethod]
+    [DataRow(2, """{"type":2,"image_item":{"media":{"encrypt_query_param":"download-param","aes_key":"key-base64","encrypt_type":1},"mid_size":32}}""")]
+    [DataRow(3, """{"type":3,"voice_item":{"media":{"encrypt_query_param":"download-param","aes_key":"key-base64","encrypt_type":1},"encode_type":6}}""")]
+    [DataRow(4, """{"type":4,"file_item":{"media":{"encrypt_query_param":"download-param","aes_key":"key-base64","encrypt_type":1},"file_name":"test.txt","len":"17"}}""")]
+    public async Task SendMessageAsync_MediaItemsMatchOfficialFieldNamesAndTypes(int type, string expectedItem)
+    {
+        var media = new WeixinClawCdnMedia
+        {
+            EncryptQueryParam = "download-param", AesKey = "key-base64", EncryptType = 1
+        };
+        var item = new WeixinClawMessageItem { Type = type };
+        switch (type)
+        {
+            case 2:
+                item.ImageItem = new() { Media = media, MidSize = 32 };
+                break;
+            case 3:
+                item.VoiceItem = new() { Media = media, EncodeType = 6 };
+                break;
+            case 4:
+                item.FileItem = new() { Media = media, FileName = "test.txt", Len = "17" };
+                break;
+        }
+        var handler = new CapturingHandler("""{"ret":0}""");
+        using var httpClient = new HttpClient(handler);
+        await new WeixinClawApi(httpClient).SendMessageAsync(
+            "https://ilink.example.test", "bot-secret",
+            new WeixinClawMessage
+            {
+                ToUserId = "user@im.wechat", ClientId = "client-1", MessageType = 2,
+                MessageState = 2, ContextToken = "ctx-1", ItemList = [item]
+            });
+
+        AssertJsonBody(
+            $$"""
+            {
+              "msg":{
+                "from_user_id":"","to_user_id":"user@im.wechat","client_id":"client-1",
+                "message_type":2,"message_state":2,"context_token":"ctx-1",
+                "item_list":[{{expectedItem}}]
+              },
+              "base_info":{"channel_version":"2.4.9","bot_agent":"NCF-WeixinManager/2.4.9"}
+            }
+            """,
+            handler.Body);
+    }
+
+    [TestMethod]
+    public async Task GetUploadUrlAsync_MatchesOfficialRequestContract()
+    {
+        var handler = new CapturingHandler("""{"upload_param":"upload","upload_full_url":"https://cdn.example.test/upload"}""");
+        using var httpClient = new HttpClient(handler);
+        var response = await new WeixinClawApi(httpClient).GetUploadUrlAsync(
+            "https://ilink.example.test", "bot-secret",
+            new WeixinClawGetUploadUrlRequest
+            {
+                FileKey = "file-key", MediaType = 3, ToUserId = "user@im.wechat",
+                RawSize = 17, RawFileMd5 = "plain-md5", FileSize = 32,
+                NoNeedThumb = true, AesKey = "000102030405060708090a0b0c0d0e0f"
+            });
+
+        Assert.AreEqual("upload", response.UploadParam);
+        AssertJsonBody(
+            """
+            {"filekey":"file-key","media_type":3,"to_user_id":"user@im.wechat",
+             "rawsize":17,"rawfilemd5":"plain-md5","filesize":32,"no_need_thumb":true,
+             "aeskey":"000102030405060708090a0b0c0d0e0f",
+             "base_info":{"channel_version":"2.4.9","bot_agent":"NCF-WeixinManager/2.4.9"}}
+            """,
+            handler.Body);
+        Assert.AreEqual("/ilink/bot/getuploadurl", handler.Request.RequestUri.AbsolutePath);
+        AssertPostHeaders(handler.Request);
+    }
+
+    [TestMethod]
+    public async Task GetUpdatesAsync_PreservesOfficialVideoMetadataAndCdnReference()
+    {
+        var handler = new CapturingHandler(
+            """
+            {"ret":0,"msgs":[{"message_type":1,"item_list":[{"type":5,"video_item":{
+              "video_size":1024,"play_length":1000,"media":{
+                "full_url":"https://cdn.example.test/video","encrypt_query_param":"param",
+                "aes_key":"key","encrypt_type":1
+              }
+            }}]}]}
+            """);
+        using var client = new HttpClient(handler);
+        var response = await new WeixinClawApi(client).GetUpdatesAsync(
+            "https://ilink.example.test", "bot-secret", "");
+
+        var video = response.Msgs.Single().ItemList.Single().VideoItem;
+        Assert.AreEqual(1024L, video.VideoSize);
+        Assert.AreEqual(1000, video.PlayLength);
+        Assert.AreEqual("https://cdn.example.test/video", video.Media.FullUrl);
+        Assert.AreEqual("param", video.Media.EncryptQueryParam);
+    }
+
+    [TestMethod]
+    public async Task DownloadMediaAsync_UsesOfficialFullUrlWithoutBotCredentials()
+    {
+        var bytes = new byte[] { 1, 2, 3 };
+        var handler = new CapturingHandler(bytes);
+        using var client = new HttpClient(handler);
+        var result = await new WeixinClawApi(client).DownloadMediaAsync(new WeixinClawCdnMedia
+        {
+            FullUrl = "https://cdn.example.test/video?param=signed", EncryptType = 0
+        });
+
+        CollectionAssert.AreEqual(bytes, result);
+        Assert.AreEqual("https://cdn.example.test/video?param=signed", handler.Request.RequestUri.AbsoluteUri);
+        Assert.IsNull(handler.Request.Headers.Authorization);
+    }
+
+    [DataTestMethod]
+    [DataRow("getconfig")]
+    [DataRow("sendtyping")]
+    [DataRow("notifystart")]
+    [DataRow("notifystop")]
+    public async Task AuxiliaryRequests_MatchOfficialRequestContracts(string operation)
+    {
+        var handler = new CapturingHandler("""{"ret":0,"typing_ticket":"ticket"}""");
+        using var httpClient = new HttpClient(handler);
+        var api = new WeixinClawApi(httpClient);
+        var expected = new JsonObject
+        {
+            ["base_info"] = new JsonObject
+            {
+                ["channel_version"] = "2.4.9", ["bot_agent"] = "NCF-WeixinManager/2.4.9"
+            }
+        };
+        switch (operation)
+        {
+            case "getconfig":
+                await api.GetConfigAsync("https://ilink.example.test", "bot-secret", "user", "ctx");
+                expected["ilink_user_id"] = "user";
+                expected["context_token"] = "ctx";
+                break;
+            case "sendtyping":
+                await api.SendTypingAsync("https://ilink.example.test", "bot-secret", "user", "ticket", 1);
+                expected["ilink_user_id"] = "user";
+                expected["typing_ticket"] = "ticket";
+                expected["status"] = 1;
+                break;
+            case "notifystart":
+                await api.NotifyStartAsync("https://ilink.example.test", "bot-secret");
+                break;
+            case "notifystop":
+                await api.NotifyStopAsync("https://ilink.example.test", "bot-secret");
+                break;
+        }
+
+        AssertJsonBody(expected.ToJsonString(), handler.Body);
+        Assert.AreEqual(
+            "/ilink/bot/" + (operation.StartsWith("notify", StringComparison.Ordinal) ? "msg/" : "") + operation,
+            handler.Request.RequestUri.AbsolutePath);
+        AssertPostHeaders(handler.Request);
+    }
+
+    private static void AssertJsonBody(string expected, string actual)
+    {
+        Assert.IsTrue(JsonNode.DeepEquals(JsonNode.Parse(expected), JsonNode.Parse(actual)),
+            $"Expected JSON: {expected}{Environment.NewLine}Actual JSON: {actual}");
+    }
+
+    private static void AssertPostHeaders(HttpRequestMessage request)
+    {
+        Assert.AreEqual(HttpMethod.Post, request.Method);
+        Assert.AreEqual("application/json", request.Content.Headers.ContentType?.ToString());
+        Assert.AreEqual("ilink_bot_token", request.Headers.GetValues("AuthorizationType").Single());
+        Assert.AreEqual("bot", request.Headers.GetValues("iLink-App-Id").Single());
+        Assert.AreEqual("132105", request.Headers.GetValues("iLink-App-ClientVersion").Single());
+        Assert.AreEqual("Bearer", request.Headers.Authorization?.Scheme);
+        Assert.AreEqual("bot-secret", request.Headers.Authorization?.Parameter);
+        var uin = Encoding.UTF8.GetString(Convert.FromBase64String(
+            request.Headers.GetValues("X-WECHAT-UIN").Single()));
+        Assert.IsTrue(uint.TryParse(uin, NumberStyles.None, CultureInfo.InvariantCulture, out _));
     }
 
     [TestMethod]

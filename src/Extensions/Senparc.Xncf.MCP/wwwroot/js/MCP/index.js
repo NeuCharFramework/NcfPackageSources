@@ -8,7 +8,53 @@
             url: url,
             data: data || {},
             headers: { 'x-requested-with': 'XMLHttpRequest' }
+        }).then(function (response) {
+            var body = response.data;
+            if (!body || typeof body !== 'object' || typeof body.success !== 'boolean') {
+                throw new Error('服务器响应格式不正确，请确认登录状态并刷新页面');
+            }
+            if (!body.success) {
+                throw new Error(body.errorMessage || (typeof body.data === 'string' && body.data) || '请求失败');
+            }
+            return response;
         });
+    }
+
+    function errorMessage(error, fallback) {
+        var response = error && error.response;
+        var body = response && response.data;
+        var detail = body && (body.errorMessage || body.message || body.title);
+        if (detail) return fallback + '：' + detail;
+        if (response && response.status === 404) {
+            return fallback + '：接口不存在（HTTP 404），请确认站点已加载新版 MCP 模块';
+        }
+        if (response && (response.status === 401 || response.status === 403)) {
+            return fallback + '：登录已失效或无访问权限，请重新登录';
+        }
+        if (response) return fallback + '（HTTP ' + response.status + '）';
+        return fallback + (error && error.message ? '：' + error.message : '');
+    }
+
+    function endpointPayload(form, authConfig) {
+        return {
+            id: form.id,
+            name: (form.name || '').trim(),
+            endpoint: (form.endpoint || '').trim(),
+            endpointType: form.endpointType,
+            protocolVersion: form.protocolVersion,
+            description: form.description,
+            enabled: form.enabled,
+            authConfig: authConfig,
+            extraConfig: form.extraConfig
+        };
+    }
+
+    function connectionResult(body) {
+        var result = body.data;
+        if (!result || typeof result.success !== 'boolean' || !Array.isArray(result.tools)) {
+            throw new Error('服务器返回的连接测试结果格式不正确');
+        }
+        return result;
     }
 
     function formatDateTime(value) {
@@ -42,6 +88,7 @@
                 // 新增/编辑对话框
                 dialogVisible: false,
                 dialogTitle: '新增 MCP Endpoint',
+                saving: false,
                 form: {
                     id: 0,
                     name: '',
@@ -105,16 +152,15 @@
                 try {
                     var res = await request(apiBase + '.GetAllEndpoints');
                     var body = res.data || {};
-                    if (body.success === false) {
-                        this.$message.error(body.errorMessage || '读取 MCP Endpoint 列表失败');
-                        return;
+                    if (!Array.isArray(body.data)) {
+                        throw new Error('服务器返回的端点列表格式不正确');
                     }
-                    this.tableData = (body.data || []).map(z => Object.assign({}, z, {
+                    this.tableData = body.data.map(z => Object.assign({}, z, {
                         bearerToken: this.extractBearerToken(z.authConfig)
                     }));
                 } catch (error) {
                     console.error(error);
-                    this.$message.error('读取 MCP Endpoint 列表失败');
+                    this.$message.error(errorMessage(error, '读取 MCP Endpoint 列表失败'));
                 } finally {
                     this.loading = false;
                 }
@@ -125,7 +171,7 @@
                     var obj = JSON.parse(authConfigJson);
                     return obj.token || obj.accessToken || obj.bearerToken || obj.apiKey || '';
                 } catch (e) {
-                    return '';
+                    return authConfigJson;
                 }
             },
             handleAdd() {
@@ -153,6 +199,9 @@
             },
             buildAuthConfig() {
                 var token = (this.form.bearerToken || '').trim();
+                if (this.form.authConfig && token === this.extractBearerToken(this.form.authConfig)) {
+                    return this.form.authConfig;
+                }
                 if (!token) return '';
                 return JSON.stringify({ token: token });
             },
@@ -163,62 +212,55 @@
                     var res = await request(apiBase + '.TestConnection', {
                         name: this.form.name,
                         endpoint: this.form.endpoint,
+                        endpointType: this.form.endpointType,
                         authConfig: this.buildAuthConfig()
                     });
                     var body = res.data || {};
-                    if (body.success === false) {
-                        this.$message.error(body.errorMessage || '连接测试失败');
-                        return;
-                    }
-                    this.preTestResult = body.data || null;
-                    if (this.preTestResult && this.preTestResult.success) {
+                    this.preTestResult = connectionResult(body);
+                    if (this.preTestResult.success) {
                         this.$message.success(this.preTestResult.statusMessage || '连接成功');
+                    } else {
+                        this.$message.error(this.preTestResult.statusMessage || '连接失败');
                     }
                 } catch (error) {
                     console.error(error);
-                    this.$message.error('连接测试失败');
+                    this.$message.error(errorMessage(error, '连接测试失败'));
                 } finally {
                     this.preTestLoading = false;
                 }
             },
             handleSubmit() {
-                this.$refs.mcpForm.validate(async (valid) => {
-                    if (!valid) return;
+                if (this.saving) return;
+                return this.$refs.mcpForm.validate(async (valid) => {
+                    if (!valid || this.saving) return;
+                    this.saving = true;
                     try {
-                        var payload = Object.assign({}, this.form, {
-                            authConfig: this.buildAuthConfig()
-                        });
-                        delete payload.bearerToken;
+                        var payload = endpointPayload(this.form, this.buildAuthConfig());
                         var res = await request(apiBase + '.SaveEndpoint', payload);
                         var body = res.data || {};
-                        if (body.success === false) {
-                            this.$message.error(body.errorMessage || body.data || '保存失败');
-                            return;
-                        }
                         this.$message.success(body.data || '保存成功');
                         this.dialogVisible = false;
-                        this.getList();
+                        await this.getList();
                     } catch (error) {
                         console.error(error);
-                        this.$message.error('保存失败');
+                        this.$message.error(errorMessage(error, '保存失败'));
+                    } finally {
+                        this.saving = false;
                     }
                 });
             },
             async handleToggleEnabled(row) {
+                if (row.saving) return;
+                this.$set(row, 'saving', true);
                 try {
-                    var payload = Object.assign({}, row, {
-                        authConfig: row.authConfig || ''
-                    });
-                    delete payload.bearerToken;
-                    var res = await request(apiBase + '.SaveEndpoint', payload);
-                    var body = res.data || {};
-                    if (body.success === false) {
-                        row.enabled = !row.enabled;
-                        this.$message.error(body.errorMessage || '更新失败');
-                    }
+                    var payload = endpointPayload(row, row.authConfig || '');
+                    await request(apiBase + '.SaveEndpoint', payload);
                 } catch (error) {
                     row.enabled = !row.enabled;
                     console.error(error);
+                    this.$message.error(errorMessage(error, '更新失败'));
+                } finally {
+                    this.$set(row, 'saving', false);
                 }
             },
             async handleDelete(row) {
@@ -228,17 +270,12 @@
                     return;
                 }
                 try {
-                    var res = await request(apiBase + '.DeleteEndpoint', { id: row.id });
-                    var body = res.data || {};
-                    if (body.success === false) {
-                        this.$message.error(body.errorMessage || '删除失败');
-                        return;
-                    }
+                    await request(apiBase + '.DeleteEndpoint', { id: row.id });
                     this.$message.success('删除成功');
-                    this.getList();
+                    await this.getList();
                 } catch (error) {
                     console.error(error);
-                    this.$message.error('删除失败');
+                    this.$message.error(errorMessage(error, '删除失败'));
                 }
             },
             async handleTest(row) {
@@ -246,11 +283,7 @@
                 try {
                     var res = await request(apiBase + '.TestEndpoint', { id: row.id });
                     var body = res.data || {};
-                    if (body.success === false) {
-                        this.$message.error(body.errorMessage || '连接测试失败');
-                        return;
-                    }
-                    var result = body.data || {};
+                    var result = connectionResult(body);
                     this.testResult = result;
                     this.testResultEndpointName = row.name;
                     this.expandedTools = [];
@@ -260,18 +293,21 @@
                         this.$message.error(result.statusMessage || '连接失败');
                     }
                     this.testDialogVisible = true;
-                    this.getList();
+                    await this.getList();
                 } catch (error) {
                     console.error(error);
-                    this.$message.error('连接测试失败');
+                    this.$message.error(errorMessage(error, '连接测试失败'));
                 } finally {
                     this.testLoadingId = 0;
                 }
             },
             handleToolExpandChange(row, expanded) {
-                if (expanded && this.expandedTools.indexOf(row.name) < 0) {
+                var isExpanded = Array.isArray(expanded)
+                    ? expanded.some(tool => tool.name === row.name)
+                    : expanded;
+                if (isExpanded && this.expandedTools.indexOf(row.name) < 0) {
                     this.expandedTools.push(row.name);
-                } else if (!expanded) {
+                } else if (!isExpanded) {
                     this.expandedTools = this.expandedTools.filter(z => z !== row.name);
                 }
             },

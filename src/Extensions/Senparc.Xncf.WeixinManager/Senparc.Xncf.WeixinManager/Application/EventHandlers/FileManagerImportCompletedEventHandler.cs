@@ -49,12 +49,35 @@ public sealed class FileManagerImportCompletedEventHandler
             _recordService.SetTenantInfo(CreateTenantInfo(@event.TenantId));
         }
 
-        await _recordService.TryUpdateInboundMediaImportAsync(
+        var updated = await _recordService.TryUpdateInboundMediaImportAsync(
             @event.AccountId,
             @event.MessageId,
             @event.StorageKey,
             @event.Result?.FileId,
             @event.Success ? null : @event.ErrorMessage).ConfigureAwait(false);
+        if (updated)
+        {
+            _logger.LogInformation(
+                "已回填微信附件 FileManager 导入结果：RequestId={RequestId}, TenantId={TenantId}, AccountId={AccountId}, MessageId={MessageId}, StorageKey={StorageKey}, Success={Success}, FileId={FileId}",
+                @event.RequestId,
+                @event.TenantId,
+                @event.AccountId,
+                @event.MessageId,
+                @event.StorageKey,
+                @event.Success,
+                @event.Result?.FileId);
+        }
+        else
+        {
+            _logger.LogDebug(
+                "FileManager 导入完成事件未匹配到可回填的微信消息记录：RequestId={RequestId}, TenantId={TenantId}, AccountId={AccountId}, MessageId={MessageId}, StorageKey={StorageKey}, Success={Success}",
+                @event.RequestId,
+                @event.TenantId,
+                @event.AccountId,
+                @event.MessageId,
+                @event.StorageKey,
+                @event.Success);
+        }
     }
 
     private static RequestTenantInfo CreateTenantInfo(int tenantId)

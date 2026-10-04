@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
@@ -197,7 +198,9 @@ public class BackgroundTenantScopeTests
         var api = new WeixinClawApi(client);
         using var executionProvider = CreateProvider(registry, provider.GetRequiredService<DatabaseIdentity>(), api);
         using var host = new WeixinClawHostedService(executionProvider.GetRequiredService<IServiceScopeFactory>(),
-            executionProvider.GetRequiredService<IBackgroundTenantScopeFactory>(), NullLogger<WeixinClawHostedService>.Instance);
+            executionProvider.GetRequiredService<IBackgroundTenantScopeFactory>(),
+            Options.Create(new WeixinClawHostedServiceOptions()),
+            NullLogger<WeixinClawHostedService>.Instance);
         using var stopping = new CancellationTokenSource();
         try
         {
