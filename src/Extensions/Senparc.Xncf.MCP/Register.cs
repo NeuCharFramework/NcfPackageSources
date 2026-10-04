@@ -65,7 +65,7 @@ namespace Senparc.Xncf.MCP
 
         public override string MenuName => McpResource.Get("Module.MCP.MenuName", "MCP Manager");
 
-        public override string Icon => "fa fa-sliders-h";
+        public override string Icon => "fa fa-plug";
 
         public override string Description => McpResource.Get("Module.MCP.Description", "Model Context Protocol (MCP) Manager");
 

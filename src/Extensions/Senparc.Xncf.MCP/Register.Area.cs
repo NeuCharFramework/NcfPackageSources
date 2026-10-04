@@ -36,7 +36,7 @@ namespace Senparc.Xncf.MCP
         public string HomeUrl => "/Admin/MCP/Index";
 
         public List<AreaPageMenuItem> AreaPageMenuItems => new List<AreaPageMenuItem>() {
-                         new AreaPageMenuItem(GetAreaHomeUrl(), McpResource.Get("Area.Home", "首页"),"fa fa-laptop"),
+                         new AreaPageMenuItem(GetAreaHomeUrl(), McpResource.Get("Area.Home", "首页"),"fa fa-plug"),
                           new AreaPageMenuItem(GetAreaUrl($"/Admin/MCP/DatabaseSample"), McpResource.Get("Area.DatabaseSample", "数据库操作示例"),"fa fa-bookmark-o")
                      };
 
