@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260924
     修改描述：v0.1.0 新增跨模块 MCP Endpoint 信息契约
 
+    修改标识：Senparc - 20261005
+    修改描述：v0.1.0 0.1.0 feat: add MCP endpoint selection feature in AgentsManager
+
 ----------------------------------------------------------------*/
 
 using System;

@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
 
+    修改标识：Senparc - 20261005
+    修改描述：v0.7.3 0.7.3 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;

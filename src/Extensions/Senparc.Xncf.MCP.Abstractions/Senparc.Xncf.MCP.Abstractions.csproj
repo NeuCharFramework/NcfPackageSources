@@ -20,7 +20,9 @@
     <PackageReleaseNotes>
       v0.1.0 创世
       [2026-09-24] v0.1.0 新增 MCP Endpoint 跨模块查询的 EventBus 请求-响应契约，供 AgentsManager 等模块通过列表选择 MCP
-    </PackageReleaseNotes>
+    
+      [2026-10-05] v0.1.0 feat: add MCP endpoint selection feature in AgentsManager
+      1、Updated Senparc.Xncf.MCP.Abstractions project behavior and integration for the latest feature and reliability improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

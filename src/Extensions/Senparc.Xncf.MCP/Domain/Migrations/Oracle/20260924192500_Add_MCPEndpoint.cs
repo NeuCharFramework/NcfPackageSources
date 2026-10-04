@@ -1,4 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20260924192500_Add_MCPEndpoint.cs
+    文件功能描述：20260924192500_Add_MCPEndpoint.cs implementation and project behavior.
+
+
+    创建标识：Senparc - 20260925
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
 #nullable disable

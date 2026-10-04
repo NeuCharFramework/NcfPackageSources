@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：DockerSandboxRuntime.cs
@@ -17,6 +17,9 @@
 
     修改标识：Senparc - 20260918
     修改描述：v0.3.3 支持创建时附加端口映射与交互式标准输入
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
 ----------------------------------------------------------------*/
 

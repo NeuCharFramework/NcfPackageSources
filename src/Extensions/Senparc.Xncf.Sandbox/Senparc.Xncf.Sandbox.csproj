@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.3.3</Version>
+    <Version>0.3.4</Version>
     <AssemblyName>Senparc.Xncf.Sandbox</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -55,7 +55,9 @@
       4、每用户沙箱并发上限由 2 提高到 10（全局上限由 20 提高到 50）
       5、会话支持可选别名（创建时设置或随时修改/清除），管理页列表展示别名与附加端口并提供重命名入口
       6、新增 SandboxSession.Alias / ExtraPorts 持久化列（含六种数据库迁移），别名与端口记录不随容器销毁清除
-</PackageReleaseNotes>
+      [2026-10-05] v0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+      1、Updated Senparc.Xncf.Sandbox project behavior and integration for the latest feature and reliability improvements.
+      2、feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <Nullable>enable</Nullable>

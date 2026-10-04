@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.10.0</Version>
+		<Version>0.10.1</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -64,7 +64,8 @@
     [2026-09-17] v0.10.0 增强 Admin Chat FunctionRender 工具调用与参数 schema
     1、支持实例 FunctionRender 方法绑定，并将选择项与显示文本写入 AI schema
     2、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5，保持后台 Chat 工具调用兼容
-</PackageReleaseNotes>
+    [2026-10-05] v0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
+    1、Updated Senparc.Areas.Admin project behavior and integration for the latest feature and reliability improvements.</PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

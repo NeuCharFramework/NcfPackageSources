@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.13</Version>
+    <Version>0.0.14</Version>
     <PackageReleaseNotes>
 [2026-07-07] v0.0.1 Dependency updates from upstream modules
 1、Dependency update from Senparc.Areas.Admin to 0.0.5
@@ -37,7 +37,8 @@
 [2026-09-17] v0.0.13 补充 Admin Chat FunctionRender 工具 schema 测试
 1、验证实例 FunctionRender 方法能够绑定到插件对象并执行
 2、验证选择项和显示文本能够暴露到 AI schema
-</PackageReleaseNotes>
+[2026-10-05] v0.0.14 Enhanced Senparc.Areas.Admin.Tests functionality and compatibility
+1、Updated Senparc.Areas.Admin.Tests project behavior and integration for the latest feature and reliability improvements.</PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 

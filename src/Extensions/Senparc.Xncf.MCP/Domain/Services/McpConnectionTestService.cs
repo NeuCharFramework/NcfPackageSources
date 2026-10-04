@@ -11,6 +11,9 @@
     修改标识：Senparc - 20260924
     修改描述：v0.5.6 新增基于 Senparc.AI.AgentKernel 的 MCP 连接测试与工具发现
 
+    修改标识：Senparc - 20261005
+    修改描述：v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
+
 ----------------------------------------------------------------*/
 
 using System;

@@ -2,6 +2,10 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.1.0</Version>
+    <PackageReleaseNotes>
+    	[2026-10-05] v0.1.0 feat: enhance file management capabilities with new upload stream method and service registration
+    	1、Updated Senparc.Xncf.FileManager.Abstractions project behavior and integration for the latest feature and reliability improvements.
+    </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.FileManager.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.FileManager.Abstractions</RootNamespace>
     <Description>Contracts for optional integrations with Senparc.Xncf.FileManager.</Description>

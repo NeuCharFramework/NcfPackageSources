@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：Register.Areas.cs
@@ -15,6 +15,9 @@
 
     修改标识：Senparc - 20260729
     修改描述：v0.23.1-preview4 限制微信管理模块的敏感日志和外部接口暴露
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
 ----------------------------------------------------------------*/
 

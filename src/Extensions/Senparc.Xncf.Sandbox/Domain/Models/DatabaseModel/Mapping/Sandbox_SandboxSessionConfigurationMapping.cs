@@ -1,4 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：Sandbox_SandboxSessionConfigurationMapping.cs
+    文件功能描述：Sandbox_SandboxSessionConfigurationMapping.cs implementation and project behavior.
+
+
+    创建标识：Senparc - 20260808
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Senparc.Ncf.Core.Models.DataBaseModel;
 using Senparc.Ncf.XncfBase.Attributes;
