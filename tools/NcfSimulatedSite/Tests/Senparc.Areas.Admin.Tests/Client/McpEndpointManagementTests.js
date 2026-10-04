@@ -16,13 +16,16 @@ function createHarness(responder) {
     let options;
     const requests = [];
     const messages = [];
+    const copied = [];
+    const clipboard = { writeText: async value => { copied.push(value); } };
     const context = vm.createContext({
         Vue: function (value) { options = value; },
         axios: async config => {
             requests.push(JSON.parse(JSON.stringify(config)));
             return responder(config);
         },
-        console: { error() {} }
+        console: { error() {} },
+        navigator: { clipboard }
     });
     vm.runInContext(source, context);
     const model = Object.assign(options.data(), {
@@ -39,11 +42,88 @@ function createHarness(responder) {
     for (const [name, getter] of Object.entries(options.computed)) {
         Object.defineProperty(model, name, { get: getter.bind(model) });
     }
-    return { model, requests, messages };
+    return { model, requests, messages, copied, clipboard, options };
 }
 
 function success(data) {
     return { data: { success: true, data } };
+}
+
+const publishedServer = {
+    serverName: 'ncf-mcp-server-Senparc-Xncf-MCP', xncfName: 'Senparc.Xncf.MCP',
+    xncfUid: '149d8021-1783-4fc9-97a8-f1a1ba60245b', route: '/mcp-senparc-xncf-mcp',
+    endpoints: [{ endpointType: 'sse', endpoint }]
+};
+
+test('published servers load and filter independently from client configurations', async () => {
+    const { model, requests, copied } = createHarness(() => success([publishedServer]));
+    model.tableData = [{ id: 42, name: 'Existing client' }];
+    await model.getPublishedServers();
+    assert.equal(requests[0].url, apiBase + '.GetPublishedServers');
+    assert.equal(requests[0].method, 'post');
+    assert.equal(model.publishedLoading, false);
+    assert.equal(model.publishedServers[0].endpoints[0].endpoint, endpoint);
+    assert.equal(model.tableData[0].id, 42);
+    model.publishedFilterText = 'SENPARC.XNCF.MCP';
+    assert.equal(model.filteredPublishedServers.length, 1);
+    model.publishedFilterText = 'localhost:5080';
+    assert.equal(model.filteredPublishedServers.length, 1);
+    model.publishedFilterText = 'not-published';
+    assert.equal(model.filteredPublishedServers.length, 0);
+    await model.copyPublishedEndpoint(endpoint);
+    assert.deepEqual(copied, [endpoint]);
+    assert.equal(requests.length, 1, 'Copying must not persist or alter client configurations.');
+});
+
+test('page initializes both lists even if the client list fails', async () => {
+    const { model, requests, messages, options } = createHarness(config =>
+        config.url.endsWith('.GetAllEndpoints')
+            ? Promise.reject({ response: { status: 500 } })
+            : success([publishedServer]));
+    options.created.call(model);
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(requests.length, 2);
+    assert.equal(model.publishedServers.length, 1);
+    assert.equal(model.loading, false);
+    assert.equal(model.publishedLoading, false);
+    assert.match(messages[0].message, /读取 MCP Endpoint 列表失败/);
+});
+
+test('failed published-server refresh retains previously loaded rows and reports the error', async () => {
+    const { model, messages } = createHarness(() => Promise.reject({ response: { status: 404 } }));
+    model.publishedServers = [publishedServer];
+    await model.getPublishedServers();
+    assert.equal(model.publishedServers.length, 1);
+    assert.equal(model.publishedLoading, false);
+    assert.match(messages[0].message, /读取本站发布的 MCP 服务失败.*HTTP 404/);
+});
+
+test('clipboard failure is visible rather than reported as a successful copy', async () => {
+    const { model, messages, clipboard } = createHarness(() => success([]));
+    clipboard.writeText = async () => { throw new Error('Clipboard permission denied'); };
+    await model.copyPublishedEndpoint(endpoint);
+    assert.equal(messages[0].type, 'error');
+    assert.match(messages[0].message, /Clipboard permission denied/);
+});
+
+test('page keeps published endpoints read-only and separates editable client configurations', () => {
+    const page = fs.readFileSync(path.join(root,
+        'src/Extensions/Senparc.Xncf.MCP/Areas/Admin/Pages/MCP/Index.cshtml'), 'utf8');
+    const panel = page.substring(page.indexOf('<section class="mcp-published-panel">'), page.indexOf('</section>'));
+    assert.match(panel, /filteredPublishedServers/);
+    assert.match(panel, /只读/);
+    assert.match(page, /客户端连接配置/);
+    assert.doesNotMatch(panel, /handle(Add|Edit|Delete|ToggleEnabled)/);
+});
+
+for (const data of [null, {}, [null], [{ serverName: 'Broken', xncfName: 'MCP', route: '/mcp', endpoints: {} }]]) {
+    test(`invalid published-server payload is rejected: ${JSON.stringify(data)}`, async () => {
+        const { model, messages } = createHarness(() => success(data));
+        await model.getPublishedServers();
+        assert.equal(model.publishedLoading, false);
+        assert.equal(messages[0].type, 'error');
+        assert.match(messages[0].message, /格式不正确/);
+    });
 }
 
 test('list uses the registered POST route and retains endpoint metadata', async () => {

@@ -78,42 +78,4 @@ namespace Senparc.Xncf.MCP.OHS.Local.PL
             await base.LoadData(serviceProvider);
         }
     }
-    public class MyFunction_CaculateRequest : FunctionAppRequestBase
-    {
-        [Required]
-        [MaxLength(50)]
-        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Name")]
-        public string Name { get; set; }
-
-        [Required]
-        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Number1")]
-        public int Number1 { get; set; }
-
-
-        [Required]
-        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Number2")]
-        public int Number2 { get; set; }
-
-        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Operator")]//下拉列表
-           [FunctionParameterUi(ParameterType.DropDownList, nameof(OperatorOptions))]
-           public string Operator { get; set; }
-
-           [JsonIgnore]
-           public SelectionList OperatorOptions { get; set; } = new SelectionList(SelectionType.DropDownList, new[] {
-                 new SelectionItem("+", McpResource.Get("Parameter.Operator.Add"), McpResource.Get("Parameter.Operator.Add.Help"), false),
-                 new SelectionItem("-", McpResource.Get("Parameter.Operator.Subtract"), McpResource.Get("Parameter.Operator.Subtract.Help"), true),
-                 new SelectionItem("×", McpResource.Get("Parameter.Operator.Multiply"), McpResource.Get("Parameter.Operator.Multiply.Help"), false),
-                 new SelectionItem("÷", McpResource.Get("Parameter.Operator.Divide"), McpResource.Get("Parameter.Operator.Divide.Help"), false)
-            });
-
-        [LocalizedDescription(typeof(McpResource), "Parameter.Sample.Power")]//多选框
-           [FunctionParameterUi(ParameterType.CheckBoxList, nameof(PowerOptions))]
-           public string[] Power { get; set; }
-
-           [JsonIgnore]
-           public SelectionList PowerOptions { get; set; } = new SelectionList(SelectionType.CheckBoxList, new[] {
-                 new SelectionItem("2", McpResource.Get("Parameter.Power.Square"), McpResource.Get("Parameter.Power.Square.Help"), false),
-                 new SelectionItem("3", McpResource.Get("Parameter.Power.Cube"), McpResource.Get("Parameter.Power.Cube.Help"), false)
-            });
-    }
 }

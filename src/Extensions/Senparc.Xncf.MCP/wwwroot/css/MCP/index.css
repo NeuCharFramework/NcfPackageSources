@@ -20,3 +20,10 @@
 }
 .mcp-form-test-block { margin-top: 4px; }
 .mcp-endpoint-url { word-break: break-all; }
+.mcp-published-panel { margin-bottom: 28px; }
+.mcp-published-note { margin-bottom: 12px; }
+.mcp-toolbar-actions { display: flex; gap: 12px; align-items: center; }
+.mcp-published-endpoint { display: flex; gap: 8px; align-items: center; margin: 4px 0; }
+.mcp-published-endpoint .mcp-endpoint-url { flex: 1; }
+.mcp-published-endpoint .el-tag { flex-shrink: 0; }
+.mcp-published-endpoint .el-button { flex-shrink: 0; margin-left: 0; }

@@ -22,8 +22,40 @@
         </el-header>
         <el-main>
             <div class="mcp-admin-page">
+                <section class="mcp-published-panel">
+                    <div class="mcp-admin-toolbar">
+                        <span class="mcp-admin-toolbar__title">本站发布的 MCP（{{ publishedServers.length }}）</span>
+                        <div class="mcp-toolbar-actions">
+                            <el-input v-model="publishedFilterText" placeholder="搜索服务 / 模块 / 地址"
+                                prefix-icon="el-icon-search" clearable size="small" style="width:220px;"></el-input>
+                            <el-button size="small" icon="el-icon-refresh" :loading="publishedLoading"
+                                @@click="getPublishedServers">刷新</el-button>
+                        </div>
+                    </div>
+                    <el-alert title="以下为本站运行时已映射的 MCP 服务，只读展示，不属于客户端连接配置。"
+                        description="发布开关、工具和访问权限由所属模块管理。地址基于当前访问站点生成，不代表已允许匿名访问或公网可达。"
+                        type="info" :closable="false" show-icon class="mcp-published-note"></el-alert>
+                    <el-table :data="filteredPublishedServers" v-loading="publishedLoading" row-key="serverName"
+                        empty-text="暂无匹配的本站 MCP 服务" style="width:100%;">
+                        <el-table-column prop="serverName" label="服务名称" min-width="220" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="xncfName" label="所属模块" min-width="220" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="route" label="发布路由" min-width="180" show-overflow-tooltip></el-table-column>
+                        <el-table-column label="访问端点" min-width="380">
+                            <template slot-scope="scope">
+                                <div v-for="endpoint in scope.row.endpoints" :key="endpoint.endpointType"
+                                    class="mcp-published-endpoint">
+                                    <el-tag size="mini">{{ endpoint.endpointType.toUpperCase() }}</el-tag>
+                                    <span class="mcp-endpoint-url">{{ endpoint.endpoint }}</span>
+                                    <el-button type="text" size="mini" icon="el-icon-document-copy"
+                                        @@click="copyPublishedEndpoint(endpoint.endpoint)">复制</el-button>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </section>
+
                 <div class="mcp-admin-toolbar">
-                    <span class="mcp-admin-toolbar__title">MCP Endpoint 管理</span>
+                    <span class="mcp-admin-toolbar__title">客户端连接配置</span>
                     <div>
                         <el-checkbox v-model="onlyEnabled" style="margin-right:12px;">仅显示已启用</el-checkbox>
                         <el-input v-model="filterText" placeholder="搜索名称 / 地址 / 描述" prefix-icon="el-icon-search"

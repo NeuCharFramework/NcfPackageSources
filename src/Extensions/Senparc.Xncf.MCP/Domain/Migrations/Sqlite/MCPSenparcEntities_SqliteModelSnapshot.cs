@@ -17,49 +17,6 @@ namespace Senparc.Xncf.MCP.Domain.Migrations.Sqlite
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
-            modelBuilder.Entity("Senparc.Xncf.MCP.Color", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AdditionNote")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Blue")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Green")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Red")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Senparc_MCP_Color");
-                });
-
             modelBuilder.Entity("Senparc.Xncf.MCP.Models.DatabaseModel.MCPEndpoint", b =>
                 {
                     b.Property<int>("Id")

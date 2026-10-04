@@ -11,6 +11,8 @@ namespace Senparc.Xncf.WeixinManager.WeixinClaw;
 public sealed class WeixinClawMediaPlaybackService
 {
     public const int VoiceSampleRate = 24000;
+    private const int MaximumVoiceBytes = 50 * 1024 * 1024;
+    private const int MaximumPacketBytes = 1024 * 5;
     private static readonly SemaphoreSlim ConversionGate = new(1, 1);
 
     public async Task<WeixinClawPlaybackFile> GetPlayableFileAsync(
@@ -37,12 +39,16 @@ public sealed class WeixinClawMediaPlaybackService
                 path, detectedType == "application/octet-stream" ? contentType ?? detectedType : detectedType);
         }
 
+        if (new FileInfo(path).Length > MaximumVoiceBytes)
+        {
+            throw new InvalidDataException("微信语音播放转换的输入不能超过 50 MB。");
+        }
         var wavPath = path + ".playback.wav";
         await ConversionGate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             var sourceWriteTime = File.GetLastWriteTimeUtc(path);
-            if (File.Exists(wavPath) && new FileInfo(wavPath).Length > 44
+            if (File.Exists(wavPath) && new FileInfo(wavPath).Length is > 44 and <= MaximumVoiceBytes + 44
                 && File.GetLastWriteTimeUtc(wavPath) >= sourceWriteTime)
             {
                 return new WeixinClawPlaybackFile(wavPath, "audio/wav");
@@ -51,10 +57,21 @@ public sealed class WeixinClawMediaPlaybackService
             var silk = await File.ReadAllBytesAsync(path, cancellationToken).ConfigureAwait(false);
             ValidateSilkPackets(silk);
             byte[] pcm;
+            var temporaryId = Guid.NewGuid().ToString("N");
+            var silkPath = wavPath + "." + temporaryId + ".silk.tmp";
+            var pcmPath = wavPath + "." + temporaryId + ".pcm.tmp";
             try
             {
-                var decoded = await new SilkDecoder { FS_API = VoiceSampleRate }.DecodeAsync(silk).ConfigureAwait(false);
-                pcm = decoded.Data;
+                await File.WriteAllBytesAsync(silkPath, silk, cancellationToken).ConfigureAwait(false);
+                // SilkSharp 2.0.8's POSIX buffer API reads an output-only open_memstream.
+                // Its file API avoids that defect and decodes the validated snapshot.
+                await new SilkDecoder { FS_API = VoiceSampleRate, Loss = 0 }
+                    .DecodeAsync(silkPath, pcmPath).ConfigureAwait(false);
+                if (new FileInfo(pcmPath).Length > MaximumVoiceBytes)
+                {
+                    throw new InvalidDataException("微信语音解码后的 PCM 数据不能超过 50 MB。");
+                }
+                pcm = await File.ReadAllBytesAsync(pcmPath, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException or BadImageFormatException)
             {
@@ -64,6 +81,11 @@ public sealed class WeixinClawMediaPlaybackService
             catch (SilkDecoderException ex)
             {
                 throw new InvalidDataException("微信 SILK 语音解码失败。", ex);
+            }
+            finally
+            {
+                if (File.Exists(pcmPath)) File.Delete(pcmPath);
+                if (File.Exists(silkPath)) File.Delete(silkPath);
             }
             cancellationToken.ThrowIfCancellationRequested();
             if (pcm.Length == 0 || pcm.Length % 2 != 0)
@@ -101,6 +123,10 @@ public sealed class WeixinClawMediaPlaybackService
 
     private static void ValidateSilkPackets(ReadOnlySpan<byte> silk)
     {
+        if (silk.Length > MaximumVoiceBytes)
+        {
+            throw new InvalidDataException("微信语音播放转换的输入不能超过 50 MB。");
+        }
         var offset = silk[0] == 2 ? 10 : 9;
         var packetCount = 0;
         while (offset < silk.Length)
@@ -115,16 +141,21 @@ public sealed class WeixinClawMediaPlaybackService
             {
                 break;
             }
-            if (length <= 0 || length > silk.Length - offset)
+            if (length <= 0 || length > MaximumPacketBytes || length > silk.Length - offset)
             {
                 throw new InvalidDataException("微信 SILK 语音包长度无效或文件已截断。");
             }
             offset += length;
             packetCount++;
+            if ((long)packetCount * 5 * (VoiceSampleRate / 50) * 2 > MaximumVoiceBytes)
+            {
+                throw new InvalidDataException("微信语音预计解码后的 PCM 数据超过 50 MB。");
+            }
         }
-        if (packetCount == 0)
+        if (packetCount < 3)
         {
-            throw new InvalidDataException("微信 SILK 语音没有可解码的数据包。");
+            // The native decoder preloads two packets and needs a third to initialize its jitter buffer.
+            throw new InvalidDataException("当前 SILK 解码器至少需要 3 个完整语音数据包。");
         }
     }
 

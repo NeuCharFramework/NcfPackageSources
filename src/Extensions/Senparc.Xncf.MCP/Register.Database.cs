@@ -42,13 +42,11 @@ namespace Senparc.Xncf.MCP
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
             //实现 [XncfAutoConfigurationMapping] 特性之后，可以自动执行，无需手动添加
-            //modelBuilder.ApplyConfiguration(new AreaTemplate_ColorConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)
         {
             //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
-            //ex. services.AddScoped(typeof(Color));
         }
 
         #endregion

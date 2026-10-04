@@ -13,9 +13,11 @@
     修改标识：Senparc - 20260717
     修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20261004
+    修改描述：移除数据库模板示例的安装初始化、依赖注入及映射
+
 ----------------------------------------------------------------*/
 
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
@@ -38,7 +40,6 @@ using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.MCP.Domain.Services;
 using Senparc.Xncf.MCP.Models;
-using Senparc.Xncf.MCP.Models.DatabaseModel.Dto;
 using Senparc.Xncf.MCP.OHS.Local.AppService;
 using System;
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ namespace Senparc.Xncf.MCP
 
         public override string Uid => "149d8021-1783-4fc9-97a8-f1a1ba60245b";//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.1.0";//必须填写版本号
+        public override string Version => "0.5.8";//必须填写版本号
 
         public override string MenuName => McpResource.Get("Module.MCP.MenuName", "MCP Manager");
 
@@ -83,10 +84,6 @@ namespace Senparc.Xncf.MCP
             {
                 case InstallOrUpdate.Install:
                     //新安装
-                    #region 初始化数据库数据
-                    var colorService = serviceProvider.GetService<ColorAppService>();
-                    var colorResult = await colorService.GetOrInitColorAsync();
-                    #endregion
                     break;
                 case InstallOrUpdate.Update:
                     //更新
@@ -98,14 +95,14 @@ namespace Senparc.Xncf.MCP
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
-            #region 删除数据库（演示）
+            #region 删除模块数据库
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
             MCPSenparcEntities mySenparcEntities = serviceProvider.GetService(mySenparcEntitiesType) as MCPSenparcEntities;
 
             //指定需要删除的数据实体
 
-            //注意：这里作为演示，在卸载模块的时候删除了所有本模块创建的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            //仅在卸载模块时删除本模块的表；安装或升级通过 EF 迁移保留端点配置。
             var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.TryGetXncfDatabaseDbContextType).Keys.ToArray();
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
@@ -120,17 +117,12 @@ namespace Senparc.Xncf.MCP
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
-            services.AddScoped<ColorAppService>();
-            services.AddScoped<ColorService>();
-
+            services.AddHttpContextAccessor();
             services.AddScoped<MCPEndpointAppService>();
             services.AddScoped<MCPEndpointService>();
             services.AddScoped<McpConnectionTestService>();
-
-            services.AddAutoMapper(z =>
-            {
-                z.CreateMap<Color, ColorDto>().ReverseMap();
-            });
+            services.AddScoped<PublishedMcpServerService>(provider => new PublishedMcpServerService(
+                XncfRegisterManager.McpServerInfoCollection, provider.GetRequiredService<EndpointDataSource>()));
 
             return base.AddXncfModule(services, configuration, env);
         }

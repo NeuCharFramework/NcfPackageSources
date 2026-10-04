@@ -15,26 +15,33 @@ namespace Senparc.Xncf.WeixinManager.Tests.WeixinClaw;
 [TestClass]
 public class WeixinClawMediaPlaybackTests
 {
-    [TestMethod]
-    public async Task GetPlayableFile_DecodesTencentSilkToCachedMonoPcmWaveAndPreservesOriginal()
+    [DataTestMethod]
+    [DataRow(60)]
+    [DataRow(200)]
+    public async Task GetPlayableFile_DecodesTencentSilkToCachedMonoPcmWaveAndPreservesOriginal(int milliseconds)
     {
         var root = Path.Combine(Path.GetTempPath(), "ncf-claw-playback-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
         try
         {
             var path = Path.Combine(root, "voice.bin");
-            var pcm = new byte[WeixinClawMediaPlaybackService.VoiceSampleRate * 2 / 5];
+            var pcm = new byte[WeixinClawMediaPlaybackService.VoiceSampleRate * 2 * milliseconds / 1000];
             for (var index = 0; index < pcm.Length / 2; index++)
             {
                 BinaryPrimitives.WriteInt16LittleEndian(pcm.AsSpan(index * 2),
                     (short)(Math.Sin(index * 2 * Math.PI * 440 / WeixinClawMediaPlaybackService.VoiceSampleRate) * 10000));
             }
-            var encoded = await new SilkEncoder
+            var pcmPath = Path.Combine(root, "source.pcm");
+            await File.WriteAllBytesAsync(pcmPath, pcm);
+            await new SilkEncoder
             {
-                FS_API = WeixinClawMediaPlaybackService.VoiceSampleRate, Tencent = true
-            }.EncodeAsync(pcm);
-            var silk = encoded.Data;
-            await File.WriteAllBytesAsync(path, silk);
+                FS_API = WeixinClawMediaPlaybackService.VoiceSampleRate,
+                FS_MaxInternal = WeixinClawMediaPlaybackService.VoiceSampleRate,
+                Tencent = true
+            }.EncodeAsync(pcmPath, path);
+            var silk = await File.ReadAllBytesAsync(path);
+            Assert.IsTrue(WeixinClawMediaFormat.IsSilk(silk),
+                "The file encoder must produce a valid SILK header.");
             var playback = new WeixinClawMediaPlaybackService();
 
             var results = await Task.WhenAll(
@@ -44,7 +51,7 @@ public class WeixinClawMediaPlaybackTests
             Assert.AreEqual(results[0].Path, results[1].Path);
             Assert.AreEqual("audio/wav", results[0].ContentType);
             var wave = await File.ReadAllBytesAsync(results[0].Path);
-            AssertWave(wave, expectedMilliseconds: 200);
+            AssertWave(wave, expectedMilliseconds: milliseconds);
             Assert.IsTrue(wave[44..].Any(value => value != 0));
             CollectionAssert.AreEqual(silk, await File.ReadAllBytesAsync(path));
             var cached = await playback.GetPlayableFileAsync(path, "voice", "audio/silk");
@@ -82,6 +89,7 @@ public class WeixinClawMediaPlaybackTests
     [DataRow("02232153494c4b5f563303")]
     [DataRow("02232153494c4b5f563310000102")]
     [DataRow("02232153494c4b5f56330000")]
+    [DataRow("02232153494c4b5f5633010000010000")]
     public async Task GetPlayableFile_RejectsTruncatedOrEmptySilkBeforeNativeDecode(string hex)
     {
         var path = Path.Combine(Path.GetTempPath(), "ncf-claw-corrupt-" + Guid.NewGuid().ToString("N") + ".bin");
@@ -110,6 +118,49 @@ public class WeixinClawMediaPlaybackTests
             await Assert.ThrowsExceptionAsync<TaskCanceledException>(() =>
                 new WeixinClawMediaPlaybackService().GetPlayableFileAsync(
                     path, "voice", "audio/silk", canceled.Token));
+            Assert.IsFalse(File.Exists(path + ".playback.wav"));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    public async Task GetPlayableFile_RejectsPacketLargerThanNativeBufferBeforeDecode()
+    {
+        var path = Path.Combine(Path.GetTempPath(), "ncf-claw-oversized-" + Guid.NewGuid().ToString("N") + ".bin");
+        var bytes = new byte[10 + 2 + 5121];
+        Convert.FromHexString("02232153494c4b5f5633").CopyTo(bytes, 0);
+        BinaryPrimitives.WriteInt16LittleEndian(bytes.AsSpan(10), 5121);
+        await File.WriteAllBytesAsync(path, bytes);
+        try
+        {
+            var error = await Assert.ThrowsExceptionAsync<InvalidDataException>(() =>
+                new WeixinClawMediaPlaybackService().GetPlayableFileAsync(path, "voice", "audio/silk"));
+            StringAssert.Contains(error.Message, "长度无效");
+            Assert.IsFalse(File.Exists(path + ".playback.wav"));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [TestMethod]
+    public async Task GetPlayableFile_RejectsInputAboveFiftyMegabytesWithoutReadingWholeFile()
+    {
+        var path = Path.Combine(Path.GetTempPath(), "ncf-claw-large-" + Guid.NewGuid().ToString("N") + ".bin");
+        await using (var stream = File.Create(path))
+        {
+            await stream.WriteAsync(Convert.FromHexString("02232153494c4b5f5633"));
+            stream.SetLength(50 * 1024 * 1024 + 1);
+        }
+        try
+        {
+            var error = await Assert.ThrowsExceptionAsync<InvalidDataException>(() =>
+                new WeixinClawMediaPlaybackService().GetPlayableFileAsync(path, "voice", "audio/silk"));
+            StringAssert.Contains(error.Message, "50 MB");
             Assert.IsFalse(File.Exists(path + ".playback.wav"));
         }
         finally
