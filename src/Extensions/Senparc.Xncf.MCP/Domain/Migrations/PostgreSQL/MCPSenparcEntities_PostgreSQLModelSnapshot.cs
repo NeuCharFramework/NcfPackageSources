@@ -22,51 +22,6 @@ namespace Senparc.Xncf.MCP.Domain.Migrations.PostgreSQL
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Senparc.Xncf.MCP.Color", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AddTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("AdditionNote")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AdminRemark")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<int>("Blue")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("Flag")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("Green")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<int>("Red")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Remark")
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)");
-
-                    b.Property<int>("TenantId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Senparc_MCP_Color");
-                });
-
             modelBuilder.Entity("Senparc.Xncf.MCP.Models.DatabaseModel.MCPEndpoint", b =>
                 {
                     b.Property<int>("Id")

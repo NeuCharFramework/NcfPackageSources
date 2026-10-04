@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.5.0-preview8 补充 A2A 发布管理所需 MCP 功能与多语言资源
 
+    修改标识：Senparc - 20261004
+    修改描述：移除模板计算示例和颜色服务依赖，保留 MCP 调用与工具
+
 ----------------------------------------------------------------*/
 
 #pragma warning disable OPENAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
@@ -36,7 +39,6 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
-using Senparc.Xncf.MCP.Domain.Services;
 using Senparc.Xncf.MCP.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
@@ -118,12 +120,10 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
     [McpServerToolType]
     public class MyFuctionAppService : AppServiceBase
     {
-        private ColorService _colorService;
         //private IMcpClient McpClient { get; set; }
 
-        public MyFuctionAppService(IServiceProvider serviceProvider, ColorService colorService) : base(serviceProvider)
+        public MyFuctionAppService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            _colorService = colorService;
         }
 
         [FunctionRender(typeof(McpResource), "Function.MCP.Execute.Name", "Function.MCP.Execute.Description", typeof(Register))]
@@ -234,72 +234,6 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                 return resultRaw.OutputString;
             });
         }
-
-
-
-        [FunctionRender(typeof(McpResource), "Function.Sample.Name", "Function.Sample.Description", typeof(Register))]
-        public async Task<StringAppResponse> Calculate(MyFunction_CaculateRequest request)
-        {
-            return await this.GetStringResponseAsync(async (response, logger) =>
-            {
-                /* 页面上点击"执行"后，将调用这里的方法
-                  *
-                  * 参数说明：
-                  * response：已经初始化后的返回结果
-                  * logger：日志
-                  * 
-                  * 如果直接对 response 的属性修改，则最终 return null，
-                  * 否则可以返回一个新的 response 对象，系统将自动覆盖原有对象
-                  */
-
-                double calcResult = request.Number1;
-                var theOperator = request.Operator;
-                switch (theOperator)
-                {
-                    case "+":
-                        calcResult = calcResult + request.Number2;
-                        break;
-                    case "-":
-                        calcResult = calcResult - request.Number2;
-                        break;
-                    case "×":
-                        calcResult = calcResult * request.Number2;
-                        break;
-                    case "÷":
-                        if (request.Number2 == 0)
-                        {
-                            response.Success = false;
-                            response.ErrorMessage = McpResource.Get("MCP.Calculate.DivideByZero");
-                            return null;
-                        }
-                        calcResult = calcResult / request.Number2;
-                        break;
-                    default:
-                        response.Success = false;
-                        response.ErrorMessage = McpResource.Format("MCP.Calculate.UnknownOperator", "未知的运算符：{0}", theOperator);
-                        return null;
-                }
-
-                logger.Append(McpResource.Format("MCP.Calculate.OperationLog", "进行运算：{0} {1} {2} = {3}", request.Number1, theOperator, request.Number2, calcResult));
-
-                Action<int> raisePower = power =>
-                {
-                    if ((request.Power ?? Array.Empty<string>()).Contains(power.ToString()))
-                    {
-                        var oldValue = calcResult;
-                        calcResult = Math.Pow(calcResult, power);
-                        logger.Append(McpResource.Format("MCP.Calculate.PowerLog", "进行 {0} 次方运算：{1}{2} = {3}", power, oldValue, power == 2 ? "²" : "³", calcResult));
-                    }
-                };
-
-                raisePower(2);
-                raisePower(3);
-
-                response.Data = McpResource.Format("MCP.Calculate.Result", "【{0}】计算结果：{1}。计算过程请查看日志", request.Name, calcResult);
-                return null;
-            });
-        }
-
 
         [McpServerTool, LocalizedDescription(typeof(McpResource), "MCP.Tool.Calculator.Description")]
         public async Task<string> Calculator(

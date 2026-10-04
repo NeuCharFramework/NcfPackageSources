@@ -2,95 +2,101 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Oracle.EntityFrameworkCore.Metadata;
 using Senparc.Xncf.MCP.Models;
 
 #nullable disable
 
-namespace Senparc.Xncf.MCP.Domain.Migrations.MySql
+namespace Senparc.Xncf.MCP.Domain.Migrations.Oracle
 {
-    [DbContext(typeof(MCPSenparcEntities_MySql))]
-    partial class MCPSenparcEntities_MySqlModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MCPSenparcEntities_Oracle))]
+    [Migration("20261004135853_Remove_DatabaseSample")]
+    partial class Remove_DatabaseSample
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.10")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
+            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Senparc.Xncf.MCP.Models.DatabaseModel.MCPEndpoint", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddTime")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("AdminRemark")
                         .HasMaxLength(300)
-                        .HasColumnType("varchar(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<string>("AuthConfig")
                         .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
+                        .HasColumnType("NVARCHAR2(1000)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
+                        .HasColumnType("NVARCHAR2(500)");
 
                     b.Property<bool>("Enabled")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<string>("Endpoint")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
+                        .HasColumnType("NVARCHAR2(500)");
 
                     b.Property<string>("EndpointType")
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("NVARCHAR2(50)");
 
                     b.Property<string>("ExtraConfig")
                         .HasMaxLength(2000)
-                        .HasColumnType("varchar(2000)");
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<bool>("Flag")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<bool?>("LastTestResult")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("NUMBER(1)");
 
                     b.Property<DateTime?>("LastTestedTime")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<int?>("LastToolCount")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.Property<string>("LastToolsJson")
-                        .HasColumnType("longtext");
+                        .HasColumnType("CLOB");
 
                     b.Property<DateTime>("LastUpdateTime")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TIMESTAMP(7)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("NVARCHAR2(100)");
 
                     b.Property<string>("ProtocolVersion")
                         .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("NVARCHAR2(20)");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
-                        .HasColumnType("varchar(300)");
+                        .HasColumnType("NVARCHAR2(300)");
 
                     b.Property<int>("TenantId")
-                        .HasColumnType("int");
+                        .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 

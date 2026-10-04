@@ -16,8 +16,12 @@
     修改标识：Senparc - 20261003
     修改描述：v0.5.7 注册端点管理 API，修正校验失败响应并保留原始端点路径
 
+    修改标识：Senparc - 20261004
+    修改描述：v0.5.8 独立提供本站实际发布的 MCP 服务只读列表
+
 ----------------------------------------------------------------*/
 
+using Microsoft.AspNetCore.Http;
 using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
@@ -51,6 +55,22 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
             : base(serviceProvider)
         {
             _mcpEndpointService = mcpEndpointService;
+        }
+
+        /// <summary>
+        /// 获取本站实际映射的 MCP 服务，与客户端连接配置分开返回。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<List<PublishedMcpServerDto>>> GetPublishedServers()
+        {
+            return await this.GetResponseAsync<List<PublishedMcpServerDto>>((response, logger) =>
+            {
+                var context = GetRequiredService<IHttpContextAccessor>().HttpContext
+                    ?? throw new NcfExceptionBase("无法获取当前请求，不能生成本站 MCP 服务地址");
+                var servers = GetRequiredService<PublishedMcpServerService>().GetPublishedServers(context.Request);
+                logger.Append(McpResource.Format("MCP.Server.CountPublished", "获取了 {0} 个本站发布的 MCP 服务", servers.Count));
+                return Task.FromResult(servers);
+            });
         }
 
         /// <summary>

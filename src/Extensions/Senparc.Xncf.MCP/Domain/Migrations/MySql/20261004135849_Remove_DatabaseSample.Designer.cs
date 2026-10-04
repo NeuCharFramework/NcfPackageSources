@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Senparc.Xncf.MCP.Models;
 
@@ -11,9 +12,11 @@ using Senparc.Xncf.MCP.Models;
 namespace Senparc.Xncf.MCP.Domain.Migrations.MySql
 {
     [DbContext(typeof(MCPSenparcEntities_MySql))]
-    partial class MCPSenparcEntities_MySqlModelSnapshot : ModelSnapshot
+    [Migration("20261004135849_Remove_DatabaseSample")]
+    partial class Remove_DatabaseSample
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

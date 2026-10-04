@@ -81,6 +81,9 @@
             return {
                 loading: false,
                 tableData: [],
+                publishedLoading: false,
+                publishedServers: [],
+                publishedFilterText: '',
                 testLoadingId: 0,
                 filterText: '',
                 onlyEnabled: false,
@@ -122,6 +125,15 @@
             };
         },
         computed: {
+            filteredPublishedServers: function () {
+                var key = this.publishedFilterText.toLowerCase().trim();
+                if (!key) return this.publishedServers;
+                return this.publishedServers.filter(server =>
+                    (server.serverName || '').toLowerCase().indexOf(key) >= 0
+                    || (server.xncfName || '').toLowerCase().indexOf(key) >= 0
+                    || (server.route || '').toLowerCase().indexOf(key) >= 0
+                    || server.endpoints.some(endpoint => endpoint.endpoint.toLowerCase().indexOf(key) >= 0));
+            },
             filteredTableData: function () {
                 var list = this.tableData;
                 if (this.onlyEnabled) {
@@ -143,10 +155,44 @@
         },
         created: function () {
             this.getList();
+            this.getPublishedServers();
         },
         methods: {
             formatDateTime: formatDateTime,
             formatSchemaJson: formatSchemaJson,
+            async getPublishedServers() {
+                this.publishedLoading = true;
+                try {
+                    var res = await request(apiBase + '.GetPublishedServers');
+                    var servers = res.data.data;
+                    if (!Array.isArray(servers) || servers.some(server =>
+                        !server || typeof server.serverName !== 'string'
+                        || typeof server.xncfName !== 'string' || typeof server.route !== 'string'
+                        || !Array.isArray(server.endpoints) || server.endpoints.some(endpoint =>
+                            !endpoint || typeof endpoint.endpointType !== 'string' || typeof endpoint.endpoint !== 'string'))) {
+                        throw new Error('服务器返回的本站 MCP 服务列表格式不正确');
+                    }
+                    this.publishedServers = servers;
+                } catch (error) {
+                    console.error(error);
+                    this.$message.error(errorMessage(error, '读取本站发布的 MCP 服务失败'));
+                } finally {
+                    this.publishedLoading = false;
+                }
+            },
+            async copyPublishedEndpoint(endpoint) {
+                if (!navigator.clipboard || !navigator.clipboard.writeText) {
+                    this.$message.error('当前浏览器不支持复制，请手动选择端点地址复制');
+                    return;
+                }
+                try {
+                    await navigator.clipboard.writeText(endpoint);
+                    this.$message.success('端点地址已复制');
+                } catch (error) {
+                    console.error(error);
+                    this.$message.error(errorMessage(error, '复制失败，请手动选择端点地址复制'));
+                }
+            },
             async getList() {
                 this.loading = true;
                 try {

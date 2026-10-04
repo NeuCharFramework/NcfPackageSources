@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,7 @@ using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Repository;
+using Senparc.Ncf.XncfBase.MCP;
 using Senparc.Xncf.AreaBase.Admin.Filters;
 using Senparc.Xncf.MCP.Domain.Services;
 using Senparc.Xncf.MCP.Models.DatabaseModel;
@@ -54,7 +56,13 @@ public class McpEndpointManagementTests
         _context = new EndpointTestContext(new DbContextOptionsBuilder().UseSqlite(_connection).Options);
         EntitySetKeys.TryLoadSetInfo(typeof(EndpointTestContext));
         await _context.Database.EnsureCreatedAsync();
-        _provider = new ServiceCollection().AddSingleton<McpConnectionTestService>().BuildServiceProvider();
+        _provider = new ServiceCollection()
+            .AddHttpContextAccessor()
+            .AddSingleton<McpConnectionTestService>()
+            .AddSingleton(new McpServerInfoCollection())
+            .AddSingleton<EndpointDataSource>(new DefaultEndpointDataSource(Array.Empty<Endpoint>()))
+            .AddSingleton<PublishedMcpServerService>()
+            .BuildServiceProvider();
         var service = new MCPEndpointService(
             new RepositoryBase<MCPEndpoint>(new TestDbData(_context)), _provider);
         _appService = new MCPEndpointAppService(_provider, service);
@@ -343,12 +351,12 @@ public class McpEndpointManagementTests
     }
 
     [TestMethod]
-    public async Task GeneratedApis_AreAuthenticatedPostRoutesAndExecuteAllSixOperations()
+    public async Task GeneratedApis_AreAuthenticatedPostRoutesAndExecuteAllSevenOperations()
     {
         var type = typeof(MCPEndpointAppService);
         Assert.IsNotNull(type.GetCustomAttribute<ApiAuthorizeAttribute>());
         var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-        Assert.AreEqual(6, methods.Length);
+        Assert.AreEqual(7, methods.Length);
         var bindings = new ApiBindInfoCollection();
         var category = type.Assembly.GetName().Name!;
         foreach (var method in methods)
@@ -361,7 +369,7 @@ public class McpEndpointManagementTests
         var group = bindings.GroupBy(z => z.Value.Category).Single();
         var engine = new WebApiEngine(options => { options.CopyCustomAttributes = true; });
         WebApiEngine.ApiAssemblyNames[group.Key] = "McpEndpointRegression_" + Guid.NewGuid().ToString("N");
-        Assert.AreEqual(6, await engine.BuildWebApi(group));
+        Assert.AreEqual(7, await engine.BuildWebApi(group));
         var assembly = engine.GetApiAssembly(group.Key);
         var controller = assembly.GetTypes().Single(z => typeof(ControllerBase).IsAssignableFrom(z));
         const string path = "/api/Senparc.Xncf.MCP/MCPEndpointAppService/Xncf.MCP_MCPEndpointAppService.";
@@ -377,6 +385,7 @@ public class McpEndpointManagementTests
         var builder = WebApplication.CreateBuilder();
         builder.WebHost.UseUrls("http://127.0.0.1:0");
         builder.Logging.ClearProviders();
+        builder.Services.AddSingleton(_provider.GetRequiredService<IHttpContextAccessor>());
         builder.Services.AddSingleton(_appService);
         builder.Services.AddControllers().AddApplicationPart(assembly);
         builder.Services.AddAuthentication()
@@ -403,6 +412,9 @@ public class McpEndpointManagementTests
         var list = await Post<AppResponseBase<List<MCPEndpointDto>>>("GetAllEndpoints", new { });
         Assert.IsTrue(list.Success);
         Assert.AreEqual(Endpoint, list.Data.Single().Endpoint);
+        var published = await Post<AppResponseBase<List<PublishedMcpServerDto>>>("GetPublishedServers", new { });
+        Assert.IsTrue(published.Success);
+        Assert.AreEqual(0, published.Data.Count);
         Assert.AreEqual(1, (await Post<AppResponseBase<List<MCPEndpointDto>>>("GetEnabledEndpoints", new { })).Data.Count);
         var preTest = await Post<AppResponseBase<McpConnectionTestResult>>("TestConnection",
             new { endpoint = "not-a-url", endpointType = "sse" });
