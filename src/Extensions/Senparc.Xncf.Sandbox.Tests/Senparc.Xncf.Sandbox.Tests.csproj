@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.7</Version>
+    <Version>0.0.8</Version>
     <PackageReleaseNotes>
       [2026-08-13] v0.0.1 Dependency update from Senparc.Xncf.Sandbox to 0.1.1-preview2
       [2026-08-15] v0.0.2 增加 Sandbox 预览路径回归测试
@@ -26,7 +26,9 @@
       [2026-09-18] v0.0.7 同步上游模块 v0.3.3 能力
       1、新增附加端口映射解析、Notebook 构建器与配额默认值回归测试
       2、补充 LabCreateNotebook / UpdateAlias Function 注册与会话别名状态回归测试
-</PackageReleaseNotes>
+      [2026-10-05] v0.0.8 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+      1、Updated Senparc.Xncf.Sandbox.Tests project behavior and integration for the latest feature and reliability improvements.
+      2、feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota</PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>

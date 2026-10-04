@@ -169,7 +169,8 @@
 		1、新增 GetMcpEndpointOptions 接口，通过 EventBus 向 Senparc.Xncf.MCP 模块查询已登记端点
 		2、Agent 与群组配置提供“从 MCP 列表选择”抽屉，复用 Function 绑定选择样式，支持搜索与勾选
 		3、MCP 模块不可用或未响应时自动降级为手动输入并给出提示
-</PackageReleaseNotes>
+		[2026-10-05] v0.18.1 feat: add MCP endpoint selection feature in AgentsManager
+		1、Updated Senparc.Xncf.AgentsManager project behavior and integration for the latest feature and reliability improvements.</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

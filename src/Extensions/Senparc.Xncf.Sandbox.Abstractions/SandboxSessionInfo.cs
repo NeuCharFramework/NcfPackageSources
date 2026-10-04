@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
   
     文件名：SandboxSessionInfo.cs
@@ -18,6 +18,9 @@
 
     修改标识：Senparc - 20260918
     修改描述：v0.3.3 增加 Alias 与 ExtraPorts 契约字段
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.3.0 0.3.0 feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota
 
 ----------------------------------------------------------------*/
 

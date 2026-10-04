@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：NcfFileManagerGateway.cs
+    文件功能描述：NcfFileManagerGateway.cs implementation and project behavior.
+
+
+    创建标识：Senparc - 20260930
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.7.3 0.7.3 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.FileManager.Abstractions;
 using Senparc.Xncf.FileManager.Domain.Models.DatabaseModel;

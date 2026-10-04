@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：Register.cs
@@ -20,6 +20,9 @@
 
     修改标识：Senparc - 20260918
     修改描述：v0.3.3 同步模块版本号（附加端口映射、Notebook 创建、别名与配额提升）
+
+    修改标识：Senparc - 20261005
+    修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
 ----------------------------------------------------------------*/
 

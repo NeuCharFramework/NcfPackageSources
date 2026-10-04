@@ -11,6 +11,9 @@
     修改标识：Senparc - 20260924
     修改描述：v0.5.6 新增 MCP Endpoint 跨模块查询处理器（EventBus 请求-响应）
 
+    修改标识：Senparc - 20261005
+    修改描述：v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.EventBus;
