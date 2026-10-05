@@ -16,6 +16,8 @@ using Senparc.Ncf.Core.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 
@@ -51,6 +53,9 @@ public sealed class WeixinClawAdminBinding : EntityBase<int>
 
     [MaxLength(1500)]
     public string ContextToken { get; private set; }
+
+    [MaxLength(2000)]
+    public string NeuBellPushStateJson { get; private set; }
 
     [MaxLength(300)]
     public string PendingApprovalRequestId { get; private set; }
@@ -105,6 +110,58 @@ public sealed class WeixinClawAdminBinding : EntityBase<int>
         LastTrajectorySequence = trajectorySequence;
         LastMessageAt = messageAt;
         SetUpdateTime();
+    }
+
+    public void SetContextToken(string contextToken, DateTime messageAt)
+    {
+        ContextToken = string.IsNullOrWhiteSpace(contextToken) ? null : contextToken;
+        LastMessageAt = messageAt;
+        SetUpdateTime();
+    }
+
+    public bool HasNeuBellPush(string providerId, string fingerprint)
+    {
+        if (string.IsNullOrWhiteSpace(providerId) || string.IsNullOrWhiteSpace(fingerprint))
+        {
+            return false;
+        }
+
+        var state = ReadNeuBellPushState();
+        return state.TryGetValue(providerId, out var previous)
+            && string.Equals(previous, fingerprint, StringComparison.Ordinal);
+    }
+
+    public void MarkNeuBellPushed(string providerId, string fingerprint)
+    {
+        if (string.IsNullOrWhiteSpace(providerId) || string.IsNullOrWhiteSpace(fingerprint))
+        {
+            return;
+        }
+
+        var state = ReadNeuBellPushState();
+        state[providerId] = fingerprint;
+        NeuBellPushStateJson = JsonSerializer.Serialize(state);
+        SetUpdateTime();
+    }
+
+    private Dictionary<string, string> ReadNeuBellPushState()
+    {
+        if (string.IsNullOrWhiteSpace(NeuBellPushStateJson))
+        {
+            return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        try
+        {
+            var state = JsonSerializer.Deserialize<Dictionary<string, string>>(NeuBellPushStateJson);
+            return state == null
+                ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                : new Dictionary<string, string>(state, StringComparer.OrdinalIgnoreCase);
+        }
+        catch (JsonException)
+        {
+            return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        }
     }
 
     public void SetPendingApproval(

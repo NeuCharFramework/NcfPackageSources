@@ -139,6 +139,11 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
             return;
         }
 
+        await _bindingService.SaveContextAsync(
+            binding,
+            context.ContextToken,
+            DateTime.UtcNow).ConfigureAwait(false);
+
         try
         {
             switch (command.ToLowerInvariant())
@@ -226,6 +231,10 @@ public sealed class AdminWeixinClawMessageHandler : IWeixinClawMessageHandler
             profile.WorkflowId,
             profile.AiModelId,
             profile.Mode).ConfigureAwait(false);
+        await _bindingService.SaveContextAsync(
+            binding,
+            context.ContextToken,
+            DateTime.UtcNow).ConfigureAwait(false);
         await ReplyAsync(
             context,
             $"绑定成功。发送 {NormalizePrefix(_options.CommandPrefix)}help 查看可用功能。",
