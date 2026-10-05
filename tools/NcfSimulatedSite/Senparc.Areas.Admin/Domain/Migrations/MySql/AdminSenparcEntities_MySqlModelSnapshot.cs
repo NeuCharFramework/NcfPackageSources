@@ -1108,6 +1108,10 @@ namespace Senparc.Areas.Admin.Domain.Migrations.MySql
                         .HasMaxLength(1500)
                         .HasColumnType("varchar(1500)");
 
+                    b.Property<string>("NeuBellPushStateJson")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
                     b.Property<bool>("EnableNeuBell")
                         .HasColumnType("tinyint(1)");
 

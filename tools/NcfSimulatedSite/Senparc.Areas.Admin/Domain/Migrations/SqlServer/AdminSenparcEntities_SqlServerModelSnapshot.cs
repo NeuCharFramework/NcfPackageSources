@@ -1108,6 +1108,10 @@ namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
                         .HasMaxLength(1500)
                         .HasColumnType("nvarchar(1500)");
 
+                    b.Property<string>("NeuBellPushStateJson")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
                     b.Property<bool>("EnableNeuBell")
                         .HasColumnType("bit");
 

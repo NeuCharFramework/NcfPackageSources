@@ -51,6 +51,20 @@ public sealed class WeixinClawAdminBindingService : BaseClientService<WeixinClaw
         return bindings.ToList();
     }
 
+    public async Task SaveContextAsync(
+        WeixinClawAdminBinding binding,
+        string contextToken,
+        DateTime messageAt)
+    {
+        if (binding == null || string.IsNullOrWhiteSpace(contextToken))
+        {
+            return;
+        }
+
+        binding.SetContextToken(contextToken, messageAt);
+        await SaveObjectAsync(binding).ConfigureAwait(false);
+    }
+
     public async Task<WeixinClawAdminBinding> BindAsync(
         int accountId,
         string fromUserId,

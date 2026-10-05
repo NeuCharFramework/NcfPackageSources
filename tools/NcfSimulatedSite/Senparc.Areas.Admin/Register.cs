@@ -137,7 +137,7 @@ namespace Senparc.Areas.Admin
 
         public override string Uid => ModuleUid;// "00000000-0000-0001-0001-000000000001";
 
-        public override string Version => "0.5.11";
+        public override string Version => "0.5.12";
 
         public override string MenuName => T("Admin.Register.MenuName", "NCF 系统管理员后台");
 
