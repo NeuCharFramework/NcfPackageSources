@@ -1,4 +1,5 @@
 var app = new Vue({
+  mixins: [AgentsStudioMixin],
   el: "#app",
   filters: {
     showFormatDate(value) {
@@ -547,7 +548,8 @@ var app = new Vue({
         agents: [],
         groups: [],
         links: [],
-        collaborations: []
+        collaborations: [],
+        tasks: []
       },
       agentGraphPollingTimer: null,
       hoveredAgentGroupId: null,
@@ -1049,9 +1051,7 @@ var app = new Vue({
             }
             return
           }
-          if (['three', 'stats'].includes(route.view)) {
-            this.handleAgentListViewModeChange(route.view, true)
-          }
+          this.handleAgentListViewModeChange(['three', 'stats'].includes(route.view) ? route.view : 'panel', true)
           if (route.agentId) {
             await this.getAgentListData('agent')
             const idx = (this.agentList || []).findIndex(item => item.id === route.agentId)
@@ -1143,31 +1143,7 @@ var app = new Vue({
       if (!snapshot) {
         return ''
       }
-      return JSON.stringify({
-        agents: (snapshot.agents || []).map(item => [
-          item.participantKey || `local:${item.id}`,
-          item.chattingCount,
-          item.pausedCount,
-          item.humanInTheLoopPausedCount,
-          item.score,
-          item.enable,
-          item.agentKind,
-          item.connectionStatus,
-          item.skillKinds
-        ]),
-        groups: (snapshot.groups || []).map(item => [
-          item.id,
-          item.enable,
-          item.runningTaskCount,
-          item.pausedTaskCount,
-          item.humanInTheLoopPendingCount,
-          item.state,
-          item.taskStatusCounts
-        ]),
-        links: (snapshot.links || []).map(item => [item.groupId, item.participantKey || `local:${item.agentId}`]),
-        collaborations: (snapshot.collaborations || []).map(item => [item.taskId, item.groupId, item.status, item.participantKeys || item.agentIds]),
-        published: (snapshot.agents || []).map(item => [item.participantKey || `local:${item.id}`, item.hasPublishedA2A, item.publishedA2AEnabled])
-      })
+      return JSON.stringify(snapshot)
     },
     buildFilteredAgentGraphSnapshot(snapshot) {
       const source = snapshot || { agents: [], groups: [], links: [], collaborations: [] }
@@ -1225,7 +1201,9 @@ var app = new Vue({
         agents: filteredAgents,
         groups: filteredGroups,
         links: filteredLinks,
-        collaborations: filteredCollaborations
+        collaborations: filteredCollaborations,
+        tasks: (source.tasks || []).filter(task => groupIdSet.has(task.groupId)
+          && (!selectedStatuses.length || selectedStatuses.includes(Number(task.status))))
       }
     },
     renderAgentGraph(snapshot = null) {
@@ -1284,13 +1262,26 @@ var app = new Vue({
               locked: !!locked
             })
           },
+          onSelect: (type, id) => this.studioSelect(type, id),
+          onAgentDrop: (key, groupId) => this.studioChangeMember(groupId, key),
+          onAgentTeamDrop: (key) => this.studioDropToTeam(key),
+          onDragStart: (agent) => this.studioDragStart(agent),
+          onDragEnd: () => this.studioDragEnd(),
+          canDrag: () => !this.studioBusy,
+          onError: () => { this.studioSceneError = this.st('SceneUnavailable') },
+          text: (key) => this.st(key),
           onAgentHover: (agent) => {
             this.$set(this, 'agentGraphFocusedAgent', agent || null)
           }
         })
-        this.agentGraph3d.init()
-        if ((this.agentGraphSnapshot.groups || []).length > 0) {
+        try {
+          if (!this.agentGraph3d.init()) throw new Error('3D scene initialization failed')
+          this.studioSceneError = ''
           this.renderAgentGraph(this.agentGraphSnapshot)
+        } catch (error) {
+          console.error('Agents studio WebGL unavailable', error)
+          this.studioSceneError = this.st('SceneUnavailable')
+          this.destroyAgentGraph3d()
         }
       }
     },
@@ -1306,8 +1297,8 @@ var app = new Vue({
         if (this.tabsActiveName !== 'first' || this.scrollbarAgentIndex !== '' || this.agentListViewMode !== 'three') {
           return
         }
-        this.refreshAgentGraphSnapshot(false)
-      }, 1000)
+        if (!document.hidden) this.refreshAgentGraphSnapshot(false)
+      }, 3000)
     },
     stopAgentGraphPolling() {
       if (this.agentGraphPollingTimer) {
@@ -1316,17 +1307,22 @@ var app = new Vue({
       }
     },
     async refreshAgentGraphSnapshot(syncRender = false) {
-      if (this.agentGraphRequesting) {
-        return
+      while (this.agentGraphRequesting) {
+        if (!syncRender) return
+        await this._agentGraphRefreshPromise
       }
       this.agentGraphRequesting = true
       const query = {
-        filter: this.agentQueryList.filter || ''
+        filter: this.agentListViewMode === 'three' ? '' : this.agentQueryList.filter || ''
       }
+      let finishRequest
+      this._agentGraphRefreshPromise = new Promise(resolve => { finishRequest = resolve })
       try {
-        const res = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetAgentGraphSnapshot?${getInterfaceQueryStr(query)}`)
+        const res = await serviceAM.get(`/api/Senparc.Xncf.AgentsManager/ChatGroupAppService/Xncf.AgentsManager_ChatGroupAppService.GetAgentGraphSnapshot?${getInterfaceQueryStr(query)}`,
+          { customAlert: this.agentListViewMode === 'three' })
         const data = res?.data ?? {}
         if (!data.success) {
+          this.studioError = data.errorMessage || this.st('RequestFailed')
           return
         }
 
@@ -1335,9 +1331,11 @@ var app = new Vue({
           agents: snapshot.agents || [],
           groups: snapshot.groups || [],
           links: snapshot.links || [],
-          collaborations: snapshot.collaborations || []
+          collaborations: snapshot.collaborations || [],
+          tasks: snapshot.tasks || []
         }
         this.agentGraphSnapshot = normalizedSnapshot
+        this.studioError = ''
         this.agentGraphLastRefreshAt = new Date()
         this.applyGraphMetricsToAgentList(normalizedSnapshot.agents)
 
@@ -1357,8 +1355,12 @@ var app = new Vue({
             })
           }
         }
+      } catch (error) {
+        console.error('Agents studio snapshot refresh failed', error)
+        this.studioError = error.message || this.st('RequestFailed')
       } finally {
         this.agentGraphRequesting = false
+        finishRequest()
       }
     },
     applyGraphMetricsToAgentList(graphAgents) {

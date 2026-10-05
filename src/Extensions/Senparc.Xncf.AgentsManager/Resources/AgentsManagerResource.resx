@@ -819,4 +819,97 @@
   <data name="Frontend.331" xml:space="preserve">
     <value>删除任务完成：成功 {0} 条||Task deletion completed: {0} succeeded.</value>
   </data>
+  <data name="Studio.Title" xml:space="preserve"><value>Agent Studio</value></data>
+  <data name="Studio.Live" xml:space="preserve"><value>LIVE</value></data>
+  <data name="Studio.Disconnected" xml:space="preserve"><value>Update unavailable</value></data>
+  <data name="Studio.NewAgent" xml:space="preserve"><value>New agent</value></data>
+  <data name="Studio.RemoteAgent" xml:space="preserve"><value>Remote A2A</value></data>
+  <data name="Studio.NewTeam" xml:space="preserve"><value>New team</value></data>
+  <data name="Studio.Refresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Studio.LocalAgents" xml:space="preserve"><value>local agents</value></data>
+  <data name="Studio.Groups" xml:space="preserve"><value>Groups</value></data>
+  <data name="Studio.ActiveTasks" xml:space="preserve"><value>active tasks</value></data>
+  <data name="Studio.HumanPending" xml:space="preserve"><value>Awaiting human input</value></data>
+  <data name="Studio.Updated" xml:space="preserve"><value>Updated</value></data>
+  <data name="Studio.Retry" xml:space="preserve"><value>Retry</value></data>
+  <data name="Studio.Search" xml:space="preserve"><value>Search agents / groups / tasks</value></data>
+  <data name="Studio.Agents" xml:space="preserve"><value>Agents</value></data>
+  <data name="Studio.Tasks" xml:space="preserve"><value>Tasks</value></data>
+  <data name="Studio.RosterHint" xml:space="preserve"><value>Drag an agent to a team desk, or select members with +.</value></data>
+  <data name="Studio.NoAgents" xml:space="preserve"><value>No agents found. Create your first agent above.</value></data>
+  <data name="Studio.GroupHint" xml:space="preserve"><value>Drop an agent here to add it without replacing existing members.</value></data>
+  <data name="Studio.Members" xml:space="preserve"><value>Members</value></data>
+  <data name="Studio.Disabled" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Studio.NoGroups" xml:space="preserve"><value>No groups found. Select agents to form a team.</value></data>
+  <data name="Studio.NoTasks" xml:space="preserve"><value>No matching tasks.</value></data>
+  <data name="Studio.AllGroups" xml:space="preserve"><value>All groups</value></data>
+  <data name="Studio.TaskStatus" xml:space="preserve"><value>Task status</value></data>
+  <data name="Studio.OnlyActive" xml:space="preserve"><value>Active groups only</value></data>
+  <data name="Studio.ResetCamera" xml:space="preserve"><value>Reset studio camera</value></data>
+  <data name="Studio.Overview" xml:space="preserve"><value>Overview</value></data>
+  <data name="Studio.SceneFallback" xml:space="preserve"><value>You can still manage agents, groups and tasks using the side panels.</value></data>
+  <data name="Studio.SceneHint" xml:space="preserve"><value>Drag agents to desks to join · Click to inspect · Drag empty space to orbit · Scroll to zoom</value></data>
+  <data name="Studio.DropHint" xml:space="preserve"><value>Release over a group desk or group name to add the agent.</value></data>
+  <data name="Studio.Inspector" xml:space="preserve"><value>Inspector</value></data>
+  <data name="Studio.Close" xml:space="preserve"><value>Close selection</value></data>
+  <data name="Studio.Human" xml:space="preserve"><value>Human</value></data>
+  <data name="Studio.Local" xml:space="preserve"><value>Local</value></data>
+  <data name="Studio.Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Studio.Disable" xml:space="preserve"><value>Disable</value></data>
+  <data name="Studio.Enable" xml:space="preserve"><value>Enable</value></data>
+  <data name="Studio.SelectMember" xml:space="preserve"><value>Select for team</value></data>
+  <data name="Studio.Task" xml:space="preserve"><value>Task</value></data>
+  <data name="Studio.Stop" xml:space="preserve"><value>Stop</value></data>
+  <data name="Studio.Archive" xml:space="preserve"><value>Archive</value></data>
+  <data name="Studio.ReviewHuman" xml:space="preserve"><value>Review / human input</value></data>
+  <data name="Studio.FullDetails" xml:space="preserve"><value>Full details</value></data>
+  <data name="Studio.Loading" xml:space="preserve"><value>Loading…</value></data>
+  <data name="Studio.Rounds" xml:space="preserve"><value>rounds</value></data>
+  <data name="Studio.Conversation" xml:space="preserve"><value>Conversation</value></data>
+  <data name="Studio.Agent" xml:space="preserve"><value>Agent</value></data>
+  <data name="Studio.LoadMore" xml:space="preserve"><value>Load more</value></data>
+  <data name="Studio.RunTask" xml:space="preserve"><value>Run task</value></data>
+  <data name="Studio.MembershipHint" xml:space="preserve"><value>Changes apply to new tasks. Running tasks keep their original team.</value></data>
+  <data name="Studio.Owner" xml:space="preserve"><value>Owner</value></data>
+  <data name="Studio.Entry" xml:space="preserve"><value>Entry agent</value></data>
+  <data name="Studio.RemoveMember" xml:space="preserve"><value>Remove member</value></data>
+  <data name="Studio.Welcome" xml:space="preserve"><value>Your agent workspace</value></data>
+  <data name="Studio.WelcomeHint" xml:space="preserve"><value>Select an agent, a team desk or a task card. Inspect, form a team and start work without leaving the studio.</value></data>
+  <data name="Studio.TeamTray" xml:space="preserve"><value>Team tray</value></data>
+  <data name="Studio.TeamTrayHint" xml:space="preserve"><value>Drop agents here to form a new team</value></data>
+  <data name="Studio.SelectAgentsHint" xml:space="preserve"><value>Select local and/or remote agents from the roster.</value></data>
+  <data name="Studio.TeamAndRun" xml:space="preserve"><value>Form team &amp; run</value></data>
+  <data name="Studio.TeamSavedRetry" xml:space="preserve"><value>The team is saved. Fix the task request and retry; the same team will be used.</value></data>
+  <data name="Studio.TeamName" xml:space="preserve"><value>Team name</value></data>
+  <data name="Studio.TaskName" xml:space="preserve"><value>Task title</value></data>
+  <data name="Studio.Command" xml:space="preserve"><value>What should the team do?</value></data>
+  <data name="Studio.Model" xml:space="preserve"><value>AI model</value></data>
+  <data name="Studio.DefaultModel" xml:space="preserve"><value>Inherit owner / system model</value></data>
+  <data name="Studio.Approval" xml:space="preserve"><value>Require human approval for tool calls</value></data>
+  <data name="Studio.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Studio.CreateOnly" xml:space="preserve"><value>Create team only</value></data>
+  <data name="Studio.InvalidTeamName" xml:space="preserve"><value>Enter a team name of 1–150 characters.</value></data>
+  <data name="Studio.SelectMembers" xml:space="preserve"><value>Select at least one team member.</value></data>
+  <data name="Studio.LocalRolesRequired" xml:space="preserve"><value>The owner and entry agent must be enabled, non-human local members.</value></data>
+  <data name="Studio.GroupNotFound" xml:space="preserve"><value>The group no longer exists. Refresh the studio.</value></data>
+  <data name="Studio.RoleCannotRemove" xml:space="preserve"><value>Edit the group to replace its owner or entry agent before removing them.</value></data>
+  <data name="Studio.MemberRemoved" xml:space="preserve"><value>Member removed from the group.</value></data>
+  <data name="Studio.MemberAdded" xml:space="preserve"><value>Member added to the group.</value></data>
+  <data name="Studio.InvalidParticipant" xml:space="preserve"><value>Invalid agent participant key.</value></data>
+  <data name="Studio.ParticipantUnavailable" xml:space="preserve"><value>The agent is missing or disabled. Refresh and select an enabled agent.</value></data>
+  <data name="Studio.GroupUnavailable" xml:space="preserve"><value>The group is missing or disabled. Enable it before running a task.</value></data>
+  <data name="Studio.ModelUnavailable" xml:space="preserve"><value>The selected chat model is unavailable.</value></data>
+  <data name="Studio.AlreadyMember" xml:space="preserve"><value>This agent already belongs to the group.</value></data>
+  <data name="Studio.RequestFailed" xml:space="preserve"><value>The operation failed. Check your connection and retry.</value></data>
+  <data name="Studio.TeamRequired" xml:space="preserve"><value>Enter a team name, select members and choose a local owner and entry agent.</value></data>
+  <data name="Studio.TaskRequired" xml:space="preserve"><value>Enter a task title and task instructions.</value></data>
+  <data name="Studio.TaskQueued" xml:space="preserve"><value>Task submitted. Watch the task board for execution status and output.</value></data>
+  <data name="Studio.TeamCreated" xml:space="preserve"><value>Team created.</value></data>
+  <data name="Studio.ConfirmStop" xml:space="preserve"><value>Stop this task? This will cancel its current execution.</value></data>
+  <data name="Studio.SceneUnavailable" xml:space="preserve"><value>The 3D scene is unavailable. Check WebGL / hardware acceleration.</value></data>
+  <data name="Studio.ReadyArea" xml:space="preserve"><value>Agent lounge</value></data>
+  <data name="Studio.Enabled" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Studio.Paused" xml:space="preserve"><value>Paused</value></data>
+  <data name="Studio.Working" xml:space="preserve"><value>Working</value></data>
+  <data name="Studio.Ready" xml:space="preserve"><value>Ready</value></data>
 </root>

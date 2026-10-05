@@ -27,5 +27,7 @@ function loadScript(src) {
 
 await loadScript('/js/PromptRange/lib/OrbitControls.js');
 await loadScript('/js/AgentsManager/axios.js');
+await loadScript('/js/AgentsManager/studio-state.js');
 await loadScript('/js/AgentsManager/agent-3d.js');
+await loadScript('/js/AgentsManager/studio.js');
 await loadScript('/js/AgentsManager/index.js');
