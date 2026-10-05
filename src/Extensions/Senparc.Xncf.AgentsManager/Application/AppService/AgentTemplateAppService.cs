@@ -47,6 +47,7 @@ using Microsoft.Extensions.AI;
 using ModelContextProtocol.Client;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Shared.Abstractions.Events;
@@ -72,6 +73,7 @@ using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Models.Entities;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using Senparc.Xncf.KnowledgeBase.Domain.Services;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
@@ -80,6 +82,7 @@ using Senparc.Ncf.XncfBase.FunctionRenders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 
@@ -107,6 +110,91 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             this._promptRangeService = promptRangeService;
             _agentWorkflowReferenceValidator = agentWorkflowReferenceValidators?.FirstOrDefault();
             _workflowFunctionCallingProvider = workflowFunctionCallingProviders?.FirstOrDefault();
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<AgentTemplate_ConvertPlainPromptResponse>> ConvertPlainPromptToPromptRange(
+            [FromBody] AgentTemplate_ConvertPlainPromptRequest request)
+        {
+            return await this.GetResponseAsync<AgentTemplate_ConvertPlainPromptResponse>(async (response, logger) =>
+            {
+                if (request == null
+                    || request.AgentTemplateId <= 0
+                    || string.IsNullOrWhiteSpace(request.PromptContent)
+                    || string.IsNullOrWhiteSpace(request.TestInput)
+                    || string.IsNullOrWhiteSpace(request.ExpectedResult)
+                    || request.AiModelId <= 0)
+                {
+                    throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase("请提供有效的 Agent、Prompt、测试输入、评分标准和 Chat 模型。");
+                }
+
+                var agentTemplate = await _agentsTemplateService.GetObjectAsync(z => z.Id == request.AgentTemplateId)
+                    ?? throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase($"未找到 AgentTemplate：{request.AgentTemplateId}");
+                if (agentTemplate.IsHuman)
+                {
+                    throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase("Human Agent 不支持 PromptRange 转换。");
+                }
+                if (AgentTemplateRunner.IsPromptRangeReference(request.PromptContent))
+                {
+                    throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase("当前内容是 PromptRange 引用而非明文 Prompt，无需再次转换。");
+                }
+
+                var aiModelService = base.GetRequiredService<AIModelService>();
+                var promptResultService = base.GetRequiredService<PromptResultService>();
+                var aiModel = await aiModelService.GetObjectAsync(z =>
+                    z.Id == request.AiModelId
+                    && z.ConfigModelType == Senparc.Xncf.AIKernel.Domain.Models.ConfigModelType.Chat);
+                if (aiModel == null)
+                {
+                    throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase($"未找到 Chat 类型 AIModel：{request.AiModelId}");
+                }
+
+                var promptRange = await _promptRangeService.AddAsync($"AgentTemplate-{agentTemplate.Name}");
+                var expectedResultsJson = JsonSerializer.Serialize(new[] { request.ExpectedResult.Trim() });
+                var promptItem = await _promptItemService.AddPromptItemAsync(new PromptItem_AddRequest
+                {
+                    RangeId = promptRange.Id,
+                    ModelId = request.AiModelId,
+                    Content = request.PromptContent.Trim(),
+                    TopP = 0.9f,
+                    Temperature = 0.6f,
+                    MaxToken = 2000,
+                    NumsOfResults = 1,
+                    IsDraft = false,
+                    isAIGrade = true,
+                    ExpectedResultsJson = expectedResultsJson,
+                    Note = $"由 AgentTemplate「{agentTemplate.Name}」转换并自动打靶评分"
+                });
+
+                var generatedResult = await promptResultService.SenparcGenerateResultAsync(
+                    promptItem,
+                    request.TestInput.Trim());
+                await promptResultService.UpdateEvalScoreAsync(promptItem.Id);
+
+                var scoredResult = await promptResultService.GetObjectAsync(z => z.Id == generatedResult.Id)
+                    ?? throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase($"未找到打靶结果：{generatedResult.Id}");
+                if (scoredResult.RobotScore < 0)
+                {
+                    throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase("Prompt 已完成打靶，但未能取得有效评分；AgentTemplate 保持原 Prompt 不变。");
+                }
+
+                var agentTemplateDto = _agentsTemplateService.Mapping<AgentTemplateDto>(agentTemplate);
+                agentTemplateDto.PromptCode = promptRange.RangeName;
+                agentTemplateDto.SystemMessage = promptRange.RangeName;
+                agentTemplateDto.ModelBinding = AgentModelBindingMode.InheritPromptRange;
+                agentTemplateDto.AiModelId = null;
+                await _agentsTemplateService.UpdateAgentTemplateAsync(agentTemplate.Id, agentTemplateDto);
+
+                logger.Append($"Prompt 已创建并完成一次打靶评分：{promptRange.RangeName}，评分：{scoredResult.RobotScore}。");
+                return new AgentTemplate_ConvertPlainPromptResponse
+                {
+                    PromptCode = promptRange.RangeName,
+                    PromptItemVersion = promptItem.FullVersion,
+                    PromptResultId = scoredResult.Id,
+                    Score = scoredResult.RobotScore,
+                    ResultString = scoredResult.ResultString
+                };
+            });
         }
 
         //[ApiBind]
@@ -152,9 +240,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     Enum.Parse<HookRobotType>(request.HookRobotType), request.HookRobotParameter,
                     null, request.FunctionCallNames, null, request.KnowledgeBaseId);
 
-                await this._agentsTemplateService.UpdateAgentTemplateAsync(request.Id, agentTemplateDto);
+                var savedAgentTemplate = await this._agentsTemplateService.UpdateAgentTemplateAsync(request.Id, agentTemplateDto);
 
-                logger.Append("Agent 模板更新成功！");
+                logger.Append($"Agent 模板更新成功，ID：{savedAgentTemplate.Id}。");
                 logger.Append("当前代理使用的 Prompt 模板：" + promptTemplate);
 
                 return logger.ToString();

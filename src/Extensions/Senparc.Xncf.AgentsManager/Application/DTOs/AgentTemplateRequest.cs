@@ -43,6 +43,36 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 {
+    public class AgentTemplate_ConvertPlainPromptRequest
+    {
+        [Required]
+        public int AgentTemplateId { get; set; }
+
+        [Required]
+        [MaxLength(50000)]
+        public string PromptContent { get; set; }
+
+        [Required]
+        [MaxLength(5000)]
+        public string TestInput { get; set; }
+
+        [Required]
+        [MaxLength(5000)]
+        public string ExpectedResult { get; set; }
+
+        [Required]
+        public int AiModelId { get; set; }
+    }
+
+    public class AgentTemplate_ConvertPlainPromptResponse
+    {
+        public string PromptCode { get; set; }
+        public string PromptItemVersion { get; set; }
+        public int PromptResultId { get; set; }
+        public decimal Score { get; set; }
+        public string ResultString { get; set; }
+    }
+
     public class AgentTemplate_ManageRequest : FunctionAppRequestBase
     {
         [Required]

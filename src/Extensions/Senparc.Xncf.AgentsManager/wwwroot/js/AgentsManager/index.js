@@ -359,6 +359,7 @@ var app = new Vue({
       },
       // 编辑现有智能体时，等待 PromptRange 候选项返回后再确定“自选”或“手动”。
       agentSystemMessageTypeDetectionPending: false,
+      agentPromptConversionLoading: false,
       agentFormRules: {
         name: [
           { required: true, message: '请填写', trigger: 'blur' },
@@ -4232,6 +4233,83 @@ var app = new Vue({
         return false
       }
       return true
+    },
+
+    async convertAgentPromptToPromptRange() {
+      const agent = this.agentForm || {}
+      const agentTemplateId = Number(agent.id || 0)
+      const aiModelId = Number(agent.aiModelId || 0)
+      const promptContent = String(agent.systemMessage || '').trim()
+      if (!agentTemplateId || agent.isHuman || String(agent.systemMessageType) !== '2' || !promptContent) {
+        this.$message.error('请先保存一个包含明文 Prompt 的 AgentTemplate。')
+        return
+      }
+      if (!this.validateAgentModelBindingForm()) {
+        return
+      }
+
+      const defaultTestInput = `请根据“${agent.name || '当前 Agent'}”的职责完成一次简短示例任务。`
+      let testInput
+      try {
+        const inputResult = await this.$prompt('输入用于验证该 Prompt 的任务内容。', 'Prompt 打靶输入', {
+          inputType: 'textarea',
+          inputValue: defaultTestInput,
+          inputValidator: value => !!String(value || '').trim(),
+          inputErrorMessage: '测试输入不能为空'
+        })
+        testInput = String(inputResult.value || '').trim()
+      } catch (_) {
+        return
+      }
+
+      const defaultExpectedResult = `结果应符合 Agent「${agent.name || ''}」的职责，并针对测试输入提供准确、清晰、可执行的回答。职责说明：${agent.description || '以测试任务为准'}`
+      let expectedResult
+      try {
+        const expectedResultInput = await this.$prompt('描述期望结果或评分标准，PromptRange 将据此进行 AI 评分。', 'Prompt 自动评分标准', {
+          inputType: 'textarea',
+          inputValue: defaultExpectedResult,
+          inputValidator: value => !!String(value || '').trim(),
+          inputErrorMessage: '评分标准不能为空'
+        })
+        expectedResult = String(expectedResultInput.value || '').trim()
+      } catch (_) {
+        return
+      }
+
+      this.agentPromptConversionLoading = true
+      try {
+        const response = await serviceAM.post(
+          '/api/Senparc.Xncf.AgentsManager/AgentTemplateAppService/Xncf.AgentsManager_AgentTemplateAppService.ConvertPlainPromptToPromptRange',
+          {
+            agentTemplateId,
+            aiModelId,
+            promptContent,
+            testInput,
+            expectedResult
+          })
+        const apiResponse = response?.data || {}
+        if (!apiResponse.success) {
+          throw new Error(apiResponse.message || apiResponse.errorMessage || apiResponse.error || 'PromptRange 转换失败。')
+        }
+
+        const result = apiResponse.data || {}
+        this.$set(this.agentForm, 'systemMessage', result.promptCode)
+        this.$set(this.agentForm, 'systemMessageType', '1')
+        this.$set(this.agentForm, 'modelBinding', 0)
+        this.$set(this.agentForm, 'aiModelId', null)
+        await this.getAgentListData('agent')
+
+        const resultPreview = String(result.resultString || '').slice(0, 600)
+        this.$alert(
+          `Prompt 已创建并完成一次打靶评分。\n靶场引用：${result.promptCode}\n打靶版本：${result.promptItemVersion}\n评分：${result.score}/10\n\n打靶结果：\n${resultPreview}`,
+          'PromptRange 转换完成',
+          { confirmButtonText: '确定', customClass: 'agent-prompt-conversion-result' })
+      } catch (error) {
+        const message = error?.response?.data?.message || error?.message || 'PromptRange 转换失败。'
+        this.$message.error(message)
+      } finally {
+        this.agentPromptConversionLoading = false
+      }
     },
 
     handleSystemMessageOptionsLoaded(options) {

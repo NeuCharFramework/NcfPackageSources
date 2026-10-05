@@ -1581,7 +1581,12 @@
                        placeholder="请填写"  
                        :rows="4">  
                     </el-input>
-
+                    <div v-if="agentForm.id && !agentForm.isHuman" style="margin-top:8px;">
+                        <el-button size="small" type="primary" plain icon="el-icon-magic-stick"
+                                   :loading="agentPromptConversionLoading"
+                                   @@click="convertAgentPromptToPromptRange">生成到 PromptRange 并打靶评分</el-button>
+                        <div class="form-help-text">使用当前明文 Prompt 和所选 Chat 模型创建靶场，完成一次打靶及 AI 评分后，自动切换为靶场级引用。</div>
+                    </div>
                 </el-form-item>
                 <el-form-item label="绑定模型" prop="modelBinding">
                     <el-radio-group v-model="agentForm.modelBinding" @@change="handleAgentModelBindingChange">
@@ -2226,7 +2231,12 @@
                 placeholder="请选择" @@options-loaded="handleSystemMessageOptionsLoaded" />
         </el-form-item>
         <el-form-item v-if="!agentForm.isHuman && agentForm.systemMessageType === '2'" label="手动输入" prop="systemMessage">
-            <el-input v-model="agentForm.systemMessage" placeholder="请填写"></el-input>
+            <el-input v-model="agentForm.systemMessage" type="textarea" :rows="4" placeholder="请填写"></el-input>
+            <div v-if="agentForm.id" style="margin-top:8px;">
+                <el-button size="small" type="primary" plain icon="el-icon-magic-stick"
+                           :loading="agentPromptConversionLoading"
+                           @@click="convertAgentPromptToPromptRange">生成到 PromptRange 并打靶评分</el-button>
+            </div>
         </el-form-item>
         <el-form-item label="绑定模型" prop="modelBinding">
             <el-radio-group v-model="agentForm.modelBinding" @@change="handleAgentModelBindingChange">
