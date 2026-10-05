@@ -1108,6 +1108,10 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
                         .HasMaxLength(1500)
                         .HasColumnType("character varying(1500)");
 
+                    b.Property<string>("NeuBellPushStateJson")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
                     b.Property<bool>("EnableNeuBell")
                         .HasColumnType("boolean");
 

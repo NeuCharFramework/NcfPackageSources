@@ -107,8 +107,17 @@ particularly `src/api/types.ts`, `src/api/api.ts`, `src/messaging/send.ts`, and 
   Pipeline tests exercise the actual send services, decrypt their uploaded ciphertext to verify
   plaintext/MD5/sizes/key encoding, and confirm that polling preserves a usable reply context.
 
-After deploying, send a fresh message from the phone and reply from NCF to that inbound record.
-Verify that the actual phone displays the text and media; unit tests and `ret=0` alone cannot prove delivery.
+After the first successful inbound message, the account and Admin binding persist the latest
+recipient and protected conversation context. This lets Admin Chat and NeuBell continue sending
+after a page reload or process restart when the WeChat-side context is still valid. The Admin
+integration also performs one startup NeuBell reconciliation and stores per-provider snapshot
+fingerprints to avoid duplicate recovery messages. Apply the Admin module's latest database
+migration before enabling this behavior in production, and persist ASP.NET Data Protection keys
+across deployments; otherwise encrypted bot/context tokens cannot be recovered.
+
+If the WeChat-side context has expired or the Data Protection keys were replaced, send a fresh
+message from the phone to establish a new context. Verify that the actual phone displays the text
+and media; unit tests and `ret=0` alone cannot prove delivery.
 
 Concrete Admin Chat, NeuBell, Workflow, and Harness routing is implemented by the upper-layer Admin
 integration rather than this channel module.
@@ -126,7 +135,7 @@ configuration section:
 ## Installation
 
 ```xml
-<PackageReference Include="Senparc.Xncf.WeixinManager" Version="0.24.13" />
+<PackageReference Include="Senparc.Xncf.WeixinManager" Version="0.24.14" />
 ```
 
 ## Key API
