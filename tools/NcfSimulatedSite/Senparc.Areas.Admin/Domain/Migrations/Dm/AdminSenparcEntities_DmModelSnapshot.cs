@@ -1090,6 +1090,10 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Dm
                         .HasMaxLength(1500)
                         .HasColumnType("NVARCHAR2(1500)");
 
+                    b.Property<string>("NeuBellPushStateJson")
+                        .HasMaxLength(2000)
+                        .HasColumnType("NVARCHAR2(2000)");
+
                     b.Property<bool>("EnableNeuBell")
                         .HasColumnType("BIT");
 
