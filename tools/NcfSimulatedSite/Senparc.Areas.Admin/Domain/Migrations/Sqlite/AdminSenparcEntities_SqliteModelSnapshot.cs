@@ -1068,6 +1068,10 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Sqlite
                         .HasMaxLength(1500)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("NeuBellPushStateJson")
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("EnableNeuBell")
                         .HasColumnType("INTEGER");
 
