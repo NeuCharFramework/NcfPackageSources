@@ -353,6 +353,7 @@ var AgentsAppData = {
       },
       // 编辑现有智能体时，等待 PromptRange 候选项返回后再确定“自选”或“手动”。
       agentSystemMessageTypeDetectionPending: false,
+      agentPromptConversionLoading: false,
       agentFormRules: {
         name: [
           { required: true, message: '请填写', trigger: 'blur' },
