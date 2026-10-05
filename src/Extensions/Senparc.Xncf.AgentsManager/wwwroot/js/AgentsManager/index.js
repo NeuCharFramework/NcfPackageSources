@@ -5,6 +5,7 @@
  */
 
 var app = new Vue({
+  mixins: [AgentsStudioMixin],
   el: "#app",
   filters: {
     showFormatDate(value) {

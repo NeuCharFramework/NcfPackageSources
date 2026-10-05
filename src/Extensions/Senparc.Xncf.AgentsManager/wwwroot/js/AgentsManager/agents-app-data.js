@@ -541,7 +541,8 @@ var AgentsAppData = {
         agents: [],
         groups: [],
         links: [],
-        collaborations: []
+        collaborations: [],
+        tasks: []
       },
       agentGraphPollingTimer: null,
       hoveredAgentGroupId: null,
