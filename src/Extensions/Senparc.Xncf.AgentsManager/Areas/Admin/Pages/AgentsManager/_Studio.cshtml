@@ -1,0 +1,205 @@
+<div class="agent-studio" :aria-busy="studioBusy">
+    <header class="studio-toolbar">
+        <div class="studio-brand"><i class="el-icon-office-building"></i><strong>{{ st('Title') }}</strong>
+            <span class="studio-live" :class="{'is-offline': studioError}">{{ st(studioError ? 'Disconnected' : 'Live') }}</span>
+        </div>
+        <div class="studio-toolbar-actions">
+            <el-button size="mini" icon="el-icon-plus" @@click="handleElVisibleOpenBtn('drawerAgent')">{{ st('NewAgent') }}</el-button>
+            <el-button size="mini" icon="el-icon-connection" @@click="openRemoteAgentManager">{{ st('RemoteAgent') }}</el-button>
+            <el-button size="mini" type="primary" icon="el-icon-s-cooperation" @@click="studioOpenComposer()">{{ st('NewTeam') }}</el-button>
+            <el-button size="mini" icon="el-icon-refresh" :loading="agentGraphRequesting" @@click="refreshAgentGraphSnapshot(true)">{{ st('Refresh') }}</el-button>
+        </div>
+    </header>
+    <div class="studio-summary">
+        <span><b>{{ agentGraphOverview.local }}</b> {{ st('LocalAgents') }}</span>
+        <span><b>{{ agentGraphOverview.remote }}</b> A2A</span>
+        <span><b>{{ agentGraphOverview.groups }}</b> {{ st('Groups') }}</span>
+        <span><b>{{ agentGraphOverview.activeTasks }}</b> {{ st('ActiveTasks') }}</span>
+        <span class="studio-human"><b>{{ agentGraphOverview.hilPending }}</b> {{ st('HumanPending') }}</span>
+        <small v-if="agentGraphLastRefreshAt">{{ st('Updated') }} {{ agentGraphLastRefreshAt.toLocaleTimeString() }}</small>
+    </div>
+    <div v-if="studioError" class="studio-error" role="alert">{{ studioError }}
+        <button type="button" @@click="refreshAgentGraphSnapshot(true)">{{ st('Retry') }}</button>
+    </div>
+    <div class="studio-workspace">
+        <aside class="studio-shelf">
+            <el-input v-model="studioSearch" size="small" clearable :placeholder="st('Search')" prefix-icon="el-icon-search"></el-input>
+            <div class="studio-shelf-tabs" role="tablist">
+                <button v-for="tab in ['agents','groups','tasks']" :key="tab" type="button" role="tab"
+                    :aria-selected="studioShelf === tab" :class="{'is-active':studioShelf === tab}"
+                    @@click="studioShelf = tab">{{ st(tab === 'agents' ? 'Agents' : tab === 'groups' ? 'Groups' : 'Tasks') }}</button>
+            </div>
+            <div class="studio-shelf-list">
+                <template v-if="studioShelf === 'agents'">
+                    <p class="studio-hint">{{ st('RosterHint') }}</p>
+                    <div v-for="agent in studioAgents" :key="studioKey(agent)" class="studio-agent-card"
+                        :class="{'is-selected':studioSelectedKeys.includes(studioKey(agent)), 'is-disabled': !agent.enable}"
+                        :draggable="agent.enable && !studioBusy" @@dragstart="studioDragStart(agent,$event)" @@dragend="studioDragEnd">
+                        <button type="button" class="studio-agent-main" @@click="studioSelect('agent',studioKey(agent))">
+                            <img :src="agent.avastar | showAvatar" alt="" />
+                            <span><strong>{{ agent.name }}</strong><small>{{ agent.agentKind === 'RemoteA2A' ? 'A2A' : agent.isHuman ? st('Human') : st('Local') }}</small></span>
+                            <i class="studio-status-dot" :class="{'is-working':agent.chattingCount,'is-paused':agent.pausedCount,'is-off':!agent.enable}"></i>
+                        </button>
+                        <button type="button" class="studio-select-agent" :disabled="!agent.enable || studioBusy || !!studioCreatedTeamId"
+                            :aria-pressed="studioSelectedKeys.includes(studioKey(agent))" :aria-label="st('SelectMember')"
+                            @@click="studioToggleAgent(agent)"><i :class="studioSelectedKeys.includes(studioKey(agent)) ? 'el-icon-check' : 'el-icon-plus'"></i></button>
+                    </div>
+                    <p v-if="!studioAgents.length" class="studio-empty">{{ st('NoAgents') }}</p>
+                </template>
+                <template v-if="studioShelf === 'groups'">
+                    <p class="studio-hint">{{ st('GroupHint') }}</p>
+                    <button v-for="group in studioGroups" :key="group.id" type="button" class="studio-group-card"
+                        :data-studio-group-id="group.id"
+                        :class="{'is-drop-target':studioDropGroupId === group.id, 'is-active':studioSelection.type === 'group' && studioSelection.id === group.id}"
+                        @@click="studioSelect('group',group.id)"
+                        @@dragover.prevent="studioDropGroupId = group.id"
+                        @@dragleave="studioDropGroupId = null"
+                        @@drop.prevent="studioChangeMember(group.id,studioDraggingKey)">
+                        <strong><i class="el-icon-s-cooperation"></i> {{ group.name }}</strong>
+                        <small>{{ group.memberParticipantKeys.length }} {{ st('Members') }} · {{ group.runningTaskCount }} {{ st('ActiveTasks') }}</small>
+                        <span v-if="!group.enable" class="studio-tag">{{ st('Disabled') }}</span>
+                    </button>
+                    <p v-if="!studioGroups.length" class="studio-empty">{{ st('NoGroups') }}</p>
+                </template>
+                <template v-if="studioShelf === 'tasks'">
+                    <button v-for="task in studioTasks" :key="task.id" type="button" class="studio-task-card"
+                        :class="{'is-active':studioSelection.type === 'task' && studioSelection.id === task.id}"
+                        @@click="studioSelect('task',task.id)">
+                        <span class="studio-task-status" :class="'status-'+task.status">{{ studioStatus(task) }}</span>
+                        <strong>{{ task.name }}</strong><small>#{{ task.id }} · G{{ task.groupId }}</small>
+                    </button>
+                    <p v-if="!studioTasks.length" class="studio-empty">{{ st('NoTasks') }}</p>
+                </template>
+            </div>
+        </aside>
+        <main class="studio-scene">
+            <div class="studio-scene-controls">
+                <el-select v-model="agentGraphFilterGroupId" size="mini" clearable filterable :placeholder="st('AllGroups')" @@change="handleAgentGraphFilterChange">
+                    <el-option v-for="group in agentGraphGroupOptions" :key="group.id" :label="group.name" :value="group.id"></el-option>
+                </el-select>
+                <el-select v-model="agentGraphFilterTaskStatuses" size="mini" multiple collapse-tags :placeholder="st('TaskStatus')" @@change="handleAgentGraphFilterChange">
+                    <el-option v-for="status in [0,1,2,3,4,5]" :key="status" :label="taskStateText[status]" :value="status"></el-option>
+                </el-select>
+                <el-checkbox v-model="agentGraphShowOnlyActiveGroup" @@change="handleAgentGraphFilterChange">{{ st('OnlyActive') }}</el-checkbox>
+                <el-button size="mini" icon="el-icon-aim" :title="st('ResetCamera')" @@click="studioResetCamera">{{ st('Overview') }}</el-button>
+            </div>
+            <div ref="agent3dContainer" class="agent-3d-canvas"
+                @@dragover.prevent="agentGraph3d && agentGraph3d.previewExternalDrop($event)"
+                @@dragleave="agentGraph3d && agentGraph3d.highlightDropGroup(null)"
+                @@drop.prevent="agentGraph3d && studioChangeMember(agentGraph3d.groupAtPointer($event),studioDraggingKey)"></div>
+            <div v-if="studioSceneError" class="studio-scene-fallback" role="alert">
+                <i class="el-icon-warning-outline"></i><p>{{ studioSceneError }}</p><small>{{ st('SceneFallback') }}</small>
+            </div>
+            <div class="studio-scene-caption"><i class="el-icon-mouse"></i>{{ st('SceneHint') }}</div>
+            <div v-if="studioDraggingKey" class="studio-drop-zones">
+                <span>{{ st('DropHint') }}</span>
+                <button v-for="group in studioGroups" :key="group.id" type="button"
+                    :data-studio-group-id="group.id"
+                    :class="{'is-drop-target':studioDropGroupId === group.id}"
+                    @@dragover.prevent="studioDropGroupId = group.id" @@dragleave="studioDropGroupId = null"
+                    @@drop.prevent="studioChangeMember(group.id,studioDraggingKey)">{{ group.name }}</button>
+            </div>
+        </main>
+        <aside class="studio-inspector">
+            <div class="studio-inspector-heading"><strong>{{ st('Inspector') }}</strong>
+                <button type="button" v-if="studioSelection.type" :aria-label="st('Close')" @@click="studioSelect('',null)"><i class="el-icon-close"></i></button>
+            </div>
+            <div class="studio-inspector-body">
+                <template v-if="studioSelectedAgent">
+                    <span class="studio-eyebrow">AGENT</span><h2>{{ studioSelectedAgent.name }}</h2>
+                    <p class="studio-description">{{ studioSelectedAgent.description }}</p>
+                    <div class="studio-tags"><span v-for="skill in studioSelectedAgent.skillKinds" :key="skill">{{ skill.toUpperCase() }}</span></div>
+                    <div class="studio-actions">
+                        <el-button size="mini" :disabled="studioBusy" @@click="studioEditAgent(studioSelectedAgent)">{{ st('Edit') }}</el-button>
+                        <el-button size="mini" :disabled="studioBusy" @@click="studioSetEnabled('agent',studioSelectedAgent)">{{ st(studioSelectedAgent.enable ? 'Disable' : 'Enable') }}</el-button>
+                        <el-button size="mini" type="primary" :disabled="studioBusy || !!studioCreatedTeamId" @@click="studioToggleAgent(studioSelectedAgent)">{{ st('SelectMember') }}</el-button>
+                    </div>
+                    <h3>{{ st('Groups') }}</h3>
+                    <button v-for="group in studioAgentGroups" :key="group.id" type="button" class="studio-link" @@click="studioSelect('group',group.id)">{{ group.name }} <i class="el-icon-arrow-right"></i></button>
+                </template>
+                <template v-else-if="studioSelection.type === 'task' && studioSelectedTask">
+                    <span class="studio-eyebrow">TASK #{{ studioSelectedTask.id }}</span><h2>{{ studioSelectedTask.name }}</h2>
+                    <span class="studio-task-status" :class="'status-'+studioSelectedTask.status">{{ studioStatus(studioSelectedTask) }}</span>
+                    <button v-if="studioSelectedGroup" type="button" class="studio-link" @@click="studioSelect('group',studioSelectedGroup.id)">{{ studioSelectedGroup.name }}</button>
+                    <div class="studio-actions">
+                        <el-button v-if="[0,1,2].includes(studioSelectedTask.status)" size="mini" type="danger" :disabled="studioBusy" @@click="studioTaskAction('stop')">{{ st('Stop') }}</el-button>
+                        <el-button v-else size="mini" :disabled="studioBusy" @@click="studioTaskAction('archive')">{{ st('Archive') }}</el-button>
+                        <el-button size="mini" @@click="navigateByHash({tab:'third',taskId:studioSelectedTask.id})">{{ st(studioSelectedTask.humanPendingCount ? 'ReviewHuman' : 'FullDetails') }}</el-button>
+                    </div>
+                    <p v-if="studioDetailLoading && !studioTaskDetail" role="status">{{ st('Loading') }}</p>
+                    <template v-if="studioTaskDetail">
+                        <p class="studio-description">{{ studioTaskDetail.promptCommand }}</p>
+                        <div class="studio-metrics"><span>{{ studioTaskDetail.totalRounds }} {{ st('Rounds') }}</span><span>{{ studioTaskDetail.totalTokens }} Token</span></div>
+                    </template>
+                    <h3>{{ st('Conversation') }}</h3>
+                    <div v-for="history in studioHistories" :key="history.id" class="studio-history">
+                        <strong>{{ history.fromParticipantName || (history.fromAgentTemplate && history.fromAgentTemplate.name) || st('Agent') }}</strong>
+                        <div v-html="history.messageHtml"></div>
+                    </div>
+                    <el-button v-if="studioHistoryMore" size="mini" :loading="studioHistoryRequesting" @@click="studioLoadHistory()">{{ st('LoadMore') }}</el-button>
+                </template>
+                <template v-else-if="studioSelectedGroup">
+                    <span class="studio-eyebrow">GROUP #{{ studioSelectedGroup.id }}</span><h2>{{ studioSelectedGroup.name }}</h2>
+                    <div class="studio-actions">
+                        <el-button size="mini" type="primary" :disabled="!studioSelectedGroup.enable || studioBusy" @@click="studioOpenComposer(studioSelectedGroup.id)">{{ st('RunTask') }}</el-button>
+                        <el-button size="mini" :disabled="studioBusy" @@click="handleEditDrawerOpenBtn('drawerGroup',studioSelectedGroup)">{{ st('Edit') }}</el-button>
+                        <el-button size="mini" :disabled="studioBusy" @@click="studioSetEnabled('group',studioSelectedGroup)">{{ st(studioSelectedGroup.enable ? 'Disable' : 'Enable') }}</el-button>
+                    </div>
+                    <h3>{{ st('Members') }} <small>{{ studioGroupMembers.length }}</small></h3>
+                    <p class="studio-hint">{{ st('MembershipHint') }}</p>
+                    <div v-for="agent in studioGroupMembers" :key="studioKey(agent)" class="studio-member">
+                        <button type="button" @@click="studioSelect('agent',studioKey(agent))">{{ agent.name }}</button>
+                        <span v-if="agent.agentKind !== 'RemoteA2A' && agent.id === studioSelectedGroup.adminAgentTemplateId" class="studio-tag">{{ st('Owner') }}</span>
+                        <span v-if="agent.agentKind !== 'RemoteA2A' && agent.id === studioSelectedGroup.enterAgentTemplateId" class="studio-tag">{{ st('Entry') }}</span>
+                        <button v-else-if="agent.agentKind === 'RemoteA2A' || agent.id !== studioSelectedGroup.adminAgentTemplateId" type="button" :disabled="studioBusy"
+                            :aria-label="st('RemoveMember')" @@click="studioChangeMember(studioSelectedGroup.id,studioKey(agent),true)"><i class="el-icon-close"></i></button>
+                    </div>
+                    <h3>{{ st('Tasks') }}</h3>
+                    <button v-for="task in studioGroupTasks" :key="task.id" type="button" class="studio-task-card" @@click="studioSelect('task',task.id)">
+                        <span class="studio-task-status" :class="'status-'+task.status">{{ studioStatus(task) }}</span><strong>{{ task.name }}</strong>
+                    </button>
+                </template>
+                <div v-else class="studio-welcome"><i class="el-icon-office-building"></i><h2>{{ st('Welcome') }}</h2><p>{{ st('WelcomeHint') }}</p></div>
+            </div>
+        </aside>
+    </div>
+    <footer class="studio-team-dock" :class="{'is-drop-target':studioDraggingKey}"
+        @@dragover.prevent @@drop.prevent="studioDropToTeam()">
+        <div><strong>{{ st('TeamTray') }}</strong><small>{{ st('TeamTrayHint') }}</small></div>
+        <div class="studio-team-members">
+            <button v-for="agent in studioSelectedAgents" :key="studioKey(agent)" type="button" :disabled="studioBusy || !!studioCreatedTeamId" @@click="studioToggleAgent(agent)">{{ agent.name }} <i class="el-icon-close"></i></button>
+            <span v-if="!studioSelectedAgents.length">{{ st('SelectAgentsHint') }}</span>
+        </div>
+        <el-button size="small" type="primary" :disabled="!studioSelectedKeys.length || studioBusy" @@click="studioOpenComposer()">{{ st('TeamAndRun') }}</el-button>
+    </footer>
+    <el-dialog :title="st(studioRunGroupId ? 'RunTask' : 'TeamAndRun')" :visible.sync="studioComposerOpen"
+        width="min(640px, 94vw)" append-to-body :close-on-click-modal="false" :close-on-press-escape="!studioBusy" :show-close="!studioBusy">
+        <el-form label-position="top" class="studio-composer" @@submit.native.prevent>
+            <template v-if="!studioRunGroupId">
+                <el-alert v-if="studioCreatedTeamId" :title="st('TeamSavedRetry')" type="warning" :closable="false"></el-alert>
+                <el-form-item :label="st('TeamName')"><el-input v-model="studioTeamName" maxlength="150" :disabled="studioBusy || !!studioCreatedTeamId"></el-input></el-form-item>
+                <div class="studio-form-row">
+                    <el-form-item :label="st('Owner')"><el-select v-model="studioAdminId" :disabled="studioBusy || !!studioCreatedTeamId">
+                        <el-option v-for="agent in studioRoleOptions" :key="agent.id" :label="agent.name" :value="agent.id"></el-option>
+                    </el-select></el-form-item>
+                    <el-form-item :label="st('Entry')"><el-select v-model="studioEntryId" :disabled="studioBusy || !!studioCreatedTeamId">
+                        <el-option v-for="agent in studioRoleOptions" :key="agent.id" :label="agent.name" :value="agent.id"></el-option>
+                    </el-select></el-form-item>
+                </div>
+                <p class="studio-composer-hint">{{ st('LocalRolesRequired') }} · {{ studioSelectedAgents.map(agent => agent.name).join(' / ') }}</p>
+            </template>
+            <el-form-item :label="st('TaskName')"><el-input v-model="studioTaskName" maxlength="150" :disabled="studioBusy"></el-input></el-form-item>
+            <el-form-item :label="st('Command')"><el-input v-model="studioCommand" type="textarea" :rows="4" :disabled="studioBusy"></el-input></el-form-item>
+            <el-form-item :label="st('Model')"><el-select v-model="studioModelId" :disabled="studioBusy">
+                <el-option :label="st('DefaultModel')" :value="0"></el-option>
+                <el-option v-for="model in studioModels" :key="model.id" :label="model.alias || model.modelId" :value="model.id"></el-option>
+            </el-select></el-form-item>
+            <el-checkbox v-model="studioApproval" :disabled="studioBusy">{{ st('Approval') }}</el-checkbox>
+        </el-form>
+        <span slot="footer">
+            <el-button :disabled="studioBusy" @@click="studioComposerOpen = false">{{ st('Cancel') }}</el-button>
+            <el-button v-if="!studioRunGroupId" :disabled="studioBusy" @@click="studioSubmitTeam(false)">{{ st('CreateOnly') }}</el-button>
+            <el-button type="primary" :loading="studioBusy" @@click="studioSubmitTeam(true)">{{ st(studioRunGroupId ? 'RunTask' : 'TeamAndRun') }}</el-button>
+        </span>
+    </el-dialog>
+</div>

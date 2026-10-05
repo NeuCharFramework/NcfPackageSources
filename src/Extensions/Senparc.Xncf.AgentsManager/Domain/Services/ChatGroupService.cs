@@ -45,6 +45,9 @@
     修改标识：Senparc - 20260829
     修改描述：v0.17.0 增强 Agent 请求诊断、ChatGroup 状态处理与工作流对象支持
 
+    修改标识：Senparc - 20261006
+    修改描述：工作室等待任务持久化后返回，同时保留后台异步执行
+
 ----------------------------------------------------------------*/
 
 #nullable enable annotations
@@ -198,16 +201,47 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     {
         ValidateRunRequest(request);
         var task = RunChatGroupExecutionCoreAsync(request);
+        TrackBackgroundTask(task);
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// 启动 ChatGroup 后立即返回已创建的任务引用，执行继续在后台进行。
+    /// </summary>
+    public async Task<ChatGroupRunResult> StartChatGroupInThreadAsync(ChatGroupRunCommand request)
+    {
+        ValidateRunRequest(request);
+        var started = new TaskCompletionSource<ChatGroupRunResult>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var task = RunChatGroupExecutionCoreAsync(request, started);
+        TrackBackgroundTask(task, started);
+        return await started.Task;
+    }
+
+    private static void TrackBackgroundTask(
+        Task<ChatGroupRunResult> task, TaskCompletionSource<ChatGroupRunResult> started = null)
+    {
+        lock (TaskList)
+        {
+            TaskList.Add(task);
+        }
 
         _ = task.ContinueWith(completedTask =>
         {
             if (completedTask.IsFaulted && completedTask.Exception != null)
             {
-                SenparcTrace.BaseExceptionLog(completedTask.Exception.GetBaseException());
+                var error = completedTask.Exception.GetBaseException();
+                started?.TrySetException(error);
+                SenparcTrace.BaseExceptionLog(error);
+            }
+            else if (completedTask.IsCanceled)
+            {
+                started?.TrySetCanceled();
+            }
+            else
+            {
+                started?.TrySetResult(completedTask.Result);
             }
         }, TaskScheduler.Default);
-
-        return Task.CompletedTask;
     }
 
     private static void ValidateRunRequest(ChatGroupRunCommand request)
@@ -253,7 +287,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return RunChatGroupExecutionCoreAsync(request);
     }
 
-    private async Task<ChatGroupRunResult> RunChatGroupExecutionCoreAsync(ChatGroupRunCommand request)
+    private async Task<ChatGroupRunResult> RunChatGroupExecutionCoreAsync(
+        ChatGroupRunCommand request, TaskCompletionSource<ChatGroupRunResult> started = null)
     {
         CancellationToken cancellationToken = request.CancellationToken;
         cancellationToken.ThrowIfCancellationRequested();
@@ -401,6 +436,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             runningKey = chatTaskService.GetChatTaskRunCacheKey(chatTask.Id);
             await _cache.SetAsync(runningKey, new RunningChatTaskDto { ChatTaskDto = chatTaskDto });
             PublishStatusEvent(chatTask.Id, ChatTask_Status.Chatting);
+            started?.TrySetResult(CreateRunResult(chatTask, chatGroup));
 
             logger.Append($"开始运行 {chatGroup.Name}");
 
