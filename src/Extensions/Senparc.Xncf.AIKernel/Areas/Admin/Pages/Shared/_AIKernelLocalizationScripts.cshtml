@@ -3,9 +3,11 @@
 @using Senparc.Xncf.AIKernel
 @inject IStringLocalizer<AIKernelResource> XR
 @{
-    var translations = XR.GetAllStrings(includeParentCultures: true)
-        .ToDictionary(item => $"AIKernel.{item.Name}", item => item.Value);
-    var sourceTranslations = XR.GetAllStrings(includeParentCultures: true)
+    var strings = XR.GetAllStrings(includeParentCultures: true).ToList();
+    var translations = strings
+        .GroupBy(item => item.Name)
+        .ToDictionary(group => $"AIKernel.{group.Key}", group => group.First().Value);
+    var sourceTranslations = strings
         .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal))
         .Select(item => item.Value.Split(new[] { "||" }, 2, StringSplitOptions.None))
         .Where(parts => parts.Length == 2)

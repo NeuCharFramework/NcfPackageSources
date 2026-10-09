@@ -84,6 +84,10 @@ The UI opens a five-stage tutorial by default, links to both language guides, of
 
 UI 默认展开五阶段教程，提供中英文文档入口、四行 JSONL 样例下载、带行号的数据结构/边界校验和全部高级参数解释。切换 Worker 会清空其模型/数据集/任务选择并拒绝旧响应，请求遵循所选配置的超时。先运行默认 10 步冒烟测试，再独立评估后部署推理。
 
+Module pages load `_AIKernelLocalizationScripts` rather than the Admin host's generic partial, so frontend labels resolve to real localized text. An unconfigured Worker is shown as a guided setup state; actual API failures remain errors. Rebuild/restart the host after updating the module.
+
+模块页面使用专属 `_AIKernelLocalizationScripts`，避免与 Admin 宿主同名 partial 冲突而显示资源键。尚未配置 Worker 时展示操作引导，真实 API 故障仍显示错误。更新模块后需重新构建并重启宿主。
+
 Functionality is the acceptance criterion, not the appearance of the UI. The backend validates offline models/data, executes real adapter updates/evaluation, persists jobs/events and exports compatible artifacts. The UI consumes Worker 1.1+ paging APIs to expose records beyond the legacy first 100 and uses persistent `storeId` to invalidate cached resources when storage changes. Legacy array endpoints remain available for existing clients. The global switch blocks NCF access; it does not terminate running Worker children.
 
 验收以功能为中心，不以页面外观代替训练正确性。后端负责离线模型/数据校验、真实适配器更新与验证、任务/事件持久化及兼容产物导出。UI 使用 Worker 1.1+ 分页接口操作超过旧接口最近 100 条的历史，并以持久化 `storeId` 在存储变化时清空旧资源缓存。旧数组接口保留兼容。全局开关阻断 NCF 接入，并不终止已运行的 Worker 子进程。
