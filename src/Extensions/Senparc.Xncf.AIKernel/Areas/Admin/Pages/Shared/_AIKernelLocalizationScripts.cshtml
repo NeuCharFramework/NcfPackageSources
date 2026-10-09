@@ -16,5 +16,16 @@
 }
 <script>
     window.ncfI18n = Object.assign(window.ncfI18n || {}, @Html.Raw(JsonSerializer.Serialize(translations)));
+    window.AIKernelI18n = Object.assign(window.AIKernelI18n || {}, @Html.Raw(JsonSerializer.Serialize(translations)));
+    window.ncfT = window.ncfT || function (key) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        var value = Object.prototype.hasOwnProperty.call(window.ncfI18n, key)
+            ? window.ncfI18n[key]
+            : key;
+        return value.replace(/\{(\d+)\}/g, function (match, index) {
+            return typeof args[index] === 'undefined' ? match : args[index];
+        });
+    };
+    window.ncfRegisterSourceTranslations = window.ncfRegisterSourceTranslations || function () { };
     window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)));
 </script>

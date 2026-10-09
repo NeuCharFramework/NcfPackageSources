@@ -166,7 +166,11 @@ var app = new Vue({
     },
     methods: {
         t(key) {
-            return ncfT("AIKernel.FineTuning." + key);
+            var localizedKey = "AIKernel.FineTuning." + key;
+            if (window.AIKernelI18n && Object.prototype.hasOwnProperty.call(window.AIKernelI18n, localizedKey)) {
+                return window.AIKernelI18n[localizedKey];
+            }
+            return typeof ncfT === "function" ? ncfT(localizedKey) : localizedKey;
         },
         isRecord(value) {
             return value !== null && typeof value === "object" && !Array.isArray(value);

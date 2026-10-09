@@ -473,6 +473,14 @@ test("AIKernel pages use a module-specific localization partial without the host
     const partial = fs.readFileSync(path.join(root, "Areas/Admin/Pages/Shared/_AIKernelLocalizationScripts.cshtml"), "utf8");
     assert.ok(partial.includes('IStringLocalizer<AIKernelResource>'));
     assert.ok(partial.includes('$"AIKernel.{group.Key}"'));
+    assert.ok(partial.includes("window.AIKernelI18n"));
+});
+
+test("fine-tuning labels prefer the module dictionary and remain usable without host ncfT", () => {
+    const { app, context } = instance();
+    context.window.AIKernelI18n = { "AIKernel.FineTuning.Title": "模块本地化标题" };
+    context.window.ncfT = undefined;
+    assert.equal(app.t("Title"), "模块本地化标题");
 });
 
 test("an unconfigured Worker is an actionable setup state, not a connection failure", async () => {
