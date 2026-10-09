@@ -163,7 +163,7 @@
 </div>
 
 @section scripts {
-    <partial name="~/Areas/Admin/Pages/Shared/_AIKernelLocalizationScripts.cshtml" />
+    @await Html.PartialAsync("~/Areas/Admin/Pages/Shared/_AIKernelLocalizationScripts.cshtml")
     <script src="~/lib/echarts/dist/echarts.js"></script>
     <script src="~/js/Admin/AITokenMonitor/index.js"></script>
 }
