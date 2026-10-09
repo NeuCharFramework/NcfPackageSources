@@ -1,0 +1,91 @@
+x-worker: &worker
+  init: true
+  read_only: true
+  user: "10001:10001"
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  pids_limit: 256
+  cpus: 2
+  mem_limit: 6g
+  memswap_limit: 6g
+  stop_grace_period: 45s
+  restart: unless-stopped
+  tmpfs:
+    - /tmp:rw,noexec,nosuid,size=512m,mode=1777
+  environment:
+    NCF_WORKER_KEY: ${NCF_WORKER_KEY:?Set NCF_WORKER_KEY to a secret of at least 32 characters}
+    NCF_QUEUE_LIMIT: "8"
+    NCF_CANCEL_GRACE_SECONDS: "30"
+    NCF_EVENT_LIMIT: "10000"
+    NCF_TORCH_THREADS: "2"
+  networks: [training-internal]
+  healthcheck:
+    test: ["CMD", "python", "-c", "import os,urllib.request; urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8091/health',headers={'X-NCF-Worker-Key':os.environ['NCF_WORKER_KEY']}),timeout=3)"]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+    start_period: 60s
+
+services:
+  cpu:
+    <<: *worker
+    profiles: [cpu]
+    build:
+      context: .
+      dockerfile: Dockerfile.cpu
+    networks:
+      training-internal:
+        aliases: [training-worker]
+    volumes:
+      - type: bind
+        source: ${NCF_MODELS_DIR:-./models}
+        target: /models
+        read_only: true
+      - cpu-data:/data
+  cuda:
+    <<: *worker
+    profiles: [cuda]
+    build:
+      context: .
+      dockerfile: Dockerfile.cuda
+    networks:
+      training-internal:
+        aliases: [training-worker]
+    volumes:
+      - type: bind
+        source: ${NCF_MODELS_DIR:-./models}
+        target: /models
+        read_only: true
+      - cuda-data:/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+  gateway:
+    profiles: [cpu, cuda]
+    image: nginx:1.28.0-alpine
+    entrypoint: ["nginx", "-g", "daemon off;"]
+    user: "101:101"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 32
+    cpus: 0.25
+    mem_limit: 64m
+    restart: unless-stopped
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=32m,mode=1777"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports: ["127.0.0.1:${NCF_WORKER_PORT:-8091}:8080"]
+    networks: [training-internal, api-ingress]
+
+networks:
+  training-internal:
+    internal: true
+  api-ingress:
+volumes:
+  cpu-data:
+  cuda-data:

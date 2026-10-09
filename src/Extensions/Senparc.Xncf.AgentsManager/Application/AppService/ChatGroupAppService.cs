@@ -105,6 +105,80 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             this._humanInTheLoopRequestStore = humanInTheLoopRequestStore;
         }
 
+        [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.SearchChatGroup.Name", "Function.Agents.SearchChatGroup.Description", typeof(Register))]
+        public async Task<StringAppResponse> FindChatGroups(ChatGroup_FindByNameRequest request)
+        {
+            return await this.GetStringResponseAsync(async (response, logger) =>
+            {
+                var query = request.Query?.Trim();
+                if (string.IsNullOrWhiteSpace(query))
+                {
+                    return "请输入 ChatGroup 名称或适用场景关键词。";
+                }
+                if (query.Length > 100)
+                {
+                    return "搜索词最多 100 个字符。";
+                }
+
+                var topN = request.TopN <= 0 ? 5 : Math.Min(request.TopN, 10);
+                var groups = await _chatGroupService.GetObjectListAsync(
+                    0,
+                    topN,
+                    group => group.Enable
+                        && (group.Name.Contains(query) || group.Description.Contains(query)),
+                    group => group.Id,
+                    Ncf.Core.Enums.OrderingType.Descending);
+                var groupList = groups.ToList();
+                if (groupList.Count == 0)
+                {
+                    return $"没有找到名称或说明包含“{query}”的 ChatGroup。";
+                }
+
+                var memberLinksByGroup = new Dictionary<int, List<ChatGroupMember>>();
+                foreach (var group in groupList)
+                {
+                    var memberPage = await _chatGroupMemeberService.GetObjectListAsync(
+                        0,
+                        13,
+                        member => member.ChatGroupId == group.Id,
+                        member => member.Id,
+                        Ncf.Core.Enums.OrderingType.Descending);
+                    memberLinksByGroup[group.Id] = memberPage.ToList();
+                }
+
+                var memberLinks = memberLinksByGroup.Values.SelectMany(members => members).ToList();
+                var agentIds = memberLinks.Select(member => member.AgentTemplateId).Distinct().ToList();
+                var agents = agentIds.Count == 0
+                    ? new List<AgentTemplate>()
+                    : await _agentsTemplateService.GetFullListAsync(agent => agentIds.Contains(agent.Id));
+                var agentNames = agents.ToDictionary(agent => agent.Id, agent => agent.Name);
+
+                return string.Join(
+                    "\n",
+                    groupList.Select(group =>
+                    {
+                        var groupMembers = memberLinksByGroup[group.Id];
+                        var members = groupMembers
+                            .Select(member => agentNames.TryGetValue(member.AgentTemplateId, out var name)
+                                ? name
+                                : $"AgentTemplate #{member.AgentTemplateId}")
+                            .Distinct(StringComparer.OrdinalIgnoreCase)
+                            .ToList();
+                        var description = string.IsNullOrWhiteSpace(group.Description)
+                            ? "(无说明)"
+                            : group.Description.Length <= 200
+                                ? group.Description
+                                : group.Description.Substring(0, 200) + "…";
+                        var memberSummary = string.Join("、", members.Take(12));
+                        if (members.Count > 12)
+                        {
+                            memberSummary += " 等更多成员";
+                        }
+                        return $"ID: {group.Id}; 名称: {group.Name}; 说明: {description}; 成员: {memberSummary}";
+                    }));
+            });
+        }
+
         [FunctionRender(typeof(AgentsManagerResource), "Function.Agents.ManageChatGroup.Name", "Function.Agents.ManageChatGroup.Description", typeof(Register))]
         public async Task<StringAppResponse> ManageChatGroupManage(ChatGroup_ManageChatGroupRequest request)
         {

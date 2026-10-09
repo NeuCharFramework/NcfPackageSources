@@ -311,8 +311,12 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 {
                     return "请输入搜索词（名称、PromptCode 或关键字）";
                 }
+                if (request.Query.Length > 500)
+                {
+                    return "搜索词最多 500 个字符。";
+                }
 
-                var topN = request.TopN <= 0 ? 5 : Math.Min(request.TopN, 20);
+                var topN = request.TopN <= 0 ? 5 : Math.Min(request.TopN, 10);
                 var aliasMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 {
                     ["提示词优化器"] = "PromptCatalyzer",
@@ -324,6 +328,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     .Select(z => z.Trim())
                     .Where(z => !string.IsNullOrWhiteSpace(z))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .Take(10)
                     .ToList();
 
                 if (keywords.Count == 0)
@@ -331,36 +336,33 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     return "请输入有效搜索词";
                 }
 
-                var enabledAgents = await _agentsTemplateService.GetFullListAsync(z => z.Enable, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
-
                 foreach (var keywordRaw in keywords)
                 {
                     var keyword = aliasMap.TryGetValue(keywordRaw, out var alias) ? alias : keywordRaw;
-                    var exact = enabledAgents
-                        .Where(z => string.Equals(z.Name, keyword, StringComparison.OrdinalIgnoreCase)
-                            || string.Equals(z.PromptCode, keyword, StringComparison.OrdinalIgnoreCase))
-                        .OrderByDescending(z => z.Id)
-                        .ToList();
-
-                    var fuzzy = enabledAgents
-                        .Where(z =>
-                            (!string.IsNullOrWhiteSpace(z.Name) && z.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase))
-                            || (!string.IsNullOrWhiteSpace(z.PromptCode) && z.PromptCode.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
-                        .OrderByDescending(z => z.Id)
-                        .ToList();
-
-                    var candidates = exact.Count > 0
+                    var exact = await _agentsTemplateService.GetObjectListAsync(
+                        0,
+                        topN,
+                        z => z.Enable && (z.Name == keyword || z.PromptCode == keyword),
+                        z => z.Id,
+                        Ncf.Core.Enums.OrderingType.Descending);
+                    var candidates = exact.TotalCount > 0
                         ? exact
-                        : fuzzy;
+                        : await _agentsTemplateService.GetObjectListAsync(
+                            0,
+                            topN,
+                            z => z.Enable
+                                && (z.Name.Contains(keyword) || z.PromptCode.Contains(keyword)),
+                            z => z.Id,
+                            Ncf.Core.Enums.OrderingType.Descending);
 
                     logger.Append($"关键词：{keywordRaw}");
-                    if (candidates.Count == 0)
+                    if (candidates.TotalCount == 0)
                     {
                         logger.Append("  未找到可用 AgentTemplate");
                         continue;
                     }
 
-                    foreach (var c in candidates.Take(topN))
+                    foreach (var c in candidates)
                     {
                         logger.Append($"  ID={c.Id} | 名称={c.Name} | PromptCode={c.PromptCode}{System.Environment.NewLine}");
                     }

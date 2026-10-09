@@ -146,8 +146,6 @@ namespace Senparc.Areas.Admin.Domain.Services
             AdminChatGenerationOptions generationOptions = null,
             CancellationToken cancellationToken = default)
         {
-            var showLoadedFunctionsInConsole = true;//是否输出 function 的 schema 信息到控制台，便于调试和验证 Function Calling 功能是否正确加载了函数
-
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
 
             var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
@@ -165,15 +163,15 @@ namespace Senparc.Areas.Admin.Domain.Services
             var importedWorkflowCount = build.ImportedWorkflowCount;
             var importedPluginNames = build.PluginNames;
             var importedFunctionSignatures = build.Signatures;
-            var loadedFunctionDebugLines = build.DebugLines;
-
+            var systemInstructions = LimitSystemInstructions(
+                generationOptions?.SystemInstructions ?? BuildSystemMessage(modules));
 
 #pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
             var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChat-{userId}-{sessionId}", new ChatClientAgentOptions()
             {
                 ChatOptions = new ChatOptions()
                 {
-                    Instructions = generationOptions?.SystemInstructions ?? BuildSystemMessage(modules),
+                    Instructions = systemInstructions,
                     MaxOutputTokens = Math.Clamp(generationOptions?.MaxOutputTokens ?? 2000, 256, 8000),
                     TopP = 0.9f,
                     Temperature = Math.Clamp(generationOptions?.Temperature ?? 0.6f, 0f, 1.5f),
@@ -199,14 +197,6 @@ namespace Senparc.Areas.Admin.Domain.Services
                     string.Join(",", moduleUids),
                     importedWorkflowCount);
             }
-            else
-            {
-                if (showLoadedFunctionsInConsole)
-                {
-                    WriteLoadedFunctionsToConsole(sessionId, userId, loadedFunctionDebugLines);
-                }
-            }
-
             _logger.LogInformation(
                 "AdminChat FunctionCalling 插件加载完成：SessionId={SessionId}, UserId={UserId}, ModuleCount={ModuleCount}, Modules={Modules}, Plugins={Plugins}, Functions={Functions}, Workflows={Workflows}, FunctionList={FunctionList}",
                 sessionId,
@@ -218,7 +208,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 importedWorkflowCount,
                 string.Join(" | ", importedFunctionSignatures));
 
-            var prompt = BuildUserPrompt(messages, userMessage);
+            var prompt = AdminChatPromptBuilder.BuildUserPrompt(messages, userMessage);
+            LogPromptContextSize(sessionId, userId, systemInstructions, prompt, aiFunctions, messages?.Count ?? 0);
 
             // 使用 FunctionChoiceBehavior.Auto() 让 AI 根据需要自动调用 ModuleAssistantPlugin 函数
             //var executionSettings = new PromptExecutionSettings
@@ -298,11 +289,15 @@ namespace Senparc.Areas.Admin.Domain.Services
             var effectiveTimeout = timeout ?? TimeSpan.FromSeconds(120);
 
 #pragma warning disable MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
+            var systemInstructions = LimitSystemInstructions(
+                BuildSystemMessage(modules) + AdminChatHarnessExecutor.BuildProtocolInstructions());
+            var firstTurnPrompt = AdminChatPromptBuilder.BuildUserPrompt(messages, userMessage) + AdminChatHarnessExecutor.BuildStartTail();
+            LogPromptContextSize(sessionId, userId, systemInstructions, firstTurnPrompt, build.Functions, messages?.Count ?? 0);
             var iWantToRun = await agentAiHandler.IWantTo(setting).ConfigChatModel($"AdminChatHarness-{userId}-{sessionId}", new ChatClientAgentOptions()
             {
                 ChatOptions = new ChatOptions()
                 {
-                    Instructions = BuildSystemMessage(modules) + AdminChatHarnessExecutor.BuildProtocolInstructions(),
+                    Instructions = systemInstructions,
                     MaxOutputTokens = 4000,
                     TopP = 0.9f,
                     Temperature = 0.4f,
@@ -317,7 +312,6 @@ namespace Senparc.Areas.Admin.Domain.Services
                 ).BuildKernelWithAgentSessionAsync();
 #pragma warning restore MEAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
 
-            var firstTurnPrompt = BuildUserPrompt(messages, userMessage) + AdminChatHarnessExecutor.BuildStartTail();
             var continuePrompt = AdminChatHarnessExecutor.BuildContinuePrompt();
 
             var executor = new AdminChatHarnessExecutor
@@ -377,6 +371,9 @@ namespace Senparc.Areas.Admin.Domain.Services
             var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
             var agentAiHandler = new AgentAiHandler(setting);
             var build = await BuildAdminChatFunctionsAsync(setting, agentAiHandler, sessionId, userId, modules, workflows, true);
+            var nativeSystemInstructions = BuildSystemMessage(modules);
+            var nativePrompt = AdminChatPromptBuilder.BuildUserPrompt(messages, userMessage);
+            LogPromptContextSize(sessionId, userId, nativeSystemInstructions, nativePrompt, build.Functions, messages?.Count ?? 0);
             var trajectory = await _trajectoryService.CreateAsync(
                 sessionId,
                 userId,
@@ -420,7 +417,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var result = await ExecuteNativeHarnessAsync(
                 trajectory,
                 harnessAgent,
-                BuildUserPrompt(messages, userMessage),
+                nativePrompt,
                 timeout ?? TimeSpan.FromMinutes(10),
                 cancellationToken,
                 onLiveEvent: onLiveEvent);
@@ -1141,8 +1138,6 @@ namespace Senparc.Areas.Admin.Domain.Services
             var importedFunctionCount = 0;
             var importedWorkflowCount = 0;
             var importedFunctionSignatures = new List<string>();
-            var loadedFunctionDebugLines = new List<string>();
-
             foreach (var pluginGroup in functionPluginGroups)
             {
                 try
@@ -1177,13 +1172,13 @@ namespace Senparc.Areas.Admin.Domain.Services
                                 parameterInfos = await FunctionHelper.GetFunctionParameterInfoAsync(
                                     _serviceProvider,
                                     functionBag,
-                                    true).ConfigureAwait(false);
+                                    tryLoadData: false).ConfigureAwait(false);
                             }
                             catch (Exception metadataException)
                             {
                                 _logger.LogWarning(
                                     metadataException,
-                                    "读取 FunctionRender 参数选项失败，将使用基础 schema：Plugin={PluginType}, Method={MethodName}",
+                                    "读取 FunctionRender 参数元数据失败，将使用基础 schema：Plugin={PluginType}, Method={MethodName}",
                                     pluginType.FullName,
                                     functionBag.MethodInfo.Name);
                                 parameterInfos = Array.Empty<FunctionParameterInfo>();
@@ -1214,7 +1209,6 @@ namespace Senparc.Areas.Admin.Domain.Services
                     var addedPlugin = KernelPluginFactory.CreateFromFunctions(pluginName, kernelFunctions);
 
                     importedFunctionSignatures.AddRange(addedPlugin.Select(kernelFunction => $"{kernelFunction.Metadata.PluginName}.{kernelFunction.Metadata.Name}({kernelFunction.Metadata.Description ?? "N/A"})"));
-                    loadedFunctionDebugLines.AddRange(BuildKernelPluginDebugLines(addedPlugin));
                     importedPluginNames.Add(pluginName);
                     importedFunctionCount += addedPlugin.Count();
                 }
@@ -1252,12 +1246,6 @@ namespace Senparc.Areas.Admin.Domain.Services
                         importedWorkflowCount++;
                         importedFunctionSignatures.Add(
                             $"{tool.Name}({string.Join(", ", workflow.Parameters.Select(parameter => parameter.Name))})");
-                        loadedFunctionDebugLines.Add(
-                            $"- Workflow: {tool.Name} ({workflow.Name})");
-                        loadedFunctionDebugLines.Add(
-                            $"  Description: {tool.Description}");
-                        loadedFunctionDebugLines.Add(
-                            $"  Schema: {tool.JsonSchema.GetRawText()}");
                     }
                 }
                 catch (Exception ex)
@@ -1272,7 +1260,6 @@ namespace Senparc.Areas.Admin.Domain.Services
                 ImportedFunctionCount = importedFunctionCount,
                 ImportedWorkflowCount = importedWorkflowCount,
                 Signatures = importedFunctionSignatures,
-                DebugLines = loadedFunctionDebugLines
             };
         }
 
@@ -1283,7 +1270,6 @@ namespace Senparc.Areas.Admin.Domain.Services
             public int ImportedFunctionCount { get; set; }
             public int ImportedWorkflowCount { get; set; }
             public List<string> Signatures { get; set; }
-            public List<string> DebugLines { get; set; }
         }
 
         private static async Task<string> ExecuteRunnerWithSessionRetryAsync(
@@ -1435,93 +1421,6 @@ namespace Senparc.Areas.Admin.Domain.Services
             return hex.Length > length ? hex.Substring(0, length) : hex;
         }
 
-        private static void WriteLoadedFunctionsToConsole(int sessionId, int userId, List<string> loadedFunctionDebugLines)
-        {
-            if (loadedFunctionDebugLines == null || loadedFunctionDebugLines.Count == 0)
-            {
-                return;
-            }
-
-            Console.WriteLine($"[AdminChat Functions] SessionId={sessionId}, UserId={userId}, LoadedFunctions={loadedFunctionDebugLines.Count(line => line.StartsWith("- Function:", StringComparison.Ordinal))}");
-            foreach (var line in loadedFunctionDebugLines)
-            {
-                Console.WriteLine(line);
-            }
-        }
-
-        private static List<string> BuildKernelPluginDebugLines(KernelPlugin kernelPlugin)
-        {
-            var lines = new List<string>();
-            foreach (var kernelFunction in kernelPlugin)
-            {
-                lines.AddRange(BuildKernelFunctionDebugLines(kernelFunction));
-            }
-
-            return lines;
-        }
-
-        private static List<string> BuildKernelFunctionDebugLines(KernelFunction kernelFunction)
-        {
-            var metadata = kernelFunction.Metadata;
-            var functionParameters = metadata.Parameters?.ToList() ?? new List<KernelParameterMetadata>();
-            var lines = new List<string>
-            {
-                $"- Function: {metadata.PluginName}.{metadata.Name}",
-                $"  Description: {metadata.Description ?? "(none)"}",
-                $"  ReturnType: {metadata.ReturnParameter.ParameterType?.FullName ?? "(none)"}",
-                $"  ReturnSchema: {FormatSchema(metadata.ReturnParameter.Schema)}"
-            };
-
-            if (functionParameters == null || functionParameters.Count == 0)
-            {
-                lines.Add("  Parameters: (none)");
-                return lines;
-            }
-
-            lines.Add($"  Parameters: {functionParameters.Count}");
-            foreach (var parameter in functionParameters)
-            {
-                lines.Add($"    - {parameter.Name}: type={parameter.ParameterType?.FullName ?? "(none)"}, required={parameter.IsRequired}, description={FormatInlineValue(parameter.Description)}, default={FormatParameterValue(parameter.DefaultValue)}, schema={FormatSchema(parameter.Schema)}");
-            }
-
-            return lines;
-        }
-
-        private static string FormatParameterValue(object value)
-        {
-            if (value == null)
-            {
-                return "(null)";
-            }
-
-            if (value is string stringValue)
-            {
-                return FormatInlineValue(stringValue);
-            }
-
-            if (value is IEnumerable<string> stringValues)
-            {
-                return $"[{string.Join(", ", stringValues.Select(FormatInlineValue))}]";
-            }
-
-            return FormatInlineValue(value.ToString());
-        }
-
-        private static string FormatSchema(KernelJsonSchema schema)
-        {
-            return schema == null ? "(none)" : FormatInlineValue(schema.ToString());
-        }
-
-        private static string FormatInlineValue(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return "(empty)";
-            }
-
-            return value.Replace("\r", " ").Replace("\n", " ").Trim();
-        }
-
         private static string BuildSystemMessage(List<AdminChatSessionModule> modules)
         {
             var sb = new StringBuilder();
@@ -1540,30 +1439,37 @@ namespace Senparc.Areas.Admin.Domain.Services
                 }
             }
 
-            return sb.ToString();
+            return LimitSystemInstructions(sb.ToString());
         }
 
-        private static string BuildUserPrompt(List<AdminChatMessage> messages, string currentUserMessage)
+        private static string LimitSystemInstructions(string systemInstructions)
         {
-            var history = (messages ?? new List<AdminChatMessage>())
-                .OrderBy(m => m.Sequence)
-                .TakeLast(12)
-                .Select(m => $"[{GetRoleName(m.RoleType)}] {m.Content}");
-
-            return "以下是最近对话上下文，请在保持语义连贯的前提下回答最后一个用户问题。\n\n"
-                 + string.Join("\n", history)
-                 + $"\n\n[用户当前问题] {currentUserMessage}";
+            const int maxSystemInstructionCharacters = 8000;
+            const string truncated = "\n[系统说明已截断]";
+            var value = systemInstructions ?? string.Empty;
+            return value.Length <= maxSystemInstructionCharacters
+                ? value
+                : value.Substring(0, maxSystemInstructionCharacters - truncated.Length) + truncated;
         }
 
-        private static string GetRoleName(ChatMessageRoleType roleType)
+        private void LogPromptContextSize(
+            int sessionId,
+            int userId,
+            string systemInstructions,
+            string prompt,
+            IReadOnlyCollection<AIFunction> functions,
+            int historyMessageCount)
         {
-            return roleType switch
-            {
-                ChatMessageRoleType.User => "用户",
-                ChatMessageRoleType.Assistant => "助手",
-                ChatMessageRoleType.System => "系统",
-                _ => "未知"
-            };
+            var toolSchemaCharacters = functions?.Sum(function => function.JsonSchema.GetRawText().Length) ?? 0;
+            _logger.LogInformation(
+                "AdminChat 请求上下文大小：SessionId={SessionId}, UserId={UserId}, SystemInstructionCharacters={SystemInstructionCharacters}, PromptCharacters={PromptCharacters}, ToolCount={ToolCount}, ToolSchemaCharacters={ToolSchemaCharacters}, HistoryMessageCount={HistoryMessageCount}",
+                sessionId,
+                userId,
+                systemInstructions?.Length ?? 0,
+                prompt?.Length ?? 0,
+                functions?.Count ?? 0,
+                toolSchemaCharacters,
+                Math.Min(historyMessageCount, 12));
         }
 
         private static string ResolveModelIdentifier(SenparcAiSetting setting)

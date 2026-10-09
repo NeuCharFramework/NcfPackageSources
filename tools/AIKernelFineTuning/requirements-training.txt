@@ -1,0 +1,5 @@
+transformers>=4.57.3,<4.58
+peft>=0.18.0,<0.19
+accelerate>=1.12.0,<1.13
+safetensors>=0.6.2,<0.8
+numpy>=2.2,<3
