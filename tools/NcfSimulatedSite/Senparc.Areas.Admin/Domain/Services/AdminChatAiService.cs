@@ -37,6 +37,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
+    修改标识：Senparc - 20261009
+    修改描述：v0.11.0 增强后台 Admin Chat 群组配置、提示词构建与上下文控制
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;

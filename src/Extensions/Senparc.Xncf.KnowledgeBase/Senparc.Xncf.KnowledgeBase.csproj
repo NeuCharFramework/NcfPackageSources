@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.5</Version>
+    <Version>0.7.6</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -18,7 +18,6 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		v0.1 创世
 		[2025-07-27] v0.1.5-preview1s update Knowledge Base
 		[2025-11-01] update basic libraries, including Senparc.AI
 		[2025-01-07] v0.1.8-preview.1 Reset all database migrations
@@ -74,7 +73,10 @@
 		2、保持知识库模块与共享 AI 工具调用兼容
 		[2026-10-05] v0.7.5 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
 		1、Updated Senparc.Xncf.KnowledgeBase project behavior and integration for the latest feature and reliability improvements.
-		2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
+		2、chore: update package versions and dependencies across multiple projects
+		[2026-10-09] v0.7.6 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
+		v0.1 创世
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：AIFineTuningWorker_Request.cs
+    文件功能描述：微调 Worker 管理请求模型
+
+
+    创建标识：Senparc - 20261009
+
+    修改标识：Senparc - 20261009
+    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
+
+----------------------------------------------------------------*/
+
 using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xncf.AIKernel.OHS.Local.PL;

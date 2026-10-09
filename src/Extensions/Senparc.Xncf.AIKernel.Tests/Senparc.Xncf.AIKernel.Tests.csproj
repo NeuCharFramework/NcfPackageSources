@@ -22,7 +22,11 @@
       2、保持项目引用链与当前功能兼容
       [2026-10-05] v0.0.4 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
       1、Updated Senparc.Xncf.AIKernel.Tests project behavior and integration for the latest feature and reliability improvements.
-      2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
+      2、chore: update package versions and dependencies across multiple projects
+      [2026-10-09] v0.0.5 补充 AIKernel 本地化与微调 Worker 回归测试
+      1、覆盖模块本地化脚本加载以及新增微调 Worker 页面资源键
+      2、验证 Worker 客户端、持久化配置和真实训练流程的回归行为
+</PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>

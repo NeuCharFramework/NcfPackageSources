@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：AdminChatPromptBuilder.cs
+    文件功能描述：后台 AI 对话提示词构建器
+
+
+    创建标识：Senparc - 20261009
+
+    修改标识：Senparc - 20261009
+    修改描述：v0.11.0 增强后台 Admin Chat 群组配置、提示词构建与上下文控制
+
+----------------------------------------------------------------*/
+
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using System;
 using System.Collections.Generic;

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.24.14</Version>
+    <Version>0.24.15</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -118,6 +118,7 @@
 		[2026-10-01] v0.24.9 接入 FileManager 私有附件导入
 		1、Weixin Bot 收到媒体文件后通过 Abstractions EventBus 请求保存到 FileManager
 		2、修复后台轮询在多租户模式下的账号发现和租户上下文传播
+		[2026-10-09] v0.24.15 Dependency update from Senparc.Xncf.PromptRange to 0.19.8
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

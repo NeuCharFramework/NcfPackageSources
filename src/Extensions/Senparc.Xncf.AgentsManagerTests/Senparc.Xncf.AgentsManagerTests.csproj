@@ -47,7 +47,11 @@
         1、同步受影响的基础库、AI 模块或宿主项目版本
         2、保持项目引用链与当前功能兼容
         [2026-10-05] v0.0.17 Enhanced Senparc.Xncf.AgentsManagerTests functionality and compatibility
-        1、Updated Senparc.Xncf.AgentsManagerTests project behavior and integration for the latest feature and reliability improvements.</PackageReleaseNotes>
+        1、Updated Senparc.Xncf.AgentsManagerTests project behavior and integration for the latest feature and reliability improvements.
+        [2026-10-09] v0.0.18 补充 Agent Studio 管理与前端交互回归测试
+        1、覆盖 Studio 页面渲染、群组配置、成员管理和任务交互
+        2、补充浏览器端 Three.js 场景与状态更新验证
+</PackageReleaseNotes>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

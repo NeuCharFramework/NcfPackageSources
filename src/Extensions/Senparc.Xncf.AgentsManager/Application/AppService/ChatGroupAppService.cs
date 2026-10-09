@@ -30,6 +30,9 @@
     修改标识：Senparc - 20261006
     修改描述：工作室增量组队、团队创建及 Agent/Group/Task 完整快照
 
+    修改标识：Senparc - 20261009
+    修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp;
