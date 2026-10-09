@@ -1,0 +1,3 @@
+-r requirements-api.txt
+-r requirements-training.txt
+torch==2.8.0

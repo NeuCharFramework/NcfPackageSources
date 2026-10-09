@@ -53,6 +53,7 @@
         <el-button type="primary" icon="el-icon-plus" size="small" @@click="addModel">@XR["Vector.Add"]</el-button>
         <el-button type="primary" icon="el-icon-plus" size="small" @@click="addNeuCharModel">@XR["Model.ImportNeuChar"]</el-button>
         <el-button type="primary" plain icon="el-icon-tachometer" size="small" tag="a" href="@Url.Content("~/Admin/AITokenMonitor/Index")">@XR["Area.AIKernel.TokenMonitor"]</el-button>
+        <a class="el-button el-button--primary el-button--small is-plain" href="@Url.Content("~/Admin/AIFineTuning/Index")?uid=@Model.Uid"><i class="el-icon-setting" aria-hidden="true"></i> @XR["FineTuning.Title"]</a>
         <el-input v-model="keyword" size="small" style="width: 220px; margin-left: 10px"
                   :placeholder="ncfT('AIKernel.TokenMonitor.SearchPlaceholder')" clearable
                   @@clear="search" @@keyup.enter.native="search"></el-input>
