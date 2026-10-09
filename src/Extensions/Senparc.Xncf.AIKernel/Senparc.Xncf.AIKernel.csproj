@@ -18,6 +18,9 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
+		[2026-10-09] v0.16.4 修复模块本地化 partial 与 Admin 宿主重名导致的前端资源键显示
+		1、模型、微调、向量、监控及仪表盘页面统一使用模块专属本地化脚本
+		2、微调未配置 Worker 时提供明确配置指引，并优化提示和窄屏排版
 		[2026-10-07] v0.16.4 补齐微调功能闭环与历史目录分页
 		1、接入 Worker 1.1 的任务/数据集分页与持久化存储身份，避免历史截断和旧缓存跨存储复用
 		2、验证真实 CPU/MLX 训练、独立验证、取消、adapter 重载及命名 Worker 客户端

@@ -462,3 +462,39 @@ test("NCF mutation APIs route Worker aliases through query and keep JSON bodies 
     await app.request("CreateJobAsync", app.form, true);
     await app.request("CancelJobAsync", { id: "job-a" }, true);
 });
+
+test("AIKernel pages use a module-specific localization partial without the host path collision", () => {
+    const pages = ["AIFineTuning", "AIKernel", "AITokenMonitor", "AIVector", "Dashboard"];
+    for (const page of pages) {
+        const razor = fs.readFileSync(path.join(root, "Areas/Admin/Pages", page, "Index.cshtml"), "utf8");
+        assert.ok(razor.includes("_AIKernelLocalizationScripts"), page);
+        assert.ok(!razor.includes('"_LocalizationScripts"') && !razor.includes('/_LocalizationScripts.cshtml'), page);
+    }
+    const partial = fs.readFileSync(path.join(root, "Areas/Admin/Pages/Shared/_AIKernelLocalizationScripts.cshtml"), "utf8");
+    assert.ok(partial.includes('IStringLocalizer<AIKernelResource>'));
+    assert.ok(partial.includes('$"AIKernel.{group.Key}"'));
+});
+
+test("an unconfigured Worker is an actionable setup state, not a connection failure", async () => {
+    const { app } = instance();
+    app.request = async method => {
+        assert.equal(method, "GetWorkersAsync");
+        return [];
+    };
+    await app.poll();
+    assert.equal(app.workerSetupRequired, true);
+    assert.equal(app.connectionError, "");
+    assert.equal(app.connectionHealthy, false);
+    app.t("WorkerSetupTitle");
+    app.t("WorkerSetupEmpty");
+    app.t("WorkerSetupExisting");
+    assert.throws(() => app.validateForm(), /NotConnected/);
+});
+
+test("real Worker discovery failures remain visible rather than becoming setup success", async () => {
+    const { app } = instance();
+    app.request = async () => { throw new Error("API unavailable"); };
+    await app.poll();
+    assert.equal(app.workerSetupRequired, false);
+    assert.equal(app.connectionError, "API unavailable");
+});

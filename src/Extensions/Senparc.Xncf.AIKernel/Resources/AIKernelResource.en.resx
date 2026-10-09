@@ -764,4 +764,7 @@
   <data name="FineTuning.WorkerNotReady" xml:space="preserve"><value>The Worker is stopping or unhealthy and cannot accept new training jobs. Inspect its status and logs.</value></data>
   <data name="FineTuning.WorkerVersionMismatch" xml:space="preserve"><value>This console requires Worker 1.1 or newer with catalog paging and persistent storage identity. Upgrade the matching Worker before submitting jobs.</value></data>
   <data name="FineTuning.WorkerDisableHelp" xml:space="preserve"><value>Disabling this profile blocks administration access, not existing training. Cancel jobs first or stop the Worker using the operator procedure when termination is required.</value></data>
+  <data name="FineTuning.WorkerSetupTitle" xml:space="preserve"><value>Worker setup required</value></data>
+  <data name="FineTuning.WorkerSetupEmpty" xml:space="preserve"><value>No Worker profile has been added yet. Deploy the training Worker, configure its matching secret and allowed host on NCF, then use Add worker to set its alias and private endpoint. Upload and training become available after a successful connection.</value></data>
+  <data name="FineTuning.WorkerSetupExisting" xml:space="preserve"><value>No selectable Worker is available. Edit a profile to enable it and configure a valid alias-specific secret on NCF, then refresh. This is a configuration step, not a failed training job.</value></data>
 </root>

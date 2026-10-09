@@ -101,6 +101,9 @@ var app = new Vue({
         };
     },
     computed: {
+        workerSetupRequired() {
+            return !this.workersPending && !this.workerAlias;
+        },
         sampleContent() {
             return this.datasetExamples[this.datasetExample].map(row => JSON.stringify(row)).join("\n") + "\n";
         },
@@ -305,7 +308,7 @@ var app = new Vue({
                 }
                 if (!this.workerAlias) {
                     this.health = null;
-                    this.connectionError = this.t("WorkerRequired");
+                    this.connectionError = "";
                     return;
                 }
                 var jobsPage = this.jobsPage;
