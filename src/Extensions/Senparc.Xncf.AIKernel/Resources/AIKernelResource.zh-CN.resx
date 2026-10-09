@@ -803,4 +803,7 @@
   <data name="FineTuning.WorkerNotReady" xml:space="preserve"><value>Worker 正在停止或处于不健康状态，不能接收新训练任务。请检查其状态与日志。</value></data>
   <data name="FineTuning.WorkerVersionMismatch" xml:space="preserve"><value>此管理界面要求 Worker 1.1 或更新版本，提供目录分页和持久化存储身份。请先升级匹配的 Worker，再提交任务。</value></data>
   <data name="FineTuning.WorkerDisableHelp" xml:space="preserve"><value>禁用该配置仅阻断管理接入，不会终止既有训练。需要终止时请先取消任务，或按运维流程停止 Worker。</value></data>
+  <data name="FineTuning.WorkerSetupTitle" xml:space="preserve"><value>尚未配置可用 Worker</value></data>
+  <data name="FineTuning.WorkerSetupEmpty" xml:space="preserve"><value>还没有添加 Worker 配置。请先部署训练 Worker，在 NCF 中配置对应密钥和主机白名单，再点击“添加 Worker”设置别名及私有端点。连接成功后才可上传数据和提交训练。</value></data>
+  <data name="FineTuning.WorkerSetupExisting" xml:space="preserve"><value>当前没有可选的 Worker。请编辑并启用配置，在 NCF 中设置该别名对应的有效密钥后刷新。这是配置步骤，不代表训练任务失败。</value></data>
 </root>

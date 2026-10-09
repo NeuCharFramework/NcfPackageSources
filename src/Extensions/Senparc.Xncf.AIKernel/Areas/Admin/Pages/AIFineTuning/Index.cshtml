@@ -66,6 +66,8 @@
             </el-option>
         </el-select>
         <p class="ft-muted">{{ t('WorkerRoutingHelp') }}</p>
+        <el-alert v-if="workerSetupRequired" type="info" :closable="false"
+                  :title="t('WorkerSetupTitle')" :description="workers.length ? t('WorkerSetupExisting') : t('WorkerSetupEmpty')" show-icon></el-alert>
         <el-button v-for="worker in workers" :key="worker.id" type="text" size="mini"
                    :disabled="uploadBusy || createBusy || cancelBusy || datasetMoreBusy" @@click="openWorkerEditor(worker)">
             {{ t('EditWorker') }}: {{ worker.name }}
@@ -90,7 +92,7 @@
     </el-dialog>
 
     <div class="ft-status" role="status" aria-live="polite">
-        <el-tag :type="connectionHealthy ? 'success' : 'warning'">{{ connectionHealthy ? t('Connected') : t('Stale') }}</el-tag>
+        <el-tag :type="connectionHealthy ? 'success' : workerSetupRequired ? 'info' : 'warning'">{{ connectionHealthy ? t('Connected') : workerSetupRequired ? t('WorkerSetupTitle') : t('Stale') }}</el-tag>
         <span>{{ t('LastUpdate') }}: {{ formatDate(lastConnectedUtc) }}</span>
         <span v-if="health">{{ t('WorkerVersion') }}: {{ health.version }} · {{ health.status }}</span>
         <span>{{ t('RunningCount') }}: {{ health ? health.activeJobs : t('Unavailable') }}</span>
@@ -195,7 +197,7 @@
                     </el-form-item>
                 </div>
                 <p class="ft-muted">{{ t('ValidationHelp') }}</p>
-                <el-alert v-if="compatibilityError" type="warning" :closable="false" :title="compatibilityError" show-icon></el-alert>
+                <el-alert v-if="health && compatibilityError" type="warning" :closable="false" :title="compatibilityError" show-icon></el-alert>
                 <el-collapse class="ft-advanced" v-model="advancedOpen">
                     <el-collapse-item :title="t('Advanced')" name="parameters">
                         <div class="ft-form-grid">
@@ -323,7 +325,7 @@
 </div>
 
 @section scripts {
-    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
+    <partial name="~/Areas/Admin/Pages/Shared/_AIKernelLocalizationScripts.cshtml" />
     <script src="~/lib/echarts/dist/echarts.js"></script>
     <script src="~/js/Admin/AIFineTuning/index.js" asp-append-version="true"></script>
 }

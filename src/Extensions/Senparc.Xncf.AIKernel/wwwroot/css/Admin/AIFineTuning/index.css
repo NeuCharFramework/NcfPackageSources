@@ -2,12 +2,18 @@
     max-width: 1600px;
     margin: 0 auto;
     color: #303133;
+    font-size: 14px;
 }
 
 .fine-tuning h1 { font-size: 24px; margin: 0 0 8px; }
 .fine-tuning h2 { font-size: 18px; margin: 0; }
 .fine-tuning h3 { font-size: 16px; margin: 20px 0 10px; }
-.fine-tuning p { line-height: 1.6; }
+.fine-tuning p { line-height: 1.6; overflow-wrap: anywhere; }
+.fine-tuning .el-alert__title { line-height: 1.6; }
+.fine-tuning .el-alert__description { line-height: 1.6; white-space: pre-line; overflow-wrap: anywhere; }
+.fine-tuning .el-card__header { padding: 16px 20px; }
+.fine-tuning .el-card__body { min-width: 0; }
+.ft-help .el-collapse-item__content { padding: 12px 16px 16px; font-size: 14px; }
 .ft-heading, .ft-detail-heading, .ft-log-heading, .ft-status {
     display: flex;
     align-items: center;
@@ -30,6 +36,7 @@
 .ft-capability > span, .ft-capability > strong { display: inline-block; margin: 0 6px 6px 0; }
 .ft-capability p { margin: 0; overflow-wrap: anywhere; }
 .ft-setup-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 16px; }
+.ft-setup-grid > .ft-card { min-width: 0; }
 .ft-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
 .ft-form-grid .el-select, .ft-form-grid .el-input-number { width: 100%; }
 .ft-form-grid .el-form-item { min-width: 0; }
