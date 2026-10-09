@@ -74,6 +74,9 @@
     2、同一账号连续密码错误达到 2 次后登录必须通过图形验证码校验；验证码一次性、2 分钟时效，存于 CO2NET 对象缓存
     3、登录页支持按用户名预判是否需要验证码、点击图片刷新，验证码错误/密码错误时服务端直接下发新验证码
     4、补齐 6 语言资源（zh/en/ja/fr/es/ru）验证码相关文案
+    [2026-10-09] v0.11.0 增强后台 Admin Chat 群组配置与提示词上下文控制
+    1、支持 Admin Chat 群组创建、提示词配置和模块助手上下文整理
+    2、限制历史消息与当前输入长度，提升后台对话稳定性和可控性
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

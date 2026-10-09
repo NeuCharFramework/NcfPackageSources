@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.5.10</Version>
+		<Version>0.5.11</Version>
 		<AssemblyName>Senparc.Xncf.Installer</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -77,6 +77,7 @@
 			[2026-09-17] v0.5.8 适配共享 AgentKernel 预览依赖版本
 			1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
 			2、保持安装器宿主模块加载兼容
+			[2026-10-09] v0.5.11 Dependency update from Senparc.Areas.Admin to 0.11.0
 </PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;Debug-Dapr;NcfDebugForPromptRange;ModifyPublish</Configurations>

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.18</Version>
+    <Version>0.0.19</Version>
     <PackageReleaseNotes>
 [2026-10-04] 覆盖本站 MCP 发布发现、只读展示及数据库示例清理迁移
 [2026-10-03] 覆盖 MCP 端点 API 注册、列表增删改查、连接测试和客户端错误处理
@@ -43,6 +43,8 @@
 [2026-09-17] v0.0.13 补充 Admin Chat FunctionRender 工具 schema 测试
 1、验证实例 FunctionRender 方法能够绑定到插件对象并执行
 2、验证选择项和显示文本能够暴露到 AI schema
+[2026-10-09] v0.0.19 补充 Admin Chat 提示词构建回归测试
+1、覆盖历史消息排序、长度截断、角色标识和当前输入限制
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

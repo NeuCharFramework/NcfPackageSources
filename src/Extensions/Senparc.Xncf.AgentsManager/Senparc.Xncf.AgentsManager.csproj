@@ -172,7 +172,11 @@
 		2、Agent 与群组配置提供“从 MCP 列表选择”抽屉，复用 Function 绑定选择样式，支持搜索与勾选
 		3、MCP 模块不可用或未响应时自动降级为手动输入并给出提示
 		[2026-10-05] v0.18.1 feat: add MCP endpoint selection feature in AgentsManager
-		1、Updated Senparc.Xncf.AgentsManager project behavior and integration for the latest feature and reliability improvements.</PackageReleaseNotes>
+		1、Updated Senparc.Xncf.AgentsManager project behavior and integration for the latest feature and reliability improvements.
+        [2026-10-09] v0.18.3 统一 Agent Studio 群组与提示配置并完善任务管理交互
+        1、支持群组与 Prompt 配置联动、快速建组、增量成员管理和任务操作
+        2、完善 Studio 页面渲染、Three.js 交互及前端状态管理
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
