@@ -1,0 +1,329 @@
+@page
+@model Senparc.Xncf.AIKernel.Areas.AIFineTuning.Pages.Index
+@{
+    ViewData["Title"] = XR["FineTuning.Title"];
+    Layout = "_Layout_Vue";
+}
+
+@section Style {
+    <link href="~/css/Admin/AIFineTuning/index.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>@XR["Area.ExtensionModules"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Module.AIKernel.MenuName"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["FineTuning.Title"]</el-breadcrumb-item>
+}
+
+<div class="fine-tuning">
+    <header class="ft-heading">
+        <div>
+            <h1>{{ t('Title') }}</h1>
+            <p>{{ t('Subtitle') }}</p>
+        </div>
+        <el-button icon="el-icon-refresh" :loading="pollBusy" :disabled="datasetMoreBusy" @@click="refresh">{{ t('Refresh') }}</el-button>
+    </header>
+
+    <el-collapse class="ft-help" v-model="helpOpen">
+        <el-collapse-item :title="t('Guide.Title')" name="workflow">
+            <el-alert type="info" :closable="false" :title="t('Guide.Purpose')" show-icon></el-alert>
+            <ol class="ft-guide">
+                <li v-for="step in ['Worker', 'Data', 'Training', 'Monitor', 'Publish']" :key="step">
+                    <strong>{{ t('Guide.' + step + 'Title') }}</strong>
+                    <p>{{ t('Guide.' + step) }}</p>
+                </li>
+            </ol>
+            <p>
+                <a href="https://doc.ncf.pub/zh/NcfPackageSources/xncf/aikernel-local-fine-tuning.html" target="_blank" rel="noopener noreferrer">{{ t('Guide.ChineseDocs') }}</a>
+                · <a href="https://doc.ncf.pub/NcfPackageSources/xncf/aikernel-local-fine-tuning.html" target="_blank" rel="noopener noreferrer">{{ t('Guide.EnglishDocs') }}</a>
+            </p>
+        </el-collapse-item>
+        <el-collapse-item :title="t('SetupHelp')" name="setup">
+            <p>{{ t('EndpointHelp') }}</p>
+            <code>SenparcXncfAIKernel:FineTuning:Enabled / AllowedHosts / WorkerApiKeys:&lt;alias&gt;</code>
+            <p>{{ t('WorkerSecretNotice') }}</p>
+            <p>{{ t('BackendHelp') }}</p>
+            <p>{{ t('SecurityHelp') }}</p>
+        </el-collapse-item>
+        <el-collapse-item :title="t('Guide.Troubleshooting')" name="troubleshooting">
+            <p v-for="topic in ['Connection', 'Dataset', 'Memory', 'Interrupted']" :key="topic">{{ t('Guide.Error.' + topic) }}</p>
+        </el-collapse-item>
+    </el-collapse>
+
+    <el-card class="ft-card">
+        <div slot="header" class="ft-detail-heading">
+            <h2>{{ t('Worker') }}</h2>
+            <el-button size="mini" icon="el-icon-plus" :disabled="uploadBusy || createBusy || cancelBusy || datasetMoreBusy" @@click="openWorkerEditor()">{{ t('AddWorker') }}</el-button>
+        </div>
+        <el-select v-model="workerAlias" filterable :placeholder="t('SelectWorker')" :aria-label="t('Worker')"
+                   :disabled="fileReading || uploadBusy || createBusy || cancelBusy || workerSaveBusy || datasetMoreBusy"
+                   @@change="selectWorker">
+            <el-option v-for="worker in workers" :key="worker.alias" :value="worker.alias"
+                       :label="worker.name + ' (' + worker.alias + ')'"
+                       :disabled="!worker.enabled || !worker.hasConfiguredSecret">
+                <span>{{ worker.name }} ({{ worker.alias }})</span>
+                <span class="ft-muted"> · {{ worker.enabled ? (worker.hasConfiguredSecret ? t('Available') : t('WorkerSecretMissing')) : t('WorkerDisabled') }}</span>
+            </el-option>
+        </el-select>
+        <p class="ft-muted">{{ t('WorkerRoutingHelp') }}</p>
+        <el-button v-for="worker in workers" :key="worker.id" type="text" size="mini"
+                   :disabled="uploadBusy || createBusy || cancelBusy || datasetMoreBusy" @@click="openWorkerEditor(worker)">
+            {{ t('EditWorker') }}: {{ worker.name }}
+        </el-button>
+    </el-card>
+
+    <el-dialog :title="t('WorkerConfiguration')" :visible.sync="workerEditorVisible" width="620px" custom-class="ft-worker-dialog">
+        <el-alert type="warning" :closable="false" :title="t('WorkerSecretNotice')" show-icon></el-alert>
+        <el-form :model="workerEditor" label-position="top">
+            <el-form-item :label="t('WorkerAlias')"><el-input v-model="workerEditor.alias" maxlength="50"></el-input></el-form-item>
+            <el-form-item :label="t('WorkerName')"><el-input v-model="workerEditor.name" maxlength="100"></el-input></el-form-item>
+            <el-form-item :label="t('WorkerEndpoint')"><el-input v-model="workerEditor.endpoint" maxlength="250"></el-input></el-form-item>
+            <el-form-item :label="t('RequestTimeout')"><el-input-number v-model="workerEditor.requestTimeoutSeconds" :min="1" :max="300"></el-input-number></el-form-item>
+            <el-form-item><el-switch v-model="workerEditor.enabled" :active-text="t('Enabled')" :inactive-text="t('WorkerDisabled')"></el-switch></el-form-item>
+            <p class="ft-muted">{{ t('WorkerDisableHelp') }}</p>
+            <el-form-item :label="t('Note')"><el-input type="textarea" v-model="workerEditor.note" maxlength="500"></el-input></el-form-item>
+        </el-form>
+        <span slot="footer">
+            <el-button @@click="workerEditorVisible = false">{{ t('Cancel') }}</el-button>
+            <el-button type="primary" :loading="workerSaveBusy" @@click="saveWorker">{{ t('SaveWorker') }}</el-button>
+        </span>
+    </el-dialog>
+
+    <div class="ft-status" role="status" aria-live="polite">
+        <el-tag :type="connectionHealthy ? 'success' : 'warning'">{{ connectionHealthy ? t('Connected') : t('Stale') }}</el-tag>
+        <span>{{ t('LastUpdate') }}: {{ formatDate(lastConnectedUtc) }}</span>
+        <span v-if="health">{{ t('WorkerVersion') }}: {{ health.version }} · {{ health.status }}</span>
+        <span>{{ t('RunningCount') }}: {{ health ? health.activeJobs : t('Unavailable') }}</span>
+        <span>{{ t('QueuedCount') }}: {{ health ? health.queuedJobs : t('Unavailable') }}</span>
+    </div>
+    <el-alert v-if="connectionError" class="ft-alert" type="error" :closable="false"
+              :title="t('ConnectionError')" :description="connectionError" show-icon></el-alert>
+    <el-alert v-if="actionError" class="ft-alert" type="error" :closable="true"
+              :title="t('ActionError')" :description="actionError" @@close="actionError = ''" show-icon></el-alert>
+    <el-alert v-if="storageNotice" class="ft-alert" type="warning" :closable="true"
+              :title="storageNotice" @@close="storageNotice = ''" show-icon></el-alert>
+
+    <el-card class="ft-card">
+        <div slot="header"><h2>{{ t('Preflight') }}</h2></div>
+        <p v-if="!health">{{ t('AwaitingHealth') }}</p>
+        <div class="ft-capabilities" v-else>
+            <div v-for="cap in health.capabilities" :key="cap.backend" class="ft-capability">
+                <strong>{{ cap.backend.toUpperCase() }}</strong>
+                <el-tag size="small" :type="cap.available ? 'success' : 'warning'">{{ cap.available ? t('Available') : t('Unavailable') }}</el-tag>
+                <span>{{ t('Method') }}: {{ cap.methods.join(', ') || t('Unavailable') }}</span>
+                <p v-if="cap.reason">{{ cap.reason }}</p>
+            </div>
+        </div>
+        <p class="ft-muted">{{ t('PreflightHelp') }}</p>
+    </el-card>
+
+    <div class="ft-setup-grid">
+        <el-card class="ft-card">
+            <div slot="header"><h2>{{ t('Datasets') }}</h2></div>
+            <p>{{ t('DatasetHelp') }}</p>
+            <el-collapse class="ft-help">
+                <el-collapse-item :title="t('Guide.DatasetExample')" name="example">
+                    <el-radio-group v-model="datasetExample" size="small" :aria-label="t('Guide.DatasetExample')">
+                        <el-radio-button label="prompt">prompt / completion</el-radio-button>
+                        <el-radio-button label="messages">messages</el-radio-button>
+                    </el-radio-group>
+                    <p>{{ t('Guide.DatasetSchema') }}</p>
+                    <p class="ft-muted">{{ t('Guide.SampleNotice') }}</p>
+                    <pre class="ft-snapshot">{{ sampleContent }}</pre>
+                    <el-button size="small" icon="el-icon-download" @@click="downloadSample">{{ t('Guide.DownloadSample') }}</el-button>
+                </el-collapse-item>
+            </el-collapse>
+            <el-form label-position="top" @@submit.native.prevent="uploadDataset">
+                <el-form-item :label="t('DatasetName')">
+                    <el-input id="ft-dataset-name" v-model="datasetName" maxlength="100" :disabled="uploadBusy" :aria-label="t('DatasetName')"></el-input>
+                </el-form-item>
+                <el-form-item :label="t('DatasetFile')">
+                    <input id="ft-dataset-file" type="file" accept=".jsonl,application/jsonl,application/x-ndjson"
+                           :disabled="fileReading || uploadBusy" :aria-label="t('DatasetFile')" @@change="readDataset" />
+                    <div class="ft-muted" role="status">{{ fileReading ? t('ReadingFile') : fileName }}</div>
+                </el-form-item>
+                <el-button type="primary" icon="el-icon-upload2" :loading="uploadBusy"
+                           :disabled="!datasetContent || fileReading || !connectionHealthy" @@click="uploadDataset">{{ t('Upload') }}</el-button>
+            </el-form>
+            <el-table :data="datasets" size="mini" max-height="280" :empty-text="t('NoDatasets')" class="ft-table">
+                <el-table-column prop="name" :label="t('DatasetName')" min-width="140"></el-table-column>
+                <el-table-column prop="rows" :label="t('Rows')" width="85"></el-table-column>
+                <el-table-column :label="t('Created')" min-width="170">
+                    <template slot-scope="scope">{{ formatDate(scope.row.createdUtc) }}</template>
+                </el-table-column>
+                <el-table-column prop="sha256" :label="t('Sha256')" min-width="160" show-overflow-tooltip></el-table-column>
+            </el-table>
+            <p class="ft-muted">{{ t('DatasetHistory') }}: {{ datasets.length }} / {{ datasetTotal }}</p>
+            <el-button v-if="datasetOffset < datasetTotal" size="small" :loading="datasetMoreBusy"
+                       :disabled="pollBusy || uploadBusy || createBusy || !connectionHealthy" @@click="loadMoreDatasets">{{ t('LoadMoreDatasets') }}</el-button>
+        </el-card>
+
+        <el-card class="ft-card">
+            <div slot="header"><h2>{{ t('CreateJob') }}</h2></div>
+            <el-form :model="form" label-position="top" @@submit.native.prevent="createJob">
+                <div class="ft-form-grid">
+                    <el-form-item :label="t('JobName')">
+                        <el-input v-model="form.name" maxlength="100" :aria-label="t('JobName')"></el-input>
+                    </el-form-item>
+                    <el-form-item :label="t('Model')">
+                        <el-select v-model="form.modelId" filterable :placeholder="t('SelectModel')" :aria-label="t('Model')">
+                            <el-option v-for="model in models" :key="model.id" :label="model.name" :value="model.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item :label="t('TrainingDataset')">
+                        <el-select v-model="form.datasetId" filterable :placeholder="t('SelectDataset')" :aria-label="t('TrainingDataset')">
+                            <el-option v-for="dataset in datasets" :key="dataset.id" :label="dataset.name + ' (' + dataset.rows + ')'" :value="dataset.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item :label="t('ValidationDataset')">
+                        <el-select v-model="form.evalDatasetId" clearable filterable :placeholder="t('NoValidation')" :aria-label="t('ValidationDataset')">
+                            <el-option v-for="dataset in datasets" :key="dataset.id" :label="dataset.name + ' (' + dataset.rows + ')'"
+                                       :value="dataset.id" :disabled="dataset.id === form.datasetId"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item :label="t('Backend')">
+                        <el-select v-model="form.backend" :aria-label="t('Backend')">
+                            <el-option v-for="backend in ['cpu', 'cuda', 'mlx']" :key="backend" :label="backend.toUpperCase()"
+                                       :value="backend" :disabled="!backendCompatible(backend)"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item :label="t('Method')">
+                        <el-select v-model="form.method" :aria-label="t('Method')">
+                            <el-option v-for="method in ['lora', 'qlora']" :key="method" :label="method.toUpperCase()"
+                                       :value="method" :disabled="!methodCompatible(method)"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <p class="ft-muted">{{ t('ValidationHelp') }}</p>
+                <el-alert v-if="compatibilityError" type="warning" :closable="false" :title="compatibilityError" show-icon></el-alert>
+                <el-collapse class="ft-advanced" v-model="advancedOpen">
+                    <el-collapse-item :title="t('Advanced')" name="parameters">
+                        <div class="ft-form-grid">
+                            <el-form-item v-for="parameter in parameters" :key="parameter.key">
+                                <span slot="label">
+                                    {{ t('Parameter.' + parameter.key) }}
+                                    <el-tooltip :content="t('Tip.' + parameter.key)" placement="top">
+                                        <button type="button" class="ft-tip" :aria-label="t('Tip.' + parameter.key)">
+                                            <i class="el-icon-question" aria-hidden="true"></i>
+                                        </button>
+                                    </el-tooltip>
+                                </span>
+                                <el-input-number v-model="form[parameter.key]" :min="parameter.min" :max="parameter.max"
+                                                 :step="parameter.step || 1" :precision="parameter.precision"
+                                                 controls-position="right" :aria-label="t('Parameter.' + parameter.key)"></el-input-number>
+                            </el-form-item>
+                            <el-form-item>
+                                <span slot="label">
+                                    {{ t('Parameter.targetModules') }}
+                                    <el-tooltip :content="t('Tip.targetModules')" placement="top">
+                                        <button type="button" class="ft-tip" :aria-label="t('Tip.targetModules')"><i class="el-icon-question" aria-hidden="true"></i></button>
+                                    </el-tooltip>
+                                </span>
+                                <el-input v-model="form.targetModules" maxlength="512" :aria-label="t('Parameter.targetModules')"></el-input>
+                            </el-form-item>
+                        </div>
+                    </el-collapse-item>
+                </el-collapse>
+                <p class="ft-muted">{{ t('Guide.EffectiveBatch') }}: {{ effectiveBatchSize }} · {{ t('Guide.SmokeNotice') }}</p>
+                <el-button type="primary" icon="el-icon-video-play" :loading="createBusy"
+                           :disabled="!connectionHealthy || !!compatibilityError" @@click="createJob">{{ t('SubmitJob') }}</el-button>
+            </el-form>
+        </el-card>
+    </div>
+
+    <el-card class="ft-card">
+        <div slot="header"><h2>{{ t('Jobs') }}</h2></div>
+        <p class="ft-muted">{{ t('JobsHelp') }}</p>
+        <el-table :data="pagedJobs" :empty-text="t('NoJobs')" row-key="id" border highlight-current-row
+                  :row-class-name="jobRowClass" @@row-click="selectJob" class="ft-table">
+            <el-table-column prop="name" :label="t('JobName')" min-width="160"></el-table-column>
+            <el-table-column :label="t('State')" min-width="130">
+                <template slot-scope="scope"><el-tag :type="stateType(scope.row.state)" size="small">{{ stateText(scope.row.state) }}</el-tag></template>
+            </el-table-column>
+            <el-table-column prop="request.modelId" :label="t('Model')" min-width="160" show-overflow-tooltip></el-table-column>
+            <el-table-column :label="t('Backend')" width="130">
+                <template slot-scope="scope">{{ scope.row.request.backend }} / {{ scope.row.request.method }}</template>
+            </el-table-column>
+            <el-table-column :label="t('Created')" min-width="170">
+                <template slot-scope="scope">{{ formatDate(scope.row.createdUtc) }}</template>
+            </el-table-column>
+            <el-table-column :label="t('Actions')" width="110">
+                <template slot-scope="scope"><el-button size="mini" @@click.stop="selectJob(scope.row)">{{ t('Monitor') }}</el-button></template>
+            </el-table-column>
+        </el-table>
+        <el-pagination :current-page.sync="jobsPage" :page-size="10" :total="jobsTotal" layout="total, prev, pager, next"
+                       @@current-change="changeJobsPage"
+                       class="ft-pagination"></el-pagination>
+    </el-card>
+
+    <el-card v-if="selectedId" class="ft-card" v-loading="detailLoading">
+        <div slot="header" class="ft-detail-heading">
+            <h2>{{ t('Monitor') }}: {{ job ? job.name : selectedId }}</h2>
+            <el-button v-if="job && canCancel(job)" type="danger" size="small" :loading="cancelBusy"
+                       @@click="cancelJob">{{ t('CancelJob') }}</el-button>
+        </div>
+        <p v-if="detailError" class="ft-error" role="alert">{{ detailError }}</p>
+        <div v-if="job">
+            <div class="ft-status">
+                <el-tag :type="stateType(job.state)">{{ stateText(job.state) }}</el-tag>
+                <span>{{ t('Started') }}: {{ formatDate(job.startedUtc) }}</span>
+                <span>{{ t('Finished') }}: {{ formatDate(job.finishedUtc) }}</span>
+                <span>{{ t('JobId') }}: {{ job.id }}</span>
+            </div>
+            <el-alert v-if="job.error" type="error" :closable="false" :title="t('TrainingError')" :description="job.error" show-icon></el-alert>
+            <div class="ft-progress" role="status" aria-live="polite">
+                <el-progress v-if="progressPercent !== null" :percentage="progressPercent" :status="progressStatus"></el-progress>
+                <p>{{ t('Steps') }}: {{ formatMetric(metric('step')) }} / {{ formatMetric(metric('totalSteps')) }}
+                    <span v-if="progressPercent === null"> · {{ t('ProgressUnknown') }}</span>
+                </p>
+                <p v-if="job.state === 'Cancelling'">{{ t('CancellingHelp') }}</p>
+            </div>
+            <div class="ft-metrics">
+                <div v-for="item in metricCards" :key="item.key" class="ft-metric">
+                    <span>{{ t('Metric.' + item.key) }}</span>
+                    <strong>{{ formatMetric(metric(item.key), item.unit) }}</strong>
+                </div>
+            </div>
+            <p class="ft-muted">{{ t('MetricsHelp') }}</p>
+            <div v-show="chartAvailable" ref="trainingChart" class="ft-chart" role="img" :aria-label="t('ChartTitle')"></div>
+            <p v-if="!chartAvailable" class="ft-muted">{{ t('ChartUnavailable') }}</p>
+            <p v-else-if="!chartPoints.length" class="ft-muted">{{ t('AwaitingMetrics') }}</p>
+            <el-collapse>
+                <el-collapse-item :title="t('ConfigSnapshot')" name="snapshot">
+                    <pre class="ft-snapshot">{{ JSON.stringify(job.request, null, 2) }}</pre>
+                </el-collapse-item>
+            </el-collapse>
+            <h3>{{ t('Artifacts') }}</h3>
+            <p>{{ t('DeploymentHelp') }}</p>
+            <p v-if="!job.artifacts.length" class="ft-muted">{{ t('NoArtifacts') }}</p>
+            <ul v-else class="ft-artifacts">
+                <li v-for="artifact in job.artifacts" :key="artifact.id">
+                    <a :href="artifactUrl(artifact)" :aria-label="t('Download') + ': ' + artifact.name">{{ t('Download') }}: {{ artifact.name }}</a>
+                    <span>({{ formatBytes(artifact.bytes) }})</span>
+                </li>
+            </ul>
+        </div>
+        <h3>{{ t('Events') }}</h3>
+        <el-alert v-if="eventsTruncated" type="warning" :closable="false" :title="t('EventsTruncated')" show-icon></el-alert>
+        <div class="ft-log-heading">
+            <span>{{ t('LogHelp') }}</span>
+            <span role="status" aria-live="polite">{{ !connectionHealthy || detailError ? t('Stale') : catchingUp ? t('Replaying') : t('Live') }} · {{ t('Cursor') }}: {{ cursor }}</span>
+            <el-checkbox v-model="followLog">{{ t('FollowLog') }}</el-checkbox>
+        </div>
+        <div ref="eventLog" class="ft-log" tabindex="0" :aria-label="t('Events')">
+            <p v-if="!events.length">{{ t('NoEvents') }}</p>
+            <div v-for="event in events" :key="event.sequence" class="ft-log-line">
+                <span class="ft-log-time">#{{ event.sequence }} {{ formatDate(event.timestampUtc) }}</span>
+                <strong>[{{ event.kind }}]</strong>
+                <span>{{ event.message }}</span>
+                <span v-if="Object.keys(event.metrics).length">{{ JSON.stringify(event.metrics) }}</span>
+            </div>
+        </div>
+    </el-card>
+</div>
+
+@section scripts {
+    <partial name="~/Areas/Admin/Pages/Shared/_LocalizationScripts.cshtml" />
+    <script src="~/lib/echarts/dist/echarts.js"></script>
+    <script src="~/js/Admin/AIFineTuning/index.js" asp-append-version="true"></script>
+}

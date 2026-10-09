@@ -55,10 +55,16 @@
     <value>Function Calls||以逗号分隔的 Function Call 名称（可选）</value>
   </data>
   <data name="Parameter.Agents.Search.Query" xml:space="preserve">
-    <value>搜索词||支持名称、PromptCode 或关键字；多个值用逗号、分号或换行分隔</value>
+    <value>搜索词||支持名称、PromptCode 或关键字；最多 10 个关键词，总计不超过 500 个字符</value>
   </data>
   <data name="Parameter.Agents.Search.TopN" xml:space="preserve">
-    <value>最大返回数量||每个搜索词的最大候选数，默认 5</value>
+    <value>最大返回数量||每个关键词最多 10 个候选，默认 5</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Search.Query" xml:space="preserve">
+    <value>搜索词||ChatGroup 名称或适用场景关键词</value>
+  </data>
+  <data name="Parameter.Agents.Chat.Search.TopN" xml:space="preserve">
+    <value>最大结果数||默认 5，最多 10</value>
   </data>
   <data name="Parameter.Agents.Chat.SelectManage" xml:space="preserve">
     <value>选择组||选择要操作的组或新建组</value>

@@ -188,6 +188,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     public class AgentTemplate_FindByNameRequest : FunctionAppRequestBase
     {
         [Required]
+        [MaxLength(500)]
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Search.Query")]
         public string Query { get; set; }
 

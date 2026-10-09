@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.16.3</Version>
+    <Version>0.16.4</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -18,6 +18,13 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
+		[2026-10-07] v0.16.4 补齐微调功能闭环与历史目录分页
+		1、接入 Worker 1.1 的任务/数据集分页与持久化存储身份，避免历史截断和旧缓存跨存储复用
+		2、验证真实 CPU/MLX 训练、独立验证、取消、adapter 重载及命名 Worker 客户端
+		3、修复 Worker 保存返回契约和动态管理 API 的 body/query 参数绑定
+		[2026-10-06] v0.16.4 整合本地模型微调、数据库多 Worker 配置与各数据库迁移
+		1、补齐中英文页内教程、JSONL 样例下载、数据校验与配置提示
+		2、修复 Worker 切换并发、请求超时与微调客户端依赖注入
 		[2026-10-01] v0.16.3 按租户隔离实时 Token 统计与运行进度
 		1、实时聚合、模型统计和日期统计按可信租户上下文分区
 		2、运行进度缓冲与查询按租户校验，阻止跨租户读取

@@ -48,10 +48,21 @@ using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 {
+    public class ChatGroup_FindByNameRequest : FunctionAppRequestBase
+    {
+        [Required]
+        [MaxLength(100)]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Search.Query")]
+        public string Query { get; set; }
+
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Search.TopN")]
+        public int TopN { get; set; } = 5;
+    }
+
     public class ChatGroup_ManageChatGroupRequest : FunctionAppRequestBase
     {
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.SelectManage")]
-        [FunctionParameterUi(ParameterType.DropDownList, nameof(ChatGroupOptions))]
+        [FunctionParameterUi(ParameterType.DropDownList, nameof(ChatGroupOptions), AllowCreate = true)]
         public string ChatGroup { get; set; }
 
         [JsonIgnore]
