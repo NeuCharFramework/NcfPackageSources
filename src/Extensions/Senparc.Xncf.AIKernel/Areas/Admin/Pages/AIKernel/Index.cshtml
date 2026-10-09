@@ -353,6 +353,6 @@
 </div>
 
 @section scripts{
-    <partial name="~/Areas/Admin/Pages/Shared/_AIKernelLocalizationScripts.cshtml" />
+    @await Html.PartialAsync("~/Areas/Admin/Pages/Shared/_AIKernelLocalizationScripts.cshtml")
     <script src="~/js/Admin/AIKernel/index.js"></script>
 }
