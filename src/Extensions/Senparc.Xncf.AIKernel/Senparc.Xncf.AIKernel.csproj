@@ -18,9 +18,6 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		[2026-10-09] v0.16.4 修复模块本地化 partial 与 Admin 宿主重名导致的前端资源键显示
-		1、模型、微调、向量、监控及仪表盘页面统一使用模块专属本地化脚本
-		2、微调未配置 Worker 时提供明确配置指引，并优化提示和窄屏排版
 		[2026-10-07] v0.16.4 补齐微调功能闭环与历史目录分页
 		1、接入 Worker 1.1 的任务/数据集分页与持久化存储身份，避免历史截断和旧缓存跨存储复用
 		2、验证真实 CPU/MLX 训练、独立验证、取消、adapter 重载及命名 Worker 客户端
@@ -127,7 +124,13 @@
 		2、保持 AIKernel 模块与共享模型调用依赖兼容
 		[2026-10-05] v0.16.3 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
 		1、Updated Senparc.Xncf.AIKernel project behavior and integration for the latest feature and reliability improvements.
-		2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
+		2、chore: update package versions and dependencies across multiple projects
+		[2026-10-09] v0.16.4 修复模块本地化 partial 与 Admin 宿主重名导致的前端资源键显示
+		1、模型、微调、向量、监控及仪表盘页面统一使用模块专属本地化脚本
+		2、微调未配置 Worker 时提供明确配置指引，并优化提示和窄屏排版
+		3、补充模块专属本地化脚本和资源键覆盖，避免 Admin 宿主资源重名导致页面文案异常
+		4、完善微调 Worker 未配置时的引导提示与窄屏页面展示
+</PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

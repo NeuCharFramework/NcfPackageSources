@@ -4,6 +4,10 @@
     File: Index.cshtml.cs
     Description: Local fine-tuning administration page.
     Created: Senparc - 20261002
+
+    修改标识：Senparc - 20261009
+    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
+
 ----------------------------------------------------------------*/
 
 using System;

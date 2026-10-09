@@ -39,6 +39,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.18.1 0.18.1 feat: add MCP endpoint selection feature in AgentsManager
 
+    修改标识：Senparc - 20261009
+    修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;
