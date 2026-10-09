@@ -123,9 +123,6 @@
 		2、修复长轮询超时被误判为账号错误、NotifyStart 失败不重试、LastMessageAt 未更新的问题
 		3、修复 WeixinClawLoginService 单例捕获 Scoped 客户端的 DI 生命周期问题，并清理过期登录会话
 		4、登录面板补齐验证代码（verify_code）输入与错误提示，保存/发送失败时显示服务端原因
-		[2026-10-01] v0.24.9 接入 FileManager 私有附件导入
-		1、Weixin Bot 收到媒体文件后通过 Abstractions EventBus 请求保存到 FileManager
-		2、修复后台轮询在多租户模式下的账号发现和租户上下文传播
 		[2026-10-09] v0.24.15 Dependency update from Senparc.Xncf.PromptRange to 0.19.8
 		[2026-10-21] v0.24.16 公众号 AI 回复接入 Token 用量记录
 		1、消息处理对话结果写入 Token 用量

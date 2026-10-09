@@ -80,6 +80,8 @@
 		3、召回支持词法混合重排（本地计算，无额外模型调用）与 LLM 重排（复用知识库对话模型，超时/解析失败自动回退词法混合）
 		4、召回测试页支持按次覆盖重排模式，结果展示重排分与原始排名；Agent RAG 上下文自动应用知识库重排配置
 		5、补齐六类数据库迁移与快照（RetrievalConfigJson）
+		[2026-10-09] v0.7.6 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
+		v0.1 创世
 		[2026-10-21] v0.7.7 适配 Senparc.AI.AgentKernel 0.1.15-preview2
 		1、升级共享 AgentKernel 依赖，保持知识库检索与 Agent 调用兼容
 </PackageReleaseNotes>
