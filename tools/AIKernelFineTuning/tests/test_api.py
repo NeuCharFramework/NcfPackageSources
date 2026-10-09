@@ -7,7 +7,8 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from worker.api import MAX_BODY_BYTES, AuthAndSize, create_app
-from worker.config import Settings
+from worker.config import MAX_DATASET_BYTES, MAX_DATASET_ROWS, Settings
+from worker.service import Worker
 from worker.storage import Store
 from tests.test_core import CONTENT, REQUEST
 
@@ -32,6 +33,9 @@ class FixtureWorker:
     def cancel(self, job_id):
         return self.store.transition(job_id, "Cancelled")
 
+    validation = Worker.validation
+    start_validation = Worker.start_validation
+
 
 class ApiTests(unittest.TestCase):
     def setUp(self):
@@ -51,12 +55,16 @@ class ApiTests(unittest.TestCase):
                              ("POST", "/datasets/file?name=raw"),
                              ("GET", "/jobs"), ("POST", "/jobs"), ("GET", "/jobs/id"), ("POST", "/jobs/id/cancel"),
                              ("GET", "/jobs/id/events"), ("GET", "/jobs/id/artifacts/id"),
+                             ("GET", "/jobs/id/validation"), ("POST", "/jobs/id/validation"),
                              ("GET", "/jobs/page"), ("GET", "/datasets/page"), ("GET", "/datasets/id")]:
             self.assertEqual(self.client.request(method, path).status_code, 401)
         self.assertEqual(self.client.get("/health", headers=self.headers).status_code, 200)
         self.assertEqual(self.client.get("/health", headers={"X-NCF-Worker-Key": "wrong"}).status_code, 401)
 
     def test_streaming_jsonl_upload_preserves_worker_contract(self):
+        self.assertEqual(self.settings.max_dataset_bytes, 512 * 1024 * 1024)
+        self.assertEqual(self.settings.max_dataset_rows, 1_000_000)
+        self.assertEqual((MAX_DATASET_BYTES, MAX_DATASET_ROWS), (512 * 1024 * 1024, 1_000_000))
         response = self.client.post("/datasets/file?name=raw", headers=self.headers,
                                     content=CONTENT.encode("utf-8"))
         self.assertEqual(response.status_code, 200)
@@ -64,6 +72,20 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(dataset["rows"], 6)
         self.assertEqual(len(dataset["sha256"]), 64)
         self.assertEqual(self.client.get(f"/datasets/{dataset['id']}", headers=self.headers).json(), dataset)
+
+    def test_validation_contract_requires_successful_job(self):
+        dataset = self.client.post("/datasets", headers=self.headers, json={"name": "test", "content": CONTENT}).json()
+        job = self.client.post("/jobs", headers=self.headers, json={**REQUEST, "datasetId": dataset["id"]}).json()
+        path = f"/jobs/{job['id']}/validation"
+        response = self.client.get(path, headers=self.headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"status": "Idle", "startedUtc": None, "finishedUtc": None,
+                                           "completed": 0, "total": 0, "results": [], "error": None})
+        response = self.client.post(path, headers=self.headers, json={"cases": [], "maxTokens": 128})
+        self.assertEqual(response.status_code, 422)
+        response = self.client.post(path, headers=self.headers,
+                                    json={"cases": [{"id": "case1", "prompt": "hello"}], "maxTokens": 128})
+        self.assertEqual(response.status_code, 409)
 
     def test_dataset_file_stream_bypasses_json_body_limit(self):
         asyncio.run(self._assert_size_gate("/datasets/file", MAX_BODY_BYTES + 1, passed=True))
