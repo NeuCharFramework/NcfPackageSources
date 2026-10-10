@@ -139,6 +139,16 @@ public sealed class FineTuningWorkerClient
     public Task<FineTuningEventPage> GetEventsAsync(string id, long after, int limit, CancellationToken cancellationToken = default) =>
         GetEventsAsync("default", id, after, limit, cancellationToken);
 
+    public Task<FineTuningValidation> GetValidationAsync(string workerAlias, string id, CancellationToken cancellationToken = default) =>
+        SendAsync<FineTuningValidation>(workerAlias, HttpMethod.Get, $"jobs/{Identifier(id)}/validation", null, cancellationToken);
+
+    public Task<FineTuningValidation> StartValidationAsync(string workerAlias, string id,
+        FineTuningValidationRequest request, CancellationToken cancellationToken = default)
+    {
+        Validate(request);
+        return SendAsync<FineTuningValidation>(workerAlias, HttpMethod.Post, $"jobs/{Identifier(id)}/validation", request, cancellationToken);
+    }
+
     // The caller owns the response and streams the body; model archives are not buffered in Web memory.
     public Task<HttpResponseMessage> DownloadArtifactAsync(string workerAlias, string id, string artifactId, CancellationToken cancellationToken = default) =>
         SendResponseAsync(workerAlias, HttpMethod.Get, $"jobs/{Identifier(id)}/artifacts/{Identifier(artifactId)}", null, cancellationToken);

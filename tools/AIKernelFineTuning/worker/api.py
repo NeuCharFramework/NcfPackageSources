@@ -12,7 +12,7 @@ from starlette.types import ASGIApp, Receive, Scope, Send
 from . import VERSION
 from .config import MAX_DATASET_BYTES, Settings, WorkerError, identifier
 from .datasets import parse_json
-from .schemas import DatasetRequest, JobRequest
+from .schemas import DatasetRequest, JobRequest, ValidationRequest
 from .service import Worker
 
 LOG = logging.getLogger(__name__)
@@ -150,6 +150,14 @@ def create_app(settings=None, worker_factory=Worker):
     @app.get("/jobs/{job_id}/events")
     def events(job_id: str, after: int = Query(0, ge=0), limit: int = Query(200, ge=1, le=200), service=Depends(worker)):
         return service.store.events(identifier(job_id), after, limit)
+
+    @app.get("/jobs/{job_id}/validation")
+    def validation(job_id: str, service=Depends(worker)):
+        return service.validation(identifier(job_id))
+
+    @app.post("/jobs/{job_id}/validation")
+    def start_validation(job_id: str, body: ValidationRequest, service=Depends(worker)):
+        return service.start_validation(identifier(job_id), body)
 
     @app.get("/jobs/{job_id}/artifacts/{artifact_id}")
     def artifact(job_id: str, artifact_id: str, service=Depends(worker)):

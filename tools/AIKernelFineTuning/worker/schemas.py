@@ -68,3 +68,13 @@ class JobRequest(StrictModel):
         if value != "all-linear" and not re.fullmatch(r"[A-Za-z0-9_.]+(?:,[A-Za-z0-9_.]+)*", value):
             raise ValueError("targetModules must be all-linear or comma-separated literal module names (not regex).")
         return value
+
+
+class ValidationCase(StrictModel):
+    id: str = Field(min_length=1, max_length=50)
+    prompt: str = Field(min_length=1, max_length=4096)
+
+
+class ValidationRequest(StrictModel):
+    cases: list[ValidationCase] = Field(min_length=1, max_length=8)
+    maxTokens: int = Field(default=128, ge=16, le=256)
