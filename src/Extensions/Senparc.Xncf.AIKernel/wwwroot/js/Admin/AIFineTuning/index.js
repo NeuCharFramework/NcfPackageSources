@@ -22,6 +22,10 @@ var app = new Vue({
             selectedId: new URL(window.location.href).searchParams.get("id") || "",
             selectionVersion: 0,
             events: [],
+            validation: { status: "Idle", startedUtc: null, finishedUtc: null, completed: 0, total: 0, results: [], error: null },
+            validationPrompts: "",
+            validationMaxTokens: 128,
+            validationBusy: false,
             cursor: 0,
             catchingUp: false,
             eventsTruncated: false,
@@ -47,6 +51,7 @@ var app = new Vue({
             datasetName: "",
             datasetContent: "",
             helpOpen: ["workflow"],
+            workflowSteps: ["Worker", "Data", "Training", "Monitor", "Publish"],
             datasetExample: "prompt",
             datasetExamples: {
                 prompt: [
@@ -141,6 +146,13 @@ var app = new Vue({
             if (this.job.state === "Succeeded") { return "success"; }
             if (["Failed", "Interrupted"].indexOf(this.job.state) >= 0) { return "exception"; }
             return undefined;
+        },
+        workflowCurrentStep() {
+            if (!this.workerAlias || !this.health) { return 0; }
+            if (!this.datasets.length) { return 1; }
+            if (!this.job) { return 2; }
+            if (this.job.state === "Succeeded") { return 4; }
+            return 3;
         }
     },
     mounted() {
@@ -171,6 +183,12 @@ var app = new Vue({
                 return window.AIKernelI18n[localizedKey];
             }
             return typeof ncfT === "function" ? ncfT(localizedKey) : localizedKey;
+        },
+        workflowStepState(index) {
+            var current = this.workflowCurrentStep;
+            if (index < current) { return "done"; }
+            if (index === current) { return "current"; }
+            return "upcoming";
         },
         isRecord(value) {
             return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -212,6 +230,14 @@ var app = new Vue({
                     && data.events.every(event => this.isRecord(event) && Number.isSafeInteger(event.sequence)
                         && event.sequence > 0 && typeof event.timestampUtc === "string"
                         && typeof event.kind === "string" && this.validMetrics(event.metrics));
+            } else if (method === "GetValidationAsync" || method === "StartValidationAsync") {
+                valid = this.isRecord(data) && ["Idle", "Running", "Succeeded", "Failed"].indexOf(data.status) >= 0
+                    && Number.isInteger(data.completed) && data.completed >= 0
+                    && Number.isInteger(data.total) && data.total >= 0
+                    && Array.isArray(data.results) && data.results.every(result =>
+                        this.isRecord(result) && typeof result.id === "string"
+                        && typeof result.prompt === "string" && typeof result.response === "string"
+                        && typeof result.completedUtc === "string");
             } else {
                 valid = this.validJob(data);
             }
@@ -255,7 +281,14 @@ var app = new Vue({
             var response;
             var requestPayload = payload || {};
             if (method !== "GetWorkersAsync" && method !== "SaveWorkerAsync") {
-                if (post) { config.params = { workerAlias: alias }; }
+                if (post) {
+                    config.params = { workerAlias: alias };
+                    if (method === "StartValidationAsync") {
+                        config.params.id = requestPayload.id;
+                        requestPayload = Object.assign({}, requestPayload);
+                        delete requestPayload.id;
+                    }
+                }
                 else { requestPayload = Object.assign({ workerAlias: alias }, requestPayload); }
             }
             try {
@@ -410,6 +443,7 @@ var app = new Vue({
             this.detailError = "";
             this.detailLoading = false;
             this.events = [];
+            this.validation = { status: "Idle", startedUtc: null, finishedUtc: null, completed: 0, total: 0, results: [], error: null };
             this.chartPoints = [];
             this.cursor = 0;
             this.catchingUp = false;
@@ -432,6 +466,11 @@ var app = new Vue({
                     this.applyEvents(batch, before);
                     if (!batch.hasMore) { break; }
                 }
+                if (job.state === "Succeeded") {
+                    var validation = await this.request("GetValidationAsync", { id: id }, false, alias);
+                    if (this._disposed || this.selectionVersion !== version) { return; }
+                    this.validation = validation;
+                }
                 this.$nextTick(() => {
                     if (this._disposed || this.selectionVersion !== version) { return; }
                     this.renderChart();
@@ -444,6 +483,27 @@ var app = new Vue({
                 throw error;
             } finally {
                 if (this.selectionVersion === version) { this.detailLoading = false; }
+            }
+        },
+        async startValidation() {
+            if (this.validationBusy || !this.job || this.job.state !== "Succeeded") { return; }
+            var prompts = this.validationPrompts.split(/\r?\n/).map(item => item.trim()).filter(Boolean);
+            if (!prompts.length || prompts.length > 8) {
+                this.reportAction(new Error(this.t("ValidationPromptError")));
+                return;
+            }
+            this.validationBusy = true;
+            try {
+                this.validation = await this.request("StartValidationAsync", {
+                    id: this.job.id,
+                    maxTokens: this.validationMaxTokens,
+                    cases: prompts.map((prompt, index) => ({ id: "case-" + (index + 1), prompt: prompt }))
+                }, true);
+                this.requestPoll();
+            } catch (error) {
+                this.reportAction(error);
+            } finally {
+                this.validationBusy = false;
             }
         },
         selectWorker() {

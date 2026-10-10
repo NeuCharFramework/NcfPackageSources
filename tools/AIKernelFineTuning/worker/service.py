@@ -16,6 +16,8 @@ from .config import OFFLINE_ENV, WorkerError, safe_path
 from .models import list_models, validate_model_request
 from .storage import Store, TERMINAL, atomic_write
 from .telemetry import Telemetry
+from .schemas import ValidationRequest
+from .validation import run_validation
 
 LOG = logging.getLogger(__name__)
 PACKAGE_ROOT = Path(__file__).resolve().parent.parent
@@ -41,6 +43,8 @@ class Worker:
         self.cancel_deadline = None
         self.stop_state = None
         self.stop_error = None
+        self.validation_lock = threading.Lock()
+        self.validation_active = set()
         for job in self.store.unfinished():
             if job["state"] != "Queued":
                 self._reap_interrupted(job["id"])
@@ -121,6 +125,51 @@ class Worker:
         active, queued = self.store.counts()
         return dict(status="ok" if not self.stopping else "stopping", version=VERSION,
                     capabilities=self.capabilities, activeJobs=active, queuedJobs=queued, storeId=self.store.store_id)
+
+    def validation(self, job_id):
+        job = self.store.job(job_id)
+        path = safe_path(self.settings.data, "jobs", job_id, "validation.json")
+        if not path.is_file():
+            return {"status": "Idle", "startedUtc": None, "finishedUtc": None,
+                    "completed": 0, "total": 0, "results": [], "error": None}
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    def start_validation(self, job_id, request: ValidationRequest):
+        job = self.store.job(job_id)
+        if job["state"] != "Succeeded":
+            raise WorkerError("Validation is available only after a successful training job.", 409)
+        if job["request"]["backend"] != "mlx":
+            raise WorkerError("Automated validation currently supports native MLX exports only.", 422)
+        with self.lock:
+            if self.active_id is not None or self.store.counts()[0] > 0:
+                raise WorkerError("Wait until the Worker has no active training job before validation.", 409)
+        with self.validation_lock:
+            if job_id in self.validation_active:
+                raise WorkerError("Validation is already running for this job.", 409)
+            self.validation_active.add(job_id)
+        output = safe_path(self.settings.data, "jobs", job_id, "output")
+        model_path = safe_path(self.settings.models, job["request"]["modelId"])
+        adapter_path = safe_path(output, "adapter")
+        if not model_path.is_dir() or not adapter_path.is_dir():
+            with self.validation_lock:
+                self.validation_active.discard(job_id)
+            raise WorkerError("The original base model or exported Adapter is missing.", 409)
+
+        def execute():
+            try:
+                run_validation(
+                    safe_path(self.settings.data, "jobs", job_id),
+                    model_path,
+                    adapter_path,
+                    request,
+                    lambda kind, message, metrics: self.store.event(job_id, kind, message, metrics),
+                )
+            finally:
+                with self.validation_lock:
+                    self.validation_active.discard(job_id)
+
+        threading.Thread(target=execute, name=f"validation-{job_id}", daemon=True).start()
+        return self.validation(job_id)
 
     def models(self):
         models, rejected = list_models(self.settings.models)

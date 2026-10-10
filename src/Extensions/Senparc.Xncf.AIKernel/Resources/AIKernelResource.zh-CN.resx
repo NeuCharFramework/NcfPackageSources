@@ -806,4 +806,14 @@
   <data name="FineTuning.WorkerSetupTitle" xml:space="preserve"><value>尚未配置可用 Worker</value></data>
   <data name="FineTuning.WorkerSetupEmpty" xml:space="preserve"><value>还没有添加 Worker 配置。请先部署训练 Worker，在 NCF 中配置对应密钥和主机白名单，再点击“添加 Worker”设置别名及私有端点。连接成功后才可上传数据和提交训练。</value></data>
   <data name="FineTuning.WorkerSetupExisting" xml:space="preserve"><value>当前没有可选的 Worker。请编辑并启用配置，在 NCF 中设置该别名对应的有效密钥后刷新。这是配置步骤，不代表训练任务失败。</value></data>
+  <data name="FineTuning.ValidationTitle" xml:space="preserve"><value>训练后快速验证</value></data>
+  <data name="FineTuning.ValidationRunHelp" xml:space="preserve"><value>仅对已成功的 MLX 任务运行最多 8 条离线测试提示。Worker 使用同一基础模型、Adapter 和 tokenizer，不执行任意命令或联网下载。</value></data>
+  <data name="FineTuning.ValidationPromptPlaceholder" xml:space="preserve"><value>每行输入一个测试问题，例如：请用小红书风格介绍一款适合通勤的保温杯。</value></data>
+  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>最多 8 条；输出上限 16–256 tokens</value></data>
+  <data name="FineTuning.RunValidation" xml:space="preserve"><value>运行验证</value></data>
+  <data name="FineTuning.ValidationFailed" xml:space="preserve"><value>验证失败</value></data>
+  <data name="FineTuning.ValidationPrompt" xml:space="preserve"><value>测试提示</value></data>
+  <data name="FineTuning.ValidationPromptError" xml:space="preserve"><value>请输入 1–8 条测试提示，每行一条。</value></data>
+  <data name="FineTuning.PartialArtifactsTitle" xml:space="preserve"><value>这是部分训练产物</value></data>
+  <data name="FineTuning.PartialArtifactsHelp" xml:space="preserve"><value>任务没有成功完成，当前文件只代表超时或中断前已保存的 checkpoint。请先检查 manifest.json 中的 status、completedSteps、错误信息和 Adapter 完整性；不要直接部署或将其视为完成训练的模型。</value></data>
 </root>

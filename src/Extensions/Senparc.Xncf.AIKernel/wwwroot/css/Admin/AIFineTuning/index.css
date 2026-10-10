@@ -13,7 +13,17 @@
 .fine-tuning .el-alert__description { line-height: 1.6; white-space: pre-line; overflow-wrap: anywhere; }
 .fine-tuning .el-card__header { padding: 16px 20px; }
 .fine-tuning .el-card__body { min-width: 0; }
-.ft-help .el-collapse-item__content { padding: 12px 16px 16px; font-size: 14px; }
+.fine-tuning .ft-help .el-collapse-item__header {
+    min-height: 44px;
+    height: auto;
+    padding: 12px 16px;
+    line-height: 1.5;
+}
+.fine-tuning .ft-help .el-collapse-item__content {
+    box-sizing: border-box;
+    padding: 16px 20px 20px !important;
+    font-size: 14px;
+}
 .ft-heading, .ft-detail-heading, .ft-log-heading, .ft-status {
     display: flex;
     align-items: center;
@@ -25,6 +35,70 @@
 .ft-status { font-size: 13px; overflow-wrap: anywhere; }
 .ft-help code { white-space: normal; overflow-wrap: anywhere; }
 .ft-help a { color: #1766b5; text-decoration: underline; }
+.ft-workflow {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    margin-bottom: 16px;
+    padding: 16px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    background: #fff;
+}
+.ft-workflow-step {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    min-width: 0;
+    gap: 10px;
+    padding: 2px 16px 6px 0;
+    color: #909399;
+}
+.ft-workflow-step:not(:last-child)::after {
+    position: absolute;
+    top: 36px;
+    right: 10px;
+    left: 42px;
+    height: 2px;
+    background: #dcdfe6;
+    content: "";
+}
+.ft-workflow-index {
+    z-index: 1;
+    display: inline-flex;
+    flex: 0 0 30px;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 2px solid #c0c4cc;
+    border-radius: 50%;
+    background: #fff;
+    font-weight: 600;
+}
+.ft-workflow-copy {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    padding: 1px 2px 2px 0;
+    background: #fff;
+}
+.ft-workflow-copy strong, .ft-workflow-copy span { display: block; }
+.ft-workflow-copy strong { margin: 0 0 5px; color: #606266; line-height: 1.45; overflow-wrap: anywhere; }
+.ft-workflow-copy span { color: #909399; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.ft-workflow-step.is-current .ft-workflow-index {
+    border-color: #409eff;
+    background: #409eff;
+    color: #fff;
+}
+.ft-workflow-step.is-current .ft-workflow-copy strong { color: #303133; }
+.ft-workflow-step.is-done .ft-workflow-index {
+    border-color: #67c23a;
+    background: #67c23a;
+    color: #fff;
+}
+.ft-workflow-step.is-done::after { background: #67c23a; }
+.ft-workflow-step.is-done .ft-workflow-copy strong { color: #606266; }
 .ft-guide { padding-left: 24px; }
 .ft-guide li { margin: 12px 0; }
 .ft-guide p { margin: 4px 0; }
@@ -57,6 +131,12 @@
 .ft-artifacts { padding-left: 20px; }
 .ft-artifacts li { margin: 10px 0; overflow-wrap: anywhere; }
 .ft-artifacts a { color: #1766b5; text-decoration: underline; }
+.ft-validation { margin-top: 24px; padding: 16px; border: 1px solid #dcdfe6; border-radius: 4px; background: #f8fafc; }
+.ft-validation h3 { margin-top: 0; }
+.ft-validation-options { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+.ft-validation-result { margin-top: 16px; padding: 12px; border: 1px solid #dcdfe6; border-radius: 4px; background: #fff; }
+.ft-validation-result p { margin: 8px 0; }
+.ft-validation-result pre { margin: 0; padding: 10px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #f5f7fa; }
 .ft-log-heading { justify-content: space-between; margin: 12px 0; font-size: 13px; }
 .ft-log { background: #18212f; color: #f1f5f9; max-height: 360px; overflow: auto; padding: 12px; font: 12px/1.7 monospace; }
 .ft-log-line { white-space: pre-wrap; overflow-wrap: anywhere; border-bottom: 1px solid #344054; padding: 4px 0; }
@@ -64,8 +144,9 @@
 .ft-log-line strong { margin: 0 6px; }
 .fine-tuning input[type="file"] { width: 100%; max-width: 100%; }
 
-@media (max-width: 1100px) {
+@media (max-width: 1280px) {
     .ft-setup-grid { grid-template-columns: minmax(0, 1fr); }
+    .ft-workflow { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 0; }
 }
 
 @media (max-width: 600px) {
@@ -73,4 +154,14 @@
     .fine-tuning .el-card__body { padding: 12px; }
     .ft-heading { align-items: flex-start; }
     .ft-chart { height: 280px; }
+    .ft-workflow { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .ft-workflow-step { padding: 2px 0 0; }
+    .ft-workflow-step:not(:last-child)::after {
+        top: 30px;
+        right: auto;
+        bottom: -12px;
+        left: 14px;
+        width: 2px;
+        height: auto;
+    }
 }

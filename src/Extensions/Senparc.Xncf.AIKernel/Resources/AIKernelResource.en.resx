@@ -767,4 +767,14 @@
   <data name="FineTuning.WorkerSetupTitle" xml:space="preserve"><value>Worker setup required</value></data>
   <data name="FineTuning.WorkerSetupEmpty" xml:space="preserve"><value>No Worker profile has been added yet. Deploy the training Worker, configure its matching secret and allowed host on NCF, then use Add worker to set its alias and private endpoint. Upload and training become available after a successful connection.</value></data>
   <data name="FineTuning.WorkerSetupExisting" xml:space="preserve"><value>No selectable Worker is available. Edit a profile to enable it and configure a valid alias-specific secret on NCF, then refresh. This is a configuration step, not a failed training job.</value></data>
+  <data name="FineTuning.ValidationTitle" xml:space="preserve"><value>Post-training quick validation</value></data>
+  <data name="FineTuning.ValidationRunHelp" xml:space="preserve"><value>Run up to 8 offline test prompts only for a successful MLX job. The Worker uses the same base model, Adapter and tokenizer; it does not execute arbitrary commands or download from the network.</value></data>
+  <data name="FineTuning.ValidationPromptPlaceholder" xml:space="preserve"><value>One test prompt per line, for example: Write a Xiaohongshu-style post about a commuter thermos.</value></data>
+  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>Up to 8 cases; output limit 16–256 tokens</value></data>
+  <data name="FineTuning.RunValidation" xml:space="preserve"><value>Run validation</value></data>
+  <data name="FineTuning.ValidationFailed" xml:space="preserve"><value>Validation failed</value></data>
+  <data name="FineTuning.ValidationPrompt" xml:space="preserve"><value>Test prompt</value></data>
+  <data name="FineTuning.ValidationPromptError" xml:space="preserve"><value>Enter 1–8 test prompts, one per line.</value></data>
+  <data name="FineTuning.PartialArtifactsTitle" xml:space="preserve"><value>These are partial training artifacts</value></data>
+  <data name="FineTuning.PartialArtifactsHelp" xml:space="preserve"><value>The job did not complete successfully. These files represent checkpoints saved before timeout or interruption. Check manifest.json for status, completedSteps, error details and Adapter integrity; do not deploy them directly or treat them as a completed training model.</value></data>
 </root>

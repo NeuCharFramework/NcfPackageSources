@@ -202,3 +202,46 @@ public sealed class FineTuningEvent
     [JsonRequired]
     public Dictionary<string, double?> Metrics { get; set; } = new();
 }
+
+public sealed class FineTuningValidationRequest
+{
+    [Required, MinLength(1), MaxLength(8)]
+    public List<FineTuningValidationCase> Cases { get; set; } = new();
+    [Range(16, 256)]
+    public int MaxTokens { get; set; } = 128;
+}
+
+public sealed class FineTuningValidationCase
+{
+    [Required, StringLength(50)]
+    public string Id { get; set; } = "";
+    [Required, StringLength(4096)]
+    public string Prompt { get; set; } = "";
+}
+
+public sealed class FineTuningValidation
+{
+    [JsonRequired]
+    public string Status { get; set; } = "Idle";
+    public DateTimeOffset? StartedUtc { get; set; }
+    public DateTimeOffset? FinishedUtc { get; set; }
+    [JsonRequired]
+    public int Completed { get; set; }
+    [JsonRequired]
+    public int Total { get; set; }
+    [JsonRequired]
+    public List<FineTuningValidationResult> Results { get; set; } = new();
+    public string? Error { get; set; }
+}
+
+public sealed class FineTuningValidationResult
+{
+    [JsonRequired]
+    public string Id { get; set; } = "";
+    [JsonRequired]
+    public string Prompt { get; set; } = "";
+    [JsonRequired]
+    public string Response { get; set; } = "";
+    [JsonRequired]
+    public DateTimeOffset CompletedUtc { get; set; }
+}
