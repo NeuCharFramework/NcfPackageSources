@@ -180,6 +180,30 @@ test("tutorial, troubleshooting and all literal UI labels have bilingual and fal
     assert.equal(app.helpOpen[0], "workflow");
 });
 
+test("workflow stepper tracks Worker, data, training, monitoring and publish order", () => {
+    const { app } = instance();
+    const page = fs.readFileSync(path.join(root, "Areas/Admin/Pages/AIFineTuning/Index.cshtml"), "utf8");
+    assert.deepEqual(Array.from(app.workflowSteps), ["Worker", "Data", "Training", "Monitor", "Publish"]);
+    assert.ok(page.includes("ft-workflow"));
+    assert.ok(page.includes("workflowStepState(index)"));
+
+    assert.equal(app.workflowCurrentStep, 0);
+    assert.deepEqual(Array.from(app.workflowSteps, (_, index) => app.workflowStepState(index)),
+        ["current", "upcoming", "upcoming", "upcoming", "upcoming"]);
+
+    app.workerAlias = "mlx_lab";
+    app.health = { status: "ok" };
+    assert.equal(app.workflowCurrentStep, 1);
+    app.datasets = [{ id: "dataset-a" }];
+    assert.equal(app.workflowCurrentStep, 2);
+    app.job = job("job-a");
+    assert.equal(app.workflowCurrentStep, 3);
+    app.job.state = "Succeeded";
+    assert.equal(app.workflowCurrentStep, 4);
+    assert.deepEqual(Array.from(app.workflowSteps, (_, index) => app.workflowStepState(index)),
+        ["done", "done", "done", "done", "current"]);
+});
+
 test("both downloadable examples are valid distinct JSONL and downloads preserve their exact content", async () => {
     const { app, context, timers } = instance();
     let blob, clicked = false, removed = false, revoked = false;

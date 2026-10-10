@@ -121,6 +121,20 @@ public class AIFineTuningAppService : AppServiceBase
     public Task<AppResponseBase<FineTuningEventPage>> GetEventsAsync(string workerAlias, string id, long after = 0, int limit = 200) =>
         this.GetResponseAsync<FineTuningEventPage>((response, logger) => _worker.GetEventsAsync(workerAlias, id, after, limit, CancellationToken));
 
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+    public Task<AppResponseBase<FineTuningValidation>> GetValidationAsync(string workerAlias, string id) =>
+        this.GetResponseAsync<FineTuningValidation>((response, logger) => _worker.GetValidationAsync(workerAlias, id, CancellationToken));
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public Task<AppResponseBase<FineTuningValidation>> StartValidationAsync(
+        [FromBody] FineTuningValidationRequest request, string workerAlias, string id) =>
+        this.GetResponseAsync<FineTuningValidation>(async (response, logger) =>
+        {
+            var validation = await _worker.StartValidationAsync(workerAlias, id, request, CancellationToken);
+            Audit("job-validation-started", $"{workerAlias}/{id}");
+            return validation;
+        });
+
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<FineTuningJob>> CancelJobAsync([FromBody] FineTuningCancelRequest request, string workerAlias) =>
         this.GetResponseAsync<FineTuningJob>(async (response, logger) =>

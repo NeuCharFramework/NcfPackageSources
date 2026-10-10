@@ -24,6 +24,19 @@
         <el-button icon="el-icon-refresh" :loading="pollBusy" :disabled="datasetMoreBusy" @@click="refresh">{{ t('Refresh') }}</el-button>
     </header>
 
+    <nav class="ft-workflow" :aria-label="t('Guide.Title')">
+        <div v-for="(step, index) in workflowSteps" :key="step"
+             class="ft-workflow-step"
+             :class="'is-' + workflowStepState(index)"
+             :aria-current="workflowStepState(index) === 'current' ? 'step' : null">
+            <span class="ft-workflow-index">{{ index + 1 }}</span>
+            <div class="ft-workflow-copy">
+                <strong>{{ t('Guide.' + step + 'Title') }}</strong>
+                <span>{{ t('Guide.' + step) }}</span>
+            </div>
+        </div>
+    </nav>
+
     <el-collapse class="ft-help" v-model="helpOpen">
         <el-collapse-item :title="t('Guide.Title')" name="workflow">
             <el-alert type="info" :closable="false" :title="t('Guide.Purpose')" show-icon></el-alert>
@@ -196,7 +209,7 @@
                         </el-select>
                     </el-form-item>
                 </div>
-                <p class="ft-muted">{{ t('ValidationHelp') }}</p>
+                <p class="ft-muted">{{ t('ValidationRunHelp') }}</p>
                 <el-alert v-if="health && compatibilityError" type="warning" :closable="false" :title="compatibilityError" show-icon></el-alert>
                 <el-collapse class="ft-advanced" v-model="advancedOpen">
                     <el-collapse-item :title="t('Advanced')" name="parameters">
@@ -296,7 +309,9 @@
                 </el-collapse-item>
             </el-collapse>
             <h3>{{ t('Artifacts') }}</h3>
-            <p>{{ t('DeploymentHelp') }}</p>
+            <el-alert v-if="job.state !== 'Succeeded' && job.artifacts.length" type="warning" :closable="false"
+                      :title="t('PartialArtifactsTitle')" :description="t('PartialArtifactsHelp')" show-icon></el-alert>
+            <p v-else>{{ t('DeploymentHelp') }}</p>
             <p v-if="!job.artifacts.length" class="ft-muted">{{ t('NoArtifacts') }}</p>
             <ul v-else class="ft-artifacts">
                 <li v-for="artifact in job.artifacts" :key="artifact.id">
@@ -304,6 +319,29 @@
                     <span>({{ formatBytes(artifact.bytes) }})</span>
                 </li>
             </ul>
+            <div v-if="job.state === 'Succeeded'" class="ft-validation">
+                <h3>{{ t('ValidationTitle') }}</h3>
+                <p class="ft-muted">{{ t('ValidationHelp') }}</p>
+                <el-input type="textarea" :rows="4" v-model="validationPrompts"
+                          :placeholder="t('ValidationPromptPlaceholder')"></el-input>
+                <div class="ft-validation-options">
+                    <el-input-number v-model="validationMaxTokens" :min="16" :max="256"></el-input-number>
+                    <el-button type="primary" size="small" :loading="validationBusy || validation.status === 'Running'"
+                               :disabled="validation.status === 'Running'" @@click="startValidation">
+                        {{ t('RunValidation') }}
+                    </el-button>
+                    <span class="ft-muted">{{ t('ValidationLimit') }}</span>
+                </div>
+                <el-progress v-if="validation.status === 'Running' && validation.total"
+                             :percentage="Math.round(validation.completed / validation.total * 100)"></el-progress>
+                <el-alert v-if="validation.error" type="error" :closable="false"
+                          :title="t('ValidationFailed')" :description="validation.error" show-icon></el-alert>
+                <div v-for="result in validation.results" :key="result.id" class="ft-validation-result">
+                    <strong>{{ result.id }}</strong>
+                    <p><span class="ft-muted">{{ t('ValidationPrompt') }}:</span> {{ result.prompt }}</p>
+                    <pre>{{ result.response }}</pre>
+                </div>
+            </div>
         </div>
         <h3>{{ t('Events') }}</h3>
         <el-alert v-if="eventsTruncated" type="warning" :closable="false" :title="t('EventsTruncated')" show-icon></el-alert>
