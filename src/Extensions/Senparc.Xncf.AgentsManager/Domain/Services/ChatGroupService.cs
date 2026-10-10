@@ -45,6 +45,12 @@
     修改标识：Senparc - 20260829
     修改描述：v0.17.0 增强 Agent 请求诊断、ChatGroup 状态处理与工作流对象支持
 
+    修改标识：Senparc - 20261006
+    修改描述：工作室等待任务持久化后返回，同时保留后台异步执行
+
+    修改标识：Senparc - 20261009
+    修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
+
 ----------------------------------------------------------------*/
 
 #nullable enable annotations
@@ -100,7 +106,7 @@ public class McpEndpoint
     public string url { get; set; }
 }
 
-/// <summary>同步等待 ChatGroup 结束时返回的持久化任务引用。</summary>
+/// <summary>ChatGroup 持久化任务引用，可在任务创建后或执行结束后返回。</summary>
 public sealed record ChatGroupRunResult(
     int ChatTaskId,
     int ChatGroupId,
@@ -185,7 +191,22 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     {
         ValidateRunRequest(request);
         var task = RunChatGroupExecutionCoreAsync(request);
+        TrackBackgroundTask(task);
+        return Task.CompletedTask;
+    }
 
+    public async Task<ChatGroupRunResult> StartChatGroupInThreadAsync(ChatGroup_RunGroupRequest request)
+    {
+        ValidateRunRequest(request);
+        var started = new TaskCompletionSource<ChatGroupRunResult>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var task = RunChatGroupExecutionCoreAsync(request, started);
+        TrackBackgroundTask(task, started);
+        return await started.Task;
+    }
+
+    private static void TrackBackgroundTask(
+        Task<ChatGroupRunResult> task, TaskCompletionSource<ChatGroupRunResult> started = null)
+    {
         lock (TaskList)
         {
             TaskList.Add(task);
@@ -200,11 +221,19 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
             if (completedTask.IsFaulted && completedTask.Exception != null)
             {
-                SenparcTrace.BaseExceptionLog(completedTask.Exception.GetBaseException());
+                var error = completedTask.Exception.GetBaseException();
+                started?.TrySetException(error);
+                SenparcTrace.BaseExceptionLog(error);
+            }
+            else if (completedTask.IsCanceled)
+            {
+                started?.TrySetCanceled();
+            }
+            else
+            {
+                started?.TrySetResult(completedTask.Result);
             }
         }, TaskScheduler.Default);
-
-        return Task.CompletedTask;
     }
 
     private static void ValidateRunRequest(ChatGroup_RunGroupRequest request)
@@ -246,7 +275,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         return RunChatGroupExecutionCoreAsync(request);
     }
 
-    private async Task<ChatGroupRunResult> RunChatGroupExecutionCoreAsync(ChatGroup_RunGroupRequest request)
+    private async Task<ChatGroupRunResult> RunChatGroupExecutionCoreAsync(
+        ChatGroup_RunGroupRequest request, TaskCompletionSource<ChatGroupRunResult> started = null)
     {
         var cancellationToken = request.CancellationToken;
         cancellationToken.ThrowIfCancellationRequested();
@@ -387,6 +417,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             runningKey = chatTaskService.GetChatTaskRunCacheKey(chatTask.Id);
             await _cache.SetAsync(runningKey, new RunningChatTaskDto { ChatTaskDto = chatTaskDto });
             PublishStatusEvent(chatTask.Id, ChatTask_Status.Chatting);
+            started?.TrySetResult(CreateRunResult(chatTask, chatGroup));
 
             logger.Append($"开始运行 {chatGroup.Name}");
 

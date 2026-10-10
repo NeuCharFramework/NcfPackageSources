@@ -1,0 +1,31 @@
+@using System.Text.Json
+@using Microsoft.Extensions.Localization
+@using Senparc.Xncf.AIKernel
+@inject IStringLocalizer<AIKernelResource> XR
+@{
+    var strings = XR.GetAllStrings(includeParentCultures: true).ToList();
+    var translations = strings
+        .GroupBy(item => item.Name)
+        .ToDictionary(group => $"AIKernel.{group.Key}", group => group.First().Value);
+    var sourceTranslations = strings
+        .Where(item => item.Name.StartsWith("Frontend.", StringComparison.Ordinal))
+        .Select(item => item.Value.Split(new[] { "||" }, 2, StringSplitOptions.None))
+        .Where(parts => parts.Length == 2)
+        .GroupBy(parts => parts[0])
+        .ToDictionary(group => group.Key, group => group.First()[1]);
+}
+<script>
+    window.ncfI18n = Object.assign(window.ncfI18n || {}, @Html.Raw(JsonSerializer.Serialize(translations)));
+    window.AIKernelI18n = Object.assign(window.AIKernelI18n || {}, @Html.Raw(JsonSerializer.Serialize(translations)));
+    window.ncfT = window.ncfT || function (key) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        var value = Object.prototype.hasOwnProperty.call(window.ncfI18n, key)
+            ? window.ncfI18n[key]
+            : key;
+        return value.replace(/\{(\d+)\}/g, function (match, index) {
+            return typeof args[index] === 'undefined' ? match : args[index];
+        });
+    };
+    window.ncfRegisterSourceTranslations = window.ncfRegisterSourceTranslations || function () { };
+    window.ncfRegisterSourceTranslations(@Html.Raw(JsonSerializer.Serialize(sourceTranslations)));
+</script>

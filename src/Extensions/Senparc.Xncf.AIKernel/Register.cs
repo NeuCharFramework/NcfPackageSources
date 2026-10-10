@@ -16,6 +16,15 @@
     修改标识：Senparc - 20260915
     修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
 
+    修改标识：Senparc - 20261002
+    修改描述：v0.16.3 接入独立本地模型微调 Worker 与实时管理界面
+
+    修改标识：Senparc - 20261003
+    修改描述：v0.16.4 支持数据库管理多 Worker 微调路由并将密钥留在基础设施配置
+
+    修改标识：Senparc - 20261009
+    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -115,6 +124,21 @@ namespace Senparc.Xncf.AIKernel
             // Token 监控服务（进程内单例，用于实时聚合与异步进度）
             services.AddSingleton<Senparc.Xncf.AIKernel.Domain.Services.AITokenMonitorService>();
 
+            services.Configure<Domain.Services.FineTuningWorkerOptions>(
+                configuration.GetSection(Domain.Services.FineTuningWorkerOptions.SectionName));
+            services.AddScoped<Domain.Services.AIFineTuningWorkerService>();
+            services.AddScoped<Domain.Services.IFineTuningWorkerConfigurationProvider,
+                Domain.Services.FineTuningWorkerConfigurationProvider>();
+            services.AddHttpContextAccessor();
+            services.AddHttpClient<Domain.Services.FineTuningWorkerClient>(client =>
+            {
+                client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
+            }).ConfigurePrimaryHttpMessageHandler(() => new System.Net.Http.HttpClientHandler
+            {
+                AllowAutoRedirect = false,
+                UseCookies = false
+            });
+
             services.AddAutoMapper(config =>
             {
                 config.AddProfile<AIKernelAutoMapperProfile>();
@@ -135,9 +159,5 @@ namespace Senparc.Xncf.AIKernel
         }
     }
 }
-
-
-
-
 
 

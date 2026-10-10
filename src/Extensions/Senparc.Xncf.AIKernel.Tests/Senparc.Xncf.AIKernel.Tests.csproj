@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.4</Version>
+    <Version>0.0.5</Version>
     <PackageReleaseNotes>
+      [2026-10-07] v0.0.5 覆盖目录分页、SQLite Worker 配置读写及命名配置的真实训练集成
+      [2026-10-06] v0.0.5 补充本地微调客户端、多 Worker 路由和依赖注入回归测试
       [2026-10-01] v0.0.4 补充 AI Token 监控租户隔离回归测试
       1、覆盖实时统计及运行进度的跨租户隔离
       [2026-09-05] v0.0.1 新增 AIKernel Token 监控单元测试
@@ -20,7 +22,11 @@
       2、保持项目引用链与当前功能兼容
       [2026-10-05] v0.0.4 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
       1、Updated Senparc.Xncf.AIKernel.Tests project behavior and integration for the latest feature and reliability improvements.
-      2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
+      2、chore: update package versions and dependencies across multiple projects
+      [2026-10-09] v0.0.5 补充 AIKernel 本地化与微调 Worker 回归测试
+      1、覆盖模块本地化脚本加载以及新增微调 Worker 页面资源键
+      2、验证 Worker 客户端、持久化配置和真实训练流程的回归行为
+</PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <ImplicitUsings>enable</ImplicitUsings>

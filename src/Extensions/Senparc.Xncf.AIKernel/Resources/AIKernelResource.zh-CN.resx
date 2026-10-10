@@ -293,4 +293,527 @@
   <data name="TokenMonitor.Search" xml:space="preserve">
     <value>搜索</value>
   </data>
+  <data name="FineTuning.Title" xml:space="preserve">
+    <value>本地模型微调</value>
+  </data>
+  <data name="FineTuning.Subtitle" xml:space="preserve">
+    <value>训练本地适配器、查看实时反馈并下载产物，不修改现有推理模型注册。</value>
+  </data>
+  <data name="FineTuning.Refresh" xml:space="preserve">
+    <value>刷新 / 重连</value>
+  </data>
+  <data name="FineTuning.Connected" xml:space="preserve">
+    <value>已连接</value>
+  </data>
+  <data name="FineTuning.Stale" xml:space="preserve">
+    <value>连接已过期 / 不可用</value>
+  </data>
+  <data name="FineTuning.LastUpdate" xml:space="preserve">
+    <value>最近成功更新</value>
+  </data>
+  <data name="FineTuning.WorkerVersion" xml:space="preserve">
+    <value>训练服务版本</value>
+  </data>
+  <data name="FineTuning.RunningCount" xml:space="preserve">
+    <value>运行中</value>
+  </data>
+  <data name="FineTuning.QueuedCount" xml:space="preserve">
+    <value>排队中</value>
+  </data>
+  <data name="FineTuning.Unavailable" xml:space="preserve">
+    <value>不可用</value>
+  </data>
+  <data name="FineTuning.ConnectionError" xml:space="preserve">
+    <value>无法刷新训练服务状态；当前显示的数据可能已过期。</value>
+  </data>
+  <data name="FineTuning.ActionError" xml:space="preserve">
+    <value>操作失败</value>
+  </data>
+  <data name="FineTuning.SetupHelp" xml:space="preserve">
+    <value>训练服务配置与故障排查</value>
+  </data>
+  <data name="FineTuning.EndpointHelp" xml:space="preserve">
+    <value>在本页创建 Worker 配置，设置别名、私有端点和请求超时（1–300 秒）。在 NCF 宿主启用 SenparcXncfAIKernel:FineTuning:Enabled，将端点主机加入 AllowedHosts，并通过 WorkerApiKeys:&lt;alias&gt; 配置与 Worker 的 NCF_WORKER_KEY 一致的密钥（至少 32 字符）。旧的 WorkerEndpoint/WorkerApiKey 不用于数据库 Worker 配置。在 Docker 中 localhost 指向容器本身，而非宿主机。本页面不输入或展示凭据。</value>
+  </data>
+  <data name="FineTuning.BackendHelp" xml:space="preserve">
+    <value>CPU 适合小规模冒烟测试。CUDA 需要兼容的 NVIDIA GPU 和启用 CUDA 的训练服务或容器。MLX 在 macOS Apple Silicon 上原生运行；Linux Docker 容器无法使用 Apple 的 Metal/MLX 后端。请启动原生 MLX 训练服务并配置可访问的地址。可用训练方法以服务报告的能力为准，而非浏览器环境。</value>
+  </data>
+  <data name="FineTuning.SecurityHelp" xml:space="preserve">
+    <value>仅可信全局管理员应管理训练，Worker 数据尚未按租户隔离。请保持 Worker 私网部署，上传前移除密钥及不必要的个人信息，并审核模型和数据许可证。端点在 Worker 配置中管理；密钥和端点白名单保留在基础设施配置中。</value>
+  </data>
+  <data name="FineTuning.Preflight" xml:space="preserve">
+    <value>训练前能力检查</value>
+  </data>
+  <data name="FineTuning.AwaitingHealth" xml:space="preserve">
+    <value>尚未获取训练服务能力。</value>
+  </data>
+  <data name="FineTuning.Available" xml:space="preserve">
+    <value>可用</value>
+  </data>
+  <data name="FineTuning.PreflightHelp" xml:space="preserve">
+    <value>能力可用不代表内存充足或训练一定成功。请检查模型、后端和训练方法，建议先运行默认的 10 步冒烟测试。</value>
+  </data>
+  <data name="FineTuning.Datasets" xml:space="preserve">
+    <value>数据集</value>
+  </data>
+  <data name="FineTuning.DatasetHelp" xml:space="preserve">
+    <value>上传 UTF-8 .jsonl：2–10,000 行、最多 2 MiB（2,097,152 字节）。每行一个受支持的对象，不接受空行、JSON 数组或额外字段。浏览器检查编码、JSON 语法及行结构，Worker 校验仍是最终依据。数据集保存在所选 Worker 上。</value>
+  </data>
+  <data name="FineTuning.DatasetName" xml:space="preserve">
+    <value>数据集名称</value>
+  </data>
+  <data name="FineTuning.DatasetFile" xml:space="preserve">
+    <value>UTF-8 JSONL 文件（最大 2 MiB）</value>
+  </data>
+  <data name="FineTuning.ReadingFile" xml:space="preserve">
+    <value>正在读取并验证文件…</value>
+  </data>
+  <data name="FineTuning.Upload" xml:space="preserve">
+    <value>上传数据集</value>
+  </data>
+  <data name="FineTuning.NoDatasets" xml:space="preserve">
+    <value>暂无数据集</value>
+  </data>
+  <data name="FineTuning.Rows" xml:space="preserve">
+    <value>行数</value>
+  </data>
+  <data name="FineTuning.Created" xml:space="preserve">
+    <value>创建时间</value>
+  </data>
+  <data name="FineTuning.Sha256" xml:space="preserve">
+    <value>SHA-256</value>
+  </data>
+  <data name="FineTuning.CreateJob" xml:space="preserve">
+    <value>训练配置</value>
+  </data>
+  <data name="FineTuning.JobName" xml:space="preserve">
+    <value>任务名称</value>
+  </data>
+  <data name="FineTuning.Model" xml:space="preserve">
+    <value>基础模型</value>
+  </data>
+  <data name="FineTuning.SelectModel" xml:space="preserve">
+    <value>选择训练服务中的模型</value>
+  </data>
+  <data name="FineTuning.TrainingDataset" xml:space="preserve">
+    <value>训练数据集</value>
+  </data>
+  <data name="FineTuning.SelectDataset" xml:space="preserve">
+    <value>选择已上传的数据集</value>
+  </data>
+  <data name="FineTuning.ValidationDataset" xml:space="preserve">
+    <value>留出验证数据集（可选）</value>
+  </data>
+  <data name="FineTuning.NoValidation" xml:space="preserve">
+    <value>自动留出验证集</value>
+  </data>
+  <data name="FineTuning.Backend" xml:space="preserve">
+    <value>训练后端</value>
+  </data>
+  <data name="FineTuning.Method" xml:space="preserve">
+    <value>训练方法</value>
+  </data>
+  <data name="FineTuning.ValidationHelp" xml:space="preserve">
+    <value>请使用独立验证集；训练/验证记录重叠会拒绝。不选择时，按 seed 自动留出约 20%、至少一条不同记录进行评估。</value>
+  </data>
+  <data name="FineTuning.BackendUnavailable" xml:space="preserve">
+    <value>所选后端不可用</value>
+  </data>
+  <data name="FineTuning.ModelBackendMismatch" xml:space="preserve">
+    <value>所选模型不支持此训练后端。</value>
+  </data>
+  <data name="FineTuning.MethodMismatch" xml:space="preserve">
+    <value>所选后端不支持此训练方法。</value>
+  </data>
+  <data name="FineTuning.Advanced" xml:space="preserve">
+    <value>高级参数（训练前请检查）</value>
+  </data>
+  <data name="FineTuning.SubmitJob" xml:space="preserve">
+    <value>创建训练任务</value>
+  </data>
+  <data name="FineTuning.Jobs" xml:space="preserve">
+    <value>已保存的训练任务</value>
+  </data>
+  <data name="FineTuning.JobsHelp" xml:space="preserve">
+    <value>选择任务可重新连接到服务器保存的状态并增量回放事件。关闭本页面后，任务仍在训练服务上运行。</value>
+  </data>
+  <data name="FineTuning.NoJobs" xml:space="preserve">
+    <value>暂无训练任务</value>
+  </data>
+  <data name="FineTuning.State" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="FineTuning.Actions" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="FineTuning.Monitor" xml:space="preserve">
+    <value>监控</value>
+  </data>
+  <data name="FineTuning.CancelJob" xml:space="preserve">
+    <value>取消任务</value>
+  </data>
+  <data name="FineTuning.Started" xml:space="preserve">
+    <value>开始时间</value>
+  </data>
+  <data name="FineTuning.Finished" xml:space="preserve">
+    <value>结束时间</value>
+  </data>
+  <data name="FineTuning.JobId" xml:space="preserve">
+    <value>任务 ID</value>
+  </data>
+  <data name="FineTuning.TrainingError" xml:space="preserve">
+    <value>训练失败</value>
+  </data>
+  <data name="FineTuning.Steps" xml:space="preserve">
+    <value>训练步 / 总步数</value>
+  </data>
+  <data name="FineTuning.ProgressUnknown" xml:space="preserve">
+    <value>训练服务报告 step 和 totalSteps 后才显示进度；不使用时间估算。</value>
+  </data>
+  <data name="FineTuning.CancellingHelp" xml:space="preserve">
+    <value>已请求取消。请等待训练服务确认结束；此时资源可能仍在使用中。</value>
+  </data>
+  <data name="FineTuning.MetricsHelp" xml:space="preserve">
+    <value>资源指标来自训练服务的采样。不支持、缺失或非数值的指标显示为不可用，绝不替换成零。多核 CPU 使用率可能超过 100%。</value>
+  </data>
+  <data name="FineTuning.ChartTitle" xml:space="preserve">
+    <value>按实际训练步展示训练损失、验证损失及学习率</value>
+  </data>
+  <data name="FineTuning.ChartUnavailable" xml:space="preserve">
+    <value>ECharts 未加载，图表不可用；仍可查看指标和日志。</value>
+  </data>
+  <data name="FineTuning.AwaitingMetrics" xml:space="preserve">
+    <value>等待包含实际训练步的数值指标…</value>
+  </data>
+  <data name="FineTuning.Loss" xml:space="preserve">
+    <value>损失</value>
+  </data>
+  <data name="FineTuning.ConfigSnapshot" xml:space="preserve">
+    <value>只读训练配置快照</value>
+  </data>
+  <data name="FineTuning.Artifacts" xml:space="preserve">
+    <value>训练产物</value>
+  </data>
+  <data name="FineTuning.DeploymentHelp" xml:space="preserve">
+    <value>下载并检查适配器、分词器及训练配置。使用兼容的推理运行时，将适配器加载到对应的基础模型或进行合并，完成测试后再部署。训练产物不会自动注册为 AIKernel 推理模型。</value>
+  </data>
+  <data name="FineTuning.NoArtifacts" xml:space="preserve">
+    <value>尚无训练产物</value>
+  </data>
+  <data name="FineTuning.Download" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="FineTuning.Events" xml:space="preserve">
+    <value>增量事件日志</value>
+  </data>
+  <data name="FineTuning.LogHelp" xml:space="preserve">
+    <value>浏览器仅保留最近 1,000 条日志和 1,000 个图表数据点。</value>
+  </data>
+  <data name="FineTuning.Replaying" xml:space="preserve">
+    <value>正在回放已保存的事件</value>
+  </data>
+  <data name="FineTuning.Live" xml:space="preserve">
+    <value>已追上事件游标</value>
+  </data>
+  <data name="FineTuning.Cursor" xml:space="preserve">
+    <value>游标</value>
+  </data>
+  <data name="FineTuning.FollowLog" xml:space="preserve">
+    <value>跟随最新日志</value>
+  </data>
+  <data name="FineTuning.NoEvents" xml:space="preserve">
+    <value>尚未收到事件</value>
+  </data>
+  <data name="FineTuning.UploadSucceeded" xml:space="preserve">
+    <value>数据集已上传并通过训练服务验证。</value>
+  </data>
+  <data name="FineTuning.JobSubmitted" xml:space="preserve">
+    <value>训练任务已提交，请在下方查看实际状态。</value>
+  </data>
+  <data name="FineTuning.CancelConfirm" xml:space="preserve">
+    <value>是否取消此排队或运行中的任务？可能保留部分产物。只有训练服务确认后，取消才算完成。</value>
+  </data>
+  <data name="FineTuning.Confirm" xml:space="preserve">
+    <value>确认取消</value>
+  </data>
+  <data name="FineTuning.KeepTraining" xml:space="preserve">
+    <value>继续训练</value>
+  </data>
+  <data name="FineTuning.CancelRequested" xml:space="preserve">
+    <value>取消请求已接受，请等待训练服务的最终状态。</value>
+  </data>
+  <data name="FineTuning.State.Queued" xml:space="preserve">
+    <value>排队中</value>
+  </data>
+  <data name="FineTuning.State.Running" xml:space="preserve">
+    <value>运行中</value>
+  </data>
+  <data name="FineTuning.State.Cancelling" xml:space="preserve">
+    <value>取消中</value>
+  </data>
+  <data name="FineTuning.State.Cancelled" xml:space="preserve">
+    <value>已取消</value>
+  </data>
+  <data name="FineTuning.State.Succeeded" xml:space="preserve">
+    <value>已成功</value>
+  </data>
+  <data name="FineTuning.State.Failed" xml:space="preserve">
+    <value>已失败</value>
+  </data>
+  <data name="FineTuning.State.Interrupted" xml:space="preserve">
+    <value>已中断</value>
+  </data>
+  <data name="FineTuning.Metric.trainLoss" xml:space="preserve">
+    <value>训练损失</value>
+  </data>
+  <data name="FineTuning.Metric.evalLoss" xml:space="preserve">
+    <value>验证损失</value>
+  </data>
+  <data name="FineTuning.Metric.learningRate" xml:space="preserve">
+    <value>学习率</value>
+  </data>
+  <data name="FineTuning.Metric.rss" xml:space="preserve">
+    <value>进程 RSS</value>
+  </data>
+  <data name="FineTuning.Metric.cpu" xml:space="preserve">
+    <value>进程 CPU</value>
+  </data>
+  <data name="FineTuning.Metric.gpuUtil" xml:space="preserve">
+    <value>GPU 使用率</value>
+  </data>
+  <data name="FineTuning.Metric.gpuMemory" xml:space="preserve">
+    <value>GPU 已用显存</value>
+  </data>
+  <data name="FineTuning.Metric.gpuTemperature" xml:space="preserve">
+    <value>GPU 温度</value>
+  </data>
+  <data name="FineTuning.Parameter.epochs" xml:space="preserve">
+    <value>训练轮数</value>
+  </data>
+  <data name="FineTuning.Tip.epochs" xml:space="preserve">
+    <value>完整遍历训练集的次数（1–100）。maxSteps 大于零时优先按步数训练。</value>
+  </data>
+  <data name="FineTuning.Parameter.maxSteps" xml:space="preserve">
+    <value>最大训练步数</value>
+  </data>
+  <data name="FineTuning.Tip.maxSteps" xml:space="preserve">
+    <value>0 表示按训练轮数运行；正数限制优化器步数（最多 1,000,000）。默认 10 步仅用于冒烟测试，不代表正式训练。</value>
+  </data>
+  <data name="FineTuning.Parameter.learningRate" xml:space="preserve">
+    <value>学习率</value>
+  </data>
+  <data name="FineTuning.Tip.learningRate" xml:space="preserve">
+    <value>优化器学习率（0.00000001–0.1）。默认值：0.0002。</value>
+  </data>
+  <data name="FineTuning.Parameter.batchSize" xml:space="preserve">
+    <value>批次大小</value>
+  </data>
+  <data name="FineTuning.Tip.batchSize" xml:space="preserve">
+    <value>每设备单个微批次的样本数（1–64）。较大的值需要更多内存。</value>
+  </data>
+  <data name="FineTuning.Parameter.gradientAccumulationSteps" xml:space="preserve">
+    <value>梯度累积步数</value>
+  </data>
+  <data name="FineTuning.Tip.gradientAccumulationSteps" xml:space="preserve">
+    <value>每个优化器步骤累积的微批次数（1–1,024）。无需分配一个大批次即可增大有效批次。</value>
+  </data>
+  <data name="FineTuning.Parameter.maxSequenceLength" xml:space="preserve">
+    <value>最大序列长度</value>
+  </data>
+  <data name="FineTuning.Tip.maxSequenceLength" xml:space="preserve">
+    <value>每个样本的令牌上限（32–32,768）。过长样本可能被截断；更大上限需要更多内存。</value>
+  </data>
+  <data name="FineTuning.Parameter.loraRank" xml:space="preserve">
+    <value>LoRA 秩</value>
+  </data>
+  <data name="FineTuning.Tip.loraRank" xml:space="preserve">
+    <value>低秩适配器维度（1–256）。更大的秩会增加可训练参数和内存用量。</value>
+  </data>
+  <data name="FineTuning.Parameter.loraAlpha" xml:space="preserve">
+    <value>LoRA 缩放系数</value>
+  </data>
+  <data name="FineTuning.Tip.loraAlpha" xml:space="preserve">
+    <value>适配器缩放系数（1–1,024），通常需要结合 LoRA 秩设置。</value>
+  </data>
+  <data name="FineTuning.Parameter.loraDropout" xml:space="preserve">
+    <value>LoRA 丢弃率</value>
+  </data>
+  <data name="FineTuning.Tip.loraDropout" xml:space="preserve">
+    <value>适配器丢弃概率（0–0.9）。训练服务会验证后端是否支持此配置。</value>
+  </data>
+  <data name="FineTuning.Parameter.targetModules" xml:space="preserve">
+    <value>目标模块</value>
+  </data>
+  <data name="FineTuning.Tip.targetModules" xml:space="preserve">
+    <value>使用 all-linear 或所选模型和后端支持的逗号分隔模块名（最多 512 字符）。</value>
+  </data>
+  <data name="FineTuning.Parameter.warmupRatio" xml:space="preserve">
+    <value>预热比例</value>
+  </data>
+  <data name="FineTuning.Tip.warmupRatio" xml:space="preserve">
+    <value>用于学习率预热的训练步数占比（0–0.5）。</value>
+  </data>
+  <data name="FineTuning.Parameter.weightDecay" xml:space="preserve">
+    <value>权重衰减</value>
+  </data>
+  <data name="FineTuning.Tip.weightDecay" xml:space="preserve">
+    <value>优化器权重衰减系数（0–1）。默认 0 表示不使用权重衰减。</value>
+  </data>
+  <data name="FineTuning.Parameter.loggingSteps" xml:space="preserve">
+    <value>日志间隔步数</value>
+  </data>
+  <data name="FineTuning.Tip.loggingSteps" xml:space="preserve">
+    <value>训练指标日志之间的优化器步数（1–10,000）。</value>
+  </data>
+  <data name="FineTuning.Parameter.saveSteps" xml:space="preserve">
+    <value>检查点保存间隔</value>
+  </data>
+  <data name="FineTuning.Tip.saveSteps" xml:space="preserve">
+    <value>检查点保存之间的优化器步数（1–100,000）。最终产物由训练服务另行报告。</value>
+  </data>
+  <data name="FineTuning.Parameter.evalSteps" xml:space="preserve">
+    <value>验证间隔步数</value>
+  </data>
+  <data name="FineTuning.Tip.evalSteps" xml:space="preserve">
+    <value>留出验证之间的优化器步数（1–100,000），包括自动切分的验证集。</value>
+  </data>
+  <data name="FineTuning.Parameter.seed" xml:space="preserve">
+    <value>随机种子</value>
+  </data>
+  <data name="FineTuning.Tip.seed" xml:space="preserve">
+    <value>随机种子（0–2,147,483,647）。可重复性仍取决于后端、模型和硬件。</value>
+  </data>
+  <data name="FineTuning.Parameter.maxDurationMinutes" xml:space="preserve">
+    <value>最长运行时间（分钟）</value>
+  </data>
+  <data name="FineTuning.Tip.maxDurationMinutes" xml:space="preserve">
+    <value>训练服务执行的运行时长上限（1–10,080 分钟），不用于估算进度。</value>
+  </data>
+  <data name="FineTuning.Error.InvalidResponse" xml:space="preserve">
+    <value>服务器返回了无效的微调响应。</value>
+  </data>
+  <data name="FineTuning.Error.Authorization" xml:space="preserve">
+    <value>需要管理员认证或访问被拒绝。请重新登录或检查权限。</value>
+  </data>
+  <data name="FineTuning.Error.Request" xml:space="preserve">
+    <value>微调请求失败</value>
+  </data>
+  <data name="FineTuning.Error.Cursor" xml:space="preserve">
+    <value>训练服务返回了无效的事件游标。请检查服务日志后重连。</value>
+  </data>
+  <data name="FineTuning.Error.FileType" xml:space="preserve">
+    <value>请选择 .jsonl 文件。</value>
+  </data>
+  <data name="FineTuning.Error.FileSize" xml:space="preserve">
+    <value>JSONL 文件不能超过 2 MiB。</value>
+  </data>
+  <data name="FineTuning.Error.FileRead" xml:space="preserve">
+    <value>无法读取文件，请重新选择。</value>
+  </data>
+  <data name="FineTuning.Error.Utf8" xml:space="preserve">
+    <value>文件不是有效的 UTF-8 编码，请转换编码后上传。</value>
+  </data>
+  <data name="FineTuning.Error.JsonLine" xml:space="preserve">
+    <value>以下行不是有效的 JSON 对象：</value>
+  </data>
+  <data name="FineTuning.Error.EmptyDataset" xml:space="preserve">
+    <value>数据集必须包含至少两个 JSON 对象。</value>
+  </data>
+  <data name="FineTuning.Error.NotConnected" xml:space="preserve">
+    <value>提交前请重新连接训练服务。</value>
+  </data>
+  <data name="FineTuning.Error.DatasetRequired" xml:space="preserve">
+    <value>请输入数据集名称并选择有效的 JSONL 文件。</value>
+  </data>
+  <data name="FineTuning.Error.JobRequired" xml:space="preserve">
+    <value>请输入任务名称，并选择已存在的模型和训练数据集。</value>
+  </data>
+  <data name="FineTuning.Error.Heldout" xml:space="preserve">
+    <value>验证必须使用与训练数据集不同且内容不同的数据集。</value>
+  </data>
+  <data name="FineTuning.Error.Parameter" xml:space="preserve">
+    <value>高级参数无效</value>
+  </data>
+  <data name="FineTuning.Error.TargetModules" xml:space="preserve">
+    <value>请使用 all-linear 或逗号分隔的字面模块名，不含空格或正则表达式，最多 512 字符。</value>
+  </data>
+  <data name="FineTuning.Error.Disabled" xml:space="preserve">
+    <value>本地微调已禁用。请配置 SenparcXncfAIKernel:FineTuning 并启动训练服务。</value>
+  </data>
+  <data name="FineTuning.Error.Unreachable" xml:space="preserve">
+    <value>无法连接微调训练服务。请检查 WorkerEndpoint、服务状态和网络连通性。</value>
+  </data>
+  <data name="FineTuning.EventsTruncated" xml:space="preserve"><value>较早事件已按 Worker 保留上限清理，当前仅为部分历史；训练指标可查看导出文件。</value></data>
+  <data name="FineTuning.Metric.gpuAllocated" xml:space="preserve"><value>后端已分配 GPU 内存</value></data>
+  <data name="FineTuning.Metric.gradNorm" xml:space="preserve"><value>梯度范数</value></data>
+  <data name="FineTuning.Metric.tokensPerSecond" xml:space="preserve"><value>处理 Token 吞吐</value></data>
+  <data name="FineTuning.Metric.elapsedSeconds" xml:space="preserve"><value>已运行时长</value></data>
+  <data name="FineTuning.Metric.diskFree" xml:space="preserve"><value>磁盘可用空间</value></data>
+  <data name="FineTuning.Metric.jobOutput" xml:space="preserve"><value>任务输出大小</value></data>
+  <data name="FineTuning.Worker" xml:space="preserve"><value>训练 Worker</value></data>
+  <data name="FineTuning.SelectWorker" xml:space="preserve"><value>请选择训练 Worker</value></data>
+  <data name="FineTuning.WorkerRequired" xml:space="preserve"><value>请先选择已配置的训练 Worker。</value></data>
+  <data name="FineTuning.WorkerSecretMissing" xml:space="preserve"><value>缺少密钥</value></data>
+  <data name="FineTuning.WorkerDisabled" xml:space="preserve"><value>已停用</value></data>
+  <data name="FineTuning.WorkerRoutingHelp" xml:space="preserve"><value>数据集、任务、日志和产物始终保留在当前选择的 Worker 上。密钥必须在数据库外配置。</value></data>
+  <data name="FineTuning.AddWorker" xml:space="preserve"><value>添加 Worker</value></data>
+  <data name="FineTuning.EditWorker" xml:space="preserve"><value>编辑 Worker</value></data>
+  <data name="FineTuning.WorkerConfiguration" xml:space="preserve"><value>Worker 配置</value></data>
+  <data name="FineTuning.WorkerSecretNotice" xml:space="preserve"><value>API 密钥不会存储或编辑于此。请通过密钥提供程序配置 FineTuning:WorkerApiKeys:&lt;别名&gt;，并在 FineTuning:AllowedHosts 中允许端点主机。</value></data>
+  <data name="FineTuning.WorkerAlias" xml:space="preserve"><value>别名</value></data>
+  <data name="FineTuning.WorkerName" xml:space="preserve"><value>名称</value></data>
+  <data name="FineTuning.WorkerEndpoint" xml:space="preserve"><value>端点</value></data>
+  <data name="FineTuning.RequestTimeout" xml:space="preserve"><value>请求超时（秒）</value></data>
+  <data name="FineTuning.Enabled" xml:space="preserve"><value>启用</value></data>
+  <data name="FineTuning.Note" xml:space="preserve"><value>备注</value></data>
+  <data name="FineTuning.Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="FineTuning.SaveWorker" xml:space="preserve"><value>保存 Worker</value></data>
+  <data name="FineTuning.WorkerSaved" xml:space="preserve"><value>Worker 已保存。</value></data>
+  <data name="FineTuning.Guide.Title" xml:space="preserve"><value>从这里开始：微调操作教程</value></data>
+  <data name="FineTuning.Guide.Purpose" xml:space="preserve"><value>LoRA/QLoRA 通过训练适配器调整任务行为、风格或输出格式，不替代 KnowledgeBase/RAG，不部署推理，也不会自动注册模型。</value></data>
+  <data name="FineTuning.Guide.WorkerTitle" xml:space="preserve"><value>准备并连接 Worker</value></data>
+  <data name="FineTuning.Guide.Worker" xml:space="preserve"><value>独立部署 CPU/CUDA 或原生 Apple Silicon Worker，准备经批准的离线模型，配置全局开关、主机白名单和别名对应密钥。在本页添加并选择 Worker 配置，先读取能力检查及不可用原因。</value></data>
+  <data name="FineTuning.Guide.DataTitle" xml:space="preserve"><value>准备独立数据集</value></data>
+  <data name="FineTuning.Guide.Data" xml:space="preserve"><value>展开下方“数据样例与下载”获取 JSONL，将示例替换为经过授权、清洗的数据，分别上传训练集和验证集。不要用最终测试集训练。未指定验证集时，Worker 自动留出约 20% 的不同记录。</value></data>
+  <data name="FineTuning.Guide.TrainingTitle" xml:space="preserve"><value>提交有边界的冒烟测试</value></data>
+  <data name="FineTuning.Guide.Training" xml:space="preserve"><value>命名任务，选择模型、数据集、兼容后端及 LoRA/QLoRA 方法。先使用默认 10 次优化器更新，展开高级参数查看含义和资源预算。CPU 不支持 QLoRA。</value></data>
+  <data name="FineTuning.Guide.MonitorTitle" xml:space="preserve"><value>查看真实进度并安全恢复</value></data>
+  <data name="FineTuning.Guide.Monitor" xml:space="preserve"><value>选择任务查看真实步数、训练/验证 loss、资源、日志和配置。刷新可恢复保留的历史。连接过期不代表训练已停止；提交超时后先刷新任务状态再重试。取消不是暂停或恢复。</value></data>
+  <data name="FineTuning.Guide.PublishTitle" xml:space="preserve"><value>评估后再部署推理</value></data>
+  <data name="FineTuning.Guide.Publish" xml:space="preserve"><value>下载导出归档并核对 manifest。Succeeded 仅代表训练进程完成，不代表质量合格。在未参与调参的任务上用相同 Prompt 和 RAG 上下文比较基座与适配器，部署兼容推理运行时，再到模型管理注册推理端点。</value></data>
+  <data name="FineTuning.Guide.ChineseDocs" xml:space="preserve"><value>完整中文教程</value></data>
+  <data name="FineTuning.Guide.EnglishDocs" xml:space="preserve"><value>完整英文教程</value></data>
+  <data name="FineTuning.Guide.Troubleshooting" xml:space="preserve"><value>常见问题与处理提示</value></data>
+  <data name="FineTuning.Guide.Error.Connection" xml:space="preserve"><value>未启用 / 缺少密钥 / 连接失败：检查全局 Enabled、有效的别名对应密钥、AllowedHosts、Worker 配置启用状态、网络命名空间及 Worker 日志。修改环境变量后重启 NCF，再刷新。</value></data>
+  <data name="FineTuning.Guide.Error.Dataset" xml:space="preserve"><value>数据集被拒绝：修复提示行、字段结构、UTF-8 编码和大小/行数限制。messages 需要模型 tokenizer 的 chat template。不同数据集 ID 不保证没有泄漏，验证记录与训练重叠会被拒绝。</value></data>
+  <data name="FineTuning.Guide.Error.Memory" xml:space="preserve"><value>内存不足 / loss 不稳定：读取真实错误及指标，降低 batch、序列长度或 rank，或选择受支持的量化后端。修复原因后新建有边界任务；不可用的传感器不能按 0 解读。</value></data>
+  <data name="FineTuning.Guide.Error.Interrupted" xml:space="preserve"><value>已取消 / 中断 / 失败：检查保留的 checkpoint 和事件。重启时活跃任务为 Interrupted，不是成功。本版本不支持自动 resume、在线删除或自动部署；生产使用前定义备份与保留策略。</value></data>
+  <data name="FineTuning.Guide.DatasetExample" xml:space="preserve"><value>数据样例与下载</value></data>
+  <data name="FineTuning.Guide.DatasetSchema" xml:space="preserve"><value>每行仅包含 prompt + completion，或仅包含 messages。文本不能为空，最多 65,536 字符且不含 NUL。messages 包含 2–128 个 role/content 对象：首条可选 system，之后 user/assistant 交替并以 assistant 结束。不支持 tool 消息或额外字段。</value></data>
+  <data name="FineTuning.Guide.SampleNotice" xml:space="preserve"><value>这四条不同记录仅演示文件格式，不代表数据充足或模型质量。messages 需批准 tokenizer 的 chat template；没有模板时使用 prompt/completion。下载不会自动上传或提交任务。</value></data>
+  <data name="FineTuning.Guide.DownloadSample" xml:space="preserve"><value>下载 JSONL 样例</value></data>
+  <data name="FineTuning.Guide.EffectiveBatch" xml:space="preserve"><value>单设备近似有效 batch（microbatch × 梯度累积）</value></data>
+  <data name="FineTuning.Guide.SmokeNotice" xml:space="preserve"><value>默认 10 步用于验证流程，不代表生产质量。正数 maxSteps 覆盖 epochs；最后一步也会执行验证。</value></data>
+  <data name="FineTuning.Error.RowLimit" xml:space="preserve"><value>数据集超过 10,000 行。</value></data>
+  <data name="FineTuning.Error.DatasetSchema" xml:space="preserve"><value>不支持的数据行结构，请参照“数据样例与下载”；行号：</value></data>
+  <data name="FineTuning.Error.WorkerChanged" xml:space="preserve"><value>Worker 选择已改变。重试前请检查原 Worker 的任务/数据集状态，其响应不能写入当前 Worker 视图。</value></data>
+  <data name="FineTuning.DatasetHistory" xml:space="preserve"><value>当前视图可选数据集 / 已保存总数</value></data>
+  <data name="FineTuning.LoadMoreDatasets" xml:space="preserve"><value>加载更早的数据集</value></data>
+  <data name="FineTuning.StoreChanged" xml:space="preserve"><value>该 Worker 的存储身份已改变。已清空缓存任务、数据集及 cursor，请重新选择新存储中的资源后再操作。</value></data>
+  <data name="FineTuning.WorkerNotReady" xml:space="preserve"><value>Worker 正在停止或处于不健康状态，不能接收新训练任务。请检查其状态与日志。</value></data>
+  <data name="FineTuning.WorkerVersionMismatch" xml:space="preserve"><value>此管理界面要求 Worker 1.1 或更新版本，提供目录分页和持久化存储身份。请先升级匹配的 Worker，再提交任务。</value></data>
+  <data name="FineTuning.WorkerDisableHelp" xml:space="preserve"><value>禁用该配置仅阻断管理接入，不会终止既有训练。需要终止时请先取消任务，或按运维流程停止 Worker。</value></data>
+  <data name="FineTuning.WorkerSetupTitle" xml:space="preserve"><value>尚未配置可用 Worker</value></data>
+  <data name="FineTuning.WorkerSetupEmpty" xml:space="preserve"><value>还没有添加 Worker 配置。请先部署训练 Worker，在 NCF 中配置对应密钥和主机白名单，再点击“添加 Worker”设置别名及私有端点。连接成功后才可上传数据和提交训练。</value></data>
+  <data name="FineTuning.WorkerSetupExisting" xml:space="preserve"><value>当前没有可选的 Worker。请编辑并启用配置，在 NCF 中设置该别名对应的有效密钥后刷新。这是配置步骤，不代表训练任务失败。</value></data>
+  <data name="FineTuning.ValidationTitle" xml:space="preserve"><value>训练后快速验证</value></data>
+  <data name="FineTuning.ValidationRunHelp" xml:space="preserve"><value>仅对已成功的 MLX 任务运行最多 8 条离线测试提示。Worker 使用同一基础模型、Adapter 和 tokenizer，不执行任意命令或联网下载。</value></data>
+  <data name="FineTuning.ValidationPromptPlaceholder" xml:space="preserve"><value>每行输入一个测试问题，例如：请用小红书风格介绍一款适合通勤的保温杯。</value></data>
+  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>最多 8 条；输出上限 16–256 tokens</value></data>
+  <data name="FineTuning.RunValidation" xml:space="preserve"><value>运行验证</value></data>
+  <data name="FineTuning.ValidationFailed" xml:space="preserve"><value>验证失败</value></data>
+  <data name="FineTuning.ValidationPrompt" xml:space="preserve"><value>测试提示</value></data>
+  <data name="FineTuning.ValidationPromptError" xml:space="preserve"><value>请输入 1–8 条测试提示，每行一条。</value></data>
+  <data name="FineTuning.PartialArtifactsTitle" xml:space="preserve"><value>这是部分训练产物</value></data>
+  <data name="FineTuning.PartialArtifactsHelp" xml:space="preserve"><value>任务没有成功完成，当前文件只代表超时或中断前已保存的 checkpoint。请先检查 manifest.json 中的 status、completedSteps、错误信息和 Adapter 完整性；不要直接部署或将其视为完成训练的模型。</value></data>
 </root>

@@ -1,0 +1,20 @@
+FROM nvidia/cuda:12.8.1-runtime-ubuntu24.04
+ENV DEBIAN_FRONTEND=noninteractive PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 \
+    HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_DATASETS_OFFLINE=1 \
+    HF_HUB_DISABLE_TELEMETRY=1 TOKENIZERS_PARALLELISM=false \
+    HF_HOME=/tmp/huggingface HOME=/tmp NCF_MODELS_ROOT=/models NCF_DATA_ROOT=/data \
+    PATH=/opt/venv/bin:$PATH
+RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv ca-certificates \
+    && rm -rf /var/lib/apt/lists/* && python3 -m venv /opt/venv
+WORKDIR /app
+COPY requirements-*.txt ./
+RUN pip install --no-cache-dir torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128 \
+    && pip install --no-cache-dir -r requirements-cuda.txt \
+    && groupadd --gid 10001 worker && useradd --uid 10001 --gid worker --no-create-home worker \
+    && mkdir /data /models && chown worker:worker /data
+COPY worker ./worker
+COPY tests ./tests
+ENV NCF_BIND_HOST=0.0.0.0
+USER 10001:10001
+EXPOSE 8091
+CMD ["python", "-m", "worker"]

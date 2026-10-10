@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260915
     修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
 
+    修改标识：Senparc - 20261009
+    修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +34,7 @@ namespace Senparc.Xncf.AIKernel.Models
         public DbSet<AIModel> AiModels { get; set; }
         public DbSet<AIVector> AiVectors { get; set; }
         public DbSet<AITokenUsage> AiTokenUsages { get; set; }
+        public DbSet<AIFineTuningWorker> AiFineTuningWorkers { get; set; }
 
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }

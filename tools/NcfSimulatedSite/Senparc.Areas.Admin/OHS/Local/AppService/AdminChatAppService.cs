@@ -28,6 +28,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
+    修改标识：Senparc - 20261009
+    修改描述：v0.11.0 增强后台 Admin Chat 群组配置、提示词构建与上下文控制
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -62,6 +65,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     [AdminOrJwtAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
     public class AdminChatAppService : LocalAppServiceBase
     {
+        private const string AgentsManagerModuleUid = "D858D7FA-775A-4690-9023-CFB0B3B84994";
+
         private readonly AdminChatSessionService _sessionService;
         private readonly AdminChatMessageService _messageService;
         private readonly AdminChatSessionModuleService _sessionModuleService;
@@ -136,6 +141,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 }
 
                 await _sessionModuleService.AddModulesToSessionAsync(session.Id, modules);
+                await EnsureAgentsManagerModuleLinkedAsync(session.Id);
 
                 var workflowProvider = ServiceProvider.GetService<IWorkflowFunctionCallingProvider>();
                 if (workflowProvider != null && request.WorkflowIds != null)
@@ -213,6 +219,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 {
                     throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
                 }
+
+                await EnsureAgentsManagerModuleLinkedAsync(sessionId);
 
                 var (messages, _) = await _messageService.GetSessionMessagesAsync(sessionId);
                 var modules = await _sessionModuleService.GetSessionModulesAsync(sessionId);
@@ -1068,6 +1076,27 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             }
 
             return dto;
+        }
+
+        private async Task EnsureAgentsManagerModuleLinkedAsync(int sessionId)
+        {
+            var register = XncfRegisterManager.RegisterList.FirstOrDefault(module =>
+                string.Equals(module.Uid, AgentsManagerModuleUid, StringComparison.OrdinalIgnoreCase));
+            if (register == null)
+            {
+                return;
+            }
+
+            var availabilityService = ServiceProvider.GetRequiredService<INeuBellModuleAvailabilityService>();
+            var openModuleUids = await availabilityService.GetOpenModuleUidsAsync(new[] { register.Uid });
+            if (openModuleUids.Contains(register.Uid, StringComparer.OrdinalIgnoreCase))
+            {
+                await _sessionModuleService.AddModuleToSessionAsync(
+                    sessionId,
+                    register.Uid,
+                    register.Name,
+                    register.Version ?? string.Empty);
+            }
         }
 
         private async Task<List<AdminChatSessionWorkflowDto>> MapWorkflowDtosAsync(

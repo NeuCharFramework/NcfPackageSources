@@ -39,6 +39,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.18.1 0.18.1 feat: add MCP endpoint selection feature in AgentsManager
 
+    修改标识：Senparc - 20261009
+    修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;
@@ -47,6 +50,7 @@ using Microsoft.Extensions.AI;
 using ModelContextProtocol.Client;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
+using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Shared.Abstractions.Events;
@@ -72,6 +76,7 @@ using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Models.Entities;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using Senparc.Xncf.KnowledgeBase.Domain.Services;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
@@ -80,6 +85,7 @@ using Senparc.Ncf.XncfBase.FunctionRenders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 
@@ -107,6 +113,91 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             this._promptRangeService = promptRangeService;
             _agentWorkflowReferenceValidator = agentWorkflowReferenceValidators?.FirstOrDefault();
             _workflowFunctionCallingProvider = workflowFunctionCallingProviders?.FirstOrDefault();
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<AgentTemplate_ConvertPlainPromptResponse>> ConvertPlainPromptToPromptRange(
+            [FromBody] AgentTemplate_ConvertPlainPromptRequest request)
+        {
+            return await this.GetResponseAsync<AgentTemplate_ConvertPlainPromptResponse>(async (response, logger) =>
+            {
+                if (request == null
+                    || request.AgentTemplateId <= 0
+                    || string.IsNullOrWhiteSpace(request.PromptContent)
+                    || string.IsNullOrWhiteSpace(request.TestInput)
+                    || string.IsNullOrWhiteSpace(request.ExpectedResult)
+                    || request.AiModelId <= 0)
+                {
+                    throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase("请提供有效的 Agent、Prompt、测试输入、评分标准和 Chat 模型。");
+                }
+
+                var agentTemplate = await _agentsTemplateService.GetObjectAsync(z => z.Id == request.AgentTemplateId)
+                    ?? throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase($"未找到 AgentTemplate：{request.AgentTemplateId}");
+                if (agentTemplate.IsHuman)
+                {
+                    throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase("Human Agent 不支持 PromptRange 转换。");
+                }
+                if (AgentTemplateRunner.IsPromptRangeReference(request.PromptContent))
+                {
+                    throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase("当前内容是 PromptRange 引用而非明文 Prompt，无需再次转换。");
+                }
+
+                var aiModelService = base.GetRequiredService<AIModelService>();
+                var promptResultService = base.GetRequiredService<PromptResultService>();
+                var aiModel = await aiModelService.GetObjectAsync(z =>
+                    z.Id == request.AiModelId
+                    && z.ConfigModelType == Senparc.Xncf.AIKernel.Domain.Models.ConfigModelType.Chat);
+                if (aiModel == null)
+                {
+                    throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase($"未找到 Chat 类型 AIModel：{request.AiModelId}");
+                }
+
+                var promptRange = await _promptRangeService.AddAsync($"AgentTemplate-{agentTemplate.Name}");
+                var expectedResultsJson = JsonSerializer.Serialize(new[] { request.ExpectedResult.Trim() });
+                var promptItem = await _promptItemService.AddPromptItemAsync(new PromptItem_AddRequest
+                {
+                    RangeId = promptRange.Id,
+                    ModelId = request.AiModelId,
+                    Content = request.PromptContent.Trim(),
+                    TopP = 0.9f,
+                    Temperature = 0.6f,
+                    MaxToken = 2000,
+                    NumsOfResults = 1,
+                    IsDraft = false,
+                    isAIGrade = true,
+                    ExpectedResultsJson = expectedResultsJson,
+                    Note = $"由 AgentTemplate「{agentTemplate.Name}」转换并自动打靶评分"
+                });
+
+                var generatedResult = await promptResultService.SenparcGenerateResultAsync(
+                    promptItem,
+                    request.TestInput.Trim());
+                await promptResultService.UpdateEvalScoreAsync(promptItem.Id);
+
+                var scoredResult = await promptResultService.GetObjectAsync(z => z.Id == generatedResult.Id)
+                    ?? throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase($"未找到打靶结果：{generatedResult.Id}");
+                if (scoredResult.RobotScore < 0)
+                {
+                    throw new Senparc.Ncf.Core.Exceptions.NcfExceptionBase("Prompt 已完成打靶，但未能取得有效评分；AgentTemplate 保持原 Prompt 不变。");
+                }
+
+                var agentTemplateDto = _agentsTemplateService.Mapping<AgentTemplateDto>(agentTemplate);
+                agentTemplateDto.PromptCode = promptRange.RangeName;
+                agentTemplateDto.SystemMessage = promptRange.RangeName;
+                agentTemplateDto.ModelBinding = AgentModelBindingMode.InheritPromptRange;
+                agentTemplateDto.AiModelId = null;
+                await _agentsTemplateService.UpdateAgentTemplateAsync(agentTemplate.Id, agentTemplateDto);
+
+                logger.Append($"Prompt 已创建并完成一次打靶评分：{promptRange.RangeName}，评分：{scoredResult.RobotScore}。");
+                return new AgentTemplate_ConvertPlainPromptResponse
+                {
+                    PromptCode = promptRange.RangeName,
+                    PromptItemVersion = promptItem.FullVersion,
+                    PromptResultId = scoredResult.Id,
+                    Score = scoredResult.RobotScore,
+                    ResultString = scoredResult.ResultString
+                };
+            });
         }
 
         //[ApiBind]
@@ -152,9 +243,9 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     Enum.Parse<HookRobotType>(request.HookRobotType), request.HookRobotParameter,
                     null, request.FunctionCallNames, null, request.KnowledgeBaseId);
 
-                await this._agentsTemplateService.UpdateAgentTemplateAsync(request.Id, agentTemplateDto);
+                var savedAgentTemplate = await this._agentsTemplateService.UpdateAgentTemplateAsync(request.Id, agentTemplateDto);
 
-                logger.Append("Agent 模板更新成功！");
+                logger.Append($"Agent 模板更新成功，ID：{savedAgentTemplate.Id}。");
                 logger.Append("当前代理使用的 Prompt 模板：" + promptTemplate);
 
                 return logger.ToString();
@@ -223,8 +314,12 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                 {
                     return "请输入搜索词（名称、PromptCode 或关键字）";
                 }
+                if (request.Query.Length > 500)
+                {
+                    return "搜索词最多 500 个字符。";
+                }
 
-                var topN = request.TopN <= 0 ? 5 : Math.Min(request.TopN, 20);
+                var topN = request.TopN <= 0 ? 5 : Math.Min(request.TopN, 10);
                 var aliasMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 {
                     ["提示词优化器"] = "PromptCatalyzer",
@@ -236,6 +331,7 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     .Select(z => z.Trim())
                     .Where(z => !string.IsNullOrWhiteSpace(z))
                     .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .Take(10)
                     .ToList();
 
                 if (keywords.Count == 0)
@@ -243,36 +339,33 @@ logger.Append($"❌ 创建智能体失败：{ex.Message}");
                     return "请输入有效搜索词";
                 }
 
-                var enabledAgents = await _agentsTemplateService.GetFullListAsync(z => z.Enable, z => z.Id, Ncf.Core.Enums.OrderingType.Descending);
-
                 foreach (var keywordRaw in keywords)
                 {
                     var keyword = aliasMap.TryGetValue(keywordRaw, out var alias) ? alias : keywordRaw;
-                    var exact = enabledAgents
-                        .Where(z => string.Equals(z.Name, keyword, StringComparison.OrdinalIgnoreCase)
-                            || string.Equals(z.PromptCode, keyword, StringComparison.OrdinalIgnoreCase))
-                        .OrderByDescending(z => z.Id)
-                        .ToList();
-
-                    var fuzzy = enabledAgents
-                        .Where(z =>
-                            (!string.IsNullOrWhiteSpace(z.Name) && z.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase))
-                            || (!string.IsNullOrWhiteSpace(z.PromptCode) && z.PromptCode.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
-                        .OrderByDescending(z => z.Id)
-                        .ToList();
-
-                    var candidates = exact.Count > 0
+                    var exact = await _agentsTemplateService.GetObjectListAsync(
+                        0,
+                        topN,
+                        z => z.Enable && (z.Name == keyword || z.PromptCode == keyword),
+                        z => z.Id,
+                        Ncf.Core.Enums.OrderingType.Descending);
+                    var candidates = exact.TotalCount > 0
                         ? exact
-                        : fuzzy;
+                        : await _agentsTemplateService.GetObjectListAsync(
+                            0,
+                            topN,
+                            z => z.Enable
+                                && (z.Name.Contains(keyword) || z.PromptCode.Contains(keyword)),
+                            z => z.Id,
+                            Ncf.Core.Enums.OrderingType.Descending);
 
                     logger.Append($"关键词：{keywordRaw}");
-                    if (candidates.Count == 0)
+                    if (candidates.TotalCount == 0)
                     {
                         logger.Append("  未找到可用 AgentTemplate");
                         continue;
                     }
 
-                    foreach (var c in candidates.Take(topN))
+                    foreach (var c in candidates)
                     {
                         logger.Append($"  ID={c.Id} | 名称={c.Name} | PromptCode={c.PromptCode}{System.Environment.NewLine}");
                     }

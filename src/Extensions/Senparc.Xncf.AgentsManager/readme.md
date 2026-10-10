@@ -14,6 +14,45 @@
 - Includes provider-specific EF Core contexts for NCF's multi-database model.
 - Supports A2A remote agents as first-class ChatGroup members while preserving the existing local `AgentTemplate` and `ChatGroupMember` data path.
 - Supports per-group context sharing: legacy full history (local-only), instruction plus bounded text conclusion (the secure mixed-group default), or instruction only.
+- Includes an interactive 3D Agent Studio with team desks, an agent lounge, a task board, and a same-screen inspector.
+
+## Agent Studio
+
+Open **Agents → 3D view** (`#tab=first&view=three`). The existing panel, statistics and full detail pages remain available.
+
+- Drag an enabled local or remote A2A agent from the roster or directly in the 3D scene to a team desk / group drop target. Membership is appended idempotently; other members, roles, enable state and context-sharing settings are preserved. This adds membership rather than moving the agent out of its other teams.
+- Use **+** or drop agents into the **Team tray**, then **Form team & run**. Choose a local, non-human owner and entry agent, a task title, instructions and an optional chat model. You can create just the team or submit a task immediately. A saved team is retained when task submission fails, so retry does not create another team.
+- Select agents, desks or task cards to inspect and manage them without leaving the studio. The inspector supports editing/enabling agents and groups, removing ordinary members, starting group tasks, reading bounded conversation pages, stopping active tasks and archiving completed tasks. Owner/entry agents must be replaced through the group editor before removal.
+- New agents, groups (including empty groups), membership changes, task statuses and names refresh every three seconds while the studio is visible. Waiting, running, paused, finished, cancelled and failed tasks are filterable; pending human requests link to the existing approval/input detail page.
+- Task submission waits for a persisted task ID, but model execution remains asynchronous. Initialization failures before task creation are returned to the composer; watch task status/output for the actual execution result. Membership edits affect future executions; already running tasks retain their captured participants.
+- Orbit empty space, scroll to zoom, or use **Overview** to fit the room. Reduced-motion preferences are respected. If WebGL is unavailable, the roster, inspector and team/task operations remain usable.
+
+Studio APIs (authenticated application-service routes):
+
+- `CreateStudioTeam(StudioTeamRequest)`: validates all participants/roles before transactionally saving the group and members.
+- `SetStudioParticipant(groupId, participantKey, remove)`: incrementally adds/removes a `local:{id}` or `remote:{id}` participant under a per-group cache lock.
+- `StartStudioTask(ChatGroup_RunGroupRequest, chatGroupId)`: returns the persisted task reference without waiting for model completion, and propagates initialization failures.
+- `GetAgentGraphSnapshot`: includes lightweight non-archived `Tasks` alongside agents, groups, links and active collaborations.
+
+### Studio regression checks
+
+Run frontend state tests with `node --test src/Extensions/Senparc.Xncf.AgentsManagerTests/Frontend/studio.test.cjs`.
+For browser checks, start `node src/Extensions/Senparc.Xncf.AgentsManagerTests/Frontend/studio.fixture.cjs`, then run
+`playwright-cli -s=ncf-studio open http://127.0.0.1:51961/` and
+`playwright-cli -s=ncf-studio run-code --filename=src/Extensions/Senparc.Xncf.AgentsManagerTests/Frontend/studio.browser.spec.js`.
+The fixture uses real studio views/scripts and mock APIs; it never writes to the host database or calls an LLM.
+Run `AgentStudioTests.Studio_*` through VSTest with `EnableMSTestRunner=false`, `TestingPlatformDotnetTestSupport=false`,
+`OutputType=Library`, `CopyLocalLockFileAssemblies=true` and `GenerateRuntimeConfigurationFiles=true`; the existing executable entry point otherwise runs only its manually listed smoke checks.
+
+The studio reuses the existing Vue, Element UI, Three.js and OrbitControls assets. The containing Razor page
+must register the MVC Tag Helpers so `_Studio`, localization scripts and versioned asset URLs are rendered,
+rather than leaving a literal `<partial>` tag in the otherwise empty 3D branch.
+Switching back to the panel or statistics view disposes the renderer; returning to 3D recreates it.
+Run `AgentStudioRenderingTests` with the same VSTest properties to verify the compiled page and script/style sections.
+For a browser regression with the original Vue lifecycle and hash navigation, set `NCF_STUDIO_RENDERED_PAGE`
+to the same absolute temporary JSON path when running this test and the fixture, then execute
+`playwright-cli -s=ncf-studio run-code --filename=src/Extensions/Senparc.Xncf.AgentsManagerTests/Frontend/studio.rendering.browser.spec.js`.
+This additional check uses the actual compiled page output, not a manually inserted partial.
 
 ## Installation
 

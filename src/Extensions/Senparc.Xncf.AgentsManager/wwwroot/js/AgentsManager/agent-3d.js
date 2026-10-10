@@ -285,6 +285,21 @@
     this.activeAgentId = null;
     this.lockedGroupId = null;
     this.pointerClickHandler = null;
+    this.taskObjects = [];
+    this.room = null;
+    this.roomLayout = null;
+    this.roomSignature = '';
+    this.pointer = null;
+    this.dropGroupId = null;
+    this.pendingSnapshot = null;
+    this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.listeners = [];
+    this.resizeObserver = null;
+    this.cameraFitted = false;
+    this.roomBounds = null;
+    this.keyHandler = null;
+    // Keep the mutable WebGL runtime out of Vue 2's deep observation.
+    Object.seal(this);
   }
 
   AgentGraph3D.prototype.init = function () {
@@ -293,16 +308,16 @@
     }
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x06131f);
+    this.scene.background = new THREE.Color(0x102234);
 
-    const width = Math.max(320, this.container.clientWidth || 320);
-    const height = Math.max(320, this.container.clientHeight || 320);
+    const width = Math.max(1, this.container.clientWidth || 320);
+    const height = Math.max(1, this.container.clientHeight || 320);
 
     this.camera = new THREE.PerspectiveCamera(48, width / height, 0.1, 1000);
-    this.camera.position.set(0, 58, 96);
+    this.camera.position.set(65, 70, 85);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-    this.renderer.setPixelRatio(window.devicePixelRatio || 1);
+    this.renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
     this.renderer.setSize(width, height);
     this.container.innerHTML = '';
     this.container.appendChild(this.renderer.domElement);
@@ -311,9 +326,10 @@
       this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
       this.controls.enableDamping = true;
       this.controls.dampingFactor = 0.07;
-      this.controls.maxDistance = 220;
-      this.controls.minDistance = 35;
-      this.controls.target.set(0, 15, 0);
+      this.controls.maxDistance = 600;
+      this.controls.minDistance = 18;
+      this.controls.maxPolarAngle = Math.PI / 2.12;
+      this.controls.target.set(0, 0, 0);
     }
 
     this.raycaster = new THREE.Raycaster();
@@ -329,24 +345,41 @@
     this.scene.add(key);
     this.scene.add(rim);
 
-    const grid = new THREE.GridHelper(130, 26, 0x2c4f70, 0x15324c);
-    grid.position.y = 0;
-    this.scene.add(grid);
-
     this.resizeHandler = this.handleResize.bind(this);
     window.addEventListener('resize', this.resizeHandler);
-
-    this.pointerMoveHandler = this.handlePointerMove.bind(this);
-    this.renderer.domElement.addEventListener('mousemove', this.pointerMoveHandler);
-    this.renderer.domElement.addEventListener('mouseleave', this.clearGroupFocus.bind(this));
-    this.pointerClickHandler = this.handlePointerClick.bind(this);
-    this.renderer.domElement.addEventListener('click', this.pointerClickHandler);
+    if (typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(this.resizeHandler);
+      this.resizeObserver.observe(this.container);
+    }
+    this.keyHandler = function (event) {
+      if (event.key === 'Escape') this.cancelStudioDrag();
+    }.bind(this);
+    window.addEventListener('keydown', this.keyHandler);
+    const canvas = this.renderer.domElement;
+    [
+      ['pointerdown', this.handleStudioPointerDown, true],
+      ['pointermove', this.handleStudioPointerMove, true],
+      ['pointerup', this.handleStudioPointerUp, true],
+      ['pointercancel', this.cancelStudioDrag, true],
+      ['lostpointercapture', this.cancelStudioDrag, true],
+      ['pointerleave', this.clearGroupFocus, false],
+      ['webglcontextlost', function (event) {
+        event.preventDefault();
+        if (this.options.onError) this.options.onError();
+      }, false]
+    ].forEach(function (entry) {
+      const listener = entry[1].bind(this);
+      canvas.addEventListener(entry[0], listener, entry[2]);
+      this.listeners.push([entry[0], listener, entry[2]]);
+    }.bind(this));
 
     this.animate();
     return true;
   };
 
   AgentGraph3D.prototype.dispose = function () {
+    this.cancelStudioDrag();
+    this.pendingSnapshot = null;
     if (this.frameId) {
       cancelAnimationFrame(this.frameId);
       this.frameId = null;
@@ -363,6 +396,17 @@
     if (this.resizeHandler) {
       window.removeEventListener('resize', this.resizeHandler);
     }
+    if (this.resizeObserver) this.resizeObserver.disconnect();
+    if (this.keyHandler) window.removeEventListener('keydown', this.keyHandler);
+    if (this.renderer) {
+      this.listeners.forEach(function (entry) {
+        this.renderer.domElement.removeEventListener(entry[0], entry[1], entry[2]);
+      }.bind(this));
+    }
+    this.listeners = [];
+    this.clearObjects();
+    this.disposeObject(this.room);
+    this.room = null;
 
     if (this.controls) {
       this.controls.dispose();
@@ -372,7 +416,6 @@
     if (this.renderer) {
       this.renderer.dispose();
       this.renderer.forceContextLoss();
-      this.renderer.domElement = null;
       this.renderer = null;
     }
 
@@ -389,11 +432,286 @@
     if (!this.renderer || !this.camera || !this.container) {
       return;
     }
-    const width = Math.max(320, this.container.clientWidth || 320);
-    const height = Math.max(320, this.container.clientHeight || 320);
+    const width = Math.max(1, this.container.clientWidth || 320);
+    const height = Math.max(1, this.container.clientHeight || 320);
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height);
+    if (this.roomBounds) this.resetCamera();
+  };
+
+  AgentGraph3D.prototype.text = function (key) {
+    return this.options.text ? this.options.text(key) : key;
+  };
+
+  AgentGraph3D.prototype.disposeObject = function (object) {
+    if (!object) return;
+    const resources = new Set();
+    object.traverse(function (node) {
+      if (node.geometry) resources.add(node.geometry);
+      const materials = Array.isArray(node.material) ? node.material : [node.material];
+      materials.filter(Boolean).forEach(function (material) {
+        if (material.map) resources.add(material.map);
+        resources.add(material);
+      });
+    });
+    resources.forEach(function (resource) { resource.dispose(); });
+    if (object.parent) object.parent.remove(object);
+  };
+
+  AgentGraph3D.prototype.buildStudioRoom = function (layout, agentCount) {
+    const loungeRows = Math.ceil(agentCount / Math.max(1, Math.floor((layout.width - 10) / 8)));
+    const depth = layout.depth + Math.max(0, loungeRows - 1) * 8;
+    const signature = JSON.stringify([layout.width, depth, layout.stations]);
+    if (signature === this.roomSignature) return;
+    this.roomSignature = signature;
+    this.disposeObject(this.room);
+    this.room = new THREE.Group();
+    this.scene.add(this.room);
+    const room = this.room;
+    const width = layout.width;
+    const centerZ = (depth - layout.depth) / 2;
+    const backZ = centerZ - depth / 2;
+    const frontZ = centerZ + depth / 2;
+    this.roomBounds = { width: width, depth: depth, centerZ: centerZ };
+
+    function box(w, h, d, color, x, y, z, emissive) {
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d),
+        new THREE.MeshStandardMaterial({ color: color, roughness: 0.8,
+          emissive: emissive || 0x000000, emissiveIntensity: emissive ? 0.35 : 0 }));
+      mesh.position.set(x, y, z);
+      room.add(mesh);
+      return mesh;
+    }
+    box(width, 0.7, depth, 0x233b4b, 0, -0.55, centerZ);
+    box(width, 11, 0.6, 0x314d60, 0, 5.2, backZ);
+    box(0.6, 7, depth, 0x294457, -width / 2, 3.2, centerZ);
+    box(width, 0.3, 0.4, 0x72c9cc, 0, 10.5, backZ + 0.4, 0x72c9cc);
+    const grid = new THREE.GridHelper(Math.max(width, depth), Math.ceil(Math.max(width, depth) / 6),
+      0x3f6170, 0x2b4656);
+    grid.position.set(0, -0.15, centerZ);
+    room.add(grid);
+    for (let x = -width / 2 + 9; x < width / 2 - 6; x += 18) {
+      box(11, 5.6, 0.22, 0x547990, x, 6.3, backZ + 0.5, 0x305a76);
+      box(0.2, 5.6, 0.35, 0x90b5bf, x, 6.3, backZ + 0.7);
+      box(11, 0.2, 0.35, 0x90b5bf, x, 6.3, backZ + 0.7);
+    }
+    const sign = textSprite(this.text('Title'), {
+      fontSize: 26, maxWorldWidth: 16, maxWorldHeight: 3,
+      background: 'rgba(10,30,43,0.92)', color: '#9cebdc'
+    });
+    sign.position.set(0, 13, backZ + 0.6);
+    room.add(sign);
+    layout.stations.forEach(function (station, index) {
+      box(layout.stations.length ? station.radius * 1.75 : 20, 0.08, station.radius * 1.65,
+        index % 2 ? 0x244c51 : 0x29465c, station.x, -0.08, station.z);
+      for (let seat = 0; seat < 6; seat++) {
+        const angle = seat * Math.PI / 3;
+        box(2.8, 0.5, 2.8, 0x3b5967, station.x + Math.cos(angle) * 8, 0.7,
+          station.z + Math.sin(angle) * 8);
+      }
+    });
+    box(width - 10, 0.12, Math.max(8, loungeRows * 8), 0x254b55, 0, 0,
+      layout.loungeZ + Math.max(0, loungeRows - 1) * 4);
+    const lounge = textSprite(this.text('ReadyArea'), {
+      fontSize: 18, maxWorldWidth: 12, maxWorldHeight: 2.5, color: '#9ed8e9'
+    });
+    lounge.position.set(-width / 2 + 9, 6, layout.loungeZ);
+    room.add(lounge);
+    [-1, 1].forEach(function (side) {
+      const x = side * (width / 2 - 4);
+      box(2.4, 2, 2.4, 0x829596, x, 0.8, backZ + 5);
+      const leaves = new THREE.Mesh(new THREE.IcosahedronGeometry(2.1, 1),
+        new THREE.MeshStandardMaterial({ color: 0x4caa82, roughness: 0.9 }));
+      leaves.position.set(x, 3.1, backZ + 5);
+      room.add(leaves);
+      box(8, 1.6, 3, 0x4e7481, x - side * 4, 0.8, frontZ - 3);
+      box(8, 1.4, 0.65, 0x375a70, x - side * 4, 2.2, frontZ - 4.3);
+    });
+    this.resetCamera();
+  };
+
+  AgentGraph3D.prototype.resetCamera = function () {
+    if (!this.camera) return;
+    const bounds = this.roomBounds || { width: 64, depth: 64, centerZ: 0 };
+    const target = new THREE.Vector3(0, 2, bounds.centerZ);
+    const direction = new THREE.Vector3(0.68, 0.9, 0.95).normalize();
+    const right = new THREE.Vector3().crossVectors(new THREE.Vector3(0, 1, 0), direction).normalize();
+    const up = new THREE.Vector3().crossVectors(direction, right);
+    const tanVertical = Math.tan(this.camera.fov * Math.PI / 360) * 0.85;
+    const tanHorizontal = tanVertical * this.camera.aspect * 0.95;
+    let distance = 35;
+    [-1, 1].forEach(function (x) {
+      [-0.55, 16].forEach(function (y) {
+        [-1, 1].forEach(function (z) {
+          const corner = new THREE.Vector3(x * bounds.width / 2, y, bounds.centerZ + z * bounds.depth / 2).sub(target);
+          const depth = corner.dot(direction);
+          distance = Math.max(distance, depth + Math.abs(corner.dot(right)) / tanHorizontal,
+            depth + Math.abs(corner.dot(up)) / tanVertical);
+        });
+      });
+    });
+    distance *= 1.03;
+    this.camera.far = Math.max(1000, distance * 6);
+    this.camera.updateProjectionMatrix();
+    this.camera.position.copy(target).addScaledVector(direction, distance);
+    if (this.controls) {
+      this.controls.maxDistance = Math.max(220, distance * 3);
+      this.controls.target.copy(target);
+      this.controls.update();
+    } else {
+      this.camera.lookAt(target);
+    }
+    this.cameraFitted = true;
+  };
+
+  AgentGraph3D.prototype.setPointerRay = function (event) {
+    if (!this.renderer || !this.camera) return false;
+    const rect = this.renderer.domElement.getBoundingClientRect();
+    if (!rect.width || !rect.height) return false;
+    this.mouse.set(((event.clientX - rect.left) / rect.width) * 2 - 1,
+      -((event.clientY - rect.top) / rect.height) * 2 + 1);
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    return true;
+  };
+
+  AgentGraph3D.prototype.pick = function (event) {
+    if (!this.setPointerRay(event)) return null;
+    const targets = this.agentObjects.concat(this.groupObjects).reduce(function (all, entry) {
+      all.push(entry.mesh, entry.label);
+      return all;
+    }, []).concat(this.taskObjects.map(function (entry) { return entry.mesh; }));
+    const hits = this.raycaster.intersectObjects(targets.filter(Boolean), true);
+    for (let i = 0; i < hits.length; i++) {
+      let object = hits[i].object;
+      while (object && !object.userData.type) object = object.parent;
+      if (object && object.userData.type) return object.userData;
+    }
+    return null;
+  };
+
+  AgentGraph3D.prototype.groupAtPointer = function (event) {
+    if (!this.renderer) return null;
+    const rect = this.renderer.domElement.getBoundingClientRect();
+    if (event.clientX < rect.left || event.clientX > rect.right
+      || event.clientY < rect.top || event.clientY > rect.bottom) return null;
+    if (!this.setPointerRay(event)) return null;
+    const hits = this.raycaster.intersectObjects(this.groupObjects.reduce(function (all, entry) {
+      return all.concat(entry.mesh, entry.label);
+    }, []), true);
+    if (hits.length) {
+      let object = hits[0].object;
+      while (object && !object.userData.groupId) object = object.parent;
+      if (object) return object.userData.groupId;
+    }
+    const point = new THREE.Vector3();
+    if (!this.raycaster.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), point)) return null;
+    const station = (this.roomLayout?.stations || []).find(function (item) {
+      return Math.hypot(item.x - point.x, item.z - point.z) < item.radius;
+    });
+    return station ? station.id : null;
+  };
+
+  AgentGraph3D.prototype.highlightDropGroup = function (groupId) {
+    this.dropGroupId = groupId;
+    this.groupObjects.forEach(function (entry) {
+      entry.statusRing.material.color.setHex(entry.group.id === groupId ? 0x67ffbd : entry.style.ring);
+      entry.statusRing.scale.setScalar(entry.group.id === groupId ? 1.35 : 1);
+    });
+  };
+
+  AgentGraph3D.prototype.previewExternalDrop = function (event) {
+    this.highlightDropGroup(this.groupAtPointer(event));
+  };
+
+  AgentGraph3D.prototype.focusGroup = function (groupId) {
+    this.lockedGroupId = groupId;
+    if (this.options.onGroupLock) this.options.onGroupLock(groupId, !!groupId);
+    this.applyGroupHighlight();
+  };
+
+  AgentGraph3D.prototype.handleStudioPointerDown = function (event) {
+    if (event.button !== 0 || this.pointer) return;
+    const hit = this.pick(event);
+    const agentKey = hit && (hit.type === 'agent' || hit.type === 'agent-label') ? hit.agentId : null;
+    const entry = agentKey ? this.agentById.get(agentKey) : null;
+    this.pointer = { id: event.pointerId, x: event.clientX, y: event.clientY,
+      agentKey: entry?.agent.enable && (!this.options.canDrag || this.options.canDrag())
+        ? agentKey : null, dragging: false, moved: false, hit: hit };
+    if (this.pointer.agentKey) {
+      if (this.controls) this.controls.enabled = false;
+      this.renderer.domElement.setPointerCapture(event.pointerId);
+      event.stopImmediatePropagation();
+    }
+  };
+
+  AgentGraph3D.prototype.handleStudioPointerMove = function (event) {
+    const pointer = this.pointer;
+    if (!pointer || pointer.id !== event.pointerId) {
+      if (!pointer) this.handlePointerMove(event);
+      return;
+    }
+    if (Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y) > 6) pointer.moved = true;
+    if (!pointer.agentKey || !pointer.moved) return;
+    event.stopImmediatePropagation();
+    const entry = this.agentById.get(pointer.agentKey);
+    if (!pointer.dragging) {
+      pointer.dragging = true;
+      this.renderer.domElement.style.cursor = 'grabbing';
+      if (this.options.onDragStart) this.options.onDragStart(entry.agent);
+    }
+    this.setPointerRay(event);
+    const point = new THREE.Vector3();
+    if (this.raycaster.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), -2.1), point)) {
+      entry.mesh.position.copy(point);
+      entry.label.position.set(point.x, point.y + 3.5, point.z);
+      if (entry.pulseRing) entry.pulseRing.position.set(point.x, 0.25, point.z);
+      if (entry.statusBadge) entry.statusBadge.position.set(point.x, point.y + 2.15, point.z);
+    }
+    this.highlightDropGroup(this.groupAtPointer(event));
+  };
+
+  AgentGraph3D.prototype.handleStudioPointerUp = function (event) {
+    const pointer = this.pointer;
+    if (!pointer || pointer.id !== event.pointerId) return;
+    const dropTarget = pointer.dragging ? document.elementFromPoint(event.clientX, event.clientY) : null;
+    const teamDrop = dropTarget?.closest('.studio-team-dock');
+    const groupDrop = dropTarget?.closest('[data-studio-group-id]');
+    const groupId = pointer.dragging
+      ? (groupDrop ? Number(groupDrop.dataset.studioGroupId) : this.groupAtPointer(event)) : null;
+    const hit = pointer.hit;
+    this.cancelStudioDrag();
+    if (pointer.dragging) {
+      event.stopImmediatePropagation();
+      if (teamDrop && this.options.onAgentTeamDrop) this.options.onAgentTeamDrop(pointer.agentKey);
+      else if (groupId && this.options.onAgentDrop) this.options.onAgentDrop(pointer.agentKey, groupId);
+    } else if (!pointer.moved && hit) {
+      if (hit.type === 'group') {
+        this.focusGroup(hit.groupId);
+        if (this.options.onSelect) this.options.onSelect('group', hit.groupId);
+      } else if (hit.type === 'task') {
+        if (this.options.onSelect) this.options.onSelect('task', hit.taskId);
+      } else if (this.options.onSelect) this.options.onSelect('agent', hit.agentId);
+    }
+  };
+
+  AgentGraph3D.prototype.cancelStudioDrag = function () {
+    const pointer = this.pointer;
+    this.pointer = null;
+    if (this.controls) this.controls.enabled = true;
+    if (this.renderer) {
+      this.renderer.domElement.style.cursor = '';
+      if (pointer && this.renderer.domElement.hasPointerCapture(pointer.id)) {
+        this.renderer.domElement.releasePointerCapture(pointer.id);
+      }
+    }
+    this.highlightDropGroup(null);
+    if (pointer?.dragging && this.options.onDragEnd) this.options.onDragEnd();
+    if (this.pendingSnapshot) {
+      const snapshot = this.pendingSnapshot;
+      this.pendingSnapshot = null;
+      this.updateGraph(snapshot);
+    }
   };
 
   AgentGraph3D.prototype.animate = function () {
@@ -404,23 +722,24 @@
     this.frameId = requestAnimationFrame(this.animate.bind(this));
 
     this.agentObjects.forEach(function (entry) {
+      if (this.pointer && this.pointer.dragging && this.pointer.agentKey === participantKey(entry.agent)) return;
       const target = entry.target;
       if (!target) {
         return;
       }
 
-      entry.baseY += (target.y - entry.baseY) * 0.15;
+      entry.baseY += (target.y - entry.baseY) * (this.reducedMotion ? 1 : 0.15);
       const movingDistance = Math.hypot(target.x - entry.mesh.position.x, target.z - entry.mesh.position.z);
       const moving = movingDistance > 0.03;
 
-      entry.mesh.position.x += (target.x - entry.mesh.position.x) * 0.09;
-      entry.mesh.position.z += (target.z - entry.mesh.position.z) * 0.09;
+      entry.mesh.position.x += (target.x - entry.mesh.position.x) * (this.reducedMotion ? 1 : 0.09);
+      entry.mesh.position.z += (target.z - entry.mesh.position.z) * (this.reducedMotion ? 1 : 0.09);
 
-      entry.motionPhase += moving ? 0.36 : 0.08;
-      const hop = moving ? Math.abs(Math.sin(entry.motionPhase)) * 0.75 : 0;
+      entry.motionPhase += this.reducedMotion ? 0 : moving ? 0.36 : 0.025;
+      const hop = moving && !this.reducedMotion ? Math.abs(Math.sin(entry.motionPhase)) * 0.45 : 0;
       entry.mesh.position.y = entry.baseY + hop;
 
-      const jelly = Math.sin(entry.motionPhase);
+      const jelly = this.reducedMotion ? 0 : Math.sin(entry.motionPhase);
       const stretchY = moving ? (1 + jelly * 0.18) : (1 + jelly * 0.05);
       const squashXZ = moving ? (1 - jelly * 0.1) : (1 - jelly * 0.03);
       entry.mesh.scale.set(squashXZ, stretchY, squashXZ);
@@ -428,7 +747,7 @@
       if (entry.pulseRing) {
         entry.pulseRing.position.set(entry.mesh.position.x, 0.25, entry.mesh.position.z);
         if (entry.isActive) {
-          const elapsed = Date.now() * 0.0025 + entry.pulsePhase;
+          const elapsed = this.reducedMotion ? 0 : Date.now() * 0.0025 + entry.pulsePhase;
           const scale = 1 + ((Math.sin(elapsed) + 1) * 0.22);
           entry.pulseRing.scale.set(scale, scale, scale);
           entry.pulseRing.material.opacity = 0.2 + ((Math.sin(elapsed) + 1) * 0.2);
@@ -446,22 +765,23 @@
           entry.mesh.position.x,
           entry.mesh.position.y + 2.15,
           entry.mesh.position.z);
-        entry.statusBadge.rotation.y += moving ? 0.025 : 0.008;
+        if (!this.reducedMotion) entry.statusBadge.rotation.y += moving ? 0.025 : 0.008;
       }
-    });
+    }.bind(this));
 
     this.groupObjects.forEach(function (entry) {
       if (!entry.statusRing) {
         return;
       }
-      const elapsed = Date.now() * 0.002 + entry.pulsePhase;
+      const elapsed = this.reducedMotion ? 0 : Date.now() * 0.002 + entry.pulsePhase;
       const isHIL = entry.statusKind === 'hil-paused';
-      const scale = isHIL ? 1 + ((Math.sin(elapsed) + 1) * 0.14) : 1;
+      const scale = entry.group.id === this.dropGroupId ? 1.35
+        : isHIL ? 1 + ((Math.sin(elapsed) + 1) * 0.14) : 1;
       entry.statusRing.scale.set(scale, scale, scale);
       entry.statusRing.material.opacity = isHIL
         ? 0.38 + ((Math.sin(elapsed * 1.4) + 1) * 0.22)
         : 0.48;
-    });
+    }.bind(this));
 
     this.refreshLinkGeometry();
 
@@ -513,6 +833,8 @@
       }
     });
 
+    this.taskObjects.forEach(function (task) { all.push(task.mesh); });
+    const disposed = new Set();
     all.forEach(function (obj) {
       if (obj && obj.parent) {
         obj.parent.remove(obj);
@@ -522,19 +844,22 @@
           if (node.material) {
             if (Array.isArray(node.material)) {
               node.material.forEach(function (mat) {
-                if (mat.map) {
+                if (mat.map && !disposed.has(mat.map)) {
+                  disposed.add(mat.map);
                   mat.map.dispose();
                 }
-                mat.dispose();
+                if (!disposed.has(mat)) { disposed.add(mat); mat.dispose(); }
               });
             } else {
-              if (node.material.map) {
+              if (node.material.map && !disposed.has(node.material.map)) {
+                disposed.add(node.material.map);
                 node.material.map.dispose();
               }
-              node.material.dispose();
+              if (!disposed.has(node.material)) { disposed.add(node.material); node.material.dispose(); }
             }
           }
-          if (node.geometry) {
+          if (node.geometry && !disposed.has(node.geometry)) {
+            disposed.add(node.geometry);
             node.geometry.dispose();
           }
         });
@@ -544,36 +869,38 @@
     this.groupObjects = [];
     this.agentObjects = [];
     this.linkObjects = [];
+    this.taskObjects = [];
     this.agentById.clear();
     this.groupById.clear();
   };
 
   AgentGraph3D.prototype.updateGraph = function (snapshot) {
+    if (this.pointer) {
+      this.pendingSnapshot = snapshot;
+      return;
+    }
+    const previousPositions = new Map(this.agentObjects.map(function (entry) {
+      return [participantKey(entry.agent), entry.mesh.position.clone()];
+    }));
     this.currentSnapshot = snapshot || { agents: [], groups: [], links: [], collaborations: [] };
     this.clearObjects();
 
-    const groups = this.currentSnapshot.groups || [];
+    const groups = (this.currentSnapshot.groups || []).map(function (group) { return Object.assign({}, group); });
     const agents = this.currentSnapshot.agents || [];
     const links = this.currentSnapshot.links || [];
-
-    const radius = Math.max(18, groups.length * 3 + 14);
-
-    groups.forEach(function (group, index) {
-      const angle = (Math.PI * 2 * index) / Math.max(1, groups.length);
-      group._pos = new THREE.Vector3(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
-    });
-
-    const groupGeom = new THREE.CylinderGeometry(0.9, 0.9, 16, 16);
+    const groupedKeys = new Set(links.map(linkParticipantKey));
+    const loungeAgents = agents.filter(function (agent) { return !groupedKeys.has(participantKey(agent)); });
+    const loungeIndex = new Map(loungeAgents.map(function (agent, index) { return [participantKey(agent), index]; }));
+    this.roomLayout = AgentStudioState.layout(this.currentSnapshot);
+    const layout = this.roomLayout;
+    this.buildStudioRoom(layout, loungeAgents.length);
+    const groupGeom = new THREE.CylinderGeometry(4.6, 4.6, 0.65, 32);
     groups.forEach(function (group) {
+      const station = layout.stations.find(function (item) { return item.id === group.id; });
+      group._pos = new THREE.Vector3(station.x, 0, station.z);
       const isEnabled = group.enable !== false;
       const status = groupStatusInfo(group);
       const style = groupStatusStyle(status.kind);
-      const waiting = status.waiting;
-      const chatting = status.chatting;
-      const paused = status.paused;
-      const finished = status.finished;
-      const cancelled = status.cancelled;
-      const failed = status.failed;
       const totalTasks = status.total;
       const mat = new THREE.MeshStandardMaterial({
         color: style.color,
@@ -585,26 +912,27 @@
         roughness: 0.55
       });
       const pillar = new THREE.Mesh(groupGeom, mat);
-      const heightScale = 0.72 + Math.min(1.45, totalTasks * 0.08 + group.runningTaskCount * 0.16);
-      pillar.scale.y = heightScale;
       pillar.position.copy(group._pos);
-      pillar.position.y = 8 * heightScale;
+      pillar.position.y = 2.9;
       pillar.userData = { type: 'group', groupId: group.id };
+      const base = new THREE.Mesh(new THREE.CylinderGeometry(2.1, 2.7, 2.6, 16),
+        new THREE.MeshStandardMaterial({ color: 0x284455, roughness: 0.65 }));
+      base.position.y = -1.6;
+      pillar.add(base);
+      const screen = new THREE.Mesh(new THREE.BoxGeometry(2.8, 1.8, 0.18),
+        new THREE.MeshStandardMaterial({ color: 0x172939, emissive: style.ring, emissiveIntensity: 0.2 }));
+      screen.position.set(0, 1.2, -1.3);
+      pillar.add(screen);
       this.scene.add(pillar);
-
-      const enableText = isEnabled ? '已启用' : '已停用';
-      const text = group.name
-        + '\n状态:' + enableText
-        + '\n任务:' + totalTasks + ' 运行:' + group.runningTaskCount
-        + '\n等待:' + waiting + ' 聊天:' + chatting + ' 暂停:' + paused
-        + '\n完成:' + finished + ' 取消:' + cancelled + ' 失败:' + failed
-        + (status.humanPending > 0 ? '\nHIL等待:' + status.humanPending : '');
+      const text = group.name + '\n' + this.text(isEnabled ? 'Enabled' : 'Disabled')
+        + ' · ' + totalTasks + ' ' + this.text('Tasks')
+        + (status.humanPending > 0 ? '\n' + this.text('HumanPending') + ': ' + status.humanPending : '');
       const label = textSprite(text, {
         fontSize: 18,
         padding: 16,
         scaleDivisor: 20,
         maxLineLength: 24,
-        maxLines: 6,
+        maxLines: 3,
         maxWorldWidth: 12,
         maxWorldHeight: 6,
         background: status.kind === 'hil-paused'
@@ -621,12 +949,13 @@
           ? '#fce7ff'
           : status.kind === 'paused' ? '#fff1c2' : !isEnabled ? '#FFE2E8' : '#DDEFFF'
       });
-      label.position.set(group._pos.x, 22 + heightScale, group._pos.z);
+      label.position.set(group._pos.x, 8.5, group._pos.z - 2);
+      label.userData = { type: 'group', groupId: group.id };
       this.scene.add(label);
 
       let statusRing = null;
-      if (status.kind === 'hil-paused' || status.kind === 'paused') {
-        const ringGeometry = new THREE.TorusGeometry(1.55, 0.16, 10, 32);
+      {
+        const ringGeometry = new THREE.TorusGeometry(5.1, 0.12, 10, 48);
         const ringMaterial = new THREE.MeshBasicMaterial({
           color: style.ring,
           transparent: true,
@@ -636,7 +965,7 @@
         });
         statusRing = new THREE.Mesh(ringGeometry, ringMaterial);
         statusRing.rotation.x = -Math.PI / 2;
-        statusRing.position.set(group._pos.x, 16 * heightScale + 0.35, group._pos.z);
+        statusRing.position.set(group._pos.x, 0.18, group._pos.z);
         this.scene.add(statusRing);
       }
 
@@ -646,6 +975,7 @@
         group: group,
         statusRing: statusRing,
         statusKind: status.kind,
+        style: style,
         pulsePhase: (hashNumber(group.id + '-status') % 100) / 10
       };
       this.groupObjects.push(groupEntry);
@@ -701,39 +1031,30 @@
           const ringCapacity = Math.min(10, Math.max(6, Math.ceil(Math.sqrt(memberCount) * 3)));
           const ringIndex = Math.floor(memberIndex / ringCapacity);
           const slot = memberIndex % ringCapacity;
-          const h = hashNumber(agentKey + '-' + primaryGroupId);
           const theta = (Math.PI * 2 * slot / ringCapacity)
-            - Math.PI / 2
-            + (((h % 17) - 8) * Math.PI / 180);
-          const spread = 11 + ringIndex * 5.5 + (activeGroupId ? 1.5 : 0);
+            - Math.PI / 2;
+          const spread = 8 + ringIndex * 4;
           target = new THREE.Vector3(
             groupNode.mesh.position.x + Math.cos(theta) * spread,
-            2.5 + ringIndex * 1.15,
+            2.1,
             groupNode.mesh.position.z + Math.sin(theta) * spread
           );
           labelOffset = {
-            x: Math.cos(theta) * 4.3,
-            y: 2.2 + ringIndex * 0.35,
-            z: Math.sin(theta) * 4.3
+            x: 0,
+            y: 3.5,
+            z: 0
           };
         }
       }
 
       if (!target) {
-        const ringCapacity = 10;
-        const ringIndex = Math.floor(index / ringCapacity);
-        const slot = index % ringCapacity;
-        const angle = (Math.PI * 2 * slot / ringCapacity) - Math.PI / 2;
-        const spread = radius + 22 + ringIndex * 5.5;
+        const slot = loungeIndex.get(agentKey) || 0;
+        const columns = Math.max(1, Math.floor((layout.width - 10) / 8));
         target = new THREE.Vector3(
-          Math.cos(angle) * spread,
-          2.5 + ringIndex * 1.15,
-          Math.sin(angle) * spread);
-        labelOffset = {
-          x: Math.cos(angle) * 4.3,
-          y: 2.2 + ringIndex * 0.35,
-          z: Math.sin(angle) * 4.3
-        };
+          (slot % columns - (Math.min(columns, loungeAgents.length) - 1) / 2) * 8,
+          2.1,
+          layout.loungeZ + Math.floor(slot / columns) * 8);
+        labelOffset = { x: 0, y: 3.5, z: 0 };
       }
 
       const isHILPaused = Number(agent.humanInTheLoopPausedCount || 0) > 0;
@@ -765,24 +1086,24 @@
         roughness: 0.45
       });
       const sphere = new THREE.Mesh(agentGeom, mat);
-      sphere.position.copy(target);
+      sphere.position.copy(previousPositions.get(agentKey) || target);
       sphere.userData = { type: 'agent', agentId: agentKey };
       this.decorateCuteAgent(sphere, agent.enable);
       this.decorateAgentSkills(sphere, agent.skillKinds);
       this.scene.add(sphere);
 
       const stateText = !agent.enable
-        ? '已停用'
+        ? this.text('Disabled')
         : isHILPaused
-          ? 'HIL等待'
+          ? this.text('HumanPending')
           : isPaused
-            ? '暂停'
-            : isActive ? '运行中' : '已启用';
+            ? this.text('Paused')
+            : isActive ? this.text('Working') : this.text('Ready');
       const label = textSprite(
         agent.name
-        + '\n' + (agent.agentKind === 'RemoteA2A' ? '远程 A2A' : '本地 Agent')
+        + '\n' + (agent.agentKind === 'RemoteA2A' ? 'A2A' : agent.isHuman ? this.text('Human') : this.text('Local'))
         + ' · ' + stateText
-        + '\n技能:' + skillDisplayText(agent),
+        + '\n' + skillDisplayText(agent),
         {
         fontSize: 16,
         padding: 12,
@@ -797,7 +1118,7 @@
       });
       label.position.set(target.x + labelOffset.x, target.y + labelOffset.y, target.z + labelOffset.z);
       label.userData = { type: 'agent-label', agentId: agentKey };
-      label.material.opacity = isActive || isPaused ? 0.8 : 0.42;
+      label.material.opacity = 0.9;
       this.scene.add(label);
 
       const entry = {
@@ -812,7 +1133,7 @@
         isActive: isActive,
         pulsePhase: (hashNumber(agentKey) % 100) / 10,
         motionPhase: (hashNumber(agentKey + '-motion') % 100) / 16,
-        baseY: target.y
+        baseY: sphere.position.y
       };
 
       if (entry.isActive) {
@@ -902,6 +1223,25 @@
       this.linkObjects.push(line);
     }.bind(this));
 
+    const tasks = AgentStudioState.tasks(this.currentSnapshot);
+    groups.forEach(function (group) {
+      const groupTasks = tasks.filter(function (task) { return task.groupId === group.id; }).slice(0, 4);
+      groupTasks.forEach(function (task, index) {
+        const colors = ['#80b6fa', '#67ddc6', '#ffc475', '#a8dba3', '#a8bdcf', '#ffa79f'];
+        const card = textSprite('#' + task.id + ' ' + task.name, {
+          fontSize: 14, maxLines: 1, maxLineLength: 24, maxWorldWidth: 9, maxWorldHeight: 1.8,
+          color: colors[task.status] || '#eaf2ff', background: 'rgba(15,35,52,0.95)'
+        });
+        card.position.set(group._pos.x, 6.3 + index * 1.5, group._pos.z + 7);
+        card.userData = { type: 'task', taskId: task.id };
+        this.scene.add(card);
+        this.taskObjects.push({ mesh: card, task: task });
+      }.bind(this));
+    }.bind(this));
+    if (this.lockedGroupId && !this.groupById.has(this.lockedGroupId)) {
+      this.lockedGroupId = null;
+      if (this.options.onGroupLock) this.options.onGroupLock(null, false);
+    }
     this.refreshLinkGeometry();
     this.applyGroupHighlight();
   };
@@ -916,7 +1256,7 @@
 
       const positions = line.geometry.attributes.position.array;
       positions[0] = groupNode.mesh.position.x;
-      positions[1] = groupNode.mesh.position.y + 7.8;
+      positions[1] = groupNode.mesh.position.y + 0.5;
       positions[2] = groupNode.mesh.position.z;
       positions[3] = agentNode.mesh.position.x;
       positions[4] = agentNode.mesh.position.y + 0.4;
@@ -924,7 +1264,7 @@
       line.geometry.attributes.position.needsUpdate = true;
 
       if (line.userData.isActive) {
-        const elapsed = Date.now() * 0.0018 + line.userData.phase;
+        const elapsed = this.reducedMotion ? 0.5 : Date.now() * 0.0018 + line.userData.phase;
         line.material.opacity = 0.45 + ((Math.sin(elapsed * 2.2) + 1) * 0.2);
 
         const t = (elapsed % 1 + 1) % 1;
@@ -1059,19 +1399,19 @@
       const agentKey = participantKey(entry.agent);
       const isHovered = this.activeAgentId && agentKey === this.activeAgentId;
       const isGroupFocused = activeGroup && activeMemberSet.has(agentKey);
-      const opacity = !activeGroup || activeMemberSet.has(agentKey) ? 0.98 : 0.08;
+      const opacity = !activeGroup || activeMemberSet.has(agentKey) ? 0.98 : 0.4;
       entry.mesh.material.opacity = opacity;
       if (entry.label) {
-        const baseOpacity = !activeGroup || activeMemberSet.has(agentKey) ? 0.42 : 0.1;
+        const baseOpacity = !activeGroup || activeMemberSet.has(agentKey) ? 0.9 : 0.45;
         entry.label.material.opacity = (isHovered || isGroupFocused) ? 1 : baseOpacity;
       }
     }.bind(this));
 
     this.groupObjects.forEach(function (entry) {
       const isActive = activeGroup && entry.group.id === activeGroup;
-      entry.mesh.material.opacity = !activeGroup ? 0.86 : (isActive ? 1 : 0.2);
-      entry.mesh.material.emissive = new THREE.Color(isActive ? 0x2b8fd1 : 0x000000);
-      entry.mesh.material.emissiveIntensity = isActive ? 0.35 : 0;
+      entry.mesh.material.opacity = !activeGroup ? entry.style.opacity : (isActive ? 1 : 0.55);
+      entry.mesh.material.emissive.setHex(isActive ? 0x2b8fd1 : entry.style.emissive);
+      entry.mesh.material.emissiveIntensity = isActive ? 0.35 : entry.style.emissiveIntensity;
       if (entry.label) {
         entry.label.material.opacity = !activeGroup ? 1 : (isActive ? 1 : 0.3);
       }

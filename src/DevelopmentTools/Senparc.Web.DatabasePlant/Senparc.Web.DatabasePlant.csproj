@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.17</Version>
+		<Version>0.0.18</Version>
 		<PackageReleaseNotes>
 		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -33,7 +33,9 @@
 		  1、同步受影响的基础库、AI 模块或宿主项目版本
 		  2、保持项目引用链与当前功能兼容
 		  [2026-10-05] v0.0.17 Enhanced Senparc.Web.DatabasePlant functionality and compatibility
-		  1、Updated Senparc.Web.DatabasePlant project behavior and integration for the latest feature and reliability improvements.</PackageReleaseNotes>
+		  1、Updated Senparc.Web.DatabasePlant project behavior and integration for the latest feature and reliability improvements.
+		  [2026-10-09] v0.0.18 Dependency update from Senparc.Xncf.AgentsManager to 0.18.3
+</PackageReleaseNotes>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>

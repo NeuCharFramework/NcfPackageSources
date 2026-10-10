@@ -25,6 +25,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
+    修改标识：Senparc - 20261009
+    修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.FunctionRenders;
@@ -48,10 +51,21 @@ using System.Text.Json.Serialization;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 {
+    public class ChatGroup_FindByNameRequest : FunctionAppRequestBase
+    {
+        [Required]
+        [MaxLength(100)]
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Search.Query")]
+        public string Query { get; set; }
+
+        [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.Search.TopN")]
+        public int TopN { get; set; } = 5;
+    }
+
     public class ChatGroup_ManageChatGroupRequest : FunctionAppRequestBase
     {
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Chat.SelectManage")]
-        [FunctionParameterUi(ParameterType.DropDownList, nameof(ChatGroupOptions))]
+        [FunctionParameterUi(ParameterType.DropDownList, nameof(ChatGroupOptions), AllowCreate = true)]
         public string ChatGroup { get; set; }
 
         [JsonIgnore]

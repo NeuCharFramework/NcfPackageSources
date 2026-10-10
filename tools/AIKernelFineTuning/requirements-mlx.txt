@@ -1,0 +1,6 @@
+-r requirements-api.txt
+transformers>=4.57.3,<4.58
+safetensors>=0.6.2,<0.8
+numpy>=2.2,<3
+mlx>=0.29.3,<0.30
+mlx-lm==0.28.3

@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.14.0-preview9 新增 Agent 模板知识库关联与管理统计
 
+    修改标识：Senparc - 20261009
+    修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
+
 ----------------------------------------------------------------*/
 
 using log4net.Core;
@@ -43,6 +46,36 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
 {
+    public class AgentTemplate_ConvertPlainPromptRequest
+    {
+        [Required]
+        public int AgentTemplateId { get; set; }
+
+        [Required]
+        [MaxLength(50000)]
+        public string PromptContent { get; set; }
+
+        [Required]
+        [MaxLength(5000)]
+        public string TestInput { get; set; }
+
+        [Required]
+        [MaxLength(5000)]
+        public string ExpectedResult { get; set; }
+
+        [Required]
+        public int AiModelId { get; set; }
+    }
+
+    public class AgentTemplate_ConvertPlainPromptResponse
+    {
+        public string PromptCode { get; set; }
+        public string PromptItemVersion { get; set; }
+        public int PromptResultId { get; set; }
+        public decimal Score { get; set; }
+        public string ResultString { get; set; }
+    }
+
     public class AgentTemplate_ManageRequest : FunctionAppRequestBase
     {
         [Required]
@@ -158,6 +191,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
     public class AgentTemplate_FindByNameRequest : FunctionAppRequestBase
     {
         [Required]
+        [MaxLength(500)]
         [LocalizedDescription(typeof(AgentsManagerResource), "Parameter.Agents.Search.Query")]
         public string Query { get; set; }
 
