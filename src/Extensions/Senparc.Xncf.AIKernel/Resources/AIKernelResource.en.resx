@@ -783,6 +783,7 @@
   <data name="FineTuning.MigrationDatasets" xml:space="preserve"><value>Datasets</value></data>
   <data name="FineTuning.MigrationJobs" xml:space="preserve"><value>Jobs</value></data>
   <data name="FineTuning.MigrationEvents" xml:space="preserve"><value>Events</value></data>
+  <data name="FineTuning.MigrationArtifacts" xml:space="preserve"><value>Artifacts</value></data>
   <data name="FineTuning.MigrationCompleted" xml:space="preserve"><value>Legacy migration completed</value></data>
   <data name="FineTuning.DiagnosticsTitle" xml:space="preserve"><value>Environment diagnostics</value></data>
   <data name="FineTuning.RunDiagnostics" xml:space="preserve"><value>Run diagnostics</value></data>

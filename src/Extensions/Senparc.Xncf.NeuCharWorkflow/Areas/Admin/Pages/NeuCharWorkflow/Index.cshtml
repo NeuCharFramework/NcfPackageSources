@@ -126,6 +126,15 @@
                                    size="small"
                                    icon="el-icon-data-analysis"
                                    @@click="openWorkflowAnalytics">统计</el-button>
+                        <el-dropdown v-if="form.id" size="small" @@command="exportWorkflow">
+                            <el-button size="small" icon="el-icon-download">导出<i class="el-icon-arrow-down el-icon--right"></i></el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="json">JSON 文件</el-dropdown-item>
+                                <el-dropdown-item command="yaml">YAML 文件</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <el-button size="small" icon="el-icon-upload2" :disabled="editingLocked" @@click="chooseWorkflowImport">导入</el-button>
+                        <input ref="workflowImportInput" type="file" accept=".json,.yaml,.yml,application/json,application/yaml,text/yaml" style="display:none" @@change="importWorkflowFile">
                         <el-button v-if="form.id"
                                    size="small"
                                    type="warning"

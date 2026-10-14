@@ -196,6 +196,7 @@
                     { key: 'home', label: '首页', icon: 'el-icon-s-home' },
                     { key: 'favorite', label: '收藏', icon: 'el-icon-star-off' },
                     { key: 'enterprise', label: '企业文档', icon: 'el-icon-folder', scope: 100 },
+                    { key: 'fine-tuning', label: '微调产物', icon: 'el-icon-s-data', scope: 300 },
                     { key: 'recycle', label: '回收站', icon: 'el-icon-delete' },
                     { key: 'divider', label: '', divider: true },
                     { key: 'dashboard', label: '数据面板', icon: 'el-icon-data-line' },
@@ -218,7 +219,11 @@
         },
         computed: {
             isSiteAsset: function () { return this.resourceScope === 200; },
-            resourceScopeName: function () { return this.isSiteAsset ? '站点静态资源' : '知识库资料'; },
+            isFineTuning: function () { return this.resourceScope === 300; },
+            resourceScopeName: function () {
+                if (this.isFineTuning) return '微调产物';
+                return this.isSiteAsset ? '站点静态资源' : '知识库资料';
+            },
             canGoParent: function () { return this.currentFolderId != null; },
             displayTableData: function () {
                 const keyword = (this.fileSearchKeyword || '').trim().toLowerCase();
@@ -229,6 +234,9 @@
                 });
             },
             scopeHint: function () {
+                if (this.isFineTuning) {
+                    return '微调产物始终保持私有，仅供训练任务、管理员和授权的下载接口使用，不会生成公开 URL。';
+                }
                 return this.isSiteAsset
                     ? '站点静态资源默认私有；公开后会生成带 SHA-256 指纹的 /assets/ URL。为防止同源脚本注入，不接受 HTML、SVG、JavaScript 或压缩包。'
                     : '知识库源文件只能是可安全提取的文本和 Office Open XML 文件。它们不会生成公开 URL，也不能在此处发布。';
@@ -239,6 +247,9 @@
                     if (list.length) {
                         return '支持 ' + list.map(function (ext) { return ext.replace(/^\./, '').toUpperCase(); }).join('、') + '。';
                     }
+                }
+                if (this.isFineTuning) {
+                    return '支持 JSONL、JSON、ZIP 及训练运行时生成的其他私有产物格式。';
                 }
                 return this.isSiteAsset
                     ? '支持 JPG、PNG、GIF、WebP、AVIF、ICO、音视频和字体格式。'
@@ -351,7 +362,7 @@
                     this.searchHomeRecent();
                     return;
                 }
-                if (item.scope === 100 || item.scope === 200) {
+                if (item.scope === 100 || item.scope === 200 || item.scope === 300) {
                     if (this.resourceScope === item.scope) {
                         this.activeNavKey = item.key;
                         return;
