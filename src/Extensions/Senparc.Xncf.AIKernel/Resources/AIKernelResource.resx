@@ -816,4 +816,27 @@
   <data name="FineTuning.ValidationPromptError" xml:space="preserve"><value>请输入 1–8 条测试提示，每行一条。</value></data>
   <data name="FineTuning.PartialArtifactsTitle" xml:space="preserve"><value>这是部分训练产物</value></data>
   <data name="FineTuning.PartialArtifactsHelp" xml:space="preserve"><value>任务没有成功完成，当前文件只代表超时或中断前已保存的 checkpoint。请先检查 manifest.json 中的 status、completedSteps、错误信息和 Adapter 完整性；不要直接部署或将其视为完成训练的模型。</value></data>
+  <data name="FineTuning.ControlPlaneTitle" xml:space="preserve"><value>数据库控制面与旧数据迁移</value></data>
+  <data name="FineTuning.ControlPlaneHelp" xml:space="preserve"><value>将当前 Worker 的历史数据幂等同步到 NCF 主数据库。源 SQLite、datasets 和 jobs 文件不会删除；迁移失败可以重试。</value></data>
+  <data name="FineTuning.MigrateLegacy" xml:space="preserve"><value>迁移旧数据</value></data>
+  <data name="FineTuning.MigrationDatasets" xml:space="preserve"><value>数据集</value></data>
+  <data name="FineTuning.MigrationJobs" xml:space="preserve"><value>任务</value></data>
+  <data name="FineTuning.MigrationEvents" xml:space="preserve"><value>事件</value></data>
+  <data name="FineTuning.MigrationCompleted" xml:space="preserve"><value>旧数据迁移完成</value></data>
+  <data name="FineTuning.DiagnosticsTitle" xml:space="preserve"><value>环境诊断</value></data>
+  <data name="FineTuning.RunDiagnostics" xml:space="preserve"><value>运行诊断</value></data>
+  <data name="FineTuning.DiagnosticsHelp" xml:space="preserve"><value>只检查配置、Worker、模型目录和 FileManager，不会安装软件或执行任意命令。</value></data>
+  <data name="FineTuning.DiagnosticsWorker" xml:space="preserve"><value>Worker</value></data>
+  <data name="FineTuning.DiagnosticsModels" xml:space="preserve"><value>可用模型</value></data>
+  <data name="FineTuning.DiagnosticsFileManager" xml:space="preserve"><value>FileManager</value></data>
+  <data name="FineTuning.ModelPreparationTitle" xml:space="preserve"><value>安全模型准备</value></data>
+  <data name="FineTuning.ModelPreparationHelp" xml:space="preserve"><value>仅允许配置白名单中的 Provider、模型和 Revision，并下载到受控目录。不会执行命令，也不会把 Token 暴露给浏览器。</value></data>
+  <data name="FineTuning.Provider" xml:space="preserve"><value>Provider</value></data>
+  <data name="FineTuning.Revision" xml:space="preserve"><value>Revision</value></data>
+  <data name="FineTuning.TargetDirectory" xml:space="preserve"><value>目标目录</value></data>
+  <data name="FineTuning.CheckModel" xml:space="preserve"><value>检查模型</value></data>
+  <data name="FineTuning.DownloadModel" xml:space="preserve"><value>下载模型</value></data>
+  <data name="FineTuning.ModelReady" xml:space="preserve"><value>模型已准备完成</value></data>
+  <data name="FineTuning.ModelIncomplete" xml:space="preserve"><value>模型文件尚未完整</value></data>
+  <data name="FineTuning.ModelDownloadCompleted" xml:space="preserve"><value>模型下载完成</value></data>
 </root>

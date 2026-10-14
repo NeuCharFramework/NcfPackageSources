@@ -39,6 +39,7 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.MCP.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
@@ -229,7 +230,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                         .ConfigChatModel("Jeffrey", chatOptions)
                         .BuildKernelAsync();
 
-                var resultRaw = await iWantToRun.RunChatAsync(request.RequestPrompt);
+                var aiModelService = ServiceProvider.GetService<AIModelService>();
+                var resultRaw = aiModelService == null
+                    ? await iWantToRun.RunChatAsync(request.RequestPrompt)
+                    : await aiModelService.RunChatWithUsageAsync(
+                        iWantToRun,
+                        request.RequestPrompt,
+                        modelAlias: "MCP.MyFunctionAppService",
+                        source: "MCP.MyFunctionAppService");
                 //return resultRaw.ToJson(true);
                 return resultRaw.OutputString;
             });

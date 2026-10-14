@@ -319,7 +319,7 @@ public sealed class AgentTemplateRunner
         }
     }
 
-    private static async Task<AgentTemplateRunResult> ExecuteBuiltResponseRunnerAsync(
+    private async Task<AgentTemplateRunResult> ExecuteBuiltResponseRunnerAsync(
         AgentTemplateRunnerBuildResult build,
         string userText,
         AgentTemplateRunRequest request,
@@ -335,11 +335,14 @@ public sealed class AgentTemplateRunner
         AgentResponse? response;
         try
         {
-            response = await build.Runner.RunChatResponseAsync(
+            response = await _aiModelService.RunChatResponseWithUsageAsync(
+                    build.Runner,
                     input,
                     session,
                     options: null,
-                    cancellationToken: cancellationToken)
+                    cancellationToken: cancellationToken,
+                    model: build.EffectiveModel,
+                    source: "AgentsManager.AgentTemplateRunner")
                 .ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -350,11 +353,14 @@ public sealed class AgentTemplateRunner
         {
             // 部分模型适配器不接受 AgentSession 时退回无状态执行；权限错误则由上层
             // 的受控 DeploymentName 兼容回退处理，避免不必要地重复提交同一请求。
-            response = await build.Runner.RunChatResponseAsync(
+            response = await _aiModelService.RunChatResponseWithUsageAsync(
+                    build.Runner,
                     input,
                     agentSession: null,
                     options: null,
-                    cancellationToken: cancellationToken)
+                    cancellationToken: cancellationToken,
+                    model: build.EffectiveModel,
+                    source: "AgentsManager.AgentTemplateRunner")
                 .ConfigureAwait(false);
         }
 
@@ -456,7 +462,7 @@ public sealed class AgentTemplateRunner
     private static bool ShouldUseStreamingFallback(string output, AgentTemplateRunRequest request)
         => string.IsNullOrWhiteSpace(output) && request?.AllowFunctionCalls != true;
 
-    private static async Task<string> ExecuteEmptyResponseStreamingFallbackAsync(
+    private async Task<string> ExecuteEmptyResponseStreamingFallbackAsync(
         AgentTemplateRunnerBuildResult build,
         string input,
         CancellationToken cancellationToken)
@@ -467,10 +473,14 @@ public sealed class AgentTemplateRunner
             new(ChatRole.User, input)
         };
 
-        await foreach (var update in build.Runner.Kernel.ChatClientAgent.RunStreamingAsync(
-                           messages,
-                           session: null,
-                           cancellationToken: cancellationToken))
+        var updates = await _aiModelService.RunAgentStreamingWithUsageAsync(
+            build.Runner.Kernel.ChatClientAgent,
+            messages,
+            null,
+            cancellationToken,
+            model: build.EffectiveModel,
+            source: "AgentsManager.AgentTemplateRunner.StreamingFallback");
+        foreach (var update in updates)
         {
             if (!string.IsNullOrWhiteSpace(update?.Text))
             {

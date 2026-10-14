@@ -87,6 +87,63 @@
         </el-button>
     </el-card>
 
+    <el-card class="ft-card">
+        <div slot="header" class="ft-detail-heading">
+            <h2>{{ t('ControlPlaneTitle') }}</h2>
+            <el-button type="primary" size="mini"
+                       :loading="migrationBusy"
+                       :disabled="!workerAlias || uploadBusy || createBusy || cancelBusy || datasetMoreBusy"
+                       @@click="migrateLegacyMetadata">{{ t('MigrateLegacy') }}</el-button>
+        </div>
+        <p>{{ t('ControlPlaneHelp') }}</p>
+        <el-alert v-if="migrationResult" :type="migrationResult.status === 'Completed' ? 'success' : 'warning'"
+                  :closable="false" :title="migrationResult.status">
+            <p>{{ t('MigrationDatasets') }}: {{ migrationResult.datasets }}</p>
+            <p>{{ t('MigrationJobs') }}: {{ migrationResult.jobs }}</p>
+            <p>{{ t('MigrationEvents') }}: {{ migrationResult.events }}</p>
+            <p v-if="migrationResult.error">{{ migrationResult.error }}</p>
+        </el-alert>
+    </el-card>
+
+    <el-card class="ft-card">
+        <div slot="header" class="ft-detail-heading">
+            <h2>{{ t('DiagnosticsTitle') }}</h2>
+            <el-button size="mini" :loading="diagnosticsBusy" :disabled="!workerAlias"
+                       @@click="runDiagnostics">{{ t('RunDiagnostics') }}</el-button>
+        </div>
+        <p>{{ t('DiagnosticsHelp') }}</p>
+        <div v-if="diagnostics" class="ft-status">
+            <el-tag :type="diagnostics.status === 'Ready' ? 'success' : 'warning'">{{ diagnostics.status }}</el-tag>
+            <span>{{ t('DiagnosticsWorker') }}: {{ diagnostics.workerReachable ? t('Available') : t('Unavailable') }}</span>
+            <span>{{ t('DiagnosticsModels') }}: {{ diagnostics.modelCount }}</span>
+            <span>{{ t('DiagnosticsFileManager') }}: {{ diagnostics.fileManagerAvailable ? t('Available') : t('Unavailable') }}</span>
+            <span v-if="diagnostics.error">{{ diagnostics.error }}</span>
+        </div>
+    </el-card>
+
+    <el-card class="ft-card">
+        <div slot="header" class="ft-detail-heading">
+            <h2>{{ t('ModelPreparationTitle') }}</h2>
+            <el-button size="mini" :loading="modelPreparationBusy"
+                       :disabled="!modelPreparation.provider || !modelPreparation.model || !modelPreparation.revision"
+                       @@click="checkModelPreparation">{{ t('CheckModel') }}</el-button>
+        </div>
+        <p>{{ t('ModelPreparationHelp') }}</p>
+        <el-form :inline="true" class="ft-model-preparation-form">
+            <el-form-item :label="t('Provider')"><el-input v-model="modelPreparation.provider" maxlength="50"></el-input></el-form-item>
+            <el-form-item :label="t('Model')"><el-input v-model="modelPreparation.model" maxlength="200"></el-input></el-form-item>
+            <el-form-item :label="t('Revision')"><el-input v-model="modelPreparation.revision" maxlength="200"></el-input></el-form-item>
+            <el-form-item :label="t('TargetDirectory')"><el-input v-model="modelPreparation.targetDirectory" maxlength="500"></el-input></el-form-item>
+        </el-form>
+        <el-button type="primary" :loading="modelPreparationDownloadBusy"
+                   :disabled="!modelPreparationStatus || modelPreparationStatus.isComplete"
+                   @@click="downloadModel">{{ t('DownloadModel') }}</el-button>
+        <el-alert v-if="modelPreparationStatus" class="ft-alert" type="info" :closable="false"
+                  :title="modelPreparationStatus.isComplete ? t('ModelReady') : t('ModelIncomplete')">
+            <span>{{ modelPreparationStatus.totalBytes }} bytes · {{ modelPreparationStatus.files.length }} files</span>
+        </el-alert>
+    </el-card>
+
     <el-dialog :title="t('WorkerConfiguration')" :visible.sync="workerEditorVisible" width="620px" custom-class="ft-worker-dialog">
         <el-alert type="warning" :closable="false" :title="t('WorkerSecretNotice')" show-icon></el-alert>
         <el-form :model="workerEditor" label-position="top">

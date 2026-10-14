@@ -1793,7 +1793,7 @@ Apple
             return true;
         }
 
-        private static async Task<(string Output, UsageDetails Usage)> RunChatAndExtractAsync(
+        private async Task<(string Output, UsageDetails Usage)> RunChatAndExtractAsync(
             IWantToRun iWantToRun,
             string prompt,
             AgentSession agentSession,
@@ -1830,7 +1830,13 @@ Apple
             SenparcKernelAiResult<string> aiResult;
             try
             {
-                aiResult = await iWantToRun.RunChatAsync(prompt, agentSession, HandleStreamUpdate);
+                aiResult = await _aiModelService.Value.RunChatWithUsageAsync(
+                    iWantToRun,
+                    prompt,
+                    agentSession,
+                    HandleStreamUpdate,
+                    model,
+                    $"PromptRange.{scene}");
             }
             catch (NcfExceptionBase)
             {
@@ -1845,7 +1851,13 @@ Apple
                     {
                         streamedText.Clear();
                         SenparcTrace.SendCustomLog("PromptRange.AI.Retry", $"{scene} 流式调用失败，尝试移除 AgentSession 后重试。");
-                        aiResult = await iWantToRun.RunChatAsync(prompt, null, HandleStreamUpdate);
+                        aiResult = await _aiModelService.Value.RunChatWithUsageAsync(
+                            iWantToRun,
+                            prompt,
+                            null,
+                            HandleStreamUpdate,
+                            model,
+                            $"PromptRange.{scene}");
                     }
                     catch (Exception retryEx)
                     {
@@ -1904,7 +1916,7 @@ Apple
                 : output ?? string.Empty;
         }
 
-        private static async Task<(string Output, UsageDetails Usage)> RunChatDirectAsync(
+        private async Task<(string Output, UsageDetails Usage)> RunChatDirectAsync(
             IWantToRun iWantToRun,
             string prompt,
             AgentSession agentSession,
@@ -1913,7 +1925,12 @@ Apple
         {
             try
             {
-                var aiResult = await iWantToRun.RunChatAsync(prompt, agentSession);
+                var aiResult = await _aiModelService.Value.RunChatWithUsageAsync(
+                    iWantToRun,
+                    prompt,
+                    agentSession,
+                    model: model,
+                    source: $"PromptRange.{scene}");
                 EnsureRunChatSucceeded(aiResult, model, scene);
                 return (aiResult.OutputString ?? string.Empty, aiResult.Result?.Usage);
             }
@@ -1928,7 +1945,12 @@ Apple
                     try
                     {
                         SenparcTrace.SendCustomLog("PromptRange.AI.Retry", $"{scene} 非流式调用失败，尝试移除 AgentSession 后重试。");
-                        var retryResult = await iWantToRun.RunChatAsync(prompt, null);
+                        var retryResult = await _aiModelService.Value.RunChatWithUsageAsync(
+                            iWantToRun,
+                            prompt,
+                            null,
+                            model: model,
+                            source: $"PromptRange.{scene}");
                         EnsureRunChatSucceeded(retryResult, model, scene);
                         return (retryResult.OutputString ?? string.Empty, retryResult.Result?.Usage);
                     }

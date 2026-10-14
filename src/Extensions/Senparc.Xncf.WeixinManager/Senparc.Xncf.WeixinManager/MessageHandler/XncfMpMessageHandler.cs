@@ -29,6 +29,7 @@ using Senparc.Weixin.MP.Entities;
 using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Weixin.MP.MessageHandlers;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.AI.AgentKernel.Handlers;
 
 namespace Senparc.Xncf.WeixinManager
@@ -62,7 +63,14 @@ namespace Senparc.Xncf.WeixinManager
             AgentAiHandler agentAiHandler = iWantToRun.AgentAiHandler;
 
             //发送到 AI 模型，获取结果
-            var result = await iWantToRun.RunChatAsync(requestMessage.Content);
+            var aiModelService = services.GetService<AIModelService>();
+            var result = aiModelService == null
+                ? await iWantToRun.RunChatAsync(requestMessage.Content)
+                : await aiModelService.RunChatWithUsageAsync(
+                    iWantToRun,
+                    requestMessage.Content,
+                    modelAlias: "WeixinManager.XncfMpMessageHandler",
+                    source: "WeixinManager.XncfMpMessageHandler");
             await Console.Out.WriteLineAsync("AI result.Output:" + result.OutputString);
             if (result == null)
             {
