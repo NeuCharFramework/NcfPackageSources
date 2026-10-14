@@ -29,7 +29,8 @@ public enum FileManagerResourceKind
 {
     KnowledgeBase = 100,
     SiteAsset = 200,
-    PrivateAttachment = 300
+    PrivateAttachment = 300,
+    FineTuning = 400
 }
 
 public sealed record FileManagerImportRequest(

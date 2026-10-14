@@ -185,6 +185,7 @@
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.FileManager.Abstractions\Senparc.Xncf.FileManager.Abstractions.csproj" />
     <!--<ProjectReference Include="..\..\Basic\Senparc.Ncf.Core.Abstractions\Senparc.Ncf.Core.Abstractions.csproj" />-->
   </ItemGroup>
 </Project>

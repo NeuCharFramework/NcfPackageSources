@@ -777,4 +777,27 @@
   <data name="FineTuning.ValidationPromptError" xml:space="preserve"><value>Enter 1–8 test prompts, one per line.</value></data>
   <data name="FineTuning.PartialArtifactsTitle" xml:space="preserve"><value>These are partial training artifacts</value></data>
   <data name="FineTuning.PartialArtifactsHelp" xml:space="preserve"><value>The job did not complete successfully. These files represent checkpoints saved before timeout or interruption. Check manifest.json for status, completedSteps, error details and Adapter integrity; do not deploy them directly or treat them as a completed training model.</value></data>
+  <data name="FineTuning.ControlPlaneTitle" xml:space="preserve"><value>Control-plane database and legacy migration</value></data>
+  <data name="FineTuning.ControlPlaneHelp" xml:space="preserve"><value>Idempotently synchronize this Worker's history into the NCF primary database. The source SQLite, datasets, and jobs files are never deleted; failed migrations can be retried.</value></data>
+  <data name="FineTuning.MigrateLegacy" xml:space="preserve"><value>Migrate legacy data</value></data>
+  <data name="FineTuning.MigrationDatasets" xml:space="preserve"><value>Datasets</value></data>
+  <data name="FineTuning.MigrationJobs" xml:space="preserve"><value>Jobs</value></data>
+  <data name="FineTuning.MigrationEvents" xml:space="preserve"><value>Events</value></data>
+  <data name="FineTuning.MigrationCompleted" xml:space="preserve"><value>Legacy migration completed</value></data>
+  <data name="FineTuning.DiagnosticsTitle" xml:space="preserve"><value>Environment diagnostics</value></data>
+  <data name="FineTuning.RunDiagnostics" xml:space="preserve"><value>Run diagnostics</value></data>
+  <data name="FineTuning.DiagnosticsHelp" xml:space="preserve"><value>Checks configuration, Worker, model availability and FileManager only; it does not install software or execute arbitrary commands.</value></data>
+  <data name="FineTuning.DiagnosticsWorker" xml:space="preserve"><value>Worker</value></data>
+  <data name="FineTuning.DiagnosticsModels" xml:space="preserve"><value>Available models</value></data>
+  <data name="FineTuning.DiagnosticsFileManager" xml:space="preserve"><value>FileManager</value></data>
+  <data name="FineTuning.ModelPreparationTitle" xml:space="preserve"><value>Secure model preparation</value></data>
+  <data name="FineTuning.ModelPreparationHelp" xml:space="preserve"><value>Only allowlisted providers, models and revisions are accepted, and downloads stay inside a controlled directory. No commands are executed and tokens are never exposed to the browser.</value></data>
+  <data name="FineTuning.Provider" xml:space="preserve"><value>Provider</value></data>
+  <data name="FineTuning.Revision" xml:space="preserve"><value>Revision</value></data>
+  <data name="FineTuning.TargetDirectory" xml:space="preserve"><value>Target directory</value></data>
+  <data name="FineTuning.CheckModel" xml:space="preserve"><value>Check model</value></data>
+  <data name="FineTuning.DownloadModel" xml:space="preserve"><value>Download model</value></data>
+  <data name="FineTuning.ModelReady" xml:space="preserve"><value>Model is ready</value></data>
+  <data name="FineTuning.ModelIncomplete" xml:space="preserve"><value>Model files are incomplete</value></data>
+  <data name="FineTuning.ModelDownloadCompleted" xml:space="preserve"><value>Model download completed</value></data>
 </root>

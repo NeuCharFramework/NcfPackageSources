@@ -8,6 +8,14 @@ var app = new Vue({
             workerEditor: { id: 0, alias: "", name: "", endpoint: "", requestTimeoutSeconds: 30, enabled: true, note: "" },
             workerEditorVisible: false,
             workerSaveBusy: false,
+            migrationBusy: false,
+            migrationResult: null,
+            diagnosticsBusy: false,
+            diagnostics: null,
+            modelPreparation: { provider: "", model: "", revision: "", targetDirectory: "" },
+            modelPreparationStatus: null,
+            modelPreparationBusy: false,
+            modelPreparationDownloadBusy: false,
             workerVersion: 0,
             health: null,
             models: [],
@@ -218,6 +226,20 @@ var app = new Vue({
                 valid = Array.isArray(data) && data.every(item => this.validDataset(item));
             } else if (method === "GetDatasetsPageAsync") {
                 valid = this.validCatalogPage(data, item => this.validDataset(item));
+            } else if (method === "MigrateLegacyMetadataAsync") {
+                valid = this.isRecord(data) && ["Completed", "Failed", "Cancelled"].indexOf(data.status) >= 0
+                    && Number.isInteger(data.datasets) && data.datasets >= 0
+                    && Number.isInteger(data.jobs) && data.jobs >= 0
+                    && Number.isInteger(data.events) && data.events >= 0
+                    && (data.error == null || typeof data.error === "string");
+            } else if (method === "DiagnosticsAsync") {
+                valid = this.isRecord(data) && typeof data.workerAlias === "string"
+                    && typeof data.fineTuningEnabled === "boolean"
+                    && typeof data.secretConfigured === "boolean"
+                    && typeof data.workerReachable === "boolean"
+                    && typeof data.fileManagerAvailable === "boolean"
+                    && Number.isInteger(data.modelCount) && data.modelCount >= 0
+                    && typeof data.status === "string";
             } else if (method === "UploadDatasetAsync" || method === "GetDatasetAsync") {
                 valid = this.validDataset(data);
             } else if (method === "GetJobsAsync") {
@@ -586,6 +608,60 @@ var app = new Vue({
                 this.reportAction(error);
             } finally {
                 this.workerSaveBusy = false;
+            }
+        },
+        async migrateLegacyMetadata() {
+            if (this.migrationBusy || !this.workerAlias) { return; }
+            this.migrationBusy = true;
+            this.actionError = "";
+            try {
+                this.migrationResult = await this.request("MigrateLegacyMetadataAsync", {}, true);
+                this.catalogPending = true;
+                this.$message.success(this.t("MigrationCompleted"));
+            } catch (error) {
+                this.actionError = error.message;
+            } finally {
+                this.migrationBusy = false;
+            }
+        },
+        async runDiagnostics() {
+            if (this.diagnosticsBusy || !this.workerAlias) { return; }
+            this.diagnosticsBusy = true;
+            try {
+                this.diagnostics = await this.request("DiagnosticsAsync");
+            } catch (error) {
+                this.actionError = error.message;
+            } finally {
+                this.diagnosticsBusy = false;
+            }
+        },
+        async checkModelPreparation() {
+            if (this.modelPreparationBusy) { return; }
+            this.modelPreparationBusy = true;
+            this.actionError = "";
+            try {
+                var response = await service.post("/api/aikernel/model-preparation/status", this.modelPreparation,
+                    { customAlert: true, timeout: 30000 });
+                this.modelPreparationStatus = response.data;
+            } catch (error) {
+                this.actionError = error.message;
+            } finally {
+                this.modelPreparationBusy = false;
+            }
+        },
+        async downloadModel() {
+            if (this.modelPreparationDownloadBusy || !this.modelPreparationStatus) { return; }
+            this.modelPreparationDownloadBusy = true;
+            this.actionError = "";
+            try {
+                var response = await service.post("/api/aikernel/model-preparation/download", this.modelPreparation,
+                    { customAlert: true, timeout: 3600000 });
+                this.modelPreparationStatus = response.data.status;
+                this.$message.success(this.t("ModelDownloadCompleted"));
+            } catch (error) {
+                this.actionError = error.message;
+            } finally {
+                this.modelPreparationDownloadBusy = false;
             }
         },
         applyEvents(batch, before) {
