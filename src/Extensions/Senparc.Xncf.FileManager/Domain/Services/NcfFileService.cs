@@ -338,7 +338,8 @@ public class NcfFileService : ServiceBase<NcfFile>
         long length,
         NcfFileResourceScope resourceScope,
         int? folderId = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        long? maxFileSizeBytes = null)
     {
         if (content == null || !content.CanRead)
         {
@@ -350,9 +351,15 @@ public class NcfFileService : ServiceBase<NcfFile>
             throw new ArgumentException("上传文件不能为空。", nameof(length));
         }
 
-        if (length > MaxFileSizeBytes)
+        var effectiveMaxFileSizeBytes = maxFileSizeBytes ?? MaxFileSizeBytes;
+        if (effectiveMaxFileSizeBytes < 1)
         {
-            throw new InvalidOperationException($"单个文件不能超过 {MaxFileSizeBytes / 1024 / 1024} MB。");
+            throw new ArgumentOutOfRangeException(nameof(maxFileSizeBytes));
+        }
+
+        if (length > effectiveMaxFileSizeBytes)
+        {
+            throw new InvalidOperationException($"单个文件不能超过 {effectiveMaxFileSizeBytes / 1024 / 1024} MB。");
         }
 
         EnsureValidScope(resourceScope);

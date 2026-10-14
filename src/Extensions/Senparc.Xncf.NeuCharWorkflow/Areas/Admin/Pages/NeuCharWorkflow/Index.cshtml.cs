@@ -23,7 +23,9 @@ using Senparc.Ncf.AreaBase.Admin;
 using Senparc.Ncf.Core.WorkContext.Provider;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.NeuCharWorkflow.Application.AppServices;
+using Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Areas.NeuCharWorkflow.Pages;
@@ -50,6 +52,69 @@ public class IndexModel(
 
     public async Task<IActionResult> OnGetDesignerDataAsync() =>
         Ok(await workflowAppService.GetDesignerDataAsync(HttpContext.RequestAborted).ConfigureAwait(false));
+
+    public async Task<IActionResult> OnGetExportAsync(int id, string format = "json")
+    {
+        if (!TryParseInterchangeFormat(format, out var interchangeFormat))
+        {
+            return BadRequest("导出格式只能是 json 或 yaml。");
+        }
+
+        try
+        {
+            var export = await workflowAppService.ExportAsync(
+                id,
+                CurrentAdminUserId,
+                interchangeFormat,
+                HttpContext.RequestAborted).ConfigureAwait(false);
+            return File(Encoding.UTF8.GetBytes(export.Content), export.ContentType, export.FileName);
+        }
+        catch (WorkflowNotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
+    public async Task<IActionResult> OnPostValidateImportAsync([FromBody] ImportWorkflowRequest request)
+    {
+        try
+        {
+            var format = ParseOptionalInterchangeFormat(request?.Format);
+            return Ok(await workflowAppService.ValidateImportAsync(
+                request?.Content ?? string.Empty,
+                format,
+                HttpContext.RequestAborted).ConfigureAwait(false));
+        }
+        catch (WorkflowInterchangeException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    public async Task<IActionResult> OnPostImportAsync([FromBody] ImportWorkflowRequest request)
+    {
+        try
+        {
+            var format = ParseOptionalInterchangeFormat(request?.Format);
+            return Ok(await workflowAppService.ImportAsync(
+                request?.Content ?? string.Empty,
+                CurrentAdminUserId,
+                format,
+                HttpContext.RequestAborted).ConfigureAwait(false));
+        }
+        catch (WorkflowNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (WorkflowInputException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (WorkflowInterchangeException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 
     public async Task<IActionResult> OnPostSaveAsync([FromBody] SaveWorkflowRequest request)
     {
@@ -222,6 +287,36 @@ public class IndexModel(
 
     private int CurrentAdminUserId => adminWorkContextProvider.GetAdminWorkContext().AdminUserId;
 
+    private static bool TryParseInterchangeFormat(string? value, out WorkflowInterchangeFormat format)
+    {
+        if (string.Equals(value, "yaml", StringComparison.OrdinalIgnoreCase))
+        {
+            format = WorkflowInterchangeFormat.Yaml;
+            return true;
+        }
+
+        if (string.Equals(value, "json", StringComparison.OrdinalIgnoreCase))
+        {
+            format = WorkflowInterchangeFormat.Json;
+            return true;
+        }
+
+        format = default;
+        return false;
+    }
+
+    private static WorkflowInterchangeFormat? ParseOptionalInterchangeFormat(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        return TryParseInterchangeFormat(value, out var format)
+            ? format
+            : throw new WorkflowInterchangeException("格式只能是 json 或 yaml。");
+    }
+
     public sealed class SaveWorkflowRequest
     {
         public int Id { get; set; }
@@ -234,6 +329,12 @@ public class IndexModel(
         public int AutoSaveMinutes { get; set; } = 3;
         public int? ExpectedRevision { get; set; }
         public string? SaveSource { get; set; }
+    }
+
+    public sealed class ImportWorkflowRequest
+    {
+        public string? Content { get; set; }
+        public string? Format { get; set; }
     }
 
     public sealed class RunWorkflowRequest

@@ -24,6 +24,8 @@ namespace Senparc.Xncf.FileManager.Domain.Services;
 
 public sealed class NcfFileManagerGateway : IFileManagerGateway
 {
+    private const long MaxFineTuningImportBytes = 512L * 1024 * 1024;
+
     private readonly NcfFileService _fileService;
     private readonly XncfRegisterManager _registerManager;
 
@@ -57,15 +59,22 @@ public sealed class NcfFileManagerGateway : IFileManagerGateway
             FileManagerResourceKind.KnowledgeBase => NcfFileResourceScope.KnowledgeBase,
             FileManagerResourceKind.SiteAsset => NcfFileResourceScope.SiteAsset,
             FileManagerResourceKind.PrivateAttachment => NcfFileResourceScope.PrivateAttachment,
+            // FileManager currently has no dedicated fine-tuning scope. Keep the
+            // abstraction-level kind while using its private, non-public storage policy.
+            FileManagerResourceKind.FineTuning => NcfFileResourceScope.PrivateAttachment,
             _ => throw new ArgumentOutOfRangeException(nameof(request.ResourceKind))
         };
+        long? maxFileSizeBytes = request.ResourceKind == FileManagerResourceKind.FineTuning
+            ? MaxFineTuningImportBytes
+            : null;
         var file = await _fileService.UploadStreamAsync(
             request.Content,
             request.FileName,
             request.ContentType,
             request.Length,
             scope,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken,
+            maxFileSizeBytes: maxFileSizeBytes).ConfigureAwait(false);
         if (!string.IsNullOrWhiteSpace(request.Description))
         {
             await _fileService.UpdateFileNoteAsync(file.Id, request.Description).ConfigureAwait(false);

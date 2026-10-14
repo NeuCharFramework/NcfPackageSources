@@ -1476,6 +1476,9 @@
                 <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'enterprise' }" @@click="onNavClick({ key: 'enterprise', label: '企业文档', scope: 100 })">
                     <i class="el-icon-folder"></i><span>企业文档</span>
                 </li>
+                <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'fine-tuning' }" @@click="onNavClick({ key: 'fine-tuning', label: '微调产物', scope: 300 })">
+                    <i class="el-icon-s-data"></i><span>微调产物</span>
+                </li>
                 <li class="file-manager-nav-item" :class="{ 'is-active': activeNavKey === 'recycle' }" @@click="onNavClick({ key: 'recycle', label: '回收站' })">
                     <i class="el-icon-delete"></i><span>回收站</span>
                 </li>

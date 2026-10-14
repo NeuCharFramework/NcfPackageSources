@@ -101,6 +101,7 @@
             <p>{{ t('MigrationDatasets') }}: {{ migrationResult.datasets }}</p>
             <p>{{ t('MigrationJobs') }}: {{ migrationResult.jobs }}</p>
             <p>{{ t('MigrationEvents') }}: {{ migrationResult.events }}</p>
+            <p>{{ t('MigrationArtifacts') }}: {{ migrationResult.artifacts }}</p>
             <p v-if="migrationResult.error">{{ migrationResult.error }}</p>
         </el-alert>
     </el-card>
