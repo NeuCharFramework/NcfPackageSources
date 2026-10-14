@@ -49,7 +49,8 @@ public static class NcfFileResourcePolicy
             {
                 ".pdf", ".doc", ".xls", ".ppt",
                 ".zip", ".7z", ".rar",
-                ".amr", ".m4a", ".mov"
+                ".amr", ".m4a", ".mov",
+                ".jsonl"
             }),
         StringComparer.OrdinalIgnoreCase);
 

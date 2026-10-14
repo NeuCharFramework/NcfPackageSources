@@ -822,6 +822,7 @@
   <data name="FineTuning.MigrationDatasets" xml:space="preserve"><value>数据集</value></data>
   <data name="FineTuning.MigrationJobs" xml:space="preserve"><value>任务</value></data>
   <data name="FineTuning.MigrationEvents" xml:space="preserve"><value>事件</value></data>
+  <data name="FineTuning.MigrationArtifacts" xml:space="preserve"><value>产物</value></data>
   <data name="FineTuning.MigrationCompleted" xml:space="preserve"><value>旧数据迁移完成</value></data>
   <data name="FineTuning.DiagnosticsTitle" xml:space="preserve"><value>环境诊断</value></data>
   <data name="FineTuning.RunDiagnostics" xml:space="preserve"><value>运行诊断</value></data>
