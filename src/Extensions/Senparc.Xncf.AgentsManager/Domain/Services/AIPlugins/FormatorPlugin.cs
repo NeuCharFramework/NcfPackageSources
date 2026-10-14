@@ -24,6 +24,7 @@ using Microsoft.Extensions.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.AgentKernel;
 using Senparc.AI.AgentKernel.Handlers;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -49,6 +50,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
     public class TranslatorPlugin
     {
+        private readonly AIModelService _aiModelService;
+
+        public TranslatorPlugin(AIModelService aiModelService)
+        {
+            _aiModelService = aiModelService;
+        }
+
         [KernelFunction, LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Translate.Description")]
         public async Task<string> Translate(
             [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.OriginalText")]
@@ -93,7 +101,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             var aiRequest = iWantToRun.CreateRequest(text, iWantToRun.Kernel.AgentSession);
             // ensure request uses replaced prompt (if any templating is used)
             aiRequest.RequestContent = aiRequest.ReplacePrompt();
-            var runResult = await iWantToRun.RunChatAsync(aiRequest).ConfigureAwait(false);
+            var runResult = await _aiModelService.RunChatWithUsageAsync(
+                iWantToRun,
+                aiRequest,
+                modelAlias: "AgentsManager.TranslatorPlugin",
+                source: "AgentsManager.TranslatorPlugin").ConfigureAwait(false);
             var resultStr = runResult.OutputString;
 
 

@@ -2049,6 +2049,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var humanApprovalResult = await ExecuteAgentWithHumanApprovalAsync(
                     agentContext,
                     userCommand,
+                    aiModelService,
                     chatTask,
                     chatTaskService,
                     roundIndex,
@@ -2064,7 +2065,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 var result = await ExecuteRunnerWithSessionRetryAsync(
                     agentContext.Runner,
                     userCommand,
-                    onUpdate);
+                    onUpdate,
+                    aiModelService,
+                    BuildModelDtoFromSetting(agentContext.Setting, "AgentsManager.ChatGroup"),
+                    "AgentsManager.ChatGroup");
                 output = string.IsNullOrWhiteSpace(result?.OutputString)
                     ? streamedOutput.ToString()
                     : result.OutputString;
@@ -2259,6 +2263,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     private async Task<HumanApprovalExecutionResult> ExecuteAgentWithHumanApprovalAsync(
         AgentRuntimeContext agentContext,
         string userCommand,
+        AIModelService aiModelService,
         ChatTask chatTask,
         ChatTaskService chatTaskService,
         int roundIndex,
@@ -2278,12 +2283,16 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         while (nextMessages != null)
         {
             var approvalRequests = new List<ToolApprovalRequestContent>();
-            await foreach (var update in agentContext.Agent.RunStreamingAsync(
+            var updates = await aiModelService.RunAgentStreamingWithUsageAsync(
+                agentContext.Agent,
                 nextMessages,
                 session,
-                cancellationToken: cancellationToken))
+                cancellationToken,
+                onUpdate,
+                BuildModelDtoFromSetting(agentContext.Setting, "AgentsManager.HumanApproval"),
+                "AgentsManager.HumanApproval");
+            foreach (var update in updates)
             {
-                onUpdate?.Invoke(update);
                 var updateText = ExtractAgentResponseUpdateText(update);
                 if (!string.IsNullOrWhiteSpace(updateText))
                 {
@@ -2388,7 +2397,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     agentContext,
                     currentSetting,
                     userCommand,
-                    $"{agentContext.Template.Name}-direct-fallback");
+                    $"{agentContext.Template.Name}-direct-fallback",
+                    aiModelService);
 
                 if (!string.IsNullOrWhiteSpace(sameModelDirectResult.Output))
                 {
@@ -2426,7 +2436,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     agentContext,
                     deploymentSetting,
                     userCommand,
-                    $"{agentContext.Template.Name}-deployment-fallback");
+                    $"{agentContext.Template.Name}-deployment-fallback",
+                    aiModelService);
 
                 if (!string.IsNullOrWhiteSpace(deploymentResult.Output))
                 {
@@ -2467,7 +2478,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                         agentContext,
                         defaultSetting,
                         userCommand,
-                        $"{agentContext.Template.Name}-default-fallback");
+                        $"{agentContext.Template.Name}-default-fallback",
+                        aiModelService);
 
                     if (!string.IsNullOrWhiteSpace(defaultResult.Output))
                     {
@@ -2504,7 +2516,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         AgentRuntimeContext agentContext,
         SenparcAiSetting setting,
         string userCommand,
-        string runnerName)
+        string runnerName,
+        AIModelService aiModelService)
     {
         var handler = new AgentAiHandler(setting);
         var runner = await handler
@@ -2512,7 +2525,13 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             .ConfigChatModel(runnerName, CloneAgentOptions(agentContext.AgentOptions))
             .BuildKernelWithAgentSessionAsync();
 
-        var runResult = await ExecuteRunnerWithSessionRetryAsync(runner, userCommand);
+        var runResult = await ExecuteRunnerWithSessionRetryAsync(
+            runner,
+            userCommand,
+            null,
+            aiModelService,
+            BuildModelDtoFromSetting(setting, "AgentsManager.Fallback"),
+            "AgentsManager.Fallback");
         var output = runResult?.OutputString;
         if (string.IsNullOrWhiteSpace(output) && runResult?.Result != null)
         {
@@ -2530,28 +2549,53 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     private static async Task<SenparcKernelAiResult<string>> ExecuteRunnerWithSessionRetryAsync(
         IWantToRun runner,
         string userCommand,
-        Action<AgentResponseUpdate> onUpdate = null)
+        Action<AgentResponseUpdate> onUpdate,
+        AIModelService aiModelService,
+        AIModelDto model,
+        string source)
     {
         var session = runner?.Kernel?.AgentSession;
         if (onUpdate == null)
         {
             try
             {
-                return await runner.RunChatAsync(userCommand, session);
+                return await aiModelService.RunChatWithUsageAsync(
+                    runner,
+                    userCommand,
+                    session,
+                    model: model,
+                    source: source);
             }
             catch when (session != null)
             {
-                return await runner.RunChatAsync(userCommand, null);
+                return await aiModelService.RunChatWithUsageAsync(
+                    runner,
+                    userCommand,
+                    null,
+                    model: model,
+                    source: source);
             }
         }
 
         try
         {
-            return await runner.RunChatAsync(userCommand, session, onUpdate);
+            return await aiModelService.RunChatWithUsageAsync(
+                runner,
+                userCommand,
+                session,
+                onUpdate,
+                model,
+                source);
         }
         catch when (session != null)
         {
-            return await runner.RunChatAsync(userCommand, null, onUpdate);
+            return await aiModelService.RunChatWithUsageAsync(
+                runner,
+                userCommand,
+                null,
+                onUpdate,
+                model,
+                source);
         }
     }
 

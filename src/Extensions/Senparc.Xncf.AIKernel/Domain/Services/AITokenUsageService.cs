@@ -52,16 +52,18 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             int durationMs,
             bool success,
             string source = null,
-            string errorNote = null)
+            string errorNote = null,
+            int tenantId = 0,
+            DateTime? occurredAt = null)
         {
             var normalized = (snapshot ?? AITokenUsageSnapshot.Empty);
             normalized.Normalize();
 
             var entity = new AITokenUsage
             {
-                ModelAlias = modelAlias,
-                ModelId = modelId,
-                DeploymentName = deploymentName,
+                ModelAlias = Truncate(modelAlias, 50),
+                ModelId = Truncate(modelId, 100),
+                DeploymentName = Truncate(deploymentName, 150),
                 AiPlatform = aiPlatform,
                 ConfigModelType = configModelType,
                 InputTokens = normalized.InputTokens,
@@ -71,13 +73,24 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 ReasoningTokens = normalized.ReasoningTokens,
                 DurationMs = Math.Max(0, durationMs),
                 Status = success ? 0 : 1,
-                Source = source,
-                ErrorNote = string.IsNullOrWhiteSpace(errorNote) ? null : errorNote,
-                AddTime = DateTime.Now
+                Source = Truncate(source, 100),
+                ErrorNote = string.IsNullOrWhiteSpace(errorNote) ? null : Truncate(errorNote, 500),
+                TenantId = tenantId,
+                AddTime = occurredAt ?? DateTime.Now
             };
 
             await this.SaveObjectAsync(entity);
             return new AITokenUsageDto(entity);
+        }
+
+        private static string Truncate(string value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value) || value.Length <= maxLength)
+            {
+                return value;
+            }
+
+            return value.Substring(0, maxLength);
         }
 
         /// <summary>

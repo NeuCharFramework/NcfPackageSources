@@ -300,7 +300,13 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 .BuildKernelWithAgentSessionAsync();
 
             //var request = iWantToRun.CreateRequest(prompt);
-            var aiResult = await iWantToRun.RunChatAsync(prompt, agentSession, inStreamItemProcessing);
+            var aiResult = await RunChatWithUsageAsync(
+                iWantToRun,
+                prompt,
+                agentSession,
+                inStreamItemProcessing,
+                source: "AIKernel.RunModelsync",
+                modelAlias: senparcAiSetting.ModelName?.Chat);
             return aiResult;
         }
 
@@ -310,11 +316,362 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         }
 
         /// <summary>
+        /// 统一执行一次 Chat 调用并异步记录 Token 用量。
+        /// <para>
+        /// 所有外部入口都应通过本方法（或本类中的同类包装方法）执行模型请求。
+        /// 记录器只入队，不等待数据库写入，因此不会拖慢模型结果返回。
+        /// </para>
+        /// </summary>
+        public Task<SenparcKernelAiResult<string>> RunChatWithUsageAsync(
+            IWantToRun runner,
+            string prompt,
+            AgentSession agentSession = null,
+            Action<AgentResponseUpdate> onUpdate = null,
+            AIModelDto model = null,
+            string source = null,
+            string modelAlias = null)
+        {
+            if (runner == null)
+            {
+                throw new ArgumentNullException(nameof(runner));
+            }
+
+            return RunTrackedChatAsync(
+                callback => callback == null
+                    ? runner.RunChatAsync(prompt, agentSession)
+                    : runner.RunChatAsync(prompt, agentSession, callback),
+                onUpdate,
+                model,
+                source,
+                modelAlias);
+        }
+
+        /// <summary>
+        /// 使用已构造的 AgentKernel 请求执行一次 Chat 调用并异步记录 Token 用量。
+        /// </summary>
+        public Task<SenparcKernelAiResult<string>> RunChatWithUsageAsync(
+            IWantToRun runner,
+            SenparcAiRequest request,
+            Action<AgentResponseUpdate> onUpdate = null,
+            AIModelDto model = null,
+            string source = null,
+            string modelAlias = null)
+        {
+            if (runner == null)
+            {
+                throw new ArgumentNullException(nameof(runner));
+            }
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            return RunTrackedChatAsync(
+                callback => callback == null
+                    ? runner.RunChatAsync(request)
+                    : runner.RunChatAsync(request, callback),
+                onUpdate,
+                model,
+                source,
+                modelAlias);
+        }
+
+        /// <summary>
+        /// 统一执行 AgentResponse 调用并异步记录 Token 用量。
+        /// </summary>
+        public async Task<AgentResponse> RunChatResponseWithUsageAsync(
+            IWantToRun runner,
+            string prompt,
+            AgentSession agentSession,
+            ChatClientAgentRunOptions options,
+            CancellationToken cancellationToken,
+            AIModelDto model = null,
+            string source = null,
+            string modelAlias = null)
+        {
+            if (runner == null)
+            {
+                throw new ArgumentNullException(nameof(runner));
+            }
+
+            var stopwatch = Stopwatch.StartNew();
+            AgentResponse response = null;
+            Exception error = null;
+            try
+            {
+                response = await runner.RunChatResponseAsync(
+                    prompt,
+                    agentSession,
+                    options,
+                    cancellationToken).ConfigureAwait(false);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+                throw;
+            }
+            finally
+            {
+                stopwatch.Stop();
+                RecordTokenUsage(
+                    model,
+                    modelAlias,
+                    response?.Usage,
+                    stopwatch.ElapsedMilliseconds,
+                    error == null,
+                    source,
+                    error?.Message);
+            }
+        }
+
+        /// <summary>
+        /// 统一执行 Agent 流式调用并异步记录 Token 用量。
+        /// </summary>
+        public async Task<IReadOnlyList<AgentResponseUpdate>> RunAgentStreamingWithUsageAsync(
+            AIAgent agent,
+            IList<ChatMessage> messages,
+            AgentSession agentSession,
+            CancellationToken cancellationToken,
+            Action<AgentResponseUpdate> onUpdate = null,
+            AIModelDto model = null,
+            string source = null,
+            string modelAlias = null)
+        {
+            if (agent == null)
+            {
+                throw new ArgumentNullException(nameof(agent));
+            }
+
+            var updates = new List<AgentResponseUpdate>();
+            UsageDetails usage = null;
+            var stopwatch = Stopwatch.StartNew();
+            Exception error = null;
+            try
+            {
+                await foreach (var update in agent.RunStreamingAsync(
+                    messages,
+                    agentSession,
+                    cancellationToken: cancellationToken))
+                {
+                    updates.Add(update);
+                    if (update?.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent usageContent
+                        && usageContent.Details != null)
+                    {
+                        usage = usageContent.Details;
+                    }
+                    onUpdate?.Invoke(update);
+                }
+
+                return updates;
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+                throw;
+            }
+            finally
+            {
+                stopwatch.Stop();
+                RecordTokenUsage(
+                    model,
+                    modelAlias,
+                    usage,
+                    stopwatch.ElapsedMilliseconds,
+                    error == null,
+                    source,
+                    error?.Message);
+            }
+        }
+
+        /// <summary>
+        /// 统一执行 AgentKernel 流式调用并异步记录 Token 用量。
+        /// </summary>
+        public async Task<IReadOnlyList<AgentResponseUpdate>> RunChatStreamingWithUsageAsync(
+            IWantToRun runner,
+            string prompt,
+            AgentSession agentSession,
+            ChatClientAgentRunOptions options,
+            CancellationToken cancellationToken,
+            Action<AgentResponseUpdate> onUpdate = null,
+            AIModelDto model = null,
+            string source = null,
+            string modelAlias = null)
+        {
+            if (runner == null)
+            {
+                throw new ArgumentNullException(nameof(runner));
+            }
+
+            var updates = new List<AgentResponseUpdate>();
+            UsageDetails usage = null;
+            var stopwatch = Stopwatch.StartNew();
+            Exception error = null;
+            try
+            {
+                await foreach (var update in runner.RunChatStreamingAsync(
+                    prompt,
+                    agentSession,
+                    options,
+                    cancellationToken))
+                {
+                    updates.Add(update);
+                    if (update?.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent usageContent
+                        && usageContent.Details != null)
+                    {
+                        usage = usageContent.Details;
+                    }
+                    onUpdate?.Invoke(update);
+                }
+
+                return updates;
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+                throw;
+            }
+            finally
+            {
+                stopwatch.Stop();
+                RecordTokenUsage(
+                    model,
+                    modelAlias,
+                    usage,
+                    stopwatch.ElapsedMilliseconds,
+                    error == null,
+                    source,
+                    error?.Message);
+            }
+        }
+
+        /// <summary>
+        /// 为无法直接通过 AgentKernel 包装入口执行的模型调用提交一条异步 Token 记录。
+        /// </summary>
+        public void RecordUsage(
+            AIModelDto model,
+            string modelAlias,
+            AITokenUsageSnapshot snapshot,
+            long durationMs,
+            bool success,
+            string source,
+            string errorNote = null)
+        {
+            RecordTokenUsage(model, modelAlias, snapshot, durationMs, success, source, errorNote);
+        }
+
+        private async Task<SenparcKernelAiResult<string>> RunTrackedChatAsync(
+            Func<Action<AgentResponseUpdate>, Task<SenparcKernelAiResult<string>>> execute,
+            Action<AgentResponseUpdate> onUpdate,
+            AIModelDto model,
+            string source,
+            string modelAlias)
+        {
+            UsageDetails streamUsage = null;
+            var stopwatch = Stopwatch.StartNew();
+            SenparcKernelAiResult<string> result = null;
+            Exception error = null;
+            try
+            {
+                Action<AgentResponseUpdate> callback = null;
+                if (onUpdate != null)
+                {
+                    callback = update =>
+                    {
+                        if (update?.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent usageContent
+                            && usageContent.Details != null)
+                        {
+                            streamUsage = usageContent.Details;
+                        }
+                        onUpdate(update);
+                    };
+                }
+
+                result = await execute(callback).ConfigureAwait(false);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+                throw;
+            }
+            finally
+            {
+                stopwatch.Stop();
+                var usage = BuildUsageSnapshot(result?.Result?.Usage);
+                if (usage.IsEmpty)
+                {
+                    usage = BuildUsageSnapshot(streamUsage);
+                }
+
+                RecordTokenUsage(
+                    model,
+                    modelAlias,
+                    usage,
+                    stopwatch.ElapsedMilliseconds,
+                    error == null,
+                    source,
+                    error?.Message);
+            }
+        }
+
+        private void RecordTokenUsage(
+            AIModelDto model,
+            string modelAlias,
+            UsageDetails usage,
+            long durationMs,
+            bool success,
+            string source,
+            string errorNote)
+        {
+            RecordTokenUsage(
+                model,
+                modelAlias,
+                BuildUsageSnapshot(usage),
+                durationMs,
+                success,
+                source,
+                errorNote);
+        }
+
+        private void RecordTokenUsage(
+            AIModelDto model,
+            string modelAlias,
+            AITokenUsageSnapshot snapshot,
+            long durationMs,
+            bool success,
+            string source,
+            string errorNote)
+        {
+            var recorder = _serviceProvider.GetService<IAITokenUsageRecorder>();
+            if (recorder == null)
+            {
+                return;
+            }
+
+            recorder.Record(new AITokenUsageRecord
+            {
+                ModelAlias = model?.Alias ?? modelAlias ?? model?.ModelId,
+                ModelId = model?.ModelId,
+                DeploymentName = model?.DeploymentName,
+                AiPlatform = model?.AiPlatform ?? AiPlatform.UnSet,
+                ConfigModelType = model?.ConfigModelType ?? ConfigModelType.Chat,
+                Snapshot = snapshot,
+                DurationMs = durationMs > int.MaxValue ? int.MaxValue : (int)Math.Max(0, durationMs),
+                Success = success,
+                TenantId = TenantMonitorScope.GetTenantId(_serviceProvider),
+                OccurredAt = DateTime.Now,
+                Source = source,
+                ErrorNote = errorNote
+            });
+        }
+
+        /// <summary>
         /// 运行模型并记录 Token 监控（含异步进度）。
         /// <para>
         /// 与 <see cref="RunModelsync"/> 相比，本方法会以流式方式运行，并在运行过程中通过
         /// <see cref="AITokenMonitorService"/> 发布 <see cref="AITokenProgressEvent"/>（异步进度），
-        /// 运行结束后捕获 <c>UsageDetails</c> 并通过 <see cref="AITokenUsageService"/> 持久化记录。
+        /// 运行结束后捕获 <c>UsageDetails</c> 并提交到异步 Token 用量记录队列。
         /// </para>
         /// </summary>
         /// <param name="aiModel">要运行的模型</param>
@@ -420,25 +777,30 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             string error = null;
             try
             {
-                aiResult = await iWantToRun.RunChatAsync(prompt, null, (AgentResponseUpdate update) =>
-                {
-                    if (update?.Text != null)
+                aiResult = await RunChatWithUsageAsync(
+                    iWantToRun,
+                    prompt,
+                    onUpdate: (AgentResponseUpdate update) =>
                     {
-                        outputText.Append(update.Text);
-                    }
-                    var usageContent = update?.Contents?.FirstOrDefault(z => z is UsageContent) as UsageContent;
-                    if (usageContent?.Details != null)
-                    {
-                        lastUsage = BuildUsageSnapshot(usageContent.Details);
-                    }
-                    else
-                    {
-                        // 流式过程中没有精确 usage 时，用已生成文本长度估算输出 Token（约 4 字符 ≈ 1 token）
-                        lastUsage.OutputTokens = (long)Math.Ceiling(outputText.Length / 4.0);
-                        lastUsage.TotalTokens = lastUsage.InputTokens + lastUsage.OutputTokens;
-                    }
-                    Publish(AITokenProgressStatus.Running, lastUsage, null);
-                });
+                        if (update?.Text != null)
+                        {
+                            outputText.Append(update.Text);
+                        }
+                        var usageContent = update?.Contents?.FirstOrDefault(z => z is UsageContent) as UsageContent;
+                        if (usageContent?.Details != null)
+                        {
+                            lastUsage = BuildUsageSnapshot(usageContent.Details);
+                        }
+                        else
+                        {
+                            // 流式过程中没有精确 usage 时，用已生成文本长度估算输出 Token（约 4 字符 ≈ 1 token）
+                            lastUsage.OutputTokens = (long)Math.Ceiling(outputText.Length / 4.0);
+                            lastUsage.TotalTokens = lastUsage.InputTokens + lastUsage.OutputTokens;
+                        }
+                        Publish(AITokenProgressStatus.Running, lastUsage, null);
+                    },
+                    model: aiModel,
+                    source: source);
                 success = true;
             }
             catch (Exception ex)
@@ -483,32 +845,6 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                     // 忽略
                 }
 
-                // 实时聚合
-                monitor.Record(aiModel.Alias, finalUsage, (int)stopwatch.ElapsedMilliseconds, success, tenantId);
-
-                // 持久化记录
-                try
-                {
-                    var usageService = this._serviceProvider.GetService<AITokenUsageService>();
-                    if (usageService != null)
-                    {
-                        await usageService.RecordAsync(
-                            aiModel.Alias,
-                            aiModel.ModelId,
-                            aiModel.DeploymentName,
-                            aiModel.AiPlatform,
-                            aiModel.ConfigModelType,
-                            finalUsage,
-                            (int)stopwatch.ElapsedMilliseconds,
-                            success,
-                            source,
-                            error);
-                    }
-                }
-                catch
-                {
-                    // 持久化失败不应影响模型运行结果返回
-                }
             }
 
             return aiResult;

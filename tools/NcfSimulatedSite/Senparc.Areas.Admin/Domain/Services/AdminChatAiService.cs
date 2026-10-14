@@ -224,9 +224,16 @@ namespace Senparc.Areas.Admin.Domain.Services
             // 当调用方提供回调时，使用 AgentKernel 已有的流式回调；没有回调时保留原有整包路径。
             var hasStreamedChunk = false;
             string responseText;
+            var aiModelService = _serviceProvider.GetService<AIModelService>();
             if (onChunk == null)
             {
-                var skResult = await iWantToRun.RunChatAsync(prompt);
+                var skResult = aiModelService == null
+                    ? await iWantToRun.RunChatAsync(prompt)
+                    : await aiModelService.RunChatWithUsageAsync(
+                        iWantToRun,
+                        prompt,
+                        modelAlias: modelIdentifier,
+                        source: "AdminChat.GenerateResponse");
                 responseText = skResult?.OutputString;
             }
             else
@@ -245,7 +252,9 @@ namespace Senparc.Areas.Admin.Domain.Services
                         hasStreamedChunk = true;
                         onChunk(updateText);
                     },
-                    cancellationToken);
+                    cancellationToken,
+                    aiModelService,
+                    modelIdentifier);
             }
 
             var result = responseText?.Trim() ?? string.Empty;
@@ -333,7 +342,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             return (result.FinalText, modelIdentifier, result);
         }
 
-        private static async Task<string> ExecuteHarnessTurnAsync(
+        private async Task<string> ExecuteHarnessTurnAsync(
             IWantToRun runner,
             AgentSession session,
             string prompt,
@@ -341,7 +350,17 @@ namespace Senparc.Areas.Admin.Domain.Services
         {
             try
             {
-                var response = await runner.RunChatResponseAsync(prompt, session, options: null, cancellationToken: cancellationToken).ConfigureAwait(false);
+                var aiModelService = _serviceProvider.GetService<AIModelService>();
+                var response = aiModelService == null
+                    ? await runner.RunChatResponseAsync(prompt, session, options: null, cancellationToken: cancellationToken).ConfigureAwait(false)
+                    : await aiModelService.RunChatResponseWithUsageAsync(
+                        runner,
+                        prompt,
+                        session,
+                        options: null,
+                        cancellationToken: cancellationToken,
+                        modelAlias: "AdminChat.Harness",
+                        source: "AdminChat.Harness").ConfigureAwait(false);
                 return response?.Text?.Trim() ?? string.Empty;
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -350,7 +369,17 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
             catch when (session != null)
             {
-                var response = await runner.RunChatResponseAsync(prompt, agentSession: null, options: null, cancellationToken: cancellationToken).ConfigureAwait(false);
+                var aiModelService = _serviceProvider.GetService<AIModelService>();
+                var response = aiModelService == null
+                    ? await runner.RunChatResponseAsync(prompt, agentSession: null, options: null, cancellationToken: cancellationToken).ConfigureAwait(false)
+                    : await aiModelService.RunChatResponseWithUsageAsync(
+                        runner,
+                        prompt,
+                        agentSession: null,
+                        options: null,
+                        cancellationToken: cancellationToken,
+                        modelAlias: "AdminChat.Harness",
+                        source: "AdminChat.Harness").ConfigureAwait(false);
                 return response?.Text?.Trim() ?? string.Empty;
             }
         }
@@ -423,6 +452,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 nativePrompt,
                 timeout ?? TimeSpan.FromMinutes(10),
                 cancellationToken,
+                modelAlias: modelIdentifier,
                 onLiveEvent: onLiveEvent);
 
             return (result.FinalText, modelIdentifier, result);
@@ -468,6 +498,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 prompt,
                 timeout ?? TimeSpan.FromMinutes(10),
                 cancellationToken,
+                modelAlias: modelIdentifier,
                 onLiveEvent: onLiveEvent);
             return (result.FinalText, modelIdentifier, result);
         }
@@ -538,6 +569,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 prompt,
                 timeout ?? TimeSpan.FromMinutes(10),
                 cancellationToken,
+                modelAlias: modelIdentifier,
                 onLiveEvent: onLiveEvent);
             return (result.FinalText, modelIdentifier, result);
         }
@@ -593,7 +625,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                 string.Empty,
                 timeout ?? TimeSpan.FromMinutes(10),
                 cancellationToken,
-                [new ChatMessage(ChatRole.User, [responseContent])],
+                modelAlias: modelIdentifier,
+                messages: [new ChatMessage(ChatRole.User, [responseContent])],
                 onLiveEvent: onLiveEvent);
             return (result.FinalText, modelIdentifier, result);
         }
@@ -688,6 +721,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             string prompt,
             TimeSpan timeout,
             CancellationToken cancellationToken,
+            string modelAlias = null,
             IEnumerable<ChatMessage> messages = null,
             Action<AdminChatLiveEvent> onLiveEvent = null)
         {
@@ -697,6 +731,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             var phaseEventType = string.Empty;
             var pendingApprovals = new List<AdminChatApprovalRequestDto>();
             var trajectoryEvents = new List<AdminChatTrajectoryEventDto>();
+            var usage = (UsageDetails)null;
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeoutCts.CancelAfter(timeout);
 
@@ -708,6 +744,12 @@ namespace Senparc.Areas.Admin.Domain.Services
                                .WithCancellation(timeoutCts.Token)
                                .ConfigureAwait(false))
                 {
+                    if (update.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent usageContent
+                        && usageContent.Details != null)
+                    {
+                        usage = usageContent.Details;
+                    }
+
                     if (!string.IsNullOrEmpty(update.Text))
                     {
                         if (!string.IsNullOrEmpty(phaseEventType)
@@ -955,6 +997,17 @@ namespace Senparc.Areas.Admin.Domain.Services
             {
                 await _trajectoryService.MarkFailedAsync(trajectory, ex);
                 throw;
+            }
+            finally
+            {
+                stopwatch.Stop();
+                _serviceProvider.GetService<AIModelService>()?.RecordUsage(
+                    null,
+                    modelAlias,
+                    AIModelService.BuildUsageSnapshot(usage),
+                    stopwatch.ElapsedMilliseconds,
+                    trajectory.Status == AdminChatTrajectoryStatus.Completed,
+                    "AdminChat.NativeHarness");
             }
 
             return new AdminChatHarnessResult
@@ -1275,31 +1328,41 @@ namespace Senparc.Areas.Admin.Domain.Services
             public List<string> Signatures { get; set; }
         }
 
-        private static async Task<string> ExecuteRunnerWithSessionRetryAsync(
+        private async Task<string> ExecuteRunnerWithSessionRetryAsync(
             IWantToRun runner,
             string prompt,
             Action<AgentResponseUpdate> onUpdate,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            AIModelService aiModelService,
+            string modelAlias)
         {
             var session = runner?.Kernel?.AgentSession;
 
             async Task<string> RunStreamingAsync(AgentSession agentSession)
             {
                 var output = new StringBuilder();
-                await foreach (var update in runner.RunChatStreamingAsync(
-                                   prompt,
-                                   agentSession,
-                                   options: null,
-                                   cancellationToken: cancellationToken)
-                               .WithCancellation(cancellationToken)
-                               .ConfigureAwait(false))
+                var updates = aiModelService == null
+                    ? await CollectChatStreamingUpdatesAsync(runner, prompt, agentSession, cancellationToken)
+                    : await aiModelService.RunChatStreamingWithUsageAsync(
+                        runner,
+                        prompt,
+                        agentSession,
+                        options: null,
+                        cancellationToken: cancellationToken,
+                        onUpdate: onUpdate,
+                        modelAlias: modelAlias,
+                        source: "AdminChat.GenerateResponse");
+                foreach (var update in updates)
                 {
                     if (!string.IsNullOrEmpty(update?.Text))
                     {
                         output.Append(update.Text);
                     }
 
-                    onUpdate?.Invoke(update);
+                    if (aiModelService == null)
+                    {
+                        onUpdate?.Invoke(update);
+                    }
                 }
 
                 return output.ToString();
@@ -1317,6 +1380,27 @@ namespace Senparc.Areas.Admin.Domain.Services
             {
                 return await RunStreamingAsync(null);
             }
+        }
+
+        private static async Task<IReadOnlyList<AgentResponseUpdate>> CollectChatStreamingUpdatesAsync(
+            IWantToRun runner,
+            string prompt,
+            AgentSession agentSession,
+            CancellationToken cancellationToken)
+        {
+            var updates = new List<AgentResponseUpdate>();
+            await foreach (var update in runner.RunChatStreamingAsync(
+                               prompt,
+                               agentSession,
+                               options: null,
+                               cancellationToken: cancellationToken)
+                           .WithCancellation(cancellationToken)
+                           .ConfigureAwait(false))
+            {
+                updates.Add(update);
+            }
+
+            return updates;
         }
 
         private async Task<(SenparcAiSetting setting, string modelIdentifier)> ResolveChatSettingAsync(int aiModelId)

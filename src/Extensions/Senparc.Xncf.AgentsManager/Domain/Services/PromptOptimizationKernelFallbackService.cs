@@ -159,7 +159,11 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
                 aiRequest.RequestContent = aiRequest.ReplacePrompt();//替换参数
 
                 _logger.LogInformation("Kernel fallback: invoking model for RequestId={RequestId}", request.RequestId);
-                var runResult = await iWantToRun.RunChatAsync(aiRequest).ConfigureAwait(false);
+                var runResult = await _aiModelService.Value.RunChatWithUsageAsync(
+                    iWantToRun,
+                    aiRequest,
+                    model: aiModelDto,
+                    source: "AgentsManager.PromptOptimizationFallback").ConfigureAwait(false);
                 var raw = runResult.OutputString?.Trim();
                 if (string.IsNullOrEmpty(raw))
                 {

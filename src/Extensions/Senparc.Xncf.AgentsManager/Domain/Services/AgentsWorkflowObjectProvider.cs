@@ -33,6 +33,7 @@ using Senparc.CO2NET;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
@@ -57,6 +58,7 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
     private readonly RemoteA2AAgentFactory _remoteA2AAgentFactory;
     private readonly HumanInTheLoopRequestStore _humanInTheLoopRequestStore;
     private readonly AgentsManagerNeuBellProvider _neuBellProvider;
+    private readonly AIModelService _aiModelService;
 
     public AgentsWorkflowObjectProvider(
         AgentsTemplateService agentService,
@@ -66,7 +68,8 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         RemoteAgentService remoteAgentService,
         RemoteA2AAgentFactory remoteA2AAgentFactory,
         HumanInTheLoopRequestStore humanInTheLoopRequestStore,
-        AgentsManagerNeuBellProvider neuBellProvider)
+        AgentsManagerNeuBellProvider neuBellProvider,
+        AIModelService aiModelService)
     {
         _agentService = agentService;
         _groupService = groupService;
@@ -76,6 +79,7 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         _remoteA2AAgentFactory = remoteA2AAgentFactory;
         _humanInTheLoopRequestStore = humanInTheLoopRequestStore;
         _neuBellProvider = neuBellProvider;
+        _aiModelService = aiModelService;
     }
 
     public string ProviderId => ProviderName;
@@ -373,10 +377,14 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             while (nextMessages != null)
             {
                 var approvals = new List<ToolApprovalRequestContent>();
-                await foreach (var update in build.Runner.Kernel.ChatClientAgent.RunStreamingAsync(
+                var updates = await _aiModelService.RunAgentStreamingWithUsageAsync(
+                    build.Runner.Kernel.ChatClientAgent,
                     nextMessages,
                     session,
-                    cancellationToken: cancellationToken))
+                    cancellationToken,
+                    model: build.EffectiveModel,
+                    source: "AgentsManager.WorkflowHumanApproval");
+                foreach (var update in updates)
                 {
                     if (!string.IsNullOrWhiteSpace(update?.Text))
                     {
