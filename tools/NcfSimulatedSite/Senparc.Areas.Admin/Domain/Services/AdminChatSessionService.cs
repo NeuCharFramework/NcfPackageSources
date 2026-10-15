@@ -67,9 +67,19 @@ namespace Senparc.Areas.Admin.Domain.Services
         /// <summary>
         /// 创建新的聊天会话
         /// </summary>
-        public async Task<AdminChatSession> CreateSessionAsync(string title, int userId)
+        public async Task<AdminChatSession> CreateSessionAsync(
+            string title,
+            int userId,
+            string workspaceId = null,
+            bool workspaceWriteEnabled = false,
+            bool workspaceCliEnabled = false)
         {
-            var session = new AdminChatSession(title, userId);
+            var session = new AdminChatSession(
+                title,
+                userId,
+                workspaceId,
+                workspaceWriteEnabled,
+                workspaceCliEnabled);
             await base.SaveObjectAsync(session);
             return session;
         }

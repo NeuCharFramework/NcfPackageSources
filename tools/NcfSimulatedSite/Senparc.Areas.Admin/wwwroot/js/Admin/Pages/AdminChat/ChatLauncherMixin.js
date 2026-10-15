@@ -18,6 +18,14 @@ window.ChatLauncherMixin = {
       availableModules: [],
       selectedModuleUids: [],
       availableWorkflows: [],
+      availableWorkspaces: [],
+      selectedWorkspaceId: '',
+      workspaceWriteEnabled: false,
+      workspaceCliEnabled: false,
+      loadingWorkspaceOptions: false,
+      createWorkspaceDialogVisible: false,
+      createWorkspaceName: '',
+      creatingWorkspace: false,
       selectedWorkflowIds: [],
       selectedWorkflows: [],
       loadingModuleOptions: false,
@@ -360,6 +368,59 @@ window.ChatLauncherMixin = {
       }
     },
 
+    async ensureWorkspaceOptionsLoaded() {
+      if (!this.isSuperAdmin || this.availableWorkspaces.length > 0) {
+        return;
+      }
+
+      this.loadingWorkspaceOptions = true;
+      try {
+        const response = await service.get('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetWorkspaceOptionsAsync');
+        this.availableWorkspaces = response.data && response.data.success && response.data.data
+          ? response.data.data.workspaces || []
+          : [];
+      } catch (error) {
+        console.error('加载 Workspace 列表失败:', error);
+        this.$message.error('加载 Workspace 列表失败。');
+      } finally {
+        this.loadingWorkspaceOptions = false;
+      }
+    },
+
+    async createWorkspace() {
+      if (!this.isSuperAdmin) {
+        return;
+      }
+
+      this.createWorkspaceName = '';
+      this.createWorkspaceDialogVisible = true;
+    },
+
+    async submitCreateWorkspace() {
+      if (!this.isSuperAdmin || !this.createWorkspaceName || !this.createWorkspaceName.trim()) {
+        this.$message.warning('请输入 Workspace 名称。');
+        return;
+      }
+
+      this.creatingWorkspace = true;
+      try {
+        const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateWorkspaceAsync', { name: this.createWorkspaceName.trim() });
+        if (response.data && response.data.success && response.data.data) {
+          this.availableWorkspaces.unshift(response.data.data);
+          this.selectedWorkspaceId = response.data.data.id;
+          this.createWorkspaceDialogVisible = false;
+          this.$message.success('Workspace 创建成功。');
+        } else {
+          this.$message.error((response.data && response.data.errorMessage) || '创建 Workspace 失败。');
+        }
+      } catch (error) {
+        console.error('创建 Workspace 失败:', error);
+        this.$message.error('创建 Workspace 失败。');
+      } finally {
+        this.creatingWorkspace = false;
+      }
+    },
+
     async openModuleSelector() {
       await this.ensureModuleOptionsLoaded(false);
       this.selectedModuleUids = this.selectedModules.map((item) => item.uid);
@@ -448,7 +509,10 @@ window.ChatLauncherMixin = {
           aiModelId: this.normalizeAiModelId(this.launcherAiModelId),
           moduleUids: this.selectedModules.map((item) => item.uid),
           workflowIds: this.selectedWorkflows.map((item) => item.id),
-          mode: this.launcherChatMode === 'harness' ? 1 : 0
+          mode: this.launcherChatMode === 'harness' ? 1 : 0,
+          workspaceId: this.isSuperAdmin ? this.selectedWorkspaceId || null : null,
+          workspaceWriteEnabled: this.isSuperAdmin && !!this.selectedWorkspaceId && this.workspaceWriteEnabled,
+          workspaceCliEnabled: this.isSuperAdmin && !!this.selectedWorkspaceId && this.workspaceCliEnabled
         };
 
         const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateSessionAsync', requestData);

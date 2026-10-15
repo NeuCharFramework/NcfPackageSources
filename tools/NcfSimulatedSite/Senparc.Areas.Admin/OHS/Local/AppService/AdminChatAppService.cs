@@ -51,6 +51,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Ncf.Shared.Abstractions.Events;
 using Senparc.Areas.Admin.OHS.Local.Events;
+using Senparc.Xncf.Workspace.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +77,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         private readonly AdminUserInfoService _adminUserInfoService;
         private readonly IStringLocalizer<AdminResource> _localizer;
         private readonly IEventBus _eventBus;
+        private readonly IWorkspaceStorage _workspaceStorage;
 
         public AdminChatAppService(
             IServiceProvider serviceProvider,
@@ -86,7 +88,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             AdminChatTrajectoryService trajectoryService,
             AdminChatAiService chatAiService,
             AdminUserInfoService adminUserInfoService,
-            IStringLocalizer<AdminResource> localizer) : base(serviceProvider)
+            IStringLocalizer<AdminResource> localizer,
+            IWorkspaceStorage workspaceStorage = null) : base(serviceProvider)
         {
             _sessionService = sessionService;
             _messageService = messageService;
@@ -97,6 +100,47 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             _adminUserInfoService = adminUserInfoService;
             _localizer = localizer;
             _eventBus = serviceProvider.GetService<IEventBus>();
+            _workspaceStorage = workspaceStorage;
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<GetWorkspaceOptionsResponse>> GetWorkspaceOptionsAsync()
+        {
+            return await this.GetResponseAsync<AppResponseBase<GetWorkspaceOptionsResponse>, GetWorkspaceOptionsResponse>(async (response, logger) =>
+            {
+                if (!IsCurrentAdminSuperAdmin() || _workspaceStorage == null)
+                {
+                    throw new NcfExceptionBase("只有超级管理员可以使用 Workspace。");
+                }
+
+                return new GetWorkspaceOptionsResponse
+                {
+                    Workspaces = (await _workspaceStorage.ListWorkspacesAsync().ConfigureAwait(false))
+                        .Select(WorkspaceOptionDto.CreateFromDescriptor)
+                        .ToList()
+                };
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<WorkspaceOptionDto>> CreateWorkspaceAsync([FromBody] CreateWorkspaceRequest request)
+        {
+            return await this.GetResponseAsync<AppResponseBase<WorkspaceOptionDto>, WorkspaceOptionDto>(async (response, logger) =>
+            {
+                if (!IsCurrentAdminSuperAdmin() || _workspaceStorage == null)
+                {
+                    throw new NcfExceptionBase("只有超级管理员可以创建 Workspace。");
+                }
+
+                if (request == null || string.IsNullOrWhiteSpace(request.Name))
+                {
+                    throw new NcfExceptionBase("Workspace 名称不能为空。");
+                }
+
+                var descriptor = await _workspaceStorage.CreateAsync(
+                    new WorkspaceCreateRequest(GetCurrentAdminUserInfoId(), request.Name.Trim())).ConfigureAwait(false);
+                return WorkspaceOptionDto.CreateFromDescriptor(descriptor);
+            });
         }
 
         #region 会话管理
@@ -120,7 +164,27 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     ? _localizer["AdminChat.NewConversation"] 
                     : (titleSource.Length > 50 ? titleSource.Substring(0, 50) + "..." : titleSource);
 
-                var session = await _sessionService.CreateSessionAsync(title, userId);
+                var workspaceId = request.WorkspaceId?.Trim();
+                if (!string.IsNullOrWhiteSpace(workspaceId))
+                {
+                    if (!IsCurrentAdminSuperAdmin())
+                    {
+                        throw new NcfExceptionBase("只有超级管理员可以使用 Workspace。");
+                    }
+
+                    if (_workspaceStorage == null
+                        || await _workspaceStorage.GetAsync(workspaceId).ConfigureAwait(false) == null)
+                    {
+                        throw new NcfExceptionBase("Workspace 不存在或不可用。");
+                    }
+                }
+
+                var session = await _sessionService.CreateSessionAsync(
+                    title,
+                    userId,
+                    workspaceId,
+                    request.WorkspaceWriteEnabled,
+                    request.WorkspaceCliEnabled);
 
                 var moduleUidSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 if (request.ModuleUids != null && request.ModuleUids.Any())
@@ -171,7 +235,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     SessionId = session.Id,
                     Title = session.Title,
                     InitialMessage = request.InitialMessage,
-                    Mode = request.Mode
+                    Mode = request.Mode,
+                    WorkspaceId = session.WorkspaceId,
+                    WorkspaceWriteEnabled = session.WorkspaceWriteEnabled,
+                    WorkspaceCliEnabled = session.WorkspaceCliEnabled
                 };
             });
         }
@@ -1168,6 +1235,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public string Title { get; set; }
         public string InitialMessage { get; set; }
         public AdminChatMode Mode { get; set; }
+        public string WorkspaceId { get; set; }
+        public bool WorkspaceWriteEnabled { get; set; }
+        public bool WorkspaceCliEnabled { get; set; }
     }
 
     /// <summary>
@@ -1177,6 +1247,37 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     {
         public List<AdminChatSessionDto> Sessions { get; set; }
         public int TotalCount { get; set; }
+    }
+
+    public class GetWorkspaceOptionsResponse
+    {
+        public IReadOnlyList<WorkspaceOptionDto> Workspaces { get; set; } = Array.Empty<WorkspaceOptionDto>();
+    }
+
+    public class CreateWorkspaceRequest
+    {
+        public string Name { get; set; }
+    }
+
+    public class WorkspaceOptionDto
+    {
+        public string Id { get; set; }
+        public int OwnerId { get; set; }
+        public string Name { get; set; }
+        public DateTime CreatedUtc { get; set; }
+        public DateTime LastAccessedUtc { get; set; }
+
+        public static WorkspaceOptionDto CreateFromDescriptor(WorkspaceDescriptor descriptor)
+        {
+            return new WorkspaceOptionDto
+            {
+                Id = descriptor.Id,
+                OwnerId = descriptor.OwnerId,
+                Name = descriptor.Name,
+                CreatedUtc = descriptor.CreatedUtc,
+                LastAccessedUtc = descriptor.LastAccessedUtc
+            };
+        }
     }
 
     /// <summary>
