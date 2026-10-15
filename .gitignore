@@ -128,3 +128,4 @@ tools/NcfSimulatedSite/Senparc.Web/wwwroot/NcfPackages/
 upgrade-senparc-packages/
 .venv_translate
 tools/NcfSimulatedSite/Senparc.Web/App_Data/WeixinClawMedia/**
+**/App_Data/AIWorkspaces/**

@@ -27,8 +27,9 @@
   border-bottom: 1px solid #e4e7ed;
   background: #fff;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
 }
 
 .sidebar-title {
@@ -38,11 +39,28 @@
   color: #303133;
   display: flex;
   align-items: center;
+  white-space: nowrap;
 }
 
 .sidebar-title .fa {
   margin-right: 8px;
   color: #667eea;
+}
+
+.sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sidebar-actions .el-button {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .session-list {
@@ -1022,7 +1040,7 @@
 
 /* ===== 超级管理员：用户用量统计 ===== */
 .user-stats-button {
-    margin-left: 8px;
+    margin-left: 0;
 }
 .user-stats-drawer-title {
     font-size: 16px;
