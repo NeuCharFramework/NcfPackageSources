@@ -184,6 +184,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .chat-title {
@@ -198,6 +200,71 @@
 .chat-title .fa {
   margin-right: 8px;
   color: #667eea;
+}
+
+.chat-workspace-context {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 420px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.chat-workspace-context > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-task-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 38px;
+  margin-top: 2px;
+  padding: 4px 8px;
+  overflow: hidden;
+  border-left: 2px solid #409eff;
+  border-radius: 3px;
+  background: #f7fbff;
+  color: #606266;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.recent-task-item {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.recent-task-item > i {
+  width: 16px;
+  flex: 0 0 16px;
+  color: #409eff;
+}
+
+.recent-task-item strong,
+.recent-task-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-task-item strong {
+  max-width: 42%;
+  color: #303133;
+  font-weight: 600;
+}
+
+.recent-task-item em {
+  flex: 0 0 auto;
+  margin-left: 6px;
+  color: #909399;
+  font-style: normal;
 }
 
 .chat-modules {
@@ -665,6 +732,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .input-tip {
@@ -674,6 +743,31 @@
 
 .input-tip .fa {
   margin-right: 5px;
+}
+
+.input-ai-model-select {
+  width: 150px;
+  margin-left: auto;
+}
+
+.input-actions .chat-mode-toggle {
+  margin-left: 0;
+}
+
+.chat-usage-status {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  min-height: 16px;
+  margin-top: 6px;
+  color: #a0a4ad;
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.chat-usage-status .fa {
+  color: #9aa4b2;
 }
 
 /* ========== 响应式布局 ========== */

@@ -49,6 +49,8 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 
         public string WorkspaceId { get; set; }
 
+        public string WorkspaceName { get; set; }
+
         public bool WorkspaceWriteEnabled { get; set; }
 
         public bool WorkspaceCliEnabled { get; set; }
