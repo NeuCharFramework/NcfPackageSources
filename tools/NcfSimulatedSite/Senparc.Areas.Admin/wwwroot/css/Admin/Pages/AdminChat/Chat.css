@@ -175,7 +175,7 @@
 
 .chat-header-top {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
 }
@@ -188,8 +188,19 @@
   flex-wrap: wrap;
 }
 
+.chat-context-bar {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #ebeef5;
+  border-radius: 6px;
+  background: #f8fafc;
+}
+
 .chat-title {
   margin: 0;
+  min-width: 0;
   font-size: 18px;
   font-weight: 600;
   color: #303133;
@@ -206,15 +217,52 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  max-width: 420px;
+  min-width: 0;
+  width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 .chat-workspace-context > span {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.chat-workspace-context > .fa,
+.chat-workspace-context > .el-tag {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.chat-context-popover-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.chat-context-popover-item {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 8px;
+  color: #606266;
+  font-size: 13px;
+}
+
+.chat-context-popover-item .fa {
+  flex: 0 0 14px;
+  color: #909399;
+  text-align: center;
+}
+
+.chat-context-popover-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .recent-task-strip {
@@ -269,12 +317,17 @@
 
 .chat-modules {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 8px;
 }
 
 .chat-modules .el-tag {
+  max-width: min(260px, 100%);
+  overflow: hidden;
   font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chat-modules .el-tag .fa {
@@ -283,6 +336,10 @@
 
 .chat-module-tag-detail {
   cursor: pointer;
+}
+
+.chat-context-more {
+  margin-left: 0;
 }
 
 .chat-module-detail-wrapper {
