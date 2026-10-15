@@ -23,22 +23,24 @@
                 <h3 class="sidebar-title">
                     <i class="fa fa-comments"></i> @AR["AdminChat.History"]
                 </h3>
-                <el-button 
-                    type="primary" 
-                    size="small" 
-                    icon="el-icon-plus" 
-                    @@click="createNewSession">
-                    @AR["AdminChat.NewConversation"]
-                </el-button>
-                <el-button
-                    v-if="isSuperAdmin"
-                    type="warning"
-                    size="small"
-                    icon="el-icon-data-line"
-                    @@click="openUserStatsDrawer"
-                    class="user-stats-button">
-                    @AR["AdminChat.UserStats"]
-                </el-button>
+                <div class="sidebar-actions">
+                    <el-button
+                        type="primary"
+                        size="small"
+                        icon="el-icon-plus"
+                        @@click="createNewSession">
+                        @AR["AdminChat.NewConversation"]
+                    </el-button>
+                    <el-button
+                        v-if="isSuperAdmin"
+                        type="warning"
+                        size="small"
+                        icon="el-icon-data-line"
+                        @@click="openUserStatsDrawer"
+                        class="user-stats-button">
+                        @AR["AdminChat.UserStats"]
+                    </el-button>
+                </div>
             </div>
             
             <div class="session-list" v-loading="loadingSessions">
