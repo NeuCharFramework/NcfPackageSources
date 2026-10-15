@@ -132,6 +132,8 @@
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.NeuCharWorkflow.Abstractions\Senparc.Xncf.NeuCharWorkflow.Abstractions.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace\Senparc.Xncf.Workspace.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />

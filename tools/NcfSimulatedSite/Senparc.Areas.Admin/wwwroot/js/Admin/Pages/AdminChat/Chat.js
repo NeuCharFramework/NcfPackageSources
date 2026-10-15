@@ -7,6 +7,9 @@
       currentSessionTitle: '',
       currentSessionModules: [],
       currentSessionWorkflows: [],
+      currentSessionWorkspaceId: '',
+      currentSessionWorkspaceWriteEnabled: false,
+      currentSessionWorkspaceCliEnabled: false,
       currentSessionAiModelId: 0,
       chatMode: 'harness',
       trajectoryDialogVisible: false,
@@ -50,6 +53,24 @@
   computed: {
     replayEvent() {
       return this.replayIndex >= 0 ? this.selectedTrajectoryEvents[this.replayIndex] || null : null;
+    },
+    groupedSessionList() {
+      const groups = [];
+      const groupMap = new Map();
+      (this.sessionList || []).forEach((session) => {
+        const key = session.workspaceId || '__no_workspace__';
+        if (!groupMap.has(key)) {
+          const group = {
+            key,
+            name: session.workspaceName || (key === '__no_workspace__' ? '未使用 Workspace' : key),
+            sessions: []
+          };
+          groupMap.set(key, group);
+          groups.push(group);
+        }
+        groupMap.get(key).sessions.push(session);
+      });
+      return groups;
     }
   },
   mounted() {
@@ -57,6 +78,7 @@
       this.currentSessionId = window.INITIAL_DATA.sessionId || 0;
       this.currentUserId = window.INITIAL_DATA.currentUserId || 0;
       this.isSuperAdmin = !!window.INITIAL_DATA.isSuperAdmin;
+      this.ensureWorkspaceOptionsLoaded();
       
       if (window.INITIAL_DATA.initialMessage) {
         const initialMessage = decodeURIComponent(window.INITIAL_DATA.initialMessage);
@@ -476,6 +498,9 @@
           this.messageList = session.messages || [];
           this.currentSessionModules = session.modules || [];
           this.currentSessionWorkflows = session.workflows || [];
+          this.currentSessionWorkspaceId = session.workspaceId || '';
+          this.currentSessionWorkspaceWriteEnabled = !!session.workspaceWriteEnabled;
+          this.currentSessionWorkspaceCliEnabled = !!session.workspaceCliEnabled;
           this.currentSessionAiModelId = this.getSessionAiModelId(this.currentSessionId);
           this.clearMessageSelection();
           this.isManageMode = false;
@@ -749,6 +774,9 @@
       this.messageList = [];
       this.currentSessionModules = [];
       this.currentSessionWorkflows = [];
+      this.currentSessionWorkspaceId = '';
+      this.currentSessionWorkspaceWriteEnabled = false;
+      this.currentSessionWorkspaceCliEnabled = false;
       this.clearMessageSelection();
       this.isManageMode = false;
       await this.loadSessionDetail();
@@ -761,6 +789,9 @@
       this.currentSessionTitle = '';
       this.currentSessionModules = [];
       this.currentSessionWorkflows = [];
+      this.currentSessionWorkspaceId = '';
+      this.currentSessionWorkspaceWriteEnabled = false;
+      this.currentSessionWorkspaceCliEnabled = false;
       this.messageList = [];
       this.inputMessage = '';
       this.chatInputText = '';

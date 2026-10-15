@@ -47,6 +47,12 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         /// </summary>
         public DateTime LastMessageTime { get; set; }
 
+        public string WorkspaceId { get; set; }
+
+        public bool WorkspaceWriteEnabled { get; set; }
+
+        public bool WorkspaceCliEnabled { get; set; }
+
         /// <summary>
         /// 关联的消息列表（可选，用于嵌套查询）
         /// </summary>
@@ -89,7 +95,10 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
                 Title = entity.Title,
                 UserId = entity.UserId,
                 Status = entity.Status,
-                LastMessageTime = entity.LastMessageTime
+                LastMessageTime = entity.LastMessageTime,
+                WorkspaceId = entity.WorkspaceId,
+                WorkspaceWriteEnabled = entity.WorkspaceWriteEnabled,
+                WorkspaceCliEnabled = entity.WorkspaceCliEnabled
             };
         }
     }
@@ -128,6 +137,12 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         /// 初始消息运行模式；页面默认发送 Harness。
         /// </summary>
         public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
+
+        public string WorkspaceId { get; set; }
+
+        public bool WorkspaceWriteEnabled { get; set; }
+
+        public bool WorkspaceCliEnabled { get; set; }
 
         public CreateChatSessionInputDto()
         {

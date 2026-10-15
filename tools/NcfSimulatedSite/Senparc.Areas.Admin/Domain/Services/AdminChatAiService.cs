@@ -75,6 +75,7 @@ using Microsoft.Extensions.AI;
 using Senparc.AI.AgentKernel.IWantToExtensions;
 using Senparc.AI.AgentKernel.Extensions;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
+using Senparc.Xncf.Workspace.Abstractions;
 using MafFunctionCallContent = Microsoft.Extensions.AI.FunctionCallContent;
 using MafFunctionResultContent = Microsoft.Extensions.AI.FunctionResultContent;
 using MafTextContent = Microsoft.Extensions.AI.TextContent;
@@ -1166,6 +1167,25 @@ namespace Senparc.Areas.Admin.Domain.Services
             var aiFunctions = functionInvocationEnabled
                 ? agentAiHandler.GetAITools(modulePlugin)
                 : new List<AIFunction>();
+
+            var sessionService = _serviceProvider.GetService<AdminChatSessionService>();
+            var session = sessionService == null
+                ? null
+                : await sessionService.GetSessionByIdAsync(sessionId, userId).ConfigureAwait(false);
+            if (functionInvocationEnabled
+                && session != null
+                && !string.IsNullOrWhiteSpace(session.WorkspaceId))
+            {
+                var workspaceStorage = _serviceProvider.GetService<IWorkspaceStorage>();
+                if (workspaceStorage != null)
+                {
+                    aiFunctions.AddRange(AdminChatWorkspaceToolFactory.Create(
+                        workspaceStorage,
+                        session.WorkspaceId,
+                        session.WorkspaceWriteEnabled,
+                        session.WorkspaceCliEnabled));
+                }
+            }
 
             var importedPluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             if (functionInvocationEnabled)

@@ -35,6 +35,13 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         /// </summary>
         public DateTime LastMessageTime { get; private set; }
 
+        [MaxLength(64)]
+        public string WorkspaceId { get; private set; }
+
+        public bool WorkspaceWriteEnabled { get; private set; }
+
+        public bool WorkspaceCliEnabled { get; private set; }
+
         /// <summary>
         /// 私有构造函数（供 EF Core 使用）
         /// </summary>
@@ -45,12 +52,20 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         /// </summary>
         /// <param name="title">会话标题</param>
         /// <param name="userId">用户ID</param>
-        public AdminChatSession(string title, int userId)
+        public AdminChatSession(
+            string title,
+            int userId,
+            string workspaceId = null,
+            bool workspaceWriteEnabled = false,
+            bool workspaceCliEnabled = false)
         {
             Title = title?.Length > 150 ? title.Substring(0, 150) : title ?? "新对话";
             UserId = userId;
             Status = ChatSessionStatus.Active;
             LastMessageTime = DateTime.Now;
+            WorkspaceId = string.IsNullOrWhiteSpace(workspaceId) ? null : workspaceId.Trim();
+            WorkspaceWriteEnabled = WorkspaceId != null && workspaceWriteEnabled;
+            WorkspaceCliEnabled = WorkspaceId != null && workspaceCliEnabled;
         }
 
         /// <summary>

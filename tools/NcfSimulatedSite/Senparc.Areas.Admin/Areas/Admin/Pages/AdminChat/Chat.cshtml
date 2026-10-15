@@ -42,25 +42,32 @@
             </div>
             
             <div class="session-list" v-loading="loadingSessions">
-                <div 
-                    v-for="session in sessionList" 
-                    :key="session.id"
-                    :class="['session-item', { 'active': currentSessionId === session.id }]"
-                    @@click="switchSession(session.id)">
-                    <div class="session-info">
-                        <div class="session-title">{{ session.title }}</div>
-                        <div class="session-time">{{ formatTime(session.lastMessageTime) }}</div>
+                <div v-for="group in groupedSessionList" :key="group.key" class="session-group">
+                    <div class="session-group-title">
+                        <i :class="group.key === '__no_workspace__' ? 'fa fa-comments-o' : 'fa fa-folder-open'"></i>
+                        <span>{{ group.name }}</span>
+                        <span class="session-group-count">{{ group.sessions.length }}</span>
                     </div>
-                    <el-dropdown trigger="click" @@command="handleSessionCommand">
-                        <span class="session-actions" @@click.stop>
-                            <i class="el-icon-more"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :command="{action: 'delete', id: session.id}">
-                                <i class="fa fa-trash"></i> @AR["Common.删除"]
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
+                    <div
+                        v-for="session in group.sessions"
+                        :key="session.id"
+                        :class="['session-item', { 'active': currentSessionId === session.id }]"
+                        @@click="switchSession(session.id)">
+                        <div class="session-info">
+                            <div class="session-title">{{ session.title }}</div>
+                            <div class="session-time">{{ formatTime(session.lastMessageTime) }}</div>
+                        </div>
+                        <el-dropdown trigger="click" @@command="handleSessionCommand">
+                            <span class="session-actions" @@click.stop>
+                                <i class="el-icon-more"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item :command="{action: 'delete', id: session.id}">
+                                    <i class="fa fa-trash"></i> @AR["Common.删除"]
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
                 </div>
                 
                 <div v-if="sessionList.length === 0 && !loadingSessions" class="empty-sessions">
@@ -97,6 +104,13 @@
                                     </div>
                                 </el-option>
                             </el-select>
+                            <div v-if="currentSessionWorkspaceId" class="chat-workspace-context">
+                                <i class="fa fa-folder-open"></i>
+                                <span>Workspace：{{ currentSessionWorkspaceId }}</span>
+                                <el-tag size="mini" type="info">当前会话</el-tag>
+                                <el-tag v-if="currentSessionWorkspaceWriteEnabled" size="mini" type="warning">可写入</el-tag>
+                                <el-tag v-if="currentSessionWorkspaceCliEnabled" size="mini" type="danger">可执行 CLI</el-tag>
+                            </div>
                             <el-button
                                 size="mini"
                                 :type="isManageMode ? 'default' : 'primary'"
@@ -441,6 +455,34 @@
                                 </div>
                             </div>
 
+                            <div class="launcher-workspace-controls" style="margin-top:12px;padding:10px;border:1px solid #ebeef5;border-radius:4px;">
+                                <div class="launcher-control-label">
+                                    <i class="fa fa-folder-open"></i>
+                                    <span>Workspace（仅超级管理员）</span>
+                                </div>
+                                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                                    <el-select v-model="selectedWorkspaceId"
+                                               filterable
+                                               clearable
+                                               :loading="loadingWorkspaceOptions"
+                                               :disabled="!isSuperAdmin"
+                                               placeholder="不使用 Workspace"
+                                               style="min-width:260px;">
+                                        <el-option v-for="item in availableWorkspaces"
+                                                   :key="item.id"
+                                                   :label="item.name + ' (' + item.id + ')'"
+                                                   :value="item.id"></el-option>
+                                    </el-select>
+                                    <el-button size="mini" plain @@click="createWorkspace" :disabled="!isSuperAdmin">新建 Workspace</el-button>
+                                    <el-checkbox v-model="workspaceWriteEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId">允许 AI 写入文件</el-checkbox>
+                                    <el-checkbox v-model="workspaceCliEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId || !workspaceWriteEnabled">允许 AI 执行 CLI</el-checkbox>
+                                </div>
+                                <div style="color:#909399;font-size:12px;margin-top:6px;">
+                                    CLI 仅能在 Workspace 内运行配置白名单命令，不经过 shell；建议仅在需要时开启。
+                                    <span v-if="!isSuperAdmin">当前账号不是超级管理员，Workspace 功能不可用。</span>
+                                </div>
+                            </div>
+
                             <el-input
                                 type="textarea"
                                 v-model="chatInputText"
@@ -518,6 +560,28 @@
             </div>
         </el-main>
     </el-container>
+    <el-dialog
+        title="新建 Workspace"
+        :visible.sync="createWorkspaceDialogVisible"
+        width="460px"
+        append-to-body>
+        <el-form label-position="top" @@submit.native.prevent="submitCreateWorkspace">
+            <el-form-item label="Workspace 名称">
+                <el-input
+                    v-model="createWorkspaceName"
+                    maxlength="100"
+                    show-word-limit
+                    autofocus
+                    placeholder="例如：Yield C# 示例项目"
+                    @@keyup.enter.native="submitCreateWorkspace">
+                </el-input>
+            </el-form-item>
+        </el-form>
+        <span slot="footer">
+            <el-button @@click="createWorkspaceDialogVisible = false">取消</el-button>
+            <el-button type="primary" :loading="creatingWorkspace" @@click="submitCreateWorkspace">创建</el-button>
+        </span>
+    </el-dialog>
     <el-dialog
         title="Harness 任务轨迹"
         :visible.sync="trajectoryDialogVisible"
@@ -660,7 +724,7 @@
 </div>
 
 @section scripts {
-    <script src="~/js/Admin/Pages/AdminChat/ChatLauncherMixin.js"></script>
+    <script src="~/js/Admin/Pages/AdminChat/ChatLauncherMixin.js" asp-append-version="true"></script>
     <script src="~/js/Admin/lib/marked.min.js"></script>
     <script src="~/js/Admin/dompurify.min.js"></script>
     <script>
@@ -672,5 +736,5 @@
             moduleUids: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ModuleUids ?? string.Empty))
         };
     </script>
-    <script src="~/js/Admin/Pages/AdminChat/Chat.js"></script>
+    <script src="~/js/Admin/Pages/AdminChat/Chat.js" asp-append-version="true"></script>
 }
