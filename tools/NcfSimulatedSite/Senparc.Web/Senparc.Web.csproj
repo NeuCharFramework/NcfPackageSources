@@ -179,4 +179,7 @@
 	  </None>
 	</ItemGroup>-->
 	<Import Project="$(MSBuildThisFileDirectory)..\..\..\src\Senparc.AI.AgentKernel.props" />
+  <ItemGroup>
+    <Compile Remove="App_Data/**/*.cs" />
+  </ItemGroup>
 </Project>

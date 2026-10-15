@@ -88,13 +88,6 @@
                             <i class="fa fa-magic"></i> {{ currentSessionTitle || ncfT('Admin.Home.AiTitle') }}
                         </h3>
                         <div class="chat-header-actions">
-                            <div v-if="currentSessionWorkspaceId" class="chat-workspace-context">
-                                <i class="fa fa-folder-open"></i>
-                                <span :title="currentSessionWorkspaceId">Workspace：{{ currentSessionWorkspaceName || currentSessionWorkspaceId }}</span>
-                                <el-tag size="mini" type="info">当前会话</el-tag>
-                                <el-tag v-if="currentSessionWorkspaceWriteEnabled" size="mini" type="warning">可写入</el-tag>
-                                <el-tag v-if="currentSessionWorkspaceCliEnabled" size="mini" type="danger">可执行 CLI</el-tag>
-                            </div>
                             <el-button
                                 size="mini"
                                 :type="isManageMode ? 'default' : 'primary'"
@@ -108,6 +101,15 @@
                                 @@click="openTrajectoryDialog">
                                 <i class="fa fa-road"></i>
                             </el-button>
+                        </div>
+                    </div>
+                    <div v-if="currentSessionWorkspaceId" class="chat-context-bar">
+                        <div class="chat-workspace-context">
+                            <i class="fa fa-folder-open"></i>
+                            <span :title="currentSessionWorkspaceId">Workspace：{{ currentSessionWorkspaceName || currentSessionWorkspaceId }}</span>
+                            <el-tag size="mini" type="info">当前会话</el-tag>
+                            <el-tag v-if="currentSessionWorkspaceWriteEnabled" size="mini" type="warning">可写入</el-tag>
+                            <el-tag v-if="currentSessionWorkspaceCliEnabled" size="mini" type="danger">可执行 CLI</el-tag>
                         </div>
                     </div>
                     <div v-if="recentTasks.length > 0" class="recent-task-strip" aria-live="polite">
@@ -124,7 +126,7 @@
                     </div>
                     <div class="chat-modules" v-if="currentSessionModules.length > 0">
                         <el-popover
-                            v-for="module in currentSessionModules"
+                            v-for="module in currentSessionModules.slice(0, 3)"
                             :key="module.id"
                             placement="bottom-start"
                             width="420"
@@ -182,10 +184,28 @@
                                 <span v-if="module.moduleVersion"> v{{ module.moduleVersion }}</span>
                             </el-tag>
                         </el-popover>
+                        <el-popover
+                            v-if="currentSessionModules.length > 3"
+                            placement="bottom-start"
+                            width="300"
+                            trigger="click">
+                            <div class="chat-context-popover-list">
+                                <div
+                                    v-for="module in currentSessionModules.slice(3)"
+                                    :key="`extra-module-${module.id}`"
+                                    class="chat-context-popover-item">
+                                    <i class="fa fa-cube"></i>
+                                    <span>{{ module.displayName || module.menuName || module.moduleName || module.xncfModuleUid }}</span>
+                                </div>
+                            </div>
+                            <el-button slot="reference" size="mini" plain class="chat-context-more">
+                                +{{ currentSessionModules.length - 3 }}
+                            </el-button>
+                        </el-popover>
                     </div>
                     <div class="chat-modules" v-if="currentSessionWorkflows.length > 0">
                         <el-popover
-                            v-for="workflow in currentSessionWorkflows"
+                            v-for="workflow in currentSessionWorkflows.slice(0, 2)"
                             :key="workflow.id"
                             placement="bottom-start"
                             width="360"
@@ -218,6 +238,24 @@
                                 <i class="fa fa-random"></i>
                                 {{ workflow.workflowName }}
                             </el-tag>
+                        </el-popover>
+                        <el-popover
+                            v-if="currentSessionWorkflows.length > 2"
+                            placement="bottom-start"
+                            width="300"
+                            trigger="click">
+                            <div class="chat-context-popover-list">
+                                <div
+                                    v-for="workflow in currentSessionWorkflows.slice(2)"
+                                    :key="`extra-workflow-${workflow.id}`"
+                                    class="chat-context-popover-item">
+                                    <i class="fa fa-random"></i>
+                                    <span>{{ workflow.workflowName }}</span>
+                                </div>
+                            </div>
+                            <el-button slot="reference" size="mini" plain class="chat-context-more">
+                                +{{ currentSessionWorkflows.length - 2 }}
+                            </el-button>
                         </el-popover>
                     </div>
                 </div>
