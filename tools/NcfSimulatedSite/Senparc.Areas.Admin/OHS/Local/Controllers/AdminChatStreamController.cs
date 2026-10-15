@@ -144,6 +144,9 @@ public sealed class AdminChatStreamController : ControllerBase
                     case "token":
                         await WriteEventAsync("token", new { text = liveEvent.Text }, cancellationToken);
                         break;
+                    case "usage":
+                        await WriteEventAsync("usage", liveEvent.Usage, cancellationToken);
+                        break;
                     case "assistant-phase":
                         await WriteEventAsync("assistant-phase", liveEvent, cancellationToken);
                         break;
@@ -220,7 +223,12 @@ public sealed class AdminChatStreamController : ControllerBase
                         Kind = "token",
                         Text = chunk
                     }),
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken,
+                    onUsage: usage => writer.TryWrite(new AdminChatLiveEvent
+                    {
+                        Kind = "usage",
+                        Usage = usage
+                    }));
                 return new AdminChatStreamResult
                 {
                     Response = result.response,

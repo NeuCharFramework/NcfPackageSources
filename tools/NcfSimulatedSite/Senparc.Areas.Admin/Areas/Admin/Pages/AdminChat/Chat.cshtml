@@ -88,27 +88,9 @@
                             <i class="fa fa-magic"></i> {{ currentSessionTitle || ncfT('Admin.Home.AiTitle') }}
                         </h3>
                         <div class="chat-header-actions">
-                            <el-select
-                                v-model="currentSessionAiModelId"
-                                size="mini"
-                                class="chat-ai-model-select"
-                                :loading="loadingAiModelOptions"
-                                @@change="handleCurrentSessionAiModelChange"
-                                placeholder="@AR["AdminChat.SelectModel"]">
-                                <el-option
-                                    v-for="item in aiModelOptions"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
-                                    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;">
-                                        <span>{{ item.name }}</span>
-                                        <span style="color:#999;font-size:12px;">{{ item.description }}</span>
-                                    </div>
-                                </el-option>
-                            </el-select>
                             <div v-if="currentSessionWorkspaceId" class="chat-workspace-context">
                                 <i class="fa fa-folder-open"></i>
-                                <span>Workspace：{{ currentSessionWorkspaceId }}</span>
+                                <span :title="currentSessionWorkspaceId">Workspace：{{ currentSessionWorkspaceName || currentSessionWorkspaceId }}</span>
                                 <el-tag size="mini" type="info">当前会话</el-tag>
                                 <el-tag v-if="currentSessionWorkspaceWriteEnabled" size="mini" type="warning">可写入</el-tag>
                                 <el-tag v-if="currentSessionWorkspaceCliEnabled" size="mini" type="danger">可执行 CLI</el-tag>
@@ -126,6 +108,18 @@
                                 @@click="openTrajectoryDialog">
                                 <i class="fa fa-road"></i>
                             </el-button>
+                        </div>
+                    </div>
+                    <div v-if="recentTasks.length > 0" class="recent-task-strip" aria-live="polite">
+                        <div
+                            v-for="task in recentTasks.slice().reverse()"
+                            :key="task.id"
+                            class="recent-task-item"
+                            :title="task.preview ? task.title + '：' + task.preview : task.title">
+                            <i :class="task.status === '执行中' || task.status === '生成中' ? 'fa fa-spinner fa-spin' : 'fa fa-check-circle'"></i>
+                            <strong>{{ task.title }}</strong>
+                            <span v-if="task.preview">：{{ task.preview }}</span>
+                            <em>{{ task.status }}</em>
                         </div>
                     </div>
                     <div class="chat-modules" v-if="currentSessionModules.length > 0">
@@ -372,6 +366,25 @@
                     <span class="input-tip">
                         <i class="fa fa-info-circle"></i> @AR["AdminChat.SendHint"]
                     </span>
+                    <el-select
+                        v-model="currentSessionAiModelId"
+                        size="mini"
+                        class="chat-ai-model-select input-ai-model-select"
+                        :loading="loadingAiModelOptions"
+                        :disabled="isSending"
+                        @@change="handleCurrentSessionAiModelChange"
+                        placeholder="@AR["AdminChat.SelectModel"]">
+                        <el-option
+                            v-for="item in aiModelOptions"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                            <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;">
+                                <span>{{ item.name }}</span>
+                                <span style="color:#999;font-size:12px;">{{ item.description }}</span>
+                            </div>
+                        </el-option>
+                    </el-select>
                     <el-radio-group v-model="chatMode" size="mini" class="chat-mode-toggle" :disabled="isSending">
                         <el-radio-button label="simple">
                             <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
@@ -397,6 +410,10 @@
                         @@click="sendMessage">
                         @AR["AdminChat.Send"]
                     </el-button>
+                </div>
+                <div class="chat-usage-status" :title="'以最近一次模型返回的 Usage 为准'">
+                    <i class="fa fa-bar-chart"></i>
+                    <span>{{ usageStatusText }}</span>
                 </div>
             </div>
 

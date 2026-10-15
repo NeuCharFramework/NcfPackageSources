@@ -57,6 +57,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
@@ -148,7 +149,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             int aiModelId = 0,
             Action<string> onChunk = null,
             AdminChatGenerationOptions generationOptions = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            Action<AITokenUsageSnapshot> onUsage = null)
         {
             var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
 
@@ -255,7 +257,8 @@ namespace Senparc.Areas.Admin.Domain.Services
                     },
                     cancellationToken,
                     aiModelService,
-                    modelIdentifier);
+                    modelIdentifier,
+                    onUsage);
             }
 
             var result = responseText?.Trim() ?? string.Empty;
@@ -273,6 +276,53 @@ namespace Senparc.Areas.Admin.Domain.Services
             }
 
             return (result, modelIdentifier);
+        }
+
+        /// <summary>
+        /// 根据首条用户消息生成简短会话标题。仅使用受限输入和输出，避免额外消耗过多 Token。
+        /// </summary>
+        public async Task<string> GenerateSessionTitleAsync(
+            string userMessage,
+            int aiModelId = 0,
+            CancellationToken cancellationToken = default)
+        {
+            var source = (userMessage ?? string.Empty).Trim();
+            if (source.Length > 600)
+            {
+                source = source.Substring(0, 600);
+            }
+
+            if (source.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            var (setting, modelIdentifier) = await ResolveChatSettingAsync(aiModelId);
+            var handler = new AgentAiHandler(setting);
+            var runner = await handler.IWantTo(setting)
+                .ConfigChatModel("AdminChatTitle", new ChatClientAgentOptions
+                {
+                    ChatOptions = new ChatOptions
+                    {
+                        Instructions = "你是会话标题生成器。根据用户需求生成一个简洁、准确的中文标题。只返回标题本身，不要引号、编号、解释或 Markdown，最多 20 个汉字。",
+                        MaxOutputTokens = 32,
+                        Temperature = 0.2f,
+                        TopP = 0.8f
+                    }
+                })
+                .BuildKernelWithAgentSessionAsync();
+
+            var prompt = $"用户需求：\n{source}\n\n请输出标题：";
+            var aiModelService = _serviceProvider.GetService<AIModelService>();
+            var result = aiModelService == null
+                ? await runner.RunChatAsync(prompt)
+                : await aiModelService.RunChatWithUsageAsync(
+                    runner,
+                    prompt,
+                    modelAlias: modelIdentifier,
+                    source: "AdminChat.GenerateTitle");
+
+            return SanitizeSessionTitle(result?.OutputString);
         }
 
         /// <summary>
@@ -749,6 +799,13 @@ namespace Senparc.Areas.Admin.Domain.Services
                         && usageContent.Details != null)
                     {
                         usage = usageContent.Details;
+                        onLiveEvent?.Invoke(new AdminChatLiveEvent
+                        {
+                            TrajectoryId = trajectory.Id,
+                            Kind = "usage",
+                            Usage = AIModelService.BuildUsageSnapshot(usageContent.Details),
+                            PendingApprovals = pendingApprovals.ToList()
+                        });
                     }
 
                     if (!string.IsNullOrEmpty(update.Text))
@@ -1354,13 +1411,25 @@ namespace Senparc.Areas.Admin.Domain.Services
             Action<AgentResponseUpdate> onUpdate,
             CancellationToken cancellationToken,
             AIModelService aiModelService,
-            string modelAlias)
+            string modelAlias,
+            Action<AITokenUsageSnapshot> onUsage = null)
         {
             var session = runner?.Kernel?.AgentSession;
 
             async Task<string> RunStreamingAsync(AgentSession agentSession)
             {
                 var output = new StringBuilder();
+                void ProcessUpdate(AgentResponseUpdate update)
+                {
+                    if (update?.Contents?.FirstOrDefault(z => z is UsageContent) is UsageContent usageContent
+                        && usageContent.Details != null)
+                    {
+                        onUsage?.Invoke(AIModelService.BuildUsageSnapshot(usageContent.Details));
+                    }
+
+                    onUpdate?.Invoke(update);
+                }
+
                 var updates = aiModelService == null
                     ? await CollectChatStreamingUpdatesAsync(runner, prompt, agentSession, cancellationToken)
                     : await aiModelService.RunChatStreamingWithUsageAsync(
@@ -1369,7 +1438,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                         agentSession,
                         options: null,
                         cancellationToken: cancellationToken,
-                        onUpdate: onUpdate,
+                        onUpdate: ProcessUpdate,
                         modelAlias: modelAlias,
                         source: "AdminChat.GenerateResponse");
                 foreach (var update in updates)
@@ -1381,7 +1450,7 @@ namespace Senparc.Areas.Admin.Domain.Services
 
                     if (aiModelService == null)
                     {
-                        onUpdate?.Invoke(update);
+                        ProcessUpdate(update);
                     }
                 }
 
@@ -1400,6 +1469,21 @@ namespace Senparc.Areas.Admin.Domain.Services
             {
                 return await RunStreamingAsync(null);
             }
+        }
+
+        private static string SanitizeSessionTitle(string title)
+        {
+            var result = (title ?? string.Empty)
+                .Replace("\r", " ")
+                .Replace("\n", " ")
+                .Trim()
+                .Trim('"', '\'', '“', '”', '‘', '’', '。', '：', ':');
+            if (result.Length > 20)
+            {
+                result = result.Substring(0, 20).TrimEnd() + "…";
+            }
+
+            return result;
         }
 
         private static async Task<IReadOnlyList<AgentResponseUpdate>> CollectChatStreamingUpdatesAsync(

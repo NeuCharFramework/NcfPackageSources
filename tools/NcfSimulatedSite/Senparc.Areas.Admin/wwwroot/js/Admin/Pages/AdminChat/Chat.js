@@ -8,6 +8,7 @@
       currentSessionModules: [],
       currentSessionWorkflows: [],
       currentSessionWorkspaceId: '',
+      currentSessionWorkspaceName: '',
       currentSessionWorkspaceWriteEnabled: false,
       currentSessionWorkspaceCliEnabled: false,
       currentSessionAiModelId: 0,
@@ -39,6 +40,9 @@
       livePendingApprovals: [],
       liveTrajectoryId: 0,
       liveStatusText: '',
+      recentTasks: [],
+      activeTaskId: '',
+      latestUsage: null,
       pendingInitialSend: false,
       currentUserId: 0,
       autoScrollEnabled: true,
@@ -51,6 +55,13 @@
     };
   },
   computed: {
+    usageStatusText() {
+      if (!this.latestUsage || !this.hasUsage(this.latestUsage)) {
+        return 'Token：—';
+      }
+
+      return `Token：输入 ${this.formatTokenCount(this.latestUsage.inputTokens)} · 输出 ${this.formatTokenCount(this.latestUsage.outputTokens)} · 总计 ${this.formatTokenCount(this.latestUsage.totalTokens)}`;
+    },
     replayEvent() {
       return this.replayIndex >= 0 ? this.selectedTrajectoryEvents[this.replayIndex] || null : null;
     },
@@ -499,6 +510,7 @@
           this.currentSessionModules = session.modules || [];
           this.currentSessionWorkflows = session.workflows || [];
           this.currentSessionWorkspaceId = session.workspaceId || '';
+          this.currentSessionWorkspaceName = session.workspaceName || '';
           this.currentSessionWorkspaceWriteEnabled = !!session.workspaceWriteEnabled;
           this.currentSessionWorkspaceCliEnabled = !!session.workspaceCliEnabled;
           this.currentSessionAiModelId = this.getSessionAiModelId(this.currentSessionId);
@@ -528,6 +540,74 @@
       this.liveStatusText = '';
     },
 
+    createRecentTask(content) {
+      const taskId = `task-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      this.recentTasks = this.recentTasks.concat({
+        id: taskId,
+        title: this.compactTaskText(content, 42),
+        preview: '',
+        status: '执行中',
+        mode: this.chatMode
+      }).slice(-2);
+      this.activeTaskId = taskId;
+    },
+
+    updateActiveTask(changes) {
+      if (!this.activeTaskId) return;
+      const index = this.recentTasks.findIndex((task) => task.id === this.activeTaskId);
+      if (index < 0) return;
+      const current = this.recentTasks[index];
+      const next = Object.assign({}, current, changes, {
+        preview: changes.preview === undefined
+          ? current.preview
+          : this.compactTaskText(changes.preview, 120)
+      });
+      this.$set(this.recentTasks, index, next);
+    },
+
+    finishActiveTask(status) {
+      if (!this.activeTaskId) return;
+      this.updateActiveTask({ status });
+      this.activeTaskId = '';
+    },
+
+    clearRecentTasks() {
+      this.recentTasks = [];
+      this.activeTaskId = '';
+    },
+
+    compactTaskText(text, maxLength) {
+      const value = (text || '').replace(/\s+/g, ' ').trim();
+      if (!value) return '';
+      return value.length > maxLength ? value.slice(0, maxLength) + '…' : value;
+    },
+
+    hasUsage(usage) {
+      return usage && ['inputTokens', 'outputTokens', 'totalTokens']
+        .some((key) => Number(usage[key]) > 0);
+    },
+
+    formatTokenCount(value) {
+      const number = Number(value);
+      return Number.isFinite(number) && number >= 0 ? number.toLocaleString() : '0';
+    },
+
+    async generateSessionTitleAsync() {
+      if (!this.currentSessionId) return;
+      try {
+        const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GenerateSessionTitleAsync', {
+          sessionId: this.currentSessionId,
+          aiModelId: this.normalizeAiModelId(this.currentSessionAiModelId)
+        });
+        if (response.data && response.data.success && response.data.data && response.data.data.title) {
+          this.currentSessionTitle = response.data.data.title;
+          await this.loadSessionList();
+        }
+      } catch (error) {
+        console.error('异步生成会话标题失败:', error);
+      }
+    },
+
     handleLiveStreamEvent(eventName, payload, tempMessageId) {
       if (eventName === 'user-message') {
         const tempIndex = this.messageList.findIndex((item) => item.id === tempMessageId);
@@ -540,6 +620,12 @@
       if (eventName === 'token') {
         this.liveAssistantText += payload && payload.text ? payload.text : '';
         this.liveStatusText = '正在生成回答…';
+        this.updateActiveTask({ preview: this.liveAssistantText, status: '生成中' });
+        return;
+      }
+
+      if (eventName === 'usage') {
+        this.latestUsage = payload || null;
         return;
       }
 
@@ -550,6 +636,10 @@
         if (payload && payload.trajectoryEvent) {
           this.upsertLiveTrajectoryEvent(payload.trajectoryEvent);
           this.liveStatusText = '正在组织当前阶段…';
+          this.updateActiveTask({
+            preview: payload.trajectoryEvent.content || payload.text || '',
+            status: '生成中'
+          });
         }
         return;
       }
@@ -565,6 +655,12 @@
             this.liveTrajectoryEvents.push(payload.trajectoryEvent);
           }
           const eventType = payload.trajectoryEvent.eventType || '';
+          if (eventType === 'assistant.text') {
+            this.updateActiveTask({
+              preview: payload.trajectoryEvent.content || payload.text || '',
+              status: '生成中'
+            });
+          }
           this.liveStatusText = {
             'tool.call': '正在调用工具…',
             'tool.result': '正在整理工具结果…',
@@ -589,10 +685,12 @@
           payload.pendingApprovals = this.livePendingApprovals.slice();
           this.messageList.push(payload);
         }
+        this.finishActiveTask('已完成');
         return;
       }
 
       if (eventName === 'error') {
+        this.finishActiveTask('失败');
         throw new Error(payload && payload.message ? payload.message : '对话执行失败');
       }
     },
@@ -682,11 +780,13 @@
       }
 
       const messageContent = this.inputMessage.trim();
+      const isFirstGeneration = !this.messageList.some((message) => message.roleType === 1);
       this.inputMessage = '';
       this.isSending = true;
       this.isStopping = false;
       this.isAIResponding = true;
       this.resetLiveRun();
+      this.createRecentTask(messageContent);
       const requestController = typeof AbortController !== 'undefined'
         ? new AbortController()
         : null;
@@ -721,17 +821,22 @@
         );
         await this.loadSessionList();
         await this.loadTrajectoryList();
+        if (isFirstGeneration) {
+          this.generateSessionTitleAsync();
+        }
         this.$nextTick(() => this.scrollToBottom());
       } catch (error) {
         const wasAborted = (error && error.name === 'AbortError')
           || (requestController && requestController.signal.aborted);
         if (wasAborted) {
+          this.finishActiveTask('已终止');
           this.messageList = this.messageList.filter((item) => item.id !== tempMessageId);
           this.inputMessage = messageContent;
           await this.loadSessionDetail();
           await this.loadTrajectoryList();
           this.$message.info('本次请求已终止');
         } else {
+          this.finishActiveTask('失败');
           console.error('发送消息异常:', error);
           this.$message.error(ncfT('AdminChat.SendFailedRetry'));
           this.messageList = this.messageList.filter((item) => item.id !== tempMessageId);
@@ -775,8 +880,11 @@
       this.currentSessionModules = [];
       this.currentSessionWorkflows = [];
       this.currentSessionWorkspaceId = '';
+      this.currentSessionWorkspaceName = '';
       this.currentSessionWorkspaceWriteEnabled = false;
       this.currentSessionWorkspaceCliEnabled = false;
+      this.clearRecentTasks();
+      this.latestUsage = null;
       this.clearMessageSelection();
       this.isManageMode = false;
       await this.loadSessionDetail();
@@ -790,8 +898,11 @@
       this.currentSessionModules = [];
       this.currentSessionWorkflows = [];
       this.currentSessionWorkspaceId = '';
+      this.currentSessionWorkspaceName = '';
       this.currentSessionWorkspaceWriteEnabled = false;
       this.currentSessionWorkspaceCliEnabled = false;
+      this.clearRecentTasks();
+      this.latestUsage = null;
       this.messageList = [];
       this.inputMessage = '';
       this.chatInputText = '';
@@ -925,6 +1036,10 @@
                 this.currentSessionTitle = '';
                 this.currentSessionModules = [];
                 this.currentSessionWorkflows = [];
+                this.currentSessionWorkspaceId = '';
+                this.currentSessionWorkspaceName = '';
+                this.clearRecentTasks();
+                this.latestUsage = null;
               }
               
               await this.loadSessionList();
