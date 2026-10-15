@@ -258,11 +258,60 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 }
 
                 var (sessions, totalCount) = await _sessionService.GetUserActiveSessionsAsync(userId, pageIndex, pageSize);
+                var sessionDtos = sessions.Select(AdminChatSessionDto.CreateFromEntity).ToList();
+                await AttachWorkspaceNamesAsync(sessionDtos);
 
                 return new GetSessionListResponse
                 {
-                    Sessions = sessions.Select(AdminChatSessionDto.CreateFromEntity).ToList(),
+                    Sessions = sessionDtos,
                     TotalCount = totalCount
+                };
+            });
+        }
+
+        /// <summary>
+        /// 异步生成首轮会话标题。标题生成只读取首条用户消息，不阻塞正常回复流。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<GenerateSessionTitleResponse>> GenerateSessionTitleAsync(
+            [FromBody] GenerateSessionTitleRequest request)
+        {
+            return await this.GetResponseAsync<AppResponseBase<GenerateSessionTitleResponse>, GenerateSessionTitleResponse>(async (response, logger) =>
+            {
+                var userId = GetCurrentAdminUserInfoId();
+                if (userId <= 0)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
+                }
+
+                var session = await _sessionService.GetSessionByIdAsync(request?.SessionId ?? 0, userId);
+                if (session == null)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
+                }
+
+                var (messages, _) = await _messageService.GetSessionMessagesAsync(session.Id);
+                var firstUserMessage = messages
+                    .Where(message => message.RoleType == ChatMessageRoleType.User)
+                    .OrderBy(message => message.Sequence)
+                    .FirstOrDefault();
+                if (firstUserMessage == null)
+                {
+                    return new GenerateSessionTitleResponse { Title = session.Title };
+                }
+
+                var title = await _chatAiService.GenerateSessionTitleAsync(
+                    firstUserMessage.Content,
+                    request?.AiModelId ?? 0);
+                if (!string.IsNullOrWhiteSpace(title))
+                {
+                    await _sessionService.UpdateSessionTitleAsync(session.Id, userId, title);
+                }
+
+                logger.Append($"生成会话标题: SessionId={session.Id}, UserId={userId}");
+                return new GenerateSessionTitleResponse
+                {
+                    Title = string.IsNullOrWhiteSpace(title) ? session.Title : title
                 };
             });
         }
@@ -294,6 +343,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var workflows = await _sessionWorkflowService.GetSessionWorkflowsAsync(sessionId);
 
                 var sessionDto = AdminChatSessionDto.CreateFromEntity(session);
+                await AttachWorkspaceNamesAsync(new[] { sessionDto });
                 sessionDto.Messages = messages.Select(AdminChatMessageDto.CreateFromEntity).ToList();
                 sessionDto.Modules = modules.Select(z => MapModuleDtoWithRegisterInfo(AdminChatSessionModuleDto.CreateFromEntity(z))).ToList();
                 sessionDto.Workflows = await MapWorkflowDtosAsync(workflows, userId).ConfigureAwait(false);
@@ -389,6 +439,32 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         #endregion
+
+        private async Task AttachWorkspaceNamesAsync(IEnumerable<AdminChatSessionDto> sessions)
+        {
+            if (_workspaceStorage == null || !IsCurrentAdminSuperAdmin())
+            {
+                return;
+            }
+
+            var items = sessions?.Where(session => !string.IsNullOrWhiteSpace(session.WorkspaceId)).ToList();
+            if (items == null || items.Count == 0)
+            {
+                return;
+            }
+
+            var workspaces = await _workspaceStorage.ListWorkspacesAsync().ConfigureAwait(false);
+            var names = workspaces
+                .Where(workspace => workspace != null && !string.IsNullOrWhiteSpace(workspace.Id))
+                .ToDictionary(workspace => workspace.Id, workspace => workspace.Name, StringComparer.OrdinalIgnoreCase);
+            foreach (var session in items)
+            {
+                if (names.TryGetValue(session.WorkspaceId, out var name))
+                {
+                    session.WorkspaceName = name;
+                }
+            }
+        }
 
         #region 消息管理
 
@@ -1257,6 +1333,17 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     public class CreateWorkspaceRequest
     {
         public string Name { get; set; }
+    }
+
+    public class GenerateSessionTitleRequest
+    {
+        public int SessionId { get; set; }
+        public int AiModelId { get; set; }
+    }
+
+    public class GenerateSessionTitleResponse
+    {
+        public string Title { get; set; }
     }
 
     public class WorkspaceOptionDto

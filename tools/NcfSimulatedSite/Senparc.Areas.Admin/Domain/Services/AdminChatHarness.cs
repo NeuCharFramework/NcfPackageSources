@@ -26,6 +26,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
+using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
@@ -290,6 +291,7 @@ namespace Senparc.Areas.Admin.Domain.Services
         public int TrajectoryId { get; set; }
         public string Kind { get; set; }
         public string Text { get; set; }
+        public AITokenUsageSnapshot Usage { get; set; }
         public AdminChatTrajectoryEventDto TrajectoryEvent { get; set; }
         public IReadOnlyList<AdminChatApprovalRequestDto> PendingApprovals { get; set; } = Array.Empty<AdminChatApprovalRequestDto>();
     }
