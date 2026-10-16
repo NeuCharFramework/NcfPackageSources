@@ -1,9 +1,11 @@
 using System.Text.Json;
+using System.ComponentModel;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Senparc.Xncf.Workspace.Abstractions;
 using System.Diagnostics;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Senparc.Xncf.Workspace;
@@ -205,6 +207,146 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         return Task.CompletedTask;
     }
 
+    public async Task<IReadOnlyList<WorkspaceSearchResult>> SearchAsync(
+        string workspaceId,
+        WorkspaceSearchRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        if (string.IsNullOrWhiteSpace(request.NameQuery)
+            && string.IsNullOrWhiteSpace(request.ContentQuery))
+        {
+            throw new ArgumentException("At least one search query is required.", nameof(request));
+        }
+
+        var workspaceRoot = GetWorkspaceRoot(workspaceId);
+        EnsureWorkspaceExists(workspaceRoot);
+        var searchRoot = ResolveDirectory(workspaceRoot, request.RelativePath);
+        EnsureNoSymlink(workspaceRoot, searchRoot);
+        var comparison = request.CaseSensitive
+            ? StringComparison.Ordinal
+            : StringComparison.OrdinalIgnoreCase;
+        var resultLimit = Math.Clamp(request.MaxResults, 1, _options.MaxSearchResults);
+        var fileLimit = Math.Max(1, _options.MaxSearchFiles);
+        var results = new List<WorkspaceSearchResult>();
+        var pending = new Stack<string>();
+        pending.Push(searchRoot);
+        var inspectedFiles = 0;
+
+        while (pending.Count > 0 && results.Count < resultLimit && inspectedFiles < fileLimit)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var directory = pending.Pop();
+            foreach (var path in Directory.EnumerateFileSystemEntries(directory)
+                         .OrderBy(item => item, StringComparer.OrdinalIgnoreCase))
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var attributes = File.GetAttributes(path);
+                if (attributes.HasFlag(FileAttributes.ReparsePoint))
+                {
+                    continue;
+                }
+
+                if (Directory.Exists(path))
+                {
+                    var directoryName = Path.GetFileName(path);
+                    if (!string.Equals(directoryName, ".git", comparison)
+                        && !string.Equals(directoryName, ".venv", comparison)
+                        && !string.Equals(directoryName, ".workspace", comparison))
+                    {
+                        pending.Push(path);
+                    }
+
+                    continue;
+                }
+
+                inspectedFiles++;
+                var relativePath = Path.GetRelativePath(workspaceRoot, path)
+                    .Replace(Path.DirectorySeparatorChar, '/');
+                var fileNameMatch = !string.IsNullOrWhiteSpace(request.NameQuery)
+                    && Path.GetFileName(path).Contains(request.NameQuery, comparison);
+                if (fileNameMatch)
+                {
+                    results.Add(new WorkspaceSearchResult(relativePath, "fileName", null, Path.GetFileName(path)));
+                    if (results.Count >= resultLimit)
+                    {
+                        break;
+                    }
+                }
+
+                if (string.IsNullOrWhiteSpace(request.ContentQuery)
+                    || new FileInfo(path).Length > _options.MaxSearchFileBytes)
+                {
+                    continue;
+                }
+
+                using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using var reader = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+                var lineNumber = 0;
+                while (await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false) is { } line)
+                {
+                    lineNumber++;
+                    if (!line.Contains(request.ContentQuery, comparison))
+                    {
+                        continue;
+                    }
+
+                    results.Add(new WorkspaceSearchResult(
+                        relativePath,
+                        "content",
+                        lineNumber,
+                        line.Length <= 500 ? line : line[..500] + "…"));
+                    if (results.Count >= resultLimit)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return results;
+    }
+
+    public async Task<WorkspacePatchResult> ApplyPatchAsync(
+        string workspaceId,
+        WorkspacePatchRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        if (string.IsNullOrEmpty(request.OldText))
+        {
+            throw new ArgumentException("Patch old text cannot be empty.", nameof(request));
+        }
+
+        var currentText = await ReadFileAsync(
+            workspaceId,
+            request.RelativePath,
+            _options.MaxFileReadBytes,
+            cancellationToken).ConfigureAwait(false);
+        if (!string.IsNullOrWhiteSpace(request.ExpectedSha256))
+        {
+            var currentHash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(currentText)));
+            if (!string.Equals(currentHash, request.ExpectedSha256, StringComparison.OrdinalIgnoreCase))
+            {
+                return new WorkspacePatchResult(false, 0, "补丁未应用：文件内容已变化，请重新读取文件后再生成补丁。");
+            }
+        }
+
+        var replacementCount = CountOccurrences(currentText, request.OldText);
+        var expectedReplacements = Math.Max(1, request.ExpectedReplacements);
+        if (replacementCount != expectedReplacements)
+        {
+            return new WorkspacePatchResult(
+                false,
+                replacementCount,
+                $"补丁未应用：找到 {replacementCount} 处匹配，但预期为 {expectedReplacements} 处。");
+        }
+
+        var updatedText = currentText.Replace(request.OldText, request.NewText, StringComparison.Ordinal);
+        await WriteFileAsync(workspaceId, request.RelativePath, updatedText, cancellationToken).ConfigureAwait(false);
+        return new WorkspacePatchResult(true, replacementCount, "补丁应用成功。");
+    }
+
     public async Task<WorkspaceCommandResult> ExecuteCommandAsync(
         string workspaceId,
         WorkspaceCommandRequest request,
@@ -227,56 +369,73 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             throw new DirectoryNotFoundException("Workspace working directory does not exist.");
         }
 
-        using var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = command,
-                WorkingDirectory = workingDirectory,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            }
-        };
-        foreach (var argument in request.Arguments ?? Array.Empty<string>())
-        {
-            process.StartInfo.ArgumentList.Add(argument ?? string.Empty);
-        }
-
-        if (!process.Start())
-        {
-            throw new InvalidOperationException("Workspace command could not be started.");
-        }
-
-        var outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
-        var errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
-        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        timeoutCts.CancelAfter(TimeSpan.FromSeconds(Math.Clamp(_options.CommandTimeoutSeconds, 1, 600)));
-        var timedOut = false;
-        try
-        {
-            await process.WaitForExitAsync(timeoutCts.Token).ConfigureAwait(false);
-        }
-        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
-        {
-            timedOut = true;
-            try { process.Kill(entireProcessTree: true); } catch { }
-        }
-
-        var output = await outputTask.ConfigureAwait(false);
-        var error = await errorTask.ConfigureAwait(false);
-        _logger.LogInformation(
-            "Workspace command completed: {WorkspaceId}, Command={Command}, ExitCode={ExitCode}, TimedOut={TimedOut}",
+        return await ExecuteProcessAsync(
             workspaceId,
             command,
-            timedOut ? -1 : process.ExitCode,
-            timedOut);
-        return new WorkspaceCommandResult(
-            timedOut ? -1 : process.ExitCode,
-            LimitOutput(output),
-            LimitOutput(error),
-            timedOut);
+            request.Arguments ?? Array.Empty<string>(),
+            workingDirectory,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<WorkspaceCommandResult> ExecutePythonAsync(
+        string workspaceId,
+        WorkspacePythonRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var workspaceRoot = GetWorkspaceRoot(workspaceId);
+        EnsureWorkspaceExists(workspaceRoot);
+
+        var scriptPath = ResolvePath(workspaceRoot, request.ScriptPath);
+        EnsureNoSymlink(workspaceRoot, scriptPath);
+        if (!File.Exists(scriptPath))
+        {
+            throw new FileNotFoundException("Python script does not exist.", request.ScriptPath);
+        }
+
+        if (!string.Equals(Path.GetExtension(scriptPath), ".py", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("Python execution requires a .py script.");
+        }
+
+        var workingDirectory = ResolvePath(workspaceRoot, request.WorkingDirectory);
+        EnsureNoSymlink(workspaceRoot, workingDirectory);
+        if (!Directory.Exists(workingDirectory))
+        {
+            throw new DirectoryNotFoundException("Workspace working directory does not exist.");
+        }
+
+        var interpreter = ResolvePythonInterpreter(workspaceRoot);
+        var arguments = new List<string>();
+        if (interpreter.UsesLauncher)
+        {
+            arguments.Add(interpreter.Module);
+        }
+
+        arguments.Add(scriptPath);
+        arguments.AddRange(request.Arguments ?? Array.Empty<string>());
+        try
+        {
+            return await ExecuteProcessAsync(
+                workspaceId,
+                interpreter.FileName,
+                arguments,
+                workingDirectory,
+                cancellationToken).ConfigureAwait(false);
+        }
+        catch (Win32Exception exception)
+        {
+            _logger.LogWarning(
+                exception,
+                "Python interpreter could not be started: WorkspaceId={WorkspaceId}, Interpreter={Interpreter}",
+                workspaceId,
+                interpreter.FileName);
+            return new WorkspaceCommandResult(
+                -1,
+                string.Empty,
+                $"Python interpreter could not be started: {exception.Message}",
+                false);
+        }
     }
 
     public Task DeleteAsync(
@@ -388,6 +547,107 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
     {
         var limit = Math.Max(1, _options.MaxCommandOutputBytes);
         return value.Length <= limit ? value : value[..limit] + Environment.NewLine + "[output truncated]";
+    }
+
+    private static int CountOccurrences(string text, string value)
+    {
+        var count = 0;
+        var index = 0;
+        while ((index = text.IndexOf(value, index, StringComparison.Ordinal)) >= 0)
+        {
+            count++;
+            index += value.Length;
+        }
+
+        return count;
+    }
+
+    private (string FileName, bool UsesLauncher, string Module) ResolvePythonInterpreter(string workspaceRoot)
+    {
+        var virtualEnvironmentRoot = Path.Combine(workspaceRoot, ".venv");
+        var virtualEnvironmentPath = OperatingSystem.IsWindows()
+            ? Path.Combine(workspaceRoot, ".venv", "Scripts", "python.exe")
+            : Path.Combine(workspaceRoot, ".venv", "bin", "python");
+        if (Directory.Exists(virtualEnvironmentRoot)
+            && !File.GetAttributes(virtualEnvironmentRoot).HasFlag(FileAttributes.ReparsePoint)
+            && File.Exists(virtualEnvironmentPath)
+            && !File.GetAttributes(virtualEnvironmentPath).HasFlag(FileAttributes.ReparsePoint))
+        {
+            return (virtualEnvironmentPath, false, string.Empty);
+        }
+
+        var candidates = OperatingSystem.IsWindows()
+            ? new[] { "py", "python" }
+            : new[] { "python3", "python" };
+        var interpreter = candidates.FirstOrDefault(candidate =>
+            _options.AllowedCommands.Any(allowed =>
+                string.Equals(allowed, candidate, StringComparison.OrdinalIgnoreCase)));
+        if (interpreter == null)
+        {
+            throw new InvalidOperationException("No allowed Python interpreter is configured for this Workspace.");
+        }
+
+        var usesLauncher = string.Equals(interpreter, "py", StringComparison.OrdinalIgnoreCase);
+        return (interpreter, usesLauncher, usesLauncher ? "-3" : string.Empty);
+    }
+
+    private async Task<WorkspaceCommandResult> ExecuteProcessAsync(
+        string workspaceId,
+        string fileName,
+        IReadOnlyList<string> arguments,
+        string workingDirectory,
+        CancellationToken cancellationToken)
+    {
+        using var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = fileName,
+                WorkingDirectory = workingDirectory,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            }
+        };
+        foreach (var argument in arguments)
+        {
+            process.StartInfo.ArgumentList.Add(argument ?? string.Empty);
+        }
+
+        if (!process.Start())
+        {
+            throw new InvalidOperationException("Workspace command could not be started.");
+        }
+
+        var outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
+        var errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
+        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutCts.CancelAfter(TimeSpan.FromSeconds(Math.Clamp(_options.CommandTimeoutSeconds, 1, 600)));
+        var timedOut = false;
+        try
+        {
+            await process.WaitForExitAsync(timeoutCts.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            timedOut = true;
+            try { process.Kill(entireProcessTree: true); } catch { }
+        }
+
+        var output = await outputTask.ConfigureAwait(false);
+        var error = await errorTask.ConfigureAwait(false);
+        _logger.LogInformation(
+            "Workspace command completed: {WorkspaceId}, Command={Command}, ExitCode={ExitCode}, TimedOut={TimedOut}",
+            workspaceId,
+            fileName,
+            timedOut ? -1 : process.ExitCode,
+            timedOut);
+        return new WorkspaceCommandResult(
+            timedOut ? -1 : process.ExitCode,
+            LimitOutput(output),
+            LimitOutput(error),
+            timedOut);
     }
 
     private static long GetWorkspaceBytes(string workspaceRoot)

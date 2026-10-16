@@ -1156,7 +1156,20 @@
     formatMessageContent(content) {
       if (!content) return '';
 
-      const rendered = marked.parse(content);
+      const normalizedContent = content.replace(
+        /```([^\r\n`]+)(?:\r?\n|(?=\s*```)|$)/g,
+        (fullMatch, header) => {
+          const match = header.trim().match(/^([A-Za-z0-9_+#.-]+)(?:\s+([\s\S]*))?$/);
+          if (!match) return fullMatch;
+
+          const language = match[1];
+          const inlineCode = match[2] ? match[2].trim() : '';
+          return inlineCode
+            ? `\`\`\`${language}\n${inlineCode}\n`
+            : `\`\`\`${language}\n`;
+        }
+      );
+      const rendered = marked.parse(normalizedContent);
       return typeof DOMPurify === 'undefined' ? '' : DOMPurify.sanitize(rendered);
     }
   }

@@ -36,6 +36,7 @@ using System.Reflection;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
+using Senparc.Xncf.PromptRange.Abstractions.Skills;
 
 namespace Senparc.Xncf.PromptRange
 {
@@ -125,6 +126,10 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptResultService>();
             services.AddScoped<PromptResultChatService>();
             services.AddScoped<LlModelService>();
+            services.AddScoped<PromptRangeSkillService>();
+            services.AddScoped<ISkillCatalog>(serviceProvider => serviceProvider.GetRequiredService<PromptRangeSkillService>());
+            services.AddScoped<ISkillExecutor>(serviceProvider => serviceProvider.GetRequiredService<PromptRangeSkillService>());
+            services.AddScoped<ISkillPackageService>(serviceProvider => serviceProvider.GetRequiredService<PromptRangeSkillService>());
             services.AddSingleton<PromptResultStreamHub>();
 
             services.AddAutoMapper(z =>
@@ -144,7 +149,6 @@ namespace Senparc.Xncf.PromptRange
         }
     }
 }
-
 
 
 
