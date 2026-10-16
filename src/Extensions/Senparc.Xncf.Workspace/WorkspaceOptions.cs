@@ -18,6 +18,12 @@ public sealed class WorkspaceOptions
 
     public int MaxCommandOutputBytes { get; set; } = 2 * 1024 * 1024;
 
+    public int MaxSearchFileBytes { get; set; } = 4 * 1024 * 1024;
+
+    public int MaxSearchFiles { get; set; } = 10_000;
+
+    public int MaxSearchResults { get; set; } = 200;
+
     public string[] AllowedCommands { get; set; } =
-        new[] { "dotnet", "git", "node", "npm", "python", "pytest" };
+        new[] { "dotnet", "git", "node", "npm", "python", "python3", "py", "pytest" };
 }

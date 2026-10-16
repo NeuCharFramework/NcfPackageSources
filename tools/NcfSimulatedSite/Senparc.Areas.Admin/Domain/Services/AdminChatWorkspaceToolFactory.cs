@@ -20,18 +20,24 @@ internal static class AdminChatWorkspaceToolFactory
         var functions = new List<AIFunction>
         {
             Create(target, nameof(WorkspaceToolTarget.ListAsync), "workspace_list", "列出当前 Workspace 内的文件和目录。"),
-            Create(target, nameof(WorkspaceToolTarget.ReadAsync), "workspace_read", "读取当前 Workspace 内的文本文件。")
+            Create(target, nameof(WorkspaceToolTarget.ReadAsync), "workspace_read", "读取当前 Workspace 内的文本文件。"),
+            Create(target, nameof(WorkspaceToolTarget.SearchAsync), "workspace_search", "在当前 Workspace 中按文件名和文件内容搜索，并返回匹配文件、行号和预览。")
         };
 
         if (allowWrite)
         {
             functions.Add(Create(target, nameof(WorkspaceToolTarget.WriteAsync), "workspace_write", "在当前 Workspace 内写入文本文件。"));
             functions.Add(Create(target, nameof(WorkspaceToolTarget.MkdirAsync), "workspace_mkdir", "在当前 Workspace 内创建目录。"));
+            functions.Add(Create(target, nameof(WorkspaceToolTarget.PatchAsync), "workspace_patch", "对当前 Workspace 内的文件应用精确文本补丁；匹配数量不符合预期时不会写入。"));
         }
 
         if (allowCli)
         {
-            functions.Add(Create(target, nameof(WorkspaceToolTarget.ExecuteAsync), "workspace_execute_cli", "在当前 Workspace 内执行白名单 CLI 命令。"));
+            functions.Add(Create(
+                target,
+                nameof(WorkspaceToolTarget.ExecutePythonAsync),
+                "workspace_execute_python",
+                "在当前 Workspace 内执行 Python .py 文件。执行器优先使用 Workspace 内的 .venv，并返回真实退出码、标准输出和错误输出。"));
         }
 
         return functions;
@@ -70,6 +76,19 @@ internal static class AdminChatWorkspaceToolFactory
             return _storage.ReadFileAsync(_workspaceId, relativePath);
         }
 
+        public async Task<string> SearchAsync(
+            string nameQuery = "",
+            string contentQuery = "",
+            string relativePath = "",
+            bool caseSensitive = false,
+            int maxResults = 100)
+        {
+            var results = await _storage.SearchAsync(
+                _workspaceId,
+                new WorkspaceSearchRequest(nameQuery, contentQuery, relativePath, caseSensitive, maxResults)).ConfigureAwait(false);
+            return JsonSerializer.Serialize(results);
+        }
+
         public async Task<string> WriteAsync(string relativePath, string content)
         {
             EnsureWrite();
@@ -84,16 +103,38 @@ internal static class AdminChatWorkspaceToolFactory
             return "目录创建成功。";
         }
 
-        public async Task<string> ExecuteAsync(string command, string[] arguments, string workingDirectory = "")
+        public async Task<string> PatchAsync(
+            string relativePath,
+            string oldText,
+            string newText,
+            int expectedReplacements = 1,
+            string expectedSha256 = "")
+        {
+            EnsureWrite();
+            var result = await _storage.ApplyPatchAsync(
+                _workspaceId,
+                new WorkspacePatchRequest(
+                    relativePath,
+                    oldText,
+                    newText,
+                    expectedReplacements,
+                    expectedSha256)).ConfigureAwait(false);
+            return JsonSerializer.Serialize(result);
+        }
+
+        public async Task<string> ExecutePythonAsync(
+            string scriptPath,
+            string[] arguments = null,
+            string workingDirectory = "")
         {
             if (!_allowCli)
             {
-                throw new InvalidOperationException("当前会话未启用 Workspace CLI 权限。");
+                throw new InvalidOperationException("当前会话未启用 Workspace Python 执行权限。");
             }
 
-            var result = await _storage.ExecuteCommandAsync(
+            var result = await _storage.ExecutePythonAsync(
                 _workspaceId,
-                new WorkspaceCommandRequest(command, arguments ?? Array.Empty<string>(), workingDirectory)).ConfigureAwait(false);
+                new WorkspacePythonRequest(scriptPath, arguments ?? Array.Empty<string>(), workingDirectory)).ConfigureAwait(false);
             return JsonSerializer.Serialize(result);
         }
 

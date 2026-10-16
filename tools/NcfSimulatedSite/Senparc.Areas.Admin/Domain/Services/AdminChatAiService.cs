@@ -77,6 +77,7 @@ using Senparc.AI.AgentKernel.IWantToExtensions;
 using Senparc.AI.AgentKernel.Extensions;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.Workspace.Abstractions;
+using Senparc.Xncf.PromptRange.Abstractions.Skills;
 using MafFunctionCallContent = Microsoft.Extensions.AI.FunctionCallContent;
 using MafFunctionResultContent = Microsoft.Extensions.AI.FunctionResultContent;
 using MafTextContent = Microsoft.Extensions.AI.TextContent;
@@ -729,7 +730,10 @@ namespace Senparc.Areas.Admin.Domain.Services
         {
             var chatOptions = new ChatOptions
             {
-                Instructions = BuildSystemMessage(modules),
+                Instructions = BuildSystemMessage(modules)
+                    + "\n\nWorkspace 操作规则：先用 workspace_search 按文件名或内容定位目标，不要猜测路径；读取目标文件后，局部修改必须优先使用 workspace_patch，只有新文件或完整重写确有必要时才使用 workspace_write。workspace_patch 的 oldText 必须来自最近一次读取，expectedReplacements 应准确填写；工具返回冲突或未应用时不得声称修改成功，必须重新读取并重新生成补丁。"
+                    + "\n执行 Python 时只能调用 workspace_execute_python；不要生成或尝试 cmd、powershell、bash、sh 或其他通用 Shell 命令。"
+                    + "\n如果当前工具列表中没有 workspace_execute_python，必须明确说明当前会话没有绑定可执行 Workspace，不能声称已经运行脚本。",
                 Tools = functions != null && functions.Count > 0
                     ? functions.Cast<AITool>().ToList()
                     : null,
@@ -1248,6 +1252,18 @@ namespace Senparc.Areas.Admin.Domain.Services
             if (functionInvocationEnabled)
             {
                 importedPluginNames.Add("ModuleAssistant");
+                var skillCatalog = _serviceProvider.GetService<ISkillCatalog>();
+                var skillExecutor = _serviceProvider.GetService<ISkillExecutor>();
+                if (skillCatalog != null && skillExecutor != null)
+                {
+                    var skillPackageService = _serviceProvider.GetService<ISkillPackageService>();
+                    if (skillPackageService != null)
+                    {
+                        aiFunctions.AddRange(agentAiHandler.GetAITools(
+                            new AdminChatSkillPlugin(skillCatalog, skillExecutor, skillPackageService)));
+                    }
+                    importedPluginNames.Add("AdminChatSkillPlugin");
+                }
             }
 
             // 自动加载会话关联模块中的 FunctionRender（[#sym:FunctionRender]）插件对象
@@ -1617,6 +1633,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var sb = new StringBuilder();
             sb.AppendLine("你是 NeuCharFramework 管理后台首页中的 AI 智能助手。");
             sb.AppendLine("请使用简洁、准确、可执行的中文回答用户问题。若信息不足，请明确指出缺失信息。\n");
+            sb.AppendLine("如果当前会话提供 Workspace 工具：先用 workspace_search 按文件名或内容定位目标，不要猜测路径；读取目标文件后，局部修改优先使用 workspace_patch，只有新文件或确需完整重写时才使用 workspace_write。补丁返回冲突或未应用时，不得声称修改成功。");
 
             if (modules != null && modules.Any())
             {
