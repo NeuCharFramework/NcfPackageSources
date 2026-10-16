@@ -112,18 +112,6 @@
                             <el-tag v-if="currentSessionWorkspaceCliEnabled" size="mini" type="danger">可执行 CLI</el-tag>
                         </div>
                     </div>
-                    <div v-if="recentTasks.length > 0" class="recent-task-strip" aria-live="polite">
-                        <div
-                            v-for="task in recentTasks.slice().reverse()"
-                            :key="task.id"
-                            class="recent-task-item"
-                            :title="task.preview ? task.title + '：' + task.preview : task.title">
-                            <i :class="task.status === '执行中' || task.status === '生成中' ? 'fa fa-spinner fa-spin' : 'fa fa-check-circle'"></i>
-                            <strong>{{ task.title }}</strong>
-                            <span v-if="task.preview">：{{ task.preview }}</span>
-                            <em>{{ task.status }}</em>
-                        </div>
-                    </div>
                     <div class="chat-modules" v-if="currentSessionModules.length > 0">
                         <el-popover
                             v-for="module in currentSessionModules.slice(0, 3)"
@@ -354,7 +342,7 @@
                     <p>@AR["AdminChat.StartPrompt"]</p>
                 </div>
 
-                <div v-if="isAIResponding" class="message-item message-assistant ai-thinking live-run-panel">
+                <div v-if="isAIResponding" :class="['message-item', 'message-assistant', 'ai-thinking', 'live-run-panel', { 'is-generating': !!liveAssistantText }]">
                     <div class="message-avatar">
                         <i class="fa fa-robot"></i>
                     </div>
@@ -372,8 +360,24 @@
                             </span>
                             @AR["AdminChat.Thinking"]
                         </div>
+                        <div v-if="recentTasks.length > 0" class="live-task-list" aria-live="polite">
+                            <div
+                                v-for="task in recentTasks.slice().reverse()"
+                                :key="task.id"
+                                class="live-task-item"
+                                :title="task.preview ? task.title + '：' + task.preview : task.title">
+                                <i :class="task.status === '执行中' || task.status === '生成中' ? 'fa fa-spinner fa-spin' : 'fa fa-check-circle'"></i>
+                                <strong>{{ task.title }}</strong>
+                                <span v-if="task.preview">：{{ task.preview }}</span>
+                                <em>{{ task.status }}</em>
+                            </div>
+                        </div>
                         <el-collapse v-if="liveTrajectoryEvents.length > 0" class="live-trajectory-collapse">
-                            <el-collapse-item title="查看实时执行过程">
+                            <el-collapse-item name="live-trajectory">
+                                <template slot="title">
+                                    <span>查看实时执行过程</span>
+                                    <i class="fa fa-angle-down live-trajectory-toggle"></i>
+                                </template>
                                 <div v-for="event in liveTrajectoryEvents" :key="`live-${event.correlationId || event.id || event.sequence}`" class="live-trajectory-event">
                                     <div class="live-trajectory-event-title">
                                         <span>{{ trajectoryEventLabel(event.eventType) }}</span>
@@ -532,10 +536,10 @@
                                     </el-select>
                                     <el-button size="mini" plain @@click="createWorkspace" :disabled="!isSuperAdmin">新建 Workspace</el-button>
                                     <el-checkbox v-model="workspaceWriteEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId">允许 AI 写入文件</el-checkbox>
-                                    <el-checkbox v-model="workspaceCliEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId || !workspaceWriteEnabled">允许 AI 执行 CLI</el-checkbox>
+                                    <el-checkbox v-model="workspaceCliEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId || !workspaceWriteEnabled">允许 AI 执行 Python</el-checkbox>
                                 </div>
                                 <div style="color:#909399;font-size:12px;margin-top:6px;">
-                                    CLI 仅能在 Workspace 内运行配置白名单命令，不经过 shell；建议仅在需要时开启。
+                                    Python 仅能执行 Workspace 内的 .py 文件，并优先使用 Workspace 内的 .venv。
                                     <span v-if="!isSuperAdmin">当前账号不是超级管理员，Workspace 功能不可用。</span>
                                 </div>
                             </div>

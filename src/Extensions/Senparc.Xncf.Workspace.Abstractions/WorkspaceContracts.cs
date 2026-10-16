@@ -21,6 +21,36 @@ public sealed record WorkspaceCommandRequest(
     IReadOnlyList<string> Arguments,
     string WorkingDirectory = "");
 
+public sealed record WorkspacePythonRequest(
+    string ScriptPath,
+    IReadOnlyList<string> Arguments,
+    string WorkingDirectory = "");
+
+public sealed record WorkspaceSearchRequest(
+    string NameQuery = "",
+    string ContentQuery = "",
+    string RelativePath = "",
+    bool CaseSensitive = false,
+    int MaxResults = 100);
+
+public sealed record WorkspaceSearchResult(
+    string RelativePath,
+    string MatchType,
+    int? LineNumber,
+    string Preview);
+
+public sealed record WorkspacePatchRequest(
+    string RelativePath,
+    string OldText,
+    string NewText,
+    int ExpectedReplacements = 1,
+    string ExpectedSha256 = "");
+
+public sealed record WorkspacePatchResult(
+    bool Applied,
+    int ReplacementCount,
+    string Message);
+
 public sealed record WorkspaceCommandResult(
     int ExitCode,
     string StandardOutput,
@@ -67,9 +97,24 @@ public interface IWorkspaceStorage
         string relativePath,
         CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<WorkspaceSearchResult>> SearchAsync(
+        string workspaceId,
+        WorkspaceSearchRequest request,
+        CancellationToken cancellationToken = default);
+
+    Task<WorkspacePatchResult> ApplyPatchAsync(
+        string workspaceId,
+        WorkspacePatchRequest request,
+        CancellationToken cancellationToken = default);
+
     Task<WorkspaceCommandResult> ExecuteCommandAsync(
         string workspaceId,
         WorkspaceCommandRequest request,
+        CancellationToken cancellationToken = default);
+
+    Task<WorkspaceCommandResult> ExecutePythonAsync(
+        string workspaceId,
+        WorkspacePythonRequest request,
         CancellationToken cancellationToken = default);
 
     Task DeleteAsync(

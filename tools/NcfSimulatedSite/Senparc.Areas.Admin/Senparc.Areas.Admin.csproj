@@ -1,8 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.11.0</Version>
+		<Version>0.11.1</Version>
 		<PackageReleaseNotes>
+    [2026-10-16] 增加 PromptRange Skill 目录、执行与 AdminChat 暴露能力
+    1、通过 PromptRange.Abstractions 暴露可移植 Skill 契约
+    2、将发布的 PromptRange Skill 注入 AdminChat 工具调用
     [2026-10-05] v0.10.3 持久化微信 Claw 会话上下文，支持 NeuBell 启动补偿推送与重复通知去重
     [2026-10-01] v0.10.2 等待租户菜单与权限初始化完成
     1、初始化失败会在租户创建流程中显式传播，不再继续执行后续模块安装
@@ -132,6 +135,7 @@
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.NeuCharWorkflow.Abstractions\Senparc.Xncf.NeuCharWorkflow.Abstractions.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace\Senparc.Xncf.Workspace.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />

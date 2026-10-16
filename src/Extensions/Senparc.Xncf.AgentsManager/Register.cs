@@ -188,6 +188,7 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<CrawlPlugin>();
             services.AddScoped<FormatorPlugin>();
             services.AddScoped<TranslatorPlugin>();
+            services.AddScoped<PromptRangeSkillPlugin>();
 
             //测试
             services.AddScoped<BuildXncfAppService>();
@@ -207,6 +208,7 @@ namespace Senparc.Xncf.AgentsManager
             aiPlugins.Add(typeof(CrawlPlugin));
             aiPlugins.Add(typeof(FormatorPlugin));
             aiPlugins.Add(typeof(TranslatorPlugin));
+            aiPlugins.Add(typeof(PromptRangeSkillPlugin));
 
             // NCF 模块在宿主 UseRouting() 之前初始化。为 A2A JSON-RPC 建立独立分支，
             // 确保其自身先路由再映射端点，而 Agent Card 的 GET 请求仍交给 MVC 控制器。
@@ -236,7 +238,6 @@ namespace Senparc.Xncf.AgentsManager
         }
     }
 }
-
 
 
 
