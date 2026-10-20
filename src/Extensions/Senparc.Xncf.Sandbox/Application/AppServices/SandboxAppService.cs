@@ -23,6 +23,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261018
+    修改描述：避免 Notebook 语言缺失时静默生成 Python Notebook
+
 ----------------------------------------------------------------*/
 
 using System.Net;
@@ -277,6 +280,13 @@ public class SandboxAppService : AppServiceBase
             {
                 response.Success = false;
                 response.ErrorMessage = "RelativePath 必须以 .ipynb 结尾。";
+                return null;
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Language))
+            {
+                response.Success = false;
+                response.ErrorMessage = "Language 不能为空，请明确填写 python 或 csharp。";
                 return null;
             }
 
