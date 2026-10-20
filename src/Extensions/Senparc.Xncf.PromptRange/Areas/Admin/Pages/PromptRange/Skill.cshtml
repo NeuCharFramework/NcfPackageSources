@@ -1,0 +1,139 @@
+@page
+@model Senparc.Xncf.PromptRange.Areas.PromptRange.Pages.SkillModel
+@{
+    ViewData["Title"] = "Skill 管理";
+    Layout = "_Layout_Vue";
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>提示词靶场</el-breadcrumb-item>
+    <el-breadcrumb-item>Skill 管理</el-breadcrumb-item>
+}
+
+<div id="skillPage" class="p-3">
+    <div class="d-flex justify-content-between align-center mb-3">
+        <h3>Skill 管理</h3>
+        <div class="d-flex" style="gap: 8px;">
+            <el-button @@click="loadSkills">刷新</el-button>
+            <el-button type="primary" @@click="installDialogVisible = true">安装外部 Skill</el-button>
+        </div>
+    </div>
+
+    <el-alert
+        title="外部 Skill 会先安装为 Draft，发布后 AdminChat 和 AgentsManager 才能使用。"
+        type="info"
+        :closable="false"
+        class="mb-3">
+    </el-alert>
+
+    <el-table :data="skills" v-loading="loading" border>
+        <el-table-column prop="skillId" label="SkillId" min-width="180"></el-table-column>
+        <el-table-column prop="name" label="名称" min-width="180"></el-table-column>
+        <el-table-column prop="currentVersion" label="当前版本" min-width="180"></el-table-column>
+        <el-table-column label="状态" width="120">
+            <template slot-scope="scope">
+                <el-tag :type="scope.row.status === 1 ? 'success' : 'warning'">
+                    {{ scope.row.status === 1 ? '已发布' : 'Draft' }}
+                </el-tag>
+            </template>
+        </el-table-column>
+        <el-table-column label="操作" width="180">
+            <template slot-scope="scope">
+                <el-button
+                    v-if="scope.row.status !== 1"
+                    type="text"
+                    @@click="publishSkill(scope.row)">
+                    发布当前版本
+                </el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+
+    <el-dialog title="安装外部 Skill" :visible.sync="installDialogVisible" width="520px">
+        <el-form label-width="100px">
+            <el-form-item label="HTTPS 地址">
+                <el-input
+                    v-model="packageUrl"
+                    placeholder="https://example.com/example.skill.zip">
+                </el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer">
+            <el-button @@click="installDialogVisible = false">取消</el-button>
+            <el-button type="primary" :loading="installing" @@click="installSkill">安装</el-button>
+        </div>
+    </el-dialog>
+</div>
+
+@section scripts {
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            skills: [],
+            loading: false,
+            installing: false,
+            installDialogVisible: false,
+            packageUrl: ''
+        },
+        mounted: function () {
+            this.loadSkills();
+        },
+        methods: {
+            loadSkills: function () {
+                var self = this;
+                self.loading = true;
+                axios.get('/api/Senparc.Xncf.PromptRange/SkillAppService/Xncf.PromptRange_SkillAppService.ListAsync', {
+                    params: { publishedOnly: false }
+                }).then(function (response) {
+                    self.skills = response.data.data || response.data.Data || [];
+                }).catch(function (error) {
+                    self.$message.error('加载 Skill 失败：' + (error.message || '未知错误'));
+                }).finally(function () {
+                    self.loading = false;
+                });
+            },
+            installSkill: function () {
+                var self = this;
+                if (!self.packageUrl || !self.packageUrl.toLowerCase().startsWith('https://')) {
+                    self.$message.warning('只允许使用 HTTPS 地址');
+                    return;
+                }
+
+                self.installing = true;
+                axios.post('/api/Senparc.Xncf.PromptRange/SkillAppService/Xncf.PromptRange_SkillAppService.InstallFromUrlAsync', {
+                    packageUrl: self.packageUrl
+                }).then(function () {
+                    self.$message.success('Skill 已安装为 Draft，请审核后发布');
+                    self.installDialogVisible = false;
+                    self.packageUrl = '';
+                    self.loadSkills();
+                }).catch(function (error) {
+                    self.$message.error('安装失败：' + (error.message || '未知错误'));
+                }).finally(function () {
+                    self.installing = false;
+                });
+            },
+            publishSkill: function (skill) {
+                var self = this;
+                self.$confirm('确认发布当前 Skill 版本吗？', '发布确认', {
+                    type: 'warning'
+                }).then(function () {
+                    return axios.post('/api/Senparc.Xncf.PromptRange/SkillAppService/Xncf.PromptRange_SkillAppService.PublishAsync', {
+                        skillId: skill.skillId,
+                        version: skill.currentVersion
+                    });
+                }).then(function () {
+                    self.$message.success('Skill 已发布');
+                    self.loadSkills();
+                }).catch(function (error) {
+                    if (error !== 'cancel') {
+                        self.$message.error('发布失败：' + (error.message || '未知错误'));
+                    }
+                });
+            }
+        }
+    });
+</script>
+}

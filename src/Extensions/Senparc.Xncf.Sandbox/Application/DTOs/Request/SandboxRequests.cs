@@ -23,6 +23,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261018
+    修改描述：避免创建请求或 Notebook 请求缺少协议字段时静默回退到 Python
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;
@@ -41,7 +44,7 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
     [Required]
     [Description("模板||选择沙箱模板（下拉一项即可）")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(TemplateOptions))]
-    public string TemplateKey { get; set; } = SandboxTemplateKeys.PythonExec;
+    public string TemplateKey { get; set; } = string.Empty;
 
     /// <summary>
     /// 下拉数据源：只读 + JsonIgnore，避免前端 JSON 反序列化 SelectionList 失败。
@@ -195,7 +198,7 @@ public class Sandbox_LabCreateNotebookRequest : FunctionAppRequestBase
     [Required]
     [Description("内核语言||python 使用 Python 3 内核；csharp 使用 dotnet-interactive C# .NET SDK 内核")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(LanguageOptions))]
-    public string Language { get; set; } = "python";
+    public string Language { get; set; } = string.Empty;
 
     [JsonIgnore]
     [Newtonsoft.Json.JsonIgnore]

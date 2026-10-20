@@ -39,6 +39,7 @@ namespace Senparc.Xncf.PromptRange
                          new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Index"), PromptRangeResource.Get("Area.Home", "首页"),"fa fa-laptop"),
                           //new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Model"),"模型","fa fa-laptop"),
                            new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Prompt"),"PromptRange","fa fa-laptop"),
+                           new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Skill"),"Skill 管理","fa fa-puzzle-piece"),
                           //new AreaPageMenuItem(GetAreaUrl($"/Admin/PromptRange/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
                      };
 

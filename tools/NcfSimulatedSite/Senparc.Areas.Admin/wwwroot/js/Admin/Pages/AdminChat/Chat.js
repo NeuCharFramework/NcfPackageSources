@@ -1169,7 +1169,7 @@
             : `\`\`\`${language}\n`;
         }
       );
-      const rendered = marked.parse(normalizedContent);
+      const rendered = marked.parse(normalizedContent, { breaks: true });
       return typeof DOMPurify === 'undefined' ? '' : DOMPurify.sanitize(rendered);
     }
   }
