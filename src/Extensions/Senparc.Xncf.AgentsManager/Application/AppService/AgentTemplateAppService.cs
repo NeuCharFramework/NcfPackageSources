@@ -42,6 +42,9 @@
     修改标识：Senparc - 20261009
     修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
 
+    修改标识：Senparc - 20261021
+    修改描述：修复明文 Prompt 转换时 PromptItem Note 超过数据库长度限制
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;
@@ -166,7 +169,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     IsDraft = false,
                     isAIGrade = true,
                     ExpectedResultsJson = expectedResultsJson,
-                    Note = $"由 AgentTemplate「{agentTemplate.Name}」转换并自动打靶评分"
+                    Note = "AgentTemplate自动评分"
                 });
 
                 var generatedResult = await promptResultService.SenparcGenerateResultAsync(
