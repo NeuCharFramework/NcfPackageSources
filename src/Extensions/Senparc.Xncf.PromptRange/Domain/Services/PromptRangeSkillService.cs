@@ -19,11 +19,14 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.AIKernel.Domain.Models;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Abstractions.Skills;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
@@ -42,17 +45,20 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
     private readonly PromptItemService _promptItemService;
     private readonly PromptResultService _promptResultService;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly AIModelService _aiModelService;
 
     public PromptRangeSkillService(
         PromptRangeService promptRangeService,
         PromptItemService promptItemService,
         PromptResultService promptResultService,
-        IHttpClientFactory httpClientFactory)
+        IHttpClientFactory httpClientFactory,
+        AIModelService aiModelService)
     {
         _promptRangeService = promptRangeService;
         _promptItemService = promptItemService;
         _promptResultService = promptResultService;
         _httpClientFactory = httpClientFactory;
+        _aiModelService = aiModelService;
     }
 
     public async Task<IReadOnlyList<SkillDescriptor>> ListAsync(
@@ -329,11 +335,24 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             await _promptRangeService.ChangeKindAsync(installedRange.Id, SkillKind.Skill);
         }
 
-        var skill = await GetAsync(
-            manifest.SkillId,
-            manifest.Version,
-            new SkillExecutionContext("PromptRange", Mode: SkillExecutionMode.Preview),
-            cancellationToken);
+        SkillDescriptor skill;
+        try
+        {
+            skill = await GetAsync(
+                manifest.SkillId,
+                manifest.Version,
+                new SkillExecutionContext("PromptRange", Mode: SkillExecutionMode.Preview),
+                cancellationToken);
+        }
+        catch (SkillNotFoundException) when (
+            string.Equals(manifest.Version, "external", StringComparison.OrdinalIgnoreCase))
+        {
+            skill = await GetAsync(
+                manifest.SkillId,
+                null,
+                new SkillExecutionContext("PromptRange", Mode: SkillExecutionMode.Preview),
+                cancellationToken);
+        }
         return new SkillInstallResult(
             skill,
             true,
@@ -350,7 +369,21 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             throw new NcfExceptionBase("Skill 安装地址必须使用 HTTPS");
         }
 
+        if (TryParseGitHubFolder(packageUrl, out var repository, out var branch, out var folder))
+        {
+            await using var githubPackage = await DownloadGitHubFolderAsync(
+                repository,
+                branch,
+                folder,
+                cancellationToken);
+            return await InstallAsync(githubPackage, $"{Path.GetFileName(folder)}.skill.zip", cancellationToken);
+        }
+
         var client = _httpClientFactory.CreateClient("PromptRangeSkillPackage");
+        if (client.DefaultRequestHeaders.UserAgent.Count == 0)
+        {
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("NeuCharFramework-SkillImporter/1.0");
+        }
         using var response = await client.GetAsync(
             uri,
             HttpCompletionOption.ResponseHeadersRead,
@@ -363,6 +396,117 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
 
         await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
         return await InstallAsync(stream, Path.GetFileName(uri.LocalPath), cancellationToken);
+    }
+
+    public async Task<SkillContentPreview> PreviewAsync(
+        string skillId,
+        string version = null,
+        CancellationToken cancellationToken = default)
+    {
+        await using var package = await ExportAsync(skillId, version, cancellationToken);
+        using var archive = new ZipArchive(package, ZipArchiveMode.Read, leaveOpen: false);
+        var files = new List<SkillContentFile>();
+        foreach (var entry in archive.Entries
+                     .Where(entry => !string.IsNullOrEmpty(entry.Name))
+                     .OrderBy(entry => entry.FullName, StringComparer.OrdinalIgnoreCase))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var isPreviewable = IsPreviewable(entry.FullName);
+            string content = null;
+            if (isPreviewable && entry.Length <= 512 * 1024)
+            {
+                using var reader = new StreamReader(entry.Open());
+                content = await reader.ReadToEndAsync(cancellationToken);
+            }
+
+            files.Add(new SkillContentFile(
+                entry.FullName,
+                GetContentType(entry.FullName),
+                entry.Length,
+                isPreviewable,
+                content));
+        }
+
+        var manifest = files.FirstOrDefault(file =>
+            string.Equals(file.Path, "skill.json", StringComparison.OrdinalIgnoreCase));
+        return new SkillContentPreview(
+            skillId,
+            version,
+            manifest?.Content,
+            files);
+    }
+
+    public async Task<SkillGenerationResult> GenerateAsync(
+        SkillGenerationRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request == null || string.IsNullOrWhiteSpace(request.Description))
+        {
+            throw new NcfExceptionBase("Skill 需求描述不能为空");
+        }
+
+        var model = await _aiModelService.GetObjectAsync(
+            item => item.Id == request.ModelId &&
+                    item.ConfigModelType == ConfigModelType.Chat);
+        if (model == null)
+        {
+            throw new NcfExceptionBase("请选择有效的 Chat 类型 AIKernel 模型");
+        }
+
+        var modelDto = _aiModelService.Mapping<Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto.AIModelDto>(model);
+        var existingContent = string.Empty;
+        if (!string.IsNullOrWhiteSpace(request.ExistingSkillId))
+        {
+            var existingItem = await ResolveItemAsync(
+                request.ExistingSkillId,
+                request.ExistingVersion,
+                new SkillExecutionContext("PromptRange", Mode: SkillExecutionMode.Preview),
+                cancellationToken);
+            existingContent = (await _promptItemService.GetAsync(existingItem.Id)).Content;
+        }
+        var generated = await _promptResultService.SenparcGenerateResultAsync(
+            new PromptItemDto
+            {
+                Id = 0,
+                ModelId = model.Id,
+                AIModelDto = modelDto,
+                Content = BuildGenerationPrompt(request, existingContent),
+                MaxToken = 4000,
+                Temperature = 0.3f,
+                TopP = 0.8f,
+                FullVersion = "Skill.Generation"
+            },
+            executionOptions: new PromptExecutionOptions { PersistResult = false });
+
+        var definition = ParseGeneratedSkill(generated.ResultString, request);
+        var range = await _promptRangeService.AddAsync(definition.SkillId);
+        await _promptRangeService.ChangeKindAsync(range.Id, SkillKind.Skill);
+        var item = await _promptItemService.AddPromptItemAsync(new PromptItem_AddRequest
+        {
+            RangeId = range.Id,
+            ModelId = request.ModelId,
+            Content = definition.Content,
+            Note = definition.Description,
+            IsDraft = true,
+            IsNewTactic = false,
+            IsNewSubTactic = false,
+            IsTopTactic = false,
+            IsNewAiming = false,
+            NumsOfResults = 1,
+            MaxToken = 4000,
+            Temperature = 0.3f,
+            TopP = 0.8f
+        });
+        var skill = await GetAsync(
+            GetSkillId(range),
+            item.FullVersion,
+            new SkillExecutionContext("PromptRange", Mode: SkillExecutionMode.Preview),
+            cancellationToken);
+        return new SkillGenerationResult(
+            skill,
+            definition.Content,
+            true,
+            "Skill 已由 AI 生成并保存为 Draft，请预览、编辑和测试后再发布。");
     }
 
     public async Task<SkillDescriptor> PublishAsync(
@@ -510,6 +654,213 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         }
 
         item.VariableDictJson = JsonSerializer.Serialize(values);
+    }
+
+    private static string BuildGenerationPrompt(SkillGenerationRequest request, string existingContent)
+    {
+        var prompt = $@"You are designing a safe PromptRange Skill. Return JSON only with these properties:
+skillId, name, description, content.
+content must be a complete, production-quality prompt for the requested Skill.
+Do not include executable code, shell commands, secrets, or claims of permissions.
+The Skill must declare any file, network, or system side effects as requirements in prose only.
+Requested Skill:
+{request.Description}
+{(string.IsNullOrWhiteSpace(request.ExistingSkillId) ? string.Empty : $"Existing Skill to improve: {request.ExistingSkillId}@{request.ExistingVersion}")}";
+        return prompt + (string.IsNullOrWhiteSpace(existingContent)
+            ? string.Empty
+            : $"\nExisting prompt content to improve:\n{existingContent}");
+    }
+
+    private static GeneratedSkillDefinition ParseGeneratedSkill(
+        string output,
+        SkillGenerationRequest request)
+    {
+        try
+        {
+            var json = output?.Trim();
+            if (json?.StartsWith("```", StringComparison.Ordinal) == true)
+            {
+                json = Regex.Replace(json, "^```(?:json)?\\s*|\\s*```$", string.Empty,
+                    RegexOptions.IgnoreCase).Trim();
+            }
+
+            var definition = JsonSerializer.Deserialize<GeneratedSkillDefinition>(json, JsonOptions);
+            if (definition != null && !string.IsNullOrWhiteSpace(definition.Content))
+            {
+                definition.SkillId = NormalizeSkillId(
+                    string.IsNullOrWhiteSpace(request.SkillId) ? definition.SkillId : request.SkillId);
+                definition.Name = string.IsNullOrWhiteSpace(request.SkillName)
+                    ? definition.Name
+                    : request.SkillName;
+                return definition;
+            }
+        }
+        catch (JsonException)
+        {
+            // Treat non-JSON model output as prompt content below.
+        }
+
+        return new GeneratedSkillDefinition
+        {
+            SkillId = NormalizeSkillId(request.SkillId ?? request.SkillName ?? "generated-skill"),
+            Name = request.SkillName ?? request.SkillId ?? "Generated Skill",
+            Description = request.Description,
+            Content = output?.Trim()
+        };
+    }
+
+    private static string NormalizeSkillId(string value)
+    {
+        var normalized = new string((value ?? "generated-skill")
+            .Trim()
+            .ToLowerInvariant()
+            .Select(character => char.IsLetterOrDigit(character) || character is '-' or '_' or '.'
+                ? character
+                : '-')
+            .ToArray());
+        return string.IsNullOrWhiteSpace(normalized) ? "generated-skill" : normalized;
+    }
+
+    private async Task<MemoryStream> DownloadGitHubFolderAsync(
+        string repository,
+        string branch,
+        string folder,
+        CancellationToken cancellationToken)
+    {
+        var client = _httpClientFactory.CreateClient("PromptRangeSkillPackage");
+        if (client.DefaultRequestHeaders.UserAgent.Count == 0)
+        {
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("NeuCharFramework-SkillImporter/1.0");
+        }
+        using var response = await client.GetAsync(
+            $"https://api.github.com/repos/{repository}/zipball/{Uri.EscapeDataString(branch)}",
+            HttpCompletionOption.ResponseHeadersRead,
+            cancellationToken);
+        response.EnsureSuccessStatusCode();
+        if (response.Content.Headers.ContentLength > 50L * 1024 * 1024)
+        {
+            throw new NcfExceptionBase("GitHub Skill 包大小超过限制（50 MB）");
+        }
+
+        await using var source = await response.Content.ReadAsStreamAsync(cancellationToken);
+        using var sourceBuffer = new MemoryStream();
+        await source.CopyToAsync(sourceBuffer, cancellationToken);
+        if (sourceBuffer.Length > 50L * 1024 * 1024)
+        {
+            throw new NcfExceptionBase("GitHub Skill 包大小超过限制（50 MB）");
+        }
+
+        sourceBuffer.Position = 0;
+        using var sourceArchive = new ZipArchive(sourceBuffer, ZipArchiveMode.Read, leaveOpen: false);
+        var normalizedFolder = folder.Trim('/').Replace('\\', '/');
+        var skillId = NormalizeSkillId(Path.GetFileName(normalizedFolder));
+        var output = new MemoryStream();
+        using (var targetArchive = new ZipArchive(output, ZipArchiveMode.Create, leaveOpen: true))
+        {
+            var manifest = new SkillPackageManifest(
+                SkillId: skillId,
+                SkillCode: skillId,
+                Name: skillId,
+                Description: $"Imported from GitHub: {repository}/{normalizedFolder}",
+                Version: "external",
+                PromptCode: "external");
+            WriteEntry(targetArchive, "skill.json", JsonSerializer.Serialize(manifest, JsonOptions));
+
+            var matchingEntries = sourceArchive.Entries
+                .Where(entry => entry.FullName.Replace('\\', '/')
+                    .Contains($"/{normalizedFolder}/", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            if (matchingEntries.Count == 0)
+            {
+                throw new NcfExceptionBase("GitHub 地址对应的 Skill 文件夹不存在或为空");
+            }
+
+            var promptEntry = matchingEntries.FirstOrDefault(entry =>
+                string.Equals(Path.GetFileName(entry.FullName), "SKILL.md", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(Path.GetFileName(entry.FullName), "skprompt.txt", StringComparison.OrdinalIgnoreCase));
+            if (promptEntry == null)
+            {
+                throw new NcfExceptionBase("GitHub Skill 文件夹必须包含 SKILL.md 或 skprompt.txt");
+            }
+
+            var pluginRoot = $"{skillId}/github/";
+            var config = targetArchive.CreateEntry($"{pluginRoot}config.json");
+            await using (var writer = new StreamWriter(config.Open()))
+            {
+                await writer.WriteAsync("{\"execution_settings\":{\"default\":{\"top_p\":0.8,\"temperature\":0.3,\"max_tokens\":4000,\"stop_sequences\":[]}}}");
+            }
+
+            var prompt = targetArchive.CreateEntry($"{pluginRoot}skprompt.txt");
+            using (var promptWriter = new StreamWriter(prompt.Open()))
+            using (var promptReader = new StreamReader(promptEntry.Open()))
+            {
+                await promptReader.BaseStream.CopyToAsync(promptWriter.BaseStream, cancellationToken);
+            }
+
+            foreach (var entry in matchingEntries.Where(entry => entry != promptEntry && !string.IsNullOrEmpty(entry.Name)))
+            {
+                var relative = entry.FullName.Replace('\\', '/');
+                var marker = $"/{normalizedFolder}/";
+                var index = relative.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+                var relativePath = index >= 0 ? relative[(index + marker.Length)..] : entry.Name;
+                var target = targetArchive.CreateEntry($"{pluginRoot}references/{relativePath}");
+                await using var input = entry.Open();
+                await using var targetStream = target.Open();
+                await input.CopyToAsync(targetStream, cancellationToken);
+            }
+        }
+
+        output.Position = 0;
+        return output;
+    }
+
+    private static bool TryParseGitHubFolder(
+        string value,
+        out string repository,
+        out string branch,
+        out string folder)
+    {
+        repository = branch = folder = null;
+        if (!Uri.TryCreate(value, UriKind.Absolute, out var uri) ||
+            !string.Equals(uri.Host, "github.com", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var match = Regex.Match(uri.AbsolutePath,
+            "^/(?<owner>[^/]+)/(?<repo>[^/]+)/tree/(?<branch>[^/]+)/(?<folder>.+)$",
+            RegexOptions.IgnoreCase);
+        if (!match.Success)
+        {
+            return false;
+        }
+
+        repository = $"{match.Groups["owner"].Value}/{match.Groups["repo"].Value}";
+        branch = Uri.UnescapeDataString(match.Groups["branch"].Value);
+        folder = Uri.UnescapeDataString(match.Groups["folder"].Value);
+        return true;
+    }
+
+    private static bool IsPreviewable(string path)
+        => new[] { ".md", ".txt", ".json", ".yaml", ".yml", ".xml", ".cs", ".js", ".ts", ".py" }
+            .Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase);
+
+    private static string GetContentType(string path)
+        => Path.GetExtension(path).ToLowerInvariant() switch
+        {
+            ".json" => "application/json",
+            ".yaml" or ".yml" => "application/yaml",
+            ".xml" => "application/xml",
+            ".md" => "text/markdown",
+            _ => "text/plain"
+        };
+
+    private sealed class GeneratedSkillDefinition
+    {
+        public string SkillId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Content { get; set; }
     }
 
     private static string SanitizePackageComponent(string value)

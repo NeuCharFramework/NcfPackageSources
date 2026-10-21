@@ -13,56 +13,95 @@
 
 <div id="skillPage" class="p-3">
     <div class="d-flex justify-content-between align-center mb-3">
-        <h3>Skill 管理</h3>
+        <div>
+            <h3 class="mb-1">Skill 管理</h3>
+            <small class="text-muted">以版本树管理 Skill，以 Draft 作为 AI 生成和外部导入的安全边界</small>
+        </div>
         <div class="d-flex" style="gap: 8px;">
-            <el-button @@click="loadSkills">刷新</el-button>
-            <el-button type="primary" @@click="installDialogVisible = true">安装外部 Skill</el-button>
+            <el-button icon="el-icon-refresh" @@click="loadSkills">刷新</el-button>
+            <el-button type="success" icon="el-icon-magic-stick" @@click="generationDialogVisible = true">AI 创建 / 修改 Skill</el-button>
+            <el-button type="primary" icon="el-icon-download" @@click="installDialogVisible = true">导入 Skill</el-button>
         </div>
     </div>
 
-    <el-alert
-        title="外部 Skill 会先安装为 Draft，发布后 AdminChat 和 AgentsManager 才能使用。"
-        type="info"
-        :closable="false"
-        class="mb-3">
-    </el-alert>
+    <el-alert title="所有外部导入和 AI 生成的 Skill 都会先进入 Draft。请先预览内容、确认权限并完成测试，再发布给 Agent 或 AdminChat。" type="info" :closable="false" class="mb-3"></el-alert>
 
-    <el-table :data="skills" v-loading="loading" border>
-        <el-table-column prop="skillId" label="SkillId" min-width="180"></el-table-column>
-        <el-table-column prop="name" label="名称" min-width="180"></el-table-column>
-        <el-table-column prop="currentVersion" label="当前版本" min-width="180"></el-table-column>
-        <el-table-column label="状态" width="120">
+    <el-row :gutter="16" class="mb-3">
+        <el-col :span="8"><el-card shadow="never"><div class="text-muted">Skill 总数</div><strong class="h4">{{ skills.length }}</strong></el-card></el-col>
+        <el-col :span="8"><el-card shadow="never"><div class="text-muted">待审核 Draft</div><strong class="h4 text-warning">{{ draftCount }}</strong></el-card></el-col>
+        <el-col :span="8"><el-card shadow="never"><div class="text-muted">已发布版本</div><strong class="h4 text-success">{{ publishedCount }}</strong></el-card></el-col>
+    </el-row>
+
+    <el-table :data="skills" v-loading="loading" border row-key="skillId">
+        <el-table-column type="expand">
             <template slot-scope="scope">
-                <el-tag :type="scope.row.status === 1 ? 'success' : 'warning'">
-                    {{ scope.row.status === 1 ? '已发布' : 'Draft' }}
-                </el-tag>
+                <div class="p-2">
+                    <div class="text-muted mb-2">{{ scope.row.description }}</div>
+                    <el-timeline>
+                        <el-timeline-item v-for="version in scope.row.versions" :key="version.version"
+                                          :type="version.status === 1 ? 'success' : 'warning'"
+                                          :timestamp="version.version">
+                            <div class="d-flex justify-content-between align-center">
+                                <span>{{ version.name || version.promptCode }}</span>
+                                <div>
+                                    <el-tag size="mini" :type="version.status === 1 ? 'success' : 'warning'">
+                                        {{ version.status === 1 ? '已发布' : 'Draft' }}
+                                    </el-tag>
+                                    <el-button type="text" @@click="previewSkill(scope.row, version)">预览内容</el-button>
+                                </div>
+                            </div>
+                        </el-timeline-item>
+                    </el-timeline>
+                </div>
             </template>
         </el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column prop="skillId" label="Skill" min-width="180"></el-table-column>
+        <el-table-column prop="name" label="名称" min-width="180"></el-table-column>
+        <el-table-column prop="currentVersion" label="当前版本" min-width="220"></el-table-column>
+        <el-table-column label="状态" width="110">
+            <template slot-scope="scope"><el-tag :type="scope.row.status === 1 ? 'success' : 'warning'">{{ scope.row.status === 1 ? '已发布' : 'Draft' }}</el-tag></template>
+        </el-table-column>
+        <el-table-column label="操作" width="250">
             <template slot-scope="scope">
-                <el-button
-                    v-if="scope.row.status !== 1"
-                    type="text"
-                    @@click="publishSkill(scope.row)">
-                    发布当前版本
-                </el-button>
+                <el-button type="text" @@click="previewSkill(scope.row, currentVersion(scope.row))">预览</el-button>
+                <el-button v-if="scope.row.status !== 1" type="text" @@click="publishSkill(scope.row)">发布</el-button>
             </template>
         </el-table-column>
     </el-table>
 
-    <el-dialog title="安装外部 Skill" :visible.sync="installDialogVisible" width="520px">
-        <el-form label-width="100px">
-            <el-form-item label="HTTPS 地址">
-                <el-input
-                    v-model="packageUrl"
-                    placeholder="https://example.com/example.skill.zip">
-                </el-input>
-            </el-form-item>
+    <el-dialog title="导入 Skill" :visible.sync="installDialogVisible" width="560px">
+        <el-tabs v-model="installTab">
+            <el-tab-pane label="ZIP / Release" name="zip">
+                <el-input v-model="packageUrl" placeholder="https://example.com/example.skill.zip"></el-input>
+            </el-tab-pane>
+            <el-tab-pane label="GitHub 文件夹" name="github">
+                <el-input v-model="githubUrl" placeholder="https://github.com/owner/repo/tree/main/skills/example"></el-input>
+                <small class="text-muted">需要包含 SKILL.md 或 skprompt.txt。导入后会自动转换为 PromptRange Skill 包。</small>
+            </el-tab-pane>
+        </el-tabs>
+        <div slot="footer"><el-button @@click="installDialogVisible = false">取消</el-button><el-button type="primary" :loading="installing" @@click="installSkill">导入并生成 Draft</el-button></div>
+    </el-dialog>
+
+    <el-dialog title="AI 创建 / 修改 Skill" :visible.sync="generationDialogVisible" width="680px">
+        <el-form label-width="110px">
+            <el-form-item label="需求描述" required><el-input type="textarea" :rows="5" v-model="generation.description" placeholder="描述 Skill 的目标、输入、输出和边界"></el-input></el-form-item>
+            <el-form-item label="SkillId"><el-input v-model="generation.skillId" placeholder="可选，例如 excel.report"></el-input></el-form-item>
+            <el-form-item label="显示名称"><el-input v-model="generation.skillName" placeholder="可选"></el-input></el-form-item>
+            <el-form-item label="修改现有 Skill"><el-select v-model="generation.existingSkillId" clearable filterable placeholder="不选择则创建新的 Skill" style="width: 100%"><el-option v-for="skill in skills" :key="skill.skillId" :label="skill.name + ' (' + skill.skillId + ')'" :value="skill.skillId"></el-option></el-select></el-form-item>
+            <el-form-item v-if="generation.existingSkillId" label="基准版本"><el-select v-model="generation.existingVersion" clearable placeholder="默认使用当前版本" style="width: 100%"><el-option v-for="version in selectedSkillVersions" :key="version.version" :label="version.version" :value="version.version"></el-option></el-select></el-form-item>
+            <el-form-item label="生成模型" required><el-select v-model="generation.modelId" placeholder="选择 AIKernel Chat 模型" filterable style="width: 100%"><el-option v-for="model in chatModels" :key="model.id" :label="model.alias || model.modelId" :value="model.id"></el-option></el-select></el-form-item>
         </el-form>
-        <div slot="footer">
-            <el-button @@click="installDialogVisible = false">取消</el-button>
-            <el-button type="primary" :loading="installing" @@click="installSkill">安装</el-button>
-        </div>
+        <div slot="footer"><el-button @@click="generationDialogVisible = false">取消</el-button><el-button type="success" :loading="generating" @@click="generateSkill">生成 Draft Skill</el-button></div>
+    </el-dialog>
+
+    <el-dialog title="Skill 内容预览" :visible.sync="previewDialogVisible" width="900px">
+        <el-alert v-if="preview.manifestJson" title="Manifest" type="info" :closable="false" class="mb-2"><pre>{{ preview.manifestJson }}</pre></el-alert>
+        <el-tabs v-model="previewTab">
+            <el-tab-pane v-for="file in preview.files" :key="file.path" :label="file.path" :name="file.path">
+                <el-alert v-if="!file.isPreviewable" title="此文件类型不支持在线预览，仅展示文件信息。" type="warning" :closable="false"></el-alert>
+                <pre v-else class="skill-preview">{{ file.content || '文件为空或超过在线预览大小限制。' }}</pre>
+            </el-tab-pane>
+        </el-tabs>
     </el-dialog>
 </div>
 
@@ -75,10 +114,28 @@
             loading: false,
             installing: false,
             installDialogVisible: false,
-            packageUrl: ''
+            packageUrl: '',
+            githubUrl: '',
+            installTab: 'github',
+            generationDialogVisible: false,
+            generating: false,
+            chatModels: [],
+            generation: { description: '', skillId: '', skillName: '', modelId: null, existingSkillId: '', existingVersion: '' },
+            previewDialogVisible: false,
+            previewTab: '',
+            preview: { manifestJson: '', files: [] }
         },
         mounted: function () {
             this.loadSkills();
+            this.loadChatModels();
+        },
+        computed: {
+            draftCount: function () { return this.skills.filter(function (skill) { return skill.status !== 1; }).length; },
+            publishedCount: function () { return this.skills.filter(function (skill) { return skill.status === 1; }).length; },
+            selectedSkillVersions: function () {
+                var selected = this.skills.find(function (skill) { return skill.skillId === this.generation.existingSkillId; });
+                return selected ? (selected.versions || []) : [];
+            }
         },
         methods: {
             loadSkills: function () {
@@ -94,26 +151,64 @@
                     self.loading = false;
                 });
             },
+            loadChatModels: function () {
+                var self = this;
+                axios.get('/api/Senparc.Xncf.PromptRange/SkillAppService/Xncf.PromptRange_SkillAppService.ListChatModelsAsync')
+                    .then(function (response) { self.chatModels = response.data.data || response.data.Data || []; })
+                    .catch(function (error) { self.$message.error('加载 Chat 模型失败：' + (error.message || '未知错误')); });
+            },
             installSkill: function () {
                 var self = this;
-                if (!self.packageUrl || !self.packageUrl.toLowerCase().startsWith('https://')) {
+                var url = self.installTab === 'github' ? self.githubUrl : self.packageUrl;
+                if (!url || !url.toLowerCase().startsWith('https://')) {
                     self.$message.warning('只允许使用 HTTPS 地址');
                     return;
                 }
 
                 self.installing = true;
                 axios.post('/api/Senparc.Xncf.PromptRange/SkillAppService/Xncf.PromptRange_SkillAppService.InstallFromUrlAsync', {
-                    packageUrl: self.packageUrl
+                    packageUrl: url
                 }).then(function () {
-                    self.$message.success('Skill 已安装为 Draft，请审核后发布');
+                    self.$message.success('Skill 已导入为 Draft，请预览、测试并审核后发布');
                     self.installDialogVisible = false;
                     self.packageUrl = '';
+                    self.githubUrl = '';
                     self.loadSkills();
                 }).catch(function (error) {
                     self.$message.error('安装失败：' + (error.message || '未知错误'));
                 }).finally(function () {
                     self.installing = false;
                 });
+            },
+            generateSkill: function () {
+                var self = this;
+                if (!self.generation.description || !self.generation.modelId) {
+                    self.$message.warning('请填写需求描述并选择 Chat 模型');
+                    return;
+                }
+                self.generating = true;
+                axios.post('/api/Senparc.Xncf.PromptRange/SkillAppService/Xncf.PromptRange_SkillAppService.GenerateAsync', self.generation)
+                    .then(function () {
+                        self.$message.success('AI 已生成 Draft Skill，可展开版本树进行预览');
+                        self.generationDialogVisible = false;
+                        self.generation = { description: '', skillId: '', skillName: '', modelId: null, existingSkillId: '', existingVersion: '' };
+                        self.loadSkills();
+                    }).catch(function (error) {
+                        self.$message.error('生成失败：' + (error.message || '未知错误'));
+                    }).finally(function () { self.generating = false; });
+            },
+            currentVersion: function (skill) {
+                return (skill.versions && skill.versions.length) ? skill.versions[0] : { version: skill.currentVersion };
+            },
+            previewSkill: function (skill, version) {
+                var self = this;
+                axios.get('/api/Senparc.Xncf.PromptRange/SkillAppService/Xncf.PromptRange_SkillAppService.PreviewAsync', {
+                    params: { skillId: skill.skillId, version: version && (version.version || version.promptCode) }
+                }).then(function (response) {
+                    self.preview = response.data.data || response.data.Data || { files: [] };
+                    self.previewTab = self.preview.files.length ? self.preview.files[0].path : '';
+                    self.previewDialogVisible = true;
+                }).catch(function (error) { self.$message.error('预览失败：' + (error.message || '未知错误')); });
             },
             publishSkill: function (skill) {
                 var self = this;
@@ -136,4 +231,8 @@
         }
     });
 </script>
+<style>
+    .skill-preview { max-height: 520px; overflow: auto; white-space: pre-wrap; background: #f7f8fa; padding: 16px; }
+    .el-timeline { padding-left: 0; }
+</style>
 }

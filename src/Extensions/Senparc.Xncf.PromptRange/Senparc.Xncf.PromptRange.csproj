@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.1</Version>
+    <Version>0.20.2</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -143,6 +143,7 @@
       1、Prompt 可标记为 Prompt 或 Skill，并携带执行策略
       2、新增 Skill 隔离测试运行器与管理端 Skill 页面
       3、执行请求可附带策略，并适配 Senparc.AI.AgentKernel 0.1.15-preview2
+      [2026-10-21] v0.20.2 upgrade Skill management with GitHub folder import, AI Draft generation, version tree preview, and safer content inspection
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
