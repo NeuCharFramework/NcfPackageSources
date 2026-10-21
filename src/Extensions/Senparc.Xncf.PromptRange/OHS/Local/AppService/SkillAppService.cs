@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,9 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Authorization;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.PromptRange.Abstractions.Skills;
+using Senparc.Xncf.AIKernel.Domain.Models;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.AIKernel.Domain.Services;
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService;
 
@@ -34,19 +38,22 @@ public sealed class SkillAppService : AppServiceBase
     private readonly ISkillExecutor _executor;
     private readonly ISkillPackageService _packageService;
     private readonly ISkillTestRunner _testRunner;
+    private readonly AIModelService _aiModelService;
 
     public SkillAppService(
         System.IServiceProvider serviceProvider,
         ISkillCatalog catalog,
         ISkillExecutor executor,
         ISkillPackageService packageService,
-        ISkillTestRunner testRunner)
+        ISkillTestRunner testRunner,
+        AIModelService aiModelService)
         : base(serviceProvider)
     {
         _catalog = catalog;
         _executor = executor;
         _packageService = packageService;
         _testRunner = testRunner;
+        _aiModelService = aiModelService;
     }
 
     [ApiBind]
@@ -66,6 +73,22 @@ public sealed class SkillAppService : AppServiceBase
     {
         return await this.GetResponseAsync<SkillDescriptor>(
             async (response, logger) => await _catalog.GetAsync(skillId, version));
+    }
+
+    [ApiBind]
+    public async Task<AppResponseBase<IReadOnlyList<AIModelDto>>> ListChatModelsAsync()
+    {
+        return await this.GetResponseAsync<IReadOnlyList<AIModelDto>>(
+            async (response, logger) =>
+            {
+                var models = await _aiModelService.GetFullListAsync(
+                    item => item.ConfigModelType == ConfigModelType.Chat,
+                    item => item.Id,
+                    Senparc.Ncf.Core.Enums.OrderingType.Descending);
+                return models
+                    .Select(model => _aiModelService.Mapping<AIModelDto>(model))
+                    .ToList();
+            });
     }
 
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
@@ -124,6 +147,25 @@ public sealed class SkillAppService : AppServiceBase
         return await this.GetResponseAsync<SkillInstallResult>(
             async (response, logger) =>
                 await _packageService.InstallFromUrlAsync(packageUrl));
+    }
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+    public async Task<AppResponseBase<SkillContentPreview>> PreviewAsync(
+        string skillId,
+        string version = null)
+    {
+        return await this.GetResponseAsync<SkillContentPreview>(
+            async (response, logger) =>
+                await _packageService.PreviewAsync(skillId, version));
+    }
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public async Task<AppResponseBase<SkillGenerationResult>> GenerateAsync(
+        SkillGenerationRequest request)
+    {
+        return await this.GetResponseAsync<SkillGenerationResult>(
+            async (response, logger) =>
+                await _packageService.GenerateAsync(request));
     }
 
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
