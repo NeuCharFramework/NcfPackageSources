@@ -183,6 +183,33 @@ public sealed record SkillInstallResult(
     bool RequiresApproval,
     string Message);
 
+public sealed record SkillContentFile(
+    string Path,
+    string ContentType,
+    long Length,
+    bool IsPreviewable,
+    string Content = null);
+
+public sealed record SkillContentPreview(
+    string SkillId,
+    string Version,
+    string ManifestJson,
+    IReadOnlyList<SkillContentFile> Files);
+
+public sealed record SkillGenerationRequest(
+    string Description,
+    int ModelId,
+    string SkillId = null,
+    string SkillName = null,
+    string ExistingSkillId = null,
+    string ExistingVersion = null);
+
+public sealed record SkillGenerationResult(
+    SkillDescriptor Skill,
+    string GeneratedContent,
+    bool RequiresApproval,
+    string Message);
+
 public interface ISkillCatalog
 {
     Task<IReadOnlyList<SkillDescriptor>> ListAsync(
@@ -224,6 +251,15 @@ public interface ISkillPackageService
 
     Task<SkillInstallResult> InstallFromUrlAsync(
         string packageUrl,
+        CancellationToken cancellationToken = default);
+
+    Task<SkillContentPreview> PreviewAsync(
+        string skillId,
+        string version = null,
+        CancellationToken cancellationToken = default);
+
+    Task<SkillGenerationResult> GenerateAsync(
+        SkillGenerationRequest request,
         CancellationToken cancellationToken = default);
 
     Task<SkillDescriptor> PublishAsync(
