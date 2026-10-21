@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.20.0 注册 Skill 目录、执行与测试服务
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -127,6 +130,7 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptResultChatService>();
             services.AddScoped<LlModelService>();
             services.AddScoped<PromptRangeSkillService>();
+            services.AddScoped<ISkillTestRunner, PromptRangeSkillTestService>();
             services.AddScoped<ISkillCatalog>(serviceProvider => serviceProvider.GetRequiredService<PromptRangeSkillService>());
             services.AddScoped<ISkillExecutor>(serviceProvider => serviceProvider.GetRequiredService<PromptRangeSkillService>());
             services.AddScoped<ISkillPackageService>(serviceProvider => serviceProvider.GetRequiredService<PromptRangeSkillService>());
@@ -149,7 +153,6 @@ namespace Senparc.Xncf.PromptRange
         }
     }
 }
-
 
 
 

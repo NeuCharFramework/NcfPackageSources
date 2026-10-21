@@ -28,6 +28,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.19.3 增强 PromptRange 流式结果处理兼容性
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.20.0 结果记录附带 Skill 执行策略
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -310,10 +313,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 resultMode,
                 isChatMode ? systemMessage : null); // 只在聊天模式时保存 SystemMessage
 
-            await base.SaveObjectAsync(promptResult);
+            if (executionOptions?.PersistResult != false)
+            {
+                await base.SaveObjectAsync(promptResult);
+            }
 
             // 如果是聊天模式，保存对话记录
-            if (isChatMode && !string.IsNullOrWhiteSpace(normalizedUserMessage) && !string.IsNullOrWhiteSpace(aiOutput))
+            if (executionOptions?.PersistResult != false &&
+                isChatMode && !string.IsNullOrWhiteSpace(normalizedUserMessage) && !string.IsNullOrWhiteSpace(aiOutput))
             {
                 var chatMessages = new List<ChatMessageDto>();
 
@@ -331,7 +338,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             // 有期望结果， 进行自动打分
-            if (promptItem.isAIGrade && !string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
+            if (executionOptions?.PersistResult != false &&
+                promptItem.isAIGrade && !string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
             {
                 await this.RobotScoringAsync(promptResult.Id, false, promptItem.ExpectedResultsJson);
             }
@@ -341,7 +349,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 onStreamEvent(new PromptResultStreamEvent
                 {
                     EventType = "final",
-                    PromptResultId = promptResult.Id,
+                    PromptResultId = executionOptions?.PersistResult == false ? null : promptResult.Id,
                     Text = aiOutput,
                     IsFinal = true,
                     PromptTokens = promptCostToken,
@@ -351,7 +359,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 });
             }
 
-            return this.Mapper.Map<PromptResultDto>(promptResult);
+            var response = this.Mapper.Map<PromptResultDto>(promptResult);
+            if (executionOptions?.PersistResult == false)
+            {
+                response.Id = 0;
+            }
+
+            return response;
         }
 
         private async Task<PromptResultDto> ExecuteTextToImageAsync(

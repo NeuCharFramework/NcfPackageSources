@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：20261015080118_Add_AdminChatWorkspace.cs
+    文件功能描述：EF Core 数据库迁移
+    
+    
+    创建标识：Senparc - 20261015
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.11.1 为 AdminChat 会话增加工作区字段迁移
+
+----------------------------------------------------------------*/
+
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

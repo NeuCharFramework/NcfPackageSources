@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：20261010172402_AddFineTuningControlPlane.cs
+    文件功能描述：EF Core 数据库迁移
+    
+    
+    创建标识：Senparc - 20261014
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.17.0 增加微调控制面数据库迁移
+
+----------------------------------------------------------------*/
+
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：PromptRangeSkillService.cs
+    文件功能描述：PromptRange Skill 目录与执行服务
+    
+    
+    创建标识：Senparc - 20261016
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.20.0 按策略提供 Skill 目录与执行
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +28,7 @@ using Senparc.Xncf.PromptRange.Abstractions.Skills;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 
 namespace Senparc.Xncf.PromptRange.Domain.Services;
 
@@ -52,6 +67,12 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         {
             cancellationToken.ThrowIfCancellationRequested();
             var skillId = GetSkillId(range);
+            if (range.Kind != SkillKind.Skill ||
+                query.AllowedSkillIds != null &&
+                !query.AllowedSkillIds.Contains(skillId, StringComparer.OrdinalIgnoreCase))
+            {
+                continue;
+            }
             if (!Matches(query, skillId, range.Alias, range.RangeName))
             {
                 continue;
@@ -80,7 +101,9 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
                 SkillSourceType.PromptRange,
                 current?.FullVersion,
                 versions,
-                Array.Empty<SkillToolDefinition>()));
+                Array.Empty<SkillToolDefinition>(),
+                SkillKind.Skill,
+                new SkillExecutionPolicy()));
         }
 
         return result;
@@ -94,6 +117,13 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
     {
         var resolved = await ResolveItemAsync(skillId, version, context, cancellationToken);
         var range = await _promptRangeService.GetAsync(resolved.RangeId);
+        if (range.Kind != SkillKind.Skill ||
+            context?.CallerModule != "PromptRange" &&
+            context?.CallerModule != "AdminChat" &&
+            context?.CallerModule != "AgentsManager")
+        {
+            throw new SkillNotFoundException(skillId, version);
+        }
         var items = await GetItemsAsync(resolved.RangeId, cancellationToken);
         var descriptorVersions = items
             .Where(item => !item.IsDraft || context?.Mode is SkillExecutionMode.Evaluation or SkillExecutionMode.Preview)
@@ -109,7 +139,9 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             SkillSourceType.PromptRange,
             resolved.FullVersion,
             descriptorVersions,
-            Array.Empty<SkillToolDefinition>());
+            Array.Empty<SkillToolDefinition>(),
+            SkillKind.Skill,
+            new SkillExecutionPolicy());
     }
 
     public async Task<SkillExecutionResult> ExecuteAsync(
@@ -122,6 +154,12 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         }
 
         var context = request.Context ?? new SkillExecutionContext("Unknown");
+        if (context.Policy?.RiskLevel > SkillRiskLevel.ReadOnly &&
+            context.Policy.TestIsolation == SkillTestIsolation.PromptOnly)
+        {
+            throw new NcfExceptionBase(
+                "具有文件、网络或系统副作用的 Skill 不能在 PromptOnly 执行，必须通过 Workspace 或 Sandbox 隔离适配器。");
+        }
         var item = await ResolveItemAsync(request.SkillId, request.Version, context, cancellationToken);
         var itemDto = await _promptItemService.GetAsync(item.Id);
         ApplyArguments(itemDto, context.Arguments, request.Input);
@@ -132,7 +170,10 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             request.Input,
             null,
             null,
-            null);
+            new PromptExecutionOptions
+            {
+                PersistResult = request.PersistResult
+            });
 
         return new SkillExecutionResult(
             request.SkillId,
@@ -278,6 +319,15 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             "skillPackage",
             Path.GetFileName(string.IsNullOrWhiteSpace(fileName) ? "skill.zip" : fileName));
         await _promptItemService.UploadPluginsAsync(formFile);
+
+        var installedRange = (await _promptRangeService.GetListAsync())
+            .FirstOrDefault(range =>
+                string.Equals(GetSkillId(range), manifest.SkillId, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(range.Alias, manifest.SkillId, StringComparison.OrdinalIgnoreCase));
+        if (installedRange != null)
+        {
+            await _promptRangeService.ChangeKindAsync(installedRange.Id, SkillKind.Skill);
+        }
 
         var skill = await GetAsync(
             manifest.SkillId,

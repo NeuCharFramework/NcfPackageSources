@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.18.3</Version>
+    <Version>0.19.0</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -176,6 +176,10 @@
         [2026-10-09] v0.18.3 统一 Agent Studio 群组与提示配置并完善任务管理交互
         1、支持群组与 Prompt 配置联动、快速建组、增量成员管理和任务操作
         2、完善 Studio 页面渲染、Three.js 交互及前端状态管理
+        [2026-10-21] v0.19.0 支持 Agent Skill 绑定、执行权限与工作区策略
+        1、Agent 模板可绑定 Skill、执行权限与 Workspace 策略
+        2、接入 PromptRange Skill 插件，并在对话链路记录 Token 用量
+        3、适配 Senparc.AI.AgentKernel 0.1.15-preview2
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -240,6 +244,7 @@
     <ProjectReference Include="..\Senparc.Xncf.AgentsManager.Abstractions\Senparc.Xncf.AgentsManager.Abstractions.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.NeuCharWorkflow.Abstractions\Senparc.Xncf.NeuCharWorkflow.Abstractions.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
   </ItemGroup>
   <ItemGroup>

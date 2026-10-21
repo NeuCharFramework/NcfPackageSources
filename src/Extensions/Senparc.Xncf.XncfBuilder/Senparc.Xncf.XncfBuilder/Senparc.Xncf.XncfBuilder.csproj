@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.41.6</Version>
+    <Version>0.41.7</Version>
     <LangVersion>latest</LangVersion>
     <AssemblyName>Senparc.Xncf.XncfBuilder</AssemblyName>
     <RootNamespace>Senparc.Xncf.XncfBuilder</RootNamespace>
@@ -144,6 +144,8 @@
 			v0.21.0 集成 Senparc.Xncf.AIKernel，可以选择已配置的 AI 模型生成代码
 			v0.24.0 聚焦支持 .NET 8.0，XNCF 取消旧版本支持
 			v0.24.1 升级新版本 Senparc.AI（Senparc.Xncf.AIKernel）
+			[2026-10-21] v0.41.7 适配 Senparc.AI.AgentKernel 0.1.15-preview2
+			1、升级共享 AgentKernel 依赖，保持模块生成与 Agent 调用兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

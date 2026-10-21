@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.20.0 维护 Skill 类型与执行策略
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -23,6 +26,7 @@ using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.PromptRange.Abstractions.Skills;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
@@ -102,6 +106,16 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
 
         await this.SaveObjectAsync(promptRange);
 
+        return this.TransEntityToDto(promptRange);
+    }
+
+    public async Task<PromptRangeDto> ChangeKindAsync(int rangeId, SkillKind kind)
+    {
+        var promptRange = await this.GetObjectAsync(r => r.Id == rangeId)
+                          ?? throw new NcfExceptionBase($"没有找到{rangeId}对应的靶场");
+
+        promptRange.ChangeKind(kind);
+        await this.SaveObjectAsync(promptRange);
         return this.TransEntityToDto(promptRange);
     }
 

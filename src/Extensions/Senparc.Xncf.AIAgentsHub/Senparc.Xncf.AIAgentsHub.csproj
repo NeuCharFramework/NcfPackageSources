@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.13.12</Version>
+    <Version>0.13.13</Version>
     <AssemblyName>Senparc.Xncf.AIAgentsHub</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIAgentsHub</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -113,6 +113,8 @@
 			2、chore: update package versions and dependencies across multiple projects
 			[2026-10-09] v0.13.12 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
 			v0.1.0 创世
+			[2026-10-21] v0.13.13 Dependency update from Senparc.Xncf.AIKernel to 0.17.0
+			1、Dependency update from Senparc.Xncf.PromptRange to 0.20.0
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
