@@ -243,6 +243,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL
                     b.Property<bool>("Flag")
                         .HasColumnType("boolean");
 
+                    b.Property<int>("Kind")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("timestamp without time zone");
 

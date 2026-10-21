@@ -243,6 +243,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Kind")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime2");
 
