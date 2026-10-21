@@ -1086,7 +1086,7 @@
     getMessageIcon(roleType) {
       const iconMap = {
         0: 'fa fa-user',
-        1: 'fa fa-robot',
+        1: 'fa fa-android',
         2: 'fa fa-info-circle'
       };
       return iconMap[roleType] || 'fa fa-user';
