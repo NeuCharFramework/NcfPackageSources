@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
-		<Version>0.39.4</Version>
+		<Version>0.39.5</Version>
 		<PackageReleaseNotes>
 			[2026-07-01] v0.21.5 Dependency update from Senparc.Xncf.AgentsManager to 0.11.0-preview2
 			[2026-07-02] v0.21.5 支持流式输出并优化交互体验，升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -65,6 +65,9 @@
 			[2026-10-05] v0.39.3 feat: enhance WeixinClaw integration with new message handling and UI improvements
 			1、Updated Senparc.Web project behavior and integration for the latest feature and reliability improvements.
 			[2026-10-09] v0.39.4 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
+			[2026-10-21] v0.39.5 排除工作区运行时脚本参与编译，并适配 AgentKernel 0.1.15-preview2
+			1、编译时排除 App_Data 下的运行时脚本，避免工作区产物进入宿主程序集
+			2、适配 Senparc.AI.AgentKernel 0.1.15-preview2
 </PackageReleaseNotes>
 		<AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
 		<TypeScriptToolsVersion>4.1</TypeScriptToolsVersion>

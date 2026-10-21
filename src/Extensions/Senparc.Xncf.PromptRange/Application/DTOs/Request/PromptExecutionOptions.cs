@@ -8,12 +8,19 @@
     创建标识：Senparc - 20260705
 
     修改标识：Senparc - 20260705
-    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3----------------------------------------------------------------*/
+    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+
+    修改标识：Senparc - 20261021
+    修改描述：v0.20.0 执行选项携带 Skill 策略
+
+----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request
 {
     public class PromptExecutionOptions
     {
+        public bool PersistResult { get; set; } = true;
+
         public PromptTextToSpeechExecutionOptions TextToSpeech { get; set; }
 
         public PromptSpeechToTextExecutionOptions SpeechToText { get; set; }

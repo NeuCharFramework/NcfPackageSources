@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.16.4</Version>
+    <Version>0.17.0</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -130,6 +130,11 @@
 		2、微调未配置 Worker 时提供明确配置指引，并优化提示和窄屏排版
 		3、补充模块专属本地化脚本和资源键覆盖，避免 Admin 宿主资源重名导致页面文案异常
 		4、完善微调 Worker 未配置时的引导提示与窄屏页面展示
+		[2026-10-21] v0.17.0 增加 Token 用量记录与微调控制面
+		1、新增异步 Token 用量记录、观察者与按来源统计
+		2、新增微调任务、数据集、事件、产物和迁移控制面，并支持产物文件引用
+		3、补齐各数据库迁移与管理端微调导入导出
+		4、适配 Senparc.AI.AgentKernel 0.1.15-preview2
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>

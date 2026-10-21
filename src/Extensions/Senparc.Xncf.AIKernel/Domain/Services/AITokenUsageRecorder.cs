@@ -6,6 +6,9 @@
 
     创建标识：Senparc - 20261011
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.17.0 异步记录 Token 用量，避免阻塞返回链路
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

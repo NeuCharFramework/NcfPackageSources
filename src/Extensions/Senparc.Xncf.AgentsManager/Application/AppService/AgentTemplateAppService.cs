@@ -45,6 +45,9 @@
     修改标识：Senparc - 20261021
     修改描述：修复明文 Prompt 转换时 PromptItem Note 超过数据库长度限制
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.19.0 保存 Agent 模板的 Skill 绑定与工作区策略
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;
@@ -245,6 +248,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     request.Description, promptCode,
                     Enum.Parse<HookRobotType>(request.HookRobotType), request.HookRobotParameter,
                     null, request.FunctionCallNames, null, request.KnowledgeBaseId);
+                agentTemplateDto.SkillBindings = request.SkillBindings;
+                agentTemplateDto.WorkspacePolicy = request.WorkspacePolicy;
 
                 var savedAgentTemplate = await this._agentsTemplateService.UpdateAgentTemplateAsync(request.Id, agentTemplateDto);
 

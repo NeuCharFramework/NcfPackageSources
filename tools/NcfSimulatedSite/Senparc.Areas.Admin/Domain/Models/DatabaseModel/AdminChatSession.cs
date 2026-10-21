@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AdminChatSession.cs
+    文件功能描述：后台对话会话
+    
+    
+    创建标识：Senparc - 20260325
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.11.1 会话关联工作区
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.Models;
 using System;
 using System.ComponentModel.DataAnnotations;

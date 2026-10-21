@@ -10,9 +10,13 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.20.0 输出 Prompt 或 Skill 类型
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.PromptRange.Abstractions.Skills;
 
 namespace Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 
@@ -32,6 +36,8 @@ public class PromptRangeDto : DtoBase
     /// 靶场名称（来自版号生成）
     /// </summary>
     public string RangeName { get; set; }
+
+    public SkillKind Kind { get; set; }
 
     // /// <summary>
     // /// 期望结果Json

@@ -1,12 +1,28 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：WorkspaceStorage.cs
+    文件功能描述：工作区文件与命令存储
+    
+    
+    创建标识：Senparc - 20261015
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.1.1 按策略执行工作区文件访问与命令
+
+----------------------------------------------------------------*/
+
 using System.Text.Json;
 using System.ComponentModel;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Senparc.Xncf.Workspace.Abstractions;
+using Senparc.Xncf.Workspace.Domain.Services;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Senparc.Xncf.Workspace;
 
@@ -16,12 +32,14 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
     private readonly WorkspaceOptions _options;
     private readonly string _rootPath;
     private readonly ILogger<WorkspaceStorage> _logger;
+    private readonly IServiceScopeFactory _scopeFactory;
     private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
 
     public WorkspaceStorage(
         IOptions<WorkspaceOptions> options,
         IHostEnvironment environment,
-        ILogger<WorkspaceStorage> logger)
+        ILogger<WorkspaceStorage> logger,
+        IServiceScopeFactory scopeFactory)
     {
         _options = options.Value;
         _rootPath = Path.GetFullPath(Path.IsPathRooted(_options.RootPath)
@@ -29,6 +47,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             : Path.Combine(environment.ContentRootPath, _options.RootPath));
         Directory.CreateDirectory(_rootPath);
         _logger = logger;
+        _scopeFactory = scopeFactory;
     }
 
     public async Task<WorkspaceDescriptor> CreateAsync(
@@ -50,8 +69,17 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         Directory.CreateDirectory(Path.Combine(path, ".workspace"));
 
         var now = DateTime.UtcNow;
-        var descriptor = new WorkspaceDescriptor(id, request.OwnerId, name, path, now, now);
+        var descriptor = new WorkspaceDescriptor(
+            id,
+            request.OwnerId,
+            name,
+            path,
+            now,
+            now,
+            request.OwnerType,
+            request.AgentTemplateId);
         await WriteManifestAsync(path, descriptor, cancellationToken).ConfigureAwait(false);
+        await PersistMetadataAsync(descriptor, cancellationToken).ConfigureAwait(false);
         _logger.LogInformation("Workspace created: {WorkspaceId}, OwnerId={OwnerId}", id, request.OwnerId);
         return descriptor;
     }
@@ -71,6 +99,13 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         await using var stream = File.OpenRead(manifestPath);
         return await JsonSerializer.DeserializeAsync<WorkspaceDescriptor>(
             stream, _jsonOptions, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task PersistMetadataAsync(WorkspaceDescriptor descriptor, CancellationToken cancellationToken)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var metadataStore = scope.ServiceProvider.GetRequiredService<IWorkspaceMetadataStore>();
+        await metadataStore.UpsertAsync(descriptor, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IReadOnlyList<WorkspaceDescriptor>> ListWorkspacesAsync(

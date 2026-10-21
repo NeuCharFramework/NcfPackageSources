@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.9</Version>
+    <Version>0.5.10</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -82,6 +82,9 @@
       [2026-10-05] v0.5.6 feat: add MCP endpoint selection feature in AgentsManager
       1、Updated Senparc.Xncf.MCP project behavior and integration for the latest feature and reliability improvements.
       [2026-10-09] v0.5.9 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
+      [2026-10-21] v0.5.10 MCP 函数调用接入 Token 用量记录
+      1、MyFunction 对话结果写入 Token 用量
+      2、适配 Senparc.AI.AgentKernel 0.1.15-preview2
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
