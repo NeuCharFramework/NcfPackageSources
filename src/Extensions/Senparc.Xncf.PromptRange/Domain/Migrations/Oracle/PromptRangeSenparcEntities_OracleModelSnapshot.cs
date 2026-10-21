@@ -243,6 +243,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Oracle
                     b.Property<bool>("Flag")
                         .HasColumnType("NUMBER(1)");
 
+                    b.Property<int>("Kind")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP(7)");
 

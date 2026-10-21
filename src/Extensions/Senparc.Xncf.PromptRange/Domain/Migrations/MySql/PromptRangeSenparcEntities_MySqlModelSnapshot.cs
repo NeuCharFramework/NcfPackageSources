@@ -243,6 +243,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
                     b.Property<bool>("Flag")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int>("Kind")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime(6)");
 

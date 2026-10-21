@@ -239,6 +239,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Dm
                     b.Property<bool>("Flag")
                         .HasColumnType("BIT");
 
+                    b.Property<int>("Kind")
+                        .HasColumnType("INT");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TIMESTAMP");
 
