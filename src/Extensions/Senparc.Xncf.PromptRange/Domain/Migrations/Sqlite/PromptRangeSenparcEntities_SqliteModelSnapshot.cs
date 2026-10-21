@@ -232,6 +232,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Kind")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("TEXT");
 
