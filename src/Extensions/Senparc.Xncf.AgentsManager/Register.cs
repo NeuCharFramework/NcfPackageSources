@@ -33,6 +33,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.19.0 注册 PromptRange Skill 插件与工作区契约
+
 ----------------------------------------------------------------*/
 
 using A2A.AspNetCore;
@@ -208,7 +211,8 @@ namespace Senparc.Xncf.AgentsManager
             aiPlugins.Add(typeof(CrawlPlugin));
             aiPlugins.Add(typeof(FormatorPlugin));
             aiPlugins.Add(typeof(TranslatorPlugin));
-            aiPlugins.Add(typeof(PromptRangeSkillPlugin));
+            // PromptRangeSkillPlugin is instantiated by AgentTemplateRunner with the
+            // Agent's explicit Skill binding set; it must not be globally exposed.
 
             // NCF 模块在宿主 UseRouting() 之前初始化。为 A2A JSON-RPC 建立独立分支，
             // 确保其自身先路由再映射端点，而 Agent Card 的 GET 请求仍交给 MVC 控制器。
@@ -238,7 +242,6 @@ namespace Senparc.Xncf.AgentsManager
         }
     }
 }
-
 
 
 

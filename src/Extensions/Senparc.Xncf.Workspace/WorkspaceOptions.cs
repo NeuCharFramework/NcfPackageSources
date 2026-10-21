@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：WorkspaceOptions.cs
+    文件功能描述：工作区存储配置
+    
+    
+    创建标识：Senparc - 20261015
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.1.1 配置工作区根路径与执行限制
+
+----------------------------------------------------------------*/
+
 namespace Senparc.Xncf.Workspace;
 
 public sealed class WorkspaceOptions

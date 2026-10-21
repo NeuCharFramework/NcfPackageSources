@@ -43,4 +43,32 @@ public class SkillContractsTests
         Assert.AreEqual("PromptRange", context.CallerModule);
         Assert.AreEqual(SkillExecutionMode.Evaluation, context.Mode);
     }
+
+    [TestMethod]
+    public void AgentBindingCarriesExplicitVersionAndPolicy()
+    {
+        var binding = new AgentSkillBinding(
+            "customer.service",
+            "2026.10.16.1-T1-A2",
+            Policy: new SkillExecutionPolicy(
+                RiskLevel: SkillRiskLevel.WorkspaceWrite,
+                TestIsolation: SkillTestIsolation.Workspace,
+                AllowWorkspaceWrite: true,
+                RequiresApproval: true));
+
+        Assert.AreEqual("customer.service", binding.SkillId);
+        Assert.AreEqual(SkillRiskLevel.WorkspaceWrite, binding.Policy.RiskLevel);
+        Assert.IsTrue(binding.Policy.RequiresApproval);
+    }
+
+    [TestMethod]
+    public void SkillQueryCanRestrictCatalogToAgentBindings()
+    {
+        var query = new SkillQuery(
+            CallerModule: "AgentsManager",
+            AllowedSkillIds: new[] { "skill-a", "skill-b" });
+
+        Assert.IsTrue(query.AllowedSkillIds.Contains("skill-a"));
+        Assert.AreEqual("AgentsManager", query.CallerModule);
+    }
 }

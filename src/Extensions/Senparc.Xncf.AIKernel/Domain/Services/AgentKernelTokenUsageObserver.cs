@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AgentKernelTokenUsageObserver.cs
+    文件功能描述：观察 AgentKernel 调用并记录 Token 用量
+    
+    
+    创建标识：Senparc - 20261014
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.17.0 观察 AgentKernel 调用并写入 Token 用量
+
+----------------------------------------------------------------*/
+
 using Senparc.AI.AgentKernel.Usage;
 using Senparc.CO2NET;
 using Senparc.Xncf.AIKernel.Domain.Models;

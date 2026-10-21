@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.1.0 0.1.0 feat: enhance file management capabilities with new upload stream method and service registration
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.2.0 增加 FineTuning 文件资源类型
+
 ----------------------------------------------------------------*/
 
 using System;

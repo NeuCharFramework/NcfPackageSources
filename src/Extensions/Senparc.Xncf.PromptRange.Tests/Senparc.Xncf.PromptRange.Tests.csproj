@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.0.17</Version>
+		<Version>0.0.18</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 升级 Senparc.AI.AgentKernel 并完成兼容性适配，升级并适配 net10.0 框架
     1、升级 Senparc.AI.AgentKernel 并完成兼容性适配
@@ -38,6 +38,8 @@
     [2026-10-05] v0.0.16 Enhanced Senparc.Xncf.PromptRange.Tests functionality and compatibility
     1、Updated Senparc.Xncf.PromptRange.Tests project behavior and integration for the latest feature and reliability improvements.
     [2026-10-09] v0.0.17 Dependency update from Senparc.Xncf.PromptRange to 0.19.8
+    [2026-10-21] v0.0.18 补充 Skill 契约测试
+    1、覆盖 Skill 类型、执行策略、测试隔离与 Agent 绑定契约
 </PackageReleaseNotes>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>

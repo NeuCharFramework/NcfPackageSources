@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：SkillAppService.cs
+    文件功能描述：Skill 查询、执行与测试应用服务
+    
+    
+    创建标识：Senparc - 20261016
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.20.0 开放 Skill 查询、执行与测试
+
+----------------------------------------------------------------*/
+
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -19,17 +33,20 @@ public sealed class SkillAppService : AppServiceBase
     private readonly ISkillCatalog _catalog;
     private readonly ISkillExecutor _executor;
     private readonly ISkillPackageService _packageService;
+    private readonly ISkillTestRunner _testRunner;
 
     public SkillAppService(
         System.IServiceProvider serviceProvider,
         ISkillCatalog catalog,
         ISkillExecutor executor,
-        ISkillPackageService packageService)
+        ISkillPackageService packageService,
+        ISkillTestRunner testRunner)
         : base(serviceProvider)
     {
         _catalog = catalog;
         _executor = executor;
         _packageService = packageService;
+        _testRunner = testRunner;
     }
 
     [ApiBind]
@@ -63,6 +80,14 @@ public sealed class SkillAppService : AppServiceBase
                 version,
                 input,
                 new SkillExecutionContext("PromptRange", Mode: SkillExecutionMode.Evaluation))));
+    }
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public async Task<AppResponseBase<SkillTestResult>> TestAsync(
+        SkillTestRequest request)
+    {
+        return await this.GetResponseAsync<SkillTestResult>(
+            async (response, logger) => await _testRunner.TestAsync(request));
     }
 
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]

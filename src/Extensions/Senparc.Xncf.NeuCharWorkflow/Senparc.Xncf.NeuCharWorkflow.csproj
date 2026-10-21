@@ -3,10 +3,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.4.4</Version>
     <PackageReleaseNotes>
-      [2026-10-14] 增加标准化 Workflow JSON/YAML 导入导出能力
-      1、提供带 schemaVersion 的 ncf.workflow 文件格式，兼容现有 GraphJson 执行链路
-      2、增加安全脱敏、导入校验、禁用草稿导入和管理端导出接口
-      3、增加 YamlDotNet 支持并限制 YAML 类型标签与文档大小
     [2026-10-01] 使用现有 Repository 查询能力，运行状态通过基础仓储局部更新
       [2026-08-13] v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
       1、支持版本与自动保存、Webhook 触发、并行节点和执行回放
@@ -41,7 +37,12 @@
       2、保持项目引用链与当前功能兼容
       [2026-10-05] v0.4.3 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
       1、Updated Senparc.Xncf.NeuCharWorkflow project behavior and integration for the latest feature and reliability improvements.
-      2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
+      2、chore: update package versions and dependencies across multiple projects
+      [2026-10-21] v0.4.4 增加标准化工作流 JSON/YAML 导入导出
+      1、提供带 schemaVersion 的 ncf.workflow 文件格式，兼容现有 GraphJson 执行链路
+      2、增加安全脱敏、导入校验、禁用草稿导入和管理端导出接口
+      3、增加 YamlDotNet 支持并限制 YAML 类型标签与文档大小
+</PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

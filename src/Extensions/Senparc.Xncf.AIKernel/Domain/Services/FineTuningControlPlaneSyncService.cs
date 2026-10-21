@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：FineTuningControlPlaneSyncService.cs
+    文件功能描述：同步微调控制面与外部训练状态
+    
+    
+    创建标识：Senparc - 20261014
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.17.0 同步微调控制面与外部训练状态
+
+----------------------------------------------------------------*/
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

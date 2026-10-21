@@ -1,7 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
+    <PackageReleaseNotes>
+      [2026-10-21] v0.1.1 提供按所有者隔离的工作区存储，并持久化元数据
+      1、支持工作区创建、文件访问、命令执行与访问策略
+      2、描述符支持所有者类型、Agent 模板关联与存储提供方
+      3、持久化工作区元数据，并在模块安装时迁移数据库
+</PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.Workspace</AssemblyName>
     <RootNamespace>Senparc.Xncf.Workspace</RootNamespace>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
@@ -9,6 +15,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <ProjectReference Include="..\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
   </ItemGroup>

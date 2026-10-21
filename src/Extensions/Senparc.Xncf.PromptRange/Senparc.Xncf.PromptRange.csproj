@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.9</Version>
+    <Version>0.20.0</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -138,6 +138,10 @@
       v0.4.11 添加 PromptResultService.GetPromptConfigParameterFromAiSetting() 方法
       v0.6.4 更新 Prompt 导入和导出 #207
       v0.6.5 优化通过 PromptRangeCode 查询
+      [2026-10-21] v0.20.0 支持 Skill 类型、执行策略与隔离测试
+      1、Prompt 可标记为 Prompt 或 Skill，并携带执行策略
+      2、新增 Skill 隔离测试运行器与管理端 Skill 页面
+      3、执行请求可附带策略，并适配 Senparc.AI.AgentKernel 0.1.15-preview2
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

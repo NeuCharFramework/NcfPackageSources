@@ -6,6 +6,9 @@
 
     创建标识：Senparc - 20261011
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.17.0 定义 Token 用量记录入口
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.AIKernel.Domain.Models.Usage;

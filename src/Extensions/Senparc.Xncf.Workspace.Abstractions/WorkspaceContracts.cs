@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：WorkspaceContracts.cs
+    文件功能描述：工作区存储与访问策略契约
+    
+    
+    创建标识：Senparc - 20261015
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.1.0 增加所有者、Agent 模板关联与访问策略
+
+----------------------------------------------------------------*/
+
 namespace Senparc.Xncf.Workspace.Abstractions;
 
 public sealed record WorkspaceDescriptor(
@@ -6,7 +20,10 @@ public sealed record WorkspaceDescriptor(
     string Name,
     string RootPath,
     DateTime CreatedUtc,
-    DateTime LastAccessedUtc);
+    DateTime LastAccessedUtc,
+    string OwnerType = "User",
+    int? AgentTemplateId = null,
+    string StorageProvider = "FileSystem");
 
 public sealed record WorkspaceEntry(
     string RelativePath,
@@ -14,7 +31,11 @@ public sealed record WorkspaceEntry(
     long Length,
     DateTime LastWriteTimeUtc);
 
-public sealed record WorkspaceCreateRequest(int OwnerId, string Name);
+public sealed record WorkspaceCreateRequest(
+    int OwnerId,
+    string Name,
+    string OwnerType = "User",
+    int? AgentTemplateId = null);
 
 public sealed record WorkspaceCommandRequest(
     string Command,
@@ -56,6 +77,15 @@ public sealed record WorkspaceCommandResult(
     string StandardOutput,
     string StandardError,
     bool TimedOut);
+
+public sealed record WorkspacePolicy(
+    bool AllowRead = false,
+    bool AllowWrite = false,
+    bool AllowCommand = false,
+    bool AllowPython = false,
+    IReadOnlyList<string>? AllowedCommands = null,
+    int MaxExecutionSeconds = 60,
+    long MaxBytes = 50 * 1024 * 1024);
 
 public interface IWorkspaceStorage
 {

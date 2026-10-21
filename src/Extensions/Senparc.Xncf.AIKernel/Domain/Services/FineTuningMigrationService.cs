@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：FineTuningMigrationService.cs
+    文件功能描述：执行微调产物迁移
+    
+    
+    创建标识：Senparc - 20261014
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.17.0 执行微调产物迁移
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Text.Json;
 using System.Threading;

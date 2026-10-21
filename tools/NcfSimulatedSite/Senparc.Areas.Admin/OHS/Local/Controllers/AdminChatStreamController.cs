@@ -18,6 +18,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.11.1 流式输出携带工作区与会话标题
+
 ----------------------------------------------------------------*/
 
 using System;

@@ -24,6 +24,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.19.0 输出 Skill 绑定、执行权限与工作区策略
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Identity.Client;
@@ -31,6 +34,8 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.Abstractions.Skills;
+using Senparc.Xncf.Workspace.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -106,6 +111,39 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto
         /// 当 <see cref="ModelBinding"/> 为手动选择时使用的 AIModel ID。
         /// </summary>
         public int? AiModelId { get; set; }
+
+        public string SkillBindingsJson { get; set; }
+
+        public string WorkspacePolicyJson { get; set; }
+
+        public List<AgentSkillBinding> SkillBindings
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(SkillBindingsJson))
+                {
+                    return new List<AgentSkillBinding>();
+                }
+
+                try
+                {
+                    return System.Text.Json.JsonSerializer.Deserialize<List<AgentSkillBinding>>(SkillBindingsJson) ?? new();
+                }
+                catch (System.Text.Json.JsonException)
+                {
+                    return new List<AgentSkillBinding>();
+                }
+            }
+            set => SkillBindingsJson = System.Text.Json.JsonSerializer.Serialize(value ?? new());
+        }
+
+        public WorkspacePolicy WorkspacePolicy
+        {
+            get => string.IsNullOrWhiteSpace(WorkspacePolicyJson)
+                ? new WorkspacePolicy()
+                : System.Text.Json.JsonSerializer.Deserialize<WorkspacePolicy>(WorkspacePolicyJson) ?? new WorkspacePolicy();
+            set => WorkspacePolicyJson = System.Text.Json.JsonSerializer.Serialize(value ?? new WorkspacePolicy());
+        }
 
         /// <summary>是否为系统保留的 Human 参与者。</summary>
         public bool IsHuman { get; set; }

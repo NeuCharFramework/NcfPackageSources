@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：FineTuningControlPlaneService.cs
+    文件功能描述：微调任务、数据集与产物控制面
+    
+    
+    创建标识：Senparc - 20261014
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.17.0 提供微调任务、数据集与产物控制面
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Repository;
 using Senparc.Xncf.AIKernel.Models;
 using System.Threading;

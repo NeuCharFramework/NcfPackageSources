@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AdminChatSkillPlugin.cs
+    文件功能描述：后台对话 Skill 插件
+    
+    
+    创建标识：Senparc - 20261016
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.11.1 把已发布 Skill 注入后台对话
+
+----------------------------------------------------------------*/
+
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;

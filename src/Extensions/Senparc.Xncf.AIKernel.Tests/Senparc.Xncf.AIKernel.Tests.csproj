@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.5</Version>
+    <Version>0.0.6</Version>
     <PackageReleaseNotes>
       [2026-10-07] v0.0.5 覆盖目录分页、SQLite Worker 配置读写及命名配置的真实训练集成
       [2026-10-06] v0.0.5 补充本地微调客户端、多 Worker 路由和依赖注入回归测试
@@ -26,6 +26,8 @@
       [2026-10-09] v0.0.5 补充 AIKernel 本地化与微调 Worker 回归测试
       1、覆盖模块本地化脚本加载以及新增微调 Worker 页面资源键
       2、验证 Worker 客户端、持久化配置和真实训练流程的回归行为
+      [2026-10-21] v0.0.6 补充 Token 用量记录测试
+      1、覆盖用量记录器的入队、聚合与持久化行为
 </PackageReleaseNotes>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>

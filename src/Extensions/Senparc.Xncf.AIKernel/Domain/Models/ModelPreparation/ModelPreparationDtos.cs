@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：ModelPreparationDtos.cs
+    文件功能描述：定义模型准备传输对象
+    
+    
+    创建标识：Senparc - 20261014
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.17.0 补充模型准备传输对象
+
+----------------------------------------------------------------*/
+
 #nullable enable
 using System;
 using System.Collections.Generic;

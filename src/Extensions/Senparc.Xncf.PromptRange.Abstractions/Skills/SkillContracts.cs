@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：SkillContracts.cs
+    文件功能描述：PromptRange Skill 跨模块契约
+    
+    
+    创建标识：Senparc - 20261016
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.3.0-preview6 扩展 Skill 类型、测试隔离、风险策略与 Agent 绑定
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,11 +43,69 @@ public enum SkillExecutionMode
     Test = 3
 }
 
+public enum SkillKind
+{
+    Prompt = 0,
+    Skill = 1
+}
+
+public enum SkillTestIsolation
+{
+    PromptOnly = 0,
+    Workspace = 1,
+    Sandbox = 2
+}
+
+public enum SkillRiskLevel
+{
+    ReadOnly = 0,
+    WorkspaceWrite = 1,
+    ExternalNetwork = 2,
+    SystemMutation = 3
+}
+
+public sealed record SkillTestRequest(
+    string SkillId,
+    string Version = null,
+    string Input = null,
+    SkillTestIsolation Isolation = SkillTestIsolation.PromptOnly,
+    string WorkspaceId = null,
+    string CallerModule = "PromptRange");
+
+public sealed record SkillTestResult(
+    string SkillId,
+    string Version,
+    SkillTestIsolation Isolation,
+    bool Succeeded,
+    bool Isolated,
+    string Output = null,
+    string Error = null,
+    IReadOnlyList<string> Diagnostics = null);
+
+public sealed record SkillExecutionPolicy(
+    SkillRiskLevel RiskLevel = SkillRiskLevel.ReadOnly,
+    SkillTestIsolation TestIsolation = SkillTestIsolation.PromptOnly,
+    bool AllowWorkspaceRead = false,
+    bool AllowWorkspaceWrite = false,
+    bool AllowNetwork = false,
+    IReadOnlyList<string> AllowedCommands = null,
+    int TimeoutSeconds = 60,
+    int MaxOutputBytes = 1024 * 1024,
+    bool RequiresApproval = false);
+
+public sealed record AgentSkillBinding(
+    string SkillId,
+    string Version = null,
+    bool Enabled = true,
+    bool AutoLoad = true,
+    SkillExecutionPolicy Policy = null);
+
 public sealed record SkillQuery(
     string SkillId = null,
     string Keyword = null,
     bool PublishedOnly = true,
-    string CallerModule = null);
+    string CallerModule = null,
+    IReadOnlyCollection<string> AllowedSkillIds = null);
 
 public sealed record SkillInputDefinition(
     string Name,
@@ -67,7 +139,9 @@ public sealed record SkillDescriptor(
     SkillSourceType SourceType,
     string CurrentVersion,
     IReadOnlyList<SkillVersionDescriptor> Versions,
-    IReadOnlyList<SkillToolDefinition> Tools);
+    IReadOnlyList<SkillToolDefinition> Tools,
+    SkillKind Kind = SkillKind.Skill,
+    SkillExecutionPolicy Policy = null);
 
 public sealed record SkillExecutionContext(
     string CallerModule,
@@ -75,7 +149,8 @@ public sealed record SkillExecutionContext(
     string TenantId = null,
     string ConversationId = null,
     SkillExecutionMode Mode = SkillExecutionMode.Production,
-    IReadOnlyDictionary<string, object> Arguments = null);
+    IReadOnlyDictionary<string, object> Arguments = null,
+    SkillExecutionPolicy Policy = null);
 
 public sealed record SkillExecutionRequest(
     string SkillId,
@@ -125,6 +200,13 @@ public interface ISkillExecutor
 {
     Task<SkillExecutionResult> ExecuteAsync(
         SkillExecutionRequest request,
+        CancellationToken cancellationToken = default);
+}
+
+public interface ISkillTestRunner
+{
+    Task<SkillTestResult> TestAsync(
+        SkillTestRequest request,
         CancellationToken cancellationToken = default);
 }
 

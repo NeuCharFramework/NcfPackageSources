@@ -22,6 +22,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.19.0 持久化 Skill 绑定、执行权限与工作区策略
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -33,6 +36,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
+using Senparc.Xncf.PromptRange.Abstractions.Skills;
+using Senparc.Xncf.Workspace.Abstractions;
 
 namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
 {
@@ -108,6 +113,58 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
         /// 手动绑定的 AIModel ID。跨 XNCF 数据库上下文，不建立数据库外键。
         /// </summary>
         public int? AiModelId { get; private set; }
+
+        /// <summary>显式绑定的 Skill 配置 JSON；为空时 Agent 不允许调用 Skill。</summary>
+        public string SkillBindingsJson { get; private set; }
+
+        /// <summary>Agent 使用 Workspace 的权限策略 JSON。</summary>
+        public string WorkspacePolicyJson { get; private set; }
+
+        public IReadOnlyList<AgentSkillBinding> GetSkillBindings()
+            => DeserializeOrEmpty<AgentSkillBinding>(SkillBindingsJson);
+
+        public WorkspacePolicy GetWorkspacePolicy()
+            => DeserializeOrDefault(WorkspacePolicyJson, new WorkspacePolicy());
+
+        public void SetSkillBindings(IEnumerable<AgentSkillBinding> bindings)
+            => SkillBindingsJson = JsonSerializer.Serialize(bindings ?? Array.Empty<AgentSkillBinding>());
+
+        public void SetWorkspacePolicy(WorkspacePolicy policy)
+            => WorkspacePolicyJson = JsonSerializer.Serialize(policy ?? new WorkspacePolicy());
+
+        private static IReadOnlyList<T> DeserializeOrEmpty<T>(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return Array.Empty<T>();
+            }
+
+            try
+            {
+                return JsonSerializer.Deserialize<List<T>>(json) ?? new List<T>();
+            }
+            catch (JsonException)
+            {
+                return Array.Empty<T>();
+            }
+        }
+
+        private static T DeserializeOrDefault<T>(string json, T fallback)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return fallback;
+            }
+
+            try
+            {
+                return JsonSerializer.Deserialize<T>(json) ?? fallback;
+            }
+            catch (JsonException)
+            {
+                return fallback;
+            }
+        }
 
         /// <summary>是否为系统保留的 Human 参与者。该属性不落库。</summary>
         [NotMapped]
@@ -261,6 +318,8 @@ namespace Senparc.Xncf.AgentsManager.Models.DatabaseModel
             Avastar = agentTemplateDto.Avastar;
             McpEndpoints = agentTemplateDto.McpEndpoints;
             KnowledgeBaseId = agentTemplateDto.KnowledgeBaseId;
+            SkillBindingsJson = agentTemplateDto.SkillBindingsJson;
+            WorkspacePolicyJson = agentTemplateDto.WorkspacePolicyJson;
             SetModelBinding(agentTemplateDto.ModelBinding, agentTemplateDto.AiModelId);
         }
 

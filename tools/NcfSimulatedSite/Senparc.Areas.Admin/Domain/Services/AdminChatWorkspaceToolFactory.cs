@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：AdminChatWorkspaceToolFactory.cs
+    文件功能描述：后台对话工作区工具工厂
+    
+    
+    创建标识：Senparc - 20261015
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.11.1 为后台对话提供工作区工具
+
+----------------------------------------------------------------*/
+
 using Microsoft.Extensions.AI;
 using Senparc.Xncf.Workspace.Abstractions;
 using System;

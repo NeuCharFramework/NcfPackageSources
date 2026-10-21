@@ -2,6 +2,11 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.1.0</Version>
+    <PackageReleaseNotes>
+      [2026-10-21] v0.1.0 定义工作区描述、创建请求与访问策略契约
+      1、描述符支持所有者类型、Agent 模板与存储提供方
+      2、新增工作区读写、命令与 Python 访问策略
+    </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.Workspace.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.Workspace.Abstractions</RootNamespace>
     <Nullable>enable</Nullable>

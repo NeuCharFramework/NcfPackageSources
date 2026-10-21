@@ -24,10 +24,14 @@
     修改标识：Senparc - 20260917
     修改描述：v0.18.0 为 Agent FunctionRender 工具注入参数元数据并保持调用兼容
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.19.0 运行模板时应用 Skill 绑定与工作区策略
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI;
 using Senparc.AI.AgentKernel;
 using Senparc.AI.AgentKernel.Extensions;
@@ -52,6 +56,8 @@ using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.Abstractions.Skills;
+using Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -815,6 +821,30 @@ public sealed class AgentTemplateRunner
         CancellationToken cancellationToken)
     {
         var tools = new List<AITool>();
+        var skillBindings = template.GetSkillBindings()
+            .Where(binding => binding.Enabled && !string.IsNullOrWhiteSpace(binding.SkillId))
+            .ToList();
+        if (skillBindings.Count > 0 && pluginToolPermission != ToolPermissionMode.Deny)
+        {
+            var skillCatalog = _serviceProvider.GetService<ISkillCatalog>();
+            var skillExecutor = _serviceProvider.GetService<ISkillExecutor>();
+            if (skillCatalog != null && skillExecutor != null)
+            {
+                var allowedSkillBindings = skillBindings
+                    .ToDictionary(binding => binding.SkillId, StringComparer.OrdinalIgnoreCase);
+                var skillPlugin = new PromptRangeSkillPlugin(
+                    skillCatalog,
+                    skillExecutor,
+                    allowedSkillBindings);
+                foreach (var tool in agentHandler.GetAITools(skillPlugin))
+                {
+                    tools.Add(tool is AIFunction function
+                        ? new DiagnosticAIFunction(function, template.Id, template.Name, correlationId)
+                        : tool);
+                }
+            }
+        }
+
         var bindings = AgentFunctionBindingCodec.Parse(template.FunctionCallNames);
         var pluginBindings = bindings
             .Where(binding => string.Equals(binding.Kind, "plugin", StringComparison.OrdinalIgnoreCase))

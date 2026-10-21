@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：FineTuningFileStore.cs
+    文件功能描述：保存微调数据集与产物文件
+    
+    
+    创建标识：Senparc - 20261014
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.17.0 保存微调数据集与产物文件
+
+----------------------------------------------------------------*/
+
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xncf.FileManager.Abstractions;
 using System;

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.3.4</Version>
+    <Version>0.3.5</Version>
     <AssemblyName>Senparc.Xncf.Sandbox</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -57,7 +57,11 @@
       6、新增 SandboxSession.Alias / ExtraPorts 持久化列（含六种数据库迁移），别名与端口记录不随容器销毁清除
       [2026-10-05] v0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
       1、Updated Senparc.Xncf.Sandbox project behavior and integration for the latest feature and reliability improvements.
-      2、feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota</PackageReleaseNotes>
+      2、feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota
+      [2026-10-21] v0.3.5 沙箱创建与 Notebook 缺少模板或语言时不再静默回退到 Python
+      1、创建请求缺少模板时返回明确错误
+      2、Notebook 缺少语言时要求明确填写 python 或 csharp
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <Nullable>enable</Nullable>

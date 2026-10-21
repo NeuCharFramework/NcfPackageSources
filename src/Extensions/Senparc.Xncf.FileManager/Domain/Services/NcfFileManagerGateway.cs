@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.7.3 0.7.3 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.8.0 允许导入微调产物文件
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase;

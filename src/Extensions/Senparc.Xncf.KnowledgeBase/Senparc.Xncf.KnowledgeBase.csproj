@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.6</Version>
+    <Version>0.7.7</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -76,6 +76,8 @@
 		2、chore: update package versions and dependencies across multiple projects
 		[2026-10-09] v0.7.6 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
 		v0.1 创世
+		[2026-10-21] v0.7.7 适配 Senparc.AI.AgentKernel 0.1.15-preview2
+		1、升级共享 AgentKernel 依赖，保持知识库检索与 Agent 调用兼容
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

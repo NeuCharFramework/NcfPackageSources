@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：SkillExceptions.cs
+    文件功能描述：Skill 查询与执行异常
+    
+    
+    创建标识：Senparc - 20261016
+    
+    修改标识：Senparc - 20261021
+    修改描述：v0.3.0-preview6 补充 Skill 不存在与访问拒绝异常
+
+----------------------------------------------------------------*/
+
 using System;
 
 namespace Senparc.Xncf.PromptRange.Abstractions.Skills;
