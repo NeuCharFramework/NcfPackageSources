@@ -172,7 +172,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     IsDraft = false,
                     isAIGrade = true,
                     ExpectedResultsJson = expectedResultsJson,
-                    Note = $"由 AgentTemplate「{agentTemplate.Name}」转换并自动打靶评分"
+                    Note = "AgentTemplate自动评分"
                 });
 
                 var generatedResult = await promptResultService.SenparcGenerateResultAsync(
