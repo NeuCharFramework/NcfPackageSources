@@ -247,6 +247,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("SourceFileId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SourceType")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SourceUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("INTEGER");
 
