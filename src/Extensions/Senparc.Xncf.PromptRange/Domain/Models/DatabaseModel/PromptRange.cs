@@ -47,6 +47,14 @@ public class PromptRange : EntityBase<int>
 
     public SkillKind Kind { get; private set; } = SkillKind.Prompt;
 
+    public int? SourceFileId { get; private set; }
+
+    [MaxLength(20)]
+    public string SourceType { get; private set; }
+
+    [MaxLength(2048)]
+    public string SourceUrl { get; private set; }
+
     // /// <summary>
     // /// 期望结果Json
     // /// </summary>
@@ -98,6 +106,14 @@ public class PromptRange : EntityBase<int>
     public PromptRange ChangeKind(SkillKind kind)
     {
         Kind = kind;
+        return this;
+    }
+
+    public PromptRange UpdateSource(int? sourceFileId, string sourceType, string sourceUrl)
+    {
+        SourceFileId = sourceFileId;
+        SourceType = sourceType;
+        SourceUrl = sourceUrl;
         return this;
     }
 

@@ -247,6 +247,7 @@ public interface ISkillPackageService
     Task<SkillInstallResult> InstallAsync(
         Stream package,
         string fileName,
+        string sourceUrl = null,
         CancellationToken cancellationToken = default);
 
     Task<SkillInstallResult> InstallFromUrlAsync(

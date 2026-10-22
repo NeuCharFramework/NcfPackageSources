@@ -258,6 +258,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
+                    b.Property<int?>("SourceFileId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SourceType")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("SourceUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("varchar(2048)");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 

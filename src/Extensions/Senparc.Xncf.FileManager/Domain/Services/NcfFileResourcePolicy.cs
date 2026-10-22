@@ -62,7 +62,8 @@ public static class NcfFileResourcePolicy
     public static bool IsValidScope(NcfFileResourceScope scope) =>
         scope is NcfFileResourceScope.KnowledgeBase
             or NcfFileResourceScope.SiteAsset
-            or NcfFileResourceScope.PrivateAttachment;
+            or NcfFileResourceScope.PrivateAttachment
+            or NcfFileResourceScope.Skill;
 
     public static string NormalizeExtension(string fileName)
     {
@@ -75,7 +76,8 @@ public static class NcfFileResourcePolicy
         {
             NcfFileResourceScope.KnowledgeBase => KnowledgeBaseExtensions.Contains(extension),
             NcfFileResourceScope.SiteAsset => SiteAssetExtensions.Contains(extension),
-            NcfFileResourceScope.PrivateAttachment => PrivateAttachmentExtensions.Contains(extension),
+            NcfFileResourceScope.PrivateAttachment or NcfFileResourceScope.Skill =>
+                PrivateAttachmentExtensions.Contains(extension),
             _ => false
         };
     }
@@ -113,6 +115,7 @@ public static class NcfFileResourcePolicy
         {
             NcfFileResourceScope.KnowledgeBase => "knowledge-base",
             NcfFileResourceScope.SiteAsset => "site-assets",
+            NcfFileResourceScope.Skill => "skills",
             NcfFileResourceScope.PrivateAttachment => "private-attachments",
             _ => throw new ArgumentOutOfRangeException(nameof(scope))
         };

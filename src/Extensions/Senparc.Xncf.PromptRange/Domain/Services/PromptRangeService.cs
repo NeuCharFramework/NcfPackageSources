@@ -119,6 +119,19 @@ public class PromptRangeService : ServiceBase<Models.DatabaseModel.PromptRange>
         return this.TransEntityToDto(promptRange);
     }
 
+    public async Task<PromptRangeDto> UpdateSourceAsync(
+        int rangeId,
+        int? sourceFileId,
+        string sourceType,
+        string sourceUrl)
+    {
+        var promptRange = await this.GetObjectAsync(r => r.Id == rangeId)
+                          ?? throw new NcfExceptionBase($"没有找到{rangeId}对应的靶场");
+        promptRange.UpdateSource(sourceFileId, sourceType, sourceUrl);
+        await this.SaveObjectAsync(promptRange);
+        return this.TransEntityToDto(promptRange);
+    }
+
     private PromptRangeDto TransEntityToDto(Models.DatabaseModel.PromptRange promptRange)
     {
         return this.Mapper.Map<PromptRangeDto>(promptRange);

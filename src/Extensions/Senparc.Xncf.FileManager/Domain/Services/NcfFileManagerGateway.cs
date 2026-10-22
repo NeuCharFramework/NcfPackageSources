@@ -65,6 +65,7 @@ public sealed class NcfFileManagerGateway : IFileManagerGateway
             // FileManager currently has no dedicated fine-tuning scope. Keep the
             // abstraction-level kind while using its private, non-public storage policy.
             FileManagerResourceKind.FineTuning => NcfFileResourceScope.PrivateAttachment,
+            FileManagerResourceKind.Skill => NcfFileResourceScope.Skill,
             _ => throw new ArgumentOutOfRangeException(nameof(request.ResourceKind))
         };
         long? maxFileSizeBytes = request.ResourceKind == FileManagerResourceKind.FineTuning

@@ -39,6 +39,12 @@ public class PromptRangeDto : DtoBase
 
     public SkillKind Kind { get; set; }
 
+    public int? SourceFileId { get; set; }
+
+    public string SourceType { get; set; }
+
+    public string SourceUrl { get; set; }
+
     // /// <summary>
     // /// 期望结果Json
     // /// </summary>
