@@ -254,6 +254,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Dm
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<int?>("SourceFileId")
+                        .HasColumnType("INT");
+
+                    b.Property<string>("SourceType")
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)");
+
+                    b.Property<string>("SourceUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("NVARCHAR2(2048)");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("INT");
 

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.0</Version>
+    <Version>0.19.1</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -18,6 +18,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
+        [2026-10-22] v0.19.1 add CLI-generated migrations for Agent Skill bindings and Workspace policy columns.
         [2026-10-06] Fix Agent Studio Razor partial rendering and validate the compiled page with the existing Three.js components.
         [2026-10-06] Add interactive Agent Studio, incremental team membership, quick team creation and task management.
 		v0.1.0 创世

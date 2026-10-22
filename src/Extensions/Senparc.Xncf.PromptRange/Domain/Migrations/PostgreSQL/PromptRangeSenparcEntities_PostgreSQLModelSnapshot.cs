@@ -258,6 +258,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
+                    b.Property<int?>("SourceFileId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SourceType")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("SourceUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");
 

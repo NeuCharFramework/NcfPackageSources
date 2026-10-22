@@ -23,8 +23,10 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Xncf.FileManager.Abstractions;
 using Senparc.Xncf.AIKernel.Domain.Models;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Abstractions.Skills;
@@ -46,19 +48,22 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
     private readonly PromptResultService _promptResultService;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly AIModelService _aiModelService;
+    private readonly IServiceProvider _serviceProvider;
 
     public PromptRangeSkillService(
         PromptRangeService promptRangeService,
         PromptItemService promptItemService,
         PromptResultService promptResultService,
         IHttpClientFactory httpClientFactory,
-        AIModelService aiModelService)
+        AIModelService aiModelService,
+        IServiceProvider serviceProvider)
     {
         _promptRangeService = promptRangeService;
         _promptItemService = promptItemService;
         _promptResultService = promptResultService;
         _httpClientFactory = httpClientFactory;
         _aiModelService = aiModelService;
+        _serviceProvider = serviceProvider;
     }
 
     public async Task<IReadOnlyList<SkillDescriptor>> ListAsync(
@@ -246,6 +251,7 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
     public async Task<SkillInstallResult> InstallAsync(
         Stream package,
         string fileName,
+        string sourceUrl = null,
         CancellationToken cancellationToken = default)
     {
         if (package == null || !package.CanRead)
@@ -318,6 +324,11 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         }
 
         buffer.Position = 0;
+        var artifact = await StoreArtifactAsync(
+            buffer,
+            Path.GetFileName(string.IsNullOrWhiteSpace(fileName) ? "skill.zip" : fileName),
+            sourceUrl);
+        buffer.Position = 0;
         var formFile = new FormFile(
             buffer,
             0,
@@ -333,6 +344,11 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         if (installedRange != null)
         {
             await _promptRangeService.ChangeKindAsync(installedRange.Id, SkillKind.Skill);
+            await _promptRangeService.UpdateSourceAsync(
+                installedRange.Id,
+                artifact?.FileId,
+                string.IsNullOrWhiteSpace(sourceUrl) ? "FilePackage" : "External",
+                sourceUrl);
         }
 
         SkillDescriptor skill;
@@ -376,7 +392,11 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
                 branch,
                 folder,
                 cancellationToken);
-            return await InstallAsync(githubPackage, $"{Path.GetFileName(folder)}.skill.zip", cancellationToken);
+            return await InstallAsync(
+                githubPackage,
+                $"{Path.GetFileName(folder)}.skill.zip",
+                packageUrl,
+                cancellationToken);
         }
 
         var client = _httpClientFactory.CreateClient("PromptRangeSkillPackage");
@@ -395,7 +415,7 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
         }
 
         await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
-        return await InstallAsync(stream, Path.GetFileName(uri.LocalPath), cancellationToken);
+        return await InstallAsync(stream, Path.GetFileName(uri.LocalPath), packageUrl, cancellationToken);
     }
 
     public async Task<SkillContentPreview> PreviewAsync(
@@ -502,6 +522,22 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             item.FullVersion,
             new SkillExecutionContext("PromptRange", Mode: SkillExecutionMode.Preview),
             cancellationToken);
+        await using var generatedPackage = await ExportAsync(
+            GetSkillId(range),
+            item.FullVersion,
+            cancellationToken);
+        var artifact = await StoreArtifactAsync(
+            (MemoryStream)generatedPackage,
+            $"{GetSkillId(range)}-{item.FullVersion}.skill.zip",
+            null);
+        if (artifact != null)
+        {
+            await _promptRangeService.UpdateSourceAsync(
+                range.Id,
+                artifact.FileId,
+                "AIGenerated",
+                null);
+        }
         return new SkillGenerationResult(
             skill,
             definition.Content,
@@ -669,6 +705,32 @@ Requested Skill:
         return prompt + (string.IsNullOrWhiteSpace(existingContent)
             ? string.Empty
             : $"\nExisting prompt content to improve:\n{existingContent}");
+    }
+
+    private async Task<FileManagerImportResult> StoreArtifactAsync(
+        MemoryStream package,
+        string fileName,
+        string sourceUrl)
+    {
+        var gateway = _serviceProvider.GetService<IFileManagerGateway>();
+        if (gateway == null || !await gateway.IsAvailableAsync())
+        {
+            return null;
+        }
+
+        package.Position = 0;
+        var result = await gateway.ImportAsync(
+            new FileManagerImportRequest(
+                package,
+                fileName,
+                "application/zip",
+                package.Length,
+                string.IsNullOrWhiteSpace(sourceUrl)
+                    ? "PromptRange Skill package"
+                    : $"PromptRange Skill package: {sourceUrl}",
+                FileManagerResourceKind.Skill));
+        package.Position = 0;
+        return result;
     }
 
     private static GeneratedSkillDefinition ParseGeneratedSkill(

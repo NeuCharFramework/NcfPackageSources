@@ -80,7 +80,10 @@ namespace Senparc.Xncf.FileManager.Domain.Models.DatabaseModel
         SiteAsset = 200,
 
         /// <summary>由微信等外部模块导入且不可公开发布的私有附件。</summary>
-        PrivateAttachment = 300
+        PrivateAttachment = 300,
+
+        /// <summary>Skill package and resource files.</summary>
+        Skill = 400
     }
 
     public enum NcfFileAccessLevel

@@ -83,7 +83,7 @@ namespace Senparc.Xncf.AgentsManager
 
         public override string Uid => ModuleUid;//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.3.22";//必须填写版本号
+        public override string Version => "0.3.23";//必须填写版本号
 
         public override string MenuName => AgentsManagerResource.Get("Module.AgentsManager.MenuName", "Agents 管理模块");
 
@@ -242,7 +242,6 @@ namespace Senparc.Xncf.AgentsManager
         }
     }
 }
-
 
 
 

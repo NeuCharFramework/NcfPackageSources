@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.2</Version>
+    <Version>0.20.3</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -144,6 +144,7 @@
       2、新增 Skill 隔离测试运行器与管理端 Skill 页面
       3、执行请求可附带策略，并适配 Senparc.AI.AgentKernel 0.1.15-preview2
       [2026-10-21] v0.20.2 upgrade Skill management with GitHub folder import, AI Draft generation, version tree preview, and safer content inspection
+      [2026-10-22] v0.20.3 persist Skill package artifacts through FileManager and add source metadata to PromptRange
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
@@ -206,6 +207,7 @@
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.FileManager.Abstractions\Senparc.Xncf.FileManager.Abstractions.csproj" />
     <ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
     <ProjectReference Include="..\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
     <ProjectReference Include="..\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />

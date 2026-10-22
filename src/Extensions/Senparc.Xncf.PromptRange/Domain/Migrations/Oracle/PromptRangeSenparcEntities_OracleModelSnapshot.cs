@@ -258,6 +258,17 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Oracle
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<int?>("SourceFileId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("SourceType")
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR2(20)");
+
+                    b.Property<string>("SourceUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("NCLOB");
+
                     b.Property<int>("TenantId")
                         .HasColumnType("NUMBER(10)");
 
