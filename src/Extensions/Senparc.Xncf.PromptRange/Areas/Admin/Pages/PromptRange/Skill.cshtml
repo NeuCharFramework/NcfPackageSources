@@ -74,6 +74,11 @@
             <el-tab-pane label="ZIP / Release" name="zip">
                 <el-input v-model="packageUrl" placeholder="https://example.com/example.skill.zip"></el-input>
             </el-tab-pane>
+            <el-tab-pane label="本地上传" name="upload">
+                <input type="file" accept=".zip,application/zip,application/x-zip-compressed" @@change="selectPackage" />
+                <small class="text-muted d-block mt-2">支持 skill.json 位于根目录、平铺文件，或包含外层文件夹的 ZIP。单个 ZIP 最大 50 MB。</small>
+                <div v-if="packageFile" class="mt-2 text-muted">已选择：{{ packageFile.name }}</div>
+            </el-tab-pane>
             <el-tab-pane label="GitHub 文件夹" name="github">
                 <el-input v-model="githubUrl" placeholder="https://github.com/owner/repo/tree/main/skills/example"></el-input>
                 <small class="text-muted">需要包含 SKILL.md 或 skprompt.txt。导入后会自动转换为 PromptRange Skill 包。</small>
@@ -96,6 +101,7 @@
 
     <el-dialog title="Skill 内容预览" :visible.sync="previewDialogVisible" width="900px">
         <el-alert v-if="preview.manifestJson" title="Manifest" type="info" :closable="false" class="mb-2"><pre>{{ preview.manifestJson }}</pre></el-alert>
+        <el-empty v-if="!preview.files.length" description="当前版本没有可预览的文件"></el-empty>
         <el-tabs v-model="previewTab">
             <el-tab-pane v-for="file in preview.files" :key="file.path" :label="file.path" :name="file.path">
                 <el-alert v-if="!file.isPreviewable" title="此文件类型不支持在线预览，仅展示文件信息。" type="warning" :closable="false"></el-alert>
@@ -116,6 +122,7 @@
             installDialogVisible: false,
             packageUrl: '',
             githubUrl: '',
+            packageFile: null,
             installTab: 'github',
             generationDialogVisible: false,
             generating: false,
@@ -157,8 +164,42 @@
                     .then(function (response) { self.chatModels = response.data.data || response.data.Data || []; })
                     .catch(function (error) { self.$message.error('加载 Chat 模型失败：' + (error.message || '未知错误')); });
             },
+            selectPackage: function (event) {
+                var file = event.target.files && event.target.files.length ? event.target.files[0] : null;
+                if (file && file.size > 50 * 1024 * 1024) {
+                    this.packageFile = null;
+                    event.target.value = '';
+                    this.$message.warning('Skill ZIP 不能超过 50 MB');
+                    return;
+                }
+                this.packageFile = file;
+            },
             installSkill: function () {
                 var self = this;
+                if (self.installTab === 'upload') {
+                    if (!self.packageFile) {
+                        self.$message.warning('请选择要上传的 Skill ZIP');
+                        return;
+                    }
+
+                    var formData = new FormData();
+                    formData.append('package', self.packageFile);
+                    self.installing = true;
+                    axios.post('/api/Senparc.Xncf.PromptRange/SkillAppService/Xncf.PromptRange_SkillAppService.InstallAsync', formData, {
+                        headers: { 'Content-Type': 'multipart/form-data' }
+                    }).then(function () {
+                        self.$message.success('Skill 已导入为 Draft，请预览、测试并审核后发布');
+                        self.installDialogVisible = false;
+                        self.packageFile = null;
+                        self.loadSkills();
+                    }).catch(function (error) {
+                        self.$message.error('上传失败：' + (error.message || '未知错误'));
+                    }).finally(function () {
+                        self.installing = false;
+                    });
+                    return;
+                }
+
                 var url = self.installTab === 'github' ? self.githubUrl : self.packageUrl;
                 if (!url || !url.toLowerCase().startsWith('https://')) {
                     self.$message.warning('只允许使用 HTTPS 地址');
@@ -203,10 +244,26 @@
             previewSkill: function (skill, version) {
                 var self = this;
                 axios.get('/api/Senparc.Xncf.PromptRange/SkillAppService/Xncf.PromptRange_SkillAppService.PreviewAsync', {
-                    params: { skillId: skill.skillId, version: version && (version.version || version.promptCode) }
+                    params: { skillId: skill.skillId, version: version && (version.version || version.Version || version.promptCode || version.PromptCode) }
                 }).then(function (response) {
-                    self.preview = response.data.data || response.data.Data || { files: [] };
-                    self.previewTab = self.preview.files.length ? self.preview.files[0].path : '';
+                    var payload = response && response.data ? response.data : {};
+                    var data = payload.data !== undefined ? payload.data : payload.Data;
+                    data = data || {};
+                    var files = data.files !== undefined ? data.files : data.Files;
+                    files = Array.isArray(files) ? files.map(function (file) {
+                        return {
+                            path: file.path !== undefined ? file.path : file.Path,
+                            contentType: file.contentType !== undefined ? file.contentType : file.ContentType,
+                            length: file.length !== undefined ? file.length : file.Length,
+                            isPreviewable: file.isPreviewable !== undefined ? file.isPreviewable : file.IsPreviewable,
+                            content: file.content !== undefined ? file.content : file.Content
+                        };
+                    }) : [];
+                    self.preview = {
+                        manifestJson: data.manifestJson !== undefined ? data.manifestJson : data.ManifestJson,
+                        files: files
+                    };
+                    self.previewTab = files.length ? files[0].path : '';
                     self.previewDialogVisible = true;
                 }).catch(function (error) { self.$message.error('预览失败：' + (error.message || '未知错误')); });
             },
