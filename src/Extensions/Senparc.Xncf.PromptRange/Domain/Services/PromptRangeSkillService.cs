@@ -43,6 +43,10 @@ namespace Senparc.Xncf.PromptRange.Domain.Services;
 /// </summary>
 public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISkillPackageService
 {
+    private const long MaxPackageBytes = 50L * 1024 * 1024;
+    private const long MaxExpandedPackageBytes = 200L * 1024 * 1024;
+    private const int MaxPackageEntries = 2000;
+
     private readonly PromptRangeService _promptRangeService;
     private readonly PromptItemService _promptItemService;
     private readonly PromptResultService _promptResultService;
@@ -259,24 +263,24 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             throw new NcfExceptionBase("Skill 包内容不可读");
         }
 
-        if (package.CanSeek && package.Length > 50L * 1024 * 1024)
+        if (package.CanSeek && package.Length > MaxPackageBytes)
         {
             throw new NcfExceptionBase("Skill 包大小超过限制（50 MB）");
         }
 
         await using var buffer = new MemoryStream();
         await package.CopyToAsync(buffer, cancellationToken);
-        if (buffer.Length > 50L * 1024 * 1024)
+        if (buffer.Length > MaxPackageBytes)
         {
             throw new NcfExceptionBase("Skill 包大小超过限制（50 MB）");
         }
 
-        buffer.Position = 0;
+        await using var normalizedPackage = await NormalizePackageAsync(buffer, cancellationToken);
+        normalizedPackage.Position = 0;
         SkillPackageManifest manifest;
-        using (var archive = new ZipArchive(buffer, ZipArchiveMode.Read, true))
+        using (var archive = new ZipArchive(normalizedPackage, ZipArchiveMode.Read, true))
         {
-            var manifestEntry = archive.GetEntry("skill.json")
-                ?? throw new NcfExceptionBase("Skill 包缺少 skill.json");
+            var manifestEntry = archive.GetEntry("skill.json")!;
             await using var manifestStream = manifestEntry.Open();
             manifest = await JsonSerializer.DeserializeAsync<SkillPackageManifest>(
                 manifestStream,
@@ -290,15 +294,8 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
                 throw new NcfExceptionBase("Skill manifest 必须包含 SkillId 和 Version");
             }
 
-            var packageRoot = SanitizePackageComponent(manifest.SkillId) + "/";
             foreach (var entry in archive.Entries)
             {
-                if (!string.Equals(entry.FullName, "skill.json", StringComparison.OrdinalIgnoreCase) &&
-                    !entry.FullName.StartsWith(packageRoot, StringComparison.OrdinalIgnoreCase))
-                {
-                    throw new NcfExceptionBase("Skill 包目录与 manifest.SkillId 不一致");
-                }
-
                 if (entry.FullName.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
                     entry.FullName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ||
                     entry.FullName.EndsWith(".sh", StringComparison.OrdinalIgnoreCase) ||
@@ -323,16 +320,16 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
             throw new NcfExceptionBase($"Skill {manifest.SkillId}@{manifest.Version} 已存在");
         }
 
-        buffer.Position = 0;
+        normalizedPackage.Position = 0;
         var artifact = await StoreArtifactAsync(
-            buffer,
+            normalizedPackage,
             Path.GetFileName(string.IsNullOrWhiteSpace(fileName) ? "skill.zip" : fileName),
             sourceUrl);
-        buffer.Position = 0;
+        normalizedPackage.Position = 0;
         var formFile = new FormFile(
-            buffer,
+            normalizedPackage,
             0,
-            buffer.Length,
+            normalizedPackage.Length,
             "skillPackage",
             Path.GetFileName(string.IsNullOrWhiteSpace(fileName) ? "skill.zip" : fileName));
         await _promptItemService.UploadPluginsAsync(formFile);
@@ -349,6 +346,126 @@ public sealed class PromptRangeSkillService : ISkillCatalog, ISkillExecutor, ISk
                 artifact?.FileId,
                 string.IsNullOrWhiteSpace(sourceUrl) ? "FilePackage" : "External",
                 sourceUrl);
+        }
+
+        async Task<MemoryStream> NormalizePackageAsync(
+            Stream package,
+            CancellationToken cancellationToken)
+        {
+            package.Position = 0;
+            using var sourceArchive = new ZipArchive(package, ZipArchiveMode.Read, leaveOpen: true);
+            if (sourceArchive.Entries.Count > MaxPackageEntries)
+            {
+                throw new NcfExceptionBase("Skill 包文件数量超过限制（2000 个）");
+            }
+
+            var entries = sourceArchive.Entries
+                .Where(entry => !string.IsNullOrEmpty(entry.Name))
+                .Select(entry => new { Entry = entry, Path = NormalizeArchivePath(entry.FullName) })
+                .ToList();
+            var expandedBytes = entries.Sum(item => item.Entry.Length);
+            if (expandedBytes > MaxExpandedPackageBytes)
+            {
+                throw new NcfExceptionBase("Skill 包解压后大小超过限制（200 MB）");
+            }
+
+            var manifestCandidates = entries
+                .Where(item => string.Equals(
+                    Path.GetFileName(item.Path),
+                    "skill.json",
+                    StringComparison.OrdinalIgnoreCase))
+                .OrderBy(item => item.Path.Count(character => character == '/'))
+                .ThenBy(item => item.Path, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            if (manifestCandidates.Count == 0)
+            {
+                throw new NcfExceptionBase("Skill 包缺少 skill.json");
+            }
+
+            var manifestCandidate = manifestCandidates[0];
+            SkillPackageManifest manifest;
+            await using (var manifestStream = manifestCandidate.Entry.Open())
+            {
+                manifest = await JsonSerializer.DeserializeAsync<SkillPackageManifest>(
+                    manifestStream,
+                    JsonOptions,
+                    cancellationToken)
+                    ?? throw new NcfExceptionBase("Skill manifest 无效");
+            }
+
+            if (string.IsNullOrWhiteSpace(manifest.SkillId) ||
+                string.IsNullOrWhiteSpace(manifest.Version))
+            {
+                throw new NcfExceptionBase("Skill manifest 必须包含 SkillId 和 Version");
+            }
+
+            var skillRoot = SanitizePackageComponent(manifest.SkillId);
+            var manifestDirectory = Path.GetDirectoryName(manifestCandidate.Path)?
+                .Replace('\\', '/')
+                .Trim('/') ?? string.Empty;
+            var output = new MemoryStream();
+            var outputPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "skill.json"
+            };
+
+            using (var targetArchive = new ZipArchive(output, ZipArchiveMode.Create, leaveOpen: true))
+            {
+                WriteEntry(targetArchive, "skill.json", JsonSerializer.Serialize(manifest, JsonOptions));
+                foreach (var item in entries)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (ReferenceEquals(item.Entry, manifestCandidate.Entry))
+                    {
+                        continue;
+                    }
+
+                    var relativePath = item.Path;
+                    if (!string.IsNullOrEmpty(manifestDirectory) &&
+                        relativePath.StartsWith(manifestDirectory + "/", StringComparison.OrdinalIgnoreCase))
+                    {
+                        relativePath = relativePath[(manifestDirectory.Length + 1)..];
+                    }
+
+                    relativePath = relativePath.Trim('/');
+                    if (string.IsNullOrEmpty(relativePath))
+                    {
+                        continue;
+                    }
+
+                    var skillPrefix = skillRoot + "/";
+                    var outputPath = relativePath.StartsWith(skillPrefix, StringComparison.OrdinalIgnoreCase)
+                        ? relativePath
+                        : skillPrefix + relativePath;
+                    if (!outputPaths.Add(outputPath))
+                    {
+                        throw new NcfExceptionBase($"Skill 包包含重复文件：{outputPath}");
+                    }
+
+                    var outputEntry = targetArchive.CreateEntry(outputPath, CompressionLevel.Fastest);
+                    await using var input = item.Entry.Open();
+                    await using var outputStream = outputEntry.Open();
+                    await input.CopyToAsync(outputStream, cancellationToken);
+                }
+            }
+
+            output.Position = 0;
+            return output;
+        }
+
+        string NormalizeArchivePath(string path)
+        {
+            var normalized = (path ?? string.Empty).Replace('\\', '/');
+            var segments = normalized.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            if (segments.Length == 0 ||
+                segments.Any(segment => segment is "." or "..") ||
+                normalized.StartsWith("/", StringComparison.Ordinal) ||
+                normalized.Contains('\0'))
+            {
+                throw new NcfExceptionBase("Skill 包包含不安全的文件路径");
+            }
+
+            return string.Join("/", segments);
         }
 
         SkillDescriptor skill;
