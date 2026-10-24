@@ -427,6 +427,9 @@
                                 class="chat-ai-model-select input-ai-model-select"
                                 :loading="loadingAiModelOptions"
                                 :disabled="isSending"
+                                filterable
+                                default-first-option
+                                filter-placeholder="搜索模型"
                                 @@change="handleCurrentSessionAiModelChange"
                                 placeholder="@AR["AdminChat.SelectModel"]">
                                 <el-option
@@ -532,6 +535,9 @@
                                         size="mini"
                                         class="chat-ai-model-select"
                                         :loading="loadingAiModelOptions"
+                                        filterable
+                                        default-first-option
+                                        filter-placeholder="搜索模型"
                                         placeholder="@AR["AdminChat.SelectModel"]">
                                         <el-option
                                             v-for="item in aiModelOptions"

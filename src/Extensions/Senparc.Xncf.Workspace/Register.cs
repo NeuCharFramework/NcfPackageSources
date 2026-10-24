@@ -29,7 +29,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 {
     public override string Name => "Senparc.Xncf.Workspace";
     public override string Uid => "9D0AA0B5-1E76-4BA3-96A0-4BE1A8D6A6E7";
-    public override string Version => "0.2.1";
+    public override string Version => "0.2.2";
     public override string MenuName => "Workspace";
     public override string Icon => "fa fa-folder-open";
     public override string Description => "通过跨平台 Workspace Agent 提供隔离文件访问、桌面编辑和安全运行时。";

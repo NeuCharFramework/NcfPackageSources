@@ -43,6 +43,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.11.1 对话接入工作区上下文并生成会话标题
 
+    修改标识：Senparc - 20261024
+    修改描述：修复 Workspace 空查询工具调用，并显式报告客户端未注册错误
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
@@ -734,7 +737,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var chatOptions = new ChatOptions
             {
                 Instructions = BuildSystemMessage(modules)
-                    + "\n\nWorkspace 操作规则：先用 workspace_search 按文件名或内容定位目标，不要猜测路径；读取目标文件后，局部修改必须优先使用 workspace_patch，只有新文件或完整重写确有必要时才使用 workspace_write。workspace_patch 的 oldText 必须来自最近一次读取，expectedReplacements 应准确填写；工具返回冲突或未应用时不得声称修改成功，必须重新读取并重新生成补丁。"
+                    + "\n\nWorkspace 操作规则：需要浏览 Workspace 时，如果不知道文件名或搜索内容，先调用 workspace_list；workspace_search 至少提供 nameQuery 或 contentQuery 之一，不能将两者都留空。不要猜测目标文件路径；读取目标文件后，局部修改必须优先使用 workspace_patch，只有新文件或完整重写确有必要时才使用 workspace_write。workspace_patch 的 oldText 必须来自最近一次读取，expectedReplacements 应准确填写；工具返回冲突或未应用时不得声称修改成功，必须重新读取并重新生成补丁。"
                     + "\n执行 Python 时只能调用 workspace_execute_python；不要生成或尝试 cmd、powershell、bash、sh 或其他通用 Shell 命令。"
                     + "\n如果当前工具列表中没有 workspace_execute_python，必须明确说明当前会话没有绑定可执行 Workspace，不能声称已经运行脚本。",
                 Tools = functions != null && functions.Count > 0
@@ -1241,23 +1244,31 @@ namespace Senparc.Areas.Admin.Domain.Services
                 && !string.IsNullOrWhiteSpace(session.WorkspaceId))
             {
                 var workspaceClientFactory = _serviceProvider.GetService<IWorkspaceClientFactory>();
-                if (workspaceClientFactory != null)
+                if (workspaceClientFactory == null)
                 {
-                    var workspaceClient = workspaceClientFactory.Create(new WorkspaceAccessContext(
-                        session.WorkspaceId,
-                        new WorkspacePolicy(
-                            AllowRead: true,
-                            AllowWrite: session.WorkspaceWriteEnabled,
-                            AllowPython: session.WorkspaceCliEnabled,
-                            MaxBytes: 50L * 1024 * 1024),
-                        "AdminChat",
-                        userId.ToString(CultureInfo.InvariantCulture),
-                        sessionId.ToString(CultureInfo.InvariantCulture)));
-                    aiFunctions.AddRange(AdminChatWorkspaceToolFactory.Create(
-                        workspaceClient,
-                        session.WorkspaceWriteEnabled,
-                        session.WorkspaceCliEnabled));
+                    _logger.LogError(
+                        "AdminChat 会话已绑定 Workspace，但 Workspace 客户端未注册：SessionId={SessionId}, UserId={UserId}, WorkspaceId={WorkspaceId}",
+                        sessionId,
+                        userId,
+                        session.WorkspaceId);
+                    throw new InvalidOperationException(
+                        "当前会话已绑定 Workspace，但 Workspace 服务未正确注册，无法访问 Workspace。");
                 }
+
+                var workspaceClient = workspaceClientFactory.Create(new WorkspaceAccessContext(
+                    session.WorkspaceId,
+                    new WorkspacePolicy(
+                        AllowRead: true,
+                        AllowWrite: session.WorkspaceWriteEnabled,
+                        AllowPython: session.WorkspaceCliEnabled,
+                        MaxBytes: 50L * 1024 * 1024),
+                    "AdminChat",
+                    userId.ToString(CultureInfo.InvariantCulture),
+                    sessionId.ToString(CultureInfo.InvariantCulture)));
+                aiFunctions.AddRange(AdminChatWorkspaceToolFactory.Create(
+                    workspaceClient,
+                    session.WorkspaceWriteEnabled,
+                    session.WorkspaceCliEnabled));
             }
 
             var importedPluginNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -1645,7 +1656,7 @@ namespace Senparc.Areas.Admin.Domain.Services
             var sb = new StringBuilder();
             sb.AppendLine("你是 NeuCharFramework 管理后台首页中的 AI 智能助手。");
             sb.AppendLine("请使用简洁、准确、可执行的中文回答用户问题。若信息不足，请明确指出缺失信息。\n");
-            sb.AppendLine("如果当前会话提供 Workspace 工具：先用 workspace_search 按文件名或内容定位目标，不要猜测路径；读取目标文件后，局部修改优先使用 workspace_patch，只有新文件或确需完整重写时才使用 workspace_write。补丁返回冲突或未应用时，不得声称修改成功。");
+            sb.AppendLine("如果当前会话提供 Workspace 工具：需要浏览 Workspace 时，如果不知道文件名或搜索内容，先调用 workspace_list；workspace_search 至少提供 nameQuery 或 contentQuery 之一，不能将两者都留空。不要猜测目标文件路径；读取目标文件后，局部修改优先使用 workspace_patch，只有新文件或确需完整重写时才使用 workspace_write。补丁返回冲突或未应用时，不得声称修改成功。");
 
             if (modules != null && modules.Any())
             {
