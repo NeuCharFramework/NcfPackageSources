@@ -1,0 +1,164 @@
+using System;
+using System.IO;
+using System.Security.Claims;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Senparc.Areas.Admin.Domain.Services;
+using Senparc.Ncf.Core.Authorization;
+
+namespace Senparc.Areas.Admin.OHS.Local.Controllers;
+
+[ApiController]
+[Route("api/Senparc.Areas.Admin/WorkspaceAssets")]
+[AdminOrJwtAuthorize(NcfAuthorizationPolicyNames.AdminOnly)]
+[AutoValidateAntiforgeryToken]
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+public sealed class AdminChatWorkspaceAssetsController : ControllerBase
+{
+    private static readonly SemaphoreSlim DownloadSlots = new(2, 2);
+    private readonly AdminChatWorkspaceAssetService _assets;
+    private readonly WorkspaceAssetShareStore _shares;
+    private readonly ILogger<AdminChatWorkspaceAssetsController> _logger;
+
+    public AdminChatWorkspaceAssetsController(
+        AdminChatWorkspaceAssetService assets, WorkspaceAssetShareStore shares,
+        ILogger<AdminChatWorkspaceAssetsController> logger)
+    {
+        _assets = assets;
+        _shares = shares;
+        _logger = logger;
+    }
+
+    [HttpGet("{sessionId:int}/preview")]
+    public Task<IActionResult> Preview(int sessionId, [FromQuery] string path, CancellationToken cancellationToken) =>
+        ExecuteAsync(async () =>
+        {
+            var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            var preview = await _assets.BuildPreviewAsync(session.WorkspaceId, path, cancellationToken);
+            return Html(preview.Html);
+        });
+
+    [HttpGet("{sessionId:int}/download")]
+    public Task<IActionResult> Download(int sessionId, [FromQuery] string path = "",
+        CancellationToken cancellationToken = default) =>
+        ExecuteAsync(async () =>
+        {
+            var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            if (!await DownloadSlots.WaitAsync(0, cancellationToken))
+                return StatusCode(StatusCodes.Status429TooManyRequests, new { message = "下载任务繁忙，请稍后重试。" });
+            try
+            {
+                var download = await _assets.DownloadAsync(session.WorkspaceId, path, cancellationToken);
+                Response.Headers["X-Content-Type-Options"] = "nosniff";
+                return File(download.Bytes, "application/octet-stream", download.FileName);
+            }
+            finally { DownloadSlots.Release(); }
+        });
+
+    [HttpGet("{sessionId:int}/shares")]
+    public Task<IActionResult> ListShares(int sessionId, CancellationToken cancellationToken) =>
+        ExecuteAsync(async () =>
+        {
+            var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            var shares = await _shares.ListAsync(GetOwnerId(), sessionId, session.WorkspaceId, cancellationToken);
+            return Ok(new { shares = System.Linq.Enumerable.Select(shares, ShareDto) });
+        });
+
+    [HttpPost("{sessionId:int}/shares")]
+    [RequestSizeLimit(4096)]
+    public Task<IActionResult> CreateShare(int sessionId, [FromBody] CreateWorkspaceAssetShare request,
+        CancellationToken cancellationToken) =>
+        ExecuteAsync(async () =>
+        {
+            var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            if (request.ExpiresInHours is not (1 or 24 or 168))
+                throw new ArgumentException("分享有效期只能是 1 小时、24 小时或 7 天。");
+            var preview = await _assets.BuildPreviewAsync(session.WorkspaceId, request.Path, cancellationToken);
+            var share = await _shares.CreateAsync(GetOwnerId(), sessionId, session.WorkspaceId,
+                request.Path, preview.Html, request.ExpiresInHours, cancellationToken);
+            return Ok(new { share = ShareDto(share), warnings = preview.Warnings });
+        });
+
+    [HttpDelete("{sessionId:int}/shares/{shareId}")]
+    public Task<IActionResult> RevokeShare(int sessionId, string shareId, CancellationToken cancellationToken) =>
+        ExecuteAsync(async () =>
+        {
+            var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            return await _shares.RevokeAsync(GetOwnerId(), sessionId, session.WorkspaceId, shareId, cancellationToken)
+                ? Ok(new { revoked = true })
+                : NotFound(new { message = "分享不存在或已失效。" });
+        });
+
+    [AllowAnonymous]
+    [HttpGet("shared/{id}/{token}")]
+    public Task<IActionResult> Shared(string id, string token, CancellationToken cancellationToken) =>
+        ExecuteAsync(async () =>
+        {
+            Response.Headers["Referrer-Policy"] = "no-referrer";
+            Response.Headers["X-Robots-Tag"] = "noindex, nofollow, noarchive";
+            if (!_shares.TryAcquirePublicRequest(HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"))
+                return StatusCode(StatusCodes.Status429TooManyRequests, new { message = "访问过于频繁，请稍后重试。" });
+            var share = await _shares.ReadPublicAsync(id, token, cancellationToken);
+            if (share == null || !await _assets.IsShareWorkspaceAvailableAsync(share, cancellationToken))
+                return NotFound(new { message = "分享不存在、已撤销或已过期。" });
+            return Html(share.Html);
+        });
+
+    private object ShareDto(WorkspaceAssetShare share) => new
+    {
+        share.Id, share.Path, share.CreatedAt, share.ExpiresAt,
+        url = $"{Request.PathBase}/api/Senparc.Areas.Admin/WorkspaceAssets/shared/{share.Id}/{share.Token}"
+    };
+
+    private int GetOwnerId() => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+    private FileContentResult Html(string html)
+    {
+        Response.Headers["Content-Security-Policy"] = WorkspaceAssetPreviewBuilder.ContentSecurityPolicy;
+        Response.Headers["X-Content-Type-Options"] = "nosniff";
+        Response.Headers["Referrer-Policy"] = "no-referrer";
+        Response.Headers["X-Robots-Tag"] = "noindex, nofollow, noarchive";
+        Response.Headers["X-Frame-Options"] = "DENY";
+        Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin";
+        Response.Headers["Cross-Origin-Resource-Policy"] = "same-origin";
+        Response.Headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
+        Response.Headers.CacheControl = "no-store";
+        return File(Encoding.UTF8.GetBytes(html), "text/html; charset=utf-8");
+    }
+
+    private async Task<IActionResult> ExecuteAsync(Func<Task<IActionResult>> action)
+    {
+        try { return await action(); }
+        catch (UnauthorizedAccessException error)
+        {
+            _logger.LogWarning("Workspace asset access denied: {Reason}", error.Message);
+            return StatusCode(StatusCodes.Status403Forbidden, new { message = "无权访问此 Workspace。" });
+        }
+        catch (Exception error) when (error is FileNotFoundException or DirectoryNotFoundException)
+        {
+            return NotFound(new { message = "Workspace、文件或分享不存在。" });
+        }
+        catch (Exception error) when (error is ArgumentException or InvalidOperationException)
+        {
+            _logger.LogWarning("Workspace asset request rejected: {Reason}", error.Message);
+            return BadRequest(new { message = error.Message });
+        }
+        catch (IOException error)
+        {
+            _logger.LogError(error, "Workspace asset operation failed.");
+            return StatusCode(StatusCodes.Status500InternalServerError,
+                new { message = "Workspace 文件操作失败，请检查服务器日志。" });
+        }
+    }
+
+    public sealed class CreateWorkspaceAssetShare
+    {
+        public string Path { get; set; } = "";
+        public int ExpiresInHours { get; set; } = 24;
+    }
+}

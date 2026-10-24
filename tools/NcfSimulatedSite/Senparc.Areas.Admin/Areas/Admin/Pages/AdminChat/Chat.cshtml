@@ -16,7 +16,10 @@
 }
 
 <div class="admin-chat-container">
-    <el-container class="chat-main-container">
+    <el-container
+        ref="workspaceContainer"
+        class="chat-main-container"
+        :class="{ 'is-workspace-preview-open': currentSessionWorkspaceId && workspacePreviewOpen, 'is-workspace-preview-overlay': workspacePreviewOverlay }">
         <!-- 左侧会话历史 -->
         <el-aside width="280px" class="chat-sidebar">
             <div class="sidebar-header">
@@ -695,9 +698,19 @@
                         {{ currentSessionWorkspaceName || currentSessionWorkspaceId }}
                     </div>
                 </div>
-                <el-button type="text" size="mini" title="关闭资产面板" @@click="workspacePreviewOpen = false">
-                    <i class="el-icon-close"></i>
-                </el-button>
+                <div class="chat-workspace-preview-actions">
+                    <el-button
+                        type="text"
+                        size="mini"
+                        title="展开至最大可用宽度"
+                        :disabled="workspacePreviewWidth >= workspacePreviewMaxWidth"
+                        @@click="expandWorkspacePreview">
+                        <i class="el-icon-full-screen"></i>
+                    </el-button>
+                    <el-button type="text" size="mini" title="关闭资产面板" @@click="workspacePreviewOpen = false">
+                        <i class="el-icon-close"></i>
+                    </el-button>
+                </div>
             </div>
             <div class="chat-workspace-preview-toolbar">
                 <el-button
@@ -734,17 +747,28 @@
                 <div v-if="workspacePreviewFilePath" class="chat-workspace-file-preview">
                     <div class="chat-workspace-file-preview-header">
                         <span :title="workspacePreviewFilePath">{{ workspaceEntryName(workspacePreviewFilePath) }}</span>
+                        <el-button
+                            v-if="workspacePreviewCanShowSource"
+                            type="text"
+                            size="mini"
+                            :title="workspacePreviewSource ? '查看预览' : '查看源码'"
+                            :aria-label="workspacePreviewSource ? '查看预览' : '查看源码'"
+                            :aria-pressed="workspacePreviewSource ? 'true' : 'false'"
+                            @@click="workspacePreviewSource = !workspacePreviewSource">
+                            <i :class="workspacePreviewSource ? 'fa fa-eye' : 'fa fa-code'"></i>
+                        </el-button>
                         <el-tag v-if="workspacePreviewData" size="mini" type="info">{{ workspacePreviewData.contentType }}</el-tag>
                     </div>
                     <div v-if="workspacePreviewLoading" class="chat-workspace-preview-loading">
                         <i class="el-icon-loading"></i> 正在加载预览…
                     </div>
+                    <pre v-else-if="workspacePreviewData && workspacePreviewSource && workspacePreviewData.isText" class="chat-workspace-text-preview">{{ workspacePreviewData.content }}</pre>
                     <iframe
-                        v-else-if="workspacePreviewData && workspacePreviewData.contentType === 'text/html'"
+                        v-else-if="workspacePreviewIsDocument"
                         class="chat-workspace-html-frame"
                         sandbox="allow-same-origin"
                         :srcdoc="workspacePreviewSrcdoc"
-                        title="Workspace HTML 预览"></iframe>
+                        :title="workspacePreviewData.contentType === 'text/markdown' ? 'Workspace Markdown 预览' : 'Workspace HTML 预览'"></iframe>
                     <div v-else-if="workspacePreviewData && workspacePreviewData.contentType.indexOf('image/') === 0" class="chat-workspace-image-preview">
                         <img :src="workspacePreviewDataUrl()" :alt="workspacePreviewFilePath" />
                     </div>

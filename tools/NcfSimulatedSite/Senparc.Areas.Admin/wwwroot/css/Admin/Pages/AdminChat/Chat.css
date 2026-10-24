@@ -1395,6 +1395,7 @@
     --chat-ink: #202633;
     --chat-muted: #7e8796;
     --chat-border: #e5e9f0;
+    --chat-content-min-width: 360px;
     height: calc(100vh - 128px);
     min-height: 520px;
     padding: 12px 14px 14px;
@@ -1413,14 +1414,18 @@
     min-width: 0;
 }
 
+.chat-main-container.is-workspace-preview-open:not(.is-workspace-preview-overlay) .chat-content {
+    min-width: var(--chat-content-min-width);
+}
+
 .chat-workspace-preview {
     position: relative;
     box-sizing: border-box;
     display: flex;
-    flex: 0 0 auto;
+    flex: 0 1 auto;
     flex-direction: column;
-    min-width: 320px;
-    max-width: min(720px, 55vw);
+    min-width: 0;
+    max-width: 100%;
     border-left: 1px solid var(--chat-border);
     background: #fff;
 }
@@ -1466,6 +1471,12 @@
     min-height: 56px;
     padding: 10px 14px 8px 18px;
     border-bottom: 1px solid #edf0f4;
+}
+
+.chat-workspace-preview-actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
 }
 
 .chat-workspace-preview-title {
@@ -1599,6 +1610,7 @@
 
 .chat-workspace-file-preview-header > span:first-child {
     min-width: 0;
+    flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1651,31 +1663,23 @@ body.is-resizing-workspace-preview iframe {
     pointer-events: none;
 }
 
-@media (max-width: 960px) {
-    .chat-workspace-preview {
-        position: absolute;
-        z-index: 5;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        max-width: calc(100vw - 72px);
-        box-shadow: -12px 0 28px rgba(32, 38, 51, 0.12);
-    }
+.is-workspace-preview-overlay .chat-workspace-preview {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: -12px 0 28px rgba(32, 38, 51, 0.12);
+}
 
-    .chat-workspace-preview-resizer {
-        left: -6px;
-    }
-
-    .chat-workspace-preview .chat-workspace-preview-resizer::after {
-        opacity: 1;
-    }
+.is-workspace-preview-overlay .chat-workspace-preview-resizer::after {
+    opacity: 1;
 }
 
 @media (max-width: 560px) {
     .chat-workspace-preview {
         min-width: 0;
-        width: calc(100vw - 34px) !important;
-        max-width: calc(100vw - 34px);
+        width: 100% !important;
     }
 
     .chat-workspace-preview .chat-workspace-file-list {
