@@ -1,0 +1,115 @@
+{
+  "name": "ncf-workspace",
+  "displayName": "NCF Workspace",
+  "description": "通过 NCF DesktopBridge 在 VS Code 或 Cursor 中安全打开远程 Workspace。",
+  "version": "0.1.0",
+  "publisher": "senparc",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "NCF",
+    "Workspace",
+    "DesktopBridge",
+    "remote",
+    "Cursor"
+  ],
+  "extensionKind": [
+    "ui"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onFileSystem:ncf-workspace",
+    "onCommand:ncfWorkspace.connect",
+    "onCommand:ncfWorkspace.reconnect",
+    "onCommand:ncfWorkspace.disconnect",
+    "onCommand:ncfWorkspace.createWorkspace",
+    "onCommand:ncfWorkspace.openWorkspace"
+  ],
+  "capabilities": {
+    "virtualWorkspaces": {
+      "supported": true,
+      "description": "NCF Workspace 通过安全的虚拟文件系统工作。"
+    },
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "连接远程 NCF 站点和写入 Workspace 前需要信任当前窗口。"
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "ncfWorkspace.connect",
+        "title": "连接 NCF Workspace",
+        "category": "NCF Workspace"
+      },
+      {
+        "command": "ncfWorkspace.reconnect",
+        "title": "重新连接",
+        "category": "NCF Workspace"
+      },
+      {
+        "command": "ncfWorkspace.disconnect",
+        "title": "断开连接",
+        "category": "NCF Workspace"
+      },
+      {
+        "command": "ncfWorkspace.createWorkspace",
+        "title": "新建 Workspace",
+        "category": "NCF Workspace"
+      },
+      {
+        "command": "ncfWorkspace.openWorkspace",
+        "title": "打开 Workspace",
+        "category": "NCF Workspace"
+      }
+    ],
+    "walkthroughs": [
+      {
+        "id": "ncfWorkspace.gettingStarted",
+        "title": "开始使用 NCF Workspace",
+        "description": "三步把 NCF Workspace 像远程目录一样打开。",
+        "steps": [
+          {
+            "id": "ncfWorkspace.connectStep",
+            "title": "连接并完成安全授权",
+            "description": "运行 [连接 NCF Workspace](command:ncfWorkspace.connect)，输入站点地址，然后按浏览器提示完成 DesktopBridge 配对和管理员授权。",
+            "completionEvents": [
+              "onCommand:ncfWorkspace.connect"
+            ]
+          },
+          {
+            "id": "ncfWorkspace.openStep",
+            "title": "选择并打开 Workspace",
+            "description": "连接流程会自动列出可用 Workspace；以后也可以运行 [打开 Workspace](command:ncfWorkspace.openWorkspace)。",
+            "completionEvents": [
+              "onCommand:ncfWorkspace.openWorkspace"
+            ]
+          },
+          {
+            "id": "ncfWorkspace.createStep",
+            "title": "需要新目录？",
+            "description": "运行 [新建 Workspace](command:ncfWorkspace.createWorkspace)，输入名称后直接打开。",
+            "completionEvents": [
+              "onCommand:ncfWorkspace.createWorkspace"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "check": "tsc -p ./ --noEmit",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "@types/vscode": "^1.90.0",
+    "typescript": "^5.6.3"
+  }
+}

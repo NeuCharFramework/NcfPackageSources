@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.1.0-preview1</Version>
+    <AssemblyName>Senparc.Ncf.IsolatedRuntime</AssemblyName>
+    <RootNamespace>Senparc.Ncf.IsolatedRuntime</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Description>NeuCharFramework shared isolated runtime providers.</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <Title>NCF 共享隔离运行时</Title>
+    <Authors>NeuCharFramework</Authors>
+    <Owners>NeuCharFramework</Owners>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <PackageTags>NeuCharFramework,NCF,Docker,Isolation,Runtime</PackageTags>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'TemplateRelease'">true</GeneratePackageOnBuild>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+    <PackageReleaseNotes>
+      [2026-10-24] v0.1.0-preview1 统一 Workspace 与 Sandbox 的 Docker 隔离底层能力
+      1、结构化管理镜像、挂载、端口、网络、资源和安全选项
+      2、支持 attached、one-shot、exec、logs、remove 和容器查询
+      3、统一超时、取消、有限输出和参数边界
+    </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\Senparc.Ncf.Shared.Abstractions\Senparc.Ncf.Shared.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Senparc.Ncf.IsolatedRuntime.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+
+</Project>

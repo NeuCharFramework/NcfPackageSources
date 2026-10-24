@@ -23,12 +23,11 @@
 
 ----------------------------------------------------------------*/
 
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Senparc.Ncf.Shared.Abstractions.Isolation;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Domain.Services;
 
@@ -43,32 +42,26 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
     private readonly ILogger<DockerSandboxRuntime> _logger;
     private readonly ISandboxImageResolver _imageResolver;
     private readonly SandboxDockerOptions _dockerOptions;
+    private readonly IIsolatedRuntimeProvider _runtimeProvider;
 
     public DockerSandboxRuntime(
         ILogger<DockerSandboxRuntime> logger,
         ISandboxImageResolver imageResolver,
+        IEnumerable<IIsolatedRuntimeProvider> isolatedRuntimeProviders,
         IOptions<SandboxDockerOptions>? dockerOptions = null)
     {
         _logger = logger;
         _imageResolver = imageResolver ?? new SandboxImageResolver(new SandboxImageOptions());
         _dockerOptions = dockerOptions?.Value ?? new SandboxDockerOptions();
+        _runtimeProvider = isolatedRuntimeProviders.Single(provider =>
+            string.Equals(provider.ProviderName, "Docker", StringComparison.OrdinalIgnoreCase));
     }
 
     public SandboxRuntimeKind Kind => SandboxRuntimeKind.Docker;
 
     public async Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default)
     {
-        try
-        {
-            var result = await RunDockerAsync(new[] { "version", "--format", "{{.Server.Version}}" }, null, TimeSpan.FromSeconds(8), cancellationToken)
-                .ConfigureAwait(false);
-            return result.ExitCode == 0 && !string.IsNullOrWhiteSpace(result.StdOut);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogDebug(ex, "Docker runtime probe failed.");
-            return false;
-        }
+        return await _runtimeProvider.IsAvailableAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<SandboxCreateRuntimeResult> CreateInteractiveAsync(
@@ -96,34 +89,17 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             request.Template.ContainerPort,
             hostPort);
 
-        // base_url 与 Jupyter 路径一致；列表链接使用本机映射端口和 token 直达容器。
         var baseUrl = SandboxJupyterPaths.GetBaseUrl(request.SessionId);
-        var args = new List<string>
+        var ports = new List<IsolatedRuntimePortBinding>
         {
-            "run", "-d",
-            "--name", $"ncf-sandbox-{request.SessionId}",
-            "--label", "ncf.sandbox=1",
-            "--label", $"ncf.sandbox.session={request.SessionId}",
-            "--cpus", request.CpuLimit.ToString("0.###"),
-            "--memory", $"{request.MemoryMb}m",
-            "--pids-limit", "256",
-            "-p", $"127.0.0.1:{hostPort}:{request.Template.ContainerPort}",
-            "-v", $"{request.WorkspaceDirectory}:/home/jovyan/work",
-            "-e", $"JUPYTER_TOKEN={token}",
-            image,
-            "start-notebook.py",
-            $"--ServerApp.token={token}",
-            $"--ServerApp.base_url={baseUrl}",
-            "--ServerApp.allow_origin=*",
-            "--ServerApp.allow_remote_access=True",
-            "--ServerApp.disable_check_xsrf=True",
-            "--ServerApp.root_dir=/home/jovyan/work"
+            new("127.0.0.1", hostPort, request.Template.ContainerPort)
         };
         foreach (var extraPort in resolvedExtraPorts)
         {
-            var insertAt = args.IndexOf(image);
-            args.Insert(insertAt, "-p");
-            args.Insert(insertAt + 1, extraPort.ToDisplayString());
+            ports.Add(new IsolatedRuntimePortBinding(
+                extraPort.ExposeExternally ? "0.0.0.0" : "127.0.0.1",
+                extraPort.HostPort,
+                extraPort.ContainerPort));
         }
 
         var createTimeout = _dockerOptions.GetInteractiveCreateTimeout();
@@ -131,13 +107,51 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             "Sandbox interactive container creating: session={SessionId} timeoutSeconds={TimeoutSeconds}",
             request.SessionId,
             createTimeout.TotalSeconds);
-        var run = await RunDockerAsync(args, null, createTimeout, cancellationToken).ConfigureAwait(false);
+        var run = await _runtimeProvider.RunAsync(
+            new IsolatedRuntimeSpec
+            {
+                Image = image,
+                Name = $"ncf-sandbox-{request.SessionId}",
+                Detached = true,
+                ReadOnlyRootFileSystem = false,
+                DropAllCapabilities = true,
+                NoNewPrivileges = true,
+                NetworkMode = string.Empty,
+                CpuLimit = request.CpuLimit,
+                MemoryMegabytes = request.MemoryMb,
+                PidsLimit = 256,
+                Timeout = createTimeout,
+                Labels = CreateLabels(request.SessionId),
+                Environment = new Dictionary<string, string>(StringComparer.Ordinal)
+                {
+                    ["JUPYTER_TOKEN"] = token
+                },
+                Ports = ports,
+                Mounts =
+                [
+                    new IsolatedRuntimeMount(
+                        Path.GetFullPath(request.WorkspaceDirectory),
+                        "/home/jovyan/work")
+                ],
+                Command =
+                [
+                    "start-notebook.py",
+                    $"--ServerApp.token={token}",
+                    $"--ServerApp.base_url={baseUrl}",
+                    "--ServerApp.allow_origin=*",
+                    "--ServerApp.allow_remote_access=True",
+                    "--ServerApp.disable_check_xsrf=True",
+                    "--ServerApp.root_dir=/home/jovyan/work"
+                ]
+            },
+            cancellationToken).ConfigureAwait(false);
         if (run.ExitCode != 0)
         {
-            throw new InvalidOperationException($"Docker 启动失败: {run.StdErr}\n{run.StdOut}");
+            throw new InvalidOperationException(
+                $"Docker 启动失败: {run.StandardError}\n{run.StandardOutput}");
         }
 
-        var containerId = run.StdOut.Trim();
+        var containerId = run.StandardOutput.Trim();
         _logger.LogInformation(
             "Sandbox Jupyter started: session={SessionId} container={ContainerId} hostPort={HostPort} baseUrl={BaseUrl}",
             request.SessionId,
@@ -199,44 +213,62 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             network,
             request.SessionId);
 
-        var args = new List<string>
-        {
-            "run", "-d",
-            "--name", $"ncf-sandbox-{request.SessionId}",
-            "--label", "ncf.sandbox=1",
-            "--label", $"ncf.sandbox.session={request.SessionId}",
-            "--cpus", request.CpuLimit.ToString("0.###"),
-            "--memory", $"{request.MemoryMb}m",
-            "--pids-limit", "256",
-            "--cap-drop", "ALL",
-            "--security-opt", "no-new-privileges",
-            "--read-only",
-            "--tmpfs", "/tmp:rw,noexec,nosuid,size=256m",
-            "--network", network,
-            "-p", $"127.0.0.1:{hostPort}:{request.Template.ContainerPort}",
-            "-v", $"{request.WorkspaceDirectory}:/workspace",
-            "-w", "/workspace",
-            "-e", "HOME=/tmp/home",
-            "-e", "DOTNET_CLI_HOME=/tmp/dotnet-home",
-            "-e", "DOTNET_CLI_TELEMETRY_OPTOUT=1",
-            "-e", $"NCF_SOLUTION_RELATIVE_PATH={preview.SolutionRelativePath.Replace('\\', '/')}",
-            "-e", $"NCF_XNCF_PREVIEW_PATH_BASE={previewBasePath}",
-            image,
-            "sh", "-c", NcfPreviewLaunchScript
-        };
-
-        var run = await RunDockerAsync(
-                args,
-                null,
-                TimeSpan.FromSeconds(Math.Clamp(preview.StartupTimeoutSeconds + 30, 60, 600)),
+        var run = await _runtimeProvider.RunAsync(
+                new IsolatedRuntimeSpec
+                {
+                    Image = image,
+                    Name = $"ncf-sandbox-{request.SessionId}",
+                    Detached = true,
+                    ReadOnlyRootFileSystem = true,
+                    DropAllCapabilities = true,
+                    NoNewPrivileges = true,
+                    NetworkMode = network,
+                    WorkingDirectory = "/workspace",
+                    CpuLimit = request.CpuLimit,
+                    MemoryMegabytes = request.MemoryMb,
+                    PidsLimit = 256,
+                    Timeout = TimeSpan.FromSeconds(
+                        Math.Clamp(preview.StartupTimeoutSeconds + 30, 60, 600)),
+                    Labels = CreateLabels(request.SessionId),
+                    Environment = new Dictionary<string, string>(StringComparer.Ordinal)
+                    {
+                        ["HOME"] = "/tmp/home",
+                        ["DOTNET_CLI_HOME"] = "/tmp/dotnet-home",
+                        ["DOTNET_CLI_TELEMETRY_OPTOUT"] = "1",
+                        ["NCF_SOLUTION_RELATIVE_PATH"] =
+                            preview.SolutionRelativePath.Replace('\\', '/'),
+                        ["NCF_XNCF_PREVIEW_PATH_BASE"] = previewBasePath
+                    },
+                    Ports =
+                    [
+                        new IsolatedRuntimePortBinding(
+                            "127.0.0.1",
+                            hostPort,
+                            request.Template.ContainerPort)
+                    ],
+                    Mounts =
+                    [
+                        new IsolatedRuntimeMount(
+                            Path.GetFullPath(request.WorkspaceDirectory),
+                            "/workspace")
+                    ],
+                    TmpfsMounts =
+                    [
+                        new IsolatedRuntimeTmpfsMount(
+                            "/tmp",
+                            "rw,noexec,nosuid,size=256m")
+                    ],
+                    Command = ["sh", "-c", NcfPreviewLaunchScript]
+                },
                 cancellationToken)
             .ConfigureAwait(false);
         if (run.ExitCode != 0)
         {
-            throw new InvalidOperationException($"Docker NCF 预览启动失败: {run.StdErr}\n{run.StdOut}");
+            throw new InvalidOperationException(
+                $"Docker NCF 预览启动失败: {run.StandardError}\n{run.StandardOutput}");
         }
 
-        var containerId = run.StdOut.Trim();
+        var containerId = run.StandardOutput.Trim();
         try
         {
             await WaitForOpenTcpPortAsync(
@@ -247,10 +279,12 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         }
         catch
         {
-            var logs = await RunDockerAsync(new[] { "logs", "--tail", "160", containerId }, null, TimeSpan.FromSeconds(20), CancellationToken.None)
+            var logs = await _runtimeProvider
+                .GetLogsAsync(containerId, 160, CancellationToken.None)
                 .ConfigureAwait(false);
             await DestroyAsync(containerId, CancellationToken.None).ConfigureAwait(false);
-            throw new InvalidOperationException($"NCF Sandbox 预览未在规定时间内监听端口。\n{logs.StdErr}\n{logs.StdOut}");
+            throw new InvalidOperationException(
+                $"NCF Sandbox 预览未在规定时间内监听端口。\n{logs}");
         }
 
         return new SandboxCreateRuntimeResult
@@ -273,7 +307,12 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         string fileName;
         string[] command;
         var mountReadOnly = true;
-        var extraDockerArgs = new List<string>();
+        var environment = new Dictionary<string, string>(StringComparer.Ordinal);
+        var workingDirectory = string.Empty;
+        IsolatedRuntimeTmpfsMount[] tmpfs =
+        [
+            new("/tmp", "rw,noexec,nosuid,size=128m")
+        ];
 
         if (string.Equals(request.Template.Key, SandboxTemplateKeys.PythonExec, StringComparison.OrdinalIgnoreCase))
         {
@@ -292,13 +331,13 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
                 .ConfigureAwait(false);
 
             mountReadOnly = false; // 编译需要写 obj/bin
-            extraDockerArgs.AddRange(new[]
+            environment = new Dictionary<string, string>(StringComparer.Ordinal)
             {
-                "-e", "HOME=/tmp",
-                "-e", "DOTNET_CLI_HOME=/tmp/dotnet-home",
-                "-e", "DOTNET_CLI_TELEMETRY_OPTOUT=1",
-                "-w", "/work"
-            });
+                ["HOME"] = "/tmp",
+                ["DOTNET_CLI_HOME"] = "/tmp/dotnet-home",
+                ["DOTNET_CLI_TELEMETRY_OPTOUT"] = "1"
+            };
+            workingDirectory = "/work";
             command = new[]
             {
                 "dotnet", "run", "--file", $"/work/{fileName}", "-v", "q",
@@ -318,22 +357,33 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             image,
             mountReadOnly);
 
-        var args = new List<string>
-        {
-            "run", "--rm",
-            "--label", "ncf.sandbox=1",
-            "--label", $"ncf.sandbox.session={request.SessionId}",
-            "--cpus", request.CpuLimit.ToString("0.###"),
-            "--memory", $"{request.MemoryMb}m",
-            "--pids-limit", "128",
-            "--network", "none",
-            "-v", mountReadOnly ? $"{workDir}:/work:ro" : $"{workDir}:/work"
-        };
-        args.AddRange(extraDockerArgs);
-        args.Add(image);
-        args.AddRange(command);
-
-        var run = await RunDockerAsync(args, null, request.Timeout, cancellationToken).ConfigureAwait(false);
+        var run = await _runtimeProvider.RunAsync(
+            new IsolatedRuntimeSpec
+            {
+                Image = image,
+                AutoRemove = true,
+                NetworkMode = "none",
+                ReadOnlyRootFileSystem = true,
+                DropAllCapabilities = true,
+                NoNewPrivileges = true,
+                CpuLimit = request.CpuLimit,
+                MemoryMegabytes = request.MemoryMb,
+                PidsLimit = 128,
+                Timeout = request.Timeout,
+                Labels = CreateLabels(request.SessionId),
+                Environment = environment,
+                WorkingDirectory = workingDirectory,
+                TmpfsMounts = tmpfs,
+                Mounts =
+                [
+                    new IsolatedRuntimeMount(
+                        Path.GetFullPath(workDir),
+                        "/work",
+                        mountReadOnly)
+                ],
+                Command = command
+            },
+            cancellationToken).ConfigureAwait(false);
         try
         {
             Directory.Delete(workDir, true);
@@ -346,8 +396,8 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         return new SandboxExecResult
         {
             ExitCode = run.ExitCode,
-            StdOut = run.StdOut,
-            StdErr = run.StdErr
+            StdOut = run.StandardOutput,
+            StdErr = run.StandardError
         };
     }
 
@@ -372,23 +422,6 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             ? 32_000
             : request.MaxOutputCharacters;
         var hasStdin = !string.IsNullOrEmpty(request.StdinContent);
-        var args = new List<string>
-        {
-            "exec"
-        };
-        if (hasStdin)
-        {
-            args.Add("-i");
-        }
-
-        args.AddRange(new[]
-        {
-            "--workdir", request.WorkingDirectory,
-            request.RuntimeHandle,
-            "/bin/sh",
-            "-lc",
-            request.Command
-        });
 
         _logger.LogInformation(
             "Sandbox interactive command starting: session={SessionId} container={RuntimeHandle} workdir={WorkingDirectory} stdin={HasStdin}",
@@ -397,20 +430,22 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             request.WorkingDirectory,
             hasStdin);
 
-        var run = await RunDockerAsync(
-                args,
-                null,
-                timeout,
-                cancellationToken,
-                maxOutputCharacters,
-                hasStdin ? request.StdinContent : null)
+        var run = await _runtimeProvider.ExecAsync(
+                new IsolatedRuntimeExecRequest(
+                    request.RuntimeHandle,
+                    ["/bin/sh", "-lc", request.Command],
+                    request.WorkingDirectory,
+                    hasStdin ? request.StdinContent : null,
+                    timeout,
+                    maxOutputCharacters),
+                cancellationToken)
             .ConfigureAwait(false);
 
         return new SandboxExecResult
         {
             ExitCode = run.ExitCode,
-            StdOut = run.StdOut,
-            StdErr = run.StdErr
+            StdOut = run.StandardOutput,
+            StdErr = run.StandardError
         };
     }
 
@@ -421,7 +456,8 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
             return;
         }
 
-        await RunDockerAsync(new[] { "rm", "-f", runtimeHandle }, null, TimeSpan.FromSeconds(30), cancellationToken)
+        await _runtimeProvider
+            .RemoveAsync(runtimeHandle, force: true, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -437,24 +473,14 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
 
     private async Task<IReadOnlyList<string>> ListHandlesAsync(bool all, CancellationToken cancellationToken)
     {
-        var result = await RunDockerAsync(
-                all
-                    ? new[] { "ps", "-aq", "--no-trunc", "--filter", "label=ncf.sandbox=1" }
-                    : new[] { "ps", "-q", "--no-trunc", "--filter", "label=ncf.sandbox=1" },
-                null,
-                TimeSpan.FromSeconds(20),
-                cancellationToken)
-            .ConfigureAwait(false);
-        if (result.ExitCode != 0)
-        {
-            throw new InvalidOperationException($"Docker 查询沙箱容器失败：{result.StdErr}");
-        }
-
-        return result.StdOut
-            .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-            .Select(z => z.Trim())
-            .Where(z => z.Length > 0)
-            .ToArray();
+        return await _runtimeProvider.ListHandlesAsync(
+            new IsolatedRuntimeListRequest(
+                new Dictionary<string, string>(StringComparer.Ordinal)
+                {
+                    ["ncf.sandbox"] = "1"
+                },
+                IncludeStopped: all),
+            cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -589,114 +615,12 @@ public sealed class DockerSandboxRuntime : ISandboxRuntime
         exec dotnet /workspace/.ncf-preview-publish/Senparc.Web.dll --urls=http://0.0.0.0:8080 --environment=XncfPreview
         """;
 
-    private async Task<(int ExitCode, string StdOut, string StdErr)> RunDockerAsync(
-        IReadOnlyList<string> args,
-        string? workingDirectory,
-        TimeSpan timeout,
-        CancellationToken cancellationToken,
-        int maxOutputCharacters = 0,
-        string? stdin = null)
+    private static IReadOnlyDictionary<string, string> CreateLabels(string sessionId)
     {
-        var hasStdin = !string.IsNullOrEmpty(stdin);
-        var psi = new ProcessStartInfo
+        return new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            FileName = "docker",
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            RedirectStandardInput = hasStdin,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            WorkingDirectory = workingDirectory ?? Environment.CurrentDirectory
+            ["ncf.sandbox"] = "1",
+            ["ncf.sandbox.session"] = sessionId
         };
-        foreach (var arg in args)
-        {
-            psi.ArgumentList.Add(arg);
-        }
-
-        using var process = new Process { StartInfo = psi, EnableRaisingEvents = true };
-        var stdout = new StringBuilder();
-        var stderr = new StringBuilder();
-        process.OutputDataReceived += (_, e) =>
-        {
-            if (e.Data != null)
-            {
-                AppendLimited(stdout, e.Data, maxOutputCharacters);
-            }
-        };
-        process.ErrorDataReceived += (_, e) =>
-        {
-            if (e.Data != null)
-            {
-                AppendLimited(stderr, e.Data, maxOutputCharacters);
-            }
-        };
-
-        if (!process.Start())
-        {
-            throw new InvalidOperationException("无法启动 docker 进程。请确认已安装 Docker 且 docker 在 PATH 中。");
-        }
-
-        process.BeginOutputReadLine();
-        process.BeginErrorReadLine();
-
-        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        timeoutCts.CancelAfter(timeout);
-
-        // 写入使用与超时联动的取消令牌：若目标程序不读取 stdin，超时到点后写入被取消并进入统一超时处理。
-        if (hasStdin)
-        {
-            try
-            {
-                var standardInput = process.StandardInput;
-                if (stdin is string stdinText)
-                {
-                    await standardInput.WriteAsync(stdinText.AsMemory(), timeoutCts.Token).ConfigureAwait(false);
-                    await standardInput.WriteAsync(Environment.NewLine.AsMemory(), timeoutCts.Token).ConfigureAwait(false);
-                }
-
-                await standardInput.FlushAsync(timeoutCts.Token).ConfigureAwait(false);
-                standardInput.Close();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogDebug(ex, "Writing stdin to docker process failed (process may have exited early).");
-            }
-        }
-
-        try
-        {
-            await process.WaitForExitAsync(timeoutCts.Token).ConfigureAwait(false);
-        }
-        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
-        {
-            try { process.Kill(entireProcessTree: true); } catch { /* ignore */ }
-            throw new TimeoutException($"docker 命令超时（{timeout.TotalSeconds:0}s）：docker {string.Join(' ', args)}");
-        }
-
-        return (process.ExitCode, stdout.ToString(), stderr.ToString());
-    }
-
-    private static void AppendLimited(StringBuilder builder, string line, int maxOutputCharacters)
-    {
-        if (maxOutputCharacters <= 0)
-        {
-            builder.AppendLine(line);
-            return;
-        }
-
-        if (builder.Length >= maxOutputCharacters)
-        {
-            return;
-        }
-
-        var remaining = maxOutputCharacters - builder.Length;
-        if (line.Length + Environment.NewLine.Length <= remaining)
-        {
-            builder.AppendLine(line);
-            return;
-        }
-
-        builder.Append(line.AsSpan(0, Math.Max(0, remaining - Environment.NewLine.Length)));
-        builder.AppendLine();
     }
 }

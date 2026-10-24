@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.6.0-preview5</Version>
+    <Version>0.7.0-preview1</Version>
     <AssemblyName>Senparc.Ncf.Shared.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Ncf.Shared.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -31,6 +31,9 @@
       [2026-08-13] v0.6.0-preview5 扩展工作流与智能体共享契约，支持 NeuBell 通知和对象编辑元数据
       1、新增可消费 NeuBell 通知提供者契约
       2、扩展工作流对象描述、编辑地址与元数据，支持模块协作
+      [2026-10-24] v0.7.0-preview1 新增 DesktopBridge 会话验证公共契约
+      1、允许 Workspace 等独立模块复用设备会话而不依赖 DesktopBridge 实现程序集
+      2、新增 IIsolatedRuntimeProvider，统一 Workspace 与 Sandbox 的 Docker 隔离能力
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

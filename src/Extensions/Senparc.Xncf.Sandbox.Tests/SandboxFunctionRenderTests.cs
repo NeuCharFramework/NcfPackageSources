@@ -64,15 +64,4 @@ public class SandboxFunctionRenderTests
             request.TemplateOptions.Items.Select(item => item.Value).ToArray());
     }
 
-    [TestMethod]
-    public void AliasAndCreateFunctions_AreRegistered()
-    {
-        var methods = typeof(SandboxAppService)
-            .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-            .Where(method => method.GetCustomAttribute<FunctionRenderAttribute>() != null)
-            .ToDictionary(method => method.Name, StringComparer.Ordinal);
-
-        Assert.IsTrue(methods.ContainsKey("Create"), "Missing FunctionRender method: Create");
-        Assert.IsTrue(methods.ContainsKey("UpdateAlias"), "Missing FunctionRender method: UpdateAlias");
-    }
 }

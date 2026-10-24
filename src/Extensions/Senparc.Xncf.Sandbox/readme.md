@@ -40,7 +40,15 @@ SandboxOrchestrator（配额、TTL、孤儿回收）
 ISandboxRuntime
   ├─ DockerSandboxRuntime
   └─ WasmSandboxRuntime (Stub)
+        ↓
+IIsolatedRuntimeProvider
+  └─ DockerIsolatedRuntimeProvider（与 Workspace 共用）
 ```
+
+`DockerSandboxRuntime` 只保留 Sandbox 模板和会话语义；Docker CLI、结构化挂载、端口、环境变量、
+网络、CPU/memory/pids、只读根、capabilities、日志、超时、销毁和容器查询由
+`Senparc.Ncf.IsolatedRuntime` 统一实现。Workspace Docker Agent 使用同一个 Provider，
+但两者仍保持独立的上层 API 和生命周期。
 
 ### 模板键（协议值，勿本地化）
 
@@ -137,17 +145,27 @@ dotnet run -- --database-upgrade
 ## 镜像配置（appsettings）
 
 ```json
-"SenparcXncfSandbox": {
-  "Docker": {
-    // docker run 在本地没有镜像时会同步下载；默认 900 秒，可按需调整为 60-3600
-    "InteractiveCreateTimeoutSeconds": 900
+{
+  "SenparcXncfSandbox": {
+    "Docker": {
+      // docker run 在本地没有镜像时会同步下载；默认 900 秒，可按需调整为 60-3600
+      "InteractiveCreateTimeoutSeconds": 900
+    },
+    "Images": {
+      "RegistryPrefix": "",
+      "Overrides": {
+        // 国内网络临时代理示例（第三方地址，稳定性不保证；不是清华 TUNA 官方镜像）
+        // "jupyter-python": "quay.dockerproxy.net/jupyter/minimal-notebook:latest",
+        // "jupyter-csharp": "ncf-jupyter-dotnet:10.0"
+      }
+    }
   },
-  "Images": {
-    "RegistryPrefix": "",
-    "Overrides": {
-      // 国内网络临时代理示例（第三方地址，稳定性不保证；不是清华 TUNA 官方镜像）
-      // "jupyter-python": "quay.dockerproxy.net/jupyter/minimal-notebook:latest",
-      // "jupyter-csharp": "ncf-jupyter-dotnet:10.0"
+  "SenparcNcf": {
+    "IsolatedRuntime": {
+      "Docker": {
+        "Executable": "docker",
+        "ProbeTimeoutSeconds": 8
+      }
     }
   }
 }
@@ -169,4 +187,3 @@ dotnet run -- --database-upgrade
 
 - `0.1.0-preview1`：创世骨架  
 - 同日补充：环境准备页 + Docs 链接 + 镜像仓库映射配置  
-

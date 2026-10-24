@@ -1,0 +1,165 @@
+@page
+@model Senparc.Xncf.Workspace.Areas.Workspace.Pages.Index
+@{
+    ViewData["Title"] = "工作区与远程编辑";
+    Layout = "_Layout_Vue";
+    var runtime = Model.RuntimeStatus;
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>扩展模块</el-breadcrumb-item>
+    <el-breadcrumb-item>Workspace</el-breadcrumb-item>
+    <el-breadcrumb-item>远程编辑</el-breadcrumb-item>
+}
+
+<style>
+    .workspace-shell { max-width: 1180px; margin: 0 auto; }
+    .workspace-hero {
+        padding: 28px;
+        border-radius: 18px;
+        color: #fff;
+        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 54%, #7c3aed 100%);
+        box-shadow: 0 18px 48px rgba(79,70,229,.22);
+        margin-bottom: 22px;
+    }
+    .workspace-hero h1 { margin: 0 0 8px; font-size: 27px; font-weight: 700; }
+    .workspace-hero p { margin: 0; opacity: .9; line-height: 1.7; }
+    .workspace-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 16px; margin: 18px 0; }
+    .workspace-card { border: 1px solid #e8ecf4; border-radius: 14px; padding: 19px; background: #fff; }
+    .workspace-card h3 { margin: 0 0 8px; font-size: 16px; color: #18212f; }
+    .workspace-card p { margin: 0; color: #687386; line-height: 1.65; }
+    .runtime-row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:14px; }
+    .workspace-create { display:flex; gap:12px; align-items:center; margin:18px 0; }
+    .workspace-create .el-input { max-width:360px; }
+    .workspace-name { font-weight:600; color:#1f2937; }
+    .workspace-id { font-family: ui-monospace,SFMono-Regular,Menlo,monospace; color:#64748b; font-size:12px; }
+    .step-list { margin: 10px 0 0; padding-left: 20px; color:#4b5563; line-height:1.9; }
+    @@media(max-width:680px) {
+        .workspace-hero { padding:22px; }
+        .workspace-create { align-items:stretch; flex-direction:column; }
+        .workspace-create .el-input { max-width:none; }
+    }
+</style>
+
+<div class="workspace-shell">
+    <div class="workspace-hero">
+        <h1><i class="fa fa-code"></i>&nbsp; 安全远程工作区</h1>
+        <p>文件始终保存在 NCF 配置的持久化目录中；AdminChat、VS Code 和 Cursor 统一通过 Workspace Agent 访问，不再直接操作宿主文件。</p>
+        <div class="runtime-row">
+            <el-tag effect="dark" type="success">@runtime.Provider</el-tag>
+            <el-tag effect="dark">@runtime.IsolationLevel</el-tag>
+            @if (runtime.ExecutionEnabled)
+            {
+                <el-tag effect="dark" type="warning">允许受控执行</el-tag>
+            }
+            else
+            {
+                <el-tag effect="dark" type="info">仅文件访问 · 执行已关闭</el-tag>
+            }
+        </div>
+    </div>
+
+    @if (TempData["WorkspaceMessage"] is string message)
+    {
+        <el-alert title="@message" type="success" show-icon :closable="false"></el-alert>
+    }
+    @if (TempData["WorkspaceError"] is string error)
+    {
+        <el-alert title="@error" type="error" show-icon :closable="false"></el-alert>
+    }
+
+    <div class="workspace-grid">
+        <div class="workspace-card">
+            <h3><i class="fa fa-shield"></i>&nbsp; 双重身份保护</h3>
+            <p>远程网关同时验证 DesktopBridge 设备会话和管理员 JWT，并只显示当前管理员拥有的工作区。</p>
+        </div>
+        <div class="workspace-card">
+            <h3><i class="fa fa-random"></i>&nbsp; 跨平台统一协议</h3>
+            <p>Windows、Linux、macOS 均使用长驻 stdio Agent；无需依赖特定的 Unix Socket 或 Named Pipe。</p>
+        </div>
+        <div class="workspace-card">
+            <h3><i class="fa fa-cube"></i>&nbsp; Docker 可选</h3>
+            <p>有 Docker 时可启用容器隔离；没有 Docker 时保留原生文件访问，且默认禁止执行代码。</p>
+        </div>
+    </div>
+
+    <el-card shadow="never">
+        <div slot="header">
+            <span><i class="fa fa-folder-open"></i>&nbsp;工作区</span>
+            <el-tag size="small" style="float:right">@Model.Workspaces.Count 个</el-tag>
+        </div>
+
+        <form method="post" asp-page-handler="Create" class="workspace-create">
+            <input type="hidden" name="Uid" value="@Model.Uid" />
+            <el-input name="NewWorkspaceName" placeholder="例如：订单系统重构" maxlength="100" show-word-limit></el-input>
+            <button type="submit" class="el-button el-button--primary">
+                <i class="el-icon-plus"></i><span>创建工作区</span>
+            </button>
+        </form>
+
+        <el-table :data="workspaces" border stripe empty-text="尚未创建工作区">
+            <el-table-column label="名称" min-width="220">
+                <template slot-scope="scope">
+                    <div class="workspace-name">{{ scope.row.name }}</div>
+                    <div class="workspace-id">{{ scope.row.id }}</div>
+                </template>
+            </el-table-column>
+            <el-table-column prop="ownerType" label="所有者类型" width="120"></el-table-column>
+            <el-table-column prop="storageProvider" label="持久化存储" width="140"></el-table-column>
+            <el-table-column label="创建时间" min-width="180">
+                <template slot-scope="scope">{{ formatDate(scope.row.createdUtc) }}</template>
+            </el-table-column>
+            <el-table-column label="最近访问" min-width="180">
+                <template slot-scope="scope">{{ formatDate(scope.row.lastAccessedUtc) }}</template>
+            </el-table-column>
+        </el-table>
+    </el-card>
+
+    <div class="workspace-grid">
+        <div class="workspace-card">
+            <h3>在 VS Code / Cursor 中连接</h3>
+            <ol class="step-list">
+                <li>安装 “NCF Workspace” 扩展。</li>
+                <li>运行 “NCF: 连接工作区”。</li>
+                <li>输入站点地址并在浏览器中确认配对。</li>
+                <li>选择工作区，文件会作为远程文件夹打开。</li>
+            </ol>
+        </div>
+        <div class="workspace-card">
+            <h3>需要执行构建或测试？</h3>
+            <p>推荐将 <code>SenparcXncfWorkspace:RuntimeProvider</code> 设置为 <code>Docker</code> 并部署官方 Agent 镜像。NativeAgent 默认只提供安全文件编辑。</p>
+            <div style="margin-top:14px">
+                <a class="el-button el-button--default el-button--small" href="/Admin/DesktopBridge/Index?uid=E9A9D870-A285-4BCE-9D4D-26A219C41252">
+                    <i class="fa fa-desktop"></i><span>管理设备配对</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        new Vue({
+            el: "#app",
+            data: function () {
+                return {
+                    workspaces: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                        Model.Workspaces.Select(x => new {
+                            id = x.Id,
+                            name = x.Name,
+                            ownerType = x.OwnerType,
+                            storageProvider = x.StorageProvider,
+                            createdUtc = x.CreatedUtc,
+                            lastAccessedUtc = x.LastAccessedUtc
+                        }),
+                        new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)))
+                };
+            },
+            methods: {
+                formatDate: function (value) {
+                    return value ? new Date(value).toLocaleString() : "—";
+                }
+            }
+        });
+    </script>
+}

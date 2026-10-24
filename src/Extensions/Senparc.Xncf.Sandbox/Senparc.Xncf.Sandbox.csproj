@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.3.5</Version>
+    <Version>0.4.0</Version>
     <AssemblyName>Senparc.Xncf.Sandbox</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -16,6 +16,10 @@
     <Title>沙箱环境</Title>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
+      [2026-10-24] v0.4.0 统一 Docker 隔离运行时底层能力
+      1、DockerSandboxRuntime 改为 IIsolatedRuntimeProvider 业务适配器
+      2、容器启动、执行、日志、销毁、查询与进程超时由共享 Provider 管理
+      3、Exec 与 Jupyter 统一应用结构化挂载、资源、网络及 capability 策略
       v0.1.0-preview1 创世：独立沙箱模块骨架
       1、引入 ISandboxRuntime 抽象（Docker + Wasm Stub）
       2、Session 生命周期、配额与 TTL 回收
@@ -78,6 +82,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.IsolatedRuntime\Senparc.Ncf.IsolatedRuntime.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
     <ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.Sandbox.Abstractions\Senparc.Xncf.Sandbox.Abstractions.csproj" />

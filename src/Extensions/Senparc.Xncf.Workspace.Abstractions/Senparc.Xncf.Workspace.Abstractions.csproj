@@ -1,8 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <PackageReleaseNotes>
+      [2026-10-24] v0.2.0 新增统一 Workspace Client、二进制文件、ETag 与 Agent 协议
+      1、AdminChat、桌面网关和其他客户端共享相同访问语义
+      2、支持原子写入、移动、删除、会话策略与结构化 Agent 错误
       [2026-10-21] v0.1.0 定义工作区描述、创建请求与访问策略契约
       1、描述符支持所有者类型、Agent 模板与存储提供方
       2、新增工作区读写、命令与 Python 访问策略
