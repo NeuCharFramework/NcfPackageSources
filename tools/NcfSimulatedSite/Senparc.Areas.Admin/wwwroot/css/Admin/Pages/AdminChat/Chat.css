@@ -1110,6 +1110,36 @@
   white-space: pre-wrap;
 }
 
+.live-generation-text {
+  display: block;
+}
+
+.live-thinking-preview {
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  border-left: 2px solid #b3d8ff;
+  background: #f5f9ff;
+  color: #7a8491;
+}
+
+.live-thinking-label {
+  margin-bottom: 3px;
+  color: #7b9bc4;
+  font-size: 12px;
+}
+
+.live-thinking-label .fa {
+  margin-right: 4px;
+}
+
+.live-thinking-content {
+  max-height: calc(1.6em * 8);
+  overflow-y: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .live-trajectory-collapse {
   margin-top: 8px;
   border-top: 1px solid #dfeeff;
@@ -1304,8 +1334,8 @@
 .live-answer-preview {
     position: relative;
     max-width: 100%;
-    max-height: 84px;
-    overflow: hidden;
+    max-height: calc(1.6em * 8);
+    overflow-y: auto;
     overflow-wrap: anywhere;
     word-break: break-word;
 }

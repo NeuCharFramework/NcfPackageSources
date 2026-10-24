@@ -351,8 +351,14 @@
                             <span class="message-role">@AR["AdminChat.RoleAssistant"]</span>
                             <span class="live-run-status">{{ liveStatusText || (chatMode === 'harness' ? '正在规划任务…' : '正在生成回答…') }}</span>
                         </div>
-                        <div class="message-text" v-if="liveAssistantText">
-                            <div class="live-answer-preview" v-html="formatMessageContent(liveAssistantText)"></div>
+                        <div class="message-text live-generation-text" v-if="liveThinkingText || liveAssistantText">
+                            <div v-if="liveThinkingText" class="live-thinking-preview">
+                                <div class="live-thinking-label">
+                                    <i class="fa fa-lightbulb-o"></i> 正在思考
+                                </div>
+                                <div ref="liveThinkingPreview" class="live-thinking-content">{{ liveThinkingText }}</div>
+                            </div>
+                            <div v-if="liveAssistantText" ref="liveAnswerPreview" class="live-answer-preview" v-html="formatMessageContent(liveAssistantText)"></div>
                         </div>
                         <div class="message-text" v-else>
                             <span class="typing-indicator">
