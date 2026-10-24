@@ -36,6 +36,7 @@
       activeRequestController: null,
       isAIResponding: false,
       liveAssistantText: '',
+      liveThinkingText: '',
       liveTrajectoryEvents: [],
       livePendingApprovals: [],
       liveTrajectoryId: 0,
@@ -534,6 +535,7 @@
 
     resetLiveRun() {
       this.liveAssistantText = '';
+      this.liveThinkingText = '';
       this.liveTrajectoryEvents = [];
       this.livePendingApprovals = [];
       this.liveTrajectoryId = 0;
@@ -619,8 +621,10 @@
 
       if (eventName === 'token') {
         this.liveAssistantText += payload && payload.text ? payload.text : '';
+        this.liveThinkingText = '';
         this.liveStatusText = '正在生成回答…';
         this.updateActiveTask({ preview: this.liveAssistantText, status: '生成中' });
+        this.scrollLivePreviewToBottom();
         return;
       }
 
@@ -634,12 +638,20 @@
           this.liveTrajectoryId = payload.trajectoryId;
         }
         if (payload && payload.trajectoryEvent) {
-          this.upsertLiveTrajectoryEvent(payload.trajectoryEvent);
-          this.liveStatusText = '正在组织当前阶段…';
+          const event = payload.trajectoryEvent;
+          this.upsertLiveTrajectoryEvent(event);
+          if (event.eventType === 'TextReasoningContent') {
+            this.liveThinkingText = payload.text || event.content || '';
+            this.liveStatusText = '正在思考…';
+          } else {
+            this.liveAssistantText = payload.text || event.content || '';
+            this.liveStatusText = '正在生成回答…';
+          }
           this.updateActiveTask({
-            preview: payload.trajectoryEvent.content || payload.text || '',
+            preview: event.content || payload.text || '',
             status: '生成中'
           });
+          this.scrollLivePreviewToBottom();
         }
         return;
       }
@@ -693,6 +705,17 @@
         this.finishActiveTask('失败');
         throw new Error(payload && payload.message ? payload.message : '对话执行失败');
       }
+    },
+
+    scrollLivePreviewToBottom() {
+      this.$nextTick(() => {
+        ['liveThinkingPreview', 'liveAnswerPreview'].forEach((refName) => {
+          const element = this.$refs[refName];
+          if (element) {
+            element.scrollTop = element.scrollHeight;
+          }
+        });
+      });
     },
 
     upsertLiveTrajectoryEvent(event) {
