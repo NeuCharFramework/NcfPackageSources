@@ -176,22 +176,22 @@
     },
 
     async handleWorkspaceEntryClick(entry) {
-      if (!entry || !entry.path) return;
+      if (!entry || !entry.relativePath) return;
       if (entry.isDirectory) {
         this.workspacePreviewFilePath = '';
         this.workspacePreviewData = null;
         this.workspacePreviewSrcdoc = '';
-        await this.loadWorkspaceEntries(entry.path);
+        await this.loadWorkspaceEntries(entry.relativePath);
         return;
       }
 
-      this.workspacePreviewFilePath = entry.path;
+      this.workspacePreviewFilePath = entry.relativePath;
       this.workspacePreviewLoading = true;
       this.workspacePreviewData = null;
       this.workspacePreviewSrcdoc = '';
       try {
         const response = await service.get('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetWorkspaceFilePreviewAsync', {
-          params: { sessionId: this.currentSessionId, relativePath: entry.path }
+          params: { sessionId: this.currentSessionId, relativePath: entry.relativePath }
         });
         if (!response.data || !response.data.success || !response.data.data) {
           throw new Error((response.data && response.data.msg) || '文件预览加载失败。');
@@ -379,8 +379,10 @@
     startWorkspacePreviewResize(event) {
       event.preventDefault();
       this.stopWorkspacePreviewResize();
+      const startX = event.clientX;
+      const startWidth = event.currentTarget.parentElement.getBoundingClientRect().width;
       this.workspaceResizeHandler = (moveEvent) => {
-        const width = window.innerWidth - moveEvent.clientX;
+        const width = startWidth + startX - moveEvent.clientX;
         this.workspacePreviewWidth = Math.min(720, Math.max(320, width));
       };
       this.workspaceResizeEndHandler = () => this.stopWorkspacePreviewResize();

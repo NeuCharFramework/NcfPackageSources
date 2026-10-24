@@ -7,7 +7,7 @@
 
 @section Style {
     <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/ChatLauncher.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/Chat.css" />
+    <link rel="stylesheet" href="~/css/Admin/Pages/AdminChat/Chat.css" asp-append-version="true" />
 }
 
 @section breadcrumbs {
@@ -671,6 +671,7 @@
                                     </button>
                                 </el-popover>
                             </div>
+                        </div>
 
                         @await Html.PartialAsync("~/Areas/Admin/Pages/Shared/_ChatModuleSelectorDialog.cshtml")
                     </div>
@@ -681,6 +682,7 @@
         <aside
             v-if="currentSessionWorkspaceId && workspacePreviewOpen"
             class="chat-workspace-preview"
+            aria-label="Workspace 资产"
             :style="{ width: workspacePreviewWidth + 'px' }">
             <div class="chat-workspace-preview-resizer" @@mousedown="startWorkspacePreviewResize"></div>
             <div class="chat-workspace-preview-header">
@@ -716,13 +718,13 @@
                 <div class="chat-workspace-file-list" v-loading="workspaceEntriesLoading">
                     <button
                         v-for="entry in workspaceEntries"
-                        :key="entry.path"
+                        :key="entry.relativePath"
                         type="button"
-                        :class="['chat-workspace-file-item', { 'is-selected': workspacePreviewFilePath === entry.path }]"
+                        :class="['chat-workspace-file-item', { 'is-selected': workspacePreviewFilePath === entry.relativePath }]"
                         @@click="handleWorkspaceEntryClick(entry)">
-                        <i :class="entry.isDirectory ? 'fa fa-folder-o' : workspaceFileIcon(entry.path)"></i>
-                        <span class="chat-workspace-file-name" :title="workspaceEntryName(entry.path)">{{ workspaceEntryName(entry.path) }}</span>
-                        <span v-if="!entry.isDirectory" class="chat-workspace-file-size">{{ formatWorkspaceFileSize(entry.size) }}</span>
+                        <i :class="entry.isDirectory ? 'fa fa-folder-o' : workspaceFileIcon(entry.relativePath)"></i>
+                        <span class="chat-workspace-file-name" :title="workspaceEntryName(entry.relativePath)">{{ workspaceEntryName(entry.relativePath) }}</span>
+                        <span v-if="!entry.isDirectory" class="chat-workspace-file-size">{{ formatWorkspaceFileSize(entry.length) }}</span>
                     </button>
                     <div v-if="!workspaceEntriesLoading && workspaceEntries.length === 0" class="chat-workspace-empty">
                         <i class="fa fa-folder-open-o"></i>

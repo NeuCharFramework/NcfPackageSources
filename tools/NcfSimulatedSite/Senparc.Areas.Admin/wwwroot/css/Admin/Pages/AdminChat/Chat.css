@@ -1403,6 +1403,7 @@
 }
 
 .admin-chat-container .chat-main-container {
+    position: relative;
     border: 1px solid var(--chat-border);
     border-radius: 14px;
     box-shadow: 0 8px 24px rgba(32, 38, 51, 0.06);
@@ -1414,6 +1415,7 @@
 
 .chat-workspace-preview {
     position: relative;
+    box-sizing: border-box;
     display: flex;
     flex: 0 0 auto;
     flex-direction: column;
@@ -1643,6 +1645,10 @@
 body.is-resizing-workspace-preview {
     cursor: col-resize;
     user-select: none;
+}
+
+body.is-resizing-workspace-preview iframe {
+    pointer-events: none;
 }
 
 @media (max-width: 960px) {
