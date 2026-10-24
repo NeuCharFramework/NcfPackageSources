@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.11.1 为后台对话提供工作区工具
 
+    修改标识：Senparc - 20261024
+    修改描述：空查询时回退为目录列表，避免 AI 首次浏览 Workspace 失败
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;
@@ -34,7 +37,7 @@ internal static class AdminChatWorkspaceToolFactory
         {
             Create(target, nameof(WorkspaceToolTarget.ListAsync), "workspace_list", "列出当前 Workspace 内的文件和目录。"),
             Create(target, nameof(WorkspaceToolTarget.ReadAsync), "workspace_read", "读取当前 Workspace 内的文本文件。"),
-            Create(target, nameof(WorkspaceToolTarget.SearchAsync), "workspace_search", "在当前 Workspace 中按文件名和文件内容搜索，并返回匹配文件、行号和预览。")
+            Create(target, nameof(WorkspaceToolTarget.SearchAsync), "workspace_search", "在当前 Workspace 中按文件名和文件内容搜索，并返回匹配文件、行号和预览；如果未提供查询条件，则返回指定目录的文件和目录列表。")
         };
 
         if (allowWrite)
@@ -95,6 +98,17 @@ internal static class AdminChatWorkspaceToolFactory
             bool caseSensitive = false,
             int maxResults = 100)
         {
+            if (string.IsNullOrWhiteSpace(nameQuery)
+                && string.IsNullOrWhiteSpace(contentQuery))
+            {
+                var entries = await _client.ListAsync(relativePath).ConfigureAwait(false);
+                return JsonSerializer.Serialize(new
+                {
+                    mode = "list",
+                    entries
+                });
+            }
+
             var results = await _client.SearchAsync(
                 new WorkspaceSearchRequest(
                     nameQuery,

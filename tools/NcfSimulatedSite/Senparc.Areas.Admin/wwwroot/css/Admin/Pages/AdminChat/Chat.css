@@ -1362,9 +1362,10 @@
     bottom: 0;
     left: -38%;
     width: 38%;
-    background: linear-gradient(90deg, rgba(17, 24, 39, 0), rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0));
+    background: linear-gradient(90deg, rgba(132, 143, 157, 0), rgba(132, 143, 157, 0.22), rgba(132, 143, 157, 0));
     content: '';
-    mix-blend-mode: multiply;
+    filter: blur(1px);
+    mix-blend-mode: normal;
     pointer-events: none;
     animation: liveTextSweep 2.2s linear infinite;
 }
@@ -1832,6 +1833,7 @@
     border-radius: 7px;
     background: #fafbfc;
     font-size: 11px;
+    white-space: nowrap;
 }
 
 .admin-chat-container .chat-inline-settings summary:hover {
@@ -1858,6 +1860,10 @@
     bottom: calc(100% + 8px);
     display: flex;
     align-items: center;
+    flex-wrap: nowrap;
+    width: max-content;
+    max-width: calc(100vw - 28px);
+    box-sizing: border-box;
     gap: 8px;
     padding: 9px;
     border: 1px solid var(--chat-border);
@@ -1883,7 +1889,13 @@
 }
 
 .admin-chat-container .chat-mode-toggle {
+    display: inline-flex;
+    flex-wrap: nowrap;
     margin-left: 0;
+}
+
+.admin-chat-container .chat-inline-settings-panel .chat-mode-toggle .el-radio-button {
+    flex: 0 0 auto;
 }
 
 .admin-chat-container .chat-mode-toggle .el-radio-button__orig-radio:checked + .el-radio-button__inner {
