@@ -36,7 +36,7 @@ namespace Senparc.Xncf.DesktopBridge.OHS.Local.Controllers;
 public sealed class DesktopBridgeController : ControllerBase
 {
     public const int CurrentProtocolVersion = 1;
-    public const string BridgeVersion = "0.2.1-preview2";
+    public const string BridgeVersion = "0.4.8";
     private const string AdminOnlyPolicy = NcfAuthorizationPolicyNames.AdminOnly;
     private const string BackendJwtScheme = "Bearer_Backend";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);

@@ -1240,12 +1240,21 @@ namespace Senparc.Areas.Admin.Domain.Services
                 && session != null
                 && !string.IsNullOrWhiteSpace(session.WorkspaceId))
             {
-                var workspaceStorage = _serviceProvider.GetService<IWorkspaceStorage>();
-                if (workspaceStorage != null)
+                var workspaceClientFactory = _serviceProvider.GetService<IWorkspaceClientFactory>();
+                if (workspaceClientFactory != null)
                 {
-                    aiFunctions.AddRange(AdminChatWorkspaceToolFactory.Create(
-                        workspaceStorage,
+                    var workspaceClient = workspaceClientFactory.Create(new WorkspaceAccessContext(
                         session.WorkspaceId,
+                        new WorkspacePolicy(
+                            AllowRead: true,
+                            AllowWrite: session.WorkspaceWriteEnabled,
+                            AllowPython: session.WorkspaceCliEnabled,
+                            MaxBytes: 50L * 1024 * 1024),
+                        "AdminChat",
+                        userId.ToString(CultureInfo.InvariantCulture),
+                        sessionId.ToString(CultureInfo.InvariantCulture)));
+                    aiFunctions.AddRange(AdminChatWorkspaceToolFactory.Create(
+                        workspaceClient,
                         session.WorkspaceWriteEnabled,
                         session.WorkspaceCliEnabled));
                 }

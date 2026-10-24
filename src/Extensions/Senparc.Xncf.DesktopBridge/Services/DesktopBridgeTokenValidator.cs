@@ -11,9 +11,11 @@
 
 ----------------------------------------------------------------*/
 
+using Senparc.Ncf.Shared.Abstractions.Security;
+
 namespace Senparc.Xncf.DesktopBridge.Services;
 
-public sealed class DesktopBridgeTokenValidator
+public sealed class DesktopBridgeTokenValidator : IDesktopBridgeSessionValidator
 {
     public const string TokenEnvironmentVariable = "NCF_DESKTOP_BRIDGE_TOKEN";
     public const string TokenHeaderName = "X-Ncf-Desktop-Token";
@@ -31,6 +33,8 @@ public sealed class DesktopBridgeTokenValidator
     }
 
     public bool IsConfigured => _credentialStore.IsConfigured;
+
+    public string HeaderName => TokenHeaderName;
 
     public bool IsAuthorized(string? suppliedToken) => _credentialStore.IsAuthorized(suppliedToken);
 
