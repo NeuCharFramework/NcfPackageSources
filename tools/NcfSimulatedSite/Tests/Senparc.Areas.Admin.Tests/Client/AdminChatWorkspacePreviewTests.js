@@ -54,9 +54,18 @@ let options;
 const requests = [];
 const listeners = new Map();
 const classes = new Set();
+const container = {
+    clientWidth: 1800,
+    querySelector() {
+        return { getBoundingClientRect() { return { width: 250 }; } };
+    }
+};
 const sandbox = {
     Vue: function (value) { options = value; },
     window: { ChatLauncherMixin: {}, innerWidth: 1440 },
+    getComputedStyle() {
+        return { getPropertyValue() { return '360px'; } };
+    },
     document: {
         addEventListener(name, handler) { listeners.set(name, handler); },
         removeEventListener(name) { listeners.delete(name); },
@@ -67,7 +76,11 @@ const sandbox = {
             requests.push({ url, params: config.params });
             return { data: { success: true, data: url.includes('GetWorkspaceEntriesAsync')
                 ? { entries: [{ relativePath: 'output/readme.txt', isDirectory: false, length: 12 }] }
-                : { path: config.params.relativePath, isText: true, contentType: 'text/plain', content: 'Workspace text' } } };
+                : {
+                    path: config.params.relativePath, isText: true,
+                    contentType: config.params.relativePath.endsWith('.md') ? 'text/markdown' : 'text/plain',
+                    content: config.params.relativePath.endsWith('.md') ? '# Workspace guide' : 'Workspace text'
+                } } };
         }
     },
     console
@@ -75,6 +88,11 @@ const sandbox = {
 vm.runInNewContext(fs.readFileSync(scriptPath, 'utf8'), sandbox, { filename: scriptPath });
 const app = options.data();
 Object.entries(options.methods).forEach(([name, method]) => { app[name] = method.bind(app); });
+Object.entries(options.computed).forEach(([name, getter]) => {
+    Object.defineProperty(app, name, { get: getter.bind(app) });
+});
+app.$nextTick = callback => callback();
+app.$refs = { workspaceContainer: { $el: container } };
 app.$notify = notification => { throw new Error(notification.message); };
 app.currentSessionId = 42;
 app.currentSessionWorkspaceId = 'ws_test';
@@ -104,12 +122,49 @@ async function run() {
     listeners.get('mouseup')();
     assert.strictEqual(listeners.size, 0);
     assert.strictEqual(classes.size, 0);
+    app.expandWorkspacePreview();
+    assert.strictEqual(app.workspacePreviewWidth, 1190,
+        'Assets must use all remaining container width, even above 720px or 55vw.');
+    assert.strictEqual(container.clientWidth - 250 - app.workspacePreviewWidth, 360,
+        'Maximizing assets must preserve the Chat minimum width.');
+    container.clientWidth = 1200;
+    app.updateWorkspacePreviewLayout();
+    assert.strictEqual(app.workspacePreviewWidth, 590, 'Resizing the container must clamp the preview.');
+    assert.strictEqual(app.workspacePreviewOverlay, false);
+    container.clientWidth = 900;
+    app.updateWorkspacePreviewLayout();
+    assert.strictEqual(app.workspacePreviewOverlay, true,
+        'Use an overlay when the actual container cannot fit both usable panes.');
+    app.expandWorkspacePreview();
+    assert.strictEqual(app.workspacePreviewWidth, 900);
     app.toggleWorkspacePreview();
     assert.strictEqual(app.workspacePreviewOpen, false);
     assert.strictEqual(requests.length, 3, 'Closing must not reload assets.');
+
+    let renderedMarkdown = null;
+    app.formatMessageContent = content => {
+        assert.strictEqual(content, '# Workspace guide');
+        return '<h1>Workspace guide</h1>';
+    };
+    app.buildWorkspaceHtmlPreview = async (content, filePath, isMarkdown) => {
+        renderedMarkdown = { content, filePath, isMarkdown };
+        return '<!doctype html><h1>Workspace guide</h1>';
+    };
+    app.workspacePreviewSource = true;
+    await app.handleWorkspaceEntryClick({ relativePath: 'guide.md', isDirectory: false });
+    assert.strictEqual(app.workspacePreviewSource, false, 'Opening Markdown must default to rendered preview.');
+    assert.strictEqual(app.workspacePreviewIsDocument, true);
+    assert.strictEqual(app.workspacePreviewCanShowSource, true);
+    assert.strictEqual(renderedMarkdown.content, '<h1>Workspace guide</h1>');
+    assert.strictEqual(renderedMarkdown.filePath, 'guide.md');
+    assert.strictEqual(renderedMarkdown.isMarkdown, true, 'Markdown must use the isolated HTML preview pipeline.');
+    assert.strictEqual(app.workspacePreviewData.content, '# Workspace guide', 'Source must remain unchanged.');
+    assert.strictEqual(app.workspacePreviewSrcdoc, '<!doctype html><h1>Workspace guide</h1>');
+    app.workspacePreviewSource = true;
     app.resetWorkspacePreview();
     assert.strictEqual(app.workspaceEntries.length, 0);
     assert.strictEqual(app.workspacePreviewData, null);
+    assert.strictEqual(app.workspacePreviewSource, false);
     console.log('AdminChat Workspace preview tests passed.');
 }
 

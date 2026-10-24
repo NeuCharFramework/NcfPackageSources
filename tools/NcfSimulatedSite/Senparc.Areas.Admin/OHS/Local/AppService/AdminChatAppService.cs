@@ -200,26 +200,9 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
         private async Task<AdminChatSession> GetWorkspaceSessionAsync(int sessionId)
         {
-            if (!IsCurrentAdminSuperAdmin() || _workspaceStorage == null)
-            {
-                throw new NcfExceptionBase("只有超级管理员可以访问 Workspace 资产。");
-            }
-
-            var session = await _sessionService
-                .GetSessionByIdAsync(sessionId, GetCurrentAdminUserInfoId())
-                .ConfigureAwait(false);
-            if (session == null || string.IsNullOrWhiteSpace(session.WorkspaceId))
-            {
-                throw new NcfExceptionBase("当前会话没有可用的 Workspace。");
-            }
-
-            var descriptor = await _workspaceStorage.GetAsync(session.WorkspaceId).ConfigureAwait(false);
-            if (descriptor == null || descriptor.OwnerId != GetCurrentAdminUserInfoId())
-            {
-                throw new NcfExceptionBase("Workspace 不存在或不可访问。");
-            }
-
-            return session;
+            var user = ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Http.IHttpContextAccessor>().HttpContext.User;
+            return await ServiceProvider.GetRequiredService<AdminChatWorkspaceAssetService>()
+                .GetSessionAsync(sessionId, user).ConfigureAwait(false);
         }
 
         private static string ResolveWorkspaceContentType(string relativePath)
