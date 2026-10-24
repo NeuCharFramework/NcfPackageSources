@@ -3,8 +3,10 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.19</Version>
+		<Version>0.0.20</Version>
 		<PackageReleaseNotes>
+		  [2026-10-24] v0.0.20 支持 Workspace 标准 EF 迁移生成
+		  1、引用 Workspace 模块作为设计时迁移目标
 		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  [2026-07-05] v0.0.2 Dependency update from Senparc.Xncf.AgentsManager to 0.11.1-preview3
@@ -50,6 +52,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
+	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.Workspace\Senparc.Xncf.Workspace.csproj" />
 	</ItemGroup>
 
 </Project>

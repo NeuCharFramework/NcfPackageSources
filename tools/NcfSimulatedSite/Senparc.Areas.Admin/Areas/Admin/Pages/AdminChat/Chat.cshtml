@@ -521,135 +521,141 @@
                                 </div>
                             </div>
 
-                            <details class="chat-advanced-settings">
-                                <summary>
-                                    <span class="chat-advanced-settings-title">
-                                        <i class="fa fa-sliders"></i>
-                                        <span>高级设置</span>
-                                    </span>
-                                    <span class="chat-advanced-settings-hint">模型、执行模式、Workspace 和引用模块</span>
-                                    <i class="fa fa-angle-down chat-advanced-settings-arrow"></i>
-                                </summary>
-                                <div class="chat-advanced-settings-body">
-                                    <div class="chat-launcher-controls">
-                                <div class="launcher-control launcher-control-model">
-                                    <div class="launcher-control-label">
+                            <div class="chat-launcher-toolbar">
+                                <div class="launcher-toolbar-control launcher-toolbar-model">
+                                    <span class="launcher-toolbar-label">
                                         <i class="fa fa-bolt"></i>
                                         <span>@AR["AdminChat.ComputePower"]</span>
-                                    </div>
-                                <el-select
-                                    v-model="launcherAiModelId"
-                                    class="chat-ai-model-select"
-                                    :loading="loadingAiModelOptions"
-                                    placeholder="@AR["AdminChat.SelectModel"]"
-                                    >
-                                    <el-option
-                                        v-for="item in aiModelOptions"
-                                        :key="`launcher-${item.id}`"
-                                        :label="item.name"
-                                        :value="item.id">
-                                        <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;">
-                                            <span>{{ item.name }}</span>
-                                            <span style="color:#999;font-size:12px;">{{ item.description }}</span>
-                                        </div>
-                                    </el-option>
-                                </el-select>
+                                    </span>
+                                    <el-select
+                                        v-model="launcherAiModelId"
+                                        size="mini"
+                                        class="chat-ai-model-select"
+                                        :loading="loadingAiModelOptions"
+                                        placeholder="@AR["AdminChat.SelectModel"]">
+                                        <el-option
+                                            v-for="item in aiModelOptions"
+                                            :key="`launcher-${item.id}`"
+                                            :label="item.name"
+                                            :value="item.id">
+                                            <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;">
+                                                <span>{{ item.name }}</span>
+                                                <span style="color:#999;font-size:12px;">{{ item.description }}</span>
+                                            </div>
+                                        </el-option>
+                                    </el-select>
                                 </div>
 
-                                <div class="launcher-control launcher-control-mode">
-                                    <div class="launcher-control-label">
+                                <div class="launcher-toolbar-control launcher-toolbar-mode">
+                                    <span class="launcher-toolbar-label">
                                         <i class="fa fa-sliders"></i>
                                         <span>执行模式</span>
-                                    </div>
-                                    <el-radio-group v-model="launcherChatMode" size="small" class="launcher-mode-toggle">
-                                    <el-radio-button label="simple">
-                                        <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
-                                    </el-radio-button>
-                                    <el-radio-button label="harness">
-                                        <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
-                                    </el-radio-button>
+                                    </span>
+                                    <el-radio-group v-model="launcherChatMode" size="mini" class="launcher-mode-toggle">
+                                        <el-radio-button label="simple">
+                                            <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
+                                        </el-radio-button>
+                                        <el-radio-button label="harness">
+                                            <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
+                                        </el-radio-button>
                                     </el-radio-group>
                                 </div>
-                            </div>
 
-                            <div class="launcher-workspace-controls">
-                                <div class="launcher-control-label">
-                                    <i class="fa fa-folder-open"></i>
-                                    <span>Workspace（仅超级管理员）</span>
-                                </div>
-                                <div class="launcher-workspace-row">
-                                    <el-select v-model="selectedWorkspaceId"
-                                               filterable
-                                               clearable
-                                               :loading="loadingWorkspaceOptions"
-                                               :disabled="!isSuperAdmin"
-                                               placeholder="不使用 Workspace"
-                                               class="launcher-workspace-select">
-                                        <el-option v-for="item in availableWorkspaces"
-                                                   :key="item.id"
-                                                   :label="item.name + ' (' + item.id + ')'"
-                                                   :value="item.id"></el-option>
-                                    </el-select>
-                                    <el-button size="mini" plain @@click="createWorkspace" :disabled="!isSuperAdmin">新建 Workspace</el-button>
-                                    <el-checkbox v-model="workspaceWriteEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId">允许 AI 写入文件</el-checkbox>
-                                    <el-checkbox v-model="workspaceCliEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId || !workspaceWriteEnabled">允许 AI 执行 Python</el-checkbox>
-                                </div>
-                                <div class="launcher-workspace-help">
-                                    Python 仅能执行 Workspace 内的 .py 文件，并优先使用 Workspace 内的 .venv。
-                                    <span v-if="!isSuperAdmin">当前账号不是超级管理员，Workspace 功能不可用。</span>
-                                </div>
-                            </div>
-
-                                    <div class="chat-module-picker chat-reference-picker">
-                            <div class="chat-module-picker-header">
-                                <div class="chat-reference-title">
-                                    <span class="chat-module-picker-title">@AR["Admin.Home.ReferenceModules"]</span>
-                                    <span class="chat-reference-count" v-if="selectedModules.length + selectedWorkflows.length > 0">
-                                        {{ selectedModules.length + selectedWorkflows.length }}
-                                    </span>
-                                    <span class="chat-reference-optional">可选</span>
-                                </div>
-                                <div class="chat-module-picker-actions">
-                                    <el-button size="mini" type="primary" plain icon="el-icon-plus" @@click="openModuleSelector">@AR["Admin.Home.AddReferenceModule"]</el-button>
-                                    <el-button size="mini" type="text" @@click="clearSelectedModules" v-if="selectedModules.length > 0 || selectedWorkflows.length > 0">
-                                        <i class="fa fa-eraser"></i> @AR["Admin.Home.Clear"]
-                                    </el-button>
-                                </div>
-                            </div>
-
-                            <div v-if="selectedModules.length > 0 || selectedWorkflows.length > 0" class="chat-reference-tags">
-                                <div v-if="selectedModules.length > 0" class="chat-module-selected-list chat-reference-tag-row">
-                                    <el-tag
-                                        v-for="module in selectedModules"
-                                        :key="module.uid"
-                                        closable
-                                        @@close="removeModule(module.uid)"
-                                        type="info"
-                                        class="module-tag">
-                                        <i :class="module.icon" aria-hidden="true"></i>
-                                        <span class="module-tag-name">{{module.name}}</span>
-                                    </el-tag>
-                                </div>
-                                <div v-if="selectedWorkflows.length > 0" class="chat-module-selected-list chat-reference-tag-row chat-workflow-tag-row">
-                                    <el-tag
-                                        v-for="workflow in selectedWorkflows"
-                                        :key="`selected-workflow-${workflow.id}`"
-                                        closable
-                                        @@close="removeWorkflow(workflow.id)"
-                                        type="success"
-                                        class="module-tag">
-                                        <i class="fa fa-random" aria-hidden="true"></i>
-                                        <span class="module-tag-name">{{workflow.name}}</span>
-                                    </el-tag>
-                                </div>
-                            </div>
-                            <div v-else class="chat-module-selected-empty">
-                                <i class="fa fa-lightbulb-o"></i>
-                                <span>不引用模块也可以直接开始</span>
-                            </div>
+                                <el-popover
+                                    placement="top-start"
+                                    width="350"
+                                    trigger="click"
+                                    :disabled="!isSuperAdmin"
+                                    popper-class="chat-launcher-popover">
+                                    <div class="launcher-popover-content">
+                                        <div class="launcher-popover-heading">
+                                            <div>
+                                                <strong>Workspace</strong>
+                                                <span>为当前对话选择工作区</span>
+                                            </div>
+                                            <el-button size="mini" type="text" @@click="createWorkspace" :disabled="!isSuperAdmin">
+                                                <i class="el-icon-plus"></i> 新建
+                                            </el-button>
+                                        </div>
+                                        <el-select
+                                            v-model="selectedWorkspaceId"
+                                            filterable
+                                            clearable
+                                            :loading="loadingWorkspaceOptions"
+                                            :disabled="!isSuperAdmin"
+                                            placeholder="不使用 Workspace"
+                                            class="launcher-workspace-select">
+                                            <el-option
+                                                v-for="item in availableWorkspaces"
+                                                :key="item.id"
+                                                :label="item.name + ' (' + item.id + ')'"
+                                                :value="item.id"></el-option>
+                                        </el-select>
+                                        <div class="launcher-popover-options">
+                                            <el-checkbox v-model="workspaceWriteEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId">允许 AI 写入文件</el-checkbox>
+                                            <el-checkbox v-model="workspaceCliEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId || !workspaceWriteEnabled">允许 AI 执行 Python</el-checkbox>
+                                        </div>
+                                        <div class="launcher-workspace-help">
+                                            Python 仅能执行 Workspace 内的 .py 文件，并优先使用 Workspace 内的 .venv。
+                                        </div>
                                     </div>
-                                </div>
-                            </details>
+                                    <button slot="reference" type="button" class="launcher-toolbar-button" :disabled="!isSuperAdmin">
+                                        <i class="fa fa-folder-open"></i>
+                                        <span>{{ selectedWorkspaceLabel }}</span>
+                                        <i class="fa fa-angle-down"></i>
+                                    </button>
+                                </el-popover>
+
+                                <el-popover
+                                    placement="top-start"
+                                    width="380"
+                                    trigger="click"
+                                    popper-class="chat-launcher-popover">
+                                    <div class="launcher-popover-content launcher-reference-popover">
+                                        <div class="launcher-popover-heading">
+                                            <div>
+                                                <strong>@AR["Admin.Home.ReferenceModules"]</strong>
+                                                <span>为当前对话添加可调用模块或 Workflow</span>
+                                            </div>
+                                            <el-button size="mini" type="primary" plain @@click="openModuleSelector">
+                                                <i class="el-icon-edit"></i> 管理
+                                            </el-button>
+                                        </div>
+                                        <div v-if="referenceSelectionCount > 0" class="launcher-reference-summary">
+                                            <el-tag
+                                                v-for="module in selectedModules"
+                                                :key="module.uid"
+                                                closable
+                                                @@close="removeModule(module.uid)"
+                                                type="info"
+                                                class="module-tag">
+                                                <i :class="module.icon" aria-hidden="true"></i>
+                                                <span class="module-tag-name">{{ module.name }}</span>
+                                            </el-tag>
+                                            <el-tag
+                                                v-for="workflow in selectedWorkflows"
+                                                :key="`selected-workflow-${workflow.id}`"
+                                                closable
+                                                @@close="removeWorkflow(workflow.id)"
+                                                type="success"
+                                                class="module-tag">
+                                                <i class="fa fa-random" aria-hidden="true"></i>
+                                                <span class="module-tag-name">{{ workflow.name }}</span>
+                                            </el-tag>
+                                        </div>
+                                        <div v-else class="chat-module-selected-empty">
+                                            <i class="fa fa-lightbulb-o"></i>
+                                            <span>不引用模块也可以直接开始</span>
+                                        </div>
+                                    </div>
+                                    <button slot="reference" type="button" class="launcher-toolbar-button">
+                                        <i class="fa fa-cubes"></i>
+                                        <span>引用模块</span>
+                                        <span v-if="referenceSelectionCount > 0" class="launcher-toolbar-count">{{ referenceSelectionCount }}</span>
+                                        <i class="fa fa-angle-down"></i>
+                                    </button>
+                                </el-popover>
+                            </div>
 
                         @await Html.PartialAsync("~/Areas/Admin/Pages/Shared/_ChatModuleSelectorDialog.cshtml")
                     </div>

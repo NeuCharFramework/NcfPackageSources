@@ -129,6 +129,17 @@ window.ChatLauncherMixin = {
         .filter((item) => this.selectedWorkflowIds.includes(item.id))
         .length;
       return selectedCount > 0 && selectedCount < this.filteredAvailableWorkflows.length;
+    },
+    referenceSelectionCount() {
+      return (this.selectedModules || []).length + (this.selectedWorkflows || []).length;
+    },
+    selectedWorkspaceLabel() {
+      if (!this.selectedWorkspaceId) {
+        return '添加 Workspace';
+      }
+
+      const workspace = (this.availableWorkspaces || []).find(item => String(item.id) === String(this.selectedWorkspaceId));
+      return workspace ? workspace.name : '已选择 Workspace';
     }
   },
   mounted() {
