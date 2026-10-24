@@ -185,4 +185,12 @@
   <ItemGroup>
     <Compile Remove="App_Data/**/*.cs" />
   </ItemGroup>
+	<Target Name="CopyWorkspaceAgent" AfterTargets="Build">
+		<ItemGroup>
+			<WorkspaceAgentFiles Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace.Agent\bin\$(Configuration)\net10.0\Senparc.Xncf.Workspace.Agent.dll" />
+			<WorkspaceAgentFiles Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace.Agent\bin\$(Configuration)\net10.0\Senparc.Xncf.Workspace.Agent.deps.json" />
+			<WorkspaceAgentFiles Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace.Agent\bin\$(Configuration)\net10.0\Senparc.Xncf.Workspace.Agent.runtimeconfig.json" />
+		</ItemGroup>
+		<Copy SourceFiles="@(WorkspaceAgentFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+	</Target>
 </Project>

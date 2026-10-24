@@ -89,6 +89,15 @@
                         </h3>
                         <div class="chat-header-actions">
                             <el-button
+                                v-if="currentSessionWorkspaceId"
+                                size="mini"
+                                :type="workspacePreviewOpen ? 'primary' : 'default'"
+                                title="Workspace 资产"
+                                @@click="toggleWorkspacePreview">
+                                <i class="fa fa-folder-open-o"></i>
+                                <span class="chat-workspace-preview-button-label">资产</span>
+                            </el-button>
+                            <el-button
                                 size="mini"
                                 :type="isManageMode ? 'default' : 'primary'"
                                 @@click="toggleManageMode">
@@ -668,6 +677,88 @@
                 </el-card>
             </div>
         </el-main>
+
+        <aside
+            v-if="currentSessionWorkspaceId && workspacePreviewOpen"
+            class="chat-workspace-preview"
+            :style="{ width: workspacePreviewWidth + 'px' }">
+            <div class="chat-workspace-preview-resizer" @@mousedown="startWorkspacePreviewResize"></div>
+            <div class="chat-workspace-preview-header">
+                <div>
+                    <div class="chat-workspace-preview-title">
+                        <i class="fa fa-folder-open"></i>
+                        <span>Workspace 资产</span>
+                    </div>
+                    <div class="chat-workspace-preview-subtitle">
+                        {{ currentSessionWorkspaceName || currentSessionWorkspaceId }}
+                    </div>
+                </div>
+                <el-button type="text" size="mini" title="关闭资产面板" @@click="workspacePreviewOpen = false">
+                    <i class="el-icon-close"></i>
+                </el-button>
+            </div>
+            <div class="chat-workspace-preview-toolbar">
+                <el-button
+                    size="mini"
+                    type="text"
+                    :disabled="!workspacePreviewPath"
+                    @@click="loadWorkspaceEntries(workspaceParentPath(workspacePreviewPath))">
+                    <i class="el-icon-back"></i>
+                </el-button>
+                <span class="chat-workspace-preview-path" :title="workspacePreviewPath || '/'">
+                    /{{ workspacePreviewPath || '' }}
+                </span>
+                <el-button size="mini" type="text" title="刷新" @@click="loadWorkspaceEntries(workspacePreviewPath)">
+                    <i class="el-icon-refresh"></i>
+                </el-button>
+            </div>
+            <div class="chat-workspace-preview-body">
+                <div class="chat-workspace-file-list" v-loading="workspaceEntriesLoading">
+                    <button
+                        v-for="entry in workspaceEntries"
+                        :key="entry.path"
+                        type="button"
+                        :class="['chat-workspace-file-item', { 'is-selected': workspacePreviewFilePath === entry.path }]"
+                        @@click="handleWorkspaceEntryClick(entry)">
+                        <i :class="entry.isDirectory ? 'fa fa-folder-o' : workspaceFileIcon(entry.path)"></i>
+                        <span class="chat-workspace-file-name" :title="workspaceEntryName(entry.path)">{{ workspaceEntryName(entry.path) }}</span>
+                        <span v-if="!entry.isDirectory" class="chat-workspace-file-size">{{ formatWorkspaceFileSize(entry.size) }}</span>
+                    </button>
+                    <div v-if="!workspaceEntriesLoading && workspaceEntries.length === 0" class="chat-workspace-empty">
+                        <i class="fa fa-folder-open-o"></i>
+                        <span>当前目录为空</span>
+                    </div>
+                </div>
+                <div v-if="workspacePreviewFilePath" class="chat-workspace-file-preview">
+                    <div class="chat-workspace-file-preview-header">
+                        <span :title="workspacePreviewFilePath">{{ workspaceEntryName(workspacePreviewFilePath) }}</span>
+                        <el-tag v-if="workspacePreviewData" size="mini" type="info">{{ workspacePreviewData.contentType }}</el-tag>
+                    </div>
+                    <div v-if="workspacePreviewLoading" class="chat-workspace-preview-loading">
+                        <i class="el-icon-loading"></i> 正在加载预览…
+                    </div>
+                    <iframe
+                        v-else-if="workspacePreviewData && workspacePreviewData.contentType === 'text/html'"
+                        class="chat-workspace-html-frame"
+                        sandbox="allow-same-origin"
+                        :srcdoc="workspacePreviewSrcdoc"
+                        title="Workspace HTML 预览"></iframe>
+                    <div v-else-if="workspacePreviewData && workspacePreviewData.contentType.indexOf('image/') === 0" class="chat-workspace-image-preview">
+                        <img :src="workspacePreviewDataUrl()" :alt="workspacePreviewFilePath" />
+                    </div>
+                    <iframe
+                        v-else-if="workspacePreviewData && workspacePreviewData.contentType === 'application/pdf'"
+                        class="chat-workspace-html-frame"
+                        :src="workspacePreviewDataUrl()"
+                        title="Workspace PDF 预览"></iframe>
+                    <pre v-else-if="workspacePreviewData && workspacePreviewData.isText" class="chat-workspace-text-preview">{{ workspacePreviewData.content }}</pre>
+                    <div v-else-if="workspacePreviewData" class="chat-workspace-binary-preview">
+                        <i class="fa fa-file-o"></i>
+                        <span>此文件类型暂不支持文本预览</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
     </el-container>
     <el-dialog
         title="新建 Workspace"
