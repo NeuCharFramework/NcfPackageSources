@@ -414,50 +414,61 @@
                     <span class="input-tip">
                         <i class="fa fa-info-circle"></i> @AR["AdminChat.SendHint"]
                     </span>
-                    <el-select
-                        v-model="currentSessionAiModelId"
-                        size="mini"
-                        class="chat-ai-model-select input-ai-model-select"
-                        :loading="loadingAiModelOptions"
-                        :disabled="isSending"
-                        @@change="handleCurrentSessionAiModelChange"
-                        placeholder="@AR["AdminChat.SelectModel"]">
-                        <el-option
-                            v-for="item in aiModelOptions"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                            <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;">
-                                <span>{{ item.name }}</span>
-                                <span style="color:#999;font-size:12px;">{{ item.description }}</span>
-                            </div>
-                        </el-option>
-                    </el-select>
-                    <el-radio-group v-model="chatMode" size="mini" class="chat-mode-toggle" :disabled="isSending">
-                        <el-radio-button label="simple">
-                            <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
-                        </el-radio-button>
-                        <el-radio-button label="harness">
-                            <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
-                        </el-radio-button>
-                    </el-radio-group>
-                    <el-button
-                        v-if="isSending"
-                        type="danger"
-                        icon="el-icon-close"
-                        :loading="isStopping"
-                        :disabled="isStopping"
-                        @@click="stopCurrentRequest">
-                        终止
-                    </el-button>
-                    <el-button
-                        v-else
-                        type="primary"
-                        icon="el-icon-s-promotion"
-                        :disabled="!currentSessionId || !inputMessage || inputMessage.trim().length === 0"
-                        @@click="sendMessage">
-                        @AR["AdminChat.Send"]
-                    </el-button>
+                    <details class="chat-inline-settings">
+                        <summary>
+                            <i class="fa fa-sliders"></i>
+                            <span>对话设置</span>
+                            <i class="fa fa-angle-down chat-inline-settings-arrow"></i>
+                        </summary>
+                        <div class="chat-inline-settings-panel">
+                            <el-select
+                                v-model="currentSessionAiModelId"
+                                size="mini"
+                                class="chat-ai-model-select input-ai-model-select"
+                                :loading="loadingAiModelOptions"
+                                :disabled="isSending"
+                                @@change="handleCurrentSessionAiModelChange"
+                                placeholder="@AR["AdminChat.SelectModel"]">
+                                <el-option
+                                    v-for="item in aiModelOptions"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                                    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;">
+                                        <span>{{ item.name }}</span>
+                                        <span style="color:#999;font-size:12px;">{{ item.description }}</span>
+                                    </div>
+                                </el-option>
+                            </el-select>
+                            <el-radio-group v-model="chatMode" size="mini" class="chat-mode-toggle" :disabled="isSending">
+                                <el-radio-button label="simple">
+                                    <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
+                                </el-radio-button>
+                                <el-radio-button label="harness">
+                                    <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
+                                </el-radio-button>
+                            </el-radio-group>
+                        </div>
+                    </details>
+                    <div class="input-send-actions">
+                        <el-button
+                            v-if="isSending"
+                            type="danger"
+                            icon="el-icon-close"
+                            :loading="isStopping"
+                            :disabled="isStopping"
+                            @@click="stopCurrentRequest">
+                            终止
+                        </el-button>
+                        <el-button
+                            v-else
+                            type="primary"
+                            icon="el-icon-s-promotion"
+                            :disabled="!currentSessionId || !inputMessage || inputMessage.trim().length === 0"
+                            @@click="sendMessage">
+                            @AR["AdminChat.Send"]
+                        </el-button>
+                    </div>
                 </div>
                 <div class="chat-usage-status" :title="'以最近一次模型返回的 Usage 为准'">
                     <i class="fa fa-bar-chart"></i>
@@ -481,7 +492,46 @@
                         </div>
 
                         <div class="chat-entrance-input-wrapper">
-                            <div class="chat-launcher-controls">
+                            <div class="chat-entrance-composer">
+                                <el-input
+                                    type="textarea"
+                                    v-model="chatInputText"
+                                    placeholder="@AR["Admin.Home.AiPlaceholder"]"
+                                    :rows="4"
+                                    :autosize="{ minRows: 4, maxRows: 8 }"
+                                    @@keydown.native="handleLauncherInputKeydown"
+                                    class="chat-entrance-input"
+                                    resize="none">
+                                </el-input>
+                                <div class="chat-entrance-composer-footer">
+                                    <span class="chat-entrance-input-tip">
+                                        <i class="fa fa-keyboard-o"></i>
+                                        按 Ctrl + Enter 或 Cmd + Enter 开始
+                                    </span>
+                                    <el-button
+                                        type="primary"
+                                        size="medium"
+                                        icon="el-icon-s-promotion"
+                                        @@click="startChatSession"
+                                        :disabled="!chatInputText || chatInputText.trim().length === 0"
+                                        :loading="isCreatingSession"
+                                        class="chat-send-button">
+                                        @AR["Admin.Home.StartConversation"]
+                                    </el-button>
+                                </div>
+                            </div>
+
+                            <details class="chat-advanced-settings">
+                                <summary>
+                                    <span class="chat-advanced-settings-title">
+                                        <i class="fa fa-sliders"></i>
+                                        <span>高级设置</span>
+                                    </span>
+                                    <span class="chat-advanced-settings-hint">模型、执行模式、Workspace 和引用模块</span>
+                                    <i class="fa fa-angle-down chat-advanced-settings-arrow"></i>
+                                </summary>
+                                <div class="chat-advanced-settings-body">
+                                    <div class="chat-launcher-controls">
                                 <div class="launcher-control launcher-control-model">
                                     <div class="launcher-control-label">
                                         <i class="fa fa-bolt"></i>
@@ -522,19 +572,19 @@
                                 </div>
                             </div>
 
-                            <div class="launcher-workspace-controls" style="margin-top:12px;padding:10px;border:1px solid #ebeef5;border-radius:4px;">
+                            <div class="launcher-workspace-controls">
                                 <div class="launcher-control-label">
                                     <i class="fa fa-folder-open"></i>
                                     <span>Workspace（仅超级管理员）</span>
                                 </div>
-                                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                                <div class="launcher-workspace-row">
                                     <el-select v-model="selectedWorkspaceId"
                                                filterable
                                                clearable
                                                :loading="loadingWorkspaceOptions"
                                                :disabled="!isSuperAdmin"
                                                placeholder="不使用 Workspace"
-                                               style="min-width:260px;">
+                                               class="launcher-workspace-select">
                                         <el-option v-for="item in availableWorkspaces"
                                                    :key="item.id"
                                                    :label="item.name + ' (' + item.id + ')'"
@@ -544,35 +594,13 @@
                                     <el-checkbox v-model="workspaceWriteEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId">允许 AI 写入文件</el-checkbox>
                                     <el-checkbox v-model="workspaceCliEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId || !workspaceWriteEnabled">允许 AI 执行 Python</el-checkbox>
                                 </div>
-                                <div style="color:#909399;font-size:12px;margin-top:6px;">
+                                <div class="launcher-workspace-help">
                                     Python 仅能执行 Workspace 内的 .py 文件，并优先使用 Workspace 内的 .venv。
                                     <span v-if="!isSuperAdmin">当前账号不是超级管理员，Workspace 功能不可用。</span>
                                 </div>
                             </div>
 
-                            <el-input
-                                type="textarea"
-                                v-model="chatInputText"
-                                placeholder="@AR["Admin.Home.AiPlaceholder"]"
-                                :rows="4"
-                                :autosize="{ minRows: 4, maxRows: 8 }"
-                                @@keydown.native="handleLauncherInputKeydown"
-                                class="chat-entrance-input"
-                                resize="none">
-                            </el-input>
-                            <el-button
-                                type="primary"
-                                size="medium"
-                                icon="el-icon-s-promotion"
-                                @@click="startChatSession"
-                                :disabled="!chatInputText || chatInputText.trim().length === 0"
-                                :loading="isCreatingSession"
-                                class="chat-send-button">
-                                @AR["Admin.Home.StartConversation"]
-                            </el-button>
-                        </div>
-
-                        <div class="chat-module-picker chat-reference-picker">
+                                    <div class="chat-module-picker chat-reference-picker">
                             <div class="chat-module-picker-header">
                                 <div class="chat-reference-title">
                                     <span class="chat-module-picker-title">@AR["Admin.Home.ReferenceModules"]</span>
@@ -619,7 +647,9 @@
                                 <i class="fa fa-lightbulb-o"></i>
                                 <span>不引用模块也可以直接开始</span>
                             </div>
-                        </div>
+                                    </div>
+                                </div>
+                            </details>
 
                         @await Html.PartialAsync("~/Areas/Admin/Pages/Shared/_ChatModuleSelectorDialog.cshtml")
                     </div>
