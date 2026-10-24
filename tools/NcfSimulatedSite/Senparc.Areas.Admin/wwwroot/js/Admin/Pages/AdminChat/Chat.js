@@ -52,7 +52,18 @@
       isSuperAdmin: false,
       userStatsDrawerVisible: false,
       userStatsLoading: false,
-      userStatsList: []
+      userStatsList: [],
+      workspacePreviewOpen: false,
+      workspacePreviewWidth: 420,
+      workspaceEntries: [],
+      workspacePreviewPath: '',
+      workspacePreviewFilePath: '',
+      workspacePreviewData: null,
+      workspacePreviewSrcdoc: '',
+      workspaceEntriesLoading: false,
+      workspacePreviewLoading: false,
+      workspaceResizeHandler: null,
+      workspaceResizeEndHandler: null
     };
   },
   computed: {
@@ -133,8 +144,263 @@
       this.activeRequestController.abort();
       this.activeRequestController = null;
     }
+    this.stopWorkspacePreviewResize();
   },
   methods: {
+    toggleWorkspacePreview() {
+      this.workspacePreviewOpen = !this.workspacePreviewOpen;
+      if (this.workspacePreviewOpen) {
+        this.loadWorkspaceEntries(this.workspacePreviewPath);
+      }
+    },
+
+    async loadWorkspaceEntries(relativePath) {
+      if (!this.currentSessionWorkspaceId || !this.currentSessionId) return;
+      const path = this.normalizeWorkspacePath(relativePath);
+      this.workspaceEntriesLoading = true;
+      try {
+        const response = await service.get('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetWorkspaceEntriesAsync', {
+          params: { sessionId: this.currentSessionId, relativePath: path }
+        });
+        if (!response.data || !response.data.success || !response.data.data) {
+          throw new Error((response.data && response.data.msg) || 'Workspace 目录读取失败。');
+        }
+        this.workspacePreviewPath = path;
+        this.workspaceEntries = response.data.data.entries || [];
+      } catch (error) {
+        console.error('加载 Workspace 目录失败:', error);
+        this.$notify({ title: 'Workspace', message: error.message || 'Workspace 目录读取失败。', type: 'error', duration: 3000 });
+      } finally {
+        this.workspaceEntriesLoading = false;
+      }
+    },
+
+    async handleWorkspaceEntryClick(entry) {
+      if (!entry || !entry.path) return;
+      if (entry.isDirectory) {
+        this.workspacePreviewFilePath = '';
+        this.workspacePreviewData = null;
+        this.workspacePreviewSrcdoc = '';
+        await this.loadWorkspaceEntries(entry.path);
+        return;
+      }
+
+      this.workspacePreviewFilePath = entry.path;
+      this.workspacePreviewLoading = true;
+      this.workspacePreviewData = null;
+      this.workspacePreviewSrcdoc = '';
+      try {
+        const response = await service.get('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetWorkspaceFilePreviewAsync', {
+          params: { sessionId: this.currentSessionId, relativePath: entry.path }
+        });
+        if (!response.data || !response.data.success || !response.data.data) {
+          throw new Error((response.data && response.data.msg) || '文件预览加载失败。');
+        }
+        this.workspacePreviewData = response.data.data;
+        if (this.workspacePreviewData.contentType === 'text/html' && this.workspacePreviewData.content) {
+          this.workspacePreviewSrcdoc = await this.buildWorkspaceHtmlPreview(
+            this.workspacePreviewData.content,
+            this.workspacePreviewData.path);
+        }
+      } catch (error) {
+        console.error('加载 Workspace 文件预览失败:', error);
+        this.$notify({ title: 'Workspace', message: error.message || '文件预览加载失败。', type: 'error', duration: 3000 });
+      } finally {
+        this.workspacePreviewLoading = false;
+      }
+    },
+
+    async buildWorkspaceHtmlPreview(content, filePath) {
+      const parser = new DOMParser();
+      const document = parser.parseFromString(content, 'text/html');
+      document.querySelectorAll('script, iframe, object, embed, form, base, meta[http-equiv="refresh"]').forEach((element) => element.remove());
+      document.querySelectorAll('*').forEach((element) => {
+        Array.from(element.attributes).forEach((attribute) => {
+          if (attribute.name.toLowerCase().startsWith('on')) {
+            element.removeAttribute(attribute.name);
+          }
+          if ((attribute.name === 'src' || attribute.name === 'href')
+            && /^\s*javascript:/i.test(attribute.value)) {
+            element.removeAttribute(attribute.name);
+          }
+        });
+        element.removeAttribute('srcset');
+      });
+
+      const resources = [];
+      document.querySelectorAll('img[src], video[src], audio[src], source[src], link[href]').forEach((element) => {
+        const attribute = element.hasAttribute('src') ? 'src' : 'href';
+        const value = element.getAttribute(attribute);
+        if (!value || value.startsWith('#') || /^(data:|blob:|https?:|\/\/)/i.test(value)) {
+          if (value && /^(https?:|\/\/)/i.test(value)) element.removeAttribute(attribute);
+          return;
+        }
+        resources.push({ element, attribute, path: this.resolveWorkspaceAssetPath(filePath, value) });
+      });
+
+      for (const resource of resources) {
+        try {
+          const asset = await this.loadWorkspacePreviewAsset(resource.path);
+          if (asset && asset.contentBase64) {
+            let contentBase64 = asset.contentBase64;
+            if (asset.contentType === 'text/css' && asset.isText && asset.content) {
+              const css = await this.inlineWorkspaceCss(asset.content, resource.path);
+              contentBase64 = this.encodeWorkspaceText(css);
+            }
+            resource.element.setAttribute(
+              resource.attribute,
+              `data:${asset.contentType};base64,${contentBase64}`);
+          } else {
+            resource.element.removeAttribute(resource.attribute);
+          }
+        } catch (error) {
+          resource.element.removeAttribute(resource.attribute);
+        }
+      }
+
+      const style = document.createElement('style');
+      style.textContent = 'html,body{max-width:100%;overflow-x:hidden;}';
+      document.head.appendChild(style);
+      const csp = document.createElement('meta');
+      csp.httpEquiv = 'Content-Security-Policy';
+      csp.content = "default-src 'none'; img-src data:; style-src 'unsafe-inline' data:; font-src data:; media-src data:;";
+      document.head.appendChild(csp);
+      return '<!doctype html>' + document.documentElement.outerHTML;
+    },
+
+    async inlineWorkspaceCss(css, cssPath) {
+      const urlPattern = /url\(\s*(['"]?)([^'")]+)\1\s*\)/gi;
+      const matches = Array.from(css.matchAll(urlPattern));
+      const replacements = await Promise.all(matches.map(async (match) => {
+        const value = match[2].trim();
+        if (!value || value.startsWith('#') || /^(data:|blob:|https?:|\/\/)/i.test(value)) {
+          return { match: match[0], replacement: value ? `url(${value})` : match[0] };
+        }
+
+        try {
+          const asset = await this.loadWorkspacePreviewAsset(
+            this.resolveWorkspaceAssetPath(cssPath, value));
+          return {
+            match: match[0],
+            replacement: asset && asset.contentBase64
+              ? `url(data:${asset.contentType};base64,${asset.contentBase64})`
+              : `url("")`
+          };
+        } catch (error) {
+          return { match: match[0], replacement: 'url("")' };
+        }
+      }));
+
+      return replacements.reduce(
+        (result, item) => result.replace(item.match, item.replacement),
+        css);
+    },
+
+    encodeWorkspaceText(text) {
+      const bytes = new TextEncoder().encode(text);
+      let binary = '';
+      bytes.forEach((byte) => { binary += String.fromCharCode(byte); });
+      return btoa(binary);
+    },
+
+    async loadWorkspacePreviewAsset(relativePath) {
+      const response = await service.get('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetWorkspaceFilePreviewAsync', {
+        params: { sessionId: this.currentSessionId, relativePath: this.normalizeWorkspacePath(relativePath) }
+      });
+      if (!response.data || !response.data.success || !response.data.data) {
+        throw new Error((response.data && response.data.msg) || 'Workspace 资产读取失败。');
+      }
+      return response.data.data;
+    },
+
+    resolveWorkspaceAssetPath(filePath, assetPath) {
+      try {
+        const base = filePath.split('/').slice(0, -1).join('/');
+        const resolved = new URL(assetPath, `https://workspace.local/${base ? `${base}/` : ''}`).pathname;
+        return this.normalizeWorkspacePath(decodeURIComponent(resolved.replace(/^\/+/, '')));
+      } catch (error) {
+        return '';
+      }
+    },
+
+    normalizeWorkspacePath(path) {
+      const parts = String(path || '').replace(/\\/g, '/').split('/');
+      const result = [];
+      parts.forEach((part) => {
+        if (!part || part === '.') return;
+        if (part === '..') {
+          result.pop();
+          return;
+        }
+        result.push(part);
+      });
+      return result.join('/');
+    },
+
+    workspaceParentPath(path) {
+      const normalized = this.normalizeWorkspacePath(path);
+      return normalized.includes('/') ? normalized.substring(0, normalized.lastIndexOf('/')) : '';
+    },
+
+    workspaceEntryName(path) {
+      const normalized = String(path || '').replace(/\/+$/, '');
+      return normalized.substring(normalized.lastIndexOf('/') + 1) || '/';
+    },
+
+    workspaceFileIcon(path) {
+      const extension = this.workspaceEntryName(path).split('.').pop().toLowerCase();
+      return {
+        html: 'fa fa-file-code-o',
+        htm: 'fa fa-file-code-o',
+        css: 'fa fa-file-code-o',
+        js: 'fa fa-file-code-o',
+        json: 'fa fa-file-text-o',
+        md: 'fa fa-file-text-o',
+        png: 'fa fa-file-image-o',
+        jpg: 'fa fa-file-image-o',
+        jpeg: 'fa fa-file-image-o',
+        gif: 'fa fa-file-image-o',
+        svg: 'fa fa-file-image-o'
+      }[extension] || 'fa fa-file-o';
+    },
+
+    formatWorkspaceFileSize(size) {
+      if (!size) return '';
+      if (size < 1024) return `${size} B`;
+      if (size < 1024 * 1024) return `${Math.round(size / 1024)} KB`;
+      return `${(size / (1024 * 1024)).toFixed(1)} MB`;
+    },
+
+    workspacePreviewDataUrl() {
+      if (!this.workspacePreviewData || !this.workspacePreviewData.contentBase64) return '';
+      return `data:${this.workspacePreviewData.contentType};base64,${this.workspacePreviewData.contentBase64}`;
+    },
+
+    startWorkspacePreviewResize(event) {
+      event.preventDefault();
+      this.stopWorkspacePreviewResize();
+      this.workspaceResizeHandler = (moveEvent) => {
+        const width = window.innerWidth - moveEvent.clientX;
+        this.workspacePreviewWidth = Math.min(720, Math.max(320, width));
+      };
+      this.workspaceResizeEndHandler = () => this.stopWorkspacePreviewResize();
+      document.addEventListener('mousemove', this.workspaceResizeHandler);
+      document.addEventListener('mouseup', this.workspaceResizeEndHandler, { once: true });
+      document.body.classList.add('is-resizing-workspace-preview');
+    },
+
+    stopWorkspacePreviewResize() {
+      if (this.workspaceResizeHandler) {
+        document.removeEventListener('mousemove', this.workspaceResizeHandler);
+        this.workspaceResizeHandler = null;
+      }
+      if (this.workspaceResizeEndHandler) {
+        document.removeEventListener('mouseup', this.workspaceResizeEndHandler);
+        this.workspaceResizeEndHandler = null;
+      }
+      document.body.classList.remove('is-resizing-workspace-preview');
+    },
+
     openUserStatsDrawer() {
       this.userStatsDrawerVisible = true;
       this.loadUserStats();
@@ -897,6 +1163,7 @@
     async switchSession(sessionId) {
       if (this.currentSessionId === sessionId) return;
 
+      this.resetWorkspacePreview();
       this.currentSessionId = sessionId;
       this.currentSessionAiModelId = this.getSessionAiModelId(sessionId);
       this.messageList = [];
@@ -915,6 +1182,7 @@
     },
 
     async createNewSession() {
+      this.resetWorkspacePreview();
       this.launcherAiModelId = this.currentSessionAiModelId || this.launcherAiModelId || 0;
       this.currentSessionId = 0;
       this.currentSessionTitle = '';
@@ -934,6 +1202,15 @@
       this.selectedTrajectoryEvents = [];
       this.clearMessageSelection();
       this.isManageMode = false;
+    },
+
+    resetWorkspacePreview() {
+      this.workspacePreviewOpen = false;
+      this.workspaceEntries = [];
+      this.workspacePreviewPath = '';
+      this.workspacePreviewFilePath = '';
+      this.workspacePreviewData = null;
+      this.workspacePreviewSrcdoc = '';
     },
 
     toggleManageMode() {

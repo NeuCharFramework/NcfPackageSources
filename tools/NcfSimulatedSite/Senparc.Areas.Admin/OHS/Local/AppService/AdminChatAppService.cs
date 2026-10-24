@@ -58,6 +58,8 @@ using Senparc.Xncf.Workspace.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Senparc.Areas.Admin.OHS.Local.AppService
@@ -144,6 +146,108 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     new WorkspaceCreateRequest(GetCurrentAdminUserInfoId(), request.Name.Trim())).ConfigureAwait(false);
                 return WorkspaceOptionDto.CreateFromDescriptor(descriptor);
             });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<WorkspaceEntriesResponse>> GetWorkspaceEntriesAsync(
+            int sessionId,
+            string relativePath = "")
+        {
+            return await this.GetResponseAsync<AppResponseBase<WorkspaceEntriesResponse>, WorkspaceEntriesResponse>(async (response, logger) =>
+            {
+                var session = await GetWorkspaceSessionAsync(sessionId).ConfigureAwait(false);
+                var entries = await _workspaceStorage.ListAsync(
+                    session.WorkspaceId,
+                    relativePath ?? string.Empty).ConfigureAwait(false);
+                return new WorkspaceEntriesResponse
+                {
+                    CurrentPath = relativePath ?? string.Empty,
+                    Entries = entries
+                };
+            });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<WorkspaceFilePreviewDto>> GetWorkspaceFilePreviewAsync(
+            int sessionId,
+            string relativePath)
+        {
+            return await this.GetResponseAsync<AppResponseBase<WorkspaceFilePreviewDto>, WorkspaceFilePreviewDto>(async (response, logger) =>
+            {
+                if (string.IsNullOrWhiteSpace(relativePath))
+                {
+                    throw new NcfExceptionBase("文件路径不能为空。");
+                }
+
+                var session = await GetWorkspaceSessionAsync(sessionId).ConfigureAwait(false);
+                var file = await _workspaceStorage.ReadFileBytesAsync(
+                    session.WorkspaceId,
+                    relativePath,
+                    2 * 1024 * 1024).ConfigureAwait(false);
+                var contentType = ResolveWorkspaceContentType(relativePath);
+                var isText = IsWorkspaceTextContent(contentType, relativePath);
+                return new WorkspaceFilePreviewDto
+                {
+                    Path = relativePath,
+                    ContentType = contentType,
+                    Size = file.Content.LongLength,
+                    IsText = isText,
+                    Content = isText ? Encoding.UTF8.GetString(file.Content) : null,
+                    ContentBase64 = Convert.ToBase64String(file.Content)
+                };
+            });
+        }
+
+        private async Task<AdminChatSession> GetWorkspaceSessionAsync(int sessionId)
+        {
+            if (!IsCurrentAdminSuperAdmin() || _workspaceStorage == null)
+            {
+                throw new NcfExceptionBase("只有超级管理员可以访问 Workspace 资产。");
+            }
+
+            var session = await _sessionService
+                .GetSessionByIdAsync(sessionId, GetCurrentAdminUserInfoId())
+                .ConfigureAwait(false);
+            if (session == null || string.IsNullOrWhiteSpace(session.WorkspaceId))
+            {
+                throw new NcfExceptionBase("当前会话没有可用的 Workspace。");
+            }
+
+            var descriptor = await _workspaceStorage.GetAsync(session.WorkspaceId).ConfigureAwait(false);
+            if (descriptor == null || descriptor.OwnerId != GetCurrentAdminUserInfoId())
+            {
+                throw new NcfExceptionBase("Workspace 不存在或不可访问。");
+            }
+
+            return session;
+        }
+
+        private static string ResolveWorkspaceContentType(string relativePath)
+        {
+            return Path.GetExtension(relativePath).ToLowerInvariant() switch
+            {
+                ".html" or ".htm" => "text/html",
+                ".css" => "text/css",
+                ".js" or ".mjs" => "text/javascript",
+                ".json" or ".map" => "application/json",
+                ".svg" => "image/svg+xml",
+                ".md" => "text/markdown",
+                ".txt" or ".log" or ".xml" => "text/plain",
+                ".png" => "image/png",
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".gif" => "image/gif",
+                ".webp" => "image/webp",
+                ".ico" => "image/x-icon",
+                ".pdf" => "application/pdf",
+                _ => "application/octet-stream"
+            };
+        }
+
+        private static bool IsWorkspaceTextContent(string contentType, string relativePath)
+        {
+            return contentType.StartsWith("text/", StringComparison.OrdinalIgnoreCase)
+                || contentType is "application/json" or "text/javascript" or "image/svg+xml"
+                || string.IsNullOrEmpty(Path.GetExtension(relativePath));
         }
 
         #region 会话管理
@@ -1368,6 +1472,22 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 LastAccessedUtc = descriptor.LastAccessedUtc
             };
         }
+    }
+
+    public class WorkspaceEntriesResponse
+    {
+        public string CurrentPath { get; set; } = string.Empty;
+        public IReadOnlyList<WorkspaceEntry> Entries { get; set; } = Array.Empty<WorkspaceEntry>();
+    }
+
+    public class WorkspaceFilePreviewDto
+    {
+        public string Path { get; set; } = string.Empty;
+        public string ContentType { get; set; } = "application/octet-stream";
+        public long Size { get; set; }
+        public bool IsText { get; set; }
+        public string Content { get; set; }
+        public string ContentBase64 { get; set; } = string.Empty;
     }
 
     /// <summary>

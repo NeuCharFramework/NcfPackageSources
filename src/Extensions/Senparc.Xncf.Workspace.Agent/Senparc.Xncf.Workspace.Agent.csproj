@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <UseAppHost>false</UseAppHost>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
+    <PackageReleaseNotes>[2026-10-24] Fix Workspace Agent deployment and support native or DLL startup.</PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.Workspace.Agent</AssemblyName>
     <RootNamespace>Senparc.Xncf.Workspace.Agent</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -71,8 +71,15 @@ public sealed class WorkspaceAgentProcessFactory
     private IIsolatedRuntimeConnection StartNative(string workspaceId, string workspaceRoot)
     {
         var agentPath = ResolveAgentPath();
-        var startInfo = CreateBaseStartInfo("dotnet");
-        startInfo.ArgumentList.Add(agentPath);
+        var startInfo = CreateBaseStartInfo(
+            string.Equals(Path.GetExtension(agentPath), ".dll", StringComparison.OrdinalIgnoreCase)
+                ? "dotnet"
+                : agentPath);
+        if (string.Equals(Path.GetExtension(agentPath), ".dll", StringComparison.OrdinalIgnoreCase))
+        {
+            startInfo.ArgumentList.Add(agentPath);
+        }
+
         AddAgentArguments(
             startInfo.ArgumentList,
             workspaceRoot,
@@ -179,16 +186,33 @@ public sealed class WorkspaceAgentProcessFactory
 
     private string ResolveAgentPath()
     {
-        var path = string.IsNullOrWhiteSpace(_options.AgentPath)
-            ? Path.Combine(AppContext.BaseDirectory, "Senparc.Xncf.Workspace.Agent.dll")
-            : Path.GetFullPath(_options.AgentPath);
-        if (!File.Exists(path))
+        if (!string.IsNullOrWhiteSpace(_options.AgentPath))
         {
-            throw new FileNotFoundException(
-                "Workspace Agent executable was not found. Configure SenparcXncfWorkspace:AgentPath.",
-                path);
+            var configuredPath = Path.GetFullPath(_options.AgentPath);
+            if (!File.Exists(configuredPath))
+            {
+                throw new FileNotFoundException(
+                    "Workspace Agent executable was not found. Configure SenparcXncfWorkspace:AgentPath.",
+                    configuredPath);
+            }
+
+            return configuredPath;
         }
 
-        return path;
+        var assemblyPath = Path.Combine(AppContext.BaseDirectory, "Senparc.Xncf.Workspace.Agent.dll");
+        if (File.Exists(assemblyPath))
+        {
+            return assemblyPath;
+        }
+
+        var executablePath = Path.Combine(AppContext.BaseDirectory, "Senparc.Xncf.Workspace.Agent");
+        if (File.Exists(executablePath))
+        {
+            return executablePath;
+        }
+
+        throw new FileNotFoundException(
+            "Workspace Agent executable was not found. Configure SenparcXncfWorkspace:AgentPath.",
+            assemblyPath);
     }
 }
