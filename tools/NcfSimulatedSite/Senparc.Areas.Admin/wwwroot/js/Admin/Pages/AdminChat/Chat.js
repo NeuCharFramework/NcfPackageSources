@@ -55,6 +55,9 @@
       userStatsList: [],
       workspacePreviewOpen: false,
       workspacePreviewWidth: 420,
+      workspacePreviewMaxWidth: 420,
+      workspacePreviewOverlay: false,
+      workspacePreviewSource: false,
       workspaceEntries: [],
       workspacePreviewPath: '',
       workspacePreviewFilePath: '',
@@ -67,6 +70,14 @@
     };
   },
   computed: {
+    workspacePreviewIsDocument() {
+      return !!this.workspacePreviewData
+        && ['text/html', 'text/markdown'].includes(this.workspacePreviewData.contentType);
+    },
+    workspacePreviewCanShowSource() {
+      return !!this.workspacePreviewData && this.workspacePreviewData.isText
+        && (this.workspacePreviewIsDocument || this.workspacePreviewData.contentType === 'image/svg+xml');
+    },
     usageStatusText() {
       if (!this.latestUsage || !this.hasUsage(this.latestUsage)) {
         return 'Token：—';
@@ -97,6 +108,8 @@
     }
   },
   mounted() {
+    this.workspacePreviewResizeObserver = new ResizeObserver(() => this.updateWorkspacePreviewLayout());
+    this.workspacePreviewResizeObserver.observe(this.$refs.workspaceContainer.$el);
     if (window.INITIAL_DATA) {
       this.currentSessionId = window.INITIAL_DATA.sessionId || 0;
       this.currentUserId = window.INITIAL_DATA.currentUserId || 0;
@@ -140,6 +153,7 @@
     }
   },
   beforeDestroy() {
+    this.workspacePreviewResizeObserver.disconnect();
     if (this.activeRequestController) {
       this.activeRequestController.abort();
       this.activeRequestController = null;
@@ -150,8 +164,27 @@
     toggleWorkspacePreview() {
       this.workspacePreviewOpen = !this.workspacePreviewOpen;
       if (this.workspacePreviewOpen) {
+        this.$nextTick(() => this.updateWorkspacePreviewLayout());
         this.loadWorkspaceEntries(this.workspacePreviewPath);
       }
+    },
+
+    updateWorkspacePreviewLayout() {
+      if (!this.workspacePreviewOpen) return;
+      const container = this.$refs.workspaceContainer.$el;
+      const sidebarWidth = container.querySelector('.chat-sidebar').getBoundingClientRect().width;
+      const chatMinWidth = parseFloat(getComputedStyle(container).getPropertyValue('--chat-content-min-width'));
+      const availableWidth = container.clientWidth - sidebarWidth;
+      this.workspacePreviewOverlay = availableWidth < chatMinWidth + 320;
+      this.workspacePreviewMaxWidth = this.workspacePreviewOverlay
+        ? container.clientWidth
+        : availableWidth - chatMinWidth;
+      this.workspacePreviewWidth = Math.min(this.workspacePreviewWidth, this.workspacePreviewMaxWidth);
+    },
+
+    expandWorkspacePreview() {
+      this.updateWorkspacePreviewLayout();
+      this.workspacePreviewWidth = this.workspacePreviewMaxWidth;
     },
 
     async loadWorkspaceEntries(relativePath) {
@@ -177,6 +210,7 @@
 
     async handleWorkspaceEntryClick(entry) {
       if (!entry || !entry.relativePath) return;
+      this.workspacePreviewSource = false;
       if (entry.isDirectory) {
         this.workspacePreviewFilePath = '';
         this.workspacePreviewData = null;
@@ -197,10 +231,14 @@
           throw new Error((response.data && response.data.msg) || '文件预览加载失败。');
         }
         this.workspacePreviewData = response.data.data;
-        if (this.workspacePreviewData.contentType === 'text/html' && this.workspacePreviewData.content) {
+        if (this.workspacePreviewIsDocument) {
+          const isMarkdown = this.workspacePreviewData.contentType === 'text/markdown';
           this.workspacePreviewSrcdoc = await this.buildWorkspaceHtmlPreview(
-            this.workspacePreviewData.content,
-            this.workspacePreviewData.path);
+            isMarkdown
+              ? this.formatMessageContent(this.workspacePreviewData.content)
+              : this.workspacePreviewData.content,
+            this.workspacePreviewData.path,
+            isMarkdown);
         }
       } catch (error) {
         console.error('加载 Workspace 文件预览失败:', error);
@@ -210,7 +248,7 @@
       }
     },
 
-    async buildWorkspaceHtmlPreview(content, filePath) {
+    async buildWorkspaceHtmlPreview(content, filePath, isMarkdown = false) {
       const parser = new DOMParser();
       const document = parser.parseFromString(content, 'text/html');
       document.querySelectorAll('script, iframe, object, embed, form, base, meta[http-equiv="refresh"]').forEach((element) => element.remove());
@@ -260,6 +298,24 @@
 
       const style = document.createElement('style');
       style.textContent = 'html,body{max-width:100%;overflow-x:hidden;}';
+      if (isMarkdown) {
+        style.textContent += `
+          body{margin:0;padding:20px;box-sizing:border-box;color:#303133;font:14px/1.7 system-ui,sans-serif;overflow-wrap:anywhere;}
+          h1,h2,h3,h4,h5,h6{line-height:1.3;margin:1.2em 0 .6em;}
+          h1,h2{padding-bottom:.3em;border-bottom:1px solid #e5e9f0;}
+          body>:first-child{margin-top:0;}
+          p,ul,ol,pre,table,blockquote{margin:0 0 1em;}
+          code{padding:2px 4px;border-radius:4px;background:#f1f3f5;font-family:monospace;}
+          pre{padding:14px;overflow:auto;border-radius:6px;background:#f6f8fa;white-space:pre;}
+          pre code{padding:0;background:none;}
+          table{display:block;max-width:100%;overflow:auto;border-collapse:collapse;}
+          th,td{padding:6px 12px;border:1px solid #e5e9f0;}
+          th{background:#f6f8fa;}
+          blockquote{margin-left:0;padding-left:14px;border-left:3px solid #d8dee8;color:#667085;}
+          img{max-width:100%;height:auto;}
+          a{color:#5267d9;}
+        `;
+      }
       document.head.appendChild(style);
       const csp = document.createElement('meta');
       csp.httpEquiv = 'Content-Security-Policy';
@@ -379,11 +435,12 @@
     startWorkspacePreviewResize(event) {
       event.preventDefault();
       this.stopWorkspacePreviewResize();
+      this.updateWorkspacePreviewLayout();
       const startX = event.clientX;
       const startWidth = event.currentTarget.parentElement.getBoundingClientRect().width;
       this.workspaceResizeHandler = (moveEvent) => {
         const width = startWidth + startX - moveEvent.clientX;
-        this.workspacePreviewWidth = Math.min(720, Math.max(320, width));
+        this.workspacePreviewWidth = Math.min(this.workspacePreviewMaxWidth, Math.max(320, width));
       };
       this.workspaceResizeEndHandler = () => this.stopWorkspacePreviewResize();
       document.addEventListener('mousemove', this.workspaceResizeHandler);
@@ -1208,6 +1265,8 @@
 
     resetWorkspacePreview() {
       this.workspacePreviewOpen = false;
+      this.workspacePreviewSource = false;
+      this.workspacePreviewOverlay = false;
       this.workspaceEntries = [];
       this.workspacePreviewPath = '';
       this.workspacePreviewFilePath = '';

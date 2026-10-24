@@ -255,6 +255,9 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatTrajectoryService>();
             services.AddScoped<AdminChatTrajectoryEventService>();
             services.AddScoped<AdminChatAiService>();
+            services.AddScoped<AdminChatWorkspaceAssetService>();
+            services.AddSingleton<WorkspaceAssetPreviewBuilder>();
+            services.AddSingleton<WorkspaceAssetShareStore>();
             services.AddScoped<IWeixinClawAdminBindingRepository, WeixinClawAdminBindingRepository>();
             services.AddScoped<WeixinClawAdminBindingService>();
             services.AddScoped<AdminWeixinClawMessageHandler>();
