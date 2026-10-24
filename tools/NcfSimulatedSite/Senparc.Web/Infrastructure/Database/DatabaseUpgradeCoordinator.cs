@@ -28,6 +28,7 @@ public sealed class DatabaseUpgradeCoordinator
 {
     private const string XncfModuleManagerName = "Senparc.Xncf.XncfModuleManager";
     private const string SystemManagerName = "Senparc.Xncf.SystemManager";
+    private const string WorkspaceName = "Senparc.Xncf.Workspace";
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly DatabaseRuntimeStateStore _stateStore;
 
@@ -276,7 +277,8 @@ public sealed class DatabaseUpgradeCoordinator
 
     private static bool IsCriticalModule(string moduleName) =>
         string.Equals(moduleName, XncfModuleManagerName, StringComparison.Ordinal)
-        || string.Equals(moduleName, SystemManagerName, StringComparison.Ordinal);
+        || string.Equals(moduleName, SystemManagerName, StringComparison.Ordinal)
+        || string.Equals(moduleName, WorkspaceName, StringComparison.Ordinal);
 
     private static IEnumerable<DatabaseModuleMigration> OrderModules(
         IEnumerable<DatabaseModuleMigration> modules)
