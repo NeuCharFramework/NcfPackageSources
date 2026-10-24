@@ -1853,8 +1853,9 @@
 .admin-chat-container .chat-inline-settings-panel {
     position: absolute;
     z-index: 3;
-    right: 22px;
-    bottom: 52px;
+    left: 0;
+    right: auto;
+    bottom: calc(100% + 8px);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1863,6 +1864,10 @@
     border-radius: 9px;
     background: #fff;
     box-shadow: 0 8px 22px rgba(32, 38, 51, 0.12);
+}
+
+.admin-chat-container .chat-inline-settings {
+    position: relative;
 }
 
 .admin-chat-container .input-ai-model-select {
@@ -2057,6 +2062,191 @@
     padding: 0 10px 10px;
 }
 
+.admin-chat-container .chat-launcher-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #edf0f4;
+}
+
+.admin-chat-container .launcher-toolbar-control,
+.admin-chat-container .launcher-toolbar-button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    border: 1px solid #e2e6ed;
+    border-radius: 8px;
+    background: #fafbfc;
+    color: #697485;
+}
+
+.admin-chat-container .launcher-toolbar-control {
+    gap: 7px;
+    padding: 3px 7px;
+}
+
+.admin-chat-container .launcher-toolbar-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #7c8695;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.admin-chat-container .launcher-toolbar-label .fa {
+    color: var(--chat-accent);
+}
+
+.admin-chat-container .launcher-toolbar-model .chat-ai-model-select {
+    width: 155px;
+}
+
+.admin-chat-container .launcher-toolbar-model .el-input__inner {
+    height: 25px;
+    padding: 0 8px;
+    border: 0;
+    background: transparent;
+    color: #536071;
+}
+
+.admin-chat-container .launcher-toolbar-mode {
+    padding-right: 3px;
+}
+
+.admin-chat-container .launcher-toolbar-mode .launcher-mode-toggle .el-radio-button__inner {
+    padding: 6px 8px;
+    border-color: transparent;
+    background: transparent;
+    font-size: 11px;
+}
+
+.admin-chat-container .launcher-toolbar-button {
+    gap: 6px;
+    padding: 0 9px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 11px;
+    transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+}
+
+.admin-chat-container .launcher-toolbar-button:hover:not(:disabled) {
+    border-color: #cbd4f0;
+    background: #f5f6ff;
+    color: var(--chat-accent);
+}
+
+.admin-chat-container .launcher-toolbar-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.admin-chat-container .launcher-toolbar-button > .fa:first-child {
+    color: var(--chat-accent);
+}
+
+.admin-chat-container .launcher-toolbar-button > .fa-angle-down {
+    margin-left: 2px;
+    color: #aab2bf;
+}
+
+.admin-chat-container .launcher-toolbar-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border-radius: 9px;
+    background: var(--chat-accent-soft);
+    color: var(--chat-accent);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.chat-launcher-popover {
+    border-color: #e1e5ed !important;
+    border-radius: 10px !important;
+    box-shadow: 0 12px 28px rgba(32, 38, 51, 0.14) !important;
+}
+
+.launcher-popover-content {
+    color: var(--chat-ink);
+}
+
+.launcher-popover-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 11px;
+}
+
+.launcher-popover-heading strong,
+.launcher-popover-heading span {
+    display: block;
+}
+
+.launcher-popover-heading strong {
+    color: #4d5868;
+    font-size: 13px;
+}
+
+.launcher-popover-heading span {
+    margin-top: 3px;
+    color: #a0a8b5;
+    font-size: 11px;
+}
+
+.launcher-popover-heading .el-button {
+    padding: 2px 0;
+}
+
+.launcher-popover-content .launcher-workspace-select {
+    width: 100%;
+    min-width: 0;
+}
+
+.launcher-popover-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.launcher-popover-options .el-checkbox {
+    margin-right: 0;
+    color: #697485;
+    font-size: 12px;
+}
+
+.launcher-popover-content .launcher-workspace-help {
+    margin-top: 9px;
+    color: #a0a8b5;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.launcher-reference-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-height: 150px;
+    overflow-y: auto;
+    padding: 2px;
+}
+
+.launcher-reference-summary .module-tag.el-tag {
+    max-width: 100%;
+    border-color: #e0e5ed;
+    border-radius: 6px;
+    background: #fafbfc;
+    color: #697485;
+}
+
 .admin-chat-container .chat-launcher-controls {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(230px, 0.8fr);
@@ -2197,13 +2387,23 @@
     }
 
     .admin-chat-container .chat-inline-settings-panel {
-        right: 12px;
-        bottom: 50px;
+        left: 0;
+        right: auto;
+        bottom: calc(100% + 8px);
         flex-direction: column;
         align-items: stretch;
     }
 
     .admin-chat-container .input-ai-model-select {
         width: 100%;
+    }
+
+    .admin-chat-container .chat-launcher-toolbar {
+        align-items: stretch;
+    }
+
+    .admin-chat-container .launcher-toolbar-control,
+    .admin-chat-container .launcher-toolbar-button {
+        flex: 1 1 auto;
     }
 }

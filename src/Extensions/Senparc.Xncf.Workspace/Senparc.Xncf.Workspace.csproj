@@ -1,8 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.1</Version>
+    <Version>0.2.2</Version>
     <PackageReleaseNotes>
+      [2026-10-24] v0.2.2 补齐 Workspace 标准 EF 设计时迁移链路
+      1、接入 Senparc.Web.DatabasePlant 作为迁移启动项目
+      2、补充六类数据库的设计时 DbContext 工厂
       [2026-10-24] v0.2.1 复用共享 Docker 隔离运行时
       1、Workspace Docker Agent 通过 IIsolatedRuntimeProvider 启动
       2、与 Sandbox 统一镜像、挂载、网络、资源和安全参数生成
@@ -29,6 +32,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Oracle.EntityFrameworkCore" Version="8.23.60" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+    <PackageReference Include="DM.Microsoft.EntityFrameworkCore" Version="8.0.0.28188" />
     <ProjectReference Include="..\Senparc.Xncf.Workspace.Agent\Senparc.Xncf.Workspace.Agent.csproj" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
