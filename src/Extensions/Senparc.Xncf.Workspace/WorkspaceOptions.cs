@@ -38,6 +38,18 @@ public sealed class WorkspaceOptions
 
     public int MaxSearchResults { get; set; } = 200;
 
+    public string RuntimeProvider { get; set; } = "NativeAgent";
+
+    public string AgentPath { get; set; } = string.Empty;
+
+    public bool AllowNativeExecution { get; set; }
+
+    public string DockerImage { get; set; } = "senparc/ncf-workspace-agent:0.2.0";
+
+    public int DockerMemoryMegabytes { get; set; } = 512;
+
+    public double DockerCpuLimit { get; set; } = 1.0;
+
     public string[] AllowedCommands { get; set; } =
         new[] { "dotnet", "git", "node", "npm", "python", "python3", "py", "pytest" };
 }

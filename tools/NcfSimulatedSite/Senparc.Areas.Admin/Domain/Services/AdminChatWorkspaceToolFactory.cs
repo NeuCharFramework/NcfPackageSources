@@ -25,12 +25,11 @@ namespace Senparc.Areas.Admin.Domain.Services;
 internal static class AdminChatWorkspaceToolFactory
 {
     public static IReadOnlyList<AIFunction> Create(
-        IWorkspaceStorage storage,
-        string workspaceId,
+        IWorkspaceClient client,
         bool allowWrite,
         bool allowCli)
     {
-        var target = new WorkspaceToolTarget(storage, workspaceId, allowWrite, allowCli);
+        var target = new WorkspaceToolTarget(client, allowWrite, allowCli);
         var functions = new List<AIFunction>
         {
             Create(target, nameof(WorkspaceToolTarget.ListAsync), "workspace_list", "列出当前 Workspace 内的文件和目录。"),
@@ -66,28 +65,27 @@ internal static class AdminChatWorkspaceToolFactory
 
     private sealed class WorkspaceToolTarget
     {
-        private readonly IWorkspaceStorage _storage;
-        private readonly string _workspaceId;
+        private readonly IWorkspaceClient _client;
         private readonly bool _allowWrite;
         private readonly bool _allowCli;
 
-        public WorkspaceToolTarget(IWorkspaceStorage storage, string workspaceId, bool allowWrite, bool allowCli)
+        public WorkspaceToolTarget(IWorkspaceClient client, bool allowWrite, bool allowCli)
         {
-            _storage = storage;
-            _workspaceId = workspaceId;
+            _client = client;
             _allowWrite = allowWrite;
             _allowCli = allowCli;
         }
 
         public async Task<string> ListAsync(string relativePath = "")
         {
-            var entries = await _storage.ListAsync(_workspaceId, relativePath).ConfigureAwait(false);
+            var entries = await _client.ListAsync(relativePath).ConfigureAwait(false);
             return JsonSerializer.Serialize(entries);
         }
 
-        public Task<string> ReadAsync(string relativePath)
+        public async Task<string> ReadAsync(string relativePath)
         {
-            return _storage.ReadFileAsync(_workspaceId, relativePath);
+            var file = await _client.ReadFileAsync(relativePath).ConfigureAwait(false);
+            return System.Text.Encoding.UTF8.GetString(file.Content);
         }
 
         public async Task<string> SearchAsync(
@@ -97,23 +95,30 @@ internal static class AdminChatWorkspaceToolFactory
             bool caseSensitive = false,
             int maxResults = 100)
         {
-            var results = await _storage.SearchAsync(
-                _workspaceId,
-                new WorkspaceSearchRequest(nameQuery, contentQuery, relativePath, caseSensitive, maxResults)).ConfigureAwait(false);
+            var results = await _client.SearchAsync(
+                new WorkspaceSearchRequest(
+                    nameQuery,
+                    contentQuery,
+                    relativePath,
+                    caseSensitive,
+                    maxResults)).ConfigureAwait(false);
             return JsonSerializer.Serialize(results);
         }
 
         public async Task<string> WriteAsync(string relativePath, string content)
         {
             EnsureWrite();
-            await _storage.WriteFileAsync(_workspaceId, relativePath, content).ConfigureAwait(false);
+            await _client.WriteFileAsync(
+                new WorkspaceWriteFileRequest(
+                    relativePath,
+                    System.Text.Encoding.UTF8.GetBytes(content))).ConfigureAwait(false);
             return "写入成功。";
         }
 
         public async Task<string> MkdirAsync(string relativePath)
         {
             EnsureWrite();
-            await _storage.CreateDirectoryAsync(_workspaceId, relativePath).ConfigureAwait(false);
+            await _client.CreateDirectoryAsync(relativePath).ConfigureAwait(false);
             return "目录创建成功。";
         }
 
@@ -125,8 +130,7 @@ internal static class AdminChatWorkspaceToolFactory
             string expectedSha256 = "")
         {
             EnsureWrite();
-            var result = await _storage.ApplyPatchAsync(
-                _workspaceId,
+            var result = await _client.ApplyPatchAsync(
                 new WorkspacePatchRequest(
                     relativePath,
                     oldText,
@@ -146,8 +150,7 @@ internal static class AdminChatWorkspaceToolFactory
                 throw new InvalidOperationException("当前会话未启用 Workspace Python 执行权限。");
             }
 
-            var result = await _storage.ExecutePythonAsync(
-                _workspaceId,
+            var result = await _client.ExecutePythonAsync(
                 new WorkspacePythonRequest(scriptPath, arguments ?? Array.Empty<string>(), workingDirectory)).ConfigureAwait(false);
             return JsonSerializer.Serialize(result);
         }
