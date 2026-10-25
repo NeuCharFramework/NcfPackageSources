@@ -16,6 +16,9 @@
 }
 
 <div class="admin-chat-container">
+    <input ref="workspaceFileInput" type="file" hidden multiple
+        accept=".txt,.md,.csv,.tsv,.json,.docx,.xlsx,.pptx,.pdf,.doc,.xls,.ppt,.png,.jpg,.jpeg,.webp"
+        @@change="handleWorkspaceFilesSelected" />
     <el-container
         ref="workspaceContainer"
         class="chat-main-container"
@@ -92,15 +95,6 @@
                         </h3>
                         <div class="chat-header-actions">
                             <el-button
-                                v-if="currentSessionWorkspaceId"
-                                size="mini"
-                                :type="workspacePreviewOpen ? 'primary' : 'default'"
-                                title="Workspace 资产"
-                                @@click="toggleWorkspacePreview">
-                                <i class="fa fa-folder-open-o"></i>
-                                <span class="chat-workspace-preview-button-label">资产</span>
-                            </el-button>
-                            <el-button
                                 size="mini"
                                 :type="isManageMode ? 'default' : 'primary'"
                                 @@click="toggleManageMode">
@@ -112,6 +106,15 @@
                                 title="任务轨迹"
                                 @@click="openTrajectoryDialog">
                                 <i class="fa fa-road"></i>
+                            </el-button>
+                            <el-button
+                                v-if="currentSessionWorkspaceId"
+                                size="mini"
+                                :type="workspacePreviewOpen ? 'primary' : 'default'"
+                                title="Workspace 资产"
+                                @@click="toggleWorkspacePreview">
+                                <i class="fa fa-folder-open-o"></i>
+                                <span class="chat-workspace-preview-button-label">资产</span>
                             </el-button>
                         </div>
                     </div>
@@ -295,6 +298,15 @@
                             <span class="message-time">{{ formatTime(message.addTime) }}</span>
                         </div>
                         <div class="message-text" v-html="formatMessageContent(message.content)"></div>
+                        <div v-if="message.attachments && message.attachments.length" class="chat-message-attachments">
+                            <button v-for="attachment in message.attachments" :key="attachment.relativePath"
+                                type="button" :title="'下载原文件：' + attachment.name"
+                                @@click="downloadWorkspaceEntry(attachment.relativePath)">
+                                <i :class="workspaceFileIcon(attachment.relativePath)"></i>
+                                <span>{{ attachment.name }}</span>
+                                <small v-if="attachment.useVision">视觉</small>
+                            </button>
+                        </div>
                         <div class="message-harness-steps" v-if="message.roleType === 1 && !isManageMode && message.harnessSteps && message.harnessSteps.length > 0">
                             <el-collapse class="harness-collapse">
                                 <el-collapse-item :title="harnessStepsTitle(message.harnessSteps)">
@@ -368,7 +380,7 @@
                                 <div class="live-thinking-label">
                                     <i class="fa fa-lightbulb-o"></i> 正在思考
                                 </div>
-                                <div ref="liveThinkingPreview" class="live-thinking-content">{{ liveThinkingText }}</div>
+                                <div ref="liveThinkingPreview" class="live-thinking-content" v-html="formatMessageContent(liveThinkingText)"></div>
                             </div>
                             <div v-if="liveAssistantText" ref="liveAnswerPreview" class="live-answer-preview" v-html="formatMessageContent(liveAssistantText)"></div>
                         </div>
@@ -412,7 +424,24 @@
                 </div>
             </div>
 
-            <div class="input-container" v-if="currentSessionId">
+            <div class="input-container" v-if="currentSessionId"
+                @@dragover="handleWorkspaceDragOver" @@drop="handleWorkspaceDrop">
+                <div v-if="pendingAttachments.length" class="chat-pending-attachments">
+                    <div v-for="attachment in pendingAttachments" :key="attachment.relativePath" class="chat-attachment-card">
+                        <img v-if="attachment.localPreviewUrl" :src="attachment.localPreviewUrl" alt="" />
+                        <i v-else :class="workspaceFileIcon(attachment.relativePath)"></i>
+                        <div class="chat-attachment-info" :title="attachment.notice">
+                            <strong>{{ attachment.name }}</strong>
+                            <small>{{ attachment.localStatus }}<span v-if="attachment.sectionCount"> · {{ attachment.sectionCount }} 段/页/表</span></small>
+                        </div>
+                        <el-checkbox v-if="attachment.contentType.indexOf('image/') === 0"
+                            v-model="attachment.useVision" :disabled="!attachment.canUseVision || isSending"
+                            title="仅本轮授权发送压缩图片给视觉模型，可能产生额外 Token。"
+                            @@change="validatePendingVision(attachment)">视觉</el-checkbox>
+                        <button type="button" :disabled="isSending" title="从本轮移除（保留 Workspace 原文件）"
+                            @@click="removePendingAttachment(attachment)"><i class="el-icon-close"></i></button>
+                    </div>
+                </div>
                 <el-input
                     type="textarea"
                     v-model="inputMessage"
@@ -420,9 +449,13 @@
                     :rows="3"
                     :disabled="!currentSessionId || isSending"
                     @@keydown.native="handleChatInputKeydown"
+                    @@paste.native="handleWorkspacePaste"
                     class="message-input">
                 </el-input>
                 <div class="input-actions">
+                    <el-button type="text" size="mini" aria-label="上传资料" :title="attachmentUploadHint"
+                        :loading="workspaceUploading" :disabled="!canUploadWorkspaceFiles || isSending"
+                        @@click="chooseWorkspaceFiles"><i class="fa fa-paperclip"></i></el-button>
                     <span class="input-tip">
                         <i class="fa fa-info-circle"></i> @AR["AdminChat.SendHint"]
                     </span>
@@ -479,7 +512,7 @@
                             v-else
                             type="primary"
                             icon="el-icon-s-promotion"
-                            :disabled="!currentSessionId || !inputMessage || inputMessage.trim().length === 0"
+                            :disabled="!currentSessionId || workspaceUploading || ((!inputMessage || inputMessage.trim().length === 0) && pendingAttachments.length === 0)"
                             @@click="sendMessage">
                             @AR["AdminChat.Send"]
                         </el-button>
@@ -506,7 +539,7 @@
                             </div>
                         </div>
 
-                        <div class="chat-entrance-input-wrapper">
+                        <div class="chat-entrance-input-wrapper" @@dragover="handleWorkspaceDragOver" @@drop="handleWorkspaceDrop">
                             <div class="chat-entrance-composer">
                                 <el-input
                                     type="textarea"
@@ -515,10 +548,14 @@
                                     :rows="4"
                                     :autosize="{ minRows: 4, maxRows: 8 }"
                                     @@keydown.native="handleLauncherInputKeydown"
+                                    @@paste.native="handleWorkspacePaste"
                                     class="chat-entrance-input"
                                     resize="none">
                                 </el-input>
                                 <div class="chat-entrance-composer-footer">
+                                    <el-button type="text" size="mini" aria-label="上传资料" :title="attachmentUploadHint"
+                                        :loading="workspaceUploading" :disabled="!canUploadWorkspaceFiles || isCreatingSession"
+                                        @@click="chooseWorkspaceFiles"><i class="fa fa-paperclip"></i></el-button>
                                     <span class="chat-entrance-input-tip">
                                         <i class="fa fa-keyboard-o"></i>
                                         按 Ctrl + Enter 或 Cmd + Enter 开始
@@ -723,6 +760,11 @@
                 <span class="chat-workspace-preview-path" :title="workspacePreviewPath || '/'">
                     /{{ workspacePreviewPath || '' }}
                 </span>
+                <el-button size="mini" type="text" title="下载当前目录 (.zip)"
+                    :loading="workspaceDownloading"
+                    @@click="downloadWorkspaceEntry(workspacePreviewPath)">
+                    <i class="el-icon-download"></i>
+                </el-button>
                 <el-button size="mini" type="text" title="刷新" @@click="loadWorkspaceEntries(workspacePreviewPath)">
                     <i class="el-icon-refresh"></i>
                 </el-button>
@@ -747,6 +789,26 @@
                 <div v-if="workspacePreviewFilePath" class="chat-workspace-file-preview">
                     <div class="chat-workspace-file-preview-header">
                         <span :title="workspacePreviewFilePath">{{ workspaceEntryName(workspacePreviewFilePath) }}</span>
+                        <a v-if="workspacePreviewData && workspacePreviewData.contentType === 'text/html'"
+                            :href="workspaceExternalPreviewUrl"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="chat-workspace-preview-action"
+                            title="在外部浏览器打开（只读）"
+                            aria-label="在外部浏览器打开（只读）">
+                            <i class="el-icon-top-right"></i>
+                        </a>
+                        <el-button
+                            v-if="workspacePreviewData && workspacePreviewData.contentType === 'text/html'"
+                            type="text" size="mini" title="管理匿名分享"
+                            @@click="openWorkspaceShareDialog">
+                            <i class="el-icon-share"></i>
+                        </el-button>
+                        <el-button type="text" size="mini" title="下载 / 另存为"
+                            :loading="workspaceDownloading"
+                            @@click="downloadWorkspaceEntry(workspacePreviewFilePath)">
+                            <i class="el-icon-download"></i>
+                        </el-button>
                         <el-button
                             v-if="workspacePreviewCanShowSource"
                             type="text"
@@ -786,6 +848,42 @@
             </div>
         </aside>
     </el-container>
+    <el-dialog title="HTML 匿名快照分享" :visible.sync="workspaceShareDialogVisible"
+        width="560px" append-to-body custom-class="workspace-share-dialog">
+        <el-alert type="warning" :closable="false"
+            title="任何持有链接的人都能查看此快照。"
+            description="只发布选中的 HTML 及其所在目录内引用的静态资源，不公开 Workspace 目录。脚本、表单、外部资源和页面跳转禁用。后续修改不会同步；撤销无法收回已经保存的副本。">
+        </el-alert>
+        <div class="workspace-share-heading">{{ workspaceSharePath }}</div>
+        <div class="workspace-share-create">
+            <el-select v-model="workspaceShareHours" size="small" aria-label="分享有效期">
+                <el-option :value="1" label="1 小时"></el-option>
+                <el-option :value="24" label="24 小时"></el-option>
+                <el-option :value="168" label="7 天"></el-option>
+            </el-select>
+            <el-button type="primary" size="small" :loading="workspaceShareCreating"
+                @@click="createWorkspaceShare">创建只读快照链接</el-button>
+        </div>
+        <div v-loading="workspaceSharesLoading" class="workspace-share-list">
+            <div v-for="share in workspaceShares" :key="share.id" class="workspace-share-item">
+                <div class="workspace-share-details">
+                    <div>到期：{{ new Date(share.expiresAt).toLocaleString() }}</div>
+                    <el-input :value="workspaceShareAbsoluteUrl(share.url)" readonly size="mini"
+                        label="匿名快照链接"
+                        @@focus="$event.target.select()"></el-input>
+                </div>
+                <el-button type="text" size="mini" @@click="copyWorkspaceShareLink(share)">复制</el-button>
+                <el-button type="text" size="mini" :loading="workspaceShareRevoking === share.id"
+                    @@click="revokeWorkspaceShare(share)">撤销</el-button>
+            </div>
+            <div v-if="!workspaceSharesLoading && workspaceShares.length === 0" class="chat-workspace-empty">
+                暂无有效分享
+            </div>
+        </div>
+        <span slot="footer">
+            <el-button @@click="workspaceShareDialogVisible = false">关闭</el-button>
+        </span>
+    </el-dialog>
     <el-dialog
         title="新建 Workspace"
         :visible.sync="createWorkspaceDialogVisible"

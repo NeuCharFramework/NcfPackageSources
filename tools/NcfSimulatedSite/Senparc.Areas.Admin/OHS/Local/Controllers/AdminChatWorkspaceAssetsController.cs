@@ -1,12 +1,16 @@
 using System;
 using System.IO;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Core.Authorization;
@@ -24,14 +28,16 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
     private readonly AdminChatWorkspaceAssetService _assets;
     private readonly WorkspaceAssetShareStore _shares;
     private readonly ILogger<AdminChatWorkspaceAssetsController> _logger;
+    private readonly IWebHostEnvironment _environment;
 
     public AdminChatWorkspaceAssetsController(
         AdminChatWorkspaceAssetService assets, WorkspaceAssetShareStore shares,
-        ILogger<AdminChatWorkspaceAssetsController> logger)
+        ILogger<AdminChatWorkspaceAssetsController> logger, IWebHostEnvironment environment)
     {
         _assets = assets;
         _shares = shares;
         _logger = logger;
+        _environment = environment;
     }
 
     [HttpGet("{sessionId:int}/preview")]
@@ -41,6 +47,33 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
             var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
             var preview = await _assets.BuildPreviewAsync(session.WorkspaceId, path, cancellationToken);
             return Html(preview.Html);
+        });
+
+    [HttpGet("{sessionId:int}/attachments/capabilities")]
+    public Task<IActionResult> AttachmentCapabilities(int sessionId, CancellationToken cancellationToken) =>
+        ExecuteAsync(async () =>
+        {
+            await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            var attachments = HttpContext.RequestServices.GetRequiredService<AdminChatAttachmentService>();
+            return Ok(new
+            {
+                maxFileBytes = attachments.UploadLimit, maxFiles = AdminChatAttachmentService.MaxAttachments,
+                extensions = AdminChatAttachmentService.AllowedExtensions,
+                notice = "本地解析不调用 AI。旧版 Office 仅保存；扫描 PDF 不自动 OCR。视觉处理需要用户勾选并使用支持图片的模型。"
+            });
+        });
+
+    [HttpPost("{sessionId:int}/attachments")]
+    [RequestSizeLimit(17 * 1024 * 1024)]
+    [RequestFormLimits(MultipartBodyLengthLimit = 17 * 1024 * 1024)]
+    public Task<IActionResult> UploadAttachment(int sessionId, IFormFile file,
+        IFormFile visionPreview, CancellationToken cancellationToken) =>
+        ExecuteAsync(async () =>
+        {
+            var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            var attachment = await HttpContext.RequestServices.GetRequiredService<AdminChatAttachmentService>()
+                .UploadAsync(session, file, visionPreview, cancellationToken);
+            return Ok(new { attachment });
         });
 
     [HttpGet("{sessionId:int}/download")]
@@ -65,6 +98,7 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
         ExecuteAsync(async () =>
         {
             var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            EnsureShareTransport();
             var shares = await _shares.ListAsync(GetOwnerId(), sessionId, session.WorkspaceId, cancellationToken);
             return Ok(new { shares = System.Linq.Enumerable.Select(shares, ShareDto) });
         });
@@ -76,6 +110,7 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
         ExecuteAsync(async () =>
         {
             var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            EnsureShareTransport();
             if (request.ExpiresInHours is not (1 or 24 or 168))
                 throw new ArgumentException("分享有效期只能是 1 小时、24 小时或 7 天。");
             var preview = await _assets.BuildPreviewAsync(session.WorkspaceId, request.Path, cancellationToken);
@@ -84,7 +119,7 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
             return Ok(new { share = ShareDto(share), warnings = preview.Warnings });
         });
 
-    [HttpDelete("{sessionId:int}/shares/{shareId}")]
+    [HttpPost("{sessionId:int}/shares/{shareId}/revoke")]
     public Task<IActionResult> RevokeShare(int sessionId, string shareId, CancellationToken cancellationToken) =>
         ExecuteAsync(async () =>
         {
@@ -101,6 +136,7 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
         {
             Response.Headers["Referrer-Policy"] = "no-referrer";
             Response.Headers["X-Robots-Tag"] = "noindex, nofollow, noarchive";
+            EnsureShareTransport();
             if (!_shares.TryAcquirePublicRequest(HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown"))
                 return StatusCode(StatusCodes.Status429TooManyRequests, new { message = "访问过于频繁，请稍后重试。" });
             var share = await _shares.ReadPublicAsync(id, token, cancellationToken);
@@ -116,6 +152,17 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
     };
 
     private int GetOwnerId() => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+    private void EnsureShareTransport()
+    {
+        if (Request.IsHttps) return;
+        var loopbackHost = string.Equals(Request.Host.Host, "localhost", StringComparison.OrdinalIgnoreCase)
+            || IPAddress.TryParse(Request.Host.Host, out var host) && IPAddress.IsLoopback(host);
+        if (_environment.IsDevelopment() && loopbackHost
+            && HttpContext.Connection.RemoteIpAddress is { } remote && IPAddress.IsLoopback(remote))
+            return;
+        throw new InvalidOperationException("匿名分享需要 HTTPS，本机回环地址调试除外；反向代理应正确转发 HTTPS 协议。");
+    }
 
     private FileContentResult Html(string html)
     {
@@ -143,7 +190,8 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
         {
             return NotFound(new { message = "Workspace、文件或分享不存在。" });
         }
-        catch (Exception error) when (error is ArgumentException or InvalidOperationException)
+        catch (Exception error) when (error is ArgumentException or InvalidOperationException
+            or InvalidDataException or NotSupportedException or System.Xml.XmlException)
         {
             _logger.LogWarning("Workspace asset request rejected: {Reason}", error.Message);
             return BadRequest(new { message = error.Message });
