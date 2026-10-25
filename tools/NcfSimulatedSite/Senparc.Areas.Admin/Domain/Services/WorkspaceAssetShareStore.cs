@@ -27,6 +27,7 @@ public sealed class WorkspaceAssetShareStore : IDisposable
     private readonly string _root;
     private readonly IDataProtector _protector;
     private readonly ILogger<WorkspaceAssetShareStore> _logger;
+    private readonly TimeProvider _time;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private readonly PartitionedRateLimiter<string> _publicLimiter = PartitionedRateLimiter.Create<string, string>(
         key => RateLimitPartition.GetFixedWindowLimiter(key, _ => new FixedWindowRateLimiterOptions
@@ -36,16 +37,20 @@ public sealed class WorkspaceAssetShareStore : IDisposable
 
     public WorkspaceAssetShareStore(
         IWebHostEnvironment environment, IDataProtectionProvider protection,
-        ILogger<WorkspaceAssetShareStore> logger)
+        ILogger<WorkspaceAssetShareStore> logger, TimeProvider timeProvider = null)
     {
         _root = System.IO.Path.Combine(environment.ContentRootPath, "App_Data", "WorkspaceAssetShares");
         if (!string.IsNullOrEmpty(environment.WebRootPath)
-            && System.IO.Path.GetFullPath(_root).StartsWith(
-                System.IO.Path.GetFullPath(environment.WebRootPath).TrimEnd(System.IO.Path.DirectorySeparatorChar)
-                + System.IO.Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            && (string.Equals(System.IO.Path.GetFullPath(_root),
+                    System.IO.Path.GetFullPath(environment.WebRootPath).TrimEnd(System.IO.Path.DirectorySeparatorChar),
+                    StringComparison.OrdinalIgnoreCase)
+                || System.IO.Path.GetFullPath(_root).StartsWith(
+                    System.IO.Path.GetFullPath(environment.WebRootPath).TrimEnd(System.IO.Path.DirectorySeparatorChar)
+                    + System.IO.Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)))
             throw new InvalidOperationException("分享存储不能位于 wwwroot 中。");
         _protector = protection.CreateProtector("NCF.AdminChat.WorkspaceAssetShare.v1");
         _logger = logger;
+        _time = timeProvider ?? TimeProvider.System;
     }
 
     public bool TryAcquirePublicRequest(string remoteAddress)
@@ -72,15 +77,22 @@ public sealed class WorkspaceAssetShareStore : IDisposable
             Directory.CreateDirectory(directory);
             var shares = await ListCoreAsync(ownerId, cancellationToken);
             if (shares.Count >= 10) throw new InvalidOperationException("每位管理员最多保留 10 个有效分享，请先撤销旧分享。");
-            var now = DateTimeOffset.UtcNow;
+            var now = _time.GetUtcNow();
             var share = new WorkspaceAssetShare(
                 $"{ownerId}-{Guid.NewGuid():N}", WebEncoders.Base64UrlEncode(RandomNumberGenerator.GetBytes(32)),
                 ownerId, sessionId, workspaceId, path, now, now.AddHours(expiresInHours), html);
             var bytes = _protector.Protect(JsonSerializer.SerializeToUtf8Bytes(share));
             var filePath = GetFilePath(share.Id, share.Token);
-            await using (var stream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.None,
-                             4096, FileOptions.Asynchronous))
-                await stream.WriteAsync(bytes, cancellationToken);
+            var temporaryPath = filePath + ".tmp";
+            try
+            {
+                await File.WriteAllBytesAsync(temporaryPath, bytes, cancellationToken);
+                File.Move(temporaryPath, filePath);
+            }
+            finally
+            {
+                if (File.Exists(temporaryPath)) File.Delete(temporaryPath);
+            }
             _logger.LogInformation("Workspace HTML snapshot shared: Owner={OwnerId}, Session={SessionId}, Share={ShareId}, Expires={ExpiresAt}",
                 ownerId, sessionId, share.Id, share.ExpiresAt);
             return share;
@@ -130,7 +142,7 @@ public sealed class WorkspaceAssetShareStore : IDisposable
             var path = GetFilePath(id, token);
             if (!File.Exists(path)) return null;
             var share = await ReadCoreAsync(path, cancellationToken);
-            if (share.ExpiresAt <= DateTimeOffset.UtcNow)
+            if (share.ExpiresAt <= _time.GetUtcNow())
             {
                 File.Delete(path);
                 return null;
@@ -149,7 +161,7 @@ public sealed class WorkspaceAssetShareStore : IDisposable
         foreach (var path in Directory.EnumerateFiles(directory, "*.protected"))
         {
             var share = await ReadCoreAsync(path, cancellationToken);
-            if (share.ExpiresAt <= DateTimeOffset.UtcNow)
+            if (share.ExpiresAt <= _time.GetUtcNow())
                 File.Delete(path);
             else if (share.OwnerId == ownerId)
                 result.Add(share);
@@ -159,7 +171,7 @@ public sealed class WorkspaceAssetShareStore : IDisposable
 
     private async Task<WorkspaceAssetShare> ReadCoreAsync(string path, CancellationToken cancellationToken)
     {
-        if (new FileInfo(path).Length > WorkspaceAssetPreviewBuilder.MaxHtmlBytes * 2)
+        if (new FileInfo(path).Length > WorkspaceAssetPreviewBuilder.MaxHtmlBytes * 6 + 4096)
             throw new IOException("分享文件超过存储限制。");
         try
         {

@@ -578,10 +578,17 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
                 }
 
+                if (string.IsNullOrWhiteSpace(request.Content) && request.Attachments?.Count is not > 0)
+                    throw new NcfExceptionBase(_localizer["AdminChat.StreamInputRequired"]);
+                if (request.Attachments?.Count > 0) await GetWorkspaceSessionAsync(request.SessionId);
+                var attachments = await ServiceProvider.GetRequiredService<AdminChatAttachmentService>()
+                    .ValidateAsync(session, request.Attachments);
+                var content = string.IsNullOrWhiteSpace(request.Content)
+                    ? AdminChatAttachmentService.AttachmentOnlyMessage : request.Content.Trim();
                 var userMessage = await _messageService.AddMessageAsync(
                     request.SessionId,
                     ChatMessageRoleType.User,
-                    request.Content);
+                    content, attachments: attachments);
 
                 await _sessionService.UpdateLastMessageTimeAsync(request.SessionId);
 
@@ -595,12 +602,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     (aiResponse, modelIdentifier, harness) = await _chatAiService.GenerateNativeHarnessResponseAsync(
                         request.SessionId,
                         userId,
-                        request.Content,
-                        request.AiModelId);
+                        content,
+                        request.AiModelId, attachments: attachments);
                 }
                 else
                 {
-                    (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(request.SessionId, userId, request.Content, request.AiModelId);
+                    (aiResponse, modelIdentifier) = await _chatAiService.GenerateResponseAsync(request.SessionId, userId, content, request.AiModelId, attachments: attachments);
                 }
 
                 var assistantMessage = await _messageService.AddMessageAsync(

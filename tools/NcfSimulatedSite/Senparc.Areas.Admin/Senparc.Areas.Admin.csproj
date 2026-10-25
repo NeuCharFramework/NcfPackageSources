@@ -1,9 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.11.3</Version>
+		<Version>0.11.4</Version>
 		<PackageReleaseNotes>
+    [2026-10-24] Add private Workspace attachments, bounded local Office/PDF reading and explicit opt-in image vision. Preserve attachment references and original files; never insert binary Base64 into text prompts. Refresh live Markdown styles in the running host.
+    1. Upload, paste or drop up to 4 files per message. User uploads do not grant AI write/CLI permission. Read/write size limits come from Workspace configuration and are displayed by the upload control.
+    2. DOCX/XLSX/PPTX and text use local extraction; PDF text is read per page, up to 200 pages. Old DOC/XLS/PPT are stored without claiming text extraction. Scanned pages require OCR or explicitly authorized image screenshots; no paid OCR is called automatically.
+    3. Document tools paginate up to 4000 characters per call and share a 16000-character per-turn output budget with Workspace listing/reading/search. These are character safeguards, not exact token estimates; model-reported Usage remains authoritative.
+    4. Vision is off by default and limited to 2 images per message. Browsers create an EXIF-free JPEG preview with a maximum 1536-pixel side and 512 KB; original files remain unchanged. The selected model must support image input.
+    5. Chat messages persist only canonical attachment references and ETags in a nullable AttachmentsJson column. File changes invalidate stale references; generated migrations cover all six database providers.
+    6. Admin design-time factories locate the real Senparc.Web configuration when launched from DatabasePlant and refuse to silently target its example database.
     [2026-10-24] Add authenticated HTML browser previews, bounded file/ZIP downloads, and expiring revocable read-only snapshot shares. Anonymous snapshots disable scripts and external resources; keep App_Data and Data Protection keys private and persistent.
+    1. Browser preview and downloads require session and Workspace ownership; anonymous links grant read-only access to a frozen HTML snapshot, never directory access or downloads.
+    2. Snapshots expire after 1 hour, 24 hours or 7 days; up to 10 active shares per owner. Revocation/expiry blocks new requests, not previously saved copies. Expired snapshots are purged on access or owner management.
+    3. HTML and each resource are limited to 2 MB, generated snapshots to 8 MB and 100 resources. ZIPs are limited to 1000 entries, 32 levels and 64 MB uncompressed; per-file reads also honor Workspace configuration.
+    4. App_Data/WorkspaceAssetShares is private encrypted storage outside wwwroot. Persist it and Data Protection keys together; replicas must share both. Use HTTPS, exclude capability URLs from access logs and keep App_Data out of static-file mappings/backups accessible to clients.
+    5. Fix doubled live Markdown line breaks without changing stream text, paragraphs or code-block whitespace.
     [2026-10-24] Expand Workspace previews while preserving Chat minimum width; render Markdown with a source toggle.
     [2026-10-24] Fix Chat Workspace asset panel template nesting, file entry fields, and split-pane resizing.
     [2026-10-05] v0.10.3 持久化微信 Claw 会话上下文，支持 NeuBell 启动补偿推送与重复通知去重
@@ -104,6 +116,7 @@
 		<None Remove="Areas\Admin\Pages\Dto\**" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
 		<PackageReference Include="AngleSharp" Version="1.3.0" />
+		<PackageReference Include="PdfPig" Version="0.1.16" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
 		  <PrivateAssets>all</PrivateAssets>
@@ -145,6 +158,7 @@
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.Workspace\Senparc.Xncf.Workspace.csproj" />
+		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.FileManager\Senparc.Xncf.FileManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager\Senparc.Xncf.WeixinManager.csproj" />
 		<ProjectReference Include="..\..\..\src\Extensions\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />

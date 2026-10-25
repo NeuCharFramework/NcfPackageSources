@@ -71,7 +71,8 @@ public sealed class AdminChatWorkspaceAssetService
     {
         path = WorkspaceAssetPreviewBuilder.NormalizePath(path, allowRoot: true);
         var metadata = await Storage.GetFileInfoAsync(workspaceId, path, cancellationToken);
-        var fileLimit = _services.GetRequiredService<IOptions<WorkspaceOptions>>().Value.MaxFileReadBytes;
+        var fileLimit = Math.Min((int)MaxArchiveBytes,
+            _services.GetRequiredService<IOptions<WorkspaceOptions>>().Value.MaxFileReadBytes);
         if (!metadata.IsDirectory)
         {
             var file = await Storage.ReadFileBytesAsync(workspaceId, path, fileLimit, cancellationToken);
