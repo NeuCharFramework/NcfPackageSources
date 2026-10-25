@@ -9,6 +9,7 @@ const adminPath = path.resolve(__dirname, '../../../Senparc.Areas.Admin');
 const page = fs.readFileSync(path.join(adminPath, 'Areas/Admin/Pages/AdminChat/Chat.cshtml'), 'utf8');
 const selector = fs.readFileSync(path.join(adminPath, 'Areas/Admin/Pages/Shared/_ChatModuleSelectorDialog.cshtml'), 'utf8');
 const scriptPath = path.join(adminPath, 'wwwroot/js/Admin/Pages/AdminChat/Chat.js');
+const styles = fs.readFileSync(path.join(adminPath, 'wwwroot/css/Admin/Pages/AdminChat/Chat.css'), 'utf8');
 const template = page.slice(page.indexOf('<div class="admin-chat-container">'), page.indexOf('@section scripts'))
     .replace(/@await Html\.PartialAsync\("[^"]+_ChatModuleSelectorDialog\.cshtml"\)/g, selector)
     .replace(/@AR\["([^"]+)"\]/g, '$1')
@@ -49,6 +50,16 @@ assert.ok(template.includes('workspaceEntryName(entry.relativePath)'),
     'File names must use the WorkspaceEntry RelativePath contract.');
 assert.ok(template.includes('formatWorkspaceFileSize(entry.length)'),
     'File sizes must use the WorkspaceEntry Length contract.');
+const headerActions = template.slice(template.indexOf('<div class="chat-header-actions">'), template.indexOf('<div v-if="currentSessionWorkspaceId"'));
+assert.ok(headerActions.lastIndexOf('toggleWorkspacePreview') > headerActions.lastIndexOf('openTrajectoryDialog'),
+    'Assets must be the rightmost Chat header action.');
+assert.ok(template.includes('v-html="formatMessageContent(liveThinkingText)"'),
+    'Live reasoning must render Markdown consistently with the final answer.');
+for (const selector of ['live-answer-preview', 'live-thinking-content', 'harness-step-body']) {
+    const rule = styles.match(new RegExp(`\\.${selector}\\s*\\{([^}]+)\\}`));
+    assert.match(rule[1], /white-space:\s*normal/,
+        'Rendered Markdown must not preserve serializer newlines on top of <br> and paragraph breaks.');
+}
 
 let options;
 const requests = [];
@@ -85,6 +96,8 @@ const sandbox = {
     },
     console
 };
+sandbox.marked = require(path.join(adminPath, 'wwwroot/js/Admin/lib/marked.min.js'));
+sandbox.DOMPurify = { sanitize: html => html };
 vm.runInNewContext(fs.readFileSync(scriptPath, 'utf8'), sandbox, { filename: scriptPath });
 const app = options.data();
 Object.entries(options.methods).forEach(([name, method]) => { app[name] = method.bind(app); });
@@ -96,6 +109,7 @@ app.$refs = { workspaceContainer: { $el: container } };
 app.$notify = notification => { throw new Error(notification.message); };
 app.currentSessionId = 42;
 app.currentSessionWorkspaceId = 'ws_test';
+app.$message = { success() {}, error(message) { throw new Error(message); }, warning() {} };
 
 async function run() {
     app.toggleWorkspacePreview();
@@ -165,6 +179,85 @@ async function run() {
     assert.strictEqual(app.workspaceEntries.length, 0);
     assert.strictEqual(app.workspacePreviewData, null);
     assert.strictEqual(app.workspacePreviewSource, false);
+    assert.strictEqual(app.workspaceShareDialogVisible, false);
+
+    app.formatMessageContent = options.methods.formatMessageContent.bind(app);
+    const original = 'Line 1\nLine 2\n\n- Item one\n- Item two\n\n```js\nconst x = 1;\n\n\nconst y = 2;\n```';
+    const rendered = app.formatMessageContent(original);
+    assert.ok(rendered.includes('Line 1<br>'), 'Keep explicit soft line breaks once.');
+    assert.ok(rendered.includes('<li>Item one</li>'), 'Keep list structure.');
+    assert.ok(rendered.includes('const x = 1;\n\n\nconst y = 2;'), 'Never collapse whitespace inside code blocks.');
+    app.scrollLivePreviewToBottom = () => {};
+    app.updateActiveTask = () => {};
+    app.handleLiveStreamEvent('token', { text: 'A: B; C，D。' });
+    app.handleLiveStreamEvent('token', { text: '\nNext line' });
+    assert.strictEqual(app.liveAssistantText, 'A: B; C，D。\nNext line',
+        'Stream chunks must not turn punctuation or token boundaries into line breaks.');
+    app.handleLiveStreamEvent('assistant-phase', {
+        text: original, trajectoryEvent: { id: 1, eventType: 'TextReasoningContent', content: original }
+    });
+    assert.strictEqual(app.liveThinkingText, original, 'Keep original reasoning source untouched.');
+
+    const assetErrors = [];
+    app.showWorkspaceAssetError = async error => assetErrors.push(error.message);
+    app.workspaceSharePath = 'index.html';
+    const share = { id: 'share-1', path: 'index.html', url: '/shared/example' };
+    sandbox.service.get = async () => ({ data: { shares: [share, { id: 'other', path: 'other.html' }] } });
+    await app.loadWorkspaceShares();
+    assert.strictEqual(app.workspaceShares.length, 1, 'Share dialog must show the selected file only.');
+    let postRequest;
+    sandbox.service.post = async (url, body) => {
+        postRequest = { url, body };
+        return { data: { share } };
+    };
+    await app.createWorkspaceShare();
+    assert.strictEqual(postRequest.body.path, 'index.html');
+    assert.strictEqual(postRequest.body.expiresInHours, 24);
+    assert.strictEqual(app.workspaceShareCreating, false);
+    sandbox.service.post = async () => ({ data: {} });
+    await app.revokeWorkspaceShare(share);
+    assert.strictEqual(app.workspaceShares.length, 2, 'Do not report revocation on an invalid/login-shaped response.');
+    assert.strictEqual(assetErrors.length, 1);
+    sandbox.service.post = async () => ({ data: { revoked: true } });
+    await app.revokeWorkspaceShare(share);
+    assert.strictEqual(app.workspaceShares.length, 0);
+    assert.strictEqual(app.workspaceShareRevoking, '');
+    const downloads = [];
+    sandbox.URL = { createObjectURL() { return 'blob:fixture'; }, revokeObjectURL() {} };
+    sandbox.setTimeout = callback => callback();
+    sandbox.document.body.appendChild = () => {};
+    sandbox.document.createElement = () => ({
+        click() { downloads.push(this.download); }, remove() {}
+    });
+    sandbox.service.get = async () => ({
+        data: 'binary-fixture', headers: { 'content-disposition': "attachment; filename*=UTF-8''%E6%96%87%E4%BB%B6.zip" }
+    });
+    await app.downloadWorkspaceEntry('folder');
+    assert.deepStrictEqual(downloads, ['文件.zip'], 'Use the server filename, including UTF-8 ZIP names.');
+    sandbox.service.get = async () => ({ data: '<html>Login</html>', headers: {} });
+    await app.downloadWorkspaceEntry('folder');
+    assert.strictEqual(downloads.length, 1, 'Never download a login page as a successful asset.');
+    assert.strictEqual(app.workspaceDownloading, false);
+    assert.strictEqual(assetErrors.length, 2);
+    const removedUrls = [];
+    sandbox.URL.revokeObjectURL = url => removedUrls.push(url);
+    app.pendingAttachments = [
+        { relativePath: 'first', useVision: true, localPreviewUrl: 'blob:first' },
+        { relativePath: 'second', useVision: true, localPreviewUrl: 'blob:second' },
+        { relativePath: 'third', useVision: true, localPreviewUrl: 'blob:third' }
+    ];
+    app.validatePendingVision(app.pendingAttachments[2]);
+    assert.strictEqual(app.pendingAttachments[2].useVision, false, 'Vision must be an explicit opt-in with a two-image limit.');
+    app.removePendingAttachment(app.pendingAttachments[0]);
+    assert.strictEqual(app.pendingAttachments.length, 2);
+    assert.deepStrictEqual(removedUrls, ['blob:first']);
+    app.clearPendingAttachments();
+    assert.strictEqual(app.pendingAttachments.length, 0);
+    assert.strictEqual(removedUrls.length, 3, 'Removing pending attachments must release local preview URLs.');
+    assert.ok(template.includes('@@paste.native="handleWorkspacePaste"'),
+        'Both composer surfaces must support file paste.');
+    assert.ok(template.includes('@@drop="handleWorkspaceDrop"'),
+        'Composer must support dropping files without affecting unrelated drag operations.');
     console.log('AdminChat Workspace preview tests passed.');
 }
 

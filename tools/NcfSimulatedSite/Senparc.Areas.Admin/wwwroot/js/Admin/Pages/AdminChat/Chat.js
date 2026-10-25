@@ -58,6 +58,17 @@
       workspacePreviewMaxWidth: 420,
       workspacePreviewOverlay: false,
       workspacePreviewSource: false,
+      pendingAttachments: [],
+      workspaceUploading: false,
+      workspaceUploadCapabilities: null,
+      workspaceDownloading: false,
+      workspaceShareDialogVisible: false,
+      workspaceSharePath: '',
+      workspaceShareHours: 24,
+      workspaceShares: [],
+      workspaceSharesLoading: false,
+      workspaceShareCreating: false,
+      workspaceShareRevoking: '',
       workspaceEntries: [],
       workspacePreviewPath: '',
       workspacePreviewFilePath: '',
@@ -70,6 +81,18 @@
     };
   },
   computed: {
+    canUploadWorkspaceFiles() {
+      return this.isSuperAdmin && !!(this.currentSessionId ? this.currentSessionWorkspaceId : this.selectedWorkspaceId);
+    },
+    attachmentUploadHint() {
+      if (!this.canUploadWorkspaceFiles) return '先选择或创建 Workspace，再上传资料';
+      const size = this.workspaceUploadCapabilities
+        ? ` · 单文件最大 ${this.formatWorkspaceFileSize(this.workspaceUploadCapabilities.maxFileBytes)}` : '';
+      return `上传 / 拖放 / 粘贴资料到 Workspace（最多 4 个）${size}。本地解析不调用 AI；图片只有勾选“视觉”才发送给模型。`;
+    },
+    workspaceExternalPreviewUrl() {
+      return this.workspaceAssetsUrl('preview') + '?path=' + encodeURIComponent(this.workspacePreviewFilePath);
+    },
     workspacePreviewIsDocument() {
       return !!this.workspacePreviewData
         && ['text/html', 'text/markdown'].includes(this.workspacePreviewData.contentType);
@@ -159,8 +182,262 @@
       this.activeRequestController = null;
     }
     this.stopWorkspacePreviewResize();
+    this.clearPendingAttachments();
   },
   methods: {
+    chooseWorkspaceFiles() {
+      this.$refs.workspaceFileInput.click();
+    },
+
+    handleWorkspaceFilesSelected(event) {
+      const files = Array.from(event.target.files || []);
+      event.target.value = '';
+      if (files.length) this.stageWorkspaceFiles(files);
+    },
+
+    handleWorkspaceDragOver(event) {
+      if (Array.from(event.dataTransfer.types || []).includes('Files')) event.preventDefault();
+    },
+
+    handleWorkspaceDrop(event) {
+      const files = Array.from(event.dataTransfer.files || []);
+      if (!files.length) return;
+      event.preventDefault();
+      this.stageWorkspaceFiles(files);
+    },
+
+    handleWorkspacePaste(event) {
+      const files = Array.from((event.clipboardData && event.clipboardData.files) || []);
+      if (!files.length) return;
+      event.preventDefault();
+      this.stageWorkspaceFiles(files);
+    },
+
+    async ensureAttachmentSession() {
+      if (this.currentSessionId) return;
+      const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateSessionAsync',
+        this.launcherSessionRequest((this.chatInputText || '').trim().slice(0, 60) || '附件对话'));
+      if (!response.data || !response.data.success || !response.data.data || !response.data.data.sessionId) {
+        throw new Error((response.data && (response.data.msg || response.data.errorMessage)) || '创建附件会话失败。');
+      }
+      this.currentSessionId = response.data.data.sessionId;
+      this.currentSessionAiModelId = this.normalizeAiModelId(this.launcherAiModelId);
+      this.setSessionAiModelId(this.currentSessionId, this.currentSessionAiModelId);
+      this.chatMode = this.launcherChatMode;
+      this.inputMessage = this.chatInputText;
+      this.chatInputText = '';
+      await this.loadSessionDetail();
+      if (!this.currentSessionWorkspaceId) throw new Error('会话已创建，但没有读到 Workspace，请刷新后重试。');
+      const url = new URL(window.location.href);
+      url.searchParams.set('sessionId', this.currentSessionId);
+      url.searchParams.set('mode', this.chatMode === 'harness' ? '1' : '0');
+      window.history.replaceState(window.history.state, '', url.href);
+      await this.loadSessionList();
+    },
+
+    async prepareVisionPreview(file) {
+      const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+      try {
+        if (bitmap.width * bitmap.height > 40_000_000) throw new Error('图片像素过大，不能生成视觉预览。');
+        const canvas = document.createElement('canvas');
+        const scale = Math.min(1, 1536 / Math.max(bitmap.width, bitmap.height));
+        canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+        canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+        const context = canvas.getContext('2d');
+        if (!context) throw new Error('浏览器无法生成图片预览。');
+        context.fillStyle = '#fff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        for (const quality of [0.82, 0.6, 0.4]) {
+          const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', quality));
+          if (blob && blob.size <= 512 * 1024) return blob;
+        }
+        throw new Error('图片预览仍超过 512 KB，请压缩图片后重试。');
+      } finally { bitmap.close(); }
+    },
+
+    async stageWorkspaceFiles(files) {
+      if (!this.canUploadWorkspaceFiles) {
+        this.$message.warning('请先选择或创建 Workspace。');
+        return;
+      }
+      if (this.workspaceUploading || this.isSending) {
+        this.$message.warning('正在上传或生成，请稍后再添加附件。');
+        return;
+      }
+      if (files.length + this.pendingAttachments.length > 4) {
+        this.$message.warning('每条消息最多附加 4 个文件，请减少本次选择。');
+        return;
+      }
+      this.workspaceUploading = true;
+      try {
+        await this.ensureAttachmentSession();
+        const capabilities = await service.get(this.workspaceAssetsUrl('attachments/capabilities'), { customAlert: true });
+        if (!capabilities.data || !Number.isFinite(capabilities.data.maxFileBytes) || capabilities.data.maxFileBytes <= 0) {
+          throw new Error('无法取得附件大小限制，未开始上传。');
+        }
+        this.workspaceUploadCapabilities = capabilities.data;
+        for (const file of files) {
+          let localPreviewUrl = '';
+          try {
+            if (file.size > capabilities.data.maxFileBytes || file.size === 0) {
+              throw new Error(`${file.name}：文件为空或超过 ${this.formatWorkspaceFileSize(capabilities.data.maxFileBytes)} 限制。`);
+            }
+            const extension = '.' + file.name.split('.').pop().toLowerCase();
+            if (!capabilities.data.extensions.includes(extension)) throw new Error(`${file.name}：不支持此文件类型。`);
+            const form = new FormData();
+            form.append('file', file, file.name);
+            if (['.png', '.jpg', '.jpeg', '.webp'].includes(extension)) {
+              try {
+                const preview = await this.prepareVisionPreview(file);
+                form.append('visionPreview', preview, 'vision.jpg');
+                localPreviewUrl = URL.createObjectURL(preview);
+              } catch (error) {
+                console.error('无法生成视觉预览:', error);
+                this.$message.warning(`${file.name}：${error.message} 仍会保存原文件，但不能启用视觉。`);
+              }
+            }
+            const response = await service.post(this.workspaceAssetsUrl('attachments'), form, { customAlert: true });
+            if (!response.data || !response.data.attachment) throw new Error(`${file.name}：上传响应无效。`);
+            this.pendingAttachments.push({ ...response.data.attachment, useVision: false, localPreviewUrl });
+          } catch (error) {
+            if (localPreviewUrl) URL.revokeObjectURL(localPreviewUrl);
+            await this.showWorkspaceAssetError(error);
+          }
+        }
+        if (this.workspacePreviewOpen) await this.loadWorkspaceEntries(this.workspacePreviewPath);
+      } catch (error) {
+        await this.showWorkspaceAssetError(error);
+      } finally { this.workspaceUploading = false; }
+    },
+
+    validatePendingVision(attachment) {
+      if (this.pendingAttachments.filter(item => item.useVision).length > 2) {
+        attachment.useVision = false;
+        this.$message.warning('每条消息最多对 2 张图片启用视觉处理。');
+      }
+    },
+
+    removePendingAttachment(attachment) {
+      if (attachment.localPreviewUrl) URL.revokeObjectURL(attachment.localPreviewUrl);
+      this.pendingAttachments = this.pendingAttachments.filter(item => item !== attachment);
+    },
+
+    clearPendingAttachments() {
+      this.pendingAttachments.forEach(attachment => {
+        if (attachment.localPreviewUrl) URL.revokeObjectURL(attachment.localPreviewUrl);
+      });
+      this.pendingAttachments = [];
+      this.workspaceUploadCapabilities = null;
+    },
+
+    workspaceAssetsUrl(action) {
+      return `/api/Senparc.Areas.Admin/WorkspaceAssets/${this.currentSessionId}/${action}`;
+    },
+
+    async showWorkspaceAssetError(error) {
+      console.error('Workspace 资产操作失败:', error);
+      let data = error.response && error.response.data;
+      if (data instanceof Blob) {
+        const text = await data.text();
+        try { data = JSON.parse(text); } catch (parseError) { data = null; }
+      }
+      this.$message.error((data && (data.message || data.title)) || error.message || 'Workspace 资产操作失败。');
+    },
+
+    async downloadWorkspaceEntry(path) {
+      if (this.workspaceDownloading) return;
+      this.workspaceDownloading = true;
+      try {
+        const response = await service.get(this.workspaceAssetsUrl('download'), {
+          params: { path }, responseType: 'blob', customAlert: true
+        });
+        const disposition = response.headers['content-disposition'] || '';
+        const utf8Name = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+        const plainName = disposition.match(/filename="([^"]+)"|filename=([^;]+)/i);
+        if (!utf8Name && !plainName) {
+          throw new Error('下载未成功，请确认登录状态和 Workspace 访问权限。');
+        }
+        const filename = utf8Name
+          ? decodeURIComponent(utf8Name[1])
+          : (plainName[1] || plainName[2]).trim();
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(response.data);
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+      } catch (error) {
+        await this.showWorkspaceAssetError(error);
+      } finally {
+        this.workspaceDownloading = false;
+      }
+    },
+
+    async openWorkspaceShareDialog() {
+      this.workspaceSharePath = this.workspacePreviewFilePath;
+      this.workspaceShares = [];
+      this.workspaceShareDialogVisible = true;
+      await this.loadWorkspaceShares();
+    },
+
+    async loadWorkspaceShares() {
+      this.workspaceSharesLoading = true;
+      try {
+        const response = await service.get(this.workspaceAssetsUrl('shares'), { customAlert: true });
+        if (!response.data || !Array.isArray(response.data.shares)) throw new Error('无法加载分享列表。');
+        this.workspaceShares = response.data.shares.filter(share => share.path === this.workspaceSharePath);
+      } catch (error) {
+        await this.showWorkspaceAssetError(error);
+      } finally { this.workspaceSharesLoading = false; }
+    },
+
+    async createWorkspaceShare() {
+      this.workspaceShareCreating = true;
+      try {
+        const response = await service.post(this.workspaceAssetsUrl('shares'), {
+          path: this.workspaceSharePath, expiresInHours: this.workspaceShareHours
+        }, { customAlert: true });
+        if (!response.data || !response.data.share) throw new Error('创建分享失败。');
+        this.workspaceShares.unshift(response.data.share);
+        this.$message.success('只读快照已创建，可复制链接。');
+      } catch (error) {
+        await this.showWorkspaceAssetError(error);
+      } finally { this.workspaceShareCreating = false; }
+    },
+
+    async revokeWorkspaceShare(share) {
+      this.workspaceShareRevoking = share.id;
+      try {
+        const response = await service.post(this.workspaceAssetsUrl(`shares/${encodeURIComponent(share.id)}/revoke`), null,
+          { customAlert: true });
+        if (!response.data || response.data.revoked !== true) throw new Error('撤销分享失败，请确认登录状态。');
+        this.workspaceShares = this.workspaceShares.filter(item => item.id !== share.id);
+        this.$message.success('分享已撤销。');
+      } catch (error) {
+        await this.showWorkspaceAssetError(error);
+      } finally { this.workspaceShareRevoking = ''; }
+    },
+
+    workspaceShareAbsoluteUrl(url) {
+      return new URL(url, window.location.origin).href;
+    },
+
+    async copyWorkspaceShareLink(share) {
+      try {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) {
+          this.$message.warning('当前浏览器不支持自动复制，请选中链接手动复制。');
+          return;
+        }
+        await navigator.clipboard.writeText(this.workspaceShareAbsoluteUrl(share.url));
+        this.$message.success('分享链接已复制。');
+      } catch (error) {
+        await this.showWorkspaceAssetError(error);
+      }
+    },
+
     toggleWorkspacePreview() {
       this.workspacePreviewOpen = !this.workspacePreviewOpen;
       if (this.workspacePreviewOpen) {
@@ -1068,7 +1345,8 @@
         signal
       });
       if (!response.ok || !response.body) {
-        throw new Error(`流式接口请求失败 (${response.status})`);
+        const data = (response.headers.get('content-type') || '').includes('json') ? await response.json() : null;
+        throw new Error((data && (data.errorMessage || data.message || data.title)) || `流式接口请求失败 (${response.status})`);
       }
 
       const reader = response.body.getReader();
@@ -1115,9 +1393,9 @@
     },
 
     async sendMessage() {
-      if (this.isSending) return;
+      if (this.isSending || this.workspaceUploading) return;
 
-      if (!this.inputMessage || this.inputMessage.trim().length === 0) {
+      if ((!this.inputMessage || this.inputMessage.trim().length === 0) && this.pendingAttachments.length === 0) {
         this.$message.warning(ncfT('AdminChat.InputRequired'));
         return;
       }
@@ -1127,7 +1405,10 @@
         return;
       }
 
-      const messageContent = this.inputMessage.trim();
+      const messageContent = (this.inputMessage || '').trim() || '请先查看本轮附件的目录和解析限制，并询问我希望如何处理。';
+      const sendingAttachments = this.pendingAttachments.slice();
+      const sendingSessionId = this.currentSessionId;
+      this.pendingAttachments = [];
       const isFirstGeneration = !this.messageList.some((message) => message.roleType === 1);
       this.inputMessage = '';
       this.isSending = true;
@@ -1147,7 +1428,8 @@
         roleType: 0,
         content: messageContent,
         addTime: new Date().toISOString(),
-        userFeedback: 0
+        userFeedback: 0,
+        attachments: sendingAttachments
       };
       this.messageList.push(tempUserMessage);
       this.$nextTick(() => {
@@ -1159,7 +1441,11 @@
           sessionId: this.currentSessionId,
           aiModelId: this.normalizeAiModelId(this.currentSessionAiModelId),
           content: messageContent,
-          mode: this.chatMode === 'harness' ? 1 : 0
+          mode: this.chatMode === 'harness' ? 1 : 0,
+          attachments: sendingAttachments.map(attachment => ({
+            relativePath: attachment.relativePath, eTag: attachment.eTag,
+            visionETag: attachment.visionETag || '', useVision: !!attachment.useVision
+          }))
         };
 
         await this.consumeAdminChatStream(
@@ -1174,6 +1460,7 @@
         }
         this.$nextTick(() => this.scrollToBottom());
       } catch (error) {
+        if (this.currentSessionId === sendingSessionId) this.pendingAttachments = sendingAttachments;
         const wasAborted = (error && error.name === 'AbortError')
           || (requestController && requestController.signal.aborted);
         if (wasAborted) {
@@ -1186,11 +1473,14 @@
         } else {
           this.finishActiveTask('失败');
           console.error('发送消息异常:', error);
-          this.$message.error(ncfT('AdminChat.SendFailedRetry'));
+          this.$message.error(error.message || ncfT('AdminChat.SendFailedRetry'));
           this.messageList = this.messageList.filter((item) => item.id !== tempMessageId);
           this.inputMessage = messageContent;
         }
       } finally {
+        sendingAttachments.filter(attachment => !this.pendingAttachments.includes(attachment)).forEach(attachment => {
+          if (attachment.localPreviewUrl) URL.revokeObjectURL(attachment.localPreviewUrl);
+        });
         if (this.activeRequestController === requestController) {
           this.activeRequestController = null;
         }
@@ -1220,9 +1510,11 @@
     },
 
     async switchSession(sessionId) {
+      if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再切换会话。'); return; }
       if (this.currentSessionId === sessionId) return;
 
       this.resetWorkspacePreview();
+      this.clearPendingAttachments();
       this.currentSessionId = sessionId;
       this.currentSessionAiModelId = this.getSessionAiModelId(sessionId);
       this.messageList = [];
@@ -1241,7 +1533,9 @@
     },
 
     async createNewSession() {
+      if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再新建会话。'); return; }
       this.resetWorkspacePreview();
+      this.clearPendingAttachments();
       this.launcherAiModelId = this.currentSessionAiModelId || this.launcherAiModelId || 0;
       this.currentSessionId = 0;
       this.currentSessionTitle = '';
@@ -1267,6 +1561,9 @@
       this.workspacePreviewOpen = false;
       this.workspacePreviewSource = false;
       this.workspacePreviewOverlay = false;
+      this.workspaceShareDialogVisible = false;
+      this.workspaceShares = [];
+      this.workspaceSharePath = '';
       this.workspaceEntries = [];
       this.workspacePreviewPath = '';
       this.workspacePreviewFilePath = '';

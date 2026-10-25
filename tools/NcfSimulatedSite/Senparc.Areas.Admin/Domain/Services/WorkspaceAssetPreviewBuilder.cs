@@ -64,11 +64,15 @@ public sealed class WorkspaceAssetPreviewBuilder
                 if (reference.Length > MaxFileBytes * 2) throw new InvalidOperationException("内嵌资源过大。");
                 return reference;
             }
-            var baseUri = new Uri("https://workspace.invalid/" + sourcePath);
+            var baseUri = new Uri("https://workspace.invalid/"
+                + string.Join("/", sourcePath.Split('/').Select(Uri.EscapeDataString)));
             if (!Uri.TryCreate(baseUri, reference, out var resolved)
                 || resolved.Scheme != "https" || resolved.Host != "workspace.invalid"
                 || !string.IsNullOrEmpty(resolved.UserInfo) || resolved.Port != 443)
-                throw new ArgumentException("预览不允许外部资源。");
+            {
+                warnings.Add("已阻止外部资源，页面外观可能与原始页面不同。");
+                return "";
+            }
 
             var path = NormalizePath(Uri.UnescapeDataString(resolved.AbsolutePath.TrimStart('/')));
             if (!path.StartsWith(scope, StringComparison.Ordinal))
@@ -110,7 +114,7 @@ public sealed class WorkspaceAssetPreviewBuilder
         }
 
         // Fail closed: a snapshot must not silently omit a referenced file or include a wider directory.
-        foreach (var element in document.QuerySelectorAll("script, iframe, object, embed, form, base, meta[http-equiv]"))
+        foreach (var element in document.QuerySelectorAll("script, iframe, object, embed, form, base, meta[http-equiv], animate, set, foreignObject"))
             element.Remove();
         foreach (var element in document.All.ToArray())
         {
@@ -149,7 +153,9 @@ public sealed class WorkspaceAssetPreviewBuilder
         }
         var meta = document.CreateElement("meta");
         meta.SetAttribute("http-equiv", "Content-Security-Policy");
-        meta.SetAttribute("content", ContentSecurityPolicy);
+        meta.SetAttribute("content", ContentSecurityPolicy
+            .Replace("sandbox; ", "", StringComparison.Ordinal)
+            .Replace("frame-ancestors 'none';", "", StringComparison.Ordinal));
         document.Head.InsertBefore(meta, document.Head.FirstChild);
         var html = "<!doctype html>" + document.DocumentElement.OuterHtml;
         if (Encoding.UTF8.GetByteCount(html) > MaxHtmlBytes)

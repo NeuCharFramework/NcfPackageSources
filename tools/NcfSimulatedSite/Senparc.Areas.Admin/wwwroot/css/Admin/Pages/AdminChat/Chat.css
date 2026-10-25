@@ -916,7 +916,13 @@
   font-size: 13px;
   color: #555;
   line-height: 1.6;
-  white-space: pre-wrap;
+  white-space: normal;
+}
+
+.harness-step-body pre,
+.harness-step-body pre code {
+  white-space: pre;
+  overflow-x: auto;
 }
 
 .message-trajectory-actions {
@@ -1107,7 +1113,7 @@
 
 .live-answer-preview {
   min-height: 22px;
-  white-space: pre-wrap;
+  white-space: normal;
 }
 
 .live-generation-text {
@@ -1135,7 +1141,7 @@
 .live-thinking-content {
   max-height: calc(1.6em * 8);
   overflow-y: auto;
-  white-space: pre-wrap;
+  white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
 }
@@ -1477,6 +1483,155 @@
     display: flex;
     flex: 0 0 auto;
     align-items: center;
+}
+
+.chat-workspace-preview-action {
+    flex: 0 0 auto;
+    padding: 7px 0;
+    color: var(--chat-accent);
+    font-size: 14px;
+}
+
+.chat-workspace-preview-action:hover {
+    color: #4053bd;
+}
+
+.chat-pending-attachments,
+.chat-message-attachments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 10px;
+}
+
+.chat-attachment-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    max-width: 100%;
+    padding: 7px 9px;
+    border: 1px solid #e5e9f0;
+    border-radius: 9px;
+    background: #fafbfc;
+}
+
+.chat-attachment-card > img {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.chat-attachment-card > .fa {
+    color: #8a94a6;
+    font-size: 22px;
+}
+
+.chat-attachment-info {
+    min-width: 0;
+    max-width: 200px;
+}
+
+.chat-attachment-info strong,
+.chat-attachment-info small {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chat-attachment-info strong {
+    color: #4b5563;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.chat-attachment-info small {
+    margin-top: 3px;
+    color: #8a94a6;
+    font-size: 10px;
+}
+
+.chat-attachment-card > button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #9099a8;
+    cursor: pointer;
+}
+
+.chat-attachment-card .el-checkbox__label {
+    padding-left: 4px;
+    font-size: 11px;
+}
+
+.chat-message-attachments {
+    margin-top: 8px;
+}
+
+.chat-message-attachments button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    padding: 5px 9px;
+    border: 1px solid #e5e9f0;
+    border-radius: 7px;
+    background: #fafbfc;
+    color: #667085;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.chat-message-attachments button span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chat-message-attachments small {
+    color: #5267d9;
+}
+
+.workspace-share-dialog {
+    max-width: calc(100vw - 28px);
+}
+
+.workspace-share-heading {
+    margin: 16px 0 10px;
+    overflow-wrap: anywhere;
+}
+
+.workspace-share-create,
+.workspace-share-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.workspace-share-create .el-select {
+    min-width: 0;
+    flex: 1;
+}
+
+.workspace-share-list {
+    min-height: 70px;
+    max-height: 300px;
+    margin-top: 14px;
+    overflow: auto;
+}
+
+.workspace-share-item {
+    padding: 10px 0;
+    border-top: 1px solid #edf0f4;
+}
+
+.workspace-share-details {
+    min-width: 0;
+    flex: 1;
+    color: #667085;
+    font-size: 12px;
 }
 
 .chat-workspace-preview-title {

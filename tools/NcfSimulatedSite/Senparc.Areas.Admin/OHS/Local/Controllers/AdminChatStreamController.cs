@@ -29,6 +29,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
@@ -79,7 +81,8 @@ public sealed class AdminChatStreamController : ControllerBase
         [FromBody] ChatMessageInputDto request,
         CancellationToken cancellationToken = default)
     {
-        if (request == null || request.SessionId <= 0 || string.IsNullOrWhiteSpace(request.Content))
+        if (request == null || request.SessionId <= 0
+            || string.IsNullOrWhiteSpace(request.Content) && request.Attachments?.Count is not > 0)
         {
             Response.StatusCode = StatusCodes.Status400BadRequest;
             await Response.WriteAsJsonAsync(new { success = false, errorMessage = _localizer["AdminChat.StreamInputRequired"].Value }, cancellationToken);
@@ -101,11 +104,30 @@ public sealed class AdminChatStreamController : ControllerBase
             return;
         }
 
-        var content = request.Content.Trim();
+        IReadOnlyList<AdminChatAttachment> attachments = Array.Empty<AdminChatAttachment>();
+        try
+        {
+            if (request.Attachments?.Count > 0)
+            {
+                await HttpContext.RequestServices.GetRequiredService<AdminChatWorkspaceAssetService>()
+                    .GetSessionAsync(request.SessionId, User, cancellationToken);
+                attachments = await HttpContext.RequestServices.GetRequiredService<AdminChatAttachmentService>()
+                    .ValidateAsync(session, request.Attachments, cancellationToken);
+            }
+        }
+        catch (Exception error) when (error is ArgumentException or InvalidOperationException
+            or UnauthorizedAccessException or IOException or NotSupportedException or System.Xml.XmlException)
+        {
+            Response.StatusCode = error is UnauthorizedAccessException ? StatusCodes.Status403Forbidden : StatusCodes.Status400BadRequest;
+            await Response.WriteAsJsonAsync(new { success = false, errorMessage = error.Message }, cancellationToken);
+            return;
+        }
+        var content = string.IsNullOrWhiteSpace(request.Content)
+            ? AdminChatAttachmentService.AttachmentOnlyMessage : request.Content.Trim();
         var userMessage = await _messageService.AddMessageAsync(
             request.SessionId,
             ChatMessageRoleType.User,
-            content);
+            content, attachments: attachments);
         await _sessionService.UpdateLastMessageTimeAsync(request.SessionId);
 
         Response.Headers.CacheControl = "no-cache";
@@ -129,14 +151,14 @@ public sealed class AdminChatStreamController : ControllerBase
                 content,
                 request.AiModelId,
                 liveEvents.Writer,
-                cancellationToken)
+                cancellationToken, attachments)
             : GenerateResponseAsync(
             request.SessionId,
             userId,
             content,
             request.AiModelId,
             liveEvents.Writer,
-            cancellationToken);
+            cancellationToken, attachments);
 
         try
         {
@@ -212,7 +234,8 @@ public sealed class AdminChatStreamController : ControllerBase
         string content,
         int aiModelId,
         ChannelWriter<AdminChatLiveEvent> writer,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyList<AdminChatAttachment> attachments)
         {
             try
             {
@@ -231,7 +254,7 @@ public sealed class AdminChatStreamController : ControllerBase
                     {
                         Kind = "usage",
                         Usage = usage
-                    }));
+                    }), attachments: attachments);
                 return new AdminChatStreamResult
                 {
                     Response = result.response,
@@ -255,7 +278,8 @@ public sealed class AdminChatStreamController : ControllerBase
         string content,
         int aiModelId,
         ChannelWriter<AdminChatLiveEvent> writer,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        IReadOnlyList<AdminChatAttachment> attachments)
     {
         try
         {
@@ -265,7 +289,7 @@ public sealed class AdminChatStreamController : ControllerBase
                 content,
                 aiModelId,
                 cancellationToken: cancellationToken,
-                onLiveEvent: liveEvent => writer.TryWrite(liveEvent));
+                onLiveEvent: liveEvent => writer.TryWrite(liveEvent), attachments: attachments);
             return new AdminChatStreamResult
             {
                 Response = result.response,

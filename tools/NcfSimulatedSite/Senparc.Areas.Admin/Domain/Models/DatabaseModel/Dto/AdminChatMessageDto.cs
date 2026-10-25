@@ -15,6 +15,7 @@ using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Core.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
 {
@@ -37,6 +38,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         /// 消息内容
         /// </summary>
         public string Content { get; set; }
+        public IReadOnlyList<AdminChatAttachment> Attachments { get; set; } = Array.Empty<AdminChatAttachment>();
 
         /// <summary>
         /// 消息序号
@@ -77,6 +79,7 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
                 SessionId = entity.SessionId,
                 RoleType = entity.RoleType,
                 Content = entity.Content,
+                Attachments = entity.GetAttachments(),
                 Sequence = entity.Sequence,
                 UserFeedback = entity.UserFeedback,
                 ModelIdentifier = entity.ModelIdentifier,
@@ -105,12 +108,13 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
         /// <summary>
         /// 消息内容
         /// </summary>
-        [Required]
         public string Content { get; set; }
 
         /// <summary>
         /// 运行模式：Simple（普通单轮对话，默认）或 Harness（MAF 长任务）。
         /// </summary>
         public AdminChatMode Mode { get; set; } = AdminChatMode.Simple;
+        [MaxLength(4)]
+        public List<AdminChatAttachmentInput> Attachments { get; set; } = new();
     }
 }

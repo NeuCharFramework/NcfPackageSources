@@ -505,6 +505,19 @@ window.ChatLauncherMixin = {
       this.selectedWorkflows = [];
     },
 
+    launcherSessionRequest(title) {
+      return {
+        initialMessage: '', title,
+        aiModelId: this.normalizeAiModelId(this.launcherAiModelId),
+        moduleUids: this.selectedModules.map(item => item.uid),
+        workflowIds: this.selectedWorkflows.map(item => item.id),
+        mode: this.launcherChatMode === 'harness' ? 1 : 0,
+        workspaceId: this.isSuperAdmin ? this.selectedWorkspaceId || null : null,
+        workspaceWriteEnabled: this.isSuperAdmin && !!this.selectedWorkspaceId && this.workspaceWriteEnabled,
+        workspaceCliEnabled: this.isSuperAdmin && !!this.selectedWorkspaceId && this.workspaceCliEnabled
+      };
+    },
+
     async startChatSession() {
       if (!this.chatInputText || this.chatInputText.trim().length === 0) {
         this.$message.warning(ncfT('AdminChat.InputRequired'));
@@ -514,17 +527,7 @@ window.ChatLauncherMixin = {
       this.isCreatingSession = true;
       try {
         const initialMessage = this.chatInputText.trim();
-        const requestData = {
-          initialMessage: '',
-          title: initialMessage,
-          aiModelId: this.normalizeAiModelId(this.launcherAiModelId),
-          moduleUids: this.selectedModules.map((item) => item.uid),
-          workflowIds: this.selectedWorkflows.map((item) => item.id),
-          mode: this.launcherChatMode === 'harness' ? 1 : 0,
-          workspaceId: this.isSuperAdmin ? this.selectedWorkspaceId || null : null,
-          workspaceWriteEnabled: this.isSuperAdmin && !!this.selectedWorkspaceId && this.workspaceWriteEnabled,
-          workspaceCliEnabled: this.isSuperAdmin && !!this.selectedWorkspaceId && this.workspaceCliEnabled
-        };
+        const requestData = this.launcherSessionRequest(initialMessage);
 
         const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateSessionAsync', requestData);
         if (response.data && response.data.success && response.data.data) {

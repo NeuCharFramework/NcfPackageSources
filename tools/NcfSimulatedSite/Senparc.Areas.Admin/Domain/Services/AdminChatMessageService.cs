@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto;
 
 namespace Senparc.Areas.Admin.Domain.Services
 {
@@ -86,7 +87,8 @@ namespace Senparc.Areas.Admin.Domain.Services
             string content,
             string modelIdentifier = null,
             int? trajectoryId = null,
-            int? trajectorySequence = null)
+            int? trajectorySequence = null,
+            IReadOnlyList<AdminChatAttachment> attachments = null)
         {
             var sequence = await GetNextSequenceAsync(sessionId);
             var message = new AdminChatMessage(
@@ -97,6 +99,7 @@ namespace Senparc.Areas.Admin.Domain.Services
                 modelIdentifier,
                 trajectoryId,
                 trajectorySequence);
+            message.SetAttachments(attachments);
             await base.SaveObjectAsync(message);
             return message;
         }
