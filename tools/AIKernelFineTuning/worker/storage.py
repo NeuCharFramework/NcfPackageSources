@@ -10,7 +10,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 
 from .config import WorkerError, safe_path
-from .datasets import validate_dataset
+from .datasets import validate_dataset, validate_dataset_file
 
 TERMINAL = {"Cancelled", "Succeeded", "Failed", "Interrupted"}
 
@@ -112,7 +112,8 @@ class Store:
             return dict(items=items, total=total, offset=offset, limit=limit)
 
     def upload(self, name, content):
-        rows, canonical, sha256 = validate_dataset(content)
+        rows, canonical, sha256 = validate_dataset(
+            content, self.settings.max_dataset_bytes, self.settings.max_dataset_rows)
         dataset = dict(id=uuid.uuid4().hex, name=name, rows=len(rows), sha256=sha256, createdUtc=utc_now())
         path = safe_path(self.root, "datasets", dataset["id"] + ".jsonl")
         with self.transaction():
@@ -123,6 +124,29 @@ class Store:
             atomic_write(path, canonical.encode("utf-8"))
             self.db.execute("INSERT INTO datasets VALUES (:id,:name,:rows,:sha256,:createdUtc)", dataset)
         return dataset
+
+    def create_upload_temp(self):
+        return safe_path(self.root, "datasets", f"uploading-{uuid.uuid4().hex}.jsonl")
+
+    def upload_file(self, name, source_path):
+        source_path = source_path if hasattr(source_path, "open") else safe_path(self.root, "datasets", str(source_path))
+        canonical_path = self.create_upload_temp()
+        try:
+            rows, canonical_bytes, sha256 = validate_dataset_file(
+                source_path, canonical_path, self.settings.max_dataset_bytes, self.settings.max_dataset_rows)
+            dataset = dict(id=uuid.uuid4().hex, name=name, rows=rows, sha256=sha256, createdUtc=utc_now())
+            path = safe_path(self.root, "datasets", dataset["id"] + ".jsonl")
+            with self.transaction():
+                if self.db.execute("SELECT COUNT(*) FROM datasets").fetchone()[0] >= self.settings.max_datasets:
+                    raise WorkerError("Dataset retention limit reached; archive and rotate the worker store.", 429)
+                if shutil.disk_usage(self.root).free < self.settings.min_free_bytes + canonical_bytes:
+                    raise WorkerError("Insufficient free disk space for dataset upload.", 507)
+                os.replace(canonical_path, path)
+                self.db.execute("INSERT INTO datasets VALUES (:id,:name,:rows,:sha256,:createdUtc)", dataset)
+            return dataset
+        finally:
+            if canonical_path.exists():
+                canonical_path.unlink()
 
     def read_dataset(self, dataset_id):
         metadata = self.dataset(dataset_id)

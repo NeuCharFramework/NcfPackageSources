@@ -57,7 +57,7 @@ var app = new Vue({
             fileReading: false,
             fileName: "",
             datasetName: "",
-            datasetContent: "",
+            datasetFile: null,
             helpOpen: ["workflow"],
             workflowSteps: ["Worker", "Data", "Training", "Monitor", "Publish"],
             datasetExample: "prompt",
@@ -240,7 +240,7 @@ var app = new Vue({
                     && typeof data.fileManagerAvailable === "boolean"
                     && Number.isInteger(data.modelCount) && data.modelCount >= 0
                     && typeof data.status === "string";
-            } else if (method === "UploadDatasetAsync" || method === "GetDatasetAsync") {
+            } else if (method === "UploadDatasetAsync" || method === "UploadDatasetFileAsync" || method === "GetDatasetAsync") {
                 valid = this.validDataset(data);
             } else if (method === "GetJobsAsync") {
                 valid = Array.isArray(data) && data.every(item => this.validJob(item));
@@ -302,6 +302,7 @@ var app = new Vue({
             var config = { customAlert: true, timeout: ((worker ? worker.requestTimeoutSeconds : 30) + 5) * 1000 };
             var response;
             var requestPayload = payload || {};
+            var isFormData = typeof FormData !== "undefined" && requestPayload instanceof FormData;
             if (method !== "GetWorkersAsync" && method !== "SaveWorkerAsync") {
                 if (post) {
                     config.params = { workerAlias: alias };
@@ -311,7 +312,7 @@ var app = new Vue({
                         delete requestPayload.id;
                     }
                 }
-                else { requestPayload = Object.assign({ workerAlias: alias }, requestPayload); }
+                else if (!isFormData) { requestPayload = Object.assign({ workerAlias: alias }, requestPayload); }
             }
             try {
                 response = post
@@ -725,12 +726,9 @@ var app = new Vue({
             return expected === "user";
         },
         validateDatasetContent(content) {
-            if (new TextEncoder().encode(content).length > 2 * 1024 * 1024) {
-                throw new Error(this.t("Error.FileSize"));
-            }
             var lines = content.split(/\r\n|\r|\n/);
             if (lines[lines.length - 1] === "") { lines.pop(); }
-            if (lines.length > 10000) { throw new Error(this.t("Error.RowLimit")); }
+            if (lines.length > 1000000) { throw new Error(this.t("Error.RowLimit")); }
             lines.forEach((line, index) => {
                 var row;
                 try { row = JSON.parse(line); }
@@ -747,6 +745,52 @@ var app = new Vue({
             if (lines.length < 2) { throw new Error(this.t("Error.EmptyDataset")); }
             return lines.length;
         },
+        async validateDatasetFile(file) {
+            if (!file.stream) { throw new Error(this.t("Error.FileRead")); }
+            var reader = file.stream().getReader();
+            var decoder;
+            try { decoder = new TextDecoder("utf-8", { fatal: true }); }
+            catch (error) { throw new Error(this.t("Error.Utf8")); }
+            var buffer = "";
+            var rows = 0;
+            var processLine = line => {
+                if (line.endsWith("\r")) { line = line.slice(0, -1); }
+                var row;
+                try { row = JSON.parse(line); }
+                catch (error) {
+                    if (error instanceof SyntaxError) {
+                        throw new Error(this.t("Error.JsonLine") + " " + (rows + 1));
+                    }
+                    throw error;
+                }
+                if (!this.isRecord(row) || !this.validDatasetRow(row)) {
+                    throw new Error(this.t("Error.DatasetSchema") + " " + (rows + 1));
+                }
+                rows++;
+                if (rows > 1000000) { throw new Error(this.t("Error.RowLimit")); }
+            };
+            try {
+                while (true) {
+                    var chunk = await reader.read();
+                    if (chunk.done) { break; }
+                    buffer += decoder.decode(chunk.value, { stream: true });
+                    var lines = buffer.split("\n");
+                    buffer = lines.pop();
+                    lines.forEach(processLine);
+                }
+                buffer += decoder.decode();
+            } catch (error) {
+                if (error instanceof TypeError || error instanceof URIError) {
+                    throw new Error(this.t("Error.Utf8"));
+                }
+                throw error;
+            } finally {
+                reader.releaseLock();
+            }
+            if (buffer.length > 0) { processLine(buffer); }
+            if (rows < 2) { throw new Error(this.t("Error.EmptyDataset")); }
+            return rows;
+        },
         downloadSample() {
             var url = URL.createObjectURL(new Blob([this.sampleContent], { type: "application/x-ndjson;charset=utf-8" }));
             var link = document.createElement("a");
@@ -758,7 +802,7 @@ var app = new Vue({
             setTimeout(() => URL.revokeObjectURL(url), 0);
         },
         async readDataset(event) {
-            this.datasetContent = "";
+            this.datasetFile = null;
             this.fileName = "";
             this.actionError = "";
             var file = event.target.files && event.target.files[0];
@@ -766,23 +810,9 @@ var app = new Vue({
             this.fileReading = true;
             try {
                 if (!/\.jsonl$/i.test(file.name)) { throw new Error(this.t("Error.FileType")); }
-                if (file.size > 2 * 1024 * 1024) { throw new Error(this.t("Error.FileSize")); }
-                var buffer = await new Promise((resolve, reject) => {
-                    var reader = new FileReader();
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = () => reject(new Error(this.t("Error.FileRead")));
-                    reader.onabort = () => reject(new Error(this.t("Error.FileRead")));
-                    reader.readAsArrayBuffer(file);
-                });
-                var content;
-                try {
-                    content = new TextDecoder("utf-8", { fatal: true }).decode(buffer);
-                } catch (error) {
-                    if (error instanceof TypeError) { throw new Error(this.t("Error.Utf8")); }
-                    throw error;
-                }
-                var rows = this.validateDatasetContent(content);
-                this.datasetContent = content;
+                if (file.size > 512 * 1024 * 1024) { throw new Error(this.t("Error.FileSize")); }
+                var rows = await this.validateDatasetFile(file);
+                this.datasetFile = file;
                 this.fileName = file.name + " (" + rows + " " + this.t("Rows") + ")";
                 if (!this.datasetName.trim()) { this.datasetName = file.name.replace(/\.jsonl$/i, "").slice(0, 100); }
             } catch (error) {
@@ -799,17 +829,19 @@ var app = new Vue({
             this.uploadBusy = true;
             try {
                 if (!this.connectionHealthy) { throw new Error(this.t("Error.NotConnected")); }
-                if (!this.datasetName.trim() || !this.datasetContent || this.fileReading) {
+                if (!this.datasetName.trim() || !this.datasetFile || this.fileReading) {
                     throw new Error(this.t("Error.DatasetRequired"));
                 }
-                var dataset = await this.request("UploadDatasetAsync",
-                    { name: this.datasetName.trim(), content: this.datasetContent }, true);
+                var form = new FormData();
+                form.append("file", this.datasetFile, this.datasetFile.name);
+                form.append("name", this.datasetName.trim());
+                var dataset = await this.request("UploadDatasetFileAsync", form, true);
                 if (workerVersion !== this.workerVersion) { throw new Error(this.t("Error.WorkerChanged")); }
                 this.datasets = this.datasets.filter(item => item.id !== dataset.id).concat([dataset]);
                 this.datasetTotal++;
                 if (!this.form.datasetId) { this.form.datasetId = dataset.id; }
                 this.$message.success(this.t("UploadSucceeded"));
-                this.datasetContent = "";
+                this.datasetFile = null;
                 this.fileName = "";
                 this.datasetName = "";
                 document.getElementById("ft-dataset-file").value = "";

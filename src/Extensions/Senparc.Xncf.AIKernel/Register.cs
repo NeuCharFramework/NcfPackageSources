@@ -149,6 +149,8 @@ namespace Senparc.Xncf.AIKernel
             services.AddScoped<Domain.Services.FineTuningMigrationService>();
             services.AddScoped<Domain.Services.IFineTuningFileStore,
                 Domain.Services.FineTuningFileStore>();
+            services.AddScoped<Senparc.Xncf.FileManager.Abstractions.IFileManagerReferenceProvider,
+                Domain.Services.FineTuningFileReferenceProvider>();
             services.AddSingleton<IHostedService, Domain.Services.FineTuningControlPlaneSyncService>();
             services.AddScoped<Domain.Services.IFineTuningControlPlaneService,
                 Domain.Services.FineTuningControlPlaneService>();

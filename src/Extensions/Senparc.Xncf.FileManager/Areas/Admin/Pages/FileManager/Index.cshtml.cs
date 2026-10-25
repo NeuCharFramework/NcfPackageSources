@@ -95,6 +95,20 @@ namespace Senparc.Xncf.FileManager.Areas.FileManager.Pages
             return Ok(stats);
         }
 
+        public async Task<IActionResult> OnGetReferenceReportAsync(
+            int page = 1,
+            int pageSize = 50,
+            NcfFileResourceScope? resourceScope = null,
+            bool onlyUnreferenced = false)
+        {
+            var report = await _fileService.ScanReferenceReportAsync(
+                page,
+                pageSize,
+                resourceScope,
+                onlyUnreferenced);
+            return Ok(report);
+        }
+
         public async Task<IActionResult> OnGetFoldersAsync(
             int? parentId = null,
             NcfFileResourceScope resourceScope = NcfFileResourceScope.KnowledgeBase)

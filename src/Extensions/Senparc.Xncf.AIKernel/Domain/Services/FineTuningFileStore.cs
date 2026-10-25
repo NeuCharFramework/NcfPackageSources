@@ -57,6 +57,16 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 cancellationToken);
         }
 
+        public Task<FileManagerReadResult> OpenReadAsync(
+            int fileId,
+            CancellationToken cancellationToken = default) =>
+            GetGateway().OpenReadAsync(fileId, cancellationToken);
+
+        public Task DeleteAsync(
+            int fileId,
+            CancellationToken cancellationToken = default) =>
+            GetGateway().DeleteAsync(fileId, cancellationToken);
+
         private IFileManagerGateway GetGateway() =>
             _serviceProvider.GetService<IFileManagerGateway>()
             ?? throw new InvalidOperationException("FileManager is not available. Install and enable Senparc.Xncf.FileManager before using fine-tuning file storage.");

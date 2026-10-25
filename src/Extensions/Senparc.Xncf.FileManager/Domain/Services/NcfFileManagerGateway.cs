@@ -91,4 +91,41 @@ public sealed class NcfFileManagerGateway : IFileManagerGateway
             file.FileSize,
             request.ResourceKind.ToString());
     }
+
+    public async Task<FileManagerReadResult> OpenReadAsync(
+        int fileId,
+        CancellationToken cancellationToken = default)
+    {
+        if (fileId <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(fileId));
+        }
+
+        var result = await _fileService.OpenReadAsync(fileId).ConfigureAwait(false);
+        if (result == null)
+        {
+            throw new FileNotFoundException($"FileManager file does not exist: {fileId}.");
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+        return new FileManagerReadResult(
+            result.File.Id,
+            result.File.FileName,
+            result.File.ContentType,
+            result.File.FileSize,
+            result.Stream);
+    }
+
+    public async Task DeleteAsync(
+        int fileId,
+        CancellationToken cancellationToken = default)
+    {
+        if (fileId <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(fileId));
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+        await _fileService.DeleteFileAsync(fileId).ConfigureAwait(false);
+    }
 }

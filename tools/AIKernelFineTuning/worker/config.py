@@ -4,7 +4,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 IDENTIFIER = re.compile(r"[a-zA-Z0-9][a-zA-Z0-9_.-]{0,127}\Z")
-MAX_DATASET_BYTES = 2 * 1024 * 1024
+MAX_DATASET_BYTES = 512 * 1024 * 1024
+MAX_DATASET_ROWS = 1_000_000
 OFFLINE_ENV = {
     "HF_HUB_OFFLINE": "1",
     "TRANSFORMERS_OFFLINE": "1",
@@ -66,6 +67,8 @@ class Settings:
     min_free_bytes: int = 1024**3
     max_datasets: int = 1000
     max_jobs: int = 1000
+    max_dataset_bytes: int = MAX_DATASET_BYTES
+    max_dataset_rows: int = MAX_DATASET_ROWS
 
     @classmethod
     def from_env(cls):
@@ -93,6 +96,8 @@ class Settings:
             min_free_bytes=env_int("NCF_MIN_FREE_BYTES", 1024**3, 1024**2, 1024**4),
             max_datasets=env_int("NCF_MAX_DATASETS", 1000, 1, 100000),
             max_jobs=env_int("NCF_MAX_JOBS", 1000, 1, 100000),
+            max_dataset_bytes=env_int("NCF_MAX_DATASET_BYTES", MAX_DATASET_BYTES, 2 * 1024 * 1024, 4 * 1024**3),
+            max_dataset_rows=env_int("NCF_MAX_DATASET_ROWS", MAX_DATASET_ROWS, 2, 10_000_000),
         )
 
 
