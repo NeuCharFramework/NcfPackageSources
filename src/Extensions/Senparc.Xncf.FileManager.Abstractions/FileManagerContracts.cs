@@ -16,6 +16,7 @@
 ----------------------------------------------------------------*/
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,12 +53,48 @@ public sealed record FileManagerImportResult(
     long Length,
     string ResourceKind);
 
+public sealed record FileManagerReadResult(
+    int FileId,
+    string FileName,
+    string ContentType,
+    long Length,
+    Stream Content);
+
+public sealed record FileManagerReference(
+    int FileId,
+    string ReferenceType,
+    string ReferenceId,
+    string Description);
+
+public sealed record FileManagerReferenceReport(
+    int FileId,
+    string FileName,
+    long Length,
+    string ResourceKind,
+    string PhysicalState,
+    IReadOnlyList<FileManagerReference> References);
+
+public interface IFileManagerReferenceProvider
+{
+    Task<IReadOnlyList<FileManagerReference>> GetReferencesAsync(
+        int fileId,
+        CancellationToken cancellationToken = default);
+}
+
 public interface IFileManagerGateway
 {
     Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default);
 
     Task<FileManagerImportResult> ImportAsync(
         FileManagerImportRequest request,
+        CancellationToken cancellationToken = default);
+
+    Task<FileManagerReadResult> OpenReadAsync(
+        int fileId,
+        CancellationToken cancellationToken = default);
+
+    Task DeleteAsync(
+        int fileId,
         CancellationToken cancellationToken = default);
 }
 

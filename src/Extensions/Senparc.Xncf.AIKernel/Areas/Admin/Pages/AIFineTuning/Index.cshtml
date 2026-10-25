@@ -216,7 +216,7 @@
                     <div class="ft-muted" role="status">{{ fileReading ? t('ReadingFile') : fileName }}</div>
                 </el-form-item>
                 <el-button type="primary" icon="el-icon-upload2" :loading="uploadBusy"
-                           :disabled="!datasetContent || fileReading || !connectionHealthy" @@click="uploadDataset">{{ t('Upload') }}</el-button>
+                           :disabled="!datasetFile || fileReading || !connectionHealthy" @@click="uploadDataset">{{ t('Upload') }}</el-button>
             </el-form>
             <el-table :data="datasets" size="mini" max-height="280" :empty-text="t('NoDatasets')" class="ft-table">
                 <el-table-column prop="name" :label="t('DatasetName')" min-width="140"></el-table-column>

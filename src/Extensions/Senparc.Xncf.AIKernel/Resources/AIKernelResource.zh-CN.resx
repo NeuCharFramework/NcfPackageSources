@@ -357,13 +357,13 @@
     <value>数据集</value>
   </data>
   <data name="FineTuning.DatasetHelp" xml:space="preserve">
-    <value>上传 UTF-8 .jsonl：2–10,000 行、最多 2 MiB（2,097,152 字节）。每行一个受支持的对象，不接受空行、JSON 数组或额外字段。浏览器检查编码、JSON 语法及行结构，Worker 校验仍是最终依据。数据集保存在所选 Worker 上。</value>
+    <value>上传 UTF-8 .jsonl：默认最多 512 MiB、100 万行。每行一个受支持的对象，不接受空行、JSON 数组或额外字段。浏览器会流式检查编码、JSON 语法及行结构，Worker 校验仍是最终依据。数据集会同时保存到 FileManager 和所选 Worker。</value>
   </data>
   <data name="FineTuning.DatasetName" xml:space="preserve">
     <value>数据集名称</value>
   </data>
   <data name="FineTuning.DatasetFile" xml:space="preserve">
-    <value>UTF-8 JSONL 文件（最大 2 MiB）</value>
+    <value>UTF-8 JSONL 文件（最大 512 MiB）</value>
   </data>
   <data name="FineTuning.ReadingFile" xml:space="preserve">
     <value>正在读取并验证文件…</value>
@@ -705,7 +705,7 @@
     <value>请选择 .jsonl 文件。</value>
   </data>
   <data name="FineTuning.Error.FileSize" xml:space="preserve">
-    <value>JSONL 文件不能超过 2 MiB。</value>
+    <value>JSONL 文件不能超过 512 MiB。</value>
   </data>
   <data name="FineTuning.Error.FileRead" xml:space="preserve">
     <value>无法读取文件，请重新选择。</value>
@@ -794,7 +794,7 @@
   <data name="FineTuning.Guide.DownloadSample" xml:space="preserve"><value>下载 JSONL 样例</value></data>
   <data name="FineTuning.Guide.EffectiveBatch" xml:space="preserve"><value>单设备近似有效 batch（microbatch × 梯度累积）</value></data>
   <data name="FineTuning.Guide.SmokeNotice" xml:space="preserve"><value>默认 10 步用于验证流程，不代表生产质量。正数 maxSteps 覆盖 epochs；最后一步也会执行验证。</value></data>
-  <data name="FineTuning.Error.RowLimit" xml:space="preserve"><value>数据集超过 10,000 行。</value></data>
+  <data name="FineTuning.Error.RowLimit" xml:space="preserve"><value>数据集超过 1,000,000 行。</value></data>
   <data name="FineTuning.Error.DatasetSchema" xml:space="preserve"><value>不支持的数据行结构，请参照“数据样例与下载”；行号：</value></data>
   <data name="FineTuning.Error.WorkerChanged" xml:space="preserve"><value>Worker 选择已改变。重试前请检查原 Worker 的任务/数据集状态，其响应不能写入当前 Worker 视图。</value></data>
   <data name="FineTuning.DatasetHistory" xml:space="preserve"><value>当前视图可选数据集 / 已保存总数</value></data>

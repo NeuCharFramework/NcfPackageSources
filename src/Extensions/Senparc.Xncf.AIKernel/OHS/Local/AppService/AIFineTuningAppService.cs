@@ -23,7 +23,10 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
 using System.Text.Json;
+using System.IO;
+using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -145,12 +148,104 @@ public class AIFineTuningAppService : AppServiceBase
     public Task<AppResponseBase<FineTuningDataset>> UploadDatasetAsync([FromBody] FineTuningDatasetRequest request, string workerAlias) =>
         this.GetResponseAsync<FineTuningDataset>(async (response, logger) =>
         {
-            var dataset = await _worker.UploadDatasetAsync(workerAlias, request, CancellationToken);
-            await _controlPlane.UpsertDatasetAsync(new AIFineTuningDataset(workerAlias, dataset.Id, dataset.Name,
-                dataset.Rows, dataset.Sha256, dataset.CreatedUtc.UtcDateTime), CancellationToken);
-            Audit("dataset-uploaded", $"{workerAlias}/{dataset.Id}");
-            return dataset;
+            var content = request?.Content ?? string.Empty;
+            await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(content), writable: false);
+            return await UploadDatasetAndStoreAsync(workerAlias, request?.Name, $"{request?.Name}.jsonl",
+                stream, stream.Length, "application/x-ndjson");
         });
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    [RequestSizeLimit(FineTuningWorkerClient.MaxDatasetBytes + 64 * 1024)]
+    [RequestFormLimits(MultipartBodyLengthLimit = FineTuningWorkerClient.MaxDatasetBytes + 64 * 1024)]
+    [FunctionRender("上传微调数据集文件", "以流方式保存并上传 JSONL 微调数据集，适合大文件。", typeof(Register), AllowAiInvocation = true)]
+    public Task<AppResponseBase<FineTuningDataset>> UploadDatasetFileAsync(
+        [FromForm] IFormFile file, [FromForm] string name, string workerAlias) =>
+        this.GetResponseAsync<FineTuningDataset>(async (response, logger) =>
+        {
+            if (file == null || file.Length <= 0)
+            {
+                throw new ArgumentException("请选择非空的 JSONL 文件。", nameof(file));
+            }
+
+            if (file.Length > FineTuningWorkerClient.MaxDatasetBytes)
+            {
+                throw new ArgumentException("数据集不能超过 512 MiB。", nameof(file));
+            }
+
+            var fileName = Path.GetFileName((file.FileName ?? string.Empty).Replace('\\', '/'));
+            if (!fileName.EndsWith(".jsonl", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ArgumentException("微调数据集必须是 .jsonl 文件。", nameof(file));
+            }
+
+            var datasetName = string.IsNullOrWhiteSpace(name)
+                ? Path.GetFileNameWithoutExtension(fileName)
+                : name.Trim();
+            await using var stream = file.OpenReadStream();
+            return await UploadDatasetAndStoreAsync(workerAlias, datasetName, fileName, stream, file.Length,
+                string.IsNullOrWhiteSpace(file.ContentType) ? "application/x-ndjson" : file.ContentType);
+        });
+
+    private async Task<FineTuningDataset> UploadDatasetAndStoreAsync(
+        string workerAlias,
+        string name,
+        string fileName,
+        Stream source,
+        long length,
+        string contentType)
+    {
+        if (source == null)
+        {
+            throw new ArgumentNullException(nameof(source));
+        }
+
+        if (string.IsNullOrWhiteSpace(name) || name.Length > 100)
+        {
+            throw new ArgumentException("数据集名称必须为 1 到 100 个字符。", nameof(name));
+        }
+
+        if (length <= 0 || length > FineTuningWorkerClient.MaxDatasetBytes)
+        {
+            throw new ArgumentOutOfRangeException(nameof(length), "数据集不能超过 512 MiB。");
+        }
+
+        if (!await _fileStore.IsAvailableAsync(CancellationToken))
+        {
+            throw new InvalidOperationException("上传微调数据集需要启用 FileManager。");
+        }
+
+        var imported = await _fileStore.ImportAsync(source, fileName, contentType, length,
+            $"AIKernel fine-tuning dataset {workerAlias}/{name}", CancellationToken);
+        try
+        {
+            var stored = await _fileStore.OpenReadAsync(imported.FileId, CancellationToken);
+            await using (stored.Content)
+            {
+                var dataset = await _worker.UploadDatasetFileAsync(workerAlias, name, stored.Content,
+                    stored.Length, CancellationToken);
+                await _controlPlane.UpsertDatasetAsync(new AIFineTuningDataset(workerAlias, dataset.Id, dataset.Name,
+                    dataset.Rows, dataset.Sha256, dataset.CreatedUtc.UtcDateTime, imported.FileId), CancellationToken);
+                Audit("dataset-uploaded", $"{workerAlias}/{dataset.Id}");
+                return dataset;
+            }
+        }
+        catch (Exception exception)
+        {
+            try
+            {
+                await _fileStore.DeleteAsync(imported.FileId, CancellationToken.None);
+            }
+            catch (Exception cleanupException)
+            {
+                _logger.LogError(cleanupException, "Failed to clean up FileManager dataset {FileId} after upload failure.",
+                    imported.FileId);
+            }
+
+            _logger.LogError(exception, "Fine-tuning dataset upload failed after FileManager import {FileId}.",
+                imported.FileId);
+            throw;
+        }
+    }
 
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<List<FineTuningJob>>> GetJobsAsync(string workerAlias) =>

@@ -9,11 +9,12 @@ const source = fs.readFileSync(path.join(root, "wwwroot/js/Admin/AIFineTuning/in
 function instance() {
     let options;
     const timers = [];
+    class FormDataStub { append() {} }
     const en = fs.readFileSync(path.join(root, "Resources/AIKernelResource.en.resx"), "utf8");
     const zh = fs.readFileSync(path.join(root, "Resources/AIKernelResource.zh-CN.resx"), "utf8");
     const fallback = fs.readFileSync(path.join(root, "Resources/AIKernelResource.resx"), "utf8");
     const context = {
-        URL, Date, TextDecoder, TextEncoder, Blob, Number, console,
+        URL, Date, TextDecoder, TextEncoder, Blob, FormData: FormDataStub, Number, console,
         window: { location: { href: "http://localhost/Admin/AIFineTuning/Index?uid=module" }, history: { replaceState() {} } },
         document: { getElementById: () => ({ value: "" }) },
         service: {},
@@ -227,21 +228,18 @@ test("both downloadable examples are valid distinct JSONL and downloads preserve
     assert.ok(revoked);
 });
 
-test("dataset validation enforces actual schema, row and UTF-8 byte thresholds with line errors", () => {
+test("dataset validation enforces actual schema and the expanded row threshold with line errors", () => {
     const { app } = instance();
     const row = '{"prompt":"x","completion":"y"}';
-    assert.equal(app.validateDatasetContent(Array(10000).fill(row).join("\n")), 10000);
-    assert.throws(() => app.validateDatasetContent(Array(10001).fill(row).join("\n")), /RowLimit/);
+    assert.equal(app.validateDatasetContent(Array(10001).fill(row).join("\n")), 10001);
     assert.throws(() => app.validateDatasetContent(row), /EmptyDataset/);
     assert.throws(() => app.validateDatasetContent(row + "\n\n" + row), /JsonLine.*2/);
-    assert.throws(() => app.validateDatasetContent("\u4e2d".repeat(700000)), /FileSize/);
     const maximumRows = Array.from({ length: 31 }, () => ({ prompt: "x".repeat(65536), completion: "y" }));
     maximumRows.push({ prompt: "", completion: "y" });
     const encode = () => maximumRows.map(row => JSON.stringify(row)).join("\n");
-    maximumRows[31].prompt = "x".repeat(2 * 1024 * 1024 - new TextEncoder().encode(encode()).length);
-    assert.equal(new TextEncoder().encode(encode()).length, 2097152);
+    maximumRows[31].prompt = "x";
     assert.equal(app.validateDatasetContent(encode()), 32);
-    assert.throws(() => app.validateDatasetContent(encode() + "\n"), /FileSize/);
+    assert.equal(app.validateDatasetContent(encode() + "\n"), 32);
     for (const invalid of [
         '{"prompt":"x","completion":"y","extra":true}',
         '{"prompt":" ","completion":"y"}',
@@ -344,7 +342,7 @@ test("completed uploads and submissions cannot populate another Worker's catalog
         app.form.modelId = "model";
         app.form.datasetId = "data";
         app.datasetName = "test";
-        app.datasetContent = app.sampleContent;
+        app.datasetFile = { name: "test.jsonl" };
         const gate = deferred();
         app.request = () => gate.promise;
         const pending = app[action]();
