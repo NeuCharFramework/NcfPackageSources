@@ -30,5 +30,13 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             long length,
             string description,
             CancellationToken cancellationToken = default);
+
+        Task<FileManagerReadResult> OpenReadAsync(
+            int fileId,
+            CancellationToken cancellationToken = default);
+
+        Task DeleteAsync(
+            int fileId,
+            CancellationToken cancellationToken = default);
     }
 }

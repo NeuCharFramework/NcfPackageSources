@@ -397,9 +397,69 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         cancellationToken.ThrowIfCancellationRequested();
         var path = GetWorkspaceRoot(workspaceId);
         EnsureWorkspaceExists(path);
+        var descriptor = await GetAsync(workspaceId, cancellationToken).ConfigureAwait(false);
+        using (var referenceScope = _scopeFactory.CreateScope())
+        {
+            foreach (var provider in referenceScope.ServiceProvider.GetServices<IWorkspaceReferenceProvider>())
+            {
+                var references = await provider.GetReferencesAsync(workspaceId, cancellationToken)
+                    .ConfigureAwait(false);
+                if (references.Count == 0)
+                {
+                    continue;
+                }
+
+                var referenceSummary = string.Join("、", references.Take(5).Select(reference =>
+                    $"{reference.ReferenceType}:{reference.ReferenceId}"));
+                if (references.Count > 5)
+                {
+                    referenceSummary += $" 等 {references.Count} 项";
+                }
+
+                throw new InvalidOperationException(
+                    $"工作区“{workspaceId}”仍被引用，不能删除：{referenceSummary}。请先解除业务引用。");
+            }
+        }
+
         await _agentPool.StopAsync(workspaceId).ConfigureAwait(false);
-        Directory.Delete(path, recursive: true);
-        _logger.LogWarning("Workspace deleted: {WorkspaceId}", workspaceId);
+
+        var stagedPath = path + $".deleting-{Guid.NewGuid():N}";
+        Directory.Move(path, stagedPath);
+        var metadataDeleted = false;
+        try
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var metadataStore = scope.ServiceProvider.GetRequiredService<IWorkspaceMetadataStore>();
+            await metadataStore.DeleteAsync(workspaceId, cancellationToken).ConfigureAwait(false);
+            metadataDeleted = true;
+
+            Directory.Delete(stagedPath, recursive: true);
+            _logger.LogWarning("Workspace deleted: {WorkspaceId}", workspaceId);
+        }
+        catch
+        {
+            if (metadataDeleted && descriptor != null)
+            {
+                try
+                {
+                    await PersistMetadataAsync(descriptor, CancellationToken.None).ConfigureAwait(false);
+                }
+                catch (Exception restoreException)
+                {
+                    _logger.LogError(
+                        restoreException,
+                        "Failed to restore workspace metadata after deletion rollback: {WorkspaceId}",
+                        workspaceId);
+                }
+            }
+
+            if (Directory.Exists(stagedPath) && !Directory.Exists(path))
+            {
+                Directory.Move(stagedPath, path);
+            }
+
+            throw;
+        }
     }
 
     private string GetWorkspaceRoot(string workspaceId)

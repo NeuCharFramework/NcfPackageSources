@@ -22,6 +22,7 @@ public interface IWorkspaceMetadataStore
 {
     Task UpsertAsync(WorkspaceDescriptor descriptor, CancellationToken cancellationToken = default);
     Task TouchAsync(string workspaceId, DateTime lastAccessedAt, CancellationToken cancellationToken = default);
+    Task DeleteAsync(string workspaceId, CancellationToken cancellationToken = default);
 }
 
 public sealed class WorkspaceMetadataStore : IWorkspaceMetadataStore
@@ -61,6 +62,20 @@ public sealed class WorkspaceMetadataStore : IWorkspaceMetadataStore
         }
 
         record.Touch(lastAccessedAt);
+        await _entities.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task DeleteAsync(string workspaceId, CancellationToken cancellationToken = default)
+    {
+        var record = await _entities.WorkspaceRecords
+            .SingleOrDefaultAsync(x => x.WorkspaceId == workspaceId, cancellationToken)
+            .ConfigureAwait(false);
+        if (record == null)
+        {
+            return;
+        }
+
+        _entities.WorkspaceRecords.Remove(record);
         await _entities.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 }

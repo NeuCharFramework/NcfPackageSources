@@ -52,7 +52,16 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 return dataset;
             }
 
-            existing.Update(dataset.WorkerAlias, dataset.ExternalId, dataset.Name, dataset.Rows, dataset.Sha256, dataset.CreatedUtc);
+            if (dataset.FileId.HasValue)
+            {
+                existing.Update(dataset.WorkerAlias, dataset.ExternalId, dataset.Name, dataset.Rows, dataset.Sha256,
+                    dataset.CreatedUtc, dataset.FileId);
+            }
+            else
+            {
+                existing.Update(dataset.WorkerAlias, dataset.ExternalId, dataset.Name, dataset.Rows, dataset.Sha256,
+                    dataset.CreatedUtc);
+            }
             await _datasetRepository.SaveChangesAsync();
             return existing;
         }

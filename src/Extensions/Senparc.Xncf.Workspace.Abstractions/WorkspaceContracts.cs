@@ -25,6 +25,19 @@ public sealed record WorkspaceDescriptor(
     int? AgentTemplateId = null,
     string StorageProvider = "FileSystem");
 
+public sealed record WorkspaceReference(
+    string WorkspaceId,
+    string ReferenceType,
+    string ReferenceId,
+    string Description);
+
+public interface IWorkspaceReferenceProvider
+{
+    Task<IReadOnlyList<WorkspaceReference>> GetReferencesAsync(
+        string workspaceId,
+        CancellationToken cancellationToken = default);
+}
+
 public sealed record WorkspaceEntry(
     string RelativePath,
     bool IsDirectory,

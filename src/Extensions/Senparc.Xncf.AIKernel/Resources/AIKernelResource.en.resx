@@ -318,13 +318,13 @@
     <value>Datasets</value>
   </data>
   <data name="FineTuning.DatasetHelp" xml:space="preserve">
-    <value>Upload UTF-8 .jsonl with 2–10,000 rows and at most 2 MiB (2,097,152 bytes). Each line must contain one supported object; blank lines, JSON arrays and extra fields are rejected. The browser checks encoding, JSON syntax and row structure; worker validation remains authoritative. Datasets persist on the selected Worker.</value>
+    <value>Upload UTF-8 .jsonl with 2–1,000,000 rows and at most 512 MiB. Each line must contain one supported object; blank lines, JSON arrays and extra fields are rejected. The browser validates the file as a stream; worker validation remains authoritative. Datasets persist in FileManager and on the selected Worker.</value>
   </data>
   <data name="FineTuning.DatasetName" xml:space="preserve">
     <value>Dataset name</value>
   </data>
   <data name="FineTuning.DatasetFile" xml:space="preserve">
-    <value>UTF-8 JSONL file (maximum 2 MiB)</value>
+    <value>UTF-8 JSONL file (maximum 512 MiB)</value>
   </data>
   <data name="FineTuning.ReadingFile" xml:space="preserve">
     <value>Reading and validating file…</value>
@@ -666,7 +666,7 @@
     <value>Select a .jsonl file.</value>
   </data>
   <data name="FineTuning.Error.FileSize" xml:space="preserve">
-    <value>The JSONL file must not exceed 2 MiB.</value>
+    <value>The JSONL file must not exceed 512 MiB.</value>
   </data>
   <data name="FineTuning.Error.FileRead" xml:space="preserve">
     <value>The file could not be read. Select it again.</value>
@@ -755,7 +755,7 @@
   <data name="FineTuning.Guide.DownloadSample" xml:space="preserve"><value>Download JSONL example</value></data>
   <data name="FineTuning.Guide.EffectiveBatch" xml:space="preserve"><value>Approximate single-device effective batch (microbatch × accumulation)</value></data>
   <data name="FineTuning.Guide.SmokeNotice" xml:space="preserve"><value>The default 10 steps verify the pipeline, not production quality. Positive maxSteps overrides epochs; validation also runs at the final step.</value></data>
-  <data name="FineTuning.Error.RowLimit" xml:space="preserve"><value>The dataset exceeds 10,000 rows.</value></data>
+  <data name="FineTuning.Error.RowLimit" xml:space="preserve"><value>The dataset exceeds 1,000,000 rows.</value></data>
   <data name="FineTuning.Error.DatasetSchema" xml:space="preserve"><value>Unsupported dataset row structure. See Dataset examples; line:</value></data>
   <data name="FineTuning.Error.WorkerChanged" xml:space="preserve"><value>The Worker selection changed. Check the original Worker's job/dataset status before retrying; its response cannot be applied to this Worker.</value></data>
   <data name="FineTuning.DatasetHistory" xml:space="preserve"><value>Datasets available in this view / total stored</value></data>

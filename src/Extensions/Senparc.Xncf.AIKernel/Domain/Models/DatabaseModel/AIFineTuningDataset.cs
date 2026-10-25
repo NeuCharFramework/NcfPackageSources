@@ -38,10 +38,18 @@ public class AIFineTuningDataset : EntityBase<int>
     [Required]
     public DateTime CreatedUtc { get; private set; }
 
+    public int? FileId { get; private set; }
+
     public AIFineTuningDataset(string workerAlias, string externalId, string name, int rows, string sha256,
         DateTime createdUtc)
     {
         Update(workerAlias, externalId, name, rows, sha256, createdUtc);
+    }
+
+    public AIFineTuningDataset(string workerAlias, string externalId, string name, int rows, string sha256,
+        DateTime createdUtc, int? fileId)
+    {
+        Update(workerAlias, externalId, name, rows, sha256, createdUtc, fileId);
     }
 
     public AIFineTuningDataset Update(string workerAlias, string externalId, string name, int rows, string sha256,
@@ -53,6 +61,14 @@ public class AIFineTuningDataset : EntityBase<int>
         Rows = rows;
         Sha256 = sha256;
         CreatedUtc = createdUtc;
+        return this;
+    }
+
+    public AIFineTuningDataset Update(string workerAlias, string externalId, string name, int rows, string sha256,
+        DateTime createdUtc, int? fileId)
+    {
+        Update(workerAlias, externalId, name, rows, sha256, createdUtc);
+        FileId = fileId;
         return this;
     }
 }

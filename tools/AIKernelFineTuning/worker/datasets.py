@@ -1,8 +1,9 @@
 import hashlib
 import json
 import random
+from pathlib import Path
 
-from .config import MAX_DATASET_BYTES, WorkerError
+from .config import MAX_DATASET_BYTES, MAX_DATASET_ROWS, WorkerError
 
 
 def parse_json(text):
@@ -20,15 +21,15 @@ def parse_json(text):
     return json.loads(text, object_pairs_hook=pairs, parse_constant=invalid)
 
 
-def validate_dataset(content):
+def validate_dataset(content, max_bytes=MAX_DATASET_BYTES, max_rows=MAX_DATASET_ROWS):
     if not isinstance(content, str) or not content.strip():
         raise WorkerError("Dataset content must be nonempty JSONL.")
-    if len(content.encode("utf-8")) > MAX_DATASET_BYTES:
-        raise WorkerError("Dataset exceeds the 2 MiB UTF-8 limit.", 413)
+    if len(content.encode("utf-8")) > max_bytes:
+        raise WorkerError(f"Dataset exceeds the {max_bytes // (1024 * 1024)} MiB UTF-8 limit.", 413)
     rows, errors = [], []
     lines = content.splitlines()
-    if len(lines) > 10000:
-        raise WorkerError("Dataset exceeds the 10000 row limit.")
+    if len(lines) > max_rows:
+        raise WorkerError(f"Dataset exceeds the {max_rows} row limit.")
     for number, line in enumerate(lines, 1):
         try:
             row = parse_json(line)
@@ -67,6 +68,76 @@ def validate_dataset(content):
         raise WorkerError("Dataset must contain at least two rows.")
     canonical = "\n".join(json.dumps(row, ensure_ascii=False, separators=(",", ":")) for row in rows)
     return rows, canonical, hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def validate_dataset_file(source, canonical_path, max_bytes=MAX_DATASET_BYTES, max_rows=MAX_DATASET_ROWS):
+    source = Path(source)
+    canonical_path = Path(canonical_path)
+    rows = 0
+    errors = []
+    raw_bytes = 0
+    canonical_bytes = 0
+    digest = hashlib.sha256()
+    canonical_path.parent.mkdir(parents=True, exist_ok=True)
+
+    try:
+        with source.open("rb") as input_stream, canonical_path.open("wb") as output_stream:
+            for number, raw_line in enumerate(input_stream, 1):
+                raw_bytes += len(raw_line)
+                if raw_bytes > max_bytes:
+                    raise WorkerError(f"Dataset exceeds the {max_bytes // (1024 * 1024)} MiB UTF-8 limit.", 413)
+                try:
+                    line = raw_line.decode("utf-8").rstrip("\r\n")
+                    row = parse_json(line)
+                    if not isinstance(row, dict):
+                        raise ValueError("Row must be an object.")
+                    if set(row) == {"prompt", "completion"}:
+                        check_text(row["prompt"], "prompt")
+                        check_text(row["completion"], "completion")
+                    elif set(row) == {"messages"}:
+                        messages = row["messages"]
+                        if not isinstance(messages, list) or not 2 <= len(messages) <= 128:
+                            raise ValueError("messages must contain 2..128 entries.")
+                        expected = "user"
+                        for index, message in enumerate(messages):
+                            if not isinstance(message, dict) or set(message) != {"role", "content"}:
+                                raise ValueError("Each message requires only role and content.")
+                            role = message["role"]
+                            if index == 0 and role == "system":
+                                check_text(message["content"], "content")
+                                continue
+                            if role != expected:
+                                raise ValueError(f"Expected {expected} role at message {index + 1}; system is allowed only first.")
+                            check_text(message["content"], "content")
+                            expected = "assistant" if role == "user" else "user"
+                        if expected != "user":
+                            raise ValueError("Conversation must end with an assistant response.")
+                    else:
+                        raise ValueError("Use only messages OR prompt/completion properties.")
+                except (UnicodeDecodeError, ValueError, TypeError, RecursionError) as exc:
+                    if len(errors) < 50:
+                        errors.append({"row": number, "error": str(exc)})
+                    continue
+
+                canonical = json.dumps(row, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+                if rows:
+                    output_stream.write(b"\n")
+                    digest.update(b"\n")
+                    canonical_bytes += 1
+                output_stream.write(canonical)
+                digest.update(canonical)
+                canonical_bytes += len(canonical)
+                rows += 1
+                if rows > max_rows:
+                    raise WorkerError(f"Dataset exceeds the {max_rows} row limit.")
+    except FileNotFoundError as exc:
+        raise WorkerError("Dataset upload disappeared before validation.", 409) from exc
+
+    if errors:
+        raise WorkerError("Invalid JSONL dataset (first 50 row errors).", details=errors)
+    if rows < 2:
+        raise WorkerError("Dataset must contain at least two rows.")
+    return rows, canonical_bytes, digest.hexdigest()
 
 
 def check_text(value, field):

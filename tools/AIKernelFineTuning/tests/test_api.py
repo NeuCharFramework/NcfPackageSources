@@ -13,6 +13,7 @@ from tests.test_core import CONTENT, REQUEST
 
 class FixtureWorker:
     def __init__(self, settings):
+        self.settings = settings
         self.store = Store(settings)
 
     def close(self):
@@ -46,12 +47,22 @@ class ApiTests(unittest.TestCase):
 
     def test_every_endpoint_requires_authentication(self):
         for method, path in [("GET", "/health"), ("GET", "/models"), ("GET", "/datasets"), ("POST", "/datasets"),
+                             ("POST", "/datasets/file?name=raw"),
                              ("GET", "/jobs"), ("POST", "/jobs"), ("GET", "/jobs/id"), ("POST", "/jobs/id/cancel"),
                              ("GET", "/jobs/id/events"), ("GET", "/jobs/id/artifacts/id"),
                              ("GET", "/jobs/page"), ("GET", "/datasets/page"), ("GET", "/datasets/id")]:
             self.assertEqual(self.client.request(method, path).status_code, 401)
         self.assertEqual(self.client.get("/health", headers=self.headers).status_code, 200)
         self.assertEqual(self.client.get("/health", headers={"X-NCF-Worker-Key": "wrong"}).status_code, 401)
+
+    def test_streaming_jsonl_upload_preserves_worker_contract(self):
+        response = self.client.post("/datasets/file?name=raw", headers=self.headers,
+                                    content=CONTENT.encode("utf-8"))
+        self.assertEqual(response.status_code, 200)
+        dataset = response.json()
+        self.assertEqual(dataset["rows"], 6)
+        self.assertEqual(len(dataset["sha256"]), 64)
+        self.assertEqual(self.client.get(f"/datasets/{dataset['id']}", headers=self.headers).json(), dataset)
 
     def test_body_limit_validation_never_echoes_data(self):
         response = self.client.post("/datasets", headers={**self.headers, "Content-Length": str(MAX_BODY_BYTES + 1)}, content="{}")

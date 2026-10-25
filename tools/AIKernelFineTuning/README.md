@@ -101,13 +101,13 @@ Use a private HTTPS endpoint for cross-host connections. `127.0.0.1` works only 
 
 跨主机使用私网 HTTPS；同一命名空间才使用 loopback。NCF 容器可加入入口网络并访问 `http://gateway:8080`，此时将 `gateway` 加入 NCF 的 `AllowedHosts`，不要误用自己的 loopback；训练 Worker 不加入外部网络。
 
-Use the default-expanded in-page tutorial and the dataset example download to prepare the first smoke test. Each example has four distinct rows and only demonstrates format; it is not a production dataset. The browser checks line structure, 2..10000 rows and the 2 MiB UTF-8 limit, while the Worker performs authoritative validation, including duplicate properties and held-out overlap.
+Use the default-expanded in-page tutorial and the dataset example download to prepare the first smoke test. Each example has four distinct rows and only demonstrates format; it is not a production dataset. The browser validates the file as a stream and checks line structure, 2..1,000,000 rows and the 512 MiB UTF-8 limit, while the Worker performs authoritative validation, including duplicate properties and held-out overlap.
 
-使用默认展开的页内教程及数据样例下载准备首次冒烟测试。每种样例含四条不同记录，仅演示格式，不是生产数据集。浏览器检查行结构、2..10000 行及 2 MiB UTF-8 上限；Worker 仍进行最终校验，包括重复字段与验证集重叠检查。
+使用默认展开的页内教程及数据样例下载准备首次冒烟测试。每种样例含四条不同记录，仅演示格式，不是生产数据集。浏览器以流方式检查行结构、2..1,000,000 行及 512 MiB UTF-8 上限；Worker 仍进行最终校验，包括重复字段与验证集重叠检查。
 
-Open **AIKernel → Local fine-tuning / 本地模型微调**. Upload UTF-8 JSONL (2..10000 rows, <=2 MiB) of `messages` or `prompt`/`completion`. Messages require the approved tokenizer's chat template. Explicit validation must not overlap training rows. If omitted, the worker deterministically holds out at least one distinct row (approximately 20%); it rejects fewer than two distinct rows.
+Open **AIKernel → Local fine-tuning / 本地模型微调**. Upload UTF-8 JSONL (2..1,000,000 rows, <=512 MiB) of `messages` or `prompt`/`completion`. Files are first stored in FileManager and streamed to the Worker; the Worker also keeps its validated training copy. Messages require the approved tokenizer's chat template. Explicit validation must not overlap training rows. If omitted, the worker deterministically holds out at least one distinct row (approximately 20%); it rejects fewer than two distinct rows.
 
-打开管理页，上传 2..10000 行、最多 2 MiB 的 UTF-8 JSONL（messages 或 prompt/completion）。messages 要求批准的 tokenizer chat template；显式验证集不能与训练记录重叠。不选验证集时，自动按 seed 留出约 20%、至少一条不同记录，少于两条不同记录则拒绝。
+打开管理页，上传 2..1,000,000 行、最多 512 MiB 的 UTF-8 JSONL（messages 或 prompt/completion）。文件会先统一保存到 FileManager，再以流方式发送到 Worker；Worker 也会保留经过校验的训练副本。messages 要求批准的 tokenizer chat template；显式验证集不能与训练记录重叠。不选验证集时，自动按 seed 留出约 20%、至少一条不同记录，少于两条不同记录则拒绝。
 
 The implemented objective is **causal next-token loss on all non-padding tokens**, including prompt/user tokens, not assistant-only masked SFT. Both backends use AdamW, linear warmup/decay and gradient clipping. Right truncation is warned; inspect data length so answers are not lost. A positive `maxSteps` overrides epochs; zero uses epochs.
 
@@ -123,6 +123,8 @@ The implemented objective is **causal next-token loss on all non-padding tokens*
 | `NCF_MIN_FREE_BYTES` | 1073741824 | Disk reserve; archive requires extra space / 磁盘预留，归档需额外空间 |
 | `NCF_EVENT_LIMIT` | 10000 | Retained events per job / 每任务保留事件数 |
 | `NCF_MAX_DATASETS`, `NCF_MAX_JOBS` | 1000 each | Store retention admission caps / 存储记录接收上限 |
+| `NCF_MAX_DATASET_BYTES` | 536870912 | Maximum raw JSONL bytes per dataset (512 MiB) / 单个 JSONL 数据集最大字节数（512 MiB） |
+| `NCF_MAX_DATASET_ROWS` | 1000000 | Maximum rows per dataset / 单个数据集最大行数 |
 | `NCF_CANCEL_GRACE_SECONDS` | 30 | Graceful checkpoint stop before tree kill / 优雅停止后进程树强杀 |
 | `NCF_TELEMETRY_SECONDS` | 2 | Resource sampling interval / 资源采样间隔 |
 | `NCF_PREFLIGHT_SECONDS` | 120 | Offline model preflight timeout / 离线模型预检超时 |
