@@ -1,3 +1,4 @@
+import asyncio
 import json
 import tempfile
 import unittest
@@ -5,7 +6,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from worker.api import MAX_BODY_BYTES, create_app
+from worker.api import MAX_BODY_BYTES, AuthAndSize, create_app
 from worker.config import Settings
 from worker.storage import Store
 from tests.test_core import CONTENT, REQUEST
@@ -63,6 +64,57 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(dataset["rows"], 6)
         self.assertEqual(len(dataset["sha256"]), 64)
         self.assertEqual(self.client.get(f"/datasets/{dataset['id']}", headers=self.headers).json(), dataset)
+
+    def test_dataset_file_stream_bypasses_json_body_limit(self):
+        asyncio.run(self._assert_size_gate("/datasets/file", MAX_BODY_BYTES + 1, passed=True))
+        asyncio.run(self._assert_size_gate("/datasets", MAX_BODY_BYTES + 1, passed=False,
+                                            detail="Request body exceeds the worker limit."))
+        asyncio.run(self._assert_size_gate(
+            "/datasets/file", self.settings.max_dataset_bytes + 1, passed=False,
+            detail="Dataset body exceeds the worker limit."))
+
+    def test_gateway_streams_dataset_files_above_json_limit(self):
+        conf = Path(__file__).resolve().parents[1].joinpath("nginx.conf").read_text()
+        file_location = conf.split("location = /datasets/file", 1)[1].split("location /", 1)[0]
+        self.assertIn("client_max_body_size 13m;", conf)
+        self.assertIn("client_max_body_size 512m;", file_location)
+        self.assertIn("proxy_request_buffering off;", file_location)
+
+    async def _assert_size_gate(self, path, length, passed, detail=None):
+        called = []
+
+        async def app(scope, receive, send):
+            called.append(scope["path"])
+            await send({"type": "http.response.start", "status": 204, "headers": []})
+            await send({"type": "http.response.body", "body": b""})
+
+        middleware = AuthAndSize(app, self.settings.key, self.settings.max_dataset_bytes)
+        scope = {
+            "type": "http",
+            "method": "POST",
+            "path": path,
+            "headers": [
+                (b"x-ncf-worker-key", self.settings.key.encode()),
+                (b"content-length", str(length).encode()),
+            ],
+        }
+        messages = []
+
+        async def receive():
+            return {"type": "http.request", "body": b"", "more_body": False}
+
+        async def send(message):
+            messages.append(message)
+
+        await middleware(scope, receive, send)
+        if passed:
+            self.assertEqual(called, [path])
+            self.assertEqual(messages[0]["status"], 204)
+            return
+        self.assertEqual(called, [])
+        self.assertEqual(messages[0]["status"], 413)
+        body = b"".join(message.get("body", b"") for message in messages if message["type"] == "http.response.body")
+        self.assertEqual(json.loads(body), {"detail": detail})
 
     def test_body_limit_validation_never_echoes_data(self):
         response = self.client.post("/datasets", headers={**self.headers, "Content-Length": str(MAX_BODY_BYTES + 1)}, content="{}")
