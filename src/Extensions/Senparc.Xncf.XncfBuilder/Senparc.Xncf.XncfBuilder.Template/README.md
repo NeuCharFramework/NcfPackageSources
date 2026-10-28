@@ -13,7 +13,7 @@
 
 ```bash
 dotnet new install Senparc.Xncf.XncfBuilder.Template
-dotnet new xncf -n MyProject --force --UseDatabase true
+dotnet new xncf -n MyProject --force --Database true
 ```
 
 Use `dotnet new uninstall Senparc.Xncf.XncfBuilder.Template` to remove the installed template package.
@@ -21,7 +21,7 @@ Use `dotnet new uninstall Senparc.Xncf.XncfBuilder.Template` to remove the insta
 ## Key template contract
 
 - Template short name: `xncf`.
-- `--UseDatabase true` includes the database model and migration structure.
+- `--Database true` includes the database model and migration structure.
 - Organization and module placeholders are replaced during template instantiation; review namespaces, package IDs, UIDs, and database names after generation.
 
 The package is a scaffolding artifact, not a runtime module. Generated code must be reviewed, tested, and secured before publication.
