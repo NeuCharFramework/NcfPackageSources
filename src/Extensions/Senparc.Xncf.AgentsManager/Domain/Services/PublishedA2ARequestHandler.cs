@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.15.0-preview11 增强 A2A 智能体、ChatGroup 执行能力与管理界面
 
+    修改标识：Senparc - 20261028
+    修改描述：多租户模式下 A2A 发布端点恢复请求租户上下文，A2AServer 缓存按租户隔离
+
 ----------------------------------------------------------------*/
 
 using A2A;
@@ -17,6 +20,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using System;
 using System.Collections.Concurrent;
@@ -136,18 +141,28 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
                 throw new A2AException("A2A agent is unavailable.", A2AErrorCode.InvalidRequest);
             }
 
-            await ValidateInboundRequestAsync(agentKey, httpContext, cancellationToken);
-            return _servers.GetOrAdd(agentKey, key => new A2AServer(
-                new LocalPublishedA2AAgentHandler(key, _scopeFactory, _loggerFactory.CreateLogger<LocalPublishedA2AAgentHandler>()),
+            // 捕获当前请求的租户上下文：A2A 端点同样经过 TenantMiddleware，
+            // 请求已按 TenantRule 解析租户。验证与后续 Agent 执行都在新建作用域中进行，
+            // 必须显式还原租户，否则多租户模式下发布型 A2A 整体 fail-closed；
+            // 且不同租户可发布相同 PublicAgentKey，缓存键需包含租户维度，
+            // 防止 A2AServer（含 InMemoryTaskStore 与绑定的执行上下文）跨租户复用。
+            var tenantSnapshot = RequestTenantSnapshot.Capture(httpContext?.RequestServices);
+            await ValidateInboundRequestAsync(agentKey, httpContext, tenantSnapshot, cancellationToken);
+            var serverCacheKey = SiteConfig.SenparcCoreSetting.EnableMultiTenant
+                ? $"{tenantSnapshot.Id}:{agentKey}"
+                : agentKey;
+            return _servers.GetOrAdd(serverCacheKey, _ => new A2AServer(
+                new LocalPublishedA2AAgentHandler(agentKey, _scopeFactory, tenantSnapshot, _loggerFactory.CreateLogger<LocalPublishedA2AAgentHandler>()),
                 new InMemoryTaskStore(),
                 new ChannelEventNotifier(),
                 _loggerFactory.CreateLogger<A2AServer>(),
                 new A2AServerOptions { AutoAppendHistory = false }));
         }
 
-        private async Task ValidateInboundRequestAsync(string agentKey, HttpContext httpContext, CancellationToken cancellationToken)
+        private async Task ValidateInboundRequestAsync(string agentKey, HttpContext httpContext, RequestTenantSnapshot tenantSnapshot, CancellationToken cancellationToken)
         {
             using var scope = _scopeFactory.CreateScope();
+            tenantSnapshot.Restore(scope.ServiceProvider);
             var publishedService = scope.ServiceProvider.GetRequiredService<PublishedA2AAgentService>();
             var templateService = scope.ServiceProvider.GetRequiredService<AgentsTemplateService>();
             var publishedAgent = await publishedService.GetByPublicAgentKeyAsync(agentKey)
@@ -207,15 +222,18 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
     {
         private readonly string _publicAgentKey;
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly RequestTenantSnapshot _tenantSnapshot;
         private readonly ILogger<LocalPublishedA2AAgentHandler> _logger;
 
         public LocalPublishedA2AAgentHandler(
             string publicAgentKey,
             IServiceScopeFactory scopeFactory,
+            RequestTenantSnapshot tenantSnapshot,
             ILogger<LocalPublishedA2AAgentHandler> logger)
         {
             _publicAgentKey = publicAgentKey;
             _scopeFactory = scopeFactory;
+            _tenantSnapshot = tenantSnapshot;
             _logger = logger;
         }
 
@@ -228,6 +246,7 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services
             }
 
             using var scope = _scopeFactory.CreateScope();
+            _tenantSnapshot.Restore(scope.ServiceProvider);
             try
             {
                 var factory = scope.ServiceProvider.GetRequiredService<PublishedA2AAgentFactory>();
