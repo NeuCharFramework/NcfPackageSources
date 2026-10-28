@@ -90,8 +90,10 @@ public sealed class WeixinClawAiMessageHandler : IWeixinClawMessageHandler
 
     private async Task<IWantToRun> GetOrCreateIWantToRunAsync(WeixinClawAccount account, WeixinClawMessageReceivedContext context)
     {
-        // 与 WechatAiContext 一致：以联系人 + PromptRangeCode 作为会话 Key，Prompt 更新后会重建
-        var key = $"{context.FromUserId}-{account.PromptRangeCode}";
+        // 与 WechatAiContext 一致：以联系人 + PromptRangeCode 作为会话 Key，Prompt 更新后会重建。
+        // AccountId 为租户作用域内的账号主键（全局唯一），将其纳入 Key，避免多租户下
+        // 不同租户命中同一缓存项（IWantToRun 持有 AI 模型与密钥配置，跨租户复用会造成信息泄露）
+        var key = $"{context.AccountId}:{context.FromUserId}-{account.PromptRangeCode}";
         if (s_iWantToRuns.TryGetValue(key, out var cached))
         {
             return cached;
