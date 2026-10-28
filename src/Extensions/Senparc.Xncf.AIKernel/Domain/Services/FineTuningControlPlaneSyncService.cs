@@ -10,12 +10,16 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 同步微调控制面与外部训练状态
 
+    修改标识：Senparc - 20261028
+    修改描述：多租户模式下按租户迭代同步微调控制面，避免根作用域缺失租户上下文
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.AIKernel.Domain.Models.FineTuning;
 using Senparc.Xncf.AIKernel.Models;
 using System;
@@ -27,15 +31,15 @@ namespace Senparc.Xncf.AIKernel.Domain.Services;
 public sealed class FineTuningControlPlaneSyncService : BackgroundService
 {
     private static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(30);
-    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly IBackgroundTenantScopeFactory _tenantScopeFactory;
     private readonly ILogger<FineTuningControlPlaneSyncService> _logger;
     private readonly IOptions<FineTuningWorkerOptions> _options;
 
-    public FineTuningControlPlaneSyncService(IServiceScopeFactory scopeFactory,
+    public FineTuningControlPlaneSyncService(IBackgroundTenantScopeFactory tenantScopeFactory,
         ILogger<FineTuningControlPlaneSyncService> logger,
         IOptions<FineTuningWorkerOptions> options)
     {
-        _scopeFactory = scopeFactory;
+        _tenantScopeFactory = tenantScopeFactory;
         _logger = logger;
         _options = options;
     }
@@ -59,21 +63,27 @@ public sealed class FineTuningControlPlaneSyncService : BackgroundService
 
         try
         {
-            using var scope = _scopeFactory.CreateScope();
-            var configuration = scope.ServiceProvider.GetRequiredService<IFineTuningWorkerConfigurationProvider>();
-            var worker = scope.ServiceProvider.GetRequiredService<FineTuningWorkerClient>();
-            var controlPlane = scope.ServiceProvider.GetRequiredService<IFineTuningControlPlaneService>();
-            var workers = await configuration.GetWorkersAsync(stoppingToken);
-
-            foreach (var profile in workers)
-            {
-                if (!profile.Enabled || !profile.HasConfiguredSecret)
+            // 微调工作器与任务数据均挂在租户下，后台同步必须按租户迭代，
+            // 否则根作用域缺少租户上下文（多租户模式下 fail-closed 或写入错误租户）。
+            await _tenantScopeFactory.ForEachEnabledTenantAsync(
+                async (scopeServiceProvider, ct) =>
                 {
-                    continue;
-                }
+                    var configuration = scopeServiceProvider.GetRequiredService<IFineTuningWorkerConfigurationProvider>();
+                    var worker = scopeServiceProvider.GetRequiredService<FineTuningWorkerClient>();
+                    var controlPlane = scopeServiceProvider.GetRequiredService<IFineTuningControlPlaneService>();
+                    var workers = await configuration.GetWorkersAsync(ct).ConfigureAwait(false);
 
-                await SynchronizeWorkerAsync(profile.Alias, worker, controlPlane, stoppingToken);
-            }
+                    foreach (var profile in workers)
+                    {
+                        if (!profile.Enabled || !profile.HasConfiguredSecret)
+                        {
+                            continue;
+                        }
+
+                        await SynchronizeWorkerAsync(profile.Alias, worker, controlPlane, ct).ConfigureAwait(false);
+                    }
+                },
+                stoppingToken).ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
         {
