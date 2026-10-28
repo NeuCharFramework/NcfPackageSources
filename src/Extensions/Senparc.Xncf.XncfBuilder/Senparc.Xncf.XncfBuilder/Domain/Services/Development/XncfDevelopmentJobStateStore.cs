@@ -12,6 +12,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
 
+    修改标识：Senparc - 20261028
+    修改描述：多租户模式下支持平台级（TenantId=0）租户上下文还原
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -258,12 +261,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             value.HasValue ? ToUtcOffset(value.Value) : null;
 
         /// <summary>
-        /// 在新作用域中还原任务所属租户的 RequestTenantInfo（仅多租户启用且 tenantId > 0 时生效），
+        /// 在新作用域中还原任务所属租户的 RequestTenantInfo（多租户启用时生效，
+        /// tenantId = 0 表示平台级/系统管理员数据），
         /// 使租户过滤查询与 TenantId 自动写入保持在任务所属租户内。
         /// </summary>
         private static void ApplyTenantContext(IServiceScope scope, int tenantId)
         {
-            if (!SiteConfig.SenparcCoreSetting.EnableMultiTenant || tenantId <= 0)
+            if (!SiteConfig.SenparcCoreSetting.EnableMultiTenant)
             {
                 return;
             }
