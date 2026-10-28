@@ -170,6 +170,7 @@
   <data name="Tenant.KeyExists" xml:space="preserve"><value>Правило сопоставления арендатора {0} уже существует</value></data>
   <data name="Tenant.SaveSuccess.Edit" xml:space="preserve"><value>Арендатор успешно обновлен</value></data>
   <data name="Tenant.SaveSuccess.Create" xml:space="preserve"><value>Арендатор успешно создан</value></data>
+  <data name="Tenant.PlatformAdminOnly" xml:space="preserve"><value>В режиме нескольких арендаторов управлять информацией об арендаторах может только администратор платформы!</value></data>
   <data name="Tenant.NotFound" xml:space="preserve"><value>Арендатор не найден</value></data>
   <data name="Tenant.SetInfoFailed" xml:space="preserve"><value>Не удалось установить информацию об арендаторе</value></data>
   <data name="Tenant.InitializeSuccess" xml:space="preserve"><value>Инициализация успешно завершена</value></data>

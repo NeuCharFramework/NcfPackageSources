@@ -625,4 +625,5 @@
   <data name="Tenant.DeleteLastTenantNotAllowed" xml:space="preserve"><value>The system must keep at least one enabled tenant; the last tenant cannot be deleted!</value></data>
   <data name="Tenant.DeleteHasAdminUsers" xml:space="preserve"><value>Tenant {0} still has {1} admin account(s). Reassign or delete them before deleting the tenant!</value></data>
   <data name="Tenant.DeleteNotFound" xml:space="preserve"><value>Tenant not found!</value></data>
+  <data name="Tenant.PlatformAdminOnly" xml:space="preserve"><value>In multi-tenant mode, only the platform administrator can manage tenant information!</value></data>
 </root>

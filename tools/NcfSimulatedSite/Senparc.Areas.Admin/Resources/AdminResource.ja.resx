@@ -170,6 +170,7 @@
   <data name="Tenant.KeyExists" xml:space="preserve"><value>テナント一致ルール {0} は既に存在します</value></data>
   <data name="Tenant.SaveSuccess.Edit" xml:space="preserve"><value>テナントの更新に成功しました</value></data>
   <data name="Tenant.SaveSuccess.Create" xml:space="preserve"><value>テナントの作成に成功しました</value></data>
+  <data name="Tenant.PlatformAdminOnly" xml:space="preserve"><value>マルチテナントモードでは、プラットフォーム管理者のみがテナント情報を管理できます！</value></data>
   <data name="Tenant.NotFound" xml:space="preserve"><value>テナントが存在しません</value></data>
   <data name="Tenant.SetInfoFailed" xml:space="preserve"><value>テナント情報の設定に失敗しました</value></data>
   <data name="Tenant.InitializeSuccess" xml:space="preserve"><value>初期化に成功しました</value></data>
