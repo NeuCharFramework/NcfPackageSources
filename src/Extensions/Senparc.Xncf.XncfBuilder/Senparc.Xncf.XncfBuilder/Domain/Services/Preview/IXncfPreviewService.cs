@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Senparc.Ncf.Core.MultiTenant;
 
 namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 {
@@ -184,7 +185,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         Task<XncfPreviewSessionInfo> StartAsync(
             XncfPreviewStartOptions options,
             Action<string> log = null,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null);
 
         Task<bool> StopAsync(
             string sessionId,

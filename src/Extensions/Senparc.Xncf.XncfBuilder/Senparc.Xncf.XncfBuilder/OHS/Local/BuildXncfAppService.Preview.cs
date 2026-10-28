@@ -20,6 +20,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Preview;
 using Senparc.Xncf.XncfBuilder.OHS.PL;
@@ -49,6 +50,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                 try
                 {
                     var previewService = ServiceProvider.GetRequiredService<IXncfPreviewService>();
+                    // 传递当前请求的租户上下文，预览持久化数据归属该租户
+                    var ambientTenant = ServiceProvider.GetRequiredService<RequestTenantInfo>();
                     var session = await previewService.StartAsync(
                         new XncfPreviewStartOptions
                         {
@@ -59,7 +62,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                             EnvironmentName = request.EnvironmentName
                         },
                         message => logger.Append(message),
-                        this.CancellationToken).ConfigureAwait(false);
+                        this.CancellationToken,
+                        ambientTenant).ConfigureAwait(false);
 
                     response.Success = true;
                     response.Data = BuildPreviewStartedHtml(

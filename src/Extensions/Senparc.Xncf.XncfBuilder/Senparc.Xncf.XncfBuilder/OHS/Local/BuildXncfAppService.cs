@@ -37,6 +37,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.VersionManager;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
@@ -449,6 +450,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         try
                         {
                             var previewService = base.ServiceProvider.GetRequiredService<IXncfPreviewService>();
+                            var ambientTenant = base.ServiceProvider.GetRequiredService<RequestTenantInfo>();
                             var previewSession = await previewService.StartAsync(
                                 new XncfPreviewStartOptions
                                 {
@@ -459,7 +461,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                                     EnvironmentName = request.PreviewEnvironmentName
                                 },
                                 message => logger.Append(message),
-                                base.CancellationToken).ConfigureAwait(false);
+                                base.CancellationToken,
+                                ambientTenant).ConfigureAwait(false);
 
                             response.Data = $"项目生成成功！请打开 {buildResult.SolutionFilePath} 解决方案文件查看已附加的项目！<br />" +
                                 BuildPreviewStartedHtml(
