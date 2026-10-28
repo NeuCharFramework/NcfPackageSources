@@ -10,9 +10,13 @@
     修改标识：Senparc - 20261005
     修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261028
+    修改描述：多租户模式下登录确认落库前还原请求租户上下文，保证账号归属发起租户
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.WeixinManager.Domain.Services;
 using System;
@@ -71,7 +75,8 @@ public sealed class WeixinClawLoginService
     public async Task<WeixinClawLoginStatus> PollAsync(
         string sessionId,
         string verifyCode = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        RequestTenantSnapshot? tenant = null)
     {
         if (!_sessions.TryGetValue(sessionId, out var session))
         {
@@ -144,6 +149,7 @@ public sealed class WeixinClawLoginService
                     PromptRangeCode = session.PromptRangeCode,
                     Enabled = true
                 };
+                tenant?.Restore(scope.ServiceProvider);
                 var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
                 var saved = await accountService.SaveSettingsAsync(account).ConfigureAwait(false);
                 saved.SetAuthenticated(

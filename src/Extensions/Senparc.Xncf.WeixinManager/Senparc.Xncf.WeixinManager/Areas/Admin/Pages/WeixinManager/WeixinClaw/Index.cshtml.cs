@@ -10,11 +10,15 @@
     修改标识：Senparc - 20261005
     修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261028
+    修改描述：登录状态轮询捕获请求租户快照并传入登录服务，保证多租户下账号落库归属正确
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.WeixinManager.Domain.Models.VD.Admin.WeixinManager;
@@ -242,7 +246,8 @@ public class IndexModel : BaseAdminWeixinManagerModel
     {
         try
         {
-            return Ok(await _loginService.PollAsync(sessionId, verifyCode).ConfigureAwait(false));
+            var tenantSnapshot = RequestTenantSnapshot.Capture(HttpContext.RequestServices);
+            return Ok(await _loginService.PollAsync(sessionId, verifyCode, tenant: tenantSnapshot).ConfigureAwait(false));
         }
         catch (Exception ex)
         {
