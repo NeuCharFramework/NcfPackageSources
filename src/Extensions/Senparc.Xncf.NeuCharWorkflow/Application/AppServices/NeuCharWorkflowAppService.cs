@@ -34,9 +34,14 @@
     修改标识：Senparc - 20261021
     修改描述：v0.4.4 提供工作流导入导出接口
 
+    修改标识：Senparc - 20261028
+    修改描述：vNext 启动运行时捕获请求租户快照，执行作用域恢复租户上下文
+
 ----------------------------------------------------------------*/
 
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Service;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -82,6 +87,7 @@ public sealed class NeuCharWorkflowAppService
     private readonly NeuCharWorkflowChatMessageService _chatMessageService;
     private readonly IAgentWorkflowReferenceValidator? _agentWorkflowReferenceValidator;
     private readonly ILogger<NeuCharWorkflowAppService> _logger;
+    private readonly IServiceProvider? _serviceProvider;
 
     public NeuCharWorkflowAppService(
         NeuCharWorkflowService workflowService,
@@ -98,7 +104,8 @@ public sealed class NeuCharWorkflowAppService
         NeuCharWorkflowChatSessionService chatSessionService,
         NeuCharWorkflowChatMessageService chatMessageService,
         IEnumerable<IAgentWorkflowReferenceValidator>? agentWorkflowReferenceValidators = null,
-        ILogger<NeuCharWorkflowAppService>? logger = null)
+        ILogger<NeuCharWorkflowAppService>? logger = null,
+        IServiceProvider? serviceProvider = null)
     {
         _workflowService = workflowService;
         _workflowVersionService = workflowVersionService;
@@ -115,6 +122,7 @@ public sealed class NeuCharWorkflowAppService
         _chatMessageService = chatMessageService;
         _logger = logger ?? NullLogger<NeuCharWorkflowAppService>.Instance;
         _agentWorkflowReferenceValidator = agentWorkflowReferenceValidators?.FirstOrDefault();
+        _serviceProvider = serviceProvider;
     }
 
     public async Task<IReadOnlyList<WorkflowListItem>> GetListAsync(int adminUserId, CancellationToken cancellationToken = default)
@@ -561,7 +569,7 @@ public sealed class NeuCharWorkflowAppService
     public async Task<Guid> StartRunAsync(int workflowId, int adminUserId, string input, CancellationToken cancellationToken = default)
     {
         await ValidateRunAsync(workflowId, adminUserId, input, cancellationToken).ConfigureAwait(false);
-        if (!_runCoordinator.TryStart(workflowId, adminUserId, input, out var runId, out var error, "manual"))
+        if (!_runCoordinator.TryStart(workflowId, adminUserId, input, out var runId, out var error, "manual", RequestTenantSnapshot.Capture(_serviceProvider)))
         {
             throw new WorkflowConflictException(error);
         }
@@ -1039,7 +1047,7 @@ public sealed class NeuCharWorkflowAppService
         }
 
         var input = JsonSerializer.Serialize(selectedValues, new JsonSerializerOptions(JsonSerializerDefaults.Web));
-        if (!_runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, input, out var runId, out var error, "webhook"))
+        if (!_runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, input, out var runId, out var error, "webhook", RequestTenantSnapshot.Capture(_serviceProvider)))
         {
             return WorkflowWebhookTriggerResult.Conflict(error);
         }
@@ -1119,7 +1127,7 @@ public sealed class NeuCharWorkflowAppService
         }
         var workflow = access.Workflow!;
         _chatSessionService.AddMessage(workflowId, participantKey, NeuCharWorkflowChatSessionService.RoleUser, normalizedMessage);
-        if (!_runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, normalizedMessage, out var runId, out var error, "chat"))
+        if (!_runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, normalizedMessage, out var runId, out var error, "chat", RequestTenantSnapshot.Capture(_serviceProvider)))
         {
             return WorkflowChatSendResult.Conflict(error);
         }

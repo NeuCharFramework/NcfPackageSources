@@ -7,6 +7,9 @@
     创建标识：Senparc - 20261028
     修改描述：vNext 新增请求租户快照，统一后台任务/隔离作用域的租户上下文传播
 
+    修改标识：Senparc - 20261028
+    修改描述：新增 From(RequestTenantInfo) 工厂方法，供租户作用域内直接构造快照
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -79,6 +82,24 @@ namespace Senparc.Ncf.Core.MultiTenant
                 requestTenantInfo.Name,
                 requestTenantInfo.TenantKey,
                 requestTenantInfo.MatchSuccess);
+        }
+
+        /// <summary>
+        /// 从作用域内已存在的 RequestTenantInfo 构造快照（不捕获异常，调用方需保证作用域有效）。
+        /// </summary>
+        /// <param name="info">目标作用域中的 RequestTenantInfo</param>
+        public static RequestTenantSnapshot From(RequestTenantInfo info)
+        {
+            if (info == null || !info.MatchSuccess)
+            {
+                return Unmatched;
+            }
+
+            return new RequestTenantSnapshot(
+                info.Id,
+                info.Name,
+                info.TenantKey,
+                info.MatchSuccess);
         }
 
         /// <summary>

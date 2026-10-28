@@ -25,11 +25,15 @@
     修改标识：Senparc - 20260915
     修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
 
+    修改标识：Senparc - 20261028
+    修改描述：vNext 运行状态携带发起租户快照，执行作用域恢复租户上下文
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Senparc.Ncf.Core.MultiTenant;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -86,13 +90,14 @@ public sealed class NeuCharWorkflowRunCoordinator
         private readonly CancellationTokenSource _manualAbort = new();
         private long _sequence;
 
-        public RunState(Guid runId, int workflowId, int adminUserId, string input, string source)
+        public RunState(Guid runId, int workflowId, int adminUserId, string input, string source, RequestTenantSnapshot? tenant)
         {
             RunId = runId;
             WorkflowId = workflowId;
             AdminUserId = adminUserId;
             Input = input;
             Source = source;
+            Tenant = tenant;
             StartedAt = DateTimeOffset.UtcNow;
         }
 
@@ -101,6 +106,7 @@ public sealed class NeuCharWorkflowRunCoordinator
         public int AdminUserId { get; }
         public string Input { get; }
         public string Source { get; }
+        public RequestTenantSnapshot? Tenant { get; }
         public DateTimeOffset StartedAt { get; }
         public bool Running { get; private set; } = true;
         public bool? Succeeded { get; private set; }
@@ -238,13 +244,14 @@ public sealed class NeuCharWorkflowRunCoordinator
         string input,
         out Guid runId,
         out string error,
-        string source = "manual")
+        string source = "manual",
+        RequestTenantSnapshot? tenant = null)
     {
         lock (_startGate)
         {
             Cleanup();
             runId = Guid.NewGuid();
-            var state = new RunState(runId, workflowId, adminUserId, input ?? string.Empty, NormalizeSource(source));
+            var state = new RunState(runId, workflowId, adminUserId, input ?? string.Empty, NormalizeSource(source), tenant);
             _runs[runId] = state;
             _ = ExecuteAsync(state);
             error = null;
@@ -308,6 +315,9 @@ public sealed class NeuCharWorkflowRunCoordinator
         try
         {
             using var scope = _scopeFactory.CreateScope();
+            // 恢复发起运行的租户上下文（手动/Webhook/Chat 来自请求作用域，定时来自租户作用域）；
+            // 未携带快照时保持原有 fail-closed 行为。
+            state.Tenant?.Restore(scope.ServiceProvider);
             var workflowService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowService>();
             var executionLogService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowExecutionLogService>();
             var engine = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowEngine>();
