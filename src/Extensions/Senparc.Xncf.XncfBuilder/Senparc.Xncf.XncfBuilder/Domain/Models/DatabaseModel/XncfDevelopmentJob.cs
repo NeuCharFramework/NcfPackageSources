@@ -15,7 +15,6 @@
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Development;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -25,7 +24,8 @@ namespace Senparc.Xncf.XncfBuilder
 {
     [Table(Register.DATABASE_PREFIX + nameof(XncfDevelopmentJob))]
     [Serializable]
-    public class XncfDevelopmentJob : EntityBase<int>, IIgnoreMulitTenant
+    // 统一使用租户底层支持：多租户启用时本表数据按 TenantId 隔离（与 PromptRange 等 XNCF 模块一致）
+    public class XncfDevelopmentJob : EntityBase<int>
     {
         [Required, MaxLength(64)]
         public string JobId { get; private set; }

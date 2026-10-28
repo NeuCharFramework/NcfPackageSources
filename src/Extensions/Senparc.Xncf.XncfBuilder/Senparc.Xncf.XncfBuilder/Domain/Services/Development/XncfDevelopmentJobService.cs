@@ -15,6 +15,7 @@
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Preview;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Workspace;
@@ -51,7 +52,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 
         public async Task<XncfDevelopmentJobInfo> CreateAsync(
             XncfDevelopmentCreateOptions options,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null)
         {
             ArgumentNullException.ThrowIfNull(options);
             var targetSolution = ValidateSolutionPath(options.SolutionFilePath);
@@ -60,6 +62,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             var snapshot = new XncfDevelopmentJobSnapshot
             {
                 JobId = "xncfdev-" + Guid.NewGuid().ToString("N"),
+                // 任务在创建时冻结所属租户；后续所有读写都在该租户的 scope 中执行
+                TenantId = ambientTenant?.MatchSuccess == true ? ambientTenant.Id : 0,
                 OwnerAdminUserId = Math.Max(options.OwnerAdminUserId, 0),
                 Mode = options.Mode,
                 ModuleProjectName = moduleName,
@@ -122,9 +126,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
         public async Task<XncfDevelopmentFileReadResult> ReadFileAsync(
             string jobId,
             string relativeFilePath,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null)
         {
-            var snapshot = await GetRequiredSnapshotAsync(jobId, cancellationToken).ConfigureAwait(false);
+            var snapshot = await GetRequiredSnapshotAsync(jobId, ambientTenant, cancellationToken).ConfigureAwait(false);
             EnsureWorkspaceAvailable(snapshot);
             var moduleDirectory = XncfWorkspaceFileService.ResolveModuleDirectory(
                 snapshot.WorkspaceSolutionFilePath,
@@ -139,9 +144,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             string relativeFilePath,
             string content,
             string expectedSha256 = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null)
         {
-            return await RunLockedAsync(jobId, async snapshot =>
+            return await RunLockedAsync(jobId, ambientTenant, async snapshot =>
             {
                 if (snapshot.Stage is XncfDevelopmentJobStage.AwaitingHumanApproval
                     or XncfDevelopmentJobStage.Applied
@@ -179,9 +185,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 
         public async Task<XncfDevelopmentJobInfo> ValidateAsync(
             string jobId,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null)
         {
-            return await RunLockedAsync(jobId, async snapshot =>
+            return await RunLockedAsync(jobId, ambientTenant, async snapshot =>
             {
                 EnsureWorkspaceAvailable(snapshot);
                 snapshot.Stage = XncfDevelopmentJobStage.Validating;
@@ -213,9 +220,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 
         public async Task<XncfDevelopmentJobInfo> StartSandboxPreviewAsync(
             string jobId,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null)
         {
-            return await RunLockedAsync(jobId, async snapshot =>
+            return await RunLockedAsync(jobId, ambientTenant, async snapshot =>
             {
                 EnsureWorkspaceAvailable(snapshot);
                 if (snapshot.Stage is XncfDevelopmentJobStage.Applied or XncfDevelopmentJobStage.Discarded)
@@ -285,9 +293,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 
         public async Task<XncfDevelopmentJobInfo> RequestMergeApprovalAsync(
             string jobId,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null)
         {
-            return await RunLockedAsync(jobId, async snapshot =>
+            return await RunLockedAsync(jobId, ambientTenant, async snapshot =>
             {
                 if (snapshot.Stage != XncfDevelopmentJobStage.ReadyForReview)
                 {
@@ -306,9 +315,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
         public async Task<XncfDevelopmentJobInfo> ApplyApprovedJobAsync(
             string jobId,
             string confirmationPhrase,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null)
         {
-            return await RunLockedAsync(jobId, async snapshot =>
+            return await RunLockedAsync(jobId, ambientTenant, async snapshot =>
             {
                 if (snapshot.Stage != XncfDevelopmentJobStage.AwaitingHumanApproval)
                 {
@@ -343,9 +353,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 
         public async Task<XncfDevelopmentJobInfo> DiscardAsync(
             string jobId,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null)
         {
-            return await RunLockedAsync(jobId, async snapshot =>
+            return await RunLockedAsync(jobId, ambientTenant, async snapshot =>
             {
                 if (!string.IsNullOrWhiteSpace(snapshot.SandboxSessionId))
                 {
@@ -365,14 +376,22 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<XncfDevelopmentJobInfo> GetAsync(string jobId, CancellationToken cancellationToken = default) =>
-            ToInfo(await GetRequiredSnapshotAsync(jobId, cancellationToken).ConfigureAwait(false));
+        public async Task<XncfDevelopmentJobInfo> GetAsync(
+            string jobId,
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null) =>
+            ToInfo(await GetRequiredSnapshotAsync(jobId, ambientTenant, cancellationToken).ConfigureAwait(false));
 
         public async Task<IReadOnlyList<XncfDevelopmentJobInfo>> GetRecentAsync(
             int maxCount = 100,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null)
         {
-            var jobs = await _stateStore.GetRecentAsync(Math.Clamp(maxCount, 1, 200), cancellationToken).ConfigureAwait(false);
+            var jobs = await _stateStore.GetRecentAsync(
+                    Math.Clamp(maxCount, 1, 200),
+                    ambientTenant?.MatchSuccess == true ? ambientTenant.Id : 0,
+                    cancellationToken)
+                .ConfigureAwait(false);
             return jobs.Select(ToInfo).ToArray();
         }
 
@@ -673,6 +692,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 
         private async Task<T> RunLockedAsync<T>(
             string jobId,
+            RequestTenantInfo? ambientTenant,
             Func<XncfDevelopmentJobSnapshot, Task<T>> operation,
             CancellationToken cancellationToken)
         {
@@ -685,7 +705,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
-                var snapshot = await GetRequiredSnapshotAsync(normalizedJobId, cancellationToken).ConfigureAwait(false);
+                var snapshot = await GetRequiredSnapshotAsync(normalizedJobId, ambientTenant, cancellationToken).ConfigureAwait(false);
                 return await operation(snapshot).ConfigureAwait(false);
             }
             finally
@@ -706,9 +726,16 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             snapshot.DiffSummary = diff.Summary;
         }
 
-        private async Task<XncfDevelopmentJobSnapshot> GetRequiredSnapshotAsync(string jobId, CancellationToken cancellationToken)
+        private async Task<XncfDevelopmentJobSnapshot> GetRequiredSnapshotAsync(
+            string jobId,
+            RequestTenantInfo? ambientTenant,
+            CancellationToken cancellationToken)
         {
-            var snapshot = await _stateStore.GetAsync(jobId, cancellationToken).ConfigureAwait(false);
+            var snapshot = await _stateStore.GetAsync(
+                    jobId,
+                    ambientTenant?.MatchSuccess == true ? ambientTenant.Id : 0,
+                    cancellationToken)
+                .ConfigureAwait(false);
             return snapshot ?? throw new InvalidOperationException("开发任务不存在，或任务记录已过期。");
         }
 

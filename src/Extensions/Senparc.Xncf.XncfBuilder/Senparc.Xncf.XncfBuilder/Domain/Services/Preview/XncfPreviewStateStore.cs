@@ -16,7 +16,10 @@
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Repository;
 using System;
 using System.Collections.Generic;
@@ -28,6 +31,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 {
     public sealed class XncfPreviewPersistenceSnapshot
     {
+        /// <summary>
+        /// 数据所属租户（多租户启用时用于恢复该租户的持久化上下文；0 表示单租户/系统公共）
+        /// </summary>
+        public int TenantId { get; init; }
+
         public string SessionId { get; init; }
 
         public string ModuleProjectName { get; init; }
@@ -92,6 +100,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
     /// <summary>
     /// The preview service is a singleton because it owns child processes. This store creates a
     /// short-lived scope for every database operation so scoped repositories never escape a scope.
+    /// Multi-tenant deployments additionally restore the snapshot's tenant into each new scope so
+    /// tenant-filtered queries and TenantId auto-stamping stay within the owning tenant.
     /// </summary>
     public sealed class XncfPreviewStateStore : IXncfPreviewStateStore
     {
@@ -101,11 +111,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             "主站重新启动，无法安全重新绑定之前的预览进程。";
 
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IBackgroundTenantScopeFactory? _tenantScopeFactory;
         private readonly SemaphoreSlim _writeLock = new(1, 1);
 
-        public XncfPreviewStateStore(IServiceScopeFactory serviceScopeFactory)
+        public XncfPreviewStateStore(
+            IServiceScopeFactory serviceScopeFactory,
+            IBackgroundTenantScopeFactory? tenantScopeFactory = null)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _tenantScopeFactory = tenantScopeFactory;
         }
 
         public async Task<IReadOnlyList<XncfPreviewPersistenceSnapshot>> LoadRecentAndInterruptAsync(
@@ -118,84 +132,131 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 throw new ArgumentOutOfRangeException(nameof(maxCount));
             }
 
+            if (SiteConfig.SenparcCoreSetting.EnableMultiTenant)
+            {
+                // 多租户：逐个启用租户恢复/中断本租户的预览任务，快照携带 TenantId 供后续写回时还原租户上下文
+                var tenantScopeFactory = _tenantScopeFactory
+                    ?? throw new NcfTenantException("多租户预览持久化需要 IBackgroundTenantScopeFactory。");
+                await _writeLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    var snapshots = new List<XncfPreviewPersistenceSnapshot>();
+                    await tenantScopeFactory.ForEachEnabledTenantAsync(
+                        async (tenantServiceProvider, tenantCancellationToken) =>
+                        {
+                            var tenantInfo = tenantServiceProvider.GetRequiredService<RequestTenantInfo>();
+                            var tenantSnapshots = await LoadAndInterruptCoreAsync(
+                                    tenantServiceProvider,
+                                    tenantInfo.Id,
+                                    maxCount,
+                                    interruptedAt,
+                                    tenantCancellationToken)
+                                .ConfigureAwait(false);
+                            snapshots.AddRange(tenantSnapshots);
+                        },
+                        cancellationToken).ConfigureAwait(false);
+                    return snapshots.ToArray();
+                }
+                finally
+                {
+                    _writeLock.Release();
+                }
+            }
+
             await _writeLock.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
                 await using var scope = _serviceScopeFactory.CreateAsyncScope();
-                var taskRepository = scope.ServiceProvider.GetRequiredService<IRepositoryBase<XncfPreviewTask>>();
-                var hostRepository = scope.ServiceProvider.GetRequiredService<IRepositoryBase<XncfPreviewHost>>();
-
-                cancellationToken.ThrowIfCancellationRequested();
-                var unfinishedTasks = await taskRepository.GetObjectListAsync(
-                        task => !task.Flag && task.Stage <= XncfPreviewStage.Stopping,
-                        task => task.Id,
-                        OrderingType.Ascending,
-                        0,
-                        0)
-                    .ConfigureAwait(false);
-                foreach (var task in unfinishedTasks)
-                {
-                    task.MarkInterrupted(interruptedAt, RestartInterruptedTaskMessage);
-                }
-                if (unfinishedTasks.Count > 0)
-                {
-                    await taskRepository.SaveObjectListAsync(unfinishedTasks).ConfigureAwait(false);
-                }
-
-                cancellationToken.ThrowIfCancellationRequested();
-                var unfinishedHosts = await hostRepository.GetObjectListAsync(
-                        host => !host.Flag
-                                && host.Status >= XncfPreviewHostStatus.Starting
-                                && host.Status <= XncfPreviewHostStatus.Stopping,
-                        host => host.Id,
-                        OrderingType.Ascending,
-                        0,
-                        0)
-                    .ConfigureAwait(false);
-                foreach (var host in unfinishedHosts)
-                {
-                    host.MarkInterrupted(interruptedAt, RestartInterruptedHostMessage);
-                }
-                if (unfinishedHosts.Count > 0)
-                {
-                    await hostRepository.SaveObjectListAsync(unfinishedHosts).ConfigureAwait(false);
-                }
-
-                cancellationToken.ThrowIfCancellationRequested();
-                var recentTasks = await taskRepository.GetObjectListAsync(
-                        task => !task.Flag,
-                        task => task.StartedAtUtc,
-                        OrderingType.Descending,
-                        1,
-                        maxCount)
-                    .ConfigureAwait(false);
-                if (recentTasks.Count == 0)
-                {
-                    return Array.Empty<XncfPreviewPersistenceSnapshot>();
-                }
-
-                var sessionIds = recentTasks.Select(task => task.SessionId).ToArray();
-                var hosts = await hostRepository.GetObjectListAsync(
-                        host => !host.Flag && Enumerable.Contains(sessionIds, host.SessionId),
-                        host => host.UpdatedAtUtc,
-                        OrderingType.Descending,
-                        0,
-                        0)
-                    .ConfigureAwait(false);
-                var hostsBySessionId = hosts
-                    .GroupBy(host => host.SessionId, StringComparer.OrdinalIgnoreCase)
-                    .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
-
-                return recentTasks
-                    .Select(task => ToSnapshot(
-                        task,
-                        hostsBySessionId.TryGetValue(task.SessionId, out var host) ? host : null))
-                    .ToArray();
+                return await LoadAndInterruptCoreAsync(
+                    scope.ServiceProvider,
+                    tenantId: 0,
+                    maxCount,
+                    interruptedAt,
+                    cancellationToken).ConfigureAwait(false);
             }
             finally
             {
                 _writeLock.Release();
             }
+        }
+
+        private static async Task<IReadOnlyList<XncfPreviewPersistenceSnapshot>> LoadAndInterruptCoreAsync(
+            IServiceProvider tenantServiceProvider,
+            int tenantId,
+            int maxCount,
+            DateTimeOffset interruptedAt,
+            CancellationToken cancellationToken)
+        {
+            var taskRepository = tenantServiceProvider.GetRequiredService<IRepositoryBase<XncfPreviewTask>>();
+            var hostRepository = tenantServiceProvider.GetRequiredService<IRepositoryBase<XncfPreviewHost>>();
+
+            cancellationToken.ThrowIfCancellationRequested();
+            var unfinishedTasks = await taskRepository.GetObjectListAsync(
+                    task => !task.Flag && task.Stage <= XncfPreviewStage.Stopping,
+                    task => task.Id,
+                    OrderingType.Ascending,
+                    0,
+                    0)
+                .ConfigureAwait(false);
+            foreach (var task in unfinishedTasks)
+            {
+                task.MarkInterrupted(interruptedAt, RestartInterruptedTaskMessage);
+            }
+            if (unfinishedTasks.Count > 0)
+            {
+                await taskRepository.SaveObjectListAsync(unfinishedTasks).ConfigureAwait(false);
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            var unfinishedHosts = await hostRepository.GetObjectListAsync(
+                    host => !host.Flag
+                            && host.Status >= XncfPreviewHostStatus.Starting
+                            && host.Status <= XncfPreviewHostStatus.Stopping,
+                    host => host.Id,
+                    OrderingType.Ascending,
+                    0,
+                    0)
+                .ConfigureAwait(false);
+            foreach (var host in unfinishedHosts)
+            {
+                host.MarkInterrupted(interruptedAt, RestartInterruptedHostMessage);
+            }
+            if (unfinishedHosts.Count > 0)
+            {
+                await hostRepository.SaveObjectListAsync(unfinishedHosts).ConfigureAwait(false);
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            var recentTasks = await taskRepository.GetObjectListAsync(
+                    task => !task.Flag,
+                    task => task.StartedAtUtc,
+                    OrderingType.Descending,
+                    1,
+                    maxCount)
+                .ConfigureAwait(false);
+            if (recentTasks.Count == 0)
+            {
+                return Array.Empty<XncfPreviewPersistenceSnapshot>();
+            }
+
+            var sessionIds = recentTasks.Select(task => task.SessionId).ToArray();
+            var hosts = await hostRepository.GetObjectListAsync(
+                    host => !host.Flag && Enumerable.Contains(sessionIds, host.SessionId),
+                    host => host.UpdatedAtUtc,
+                    OrderingType.Descending,
+                    0,
+                    0)
+                .ConfigureAwait(false);
+            var hostsBySessionId = hosts
+                .GroupBy(host => host.SessionId, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+
+            return recentTasks
+                .Select(task => ToSnapshot(
+                    task,
+                    hostsBySessionId.TryGetValue(task.SessionId, out var host) ? host : null,
+                    tenantId))
+                .ToArray();
         }
 
         public async Task SaveAsync(
@@ -212,6 +273,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             try
             {
                 await using var scope = _serviceScopeFactory.CreateAsyncScope();
+                ApplyTenantContext(scope, snapshot.TenantId);
                 var taskRepository = scope.ServiceProvider.GetRequiredService<IRepositoryBase<XncfPreviewTask>>();
                 var task = await taskRepository
                     .GetFirstOrDefaultObjectAsync(item => !item.Flag && item.SessionId == snapshot.SessionId)
@@ -240,10 +302,12 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 
         private static XncfPreviewPersistenceSnapshot ToSnapshot(
             XncfPreviewTask task,
-            XncfPreviewHost host)
+            XncfPreviewHost host,
+            int tenantId)
         {
             return new XncfPreviewPersistenceSnapshot
             {
+                TenantId = tenantId,
                 SessionId = task.SessionId,
                 ModuleProjectName = task.ModuleProjectName,
                 SolutionFilePath = task.SolutionFilePath,
@@ -279,6 +343,22 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         private static DateTimeOffset? ToUtcOffset(DateTime? value)
         {
             return value.HasValue ? ToUtcOffset(value.Value) : null;
+        }
+
+        /// <summary>
+        /// 在新作用域中还原快照所属租户的 RequestTenantInfo（仅多租户启用且 tenantId > 0 时生效），
+        /// 使租户过滤查询与 TenantId 自动写入保持在数据所属租户内。
+        /// </summary>
+        private static void ApplyTenantContext(IServiceScope scope, int tenantId)
+        {
+            if (!SiteConfig.SenparcCoreSetting.EnableMultiTenant || tenantId <= 0)
+            {
+                return;
+            }
+
+            var requestTenantInfo = scope.ServiceProvider.GetRequiredService<RequestTenantInfo>();
+            requestTenantInfo.Id = tenantId;
+            requestTenantInfo.TryMatch(true);
         }
     }
 }

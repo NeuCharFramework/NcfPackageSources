@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Senparc.Ncf.Core.MultiTenant;
 
 namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 {
@@ -116,31 +117,37 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
     {
         Task<XncfDevelopmentJobInfo> CreateAsync(
             XncfDevelopmentCreateOptions options,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null);
 
         Task<XncfDevelopmentFileReadResult> ReadFileAsync(
             string jobId,
             string relativeFilePath,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null);
 
         Task<XncfDevelopmentFileWriteResult> WriteFileAsync(
             string jobId,
             string relativeFilePath,
             string content,
             string expectedSha256 = null,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null);
 
         Task<XncfDevelopmentJobInfo> ValidateAsync(
             string jobId,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null);
 
         Task<XncfDevelopmentJobInfo> StartSandboxPreviewAsync(
             string jobId,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null);
 
         Task<XncfDevelopmentJobInfo> RequestMergeApprovalAsync(
             string jobId,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null);
 
         /// <summary>
         /// This method is intentionally not a FunctionRender. It is invoked only from an
@@ -149,17 +156,23 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
         Task<XncfDevelopmentJobInfo> ApplyApprovedJobAsync(
             string jobId,
             string confirmationPhrase,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null);
 
         Task<XncfDevelopmentJobInfo> DiscardAsync(
             string jobId,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null);
 
-        Task<XncfDevelopmentJobInfo> GetAsync(string jobId, CancellationToken cancellationToken = default);
+        Task<XncfDevelopmentJobInfo> GetAsync(
+            string jobId,
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null);
 
         Task<IReadOnlyList<XncfDevelopmentJobInfo>> GetRecentAsync(
             int maxCount = 100,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null);
 
         XncfDevelopmentPersistenceInfo GetPersistenceStatus();
     }

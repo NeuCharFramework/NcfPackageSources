@@ -36,6 +36,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Senparc.Ncf.Core.MultiTenant;
 
 namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 {
@@ -193,7 +194,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         public async Task<XncfPreviewSessionInfo> StartAsync(
             XncfPreviewStartOptions options,
             Action<string> log = null,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null)
         {
             ArgumentNullException.ThrowIfNull(options);
             ValidateOptions(options);
@@ -204,6 +206,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 options.ModuleProjectName,
                 options.SolutionFilePath,
                 log);
+            // 捕获请求环境的租户上下文：后续后台状态写回据此在正确租户的 scope 中执行
+            newState.TenantId = ambientTenant?.MatchSuccess == true ? ambientTenant.Id : 0;
             _sessions[sessionId] = newState;
             SetStage(newState, XncfPreviewStage.Queued, "预览任务已进入队列。", null);
             await PersistStateAsync(newState, cancellationToken).ConfigureAwait(false);
@@ -1281,6 +1285,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 
                 snapshot = new XncfPreviewPersistenceSnapshot
                 {
+                    TenantId = state.TenantId,
                     SessionId = state.SessionId,
                     ModuleProjectName = state.ModuleProjectName,
                     SolutionFilePath = state.SolutionFilePath,
@@ -1321,6 +1326,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                 startedAt: snapshot.StartedAt);
             lock (state.SyncRoot)
             {
+                state.TenantId = snapshot.TenantId;
                 state.Stage = snapshot.Stage;
                 state.ProgressPercent = snapshot.ProgressPercent;
                 state.StatusMessage = snapshot.StatusMessage;
@@ -1473,6 +1479,11 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
             public string ModuleProjectName { get; }
 
             public string SolutionFilePath { get; }
+
+            /// <summary>
+            /// 会话创建时的租户（0 = 单租户/系统公共）。后台状态写回据此还原租户 scope。
+            /// </summary>
+            public int TenantId { get; set; }
 
             public string Url { get; set; }
 
