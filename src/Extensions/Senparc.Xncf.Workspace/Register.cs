@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.1.1 注册元数据存储，并在安装时迁移数据库
 
+    修改标识：Senparc - 20261028
+    修改描述：注册 IHttpContextAccessor，供单例存储捕获请求租户上下文
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -41,6 +44,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
     {
         services.Configure<WorkspaceOptions>(
             configuration.GetSection(WorkspaceOptions.SectionName));
+        services.AddHttpContextAccessor();
         services.AddDockerIsolatedRuntime(configuration);
         services.AddScoped<Domain.Models.DatabaseModel.WorkspaceSenparcEntities>(serviceProvider =>
             (Domain.Models.DatabaseModel.WorkspaceSenparcEntities)serviceProvider.GetRequiredService(
