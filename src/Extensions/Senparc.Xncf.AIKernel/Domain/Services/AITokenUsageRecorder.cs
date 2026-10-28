@@ -9,11 +9,16 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 异步记录 Token 用量，避免阻塞返回链路
 
+    修改标识：Senparc - 20261028
+    修改描述：多租户模式下在请求上下文捕获租户快照，并在持久化作用域中还原，避免用量记录丢失租户归属
+
 ----------------------------------------------------------------*/
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.AIKernel.Domain.Models.Usage;
 using System;
 using System.Threading;
@@ -34,7 +39,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         private readonly AITokenMonitorService _monitor;
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<AITokenUsageRecorder> _logger;
-        private readonly Channel<AITokenUsageRecord> _records = Channel.CreateUnbounded<AITokenUsageRecord>(
+        private readonly IHttpContextAccessor? _httpContextAccessor;
+        private readonly Channel<PendingTokenUsageRecord> _records = Channel.CreateUnbounded<PendingTokenUsageRecord>(
             new UnboundedChannelOptions
             {
                 SingleReader = true,
@@ -46,11 +52,13 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         public AITokenUsageRecorder(
             AITokenMonitorService monitor,
             IServiceScopeFactory scopeFactory,
-            ILogger<AITokenUsageRecorder> logger)
+            ILogger<AITokenUsageRecorder> logger,
+            IHttpContextAccessor? httpContextAccessor = null)
         {
             _monitor = monitor;
             _scopeFactory = scopeFactory;
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -102,7 +110,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
                 normalized.Success,
                 normalized.TenantId);
 
-            if (!_records.Writer.TryWrite(normalized))
+            if (!_records.Writer.TryWrite(new PendingTokenUsageRecord(normalized, CaptureCurrentTenant())))
             {
                 _logger.LogError(
                     "Token 用量记录队列已关闭，无法持久化记录。Source={Source}, Model={Model}",
@@ -111,22 +119,47 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
         }
 
+        /// <summary>
+        /// 捕获当前请求的租户快照（非请求上下文返回未匹配快照）。
+        /// </summary>
+        private RequestTenantSnapshot CaptureCurrentTenant()
+        {
+            var httpContext = _httpContextAccessor?.HttpContext;
+            return httpContext == null
+                ? RequestTenantSnapshot.Unmatched
+                : RequestTenantSnapshot.Capture(httpContext.RequestServices);
+        }
+
         private async Task ProcessAsync()
         {
-            await foreach (var record in _records.Reader.ReadAllAsync().ConfigureAwait(false))
+            await foreach (var pending in _records.Reader.ReadAllAsync().ConfigureAwait(false))
             {
-                await PersistAsync(record).ConfigureAwait(false);
+                await PersistAsync(pending).ConfigureAwait(false);
             }
         }
 
-        private async Task PersistAsync(AITokenUsageRecord record)
+        private sealed class PendingTokenUsageRecord
         {
+            public PendingTokenUsageRecord(AITokenUsageRecord record, RequestTenantSnapshot tenant)
+            {
+                Record = record;
+                Tenant = tenant;
+            }
+
+            public AITokenUsageRecord Record { get; }
+            public RequestTenantSnapshot Tenant { get; }
+        }
+
+        private async Task PersistAsync(PendingTokenUsageRecord pending)
+        {
+            var record = pending.Record;
             const int MaxAttempts = 3;
             for (var attempt = 1; attempt <= MaxAttempts; attempt++)
             {
                 try
                 {
                     using var scope = _scopeFactory.CreateScope();
+                    pending.Tenant.Restore(scope.ServiceProvider);
                     var usageService = scope.ServiceProvider.GetRequiredService<AITokenUsageService>();
                     await usageService.RecordAsync(
                         record.ModelAlias,
