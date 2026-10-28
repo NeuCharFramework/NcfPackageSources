@@ -10,16 +10,21 @@
     修改标识：Senparc - 20261021
     修改描述：v0.1.1 按策略执行工作区文件访问与命令
 
+    修改标识：Senparc - 20261028
+    修改描述：多租户模式下元数据读写在独立作用域中还原当前请求租户上下文
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Senparc.Xncf.Workspace.Abstractions;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.Workspace.Domain.Services;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Senparc.Xncf.Workspace;
 
@@ -32,6 +37,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly WorkspaceAgentConnectionPool _agentPool;
     private readonly WorkspaceChangeHub _changeHub;
+    private readonly IHttpContextAccessor? _httpContextAccessor;
     private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
 
     public WorkspaceStorage(
@@ -40,7 +46,8 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         ILogger<WorkspaceStorage> logger,
         IServiceScopeFactory scopeFactory,
         WorkspaceAgentConnectionPool agentPool,
-        WorkspaceChangeHub changeHub)
+        WorkspaceChangeHub changeHub,
+        IHttpContextAccessor? httpContextAccessor = null)
     {
         _options = options.Value;
         _rootPath = Path.GetFullPath(Path.IsPathRooted(_options.RootPath)
@@ -51,6 +58,18 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         _scopeFactory = scopeFactory;
         _agentPool = agentPool;
         _changeHub = changeHub;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    /// <summary>
+    /// 捕获当前请求的租户快照（非请求上下文返回未匹配快照，保持 fail-closed）。
+    /// </summary>
+    private RequestTenantSnapshot CaptureCurrentTenant()
+    {
+        var httpContext = _httpContextAccessor?.HttpContext;
+        return httpContext == null
+            ? RequestTenantSnapshot.Unmatched
+            : RequestTenantSnapshot.Capture(httpContext.RequestServices);
     }
 
     public async Task<WorkspaceDescriptor> CreateAsync(
@@ -107,6 +126,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
     private async Task PersistMetadataAsync(WorkspaceDescriptor descriptor, CancellationToken cancellationToken)
     {
         using var scope = _scopeFactory.CreateScope();
+        CaptureCurrentTenant().Restore(scope.ServiceProvider);
         var metadataStore = scope.ServiceProvider.GetRequiredService<IWorkspaceMetadataStore>();
         await metadataStore.UpsertAsync(descriptor, cancellationToken).ConfigureAwait(false);
     }
@@ -400,6 +420,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         var descriptor = await GetAsync(workspaceId, cancellationToken).ConfigureAwait(false);
         using (var referenceScope = _scopeFactory.CreateScope())
         {
+            CaptureCurrentTenant().Restore(referenceScope.ServiceProvider);
             foreach (var provider in referenceScope.ServiceProvider.GetServices<IWorkspaceReferenceProvider>())
             {
                 var references = await provider.GetReferencesAsync(workspaceId, cancellationToken)
@@ -429,6 +450,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         try
         {
             using var scope = _scopeFactory.CreateScope();
+            CaptureCurrentTenant().Restore(scope.ServiceProvider);
             var metadataStore = scope.ServiceProvider.GetRequiredService<IWorkspaceMetadataStore>();
             await metadataStore.DeleteAsync(workspaceId, cancellationToken).ConfigureAwait(false);
             metadataDeleted = true;
