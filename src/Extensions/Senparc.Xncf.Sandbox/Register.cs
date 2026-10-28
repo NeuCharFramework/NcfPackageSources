@@ -24,6 +24,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261028
+    修改描述：注册 IHttpContextAccessor，供单例编排器捕获请求租户上下文
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http;
@@ -83,6 +86,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
     {
         services.Configure<SandboxImageOptions>(configuration.GetSection(SandboxImageOptions.SectionName));
         services.Configure<SandboxDockerOptions>(configuration.GetSection(SandboxDockerOptions.SectionName));
+        services.AddHttpContextAccessor();
         services.AddDockerIsolatedRuntime(configuration);
         services.Configure<SandboxNcfPreviewOptions>(configuration.GetSection(SandboxNcfPreviewOptions.SectionName));
         services.AddSingleton<ISandboxImageResolver, SandboxImageResolver>();

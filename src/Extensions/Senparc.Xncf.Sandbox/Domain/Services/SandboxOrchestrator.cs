@@ -27,11 +27,16 @@
     修改标识：Senparc - 20261005
     修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261028
+    修改描述：多租户模式下单例编排器恢复请求租户上下文，后台 TTL/孤儿回收按租户迭代
+
 ----------------------------------------------------------------*/
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Domain.Models.DatabaseModel;
 using Senparc.Xncf.Sandbox.Domain.Services.Runtime;
@@ -45,6 +50,8 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
     private readonly ILogger<SandboxOrchestrator> _logger;
     private readonly SandboxQuotaPolicy _quota;
     private readonly string _workspaceRoot;
+    private readonly IHttpContextAccessor? _httpContextAccessor;
+    private readonly IBackgroundTenantScopeFactory? _tenantScopeFactory;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private Timer? _ttlTimer;
 
@@ -52,13 +59,38 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         IServiceScopeFactory scopeFactory,
         IEnumerable<ISandboxRuntime> runtimes,
         ILogger<SandboxOrchestrator> logger,
-        SandboxQuotaPolicy? quota = null)
+        SandboxQuotaPolicy? quota = null,
+        IHttpContextAccessor? httpContextAccessor = null,
+        IBackgroundTenantScopeFactory? tenantScopeFactory = null)
     {
         _scopeFactory = scopeFactory;
         _runtimes = runtimes;
         _logger = logger;
         _quota = quota ?? new SandboxQuotaPolicy();
         _workspaceRoot = Path.Combine(Path.GetTempPath(), "Senparc.Ncf", "Sandbox");
+        _httpContextAccessor = httpContextAccessor;
+        _tenantScopeFactory = tenantScopeFactory;
+    }
+
+    /// <summary>
+    /// 捕获当前请求的租户快照（非请求上下文返回未匹配快照，保持 fail-closed）。
+    /// </summary>
+    private RequestTenantSnapshot CaptureCurrentTenant()
+    {
+        var httpContext = _httpContextAccessor?.HttpContext;
+        return httpContext == null
+            ? RequestTenantSnapshot.Unmatched
+            : RequestTenantSnapshot.Capture(httpContext.RequestServices);
+    }
+
+    /// <summary>
+    /// 创建还原了当前请求租户上下文的作用域（用于请求触发的沙箱操作）。
+    /// </summary>
+    private IServiceScope CreateTenantScope()
+    {
+        var scope = _scopeFactory.CreateScope();
+        CaptureCurrentTenant().Restore(scope.ServiceProvider);
+        return scope;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -130,7 +162,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            using var scope = _scopeFactory.CreateScope();
+            using var scope = CreateTenantScope();
             var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
 
             var userCount = await sessionService.CountActiveByUserAsync(ownerUserId).ConfigureAwait(false);
@@ -261,7 +293,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            using var scope = _scopeFactory.CreateScope();
+            using var scope = CreateTenantScope();
             var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
             var entity = await sessionService.GetBySessionIdAsync(sessionId.Trim()).ConfigureAwait(false)
                          ?? throw new InvalidOperationException("会话不存在。");
@@ -317,7 +349,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            using var scope = _scopeFactory.CreateScope();
+            using var scope = CreateTenantScope();
             var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
             var entity = await sessionService.GetBySessionIdAsync(sessionId.Trim()).ConfigureAwait(false)
                          ?? throw new InvalidOperationException("会话不存在。");
@@ -338,7 +370,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         string code,
         CancellationToken cancellationToken = default)
     {
-        using var scope = _scopeFactory.CreateScope();
+        using var scope = CreateTenantScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var entity = await sessionService.GetBySessionIdAsync(sessionId).ConfigureAwait(false)
                      ?? throw new InvalidOperationException($"会话不存在：{sessionId}");
@@ -382,7 +414,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         string? stdinContent = null,
         CancellationToken cancellationToken = default)
     {
-        using var scope = _scopeFactory.CreateScope();
+        using var scope = CreateTenantScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var context = await GetInteractiveControlContextAsync(sessionService, sessionId, cancellationToken)
             .ConfigureAwait(false);
@@ -446,7 +478,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         bool overwrite = true,
         CancellationToken cancellationToken = default)
     {
-        using var scope = _scopeFactory.CreateScope();
+        using var scope = CreateTenantScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var context = await GetInteractiveControlContextAsync(sessionService, sessionId, cancellationToken)
             .ConfigureAwait(false);
@@ -481,7 +513,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         long maxBytes = 0,
         CancellationToken cancellationToken = default)
     {
-        using var scope = _scopeFactory.CreateScope();
+        using var scope = CreateTenantScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var context = await GetInteractiveControlContextAsync(sessionService, sessionId, cancellationToken)
             .ConfigureAwait(false);
@@ -528,7 +560,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         int maxItems = 0,
         CancellationToken cancellationToken = default)
     {
-        using var scope = _scopeFactory.CreateScope();
+        using var scope = CreateTenantScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var context = await GetInteractiveControlContextAsync(sessionService, sessionId, cancellationToken)
             .ConfigureAwait(false);
@@ -568,7 +600,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
 
     public async Task<IReadOnlyList<SandboxSessionInfo>> ListAsync(CancellationToken cancellationToken = default)
     {
-        using var scope = _scopeFactory.CreateScope();
+        using var scope = CreateTenantScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var list = await sessionService.GetObjectListAsync(
                 0,
@@ -582,7 +614,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
 
     public async Task<SandboxSessionInfo?> GetAsync(string sessionId, CancellationToken cancellationToken = default)
     {
-        using var scope = _scopeFactory.CreateScope();
+        using var scope = CreateTenantScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var entity = await sessionService.GetBySessionIdAsync(sessionId).ConfigureAwait(false);
         return entity == null ? null : ToInfo(entity);
@@ -633,7 +665,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             return null;
         }
 
-        using var scope = _scopeFactory.CreateScope();
+        using var scope = CreateTenantScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var normalizedId = sessionId.Trim().ToLowerInvariant();
         var entity = await sessionService.GetBySessionIdAsync(normalizedId).ConfigureAwait(false);
@@ -673,7 +705,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
             return null;
         }
 
-        using var scope = _scopeFactory.CreateScope();
+        using var scope = CreateTenantScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var entity = await sessionService.GetBySessionIdAsync(sessionId.Trim().ToLowerInvariant()).ConfigureAwait(false);
         if (entity == null
@@ -697,7 +729,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            using var scope = _scopeFactory.CreateScope();
+            using var scope = CreateTenantScope();
             var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
             var entity = await sessionService.GetBySessionIdAsync(sessionId).ConfigureAwait(false);
             if (entity == null)
@@ -739,7 +771,7 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            using var scope = _scopeFactory.CreateScope();
+            using var scope = CreateTenantScope();
             var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
             var entity = await sessionService.GetBySessionIdAsync(normalizedSessionId).ConfigureAwait(false);
             if (entity == null)
@@ -865,34 +897,52 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            using var scope = _scopeFactory.CreateScope();
-            var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
-            List<SandboxSession> expired;
-            try
+            if (_tenantScopeFactory != null)
             {
-                expired = await sessionService.GetExpiredRunningAsync(DateTime.UtcNow).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogDebug(ex, "Sandbox persistence not ready for TTL sweep.");
+                // 沙箱会话为租户功能表：后台 TTL 回收必须按租户迭代。
+                await _tenantScopeFactory.ForEachEnabledTenantAsync(
+                    async (scopeServiceProvider, ct) =>
+                    {
+                        var sessionService = scopeServiceProvider.GetRequiredService<SandboxSessionService>();
+                        await SweepForTenantCoreAsync(sessionService, ct).ConfigureAwait(false);
+                    },
+                    cancellationToken).ConfigureAwait(false);
                 return;
             }
 
-            foreach (var entity in expired)
-            {
-                try
-                {
-                    await DestroyExpiredCoreAsync(sessionService, entity, cancellationToken).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex, "Failed to expire sandbox session {SessionId}", entity.SessionId);
-                }
-            }
+            using var scope = CreateTenantScope();
+            await SweepForTenantCoreAsync(scope.ServiceProvider.GetRequiredService<SandboxSessionService>(), cancellationToken)
+                .ConfigureAwait(false);
         }
         finally
         {
             _gate.Release();
+        }
+    }
+
+    private async Task SweepForTenantCoreAsync(SandboxSessionService sessionService, CancellationToken cancellationToken)
+    {
+        List<SandboxSession> expired;
+        try
+        {
+            expired = await sessionService.GetExpiredRunningAsync(DateTime.UtcNow).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Sandbox persistence not ready for TTL sweep.");
+            return;
+        }
+
+        foreach (var entity in expired)
+        {
+            try
+            {
+                await DestroyExpiredCoreAsync(sessionService, entity, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to expire sandbox session {SessionId}", entity.SessionId);
+            }
         }
     }
 
@@ -926,63 +976,86 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
                 continue;
             }
 
-            try
+            if (_tenantScopeFactory != null)
             {
-                using var scope = _scopeFactory.CreateScope();
-                var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
-                var active = await sessionService.GetActiveSessionsAsync().ConfigureAwait(false);
-                var handles = await runtime.ListOrphanHandlesAsync(cancellationToken).ConfigureAwait(false);
-                var allHandles = new HashSet<string>(
-                    handles,
-                    StringComparer.OrdinalIgnoreCase);
-                var runningHandles = new HashSet<string>(
-                    await runtime.ListRunningHandlesAsync(cancellationToken).ConfigureAwait(false),
-                    StringComparer.OrdinalIgnoreCase);
-                var known = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                // 沙箱会话为租户功能表：启动时的孤儿回收必须按租户迭代。
+                await _tenantScopeFactory.ForEachEnabledTenantAsync(
+                    async (scopeServiceProvider, ct) =>
+                    {
+                        var sessionService = scopeServiceProvider.GetRequiredService<SandboxSessionService>();
+                        await ReconcileRuntimeCoreAsync(runtime, sessionService, ct).ConfigureAwait(false);
+                    },
+                    cancellationToken).ConfigureAwait(false);
+                continue;
+            }
 
-                foreach (var entity in active.Where(z => z.RuntimeKind == runtime.Kind))
+            using var scope = CreateTenantScope();
+            await ReconcileRuntimeCoreAsync(
+                runtime,
+                scope.ServiceProvider.GetRequiredService<SandboxSessionService>(),
+                cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private async Task ReconcileRuntimeCoreAsync(
+        ISandboxRuntime runtime,
+        SandboxSessionService sessionService,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var active = await sessionService.GetActiveSessionsAsync().ConfigureAwait(false);
+            var handles = await runtime.ListOrphanHandlesAsync(cancellationToken).ConfigureAwait(false);
+            var allHandles = new HashSet<string>(
+                handles,
+                StringComparer.OrdinalIgnoreCase);
+            var runningHandles = new HashSet<string>(
+                await runtime.ListRunningHandlesAsync(cancellationToken).ConfigureAwait(false),
+                StringComparer.OrdinalIgnoreCase);
+            var known = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var entity in active.Where(z => z.RuntimeKind == runtime.Kind))
+            {
+                var handle = entity.RuntimeHandle;
+                if (string.IsNullOrWhiteSpace(handle)
+                    || handle.StartsWith("exec-placeholder:", StringComparison.OrdinalIgnoreCase))
                 {
-                    var handle = entity.RuntimeHandle;
-                    if (string.IsNullOrWhiteSpace(handle)
-                        || handle.StartsWith("exec-placeholder:", StringComparison.OrdinalIgnoreCase))
-                    {
-                        continue;
-                    }
-
-                    if (ContainsRuntimeHandle(runningHandles, handle))
-                    {
-                        known.Add(handle);
-                        continue;
-                    }
-
-                    var reason = allHandles.Contains(handle)
-                        ? "Sandbox 容器已停止，应用启动时已同步为已停止。"
-                        : "Sandbox 容器已不存在，应用启动时已同步为已停止。";
-                    entity.MarkStopped(reason);
-                    TryDeleteWorkspace(entity.SessionId);
-                    await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
-                    _logger.LogWarning(
-                        "Sandbox session {SessionId} runtime handle {Handle} is {State}; marked stopped.",
-                        entity.SessionId,
-                        handle,
-                        allHandles.Contains(handle) ? "stopped" : "missing");
+                    continue;
                 }
 
-                foreach (var handle in handles)
+                if (ContainsRuntimeHandle(runningHandles, handle))
                 {
-                    if (ContainsRuntimeHandle(known, handle))
-                    {
-                        continue;
-                    }
-
-                    _logger.LogWarning("Removing orphan sandbox runtime handle {Handle}", handle);
-                    await runtime.DestroyAsync(handle, cancellationToken).ConfigureAwait(false);
+                    known.Add(handle);
+                    continue;
                 }
+
+                var reason = allHandles.Contains(handle)
+                    ? "Sandbox 容器已停止，应用启动时已同步为已停止。"
+                    : "Sandbox 容器已不存在，应用启动时已同步为已停止。";
+                entity.MarkStopped(reason);
+                TryDeleteWorkspace(entity.SessionId);
+                await sessionService.SaveObjectAsync(entity).ConfigureAwait(false);
+                _logger.LogWarning(
+                    "Sandbox session {SessionId} runtime handle {Handle} is {State}; marked stopped.",
+                    entity.SessionId,
+                    handle,
+                    allHandles.Contains(handle) ? "stopped" : "missing");
             }
-            catch (Exception ex)
+
+            foreach (var handle in handles)
             {
-                _logger.LogDebug(ex, "Orphan reconcile skipped for {Kind}", runtime.Kind);
+                if (ContainsRuntimeHandle(known, handle))
+                {
+                    continue;
+                }
+
+                _logger.LogWarning("Removing orphan sandbox runtime handle {Handle}", handle);
+                await runtime.DestroyAsync(handle, cancellationToken).ConfigureAwait(false);
             }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Orphan reconcile skipped for {Kind}", runtime.Kind);
         }
     }
 
