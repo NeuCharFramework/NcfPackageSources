@@ -54,6 +54,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.19.0 群组对话记录 Token 用量
 
+    修改标识：Senparc - 20261028
+    修改描述：多租户模式下 ChatGroup/Studio 后台执行与隔离状态更新恢复请求租户上下文
+
 ----------------------------------------------------------------*/
 
 #nullable enable annotations
@@ -74,7 +77,9 @@ using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core;
+using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
@@ -299,6 +304,10 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         CancellationToken cancellationToken = request.CancellationToken;
         cancellationToken.ThrowIfCancellationRequested();
 
+        // 同步捕获当前请求的租户上下文（后台执行开始时调用方作用域可能已释放），
+        // 保证后续数据读写始终保持在发起请求所属租户内（多租户 fail-closed）。
+        var tenantSnapshot = RequestTenantSnapshot.Capture(_serviceProvider);
+
         IDisposable activeOptimizationScope = null;
         if (!string.IsNullOrWhiteSpace(request.CorrelationId))
         {
@@ -308,6 +317,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
         var scope = SenparcDI.GetServiceProvider(true).CreateScope();
         var services = scope.ServiceProvider;
+        tenantSnapshot.Restore(services);
 
         ChatTask chatTask = null;
         ChatTaskService chatTaskService = null;
@@ -546,12 +556,14 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                             chatTask,
                             chatTaskService,
                             request.HumanRecipientUserId,
-                            currentHumanRoundIndex),
+                            currentHumanRoundIndex,
+                            tenantSnapshot),
                         (pending, decision) => HandleHumanRequestResolvedAsync(
                             pending,
                             decision,
                             chatTask,
-                            chatTaskService),
+                            chatTaskService,
+                            tenantSnapshot),
                         request.CorrelationId,
                         request.HumanRecipientUserId);
 
@@ -1286,7 +1298,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                                     state.WorkflowPendingRequests.Add(pending);
                                     await SetChatTaskStatusInIsolatedScopeAsync(
                                         chatTask,
-                                        ChatTask_Status.Paused).ConfigureAwait(false);
+                                        ChatTask_Status.Paused,
+                                        tenantSnapshot).ConfigureAwait(false);
                                     PublishStatusEvent(chatTask.Id, ChatTask_Status.Paused);
                                     PublishHumanRequestEvent(chatTask.Id, pending.ToDto(), state.RoundIndex + 1);
                                     workflowRequestReceived = true;
@@ -1392,7 +1405,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
                         await SetChatTaskStatusInIsolatedScopeAsync(
                             chatTask,
-                            ChatTask_Status.Chatting).ConfigureAwait(false);
+                            ChatTask_Status.Chatting,
+                            tenantSnapshot).ConfigureAwait(false);
                         PublishStatusEvent(chatTask.Id, ChatTask_Status.Chatting);
                         startNextSuperStepWithTurnToken = false;
                         continue;
@@ -2840,7 +2854,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         ChatTask chatTask,
         ChatTaskService chatTaskService,
         string recipientUserId,
-        int roundIndex)
+        int roundIndex,
+        RequestTenantSnapshot tenantSnapshot)
     {
         if (pending == null)
         {
@@ -2860,7 +2875,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         await NotifyNeuBellChangedAsync().ConfigureAwait(false);
         await SetChatTaskStatusInIsolatedScopeAsync(
             chatTask,
-            ChatTask_Status.Paused).ConfigureAwait(false);
+            ChatTask_Status.Paused,
+            tenantSnapshot).ConfigureAwait(false);
         PublishStatusEvent(chatTask.Id, ChatTask_Status.Paused);
         PublishHumanRequestEvent(chatTask.Id, pending.ToDto(), roundIndex);
     }
@@ -2888,7 +2904,8 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         PendingHumanRequest pending,
         HumanInTheLoopDecision decision,
         ChatTask chatTask,
-        ChatTaskService chatTaskService)
+        ChatTaskService chatTaskService,
+        RequestTenantSnapshot tenantSnapshot)
     {
         if (pending == null || decision == null)
         {
@@ -2902,18 +2919,21 @@ public class ChatGroupService : ServiceBase<ChatGroup>
         PublishHumanResolvedEvent(chatTask.Id, pending.RequestId, decision);
         await SetChatTaskStatusInIsolatedScopeAsync(
             chatTask,
-            ChatTask_Status.Chatting).ConfigureAwait(false);
+            ChatTask_Status.Chatting,
+            tenantSnapshot).ConfigureAwait(false);
         PublishStatusEvent(chatTask.Id, ChatTask_Status.Chatting);
     }
 
     private async Task SetChatTaskStatusInIsolatedScopeAsync(
         ChatTask chatTask,
-        ChatTask_Status status)
+        ChatTask_Status status,
+        RequestTenantSnapshot tenantSnapshot = null)
     {
         ArgumentNullException.ThrowIfNull(chatTask);
         chatTask.ChangeStatus(status);
 
         using var scope = _scopeFactory.CreateScope();
+        tenantSnapshot.Restore(scope.ServiceProvider);
         var isolatedTaskService = scope.ServiceProvider.GetRequiredService<ChatTaskService>();
         var persistedTask = await isolatedTaskService
             .GetObjectAsync(item => item.Id == chatTask.Id)
