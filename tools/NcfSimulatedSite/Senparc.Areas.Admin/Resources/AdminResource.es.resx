@@ -170,6 +170,7 @@
   <data name="Tenant.KeyExists" xml:space="preserve"><value>La regla de coincidencia del inquilino {0} ya existe</value></data>
   <data name="Tenant.SaveSuccess.Edit" xml:space="preserve"><value>Inquilino actualizado correctamente</value></data>
   <data name="Tenant.SaveSuccess.Create" xml:space="preserve"><value>Inquilino creado correctamente</value></data>
+  <data name="Tenant.PlatformAdminOnly" xml:space="preserve"><value>¡En modo multiinquilino, solo el administrador de la plataforma puede gestionar la información de los inquilinos!</value></data>
   <data name="Tenant.NotFound" xml:space="preserve"><value>Inquilino no encontrado</value></data>
   <data name="Tenant.SetInfoFailed" xml:space="preserve"><value>No se pudo establecer la información del inquilino</value></data>
   <data name="Tenant.InitializeSuccess" xml:space="preserve"><value>Inicialización completada correctamente</value></data>
