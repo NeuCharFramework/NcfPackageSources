@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.40.0-preview10 增强 XncfBuilder 预览状态持久化与后台初始化
 
+    修改标识：Senparc - 20261028
+    修改描述：多租户模式下支持平台级（TenantId=0）租户上下文还原与启动恢复
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -155,6 +158,15 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
                             snapshots.AddRange(tenantSnapshots);
                         },
                         cancellationToken).ConfigureAwait(false);
+                    // 平台级（TenantId=0）预览任务不在启用租户列表中，需单独恢复/中断
+                    await using var platformScope = _serviceScopeFactory.CreateAsyncScope();
+                    ApplyTenantContext(platformScope, 0);
+                    snapshots.AddRange(await LoadAndInterruptCoreAsync(
+                        platformScope.ServiceProvider,
+                        tenantId: 0,
+                        maxCount,
+                        interruptedAt,
+                        cancellationToken).ConfigureAwait(false));
                     return snapshots.ToArray();
                 }
                 finally
@@ -346,12 +358,13 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         }
 
         /// <summary>
-        /// 在新作用域中还原快照所属租户的 RequestTenantInfo（仅多租户启用且 tenantId > 0 时生效），
+        /// 在新作用域中还原快照所属租户的 RequestTenantInfo（多租户启用时生效，
+        /// tenantId = 0 表示平台级/系统管理员数据），
         /// 使租户过滤查询与 TenantId 自动写入保持在数据所属租户内。
         /// </summary>
         private static void ApplyTenantContext(IServiceScope scope, int tenantId)
         {
-            if (!SiteConfig.SenparcCoreSetting.EnableMultiTenant || tenantId <= 0)
+            if (!SiteConfig.SenparcCoreSetting.EnableMultiTenant)
             {
                 return;
             }
