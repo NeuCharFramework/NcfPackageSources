@@ -2069,7 +2069,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                     userCommand,
                     onUpdate,
                     aiModelService,
-                    BuildModelDtoFromSetting(agentContext.Setting, "AgentsManager.ChatGroup"),
+                    AgentModelFallbackResolver.BuildModelDtoFromSetting(agentContext.Setting, "AgentsManager.ChatGroup"),
                     "AgentsManager.ChatGroup");
                 output = string.IsNullOrWhiteSpace(result?.OutputString)
                     ? streamedOutput.ToString()
@@ -2291,7 +2291,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
                 session,
                 cancellationToken,
                 onUpdate,
-                BuildModelDtoFromSetting(agentContext.Setting, "AgentsManager.HumanApproval"),
+                AgentModelFallbackResolver.BuildModelDtoFromSetting(agentContext.Setting, "AgentsManager.HumanApproval"),
                 "AgentsManager.HumanApproval");
             foreach (var update in updates)
             {
@@ -2532,7 +2532,7 @@ public class ChatGroupService : ServiceBase<ChatGroup>
             userCommand,
             null,
             aiModelService,
-            BuildModelDtoFromSetting(setting, "AgentsManager.Fallback"),
+            AgentModelFallbackResolver.BuildModelDtoFromSetting(setting, "AgentsManager.Fallback"),
             "AgentsManager.Fallback");
         var output = runResult?.OutputString;
         if (string.IsNullOrWhiteSpace(output) && runResult?.Result != null)
