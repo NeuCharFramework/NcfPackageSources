@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.30.2-preview9</Version>
+    <Version>0.30.3-preview9</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -18,6 +18,10 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
+				[2026-10-28] v0.30.3-preview9 新增请求租户快照 RequestTenantSnapshot，统一后台任务/隔离作用域的租户上下文传播
+				1、新增 RequestTenantSnapshot：请求作用域捕获租户（Capture/From），独立作用域还原（Restore），仅多租户启用且匹配成功时生效
+				2、保持 fail-closed 语义：未匹配或作用域已释放时不修改目标作用域租户上下文
+				3、配合各模块修复 ChatGroup、A2A、Token 用量、沙箱、Workspace、Workflow 等后台/跨作用域场景的租户隔离
 				[2026-10-02] 提供统一后台租户作用域入口，复用租户注册信息并保持独立作用域
 				[2026-10-01] v0.30.1-preview9 提供可等待的安装完成标记 API
 				1、新增 SetInstallFinishedAsync，使文件写入失败可由安装流程观察和处理
