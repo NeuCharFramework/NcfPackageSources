@@ -73,7 +73,8 @@ public sealed class WeixinClawAiMessageHandler : IWeixinClawMessageHandler
                 context.FromUserId,
                 reply,
                 context.ContextToken,
-                cancellationToken).ConfigureAwait(false);
+                runId: context.RunId,
+                cancellationToken: cancellationToken).ConfigureAwait(false);
             _logger.LogInformation("个人微信 AI 回复已发送（{AccountId}/{MessageId}）。", context.AccountId, context.MessageId);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
