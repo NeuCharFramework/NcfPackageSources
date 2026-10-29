@@ -1,7 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>1.1.11</Version>
+    <Version>1.1.12</Version>
+    <XncfHasDatabase>Template_Database</XncfHasDatabase>
+    <XncfIsSample>Template_Sample</XncfIsSample>
     <AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
     <RootNamespace>Template_OrgName.Xncf.Template_XncfName</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -53,7 +55,11 @@
       2、chore: update package versions and dependencies across multiple projects
       [2026-10-28] v1.1.11 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.13
       1、升级 Senparc.Ncf.DatabasePlant 至 0.21.13，保持生成项目与基础库兼容
-      2、同步模板参数默认值：TargetFramework 为 net10.0，XncfBaseVersion 为 0.28.1，NcfAreaBaseVersion 为 0.23.9</PackageReleaseNotes>
+      2、同步模板参数默认值：TargetFramework 为 net10.0，XncfBaseVersion 为 0.28.1，NcfAreaBaseVersion 为 0.23.9
+      [2026-10-29] v1.1.12 模板依赖与资源条件化
+      1、Senparc.Ncf.DatabasePlant 引用改为条件包含（Database 或 Sample 开启时才生成）
+      2、Sample 关闭时不再生成 databaseSampleIndex 静态资源
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
@@ -65,7 +71,7 @@
     <EmbeddedResource Include="wwwroot\**\*" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition=" ( '$(XncfHasDatabase)' != 'false' AND '$(XncfHasDatabase)' != 'False' ) OR ( '$(XncfIsSample)' != 'false' AND '$(XncfIsSample)' != 'False' ) ">
     <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.21.13" />
   </ItemGroup>
   <ItemGroup>

@@ -25,7 +25,8 @@
     "Sample": {
       "type": "parameter",
       "dataType": "bool",
-      "defaultValue": "false"
+      "defaultValue": "false",
+      "replaces": "Template_Sample"
     },
     "Web": {
       "type": "parameter",
@@ -40,7 +41,8 @@
     "Database": {
       "type": "parameter",
       "dataType": "bool",
-      "defaultValue": "false"
+      "defaultValue": "false",
+      "replaces": "Template_Database"
     },
     "UseWebApi": {
       "type": "parameter",
@@ -144,7 +146,9 @@
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml",
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml.cs",
             "Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml",
-            "Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs"
+            "Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs",
+            "wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css",
+            "wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js"
           ]
         },
         {
