@@ -49,6 +49,10 @@
       "dataType": "bool",
       "defaultValue": "false"
     },
+    "XNCF_HAS_DATABASE": {
+      "type": "computed",
+      "value": "Database || Sample"
+    },
     "IntegrationToNcf": {
       "type": "parameter",
       "dataType": "bool",
