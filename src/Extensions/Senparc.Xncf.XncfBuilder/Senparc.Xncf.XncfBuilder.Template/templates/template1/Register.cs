@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
+#if XNCF_HAS_DATABASE
 using Template_OrgName.Xncf.Template_XncfName.Models;
 using Template_OrgName.Xncf.Template_XncfName.Application.AppServices;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Services;
@@ -28,6 +29,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Template_OrgName.Xncf.Template_XncfName.Domain.Models.DatabaseModel.Dto;
+#endif
 using Microsoft.AspNetCore.Builder;
 using Senparc.CO2NET.RegisterServices;
 using System.Reflection;
@@ -54,18 +56,21 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
+#if XNCF_HAS_DATABASE
             //安装或升级版本时更新数据库
             await XncfDatabaseDbContext.MigrateOnInstallAsync(serviceProvider, this);
-
+#endif
             //根据安装或更新不同条件执行逻辑
             switch (installOrUpdate)
             {
                 case InstallOrUpdate.Install:
                     //新安装
+#if XNCF_HAS_DATABASE
             #region 初始化数据库数据
                     var colorService = serviceProvider.GetService<ColorAppService>();
                     var colorResult = await colorService.GetOrInitColorAsync();
             #endregion
+#endif
                     break;
                 case InstallOrUpdate.Update:
                     //更新
@@ -77,6 +82,7 @@ namespace Template_OrgName.Xncf.Template_XncfName
 
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
+#if XNCF_HAS_DATABASE
             #region 删除数据库（演示）
 
             var mySenparcEntitiesType = this.TryGetXncfDatabaseDbContextType;
@@ -89,19 +95,22 @@ namespace Template_OrgName.Xncf.Template_XncfName
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
             #endregion
+#endif
             await unsinstallFunc().ConfigureAwait(false);
         }
         #endregion
 
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
+#if XNCF_HAS_DATABASE
             services.AddScoped<ColorAppService>();
             services.AddScoped<ColorService>();
-            
+
             services.AddAutoMapper(z =>
             {
                 z.CreateMap<Color, ColorDto>().ReverseMap();
             });
+#endif
             return base.AddXncfModule(services, configuration, env);
         }
 
