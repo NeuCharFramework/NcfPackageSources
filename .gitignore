@@ -130,3 +130,5 @@ upgrade-senparc-packages/
 tools/NcfSimulatedSite/Senparc.Web/App_Data/WeixinClawMedia/**
 **/App_Data/AIWorkspaces/**
 tools/NcfSimulatedSite/Senparc.Web/App_Data/WorkspaceAssetShares/*
+**/.venv/*
+tools/AIKernelFineTuning/worker/
