@@ -40,7 +40,10 @@
                 hasSyntheticName: ['HasSyntheticName'],
                 metadataError: ['MetadataError'],
                 defaultValue: ['DefaultValue'],
-                options: ['Options']
+                options: ['Options'],
+                allowMultiple: ['AllowMultiple'],
+                maxFiles: ['MaxFiles'],
+                accept: ['Accept']
             };
             Object.keys(aliases).forEach(key => {
                 if (Object.prototype.hasOwnProperty.call(normalized, key)) return;
@@ -94,6 +97,8 @@
                     : [];
             } else if (parameter.parameterType === 4) {
                 value = value === true || value === 'true' || value === 'True';
+            } else if (parameter.parameterType === 6) {
+                value = parameter.allowMultiple ? [] : '';
             } else if (value === null || typeof value === 'undefined') {
                 value = '';
             }

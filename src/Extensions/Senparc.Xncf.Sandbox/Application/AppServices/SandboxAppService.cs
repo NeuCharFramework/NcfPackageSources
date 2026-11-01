@@ -36,6 +36,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.XncfBase.Functions.Files;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Application.DTOs.Request;
 using Senparc.Xncf.Sandbox.Domain.Services;
@@ -45,12 +46,18 @@ namespace Senparc.Xncf.Sandbox.Application.AppServices;
 
 public class SandboxAppService : AppServiceBase
 {
+    private const int MaxReferencedFilesPerUpload = 16;
     private readonly SandboxOrchestrator _orchestrator;
+    private readonly IFunctionFileStore _fileStore;
 
-    public SandboxAppService(IServiceProvider serviceProvider, SandboxOrchestrator orchestrator)
+    public SandboxAppService(
+        IServiceProvider serviceProvider,
+        SandboxOrchestrator orchestrator,
+        IFunctionFileStore fileStore)
         : base(serviceProvider)
     {
         _orchestrator = orchestrator;
+        _fileStore = fileStore;
     }
 
     [FunctionRender(
@@ -205,6 +212,85 @@ public class SandboxAppService : AppServiceBase
                 file.RelativePath,
                 file.Length,
                 file.LastWriteTimeUtc
+            });
+            return null;
+        });
+    }
+
+    [FunctionRender("批量上传 Lab 文件", "把多个已上传文件以流方式写入运行中的持久化 JupyterLab 工作区", typeof(Register), AllowAiInvocation = true)]
+    public async Task<StringAppResponse> LabUploadFiles(Sandbox_LabUploadFilesRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            if (request.Files == null || request.Files.Length == 0)
+            {
+                response.Success = false;
+                response.ErrorMessage = "Files 至少需要包含一个文件。";
+                return null;
+            }
+
+            if (request.Files.Length > MaxReferencedFilesPerUpload)
+            {
+                response.Success = false;
+                response.ErrorMessage = $"一次最多上传 {MaxReferencedFilesPerUpload} 个文件。";
+                return null;
+            }
+
+            var relativeDirectory = (request.RelativeDirectory ?? string.Empty).Trim();
+            var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var uploaded = new List<object>(request.Files.Length);
+            foreach (var fileReference in request.Files)
+            {
+                if (fileReference == null || string.IsNullOrWhiteSpace(fileReference.FileId))
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Files 中包含无效的文件引用。";
+                    return null;
+                }
+
+                await using var file = await _fileStore.OpenReadAsync(
+                        fileReference.FileId,
+                        CancellationToken.None)
+                    .ConfigureAwait(false);
+                var fileName = Path.GetFileName(file.Reference.FileName);
+                if (string.IsNullOrWhiteSpace(fileName))
+                {
+                    fileName = file.Reference.FileId + ".bin";
+                }
+
+                if (!names.Add(fileName))
+                {
+                    response.Success = false;
+                    response.ErrorMessage = $"批量上传中存在重复文件名：{fileName}";
+                    return null;
+                }
+
+                var relativePath = string.IsNullOrWhiteSpace(relativeDirectory)
+                    ? fileName
+                    : Path.Combine(relativeDirectory, fileName);
+                var result = await _orchestrator.UploadWorkspaceFileAsync(
+                        request.SessionId,
+                        relativePath,
+                        file.Content,
+                        file.Reference.Length,
+                        request.Overwrite,
+                        CancellationToken.None)
+                    .ConfigureAwait(false);
+                uploaded.Add(new
+                {
+                    result.RelativePath,
+                    result.Length,
+                    result.LastWriteTimeUtc,
+                    fileId = file.Reference.FileId,
+                    fileName = fileName
+                });
+            }
+
+            logger.Append($"Lab files uploaded: SessionId={request.SessionId}, Count={uploaded.Count}");
+            response.Data = JsonSerializer.Serialize(new
+            {
+                sessionId = request.SessionId,
+                files = uploaded
             });
             return null;
         });

@@ -18,6 +18,7 @@
 
 ----------------------------------------------------------------*/
 using Senparc.Ncf.XncfBase.Functions;
+using Senparc.Ncf.XncfBase.Functions.Files;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -101,6 +102,11 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
 
         private static JsonNode NormalizeSimpleNode(Type targetType, JsonNode currentNode, FunctionParameterUiAttribute uiAttr)
         {
+            if (IsFileReferenceType(targetType))
+            {
+                return NormalizeFileReferenceNode(currentNode, targetType);
+            }
+
             if (currentNode == null)
             {
                 return CreateDefaultValueNode(targetType);
@@ -178,6 +184,58 @@ namespace Senparc.Ncf.XncfBase.FunctionRenders
             }
 
             return JsonValue.Create(firstValue);
+        }
+
+        private static bool IsFileReferenceType(Type targetType)
+        {
+            if (targetType == typeof(FunctionFileReference))
+            {
+                return true;
+            }
+
+            if (targetType.IsArray)
+            {
+                return targetType.GetElementType() == typeof(FunctionFileReference);
+            }
+
+            return targetType.IsGenericType &&
+                   (targetType.GetGenericTypeDefinition() == typeof(List<>) ||
+                    targetType.GetGenericTypeDefinition() == typeof(IReadOnlyList<>) ||
+                    targetType.GetGenericTypeDefinition() == typeof(IEnumerable<>)) &&
+                   targetType.GetGenericArguments()[0] == typeof(FunctionFileReference);
+        }
+
+        private static JsonNode NormalizeFileReferenceNode(JsonNode currentNode, Type targetType)
+        {
+            if (targetType == typeof(FunctionFileReference))
+            {
+                return currentNode == null ? null : NormalizeSingleFileReferenceNode(currentNode);
+            }
+
+            if (currentNode == null)
+            {
+                return new JsonArray();
+            }
+
+            if (currentNode is not JsonArray array)
+            {
+                return new JsonArray(NormalizeSingleFileReferenceNode(currentNode));
+            }
+
+            return new JsonArray(array.Select(NormalizeSingleFileReferenceNode).ToArray());
+        }
+
+        private static JsonNode NormalizeSingleFileReferenceNode(JsonNode currentNode)
+        {
+            if (currentNode is JsonValue valueNode && TryGetString(valueNode, out var fileId))
+            {
+                return new JsonObject
+                {
+                    ["FileId"] = fileId
+                };
+            }
+
+            return currentNode;
         }
 
         private static JsonNode CreateDefaultValueNode(Type targetType)

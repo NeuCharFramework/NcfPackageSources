@@ -39,6 +39,7 @@ using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Domain.Services;
+using Senparc.Ncf.XncfBase.Functions.Files;
 
 namespace Senparc.Xncf.Sandbox.Application.DTOs.Request;
 
@@ -147,6 +148,26 @@ public class Sandbox_LabUploadFileRequest : FunctionAppRequestBase
     [MaxLength(4_194_304)]
     [Description("Base64 内容||文件内容经过 Base64 编码，单个文件最多约 3 MB")]
     public string ContentBase64 { get; set; } = string.Empty;
+
+    [Description("覆盖已有文件||关闭后，目标文件存在时操作失败")]
+    public bool Overwrite { get; set; } = true;
+}
+
+public class Sandbox_LabUploadFilesRequest : FunctionAppRequestBase
+{
+    [Required]
+    [MaxLength(64)]
+    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    public string SessionId { get; set; } = string.Empty;
+
+    [MaxLength(512)]
+    [Description("工作区目录||文件将以原始文件名写入该目录，留空表示工作区根目录")]
+    public string RelativeDirectory { get; set; } = string.Empty;
+
+    [Required]
+    [FunctionParameterUi(ParameterType.File, AllowMultiple = true, MaxFiles = 16)]
+    [Description("文件||可一次上传多个文件；文件内容通过安全文件引用传递")]
+    public FunctionFileReference[] Files { get; set; } = Array.Empty<FunctionFileReference>();
 
     [Description("覆盖已有文件||关闭后，目标文件存在时操作失败")]
     public bool Overwrite { get; set; } = true;

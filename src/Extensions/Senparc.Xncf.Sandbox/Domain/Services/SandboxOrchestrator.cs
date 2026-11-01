@@ -446,13 +446,33 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         bool overwrite = true,
         CancellationToken cancellationToken = default)
     {
+        content ??= Array.Empty<byte>();
+        await using var input = new MemoryStream(content, writable: false);
+        return await UploadWorkspaceFileAsync(
+                sessionId,
+                relativePath,
+                input,
+                content.LongLength,
+                overwrite,
+                cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task<SandboxWorkspaceFileInfo> UploadWorkspaceFileAsync(
+        string sessionId,
+        string relativePath,
+        Stream content,
+        long? contentLength = null,
+        bool overwrite = true,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(content);
         using var scope = _scopeFactory.CreateScope();
         var sessionService = scope.ServiceProvider.GetRequiredService<SandboxSessionService>();
         var context = await GetInteractiveControlContextAsync(sessionService, sessionId, cancellationToken)
             .ConfigureAwait(false);
 
-        content ??= Array.Empty<byte>();
-        if (content.LongLength > _quota.MaxWorkspaceFileBytes)
+        if (contentLength is > 0 && contentLength > _quota.MaxWorkspaceFileBytes)
         {
             throw new InvalidOperationException(
                 $"上传文件不能超过 {_quota.MaxWorkspaceFileBytes} 字节。");
@@ -468,7 +488,50 @@ public sealed class SandboxOrchestrator : IHostedService, IDisposable
         }
 
         Directory.CreateDirectory(Path.GetDirectoryName(target)!);
-        await File.WriteAllBytesAsync(target, content, cancellationToken).ConfigureAwait(false);
+        var temporaryTarget = target + ".ncf-upload-" + Guid.NewGuid().ToString("N");
+        EnsureWorkspacePathSafe(workspace, temporaryTarget);
+        var length = 0L;
+        try
+        {
+            await using (var output = new FileStream(
+                temporaryTarget,
+                FileMode.CreateNew,
+                FileAccess.Write,
+                FileShare.None,
+                64 * 1024,
+                FileOptions.Asynchronous | FileOptions.SequentialScan))
+            {
+                var buffer = new byte[64 * 1024];
+                int read;
+                while ((read = await content.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0)
+                {
+                    length = checked(length + read);
+                    if (length > _quota.MaxWorkspaceFileBytes)
+                    {
+                        throw new InvalidOperationException(
+                            $"上传文件不能超过 {_quota.MaxWorkspaceFileBytes} 字节。");
+                    }
+
+                    await output.WriteAsync(buffer.AsMemory(0, read), cancellationToken)
+                        .ConfigureAwait(false);
+                }
+            }
+
+            if (contentLength.HasValue && contentLength.Value != length)
+            {
+                throw new InvalidOperationException("上传文件长度与声明长度不一致。");
+            }
+
+            File.Move(temporaryTarget, target, overwrite);
+        }
+        finally
+        {
+            if (File.Exists(temporaryTarget))
+            {
+                File.Delete(temporaryTarget);
+            }
+        }
+
         var file = ToWorkspaceFileInfo(workspace, target);
         context.Entity.Touch();
         await sessionService.SaveObjectAsync(context.Entity).ConfigureAwait(false);

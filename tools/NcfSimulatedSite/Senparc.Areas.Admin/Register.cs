@@ -103,6 +103,7 @@ using Senparc.Ncf.Service;
 using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
+using Senparc.Ncf.XncfBase.Functions.Files;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -211,6 +212,8 @@ namespace Senparc.Areas.Admin
             //services.AddScoped(typeof(AuthenticationAsyncPageFilterAttribute));
 
             services.Configure<JwtSettings>(JwtSettings.Position_Backend, configuration.GetSection(JwtSettings.Position_Backend));// 配置管理后台jwt
+            services.Configure<FunctionFileStoreOptions>(
+                configuration.GetSection(FunctionFileStoreOptions.SectionName));
             services.Configure<WeixinClawAdminIntegrationOptions>(
                 configuration.GetSection(WeixinClawAdminIntegrationOptions.SectionName));
 

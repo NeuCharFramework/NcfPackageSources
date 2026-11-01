@@ -43,6 +43,9 @@ public static class WorkflowFunctionSchemaBuilder
                 MaxLength = z.MaxLength,
                 Filterable = z.Filterable,
                 AllowCreate = z.AllowCreate,
+                AllowMultiple = z.AllowMultiple,
+                MaxFiles = z.MaxFiles,
+                Accept = z.Accept,
                 HasSyntheticName = hasSyntheticName,
                 MetadataError = hasSyntheticName
                     ? "Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。"
@@ -75,6 +78,10 @@ public static class WorkflowFunctionSchemaBuilder
             {
                 value = false;
             }
+            else if (parameter.ParameterType == (int)ParameterType.File)
+            {
+                value = parameter.AllowMultiple ? Array.Empty<string>() : string.Empty;
+            }
             result[parameter.Name] = value;
         }
         return result;
@@ -92,6 +99,9 @@ public sealed class WorkflowFunctionParameterSchema
     public int MaxLength { get; set; }
     public bool Filterable { get; set; }
     public bool AllowCreate { get; set; }
+    public bool AllowMultiple { get; set; }
+    public int MaxFiles { get; set; }
+    public string Accept { get; set; }
     public bool HasSyntheticName { get; set; }
     public string MetadataError { get; set; }
     public object DefaultValue { get; set; }
