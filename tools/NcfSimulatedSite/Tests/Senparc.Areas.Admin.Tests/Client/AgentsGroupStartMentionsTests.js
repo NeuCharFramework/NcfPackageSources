@@ -67,7 +67,7 @@ const context = vm.createContext({
     Vue,
     serviceAM,
     console: { log() { }, warn() { }, error() { } },
-    window: { location: { hash: '' } },
+    location: { hash: '' },
     document: {},
     setTimeout() { },
     clearTimeout() { },
