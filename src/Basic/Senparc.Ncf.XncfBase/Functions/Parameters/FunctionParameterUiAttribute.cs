@@ -30,6 +30,12 @@ namespace Senparc.Ncf.XncfBase
 
         public bool AllowCreate { get; set; }
 
+        public bool AllowMultiple { get; set; }
+
+        public int MaxFiles { get; set; }
+
+        public string Accept { get; set; }
+
         public FunctionParameterUiAttribute(ParameterType parameterType, string selectionListPropertyName = null)
         {
             ParameterType = parameterType;

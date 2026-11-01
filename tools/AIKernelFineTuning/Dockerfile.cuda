@@ -18,3 +18,6 @@ ENV NCF_BIND_HOST=0.0.0.0
 USER 10001:10001
 EXPOSE 8091
 CMD ["python", "-m", "worker"]
+ls -lh /tmp/nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_aarch64.whl
+sha256sum /tmp/nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_aarch64.whl
+file /tmp/nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_aarch64.whl

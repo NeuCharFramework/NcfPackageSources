@@ -27,7 +27,7 @@ NCF 独立沙箱编排模块：为用户快速创建/销毁隔离实验环境（
 | 单元测试（ImageResolver） | ✅ |
 | Jupyter 访问 / 反向代理 | ✅ 列表使用容器本机映射端口；仍支持 `/sandbox-jupyter/{sessionId}/` 代理 |
 | csharp-exec .NET 10 file-based | ✅ `sdk:10.0` + `dotnet run --file main.cs` |
-| 持久化 Lab FunctionRender 控制 | ✅ 命令、工作区文件上传/下载/列举 |
+| 持久化 Lab FunctionRender 控制 | ✅ 命令、流式/批量工作区文件上传、下载/列举 |
 | Wasmtime 实装 | ⏳ |
 
 ## 架构
@@ -86,8 +86,38 @@ Jupyter Kernel 和构建时预热的常用 NuGet 包；镜像构建完成后需�
 
 - `LabExec`：在容器工作区内执行 `/bin/sh -lc` 命令，默认 30 秒，最长 120 秒，输出有长度上限；
 - `LabUploadFile`：使用 Base64 写入工作区内的相对路径，单文件默认最多约 3 MB；
+- `LabUploadFiles`：接收预先上传的 `FunctionFileReference[]`，以流方式批量写入工作区根目录或指定相对目录；默认最多 16 个文件，避免将大文件编码进 Function JSON；
 - `LabDownloadFile`：读取工作区文件并返回 Base64，读取大小受上限约束；
 - `LabListFiles`：列举工作区文件，可选择递归和返回数量上限。
+
+### FunctionRender 文件参数
+
+对于需要处理大文件或多个文件的 Function，不应把文件内容放入请求 JSON。基础层提供
+`ParameterType.File`、`FunctionFileReference` 和 `IFunctionFileStore`：
+
+```text
+浏览器 / multipart 客户端
+        ↓  一次请求上传多个 files
+FunctionFileStore（流式落盘、SHA-256、过期校验与按访问清理）
+        ↓
+FunctionFileReference.FileId
+        ↓  Function JSON / Workflow / AI Function Calling
+Function 执行时通过 IFunctionFileStore.OpenReadAsync() 获取 Stream
+```
+
+文件引用绑定到创建时的 `RequestTenantInfo.Id`。启用多租户后，上传、查询、读取和删除
+都会校验当前请求租户；不同租户即使持有相同的 FileId 也不能读取或删除文件。后台任务
+必须通过现有的 `IBackgroundTenantScopeFactory` 创建租户作用域后再执行文件操作。自定义
+`IFunctionFileStore` 实现也必须保持 `FunctionFileReference.TenantId` 的隔离语义。
+
+Admin 上传接口为 `POST /api/Senparc.Areas.Admin/FunctionFiles/upload`，字段名为
+`files`，支持同一 multipart 请求上传多个文件。返回的 `FileId` 仅是可序列化引用，
+不会把 Base64 或二进制内容带入 Workflow、AI schema 或 Function 参数持久化数据。
+默认单文件上限为 64 MiB、单批次上限为 256 MiB、保留时间为 2 小时；宿主可通过
+`FunctionFiles` 配置节覆盖这些限制，也可以替换 `IFunctionFileStore` 为对象存储实现。
+
+旧版 `LabUploadFile` Base64 接口保留用于兼容小文件调用；新 UI、NeuCharPivot 和
+Workflow 文件选择器会先批量上传，再把 FileId 写入 Function 参数。
 
 所有文件操作都拒绝绝对路径、路径穿越和符号链接/重解析点，并且只允许运行中的
 Jupyter Lab 会话。`python-exec` / `csharp-exec` 仍然是一次性 `docker run --rm`

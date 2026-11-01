@@ -168,6 +168,7 @@
         <span v-if="health">{{ t('WorkerVersion') }}: {{ health.version }} · {{ health.status }}</span>
         <span>{{ t('RunningCount') }}: {{ health ? health.activeJobs : t('Unavailable') }}</span>
         <span>{{ t('QueuedCount') }}: {{ health ? health.queuedJobs : t('Unavailable') }}</span>
+        <span>{{ t('PausedCount') }}: {{ health && health.pausedJobs != null ? health.pausedJobs : t('Unavailable') }}</span>
     </div>
     <el-alert v-if="connectionError" class="ft-alert" type="error" :closable="false"
               :title="t('ConnectionError')" :description="connectionError" show-icon></el-alert>
@@ -332,8 +333,16 @@
     <el-card v-if="selectedId" class="ft-card" v-loading="detailLoading">
         <div slot="header" class="ft-detail-heading">
             <h2>{{ t('Monitor') }}: {{ job ? job.name : selectedId }}</h2>
+            <span>
+                <el-button v-if="job && canPause(job)" type="warning" size="small" :loading="pauseBusy"
+                           @@click="pauseJob">{{ t('PauseJob') }}</el-button>
+                <el-button v-if="job && canResume(job)" type="primary" size="small" :loading="resumeBusy"
+                           @@click="resumeJob">{{ t('ResumeJob') }}</el-button>
             <el-button v-if="job && canCancel(job)" type="danger" size="small" :loading="cancelBusy"
                        @@click="cancelJob">{{ t('CancelJob') }}</el-button>
+                <el-button v-if="job && canDelete(job)" type="danger" plain size="small" :loading="deleteBusy"
+                           @@click="deleteJob">{{ t('DeleteJob') }}</el-button>
+            </span>
         </div>
         <p v-if="detailError" class="ft-error" role="alert">{{ detailError }}</p>
         <div v-if="job">
@@ -350,6 +359,26 @@
                     <span v-if="progressPercent === null"> · {{ t('ProgressUnknown') }}</span>
                 </p>
                 <p v-if="job.state === 'Cancelling'">{{ t('CancellingHelp') }}</p>
+                <p>{{ t('AverageStepDuration') }}: {{ formatMetric(metric('averageStepDuration'), 's') }}
+                    · {{ t('EstimatedFinish') }}: {{ formatDate(estimatedFinishUtc) }}</p>
+                <p v-if="metric('sampleCount') !== null">
+                    {{ t('CurrentSamples') }}:
+                    #{{ formatMetric(metric('sampleIndexMin')) }}-#{{ formatMetric(metric('sampleIndexMax')) }}
+                    · {{ formatMetric(metric('sampleCount')) }} {{ t('SamplesUnit') }}
+                    · {{ formatMetric(metric('tokenCount')) }} {{ t('TokensUnit') }}
+                    · {{ formatMetric(metric('sequenceLengthMin')) }}-{{ formatMetric(metric('sequenceLengthMax')) }} {{ t('TokensPerSampleUnit') }}
+                    · {{ t('TruncatedSamples') }}: {{ formatMetric(metric('truncatedSampleCount')) }}
+                </p>
+                <el-form :inline="true" class="ft-runtime-form">
+                    <el-form-item :label="t('MaxDurationMinutes')">
+                        <el-input-number v-model="runtimeMinutes" :min="1" :max="10080"
+                                         :disabled="runtimeBusy || ['Cancelled', 'Succeeded', 'Failed', 'Interrupted'].indexOf(job.state) >= 0">
+                        </el-input-number>
+                    </el-form-item>
+                    <el-button size="small" :loading="runtimeBusy"
+                               :disabled="runtimeBusy || runtimeMinutes === null"
+                               @@click="updateRuntime">{{ t('UpdateRuntime') }}</el-button>
+                </el-form>
             </div>
             <div class="ft-metrics">
                 <div v-for="item in metricCards" :key="item.key" class="ft-metric">
@@ -380,6 +409,19 @@
             <div v-if="job.state === 'Succeeded'" class="ft-validation">
                 <h3>{{ t('ValidationTitle') }}</h3>
                 <p class="ft-muted">{{ t('ValidationHelp') }}</p>
+                <div class="ft-validation-options">
+                    <el-select v-model="validationBackend" :placeholder="t('ValidationBackend')" clearable>
+                        <el-option value="cpu" :label="t('BackendCpu')"></el-option>
+                        <el-option value="cuda" :label="t('BackendCuda')"></el-option>
+                        <el-option value="mlx" :label="t('BackendMlx')"></el-option>
+                    </el-select>
+                    <el-select v-model="validationMethod" :placeholder="t('ValidationMethod')" clearable>
+                        <el-option value="lora" :label="t('MethodLora')"></el-option>
+                        <el-option value="qlora" :label="t('MethodQlora')"></el-option>
+                    </el-select>
+                </div>
+                <el-alert v-if="validationMismatchWarning" type="warning" :closable="false"
+                          :title="t('ValidationMismatchWarning')" :description="validationMismatchWarning" show-icon></el-alert>
                 <el-input type="textarea" :rows="4" v-model="validationPrompts"
                           :placeholder="t('ValidationPromptPlaceholder')"></el-input>
                 <div class="ft-validation-options">

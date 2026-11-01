@@ -67,7 +67,9 @@ namespace Senparc.Xncf.MCP
         public override string Version => "0.5.8";//必须填写版本号
 
         public override string MenuName => McpResource.Get("Module.MCP.MenuName", "MCP Manager");
+
         public override string Icon => "fa fa-plug";
+
         public override string Description => McpResource.Get("Module.MCP.Description", "Model Context Protocol (MCP) Manager");
 
         public override bool EnableMcpServer => true;

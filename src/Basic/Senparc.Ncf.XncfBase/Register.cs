@@ -57,6 +57,7 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.Attributes;
 using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Ncf.XncfBase.Functions.Files;
 using Senparc.Ncf.XncfBase.Threads;
 
 namespace Senparc.Ncf.XncfBase
@@ -402,6 +403,11 @@ namespace Senparc.Ncf.XncfBase
             //AppService
             services.AddScoped(typeof(AppRequestBase));
             services.AddScoped(typeof(IAppRequest), typeof(AppRequestBase));
+            services.AddOptions<FunctionFileStoreOptions>();
+            if (!services.Any(descriptor => descriptor.ServiceType == typeof(IFunctionFileStore)))
+            {
+                services.AddScoped<IFunctionFileStore, LocalFunctionFileStore>();
+            }
 
             services.AddScoped(typeof(AppResponseBase));
             services.AddScoped(typeof(AppResponseBase<>));
