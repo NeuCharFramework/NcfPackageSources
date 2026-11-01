@@ -53,6 +53,8 @@ class Store:
             CREATE TABLE IF NOT EXISTS jobs (
                 id TEXT PRIMARY KEY, name TEXT NOT NULL, state TEXT NOT NULL,
                 createdUtc TEXT NOT NULL, startedUtc TEXT, finishedUtc TEXT,
+                trainingStartedUtc TEXT, pausedSeconds REAL NOT NULL DEFAULT 0,
+                pauseStartedUtc TEXT,
                 request TEXT NOT NULL, error TEXT, latestMetrics TEXT NOT NULL DEFAULT '{}',
                 lastEventSequence INTEGER NOT NULL DEFAULT 0);
             CREATE TABLE IF NOT EXISTS events (
@@ -66,6 +68,14 @@ class Store:
             CREATE UNIQUE INDEX IF NOT EXISTS artifact_name ON artifacts(jobId,name);
             CREATE TABLE IF NOT EXISTS worker_metadata (name TEXT PRIMARY KEY, value TEXT NOT NULL);
         """)
+        for name, definition in (
+            ("trainingStartedUtc", "TEXT"),
+            ("pausedSeconds", "REAL NOT NULL DEFAULT 0"),
+            ("pauseStartedUtc", "TEXT"),
+        ):
+            columns = {row[1] for row in self.db.execute("PRAGMA table_info(jobs)")}
+            if name not in columns:
+                self.db.execute(f"ALTER TABLE jobs ADD COLUMN {name} {definition}")
         self.db.execute("INSERT OR IGNORE INTO worker_metadata VALUES ('storeId', ?)", (uuid.uuid4().hex,))
         self.store_id = self.db.execute("SELECT value FROM worker_metadata WHERE name='storeId'").fetchone()[0]
 
@@ -204,29 +214,57 @@ class Store:
 
     def counts(self):
         with self.lock:
-            active = self.db.execute("SELECT COUNT(*) FROM jobs WHERE state IN ('Running','Cancelling')").fetchone()[0]
+            active = self.db.execute(
+                "SELECT COUNT(*) FROM jobs WHERE state IN ('Running','Pausing','Cancelling','Resuming')"
+            ).fetchone()[0]
             queued = self.db.execute("SELECT COUNT(*) FROM jobs WHERE state='Queued'").fetchone()[0]
             return active, queued
 
+    def paused_count(self):
+        with self.lock:
+            return self.db.execute("SELECT COUNT(*) FROM jobs WHERE state='Paused'").fetchone()[0]
+
     def transition(self, job_id, state, error=None):
         with self.transaction():
-            old = self.job(job_id)["state"]
+            job = self.job(job_id)
+            old = job["state"]
             allowed = {
-                "Queued": {"Running", "Cancelled", "Failed"},
-                "Running": {"Cancelling", "Succeeded", "Failed", "Interrupted"},
+                "Queued": {"Running", "Cancelled", "Paused", "Failed"},
+                "Running": {"Pausing", "Cancelling", "Succeeded", "Failed", "Interrupted"},
+                "Pausing": {"Paused", "Cancelling", "Cancelled", "Failed", "Interrupted"},
+                "Paused": {"Resuming", "Cancelled"},
+                "Resuming": {"Running", "Failed", "Interrupted"},
                 "Cancelling": {"Cancelled", "Failed", "Interrupted"},
             }
             if state not in allowed.get(old, set()):
                 raise WorkerError(f"Invalid lifecycle transition {old} -> {state}.", 409)
             self.db.execute("UPDATE jobs SET state=?,error=? WHERE id=?", (state, error, job_id))
             if state == "Running":
-                self.db.execute("UPDATE jobs SET startedUtc=? WHERE id=?", (utc_now(), job_id))
+                if job["startedUtc"] is None:
+                    self.db.execute("UPDATE jobs SET startedUtc=? WHERE id=?", (utc_now(), job_id))
+                self.db.execute("UPDATE jobs SET pauseStartedUtc=NULL WHERE id=?", (job_id,))
+            elif state == "Pausing":
+                self.db.execute("UPDATE jobs SET pauseStartedUtc=? WHERE id=?", (utc_now(), job_id))
+            elif state == "Paused":
+                self._finish_pause(job)
             if state in TERMINAL:
+                if job["pauseStartedUtc"] is not None:
+                    self._finish_pause(job)
                 self.db.execute("UPDATE jobs SET finishedUtc=? WHERE id=?", (utc_now(), job_id))
             self._event(job_id, "status", state, {})
             if error:
                 self._event(job_id, "error" if state == "Failed" else "warning", error, {})
             return self.job(job_id)
+
+    def _finish_pause(self, job):
+        if not job["pauseStartedUtc"]:
+            return
+        started = datetime.fromisoformat(job["pauseStartedUtc"].replace("Z", "+00:00"))
+        elapsed = max(0.0, (datetime.now(timezone.utc) - started).total_seconds())
+        self.db.execute(
+            "UPDATE jobs SET pausedSeconds=pausedSeconds+?,pauseStartedUtc=NULL WHERE id=?",
+            (elapsed, job["id"]),
+        )
 
     def event(self, job_id, kind, message=None, metrics=None):
         if kind not in {"status", "log", "metrics", "warning", "error"}:
@@ -241,6 +279,10 @@ class Store:
         if len(values) > 64:
             raise ValueError("Too many metric keys")
         with self.transaction():
+            if kind == "metrics" and values.get("step") is not None:
+                job = self.job(job_id)
+                if job["trainingStartedUtc"] is None:
+                    self.db.execute("UPDATE jobs SET trainingStartedUtc=? WHERE id=?", (utc_now(), job_id))
             self._event(job_id, kind, (message or "")[:8192], values)
 
     def _event(self, job_id, kind, message, metrics):
@@ -287,6 +329,26 @@ class Store:
                 "INSERT OR IGNORE INTO artifacts VALUES (?,?,?,?,?)",
                 (uuid.uuid4().hex, job_id, path.name, path.stat().st_size, digest),
             )
+
+    def update_runtime(self, job_id, max_duration_minutes):
+        with self.transaction():
+            job = self.job(job_id)
+            if job["state"] in TERMINAL or job["state"] == "Cancelled":
+                raise WorkerError("The maximum runtime can only be changed for an unfinished job.", 409)
+            request = job["request"]
+            request["maxDurationMinutes"] = max_duration_minutes
+            self.db.execute("UPDATE jobs SET request=? WHERE id=?", (json.dumps(request), job_id))
+            self._event(job_id, "log", f"Maximum runtime updated to {max_duration_minutes} minutes.", {})
+            return self.job(job_id)
+
+    def delete_job(self, job_id):
+        with self.transaction():
+            job = self.job(job_id)
+            if job["state"] not in TERMINAL and job["state"] != "Paused":
+                raise WorkerError("Only completed, cancelled, failed, interrupted, or paused jobs can be deleted.", 409)
+            self.db.execute("DELETE FROM events WHERE jobId=?", (job_id,))
+            self.db.execute("DELETE FROM artifacts WHERE jobId=?", (job_id,))
+            self.db.execute("DELETE FROM jobs WHERE id=?", (job_id,))
 
     def artifact(self, job_id, artifact_id):
         with self.lock:

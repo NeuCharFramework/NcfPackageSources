@@ -160,7 +160,27 @@ var app = new Vue({
       const item = openingModules.find(z => z.uid === moduleUid);
       return item ? item.menuName : moduleUid;
     },
+    pivotBlockIsMissing(block) {
+      return block && block.available === false;
+    },
+    pivotBlockMissingDescription(block) {
+      return `该 Pivot Block 引用的 Function 尚未在数据库中初始化。模块 UID：${block.moduleUid || '-'}；Function Code：${block.functionKey || '-'}。请先在模块的 NeuCharPivot 设置中生成或恢复对应 Function，再回到面板设置重新选择。`;
+    },
+    pivotBlockSettingsUrl(block) {
+      const boardId = this.pivotBoard && this.pivotBoard.id ? this.pivotBoard.id : '';
+      return '/Admin/NeuCharPivot/Board?boardId=' + encodeURIComponent(boardId) +
+        '&pageKey=admin-home&moduleUid=' + encodeURIComponent(block.moduleUid || '') +
+        '&functionKey=' + encodeURIComponent(block.functionKey || '');
+    },
+    pivotBlockModuleSettingsUrl(block) {
+      return '/Admin/XncfModule/Start/?uid=' + encodeURIComponent(block.moduleUid || '') +
+        '&functionKey=' + encodeURIComponent(block.functionKey || '') +
+        '&action=settings&tab=pivot';
+    },
     openPivotBlock(block) {
+      if (this.pivotBlockIsMissing(block)) {
+        return;
+      }
       if (window.NeuCharPivotFunction && typeof window.NeuCharPivotFunction.open === 'function') {
         window.NeuCharPivotFunction.open({
           moduleUid: block.moduleUid,

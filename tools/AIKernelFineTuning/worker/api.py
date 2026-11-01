@@ -13,7 +13,7 @@ from starlette.types import ASGIApp, Receive, Scope, Send
 from . import VERSION
 from .config import Settings, WorkerError, identifier
 from .datasets import parse_json
-from .schemas import DatasetRequest, JobRequest, ValidationRequest
+from .schemas import DatasetRequest, JobRequest, RuntimeRequest, ValidationRequest
 from .service import Worker
 
 LOG = logging.getLogger(__name__)
@@ -178,6 +178,22 @@ def create_app(settings=None, worker_factory=Worker):
     @app.post("/jobs/{job_id}/cancel")
     def cancel(job_id: str, service=Depends(worker)):
         return service.cancel(identifier(job_id))
+
+    @app.post("/jobs/{job_id}/pause")
+    def pause(job_id: str, service=Depends(worker)):
+        return service.pause(identifier(job_id))
+
+    @app.post("/jobs/{job_id}/resume")
+    def resume(job_id: str, service=Depends(worker)):
+        return service.resume(identifier(job_id))
+
+    @app.post("/jobs/{job_id}/runtime")
+    def update_runtime(job_id: str, body: RuntimeRequest, service=Depends(worker)):
+        return service.update_runtime(identifier(job_id), body.maxDurationMinutes)
+
+    @app.delete("/jobs/{job_id}")
+    def delete_job(job_id: str, service=Depends(worker)):
+        return service.delete(identifier(job_id))
 
     @app.get("/jobs/{job_id}/events")
     def events(job_id: str, after: int = Query(0, ge=0), limit: int = Query(200, ge=1, le=200), service=Depends(worker)):

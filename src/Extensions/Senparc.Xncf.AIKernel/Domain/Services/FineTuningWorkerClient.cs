@@ -148,6 +148,32 @@ public sealed class FineTuningWorkerClient
     [Obsolete("Select a database worker explicitly.")]
     public Task<FineTuningJob> CancelJobAsync(string id, CancellationToken cancellationToken = default) => CancelJobAsync("default", id, cancellationToken);
 
+    public Task<FineTuningJob> PauseJobAsync(string workerAlias, string id, CancellationToken cancellationToken = default) =>
+        SendAsync<FineTuningJob>(workerAlias, HttpMethod.Post, $"jobs/{Identifier(id)}/pause", new { }, cancellationToken);
+    [Obsolete("Select a database worker explicitly.")]
+    public Task<FineTuningJob> PauseJobAsync(string id, CancellationToken cancellationToken = default) => PauseJobAsync("default", id, cancellationToken);
+
+    public Task<FineTuningJob> ResumeJobAsync(string workerAlias, string id, CancellationToken cancellationToken = default) =>
+        SendAsync<FineTuningJob>(workerAlias, HttpMethod.Post, $"jobs/{Identifier(id)}/resume", new { }, cancellationToken);
+    [Obsolete("Select a database worker explicitly.")]
+    public Task<FineTuningJob> ResumeJobAsync(string id, CancellationToken cancellationToken = default) => ResumeJobAsync("default", id, cancellationToken);
+
+    public Task<FineTuningJob> UpdateRuntimeAsync(string workerAlias, string id, FineTuningRuntimeRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        Validate(request);
+        return SendAsync<FineTuningJob>(workerAlias, HttpMethod.Post, $"jobs/{Identifier(id)}/runtime", request, cancellationToken);
+    }
+    [Obsolete("Select a database worker explicitly.")]
+    public Task<FineTuningJob> UpdateRuntimeAsync(string id, FineTuningRuntimeRequest request,
+        CancellationToken cancellationToken = default) => UpdateRuntimeAsync("default", id, request, cancellationToken);
+
+    public Task<FineTuningDeleteResult> DeleteJobAsync(string workerAlias, string id, CancellationToken cancellationToken = default) =>
+        SendAsync<FineTuningDeleteResult>(workerAlias, HttpMethod.Delete, $"jobs/{Identifier(id)}", null, cancellationToken);
+    [Obsolete("Select a database worker explicitly.")]
+    public Task<FineTuningDeleteResult> DeleteJobAsync(string id, CancellationToken cancellationToken = default) =>
+        DeleteJobAsync("default", id, cancellationToken);
+
     public Task<FineTuningEventPage> GetEventsAsync(string workerAlias, string id, long after, int limit, CancellationToken cancellationToken = default)
     {
         if (after < 0 || limit < 1 || limit > 200)

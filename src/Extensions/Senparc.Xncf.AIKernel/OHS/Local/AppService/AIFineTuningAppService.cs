@@ -297,7 +297,7 @@ public class AIFineTuningAppService : AppServiceBase
         this.GetResponseAsync<FineTuningValidation>((response, logger) => _worker.GetValidationAsync(workerAlias, id, CancellationToken));
 
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-    [FunctionRender("验证微调 Adapter", "对已成功的原生 MLX 微调任务运行受限的离线测试提示。", typeof(Register), AllowAiInvocation = true)]
+    [FunctionRender("验证微调 Adapter", "对已成功的微调任务按选择的 CPU、CUDA 或 MLX 后端运行受限的离线测试提示；与任务记录不一致时必须明确确认。", typeof(Register), AllowAiInvocation = true)]
     public Task<AppResponseBase<FineTuningValidation>> StartValidationAsync(
         [FromBody] FineTuningValidationRequest request, string workerAlias, string id) =>
         this.GetResponseAsync<FineTuningValidation>(async (response, logger) =>
@@ -312,8 +312,56 @@ public class AIFineTuningAppService : AppServiceBase
         this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
         {
             var job = await _worker.CancelJobAsync(workerAlias, request.Id, CancellationToken);
+            await MirrorJobAsync(workerAlias, job);
             Audit("job-cancel-requested", $"{workerAlias}/{job.Id}");
             return job;
+        });
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public Task<AppResponseBase<FineTuningJob>> PauseJobAsync([FromBody] FineTuningCancelRequest request, string workerAlias) =>
+        this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
+        {
+            var job = await _worker.PauseJobAsync(workerAlias, request.Id, CancellationToken);
+            await MirrorJobAsync(workerAlias, job);
+            Audit("job-pause-requested", $"{workerAlias}/{job.Id}");
+            return job;
+        });
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public Task<AppResponseBase<FineTuningJob>> ResumeJobAsync([FromBody] FineTuningCancelRequest request, string workerAlias) =>
+        this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
+        {
+            var job = await _worker.ResumeJobAsync(workerAlias, request.Id, CancellationToken);
+            await MirrorJobAsync(workerAlias, job);
+            Audit("job-resume-requested", $"{workerAlias}/{job.Id}");
+            return job;
+        });
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public Task<AppResponseBase<FineTuningJob>> UpdateRuntimeAsync(
+        [FromBody] FineTuningRuntimeRequest request, string workerAlias, string id) =>
+        this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
+        {
+            var job = await _worker.UpdateRuntimeAsync(workerAlias, id, request, CancellationToken);
+            await MirrorJobAsync(workerAlias, job);
+            Audit("job-runtime-updated", $"{workerAlias}/{job.Id}");
+            return job;
+        });
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public Task<AppResponseBase<FineTuningDeleteResult>> DeleteJobAsync(
+        [FromBody] FineTuningCancelRequest request, string workerAlias) =>
+        this.GetResponseAsync<FineTuningDeleteResult>(async (response, logger) =>
+        {
+            var deleted = await _worker.DeleteJobAsync(workerAlias, request.Id, CancellationToken);
+            var fileIds = await _controlPlane.DeleteJobAsync(workerAlias, request.Id, CancellationToken);
+            foreach (var fileId in fileIds)
+            {
+                await _fileStore.DeleteAsync(fileId, CancellationToken);
+            }
+
+            Audit("job-deleted", $"{workerAlias}/{deleted.Id}");
+            return deleted;
         });
 
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]

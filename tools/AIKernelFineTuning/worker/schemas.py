@@ -70,6 +70,10 @@ class JobRequest(StrictModel):
         return value
 
 
+class RuntimeRequest(StrictModel):
+    maxDurationMinutes: int = Field(ge=1, le=10080)
+
+
 class ValidationCase(StrictModel):
     id: str = Field(min_length=1, max_length=50)
     prompt: str = Field(min_length=1, max_length=4096)
@@ -78,3 +82,6 @@ class ValidationCase(StrictModel):
 class ValidationRequest(StrictModel):
     cases: list[ValidationCase] = Field(min_length=1, max_length=8)
     maxTokens: int = Field(default=128, ge=16, le=256)
+    backend: Literal["cpu", "cuda", "mlx"] | None = None
+    method: Literal["lora", "qlora"] | None = None
+    confirmMismatch: bool = False

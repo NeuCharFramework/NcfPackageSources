@@ -3,7 +3,7 @@ import time
 
 
 class Telemetry:
-    def __init__(self, process, root):
+    def __init__(self, process, root, backend=None):
         import psutil
 
         self.psutil = psutil
@@ -13,6 +13,7 @@ class Telemetry:
         except psutil.NoSuchProcess:
             self.process = None
         self.root = root
+        self.backend = backend
         self.started = time.monotonic()
         self.nvml = None
         self.gpu_reason = "NVML not installed or no NVIDIA GPU."
@@ -42,7 +43,9 @@ class Telemetry:
             values["diskFreeBytes"] = shutil.disk_usage(self.root).free
         except (self.psutil.NoSuchProcess, self.psutil.AccessDenied, OSError) as exc:
             unavailable["process"] = str(exc)
-        if self.nvml is None:
+        if self.backend == "mlx":
+            unavailable["gpuUtilization"] = "MLX exposes unified-memory allocation, but macOS does not provide portable live GPU utilization and temperature metrics."
+        elif self.nvml is None:
             unavailable["gpu"] = self.gpu_reason
             values.update(gpuMemoryBytes=None, gpuUtilizationPercent=None, gpuTemperatureCelsius=None)
         else:

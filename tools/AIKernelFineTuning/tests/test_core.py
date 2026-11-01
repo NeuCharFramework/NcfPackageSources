@@ -276,6 +276,15 @@ class LoopTests(unittest.TestCase):
         self.assertEqual(schedule_rate(REQUEST, 1, 10), REQUEST["learningRate"])
         self.assertGreater(schedule_rate(REQUEST, 10, 10), 0)
 
+    def test_observability_indices_follow_shuffled_batches(self):
+        request = {**REQUEST, "maxSteps": 0, "epochs": 1, "batchSize": 2, "gradientAccumulationSteps": 2}
+        groups = list(batch_groups(ROWS[:5], request, include_indices=True))
+        self.assertEqual(len(groups), 2)
+        self.assertEqual(sum(len(indices) for _, _, indices in groups), 5)
+        self.assertEqual(sorted(index for _, _, indices in groups for index in indices), list(range(5)))
+        self.assertEqual([len(batch) for batch in groups[0][0]], [2, 2])
+        self.assertEqual(len(groups[1][2]), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

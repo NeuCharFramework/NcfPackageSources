@@ -13,7 +13,10 @@
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Repository;
+using Senparc.Ncf.Core.Enums;
 using Senparc.Xncf.AIKernel.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -116,9 +119,39 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
             }
 
             existing.Update(artifact.WorkerAlias, artifact.JobExternalId, artifact.ExternalId, artifact.Name, artifact.Bytes,
-                artifact.FileId, artifact.StorageKey, artifact.ContentSha256);
+                artifact.FileId ?? existing.FileId, artifact.StorageKey ?? existing.StorageKey,
+                artifact.ContentSha256 ?? existing.ContentSha256);
             await _artifactRepository.SaveChangesAsync();
             return existing;
+        }
+
+        public async Task<List<int>> DeleteJobAsync(string workerAlias, string jobExternalId,
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var artifacts = (await _artifactRepository.GetObjectListAsync(
+                item => item.WorkerAlias == workerAlias && item.JobExternalId == jobExternalId,
+                item => item.Id, OrderingType.Ascending, 0, 0)).ToList();
+            var events = (await _eventRepository.GetObjectListAsync(
+                item => item.WorkerAlias == workerAlias && item.JobExternalId == jobExternalId,
+                item => item.Id, OrderingType.Ascending, 0, 0)).ToList();
+            var job = await _jobRepository.GetFirstOrDefaultObjectAsync(
+                item => item.WorkerAlias == workerAlias && item.ExternalId == jobExternalId);
+
+            if (artifacts.Count > 0)
+            {
+                await _artifactRepository.DeleteAllAsync(artifacts);
+            }
+            if (events.Count > 0)
+            {
+                await _eventRepository.DeleteAllAsync(events);
+            }
+            if (job != null)
+            {
+                await _jobRepository.DeleteAsync(job);
+            }
+
+            return artifacts.Where(item => item.FileId.HasValue).Select(item => item.FileId!.Value).Distinct().ToList();
         }
 
         public Task<AIFineTuningArtifact> FindArtifactAsync(string workerAlias, string jobExternalId,

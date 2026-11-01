@@ -109,6 +109,24 @@ class TorchTraining:
         self.model.save_pretrained(path, safe_serialization=True)
         self.model.config.save_pretrained(path)
 
+    def load_checkpoint(self, path):
+        metadata = json.loads((path / "checkpoint.json").read_text(encoding="utf-8"))
+        if metadata.get("backend") != self.request["backend"] or not metadata.get("resumeSupported", False):
+            raise RuntimeError("Checkpoint backend is not compatible with this training request.")
+        from safetensors.torch import load_file
+
+        weights = next((candidate for candidate in (path / "adapter_model.safetensors", path / "model.safetensors")
+                        if candidate.is_file()), None)
+        if weights is None:
+            raise RuntimeError("Checkpoint adapter weights are missing.")
+        self.model.load_state_dict(load_file(str(weights), device=str(self.device)), strict=False)
+        state = self.torch.load(path / "optimizer-state.pt", map_location=self.device)
+        self.optimizer.load_state_dict(state["optimizer"])
+        self.scaler.load_state_dict(state["scaler"])
+        self.torch.set_rng_state(state["torchRngState"])
+        if self.device.type == "cuda" and state.get("cudaRngState"):
+            self.torch.cuda.set_rng_state_all(state["cudaRngState"])
+
     def checkpoint(self, root, step):
         root.mkdir(exist_ok=True)
         destination = root / f"step-{step:08d}"
@@ -126,7 +144,7 @@ class TorchTraining:
         atomic_write(temporary / "checkpoint.json", json.dumps({
             "step": step, "backend": self.request["backend"],
             "optimizerState": "Trusted worker-generated PyTorch state, not accepted as an input model.",
-            "resumeSupported": False,
+            "resumeSupported": True,
         }).encode())
         os.replace(temporary, destination)
         for old in sorted(path for path in root.iterdir() if path.is_dir() and not path.name.endswith(".tmp"))[:-2]:
