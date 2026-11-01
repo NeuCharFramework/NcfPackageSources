@@ -11,6 +11,7 @@ import threading
 import time
 import zipfile
 from pathlib import Path
+from datetime import datetime, timezone
 
 from . import VERSION
 from .config import OFFLINE_ENV, WorkerError, python_dev_include_paths, python_header_roots, safe_path
@@ -47,7 +48,7 @@ class Worker:
         self.validation_lock = threading.Lock()
         self.validation_active = set()
         for job in self.store.unfinished():
-            if job["state"] != "Queued":
+            if job["state"] not in {"Queued", "Paused"}:
                 self._reap_interrupted(job["id"])
                 self.store.transition(job["id"], "Interrupted", "Worker restarted before the child job completed; no automatic resume.")
                 self._publish(job["id"])
@@ -132,23 +133,54 @@ class Worker:
 
     def health(self):
         active, queued = self.store.counts()
+        paused = self.store.paused_count()
         return dict(status="ok" if not self.stopping else "stopping", version=VERSION,
-                    capabilities=self.capabilities, activeJobs=active, queuedJobs=queued, storeId=self.store.store_id)
+                    capabilities=self.capabilities, activeJobs=active, queuedJobs=queued,
+                    pausedJobs=paused, storeId=self.store.store_id)
 
     def validation(self, job_id):
         job = self.store.job(job_id)
         path = safe_path(self.settings.data, "jobs", job_id, "validation.json")
         if not path.is_file():
-            return {"status": "Idle", "startedUtc": None, "finishedUtc": None,
-                    "completed": 0, "total": 0, "results": [], "error": None}
-        return json.loads(path.read_text(encoding="utf-8"))
+            state = {"status": "Idle", "startedUtc": None, "finishedUtc": None,
+                     "completed": 0, "total": 0, "results": [], "error": None}
+        else:
+            state = json.loads(path.read_text(encoding="utf-8"))
+        manifest_path = safe_path(self.settings.data, "jobs", job_id, "output") / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.is_file() else {}
+        recorded = manifest.get("request") if isinstance(manifest.get("request"), dict) else {}
+        state["recordedBackend"] = recorded.get("backend") or job.get("request", {}).get("backend")
+        state["recordedMethod"] = recorded.get("method") or job.get("request", {}).get("method")
+        return state
 
     def start_validation(self, job_id, request: ValidationRequest):
         job = self.store.job(job_id)
         if job["state"] != "Succeeded":
             raise WorkerError("Validation is available only after a successful training job.", 409)
-        if job["request"]["backend"] != "mlx":
-            raise WorkerError("Automated validation currently supports native MLX exports only.", 422)
+        output = safe_path(self.settings.data, "jobs", job_id, "output")
+        manifest_path = output / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.is_file() else {}
+        recorded = manifest.get("request") if isinstance(manifest.get("request"), dict) else {}
+        recorded_backend = recorded.get("backend") or job.get("request", {}).get("backend")
+        recorded_method = recorded.get("method") or job.get("request", {}).get("method")
+        selected_backend = request.backend or recorded_backend
+        selected_method = request.method or recorded_method
+        if selected_backend not in {"cpu", "cuda", "mlx"}:
+            raise WorkerError("Validation backend is missing. Select cpu, cuda, or mlx.", 422)
+        if selected_method not in {"lora", "qlora"}:
+            raise WorkerError("Validation method is missing. Select lora or qlora.", 422)
+        mismatches = []
+        if recorded_backend and request.backend and request.backend != recorded_backend:
+            mismatches.append(f"backend recorded as {recorded_backend}, selected {request.backend}")
+        if recorded_method and request.method and request.method != recorded_method:
+            mismatches.append(f"method recorded as {recorded_method}, selected {request.method}")
+        if mismatches and not request.confirmMismatch:
+            raise WorkerError(
+                "Validation selection does not match the training manifest: "
+                + "; ".join(mismatches)
+                + ". Confirm the mismatch to continue.",
+                409,
+            )
         with self.lock:
             if self.active_id is not None or self.store.counts()[0] > 0:
                 raise WorkerError("Wait until the Worker has no active training job before validation.", 409)
@@ -156,7 +188,6 @@ class Worker:
             if job_id in self.validation_active:
                 raise WorkerError("Validation is already running for this job.", 409)
             self.validation_active.add(job_id)
-        output = safe_path(self.settings.data, "jobs", job_id, "output")
         model_path = safe_path(self.settings.models, job["request"]["modelId"])
         adapter_path = safe_path(output, "adapter")
         if not model_path.is_dir() or not adapter_path.is_dir():
@@ -172,6 +203,8 @@ class Worker:
                     adapter_path,
                     request,
                     lambda kind, message, metrics: self.store.event(job_id, kind, message, metrics),
+                    selected_backend,
+                    selected_method,
                 )
             finally:
                 with self.validation_lock:
@@ -232,12 +265,72 @@ class Worker:
                 return job
             if job["state"] == "Queued":
                 return self.store.transition(job_id, "Cancelled")
+            if job["state"] == "Paused":
+                return self.store.transition(job_id, "Cancelled")
+            if job["state"] == "Pausing":
+                self.store.transition(job_id, "Cancelling")
+                self._stop("Cancelled", None, override=True)
+                return self.store.job(job_id)
             self.store.transition(job_id, "Cancelling")
             self._stop("Cancelled", None)
             return self.store.job(job_id)
 
-    def _stop(self, state, error):
-        if self.stop_state is not None:
+    def pause(self, job_id):
+        with self.lock:
+            job = self.store.job(job_id)
+            if job["state"] in TERMINAL or job["state"] == "Paused":
+                return job
+            if job["state"] == "Queued":
+                return self.store.transition(job_id, "Paused")
+            if job["state"] != "Running":
+                raise WorkerError("The job is already changing lifecycle state; retry shortly.", 409)
+            self.store.transition(job_id, "Pausing")
+            self._stop("Paused", None)
+            return self.store.job(job_id)
+
+    def resume(self, job_id):
+        with self.lock:
+            job = self.store.job(job_id)
+            if job["state"] == "Resuming":
+                return job
+            if job["state"] != "Paused":
+                raise WorkerError("Only a paused job can be resumed.", 409)
+            checkpoint = self._latest_checkpoint(job_id)
+            if checkpoint is None and job["trainingStartedUtc"] is not None:
+                raise WorkerError("No completed checkpoint is available for this job.", 409)
+            return self.store.transition(job_id, "Resuming")
+
+    def update_runtime(self, job_id, max_duration_minutes):
+        if max_duration_minutes > self.settings.max_duration_minutes:
+            raise WorkerError(f"maxDurationMinutes exceeds the operator budget ({self.settings.max_duration_minutes}).")
+        return self.store.update_runtime(job_id, max_duration_minutes)
+
+    def delete(self, job_id):
+        with self.lock:
+            job = self.store.job(job_id)
+            if self.active_id == job_id or job["state"] in {"Running", "Pausing", "Resuming", "Cancelling"}:
+                raise WorkerError("Stop or pause the job before deleting it.", 409)
+            root = safe_path(self.settings.data, "jobs", job_id)
+            self.store.delete_job(job_id)
+            if root.exists():
+                if root.is_symlink() or not root.is_dir():
+                    raise WorkerError("Job storage path is not a regular directory.", 409)
+                shutil.rmtree(root)
+            return {"id": job_id, "deleted": True}
+
+    def _latest_checkpoint(self, job_id):
+        checkpoints = safe_path(self.settings.data, "jobs", job_id, "output", "checkpoints")
+        if not checkpoints.is_dir():
+            return None
+        candidates = [
+            path for path in checkpoints.iterdir()
+            if path.is_dir() and not path.is_symlink() and path.name.startswith("step-")
+            and (path / "checkpoint.json").is_file()
+        ]
+        return max(candidates, key=lambda path: path.name) if candidates else None
+
+    def _stop(self, state, error, override=False):
+        if self.stop_state is not None and not override:
             return
         self.stop_state, self.stop_error = state, error
         self.cancel_deadline = time.monotonic() + self.settings.cancel_grace_seconds
@@ -253,7 +346,7 @@ class Worker:
                 with self.lock:
                     if self.stopping:
                         return
-                    queued = next((job for job in self.store.unfinished() if job["state"] == "Queued"), None)
+                    queued = next((job for job in self.store.unfinished() if job["state"] in {"Queued", "Resuming"}), None)
                     if queued:
                         self._launch(queued)
                 if queued:
@@ -277,6 +370,14 @@ class Worker:
         root.mkdir(exist_ok=True)
         spec = self._spec(job["request"])
         spec.update(jobId=job_id, outputPath=str(root / "output"))
+        if job["state"] == "Resuming":
+            checkpoint = self._latest_checkpoint(job_id)
+            if checkpoint is None and job["trainingStartedUtc"] is not None:
+                self.store.transition(job_id, "Failed", "No completed checkpoint is available for resume.")
+                return
+            if checkpoint is not None:
+                checkpoint_data = json.loads((checkpoint / "checkpoint.json").read_text(encoding="utf-8"))
+                spec.update(resumeCheckpoint=str(checkpoint), resumeStep=int(checkpoint_data["step"]))
         atomic_write(root / "spec.json", json.dumps(spec).encode())
         self.active_id = job_id
         self.process = None
@@ -334,8 +435,8 @@ class Worker:
         job_id, process = job["id"], self.process
         reader = threading.Thread(target=self._read_output, args=(job_id, process.stdout), daemon=True)
         reader.start()
-        telemetry = Telemetry(process, self.settings.data)
-        started, last_sample = time.monotonic(), 0
+        telemetry = Telemetry(process, self.settings.data, job["request"]["backend"])
+        last_sample = 0
         warned = set()
         last_disk_check = 0
         while process.poll() is None:
@@ -343,7 +444,11 @@ class Worker:
             with self.lock:
                 if self.stopping:
                     self._stop("Interrupted", "Worker shut down; checkpoint saved if the child reached a safe boundary.")
-                if now - started >= job["request"]["maxDurationMinutes"] * 60:
+                current = self.store.job(job_id)
+                started_utc = current["startedUtc"]
+                started = datetime.fromisoformat(started_utc.replace("Z", "+00:00")) if started_utc else datetime.now(timezone.utc)
+                elapsed = (datetime.now(timezone.utc) - started).total_seconds() - float(current["pausedSeconds"] or 0)
+                if elapsed >= current["request"]["maxDurationMinutes"] * 60:
                     self._stop("Failed", "Training exceeded maxDurationMinutes; checkpoint saved if possible.")
                 if self.cancel_deadline is not None and now >= self.cancel_deadline:
                     try:
@@ -366,6 +471,7 @@ class Worker:
                         self.store.event(job_id, "warning", "Training output exceeds 80% of the operator disk budget.")
                         warned.add("disk-budget")
                     last_disk_check = now
+                values["jobElapsedSeconds"] = max(0.0, elapsed)
                 self.store.event(job_id, "metrics", "Process telemetry (CPU percent may exceed 100 on multicore; GPU values are device-wide).", values)
                 for key, reason in unavailable.items():
                     if key not in warned:
@@ -387,11 +493,12 @@ class Worker:
             error = self.stop_error
             if state == "Failed" and not error:
                 error = f"Training child exited with code {process.returncode}; see retained error/log events."
-            try:
-                self._publish(job_id)
-            except (OSError, ValueError, zipfile.BadZipFile, WorkerError) as exc:
-                LOG.exception("Artifact publication failed for %s", job_id)
-                state, error = "Failed", f"Artifact publication failed: {exc}"
+            if state != "Paused":
+                try:
+                    self._publish(job_id)
+                except (OSError, ValueError, zipfile.BadZipFile, WorkerError) as exc:
+                    LOG.exception("Artifact publication failed for %s", job_id)
+                    state, error = "Failed", f"Artifact publication failed: {exc}"
             self.store.transition(job_id, state, error)
             self.process = None
             self.active_id = None

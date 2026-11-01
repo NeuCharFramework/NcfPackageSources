@@ -80,7 +80,8 @@ class ApiTests(unittest.TestCase):
         response = self.client.get(path, headers=self.headers)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"status": "Idle", "startedUtc": None, "finishedUtc": None,
-                                           "completed": 0, "total": 0, "results": [], "error": None})
+                                           "completed": 0, "total": 0, "results": [], "error": None,
+                                           "recordedBackend": REQUEST["backend"], "recordedMethod": REQUEST["method"]})
         response = self.client.post(path, headers=self.headers, json={"cases": [], "maxTokens": 128})
         self.assertEqual(response.status_code, 422)
         response = self.client.post(path, headers=self.headers,

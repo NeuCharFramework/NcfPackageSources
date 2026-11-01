@@ -128,6 +128,8 @@ public class FineTuningWorkerClientTests
             Assert.AreEqual(HttpMethod.Post, request.Method);
             using var body = JsonDocument.Parse(await request.Content!.ReadAsStringAsync(token));
             Assert.AreEqual("base-model", body.RootElement.GetProperty("modelId").GetString());
+            Assert.AreEqual("cpu", body.RootElement.GetProperty("backend").GetString());
+            Assert.AreEqual("lora", body.RootElement.GetProperty("method").GetString());
             Assert.AreEqual(16, body.RootElement.GetProperty("loraAlpha").GetInt32());
             Assert.AreEqual(42, body.RootElement.GetProperty("seed").GetInt32());
             return Json("""{"id":"job-1","name":"Test","state":"Queued","createdUtc":"2026-10-01T19:00:00Z","artifacts":[],"lastEventSequence":0,"latestMetrics":{"gpuMemoryMb":null},"request":{"modelId":"base-model"}}""");
@@ -136,7 +138,9 @@ public class FineTuningWorkerClientTests
         {
             Name = "Test",
             ModelId = "base-model",
-            DatasetId = "dataset-1"
+            DatasetId = "dataset-1",
+            Backend = "cpu",
+            Method = "lora"
         });
         Assert.AreEqual("Queued", result.State);
         Assert.IsNull(result.LatestMetrics["gpuMemoryMb"]);
@@ -149,15 +153,25 @@ public class FineTuningWorkerClientTests
         var client = Client(handler);
         await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => client.CreateJobAsync(new FineTuningJobRequest
         {
-            Name = "test", ModelId = "model", DatasetId = "data", LearningRate = double.NaN
+            Name = "test", ModelId = "model", DatasetId = "data", Backend = "cpu", Method = "lora",
+            LearningRate = double.NaN
         }));
         await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => client.CreateJobAsync(new FineTuningJobRequest
         {
-            Name = "test", ModelId = "model", DatasetId = "data", EvalDatasetId = "data"
+            Name = "test", ModelId = "model", DatasetId = "data", Backend = "cpu", Method = "lora",
+            EvalDatasetId = "data"
         }));
         await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => client.CreateJobAsync(new FineTuningJobRequest
         {
             Name = "test", ModelId = "model", DatasetId = "data", Method = "qlora", Backend = "cpu"
+        }));
+        await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => client.CreateJobAsync(new FineTuningJobRequest
+        {
+            Name = "test", ModelId = "model", DatasetId = "data", Method = "lora"
+        }));
+        await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => client.CreateJobAsync(new FineTuningJobRequest
+        {
+            Name = "test", ModelId = "model", DatasetId = "data", Backend = "cpu"
         }));
     }
 

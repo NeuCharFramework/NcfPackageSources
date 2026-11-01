@@ -14,6 +14,7 @@
 
 using Senparc.Xncf.AIKernel.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,6 +28,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services
         Task<AIFineTuningArtifact> UpsertArtifactAsync(AIFineTuningArtifact artifact, CancellationToken cancellationToken = default);
         Task<AIFineTuningArtifact> FindArtifactAsync(string workerAlias, string jobExternalId, string externalId,
             CancellationToken cancellationToken = default);
+        Task<List<int>> DeleteJobAsync(string workerAlias, string jobExternalId, CancellationToken cancellationToken = default);
         Task<AIFineTuningMigration> UpsertMigrationAsync(AIFineTuningMigration migration, CancellationToken cancellationToken = default);
     }
 }

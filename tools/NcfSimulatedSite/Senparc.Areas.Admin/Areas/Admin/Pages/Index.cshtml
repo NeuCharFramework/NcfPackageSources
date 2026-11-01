@@ -204,6 +204,61 @@
         .pivot-board-block.pivot-block-accent-purple { border-left-color: #8c52ff; }
         .pivot-board-block.pivot-block-accent-gray { border-left-color: #909399; }
 
+        .pivot-board-block-missing {
+            border-left-color: #e6a23c;
+            background: linear-gradient(145deg, #fffdf7 0%, #fffaf0 100%);
+            cursor: help;
+        }
+
+        .pivot-board-block-missing:hover {
+            box-shadow: 0 6px 18px rgba(230, 162, 60, 0.18);
+        }
+
+        .pivot-board-block-missing h4 {
+            color: #b88230;
+        }
+
+        .pivot-missing-popover {
+            color: #606266;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .pivot-missing-popover strong {
+            display: block;
+            color: #b88230;
+        }
+
+        .pivot-missing-popover p {
+            margin: 8px 0;
+        }
+
+        .pivot-missing-popover code {
+            display: block;
+            margin-top: 4px;
+            padding: 3px 6px;
+            overflow-wrap: anywhere;
+            color: #606266;
+            background: #f5f7fa;
+            border-radius: 4px;
+        }
+
+        .pivot-missing-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 14px;
+            margin-top: 12px;
+        }
+
+        .pivot-missing-actions a {
+            color: #409eff;
+            text-decoration: none;
+        }
+
+        .pivot-missing-actions a:hover {
+            text-decoration: underline;
+        }
+
         .pivot-block-module {
             display: inline-block;
             margin-top: 10px;
@@ -1442,14 +1497,44 @@
         </div>
         <p v-if="pivotBoard.description" class="pivot-board-description">{{pivotBoard.description}}</p>
         <div class="pivot-board-grid" :style="{'--pivot-board-columns': pivotBoard.columns || 2}">
-            <div v-for="block in pivotBoard.blocks" :key="block.key || (block.moduleUid + block.functionKey)"
-                 class="pivot-board-block" :class="'pivot-block-accent-' + (block.accent || 'blue')"
-                 role="button" tabindex="0"
-                 @@click="openPivotBlock(block)" @@keydown.enter.prevent="openPivotBlock(block)">
-                <h4>{{block.title || block.functionKey}}</h4>
-                <p>{{block.summary || block.functionName}}</p>
-                <small class="pivot-block-module"><i class="fa fa-cube"></i> {{pivotBlockModuleLabel(block.moduleUid)}}</small>
-                <i class="fa fa-hand-pointer-o pivot-block-hint"></i>
+            <div v-for="block in pivotBoard.blocks" :key="block.key || (block.moduleUid + block.functionKey)">
+                <el-tooltip v-if="pivotBlockIsMissing(block)"
+                            :content="pivotBlockMissingDescription(block)"
+                            placement="top"
+                            effect="light">
+                    <el-popover placement="top-start" width="380" trigger="click">
+                        <div class="pivot-missing-popover">
+                            <strong><i class="el-icon-warning"></i> Pivot Block 尚未初始化</strong>
+                            <p>数据库中没有找到该块引用的 Function。先初始化或恢复 Function 后，再回到面板设置重新选择即可。</p>
+                            <code>模块 UID：{{block.moduleUid || '-'}}</code>
+                            <code>Function Code：{{block.functionKey || '-'}}</code>
+                            <div class="pivot-missing-actions">
+                                <a :href="pivotBlockModuleSettingsUrl(block)" @@click.stop>打开模块 NeuCharPivot 设置</a>
+                                <a :href="pivotBlockSettingsUrl(block)" @@click.stop>打开面板设置并预填代码</a>
+                            </div>
+                        </div>
+                        <div slot="reference"
+                             class="pivot-board-block pivot-board-block-missing"
+                             :class="'pivot-block-accent-' + (block.accent || 'orange')"
+                             role="button"
+                             tabindex="0">
+                            <h4><i class="el-icon-warning-outline"></i> {{block.title || block.functionKey}}</h4>
+                            <p>缺少 Function：{{block.functionKey || '未提供 code'}}</p>
+                            <small class="pivot-block-module"><i class="fa fa-cube"></i> {{pivotBlockModuleLabel(block.moduleUid)}}</small>
+                            <i class="el-icon-question pivot-block-hint"></i>
+                        </div>
+                    </el-popover>
+                </el-tooltip>
+                <div v-else
+                     class="pivot-board-block"
+                     :class="'pivot-block-accent-' + (block.accent || 'blue')"
+                     role="button" tabindex="0"
+                     @@click="openPivotBlock(block)" @@keydown.enter.prevent="openPivotBlock(block)">
+                    <h4>{{block.title || block.functionKey}}</h4>
+                    <p>{{block.summary || block.functionName}}</p>
+                    <small class="pivot-block-module"><i class="fa fa-cube"></i> {{pivotBlockModuleLabel(block.moduleUid)}}</small>
+                    <i class="fa fa-hand-pointer-o pivot-block-hint"></i>
+                </div>
             </div>
         </div>
     </el-card>

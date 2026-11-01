@@ -6,6 +6,10 @@
     [2026-10-16] 增加 PromptRange Skill 目录、执行与 AdminChat 暴露能力
     1、通过 PromptRange.Abstractions 暴露可移植 Skill 契约
     2、将发布的 PromptRange Skill 注入 AdminChat 工具调用
+    [2026-11-01] Improve missing custom NeuCharPivot Block handling
+    1. Show a friendly placeholder with the missing module UID and Function Code instead of opening an error popup.
+    2. Add hover/click guidance and prefilled links to the Pivot and module settings pages.
+    3. Preserve missing-block metadata when loading Admin home panels and cover the client fallback behavior with regression tests.
     [2026-10-24] Add private Workspace attachments, bounded local Office/PDF reading and explicit opt-in image vision. Preserve attachment references and original files; never insert binary Base64 into text prompts. Refresh live Markdown styles in the running host.
     1. Upload, paste or drop up to 4 files per message. User uploads do not grant AI write/CLI permission. Read/write size limits come from Workspace configuration and are displayed by the upload control.
     2. DOCX/XLSX/PPTX and text use local extraction; PDF text is read per page, up to 200 pages. Old DOC/XLS/PPT are stored without claiming text extraction. Scanned pages require OCR or explicitly authorized image screenshots; no paid OCR is called automatically.

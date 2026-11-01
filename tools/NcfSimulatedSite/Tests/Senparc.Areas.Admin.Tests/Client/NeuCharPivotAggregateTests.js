@@ -13,6 +13,14 @@ const globalFunctionPath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/wwwroot/js/Admin/GlobalNeuCharPivot.js');
 const pagePath = path.resolve(__dirname,
     '../../../Senparc.Areas.Admin/Areas/Admin/Pages/NeuCharPivot/Aggregate.cshtml');
+const homePagePath = path.resolve(__dirname,
+    '../../../Senparc.Areas.Admin/Areas/Admin/Pages/Index.cshtml');
+const homeScriptPath = path.resolve(__dirname,
+    '../../../Senparc.Areas.Admin/wwwroot/js/Admin/Pages/Index/Index.js');
+const boardPagePath = path.resolve(__dirname,
+    '../../../Senparc.Areas.Admin/Areas/Admin/Pages/NeuCharPivot/Board.cshtml');
+const boardScriptPath = path.resolve(__dirname,
+    '../../../Senparc.Areas.Admin/wwwroot/js/Admin/Pages/NeuCharPivot/Board.js');
 const sandboxPagePath = path.resolve(__dirname,
     '../../../../../src/Extensions/Senparc.Xncf.Sandbox/Areas/Admin/Pages/Sandbox/Index.cshtml');
 
@@ -57,6 +65,10 @@ assert.strictEqual(sandbox.window.NeuCharPivotUi.loopStatus({ enabled: true, isR
 const aggregateScript = fs.readFileSync(aggregatePath, 'utf8');
 const globalFunctionScript = fs.readFileSync(globalFunctionPath, 'utf8');
 const page = fs.readFileSync(pagePath, 'utf8');
+const homePage = fs.readFileSync(homePagePath, 'utf8');
+const homeScript = fs.readFileSync(homeScriptPath, 'utf8');
+const boardPage = fs.readFileSync(boardPagePath, 'utf8');
+const boardScript = fs.readFileSync(boardScriptPath, 'utf8');
 const sandboxPage = fs.readFileSync(sandboxPagePath, 'utf8');
 assert.ok(aggregateScript.includes('NeuCharPivotUi.sanitizeHtml(data.data)'),
     'String Function results must pass through the shared sanitizer.');
@@ -82,6 +94,16 @@ assert.ok(globalFunctionScript.includes('/Admin/NeuCharPivot/Function?handler=De
     'The global floating dialog must resolve the server-side Function mapping.');
 assert.ok(globalFunctionScript.includes('/Admin/NeuCharPivot/Function?handler=Run'),
     'The global floating dialog must execute through the unified server endpoint.');
+assert.ok(homeScript.includes('block.available === false'),
+    'Admin home must identify Pivot blocks missing from the database catalog.');
+assert.ok(homePage.includes('pivot-missing-popover'),
+    'Missing Admin home Pivot blocks must provide actionable details instead of an error popup.');
+assert.ok(homePage.includes('打开面板设置并预填代码'),
+    'Missing Admin home Pivot blocks must link to prefilled settings.');
+assert.ok(boardScript.includes('readSetupRequest'),
+    'Pivot settings must consume the missing block setup parameters.');
+assert.ok(boardPage.includes('Function Code：'),
+    'Pivot settings must display the prefilled Function code.');
 assert.ok(sandboxPage.includes('window.NeuCharPivotFunction.open'),
     'Sandbox shortcuts must use the global floating Function mapping.');
 assert.ok(sandboxPage.includes('window.location.assign(this.getFunctionUrl'),

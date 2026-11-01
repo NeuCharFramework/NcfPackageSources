@@ -30,9 +30,11 @@ var app = new Vue({
             selectedId: new URL(window.location.href).searchParams.get("id") || "",
             selectionVersion: 0,
             events: [],
-            validation: { status: "Idle", startedUtc: null, finishedUtc: null, completed: 0, total: 0, results: [], error: null },
+            validation: { status: "Idle", startedUtc: null, finishedUtc: null, completed: 0, total: 0, results: [], error: null, recordedBackend: null, recordedMethod: null },
             validationPrompts: "",
             validationMaxTokens: 128,
+            validationBackend: "",
+            validationMethod: "",
             validationBusy: false,
             cursor: 0,
             catchingUp: false,
@@ -54,6 +56,11 @@ var app = new Vue({
             uploadBusy: false,
             createBusy: false,
             cancelBusy: false,
+            pauseBusy: false,
+            resumeBusy: false,
+            deleteBusy: false,
+            runtimeBusy: false,
+            runtimeMinutes: null,
             fileReading: false,
             fileName: "",
             datasetName: "",
@@ -108,6 +115,7 @@ var app = new Vue({
                 { key: "gpuUtil", unit: "%" }, { key: "gpuMemory", unit: "MiB" },
                 { key: "gpuTemperature", unit: "\u00b0C" }, { key: "gpuAllocated", unit: "MiB" },
                 { key: "gradNorm" }, { key: "tokensPerSecond", unit: "token/s" },
+                { key: "averageStepDuration", unit: "s" }, { key: "estimatedRemaining", unit: "s" },
                 { key: "elapsedSeconds", unit: "s" }, { key: "diskFree", unit: "MiB" },
                 { key: "jobOutput", unit: "MiB" }
             ]
@@ -122,6 +130,19 @@ var app = new Vue({
         },
         effectiveBatchSize() {
             return this.form.batchSize * this.form.gradientAccumulationSteps;
+        },
+        validationMismatchWarning() {
+            if (!this.job || !this.job.request) { return ""; }
+            var recordedBackend = this.validation.recordedBackend || this.job.request.backend;
+            var recordedMethod = this.validation.recordedMethod || this.job.request.method;
+            var messages = [];
+            if (recordedBackend && this.validationBackend && recordedBackend !== this.validationBackend) {
+                messages.push(this.t("ValidationBackend") + ": " + recordedBackend + " -> " + this.validationBackend);
+            }
+            if (recordedMethod && this.validationMethod && recordedMethod !== this.validationMethod) {
+                messages.push(this.t("ValidationMethod") + ": " + recordedMethod + " -> " + this.validationMethod);
+            }
+            return messages.join("; ");
         },
         connectionHealthy() {
             return !!this.health && !this.connectionError && !!this.lastConnectedUtc
@@ -154,6 +175,11 @@ var app = new Vue({
             if (this.job.state === "Succeeded") { return "success"; }
             if (["Failed", "Interrupted"].indexOf(this.job.state) >= 0) { return "exception"; }
             return undefined;
+        },
+        estimatedFinishUtc() {
+            var remaining = this.metric("estimatedRemaining");
+            if (remaining === null || remaining < 0 || !this.job || this.job.state !== "Running") { return null; }
+            return new Date(Date.now() + remaining * 1000).toISOString();
         },
         workflowCurrentStep() {
             if (!this.workerAlias || !this.health) { return 0; }
@@ -259,7 +285,11 @@ var app = new Vue({
                     && Array.isArray(data.results) && data.results.every(result =>
                         this.isRecord(result) && typeof result.id === "string"
                         && typeof result.prompt === "string" && typeof result.response === "string"
-                        && typeof result.completedUtc === "string");
+                        && typeof result.completedUtc === "string")
+                    && (data.recordedBackend == null || ["cpu", "cuda", "mlx"].indexOf(data.recordedBackend) >= 0)
+                    && (data.recordedMethod == null || ["lora", "qlora"].indexOf(data.recordedMethod) >= 0);
+            } else if (method === "DeleteJobAsync") {
+                valid = this.isRecord(data) && typeof data.id === "string" && data.deleted === true;
             } else {
                 valid = this.validJob(data);
             }
@@ -288,7 +318,7 @@ var app = new Vue({
         },
         validJob(job) {
             return this.isRecord(job) && typeof job.id === "string" && typeof job.name === "string"
-                && ["Queued", "Running", "Cancelling", "Cancelled", "Succeeded", "Failed", "Interrupted"].indexOf(job.state) >= 0
+                && ["Queued", "Running", "Pausing", "Paused", "Resuming", "Cancelling", "Cancelled", "Succeeded", "Failed", "Interrupted"].indexOf(job.state) >= 0
                 && this.isRecord(job.request) && this.validMetrics(job.latestMetrics)
                 && Number.isSafeInteger(job.lastEventSequence) && job.lastEventSequence >= 0
                 && Array.isArray(job.artifacts) && job.artifacts.every(artifact =>
@@ -306,7 +336,7 @@ var app = new Vue({
             if (method !== "GetWorkersAsync" && method !== "SaveWorkerAsync") {
                 if (post) {
                     config.params = { workerAlias: alias };
-                    if (method === "StartValidationAsync") {
+                    if (method === "StartValidationAsync" || method === "UpdateRuntimeAsync") {
                         config.params.id = requestPayload.id;
                         requestPayload = Object.assign({}, requestPayload);
                         delete requestPayload.id;
@@ -445,9 +475,14 @@ var app = new Vue({
                 this.pollBusy = false;
                 this.now = Date.now();
                 if (!this._disposed) {
-                    this._pollTimer = setTimeout(() => this.poll(), this.refreshPending ? 0 : 2000);
+                    this._pollTimer = setTimeout(() => this.poll(), this.refreshPending ? 0 : this.pollDelay());
                 }
             }
+        },
+        pollDelay() {
+            if (this.job && this.job.state === "Running") { return 1000; }
+            if (this.job && ["Queued", "Pausing", "Resuming", "Cancelling"].indexOf(this.job.state) >= 0) { return 2000; }
+            return 5000;
         },
         selectJob(row, refresh) {
             if (this.selectedId === row.id && this.job) { return; }
@@ -466,7 +501,10 @@ var app = new Vue({
             this.detailError = "";
             this.detailLoading = false;
             this.events = [];
-            this.validation = { status: "Idle", startedUtc: null, finishedUtc: null, completed: 0, total: 0, results: [], error: null };
+            this.validation = { status: "Idle", startedUtc: null, finishedUtc: null, completed: 0, total: 0, results: [], error: null, recordedBackend: null, recordedMethod: null };
+            this.validationBackend = "";
+            this.validationMethod = "";
+            this.runtimeMinutes = null;
             this.chartPoints = [];
             this.cursor = 0;
             this.catchingUp = false;
@@ -481,6 +519,13 @@ var app = new Vue({
                 var job = await this.request("GetJobAsync", { id: id }, false, alias);
                 if (this._disposed || this.selectionVersion !== version) { return; }
                 this.job = job;
+                if (!this.validationBackend && job.request && ["cpu", "cuda", "mlx"].indexOf(job.request.backend) >= 0) {
+                    this.validationBackend = job.request.backend;
+                }
+                if (!this.validationMethod && job.request && ["lora", "qlora"].indexOf(job.request.method) >= 0) {
+                    this.validationMethod = job.request.method;
+                }
+                if (!this.runtimeBusy) { this.runtimeMinutes = job.request.maxDurationMinutes; }
                 this.detailError = "";
                 for (var page = 0; page < 3; page++) {
                     var before = this.cursor;
@@ -493,6 +538,12 @@ var app = new Vue({
                     var validation = await this.request("GetValidationAsync", { id: id }, false, alias);
                     if (this._disposed || this.selectionVersion !== version) { return; }
                     this.validation = validation;
+                    if (!this.validationBackend && validation.recordedBackend) {
+                        this.validationBackend = validation.recordedBackend;
+                    }
+                    if (!this.validationMethod && validation.recordedMethod) {
+                        this.validationMethod = validation.recordedMethod;
+                    }
                 }
                 this.$nextTick(() => {
                     if (this._disposed || this.selectionVersion !== version) { return; }
@@ -517,11 +568,28 @@ var app = new Vue({
             }
             this.validationBusy = true;
             try {
-                this.validation = await this.request("StartValidationAsync", {
+                var payload = {
                     id: this.job.id,
                     maxTokens: this.validationMaxTokens,
+                    backend: this.validationBackend || null,
+                    method: this.validationMethod || null,
+                    confirmMismatch: false,
                     cases: prompts.map((prompt, index) => ({ id: "case-" + (index + 1), prompt: prompt }))
-                }, true);
+                };
+                try {
+                    this.validation = await this.request("StartValidationAsync", payload, true);
+                } catch (error) {
+                    if (!this.validationMismatchWarning || !this.$confirm) { throw error; }
+                    try {
+                        await this.$confirm(this.t("ValidationMismatchConfirm") + "\n" + this.validationMismatchWarning,
+                            this.t("ValidationMismatchWarning"), { type: "warning", confirmButtonText: this.t("Confirm"), cancelButtonText: this.t("Cancel") });
+                    } catch (confirmError) {
+                        if (confirmError === "cancel" || confirmError === "close") { return; }
+                        throw confirmError;
+                    }
+                    payload.confirmMismatch = true;
+                    this.validation = await this.request("StartValidationAsync", payload, true);
+                }
                 this.requestPoll();
             } catch (error) {
                 this.reportAction(error);
@@ -906,7 +974,16 @@ var app = new Vue({
             }
         },
         canCancel(job) {
+            return ["Queued", "Running", "Pausing", "Paused"].indexOf(job.state) >= 0;
+        },
+        canPause(job) {
             return ["Queued", "Running"].indexOf(job.state) >= 0;
+        },
+        canResume(job) {
+            return job.state === "Paused";
+        },
+        canDelete(job) {
+            return ["Cancelled", "Succeeded", "Failed", "Interrupted", "Paused"].indexOf(job.state) >= 0;
         },
         async cancelJob() {
             if (this.cancelBusy || !this.job || !this.canCancel(this.job)) { return; }
@@ -934,6 +1011,83 @@ var app = new Vue({
                 this.cancelBusy = false;
             }
         },
+        async pauseJob() {
+            if (this.pauseBusy || !this.job || !this.canPause(this.job)) { return; }
+            this.pauseBusy = true;
+            try {
+                var job = await this.request("PauseJobAsync", { id: this.job.id }, true, this.workerAlias);
+                this.job = job;
+                this.$message.success(this.t("PauseRequested"));
+                this.requestPoll();
+            } catch (error) {
+                this.reportAction(error);
+            } finally {
+                this.pauseBusy = false;
+            }
+        },
+        async resumeJob() {
+            if (this.resumeBusy || !this.job || !this.canResume(this.job)) { return; }
+            this.resumeBusy = true;
+            try {
+                var job = await this.request("ResumeJobAsync", { id: this.job.id }, true, this.workerAlias);
+                this.job = job;
+                this.$message.success(this.t("ResumeRequested"));
+                this.requestPoll();
+            } catch (error) {
+                this.reportAction(error);
+            } finally {
+                this.resumeBusy = false;
+            }
+        },
+        async updateRuntime() {
+            if (this.runtimeBusy || !this.job || this.runtimeMinutes === null) { return; }
+            this.runtimeBusy = true;
+            try {
+                var minutes = Number(this.runtimeMinutes);
+                if (!Number.isInteger(minutes) || minutes < 1 || minutes > 10080) {
+                    throw new Error(this.t("RuntimeInvalid"));
+                }
+                var job = await this.request("UpdateRuntimeAsync", {
+                    id: this.job.id, maxDurationMinutes: minutes
+                }, true, this.workerAlias);
+                this.job = job;
+                this.runtimeMinutes = job.request.maxDurationMinutes;
+                this.$message.success(this.t("RuntimeUpdated"));
+            } catch (error) {
+                this.reportAction(error);
+            } finally {
+                this.runtimeBusy = false;
+            }
+        },
+        async deleteJob() {
+            if (this.deleteBusy || !this.job || !this.canDelete(this.job)) { return; }
+            try {
+                await this.$confirm(this.t("DeleteConfirm"), this.t("DeleteJob"), {
+                    type: "warning", confirmButtonText: this.t("Confirm"), cancelButtonText: this.t("KeepTraining")
+                });
+            } catch (error) {
+                if (error === "cancel" || error === "close") { return; }
+                this.reportAction(error);
+                return;
+            }
+            this.deleteBusy = true;
+            try {
+                await this.request("DeleteJobAsync", { id: this.job.id }, true, this.workerAlias);
+                this.$message.success(this.t("DeleteCompleted"));
+                this.jobs = this.jobs.filter(item => item.id !== this.job.id);
+                this.jobsTotal = Math.max(0, this.jobsTotal - 1);
+                this.selectedId = "";
+                this.clearJobDetails();
+                var url = new URL(window.location.href);
+                url.searchParams.delete("id");
+                window.history.replaceState(null, "", url.toString());
+                this.requestPoll();
+            } catch (error) {
+                this.reportAction(error);
+            } finally {
+                this.deleteBusy = false;
+            }
+        },
         readMetric(metrics, key) {
             var bytesKeys = { rss: "processRssBytes", gpuMemory: "gpuMemoryBytes",
                 gpuAllocated: "gpuAllocatedBytes", diskFree: "diskFreeBytes", jobOutput: "jobOutputBytes" };
@@ -950,7 +1104,11 @@ var app = new Vue({
                 cpu: ["processCpuPercent", "cpuPercent", "cpu_percent"],
                 gpuUtil: ["gpuUtilizationPercent", "gpuUtilization", "gpuUtilPercent", "gpu_utilization", "gpu_util_percent"],
                 gpuMemory: ["gpuMemoryMb", "gpuMemoryMiB", "gpu_memory_mb", "gpu_memory_mib"],
-                gpuTemperature: ["gpuTemperatureCelsius", "gpuTemperatureC", "gpu_temperature_c"]
+                gpuMemory: ["gpuMemoryMb", "gpuMemoryMiB", "gpu_memory_mb", "gpu_memory_mib"],
+                gpuTemperature: ["gpuTemperatureCelsius", "gpuTemperatureC", "gpu_temperature_c"],
+                averageStepDuration: ["averageStepDurationSeconds", "average_step_duration_seconds"],
+                estimatedRemaining: ["estimatedRemainingSeconds", "estimated_remaining_seconds"],
+                elapsedSeconds: ["jobElapsedSeconds", "elapsedSeconds"]
             };
             var names = aliases[key] || [key];
             for (var index = 0; index < names.length; index++) {
@@ -982,7 +1140,7 @@ var app = new Vue({
         stateType(state) {
             if (state === "Succeeded") { return "success"; }
             if (state === "Failed" || state === "Interrupted") { return "danger"; }
-            if (state === "Cancelling") { return "warning"; }
+            if (["Cancelling", "Pausing", "Paused", "Resuming"].indexOf(state) >= 0) { return "warning"; }
             return "info";
         },
         jobRowClass(context) {
