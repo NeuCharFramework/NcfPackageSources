@@ -43,6 +43,10 @@ namespace Senparc.Ncf.XncfBase
         /// 多行文本，对应字符串类参数，前端渲染为 textarea。
         /// </summary>
         TextArea = 5,
+        /// <summary>
+        /// 文件引用；文件内容通过 Function 文件存储上传，参数只传递可序列化引用。
+        /// </summary>
+        File = 6,
     }
 
     /// <summary>
@@ -98,6 +102,21 @@ namespace Senparc.Ncf.XncfBase
         /// 下拉框是否允许创建自定义值
         /// </summary>
         public bool AllowCreate { get; set; }
+
+        /// <summary>
+        /// 文件参数是否允许一次选择多个文件。
+        /// </summary>
+        public bool AllowMultiple { get; set; }
+
+        /// <summary>
+        /// 文件参数的最大文件数量。
+        /// </summary>
+        public int MaxFiles { get; set; }
+
+        /// <summary>
+        /// 文件参数的客户端 accept 提示。
+        /// </summary>
+        public string Accept { get; set; }
 
         public FunctionParameterInfo()
         {

@@ -252,6 +252,7 @@ new Vue({
             workflows: [],
             functions: [],
             workflowObjects: [],
+            workflowFileSelections: {},
             chatModels: [],
             observedOutputSchemas: [],
             keyword: '',
@@ -3172,8 +3173,63 @@ new Vue({
             });
         },
         resetParameterManual(node, parameter) {
-            let value = parameter.parameterType === 2 ? [] : parameter.parameterType === 4 ? false : '';
+            let value = parameter.parameterType === 2 ||
+                (parameter.parameterType === 6 && parameter.allowMultiple)
+                ? []
+                : parameter.parameterType === 4 ? false : '';
             this.$set(node.config.parameters, parameter.name, value);
+        },
+        formatFileSize(value) {
+            const bytes = Number(value || 0);
+            if (bytes < 1024) return `${bytes} B`;
+            if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+            if (bytes < 1024 * 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+            return `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`;
+        },
+        async uploadFunctionFiles(fileList, maxFiles) {
+            const files = Array.from(fileList || []);
+            if (!files.length) return [];
+            if (maxFiles && files.length > Number(maxFiles)) {
+                throw new Error(`一次最多选择 ${maxFiles} 个文件。`);
+            }
+            const form = new FormData();
+            files.forEach(file => form.append('files', file, file.name));
+            const response = await service.post(
+                '/api/Senparc.Areas.Admin/FunctionFiles/upload',
+                form,
+                { customAlert: true });
+            const uploaded = response && response.data && response.data.files;
+            if (!Array.isArray(uploaded) || uploaded.length !== files.length) {
+                throw new Error('文件上传响应无效。');
+            }
+            return uploaded;
+        },
+        async handleWorkflowFileSelection(event, node, parameter) {
+            const selectedFiles = event && event.target ? event.target.files : [];
+            if (!selectedFiles.length || !node || !parameter || this.editingLocked) return;
+            this.loading = true;
+            try {
+                const uploaded = await this.uploadFunctionFiles(selectedFiles, parameter.maxFiles);
+                const references = parameter.allowMultiple ? uploaded : uploaded.slice(0, 1);
+                this.$set(node.config.parameters, parameter.name,
+                    parameter.allowMultiple
+                        ? references.map(file => file.fileId)
+                        : (references[0] ? references[0].fileId : ''));
+                if (!this.workflowFileSelections[node.id]) {
+                    this.$set(this.workflowFileSelections, node.id, {});
+                }
+                this.$set(this.workflowFileSelections[node.id], parameter.name, references);
+                this.scheduleAutoSave();
+            } catch (error) {
+                this.$notify({
+                    title: '文件上传失败',
+                    message: error && error.message ? error.message : '文件上传失败。',
+                    type: 'error'
+                });
+            } finally {
+                this.loading = false;
+                if (event && event.target) event.target.value = '';
+            }
         },
         expectedShape(parameter) {
             const systemType = String(parameter.systemType || '').toLowerCase();
