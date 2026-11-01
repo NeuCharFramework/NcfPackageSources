@@ -7,7 +7,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
 using Senparc.Xncf.AgentsManager.OHS.Local.AppService;
-using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AgentsManager.Application.Dtos;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Domain.Services;
 
@@ -205,7 +205,7 @@ public class AgentStudioTests : AgentsManagerTestBase
     {
         var service = _serviceProvider.GetRequiredService<ChatGroupService>();
         await Assert.ThrowsExceptionAsync<NcfExceptionBase>(async () =>
-            await service.StartChatGroupInThreadAsync(new ChatGroup_RunGroupRequest
+            await service.StartChatGroupInThreadAsync(new ChatGroupRunCommand
             {
                 ChatGroupId = int.MaxValue, Name = "missing studio", PromptCommand = "test"
             }).WaitAsync(TimeSpan.FromSeconds(10)));
@@ -215,7 +215,7 @@ public class AgentStudioTests : AgentsManagerTestBase
     public async Task Studio_LegacyBackgroundStart_RemainsNonBlocking()
     {
         var service = _serviceProvider.GetRequiredService<ChatGroupService>();
-        var scheduled = service.RunChatGroupInThread(new ChatGroup_RunGroupRequest
+        var scheduled = service.RunChatGroupInThread(new ChatGroupRunCommand
         {
             ChatGroupId = int.MaxValue, Name = "legacy background", PromptCommand = "test"
         });
@@ -230,7 +230,7 @@ public class AgentStudioTests : AgentsManagerTestBase
         {
             var service = _serviceProvider.GetRequiredService<ChatGroupService>();
             // A missing explicit model fails after persistence, before any provider request.
-            var started = await service.StartChatGroupInThreadAsync(new ChatGroup_RunGroupRequest
+            var started = await service.StartChatGroupInThreadAsync(new ChatGroupRunCommand
             {
                 ChatGroupId = fixture.Group.Id, Name = "studio persisted task", PromptCommand = "test",
                 AiModelId = int.MaxValue

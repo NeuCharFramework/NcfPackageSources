@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.0</Version>
+		<Version>0.12.1</Version>
 		<PackageReleaseNotes>
     [2026-11-01] Improve missing custom NeuCharPivot Block handling
     1. Show a friendly placeholder with the missing module UID and Function Code instead of opening an error popup.
@@ -102,6 +102,7 @@
     3、调整对话布局、模块展示和助手头像样式
     4、为会话增加工作区字段，并补齐各数据库迁移
     5、适配 Senparc.AI.AgentKernel 0.1.15-preview2
+    [2026-11-02] v0.12.1 修复分支合并遗留的微信 Claw 绑定重复声明，保留实体及索引功能
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

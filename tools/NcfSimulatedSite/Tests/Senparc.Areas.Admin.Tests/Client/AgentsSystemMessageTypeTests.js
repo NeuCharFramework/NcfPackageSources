@@ -14,6 +14,7 @@ const pagePath = path.resolve(
 const scriptDir = path.dirname(scriptPath);
 // index.js 已按功能拆分：按 three-loader.js 的加载顺序拼接后再执行
 const scriptFiles = [
+    'studio-state.js',
     'agents-app-utils.js',
     'agents-app-data.js',
     'agents-app-computed.js',
@@ -25,6 +26,7 @@ const scriptFiles = [
     'agents-app-methods-manage.js',
     'agents-app-methods-plugin-mcp.js',
     'agents-app-components.js',
+    'studio.js',
     'index.js',
 ];
 const script = scriptFiles
@@ -62,7 +64,6 @@ const context = vm.createContext({
     Vue,
     serviceAM,
     console: { log() { }, warn() { }, error() { } },
-    window: {},
     document: {},
     setTimeout,
     clearTimeout,
@@ -80,6 +81,7 @@ const context = vm.createContext({
     URLSearchParams,
     formatDate(value) { return value; }
 });
+context.window = context;
 
 function createViewModel() {
     const viewModel = Object.assign({

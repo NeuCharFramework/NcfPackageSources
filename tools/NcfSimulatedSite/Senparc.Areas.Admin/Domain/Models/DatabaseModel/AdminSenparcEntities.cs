@@ -34,6 +34,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
+    修改标识：Senparc - 20261102
+    修改描述：移除合并遗留的微信 Claw 绑定重复声明和索引配置，保留原有映射
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -141,11 +144,6 @@ namespace Senparc.Areas.Admin.Domain.Models
         /// </summary>
         public DbSet<NeuCharFunctionProvitAccess> NeuCharFunctionProvitAccesses { get; set; }
 
-        /// <summary>
-        /// 个人微信 Claw 与 Admin Chat 的上层绑定。
-        /// </summary>
-        public DbSet<WeixinClawAdminBinding> WeixinClawAdminBindings { get; set; }
-
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
 
         #endregion
@@ -198,11 +196,6 @@ namespace Senparc.Areas.Admin.Domain.Models
             modelBuilder.Entity<NeuCharFunctionProvitAccess>()
                 .HasIndex(z => new { z.ModuleUid, z.FunctionKey })
                 .IsUnique();
-            modelBuilder.Entity<WeixinClawAdminBinding>()
-                .HasIndex(z => new { z.AccountId, z.FromUserId, z.GroupId })
-                .IsUnique();
-            modelBuilder.Entity<WeixinClawAdminBinding>()
-                .HasIndex(z => new { z.Enabled, z.EnableNeuBell });
 
             var providerName = Database.ProviderName ?? string.Empty;
             var largeTextType = providerName.Contains("Oracle", StringComparison.OrdinalIgnoreCase)
