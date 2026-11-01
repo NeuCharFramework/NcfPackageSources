@@ -8,7 +8,7 @@ from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
-from worker.config import Settings, WorkerError, identifier, safe_path
+from worker.config import Settings, WorkerError, identifier, python_dev_include_paths, safe_path
 from worker.datasets import encode_row, parse_json, split_rows, validate_dataset
 from worker.models import list_models, validate_model_request
 from worker.runner import batch_groups, schedule_rate
@@ -264,6 +264,24 @@ class DurableStoreTests(unittest.TestCase):
         (tiny / "escape").unlink()
         (tiny / "config.json").write_text('{"model_type":"gpt2","auto_map":{"AutoModel":"evil"}}')
         self.assertEqual(list_models(self.models)[0], [])
+
+
+class PythonHeaderTests(unittest.TestCase):
+    def test_local_headers_are_used_only_when_the_system_header_is_missing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            headers = root / "python3.12"
+            headers.mkdir()
+            (headers / "Python.h").write_text("")
+            system = root / "system"
+            system.mkdir()
+            self.assertEqual(
+                python_dev_include_paths(system, "python3.12", [root]),
+                [str(headers), str(root)],
+            )
+            self.assertEqual(python_dev_include_paths(system, "python3.12", [root / "missing"]), [])
+            (system / "Python.h").write_text("")
+            self.assertEqual(python_dev_include_paths(system, "python3.12", [root]), [])
 
 
 class LoopTests(unittest.TestCase):

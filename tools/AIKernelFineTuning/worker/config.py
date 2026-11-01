@@ -101,6 +101,48 @@ class Settings:
         )
 
 
+def python_header_roots():
+    roots = []
+    configured = os.environ.get("NCF_PYTHON_HEADERS", "").strip()
+    if configured:
+        roots.append(Path(configured))
+    roots.append(Path.home() / ".local" / "share" / "ncf" / "python-headers")
+    roots.append(Path(__file__).resolve().parent.parent / ".python-headers")
+    return roots
+
+
+def python_dev_include_paths(system_include, version, roots):
+    """Extra C include dirs when this interpreter has no Python.h.
+
+    The first CUDA step compiles Triton's NVIDIA driver, which includes
+    Python.h and the multiarch pyconfig.h next to it. A virtualenv does not
+    ship those headers.
+    """
+    system_include = Path(system_include)
+    if (system_include / "Python.h").is_file():
+        return []
+    for root in roots:
+        root = Path(root)
+        headers = root / version
+        if (headers / "Python.h").is_file():
+            return [str(headers), str(root)]
+    return []
+
+
+def cuda_python_headers_available():
+    import sys
+    import sysconfig
+
+    include = Path(sysconfig.get_path("include"))
+    version = f"python{sys.version_info.major}.{sys.version_info.minor}"
+    if (include / "Python.h").is_file():
+        return True
+    extra = python_dev_include_paths(include, version, python_header_roots())
+    current = os.environ.get("C_INCLUDE_PATH", "")
+    searched = extra + ([part for part in current.split(os.pathsep) if part] if current else [])
+    return any((Path(path) / "Python.h").is_file() for path in searched)
+
+
 def env_int(name, default, minimum, maximum):
     try:
         value = int(os.environ.get(name, str(default)))

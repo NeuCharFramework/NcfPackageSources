@@ -179,6 +179,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
     private const float DefaultTemperature = 0.3f;
     private const float DefaultTopP = 0.3f;
 
+    /// <summary>
+    /// 持有正在运行的后台任务，避免引用丢失，并供并发启动时加锁登记。
+    /// </summary>
+    public static List<Task> TaskList = new List<Task>();
+
     private readonly IBaseObjectCacheStrategy _cache;
     private readonly ChatTaskStreamHub _chatTaskStreamHub;
     private readonly HumanInTheLoopRequestStore _humanInTheLoopRequestStore;
@@ -238,6 +243,11 @@ public class ChatGroupService : ServiceBase<ChatGroup>
 
         _ = task.ContinueWith(completedTask =>
         {
+            lock (TaskList)
+            {
+                TaskList.Remove(completedTask);
+            }
+
             if (completedTask.IsFaulted && completedTask.Exception != null)
             {
                 var error = completedTask.Exception.GetBaseException();
