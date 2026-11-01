@@ -6,13 +6,14 @@ import shutil
 import signal
 import subprocess
 import sys
+import sysconfig
 import threading
 import time
 import zipfile
 from pathlib import Path
 
 from . import VERSION
-from .config import OFFLINE_ENV, WorkerError, safe_path
+from .config import OFFLINE_ENV, WorkerError, python_dev_include_paths, python_header_roots, safe_path
 from .models import list_models, validate_model_request
 from .storage import Store, TERMINAL, atomic_write
 from .telemetry import Telemetry
@@ -63,6 +64,14 @@ class Worker:
         env["NCF_EVENT_LIMIT"] = str(self.settings.event_limit)
         env["OMP_NUM_THREADS"] = str(self.settings.torch_threads)
         env["MKL_NUM_THREADS"] = str(self.settings.torch_threads)
+        includes = python_dev_include_paths(
+            sysconfig.get_path("include"),
+            f"python{sys.version_info.major}.{sys.version_info.minor}",
+            python_header_roots(),
+        )
+        if includes:
+            current = env.get("C_INCLUDE_PATH", "")
+            env["C_INCLUDE_PATH"] = os.pathsep.join(includes + ([current] if current else []))
         # Training never needs credentials, cloud tokens, or proxy secrets.
         for key in list(env):
             if any(part in key.upper() for part in ("KEY", "TOKEN", "SECRET", "PASSWORD", "PROXY")) and key not in OFFLINE_ENV:

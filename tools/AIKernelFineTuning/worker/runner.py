@@ -15,7 +15,7 @@ import traceback
 from pathlib import Path
 
 from . import VERSION
-from .config import OFFLINE_ENV, WorkerError
+from .config import OFFLINE_ENV, WorkerError, cuda_python_headers_available
 from .datasets import encode_row, split_rows, validate_dataset
 from .models import validate_model_request
 from .storage import atomic_write, utc_now
@@ -112,6 +112,13 @@ def train(spec):
     }
     atomic_write(output / "manifest.json", json.dumps(manifest, indent=2).encode())
     try:
+        if request["backend"] == "cuda" and not cuda_python_headers_available():
+            version = f"python{sys.version_info.major}.{sys.version_info.minor}"
+            raise WorkerError(
+                f"CUDA training cannot compile Triton because {version} development headers are missing. "
+                f"Install them with sudo apt-get install {version}-dev, or extract that package under "
+                "~/.local/share/ncf/python-headers."
+            )
         model_path, _ = validate_model_request(Path(spec["modelsRoot"]), request)
         manifest["baseModelSha256"] = {
             path.name: dataset_digest(path) for path in sorted(model_path.glob("*.safetensors"))
