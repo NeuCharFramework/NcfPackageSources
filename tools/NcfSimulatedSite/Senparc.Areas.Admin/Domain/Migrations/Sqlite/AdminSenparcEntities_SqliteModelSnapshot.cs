@@ -115,6 +115,53 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Sqlite
                     b.ToTable("ADMIN_AdminAuthConfig");
                 });
 
+            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatMemoryState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Payload")
+                        .IsRequired()
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Revision")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("ADMIN_AdminChatMemoryState");
+                });
+
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatMessage", b =>
                 {
                     b.Property<int>("Id")

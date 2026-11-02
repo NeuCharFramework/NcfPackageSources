@@ -30,6 +30,10 @@
                     <i class="fa fa-comments"></i> @AR["AdminChat.History"]
                 </h3>
                 <div class="sidebar-actions">
+                    <el-button size="small" icon="el-icon-notebook-2" :title="ncfT('AdminChat.Memory.Settings')"
+                               :disabled="memoryBusy" @@click="openMemoryDialog">
+                        Memory
+                    </el-button>
                     <el-button
                         type="primary"
                         size="small"
@@ -497,6 +501,19 @@
                                     <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
                                 </el-radio-button>
                             </el-radio-group>
+                            <el-dropdown trigger="click" @@command="handleMemoryCommand($event)">
+                                <el-button size="mini" class="chat-memory-trigger"
+                                           :disabled="memoryBusy || isSending || !memoryReady">
+                                    Memory · {{ memoryModeLabel(memoryMode) }} <i class="el-icon-arrow-down"></i>
+                                </el-button>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item v-for="mode in [0,1,2]" :key="mode" :command="mode"
+                                                      :icon="memoryMode === mode ? 'el-icon-check' : ''">
+                                        {{ memoryModeLabel(mode) }}
+                                    </el-dropdown-item>
+                                    <el-dropdown-item command="settings" divided>@AR["AdminChat.Memory.Settings"]</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
                         </div>
                     </details>
                     <div class="input-send-actions">
@@ -617,6 +634,19 @@
                                         </el-radio-button>
                                     </el-radio-group>
                                 </div>
+
+                                <el-dropdown trigger="click" @@command="handleMemoryCommand($event, true)">
+                                    <el-button size="mini" class="chat-memory-trigger" :disabled="memoryBusy || isCreatingSession">
+                                        Memory · {{ memoryModeLabel(launcherMemoryMode) }} <i class="el-icon-arrow-down"></i>
+                                    </el-button>
+                                    <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item v-for="mode in [0,1,2]" :key="mode" :command="mode"
+                                                          :icon="launcherMemoryMode === mode ? 'el-icon-check' : ''">
+                                            {{ memoryModeLabel(mode) }}
+                                        </el-dropdown-item>
+                                        <el-dropdown-item command="settings" divided>@AR["AdminChat.Memory.Settings"]</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
 
                                 <el-popover
                                     placement="top-start"
@@ -982,6 +1012,128 @@
                     </el-timeline-item>
                 </el-timeline>
             </div>
+        </div>
+    </el-dialog>
+
+    <el-dialog :title="ncfT('AdminChat.Memory.Settings')" :visible.sync="memoryDialogVisible"
+               width="760px" custom-class="chat-memory-dialog" :close-on-click-modal="false" append-to-body>
+        <el-alert :title="ncfT('AdminChat.Memory.Notice')" type="info" :closable="false"></el-alert>
+        <el-tabs v-model="memoryTab">
+            <el-tab-pane :label="ncfT('AdminChat.Memory.Entries')" name="entries">
+                <p>@AR["AdminChat.Memory.ScopeNotice"]</p>
+                <el-button size="mini" icon="el-icon-plus" :disabled="memoryBusy" @@click="editMemoryEntry(null)">
+                    @AR["AdminChat.Memory.Add"]
+                </el-button>
+                <div v-if="memoryEntryDraft" class="chat-memory-entry-editor">
+                    <el-form label-position="top" size="mini">
+                        <el-form-item :label="ncfT('AdminChat.Memory.Text')">
+                            <el-input type="textarea" :rows="3" :maxlength="300" v-model="memoryEntryDraft.text"></el-input>
+                        </el-form-item>
+                        <div class="chat-memory-entry-options">
+                            <el-form-item :label="ncfT('AdminChat.Memory.Scope')">
+                                <el-select v-model="memoryEntryDraft.scope">
+                                    <el-option :label="ncfT('AdminChat.Memory.ScopeGlobal')" value="global"></el-option>
+                                    <el-option label="Workspace" value="workspace" :disabled="!memoryWorkspaceId"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item :label="ncfT('AdminChat.Memory.Tier')">
+                                <el-select v-model="memoryEntryDraft.tier">
+                                    <el-option v-for="tier in ['core','topic','archive']" :key="tier" :label="tier" :value="tier"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item :label="ncfT('AdminChat.Memory.Kind')">
+                                <el-select v-model="memoryEntryDraft.kind">
+                                    <el-option v-for="kind in ['preference','project','decision','reference']" :key="kind" :label="kind" :value="kind"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item :label="ncfT('AdminChat.Memory.Topic')">
+                                <el-input :maxlength="40" v-model="memoryEntryDraft.topic"></el-input>
+                            </el-form-item>
+                            <el-form-item :label="ncfT('AdminChat.Memory.Expires')">
+                                <el-date-picker v-model="memoryEntryDraft.expiresAt" type="datetime" clearable></el-date-picker>
+                            </el-form-item>
+                        </div>
+                        <el-checkbox v-model="memoryEntryDraft.pinned">@AR["AdminChat.Memory.Pinned"]</el-checkbox>
+                    </el-form>
+                    <el-button type="primary" size="mini" :loading="memoryBusy" @@click="saveMemoryEntry(false)">@AR["AdminChat.Memory.Save"]</el-button>
+                    <el-popconfirm v-if="memoryEntryDraft.id" :title="ncfT('AdminChat.Memory.DeleteNotice')" @@on-confirm="saveMemoryEntry(true)">
+                        <el-button slot="reference" type="danger" size="mini" :disabled="memoryBusy">@AR["AdminChat.Memory.Delete"]</el-button>
+                    </el-popconfirm>
+                </div>
+                <el-table :data="memoryEntries" size="mini" max-height="360">
+                    <el-table-column type="expand">
+                        <template slot-scope="props">
+                            <p>{{ props.row.kind }} · {{ props.row.tier }} · v{{ props.row.version }} · {{ props.row.source }}</p>
+                            <p v-if="props.row.sourceMessageId">@AR["AdminChat.Memory.Source"]: #{{ props.row.sourceSessionId }} / #{{ props.row.sourceMessageId }}</p>
+                            <blockquote>{{ props.row.evidence }}</blockquote>
+                            <p v-if="props.row.expiresAt">@AR["AdminChat.Memory.Expires"]: {{ props.row.expiresAt }}</p>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="text" :label="ncfT('AdminChat.Memory.Text')"></el-table-column>
+                    <el-table-column :label="ncfT('AdminChat.Memory.Scope')" width="110">
+                        <template slot-scope="props">{{ props.row.workspaceId ? 'Workspace' : ncfT('AdminChat.Memory.ScopeGlobal') }}</template>
+                    </el-table-column>
+                    <el-table-column width="60">
+                        <template slot-scope="props">
+                            <el-button type="text" icon="el-icon-edit" :disabled="memoryBusy" :title="ncfT('AdminChat.Memory.Edit')" @@click="editMemoryEntry(props.row)"></el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-tab-pane>
+            <el-tab-pane :label="ncfT('AdminChat.Memory.Loaded')" name="loaded">
+                <p>@AR["AdminChat.Memory.LoadedNotice"]</p>
+                <template v-if="memoryUsage && memoryUsageSessionId === memoryDialogSessionId">
+                    <p>{{ memoryUsage.tokens }} / {{ memoryUsage.budget }} tokens · {{ memoryUsage.counter }}</p>
+                    <el-table :data="memoryUsage.entries" size="mini">
+                        <el-table-column prop="text" :label="ncfT('AdminChat.Memory.Text')"></el-table-column>
+                        <el-table-column prop="scope" :label="ncfT('AdminChat.Memory.Scope')" width="100"></el-table-column>
+                        <el-table-column prop="reason" :label="ncfT('AdminChat.Memory.Reason')" width="130"></el-table-column>
+                    </el-table>
+                </template>
+            </el-tab-pane>
+            <el-tab-pane :label="ncfT('AdminChat.Memory.History')" name="history">
+                <el-table :data="memoryHistory" size="mini" max-height="400">
+                    <el-table-column prop="at" :label="ncfT('AdminChat.Memory.Time')" width="180"></el-table-column>
+                    <el-table-column :label="ncfT('AdminChat.Memory.Text')">
+                        <template slot-scope="props">
+                            <div>{{ props.row.action }} · v{{ props.row.version }} · {{ props.row.source }}</div>
+                            <del v-if="props.row.before">{{ props.row.before.text }}</del>
+                            <div v-if="props.row.after">{{ props.row.after.text }}</div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-tab-pane>
+            <el-tab-pane :label="ncfT('AdminChat.Memory.Preview')" name="preview">
+                <div class="markdown-body" style="max-height:420px;overflow:auto;"
+                     v-html="formatMemoryContent(memoryMarkdown)"></div>
+            </el-tab-pane>
+            <el-tab-pane :label="ncfT('AdminChat.Memory.Edit')" name="edit">
+                <p>@AR["AdminChat.Memory.MarkdownScope"]</p>
+                <p>@AR["AdminChat.Memory.Format"]</p>
+                <el-input type="textarea" :rows="14" v-model="memoryMarkdown" :maxlength="32000"
+                          :disabled="memoryBusy"></el-input>
+            </el-tab-pane>
+            <el-tab-pane :label="ncfT('AdminChat.Memory.SystemMessage')" name="system">
+                <p>@AR["AdminChat.Memory.SystemNotice"]</p>
+                <el-input type="textarea" :rows="6" v-model="memorySystemMessage" :maxlength="2000"
+                          :disabled="memoryBusy"></el-input>
+                <template v-if="isSuperAdmin && globalChatLoaded">
+                    <h4>@AR["AdminChat.Memory.GlobalSystem"]</h4>
+                    <p>@AR["AdminChat.Memory.GlobalNotice"]</p>
+                    <el-input type="textarea" :rows="6" v-model="globalChatSystemMessage" :maxlength="2000"
+                              :disabled="memoryBusy"></el-input>
+                    <el-button @@click="saveGlobalChatSystemMessage" :disabled="memoryBusy">
+                        @AR["AdminChat.Memory.SaveGlobal"]
+                    </el-button>
+                </template>
+            </el-tab-pane>
+        </el-tabs>
+        <div slot="footer">
+            <el-button @@click="downloadMemory">@AR["AdminChat.Memory.Download"]</el-button>
+            <el-button v-if="memoryTab === 'edit'" :disabled="memoryBusy" @@click="memoryMarkdown = '# Memory\n\n## Core\n\n## Archive\n'; memoryTab = 'edit'">
+                @AR["AdminChat.Memory.Clear"]
+            </el-button>
+            <el-button v-if="memoryTab === 'edit' || memoryTab === 'system'" type="primary" :loading="memoryBusy" @@click="saveMemory">@AR["AdminChat.Memory.Save"]</el-button>
         </div>
     </el-dialog>
 

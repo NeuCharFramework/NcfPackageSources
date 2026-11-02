@@ -124,6 +124,55 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
                     b.ToTable("ADMIN_AdminAuthConfig");
                 });
 
+            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatMemoryState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<byte[]>("Payload")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("Revision")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("ADMIN_AdminChatMemoryState");
+                });
+
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatMessage", b =>
                 {
                     b.Property<int>("Id")

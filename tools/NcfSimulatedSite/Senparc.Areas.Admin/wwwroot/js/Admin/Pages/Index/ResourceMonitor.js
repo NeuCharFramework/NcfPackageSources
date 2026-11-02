@@ -161,8 +161,8 @@
         smooth: false,
         connectNulls: false,
         data: data,
-        lineStyle: { color: color, width: 1.6, type: dashed ? 'dashed' : 'solid' },
-        itemStyle: { color: color }
+        lineStyle: { normal: { color: color, width: 1.6, type: dashed ? 'dashed' : 'solid' } },
+        itemStyle: { normal: { color: color } }
       };
     }
 
@@ -389,6 +389,13 @@
       }
     }
 
+    var resizeObserver = typeof global.ResizeObserver === 'function'
+      ? new global.ResizeObserver(onResize)
+      : null;
+    if (resizeObserver) {
+      resizeObserver.observe(el);
+    }
+
     el.addEventListener('mousedown', onMouseDown);
     el.addEventListener('mousemove', onMouseMove);
     el.addEventListener('wheel', onWheel, { passive: false });
@@ -406,6 +413,9 @@
         disposed = true;
         global.removeEventListener('mouseup', onMouseUp);
         global.removeEventListener('resize', onResize);
+        if (resizeObserver) {
+          resizeObserver.disconnect();
+        }
         el.removeEventListener('mousedown', onMouseDown);
         el.removeEventListener('mousemove', onMouseMove);
         el.removeEventListener('wheel', onWheel);

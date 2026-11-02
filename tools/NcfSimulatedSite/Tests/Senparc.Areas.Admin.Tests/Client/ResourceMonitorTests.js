@@ -15,6 +15,7 @@ function createHarness() {
     let lastView;
     let disposed = false;
     let resizeCount = 0;
+    let observer;
     const elementListeners = {};
     const windowListeners = {};
     const chartListeners = {};
@@ -31,7 +32,12 @@ function createHarness() {
     };
     const window = {
         addEventListener(name, handler) { windowListeners[name] = handler; },
-        removeEventListener(name) { delete windowListeners[name]; }
+        removeEventListener(name) { delete windowListeners[name]; },
+        ResizeObserver: class {
+            constructor(callback) { this.callback = callback; observer = this; }
+            observe(target) { this.target = target; }
+            disconnect() { this.disconnected = true; }
+        }
     };
     vm.runInNewContext(chartScript, {
         window,
@@ -64,7 +70,9 @@ function createHarness() {
         get option() { return option; },
         get view() { return lastView; },
         get disposed() { return disposed; },
-        get resizeCount() { return resizeCount; }
+        get resizeCount() { return resizeCount; },
+        get observer() { return observer; },
+        element
     };
 }
 
@@ -80,6 +88,9 @@ assert.strictEqual(h.option.series.length, 6);
 assert.strictEqual(h.option.yAxis[0].name, '%');
 assert.strictEqual(h.option.yAxis[1].name, 'Mbps');
 assert.ok(h.option.series.slice(4).every(series => series.yAxisIndex === 1));
+assert.strictEqual(h.option.series[0].itemStyle.normal.color, '#8c52ff');
+assert.strictEqual(h.option.series[1].lineStyle.normal.type, 'dashed');
+assert.strictEqual(h.option.series[4].lineStyle.normal.color, '#409eff');
 assert.strictEqual(h.children[0].style.display, 'flex', 'An empty cache must display the empty state.');
 
 h.monitor.addLiveSample({ t: now, cpu: 20, pcpu: 0, mem: 50, pmem: null, rx: 1, tx: 2 });
@@ -186,8 +197,12 @@ assert.ok(h.view.start >= now + 10000 - 24 * hour);
 
 h.windowListeners.resize();
 assert.strictEqual(h.resizeCount, 1);
+assert.strictEqual(h.observer.target, h.element);
+h.observer.callback();
+assert.strictEqual(h.resizeCount, 2, 'Sidebar/layout resizing must resize the chart.');
 h.monitor.dispose();
 assert.strictEqual(h.disposed, true);
+assert.strictEqual(h.observer.disconnected, true);
 assert.strictEqual(h.children.length, 0);
 assert.deepStrictEqual(Object.keys(h.windowListeners), []);
 assert.deepStrictEqual(Object.keys(h.elementListeners), []);
@@ -207,6 +222,8 @@ assert.strictEqual((page.match(/class="host-metrics-card"/g) || []).length, 1,
     'Realtime and historical monitoring must use one card.');
 assert.strictEqual((page.match(/id="resourceMonitorChart"/g) || []).length, 1);
 assert.ok(!page.includes('id="hostMetricsChart"'));
+assert.ok(page.includes('class="resource-monitor-chart-scroll"'));
+assert.ok(page.includes('min-width: 280px'));
 for (const range of [300000, 1800000, 21600000, 86400000]) {
     assert.ok(page.includes(`:label="${range}"`), `Missing range ${range}.`);
 }

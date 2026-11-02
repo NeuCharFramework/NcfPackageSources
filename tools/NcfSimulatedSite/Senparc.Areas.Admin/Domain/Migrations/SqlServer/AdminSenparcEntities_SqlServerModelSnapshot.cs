@@ -124,6 +124,55 @@ namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
                     b.ToTable("ADMIN_AdminAuthConfig");
                 });
 
+            modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatMemoryState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AdminRemark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<bool>("Flag")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Payload")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Remark")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Revision")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("ADMIN_AdminChatMemoryState");
+                });
+
             modelBuilder.Entity("Senparc.Areas.Admin.Domain.Models.DatabaseModel.AdminChatMessage", b =>
                 {
                     b.Property<int>("Id")

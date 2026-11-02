@@ -7,6 +7,8 @@ window.ChatLauncherMixin = {
       chatInputText: '',
       launcherAiModelId: 0,
       launcherChatMode: 'harness',
+      launcherUseMemory: false,
+      launcherMemoryMode: 0,
       sessionAiModelMap: {},
       selectedModules: [],
       moduleSelectorVisible: false,
@@ -512,6 +514,8 @@ window.ChatLauncherMixin = {
         moduleUids: this.selectedModules.map(item => item.uid),
         workflowIds: this.selectedWorkflows.map(item => item.id),
         mode: this.launcherChatMode === 'harness' ? 1 : 0,
+        useMemory: !!this.launcherUseMemory,
+        memoryMode: this.launcherMemoryMode,
         workspaceId: this.isSuperAdmin ? this.selectedWorkspaceId || null : null,
         workspaceWriteEnabled: this.isSuperAdmin && !!this.selectedWorkspaceId && this.workspaceWriteEnabled,
         workspaceCliEnabled: this.isSuperAdmin && !!this.selectedWorkspaceId && this.workspaceCliEnabled
