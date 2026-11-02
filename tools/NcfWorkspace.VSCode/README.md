@@ -12,7 +12,7 @@
 
 ## 大文件上传与 AdminChat
 
-管理员可以在站点的 Workspace 管理页直接选择一个或多个文件上传。文件会以服务器端流式方式写入 Workspace 的 `input/` 目录，默认单文件上限为 300 MiB，不会先转换为 Base64，也不会自动放入 AI 上下文。AdminChat 中的附件上传仍面向需要本地解析的小型资料；280 MiB 级 JSON 等数据集应先通过 Workspace 管理页上传，再让 AI 在 Workspace 中编写脚本进行流式处理。
+管理员可以在站点的 Workspace 管理页直接选择一个或多个文件上传。文件会以服务器端流式方式写入 Workspace 的 `input/` 目录，默认单文件上限为 300 MiB，不会先转换为 Base64，也不会自动放入 AI 上下文。AdminChat 也支持超过本地解析上限的大文件上传；此类文件会流式保存到 Workspace，并要求 AI 在 Workspace 中使用 Python 或其他工具分批处理，而不是读取全文。
 
 部署时还需要将反向代理、Ingress、Kestrel 或 Web Server 的 multipart/body 限制设置为不小于应用的上传上限。Workspace 按当前管理员及当前租户隔离；上传接口只允许当前 Workspace 所有者使用，上传失败或未提交的 Chat 附件应及时清理。
 

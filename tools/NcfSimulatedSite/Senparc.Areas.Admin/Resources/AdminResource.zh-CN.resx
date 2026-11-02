@@ -767,4 +767,13 @@
     <value>暂无可排序的菜单或页面</value>
   </data>
   <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>WebHook 设置</value></data>
+  <data name="DocHelp.Help" xml:space="preserve"><value>帮助</value></data>
+  <data name="DocHelp.Title" xml:space="preserve"><value>功能文档</value></data>
+  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>在新窗口打开</value></data>
+  <data name="DocHelp.Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="DocHelp.Loading" xml:space="preserve"><value>正在加载文档…</value></data>
+  <data name="DocHelp.Notice" xml:space="preserve"><value>若文档空白或被浏览器阻止，请在新窗口打开。</value></data>
+  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>文档加载失败或等待超时，请重试或在新窗口打开。</value></data>
+  <data name="DocHelp.Retry" xml:space="preserve"><value>重试</value></data>
+  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>帮助文档索引配置无效，请联系管理员。</value></data>
 </root>

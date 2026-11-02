@@ -23,6 +23,7 @@ public sealed class ModelPreparationOptions
     public const string SectionName = "SenparcXncfAIKernel:ModelPreparation";
     public bool Enabled { get; set; }
     public string ControlledModelRoot { get; set; } = "";
+    public bool RequireFileHashes { get; set; }
     public long MaxFileBytes { get; set; } = 4L * 1024 * 1024 * 1024;
     public long MaxTotalBytes { get; set; } = 8L * 1024 * 1024 * 1024;
     public int MaxFiles { get; set; } = 4096;
