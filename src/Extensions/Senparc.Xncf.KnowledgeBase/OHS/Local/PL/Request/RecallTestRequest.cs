@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -31,5 +34,15 @@ namespace Senparc.Xncf.KnowledgeBase.OHS.Local.PL.Request
         /// 召回片段数量 Top K，默认 5，范围 1-20
         /// </summary>
         public int TopK { get; set; } = 5;
+
+        /// <summary>
+        /// 本次测试的重排模式覆盖：None / Lexical / Llm；空表示跟随知识库配置。
+        /// </summary>
+        public string RerankMode { get; set; }
+
+        /// <summary>
+        /// 本次测试的重排候选池覆盖；≤0 表示跟随知识库配置。
+        /// </summary>
+        public int CandidateCount { get; set; }
     }
 }

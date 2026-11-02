@@ -12,10 +12,18 @@
     修改标识：Senparc - 20260822
     修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
 
+    修改标识：Senparc - 20261028
+    修改描述：多租户模式下支持平台级（TenantId=0）租户上下文还原
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.41.7 XncfBuilder 状态存储支持平台级（TenantId=0）租户上下文
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Repository;
 using System;
 using System.Collections.Generic;
@@ -28,6 +36,10 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
     public sealed class XncfDevelopmentJobSnapshot
     {
         public string JobId { get; set; }
+        /// <summary>
+        /// 任务所属租户（0 = 单租户/系统公共）；多租户下所有读写均在任务所属租户的 scope 中执行。
+        /// </summary>
+        public int TenantId { get; set; }
         public int OwnerAdminUserId { get; set; }
         public XncfDevelopmentJobMode Mode { get; set; }
         public string ModuleProjectName { get; set; }
@@ -55,14 +67,16 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
     public interface IXncfDevelopmentJobStateStore
     {
         Task SaveAsync(XncfDevelopmentJobSnapshot snapshot, CancellationToken cancellationToken = default);
-        Task<XncfDevelopmentJobSnapshot> GetAsync(string jobId, CancellationToken cancellationToken = default);
-        Task<IReadOnlyList<XncfDevelopmentJobSnapshot>> GetRecentAsync(int maxCount, CancellationToken cancellationToken = default);
+        Task<XncfDevelopmentJobSnapshot> GetAsync(string jobId, int tenantId, CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<XncfDevelopmentJobSnapshot>> GetRecentAsync(int maxCount, int tenantId, CancellationToken cancellationToken = default);
         XncfDevelopmentPersistenceInfo GetPersistenceStatus();
     }
 
     /// <summary>
     /// Creates a scope per operation because the development workflow is singleton and owns
     /// per-job locks. Repository instances are scoped and must never be retained by it.
+    /// Multi-tenant deployments additionally restore the job's tenant into each new scope so
+    /// tenant-filtered queries and TenantId auto-stamping stay within the owning tenant.
     /// </summary>
     public sealed class XncfDevelopmentJobStateStore : IXncfDevelopmentJobStateStore
     {
@@ -94,6 +108,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
                 try
                 {
                     await using var scope = _serviceScopeFactory.CreateAsyncScope();
+                    ApplyTenantContext(scope, snapshot.TenantId);
                     var repository = scope.ServiceProvider.GetRequiredService<IRepositoryBase<XncfDevelopmentJob>>();
                     var entity = await repository.GetFirstOrDefaultObjectAsync(
                             job => !job.Flag && job.JobId == snapshot.JobId)
@@ -115,7 +130,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             }
         }
 
-        public async Task<XncfDevelopmentJobSnapshot> GetAsync(string jobId, CancellationToken cancellationToken = default)
+        public async Task<XncfDevelopmentJobSnapshot> GetAsync(string jobId, int tenantId, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(jobId))
             {
@@ -125,6 +140,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             try
             {
                 await using var scope = _serviceScopeFactory.CreateAsyncScope();
+                ApplyTenantContext(scope, tenantId);
                 var repository = scope.ServiceProvider.GetRequiredService<IRepositoryBase<XncfDevelopmentJob>>();
                 var entity = await repository.GetFirstOrDefaultObjectAsync(
                         job => !job.Flag && job.JobId == jobId.Trim())
@@ -141,6 +157,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 
         public async Task<IReadOnlyList<XncfDevelopmentJobSnapshot>> GetRecentAsync(
             int maxCount,
+            int tenantId,
             CancellationToken cancellationToken = default)
         {
             if (maxCount <= 0)
@@ -151,6 +168,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             try
             {
                 await using var scope = _serviceScopeFactory.CreateAsyncScope();
+                ApplyTenantContext(scope, tenantId);
                 var repository = scope.ServiceProvider.GetRequiredService<IRepositoryBase<XncfDevelopmentJob>>();
                 var jobs = await repository.GetObjectListAsync(
                         job => !job.Flag,
@@ -213,6 +231,7 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
             return new XncfDevelopmentJobSnapshot
             {
                 JobId = job.JobId,
+                TenantId = job.TenantId,
                 OwnerAdminUserId = job.OwnerAdminUserId,
                 Mode = job.Mode,
                 ModuleProjectName = job.ModuleProjectName,
@@ -243,5 +262,22 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Development
 
         private static DateTimeOffset? ToUtcOffset(DateTime? value) =>
             value.HasValue ? ToUtcOffset(value.Value) : null;
+
+        /// <summary>
+        /// 在新作用域中还原任务所属租户的 RequestTenantInfo（多租户启用时生效，
+        /// tenantId = 0 表示平台级/系统管理员数据），
+        /// 使租户过滤查询与 TenantId 自动写入保持在任务所属租户内。
+        /// </summary>
+        private static void ApplyTenantContext(IServiceScope scope, int tenantId)
+        {
+            if (!SiteConfig.SenparcCoreSetting.EnableMultiTenant)
+            {
+                return;
+            }
+
+            var requestTenantInfo = scope.ServiceProvider.GetRequiredService<RequestTenantInfo>();
+            requestTenantInfo.Id = tenantId;
+            requestTenantInfo.TryMatch(true);
+        }
     }
 }

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.24.16 add comprehensive tests for MCP endpoint management and background tenant scope
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -219,12 +222,12 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                     try
                     {
                         await api.NotifyStartAsync(baseUrl, token, stoppingToken).ConfigureAwait(false);
+                        notifiedStart = true;
                     }
                     catch (Exception ex)
                     {
                         _logger.LogDebug(ex, "通知个人微信 Claw 启动失败，继续尝试拉取消息。");
                     }
-                    notifiedStart = true;
                 }
                 WeixinClawGetUpdatesResponse response;
                 try
@@ -237,9 +240,8 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 }
                 catch (Exception ex) when (IsExpectedLongPollTimeout(ex, stoppingToken))
                 {
-                    // The host may still have a generic 30-second Polly timeout in
-                    // an already-running process. A canceled getupdates request is
-                    // an empty poll, not an account failure.
+                    // 宿主仍可能带着通用 30 秒 Polly 超时。被取消的 getupdates
+                    // 只是一次空轮询，不应记成账号错误。
                     _logger.LogDebug(
                         ex,
                         "个人微信 Claw 账号 {AccountId} 长轮询达到宿主超时边界，继续下一轮：{ExceptionType}",
@@ -261,6 +263,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 var receiptService = scope.ServiceProvider.GetRequiredService<WeixinClawMessageReceiptService>();
                 var recordService = scope.ServiceProvider.GetRequiredService<WeixinClawMessageRecordService>();
                 var dispatcher = scope.ServiceProvider.GetRequiredService<WeixinClawMessageDispatcher>();
+                var handledMessage = false;
                 var mediaService = scope.ServiceProvider.GetRequiredService<WeixinClawMediaService>();
                 foreach (var message in response.Msgs ?? Enumerable.Empty<WeixinClawMessage>())
                 {
@@ -274,6 +277,7 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                         continue;
                     }
 
+                    handledMessage = true;
                     _logger.LogInformation(
                         "个人微信 Claw 账号 {AccountId} 收到消息：MessageId={MessageId}, Seq={Seq}, MessageType={MessageType}, ItemCount={ItemCount}, HasContextToken={HasContextToken}",
                         account.Id,
@@ -351,7 +355,10 @@ public sealed class WeixinClawHostedService : IHostedService, IDisposable
                 {
                     account.SetCursor(response.GetUpdatesBuf);
                 }
-                account.MarkRunning();
+                if (!handledMessage)
+                {
+                    account.MarkRunning();
+                }
                 await accountService.SaveObjectAsync(account).ConfigureAwait(false);
             }
         }

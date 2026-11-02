@@ -17,7 +17,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		[2026-10-01] 模块菜单权限通过现有 SysRolePermissionService 保存，取消直接数据库写入
+      [2024-09-10] v0.11.4-preview1 升级缓存基础库
       v0.1.0 创世
       v0.2 重新分离 DDD 架构，重构数据库
       v0.3.3.1 添加 Oracle 数据库迁移代码
@@ -25,7 +25,6 @@
       v0.5.3 fix bug：模块菜单名更新后，无法更新到数据库中的菜单信息
       v0.6.0 解决模块安装后直接授权菜单问题
       v0.8.0 添加 XncfStateAppService
-      [2024-09-10] v0.11.4-preview1 升级缓存基础库
       [2024-10-09] v0.11.6-preview1 升级基础库
       [2024-10-09] v0.11.7-preview1 升级基础库
       [2024-10-16] v0.11.8-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
@@ -73,9 +72,12 @@
       [2026-09-17] v0.15.10 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
       1、同步受影响的基础库、AI 模块或宿主项目版本
       2、保持项目引用链与当前功能兼容
-      [2026-10-05] v0.15.11 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+		[2026-10-01] 模块菜单权限通过现有 SysRolePermissionService 保存，取消直接数据库写入
+      [2026-11-03] v0.15.11 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
       1、Updated [5950]Senparc.Xncf.XncfModuleManager project behavior and integration for the latest feature and reliability improvements.
-      2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
+      2、chore: update package versions and dependencies across multiple projects
+      3、通过权限服务保存模块菜单权限
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

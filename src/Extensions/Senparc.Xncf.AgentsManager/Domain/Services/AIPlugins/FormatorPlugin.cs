@@ -16,6 +16,12 @@
     修改标识：Senparc - 20260717
     修改描述：v0.12.0-preview6 为 AgentsManager 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.19.0 格式化输出时记录 Token 用量
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using Microsoft.SemanticKernel;
@@ -24,6 +30,7 @@ using Microsoft.Extensions.AI;
 using Senparc.AI.Entities;
 using Senparc.AI.AgentKernel;
 using Senparc.AI.AgentKernel.Handlers;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -49,6 +56,13 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
 
     public class TranslatorPlugin
     {
+        private readonly AIModelService _aiModelService;
+
+        public TranslatorPlugin(AIModelService aiModelService)
+        {
+            _aiModelService = aiModelService;
+        }
+
         [KernelFunction, LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.Translate.Description")]
         public async Task<string> Translate(
             [LocalizedDescription(typeof(AgentsManagerResource), "Agents.Plugin.OriginalText")]
@@ -93,7 +107,11 @@ namespace Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins
             var aiRequest = iWantToRun.CreateRequest(text, iWantToRun.Kernel.AgentSession);
             // ensure request uses replaced prompt (if any templating is used)
             aiRequest.RequestContent = aiRequest.ReplacePrompt();
-            var runResult = await iWantToRun.RunChatAsync(aiRequest).ConfigureAwait(false);
+            var runResult = await _aiModelService.RunChatWithUsageAsync(
+                iWantToRun,
+                aiRequest,
+                modelAlias: "AgentsManager.TranslatorPlugin",
+                source: "AgentsManager.TranslatorPlugin").ConfigureAwait(false);
             var resultStr = runResult.OutputString;
 
 

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261009
     修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 enhance Agent Studio, group configuration, and task management interactions
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;

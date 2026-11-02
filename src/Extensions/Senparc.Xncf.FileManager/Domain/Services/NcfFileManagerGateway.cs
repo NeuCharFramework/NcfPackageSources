@@ -10,6 +10,12 @@
     修改标识：Senparc - 20261005
     修改描述：v0.7.3 0.7.3 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.8.0 允许导入微调产物文件
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.1 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase;
@@ -24,6 +30,8 @@ namespace Senparc.Xncf.FileManager.Domain.Services;
 
 public sealed class NcfFileManagerGateway : IFileManagerGateway
 {
+    private const long MaxFineTuningImportBytes = 512L * 1024 * 1024;
+
     private readonly NcfFileService _fileService;
     private readonly XncfRegisterManager _registerManager;
 
@@ -57,15 +65,23 @@ public sealed class NcfFileManagerGateway : IFileManagerGateway
             FileManagerResourceKind.KnowledgeBase => NcfFileResourceScope.KnowledgeBase,
             FileManagerResourceKind.SiteAsset => NcfFileResourceScope.SiteAsset,
             FileManagerResourceKind.PrivateAttachment => NcfFileResourceScope.PrivateAttachment,
+            // FileManager currently has no dedicated fine-tuning scope. Keep the
+            // abstraction-level kind while using its private, non-public storage policy.
+            FileManagerResourceKind.FineTuning => NcfFileResourceScope.PrivateAttachment,
+            FileManagerResourceKind.Skill => NcfFileResourceScope.Skill,
             _ => throw new ArgumentOutOfRangeException(nameof(request.ResourceKind))
         };
+        long? maxFileSizeBytes = request.ResourceKind == FileManagerResourceKind.FineTuning
+            ? MaxFineTuningImportBytes
+            : null;
         var file = await _fileService.UploadStreamAsync(
             request.Content,
             request.FileName,
             request.ContentType,
             request.Length,
             scope,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken: cancellationToken,
+            maxFileSizeBytes: maxFileSizeBytes).ConfigureAwait(false);
         if (!string.IsNullOrWhiteSpace(request.Description))
         {
             await _fileService.UpdateFileNoteAsync(file.Id, request.Description).ConfigureAwait(false);
@@ -77,5 +93,42 @@ public sealed class NcfFileManagerGateway : IFileManagerGateway
             file.ContentType,
             file.FileSize,
             request.ResourceKind.ToString());
+    }
+
+    public async Task<FileManagerReadResult> OpenReadAsync(
+        int fileId,
+        CancellationToken cancellationToken = default)
+    {
+        if (fileId <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(fileId));
+        }
+
+        var result = await _fileService.OpenReadAsync(fileId).ConfigureAwait(false);
+        if (result == null)
+        {
+            throw new FileNotFoundException($"FileManager file does not exist: {fileId}.");
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+        return new FileManagerReadResult(
+            result.File.Id,
+            result.File.FileName,
+            result.File.ContentType,
+            result.File.FileSize,
+            result.Stream);
+    }
+
+    public async Task DeleteAsync(
+        int fileId,
+        CancellationToken cancellationToken = default)
+    {
+        if (fileId <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(fileId));
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
+        await _fileService.DeleteFileAsync(fileId).ConfigureAwait(false);
     }
 }

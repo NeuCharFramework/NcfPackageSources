@@ -68,9 +68,12 @@
 				[2026-09-17] v0.23.8 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
 				1、同步受影响的基础库、AI 模块或宿主项目版本
 				2、保持项目引用链与当前功能兼容
-				[2026-10-05] v0.23.9 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+				[2026-11-03] v0.23.9 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
 				1、Updated Senparc.Ncf.AreaBase project behavior and integration for the latest feature and reliability improvements.
-				2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
+				2、chore: update package versions and dependencies across multiple projects
+				3、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.6-preview10
+				4、Dependency update from Senparc.Ncf.SMS to 0.20.10-preview10
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

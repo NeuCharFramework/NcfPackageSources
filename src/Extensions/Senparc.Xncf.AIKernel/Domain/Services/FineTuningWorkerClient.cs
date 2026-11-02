@@ -10,14 +10,19 @@
     修改标识：Senparc - 20261009
     修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 enhance job management and telemetry features
+
 ----------------------------------------------------------------*/
 
 #nullable enable
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -34,7 +39,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services;
 
 public sealed class FineTuningWorkerClient
 {
-    public const int MaxDatasetBytes = 2 * 1024 * 1024;
+    public const long MaxDatasetBytes = 512L * 1024 * 1024;
+    public const int MaxDatasetRows = 1_000_000;
     private const long MaxResponseBytes = 8 * 1024 * 1024;
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private static readonly Regex SafeIdentifier = new("^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,127}$", RegexOptions.CultureInvariant);
@@ -80,12 +86,28 @@ public sealed class FineTuningWorkerClient
     [Obsolete("Select a database worker explicitly.")]
     public Task<List<FineTuningDataset>> GetDatasetsAsync(CancellationToken cancellationToken = default) => GetDatasetsAsync("default", cancellationToken);
 
-    public Task<FineTuningDataset> UploadDatasetAsync(string workerAlias, FineTuningDatasetRequest request, CancellationToken cancellationToken = default)
+    public async Task<FineTuningDataset> UploadDatasetAsync(string workerAlias, FineTuningDatasetRequest request, CancellationToken cancellationToken = default)
     {
         Validate(request);
         if (Encoding.UTF8.GetByteCount(request.Content) > MaxDatasetBytes)
-            throw new NcfExceptionBase("Dataset exceeds the 2 MiB UTF-8 limit.");
-        return SendAsync<FineTuningDataset>(workerAlias, HttpMethod.Post, "datasets", request, cancellationToken);
+            throw new NcfExceptionBase("Dataset exceeds the 512 MiB UTF-8 limit.");
+        var content = Encoding.UTF8.GetBytes(request.Content);
+        await using var stream = new MemoryStream(content, writable: false);
+        return await UploadDatasetFileAsync(workerAlias, request.Name, stream, content.LongLength, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public Task<FineTuningDataset> UploadDatasetFileAsync(string workerAlias, string name, Stream content, long length,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(name) || name.Length > 100)
+            throw new NcfExceptionBase("Dataset name must be between 1 and 100 characters.");
+        if (content == null || !content.CanRead)
+            throw new NcfExceptionBase("Dataset content is required.");
+        if (length < 1 || length > MaxDatasetBytes)
+            throw new NcfExceptionBase("Dataset exceeds the 512 MiB UTF-8 limit.");
+        return SendStreamAsync<FineTuningDataset>(workerAlias, HttpMethod.Post,
+            $"datasets/file?name={Uri.EscapeDataString(name)}", content, length, cancellationToken);
     }
     [Obsolete("Select a database worker explicitly.")]
     public Task<FineTuningDataset> UploadDatasetAsync(FineTuningDatasetRequest request, CancellationToken cancellationToken = default) =>
@@ -128,6 +150,32 @@ public sealed class FineTuningWorkerClient
         SendAsync<FineTuningJob>(workerAlias, HttpMethod.Post, $"jobs/{Identifier(id)}/cancel", new { }, cancellationToken);
     [Obsolete("Select a database worker explicitly.")]
     public Task<FineTuningJob> CancelJobAsync(string id, CancellationToken cancellationToken = default) => CancelJobAsync("default", id, cancellationToken);
+
+    public Task<FineTuningJob> PauseJobAsync(string workerAlias, string id, CancellationToken cancellationToken = default) =>
+        SendAsync<FineTuningJob>(workerAlias, HttpMethod.Post, $"jobs/{Identifier(id)}/pause", new { }, cancellationToken);
+    [Obsolete("Select a database worker explicitly.")]
+    public Task<FineTuningJob> PauseJobAsync(string id, CancellationToken cancellationToken = default) => PauseJobAsync("default", id, cancellationToken);
+
+    public Task<FineTuningJob> ResumeJobAsync(string workerAlias, string id, CancellationToken cancellationToken = default) =>
+        SendAsync<FineTuningJob>(workerAlias, HttpMethod.Post, $"jobs/{Identifier(id)}/resume", new { }, cancellationToken);
+    [Obsolete("Select a database worker explicitly.")]
+    public Task<FineTuningJob> ResumeJobAsync(string id, CancellationToken cancellationToken = default) => ResumeJobAsync("default", id, cancellationToken);
+
+    public Task<FineTuningJob> UpdateRuntimeAsync(string workerAlias, string id, FineTuningRuntimeRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        Validate(request);
+        return SendAsync<FineTuningJob>(workerAlias, HttpMethod.Post, $"jobs/{Identifier(id)}/runtime", request, cancellationToken);
+    }
+    [Obsolete("Select a database worker explicitly.")]
+    public Task<FineTuningJob> UpdateRuntimeAsync(string id, FineTuningRuntimeRequest request,
+        CancellationToken cancellationToken = default) => UpdateRuntimeAsync("default", id, request, cancellationToken);
+
+    public Task<FineTuningDeleteResult> DeleteJobAsync(string workerAlias, string id, CancellationToken cancellationToken = default) =>
+        SendAsync<FineTuningDeleteResult>(workerAlias, HttpMethod.Delete, $"jobs/{Identifier(id)}", null, cancellationToken);
+    [Obsolete("Select a database worker explicitly.")]
+    public Task<FineTuningDeleteResult> DeleteJobAsync(string id, CancellationToken cancellationToken = default) =>
+        DeleteJobAsync("default", id, cancellationToken);
 
     public Task<FineTuningEventPage> GetEventsAsync(string workerAlias, string id, long after, int limit, CancellationToken cancellationToken = default)
     {
@@ -231,6 +279,34 @@ public sealed class FineTuningWorkerClient
         }
     }
 
+    private async Task<T> SendStreamAsync<T>(string workerAlias, HttpMethod method, string path,
+        Stream content, long length, CancellationToken cancellationToken)
+    {
+        var configuration = await _configuration.GetAsync(workerAlias, cancellationToken).ConfigureAwait(false);
+        using var requestContent = new StreamContent(content);
+        requestContent.Headers.ContentType = new MediaTypeHeaderValue("application/x-ndjson");
+        requestContent.Headers.ContentLength = length;
+        using var response = await SendResponseAsync(configuration, method, path, requestContent, cancellationToken)
+            .ConfigureAwait(false);
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeout.CancelAfter(TimeSpan.FromSeconds(configuration.RequestTimeoutSeconds));
+        try
+        {
+            await response.Content.LoadIntoBufferAsync(MaxResponseBytes, timeout.Token).ConfigureAwait(false);
+            return await response.Content.ReadFromJsonAsync<T>(JsonOptions, timeout.Token).ConfigureAwait(false)
+                ?? throw new NcfExceptionBase("The fine-tuning worker returned an empty response.");
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Invalid fine-tuning worker JSON for {Path}", path);
+            throw new NcfExceptionBase("The fine-tuning worker returned an invalid response.", ex);
+        }
+        catch (OperationCanceledException ex) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw new NcfExceptionBase("The fine-tuning worker response timed out; refresh job status before retrying creation.", ex);
+        }
+    }
+
     private async Task<HttpResponseMessage> SendResponseAsync(string workerAlias, HttpMethod method, string path, object? body, CancellationToken cancellationToken)
     {
         var configuration = await _configuration.GetAsync(workerAlias, cancellationToken).ConfigureAwait(false);
@@ -240,10 +316,16 @@ public sealed class FineTuningWorkerClient
     private async Task<HttpResponseMessage> SendResponseAsync(FineTuningWorkerConfiguration configuration, HttpMethod method,
         string path, object? body, CancellationToken cancellationToken)
     {
+        HttpContent? content = body == null ? null : JsonContent.Create(body, options: JsonOptions);
+        return await SendResponseAsync(configuration, method, path, content, cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<HttpResponseMessage> SendResponseAsync(FineTuningWorkerConfiguration configuration, HttpMethod method,
+        string path, HttpContent? content, CancellationToken cancellationToken)
+    {
         using var request = new HttpRequestMessage(method, new Uri(configuration.Endpoint, path));
         request.Headers.Add("X-NCF-Worker-Key", configuration.ApiKey);
-        if (body != null)
-            request.Content = JsonContent.Create(body, options: JsonOptions);
+        request.Content = content;
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeout.CancelAfter(TimeSpan.FromSeconds(configuration.RequestTimeoutSeconds));
         HttpResponseMessage response;

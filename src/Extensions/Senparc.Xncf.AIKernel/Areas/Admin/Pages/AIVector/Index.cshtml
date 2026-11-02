@@ -18,6 +18,7 @@
 <div>
     <div class="filter-container">
         <el-button type="primary" icon="el-icon-plus" size="small" @@click="addVector">@XR["Vector.Add"]</el-button>
+        <ncf-doc-help topic="ai.vectors"></ncf-doc-help>
     </div>
 
     <el-table :data="tableData" v-loading="tableLoading" border>

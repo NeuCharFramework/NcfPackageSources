@@ -13,6 +13,12 @@
     修改标识：Senparc - 20260717
     修改描述：v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.20.0 注册 Skill 目录、执行与测试服务
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 implement AdminChat memory storage and management system
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
@@ -36,6 +42,7 @@ using System.Reflection;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
+using Senparc.Xncf.PromptRange.Abstractions.Skills;
 
 namespace Senparc.Xncf.PromptRange
 {
@@ -49,7 +56,7 @@ namespace Senparc.Xncf.PromptRange
 
         public override string Uid => "C6175B8E-9F79-4053-9523-F8E4AC0C3E18"; //必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.15.2"; //必须填写版本号
+        public override string Version => "0.15.4"; //必须填写版本号
 
         public override string MenuName => PromptRangeResource.Get("Module.PromptRange.MenuName", "提示词靶场");
 
@@ -122,9 +129,15 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptService>();
             services.AddScoped<PromptRangeService>();
             services.AddScoped<PromptItemService>();
+            services.AddScoped<Senparc.Xncf.PromptRange.Abstractions.Memory.IMemoryPromptProvider, MemoryPromptProvider>();
             services.AddScoped<PromptResultService>();
             services.AddScoped<PromptResultChatService>();
             services.AddScoped<LlModelService>();
+            services.AddScoped<PromptRangeSkillService>();
+            services.AddScoped<ISkillTestRunner, PromptRangeSkillTestService>();
+            services.AddScoped<ISkillCatalog>(serviceProvider => serviceProvider.GetRequiredService<PromptRangeSkillService>());
+            services.AddScoped<ISkillExecutor>(serviceProvider => serviceProvider.GetRequiredService<PromptRangeSkillService>());
+            services.AddScoped<ISkillPackageService>(serviceProvider => serviceProvider.GetRequiredService<PromptRangeSkillService>());
             services.AddSingleton<PromptResultStreamHub>();
 
             services.AddAutoMapper(z =>
@@ -144,11 +157,6 @@ namespace Senparc.Xncf.PromptRange
         }
     }
 }
-
-
-
-
-
 
 
 

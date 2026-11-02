@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 update AgentsManager with new features and improvements
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.EventBus;
@@ -20,7 +23,7 @@ using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
-using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AgentsManager.Application.Dtos;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -99,7 +102,7 @@ namespace Senparc.Xncf.AgentsManager.Application.EventHandlers
 
                 _logger.LogInformation("  即将同步运行 ChatGroup 直至对话结束，ChatGroupId={GroupId}", chatGroup.Id);
 
-                var runGroupRequest = new ChatGroup_RunGroupRequest
+                var runGroupRequest = new ChatGroupRunCommand
                 {
                     ChatGroupId = chatGroup.Id,
                     AiModelId = aiModelId,

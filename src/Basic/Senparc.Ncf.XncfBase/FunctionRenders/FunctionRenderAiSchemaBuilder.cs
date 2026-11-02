@@ -10,6 +10,12 @@
     修改标识：Senparc - 20260917
     修改描述：v0.28.0 增强 FunctionRender AI schema 的选择元数据支持
 
+    修改标识：Senparc - 20261101
+    修改描述：增加 Function 文件引用及批量文件参数的 AI schema 元数据
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.Functions;
@@ -45,16 +51,25 @@ public static class FunctionRenderAiSchemaBuilder
 
         foreach (var parameter in parameters)
         {
-            if (parameter == null ||
-                string.IsNullOrWhiteSpace(parameter.Name) ||
-                parameter.SelectionList?.Items == null ||
-                parameter.SelectionList.Items.Count == 0)
+            if (parameter == null || string.IsNullOrWhiteSpace(parameter.Name))
             {
                 continue;
             }
 
             var parameterSchema = FindPropertySchema(root, parameter.Name);
             if (parameterSchema == null)
+            {
+                continue;
+            }
+
+            if (parameter.ParameterType == ParameterType.File)
+            {
+                ApplyFileMetadata(parameterSchema, parameter);
+                continue;
+            }
+
+            if (parameter.SelectionList?.Items == null ||
+                parameter.SelectionList.Items.Count == 0)
             {
                 continue;
             }
@@ -159,6 +174,45 @@ public static class FunctionRenderAiSchemaBuilder
                 items.Select(item => CreateSchemaValue(item.Value, itemSchema))
                     .ToArray());
         }
+    }
+
+    private static void ApplyFileMetadata(
+        JsonObject parameterSchema,
+        FunctionParameterInfo parameter)
+    {
+        var allowMultiple = parameter.AllowMultiple || IsArraySchema(parameterSchema);
+        if (allowMultiple)
+        {
+            parameterSchema["type"] = "array";
+            parameterSchema["items"] = new JsonObject
+            {
+                ["type"] = "string",
+                ["description"] = "Uploaded Function file ID"
+            };
+        }
+        else
+        {
+            parameterSchema["type"] = "string";
+        }
+
+        parameterSchema["x-ncf-parameter-type"] = "file";
+        if (parameter.MaxFiles > 0)
+        {
+            parameterSchema["maxItems"] = parameter.MaxFiles;
+        }
+
+        var details = allowMultiple
+            ? "Upload one or more files first and pass their FileId values."
+            : "Upload a file first and pass its FileId.";
+        if (!string.IsNullOrWhiteSpace(parameter.Accept))
+        {
+            details += $" Accepted types: {parameter.Accept}.";
+        }
+
+        var existingDescription = GetStringProperty(parameterSchema, "description");
+        parameterSchema["description"] = string.IsNullOrWhiteSpace(existingDescription)
+            ? details
+            : $"{existingDescription.Trim()} {details}";
     }
 
     private static bool IsArraySchema(JsonObject schema)

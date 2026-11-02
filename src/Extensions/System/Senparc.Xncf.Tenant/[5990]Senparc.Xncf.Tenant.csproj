@@ -17,21 +17,14 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		[2026-10-02] 基于现有启用租户缓存提供类型化后台租户信息
-		[2026-10-01] 租户缓存查询复用现有 TenantInfoRepository，保留独立租户数据库启动机制
-				[2026-10-01] v0.15.12 移除租户缓存刷新时的共享过滤器状态切换
-				1、TenantInfo 全局注册表查询直接依赖 IIgnoreMulitTenant，避免并发请求观察到临时禁用的租户过滤状态
-				[2026-10-01] v0.15.11 加固 RequestHeader 模式租户授权
-				1、已认证管理员仅可使用与可信租户声明一致的 TenantKey
-				2、无请求头时保留已认证用户的租户上下文，避免回退到默认租户
-				v0.1.0 创世
-				v0.2.2 添加 services.AddMultiTenant(); 等注册过程到此模块
-				v0.3.3.1 添加 Oracle 数据库迁移代码
-				v0.6.0 完善租户启用过滤机制
 				[2024-09-10] v0.11.4-preview1 升级缓存基础库
 				[2024-10-09] v0.11.6-preview1 升级基础库
 				[2024-10-16] v0.11.7-preview1 添加 Service 对 PagedList 对象快速 Mapping 到 DTO 对象的方法
 				[2024-11-08] v0.11.9-preview1 升级 Senparc.AI
+				v0.1.0 创世
+				v0.2.2 添加 services.AddMultiTenant(); 等注册过程到此模块
+				v0.3.3.1 添加 Oracle 数据库迁移代码
+				v0.6.0 完善租户启用过滤机制
 				[2024-11-15] v0.12.0-preview1 使用新版本 AutoGen，升级 AgentsManager；解决 AgentsManager 中状态获取的异常
 				[2024-11-21] v0.13.2-preview1 更新 CO2NET 及缓存基础库
 				[2024-11-28] v0.13.3-preview1 update CO2NET, use new SenparcSetting with UseLowerCaseApiName property
@@ -73,6 +66,15 @@
 				[2026-09-17] v0.15.10 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
 				1、同步受影响的基础库、AI 模块或宿主项目版本
 				2、保持项目引用链与当前功能兼容
+		[2026-10-01] 租户缓存查询复用现有 TenantInfoRepository，保留独立租户数据库启动机制
+				[2026-10-01] v0.15.12 移除租户缓存刷新时的共享过滤器状态切换
+				1、TenantInfo 全局注册表查询直接依赖 IIgnoreMulitTenant，避免并发请求观察到临时禁用的租户过滤状态
+				[2026-10-01] v0.15.11 加固 RequestHeader 模式租户授权
+				1、已认证管理员仅可使用与可信租户声明一致的 TenantKey
+				2、无请求头时保留已认证用户的租户上下文，避免回退到默认租户
+		[2026-10-02] 基于现有启用租户缓存提供类型化后台租户信息
+				[2026-11-03] v0.15.14 提供后台租户发现、租户缓存与请求作用域支持
+				1、Dependency update from [5990]Senparc.Xncf.Tenant.Interface to 0.10.10-preview10
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

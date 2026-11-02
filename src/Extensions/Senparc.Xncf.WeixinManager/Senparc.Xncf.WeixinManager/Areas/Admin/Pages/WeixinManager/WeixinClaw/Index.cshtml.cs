@@ -10,11 +10,18 @@
     修改标识：Senparc - 20261005
     修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261028
+    修改描述：登录状态轮询捕获请求租户快照并传入登录服务，保证多租户下账号落库归属正确
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.24.16 微信 Claw 登录确认落库恢复请求租户上下文
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.WeixinManager.Domain.Models.VD.Admin.WeixinManager;
@@ -238,11 +245,12 @@ public class IndexModel : BaseAdminWeixinManagerModel
         }
     }
 
-    public async Task<IActionResult> OnGetLoginStatusAsync(string sessionId)
+    public async Task<IActionResult> OnGetLoginStatusAsync(string sessionId, string verifyCode = null)
     {
         try
         {
-            return Ok(await _loginService.PollAsync(sessionId).ConfigureAwait(false));
+            var tenantSnapshot = RequestTenantSnapshot.Capture(HttpContext.RequestServices);
+            return Ok(await _loginService.PollAsync(sessionId, verifyCode, tenant: tenantSnapshot).ConfigureAwait(false));
         }
         catch (Exception ex)
         {

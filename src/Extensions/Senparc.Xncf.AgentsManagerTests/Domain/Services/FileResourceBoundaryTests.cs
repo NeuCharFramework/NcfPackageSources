@@ -24,6 +24,8 @@ public class FileResourceBoundaryTests
         Assert.IsTrue(NcfFileResourcePolicy.IsAllowedExtension(NcfFileResourceScope.SiteAsset, ".webp"));
         Assert.IsFalse(NcfFileResourcePolicy.IsAllowedExtension(NcfFileResourceScope.SiteAsset, ".js"));
         Assert.IsFalse(NcfFileResourcePolicy.IsAllowedExtension(NcfFileResourceScope.SiteAsset, ".html"));
+        Assert.IsTrue(NcfFileResourcePolicy.IsAllowedExtension(NcfFileResourceScope.PrivateAttachment, ".jsonl"));
+        Assert.IsFalse(NcfFileResourcePolicy.IsAllowedExtension(NcfFileResourceScope.SiteAsset, ".jsonl"));
     }
 
     [TestMethod]

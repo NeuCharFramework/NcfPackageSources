@@ -30,6 +30,9 @@ Use the output JSON as the source of truth for:
 5. Projects containing any changed file in the commit-path union, `.csproj` files changed directly, and projects affected by changed `.props` imports (`changed_csprojs`) that must receive direct project updates.
 6. Direct update roots (`dependency_roots`) and recursive dependent `.csproj` files that need passive version bumps.
 7. Comparison baseline metadata (`master/main` branch ref and merge-base commit).
+8. Test projects excluded from version updates (`skipped_test_csprojs`). File and `.props` mappings may still include them for impact reporting.
+
+Test projects are not released. Never add, update, or remove their `<Version>`, whether directly changed or reached through a dependency, and do not require new package release notes for them. If existing release notes are out of order, reorder their complete entries without changing their content. This includes `*.Tests.csproj`, `*Tests.csproj`, and projects under `Tests`, `*.Tests`, or `*Tests` directories. Continue traversing their references when discovering non-test dependents.
 
 Special skip rules for header updates:
 
@@ -112,9 +115,9 @@ For every changed `.props` file:
 
 1. Resolve explicit `<Import Project="...props" />` paths, including `$(MSBuildThisFileDirectory)` and `$(MSBuildProjectDirectory)`.
 2. Follow `.props` -> `.props` imports transitively until all importing `.csproj` files are found.
-3. Treat every importing project as directly changed, even if none of its own `.cs` files changed.
+3. Treat every non-test importing project as directly changed, even if none of its own `.cs` files changed.
 4. Add these projects to `changed_csprojs`, `dependency_roots`, and `changed_csproj_to_props_files`.
-5. A changed `.props` file does not receive a C# header block; its functional effect must be recorded in every importing project's `<PackageReleaseNotes>`.
+5. A changed `.props` file does not receive a C# header block; its functional effect must be recorded in every non-test importing project's `<PackageReleaseNotes>`.
 
 For all projects in `changed_csprojs` (any changed project-contained file, directly changed `.csproj`, or changed `.props` imports):
 
@@ -128,7 +131,7 @@ For all projects in `changed_csprojs` (any changed project-contained file, direc
 
 In every `.csproj` in `changed_csprojs` (the selected primary must also satisfy Step 4 when affected):
 
-1. Append new lines to existing `<PackageReleaseNotes>` content.
+1. Add new entries to existing `<PackageReleaseNotes>` in chronological order, normally at the end.
 2. Keep the same leading spaces as the previous line.
 3. Do not insert blank lines inside `<PackageReleaseNotes>` (including between entries and detail lines).
 4. Use this structure:
@@ -145,6 +148,10 @@ In every `.csproj` in `changed_csprojs` (the selected primary must also satisfy 
 12. `<Version>` must be located after `<TargetFramework>` or `<TargetFrameworks>` in the `.csproj` file.
 13. `<Version>` does not need to be immediately adjacent to `<TargetFramework>`/`<TargetFrameworks>`. If it is already after framework tags, keep its current position.
 14. If `<Version>` appears before `<TargetFramework>`/`<TargetFrameworks>`, move `<Version>` to any valid location after framework tags while preserving indentation/content.
+15. Inspect the existing entries and reorder dated entries from oldest to newest, so newer entries appear below older entries. Move each entry together with all of its detail lines.
+16. Preserve the relative order of entries with the same date unless their actual sequence is known. Add a new same-date entry after existing entries for that date.
+17. Preserve undated legacy entries and their relative order; do not attach them to unrelated dated entries or invent dates. If their chronological position cannot be established reliably, report them for manual review.
+18. When merging changes into an existing current-version block, use the date of the most recent included change and move the whole block to its chronological position.
 
 If `<PackageReleaseNotes>` does not exist, create it under the first `<PropertyGroup>` and match surrounding indentation.
 
@@ -166,7 +173,7 @@ Validate:
 
 1. Every eligible file in `changed_cs_files` (after applying special skip rules) contains a valid changelog block.
 2. Every changed `.props` file is mapped to all direct and transitive importing projects in `changed_props_importers`.
-3. Every `.csproj` in `changed_csprojs` (including `.props` importers) has updated version/release notes for current window.
+3. Every non-test `.csproj` in `changed_csprojs` (including `.props` importers) has updated version/release notes for current window.
 4. All recursive dependents from every `dependency_roots` project are covered.
 5. In every edited `.csproj`, `<Version>` is located after `<TargetFramework>` or `<TargetFrameworks>`.
 6. In every edited `.csproj`, `<PackageReleaseNotes>` is located after `<Version>`.
@@ -175,7 +182,14 @@ Validate:
 9. In every edited `.csproj`, resulting `<Version>` is not lower than its pre-update `<Version>`.
 10. All commits in `comparison_base..HEAD` are reflected by updated files/projects in this workflow.
 11. For every edited `.cs` file in this run, its mapped `.csproj` has a release-note merge/update in current window version block.
-12. Optional: run project build/tests before commit.
+12. In every edited `.csproj`, dated release-note blocks are ordered from oldest to newest, and each block retains its original detail lines.
+13. No test project's `<Version>` was changed, added, or removed; any reordered existing test-project notes retain their content.
+14. Optional: run project build/tests before commit.
+
+## Learnings
+
+- `<PackageReleaseNotes>` is chronological history: older entries belong above newer entries. Preserve complete entry blocks and avoid guessing dates for undated legacy notes.
+- Test projects are not published, so their existing version metadata must be left untouched and missing versions must not be added.
 
 ## Suggested Command Sequence
 

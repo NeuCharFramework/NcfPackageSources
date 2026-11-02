@@ -8,7 +8,7 @@ from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
-from worker.config import MAX_DATASET_BYTES, Settings, WorkerError, identifier, safe_path
+from worker.config import Settings, WorkerError, identifier, python_dev_include_paths, safe_path
 from worker.datasets import encode_row, parse_json, split_rows, validate_dataset
 from worker.models import list_models, validate_model_request
 from worker.runner import batch_groups, schedule_rate
@@ -21,12 +21,13 @@ REQUEST = dict(name="tiny test", modelId="tiny", datasetId="dataset", evalDatase
                gradientAccumulationSteps=1, maxSequenceLength=32, loraRank=8, loraAlpha=16,
                loraDropout=0.05, targetModules="all-linear", warmupRatio=0.03, weightDecay=0,
                loggingSteps=1, saveSteps=20, evalSteps=20, seed=42, maxDurationMinutes=60)
+TEST_MAX_DATASET_BYTES = 2 * 1024 * 1024
 
-def maximum_dataset():
+def maximum_dataset(max_bytes=TEST_MAX_DATASET_BYTES):
     rows = [dict(prompt="x" * 65536, completion="y") for _ in range(31)]
     rows.append(dict(prompt="", completion="y"))
     encode = lambda values: "\n".join(json.dumps(row, separators=(",", ":")) for row in values)
-    rows[-1]["prompt"] = "x" * (MAX_DATASET_BYTES - len(encode(rows).encode("utf-8")))
+    rows[-1]["prompt"] = "x" * (max_bytes - len(encode(rows).encode("utf-8")))
     return encode(rows)
 
 
@@ -55,18 +56,18 @@ class DatasetTests(unittest.TestCase):
         with self.assertRaises(WorkerError):
             validate_dataset(json.dumps(ROWS[0]))
         with self.assertRaises(WorkerError) as ctx:
-            validate_dataset("x" * (MAX_DATASET_BYTES + 1))
+            validate_dataset("x" * (TEST_MAX_DATASET_BYTES + 1), max_bytes=TEST_MAX_DATASET_BYTES)
         self.assertEqual(ctx.exception.status, 413)
 
     def test_exact_byte_limit_remains_readable_after_canonicalization(self):
         content = maximum_dataset()
-        self.assertEqual(len(content.encode("utf-8")), MAX_DATASET_BYTES)
-        rows, canonical, _ = validate_dataset(content)
+        self.assertEqual(len(content.encode("utf-8")), TEST_MAX_DATASET_BYTES)
+        rows, canonical, _ = validate_dataset(content, max_bytes=TEST_MAX_DATASET_BYTES)
         self.assertEqual(len(rows), 32)
-        self.assertLessEqual(len(canonical.encode("utf-8")), MAX_DATASET_BYTES)
+        self.assertLessEqual(len(canonical.encode("utf-8")), TEST_MAX_DATASET_BYTES)
         self.assertEqual(validate_dataset(canonical)[0], rows)
         with self.assertRaises(WorkerError):
-            validate_dataset(content + "\n")
+            validate_dataset(content + "\n", max_bytes=TEST_MAX_DATASET_BYTES)
 
     def test_duplicate_properties_nonfinite_rejected(self):
         for value in ['{"a":1,"a":2}', '{"a":NaN}', '{"a":Infinity}']:
@@ -94,7 +95,8 @@ class DurableStoreTests(unittest.TestCase):
         self.root = Path(self.temporary.name)
         self.models = self.root / "models"
         self.models.mkdir()
-        self.settings = Settings("k" * 32, self.models, self.root / "data", queue_limit=2, event_limit=200)
+        self.settings = Settings("k" * 32, self.models, self.root / "data", queue_limit=2, event_limit=200,
+                                 max_dataset_bytes=TEST_MAX_DATASET_BYTES)
         self.store = Store(self.settings)
 
     def tearDown(self):
@@ -264,6 +266,24 @@ class DurableStoreTests(unittest.TestCase):
         self.assertEqual(list_models(self.models)[0], [])
 
 
+class PythonHeaderTests(unittest.TestCase):
+    def test_local_headers_are_used_only_when_the_system_header_is_missing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            headers = root / "python3.12"
+            headers.mkdir()
+            (headers / "Python.h").write_text("")
+            system = root / "system"
+            system.mkdir()
+            self.assertEqual(
+                python_dev_include_paths(system, "python3.12", [root]),
+                [str(headers), str(root)],
+            )
+            self.assertEqual(python_dev_include_paths(system, "python3.12", [root / "missing"]), [])
+            (system / "Python.h").write_text("")
+            self.assertEqual(python_dev_include_paths(system, "python3.12", [root]), [])
+
+
 class LoopTests(unittest.TestCase):
     def test_epoch_and_gradient_accumulation_partial_groups(self):
         request = {**REQUEST, "maxSteps": 0, "epochs": 2, "batchSize": 2, "gradientAccumulationSteps": 2}
@@ -273,6 +293,15 @@ class LoopTests(unittest.TestCase):
         self.assertEqual(sum(len(batch) for group, _ in groups for batch in group), 10)
         self.assertEqual(schedule_rate(REQUEST, 1, 10), REQUEST["learningRate"])
         self.assertGreater(schedule_rate(REQUEST, 10, 10), 0)
+
+    def test_observability_indices_follow_shuffled_batches(self):
+        request = {**REQUEST, "maxSteps": 0, "epochs": 1, "batchSize": 2, "gradientAccumulationSteps": 2}
+        groups = list(batch_groups(ROWS[:5], request, include_indices=True))
+        self.assertEqual(len(groups), 2)
+        self.assertEqual(sum(len(indices) for _, _, indices in groups), 5)
+        self.assertEqual(sorted(index for _, _, indices in groups for index in indices), list(range(5)))
+        self.assertEqual([len(batch) for batch in groups[0][0]], [2, 2])
+        self.assertEqual(len(groups[1][2]), 1)
 
 
 if __name__ == "__main__":

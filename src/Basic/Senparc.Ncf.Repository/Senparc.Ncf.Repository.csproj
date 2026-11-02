@@ -17,11 +17,10 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		[2026-10-01] 支持已跟踪实体按指定字段保存，统一封装局部更新能力
+				[2024-09-10] v0.18.4-preview1 升级缓存基础库
 				v0.1.0 创世
 				v0.4.100 添加 include 方法
 				v0.11.6 优化 DeleteAllAsync() 方法，提供 deleteItemAction 参数
-				[2024-09-10] v0.18.4-preview1 升级缓存基础库
 				[2025-01-25] v0.19.5-preview1 Update Agents functions, support for function calling
 				[2025-04-29] v0.19.7-preview1 Update CO2NET and AIKernel
 				[2025-04-29] v0.19.8-preview1 Update CO2NET and AIKernel
@@ -37,6 +36,8 @@
 				[2026-08-15] v0.20.8-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
 				[2026-08-29] v0.20.9-preview9 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
 				1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
+		[2026-10-01] 支持已跟踪实体按指定字段保存，统一封装局部更新能力
+				[2026-11-03] v0.20.10-preview9 支持按指定字段保存已跟踪实体
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

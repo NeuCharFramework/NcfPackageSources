@@ -22,6 +22,7 @@ var app = new Vue({
             selectedKnowledgeBaseId: null,
             recallContent: '',
             topK: 5,
+            recallRerankMode: '', // ''=跟随知识库设置; None/Lexical/Llm 为本次测试覆盖
             recallLoading: false,
             recallResults: [],
             lastElapsedMilliseconds: null,
@@ -236,12 +237,31 @@ var app = new Vue({
                     id: item.id,
                     name: item.name || ('知识库-' + item.id),
                     ready: ready,
+                    retrievalConfig: item.retrievalConfig || null,
                     label: (item.name || ('知识库-' + item.id)) + (ready ? '' : '（尚未向量化）')
                 };
             });
         },
         selectedKnowledgeBase() {
             return this.recallKnowledgeBaseList.find(item => Number(item.id) === Number(this.selectedKnowledgeBaseId)) || null;
+        },
+        recallRerankSummary() {
+            const kb = this.selectedKnowledgeBase;
+            if (!kb) {
+                return '未选择知识库';
+            }
+            const cfg = kb.retrievalConfig || {};
+            const mode = cfg.rerankMode || 'None';
+            if (mode === 'None') {
+                return '重排关闭（仅按向量相似度排序）';
+            }
+            const candidates = cfg.rerankCandidateCount || 20;
+            if (mode === 'Lexical') {
+                const weight = cfg.lexicalWeight == null ? 0.35 : cfg.lexicalWeight;
+                return '词法混合重排（候选 ' + candidates + ' 个，词法权重 ' + weight + '）';
+            }
+            const modelText = cfg.rerankModelId > 0 ? ('指定模型 #' + cfg.rerankModelId) : '使用知识库对话模型';
+            return 'LLM 重排（候选 ' + candidates + ' 个，' + modelText + '）';
         },
         recordTotal() {
             return this.recordList.length;
@@ -441,7 +461,8 @@ var app = new Vue({
                 const response = await service.post(recallUrl, {
                     id: Number(knowledgeBase.id),
                     content: content,
-                    topK: this.topK
+                    topK: this.topK,
+                    rerankMode: this.recallRerankMode || ''
                 });
                 const body = response && response.data;
                 const results = body && Object.prototype.hasOwnProperty.call(body, 'data') ? body.data : body;
@@ -801,6 +822,34 @@ var app = new Vue({
                 that.categoryData = res.data.data.list;
             });
         },
+        // 检索配置默认值（与后端旧版行为一致）
+        defaultRetrievalConfig() {
+            return {
+                chunkingStrategy: 'Fixed',
+                chunkSize: 800,
+                chunkOverlap: 120,
+                rerankMode: 'None',
+                rerankModelId: 0,
+                rerankCandidateCount: 20,
+                lexicalWeight: 0.35
+            };
+        },
+        // 回显检索配置：补齐缺省字段，容错后端返回 null
+        normalizeRetrievalConfig(raw) {
+            const defaults = this.defaultRetrievalConfig();
+            if (!raw || typeof raw !== 'object') {
+                return defaults;
+            }
+            return {
+                chunkingStrategy: raw.chunkingStrategy || defaults.chunkingStrategy,
+                chunkSize: Number(raw.chunkSize) > 0 ? Number(raw.chunkSize) : defaults.chunkSize,
+                chunkOverlap: Number(raw.chunkOverlap) >= 0 ? Number(raw.chunkOverlap) : defaults.chunkOverlap,
+                rerankMode: raw.rerankMode || defaults.rerankMode,
+                rerankModelId: Number(raw.rerankModelId) > 0 ? Number(raw.rerankModelId) : 0,
+                rerankCandidateCount: Number(raw.rerankCandidateCount) > 0 ? Number(raw.rerankCandidateCount) : defaults.rerankCandidateCount,
+                lexicalWeight: (raw.lexicalWeight == null) ? defaults.lexicalWeight : Number(raw.lexicalWeight)
+            };
+        },
         // 编辑 // 新增知识库（下拉直接绑定 dialog.data.*Id）
         handleEdit(index, row, flag) {
             let that = this;
@@ -817,21 +866,23 @@ var app = new Vue({
                     vectorDBId: null,
                     chatModelId: null,
                     name: '',
-                    content: ''
+                    content: '',
+                    retrievalConfig: that.defaultRetrievalConfig()
                 };
                 that.dialogImageUrl = '';
                 return;
             }
 
             // 编辑 - 使用现有数据
-            let { id, embeddingModelId, vectorDBId, chatModelId, name, content } = row;
+            let { id, embeddingModelId, vectorDBId, chatModelId, name, content, retrievalConfig } = row;
             that.dialog.data = {
                 id: id || 0,
                 embeddingModelId: embeddingModelId ? parseInt(embeddingModelId, 10) : null,
                 vectorDBId: vectorDBId ? parseInt(vectorDBId, 10) : null,
                 chatModelId: chatModelId ? parseInt(chatModelId, 10) : null,
                 name: name || '',
-                content: content || ''
+                content: content || '',
+                retrievalConfig: that.normalizeRetrievalConfig(retrievalConfig)
             };
 
             if (flag === 'edit') {
@@ -953,6 +1004,7 @@ var app = new Vue({
                     chatModelId: parseInt(that.dialog.data.chatModelId, 10) || 0,
                     name: that.dialog.data.name,
                     content: that.dialog.data.content || '',
+                    retrievalConfig: that.dialog.data.retrievalConfig || that.defaultRetrievalConfig(),
                     NcfFileIds: null
                 };
                 console.log('保存知识库数据：' + JSON.stringify(data));

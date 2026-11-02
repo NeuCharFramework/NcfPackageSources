@@ -23,6 +23,15 @@
     修改标识：Senparc - 20261005
     修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261018
+    修改描述：避免 Notebook 语言缺失时静默生成 Python Notebook
+
+    修改标识：Senparc - 20261021
+    修改描述：v0.3.5 缺少模板或语言时拒绝静默回退到 Python
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.0 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using System.Net;
@@ -30,6 +39,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.XncfBase.Functions.Files;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Application.DTOs.Request;
 using Senparc.Xncf.Sandbox.Domain.Services;
@@ -39,12 +49,18 @@ namespace Senparc.Xncf.Sandbox.Application.AppServices;
 
 public class SandboxAppService : AppServiceBase
 {
+    private const int MaxReferencedFilesPerUpload = 16;
     private readonly SandboxOrchestrator _orchestrator;
+    private readonly IFunctionFileStore _fileStore;
 
-    public SandboxAppService(IServiceProvider serviceProvider, SandboxOrchestrator orchestrator)
+    public SandboxAppService(
+        IServiceProvider serviceProvider,
+        SandboxOrchestrator orchestrator,
+        IFunctionFileStore fileStore)
         : base(serviceProvider)
     {
         _orchestrator = orchestrator;
+        _fileStore = fileStore;
     }
 
     [FunctionRender(
@@ -204,6 +220,85 @@ public class SandboxAppService : AppServiceBase
         });
     }
 
+    [FunctionRender("批量上传 Lab 文件", "把多个已上传文件以流方式写入运行中的持久化 JupyterLab 工作区", typeof(Register), AllowAiInvocation = true)]
+    public async Task<StringAppResponse> LabUploadFiles(Sandbox_LabUploadFilesRequest request)
+    {
+        return await this.GetStringResponseAsync(async (response, logger) =>
+        {
+            if (request.Files == null || request.Files.Length == 0)
+            {
+                response.Success = false;
+                response.ErrorMessage = "Files 至少需要包含一个文件。";
+                return null;
+            }
+
+            if (request.Files.Length > MaxReferencedFilesPerUpload)
+            {
+                response.Success = false;
+                response.ErrorMessage = $"一次最多上传 {MaxReferencedFilesPerUpload} 个文件。";
+                return null;
+            }
+
+            var relativeDirectory = (request.RelativeDirectory ?? string.Empty).Trim();
+            var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var uploaded = new List<object>(request.Files.Length);
+            foreach (var fileReference in request.Files)
+            {
+                if (fileReference == null || string.IsNullOrWhiteSpace(fileReference.FileId))
+                {
+                    response.Success = false;
+                    response.ErrorMessage = "Files 中包含无效的文件引用。";
+                    return null;
+                }
+
+                await using var file = await _fileStore.OpenReadAsync(
+                        fileReference.FileId,
+                        CancellationToken.None)
+                    .ConfigureAwait(false);
+                var fileName = Path.GetFileName(file.Reference.FileName);
+                if (string.IsNullOrWhiteSpace(fileName))
+                {
+                    fileName = file.Reference.FileId + ".bin";
+                }
+
+                if (!names.Add(fileName))
+                {
+                    response.Success = false;
+                    response.ErrorMessage = $"批量上传中存在重复文件名：{fileName}";
+                    return null;
+                }
+
+                var relativePath = string.IsNullOrWhiteSpace(relativeDirectory)
+                    ? fileName
+                    : Path.Combine(relativeDirectory, fileName);
+                var result = await _orchestrator.UploadWorkspaceFileAsync(
+                        request.SessionId,
+                        relativePath,
+                        file.Content,
+                        file.Reference.Length,
+                        request.Overwrite,
+                        CancellationToken.None)
+                    .ConfigureAwait(false);
+                uploaded.Add(new
+                {
+                    result.RelativePath,
+                    result.Length,
+                    result.LastWriteTimeUtc,
+                    fileId = file.Reference.FileId,
+                    fileName = fileName
+                });
+            }
+
+            logger.Append($"Lab files uploaded: SessionId={request.SessionId}, Count={uploaded.Count}");
+            response.Data = JsonSerializer.Serialize(new
+            {
+                sessionId = request.SessionId,
+                files = uploaded
+            });
+            return null;
+        });
+    }
+
     [FunctionRender("下载 Lab 文件", "读取运行中的持久化 JupyterLab 工作区文件并返回 Base64 内容", typeof(Register), AllowAiInvocation = true)]
     public async Task<StringAppResponse> LabDownloadFile(Sandbox_LabFileRequest request)
     {
@@ -277,6 +372,13 @@ public class SandboxAppService : AppServiceBase
             {
                 response.Success = false;
                 response.ErrorMessage = "RelativePath 必须以 .ipynb 结尾。";
+                return null;
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Language))
+            {
+                response.Success = false;
+                response.ErrorMessage = "Language 不能为空，请明确填写 python 或 csharp。";
                 return null;
             }
 

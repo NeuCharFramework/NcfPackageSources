@@ -24,6 +24,12 @@
     修改标识：Senparc - 20261005
     修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261028
+    修改描述：注册 IHttpContextAccessor，供单例编排器捕获请求租户上下文
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.0 沙箱单例编排器恢复请求租户上下文，后台回收按租户迭代
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http;
@@ -35,6 +41,7 @@ using Microsoft.Extensions.Hosting;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Core.Models;
+using Senparc.Ncf.IsolatedRuntime;
 using Senparc.Ncf.XncfBase;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.Sandbox.Application.AppServices;
@@ -54,7 +61,7 @@ public partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Uid => "BDF12490-AA0B-41B4-ADB3-63155ED95A93";
 
-    public override string Version => "0.3.3";
+    public override string Version => "0.4.0";
 
     public override string MenuName => SandboxResource.Get("Module.Sandbox.MenuName", "沙箱环境");
 
@@ -82,6 +89,8 @@ public partial class Register : XncfRegisterBase, IXncfRegister
     {
         services.Configure<SandboxImageOptions>(configuration.GetSection(SandboxImageOptions.SectionName));
         services.Configure<SandboxDockerOptions>(configuration.GetSection(SandboxDockerOptions.SectionName));
+        services.AddHttpContextAccessor();
+        services.AddDockerIsolatedRuntime(configuration);
         services.Configure<SandboxNcfPreviewOptions>(configuration.GetSection(SandboxNcfPreviewOptions.SectionName));
         services.AddSingleton<ISandboxImageResolver, SandboxImageResolver>();
         services.AddSingleton(new SandboxQuotaPolicy());

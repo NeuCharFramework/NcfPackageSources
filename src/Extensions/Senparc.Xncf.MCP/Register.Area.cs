@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261004
     修改描述：移除数据库操作示例菜单
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.5.10 use compatible icon for MCP module
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;

@@ -47,8 +47,7 @@
                 </li>
             </ol>
             <p>
-                <a href="https://doc.ncf.pub/zh/NcfPackageSources/xncf/aikernel-local-fine-tuning.html" target="_blank" rel="noopener noreferrer">{{ t('Guide.ChineseDocs') }}</a>
-                · <a href="https://doc.ncf.pub/NcfPackageSources/xncf/aikernel-local-fine-tuning.html" target="_blank" rel="noopener noreferrer">{{ t('Guide.EnglishDocs') }}</a>
+                <ncf-doc-help topic="ai.fine-tuning"></ncf-doc-help>
             </p>
         </el-collapse-item>
         <el-collapse-item :title="t('SetupHelp')" name="setup">
@@ -65,7 +64,7 @@
 
     <el-card class="ft-card">
         <div slot="header" class="ft-detail-heading">
-            <h2>{{ t('Worker') }}</h2>
+            <h2>{{ t('Worker') }}<ncf-doc-help topic="ai.workers"></ncf-doc-help></h2>
             <el-button size="mini" icon="el-icon-plus" :disabled="uploadBusy || createBusy || cancelBusy || datasetMoreBusy" @@click="openWorkerEditor()">{{ t('AddWorker') }}</el-button>
         </div>
         <el-select v-model="workerAlias" filterable :placeholder="t('SelectWorker')" :aria-label="t('Worker')"
@@ -85,6 +84,82 @@
                    :disabled="uploadBusy || createBusy || cancelBusy || datasetMoreBusy" @@click="openWorkerEditor(worker)">
             {{ t('EditWorker') }}: {{ worker.name }}
         </el-button>
+    </el-card>
+
+    <el-card class="ft-card">
+        <div slot="header" class="ft-detail-heading">
+            <h2>{{ t('ControlPlaneTitle') }}</h2>
+            <el-button type="primary" size="mini"
+                       :loading="migrationBusy"
+                       :disabled="!workerAlias || uploadBusy || createBusy || cancelBusy || datasetMoreBusy"
+                       @@click="migrateLegacyMetadata">{{ t('MigrateLegacy') }}</el-button>
+        </div>
+        <p>{{ t('ControlPlaneHelp') }}</p>
+        <el-alert v-if="migrationResult" :type="migrationResult.status === 'Completed' ? 'success' : 'warning'"
+                  :closable="false" :title="migrationResult.status">
+            <p>{{ t('MigrationDatasets') }}: {{ migrationResult.datasets }}</p>
+            <p>{{ t('MigrationJobs') }}: {{ migrationResult.jobs }}</p>
+            <p>{{ t('MigrationEvents') }}: {{ migrationResult.events }}</p>
+            <p>{{ t('MigrationArtifacts') }}: {{ migrationResult.artifacts }}</p>
+            <p v-if="migrationResult.error">{{ migrationResult.error }}</p>
+        </el-alert>
+    </el-card>
+
+    <el-card class="ft-card">
+        <div slot="header" class="ft-detail-heading">
+            <h2>{{ t('DiagnosticsTitle') }}</h2>
+            <el-button size="mini" :loading="diagnosticsBusy" :disabled="!workerAlias"
+                       @@click="runDiagnostics">{{ t('RunDiagnostics') }}</el-button>
+        </div>
+        <p>{{ t('DiagnosticsHelp') }}</p>
+        <div v-if="diagnostics" class="ft-status">
+            <el-tag :type="diagnostics.status === 'Ready' ? 'success' : 'warning'">{{ diagnostics.status }}</el-tag>
+            <span>{{ t('DiagnosticsWorker') }}: {{ diagnostics.workerReachable ? t('Available') : t('Unavailable') }}</span>
+            <span>{{ t('DiagnosticsModels') }}: {{ diagnostics.modelCount }}</span>
+            <span>{{ t('DiagnosticsFileManager') }}: {{ diagnostics.fileManagerAvailable ? t('Available') : t('Unavailable') }}</span>
+            <span v-if="diagnostics.error">{{ diagnostics.error }}</span>
+        </div>
+    </el-card>
+
+    <el-card class="ft-card">
+        <div slot="header" class="ft-detail-heading">
+            <h2>{{ t('ModelPreparationTitle') }}</h2>
+            <el-button size="mini" :loading="modelPreparationBusy"
+                       :disabled="!modelPreparation.provider || !modelPreparation.model || !modelPreparation.revision"
+                       @@click="checkModelPreparation">{{ t('CheckModel') }}</el-button>
+        </div>
+        <p>{{ t('ModelPreparationHelp') }}</p>
+        <el-form :inline="true" class="ft-model-preparation-form">
+            <el-form-item :label="t('Provider')"><el-input v-model="modelPreparation.provider" maxlength="50"></el-input></el-form-item>
+            <el-form-item :label="t('Model')"><el-input v-model="modelPreparation.model" maxlength="200"></el-input></el-form-item>
+            <el-form-item :label="t('Revision')"><el-input v-model="modelPreparation.revision" maxlength="200"></el-input></el-form-item>
+            <el-form-item :label="t('TargetDirectory')"><el-input v-model="modelPreparation.targetDirectory" maxlength="500"></el-input></el-form-item>
+        </el-form>
+        <div class="ft-model-search">
+            <el-input v-model="modelSearchQuery" :placeholder="t('ModelSearchPlaceholder')" maxlength="100"></el-input>
+            <el-button size="small" :loading="modelSearchBusy"
+                       :disabled="!modelPreparation.provider || !modelSearchQuery"
+                       @@click="searchModels">{{ t('SearchModels') }}</el-button>
+        </div>
+        <el-alert v-if="modelSearchError" type="warning" :closable="false"
+                  :title="t('ModelSearchUnavailable')" :description="modelSearchError" show-icon></el-alert>
+        <el-table v-if="modelSearchResults.length" :data="modelSearchResults" size="small" class="ft-model-search-results">
+            <el-table-column prop="model" :label="t('Model')" min-width="220"></el-table-column>
+            <el-table-column prop="revision" :label="t('Revision')" min-width="160"></el-table-column>
+            <el-table-column prop="description" :label="t('Description')" min-width="260"></el-table-column>
+            <el-table-column :label="t('Action')" width="110">
+                <template slot-scope="scope">
+                    <el-button type="text" size="small" @@click="selectModelSearchResult(scope.row)">{{ t('SelectModel') }}</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-button type="primary" :loading="modelPreparationDownloadBusy"
+                   :disabled="!modelPreparationStatus || modelPreparationStatus.isComplete"
+                   @@click="downloadModel">{{ t('DownloadModel') }}</el-button>
+        <el-alert v-if="modelPreparationStatus" class="ft-alert" type="info" :closable="false"
+                  :title="modelPreparationStatus.isComplete ? t('ModelReady') : t('ModelIncomplete')">
+            <span>{{ modelPreparationStatus.totalBytes }} bytes · {{ modelPreparationStatus.files.length }} files</span>
+        </el-alert>
     </el-card>
 
     <el-dialog :title="t('WorkerConfiguration')" :visible.sync="workerEditorVisible" width="620px" custom-class="ft-worker-dialog">
@@ -110,6 +185,7 @@
         <span v-if="health">{{ t('WorkerVersion') }}: {{ health.version }} · {{ health.status }}</span>
         <span>{{ t('RunningCount') }}: {{ health ? health.activeJobs : t('Unavailable') }}</span>
         <span>{{ t('QueuedCount') }}: {{ health ? health.queuedJobs : t('Unavailable') }}</span>
+        <span>{{ t('PausedCount') }}: {{ health && health.pausedJobs != null ? health.pausedJobs : t('Unavailable') }}</span>
     </div>
     <el-alert v-if="connectionError" class="ft-alert" type="error" :closable="false"
               :title="t('ConnectionError')" :description="connectionError" show-icon></el-alert>
@@ -158,7 +234,7 @@
                     <div class="ft-muted" role="status">{{ fileReading ? t('ReadingFile') : fileName }}</div>
                 </el-form-item>
                 <el-button type="primary" icon="el-icon-upload2" :loading="uploadBusy"
-                           :disabled="!datasetContent || fileReading || !connectionHealthy" @@click="uploadDataset">{{ t('Upload') }}</el-button>
+                           :disabled="!datasetFile || fileReading || !connectionHealthy" @@click="uploadDataset">{{ t('Upload') }}</el-button>
             </el-form>
             <el-table :data="datasets" size="mini" max-height="280" :empty-text="t('NoDatasets')" class="ft-table">
                 <el-table-column prop="name" :label="t('DatasetName')" min-width="140"></el-table-column>
@@ -274,8 +350,16 @@
     <el-card v-if="selectedId" class="ft-card" v-loading="detailLoading">
         <div slot="header" class="ft-detail-heading">
             <h2>{{ t('Monitor') }}: {{ job ? job.name : selectedId }}</h2>
+            <span>
+                <el-button v-if="job && canPause(job)" type="warning" size="small" :loading="pauseBusy"
+                           @@click="pauseJob">{{ t('PauseJob') }}</el-button>
+                <el-button v-if="job && canResume(job)" type="primary" size="small" :loading="resumeBusy"
+                           @@click="resumeJob">{{ t('ResumeJob') }}</el-button>
             <el-button v-if="job && canCancel(job)" type="danger" size="small" :loading="cancelBusy"
                        @@click="cancelJob">{{ t('CancelJob') }}</el-button>
+                <el-button v-if="job && canDelete(job)" type="danger" plain size="small" :loading="deleteBusy"
+                           @@click="deleteJob">{{ t('DeleteJob') }}</el-button>
+            </span>
         </div>
         <p v-if="detailError" class="ft-error" role="alert">{{ detailError }}</p>
         <div v-if="job">
@@ -292,6 +376,26 @@
                     <span v-if="progressPercent === null"> · {{ t('ProgressUnknown') }}</span>
                 </p>
                 <p v-if="job.state === 'Cancelling'">{{ t('CancellingHelp') }}</p>
+                <p>{{ t('AverageStepDuration') }}: {{ formatMetric(metric('averageStepDuration'), 's') }}
+                    · {{ t('EstimatedFinish') }}: {{ formatDate(estimatedFinishUtc) }}</p>
+                <p v-if="metric('sampleCount') !== null">
+                    {{ t('CurrentSamples') }}:
+                    #{{ formatMetric(metric('sampleIndexMin')) }}-#{{ formatMetric(metric('sampleIndexMax')) }}
+                    · {{ formatMetric(metric('sampleCount')) }} {{ t('SamplesUnit') }}
+                    · {{ formatMetric(metric('tokenCount')) }} {{ t('TokensUnit') }}
+                    · {{ formatMetric(metric('sequenceLengthMin')) }}-{{ formatMetric(metric('sequenceLengthMax')) }} {{ t('TokensPerSampleUnit') }}
+                    · {{ t('TruncatedSamples') }}: {{ formatMetric(metric('truncatedSampleCount')) }}
+                </p>
+                <el-form :inline="true" class="ft-runtime-form">
+                    <el-form-item :label="t('MaxDurationMinutes')">
+                        <el-input-number v-model="runtimeMinutes" :min="1" :max="10080"
+                                         :disabled="runtimeBusy || ['Cancelled', 'Succeeded', 'Failed', 'Interrupted'].indexOf(job.state) >= 0">
+                        </el-input-number>
+                    </el-form-item>
+                    <el-button size="small" :loading="runtimeBusy"
+                               :disabled="runtimeBusy || runtimeMinutes === null"
+                               @@click="updateRuntime">{{ t('UpdateRuntime') }}</el-button>
+                </el-form>
             </div>
             <div class="ft-metrics">
                 <div v-for="item in metricCards" :key="item.key" class="ft-metric">
@@ -322,6 +426,19 @@
             <div v-if="job.state === 'Succeeded'" class="ft-validation">
                 <h3>{{ t('ValidationTitle') }}</h3>
                 <p class="ft-muted">{{ t('ValidationHelp') }}</p>
+                <div class="ft-validation-options">
+                    <el-select v-model="validationBackend" :placeholder="t('ValidationBackend')" clearable>
+                        <el-option value="cpu" :label="t('BackendCpu')"></el-option>
+                        <el-option value="cuda" :label="t('BackendCuda')"></el-option>
+                        <el-option value="mlx" :label="t('BackendMlx')"></el-option>
+                    </el-select>
+                    <el-select v-model="validationMethod" :placeholder="t('ValidationMethod')" clearable>
+                        <el-option value="lora" :label="t('MethodLora')"></el-option>
+                        <el-option value="qlora" :label="t('MethodQlora')"></el-option>
+                    </el-select>
+                </div>
+                <el-alert v-if="validationMismatchWarning" type="warning" :closable="false"
+                          :title="t('ValidationMismatchWarning')" :description="validationMismatchWarning" show-icon></el-alert>
                 <el-input type="textarea" :rows="4" v-model="validationPrompts"
                           :placeholder="t('ValidationPromptPlaceholder')"></el-input>
                 <div class="ft-validation-options">
@@ -343,21 +460,57 @@
                 </div>
             </div>
         </div>
-        <h3>{{ t('Events') }}</h3>
-        <el-alert v-if="eventsTruncated" type="warning" :closable="false" :title="t('EventsTruncated')" show-icon></el-alert>
-        <div class="ft-log-heading">
-            <span>{{ t('LogHelp') }}</span>
-            <span role="status" aria-live="polite">{{ !connectionHealthy || detailError ? t('Stale') : catchingUp ? t('Replaying') : t('Live') }} · {{ t('Cursor') }}: {{ cursor }}</span>
-            <el-checkbox v-model="followLog">{{ t('FollowLog') }}</el-checkbox>
-        </div>
-        <div ref="eventLog" class="ft-log" tabindex="0" :aria-label="t('Events')">
-            <p v-if="!events.length">{{ t('NoEvents') }}</p>
-            <div v-for="event in events" :key="event.sequence" class="ft-log-line">
-                <span class="ft-log-time">#{{ event.sequence }} {{ formatDate(event.timestampUtc) }}</span>
-                <strong>[{{ event.kind }}]</strong>
-                <span>{{ event.message }}</span>
-                <span v-if="Object.keys(event.metrics).length">{{ JSON.stringify(event.metrics) }}</span>
+        <div class="ft-events-section" :class="{ 'is-stacked': eventLayout === 'stacked', 'is-expanded': eventExpanded }">
+            <el-alert v-if="eventsTruncated" type="warning" :closable="false" :title="t('EventsTruncated')" show-icon></el-alert>
+            <div class="ft-events-heading">
+                <div>
+                    <h3>{{ t('Events') }}</h3>
+                    <p class="ft-muted">{{ t('EventsLayoutHelp') }}</p>
+                </div>
+                <div class="ft-events-actions">
+                    <el-button-group>
+                        <el-button size="small" :type="eventLayout === 'split' ? 'primary' : 'default'"
+                                   @@click="setEventLayout('split')">{{ t('EventsSideBySide') }}</el-button>
+                        <el-button size="small" :type="eventLayout === 'stacked' ? 'primary' : 'default'"
+                                   @@click="setEventLayout('stacked')">{{ t('EventsStacked') }}</el-button>
+                    </el-button-group>
+                    <el-button size="small" icon="el-icon-full-screen"
+                               @@click="toggleEventExpanded">
+                        {{ eventExpanded ? t('RestoreEvents') : t('ExpandEvents') }}
+                    </el-button>
+                </div>
             </div>
+            <div class="ft-event-columns">
+            <section class="ft-event-pane">
+                <h3>{{ t('CommandLog') }}</h3>
+                <div class="ft-log-heading">
+                    <span>{{ t('CommandLogHelp') }}</span>
+                    <span role="status" aria-live="polite">{{ !connectionHealthy || detailError ? t('Stale') : catchingUp ? t('Replaying') : t('Live') }} · {{ t('Cursor') }}: {{ cursor }}</span>
+                    <el-checkbox v-model="followLog">{{ t('FollowLog') }}</el-checkbox>
+                </div>
+                <div ref="eventLog" class="ft-log" tabindex="0" :aria-label="t('CommandLog')">
+                    <p v-if="!logEvents.length">{{ t('NoEvents') }}</p>
+                    <div v-for="event in logEvents" :key="event.sequence" class="ft-log-line">
+                        <span class="ft-log-time">#{{ event.sequence }} {{ formatDate(event.timestampUtc) }}</span>
+                        <strong>[{{ event.kind }}]</strong>
+                        <span>{{ event.message }}</span>
+                    </div>
+                </div>
+            </section>
+            <section class="ft-event-pane">
+                <h3>{{ t('MetricLog') }}</h3>
+                <div class="ft-log-heading">
+                    <span>{{ t('MetricLogHelp') }}</span>
+                    <span>{{ metricEvents.length }}</span>
+                </div>
+                <div ref="metricLog" class="ft-log ft-metric-log" tabindex="0" :aria-label="t('MetricLog')">
+                    <p v-if="!metricEvents.length">{{ t('NoMetrics') }}</p>
+                    <div v-for="event in metricEvents" :key="event.sequence" class="ft-log-line">
+                        <span class="ft-log-time">#{{ event.sequence }} {{ formatDate(event.timestampUtc) }}</span>
+                        <span>{{ JSON.stringify(event.metrics) }}</span>
+                    </div>
+                </div>
+            </section>
         </div>
     </el-card>
 </div>

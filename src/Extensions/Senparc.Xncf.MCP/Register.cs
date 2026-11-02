@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261004
     修改描述：移除数据库模板示例的安装初始化、依赖注入及映射
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.5.10 use compatible icon for MCP module
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;

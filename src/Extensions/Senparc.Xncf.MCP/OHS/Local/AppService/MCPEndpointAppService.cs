@@ -19,6 +19,9 @@
     修改标识：Senparc - 20261004
     修改描述：v0.5.8 独立提供本站实际发布的 MCP 服务只读列表
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.5.10 Remove DatabaseSample and related components from MCP extension
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;

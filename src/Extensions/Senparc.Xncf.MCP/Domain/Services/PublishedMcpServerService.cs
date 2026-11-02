@@ -5,6 +5,10 @@
     文件功能描述：读取本站运行时实际发布的 MCP 服务及访问端点
 
     创建标识：Senparc - 20261004
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.5.10 Remove DatabaseSample and related components from MCP extension
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;

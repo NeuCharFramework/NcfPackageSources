@@ -16,6 +16,12 @@
     修改标识：Senparc - 20261009
     修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.17.0 纳入微调控制面实体
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -35,13 +41,16 @@ namespace Senparc.Xncf.AIKernel.Models
         public DbSet<AIVector> AiVectors { get; set; }
         public DbSet<AITokenUsage> AiTokenUsages { get; set; }
         public DbSet<AIFineTuningWorker> AiFineTuningWorkers { get; set; }
+        public DbSet<AIFineTuningDataset> AiFineTuningDatasets { get; set; }
+        public DbSet<AIFineTuningJob> AiFineTuningJobs { get; set; }
+        public DbSet<AIFineTuningEvent> AiFineTuningEvents { get; set; }
+        public DbSet<AIFineTuningArtifact> AiFineTuningArtifacts { get; set; }
+        public DbSet<AIFineTuningMigration> AiFineTuningMigrations { get; set; }
 
         //DOT REMOVE OR MODIFY THIS LINE 请勿移除或修改本行 - Entities Point
         //ex. public DbSet<Color> Colors { get; set; }
 
         //如无特殊需需要，OnModelCreating 方法可以不用写，已经在 Register 中要求注册
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //}
+        // Keep provider-specific model configuration in the generated migrations.
     }
 }

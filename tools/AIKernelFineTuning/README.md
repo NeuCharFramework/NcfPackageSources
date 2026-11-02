@@ -101,13 +101,13 @@ Use a private HTTPS endpoint for cross-host connections. `127.0.0.1` works only 
 
 跨主机使用私网 HTTPS；同一命名空间才使用 loopback。NCF 容器可加入入口网络并访问 `http://gateway:8080`，此时将 `gateway` 加入 NCF 的 `AllowedHosts`，不要误用自己的 loopback；训练 Worker 不加入外部网络。
 
-Use the default-expanded in-page tutorial and the dataset example download to prepare the first smoke test. Each example has four distinct rows and only demonstrates format; it is not a production dataset. The browser checks line structure, 2..10000 rows and the 2 MiB UTF-8 limit, while the Worker performs authoritative validation, including duplicate properties and held-out overlap.
+Use the default-expanded in-page tutorial and the dataset example download to prepare the first smoke test. Each example has four distinct rows and only demonstrates format; it is not a production dataset. The browser validates the file as a stream and checks line structure, 2..1,000,000 rows and the 512 MiB UTF-8 limit, while the Worker performs authoritative validation, including duplicate properties and held-out overlap.
 
-使用默认展开的页内教程及数据样例下载准备首次冒烟测试。每种样例含四条不同记录，仅演示格式，不是生产数据集。浏览器检查行结构、2..10000 行及 2 MiB UTF-8 上限；Worker 仍进行最终校验，包括重复字段与验证集重叠检查。
+使用默认展开的页内教程及数据样例下载准备首次冒烟测试。每种样例含四条不同记录，仅演示格式，不是生产数据集。浏览器以流方式检查行结构、2..1,000,000 行及 512 MiB UTF-8 上限；Worker 仍进行最终校验，包括重复字段与验证集重叠检查。
 
-Open **AIKernel → Local fine-tuning / 本地模型微调**. Upload UTF-8 JSONL (2..10000 rows, <=2 MiB) of `messages` or `prompt`/`completion`. Messages require the approved tokenizer's chat template. Explicit validation must not overlap training rows. If omitted, the worker deterministically holds out at least one distinct row (approximately 20%); it rejects fewer than two distinct rows.
+Open **AIKernel → Local fine-tuning / 本地模型微调**. Upload UTF-8 JSONL (2..1,000,000 rows, <=512 MiB) of `messages` or `prompt`/`completion`. Files are first stored in FileManager and streamed to the Worker; the Worker also keeps its validated training copy. Messages require the approved tokenizer's chat template. Explicit validation must not overlap training rows. If omitted, the worker deterministically holds out at least one distinct row (approximately 20%); it rejects fewer than two distinct rows.
 
-打开管理页，上传 2..10000 行、最多 2 MiB 的 UTF-8 JSONL（messages 或 prompt/completion）。messages 要求批准的 tokenizer chat template；显式验证集不能与训练记录重叠。不选验证集时，自动按 seed 留出约 20%、至少一条不同记录，少于两条不同记录则拒绝。
+打开管理页，上传 2..1,000,000 行、最多 512 MiB 的 UTF-8 JSONL（messages 或 prompt/completion）。文件会先统一保存到 FileManager，再以流方式发送到 Worker；Worker 也会保留经过校验的训练副本。messages 要求批准的 tokenizer chat template；显式验证集不能与训练记录重叠。不选验证集时，自动按 seed 留出约 20%、至少一条不同记录，少于两条不同记录则拒绝。
 
 The implemented objective is **causal next-token loss on all non-padding tokens**, including prompt/user tokens, not assistant-only masked SFT. Both backends use AdamW, linear warmup/decay and gradient clipping. Right truncation is warned; inspect data length so answers are not lost. A positive `maxSteps` overrides epochs; zero uses epochs.
 
@@ -123,6 +123,8 @@ The implemented objective is **causal next-token loss on all non-padding tokens*
 | `NCF_MIN_FREE_BYTES` | 1073741824 | Disk reserve; archive requires extra space / 磁盘预留，归档需额外空间 |
 | `NCF_EVENT_LIMIT` | 10000 | Retained events per job / 每任务保留事件数 |
 | `NCF_MAX_DATASETS`, `NCF_MAX_JOBS` | 1000 each | Store retention admission caps / 存储记录接收上限 |
+| `NCF_MAX_DATASET_BYTES` | 536870912 | Maximum raw JSONL bytes per dataset (512 MiB) / 单个 JSONL 数据集最大字节数（512 MiB） |
+| `NCF_MAX_DATASET_ROWS` | 1000000 | Maximum rows per dataset / 单个数据集最大行数 |
 | `NCF_CANCEL_GRACE_SECONDS` | 30 | Graceful checkpoint stop before tree kill / 优雅停止后进程树强杀 |
 | `NCF_TELEMETRY_SECONDS` | 2 | Resource sampling interval / 资源采样间隔 |
 | `NCF_PREFLIGHT_SECONDS` | 120 | Offline model preflight timeout / 离线模型预检超时 |
@@ -132,17 +134,21 @@ A filesystem quota remains necessary: disk checks are periodic, not a hard synch
 
 磁盘定期检查不是硬实时配额，生产仍需文件系统 quota。Compose 中需显式传入环境覆盖。CPU/内存/PID 由容器/宿主约束，不承诺每任务内存一定足够。
 
-SQLite WAL, canonical datasets and outputs persist together in `/data`. One process owns the store via an OS lock. Restarted active jobs become `Interrupted`; there is **no resume/pause API**. Cancellation saves at safe boundaries when possible; forced termination retains only completed checkpoints. Last two checkpoints are kept; older events are pruned with an explicit truncated-history indicator.
+SQLite WAL, canonical datasets and outputs persist together in `/data`. One process owns the store via an OS lock. Jobs can pause at a safe boundary and resume from the latest checkpoint; paused time is excluded from the maximum runtime. Cancellation and timeout save a checkpoint when possible. Last two checkpoints are kept; older events are pruned with an explicit truncated-history indicator.
 
-SQLite WAL、数据与输出共同持久化；OS 锁限制一个 Worker。重启后活跃任务标为 Interrupted，**不提供 resume/pause API**。取消尽可能在安全边界保存；强杀仅保留已完成 checkpoint。保留最后两个 checkpoint，历史事件裁剪会明确提示。
+SQLite WAL、数据与输出共同持久化；OS 锁限制一个 Worker。任务支持在安全边界暂停并从最近 checkpoint 恢复，暂停期间不计入最大运行时间；取消和超时尽可能保存 checkpoint。最后两个 checkpoint 会保留，历史事件裁剪会明确提示。暂停/恢复依赖当前 Worker 仍可访问任务目录，Worker 重启后的活动任务仍会标为 Interrupted。
+
+The Worker exposes `POST /jobs/<id>/pause`, `POST /jobs/<id>/resume`, `POST /jobs/<id>/runtime` (JSON `maxDurationMinutes`) and `DELETE /jobs/<id>`. Deletion is restricted to terminal or paused jobs and removes the Worker job directory; the NCF control plane also removes task events/artifacts and then attempts to remove unreferenced FileManager assets. A running job's maximum runtime can be increased or reduced within the operator budget. It starts when execution begins, excludes queue and paused time, and is checked against the latest persisted request.
+
+Worker 提供 `POST /jobs/<id>/pause`、`POST /jobs/<id>/resume`、`POST /jobs/<id>/runtime`（JSON `maxDurationMinutes`）和 `DELETE /jobs/<id>`。删除仅允许终态或暂停任务，并删除 Worker 任务目录；NCF 控制面也会删除任务事件/产物，然后尝试删除没有其他引用的 FileManager 资产。运行期间可以在运维预算内增加或减少最长运行时间；计时从执行开始，排队和暂停时间不计入，并按最新持久化请求检查。
 
 Downloads include `training-export.zip`, `manifest.json` and `metrics.jsonl`. Archives contain adapter/tokenizer files, completed checkpoints, optimizer/RNG state and provenance. Manifest records base safetensors hashes, data hashes, parameters, dependency versions, evaluation strategy and loss convention. Optimizer state is worker-produced diagnostic data, not accepted as an input model. Adapters require the same base/format; MLX QLoRA from unquantized input additionally requires recreating the exported 4-bit affine quantization (group size 64) before loading the adapter. Evaluate and deploy separately; never register this training API as an AIModel inference endpoint.
 
 下载包包含 adapter/tokenizer、已完成 checkpoint、优化器/RNG 与追溯信息。Manifest 记录权重/数据 hash、参数、依赖版本、验证策略及 loss 约定。优化器状态仅用于诊断，不接收为模型输入。MLX 从未量化基座进行 QLoRA 时，加载 adapter 前应按导出的 4-bit affine/group size 64 重新量化基座。评估与部署独立完成，训练 API 不能注册为推理 API。
 
-Resources are global trusted-operator assets, not tenant-isolated. Back up the stopped store/volume consistently, retain according to policy, and rotate to a new store when admission caps are reached. No online deletion or automated model promotion is provided.
+Resources are global trusted-operator assets, not tenant-isolated. Back up the stopped store/volume consistently, retain according to policy, and rotate to a new store when admission caps are reached. Deletion is an explicit operator action and does not promote a model automatically.
 
-资源属于可信全局运维人员，不提供租户隔离。停止 Worker 后一致备份，按策略保留，到达接收上限时归档并切换存储；不提供在线删除或自动发布。
+资源属于可信全局运维人员，不提供租户隔离。停止 Worker 后一致备份，按策略保留，到达接收上限时归档并切换存储；删除必须由运维人员显式操作，且不会自动发布模型。
 
 ## Verification / 验证
 

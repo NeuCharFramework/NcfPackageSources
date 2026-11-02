@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.16.4</Version>
+    <Version>0.17.1</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -18,16 +18,9 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-		[2026-10-07] v0.16.4 补齐微调功能闭环与历史目录分页
-		1、接入 Worker 1.1 的任务/数据集分页与持久化存储身份，避免历史截断和旧缓存跨存储复用
-		2、验证真实 CPU/MLX 训练、独立验证、取消、adapter 重载及命名 Worker 客户端
-		3、修复 Worker 保存返回契约和动态管理 API 的 body/query 参数绑定
-		[2026-10-06] v0.16.4 整合本地模型微调、数据库多 Worker 配置与各数据库迁移
-		1、补齐中英文页内教程、JSONL 样例下载、数据校验与配置提示
-		2、修复 Worker 切换并发、请求超时与微调客户端依赖注入
-		[2026-10-01] v0.16.3 按租户隔离实时 Token 统计与运行进度
-		1、实时聚合、模型统计和日期统计按可信租户上下文分区
-		2、运行进度缓冲与查询按租户校验，阻止跨租户读取
+		[2024-08-06] v0.8.6-preview1 update Senparc.AI.Kernel
+		[2024-08-18] v0.8.10 NeuCharAI 模型提供快速选择；解决 Chat/TextCompetion 编辑选中 bug
+		[2024-08-28] v0.8.9 添加 NeuChar 模型获取接口
 		v0.1.0 创世
 		v0.1.3 升级 Senparc.AI，提供多模型配
 		v0.2.0 升级 Senparc.AI，添加 FastAPI 模式
@@ -36,9 +29,6 @@
 		v0.5.2 升级 Senparc.AI，支持新格式模型配置
 		v0.5.3.1 添加 AIKernelAutoMapperProfile 映射
 		v0.8.3 支持 Ollama
-		[2024-08-06] v0.8.6-preview1 update Senparc.AI.Kernel
-		[2024-08-28] v0.8.9 添加 NeuChar 模型获取接口
-		[2024-08-18] v0.8.10 NeuCharAI 模型提供快速选择；解决 Chat/TextCompetion 编辑选中 bug
 		[2024-08-28] v0.8.10.6-preview1 完善 NeuChar AI 云端模型自动载入
 		[2024-08-28] v0.8.10.7-preview1 完善 NeuChar AI 云端模型自动载入
 		[2024-08-28] v0.8.10.11-preview1 完善 NeuChar AI 模型同步提示
@@ -122,14 +112,33 @@
 		[2026-09-17] v0.16.2 适配共享 AgentKernel 预览依赖版本
 		1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
 		2、保持 AIKernel 模块与共享模型调用依赖兼容
+		[2026-10-01] v0.16.3 按租户隔离实时 Token 统计与运行进度
+		1、实时聚合、模型统计和日期统计按可信租户上下文分区
+		2、运行进度缓冲与查询按租户校验，阻止跨租户读取
 		[2026-10-05] v0.16.3 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
 		1、Updated Senparc.Xncf.AIKernel project behavior and integration for the latest feature and reliability improvements.
 		2、chore: update package versions and dependencies across multiple projects
+		[2026-10-06] v0.16.4 整合本地模型微调、数据库多 Worker 配置与各数据库迁移
+		1、补齐中英文页内教程、JSONL 样例下载、数据校验与配置提示
+		2、修复 Worker 切换并发、请求超时与微调客户端依赖注入
+		[2026-10-07] v0.16.4 补齐微调功能闭环与历史目录分页
+		1、接入 Worker 1.1 的任务/数据集分页与持久化存储身份，避免历史截断和旧缓存跨存储复用
+		2、验证真实 CPU/MLX 训练、独立验证、取消、adapter 重载及命名 Worker 客户端
+		3、修复 Worker 保存返回契约和动态管理 API 的 body/query 参数绑定
 		[2026-10-09] v0.16.4 修复模块本地化 partial 与 Admin 宿主重名导致的前端资源键显示
 		1、模型、微调、向量、监控及仪表盘页面统一使用模块专属本地化脚本
 		2、微调未配置 Worker 时提供明确配置指引，并优化提示和窄屏排版
 		3、补充模块专属本地化脚本和资源键覆盖，避免 Admin 宿主资源重名导致页面文案异常
 		4、完善微调 Worker 未配置时的引导提示与窄屏页面展示
+		[2026-11-03] v0.17.0 增加 Token 用量记录与微调控制面
+		1、新增异步 Token 用量记录、观察者与按来源统计
+		2、新增微调任务、数据集、事件、产物和迁移控制面，并支持产物文件引用
+		3、补齐各数据库迁移与管理端微调导入导出
+		4、适配 Senparc.AI.AgentKernel 0.1.15-preview2
+		5、完善微调任务、数据集、产物文件引用、导入导出和验证流程
+		6、按租户记录 Token 用量并同步微调控制面，改进事件游标的并发管理
+		7、完善微调管理页、任务遥测和多语言配置引导
+    [2026-11-03] Add localized contextual documentation for fine-tuning Workers and vector storage.
 </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
@@ -185,6 +194,7 @@
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.FileManager.Abstractions\Senparc.Xncf.FileManager.Abstractions.csproj" />
     <!--<ProjectReference Include="..\..\Basic\Senparc.Ncf.Core.Abstractions\Senparc.Ncf.Core.Abstractions.csproj" />-->
   </ItemGroup>
 </Project>

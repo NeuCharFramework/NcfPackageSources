@@ -318,13 +318,13 @@
     <value>Datasets</value>
   </data>
   <data name="FineTuning.DatasetHelp" xml:space="preserve">
-    <value>Upload UTF-8 .jsonl with 2–10,000 rows and at most 2 MiB (2,097,152 bytes). Each line must contain one supported object; blank lines, JSON arrays and extra fields are rejected. The browser checks encoding, JSON syntax and row structure; worker validation remains authoritative. Datasets persist on the selected Worker.</value>
+    <value>Upload UTF-8 .jsonl with 2–1,000,000 rows and at most 512 MiB. Each line must contain one supported object; blank lines, JSON arrays and extra fields are rejected. The browser validates the file as a stream; worker validation remains authoritative. Datasets persist in FileManager and on the selected Worker.</value>
   </data>
   <data name="FineTuning.DatasetName" xml:space="preserve">
     <value>Dataset name</value>
   </data>
   <data name="FineTuning.DatasetFile" xml:space="preserve">
-    <value>UTF-8 JSONL file (maximum 2 MiB)</value>
+    <value>UTF-8 JSONL file (maximum 512 MiB)</value>
   </data>
   <data name="FineTuning.ReadingFile" xml:space="preserve">
     <value>Reading and validating file…</value>
@@ -435,7 +435,7 @@
     <value>Cancellation has been requested. Wait for the worker to acknowledge termination; resources may still be in use.</value>
   </data>
   <data name="FineTuning.MetricsHelp" xml:space="preserve">
-    <value>Resource metrics are worker-reported samples. Unsupported, missing or non-numeric values are shown as unavailable, never as zero. CPU usage may exceed 100% across multiple cores.</value>
+    <value>Resource metrics and training context are worker-reported. The event log includes training-split sample indexes, batch/token counts, sequence-length ranges and truncation counts; raw sample text is never persisted. Unsupported, missing or non-numeric values are shown as unavailable, never as zero. CPU usage may exceed 100% across multiple cores.</value>
   </data>
   <data name="FineTuning.ChartTitle" xml:space="preserve">
     <value>Training loss, evaluation loss and learning rate by actual training step</value>
@@ -470,6 +470,16 @@
   <data name="FineTuning.LogHelp" xml:space="preserve">
     <value>Only the latest 1,000 log entries and 1,000 chart points are retained in the browser.</value>
   </data>
+  <data name="FineTuning.CommandLog" xml:space="preserve"><value>Command and event log</value></data>
+  <data name="FineTuning.CommandLogHelp" xml:space="preserve"><value>Training commands, warnings and errors</value></data>
+  <data name="FineTuning.MetricLog" xml:space="preserve"><value>Metrics stream</value></data>
+  <data name="FineTuning.MetricLogHelp" xml:space="preserve"><value>Periodic GPU, loss, step and timing values</value></data>
+  <data name="FineTuning.NoMetrics" xml:space="preserve"><value>No metrics received yet</value></data>
+  <data name="FineTuning.EventsLayoutHelp" xml:space="preserve"><value>Choose a side-by-side or stacked view; expand for a larger monitoring workspace.</value></data>
+  <data name="FineTuning.EventsSideBySide" xml:space="preserve"><value>Side by side</value></data>
+  <data name="FineTuning.EventsStacked" xml:space="preserve"><value>Stacked</value></data>
+  <data name="FineTuning.ExpandEvents" xml:space="preserve"><value>Expand</value></data>
+  <data name="FineTuning.RestoreEvents" xml:space="preserve"><value>Restore</value></data>
   <data name="FineTuning.Replaying" xml:space="preserve">
     <value>Replaying persisted events</value>
   </data>
@@ -666,7 +676,7 @@
     <value>Select a .jsonl file.</value>
   </data>
   <data name="FineTuning.Error.FileSize" xml:space="preserve">
-    <value>The JSONL file must not exceed 2 MiB.</value>
+    <value>The JSONL file must not exceed 512 MiB.</value>
   </data>
   <data name="FineTuning.Error.FileRead" xml:space="preserve">
     <value>The file could not be read. Select it again.</value>
@@ -755,7 +765,7 @@
   <data name="FineTuning.Guide.DownloadSample" xml:space="preserve"><value>Download JSONL example</value></data>
   <data name="FineTuning.Guide.EffectiveBatch" xml:space="preserve"><value>Approximate single-device effective batch (microbatch × accumulation)</value></data>
   <data name="FineTuning.Guide.SmokeNotice" xml:space="preserve"><value>The default 10 steps verify the pipeline, not production quality. Positive maxSteps overrides epochs; validation also runs at the final step.</value></data>
-  <data name="FineTuning.Error.RowLimit" xml:space="preserve"><value>The dataset exceeds 10,000 rows.</value></data>
+  <data name="FineTuning.Error.RowLimit" xml:space="preserve"><value>The dataset exceeds 1,000,000 rows.</value></data>
   <data name="FineTuning.Error.DatasetSchema" xml:space="preserve"><value>Unsupported dataset row structure. See Dataset examples; line:</value></data>
   <data name="FineTuning.Error.WorkerChanged" xml:space="preserve"><value>The Worker selection changed. Check the original Worker's job/dataset status before retrying; its response cannot be applied to this Worker.</value></data>
   <data name="FineTuning.DatasetHistory" xml:space="preserve"><value>Datasets available in this view / total stored</value></data>
@@ -768,13 +778,76 @@
   <data name="FineTuning.WorkerSetupEmpty" xml:space="preserve"><value>No Worker profile has been added yet. Deploy the training Worker, configure its matching secret and allowed host on NCF, then use Add worker to set its alias and private endpoint. Upload and training become available after a successful connection.</value></data>
   <data name="FineTuning.WorkerSetupExisting" xml:space="preserve"><value>No selectable Worker is available. Edit a profile to enable it and configure a valid alias-specific secret on NCF, then refresh. This is a configuration step, not a failed training job.</value></data>
   <data name="FineTuning.ValidationTitle" xml:space="preserve"><value>Post-training quick validation</value></data>
-  <data name="FineTuning.ValidationRunHelp" xml:space="preserve"><value>Run up to 8 offline test prompts only for a successful MLX job. The Worker uses the same base model, Adapter and tokenizer; it does not execute arbitrary commands or download from the network.</value></data>
+  <data name="FineTuning.ValidationRunHelp" xml:space="preserve"><value>Run up to 8 offline test prompts for a successful job. The selection defaults from the task manifest when available; older jobs can be selected manually. A mismatch requires confirmation, and the Worker still verifies the selected runtime.</value></data>
   <data name="FineTuning.ValidationPromptPlaceholder" xml:space="preserve"><value>One test prompt per line, for example: Write a Xiaohongshu-style post about a commuter thermos.</value></data>
   <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>Up to 8 cases; output limit 16–256 tokens</value></data>
   <data name="FineTuning.RunValidation" xml:space="preserve"><value>Run validation</value></data>
   <data name="FineTuning.ValidationFailed" xml:space="preserve"><value>Validation failed</value></data>
   <data name="FineTuning.ValidationPrompt" xml:space="preserve"><value>Test prompt</value></data>
   <data name="FineTuning.ValidationPromptError" xml:space="preserve"><value>Enter 1–8 test prompts, one per line.</value></data>
+  <data name="FineTuning.ValidationBackend" xml:space="preserve"><value>Validation backend</value></data>
+  <data name="FineTuning.ValidationMethod" xml:space="preserve"><value>Validation method</value></data>
+  <data name="FineTuning.BackendCpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="FineTuning.BackendCuda" xml:space="preserve"><value>CUDA</value></data>
+  <data name="FineTuning.BackendMlx" xml:space="preserve"><value>MLX</value></data>
+  <data name="FineTuning.MethodLora" xml:space="preserve"><value>LoRA</value></data>
+  <data name="FineTuning.MethodQlora" xml:space="preserve"><value>QLoRA</value></data>
+  <data name="FineTuning.ValidationMismatchWarning" xml:space="preserve"><value>Manual selection differs from the training manifest</value></data>
+  <data name="FineTuning.ValidationMismatchConfirm" xml:space="preserve"><value>The selected backend or method differs from the recorded configuration. Continue only if the Adapter format and runtime are compatible.</value></data>
   <data name="FineTuning.PartialArtifactsTitle" xml:space="preserve"><value>These are partial training artifacts</value></data>
   <data name="FineTuning.PartialArtifactsHelp" xml:space="preserve"><value>The job did not complete successfully. These files represent checkpoints saved before timeout or interruption. Check manifest.json for status, completedSteps, error details and Adapter integrity; do not deploy them directly or treat them as a completed training model.</value></data>
+  <data name="FineTuning.ControlPlaneTitle" xml:space="preserve"><value>Control-plane database and legacy migration</value></data>
+  <data name="FineTuning.ControlPlaneHelp" xml:space="preserve"><value>Idempotently synchronize this Worker's history into the NCF primary database. The source SQLite, datasets, and jobs files are never deleted; failed migrations can be retried.</value></data>
+  <data name="FineTuning.MigrateLegacy" xml:space="preserve"><value>Migrate legacy data</value></data>
+  <data name="FineTuning.MigrationDatasets" xml:space="preserve"><value>Datasets</value></data>
+  <data name="FineTuning.MigrationJobs" xml:space="preserve"><value>Jobs</value></data>
+  <data name="FineTuning.MigrationEvents" xml:space="preserve"><value>Events</value></data>
+  <data name="FineTuning.MigrationArtifacts" xml:space="preserve"><value>Artifacts</value></data>
+  <data name="FineTuning.MigrationCompleted" xml:space="preserve"><value>Legacy migration completed</value></data>
+  <data name="FineTuning.DiagnosticsTitle" xml:space="preserve"><value>Environment diagnostics</value></data>
+  <data name="FineTuning.RunDiagnostics" xml:space="preserve"><value>Run diagnostics</value></data>
+  <data name="FineTuning.DiagnosticsHelp" xml:space="preserve"><value>Checks configuration, Worker, model availability and FileManager only; it does not install software or execute arbitrary commands.</value></data>
+  <data name="FineTuning.DiagnosticsWorker" xml:space="preserve"><value>Worker</value></data>
+  <data name="FineTuning.DiagnosticsModels" xml:space="preserve"><value>Available models</value></data>
+  <data name="FineTuning.DiagnosticsFileManager" xml:space="preserve"><value>FileManager</value></data>
+  <data name="FineTuning.ModelPreparationTitle" xml:space="preserve"><value>Secure model preparation</value></data>
+  <data name="FineTuning.ModelPreparationHelp" xml:space="preserve"><value>Search is available only through an operator-configured allowlisted provider catalog. Selected models and revisions still pass manifest, size, path and integrity checks before download; no commands are executed and tokens are never exposed to the browser.</value></data>
+  <data name="FineTuning.Provider" xml:space="preserve"><value>Provider</value></data>
+  <data name="FineTuning.Revision" xml:space="preserve"><value>Revision</value></data>
+  <data name="FineTuning.TargetDirectory" xml:space="preserve"><value>Target directory</value></data>
+  <data name="FineTuning.CheckModel" xml:space="preserve"><value>Check model</value></data>
+  <data name="FineTuning.DownloadModel" xml:space="preserve"><value>Download model</value></data>
+  <data name="FineTuning.SearchModels" xml:space="preserve"><value>Search models</value></data>
+  <data name="FineTuning.ModelSearchPlaceholder" xml:space="preserve"><value>Search the configured provider catalog</value></data>
+  <data name="FineTuning.ModelSearchUnavailable" xml:space="preserve"><value>Model search unavailable</value></data>
+  <data name="FineTuning.ModelSearchEmpty" xml:space="preserve"><value>No allowlisted models matched the search.</value></data>
+  <data name="FineTuning.Description" xml:space="preserve"><value>Description</value></data>
+  <data name="FineTuning.Action" xml:space="preserve"><value>Action</value></data>
+  <data name="FineTuning.ModelReady" xml:space="preserve"><value>Model is ready</value></data>
+  <data name="FineTuning.ModelIncomplete" xml:space="preserve"><value>Model files are incomplete</value></data>
+  <data name="FineTuning.ModelDownloadCompleted" xml:space="preserve"><value>Model download completed</value></data>
+  <data name="FineTuning.PauseJob" xml:space="preserve"><value>Pause job</value></data>
+  <data name="FineTuning.ResumeJob" xml:space="preserve"><value>Resume job</value></data>
+  <data name="FineTuning.DeleteJob" xml:space="preserve"><value>Delete job</value></data>
+  <data name="FineTuning.DeleteConfirm" xml:space="preserve"><value>Delete this job, its checkpoints and exported assets? This cannot be undone.</value></data>
+  <data name="FineTuning.DeleteCompleted" xml:space="preserve"><value>Job and its assets were deleted.</value></data>
+  <data name="FineTuning.PauseRequested" xml:space="preserve"><value>Pause requested; the worker will save a checkpoint at the next safe boundary.</value></data>
+  <data name="FineTuning.ResumeRequested" xml:space="preserve"><value>Resume requested; the job will return to the queue.</value></data>
+  <data name="FineTuning.RuntimeInvalid" xml:space="preserve"><value>Maximum runtime must be an integer from 1 to 10,080 minutes.</value></data>
+  <data name="FineTuning.RuntimeUpdated" xml:space="preserve"><value>Maximum runtime updated.</value></data>
+  <data name="FineTuning.AverageStepDuration" xml:space="preserve"><value>Average step duration</value></data>
+  <data name="FineTuning.EstimatedFinish" xml:space="preserve"><value>Estimated finish</value></data>
+  <data name="FineTuning.MaxDurationMinutes" xml:space="preserve"><value>Maximum runtime (minutes)</value></data>
+  <data name="FineTuning.UpdateRuntime" xml:space="preserve"><value>Update runtime</value></data>
+  <data name="FineTuning.PausedCount" xml:space="preserve"><value>Paused</value></data>
+  <data name="FineTuning.State.Pausing" xml:space="preserve"><value>Pausing</value></data>
+  <data name="FineTuning.State.Paused" xml:space="preserve"><value>Paused</value></data>
+  <data name="FineTuning.State.Resuming" xml:space="preserve"><value>Resuming</value></data>
+  <data name="FineTuning.Metric.averageStepDuration" xml:space="preserve"><value>Average step duration</value></data>
+  <data name="FineTuning.Metric.estimatedRemaining" xml:space="preserve"><value>Estimated remaining</value></data>
+  <data name="FineTuning.CurrentSamples" xml:space="preserve"><value>Current samples</value></data>
+  <data name="FineTuning.SamplesUnit" xml:space="preserve"><value>samples</value></data>
+  <data name="FineTuning.TokensUnit" xml:space="preserve"><value>tokens</value></data>
+  <data name="FineTuning.TokensPerSampleUnit" xml:space="preserve"><value>tokens/sample</value></data>
+  <data name="FineTuning.TruncatedSamples" xml:space="preserve"><value>Truncated</value></data>
 </root>

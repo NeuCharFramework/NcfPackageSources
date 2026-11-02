@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.24.16 AI 会话缓存（IWantToRun）Key 增加账号维度，防止多租户跨租户复用
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -43,7 +46,9 @@ namespace Senparc.Xncf.WeixinManager
         /// <returns></returns>
         private static string GetKey(string openId, MpAccountDto mpAccountDto)
         {
-            return $"{openId}-{mpAccountDto.PromptRangeCode}";
+            // 纳入公众号账号 Id：MpAccount 为租户作用域实体，Id 全局唯一，
+            // 避免多租户下不同租户的相同 openId + PromptRangeCode 命中同一 IWantToRun
+            return $"{mpAccountDto.Id}:{openId}-{mpAccountDto.PromptRangeCode}";
         }
 
         /// <summary>

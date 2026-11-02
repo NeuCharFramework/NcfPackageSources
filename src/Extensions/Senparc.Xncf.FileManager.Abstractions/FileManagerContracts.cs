@@ -10,9 +10,16 @@
     修改标识：Senparc - 20261005
     修改描述：v0.1.0 0.1.0 feat: enhance file management capabilities with new upload stream method and service registration
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.2.0 增加 FineTuning 文件资源类型
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.2.0 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+
 ----------------------------------------------------------------*/
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,7 +36,9 @@ public enum FileManagerResourceKind
 {
     KnowledgeBase = 100,
     SiteAsset = 200,
-    PrivateAttachment = 300
+    PrivateAttachment = 300,
+    FineTuning = 400,
+    Skill = 500
 }
 
 public sealed record FileManagerImportRequest(
@@ -47,12 +56,48 @@ public sealed record FileManagerImportResult(
     long Length,
     string ResourceKind);
 
+public sealed record FileManagerReadResult(
+    int FileId,
+    string FileName,
+    string ContentType,
+    long Length,
+    Stream Content);
+
+public sealed record FileManagerReference(
+    int FileId,
+    string ReferenceType,
+    string ReferenceId,
+    string Description);
+
+public sealed record FileManagerReferenceReport(
+    int FileId,
+    string FileName,
+    long Length,
+    string ResourceKind,
+    string PhysicalState,
+    IReadOnlyList<FileManagerReference> References);
+
+public interface IFileManagerReferenceProvider
+{
+    Task<IReadOnlyList<FileManagerReference>> GetReferencesAsync(
+        int fileId,
+        CancellationToken cancellationToken = default);
+}
+
 public interface IFileManagerGateway
 {
     Task<bool> IsAvailableAsync(CancellationToken cancellationToken = default);
 
     Task<FileManagerImportResult> ImportAsync(
         FileManagerImportRequest request,
+        CancellationToken cancellationToken = default);
+
+    Task<FileManagerReadResult> OpenReadAsync(
+        int fileId,
+        CancellationToken cancellationToken = default);
+
+    Task DeleteAsync(
+        int fileId,
         CancellationToken cancellationToken = default);
 }
 

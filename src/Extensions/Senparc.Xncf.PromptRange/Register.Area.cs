@@ -13,6 +13,12 @@
     修改标识：Senparc - 20260717
     修改描述：v0.17.0-preview5 为 PromptRange 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.20.0 注册 Skill 管理页面
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 enhance Sandbox functionality with language validation and request handling improvements
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;
@@ -39,6 +45,7 @@ namespace Senparc.Xncf.PromptRange
                          new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Index"), PromptRangeResource.Get("Area.Home", "首页"),"fa fa-laptop"),
                           //new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Model"),"模型","fa fa-laptop"),
                            new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Prompt"),"PromptRange","fa fa-laptop"),
+                           new AreaPageMenuItem(GetAreaUrl(HomeUrl+"Skill"),"Skill 管理","fa fa-puzzle-piece"),
                           //new AreaPageMenuItem(GetAreaUrl($"/Admin/PromptRange/DatabaseSample"),"数据库操作示例","fa fa-bookmark-o")
                      };
 

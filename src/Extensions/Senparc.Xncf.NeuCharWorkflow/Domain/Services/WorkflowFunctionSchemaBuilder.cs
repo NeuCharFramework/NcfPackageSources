@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.1.0-preview1 增强工作流编排、回放、Webhook 与并行执行能力
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.4 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase;
@@ -43,6 +46,9 @@ public static class WorkflowFunctionSchemaBuilder
                 MaxLength = z.MaxLength,
                 Filterable = z.Filterable,
                 AllowCreate = z.AllowCreate,
+                AllowMultiple = z.AllowMultiple,
+                MaxFiles = z.MaxFiles,
+                Accept = z.Accept,
                 HasSyntheticName = hasSyntheticName,
                 MetadataError = hasSyntheticName
                     ? "Function 参数元数据缺少字段名；当前仅可保存草稿，修复或更新模块后才能运行。"
@@ -75,6 +81,10 @@ public static class WorkflowFunctionSchemaBuilder
             {
                 value = false;
             }
+            else if (parameter.ParameterType == (int)ParameterType.File)
+            {
+                value = parameter.AllowMultiple ? Array.Empty<string>() : string.Empty;
+            }
             result[parameter.Name] = value;
         }
         return result;
@@ -92,6 +102,9 @@ public sealed class WorkflowFunctionParameterSchema
     public int MaxLength { get; set; }
     public bool Filterable { get; set; }
     public bool AllowCreate { get; set; }
+    public bool AllowMultiple { get; set; }
+    public int MaxFiles { get; set; }
+    public string Accept { get; set; }
     public bool HasSyntheticName { get; set; }
     public string MetadataError { get; set; }
     public object DefaultValue { get; set; }

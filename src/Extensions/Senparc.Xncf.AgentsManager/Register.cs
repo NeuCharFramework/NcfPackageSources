@@ -33,6 +33,12 @@
     修改标识：Senparc - 20260822
     修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.19.0 注册 PromptRange Skill 插件与工作区契约
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+
 ----------------------------------------------------------------*/
 
 using A2A.AspNetCore;
@@ -80,7 +86,7 @@ namespace Senparc.Xncf.AgentsManager
 
         public override string Uid => ModuleUid;//必须确保全局唯一，生成后必须固定，已自动生成，也可自行修改
 
-        public override string Version => "0.3.22";//必须填写版本号
+        public override string Version => "0.3.23";//必须填写版本号
 
         public override string MenuName => AgentsManagerResource.Get("Module.AgentsManager.MenuName", "Agents 管理模块");
 
@@ -151,6 +157,7 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<PromptOptimizationKernelFallbackService>();
             services.AddScoped<PromptOptimizationService>(); // 注册 PromptOptimizationService
             services.AddSingleton<ChatTaskStreamHub>();
+            services.AddSingleton<ChatTaskCancellationRegistry>();
             services.AddSingleton<HumanInTheLoopRequestStore>();
             services.AddSingleton<AgentsManagerNeuBellProvider>();
             services.AddSingleton<AgentsManagerHumanInteractionService>();
@@ -188,6 +195,7 @@ namespace Senparc.Xncf.AgentsManager
             services.AddScoped<CrawlPlugin>();
             services.AddScoped<FormatorPlugin>();
             services.AddScoped<TranslatorPlugin>();
+            services.AddScoped<PromptRangeSkillPlugin>();
 
             //测试
             services.AddScoped<BuildXncfAppService>();
@@ -207,6 +215,8 @@ namespace Senparc.Xncf.AgentsManager
             aiPlugins.Add(typeof(CrawlPlugin));
             aiPlugins.Add(typeof(FormatorPlugin));
             aiPlugins.Add(typeof(TranslatorPlugin));
+            // PromptRangeSkillPlugin is instantiated by AgentTemplateRunner with the
+            // Agent's explicit Skill binding set; it must not be globally exposed.
 
             // NCF 模块在宿主 UseRouting() 之前初始化。为 A2A JSON-RPC 建立独立分支，
             // 确保其自身先路由再映射端点，而 Agent Card 的 GET 请求仍交给 MVC 控制器。
@@ -236,9 +246,6 @@ namespace Senparc.Xncf.AgentsManager
         }
     }
 }
-
-
-
 
 
 

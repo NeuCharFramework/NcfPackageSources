@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------
+﻿/*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
     文件名：AgentTemplateRunner.cs
@@ -24,10 +24,17 @@
     修改标识：Senparc - 20260917
     修改描述：v0.18.0 为 Agent FunctionRender 工具注入参数元数据并保持调用兼容
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.19.0 运行模板时应用 Skill 绑定与工作区策略
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.AI;
 using Senparc.AI.AgentKernel;
 using Senparc.AI.AgentKernel.Extensions;
@@ -39,6 +46,7 @@ using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
+using Senparc.Xncf.AgentsManager.Domain.Models;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
@@ -52,6 +60,8 @@ using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
+using Senparc.Xncf.PromptRange.Abstractions.Skills;
+using Senparc.Xncf.AgentsManager.Domain.Services.AIPlugins;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -171,7 +181,7 @@ public sealed class AgentTemplateRunner
         {
             throw;
         }
-        catch (Exception ex) when (request.AllowDeploymentNameModelIdFallback && ContainsForbiddenStatus(ex))
+        catch (Exception ex) when (request.AllowDeploymentNameModelIdFallback && AgentModelFallbackResolver.ContainsForbiddenStatus(ex))
         {
             var lastForbiddenException = ex;
 
@@ -231,7 +241,7 @@ public sealed class AgentTemplateRunner
                 {
                     throw;
                 }
-                catch (Exception standardTransportException) when (ContainsForbiddenStatus(standardTransportException))
+                catch (Exception standardTransportException) when (AgentModelFallbackResolver.ContainsForbiddenStatus(standardTransportException))
                 {
                     lastForbiddenException = standardTransportException;
                     SenparcTrace.SendCustomLog(
@@ -245,7 +255,7 @@ public sealed class AgentTemplateRunner
             // route. ChatGroup already supports this compatibility fallback; publish it through the
             // shared runner so A2A performs the same model selection without silently changing to a
             // different system-default model.
-            if (TryBuildAlternateDeploymentModel(build.EffectiveModel, out var fallbackModel))
+            if (AgentModelFallbackResolver.TryBuildAlternateDeploymentModel(build.EffectiveModel, out var fallbackModel))
             {
                 try
                 {
@@ -271,13 +281,13 @@ public sealed class AgentTemplateRunner
                     return await ExecuteBuiltResponseRunnerAsync(fallbackBuild, userText, fallbackRequest, cancellationToken)
                         .ConfigureAwait(false);
                 }
-                catch (Exception fallbackException) when (ContainsForbiddenStatus(fallbackException))
+                catch (Exception fallbackException) when (AgentModelFallbackResolver.ContainsForbiddenStatus(fallbackException))
                 {
                     lastForbiddenException = fallbackException;
                 }
             }
 
-            foreach (var apiVersionFallback in GetApiVersionCompatibilityFallbacks(
+            foreach (var apiVersionFallback in AgentModelFallbackResolver.GetApiVersionCompatibilityFallbacks(
                          build.EffectiveModel,
                          build.EffectiveSetting))
             {
@@ -308,7 +318,7 @@ public sealed class AgentTemplateRunner
                     return await ExecuteBuiltResponseRunnerAsync(apiVersionBuild, userText, apiVersionRequest, cancellationToken)
                         .ConfigureAwait(false);
                 }
-                catch (Exception apiVersionException) when (ContainsForbiddenStatus(apiVersionException))
+                catch (Exception apiVersionException) when (AgentModelFallbackResolver.ContainsForbiddenStatus(apiVersionException))
                 {
                     lastForbiddenException = apiVersionException;
                 }
@@ -318,7 +328,7 @@ public sealed class AgentTemplateRunner
         }
     }
 
-    private static async Task<AgentTemplateRunResult> ExecuteBuiltResponseRunnerAsync(
+    private async Task<AgentTemplateRunResult> ExecuteBuiltResponseRunnerAsync(
         AgentTemplateRunnerBuildResult build,
         string userText,
         AgentTemplateRunRequest request,
@@ -334,26 +344,32 @@ public sealed class AgentTemplateRunner
         AgentResponse? response;
         try
         {
-            response = await build.Runner.RunChatResponseAsync(
+            response = await _aiModelService.RunChatResponseWithUsageAsync(
+                    build.Runner,
                     input,
                     session,
                     options: null,
-                    cancellationToken: cancellationToken)
+                    cancellationToken: cancellationToken,
+                    model: build.EffectiveModel,
+                    source: "AgentsManager.AgentTemplateRunner")
                 .ConfigureAwait(false);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             throw;
         }
-        catch (Exception ex) when (session != null && !ContainsForbiddenStatus(ex))
+        catch (Exception ex) when (session != null && !AgentModelFallbackResolver.ContainsForbiddenStatus(ex))
         {
             // 部分模型适配器不接受 AgentSession 时退回无状态执行；权限错误则由上层
             // 的受控 DeploymentName 兼容回退处理，避免不必要地重复提交同一请求。
-            response = await build.Runner.RunChatResponseAsync(
+            response = await _aiModelService.RunChatResponseWithUsageAsync(
+                    build.Runner,
                     input,
                     agentSession: null,
                     options: null,
-                    cancellationToken: cancellationToken)
+                    cancellationToken: cancellationToken,
+                    model: build.EffectiveModel,
+                    source: "AgentsManager.AgentTemplateRunner")
                 .ConfigureAwait(false);
         }
 
@@ -455,7 +471,7 @@ public sealed class AgentTemplateRunner
     private static bool ShouldUseStreamingFallback(string output, AgentTemplateRunRequest request)
         => string.IsNullOrWhiteSpace(output) && request?.AllowFunctionCalls != true;
 
-    private static async Task<string> ExecuteEmptyResponseStreamingFallbackAsync(
+    private async Task<string> ExecuteEmptyResponseStreamingFallbackAsync(
         AgentTemplateRunnerBuildResult build,
         string input,
         CancellationToken cancellationToken)
@@ -466,10 +482,14 @@ public sealed class AgentTemplateRunner
             new(ChatRole.User, input)
         };
 
-        await foreach (var update in build.Runner.Kernel.ChatClientAgent.RunStreamingAsync(
-                           messages,
-                           session: null,
-                           cancellationToken: cancellationToken))
+        var updates = await _aiModelService.RunAgentStreamingWithUsageAsync(
+            build.Runner.Kernel.ChatClientAgent,
+            messages,
+            null,
+            cancellationToken,
+            model: build.EffectiveModel,
+            source: "AgentsManager.AgentTemplateRunner.StreamingFallback");
+        foreach (var update in updates)
         {
             if (!string.IsNullOrWhiteSpace(update?.Text))
             {
@@ -805,6 +825,30 @@ public sealed class AgentTemplateRunner
         CancellationToken cancellationToken)
     {
         var tools = new List<AITool>();
+        var skillBindings = template.GetSkillBindings()
+            .Where(binding => binding.Enabled && !string.IsNullOrWhiteSpace(binding.SkillId))
+            .ToList();
+        if (skillBindings.Count > 0 && pluginToolPermission != ToolPermissionMode.Deny)
+        {
+            var skillCatalog = _serviceProvider.GetService<ISkillCatalog>();
+            var skillExecutor = _serviceProvider.GetService<ISkillExecutor>();
+            if (skillCatalog != null && skillExecutor != null)
+            {
+                var allowedSkillBindings = skillBindings
+                    .ToDictionary(binding => binding.SkillId, StringComparer.OrdinalIgnoreCase);
+                var skillPlugin = new PromptRangeSkillPlugin(
+                    skillCatalog,
+                    skillExecutor,
+                    allowedSkillBindings);
+                foreach (var tool in agentHandler.GetAITools(skillPlugin))
+                {
+                    tools.Add(tool is AIFunction function
+                        ? new DiagnosticAIFunction(function, template.Id, template.Name, correlationId)
+                        : tool);
+                }
+            }
+        }
+
         var bindings = AgentFunctionBindingCodec.Parse(template.FunctionCallNames);
         var pluginBindings = bindings
             .Where(binding => string.Equals(binding.Kind, "plugin", StringComparison.OrdinalIgnoreCase))
@@ -1074,131 +1118,10 @@ public sealed class AgentTemplateRunner
 
         return $"model source={modelSource}; aiModelId={model.Id}; " +
                $"platform={model.AiPlatform}; type={model.ConfigModelType}; model={model.ModelId}; " +
-               $"endpointHost={GetEndpointHost(model.Endpoint)}; " +
-               $"configuredApiVersion={GetConfiguredApiVersion(model, setting)}";
+               $"endpointHost={AgentModelFallbackResolver.GetEndpointHost(model.Endpoint)}; " +
+               $"configuredApiVersion={AgentModelFallbackResolver.GetConfiguredApiVersion(model, setting)}";
     }
 
-    private static string GetEndpointHost(string endpoint)
-    {
-        if (string.IsNullOrWhiteSpace(endpoint))
-        {
-            return "unset";
-        }
-
-        return Uri.TryCreate(endpoint, UriKind.Absolute, out var endpointUri)
-            ? endpointUri.Host
-            : "custom";
-    }
-
-    private static bool ContainsForbiddenStatus(Exception exception)
-    {
-        var message = exception?.ToString() ?? string.Empty;
-        return message.Contains("Status: 403", StringComparison.OrdinalIgnoreCase)
-               || message.Contains("StatusCode: 403", StringComparison.OrdinalIgnoreCase)
-               || (message.Contains("403", StringComparison.OrdinalIgnoreCase)
-                   && message.Contains("Forbidden", StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static bool TryBuildAlternateDeploymentModel(AIModelDto model, out AIModelDto fallbackModel)
-    {
-        fallbackModel = null;
-        if (model == null
-            || (model.AiPlatform != AiPlatform.AzureOpenAI && model.AiPlatform != AiPlatform.NeuCharAI)
-            || string.IsNullOrWhiteSpace(model.ModelId)
-            || string.Equals(model.DeploymentName, model.ModelId, StringComparison.OrdinalIgnoreCase))
-        {
-            return false;
-        }
-
-        fallbackModel = new AIModelDto
-        {
-            Id = model.Id,
-            Alias = $"{model.Alias ?? "Model"}_DeploymentAsModelId",
-            DeploymentName = model.ModelId,
-            ModelId = model.ModelId,
-            Endpoint = model.Endpoint,
-            AiPlatform = model.AiPlatform,
-            ConfigModelType = model.ConfigModelType,
-            OrganizationId = model.OrganizationId,
-            ApiKey = model.ApiKey,
-            ApiVersion = model.ApiVersion,
-            Note = model.Note,
-            MaxToken = model.MaxToken,
-            IsShared = model.IsShared,
-            Show = model.Show
-        };
-        return true;
-    }
-
-    private static IReadOnlyList<ApiVersionCompatibilityFallback> GetApiVersionCompatibilityFallbacks(
-        AIModelDto model,
-        ISenparcAiSetting setting)
-    {
-        var candidates = new List<ApiVersionCompatibilityFallback>();
-        if (model == null
-            || (model.AiPlatform != AiPlatform.AzureOpenAI && model.AiPlatform != AiPlatform.NeuCharAI))
-        {
-            return candidates;
-        }
-
-        AddApiVersionCandidate(candidates, model.ApiVersion, "AIModel");
-        AddApiVersionCandidate(candidates, GetSettingApiVersion(model.AiPlatform, setting), "EffectiveSetting");
-
-        // NeuChar's existing NCF model configuration and legacy Azure-compatible gateway default to
-        // this version. The MAF Azure client currently emits 2025-04-01-preview unconditionally;
-        // only after that request has actually received 403 do we attempt this same-endpoint
-        // compatibility form. It never changes the model, endpoint, key or authorization scope.
-        if (model.AiPlatform == AiPlatform.NeuCharAI
-            && string.Equals(GetEndpointHost(model.Endpoint), "www.neuchar.com", StringComparison.OrdinalIgnoreCase))
-        {
-            AddApiVersionCandidate(candidates, "2022-12-01", "NeuCharLegacyDefault");
-        }
-
-        return candidates;
-    }
-
-    private static void AddApiVersionCandidate(
-        ICollection<ApiVersionCompatibilityFallback> candidates,
-        string apiVersion,
-        string source)
-    {
-        if (string.IsNullOrWhiteSpace(apiVersion))
-        {
-            return;
-        }
-
-        var normalized = apiVersion.Trim();
-        if (normalized.Length > 64
-            || string.Equals(normalized, "2025-04-01-preview", StringComparison.OrdinalIgnoreCase)
-            || candidates.Any(z => string.Equals(z.ApiVersion, normalized, StringComparison.OrdinalIgnoreCase)))
-        {
-            return;
-        }
-
-        candidates.Add(new ApiVersionCompatibilityFallback(normalized, source));
-    }
-
-    private static string GetConfiguredApiVersion(AIModelDto model, ISenparcAiSetting setting)
-    {
-        if (!string.IsNullOrWhiteSpace(model?.ApiVersion))
-        {
-            return model.ApiVersion.Trim();
-        }
-
-        return GetSettingApiVersion(model?.AiPlatform, setting) ?? "unset";
-    }
-
-    private static string GetSettingApiVersion(AiPlatform? platform, ISenparcAiSetting setting)
-    {
-        return platform switch
-        {
-            AiPlatform.AzureOpenAI => setting?.AzureOpenAIApiVersion,
-            AiPlatform.NeuCharAI => setting?.NeuCharAIApiVersion,
-            _ => null
-        };
-    }
-
-    private sealed record ApiVersionCompatibilityFallback(string ApiVersion, string Source);
 
     private sealed record AgentTemplateExecutionConfiguration(
         ISenparcAiSetting Setting,

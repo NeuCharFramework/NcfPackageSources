@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.6</Version>
+    <Version>0.8.1</Version>
     <AssemblyName>Senparc.Xncf.KnowledgeBase</AssemblyName>
     <RootNamespace>Senparc.Xncf.KnowledgeBase</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -18,9 +18,9 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
+		[2025-01-07] v0.1.8-preview.1 Reset all database migrations
 		[2025-07-27] v0.1.5-preview1s update Knowledge Base
 		[2025-11-01] update basic libraries, including Senparc.AI
-		[2025-01-07] v0.1.8-preview.1 Reset all database migrations
 		[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
 		[2026-07-02] v0.2.2-preview1 新增 PromptRange 与 AgentsManager 使用记录能力，升级 Senparc.AI.AgentKernel 并完成兼容性适配
 		1、新增 PromptRange 与 AgentsManager 使用记录能力
@@ -71,11 +71,17 @@
 		[2026-09-17] v0.7.4 适配共享 AgentKernel 预览依赖版本
 		1、同步 Senparc.AI.AgentKernel 至 0.1.14-preview5
 		2、保持知识库模块与共享 AI 工具调用兼容
-		[2026-10-05] v0.7.5 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
-		1、Updated Senparc.Xncf.KnowledgeBase project behavior and integration for the latest feature and reliability improvements.
-		2、chore: update package versions and dependencies across multiple projects
-		[2026-10-09] v0.7.6 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
-		v0.1 创世
+		[2026-10-21] v0.7.7 适配 Senparc.AI.AgentKernel 0.1.15-preview2
+		1、升级共享 AgentKernel 依赖，保持知识库检索与 Agent 调用兼容
+		[2026-11-03] v0.8.0 检索能力升级：可配置切片策略与 Re-ranking（向下兼容）
+		1、新增知识库级检索配置（切片策略/大小/重叠、重排模式/模型/候选数/词法权重），默认值与旧版行为完全一致
+		2、切片支持三种策略：固定长度（旧版行为）、递归结构化（段落→行→句读→字符，中英文友好）、按段落（短段落自动合并）
+		3、召回支持词法混合重排（本地计算，无额外模型调用）与 LLM 重排（复用知识库对话模型，超时/解析失败自动回退词法混合）
+		4、召回测试页支持按次覆盖重排模式，结果展示重排分与原始排名；Agent RAG 上下文自动应用知识库重排配置
+		5、补齐六类数据库迁移与快照（RetrievalConfigJson）
+		6、支持可配置文本分块和检索重排序，保持现有检索配置兼容
+		7、完善知识库检索配置、召回测试和多数据库迁移
+    [2026-11-03] Add contextual documentation for knowledge-base setup and recall-test Top K.
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

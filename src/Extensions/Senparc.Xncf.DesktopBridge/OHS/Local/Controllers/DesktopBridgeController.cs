@@ -15,6 +15,9 @@
     修改标识：Senparc - 20260808
     修改描述：v0.4.0-preview4 新增管理员换票发起与兑换接口
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.8 implement connection manager and workspace file system provider
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;
@@ -36,7 +39,7 @@ namespace Senparc.Xncf.DesktopBridge.OHS.Local.Controllers;
 public sealed class DesktopBridgeController : ControllerBase
 {
     public const int CurrentProtocolVersion = 1;
-    public const string BridgeVersion = "0.2.1-preview2";
+    public const string BridgeVersion = "0.4.8";
     private const string AdminOnlyPolicy = NcfAuthorizationPolicyNames.AdminOnly;
     private const string BackendJwtScheme = "Bearer_Backend";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);

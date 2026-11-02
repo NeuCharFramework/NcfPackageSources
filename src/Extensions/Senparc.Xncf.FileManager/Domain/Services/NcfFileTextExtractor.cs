@@ -9,6 +9,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.5.0-preview5 新增文件文本提取与文件管理服务
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.1 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -22,6 +25,8 @@ using System.Xml;
 using System.Xml.Linq;
 
 namespace Senparc.Xncf.FileManager.Domain.Services;
+
+public sealed record NcfFileTextSection(string Title, string Text);
 
 /// <summary>
 /// 文件文本提取结果。
@@ -65,6 +70,112 @@ public static class NcfFileTextExtractor
     {
         var normalized = NormalizeExtension(extension);
         return PlainTextExtensions.Contains(normalized) || OpenXmlExtensions.Contains(normalized);
+    }
+
+    public static IReadOnlyList<NcfFileTextSection> ExtractSections(byte[] bytes, string extension)
+    {
+        var normalized = NormalizeExtension(extension);
+        if (PlainTextExtensions.Contains(normalized))
+            return ChunkText(DecodePlainText(bytes), "文本");
+        using var archive = OpenArchive(bytes);
+        var sections = new List<NcfFileTextSection>();
+        if (normalized == ".docx")
+        {
+            var document = LoadXml(archive.GetEntry("word/document.xml")
+                ?? throw new InvalidDataException("DOCX 缺少正文。"));
+            var text = string.Join("\n", document.Descendants().Where(element => element.Name.LocalName == "p")
+                .Select(paragraph => string.Concat(paragraph.Descendants()
+                    .Where(element => element.Name.LocalName is "t" or "tab" or "br")
+                    .Select(element => element.Name.LocalName switch { "tab" => "\t", "br" => "\n", _ => element.Value }))));
+            return ChunkText(text, "正文分段（非物理页码）");
+        }
+        if (normalized == ".xlsx")
+        {
+            var workbook = LoadXml(archive.GetEntry("xl/workbook.xml")
+                ?? throw new InvalidDataException("XLSX 缺少工作簿。"));
+            var relationships = ReadRelationships(archive, "xl/_rels/workbook.xml.rels", "xl/workbook.xml");
+            var sharedStrings = ReadSharedStrings(archive);
+            foreach (var sheet in workbook.Descendants().Where(element => element.Name.LocalName == "sheet"))
+            {
+                var relationshipId = sheet.Attributes().FirstOrDefault(attribute => attribute.Name.LocalName == "id")?.Value;
+                if (relationshipId == null || !relationships.TryGetValue(relationshipId, out var part))
+                    throw new InvalidDataException("工作表引用无效。");
+                var xml = LoadXml(archive.GetEntry(part) ?? throw new InvalidDataException("工作表不存在。"));
+                var lines = new List<string>();
+                var length = 0;
+                foreach (var row in xml.Descendants().Where(element => element.Name.LocalName == "row"))
+                {
+                    var values = row.Elements().Where(element => element.Name.LocalName == "c").Select(cell =>
+                    {
+                        var value = ReadCellText(cell, sharedStrings);
+                        var formula = cell.Elements().FirstOrDefault(element => element.Name.LocalName == "f")?.Value;
+                        if (formula != null) value = $"={formula} [缓存值: {value}]";
+                        return $"{cell.Attribute("r")?.Value ?? "?"}={value}";
+                    });
+                    var line = string.Join("\t", values);
+                    length += line.Length;
+                    if (length > MaxExtractedCharacters) throw new InvalidDataException("工作表文本超过提取限制。");
+                    lines.Add(line);
+                }
+                sections.Add(new NcfFileTextSection(sheet.Attribute("name")?.Value ?? part, string.Join("\n", lines)));
+                if (sections.Sum(section => (long)section.Text.Length) > MaxExtractedCharacters)
+                    throw new InvalidDataException("工作簿文本超过提取限制。");
+            }
+        }
+        else if (normalized == ".pptx")
+        {
+            var presentation = LoadXml(archive.GetEntry("ppt/presentation.xml")
+                ?? throw new InvalidDataException("PPTX 缺少演示文稿。"));
+            var relationships = ReadRelationships(archive, "ppt/_rels/presentation.xml.rels", "ppt/presentation.xml");
+            foreach (var slide in presentation.Descendants().Where(element => element.Name.LocalName == "sldId"))
+            {
+                var relationshipId = slide.Attributes().FirstOrDefault(attribute =>
+                    attribute.Name.LocalName == "id" && attribute.Name.NamespaceName.Length > 0)?.Value;
+                if (relationshipId == null || !relationships.TryGetValue(relationshipId, out var part))
+                    throw new InvalidDataException("幻灯片引用无效。");
+                var document = LoadXml(archive.GetEntry(part) ?? throw new InvalidDataException("幻灯片不存在。"));
+                var text = string.Join("\n", document.Descendants().Where(element => element.Name.LocalName == "p")
+                    .Select(paragraph => string.Concat(paragraph.Descendants().Where(element => element.Name.LocalName == "t")
+                        .Select(element => element.Value))));
+                sections.Add(new NcfFileTextSection($"幻灯片 {sections.Count + 1}", text));
+                if (sections.Sum(section => (long)section.Text.Length) > MaxExtractedCharacters)
+                    throw new InvalidDataException("演示文稿文本超过提取限制。");
+            }
+        }
+        else throw new NotSupportedException("此格式不支持本地文字提取。");
+        if (sections.Count > 1000) throw new InvalidDataException("文档分段超过 1000 个。");
+        return sections;
+    }
+
+    private static IReadOnlyList<NcfFileTextSection> ChunkText(string text, string title)
+    {
+        if (text.Length > MaxExtractedCharacters) throw new InvalidDataException("文本超过提取限制。");
+        var result = new List<NcfFileTextSection>();
+        for (var offset = 0; offset < text.Length;)
+        {
+            var count = Math.Min(8000, text.Length - offset);
+            if (offset + count < text.Length && char.IsHighSurrogate(text[offset + count - 1])) count--;
+            result.Add(new NcfFileTextSection($"{title} {result.Count + 1}", text.Substring(offset, count)));
+            offset += count;
+        }
+        return result;
+    }
+
+    private static Dictionary<string, string> ReadRelationships(ZipArchive archive, string relationshipsPath, string sourcePath)
+    {
+        var document = LoadXml(archive.GetEntry(relationshipsPath)
+            ?? throw new InvalidDataException("Office 文档缺少关系定义。"));
+        return document.Descendants().Where(element => element.Name.LocalName == "Relationship"
+                && !string.Equals(element.Attribute("TargetMode")?.Value, "External", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(element => element.Attribute("Id")?.Value ?? throw new InvalidDataException("关系缺少 Id。"),
+                element =>
+                {
+                    var target = element.Attribute("Target")?.Value ?? throw new InvalidDataException("关系缺少目标。");
+                    var uri = new Uri(new Uri("https://office.invalid/" + sourcePath), target);
+                    if (uri.Host != "office.invalid" || uri.Scheme != "https")
+                        throw new InvalidDataException("Office 关系不允许引用外部文件。");
+                    return Uri.UnescapeDataString(uri.AbsolutePath.TrimStart('/'));
+                });
     }
 
     public static NcfFileTextExtractionResult Extract(byte[] fileBytes, string extension, string displayName = null)
@@ -264,11 +375,12 @@ public static class NcfFileTextExtractor
         }
 
         var value = cell.Elements().FirstOrDefault(z => z.Name.LocalName == "v")?.Value ?? string.Empty;
-        if (string.Equals(cellType, "s", StringComparison.OrdinalIgnoreCase)
-            && int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index)
-            && index >= 0 && index < sharedStrings.Count)
+        if (string.Equals(cellType, "s", StringComparison.OrdinalIgnoreCase))
         {
-            return sharedStrings[index];
+            if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var index)
+                && index >= 0 && index < sharedStrings.Count)
+                return sharedStrings[index];
+            throw new InvalidDataException("Excel 单元格引用了无效的共享字符串，拒绝将索引误当成数据。");
         }
 
         return value;
@@ -278,7 +390,14 @@ public static class NcfFileTextExtractor
     {
         try
         {
-            return new ZipArchive(new MemoryStream(bytes, writable: false), ZipArchiveMode.Read, leaveOpen: false);
+            var archive = new ZipArchive(new MemoryStream(bytes, writable: false), ZipArchiveMode.Read, leaveOpen: false);
+            if (archive.Entries.Count > 2000 || archive.Entries.Any(entry => entry.Length > 64L * 1024 * 1024)
+                || archive.Entries.Sum(entry => entry.Length) > 64L * 1024 * 1024)
+            {
+                archive.Dispose();
+                throw new InvalidDataException("Office 压缩包超过条目数或解压大小限制。");
+            }
+            return archive;
         }
         catch (InvalidDataException ex)
         {

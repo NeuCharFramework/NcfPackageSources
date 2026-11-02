@@ -27,6 +27,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 update AgentsManager with new features and improvements
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +42,7 @@ using Senparc.Ncf.Utility;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AgentsManager.Domain.Services;
-using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AgentsManager.Application.Dtos;
 using Senparc.Xncf.AreaBase.Admin.Filters;
 using Senparc.Ncf.Core.WorkContext.Provider;
 using System;
@@ -56,18 +59,21 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
         private readonly ChatGroupService _chatGroupService;
         private readonly HumanInTheLoopRequestStore _humanInTheLoopRequestStore;
         private readonly AgentsManagerHumanInteractionService _humanInteractionService;
+        private readonly ChatTaskCancellationRegistry _cancellationRegistry;
 
         public ChatTaskAppService(
             IServiceProvider serviceProvider,
             ChatTaskService chatTaskService,
             ChatGroupService chatGroupService,
             HumanInTheLoopRequestStore humanInTheLoopRequestStore,
-            AgentsManagerHumanInteractionService humanInteractionService) : base(serviceProvider)
+            AgentsManagerHumanInteractionService humanInteractionService,
+            ChatTaskCancellationRegistry cancellationRegistry) : base(serviceProvider)
         {
             _chatTaskService = chatTaskService;
             _chatGroupService = chatGroupService;
             _humanInTheLoopRequestStore = humanInTheLoopRequestStore;
             _humanInteractionService = humanInteractionService;
+            _cancellationRegistry = cancellationRegistry;
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
@@ -281,7 +287,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         continue;
                     }
 
-                    var runRequest = new ChatGroup_RunGroupRequest
+                    var runRequest = new ChatGroupRunCommand
                     {
                         Name = task.Name,
                         ChatGroupId = task.ChatGroupId,
@@ -335,6 +341,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 await _chatTaskService.SetStatus(ChatTask_Status.Cancelled, task);
                 _humanInTheLoopRequestStore.CancelForTask(task.Id);
                 await cache.RemoveFromCacheAsync(_chatTaskService.GetChatTaskRunCacheKey(task.Id));
+                _cancellationRegistry.TryCancel(task.Id);
                 changed++;
             }
 
@@ -380,6 +387,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             {
                 _humanInTheLoopRequestStore.CancelForTask(task.Id);
                 await cache.RemoveFromCacheAsync(_chatTaskService.GetChatTaskRunCacheKey(task.Id));
+                _cancellationRegistry.TryCancel(task.Id);
                 await _chatTaskService.DeleteObjectAsync(task);
             }
 

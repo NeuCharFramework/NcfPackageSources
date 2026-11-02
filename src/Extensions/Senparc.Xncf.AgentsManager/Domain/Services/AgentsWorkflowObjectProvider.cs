@@ -24,6 +24,12 @@
     修改标识：Senparc - 20260829
     修改描述：v0.17.0 增强 Agent 请求诊断、ChatGroup 状态处理与工作流对象支持
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.19.0 工作流对象调用时记录 Token 用量
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -33,10 +39,10 @@ using Senparc.CO2NET;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
-using Senparc.Xncf.AgentsManager.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +63,7 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
     private readonly RemoteA2AAgentFactory _remoteA2AAgentFactory;
     private readonly HumanInTheLoopRequestStore _humanInTheLoopRequestStore;
     private readonly AgentsManagerNeuBellProvider _neuBellProvider;
+    private readonly AIModelService _aiModelService;
 
     public AgentsWorkflowObjectProvider(
         AgentsTemplateService agentService,
@@ -66,7 +73,8 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         RemoteAgentService remoteAgentService,
         RemoteA2AAgentFactory remoteA2AAgentFactory,
         HumanInTheLoopRequestStore humanInTheLoopRequestStore,
-        AgentsManagerNeuBellProvider neuBellProvider)
+        AgentsManagerNeuBellProvider neuBellProvider,
+        AIModelService aiModelService)
     {
         _agentService = agentService;
         _groupService = groupService;
@@ -76,6 +84,7 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
         _remoteA2AAgentFactory = remoteA2AAgentFactory;
         _humanInTheLoopRequestStore = humanInTheLoopRequestStore;
         _neuBellProvider = neuBellProvider;
+        _aiModelService = aiModelService;
     }
 
     public string ProviderId => ProviderName;
@@ -180,7 +189,7 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                 return new WorkflowObjectExecutionResult(false, null, "Agent 组不存在或未启用。");
             }
 
-            var groupRun = await _groupService.RunChatGroupAwaitWithResultAsync(new ChatGroup_RunGroupRequest
+            var groupRun = await _groupService.RunChatGroupAwaitWithResultAsync(new ChatGroupRunCommand
             {
                 ChatGroupId = groupId,
                 AiModelId = request.AiModelId,
@@ -213,9 +222,9 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
                     GetIntegerParameter(
                         request,
                         WorkflowObjectExecutionParameters.ChatMaxRound,
-                        ChatGroupService.ChatMaxRound),
+                        ChatGroupService.DefaultChatMaxRound),
                     1,
-                    50),
+                    ChatGroupService.MaxEffectiveChatRounds),
                 CancellationToken = cancellationToken
             }).ConfigureAwait(false);
             var reference = new WorkflowObjectExecutionReference(
@@ -373,10 +382,14 @@ public sealed class AgentsWorkflowObjectProvider : IWorkflowObjectProvider
             while (nextMessages != null)
             {
                 var approvals = new List<ToolApprovalRequestContent>();
-                await foreach (var update in build.Runner.Kernel.ChatClientAgent.RunStreamingAsync(
+                var updates = await _aiModelService.RunAgentStreamingWithUsageAsync(
+                    build.Runner.Kernel.ChatClientAgent,
                     nextMessages,
                     session,
-                    cancellationToken: cancellationToken))
+                    cancellationToken,
+                    model: build.EffectiveModel,
+                    source: "AgentsManager.WorkflowHumanApproval");
+                foreach (var update in updates)
                 {
                     if (!string.IsNullOrWhiteSpace(update?.Text))
                     {

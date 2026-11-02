@@ -8,6 +8,18 @@ var app = new Vue({
             workerEditor: { id: 0, alias: "", name: "", endpoint: "", requestTimeoutSeconds: 30, enabled: true, note: "" },
             workerEditorVisible: false,
             workerSaveBusy: false,
+            migrationBusy: false,
+            migrationResult: null,
+            diagnosticsBusy: false,
+            diagnostics: null,
+            modelPreparation: { provider: "", model: "", revision: "", targetDirectory: "" },
+            modelPreparationStatus: null,
+            modelPreparationBusy: false,
+            modelPreparationDownloadBusy: false,
+            modelSearchQuery: "",
+            modelSearchResults: [],
+            modelSearchError: "",
+            modelSearchBusy: false,
             workerVersion: 0,
             health: null,
             models: [],
@@ -22,14 +34,18 @@ var app = new Vue({
             selectedId: new URL(window.location.href).searchParams.get("id") || "",
             selectionVersion: 0,
             events: [],
-            validation: { status: "Idle", startedUtc: null, finishedUtc: null, completed: 0, total: 0, results: [], error: null },
+            validation: { status: "Idle", startedUtc: null, finishedUtc: null, completed: 0, total: 0, results: [], error: null, recordedBackend: null, recordedMethod: null },
             validationPrompts: "",
             validationMaxTokens: 128,
+            validationBackend: "",
+            validationMethod: "",
             validationBusy: false,
             cursor: 0,
             catchingUp: false,
             eventsTruncated: false,
             followLog: true,
+            eventLayout: "split",
+            eventExpanded: false,
             chartPoints: [],
             chartAvailable: typeof echarts !== "undefined",
             pollBusy: false,
@@ -46,10 +62,15 @@ var app = new Vue({
             uploadBusy: false,
             createBusy: false,
             cancelBusy: false,
+            pauseBusy: false,
+            resumeBusy: false,
+            deleteBusy: false,
+            runtimeBusy: false,
+            runtimeMinutes: null,
             fileReading: false,
             fileName: "",
             datasetName: "",
-            datasetContent: "",
+            datasetFile: null,
             helpOpen: ["workflow"],
             workflowSteps: ["Worker", "Data", "Training", "Monitor", "Publish"],
             datasetExample: "prompt",
@@ -100,6 +121,7 @@ var app = new Vue({
                 { key: "gpuUtil", unit: "%" }, { key: "gpuMemory", unit: "MiB" },
                 { key: "gpuTemperature", unit: "\u00b0C" }, { key: "gpuAllocated", unit: "MiB" },
                 { key: "gradNorm" }, { key: "tokensPerSecond", unit: "token/s" },
+                { key: "averageStepDuration", unit: "s" }, { key: "estimatedRemaining", unit: "s" },
                 { key: "elapsedSeconds", unit: "s" }, { key: "diskFree", unit: "MiB" },
                 { key: "jobOutput", unit: "MiB" }
             ]
@@ -114,6 +136,25 @@ var app = new Vue({
         },
         effectiveBatchSize() {
             return this.form.batchSize * this.form.gradientAccumulationSteps;
+        },
+        logEvents() {
+            return this.events.filter(event => event.kind !== "metrics");
+        },
+        metricEvents() {
+            return this.events.filter(event => event.kind === "metrics");
+        },
+        validationMismatchWarning() {
+            if (!this.job || !this.job.request) { return ""; }
+            var recordedBackend = this.validation.recordedBackend || this.job.request.backend;
+            var recordedMethod = this.validation.recordedMethod || this.job.request.method;
+            var messages = [];
+            if (recordedBackend && this.validationBackend && recordedBackend !== this.validationBackend) {
+                messages.push(this.t("ValidationBackend") + ": " + recordedBackend + " -> " + this.validationBackend);
+            }
+            if (recordedMethod && this.validationMethod && recordedMethod !== this.validationMethod) {
+                messages.push(this.t("ValidationMethod") + ": " + recordedMethod + " -> " + this.validationMethod);
+            }
+            return messages.join("; ");
         },
         connectionHealthy() {
             return !!this.health && !this.connectionError && !!this.lastConnectedUtc
@@ -146,6 +187,11 @@ var app = new Vue({
             if (this.job.state === "Succeeded") { return "success"; }
             if (["Failed", "Interrupted"].indexOf(this.job.state) >= 0) { return "exception"; }
             return undefined;
+        },
+        estimatedFinishUtc() {
+            var remaining = this.metric("estimatedRemaining");
+            if (remaining === null || remaining < 0 || !this.job || this.job.state !== "Running") { return null; }
+            return new Date(Date.now() + remaining * 1000).toISOString();
         },
         workflowCurrentStep() {
             if (!this.workerAlias || !this.health) { return 0; }
@@ -218,7 +264,21 @@ var app = new Vue({
                 valid = Array.isArray(data) && data.every(item => this.validDataset(item));
             } else if (method === "GetDatasetsPageAsync") {
                 valid = this.validCatalogPage(data, item => this.validDataset(item));
-            } else if (method === "UploadDatasetAsync" || method === "GetDatasetAsync") {
+            } else if (method === "MigrateLegacyMetadataAsync") {
+                valid = this.isRecord(data) && ["Completed", "Failed", "Cancelled"].indexOf(data.status) >= 0
+                    && Number.isInteger(data.datasets) && data.datasets >= 0
+                    && Number.isInteger(data.jobs) && data.jobs >= 0
+                    && Number.isInteger(data.events) && data.events >= 0
+                    && (data.error == null || typeof data.error === "string");
+            } else if (method === "DiagnosticsAsync") {
+                valid = this.isRecord(data) && typeof data.workerAlias === "string"
+                    && typeof data.fineTuningEnabled === "boolean"
+                    && typeof data.secretConfigured === "boolean"
+                    && typeof data.workerReachable === "boolean"
+                    && typeof data.fileManagerAvailable === "boolean"
+                    && Number.isInteger(data.modelCount) && data.modelCount >= 0
+                    && typeof data.status === "string";
+            } else if (method === "UploadDatasetAsync" || method === "UploadDatasetFileAsync" || method === "GetDatasetAsync") {
                 valid = this.validDataset(data);
             } else if (method === "GetJobsAsync") {
                 valid = Array.isArray(data) && data.every(item => this.validJob(item));
@@ -237,7 +297,11 @@ var app = new Vue({
                     && Array.isArray(data.results) && data.results.every(result =>
                         this.isRecord(result) && typeof result.id === "string"
                         && typeof result.prompt === "string" && typeof result.response === "string"
-                        && typeof result.completedUtc === "string");
+                        && typeof result.completedUtc === "string")
+                    && (data.recordedBackend == null || ["cpu", "cuda", "mlx"].indexOf(data.recordedBackend) >= 0)
+                    && (data.recordedMethod == null || ["lora", "qlora"].indexOf(data.recordedMethod) >= 0);
+            } else if (method === "DeleteJobAsync") {
+                valid = this.isRecord(data) && typeof data.id === "string" && data.deleted === true;
             } else {
                 valid = this.validJob(data);
             }
@@ -266,7 +330,7 @@ var app = new Vue({
         },
         validJob(job) {
             return this.isRecord(job) && typeof job.id === "string" && typeof job.name === "string"
-                && ["Queued", "Running", "Cancelling", "Cancelled", "Succeeded", "Failed", "Interrupted"].indexOf(job.state) >= 0
+                && ["Queued", "Running", "Pausing", "Paused", "Resuming", "Cancelling", "Cancelled", "Succeeded", "Failed", "Interrupted"].indexOf(job.state) >= 0
                 && this.isRecord(job.request) && this.validMetrics(job.latestMetrics)
                 && Number.isSafeInteger(job.lastEventSequence) && job.lastEventSequence >= 0
                 && Array.isArray(job.artifacts) && job.artifacts.every(artifact =>
@@ -280,16 +344,17 @@ var app = new Vue({
             var config = { customAlert: true, timeout: ((worker ? worker.requestTimeoutSeconds : 30) + 5) * 1000 };
             var response;
             var requestPayload = payload || {};
+            var isFormData = typeof FormData !== "undefined" && requestPayload instanceof FormData;
             if (method !== "GetWorkersAsync" && method !== "SaveWorkerAsync") {
                 if (post) {
                     config.params = { workerAlias: alias };
-                    if (method === "StartValidationAsync") {
+                    if (method === "StartValidationAsync" || method === "UpdateRuntimeAsync") {
                         config.params.id = requestPayload.id;
                         requestPayload = Object.assign({}, requestPayload);
                         delete requestPayload.id;
                     }
                 }
-                else { requestPayload = Object.assign({ workerAlias: alias }, requestPayload); }
+                else if (!isFormData) { requestPayload = Object.assign({ workerAlias: alias }, requestPayload); }
             }
             try {
                 response = post
@@ -422,9 +487,14 @@ var app = new Vue({
                 this.pollBusy = false;
                 this.now = Date.now();
                 if (!this._disposed) {
-                    this._pollTimer = setTimeout(() => this.poll(), this.refreshPending ? 0 : 2000);
+                    this._pollTimer = setTimeout(() => this.poll(), this.refreshPending ? 0 : this.pollDelay());
                 }
             }
+        },
+        pollDelay() {
+            if (this.job && this.job.state === "Running") { return 1000; }
+            if (this.job && ["Queued", "Pausing", "Resuming", "Cancelling"].indexOf(this.job.state) >= 0) { return 2000; }
+            return 5000;
         },
         selectJob(row, refresh) {
             if (this.selectedId === row.id && this.job) { return; }
@@ -443,12 +513,31 @@ var app = new Vue({
             this.detailError = "";
             this.detailLoading = false;
             this.events = [];
-            this.validation = { status: "Idle", startedUtc: null, finishedUtc: null, completed: 0, total: 0, results: [], error: null };
+            this.validation = { status: "Idle", startedUtc: null, finishedUtc: null, completed: 0, total: 0, results: [], error: null, recordedBackend: null, recordedMethod: null };
+            this.validationBackend = "";
+            this.validationMethod = "";
+            this.runtimeMinutes = null;
             this.chartPoints = [];
             this.cursor = 0;
             this.catchingUp = false;
             this.eventsTruncated = false;
             if (this._chart) { this._chart.dispose(); this._chart = null; }
+        },
+        setEventLayout(layout) {
+            if (layout === "split" || layout === "stacked") {
+                this.eventLayout = layout;
+            }
+        },
+        toggleEventExpanded() {
+            this.eventExpanded = !this.eventExpanded;
+            this.$nextTick(() => {
+                if (this.followLog && this.isLogAtBottom() && this.$refs.eventLog) {
+                    this.$refs.eventLog.scrollTop = this.$refs.eventLog.scrollHeight;
+                }
+                if (this.followLog && this.isMetricLogAtBottom() && this.$refs.metricLog) {
+                    this.$refs.metricLog.scrollTop = this.$refs.metricLog.scrollHeight;
+                }
+            });
         },
         async pollSelectedJob() {
             var id = this.selectedId;
@@ -458,24 +547,45 @@ var app = new Vue({
                 var job = await this.request("GetJobAsync", { id: id }, false, alias);
                 if (this._disposed || this.selectionVersion !== version) { return; }
                 this.job = job;
-                this.detailError = "";
-                for (var page = 0; page < 3; page++) {
-                    var before = this.cursor;
-                    var batch = await this.request("GetEventsAsync", { id: id, after: before, limit: 200 }, false, alias);
-                    if (this._disposed || this.selectionVersion !== version) { return; }
-                    this.applyEvents(batch, before);
-                    if (!batch.hasMore) { break; }
+                if (!this.validationBackend && job.request && ["cpu", "cuda", "mlx"].indexOf(job.request.backend) >= 0) {
+                    this.validationBackend = job.request.backend;
                 }
-                if (job.state === "Succeeded") {
+                if (!this.validationMethod && job.request && ["lora", "qlora"].indexOf(job.request.method) >= 0) {
+                    this.validationMethod = job.request.method;
+                }
+                if (!this.runtimeBusy) { this.runtimeMinutes = job.request.maxDurationMinutes; }
+                this.detailError = "";
+                var activeStates = ["Queued", "Running", "Pausing", "Paused", "Resuming", "Cancelling"];
+                if (activeStates.indexOf(job.state) >= 0 || this.cursor < job.lastEventSequence) {
+                    for (var page = 0; page < 3; page++) {
+                        var before = this.cursor;
+                        var batch = await this.request("GetEventsAsync", { id: id, after: before, limit: 200 }, false, alias);
+                        if (this._disposed || this.selectionVersion !== version) { return; }
+                        this.applyEvents(batch, before);
+                        if (!batch.hasMore) { break; }
+                    }
+                }
+                if (job.state === "Succeeded" && ["Idle", "Running"].indexOf(this.validation.status) >= 0) {
                     var validation = await this.request("GetValidationAsync", { id: id }, false, alias);
                     if (this._disposed || this.selectionVersion !== version) { return; }
                     this.validation = validation;
+                    if (!this.validationBackend && validation.recordedBackend) {
+                        this.validationBackend = validation.recordedBackend;
+                    }
+                    if (!this.validationMethod && validation.recordedMethod) {
+                        this.validationMethod = validation.recordedMethod;
+                    }
                 }
+                var shouldFollowLog = this.followLog && this.isLogAtBottom();
+                var shouldFollowMetrics = this.followLog && this.isMetricLogAtBottom();
                 this.$nextTick(() => {
                     if (this._disposed || this.selectionVersion !== version) { return; }
                     this.renderChart();
-                    if (this.followLog && this.$refs.eventLog) {
+                    if (shouldFollowLog && this.$refs.eventLog) {
                         this.$refs.eventLog.scrollTop = this.$refs.eventLog.scrollHeight;
+                    }
+                    if (shouldFollowMetrics && this.$refs.metricLog) {
+                        this.$refs.metricLog.scrollTop = this.$refs.metricLog.scrollHeight;
                     }
                 });
             } catch (error) {
@@ -494,17 +604,63 @@ var app = new Vue({
             }
             this.validationBusy = true;
             try {
-                this.validation = await this.request("StartValidationAsync", {
+                var payload = {
                     id: this.job.id,
                     maxTokens: this.validationMaxTokens,
+                    backend: this.validationBackend || null,
+                    method: this.validationMethod || null,
+                    confirmMismatch: false,
                     cases: prompts.map((prompt, index) => ({ id: "case-" + (index + 1), prompt: prompt }))
-                }, true);
+                };
+                try {
+                    this.validation = await this.request("StartValidationAsync", payload, true);
+                } catch (error) {
+                    if (!this.validationMismatchWarning
+                        && this.validationBackend === "mlx"
+                        && (!this.job.request.backend || this.job.request.backend === "mlx")
+                        && this.isLegacyValidationRequestError(error)) {
+                        var legacyPayload = Object.assign({}, payload);
+                        delete legacyPayload.backend;
+                        delete legacyPayload.method;
+                        delete legacyPayload.confirmMismatch;
+                        this.validation = await this.request("StartValidationAsync", legacyPayload, true);
+                        this.requestPoll();
+                        return;
+                    }
+                    if (!this.validationMismatchWarning || !this.$confirm) { throw error; }
+                    try {
+                        await this.$confirm(this.t("ValidationMismatchConfirm") + "\n" + this.validationMismatchWarning,
+                            this.t("ValidationMismatchWarning"), { type: "warning", confirmButtonText: this.t("Confirm"), cancelButtonText: this.t("Cancel") });
+                    } catch (confirmError) {
+                        if (confirmError === "cancel" || confirmError === "close") { return; }
+                        throw confirmError;
+                    }
+                    payload.confirmMismatch = true;
+                    this.validation = await this.request("StartValidationAsync", payload, true);
+                }
                 this.requestPoll();
             } catch (error) {
                 this.reportAction(error);
             } finally {
                 this.validationBusy = false;
             }
+        },
+        isLegacyValidationRequestError(error) {
+            var message = error && error.message ? error.message : String(error || "");
+            return message.indexOf("body.backend") >= 0
+                && message.indexOf("Extra inputs are not permitted") >= 0
+                && message.indexOf("body.method") >= 0
+                && message.indexOf("body.confirmMismatch") >= 0;
+        },
+        isLogAtBottom() {
+            var log = this.$refs && this.$refs.eventLog;
+            if (!log) { return true; }
+            return log.scrollHeight - log.scrollTop - log.clientHeight <= 8;
+        },
+        isMetricLogAtBottom() {
+            var log = this.$refs && this.$refs.metricLog;
+            if (!log) { return true; }
+            return log.scrollHeight - log.scrollTop - log.clientHeight <= 8;
         },
         selectWorker() {
             this.workerVersion++;
@@ -588,6 +744,87 @@ var app = new Vue({
                 this.workerSaveBusy = false;
             }
         },
+        async migrateLegacyMetadata() {
+            if (this.migrationBusy || !this.workerAlias) { return; }
+            this.migrationBusy = true;
+            this.actionError = "";
+            try {
+                this.migrationResult = await this.request("MigrateLegacyMetadataAsync", {}, true);
+                this.catalogPending = true;
+                this.$message.success(this.t("MigrationCompleted"));
+            } catch (error) {
+                this.actionError = error.message;
+            } finally {
+                this.migrationBusy = false;
+            }
+        },
+        async runDiagnostics() {
+            if (this.diagnosticsBusy || !this.workerAlias) { return; }
+            this.diagnosticsBusy = true;
+            try {
+                this.diagnostics = await this.request("DiagnosticsAsync");
+            } catch (error) {
+                this.actionError = error.message;
+            } finally {
+                this.diagnosticsBusy = false;
+            }
+        },
+        async checkModelPreparation() {
+            if (this.modelPreparationBusy) { return; }
+            this.modelPreparationBusy = true;
+            this.actionError = "";
+            try {
+                var response = await service.post("/api/aikernel/model-preparation/status", this.modelPreparation,
+                    { customAlert: true, timeout: 30000 });
+                this.modelPreparationStatus = response.data;
+            } catch (error) {
+                this.actionError = error.message;
+            } finally {
+                this.modelPreparationBusy = false;
+            }
+        },
+        async searchModels() {
+            if (this.modelSearchBusy || !this.modelPreparation.provider || !this.modelSearchQuery) { return; }
+            this.modelSearchBusy = true;
+            this.modelSearchError = "";
+            try {
+                var response = await service.post("/api/aikernel/model-preparation/search", {
+                    provider: this.modelPreparation.provider,
+                    query: this.modelSearchQuery,
+                    limit: 20
+                }, { customAlert: true, timeout: 30000 });
+                this.modelSearchResults = Array.isArray(response.data) ? response.data : [];
+                if (!this.modelSearchResults.length) { this.modelSearchError = this.t("ModelSearchEmpty"); }
+            } catch (error) {
+                this.modelSearchResults = [];
+                this.modelSearchError = error.message;
+            } finally {
+                this.modelSearchBusy = false;
+            }
+        },
+        selectModelSearchResult(result) {
+            this.modelPreparation.provider = result.provider;
+            this.modelPreparation.model = result.model;
+            this.modelPreparation.revision = result.revision;
+            this.modelPreparationStatus = null;
+            this.modelSearchError = "";
+            this.checkModelPreparation();
+        },
+        async downloadModel() {
+            if (this.modelPreparationDownloadBusy || !this.modelPreparationStatus) { return; }
+            this.modelPreparationDownloadBusy = true;
+            this.actionError = "";
+            try {
+                var response = await service.post("/api/aikernel/model-preparation/download", this.modelPreparation,
+                    { customAlert: true, timeout: 3600000 });
+                this.modelPreparationStatus = response.data.status;
+                this.$message.success(this.t("ModelDownloadCompleted"));
+            } catch (error) {
+                this.actionError = error.message;
+            } finally {
+                this.modelPreparationDownloadBusy = false;
+            }
+        },
         applyEvents(batch, before) {
             if (batch.truncated) { this.eventsTruncated = true; }
             var ordered = batch.events.slice().sort((a, b) => a.sequence - b.sequence);
@@ -649,12 +886,9 @@ var app = new Vue({
             return expected === "user";
         },
         validateDatasetContent(content) {
-            if (new TextEncoder().encode(content).length > 2 * 1024 * 1024) {
-                throw new Error(this.t("Error.FileSize"));
-            }
             var lines = content.split(/\r\n|\r|\n/);
             if (lines[lines.length - 1] === "") { lines.pop(); }
-            if (lines.length > 10000) { throw new Error(this.t("Error.RowLimit")); }
+            if (lines.length > 1000000) { throw new Error(this.t("Error.RowLimit")); }
             lines.forEach((line, index) => {
                 var row;
                 try { row = JSON.parse(line); }
@@ -671,6 +905,52 @@ var app = new Vue({
             if (lines.length < 2) { throw new Error(this.t("Error.EmptyDataset")); }
             return lines.length;
         },
+        async validateDatasetFile(file) {
+            if (!file.stream) { throw new Error(this.t("Error.FileRead")); }
+            var reader = file.stream().getReader();
+            var decoder;
+            try { decoder = new TextDecoder("utf-8", { fatal: true }); }
+            catch (error) { throw new Error(this.t("Error.Utf8")); }
+            var buffer = "";
+            var rows = 0;
+            var processLine = line => {
+                if (line.endsWith("\r")) { line = line.slice(0, -1); }
+                var row;
+                try { row = JSON.parse(line); }
+                catch (error) {
+                    if (error instanceof SyntaxError) {
+                        throw new Error(this.t("Error.JsonLine") + " " + (rows + 1));
+                    }
+                    throw error;
+                }
+                if (!this.isRecord(row) || !this.validDatasetRow(row)) {
+                    throw new Error(this.t("Error.DatasetSchema") + " " + (rows + 1));
+                }
+                rows++;
+                if (rows > 1000000) { throw new Error(this.t("Error.RowLimit")); }
+            };
+            try {
+                while (true) {
+                    var chunk = await reader.read();
+                    if (chunk.done) { break; }
+                    buffer += decoder.decode(chunk.value, { stream: true });
+                    var lines = buffer.split("\n");
+                    buffer = lines.pop();
+                    lines.forEach(processLine);
+                }
+                buffer += decoder.decode();
+            } catch (error) {
+                if (error instanceof TypeError || error instanceof URIError) {
+                    throw new Error(this.t("Error.Utf8"));
+                }
+                throw error;
+            } finally {
+                reader.releaseLock();
+            }
+            if (buffer.length > 0) { processLine(buffer); }
+            if (rows < 2) { throw new Error(this.t("Error.EmptyDataset")); }
+            return rows;
+        },
         downloadSample() {
             var url = URL.createObjectURL(new Blob([this.sampleContent], { type: "application/x-ndjson;charset=utf-8" }));
             var link = document.createElement("a");
@@ -682,7 +962,7 @@ var app = new Vue({
             setTimeout(() => URL.revokeObjectURL(url), 0);
         },
         async readDataset(event) {
-            this.datasetContent = "";
+            this.datasetFile = null;
             this.fileName = "";
             this.actionError = "";
             var file = event.target.files && event.target.files[0];
@@ -690,23 +970,9 @@ var app = new Vue({
             this.fileReading = true;
             try {
                 if (!/\.jsonl$/i.test(file.name)) { throw new Error(this.t("Error.FileType")); }
-                if (file.size > 2 * 1024 * 1024) { throw new Error(this.t("Error.FileSize")); }
-                var buffer = await new Promise((resolve, reject) => {
-                    var reader = new FileReader();
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = () => reject(new Error(this.t("Error.FileRead")));
-                    reader.onabort = () => reject(new Error(this.t("Error.FileRead")));
-                    reader.readAsArrayBuffer(file);
-                });
-                var content;
-                try {
-                    content = new TextDecoder("utf-8", { fatal: true }).decode(buffer);
-                } catch (error) {
-                    if (error instanceof TypeError) { throw new Error(this.t("Error.Utf8")); }
-                    throw error;
-                }
-                var rows = this.validateDatasetContent(content);
-                this.datasetContent = content;
+                if (file.size > 512 * 1024 * 1024) { throw new Error(this.t("Error.FileSize")); }
+                var rows = await this.validateDatasetFile(file);
+                this.datasetFile = file;
                 this.fileName = file.name + " (" + rows + " " + this.t("Rows") + ")";
                 if (!this.datasetName.trim()) { this.datasetName = file.name.replace(/\.jsonl$/i, "").slice(0, 100); }
             } catch (error) {
@@ -723,17 +989,19 @@ var app = new Vue({
             this.uploadBusy = true;
             try {
                 if (!this.connectionHealthy) { throw new Error(this.t("Error.NotConnected")); }
-                if (!this.datasetName.trim() || !this.datasetContent || this.fileReading) {
+                if (!this.datasetName.trim() || !this.datasetFile || this.fileReading) {
                     throw new Error(this.t("Error.DatasetRequired"));
                 }
-                var dataset = await this.request("UploadDatasetAsync",
-                    { name: this.datasetName.trim(), content: this.datasetContent }, true);
+                var form = new FormData();
+                form.append("file", this.datasetFile, this.datasetFile.name);
+                form.append("name", this.datasetName.trim());
+                var dataset = await this.request("UploadDatasetFileAsync", form, true);
                 if (workerVersion !== this.workerVersion) { throw new Error(this.t("Error.WorkerChanged")); }
                 this.datasets = this.datasets.filter(item => item.id !== dataset.id).concat([dataset]);
                 this.datasetTotal++;
                 if (!this.form.datasetId) { this.form.datasetId = dataset.id; }
                 this.$message.success(this.t("UploadSucceeded"));
-                this.datasetContent = "";
+                this.datasetFile = null;
                 this.fileName = "";
                 this.datasetName = "";
                 document.getElementById("ft-dataset-file").value = "";
@@ -798,7 +1066,16 @@ var app = new Vue({
             }
         },
         canCancel(job) {
+            return ["Queued", "Running", "Pausing", "Paused"].indexOf(job.state) >= 0;
+        },
+        canPause(job) {
             return ["Queued", "Running"].indexOf(job.state) >= 0;
+        },
+        canResume(job) {
+            return job.state === "Paused";
+        },
+        canDelete(job) {
+            return ["Cancelled", "Succeeded", "Failed", "Interrupted", "Paused"].indexOf(job.state) >= 0;
         },
         async cancelJob() {
             if (this.cancelBusy || !this.job || !this.canCancel(this.job)) { return; }
@@ -826,6 +1103,83 @@ var app = new Vue({
                 this.cancelBusy = false;
             }
         },
+        async pauseJob() {
+            if (this.pauseBusy || !this.job || !this.canPause(this.job)) { return; }
+            this.pauseBusy = true;
+            try {
+                var job = await this.request("PauseJobAsync", { id: this.job.id }, true, this.workerAlias);
+                this.job = job;
+                this.$message.success(this.t("PauseRequested"));
+                this.requestPoll();
+            } catch (error) {
+                this.reportAction(error);
+            } finally {
+                this.pauseBusy = false;
+            }
+        },
+        async resumeJob() {
+            if (this.resumeBusy || !this.job || !this.canResume(this.job)) { return; }
+            this.resumeBusy = true;
+            try {
+                var job = await this.request("ResumeJobAsync", { id: this.job.id }, true, this.workerAlias);
+                this.job = job;
+                this.$message.success(this.t("ResumeRequested"));
+                this.requestPoll();
+            } catch (error) {
+                this.reportAction(error);
+            } finally {
+                this.resumeBusy = false;
+            }
+        },
+        async updateRuntime() {
+            if (this.runtimeBusy || !this.job || this.runtimeMinutes === null) { return; }
+            this.runtimeBusy = true;
+            try {
+                var minutes = Number(this.runtimeMinutes);
+                if (!Number.isInteger(minutes) || minutes < 1 || minutes > 10080) {
+                    throw new Error(this.t("RuntimeInvalid"));
+                }
+                var job = await this.request("UpdateRuntimeAsync", {
+                    id: this.job.id, maxDurationMinutes: minutes
+                }, true, this.workerAlias);
+                this.job = job;
+                this.runtimeMinutes = job.request.maxDurationMinutes;
+                this.$message.success(this.t("RuntimeUpdated"));
+            } catch (error) {
+                this.reportAction(error);
+            } finally {
+                this.runtimeBusy = false;
+            }
+        },
+        async deleteJob() {
+            if (this.deleteBusy || !this.job || !this.canDelete(this.job)) { return; }
+            try {
+                await this.$confirm(this.t("DeleteConfirm"), this.t("DeleteJob"), {
+                    type: "warning", confirmButtonText: this.t("Confirm"), cancelButtonText: this.t("KeepTraining")
+                });
+            } catch (error) {
+                if (error === "cancel" || error === "close") { return; }
+                this.reportAction(error);
+                return;
+            }
+            this.deleteBusy = true;
+            try {
+                await this.request("DeleteJobAsync", { id: this.job.id }, true, this.workerAlias);
+                this.$message.success(this.t("DeleteCompleted"));
+                this.jobs = this.jobs.filter(item => item.id !== this.job.id);
+                this.jobsTotal = Math.max(0, this.jobsTotal - 1);
+                this.selectedId = "";
+                this.clearJobDetails();
+                var url = new URL(window.location.href);
+                url.searchParams.delete("id");
+                window.history.replaceState(null, "", url.toString());
+                this.requestPoll();
+            } catch (error) {
+                this.reportAction(error);
+            } finally {
+                this.deleteBusy = false;
+            }
+        },
         readMetric(metrics, key) {
             var bytesKeys = { rss: "processRssBytes", gpuMemory: "gpuMemoryBytes",
                 gpuAllocated: "gpuAllocatedBytes", diskFree: "diskFreeBytes", jobOutput: "jobOutputBytes" };
@@ -842,7 +1196,11 @@ var app = new Vue({
                 cpu: ["processCpuPercent", "cpuPercent", "cpu_percent"],
                 gpuUtil: ["gpuUtilizationPercent", "gpuUtilization", "gpuUtilPercent", "gpu_utilization", "gpu_util_percent"],
                 gpuMemory: ["gpuMemoryMb", "gpuMemoryMiB", "gpu_memory_mb", "gpu_memory_mib"],
-                gpuTemperature: ["gpuTemperatureCelsius", "gpuTemperatureC", "gpu_temperature_c"]
+                gpuMemory: ["gpuMemoryMb", "gpuMemoryMiB", "gpu_memory_mb", "gpu_memory_mib"],
+                gpuTemperature: ["gpuTemperatureCelsius", "gpuTemperatureC", "gpu_temperature_c"],
+                averageStepDuration: ["averageStepDurationSeconds", "average_step_duration_seconds"],
+                estimatedRemaining: ["estimatedRemainingSeconds", "estimated_remaining_seconds"],
+                elapsedSeconds: ["jobElapsedSeconds", "elapsedSeconds"]
             };
             var names = aliases[key] || [key];
             for (var index = 0; index < names.length; index++) {
@@ -874,7 +1232,7 @@ var app = new Vue({
         stateType(state) {
             if (state === "Succeeded") { return "success"; }
             if (state === "Failed" || state === "Interrupted") { return "danger"; }
-            if (state === "Cancelling") { return "warning"; }
+            if (["Cancelling", "Pausing", "Paused", "Resuming"].indexOf(state) >= 0) { return "warning"; }
             return "info";
         },
         jobRowClass(context) {

@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260717
     修改描述：v0.4.0-preview3 为 MCP 模块接入统一资源本地化并优化功能文案
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.5.10 Remove DatabaseSample and related components from MCP extension
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.FunctionRenders;

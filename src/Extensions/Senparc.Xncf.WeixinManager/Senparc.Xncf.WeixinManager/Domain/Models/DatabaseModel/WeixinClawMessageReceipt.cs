@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.24.16 维护WeixinClawMessageReceipt.cs implementation and project behavior
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;

@@ -19,13 +19,14 @@
       "description": "<TargetFramework> value",
       "fileRename": "Template_TargetFramework",
       "replaces": "Template_TargetFramework",
-      "isRequired": true,
-      "defaultValue": "netstandard2.1"
+      "isRequired": false,
+      "defaultValue": "net10.0"
     },
     "Sample": {
       "type": "parameter",
       "dataType": "bool",
-      "defaultValue": "false"
+      "defaultValue": "false",
+      "replaces": "Template_Sample"
     },
     "Web": {
       "type": "parameter",
@@ -40,12 +41,17 @@
     "Database": {
       "type": "parameter",
       "dataType": "bool",
-      "defaultValue": "false"
+      "defaultValue": "false",
+      "replaces": "Template_Database"
     },
     "UseWebApi": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false"
+    },
+    "XNCF_HAS_DATABASE": {
+      "type": "computed",
+      "value": "Database || Sample"
     },
     "IntegrationToNcf": {
       "type": "parameter",
@@ -121,8 +127,8 @@
       "description": "Senparc.Ncf.XncfBase package version",
       "fileRename": "Template_XncfBase_Version",
       "replaces": "Template_XncfBase_Version",
-      "isRequired": true,
-      "defaultValue": "0.11.4-beta8"
+      "isRequired": false,
+      "defaultValue": "0.28.1"
     },
     "NcfAreaBaseVersion": {
       "type": "parameter",
@@ -130,8 +136,8 @@
       "description": "Senparc.Ncf.AreaBase package version",
       "fileRename": "Template_NcfAreaBase_Version",
       "replaces": "Template_NcfAreaBase_Version",
-      "isRequired": true,
-      "defaultValue": "0.11.4-beta8"
+      "isRequired": false,
+      "defaultValue": "0.23.9"
     }
   },
   "sourceName": "Template_OrgName.Xncf.Template_XncfName",
@@ -144,7 +150,9 @@
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml",
             "Areas/Admin/Pages/Template_XncfName/DatabaseSample.cshtml.cs",
             "Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml",
-            "Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs"
+            "Areas/Admin/Pages/Template_XncfName/DatabaseSampleIndex.cshtml.cs",
+            "wwwroot/css/Admin/Template_XncfName/databaseSampleIndex.css",
+            "wwwroot/js/Admin/Template_XncfName/databaseSampleIndex.js"
           ]
         },
         {

@@ -33,6 +33,9 @@
     修改标识：Senparc - 20261009
     修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 enhance Agent Studio, group configuration, and task management interactions
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp;
@@ -50,7 +53,7 @@ using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
-using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AgentsManager.Application.Dtos;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.PromptRange.Domain.Models;
@@ -477,7 +480,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 foreach (var chatGroupId in request.ChatGroups.Select(z => int.Parse(z)))
                 {
-                    var runRequest = new ChatGroup_RunGroupRequest
+                    var runRequest = new ChatGroupRunCommand
                     {
                         Name = $"ChatGroup-{chatGroupId}-{DateTime.Now:yyyyMMddHHmmss}",
                         ChatGroupId = chatGroupId,
@@ -493,7 +496,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         HumanRecipientUserId = GetCurrentAdminUserId(),
                         HookPlatform = HookPlatform.None,
                         HookParameter = string.Empty,
-                        ChatMaxRound = ChatGroupService.ChatMaxRound
+                        ChatMaxRound = ChatGroupService.DefaultChatMaxRound
                     };
 
                     await _chatGroupService.RunChatGroupInThread(runRequest);
@@ -1025,13 +1028,10 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 request.HumanRecipientUserId ??= GetCurrentAdminUserId();
                 await ValidateStudioRunRequestAsync(request);
-                List<Task> tasks = new List<Task>();
 
-                //TODO: 使用线程进行维护
-                var task = _chatGroupService.RunChatGroupInThread(request);
-                tasks.Add(task);
-
-                Task.WaitAll(tasks.ToArray());
+                //RunChatGroupInThread 内部通过 ContinueWith 记录异常并管理自身生命周期，
+                //调用方只需投递领域命令，无需等待。
+                _ = _chatGroupService.RunChatGroupInThread(ToRunCommand(request));
 
                 return logger.ToString();
 
@@ -1051,7 +1051,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 if (chatGroupId > 0) request.ChatGroupId = chatGroupId;
                 request.HumanRecipientUserId ??= GetCurrentAdminUserId();
                 await ValidateStudioRunRequestAsync(request);
-                return await _chatGroupService.StartChatGroupInThreadAsync(request);
+                return await _chatGroupService.StartChatGroupInThreadAsync(ToRunCommand(request));
             });
         }
 
@@ -1073,6 +1073,33 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
             {
                 throw new NcfExceptionBase(AgentsManagerResource.Get("Studio.ModelUnavailable"));
             }
+        }
+
+        /// <summary>
+        /// 将 HTTP/UI 绑定模型 ChatGroup_RunGroupRequest 映射为 Domain 层执行命令。
+        /// </summary>
+        private static ChatGroupRunCommand ToRunCommand(ChatGroup_RunGroupRequest request)
+        {
+            return new ChatGroupRunCommand
+            {
+                Name = request.Name,
+                ChatGroupId = request.ChatGroupId,
+                AiModelId = request.AiModelId,
+                PromptCommand = request.PromptCommand,
+                Description = request.Description,
+                Personality = request.Personality,
+                HookPlatform = request.HookPlatform,
+                HookParameter = request.HookParameter,
+                ChatMaxRound = request.ChatMaxRound,
+                CorrelationId = request.CorrelationId,
+                RequireHumanApproval = request.RequireHumanApproval,
+                HumanInTheLoopLevel = request.HumanInTheLoopLevel,
+                PluginToolPermission = request.PluginToolPermission,
+                McpToolPermission = request.McpToolPermission,
+                IncludeHumanParticipant = request.IncludeHumanParticipant,
+                HumanRecipientUserId = request.HumanRecipientUserId,
+                CancellationToken = request.CancellationToken
+            };
         }
 
         /// <summary>

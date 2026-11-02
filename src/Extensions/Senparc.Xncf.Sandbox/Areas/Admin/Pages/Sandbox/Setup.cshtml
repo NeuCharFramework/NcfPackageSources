@@ -47,7 +47,7 @@
                     <li>检测通过后，打开模块 Function「创建沙箱」，在模板下拉中选择 Python Exec，执行即可；无需在命令行输入模板名。</li>
                 </ol>
                 <p style="margin-top:12px;">
-                    <el-button type="primary" icon="el-icon-document" @@click="openDocs">打开完整文档（doc.ncf.pub）</el-button>
+                    <ncf-doc-help topic="sandbox.manage"></ncf-doc-help>
                     <a class="el-button el-button--default" href="/Admin/Sandbox/Index?uid=@Model.XncfModuleUid">进入沙箱面板</a>
                 </p>
                 <p style="color:#888;font-size:12px;margin-top:8px;">
@@ -66,7 +66,7 @@
                 return {
                     dockerAvailable: @(Model.DockerAvailable ? "true" : "false"),
                     statusMessage: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DockerStatusMessage)),
-                    docsUrl: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.DocsUrl)),
+                    docsUrl: NcfDocHelp.resolve('sandbox.manage', document.documentElement.lang),
                     hasRegistryPrefix: @(Model.HasRegistryPrefix ? "true" : "false"),
                     registryPrefix: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.RegistryPrefix ?? ""))
                 };
@@ -77,13 +77,9 @@
                     if (res.data) {
                         this.dockerAvailable = !!res.data.dockerAvailable;
                         this.statusMessage = res.data.message || '';
-                        this.docsUrl = res.data.docsUrl || this.docsUrl;
                         this.hasRegistryPrefix = !!res.data.hasRegistryPrefix;
                         this.registryPrefix = res.data.registryPrefix || '';
                     }
-                },
-                openDocs() {
-                    window.open(this.docsUrl, '_blank', 'noopener');
                 }
             }
         });

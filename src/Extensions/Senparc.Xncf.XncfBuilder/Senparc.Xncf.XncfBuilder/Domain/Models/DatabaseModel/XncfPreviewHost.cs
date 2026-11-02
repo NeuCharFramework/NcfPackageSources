@@ -9,10 +9,12 @@
     修改标识：Senparc - 20260804
     修改描述：v0.39.0-preview8 新增 XNCF 隔离预览持久化与跨数据库迁移支持
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.41.7 XncfBuilder 预览与隔离开发任务表统一租户底层支持
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
-using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Preview;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -22,7 +24,8 @@ namespace Senparc.Xncf.XncfBuilder
 {
     [Table(Register.DATABASE_PREFIX + nameof(XncfPreviewHost))]
     [Serializable]
-    public class XncfPreviewHost : EntityBase<int>, IIgnoreMulitTenant
+    // 统一使用租户底层支持：多租户启用时本表数据按 TenantId 隔离（与 PromptRange 等 XNCF 模块一致）
+    public class XncfPreviewHost : EntityBase<int>
     {
         [Required, MaxLength(128)]
         public string SessionId { get; private set; }

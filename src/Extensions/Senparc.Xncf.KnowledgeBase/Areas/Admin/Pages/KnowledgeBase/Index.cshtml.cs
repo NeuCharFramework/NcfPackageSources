@@ -22,6 +22,9 @@
     修改标识：Senparc - 20260915
     修改描述：v0.7.2 修复知识库管理端敏感信息泄露并优化检索交互
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -35,6 +38,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Models;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Utility;
+using Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval;
 using Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto;
 using Senparc.Xncf.KnowledgeBase.Services;
 using Senparc.Xncf.KnowledgeBase.Domain.Services;
@@ -90,6 +94,7 @@ namespace Senparc.Xncf.KnowledgeBase.Areas.Admin.Pages.KnowledgeBase
                             _.Content,
                             _.EmbeddedTime,
                             _.VectorCollectionName,
+                            RetrievalConfig = KnowledgeBaseRetrievalConfig.FromJson(_.RetrievalConfigJson),
                             _.AddTime
                         })
                     });

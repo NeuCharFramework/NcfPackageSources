@@ -25,15 +25,24 @@
     修改标识：Senparc - 20261009
     修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.17.0 注册 Token 用量记录与微调控制面服务
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add PromptRange selector service, UI components, and tests
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.Authorization;
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.AI.AgentKernel.Usage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
@@ -44,12 +53,16 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.XncfBase.Database;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Senparc.AI.AgentKernel;
 using Senparc.CO2NET.RegisterServices;
 using System.Reflection;
 using Senparc.AI.Interfaces;
 using Senparc.Xncf.AIKernel.AutoMapperProfiles;
+using Senparc.Xncf.AIKernel.Domain.Models.ModelPreparation;
+using Senparc.Xncf.AIKernel.Domain.Services;
+using Microsoft.AspNetCore.Routing;
 
 namespace Senparc.Xncf.AIKernel
 {
@@ -117,22 +130,48 @@ namespace Senparc.Xncf.AIKernel
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
             services.AddSenparcAI(configuration);
+            AgentKernelUsageRegistry.DefaultObserver ??= new Domain.Services.AgentKernelTokenUsageObserver();
             //services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();
             //Console.WriteLine("======================services.AddScoped<ISenparcAiSetting, SenparcAiSetting>();================");
             services.AddScoped<AgentAiHandler>();
 
             // Token 监控服务（进程内单例，用于实时聚合与异步进度）
             services.AddSingleton<Senparc.Xncf.AIKernel.Domain.Services.AITokenMonitorService>();
+            services.AddScoped<Senparc.Xncf.AIKernel.Domain.Services.AITokenUsageService>();
+            services.AddSingleton<Senparc.Xncf.AIKernel.Domain.Services.AITokenUsageRecorder>();
+            services.AddSingleton<Senparc.Xncf.AIKernel.Domain.Services.IAITokenUsageRecorder>(
+                serviceProvider => serviceProvider.GetRequiredService<Senparc.Xncf.AIKernel.Domain.Services.AITokenUsageRecorder>());
+            services.AddSingleton<IHostedService>(
+                serviceProvider => serviceProvider.GetRequiredService<Senparc.Xncf.AIKernel.Domain.Services.AITokenUsageRecorder>());
 
             services.Configure<Domain.Services.FineTuningWorkerOptions>(
                 configuration.GetSection(Domain.Services.FineTuningWorkerOptions.SectionName));
+            services.Configure<ModelPreparationOptions>(
+                configuration.GetSection(ModelPreparationOptions.SectionName));
             services.AddScoped<Domain.Services.AIFineTuningWorkerService>();
+            services.AddScoped<Domain.Services.FineTuningMigrationService>();
+            services.AddScoped<Domain.Services.IFineTuningFileStore,
+                Domain.Services.FineTuningFileStore>();
+            services.AddScoped<Senparc.Xncf.FileManager.Abstractions.IFileManagerReferenceProvider,
+                Domain.Services.FineTuningFileReferenceProvider>();
+            services.AddSingleton<IHostedService, Domain.Services.FineTuningControlPlaneSyncService>();
+            services.AddScoped<Domain.Services.IFineTuningControlPlaneService,
+                Domain.Services.FineTuningControlPlaneService>();
             services.AddScoped<Domain.Services.IFineTuningWorkerConfigurationProvider,
                 Domain.Services.FineTuningWorkerConfigurationProvider>();
             services.AddHttpContextAccessor();
             services.AddHttpClient<Domain.Services.FineTuningWorkerClient>(client =>
             {
                 client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
+            }).ConfigurePrimaryHttpMessageHandler(() => new System.Net.Http.HttpClientHandler
+            {
+                AllowAutoRedirect = false,
+                UseCookies = false
+            });
+            services.AddHttpClient<IModelPreparationService, ModelPreparationService>(client =>
+            {
+                client.Timeout = System.Threading.Timeout.InfiniteTimeSpan;
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Senparc.Xncf.AIKernel/ModelPreparation");
             }).ConfigurePrimaryHttpMessageHandler(() => new System.Net.Http.HttpClientHandler
             {
                 AllowAutoRedirect = false,
@@ -155,9 +194,21 @@ namespace Senparc.Xncf.AIKernel
             {
                 FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
             });
+            if (app is IEndpointRouteBuilder endpoints)
+            {
+                var group = endpoints.MapGroup("/api/aikernel/model-preparation")
+                    .RequireAuthorization(NcfAuthorizationPolicyNames.AdminOnly);
+                group.MapPost("/search", async (ModelSearchRequest request,
+                    IModelPreparationService service, CancellationToken cancellationToken) =>
+                    Results.Ok(await service.SearchAsync(request, cancellationToken)));
+                group.MapPost("/status", async (ModelPreparationRequest request,
+                    IModelPreparationService service, CancellationToken cancellationToken) =>
+                    Results.Ok(await service.GetStatusAsync(request, cancellationToken)));
+                group.MapPost("/download", async (ModelPreparationRequest request,
+                    IModelPreparationService service, CancellationToken cancellationToken) =>
+                    Results.Ok(await service.DownloadAsync(request, cancellationToken)));
+            }
             return base.UseXncfModule(app, registerService);
         }
     }
 }
-
-

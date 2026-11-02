@@ -16,6 +16,12 @@
     修改标识：Senparc - 20261005
     修改描述：v0.7.3 0.7.3 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.8.0 保存和查询微调产物文件
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.1 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;
@@ -50,6 +56,13 @@ public sealed class NcfFileReadResult
     public NcfFile File { get; }
     public Stream Stream { get; }
 }
+
+public sealed record FileManagerReferenceScanResult(
+    int PageIndex,
+    int PageSize,
+    int InspectedFileCount,
+    bool HasMore,
+    IReadOnlyList<FileManagerReferenceReport> Items);
 
 public class NcfFileService : ServiceBase<NcfFile>
 {
@@ -92,6 +105,81 @@ public class NcfFileService : ServiceBase<NcfFile>
         }
 
         return result;
+    }
+
+    public async Task<FileManagerReferenceScanResult> ScanReferenceReportAsync(
+        int page = 1,
+        int pageSize = 50,
+        NcfFileResourceScope? resourceScope = null,
+        bool onlyUnreferenced = false)
+    {
+        page = Math.Max(page, 1);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+        var filesToSkip = (page - 1) * pageSize;
+        var skipped = 0;
+        var inspected = 0;
+        var sourcePage = 1;
+        var reports = new List<FileManagerReferenceReport>(pageSize);
+        var hasMore = false;
+
+        while (inspected < 10_000)
+        {
+            var files = await GetObjectListAsync(
+                sourcePage,
+                pageSize,
+                file => resourceScope == null || file.ResourceScope == resourceScope,
+                file => file.Id,
+                OrderingType.Ascending,
+                null);
+            if (files.Count == 0)
+            {
+                break;
+            }
+
+            foreach (var file in files)
+            {
+                inspected++;
+                var references = new List<FileManagerReference>();
+                foreach (var provider in ServiceProvider.GetServices<IFileManagerReferenceProvider>())
+                {
+                    references.AddRange(await provider.GetReferencesAsync(file.Id));
+                }
+
+                if (onlyUnreferenced && references.Count > 0)
+                {
+                    continue;
+                }
+
+                if (skipped < filesToSkip)
+                {
+                    skipped++;
+                    continue;
+                }
+
+                reports.Add(new FileManagerReferenceReport(
+                    file.Id,
+                    file.FileName,
+                    file.FileSize,
+                    file.ResourceScope.ToString(),
+                    GetPhysicalState(file),
+                    references));
+                if (reports.Count == pageSize)
+                {
+                    hasMore = files.Count == pageSize || inspected == 10_000;
+                    return new FileManagerReferenceScanResult(page, pageSize, inspected, hasMore, reports);
+                }
+            }
+
+            if (files.Count < pageSize)
+            {
+                break;
+            }
+
+            sourcePage++;
+        }
+
+        hasMore = inspected >= 10_000;
+        return new FileManagerReferenceScanResult(page, pageSize, inspected, hasMore, reports);
     }
 
     /// <summary>
@@ -338,7 +426,8 @@ public class NcfFileService : ServiceBase<NcfFile>
         long length,
         NcfFileResourceScope resourceScope,
         int? folderId = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        long? maxFileSizeBytes = null)
     {
         if (content == null || !content.CanRead)
         {
@@ -350,9 +439,15 @@ public class NcfFileService : ServiceBase<NcfFile>
             throw new ArgumentException("上传文件不能为空。", nameof(length));
         }
 
-        if (length > MaxFileSizeBytes)
+        var effectiveMaxFileSizeBytes = maxFileSizeBytes ?? MaxFileSizeBytes;
+        if (effectiveMaxFileSizeBytes < 1)
         {
-            throw new InvalidOperationException($"单个文件不能超过 {MaxFileSizeBytes / 1024 / 1024} MB。");
+            throw new ArgumentOutOfRangeException(nameof(maxFileSizeBytes));
+        }
+
+        if (length > effectiveMaxFileSizeBytes)
+        {
+            throw new InvalidOperationException($"单个文件不能超过 {effectiveMaxFileSizeBytes / 1024 / 1024} MB。");
         }
 
         EnsureValidScope(resourceScope);
@@ -466,6 +561,23 @@ public class NcfFileService : ServiceBase<NcfFile>
             return;
         }
 
+        foreach (var provider in ServiceProvider.GetServices<IFileManagerReferenceProvider>())
+        {
+            var references = await provider.GetReferencesAsync(file.Id);
+            if (references.Count > 0)
+            {
+                var referenceSummary = string.Join("、", references.Take(5).Select(reference =>
+                    $"{reference.ReferenceType}:{reference.ReferenceId}"));
+                if (references.Count > 5)
+                {
+                    referenceSummary += $" 等 {references.Count} 项";
+                }
+
+                throw new InvalidOperationException(
+                    $"文件“{file.FileName}”仍被引用，不能删除：{referenceSummary}。请先解除业务引用。");
+            }
+        }
+
         // Consumers own their references. Run their guards before moving the
         // physical file so a rejected deletion cannot leave a broken source.
         foreach (var guard in ServiceProvider.GetServices<INcfFileDeletionGuard>())
@@ -496,6 +608,18 @@ public class NcfFileService : ServiceBase<NcfFile>
                 File.Move(stagedPath, fullPath);
             }
             throw;
+        }
+    }
+
+    private string GetPhysicalState(NcfFile file)
+    {
+        try
+        {
+            return File.Exists(ResolvePhysicalPath(file)) ? "Present" : "Missing";
+        }
+        catch (InvalidOperationException)
+        {
+            return "InvalidMetadata";
         }
     }
 

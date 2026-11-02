@@ -10,6 +10,12 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.20.0 支持将条目标记为 Prompt 或 Skill
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -17,6 +23,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.PromptRange.Abstractions.Skills;
 
 namespace Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 
@@ -40,6 +47,16 @@ public class PromptRange : EntityBase<int>
     [Required, MaxLength(20)]
     //[NotNull]
     public string RangeName { get; private set; }
+
+    public SkillKind Kind { get; private set; } = SkillKind.Prompt;
+
+    public int? SourceFileId { get; private set; }
+
+    [MaxLength(20)]
+    public string SourceType { get; private set; }
+
+    [MaxLength(2048)]
+    public string SourceUrl { get; private set; }
 
     // /// <summary>
     // /// 期望结果Json
@@ -86,6 +103,20 @@ public class PromptRange : EntityBase<int>
     {
         this.Alias = alias;
 
+        return this;
+    }
+
+    public PromptRange ChangeKind(SkillKind kind)
+    {
+        Kind = kind;
+        return this;
+    }
+
+    public PromptRange UpdateSource(int? sourceFileId, string sourceType, string sourceUrl)
+    {
+        SourceFileId = sourceFileId;
+        SourceType = sourceType;
+        SourceUrl = sourceUrl;
         return this;
     }
 

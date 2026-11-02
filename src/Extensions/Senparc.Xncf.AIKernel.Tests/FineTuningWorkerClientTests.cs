@@ -162,12 +162,10 @@ public class FineTuningWorkerClientTests
     }
 
     [TestMethod]
-    public async Task DatasetLimit_IsUtf8Bytes_NotCharacterCount()
+    public void DatasetLimit_IsNoLongerHardCodedToTwoMiB()
     {
-        var handler = new StubHandler((request, token) => throw new AssertFailedException("Oversize dataset must not send."));
-        var error = await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => Client(handler).UploadDatasetAsync(
-            new FineTuningDatasetRequest { Name = "big", Content = new string('\u4e2d', 700000) }));
-        Assert.IsTrue(error.Message.Contains("2 MiB", StringComparison.Ordinal));
+        Assert.IsTrue(FineTuningWorkerClient.MaxDatasetBytes >= 512L * 1024 * 1024);
+        Assert.IsTrue(FineTuningWorkerClient.MaxDatasetRows >= 1_000_000);
     }
 
     [TestMethod]

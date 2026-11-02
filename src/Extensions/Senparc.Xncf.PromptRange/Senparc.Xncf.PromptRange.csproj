@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.9</Version>
+    <Version>0.20.9</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -138,6 +138,21 @@
       v0.4.11 添加 PromptResultService.GetPromptConfigParameterFromAiSetting() 方法
       v0.6.4 更新 Prompt 导入和导出 #207
       v0.6.5 优化通过 PromptRangeCode 查询
+      [2026-10-21] v0.20.0 支持 Skill 类型、执行策略与隔离测试
+      [2026-10-21] v0.20.1 generate PromptRange SkillKind migrations with dotnet ef
+      1、Prompt 可标记为 Prompt 或 Skill，并携带执行策略
+      2、新增 Skill 隔离测试运行器与管理端 Skill 页面
+      3、执行请求可附带策略，并适配 Senparc.AI.AgentKernel 0.1.15-preview2
+      [2026-10-21] v0.20.2 upgrade Skill management with GitHub folder import, AI Draft generation, version tree preview, and safer content inspection
+      [2026-10-22] v0.20.3 persist Skill package artifacts through FileManager and add source metadata to PromptRange
+      [2026-11-02] Fix Memory default prompt note length and support scoped, evidence-based incremental extraction.
+      [2026-11-02] Add the AdminChat.Memory system prompt provider with published-version score selection.
+      [2026-11-02] Return prompt scores and support server-side average-score and PromptCode sorting in the reusable selector.
+      [2026-11-02] Add authorized prompt selector APIs for range/lane options, paginated keyword search and on-demand prompt content.
+      [2026-11-03] Recognize durable reply preferences and safely refresh unchanged, unscored Memory defaults without replacing customized or scored prompts.
+      [2026-11-03] v0.20.8 支持 Skill 管理、包上传和来源文件关联，并补齐多数据库迁移
+      1、提供 PromptRange 选择与评分信息，支持聊天记忆提示词
+    [2026-11-03] Add shared contextual documentation beside prompt range selection.
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
@@ -158,6 +173,10 @@
     <OutputPath>..\..\BuildOutPut</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <!--<FrameworkReference
     Include="Microsoft.AspNetCore.App" />-->
     <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
@@ -196,6 +215,7 @@
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.FileManager.Abstractions\Senparc.Xncf.FileManager.Abstractions.csproj" />
     <ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
     <ProjectReference Include="..\System\Senparc.Xncf.SystemCore\[5980]Senparc.Xncf.SystemCore.csproj" />
     <ProjectReference Include="..\System\Senparc.Xncf.SystemManager\[5970]Senparc.Xncf.SystemManager.csproj" />

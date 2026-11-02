@@ -15,9 +15,13 @@
     修改标识：Senparc - 20260822
     修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.41.7 XncfBuilder 预览与隔离开发任务表统一租户底层支持
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Service;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Preview;
 using Senparc.Xncf.XncfBuilder.Domain.Services.Development;
@@ -31,15 +35,18 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
     {
         private readonly IXncfPreviewService _previewService;
         private readonly IXncfDevelopmentJobService _developmentJobService;
+        private readonly RequestTenantInfo _requestTenantInfo;
 
         public PreviewMonitor(
             Lazy<XncfModuleService> xncfModuleService,
             IXncfPreviewService previewService,
-            IXncfDevelopmentJobService developmentJobService)
+            IXncfDevelopmentJobService developmentJobService,
+            RequestTenantInfo requestTenantInfo)
             : base(xncfModuleService)
         {
             _previewService = previewService;
             _developmentJobService = developmentJobService;
+            _requestTenantInfo = requestTenantInfo;
         }
 
         public void OnGet()
@@ -66,7 +73,7 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
             else try
             {
                 developmentJobs = await _developmentJobService
-                    .GetRecentAsync(100, HttpContext.RequestAborted)
+                    .GetRecentAsync(100, HttpContext.RequestAborted, _requestTenantInfo)
                     .ConfigureAwait(false);
                 developmentStatus = _developmentJobService.GetPersistenceStatus();
             }
@@ -135,7 +142,7 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
             try
             {
                 var result = await _developmentJobService
-                    .ApplyApprovedJobAsync(jobId, confirmationPhrase, HttpContext.RequestAborted)
+                    .ApplyApprovedJobAsync(jobId, confirmationPhrase, HttpContext.RequestAborted, _requestTenantInfo)
                     .ConfigureAwait(false);
                 return new JsonResult(new { Success = true, Message = result.StatusMessage });
             }
@@ -155,7 +162,7 @@ namespace Senparc.Xncf.XncfBuilder.Areas.XncfBuilder.Pages
             try
             {
                 var result = await _developmentJobService
-                    .DiscardAsync(jobId, HttpContext.RequestAborted)
+                    .DiscardAsync(jobId, HttpContext.RequestAborted, _requestTenantInfo)
                     .ConfigureAwait(false);
                 return new JsonResult(new { Success = true, Message = result.StatusMessage });
             }

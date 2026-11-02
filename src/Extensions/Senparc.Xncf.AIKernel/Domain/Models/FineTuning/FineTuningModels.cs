@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261009
     修改描述：v0.16.4 完善 AIKernel 本地微调 Worker、数据库配置与本地化管理能力
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 enhance job management and telemetry features
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -31,9 +34,9 @@ public sealed class FineTuningJobRequest
     [StringLength(128)]
     public string? EvalDatasetId { get; set; }
     [Required, RegularExpression("^(cpu|cuda|mlx)$")]
-    public string Backend { get; set; } = "cpu";
+    public string? Backend { get; set; }
     [Required, RegularExpression("^(lora|qlora)$")]
-    public string Method { get; set; } = "lora";
+    public string? Method { get; set; }
     [Range(1, 100)]
     public int Epochs { get; set; } = 1;
     [Range(0, 1000000)]
@@ -84,6 +87,20 @@ public sealed class FineTuningCancelRequest
     public string Id { get; set; } = "";
 }
 
+public sealed class FineTuningRuntimeRequest
+{
+    [Range(1, 10080)]
+    public int MaxDurationMinutes { get; set; }
+}
+
+public sealed class FineTuningDeleteResult
+{
+    [JsonRequired]
+    public string Id { get; set; } = "";
+    [JsonRequired]
+    public bool Deleted { get; set; }
+}
+
 public sealed class FineTuningHealth
 {
     public string? StoreId { get; set; }
@@ -97,6 +114,7 @@ public sealed class FineTuningHealth
     public int ActiveJobs { get; set; }
     [JsonRequired]
     public int QueuedJobs { get; set; }
+    public int PausedJobs { get; set; }
 }
 
 public sealed class FineTuningCatalogPage<T>
@@ -158,6 +176,9 @@ public sealed class FineTuningJob
     public DateTimeOffset CreatedUtc { get; set; }
     public DateTimeOffset? StartedUtc { get; set; }
     public DateTimeOffset? FinishedUtc { get; set; }
+    public DateTimeOffset? TrainingStartedUtc { get; set; }
+    public double PausedSeconds { get; set; }
+    public DateTimeOffset? PauseStartedUtc { get; set; }
     [JsonRequired]
     public FineTuningJobRequest Request { get; set; } = new();
     public string? Error { get; set; }
@@ -209,6 +230,11 @@ public sealed class FineTuningValidationRequest
     public List<FineTuningValidationCase> Cases { get; set; } = new();
     [Range(16, 256)]
     public int MaxTokens { get; set; } = 128;
+    [RegularExpression("^(cpu|cuda|mlx)$")]
+    public string? Backend { get; set; }
+    [RegularExpression("^(lora|qlora)$")]
+    public string? Method { get; set; }
+    public bool ConfirmMismatch { get; set; }
 }
 
 public sealed class FineTuningValidationCase
@@ -232,6 +258,8 @@ public sealed class FineTuningValidation
     [JsonRequired]
     public List<FineTuningValidationResult> Results { get; set; } = new();
     public string? Error { get; set; }
+    public string? RecordedBackend { get; set; }
+    public string? RecordedMethod { get; set; }
 }
 
 public sealed class FineTuningValidationResult

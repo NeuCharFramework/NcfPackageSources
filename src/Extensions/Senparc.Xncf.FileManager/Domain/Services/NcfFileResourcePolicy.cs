@@ -10,6 +10,12 @@
     修改标识：Senparc - 20260813
     修改描述：v0.6.0-preview1 完善文件资源边界、安全删除策略与静态资源管理
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.8.0 按 FineTuning 资源类型校验访问
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.StaticFiles;
@@ -49,7 +55,8 @@ public static class NcfFileResourcePolicy
             {
                 ".pdf", ".doc", ".xls", ".ppt",
                 ".zip", ".7z", ".rar",
-                ".amr", ".m4a", ".mov"
+                ".amr", ".m4a", ".mov",
+                ".jsonl"
             }),
         StringComparer.OrdinalIgnoreCase);
 
@@ -58,7 +65,8 @@ public static class NcfFileResourcePolicy
     public static bool IsValidScope(NcfFileResourceScope scope) =>
         scope is NcfFileResourceScope.KnowledgeBase
             or NcfFileResourceScope.SiteAsset
-            or NcfFileResourceScope.PrivateAttachment;
+            or NcfFileResourceScope.PrivateAttachment
+            or NcfFileResourceScope.Skill;
 
     public static string NormalizeExtension(string fileName)
     {
@@ -71,7 +79,8 @@ public static class NcfFileResourcePolicy
         {
             NcfFileResourceScope.KnowledgeBase => KnowledgeBaseExtensions.Contains(extension),
             NcfFileResourceScope.SiteAsset => SiteAssetExtensions.Contains(extension),
-            NcfFileResourceScope.PrivateAttachment => PrivateAttachmentExtensions.Contains(extension),
+            NcfFileResourceScope.PrivateAttachment or NcfFileResourceScope.Skill =>
+                PrivateAttachmentExtensions.Contains(extension),
             _ => false
         };
     }
@@ -109,6 +118,7 @@ public static class NcfFileResourcePolicy
         {
             NcfFileResourceScope.KnowledgeBase => "knowledge-base",
             NcfFileResourceScope.SiteAsset => "site-assets",
+            NcfFileResourceScope.Skill => "skills",
             NcfFileResourceScope.PrivateAttachment => "private-attachments",
             _ => throw new ArgumentOutOfRangeException(nameof(scope))
         };

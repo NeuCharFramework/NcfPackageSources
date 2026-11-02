@@ -13,10 +13,14 @@
     修改标识：Senparc - 20260804
     修改描述：v0.5.0-preview6 新增知识库生命周期管理与 Agent 模板集成
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+
 ----------------------------------------------------------------*/
 
 
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.KnowledgeBase.Domain.Services.Retrieval;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -66,6 +70,11 @@ namespace Senparc.Xncf.KnowledgeBase.Models.DatabaseModel.Dto
         public string VectorCollectionName { get; set; }
 
         public DateTime? EmbeddedTime { get; set; }
+
+        /// <summary>
+        /// 检索配置（切片策略 + 重排）。null 表示使用默认（与旧版一致）。
+        /// </summary>
+        public KnowledgeBaseRetrievalConfig RetrievalConfig { get; set; }
 
     }
 

@@ -16,12 +16,16 @@
     修改标识：Senparc - 20260822
     修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.41.7 XncfBuilder 预览与隔离开发任务表统一租户底层支持
+
 ----------------------------------------------------------------*/
 
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Senparc.Ncf.Core.MultiTenant;
 
 namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
 {
@@ -184,7 +188,8 @@ namespace Senparc.Xncf.XncfBuilder.Domain.Services.Preview
         Task<XncfPreviewSessionInfo> StartAsync(
             XncfPreviewStartOptions options,
             Action<string> log = null,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            RequestTenantInfo? ambientTenant = null);
 
         Task<bool> StopAsync(
             string sessionId,

@@ -19,6 +19,12 @@
     修改标识：Senparc - 20261009
     修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.19.0 接收 Skill 绑定、执行权限与工作区策略
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 enhance Agent Studio, group configuration, and task management interactions
+
 ----------------------------------------------------------------*/
 
 using log4net.Core;
@@ -43,8 +49,10 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Senparc.Xncf.PromptRange.Abstractions.Skills;
+using Senparc.Xncf.Workspace.Abstractions;
 
-namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
+namespace Senparc.Xncf.AgentsManager.Application.Dtos
 {
     public class AgentTemplate_ConvertPlainPromptRequest
     {
@@ -117,6 +125,12 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.PL
         public string FunctionCallNames { get; set; }
 
         public int? KnowledgeBaseId { get; set; }
+
+        /// <summary>此 Agent 显式允许使用的 Skill，空集合表示不允许调用 Skill。</summary>
+        public List<AgentSkillBinding> SkillBindings { get; set; } = new();
+
+        /// <summary>此 Agent 的 Workspace 文件和命令权限。</summary>
+        public WorkspacePolicy WorkspacePolicy { get; set; } = new();
 
         public string GetSystemMessagePromptCode()
         {

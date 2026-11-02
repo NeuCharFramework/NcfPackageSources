@@ -180,6 +180,15 @@ def filename_net_major(path: Path) -> int:
     return int(match.group("major")) if match else -1
 
 
+def is_test_project(project_path: Path, root: Path) -> bool:
+    relative = project_path.resolve().relative_to(root.resolve())
+    project_name = Path(NET_FILENAME_RE.sub(".csproj", relative.name)).stem
+    return any(
+        part == "Tests" or part.endswith("Tests")
+        for part in (*relative.parts[:-1], project_name)
+    )
+
+
 def tfm_major(info: CsprojInfo) -> int:
     if not info.tfm_majors:
         return -1
@@ -693,8 +702,20 @@ def main() -> int:
     changed_cs_files_in_primary_project = [item for item in changed_cs_files if path_is_under(item["path"], primary_project_rel)]
 
     reverse_map = build_reverse_dependency_map(selected_by_dir, info_by_path)
-    dependency_roots = set(changed_csproj_targets) if changed_csproj_targets else {primary}
-    dependency_layers, dependents = compute_dependency_layers(dependency_roots, reverse_map)
+    all_dependency_roots = set(changed_csproj_targets) if changed_csproj_targets else {primary}
+    all_layers, all_dependents = compute_dependency_layers(all_dependency_roots, reverse_map)
+    skipped_test_csprojs = {
+        project for project in all_dependency_roots | set(all_dependents)
+        if is_test_project(project, root)
+    }
+    changed_csproj_targets.difference_update(skipped_test_csprojs)
+    dependency_roots = all_dependency_roots - skipped_test_csprojs
+    dependency_layers = [
+        non_test_layer
+        for layer in all_layers
+        if (non_test_layer := [project for project in layer if project not in skipped_test_csprojs])
+    ]
+    dependents = [project for project in all_dependents if project not in skipped_test_csprojs]
 
     payload = {
         "root": root.resolve().as_posix(),
@@ -720,6 +741,7 @@ def main() -> int:
         "changed_csproj_files": changed_csproj_files,
         "changed_props_files": changed_props_files,
         "changed_csprojs": [to_relative_path(root, p) for p in sorted(changed_csproj_targets)],
+        "skipped_test_csprojs": [to_relative_path(root, p) for p in sorted(skipped_test_csprojs)],
         "changed_csproj_to_files": {
             to_relative_path(root, project): sorted(set(items))
             for project, items in sorted(changed_csproj_to_files.items(), key=lambda kv: to_relative_path(root, kv[0]))

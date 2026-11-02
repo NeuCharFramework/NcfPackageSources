@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.24.16 harden WeixinClaw merge integration
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -64,13 +67,23 @@ public class WeixinClawMessageReceiptService : ServiceBase<WeixinClawMessageRece
     {
         for (Exception current = exception; current != null; current = current.InnerException)
         {
-            if (HasDuplicateErrorCode(current) || HasDuplicateConstraintName(current.Message))
+            if (HasDuplicateErrorCode(current)
+                || HasDuplicateConstraintName(current.Message)
+                || HasGenericDuplicateReceiptMessage(current.Message))
             {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private static bool HasGenericDuplicateReceiptMessage(string message)
+    {
+        return !string.IsNullOrWhiteSpace(message)
+            && message.Contains("WeixinClawMessageReceipt", StringComparison.OrdinalIgnoreCase)
+            && (message.Contains("duplicate", StringComparison.OrdinalIgnoreCase)
+                || message.Contains("unique", StringComparison.OrdinalIgnoreCase));
     }
 
     private static bool HasDuplicateConstraintName(string message)

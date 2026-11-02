@@ -19,6 +19,12 @@
     修改标识：Senparc - 20261004
     修改描述：移除模板计算示例和颜色服务依赖，保留 MCP 调用与工具
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.5.10 函数对话结果写入 Token 用量
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.5.10 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 #pragma warning disable OPENAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。
@@ -39,6 +45,7 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Models;
+using Senparc.Xncf.AIKernel.Domain.Services;
 using Senparc.Xncf.MCP.OHS.Local.PL;
 using System;
 using System.Collections.Generic;
@@ -229,7 +236,14 @@ namespace Senparc.Xncf.MCP.OHS.Local.AppService
                         .ConfigChatModel("Jeffrey", chatOptions)
                         .BuildKernelAsync();
 
-                var resultRaw = await iWantToRun.RunChatAsync(request.RequestPrompt);
+                var aiModelService = ServiceProvider.GetService<AIModelService>();
+                var resultRaw = aiModelService == null
+                    ? await iWantToRun.RunChatAsync(request.RequestPrompt)
+                    : await aiModelService.RunChatWithUsageAsync(
+                        iWantToRun,
+                        request.RequestPrompt,
+                        modelAlias: "MCP.MyFunctionAppService",
+                        source: "MCP.MyFunctionAppService");
                 //return resultRaw.ToJson(true);
                 return resultRaw.OutputString;
             });

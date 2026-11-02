@@ -42,6 +42,15 @@
     修改标识：Senparc - 20261009
     修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
 
+    修改标识：Senparc - 20261021
+    修改描述：修复明文 Prompt 转换时 PromptItem Note 超过数据库长度限制
+
+    修改标识：Senparc - 20261021
+    修改描述：v0.19.0 保存 Agent 模板的 Skill 绑定与工作区策略
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 update chat avatar icon and improve assistant message styling
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;
@@ -67,7 +76,7 @@ using Senparc.Xncf.AgentsManager.Domain.Services;
 using Senparc.Xncf.AgentsManager.Abstractions;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel;
 using Senparc.Xncf.AgentsManager.Models.DatabaseModel.Models.Dto;
-using Senparc.Xncf.AgentsManager.OHS.Local.PL;
+using Senparc.Xncf.AgentsManager.Application.Dtos;
 using Senparc.Xncf.AIKernel.Domain.Models;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.AIKernel.Domain.Services;
@@ -166,7 +175,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     IsDraft = false,
                     isAIGrade = true,
                     ExpectedResultsJson = expectedResultsJson,
-                    Note = $"由 AgentTemplate「{agentTemplate.Name}」转换并自动打靶评分"
+                    Note = "AgentTemplate自动评分"
                 });
 
                 var generatedResult = await promptResultService.SenparcGenerateResultAsync(
@@ -242,6 +251,8 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                     request.Description, promptCode,
                     Enum.Parse<HookRobotType>(request.HookRobotType), request.HookRobotParameter,
                     null, request.FunctionCallNames, null, request.KnowledgeBaseId);
+                agentTemplateDto.SkillBindings = request.SkillBindings;
+                agentTemplateDto.WorkspacePolicy = request.WorkspacePolicy;
 
                 var savedAgentTemplate = await this._agentsTemplateService.UpdateAgentTemplateAsync(request.Id, agentTemplateDto);
 

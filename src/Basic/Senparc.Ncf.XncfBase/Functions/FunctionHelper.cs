@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.26.0 增强 XNCF 基础注册与函数参数处理能力
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Extensions;
@@ -22,6 +25,7 @@ using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions.Parameters;
+using Senparc.Ncf.XncfBase.Functions.Files;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -139,6 +143,17 @@ namespace Senparc.Ncf.XncfBase.Functions
                     parameterType = ParameterType.CheckBox;
                 }
 
+                var allowMultiple = false;
+                var maxFiles = 0;
+                var accept = string.Empty;
+                if (parameterType == ParameterType.File)
+                {
+                    allowMultiple = functionParameterUi?.AllowMultiple == true ||
+                                    IsFileCollection(prop.PropertyType);
+                    maxFiles = functionParameterUi?.MaxFiles ?? 0;
+                    accept = functionParameterUi?.Accept ?? string.Empty;
+                }
+
                 var name = prop.Name;
                 string title = null;
                 string description = null;
@@ -180,6 +195,9 @@ namespace Senparc.Ncf.XncfBase.Functions
                 var functionParamInfo = new FunctionParameterInfo(name, title, description, isRequired, systemType, parameterType,
                                                 selectionList ?? new SelectionList(SelectionType.Unknown), value, maxLength,
                                                 filterable, allowCreate);
+                functionParamInfo.AllowMultiple = allowMultiple;
+                functionParamInfo.MaxFiles = maxFiles;
+                functionParamInfo.Accept = accept;
                 result.Add(functionParamInfo);
             }
             return result;
@@ -199,6 +217,20 @@ namespace Senparc.Ncf.XncfBase.Functions
         {
             var t = prop.PropertyType;
             return t == typeof(bool) || Nullable.GetUnderlyingType(t) == typeof(bool);
+        }
+
+        private static bool IsFileCollection(Type type)
+        {
+            if (type == typeof(FunctionFileReference[]))
+            {
+                return true;
+            }
+
+            return type.IsGenericType &&
+                   (type.GetGenericTypeDefinition() == typeof(List<>) ||
+                    type.GetGenericTypeDefinition() == typeof(IReadOnlyList<>) ||
+                    type.GetGenericTypeDefinition() == typeof(IEnumerable<>)) &&
+                   type.GetGenericArguments()[0] == typeof(FunctionFileReference);
         }
 
         /// <summary>

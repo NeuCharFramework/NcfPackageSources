@@ -22,6 +22,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.3.0 0.3.0 feat: enhance Sandbox with external JupyterLab control, port mappings, session alias and raised quota
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.3.1 维护跨模块可共享的沙箱会话快照
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Sandbox.Abstractions;

@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>1.1.10</Version>
+    <Version>1.1.13</Version>
+    <XncfHasDatabase>Template_Database</XncfHasDatabase>
+    <XncfIsSample>Template_Sample</XncfIsSample>
     <AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
     <RootNamespace>Template_OrgName.Xncf.Template_XncfName</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -50,9 +52,24 @@
       2、保持项目引用链与当前功能兼容
       [2026-10-05] v1.1.10 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
       1、Updated Template_OrgName.Xncf.Template_XncfName project behavior and integration for the latest feature and reliability improvements.
-      2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
+      2、chore: update package versions and dependencies across multiple projects
+      [2026-10-28] v1.1.11 Dependency update from Senparc.Ncf.DatabasePlant to 0.21.13
+      1、升级 Senparc.Ncf.DatabasePlant 至 0.21.13，保持生成项目与基础库兼容
+      2、同步模板参数默认值：TargetFramework 为 net10.0，XncfBaseVersion 为 0.28.1，NcfAreaBaseVersion 为 0.23.9
+      [2026-10-29] v1.1.12 模板依赖与资源条件化
+      1、Senparc.Ncf.DatabasePlant 引用改为条件包含（Database 或 Sample 开启时才生成）
+      2、Sample 关闭时不再生成 databaseSampleIndex 静态资源
+      [2026-11-03] v1.1.13 修复无数据库变体无法编译的问题
+      1、Register.cs 的数据库相关代码（迁移、初始化、卸载删表、DI 注册）改用 XNCF_HAS_DATABASE 条件编译
+      2、csproj 仅在 Database 或 Sample 开启时定义 XNCF_HAS_DATABASE 并包含 DatabasePlant 引用
+      3、修复模板参数默认值及数据库和静态资源的条件引用
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition=" ( '$(XncfHasDatabase)' != 'false' AND '$(XncfHasDatabase)' != 'False' ) OR ( '$(XncfIsSample)' != 'false' AND '$(XncfIsSample)' != 'False' ) ">
+    <XncfDatabaseEnabled>true</XncfDatabaseEnabled>
+    <DefineConstants>$(DefineConstants);XNCF_HAS_DATABASE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputPath>..\..\..\BuildOutPut</OutputPath>
@@ -62,8 +79,8 @@
     <EmbeddedResource Include="wwwroot\**\*" />
     <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.21.10" />
+  <ItemGroup Condition=" '$(XncfDatabaseEnabled)' == 'true' ">
+    <PackageReference Include="Senparc.Ncf.DatabasePlant" Version="0.21.13" />
   </ItemGroup>
   <ItemGroup>
     <!--<PackageReference Include="Senparc.Ncf.XncfBase" Version="0.22.4-preview1" />

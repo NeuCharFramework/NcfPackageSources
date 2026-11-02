@@ -22,6 +22,9 @@
     修改标识：Senparc - 20261002
     修改描述：注册统一后台租户作用域工厂
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -57,6 +60,7 @@ using Senparc.Ncf.Database;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.Attributes;
 using Senparc.Ncf.XncfBase.FunctionRenders;
+using Senparc.Ncf.XncfBase.Functions.Files;
 using Senparc.Ncf.XncfBase.Threads;
 
 namespace Senparc.Ncf.XncfBase
@@ -402,6 +406,11 @@ namespace Senparc.Ncf.XncfBase
             //AppService
             services.AddScoped(typeof(AppRequestBase));
             services.AddScoped(typeof(IAppRequest), typeof(AppRequestBase));
+            services.AddOptions<FunctionFileStoreOptions>();
+            if (!services.Any(descriptor => descriptor.ServiceType == typeof(IFunctionFileStore)))
+            {
+                services.AddScoped<IFunctionFileStore, LocalFunctionFileStore>();
+            }
 
             services.AddScoped(typeof(AppResponseBase));
             services.AddScoped(typeof(AppResponseBase<>));

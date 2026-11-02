@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Ncf.Core.AppServices;
+using Senparc.Ncf.XncfBase;
+using Senparc.Ncf.XncfBase.Functions.Parameters;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Application.AppServices;
 using Senparc.Xncf.Sandbox.Application.DTOs.Request;
@@ -17,6 +19,7 @@ public class SandboxFunctionRenderTests
         {
             "LabExec",
             "LabUploadFile",
+            "LabUploadFiles",
             "LabDownloadFile",
             "LabListFiles",
             "LabCreateNotebook"
@@ -65,14 +68,17 @@ public class SandboxFunctionRenderTests
     }
 
     [TestMethod]
-    public void AliasAndCreateFunctions_AreRegistered()
+    public void BatchUploadRequest_ExposesFileParameterMetadata()
     {
-        var methods = typeof(SandboxAppService)
-            .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-            .Where(method => method.GetCustomAttribute<FunctionRenderAttribute>() != null)
-            .ToDictionary(method => method.Name, StringComparer.Ordinal);
+        var property = typeof(Sandbox_LabUploadFilesRequest).GetProperty(nameof(Sandbox_LabUploadFilesRequest.Files));
 
-        Assert.IsTrue(methods.ContainsKey("Create"), "Missing FunctionRender method: Create");
-        Assert.IsTrue(methods.ContainsKey("UpdateAlias"), "Missing FunctionRender method: UpdateAlias");
+        Assert.IsNotNull(property);
+        var attribute = property.GetCustomAttributes(typeof(FunctionParameterUiAttribute), inherit: true)
+            .Cast<FunctionParameterUiAttribute>()
+            .Single();
+        Assert.AreEqual(ParameterType.File, attribute.ParameterType);
+        Assert.IsTrue(attribute.AllowMultiple);
+        Assert.AreEqual(16, attribute.MaxFiles);
     }
+
 }

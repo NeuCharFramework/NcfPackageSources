@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.18</Version>
+		<Version>0.0.21</Version>
 		<PackageReleaseNotes>
 		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
@@ -35,6 +35,10 @@
 		  [2026-10-05] v0.0.17 Enhanced Senparc.Web.DatabasePlant functionality and compatibility
 		  1、Updated Senparc.Web.DatabasePlant project behavior and integration for the latest feature and reliability improvements.
 		  [2026-10-09] v0.0.18 Dependency update from Senparc.Xncf.AgentsManager to 0.18.3
+		  [2026-10-21] v0.0.19 Dependency update from Senparc.Xncf.AgentsManager to 0.19.0
+		  [2026-10-24] Reference Admin for standard multi-provider Chat attachment migrations.
+		  [2026-10-24] v0.0.20 支持 Workspace 标准 EF 迁移生成
+		  1、引用 Workspace 模块作为设计时迁移目标
 </PackageReleaseNotes>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -48,7 +52,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\..\tools\NcfSimulatedSite\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
 	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
+	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.Workspace\Senparc.Xncf.Workspace.csproj" />
 	</ItemGroup>
 
 </Project>

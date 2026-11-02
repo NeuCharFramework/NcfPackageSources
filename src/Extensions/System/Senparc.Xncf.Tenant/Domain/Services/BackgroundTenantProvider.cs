@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：BackgroundTenantProvider.cs
+    文件功能描述：BackgroundTenantProvider 相关定义与实现
+
+
+    创建标识：Senparc - 20261002
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.15.14 提供后台租户发现、租户缓存与请求作用域支持
+
+----------------------------------------------------------------*/
+
 using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.Tenant.Domain.Cache;
 using System.Collections.Generic;

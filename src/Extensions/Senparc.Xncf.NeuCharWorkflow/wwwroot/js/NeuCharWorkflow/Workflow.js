@@ -252,6 +252,7 @@ new Vue({
             workflows: [],
             functions: [],
             workflowObjects: [],
+            workflowFileSelections: {},
             chatModels: [],
             observedOutputSchemas: [],
             keyword: '',
@@ -974,6 +975,58 @@ new Vue({
             const workflowId = Number(this.form && this.form.id || 0);
             if (!Number.isInteger(workflowId) || workflowId <= 0) return;
             window.location.assign(`/Admin/NeuCharWorkflow/Analytics?workflowId=${encodeURIComponent(workflowId)}`);
+        },
+        exportWorkflow(format) {
+            const workflowId = Number(this.form && this.form.id || 0);
+            if (!Number.isInteger(workflowId) || workflowId <= 0) return;
+            const selectedFormat = String(format || 'json').toLowerCase() === 'yaml' ? 'yaml' : 'json';
+            window.location.assign(`/Admin/NeuCharWorkflow/Index?handler=Export&id=${encodeURIComponent(workflowId)}&format=${selectedFormat}`);
+        },
+        chooseWorkflowImport() {
+            const input = this.$refs && this.$refs.workflowImportInput;
+            if (input) input.click();
+        },
+        async importWorkflowFile(event) {
+            const input = event && event.target;
+            const file = input && input.files && input.files[0];
+            if (!file) return;
+            const extension = String(file.name || '').toLowerCase().endsWith('.yaml') ||
+                String(file.name || '').toLowerCase().endsWith('.yml') ? 'yaml' : 'json';
+            try {
+                const content = await file.text();
+                const previewResponse = await service.post('/Admin/NeuCharWorkflow/Index?handler=ValidateImport', {
+                    content,
+                    format: extension
+                }, { customAlert: true });
+                const preview = NeuCharWorkflowUi.unwrap(previewResponse);
+                const errors = (preview && preview.errors) || [];
+                if (errors.length || !preview || preview.valid !== true) {
+                    const message = errors.map(error => error.message).join('；') || 'Workflow 文件校验失败。';
+                    this.$notify({ title: '无法导入', message, type: 'error', duration: 6000 });
+                    return;
+                }
+                const secrets = (preview.secrets || []).length;
+                const warning = secrets ? `其中 ${secrets} 个敏感字段需要导入后重新配置。` : '';
+                await this.$confirm(
+                    `将以禁用草稿导入“${preview.name || 'Imported Workflow'}”。${warning}`,
+                    '确认导入 Workflow',
+                    { confirmButtonText: '导入草稿', cancelButtonText: '取消', type: 'warning' });
+                const response = await service.post('/Admin/NeuCharWorkflow/Index?handler=Import', {
+                    content,
+                    format: extension
+                }, { customAlert: true });
+                const saved = NeuCharWorkflowUi.unwrap(response);
+                this.applySavedWorkflow(saved);
+                this.editing = true;
+                await this.refreshWorkflowList();
+                this.$notify({ title: 'Workflow', message: '已导入为禁用草稿，请检查配置后再启用。', type: 'success' });
+            } catch (error) {
+                if (!(error && error.message === 'cancel')) {
+                    this.$notify({ title: '导入失败', message: this.errorMessage(error, 'Workflow 文件导入失败。'), type: 'error' });
+                }
+            } finally {
+                if (input) input.value = '';
+            }
         },
         hasAgentGroupConversation(event) {
             const reference = event && event.objectReference;
@@ -3120,8 +3173,63 @@ new Vue({
             });
         },
         resetParameterManual(node, parameter) {
-            let value = parameter.parameterType === 2 ? [] : parameter.parameterType === 4 ? false : '';
+            let value = parameter.parameterType === 2 ||
+                (parameter.parameterType === 6 && parameter.allowMultiple)
+                ? []
+                : parameter.parameterType === 4 ? false : '';
             this.$set(node.config.parameters, parameter.name, value);
+        },
+        formatFileSize(value) {
+            const bytes = Number(value || 0);
+            if (bytes < 1024) return `${bytes} B`;
+            if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+            if (bytes < 1024 * 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+            return `${(bytes / 1024 / 1024 / 1024).toFixed(1)} GB`;
+        },
+        async uploadFunctionFiles(fileList, maxFiles) {
+            const files = Array.from(fileList || []);
+            if (!files.length) return [];
+            if (maxFiles && files.length > Number(maxFiles)) {
+                throw new Error(`一次最多选择 ${maxFiles} 个文件。`);
+            }
+            const form = new FormData();
+            files.forEach(file => form.append('files', file, file.name));
+            const response = await service.post(
+                '/api/Senparc.Areas.Admin/FunctionFiles/upload',
+                form,
+                { customAlert: true });
+            const uploaded = response && response.data && response.data.files;
+            if (!Array.isArray(uploaded) || uploaded.length !== files.length) {
+                throw new Error('文件上传响应无效。');
+            }
+            return uploaded;
+        },
+        async handleWorkflowFileSelection(event, node, parameter) {
+            const selectedFiles = event && event.target ? event.target.files : [];
+            if (!selectedFiles.length || !node || !parameter || this.editingLocked) return;
+            this.loading = true;
+            try {
+                const uploaded = await this.uploadFunctionFiles(selectedFiles, parameter.maxFiles);
+                const references = parameter.allowMultiple ? uploaded : uploaded.slice(0, 1);
+                this.$set(node.config.parameters, parameter.name,
+                    parameter.allowMultiple
+                        ? references.map(file => file.fileId)
+                        : (references[0] ? references[0].fileId : ''));
+                if (!this.workflowFileSelections[node.id]) {
+                    this.$set(this.workflowFileSelections, node.id, {});
+                }
+                this.$set(this.workflowFileSelections[node.id], parameter.name, references);
+                this.scheduleAutoSave();
+            } catch (error) {
+                this.$notify({
+                    title: '文件上传失败',
+                    message: error && error.message ? error.message : '文件上传失败。',
+                    type: 'error'
+                });
+            } finally {
+                this.loading = false;
+                if (event && event.target) event.target.value = '';
+            }
         },
         expectedShape(parameter) {
             const systemType = String(parameter.systemType || '').toLowerCase();

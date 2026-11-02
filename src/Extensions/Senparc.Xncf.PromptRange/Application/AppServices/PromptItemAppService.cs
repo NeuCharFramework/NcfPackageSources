@@ -15,7 +15,15 @@
     修改标识：Senparc - 20260729
     修改描述：v0.17.1-preview6 加强提示词接口授权并防护插件压缩包路径
 
-    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3----------------------------------------------------------------*/
+    修改标识：Senparc - 20261102
+    修改描述：增加可复用提示词选择器的筛选、分页搜索、评分及 PromptCode 排序和正文读取接口
+
+    修改描述：v0.16.4-preview3 增强文生图重试机制并兼容 TLS1.2/TLS1.3
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 add PromptRange selector service, UI components, and tests
+
+----------------------------------------------------------------*/
 
 using System;
 using System.Collections.Generic;
@@ -63,6 +71,30 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             _promptItemService = promptItemService;
             _promptResultService = promptResultService;
             _promptResultStreamHub = promptResultStreamHub;
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public Task<AppResponseBase<List<PromptSelectorOption>>> GetSelectorOptionsAsync()
+        {
+            return this.GetResponseAsync<List<PromptSelectorOption>>(
+                async (response, logger) => await _promptItemService.GetSelectorOptionsAsync());
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public Task<AppResponseBase<PromptSelectorSearchResponse>> SearchSelectorAsync(
+            int rangeId = 0, string tactic = null, string keyword = null, int pageIndex = 1, int pageSize = 10,
+            string sortBy = "score")
+        {
+            return this.GetResponseAsync<PromptSelectorSearchResponse>(
+                async (response, logger) => await _promptItemService.SearchSelectorAsync(
+                    rangeId, tactic, keyword, pageIndex, pageSize, sortBy));
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public Task<AppResponseBase<PromptSelectorItem>> GetSelectorPromptAsync(int id)
+        {
+            return this.GetResponseAsync<PromptSelectorItem>(
+                async (response, logger) => await _promptItemService.GetSelectorPromptAsync(id));
         }
 
         /// <summary>

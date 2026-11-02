@@ -76,7 +76,9 @@ class MlxTraining:
         return loss_sum / total
 
     def memory_metrics(self):
-        return dict(gpuAllocatedBytes=self.mx.get_active_memory(), gpuPeakAllocatedBytes=self.mx.get_peak_memory())
+        return dict(gpuMemoryBytes=self.mx.get_active_memory(),
+                    gpuAllocatedBytes=self.mx.get_active_memory(),
+                    gpuPeakAllocatedBytes=self.mx.get_peak_memory())
 
     def export(self, path):
         from mlx.utils import tree_flatten
@@ -88,6 +90,20 @@ class MlxTraining:
             "lora_parameters": self.lora_parameters,
         }, indent=2).encode())
         atomic_write(path / "config.json", json.dumps(self.config, indent=2).encode())
+
+    def load_checkpoint(self, path):
+        from mlx.utils import tree_unflatten
+
+        metadata = json.loads((path / "checkpoint.json").read_text(encoding="utf-8"))
+        if metadata.get("backend") != "mlx" or not metadata.get("resumeSupported", False):
+            raise RuntimeError("Checkpoint backend is not compatible with this training request.")
+        weights = self.mx.load(str(path / "adapters.safetensors"))
+        self.model.load_weights(list(weights.items()))
+        optimizer_state = self.mx.load(str(path / "optimizer-state.safetensors"))
+        self.optimizer.state = tree_unflatten(list(optimizer_state.items()))
+        rng_state = self.mx.load(str(path / "rng-state.npz"))
+        self.mx.random.state = [rng_state[name] for name in sorted(rng_state)]
+        self.mx.eval(self.model.parameters(), self.optimizer.state)
 
     def checkpoint(self, root, step):
         from mlx.utils import tree_flatten
@@ -103,7 +119,7 @@ class MlxTraining:
         self.mx.savez(str(temporary / "rng-state.npz"),
                       **{f"state_{index}": value for index, value in enumerate(self.mx.random.state)})
         atomic_write(temporary / "checkpoint.json", json.dumps({
-            "step": step, "backend": "mlx", "resumeSupported": False,
+            "step": step, "backend": "mlx", "resumeSupported": True,
         }).encode())
         os.replace(temporary, destination)
         for old in sorted(path for path in root.iterdir() if path.is_dir() and not path.name.endswith(".tmp"))[:-2]:

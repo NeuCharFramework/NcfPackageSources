@@ -1,0 +1,44 @@
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20260926101544_Add_KnowledgeBaseRetrievalConfig.cs
+    文件功能描述：实现 Entity Framework 数据库迁移。
+
+
+    创建标识：Senparc - 20260926
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.0 支持 Add_KnowledgeBaseRetrievalConfig 数据库迁移
+
+----------------------------------------------------------------*/
+
+using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace Senparc.Xncf.KnowledgeBase.Domain.Migrations.SqlServer
+{
+    /// <inheritdoc />
+    public partial class Add_KnowledgeBaseRetrievalConfig : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<string>(
+                name: "RetrievalConfigJson",
+                table: "Senparc_KnowledgeBase_KnowledgeBase",
+                type: "nvarchar(2000)",
+                maxLength: 2000,
+                nullable: true);
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "RetrievalConfigJson",
+                table: "Senparc_KnowledgeBase_KnowledgeBase");
+        }
+    }
+}

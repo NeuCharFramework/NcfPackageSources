@@ -10,13 +10,21 @@
     修改标识：Senparc - 20261005
     修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261028
+    修改描述：多租户模式下登录确认落库前还原请求租户上下文，保证账号归属发起租户
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.24.16 微信 Claw 登录确认落库恢复请求租户上下文
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.WeixinManager.Domain.Models.DatabaseModel.Dto;
 using Senparc.Xncf.WeixinManager.Domain.Services;
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,15 +32,20 @@ namespace Senparc.Xncf.WeixinManager.WeixinClaw;
 
 public sealed class WeixinClawLoginService
 {
-    private readonly WeixinClawApi _api;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ConcurrentDictionary<string, LoginSession> _sessions = new();
 
+    // 单例服务不能直接持有 Scoped 的 WeixinClawApi（AddHttpClient<T> 注册为 Scoped），
+    // 否则 HttpClient handler 无法轮换。每次调用从独立作用域解析。
+    private WeixinClawApi CreateApi()
+    {
+        using var scope = _scopeFactory.CreateScope();
+        return scope.ServiceProvider.GetRequiredService<WeixinClawApi>();
+    }
+
     public WeixinClawLoginService(
-        WeixinClawApi api,
         IServiceScopeFactory scopeFactory)
     {
-        _api = api;
         _scopeFactory = scopeFactory;
     }
 
@@ -41,7 +54,12 @@ public sealed class WeixinClawLoginService
         string promptRangeCode,
         CancellationToken cancellationToken = default)
     {
-        var qr = await _api.GetQrCodeAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        foreach (var expired in _sessions.Where(z => DateTimeOffset.UtcNow - z.Value.StartedAt > TimeSpan.FromMinutes(10)).ToList())
+        {
+            _sessions.TryRemove(expired.Key, out _);
+        }
+
+        var qr = await CreateApi().GetQrCodeAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(qr.Qrcode) || string.IsNullOrWhiteSpace(qr.QrcodeImageContent))
         {
             throw new InvalidOperationException("微信 Claw 服务没有返回有效二维码。");
@@ -65,7 +83,9 @@ public sealed class WeixinClawLoginService
 
     public async Task<WeixinClawLoginStatus> PollAsync(
         string sessionId,
-        CancellationToken cancellationToken = default)
+        string verifyCode = null,
+        CancellationToken cancellationToken = default,
+        RequestTenantSnapshot? tenant = null)
     {
         if (!_sessions.TryGetValue(sessionId, out var session))
         {
@@ -96,8 +116,9 @@ public sealed class WeixinClawLoginService
                 return CompleteSession(session);
             }
 
-            var response = await _api.GetQrCodeStatusAsync(
+            var response = await CreateApi().GetQrCodeStatusAsync(
                 session.Qrcode,
+                verifyCode,
                 baseUrl: session.ApiBaseUrl,
                 cancellationToken: cancellationToken).ConfigureAwait(false);
             session.Status = response.Status ?? "wait";
@@ -136,6 +157,7 @@ public sealed class WeixinClawLoginService
                     Enabled = true
                 };
                 using var scope = _scopeFactory.CreateScope();
+                tenant?.Restore(scope.ServiceProvider);
                 var accountService = scope.ServiceProvider.GetRequiredService<WeixinClawAccountService>();
                 var saved = await accountService.SaveSettingsAsync(account).ConfigureAwait(false);
                 saved.SetAuthenticated(

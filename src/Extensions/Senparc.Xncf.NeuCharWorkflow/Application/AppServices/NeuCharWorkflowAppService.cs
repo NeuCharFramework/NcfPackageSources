@@ -31,9 +31,20 @@
     修改标识：Senparc - 20260915
     修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.4.4 提供工作流导入导出接口
+
+    修改标识：Senparc - 20261028
+    修改描述：vNext 启动运行时捕获请求租户快照，执行作用域恢复租户上下文
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
+
 ----------------------------------------------------------------*/
 
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Ncf.Core.Enums;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Service;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -49,6 +60,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -78,6 +90,7 @@ public sealed class NeuCharWorkflowAppService
     private readonly NeuCharWorkflowChatMessageService _chatMessageService;
     private readonly IAgentWorkflowReferenceValidator? _agentWorkflowReferenceValidator;
     private readonly ILogger<NeuCharWorkflowAppService> _logger;
+    private readonly IServiceProvider? _serviceProvider;
 
     public NeuCharWorkflowAppService(
         NeuCharWorkflowService workflowService,
@@ -94,7 +107,8 @@ public sealed class NeuCharWorkflowAppService
         NeuCharWorkflowChatSessionService chatSessionService,
         NeuCharWorkflowChatMessageService chatMessageService,
         IEnumerable<IAgentWorkflowReferenceValidator>? agentWorkflowReferenceValidators = null,
-        ILogger<NeuCharWorkflowAppService>? logger = null)
+        ILogger<NeuCharWorkflowAppService>? logger = null,
+        IServiceProvider? serviceProvider = null)
     {
         _workflowService = workflowService;
         _workflowVersionService = workflowVersionService;
@@ -111,6 +125,7 @@ public sealed class NeuCharWorkflowAppService
         _chatMessageService = chatMessageService;
         _logger = logger ?? NullLogger<NeuCharWorkflowAppService>.Instance;
         _agentWorkflowReferenceValidator = agentWorkflowReferenceValidators?.FirstOrDefault();
+        _serviceProvider = serviceProvider;
     }
 
     public async Task<IReadOnlyList<WorkflowListItem>> GetListAsync(int adminUserId, CancellationToken cancellationToken = default)
@@ -170,6 +185,195 @@ public sealed class NeuCharWorkflowAppService
                 descriptor.CatalogError);
         }).ToList();
         return new WorkflowDesignerData(functions, objects);
+    }
+
+    public async Task<WorkflowInterchangeExport> ExportAsync(
+        int workflowId,
+        int adminUserId,
+        WorkflowInterchangeFormat format,
+        CancellationToken cancellationToken = default)
+    {
+        var workflow = await GetOwnedWorkflowAsync(workflowId, adminUserId).ConfigureAwait(false)
+            ?? throw new WorkflowNotFoundException();
+        var editableGraphJson = await _workflowEngine
+            .BuildEditableGraphJsonAsync(workflow.GraphJson, cancellationToken)
+            .ConfigureAwait(false);
+        var graph = JsonSerializer.Deserialize<NeuCharWorkflowGraph>(
+            editableGraphJson,
+            DesignerJsonOptions) ?? throw new WorkflowInputException("工作流图数据无效。");
+        var definition = new NeuCharWorkflowDefinition
+        {
+            Metadata = new WorkflowDefinitionMetadata
+            {
+                Name = workflow.Name,
+                Description = workflow.Description
+            },
+            Trigger = new WorkflowDefinitionTrigger
+            {
+                Type = workflow.TriggerType,
+                Config = ParseJsonObject(workflow.TriggerConfigJson)
+            },
+            Graph = graph
+        };
+
+        RedactExportSecrets(definition);
+        var extension = format == WorkflowInterchangeFormat.Json ? "workflow.json" : "workflow.yaml";
+        return new WorkflowInterchangeExport(
+            $"{SanitizeFileName(workflow.Name)}.{extension}",
+            format == WorkflowInterchangeFormat.Json ? "application/json; charset=utf-8" : "application/yaml; charset=utf-8",
+            WorkflowInterchangeCodec.Serialize(definition, format));
+    }
+
+    public Task<WorkflowImportPreview> ValidateImportAsync(
+        string content,
+        WorkflowInterchangeFormat? format = null,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return Task.FromResult(CreateImportPreview(content, format));
+    }
+
+    public async Task<WorkflowDetail> ImportAsync(
+        string content,
+        int adminUserId,
+        WorkflowInterchangeFormat? format = null,
+        CancellationToken cancellationToken = default)
+    {
+        var preview = CreateImportPreview(content, format);
+        if (!preview.Valid || preview.Definition == null)
+        {
+            throw new WorkflowInputException(string.Join(
+                Environment.NewLine,
+                preview.Errors.Select(issue => issue.Message)));
+        }
+
+        var definition = preview.Definition;
+        return await SaveAsync(
+            new SaveWorkflowCommand(
+                0,
+                string.IsNullOrWhiteSpace(definition.Metadata.Name) ? "Imported Workflow" : definition.Metadata.Name,
+                definition.Metadata.Description,
+                JsonSerializer.Serialize(definition.Graph, DesignerJsonOptions),
+                false,
+                definition.Trigger.Type,
+                definition.Trigger.Config.ToJsonString(DesignerJsonOptions),
+                SaveSource: "import"),
+            adminUserId,
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private WorkflowImportPreview CreateImportPreview(
+        string content,
+        WorkflowInterchangeFormat? format)
+    {
+        var errors = new List<WorkflowImportIssue>();
+        try
+        {
+            var document = WorkflowInterchangeCodec.Parse(content, format);
+            var definition = document.Definition;
+            _workflowEngine.ParseAndValidateGraph(
+                JsonSerializer.Serialize(definition.Graph, DesignerJsonOptions),
+                requireAllNodesReachable: false);
+            var expectedTrigger = $"{definition.Trigger.Type}-trigger";
+            if (!definition.Graph.Nodes.Any(node =>
+                    string.Equals(node.Type, expectedTrigger, StringComparison.OrdinalIgnoreCase)))
+            {
+                errors.Add(new WorkflowImportIssue(
+                    "error",
+                    "trigger-mismatch",
+                    "Workflow 触发器配置与图中的触发器节点不一致。",
+                    "trigger.type"));
+            }
+
+            return new WorkflowImportPreview(
+                errors.Count == 0,
+                string.IsNullOrWhiteSpace(definition.Metadata.Name) ? "Imported Workflow" : definition.Metadata.Name,
+                definition.Trigger.Type,
+                errors,
+                Array.Empty<WorkflowImportIssue>(),
+                definition.Secrets,
+                definition);
+        }
+        catch (WorkflowInterchangeException ex)
+        {
+            errors.Add(new WorkflowImportIssue("error", "invalid-document", ex.Message));
+        }
+        catch (InvalidOperationException ex)
+        {
+            errors.Add(new WorkflowImportIssue("error", "invalid-graph", ex.Message, "graph"));
+        }
+
+        return new WorkflowImportPreview(
+            false,
+            "Imported Workflow",
+            "manual",
+            errors,
+            Array.Empty<WorkflowImportIssue>(),
+            Array.Empty<WorkflowSecretRequirement>());
+    }
+
+    private static JsonObject ParseJsonObject(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return new JsonObject();
+        }
+
+        return JsonNode.Parse(json) as JsonObject
+            ?? throw new WorkflowInputException("Workflow 触发器配置无效。");
+    }
+
+    private static void RedactExportSecrets(NeuCharWorkflowDefinition definition)
+    {
+        if (definition.Trigger.Type == "webhook")
+        {
+            definition.Trigger.Config["token"] = string.Empty;
+            definition.Secrets.Add(new WorkflowSecretRequirement
+            {
+                Path = "trigger.config.token",
+                Reason = "Webhook token must be configured after import."
+            });
+        }
+
+        foreach (var node in definition.Graph.Nodes.Where(node => node.Config != null))
+        {
+            RedactSecretProperties(node.Config!, $"graph.nodes[{node.Id}].config", definition.Secrets);
+        }
+    }
+
+    private static void RedactSecretProperties(
+        JsonObject config,
+        string path,
+        ICollection<WorkflowSecretRequirement> secrets)
+    {
+        foreach (var property in config.ToList())
+        {
+            if (property.Key.Contains("password", StringComparison.OrdinalIgnoreCase) ||
+                property.Key.Contains("secret", StringComparison.OrdinalIgnoreCase) ||
+                property.Key.Contains("token", StringComparison.OrdinalIgnoreCase) ||
+                property.Key.Contains("apikey", StringComparison.OrdinalIgnoreCase) ||
+                property.Key.Contains("api_key", StringComparison.OrdinalIgnoreCase) ||
+                property.Key.Equals("externalResumeKey", StringComparison.OrdinalIgnoreCase))
+            {
+                config[property.Key] = string.Empty;
+                secrets.Add(new WorkflowSecretRequirement
+                {
+                    Path = $"{path}.{property.Key}",
+                    Reason = "Sensitive value must be configured after import."
+                });
+            }
+            else if (property.Value is JsonObject child)
+            {
+                RedactSecretProperties(child, $"{path}.{property.Key}", secrets);
+            }
+        }
+    }
+
+    private static string SanitizeFileName(string name)
+    {
+        var invalid = Path.GetInvalidFileNameChars();
+        var sanitized = new string(name.Select(character => invalid.Contains(character) ? '_' : character).ToArray()).Trim();
+        return string.IsNullOrWhiteSpace(sanitized) ? "workflow" : sanitized;
     }
 
     public async Task<WorkflowDetail> SaveAsync(
@@ -368,7 +572,7 @@ public sealed class NeuCharWorkflowAppService
     public async Task<Guid> StartRunAsync(int workflowId, int adminUserId, string input, CancellationToken cancellationToken = default)
     {
         await ValidateRunAsync(workflowId, adminUserId, input, cancellationToken).ConfigureAwait(false);
-        if (!_runCoordinator.TryStart(workflowId, adminUserId, input, out var runId, out var error, "manual"))
+        if (!_runCoordinator.TryStart(workflowId, adminUserId, input, out var runId, out var error, "manual", RequestTenantSnapshot.Capture(_serviceProvider)))
         {
             throw new WorkflowConflictException(error);
         }
@@ -846,7 +1050,7 @@ public sealed class NeuCharWorkflowAppService
         }
 
         var input = JsonSerializer.Serialize(selectedValues, new JsonSerializerOptions(JsonSerializerDefaults.Web));
-        if (!_runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, input, out var runId, out var error, "webhook"))
+        if (!_runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, input, out var runId, out var error, "webhook", RequestTenantSnapshot.Capture(_serviceProvider)))
         {
             return WorkflowWebhookTriggerResult.Conflict(error);
         }
@@ -926,7 +1130,7 @@ public sealed class NeuCharWorkflowAppService
         }
         var workflow = access.Workflow!;
         _chatSessionService.AddMessage(workflowId, participantKey, NeuCharWorkflowChatSessionService.RoleUser, normalizedMessage);
-        if (!_runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, normalizedMessage, out var runId, out var error, "chat"))
+        if (!_runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, normalizedMessage, out var runId, out var error, "chat", RequestTenantSnapshot.Capture(_serviceProvider)))
         {
             return WorkflowChatSendResult.Conflict(error);
         }
@@ -1535,6 +1739,11 @@ public sealed record WorkflowDetail(
     bool Unchanged, DateTime LastUpdateTime,
     int RunningCount = 0,
     IReadOnlyList<NeuCharWorkflowObservedOutputSchema>? ObservedOutputSchemas = null);
+
+public sealed record WorkflowInterchangeExport(
+    string FileName,
+    string ContentType,
+    string Content);
 
 public sealed record WorkflowTaskListItem(
     string TaskId,

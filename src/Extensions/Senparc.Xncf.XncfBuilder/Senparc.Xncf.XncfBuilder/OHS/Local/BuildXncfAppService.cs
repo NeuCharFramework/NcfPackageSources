@@ -31,12 +31,16 @@
     修改标识：Senparc - 20260822
     修改描述：v0.41.0 优化 XncfBuilder 预览任务与工作区服务
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.41.7 XncfBuilder 预览与隔离开发任务表统一租户底层支持
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Extensions;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.XncfBase.VersionManager;
 using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
@@ -449,6 +453,7 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                         try
                         {
                             var previewService = base.ServiceProvider.GetRequiredService<IXncfPreviewService>();
+                            var ambientTenant = base.ServiceProvider.GetRequiredService<RequestTenantInfo>();
                             var previewSession = await previewService.StartAsync(
                                 new XncfPreviewStartOptions
                                 {
@@ -459,7 +464,8 @@ namespace Senparc.Xncf.XncfBuilder.OHS.Local
                                     EnvironmentName = request.PreviewEnvironmentName
                                 },
                                 message => logger.Append(message),
-                                base.CancellationToken).ConfigureAwait(false);
+                                base.CancellationToken,
+                                ambientTenant).ConfigureAwait(false);
 
                             response.Data = $"项目生成成功！请打开 {buildResult.SolutionFilePath} 解决方案文件查看已附加的项目！<br />" +
                                 BuildPreviewStartedHtml(

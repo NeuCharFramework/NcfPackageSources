@@ -68,6 +68,11 @@
                             <div class="recall-card-meta">
                                 <strong>第 {{ item.rank }} 条</strong>
                                 <el-tag size="mini" type="info">相似度 {{ formatScore(item.score) }}</el-tag>
+                                <template v-if="item.rerankMode && item.rerankMode !== 'None'">
+                                    <el-tag size="mini" type="warning">{{ item.rerankMode === 'Llm' ? 'LLM 重排' : '词法重排' }}</el-tag>
+                                    <el-tag size="mini" type="success" v-if="item.rerankScore != null">重排分 {{ formatScore(item.rerankScore) }}</el-tag>
+                                    <el-tag size="mini" v-if="item.originalRank && item.originalRank !== item.rank">原排名 #{{ item.originalRank }}</el-tag>
+                                </template>
                             </div>
                             <p class="recall-card-content">{{ item.content }}</p>
                             <div class="recall-card-source"><i class="el-icon-document"></i> 来源：{{ item.sourceName || '未提供来源名称' }}</div>
@@ -106,7 +111,7 @@
                 <p class="search-method-tip">系统将问题和资料片段转换为向量后按语义相近程度排序。不同模型和向量库的分数范围可能不同，因此不要把它当作固定百分比或召回率。</p>
             </div>
             <div class="search-settings-item">
-                <div class="search-settings-label">返回片段数量（Top K）</div>
+                <div class="search-settings-label">返回片段数量（Top K）<ncf-doc-help topic="knowledge.recall"></ncf-doc-help></div>
                 <p class="search-method-tip">先从 5 开始。结果太少可提高，结果太杂可降低；本设置只影响当前页面后续测试。</p>
                 <div class="topk-row">
                     <el-slider v-model="topK" :min="1" :max="20" :step="1" show-stops></el-slider>
@@ -119,7 +124,9 @@
 
     <el-dialog title="召回片段详情" :visible.sync="visible.paragraphDetailDialog" width="620px" @@close="paragraphDetailItem = null">
         <template v-if="paragraphDetailItem">
-            <div class="paragraph-detail-meta">第 {{ paragraphDetailItem.rank }} 条 · 相似度 {{ formatScore(paragraphDetailItem.score) }}</div>
+            <div class="paragraph-detail-meta">第 {{ paragraphDetailItem.rank }} 条 · 相似度 {{ formatScore(paragraphDetailItem.score) }}
+                <template v-if="paragraphDetailItem.rerankMode && paragraphDetailItem.rerankMode !== 'None' && paragraphDetailItem.originalRank && paragraphDetailItem.originalRank !== paragraphDetailItem.rank"> · 重排前第 {{ paragraphDetailItem.originalRank }} 条</template>
+            </div>
             <div class="paragraph-detail-source">来源：{{ paragraphDetailItem.sourceName || '未提供来源名称' }}</div>
             <div class="paragraph-detail-content">{{ paragraphDetailItem.content || '—' }}</div>
         </template>

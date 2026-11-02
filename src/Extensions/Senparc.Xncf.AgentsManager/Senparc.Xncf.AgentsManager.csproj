@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.18.3</Version>
+    <Version>0.19.1</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -18,11 +18,9 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-        [2026-10-06] Fix Agent Studio Razor partial rendering and validate the compiled page with the existing Three.js components.
-        [2026-10-06] Add interactive Agent Studio, incremental team membership, quick team creation and task management.
-		v0.1.0 创世
 		[2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
 		[2024-08-31] v0.5.0-preview1 PromptRange 支持 Markdown 输出格式展示
+		v0.1.0 创世
 		[2024-09-03] v0.5.1-preview1 PromptRange 结果提供“复制”功能
 		[2024-09-04] v0.5.2-preview1 PromptRange 完善结果显示样式，添加“复制”功能
 		[2024-09-07] v0.5.3-preview1 XncfBuilder 更新默认 Prompt
@@ -62,8 +60,8 @@
 		[2025-06-20] v0.9.13-preview Add MCP functions in XncfRegisterBase class
 		[2025-07-27] v0.9.14-preview.1 update Knowledge Base
 		[2025-09-10] v0.9.14.5-preview.1 update MCP tools inject progress
-		[2026-03-24] v0.9.18-preview.1 update Senparc.AI.Agents to v0.7.1
 		[2025-11-01] update basic libraries, including Senparc.AI
+		[2026-03-24] v0.9.18-preview.1 update Senparc.AI.Agents to v0.7.1
 		[2026-04-24] Simplify FunctionRender request parameters and keep SelectionList UI metadata compatibility
 		[2026-07-01] v0.11.0-preview2 Upgrade multi-agent group chat workflow and MAF integration
 		1、优化 ChatGroupService 的任务管理、并发处理与异常回退
@@ -173,9 +171,22 @@
 		3、MCP 模块不可用或未响应时自动降级为手动输入并给出提示
 		[2026-10-05] v0.18.1 feat: add MCP endpoint selection feature in AgentsManager
 		1、Updated Senparc.Xncf.AgentsManager project behavior and integration for the latest feature and reliability improvements.
+        [2026-10-06] Fix Agent Studio Razor partial rendering and validate the compiled page with the existing Three.js components.
+        [2026-10-06] Add interactive Agent Studio, incremental team membership, quick team creation and task management.
         [2026-10-09] v0.18.3 统一 Agent Studio 群组与提示配置并完善任务管理交互
         1、支持群组与 Prompt 配置联动、快速建组、增量成员管理和任务操作
         2、完善 Studio 页面渲染、Three.js 交互及前端状态管理
+        [2026-10-21] v0.19.0 支持 Agent Skill 绑定、执行权限与工作区策略
+        1、Agent 模板可绑定 Skill、执行权限与 Workspace 策略
+        2、接入 PromptRange Skill 插件，并在对话链路记录 Token 用量
+        3、适配 Senparc.AI.AgentKernel 0.1.15-preview2
+        [2026-11-03] v0.19.1 add CLI-generated migrations for Agent Skill bindings and Workspace policy columns.
+        1、增强 Agent Studio、聊天群组配置、任务执行和并发控制
+        2、为聊天任务及 A2A 发布恢复请求租户上下文并隔离缓存
+        3、支持 Agent 模板关联 Skill 和 Workspace 策略
+        4、Dependency update from Senparc.Xncf.AgentsManager.Abstractions to 0.3.1
+        5、Dependency update from Senparc.Xncf.MCP.Abstractions to 0.1.1
+        6、Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.3.1
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
@@ -240,6 +251,7 @@
     <ProjectReference Include="..\Senparc.Xncf.AgentsManager.Abstractions\Senparc.Xncf.AgentsManager.Abstractions.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.NeuCharWorkflow.Abstractions\Senparc.Xncf.NeuCharWorkflow.Abstractions.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.PromptRange.Abstractions\Senparc.Xncf.PromptRange.Abstractions.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj" />
     <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
   </ItemGroup>
   <ItemGroup>

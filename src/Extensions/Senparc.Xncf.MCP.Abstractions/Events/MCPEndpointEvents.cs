@@ -17,6 +17,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.1.0 0.1.0 feat: add MCP endpoint selection feature in AgentsManager
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.1.1 维护MCP Endpoint 跨模块 EventBus 契约（请求-响应 + 变更通知）
+
 ----------------------------------------------------------------*/
 
 using System;

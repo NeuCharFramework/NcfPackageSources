@@ -18,6 +18,9 @@
     修改标识：Senparc - 20260808
     修改描述：v0.4.0-preview4 注册桌面管理员换票交接相关服务
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.8 implement connection manager and workspace file system provider
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -27,6 +30,7 @@ using System.Reflection;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Shared.Abstractions.Events;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
+using Senparc.Ncf.Shared.Abstractions.Security;
 using Senparc.Ncf.XncfBase;
 using Senparc.Xncf.DesktopBridge.Services;
 
@@ -41,7 +45,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
 
     public override string Uid => ModuleUid;
 
-    public override string Version => "0.2.1-preview2";
+    public override string Version => "0.4.8";
 
     public override string MenuName => "DesktopBridge 桌面桥接";
 
@@ -68,6 +72,8 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
         services.AddSingleton<DesktopAuthorizedSyncHub>();
         services.AddSingleton<DesktopBridgeCredentialStore>();
         services.AddSingleton<DesktopBridgeTokenValidator>();
+        services.AddSingleton<IDesktopBridgeSessionValidator>(serviceProvider =>
+            serviceProvider.GetRequiredService<DesktopBridgeTokenValidator>());
         services.AddSingleton<DesktopAdminAuthHandoffStore>();
         services.AddSingleton<INeuBellProvider, DesktopBridgeNeuBellProvider>();
 

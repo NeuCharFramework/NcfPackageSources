@@ -31,12 +31,19 @@
     修改标识：Senparc - 20260915
     修改描述：v0.4.0 增强 Chat 触发器消息持久化与恢复能力
 
+    修改标识：Senparc - 20261028
+    修改描述：vNext 宿主服务定时扫描按租户迭代，触发运行时携带租户快照
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.4 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Senparc.CO2NET;
+using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Service;
 using Senparc.Ncf.Shared.Abstractions.NeuBell;
 using Senparc.Xncf.NeuCharWorkflow.Abstractions.Workflow;
@@ -3570,15 +3577,18 @@ public sealed class NeuCharWorkflowEngine
 public sealed class NeuCharWorkflowHostedService : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly IBackgroundTenantScopeFactory? _tenantScopeFactory;
     private readonly ILogger<NeuCharWorkflowHostedService> _logger;
     private static DateTime _lastChatCleanupAt = DateTime.MinValue;
 
     public NeuCharWorkflowHostedService(
         IServiceScopeFactory scopeFactory,
-        ILogger<NeuCharWorkflowHostedService> logger)
+        ILogger<NeuCharWorkflowHostedService> logger,
+        IBackgroundTenantScopeFactory? tenantScopeFactory = null)
     {
         _scopeFactory = scopeFactory;
         _logger = logger;
+        _tenantScopeFactory = tenantScopeFactory;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -3588,28 +3598,17 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
         {
             try
             {
-                using var scope = _scopeFactory.CreateScope();
-                var moduleService = scope.ServiceProvider.GetRequiredService<XncfModuleService>();
-                var module = await moduleService.GetObjectAsync(z => z.Uid == new Register().Uid).ConfigureAwait(false);
-                if (module?.State != XncfModules_State.开放)
+                if (_tenantScopeFactory != null)
                 {
+                    // 工作流、Chat 消息与执行日志均挂在租户下，定时扫描必须按租户迭代，
+                    // 否则根作用域缺少租户上下文（多租户模式下 fail-closed 或写入错误租户）。
+                    await _tenantScopeFactory.ForEachEnabledTenantAsync(
+                        (scopeServiceProvider, _) => ScanIntervalWorkflowsAsync(scopeServiceProvider),
+                        stoppingToken).ConfigureAwait(false);
                     continue;
                 }
-                var workflowService = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowService>();
-                var runCoordinator = scope.ServiceProvider.GetRequiredService<NeuCharWorkflowRunCoordinator>();
-                await CleanupExpiredChatMessagesAsync(scope.ServiceProvider).ConfigureAwait(false);
-                var now = DateTime.UtcNow;
-                var workflows = await workflowService.GetFullListAsync(
-                    z => z.Enabled && z.TriggerType == "interval" && z.NextRunAt != null && z.NextRunAt <= now,
-                    z => z.NextRunAt,
-                    OrderingType.Ascending).ConfigureAwait(false);
-                foreach (var workflow in workflows.Take(10))
-                {
-                    if (!runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, string.Empty, out _, out var error, "interval"))
-                    {
-                        _logger.LogDebug("跳过已在运行的定时 Workflow：WorkflowId={WorkflowId}，原因：{Error}", workflow.Id, error);
-                    }
-                }
+                using var scope = _scopeFactory.CreateScope();
+                await ScanIntervalWorkflowsAsync(scope.ServiceProvider).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
             {
@@ -3618,6 +3617,36 @@ public sealed class NeuCharWorkflowHostedService : BackgroundService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "扫描 NeuChar Workflow 失败，将在下一个周期重试。");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 在指定（租户）作用域内执行一次定时扫描：模块开关校验、过期消息清理与定时 Workflow 触发。
+    /// </summary>
+    private async Task ScanIntervalWorkflowsAsync(IServiceProvider scopeServiceProvider)
+    {
+        var moduleService = scopeServiceProvider.GetRequiredService<XncfModuleService>();
+        var module = await moduleService.GetObjectAsync(z => z.Uid == new Register().Uid).ConfigureAwait(false);
+        if (module?.State != XncfModules_State.开放)
+        {
+            return;
+        }
+        var workflowService = scopeServiceProvider.GetRequiredService<NeuCharWorkflowService>();
+        var runCoordinator = scopeServiceProvider.GetRequiredService<NeuCharWorkflowRunCoordinator>();
+        await CleanupExpiredChatMessagesAsync(scopeServiceProvider).ConfigureAwait(false);
+        var now = DateTime.UtcNow;
+        var workflows = await workflowService.GetFullListAsync(
+            z => z.Enabled && z.TriggerType == "interval" && z.NextRunAt != null && z.NextRunAt <= now,
+            z => z.NextRunAt,
+            OrderingType.Ascending).ConfigureAwait(false);
+        foreach (var workflow in workflows.Take(10))
+        {
+            // 携带当前租户快照，使运行执行作用域（TryStart 之后立即创建）保持在同一租户内。
+            var tenant = RequestTenantSnapshot.From(scopeServiceProvider.GetRequiredService<RequestTenantInfo>());
+            if (!runCoordinator.TryStart(workflow.Id, workflow.AdminUserId, string.Empty, out _, out var error, "interval", tenant))
+            {
+                _logger.LogDebug("跳过已在运行的定时 Workflow：WorkflowId={WorkflowId}，原因：{Error}", workflow.Id, error);
             }
         }
     }

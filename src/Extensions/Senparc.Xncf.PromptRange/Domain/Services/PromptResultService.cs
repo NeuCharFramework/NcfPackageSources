@@ -28,6 +28,12 @@
     修改标识：Senparc - 20260822
     修改描述：v0.19.3 增强 PromptRange 流式结果处理兼容性
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.20.0 结果记录附带 Skill 执行策略
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -310,10 +316,14 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 resultMode,
                 isChatMode ? systemMessage : null); // 只在聊天模式时保存 SystemMessage
 
-            await base.SaveObjectAsync(promptResult);
+            if (executionOptions?.PersistResult != false)
+            {
+                await base.SaveObjectAsync(promptResult);
+            }
 
             // 如果是聊天模式，保存对话记录
-            if (isChatMode && !string.IsNullOrWhiteSpace(normalizedUserMessage) && !string.IsNullOrWhiteSpace(aiOutput))
+            if (executionOptions?.PersistResult != false &&
+                isChatMode && !string.IsNullOrWhiteSpace(normalizedUserMessage) && !string.IsNullOrWhiteSpace(aiOutput))
             {
                 var chatMessages = new List<ChatMessageDto>();
 
@@ -331,7 +341,8 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
             }
 
             // 有期望结果， 进行自动打分
-            if (promptItem.isAIGrade && !string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
+            if (executionOptions?.PersistResult != false &&
+                promptItem.isAIGrade && !string.IsNullOrWhiteSpace(promptItem.ExpectedResultsJson))
             {
                 await this.RobotScoringAsync(promptResult.Id, false, promptItem.ExpectedResultsJson);
             }
@@ -341,7 +352,7 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 onStreamEvent(new PromptResultStreamEvent
                 {
                     EventType = "final",
-                    PromptResultId = promptResult.Id,
+                    PromptResultId = executionOptions?.PersistResult == false ? null : promptResult.Id,
                     Text = aiOutput,
                     IsFinal = true,
                     PromptTokens = promptCostToken,
@@ -351,7 +362,13 @@ namespace Senparc.Xncf.PromptRange.Domain.Services
                 });
             }
 
-            return this.Mapper.Map<PromptResultDto>(promptResult);
+            var response = this.Mapper.Map<PromptResultDto>(promptResult);
+            if (executionOptions?.PersistResult == false)
+            {
+                response.Id = 0;
+            }
+
+            return response;
         }
 
         private async Task<PromptResultDto> ExecuteTextToImageAsync(
@@ -1793,7 +1810,7 @@ Apple
             return true;
         }
 
-        private static async Task<(string Output, UsageDetails Usage)> RunChatAndExtractAsync(
+        private async Task<(string Output, UsageDetails Usage)> RunChatAndExtractAsync(
             IWantToRun iWantToRun,
             string prompt,
             AgentSession agentSession,
@@ -1830,7 +1847,13 @@ Apple
             SenparcKernelAiResult<string> aiResult;
             try
             {
-                aiResult = await iWantToRun.RunChatAsync(prompt, agentSession, HandleStreamUpdate);
+                aiResult = await _aiModelService.Value.RunChatWithUsageAsync(
+                    iWantToRun,
+                    prompt,
+                    agentSession,
+                    HandleStreamUpdate,
+                    model,
+                    $"PromptRange.{scene}");
             }
             catch (NcfExceptionBase)
             {
@@ -1845,7 +1868,13 @@ Apple
                     {
                         streamedText.Clear();
                         SenparcTrace.SendCustomLog("PromptRange.AI.Retry", $"{scene} 流式调用失败，尝试移除 AgentSession 后重试。");
-                        aiResult = await iWantToRun.RunChatAsync(prompt, null, HandleStreamUpdate);
+                        aiResult = await _aiModelService.Value.RunChatWithUsageAsync(
+                            iWantToRun,
+                            prompt,
+                            null,
+                            HandleStreamUpdate,
+                            model,
+                            $"PromptRange.{scene}");
                     }
                     catch (Exception retryEx)
                     {
@@ -1904,7 +1933,7 @@ Apple
                 : output ?? string.Empty;
         }
 
-        private static async Task<(string Output, UsageDetails Usage)> RunChatDirectAsync(
+        private async Task<(string Output, UsageDetails Usage)> RunChatDirectAsync(
             IWantToRun iWantToRun,
             string prompt,
             AgentSession agentSession,
@@ -1913,7 +1942,12 @@ Apple
         {
             try
             {
-                var aiResult = await iWantToRun.RunChatAsync(prompt, agentSession);
+                var aiResult = await _aiModelService.Value.RunChatWithUsageAsync(
+                    iWantToRun,
+                    prompt,
+                    agentSession,
+                    model: model,
+                    source: $"PromptRange.{scene}");
                 EnsureRunChatSucceeded(aiResult, model, scene);
                 return (aiResult.OutputString ?? string.Empty, aiResult.Result?.Usage);
             }
@@ -1928,7 +1962,12 @@ Apple
                     try
                     {
                         SenparcTrace.SendCustomLog("PromptRange.AI.Retry", $"{scene} 非流式调用失败，尝试移除 AgentSession 后重试。");
-                        var retryResult = await iWantToRun.RunChatAsync(prompt, null);
+                        var retryResult = await _aiModelService.Value.RunChatWithUsageAsync(
+                            iWantToRun,
+                            prompt,
+                            null,
+                            model: model,
+                            source: $"PromptRange.{scene}");
                         EnsureRunChatSucceeded(retryResult, model, scene);
                         return (retryResult.OutputString ?? string.Empty, retryResult.Result?.Usage);
                     }

@@ -13,6 +13,12 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20261021
+    修改描述：v0.19.0 提示词优化回退时记录 Token 用量
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;
@@ -159,7 +165,11 @@ Suggested defaults: temperature {{$defTemp}}, topP {{$defTopP}}, maxTokens {{$de
                 aiRequest.RequestContent = aiRequest.ReplacePrompt();//替换参数
 
                 _logger.LogInformation("Kernel fallback: invoking model for RequestId={RequestId}", request.RequestId);
-                var runResult = await iWantToRun.RunChatAsync(aiRequest).ConfigureAwait(false);
+                var runResult = await _aiModelService.Value.RunChatWithUsageAsync(
+                    iWantToRun,
+                    aiRequest,
+                    model: aiModelDto,
+                    source: "AgentsManager.PromptOptimizationFallback").ConfigureAwait(false);
                 var raw = runResult.OutputString?.Trim();
                 if (string.IsNullOrEmpty(raw))
                 {

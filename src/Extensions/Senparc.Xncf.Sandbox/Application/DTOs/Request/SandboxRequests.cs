@@ -23,6 +23,15 @@
     修改标识：Senparc - 20261005
     修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261018
+    修改描述：避免创建请求或 Notebook 请求缺少协议字段时静默回退到 Python
+
+    修改标识：Senparc - 20261021
+    修改描述：v0.3.5 创建和 Notebook 请求不再默认 Python
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.0 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;
@@ -33,6 +42,7 @@ using Senparc.Ncf.XncfBase.FunctionRenders;
 using Senparc.Ncf.XncfBase.Functions;
 using Senparc.Xncf.Sandbox.Abstractions;
 using Senparc.Xncf.Sandbox.Domain.Services;
+using Senparc.Ncf.XncfBase.Functions.Files;
 
 namespace Senparc.Xncf.Sandbox.Application.DTOs.Request;
 
@@ -41,7 +51,7 @@ public class Sandbox_CreateRequest : FunctionAppRequestBase
     [Required]
     [Description("模板||选择沙箱模板（下拉一项即可）")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(TemplateOptions))]
-    public string TemplateKey { get; set; } = SandboxTemplateKeys.PythonExec;
+    public string TemplateKey { get; set; } = string.Empty;
 
     /// <summary>
     /// 下拉数据源：只读 + JsonIgnore，避免前端 JSON 反序列化 SelectionList 失败。
@@ -146,6 +156,26 @@ public class Sandbox_LabUploadFileRequest : FunctionAppRequestBase
     public bool Overwrite { get; set; } = true;
 }
 
+public class Sandbox_LabUploadFilesRequest : FunctionAppRequestBase
+{
+    [Required]
+    [MaxLength(64)]
+    [Description("SessionId||必须是运行中的 JupyterLab 会话")]
+    public string SessionId { get; set; } = string.Empty;
+
+    [MaxLength(512)]
+    [Description("工作区目录||文件将以原始文件名写入该目录，留空表示工作区根目录")]
+    public string RelativeDirectory { get; set; } = string.Empty;
+
+    [Required]
+    [FunctionParameterUi(ParameterType.File, AllowMultiple = true, MaxFiles = 16)]
+    [Description("文件||可一次上传多个文件；文件内容通过安全文件引用传递")]
+    public FunctionFileReference[] Files { get; set; } = Array.Empty<FunctionFileReference>();
+
+    [Description("覆盖已有文件||关闭后，目标文件存在时操作失败")]
+    public bool Overwrite { get; set; } = true;
+}
+
 public class Sandbox_LabFileRequest : FunctionAppRequestBase
 {
     [Required]
@@ -195,7 +225,7 @@ public class Sandbox_LabCreateNotebookRequest : FunctionAppRequestBase
     [Required]
     [Description("内核语言||python 使用 Python 3 内核；csharp 使用 dotnet-interactive C# .NET SDK 内核")]
     [FunctionParameterUi(ParameterType.DropDownList, nameof(LanguageOptions))]
-    public string Language { get; set; } = "python";
+    public string Language { get; set; } = string.Empty;
 
     [JsonIgnore]
     [Newtonsoft.Json.JsonIgnore]

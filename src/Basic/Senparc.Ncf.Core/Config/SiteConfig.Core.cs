@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260729
     修改描述：v0.26.0-preview3 修复安装状态写入并统一授权策略名称
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.30.3-preview9 维护SiteConfig.Core 相关实现
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;

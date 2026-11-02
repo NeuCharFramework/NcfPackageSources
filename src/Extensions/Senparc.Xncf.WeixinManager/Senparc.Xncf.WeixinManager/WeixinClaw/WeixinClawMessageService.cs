@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.24.9 0.24.9 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.24.16 add comprehensive tests for MCP endpoint management and background tenant scope
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
@@ -73,7 +76,7 @@ public sealed class WeixinClawMessageService : IWeixinClawMessageSender
         var account = await _accountService.GetObjectAsync(z => z.Id == accountId).ConfigureAwait(false);
         if (account == null)
         {
-            throw new InvalidOperationException("个人微信账号不存在或已删除。");
+            throw new InvalidOperationException($"个人微信账号不存在或已删除：{accountId}");
         }
 
         var token = _accountService.UnprotectToken(account);

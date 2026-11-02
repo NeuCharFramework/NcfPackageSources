@@ -4,7 +4,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 IDENTIFIER = re.compile(r"[a-zA-Z0-9][a-zA-Z0-9_.-]{0,127}\Z")
-MAX_DATASET_BYTES = 2 * 1024 * 1024
+MAX_DATASET_BYTES = 512 * 1024 * 1024
+MAX_DATASET_ROWS = 1_000_000
 OFFLINE_ENV = {
     "HF_HUB_OFFLINE": "1",
     "TRANSFORMERS_OFFLINE": "1",
@@ -66,6 +67,8 @@ class Settings:
     min_free_bytes: int = 1024**3
     max_datasets: int = 1000
     max_jobs: int = 1000
+    max_dataset_bytes: int = MAX_DATASET_BYTES
+    max_dataset_rows: int = MAX_DATASET_ROWS
 
     @classmethod
     def from_env(cls):
@@ -93,7 +96,51 @@ class Settings:
             min_free_bytes=env_int("NCF_MIN_FREE_BYTES", 1024**3, 1024**2, 1024**4),
             max_datasets=env_int("NCF_MAX_DATASETS", 1000, 1, 100000),
             max_jobs=env_int("NCF_MAX_JOBS", 1000, 1, 100000),
+            max_dataset_bytes=env_int("NCF_MAX_DATASET_BYTES", MAX_DATASET_BYTES, 2 * 1024 * 1024, 4 * 1024**3),
+            max_dataset_rows=env_int("NCF_MAX_DATASET_ROWS", MAX_DATASET_ROWS, 2, 10_000_000),
         )
+
+
+def python_header_roots():
+    roots = []
+    configured = os.environ.get("NCF_PYTHON_HEADERS", "").strip()
+    if configured:
+        roots.append(Path(configured))
+    roots.append(Path.home() / ".local" / "share" / "ncf" / "python-headers")
+    roots.append(Path(__file__).resolve().parent.parent / ".python-headers")
+    return roots
+
+
+def python_dev_include_paths(system_include, version, roots):
+    """Extra C include dirs when this interpreter has no Python.h.
+
+    The first CUDA step compiles Triton's NVIDIA driver, which includes
+    Python.h and the multiarch pyconfig.h next to it. A virtualenv does not
+    ship those headers.
+    """
+    system_include = Path(system_include)
+    if (system_include / "Python.h").is_file():
+        return []
+    for root in roots:
+        root = Path(root)
+        headers = root / version
+        if (headers / "Python.h").is_file():
+            return [str(headers), str(root)]
+    return []
+
+
+def cuda_python_headers_available():
+    import sys
+    import sysconfig
+
+    include = Path(sysconfig.get_path("include"))
+    version = f"python{sys.version_info.major}.{sys.version_info.minor}"
+    if (include / "Python.h").is_file():
+        return True
+    extra = python_dev_include_paths(include, version, python_header_roots())
+    current = os.environ.get("C_INCLUDE_PATH", "")
+    searched = extra + ([part for part in current.split(os.pathsep) if part] if current else [])
+    return any((Path(path) / "Python.h").is_file() for path in searched)
 
 
 def env_int(name, default, minimum, maximum):
