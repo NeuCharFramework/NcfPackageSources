@@ -15,6 +15,7 @@
 #nullable enable
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Senparc.Xncf.AIKernel.Domain.Models.ModelPreparation;
 
 namespace Senparc.Xncf.AIKernel.Domain.Services;

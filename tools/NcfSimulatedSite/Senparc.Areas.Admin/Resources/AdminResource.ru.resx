@@ -610,4 +610,13 @@
     <value>Нет меню или страниц для сортировки</value>
   </data>
   <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>Настройки WebHook</value></data>
+  <data name="DocHelp.Help" xml:space="preserve"><value>Справка</value></data>
+  <data name="DocHelp.Title" xml:space="preserve"><value>Документация функции</value></data>
+  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>Открыть в новом окне</value></data>
+  <data name="DocHelp.Close" xml:space="preserve"><value>Закрыть</value></data>
+  <data name="DocHelp.Loading" xml:space="preserve"><value>Загрузка документации...</value></data>
+  <data name="DocHelp.Notice" xml:space="preserve"><value>Если документ пуст или заблокирован, откройте его в новом окне.</value></data>
+  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>Ошибка загрузки или истекло время ожидания. Повторите попытку или откройте новое окно.</value></data>
+  <data name="DocHelp.Retry" xml:space="preserve"><value>Повторить</value></data>
+  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>Неверная настройка документации. Обратитесь к администратору.</value></data>
 </root>

@@ -610,4 +610,13 @@
     <value>Aucun menu ou page à trier</value>
   </data>
   <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>Paramètres WebHook</value></data>
+  <data name="DocHelp.Help" xml:space="preserve"><value>Aide</value></data>
+  <data name="DocHelp.Title" xml:space="preserve"><value>Documentation de la fonctionnalité</value></data>
+  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>Ouvrir dans une nouvelle fenêtre</value></data>
+  <data name="DocHelp.Close" xml:space="preserve"><value>Fermer</value></data>
+  <data name="DocHelp.Loading" xml:space="preserve"><value>Chargement de la documentation...</value></data>
+  <data name="DocHelp.Notice" xml:space="preserve"><value>Si le document est vide ou bloqué, ouvrez-le dans une nouvelle fenêtre.</value></data>
+  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>Échec ou délai de chargement dépassé. Réessayez ou ouvrez une nouvelle fenêtre.</value></data>
+  <data name="DocHelp.Retry" xml:space="preserve"><value>Réessayer</value></data>
+  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>La configuration de la documentation est invalide. Contactez votre administrateur.</value></data>
 </root>

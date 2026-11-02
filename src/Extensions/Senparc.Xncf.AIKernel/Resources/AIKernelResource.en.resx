@@ -811,7 +811,6 @@
   <data name="FineTuning.ModelSearchPlaceholder" xml:space="preserve"><value>Search the configured provider catalog</value></data>
   <data name="FineTuning.ModelSearchUnavailable" xml:space="preserve"><value>Model search unavailable</value></data>
   <data name="FineTuning.ModelSearchEmpty" xml:space="preserve"><value>No allowlisted models matched the search.</value></data>
-  <data name="FineTuning.SelectModel" xml:space="preserve"><value>Select</value></data>
   <data name="FineTuning.Description" xml:space="preserve"><value>Description</value></data>
   <data name="FineTuning.Action" xml:space="preserve"><value>Action</value></data>
   <data name="FineTuning.ModelReady" xml:space="preserve"><value>Model is ready</value></data>

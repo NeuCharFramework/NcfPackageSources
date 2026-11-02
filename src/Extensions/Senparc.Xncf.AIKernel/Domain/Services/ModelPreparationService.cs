@@ -21,6 +21,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -77,7 +78,7 @@ public sealed class ModelPreparationService : IModelPreparationService
             .Replace("{query}", Uri.EscapeDataString(request.Query), StringComparison.Ordinal)
             .Replace("{limit}", request.Limit.ToString(System.Globalization.CultureInfo.InvariantCulture), StringComparison.Ordinal);
         var uri = BuildProviderUri(provider, "", "", "", searchTemplate);
-        using var response = await _http.GetAsync(new Uri(uri, UriKind.Absolute),
+        using var response = await _http.GetAsync(uri,
             HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         response.EnsureSuccessStatusCode();
         if (response.Content.Headers.ContentLength is > MaxSearchBytes)
@@ -127,7 +128,8 @@ public sealed class ModelPreparationService : IModelPreparationService
         {
             cancellationToken.ThrowIfCancellationRequested();
             var destination = ResolveChild(validated.TargetDirectory, file.Path);
-            if (File.Exists(destination) && new FileInfo(destination).Length == file.Size)
+            if (File.Exists(destination) && new FileInfo(destination).Length == file.Size &&
+                await MatchesHashAsync(destination, file.Sha256, cancellationToken))
                 continue;
 
             Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
@@ -146,6 +148,8 @@ public sealed class ModelPreparationService : IModelPreparationService
                 await using var output = new FileStream(temporary, FileMode.Create, FileAccess.Write,
                     FileShare.None, 128 * 1024, FileOptions.SequentialScan);
                 await CopyWithLimitAsync(input, output, file.Size, cancellationToken);
+                if (!await MatchesHashAsync(temporary, file.Sha256, cancellationToken))
+                    throw new NcfExceptionBase($"Model file hash mismatch for '{file.Path}'.");
                 File.Move(temporary, destination, true);
             }
             finally
@@ -221,7 +225,9 @@ public sealed class ModelPreparationService : IModelPreparationService
     {
         if (string.IsNullOrWhiteSpace(file.Path) || file.Path.StartsWith("/", StringComparison.Ordinal) ||
             file.Path.Contains('\\') || file.Path.Split('/').Any(part => part is "" or "." or "..") ||
-            file.Size < 0 || file.Size > _options.MaxFileBytes)
+            file.Size < 0 || file.Size > _options.MaxFileBytes ||
+            (_options.RequireFileHashes && string.IsNullOrWhiteSpace(file.Sha256)) ||
+            (file.Sha256 is not null && !System.Text.RegularExpressions.Regex.IsMatch(file.Sha256, "^[a-fA-F0-9]{64}$")))
             throw new NcfExceptionBase("The model manifest contains an unsafe file path or size.");
         return file;
     }
@@ -259,8 +265,19 @@ public sealed class ModelPreparationService : IModelPreparationService
                 throw new NcfExceptionBase("The downloaded model file exceeds its manifest size.");
             await output.WriteAsync(buffer.AsMemory(0, read), cancellationToken);
         }
+
         if (total != expected)
             throw new NcfExceptionBase("The downloaded model file is incomplete.");
+    }
+
+    private static async Task<bool> MatchesHashAsync(string path, string? expected,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(expected))
+            return true;
+        await using var stream = File.OpenRead(path);
+        var actual = await SHA256.HashDataAsync(stream, cancellationToken);
+        return Convert.ToHexString(actual).Equals(expected, StringComparison.OrdinalIgnoreCase);
     }
 
     private static string ResolveChild(string root, string relative)
@@ -322,7 +339,7 @@ public sealed class ModelPreparationService : IModelPreparationService
     private sealed record PreparedRequest(string Provider, string Model, string Revision,
         string TargetDirectory, ModelProviderOptions ProviderOptions);
     private sealed record ModelManifest(List<ModelManifestFile> Files);
-    private sealed record ModelManifestFile(string Path, long Size);
+    private sealed record ModelManifestFile(string Path, long Size, string? Sha256 = null);
 
     private sealed class LimitedReadStream(Stream inner, long limit) : Stream
     {

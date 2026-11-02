@@ -658,4 +658,13 @@
   <data name="PromptSelector.AverageScore" xml:space="preserve"><value>Average score</value></data>
   <data name="PromptSelector.MaxScore" xml:space="preserve"><value>Highest score</value></data>
   <data name="PromptSelector.Unrated" xml:space="preserve"><value>Not rated</value></data>
+  <data name="DocHelp.Help" xml:space="preserve"><value>Help</value></data>
+  <data name="DocHelp.Title" xml:space="preserve"><value>Feature documentation</value></data>
+  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>Open in new window</value></data>
+  <data name="DocHelp.Close" xml:space="preserve"><value>Close</value></data>
+  <data name="DocHelp.Loading" xml:space="preserve"><value>Loading documentation...</value></data>
+  <data name="DocHelp.Notice" xml:space="preserve"><value>If the document is blank or blocked, open it in a new window.</value></data>
+  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>Document loading failed or timed out. Retry or open in a new window.</value></data>
+  <data name="DocHelp.Retry" xml:space="preserve"><value>Retry</value></data>
+  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>The documentation index is invalid. Please contact your administrator.</value></data>
 </root>

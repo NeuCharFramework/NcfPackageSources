@@ -26,6 +26,7 @@ namespace Senparc.Areas.Admin.OHS.Local.Controllers;
 public sealed class AdminChatWorkspaceAssetsController : ControllerBase
 {
     private static readonly SemaphoreSlim DownloadSlots = new(2, 2);
+    private const long LargeAttachmentTransportLimit = 320L * 1024 * 1024;
     private readonly AdminChatWorkspaceAssetService _assets;
     private readonly WorkspaceAssetShareStore _shares;
     private readonly ILogger<AdminChatWorkspaceAssetsController> _logger;
@@ -58,9 +59,11 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
             var attachments = HttpContext.RequestServices.GetRequiredService<AdminChatAttachmentService>();
             return Ok(new
             {
-                maxFileBytes = attachments.UploadLimit, maxFiles = AdminChatAttachmentService.MaxAttachments,
+                maxFileBytes = attachments.LargeUploadLimit,
+                inlineParseMaxFileBytes = attachments.UploadLimit,
+                maxFiles = AdminChatAttachmentService.MaxAttachments,
                 extensions = AdminChatAttachmentService.AllowedExtensions,
-                notice = "本地解析不调用 AI。旧版 Office 仅保存；扫描 PDF 不自动 OCR。视觉处理需要用户勾选并使用支持图片的模型。"
+                notice = "小文件可本地解析；超过本地解析限制的文件会流式保存到 Workspace，不读取全文。请使用 Workspace/Python 分批处理，不会自动把大文件发送给 AI。"
             });
         });
 
@@ -74,6 +77,19 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
             var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
             var attachment = await HttpContext.RequestServices.GetRequiredService<AdminChatAttachmentService>()
                 .UploadAsync(session, file, visionPreview, cancellationToken);
+            return Ok(new { attachment });
+        });
+
+    [HttpPost("{sessionId:int}/attachments/large")]
+    [RequestSizeLimit(LargeAttachmentTransportLimit)]
+    [RequestFormLimits(MultipartBodyLengthLimit = LargeAttachmentTransportLimit)]
+    public Task<IActionResult> UploadLargeAttachment(int sessionId, IFormFile file,
+        CancellationToken cancellationToken) =>
+        ExecuteAsync(async () =>
+        {
+            var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            var attachment = await HttpContext.RequestServices.GetRequiredService<AdminChatAttachmentService>()
+                .UploadLargeAsync(session, file, cancellationToken);
             return Ok(new { attachment });
         });
 

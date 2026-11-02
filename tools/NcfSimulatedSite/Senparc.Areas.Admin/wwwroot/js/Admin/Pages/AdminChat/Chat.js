@@ -88,7 +88,10 @@
       if (!this.canUploadWorkspaceFiles) return '先选择或创建 Workspace，再上传资料';
       const size = this.workspaceUploadCapabilities
         ? ` · 单文件最大 ${this.formatWorkspaceFileSize(this.workspaceUploadCapabilities.maxFileBytes)}` : '';
-      return `上传 / 拖放 / 粘贴资料到 Workspace（最多 4 个）${size}。本地解析不调用 AI；图片只有勾选“视觉”才发送给模型。`;
+      const parseLimit = this.workspaceUploadCapabilities
+        ? `超过 ${this.formatWorkspaceFileSize(this.workspaceUploadCapabilities.inlineParseMaxFileBytes)} 的文件将保存后由 Workspace/Python 分批处理`
+        : '大文件将保存后由 Workspace/Python 分批处理';
+      return `上传 / 拖放 / 粘贴资料到 Workspace（最多 4 个）${size}。${parseLimit}，不会自动把全文发送给模型。`;
     },
     workspaceExternalPreviewUrl() {
       return this.workspaceAssetsUrl('preview') + '?path=' + encodeURIComponent(this.workspacePreviewFilePath);
@@ -277,6 +280,7 @@
           throw new Error('无法取得附件大小限制，未开始上传。');
         }
         this.workspaceUploadCapabilities = capabilities.data;
+        const inlineParseMaxFileBytes = Number(capabilities.data.inlineParseMaxFileBytes);
         for (const file of files) {
           let localPreviewUrl = '';
           try {
@@ -287,7 +291,9 @@
             if (!capabilities.data.extensions.includes(extension)) throw new Error(`${file.name}：不支持此文件类型。`);
             const form = new FormData();
             form.append('file', file, file.name);
-            if (['.png', '.jpg', '.jpeg', '.webp'].includes(extension)) {
+            const isLargeUpload = Number.isFinite(inlineParseMaxFileBytes)
+              && file.size > inlineParseMaxFileBytes;
+            if (!isLargeUpload && ['.png', '.jpg', '.jpeg', '.webp'].includes(extension)) {
               try {
                 const preview = await this.prepareVisionPreview(file);
                 form.append('visionPreview', preview, 'vision.jpg');
@@ -297,7 +303,11 @@
                 this.$message.warning(`${file.name}：${error.message} 仍会保存原文件，但不能启用视觉。`);
               }
             }
-            const response = await service.post(this.workspaceAssetsUrl('attachments'), form, { customAlert: true });
+            const uploadAction = isLargeUpload ? 'attachments/large' : 'attachments';
+            const response = await service.post(this.workspaceAssetsUrl(uploadAction), form, {
+              customAlert: true,
+              timeout: isLargeUpload ? 0 : undefined
+            });
             if (!response.data || !response.data.attachment) throw new Error(`${file.name}：上传响应无效。`);
             this.pendingAttachments.push({ ...response.data.attachment, useVision: false, localPreviewUrl });
           } catch (error) {

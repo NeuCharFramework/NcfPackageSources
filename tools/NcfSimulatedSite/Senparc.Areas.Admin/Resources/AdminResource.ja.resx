@@ -610,4 +610,13 @@
     <value>並べ替え可能なメニューやページがありません</value>
   </data>
   <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>WebHook 設定</value></data>
+  <data name="DocHelp.Help" xml:space="preserve"><value>ヘルプ</value></data>
+  <data name="DocHelp.Title" xml:space="preserve"><value>機能ドキュメント</value></data>
+  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>新しいウィンドウで開く</value></data>
+  <data name="DocHelp.Close" xml:space="preserve"><value>閉じる</value></data>
+  <data name="DocHelp.Loading" xml:space="preserve"><value>ドキュメントを読み込み中...</value></data>
+  <data name="DocHelp.Notice" xml:space="preserve"><value>表示されない場合は、新しいウィンドウで開いてください。</value></data>
+  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>読み込みに失敗したか、タイムアウトしました。再試行するか、新しいウィンドウで開いてください。</value></data>
+  <data name="DocHelp.Retry" xml:space="preserve"><value>再試行</value></data>
+  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>ドキュメントの設定が無効です。管理者にお問い合わせください。</value></data>
 </root>

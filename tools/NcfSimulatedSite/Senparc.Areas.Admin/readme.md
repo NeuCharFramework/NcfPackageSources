@@ -4,6 +4,92 @@
 
 如果你狠狠心，也可以将此模块删除，这不会影响系统的正常运行，只不过你无法再进入管理后台。当然对黑客来说也一样。
 
+## 上下文文档帮助（试点）
+
+Vue 公共布局在顶部语言/账号区域提供问号帮助图标，默认在独立的 Element UI 弹窗中加载
+`https://doc.ncf.pub`，也可在新窗口打开当前选定的文档。弹窗按需创建、全页共享，
+关闭后移除 iframe 并恢复入口焦点，不请求后台业务 API，不影响相邻按钮的业务行为。
+
+- 文档语言只读取当前页面的 `html[lang]`（来自 `CurrentUICulture`）：`zh` 及 `zh-*`
+  使用 `/zh/`，英语、日语、法语、西班牙语、俄语及其他语言使用英文根目录，**不是 `/en/`**。
+  切换系统语言后的页面会自动使用对应文档；帮助控件自身使用现有七套 Admin 资源。
+- 当前固定入口仅开放：首页、模块管理、MCP 首页；模块管理的“切换发布状态”按钮旁
+  增加章节级入口。其他页面不会被默认导向不相关的通用文档。
+- iframe 等待 15 秒后显示超时提示，支持重试；新窗口入口始终可用。跨域 iframe 的
+  `load` 事件不能证明 HTTP 成功或识别所有 CSP/X-Frame-Options 阻止，因此始终保留空白/
+  被阻止时的提示，不把 `load` 当作成功验证，也不代理文档或绕过文档站安全策略。
+  新窗口打开的是选定索引的文档，不跟踪 iframe 内后续跨域导航。
+
+### 最少接入代码
+
+文档及双语章节索引集中维护在
+[`NcfDocHelpCatalog.js`](wwwroot/js/Admin/Shared/NcfDocHelpCatalog.js)。
+`topics` 中的 `path` 不含域名、语言前缀、查询参数或锚点；有章节时同时配置
+`anchors.zh` 和 `anchors.en`。组件统一编码锚点、限制目标域名，并显式报告无效索引。
+
+使用公共布局的页面，在 `pages` 添加路径到主题键的映射即可，**页面无需新增代码**。
+Razor 的目录路由和 `/Index` 路由需分别登记；查询参数不会参与匹配，也不会发送到文档站。
+也可以在页面的 Razor 配置块中覆盖顶部主题：
+
+```cshtml
+ViewData["DocHelp"] = "modules.manage";
+```
+
+在按钮、字段或标题旁放一个独立入口，只需：
+
+```html
+<ncf-doc-help topic="modules.publish"></ncf-doc-help>
+```
+
+非组件调用可使用 `NcfDocHelp.open("modules.publish")`。
+组件在页面脚本前全局注册，不需要修改各页 Vue data/methods，也无需复制弹窗。
+暂未覆盖无布局的登录/安装页面、旧 `_Layout`、独立前端及生成模板；
+不要直接在这些页面使用组件，需先接入同一套 Vue、Element UI、本地化和帮助资源。
+
+### 扫描与铺设边界（2026-11-02）
+
+排除测试与模板后，扫描到 137 个 Admin Razor 文件，其中 67 个含 `@page` 的页面，
+覆盖 Admin、Accounts 及 15 个扩展模块；本地 NcfDocs 有中英文各 103 篇文档。
+全部 206 个文档地址的线上 HEAD 检查结果为 186 个 HTTP 200、20 个 HTTP 404。
+HTTP 200 只是部署可达性检查；本次三页及章节试点另外通过真实浏览器验证。
+
+| 后续范围 | 文档接入条件 |
+| --- | --- |
+| AIKernel 微调、AgentsManager、Workflow、Workspace/AdminChat | 本地有专项文档，但相应双语线上地址均为 404，部署后再启用 |
+| XncfBuilder 隔离开发、Host/Admin 深度指南 | 本地专项文档尚未在线部署；不要以失效地址替换当前可用的入门指南 |
+| Sandbox | 已有环境配置指南，可作为下一批试点 |
+| KnowledgeBase、PromptRange、FileManager、DynamicData、SenMapic、WeixinManager、DesktopBridge | 需审核现有概览是否能说明具体操作，缺少专项说明的功能先补文档 |
+| 账号、权限、菜单、模块函数页 | 逐项核对指南与功能/模块上下文，避免只按通用函数页 URL 错配文档 |
+
+20 个 404 对应以下 10 篇文档的双语版本：`solution-project-map`、
+`agents-manager-3d-status`、`agents-manager-human-in-the-loop`、
+`aikernel-local-fine-tuning`、`module-documentation-map`、`neuchar-workflow`、
+`senparc-web-admin`、`workspace-adminchat`、`xncfbuilder-isolated-development`、
+`isolated-xncf-development`。后续铺设前需重新检查部署和两种语言的真实锚点。
+当前仅启用试点，不因基础组件可用就自动为所有页面展示帮助。
+
+### 验证
+
+从仓库根目录运行：
+
+```bash
+node --test tools/NcfSimulatedSite/Tests/Senparc.Areas.Admin.Tests/Client/NcfDocHelpTests.js
+```
+
+可设置 `NCF_DOCS_ROOT` 为本地 NcfDocs 仓库路径，额外检查所有索引的双语 Markdown 文件存在。
+浏览器检查使用仓库真实 Vue/Element UI/帮助组件/资源文件及线上文档，以拦截的隔离页面
+替代后台业务与登录，不操作数据库，也不要求启动或重启站点：
+
+```bash
+playwright-cli -s=ncf-doc-help open
+playwright-cli -s=ncf-doc-help run-code --filename=tools/NcfSimulatedSite/Tests/Senparc.Areas.Admin.Tests/Client/NcfDocHelpBrowserChecks.js
+playwright-cli -s=ncf-doc-help close
+```
+
+检查覆盖三页双语 iframe/新窗口、双语章节、相邻按钮隔离、移动端、关闭/焦点、
+其余四种 UI 语言、非试点页面、阻止加载、超时与重试。它不等同于登录后整页验收。
+试点验收完成并确认文档部署后，再扩展集中索引。
+
 ## Host 资源监控
 
 管理后台首页的 Host 资源监控在一个面板中展示实时状态和历史趋势：

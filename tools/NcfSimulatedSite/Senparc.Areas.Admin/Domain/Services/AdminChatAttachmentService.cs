@@ -42,6 +42,7 @@ public sealed class AdminChatAttachmentService
     }
 
     public int UploadLimit => Math.Min(_documents.ReadLimit, _options.MaxFileWriteBytes);
+    public long LargeUploadLimit => _options.MaxUploadFileBytes;
 
     public async Task<AdminChatAttachment> UploadAsync(
         AdminChatSession session, IFormFile file, IFormFile visionPreview, CancellationToken cancellationToken)
@@ -94,6 +95,46 @@ public sealed class AdminChatAttachmentService
             catch (Exception cleanupError)
             {
                 _logger.LogError(cleanupError, "Workspace attachment rollback failed. Workspace={WorkspaceId}, Directory={Directory}",
+                    session.WorkspaceId, directory);
+            }
+            throw;
+        }
+    }
+
+    public async Task<AdminChatAttachment> UploadLargeAsync(
+        AdminChatSession session, IFormFile file, CancellationToken cancellationToken)
+    {
+        if (file == null || file.Length <= 0 || file.Length > LargeUploadLimit)
+            throw new ArgumentException($"附件不能为空，单文件最大 {LargeUploadLimit / (1024 * 1024)} MiB。");
+
+        var (name, extension) = ValidateFileName(file);
+        if (!AllowedExtensions.Contains(extension))
+            throw new ArgumentException("不支持此附件类型，不允许上传可执行脚本或宏文件。");
+
+        var directory = "uploads/" + Guid.NewGuid().ToString("N");
+        var path = directory + "/" + name;
+        await Storage.CreateDirectoryAsync(session.WorkspaceId, directory, cancellationToken);
+        try
+        {
+            await using var stream = file.OpenReadStream();
+            var result = await Storage.WriteFileStreamAsync(
+                session.WorkspaceId,
+                new WorkspaceStreamWriteRequest(path, Overwrite: false, ContentLength: file.Length),
+                stream,
+                cancellationToken);
+            return Describe(path, result.Metadata, document: null, deferredProcessing: true);
+        }
+        catch (Exception uploadError)
+        {
+            _logger.LogError(uploadError, "Large Workspace attachment upload failed. Session={SessionId}", session.Id);
+            try
+            {
+                await Storage.DeleteEntryAsync(session.WorkspaceId,
+                    new WorkspaceDeleteEntryRequest(directory, Recursive: true), CancellationToken.None);
+            }
+            catch (Exception cleanupError)
+            {
+                _logger.LogError(cleanupError, "Large Workspace attachment rollback failed. Workspace={WorkspaceId}, Directory={Directory}",
                     session.WorkspaceId, directory);
             }
             throw;
@@ -164,10 +205,11 @@ public sealed class AdminChatAttachmentService
                 throw new InvalidOperationException("附件已改变或不存在，请重新选择。");
             var extension = Path.GetExtension(path).ToLowerInvariant();
             if (!AllowedExtensions.Contains(extension)) throw new ArgumentException("不支持此附件类型。");
+            var deferredProcessing = metadata.Length > _documents.ReadLimit;
             WorkspaceDocument document = null;
-            if (NcfFileTextExtractor.CanExtractText(extension) || extension == ".pdf")
+            if (!deferredProcessing && (NcfFileTextExtractor.CanExtractText(extension) || extension == ".pdf"))
                 document = (await _documents.ReadAsync(client, path, input.ETag, cancellationToken)).Document;
-            var item = Describe(path, metadata, document);
+            var item = Describe(path, metadata, document, deferredProcessing);
             if (!string.IsNullOrEmpty(input.VisionETag))
             {
                 if (!IsImage(extension)) throw new ArgumentException("文档附件不能作为图片发送。");
@@ -228,10 +270,19 @@ public sealed class AdminChatAttachmentService
         session.WorkspaceId, new WorkspacePolicy(AllowRead: true, MaxBytes: UploadLimit),
         "AdminChatAttachments", session.UserId.ToString(), session.Id.ToString()));
 
+    private static (string Name, string Extension) ValidateFileName(IFormFile file)
+    {
+        var name = Path.GetFileName(file.FileName.Replace('\\', '/'));
+        if (name.Length == 0 || name.Length > 120 || name.Any(char.IsControl) || name.Contains(':'))
+            throw new ArgumentException("附件文件名无效或超过 120 个字符。");
+        return (name, Path.GetExtension(name).ToLowerInvariant());
+    }
+
     private static string VisionPath(string path) => path[..path.LastIndexOf('/')] + "/.vision.jpg";
     private static bool IsImage(string extension) => extension is ".png" or ".jpg" or ".jpeg" or ".webp";
 
-    private static AdminChatAttachment Describe(string path, WorkspaceFileMetadata metadata, WorkspaceDocument document)
+    private static AdminChatAttachment Describe(
+        string path, WorkspaceFileMetadata metadata, WorkspaceDocument document, bool deferredProcessing = false)
     {
         var extension = Path.GetExtension(path).ToLowerInvariant();
         return new AdminChatAttachment
@@ -239,11 +290,14 @@ public sealed class AdminChatAttachmentService
             RelativePath = path, Name = path.Split('/').Last(), Size = metadata.Length, ETag = metadata.ETag,
             ContentType = IsImage(extension) ? "image/" + (extension is ".jpg" or ".jpeg" ? "jpeg" : extension[1..])
                 : extension == ".pdf" ? "application/pdf" : "application/octet-stream",
-            LocalStatus = document != null ? document.HasText ? "已本地解析"
+            LocalStatus = deferredProcessing ? "已保存，需使用 Workspace/Python 处理"
+                : document != null ? document.HasText ? "已本地解析"
                     : extension == ".pdf" ? "未提取到文字，可能需要 OCR" : "未提取到可读文字"
                 : IsImage(extension) ? "图片已保存，默认不发给模型" : "仅保存，需转换为新版 Office 格式",
             SectionCount = document?.Sections.Count ?? 0, ExtractedCharacters = document?.Characters ?? 0,
-            Notice = document?.Notice ?? (IsImage(extension)
+            Notice = deferredProcessing
+                ? "文件较大，服务端未读取全文。请让 AI 使用 Workspace 工具编写 Python，采用流式或分批方式处理；文件全文不会自动发送给模型。"
+                : document?.Notice ?? (IsImage(extension)
                 ? "勾选视觉后仅发送压缩预览。需要选择支持图片的模型；可能产生额外视觉 Token。"
                 : "未解析旧版二进制 Office，未执行其中的宏；请另存为 DOCX/XLSX/PPTX。")
         };

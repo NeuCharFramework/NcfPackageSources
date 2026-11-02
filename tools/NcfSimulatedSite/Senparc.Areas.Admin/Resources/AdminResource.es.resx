@@ -610,4 +610,13 @@
     <value>No hay menús o páginas para ordenar</value>
   </data>
   <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>Configuración de WebHook</value></data>
+  <data name="DocHelp.Help" xml:space="preserve"><value>Ayuda</value></data>
+  <data name="DocHelp.Title" xml:space="preserve"><value>Documentación de la función</value></data>
+  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>Abrir en una ventana nueva</value></data>
+  <data name="DocHelp.Close" xml:space="preserve"><value>Cerrar</value></data>
+  <data name="DocHelp.Loading" xml:space="preserve"><value>Cargando documentación...</value></data>
+  <data name="DocHelp.Notice" xml:space="preserve"><value>Si el documento está vacío o bloqueado, ábralo en una ventana nueva.</value></data>
+  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>Error o tiempo de carga agotado. Reintente o abra una ventana nueva.</value></data>
+  <data name="DocHelp.Retry" xml:space="preserve"><value>Reintentar</value></data>
+  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>La configuración de la documentación no es válida. Contacte con su administrador.</value></data>
 </root>
