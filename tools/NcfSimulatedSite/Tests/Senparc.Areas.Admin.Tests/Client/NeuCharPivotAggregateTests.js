@@ -110,3 +110,48 @@ assert.ok(sandboxPage.includes('window.location.assign(this.getFunctionUrl'),
     'Sandbox must retain the existing Function page as a fallback.');
 
 console.log('NeuCharPivot Aggregate safe HTML tests passed.');
+
+async function testGlobalFunctionAccessErrors() {
+    let options;
+    let failure;
+    let message;
+    function Vue(config) {
+        if (config) {
+            options = config;
+        }
+    }
+    const context = vm.createContext({
+        window: {
+            Vue,
+            document: { getElementById() { return {}; } },
+            service: { async get() { throw failure; } }
+        }
+    });
+    vm.runInContext(globalFunctionScript, context, { filename: globalFunctionPath });
+    const viewModel = Object.assign(options.data(), {
+        $message: { error(value) { message = value; } }
+    });
+    const request = { moduleUid: 'module', functionKey: 'function' };
+    failure = { response: { status: 403, data: 'Function is not enabled for global Pivot.' } };
+    await options.methods.open.call(viewModel, request);
+    assert.strictEqual(message, failure.response.data, 'Show the actual server denial reason.');
+    assert.strictEqual(viewModel.visible, false);
+    assert.strictEqual(viewModel.loading, false);
+
+    const fallback = '当前账号无权访问该 Function，或模块已不可用。';
+    for (failure of [
+        new Error('Network failure'),
+        { response: { status: 403, data: {} } },
+        { response: { status: 403, data: ' ' } },
+        { response: { status: 500, data: '<html>Internal server error</html>' } }
+    ]) {
+        await options.methods.open.call(viewModel, request);
+        assert.strictEqual(message, fallback, 'Unexpected responses should retain the existing fallback.');
+    }
+    console.log('Global Pivot access error tests passed.');
+}
+
+testGlobalFunctionAccessErrors().catch(error => {
+    console.error(error);
+    process.exitCode = 1;
+});

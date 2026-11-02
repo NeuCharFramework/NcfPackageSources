@@ -42,9 +42,11 @@
 </style>
 
 <div class="workspace-shell">
+    <input ref="workspaceUploadInput" type="file" hidden multiple
+        @@change="handleWorkspaceUpload" />
     <div class="workspace-hero">
         <h1><i class="fa fa-code"></i>&nbsp; 安全远程工作区</h1>
-        <p>文件始终保存在 NCF 配置的持久化目录中；AdminChat、VS Code 和 Cursor 统一通过 Workspace Agent 访问，不再直接操作宿主文件。</p>
+        <p>文件始终保存在 NCF 配置的持久化目录中；AdminChat、VS Code 和 Cursor 统一通过 Workspace Agent 访问，不再直接操作宿主文件。可在下方直接上传多个文件到 <code>input/</code>，默认单文件上限 300 MiB。</p>
         <div class="runtime-row">
             <el-tag effect="dark" type="success">@runtime.Provider</el-tag>
             <el-tag effect="dark">@runtime.IsolationLevel</el-tag>
@@ -112,7 +114,27 @@
             <el-table-column label="最近访问" min-width="180">
                 <template slot-scope="scope">{{ formatDate(scope.row.lastAccessedUtc) }}</template>
             </el-table-column>
+            <el-table-column label="手动上传" width="130">
+                <template slot-scope="scope">
+                    <el-button
+                        type="primary"
+                        size="mini"
+                        :loading="manualUploadWorkspaceId === scope.row.id && manualUploading"
+                        :disabled="manualUploading"
+                        @@click="chooseWorkspaceUpload(scope.row.id)">
+                        <i class="el-icon-upload2"></i> 上传文件
+                    </el-button>
+                </template>
+            </el-table-column>
         </el-table>
+        <el-alert
+            v-if="manualUploading"
+            style="margin-top:16px"
+            type="info"
+            show-icon
+            :closable="false"
+            :title="manualUploadFileName + ' 上传中：' + manualUploadProgress + '%'">
+        </el-alert>
     </el-card>
 
     <div class="workspace-grid">
@@ -143,6 +165,10 @@
             el: "#app",
             data: function () {
                 return {
+                    manualUploadWorkspaceId: '',
+                    manualUploadFileName: '',
+                    manualUploadProgress: 0,
+                    manualUploading: false,
                     workspaces: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
                         Model.Workspaces.Select(x => new {
                             id = x.Id,
@@ -158,6 +184,74 @@
             methods: {
                 formatDate: function (value) {
                     return value ? new Date(value).toLocaleString() : "—";
+                },
+                chooseWorkspaceUpload: function (workspaceId) {
+                    this.manualUploadWorkspaceId = workspaceId;
+                    this.manualUploadProgress = 0;
+                    this.$refs.workspaceUploadInput.value = "";
+                    this.$refs.workspaceUploadInput.click();
+                },
+                handleWorkspaceUpload: async function (event) {
+                    var files = Array.from(event.target.files || []);
+                    event.target.value = "";
+                    if (!files.length || !this.manualUploadWorkspaceId) return;
+
+                    this.manualUploading = true;
+                    try {
+                        var capabilitiesResponse = await service.get(
+                            "/api/Senparc.Areas.Admin/WorkspaceFiles/capabilities",
+                            { customAlert: true });
+                        var capabilities = capabilitiesResponse.data || {};
+                        var maxFileBytes = Number(capabilities.maxFileBytes);
+                        if (!Number.isFinite(maxFileBytes) || maxFileBytes <= 0) {
+                            throw new Error("无法取得 Workspace 上传限制。");
+                        }
+
+                        for (var file of files) {
+                            if (!file || file.size <= 0 || file.size > maxFileBytes) {
+                                throw new Error(file.name + " 为空或超过 " + this.formatFileSize(maxFileBytes) + "。");
+                            }
+
+                            this.manualUploadFileName = file.name;
+                            this.manualUploadProgress = 0;
+                            var form = new FormData();
+                            form.append("file", file, file.name);
+                            var response = await service.post(
+                                "/api/Senparc.Areas.Admin/WorkspaceFiles/"
+                                    + encodeURIComponent(this.manualUploadWorkspaceId) + "/upload",
+                                form,
+                                {
+                                    customAlert: true,
+                                    onUploadProgress: function (progressEvent) {
+                                        if (progressEvent && progressEvent.total) {
+                                            this.manualUploadProgress = Math.min(
+                                                100,
+                                                Math.round(progressEvent.loaded * 100 / progressEvent.total));
+                                        }
+                                    }.bind(this)
+                                });
+                            if (!response.data || !response.data.file) {
+                                throw new Error(file.name + " 上传响应无效。");
+                            }
+                            this.$message.success(file.name + " 已上传到 Workspace/input。");
+                        }
+                    } catch (error) {
+                        console.error("Workspace 手动上传失败:", error);
+                        this.$message.error(
+                            (error.response && error.response.data && error.response.data.message)
+                            || error.message
+                            || "Workspace 手动上传失败。");
+                    } finally {
+                        this.manualUploading = false;
+                        this.manualUploadProgress = 0;
+                        this.manualUploadFileName = "";
+                        this.manualUploadWorkspaceId = "";
+                    }
+                },
+                formatFileSize: function (bytes) {
+                    if (bytes >= 1024 * 1024 * 1024) return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+                    if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(0) + " MB";
+                    return Math.max(1, Math.round(bytes / 1024)) + " KB";
                 }
             }
         });

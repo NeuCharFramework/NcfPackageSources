@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.1.0 增加所有者、Agent 模板关联与访问策略
 
+    修改标识：Senparc - 20261102
+    修改描述：增加 Workspace 服务器端流式文件上传契约
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Workspace.Abstractions;
@@ -62,6 +65,13 @@ public sealed record WorkspaceWriteFileRequest(
     bool Create = true,
     bool Overwrite = true,
     string ExpectedETag = "");
+
+public sealed record WorkspaceStreamWriteRequest(
+    string RelativePath,
+    bool Create = true,
+    bool Overwrite = true,
+    string ExpectedETag = "",
+    long? ContentLength = null);
 
 public sealed record WorkspaceWriteFileResult(
     WorkspaceFileMetadata Metadata,
@@ -256,6 +266,12 @@ public interface IWorkspaceStorage
     Task<WorkspaceWriteFileResult> WriteFileBytesAsync(
         string workspaceId,
         WorkspaceWriteFileRequest request,
+        CancellationToken cancellationToken = default);
+
+    Task<WorkspaceWriteFileResult> WriteFileStreamAsync(
+        string workspaceId,
+        WorkspaceStreamWriteRequest request,
+        Stream content,
         CancellationToken cancellationToken = default);
 
     Task CreateDirectoryAsync(

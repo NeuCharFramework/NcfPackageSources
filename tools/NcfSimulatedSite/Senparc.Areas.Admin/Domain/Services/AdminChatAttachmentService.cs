@@ -100,6 +100,47 @@ public sealed class AdminChatAttachmentService
         }
     }
 
+    public async Task DeletePendingAsync(
+        AdminChatSession session,
+        AdminChatAttachmentInput input,
+        IReadOnlyList<AdminChatMessage> messages,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(session);
+        ArgumentNullException.ThrowIfNull(input);
+        if (string.IsNullOrWhiteSpace(session.WorkspaceId))
+        {
+            throw new ArgumentException("附件 Workspace 不存在。");
+        }
+
+        var workspace = await Storage.GetAsync(session.WorkspaceId, cancellationToken).ConfigureAwait(false);
+        if (workspace?.OwnerId != session.UserId)
+        {
+            throw new UnauthorizedAccessException("无权删除此 Workspace 的附件。");
+        }
+
+        var (path, directory) = ValidateAttachmentPath(input.RelativePath, input.ETag);
+        if (messages?.SelectMany(message => message.GetAttachments())
+            .Any(attachment => string.Equals(attachment.RelativePath, path, StringComparison.Ordinal)) == true)
+        {
+            throw new InvalidOperationException("已经提交到聊天消息的附件不能从 Workspace 中删除。");
+        }
+
+        var metadata = await Storage.GetFileInfoAsync(
+            session.WorkspaceId,
+            path,
+            cancellationToken).ConfigureAwait(false);
+        if (metadata.IsDirectory || !string.Equals(metadata.ETag, input.ETag, StringComparison.Ordinal))
+        {
+            throw new InvalidOperationException("附件已改变或不存在，请刷新后重试。");
+        }
+
+        await Storage.DeleteEntryAsync(
+            session.WorkspaceId,
+            new WorkspaceDeleteEntryRequest(directory, Recursive: true),
+            cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<IReadOnlyList<AdminChatAttachment>> ValidateAsync(
         AdminChatSession session, IReadOnlyList<AdminChatAttachmentInput> inputs, CancellationToken cancellationToken = default)
     {
@@ -140,6 +181,22 @@ public sealed class AdminChatAttachmentService
         }
         if (result.Count(item => item.UseVision) > 2) throw new ArgumentException("每条消息最多启用 2 张图片的视觉处理。");
         return result;
+    }
+
+    private static (string Path, string Directory) ValidateAttachmentPath(string relativePath, string etag)
+    {
+        var path = WorkspaceAssetPreviewBuilder.NormalizePath(relativePath);
+        var segments = path.Split('/');
+        if (segments.Length != 3
+            || segments[0] != "uploads"
+            || !Guid.TryParseExact(segments[1], "N", out _)
+            || segments[2] == ".vision.jpg"
+            || string.IsNullOrWhiteSpace(etag))
+        {
+            throw new ArgumentException("附件引用无效，请重新上传。");
+        }
+
+        return (path, path[..path.LastIndexOf('/')]);
     }
 
     public async Task<IList<ChatMessage>> BuildVisionMessagesAsync(

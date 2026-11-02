@@ -13,8 +13,13 @@
     修改标识：Senparc - 20261028
     修改描述：多租户模式下元数据读写在独立作用域中还原当前请求租户上下文
 
+    修改标识：Senparc - 20261102
+    修改描述：增加流式上传落盘与租户可见性校验
+
 ----------------------------------------------------------------*/
 
+using System.Collections.Concurrent;
+using System.Security.Cryptography;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +42,7 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly WorkspaceAgentConnectionPool _agentPool;
     private readonly WorkspaceChangeHub _changeHub;
+    private readonly ConcurrentDictionary<string, SemaphoreSlim> _streamWriteLocks = new(StringComparer.Ordinal);
     private readonly IHttpContextAccessor? _httpContextAccessor;
     private readonly JsonSerializerOptions _jsonOptions = new(JsonSerializerDefaults.Web);
 
@@ -119,8 +125,19 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         }
 
         await using var stream = File.OpenRead(manifestPath);
-        return await JsonSerializer.DeserializeAsync<WorkspaceDescriptor>(
+        var descriptor = await JsonSerializer.DeserializeAsync<WorkspaceDescriptor>(
             stream, _jsonOptions, cancellationToken).ConfigureAwait(false);
+        if (descriptor == null)
+        {
+            return null;
+        }
+
+        using var scope = _scopeFactory.CreateScope();
+        CaptureCurrentTenant().Restore(scope.ServiceProvider);
+        var metadataStore = scope.ServiceProvider.GetRequiredService<IWorkspaceMetadataStore>();
+        return await metadataStore.IsVisibleAsync(workspaceId, cancellationToken).ConfigureAwait(false)
+            ? descriptor
+            : null;
     }
 
     private async Task PersistMetadataAsync(WorkspaceDescriptor descriptor, CancellationToken cancellationToken)
@@ -266,6 +283,150 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             workspaceId,
             request.RelativePath);
         return result;
+    }
+
+    public async Task<WorkspaceWriteFileResult> WriteFileStreamAsync(
+        string workspaceId,
+        WorkspaceStreamWriteRequest request,
+        Stream content,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(content);
+        if (!content.CanRead)
+        {
+            throw new ArgumentException("Workspace upload stream must be readable.", nameof(content));
+        }
+
+        var workspaceRoot = GetWorkspaceRoot(workspaceId);
+        EnsureWorkspaceExists(workspaceRoot);
+        if (request.ContentLength is < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(request.ContentLength));
+        }
+
+        if (request.ContentLength is > 0 && request.ContentLength > _options.MaxUploadFileBytes)
+        {
+            throw new InvalidOperationException(
+                $"Workspace upload exceeds the {_options.MaxUploadFileBytes} byte upload limit.");
+        }
+
+        var writeLock = _streamWriteLocks.GetOrAdd(workspaceId, _ => new SemaphoreSlim(1, 1));
+        await writeLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            var path = ResolvePath(workspaceRoot, request.RelativePath);
+            EnsureNoSymlink(workspaceRoot, path);
+            var directory = Path.GetDirectoryName(path)
+                ?? throw new InvalidOperationException("Workspace file has no parent directory.");
+            EnsureNoSymlink(workspaceRoot, directory);
+
+            var exists = File.Exists(path);
+            if (Directory.Exists(path))
+            {
+                throw new IOException("Workspace upload target is a directory.");
+            }
+
+            if (!exists && !request.Create)
+            {
+                throw new FileNotFoundException("Workspace file does not exist.", request.RelativePath);
+            }
+
+            if (exists && !request.Overwrite)
+            {
+                throw new IOException("Workspace file already exists.");
+            }
+
+            if (exists && !string.IsNullOrWhiteSpace(request.ExpectedETag))
+            {
+                var current = await CreateFileMetadataAsync(workspaceRoot, path, cancellationToken)
+                    .ConfigureAwait(false);
+                if (!string.Equals(current.ETag, request.ExpectedETag, StringComparison.Ordinal))
+                {
+                    throw new WorkspaceConflictException(
+                        "Workspace file changed after it was read. Reload the file before saving.");
+                }
+            }
+
+            var existingLength = exists ? new FileInfo(path).Length : 0;
+            var currentBytes = GetWorkspaceBytes(workspaceRoot);
+            if (request.ContentLength is { } declaredLength
+                && currentBytes - existingLength + declaredLength > _options.MaxWorkspaceBytes)
+            {
+                throw new InvalidOperationException("Workspace quota exceeded.");
+            }
+
+            Directory.CreateDirectory(directory);
+            var temporaryPath = Path.Combine(
+                directory,
+                $".{Path.GetFileName(path)}.{Guid.NewGuid():N}.ncf-upload-tmp");
+            long totalBytes = 0;
+            try
+            {
+                await using (var target = new FileStream(
+                    temporaryPath,
+                    FileMode.CreateNew,
+                    FileAccess.Write,
+                    FileShare.None,
+                    128 * 1024,
+                    FileOptions.Asynchronous | FileOptions.SequentialScan))
+                {
+                    var buffer = new byte[128 * 1024];
+                    int read;
+                    while ((read = await content.ReadAsync(buffer.AsMemory(), cancellationToken).ConfigureAwait(false)) > 0)
+                    {
+                        totalBytes += read;
+                        if (totalBytes > _options.MaxUploadFileBytes)
+                        {
+                            throw new InvalidOperationException(
+                                $"Workspace upload exceeds the {_options.MaxUploadFileBytes} byte upload limit.");
+                        }
+
+                        await target.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
+                    }
+
+                    await target.FlushAsync(cancellationToken).ConfigureAwait(false);
+                }
+
+                if (request.ContentLength is { } expectedLength && totalBytes != expectedLength)
+                {
+                    throw new InvalidDataException(
+                        $"Workspace upload length mismatch: expected {expectedLength}, received {totalBytes}.");
+                }
+
+                if (request.ContentLength is null
+                    && currentBytes - existingLength + totalBytes > _options.MaxWorkspaceBytes)
+                {
+                    throw new InvalidOperationException("Workspace quota exceeded.");
+                }
+
+                File.Move(temporaryPath, path, overwrite: request.Overwrite);
+                var metadata = await CreateFileMetadataAsync(workspaceRoot, path, cancellationToken)
+                    .ConfigureAwait(false);
+                _changeHub.Publish(
+                    workspaceId,
+                    request.RelativePath,
+                    exists ? "changed" : "created",
+                    etag: metadata.ETag);
+                _logger.LogInformation(
+                    "Workspace stream file written: {WorkspaceId}, RelativePath={RelativePath}, Bytes={Bytes}",
+                    workspaceId,
+                    request.RelativePath,
+                    totalBytes);
+                return new WorkspaceWriteFileResult(metadata, !exists);
+            }
+            finally
+            {
+                if (File.Exists(temporaryPath))
+                {
+                    File.Delete(temporaryPath);
+                }
+            }
+        }
+        finally
+        {
+            writeLock.Release();
+        }
     }
 
     public async Task CreateDirectoryAsync(
@@ -495,6 +656,130 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
         }
 
         return Path.Combine(_rootPath, workspaceId);
+    }
+
+    private static string ResolvePath(string workspaceRoot, string relativePath)
+    {
+        if (string.IsNullOrWhiteSpace(relativePath))
+        {
+            throw new InvalidOperationException("Workspace root cannot be modified as a file entry.");
+        }
+
+        if (Path.IsPathRooted(relativePath))
+        {
+            throw new InvalidOperationException("Workspace paths must be relative.");
+        }
+
+        var normalized = relativePath.Replace('\\', '/').TrimStart('/');
+        if (normalized.Split('/', StringSplitOptions.RemoveEmptyEntries)
+            .Any(segment => segment is "." or ".."))
+        {
+            throw new InvalidOperationException("Workspace paths cannot contain traversal segments.");
+        }
+
+        var path = Path.GetFullPath(Path.Combine(workspaceRoot, normalized));
+        var prefix = workspaceRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                     + Path.DirectorySeparatorChar;
+        var comparison = OperatingSystem.IsWindows()
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+        if (!path.StartsWith(prefix, comparison))
+        {
+            throw new InvalidOperationException("Workspace path escapes its root.");
+        }
+
+        var relative = Path.GetRelativePath(workspaceRoot, path)
+            .Replace(Path.DirectorySeparatorChar, '/');
+        var firstSegment = relative.Split('/', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+        if (string.Equals(firstSegment, ".workspace", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(firstSegment, ".workspace.json", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new UnauthorizedAccessException("Workspace internal metadata is not externally accessible.");
+        }
+
+        return path;
+    }
+
+    private static void EnsureNoSymlink(string workspaceRoot, string path)
+    {
+        var relative = Path.GetRelativePath(workspaceRoot, path);
+        var current = workspaceRoot;
+        if (relative == ".")
+        {
+            return;
+        }
+
+        foreach (var segment in relative.Split(
+                     [Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar],
+                     StringSplitOptions.RemoveEmptyEntries))
+        {
+            current = Path.Combine(current, segment);
+            if ((File.Exists(current) || Directory.Exists(current))
+                && File.GetAttributes(current).HasFlag(FileAttributes.ReparsePoint))
+            {
+                throw new InvalidOperationException("Workspace paths cannot traverse symbolic links.");
+            }
+        }
+    }
+
+    private static async Task<WorkspaceFileMetadata> CreateFileMetadataAsync(
+        string workspaceRoot,
+        string path,
+        CancellationToken cancellationToken)
+    {
+        if (!File.Exists(path))
+        {
+            throw new FileNotFoundException("Workspace file does not exist.", path);
+        }
+
+        var info = new FileInfo(path);
+        await using var stream = new FileStream(
+            path,
+            FileMode.Open,
+            FileAccess.Read,
+            FileShare.ReadWrite,
+            128 * 1024,
+            FileOptions.Asynchronous | FileOptions.SequentialScan);
+        var hash = await SHA256.HashDataAsync(stream, cancellationToken).ConfigureAwait(false);
+        var relativePath = Path.GetRelativePath(workspaceRoot, path)
+            .Replace(Path.DirectorySeparatorChar, '/');
+        return new WorkspaceFileMetadata(
+            relativePath,
+            false,
+            info.Length,
+            info.CreationTimeUtc,
+            info.LastWriteTimeUtc,
+            $"\"{Convert.ToHexString(hash)}\"");
+    }
+
+    private static long GetWorkspaceBytes(string workspaceRoot)
+    {
+        var total = 0L;
+        var pending = new Stack<string>();
+        pending.Push(workspaceRoot);
+        while (pending.Count > 0)
+        {
+            var directory = pending.Pop();
+            foreach (var path in Directory.EnumerateFileSystemEntries(directory))
+            {
+                var attributes = File.GetAttributes(path);
+                if (attributes.HasFlag(FileAttributes.ReparsePoint))
+                {
+                    continue;
+                }
+
+                if (attributes.HasFlag(FileAttributes.Directory))
+                {
+                    pending.Push(path);
+                }
+                else
+                {
+                    total = checked(total + new FileInfo(path).Length);
+                }
+            }
+        }
+
+        return total;
     }
 
     private static string NormalizeName(string name)

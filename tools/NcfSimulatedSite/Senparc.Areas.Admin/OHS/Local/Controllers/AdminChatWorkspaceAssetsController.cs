@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto;
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Core.Authorization;
 
@@ -74,6 +75,20 @@ public sealed class AdminChatWorkspaceAssetsController : ControllerBase
             var attachment = await HttpContext.RequestServices.GetRequiredService<AdminChatAttachmentService>()
                 .UploadAsync(session, file, visionPreview, cancellationToken);
             return Ok(new { attachment });
+        });
+
+    [HttpPost("{sessionId:int}/attachments/delete")]
+    [RequestSizeLimit(64 * 1024)]
+    public Task<IActionResult> DeletePendingAttachment(int sessionId,
+        [FromBody] AdminChatAttachmentInput request, CancellationToken cancellationToken) =>
+        ExecuteAsync(async () =>
+        {
+            var session = await _assets.GetSessionAsync(sessionId, User, cancellationToken);
+            var messages = await HttpContext.RequestServices.GetRequiredService<AdminChatMessageService>()
+                .GetSessionMessagesAsync(sessionId);
+            await HttpContext.RequestServices.GetRequiredService<AdminChatAttachmentService>()
+                .DeletePendingAsync(session, request, messages.messages, cancellationToken);
+            return Ok(new { deleted = true });
         });
 
     [HttpGet("{sessionId:int}/download")]

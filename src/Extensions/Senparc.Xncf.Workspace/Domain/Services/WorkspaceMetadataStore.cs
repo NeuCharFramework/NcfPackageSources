@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.1.1 保存和更新工作区元数据
 
+    修改标识：Senparc - 20261102
+    修改描述：增加租户范围内的 Workspace 可见性查询
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +23,7 @@ namespace Senparc.Xncf.Workspace.Domain.Services;
 
 public interface IWorkspaceMetadataStore
 {
+    Task<bool> IsVisibleAsync(string workspaceId, CancellationToken cancellationToken = default);
     Task UpsertAsync(WorkspaceDescriptor descriptor, CancellationToken cancellationToken = default);
     Task TouchAsync(string workspaceId, DateTime lastAccessedAt, CancellationToken cancellationToken = default);
     Task DeleteAsync(string workspaceId, CancellationToken cancellationToken = default);
@@ -33,6 +37,9 @@ public sealed class WorkspaceMetadataStore : IWorkspaceMetadataStore
     {
         _entities = entities;
     }
+
+    public Task<bool> IsVisibleAsync(string workspaceId, CancellationToken cancellationToken = default) =>
+        _entities.WorkspaceRecords.AnyAsync(x => x.WorkspaceId == workspaceId, cancellationToken);
 
     public async Task UpsertAsync(WorkspaceDescriptor descriptor, CancellationToken cancellationToken = default)
     {

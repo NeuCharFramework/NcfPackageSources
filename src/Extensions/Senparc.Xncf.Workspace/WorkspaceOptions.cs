@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.1.1 配置工作区根路径与执行限制
 
+    修改标识：Senparc - 20261102
+    修改描述：增加默认 300 MiB 手动上传上限
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Workspace;
@@ -27,6 +30,8 @@ public sealed class WorkspaceOptions
     public int MaxFileReadBytes { get; set; } = 2 * 1024 * 1024;
 
     public int MaxFileWriteBytes { get; set; } = 10 * 1024 * 1024;
+
+    public long MaxUploadFileBytes { get; set; } = 300L * 1024 * 1024;
 
     public int CommandTimeoutSeconds { get; set; } = 60;
 

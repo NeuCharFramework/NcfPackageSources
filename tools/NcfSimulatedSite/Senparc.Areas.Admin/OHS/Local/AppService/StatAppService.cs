@@ -22,6 +22,9 @@
     修改标识：Senparc - 20260926
     修改描述：v0.12.0 新增资源监控数据读取（后台 10 秒级记录，CO2NET 缓存最多 24 小时）
 
+    修改标识：Senparc - 20261102
+    修改描述：v0.12.3 恢复 GetHostMetrics 的 API 注册，移除资源监控方法的重复标记
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.OHS.Local.PL;
@@ -114,10 +117,6 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前 Host 的实时 CPU、内存、网络及 Web 进程指标。
-        /// </summary>
-        [ApiBind]
-        /// <summary>
         /// 获取资源监控数据（后台每 10 秒记录，三个时间分档，CO2NET 缓存最多保留 24 小时）。
         /// </summary>
         [ApiBind]
@@ -164,6 +163,10 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             return window;
         }
 
+        /// <summary>
+        /// 获取当前 Host 的实时 CPU、内存、网络及 Web 进程指标。
+        /// </summary>
+        [ApiBind]
         public async Task<AppResponseBase<HostMetricsSnapshot>> GetHostMetrics()
         {
             return await this.GetResponseAsync<HostMetricsSnapshot>((response, logger) =>
