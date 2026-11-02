@@ -113,6 +113,8 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel.Dto
     /// </summary>
     public class CreateChatSessionInputDto
     {
+        public bool UseMemory { get; set; }
+        public Senparc.Areas.Admin.Domain.Services.AdminChatMemoryMode? MemoryMode { get; set; }
         /// <summary>
         /// 初始消息内容
         /// </summary>

@@ -138,7 +138,7 @@ namespace Senparc.Areas.Admin
 
         public override string Uid => ModuleUid;// "00000000-0000-0001-0001-000000000001";
 
-        public override string Version => "0.5.13";
+        public override string Version => "0.5.14";
 
         public override string MenuName => T("Admin.Register.MenuName", "NCF 系统管理员后台");
 
@@ -258,6 +258,12 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminChatTrajectoryService>();
             services.AddScoped<AdminChatTrajectoryEventService>();
             services.AddScoped<AdminChatAiService>();
+            services.AddSingleton<AdminChatMemoryStore>();
+            services.AddScoped<IAdminChatMemoryStore>(provider => new AdminChatMemoryDatabaseStore(
+                provider.GetRequiredService<Senparc.Ncf.Core.Models.INcfDbData>().BaseDataContext,
+                provider.GetRequiredService<AdminChatMemoryStore>(),
+                provider.GetRequiredService<Microsoft.AspNetCore.DataProtection.IDataProtectionProvider>()));
+            services.AddScoped<AdminChatMemoryService>();
             services.AddScoped<AdminChatWorkspaceAssetService>();
             services.AddSingleton<WorkspaceAssetPreviewBuilder>();
             services.AddSingleton<WorkspaceAssetShareStore>();

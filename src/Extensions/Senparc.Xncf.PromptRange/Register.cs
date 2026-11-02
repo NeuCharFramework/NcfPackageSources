@@ -126,6 +126,7 @@ namespace Senparc.Xncf.PromptRange
             services.AddScoped<PromptService>();
             services.AddScoped<PromptRangeService>();
             services.AddScoped<PromptItemService>();
+            services.AddScoped<Senparc.Xncf.PromptRange.Abstractions.Memory.IMemoryPromptProvider, MemoryPromptProvider>();
             services.AddScoped<PromptResultService>();
             services.AddScoped<PromptResultChatService>();
             services.AddScoped<LlModelService>();
@@ -153,7 +154,6 @@ namespace Senparc.Xncf.PromptRange
         }
     }
 }
-
 
 
 

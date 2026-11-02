@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.0.24</Version>
+    <Version>0.0.26</Version>
     <PackageReleaseNotes>
+[2026-11-02] Verify relational Memory migration, scope isolation, tokenizer budgets, prompt field constraints and three-mode controls.
+[2026-11-02] Cover private Memory persistence, bounded tier loading, optimistic concurrency and client settings behavior.
 [2026-11-02] Cover merged Host monitoring, historical sampling precedence, time ranges, zoom, live following and localization.
 [2026-11-02] Verify selector score formatting, default sort and sorting request parameters.
 [2026-11-02] Cover reusable PromptRange selector lifecycle, cursor insertion, stale requests and AdminChat integration.

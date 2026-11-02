@@ -133,3 +133,4 @@ tools/NcfSimulatedSite/Senparc.Web/App_Data/WorkspaceAssetShares/*
 **/.venv/*
 tools/AIKernelFineTuning/worker/
 tools/NcfSimulatedSite/Senparc.Web/App_Data/Files/*
+tools/NcfSimulatedSite/Senparc.Web/App_Data/AdminChatMemory/**

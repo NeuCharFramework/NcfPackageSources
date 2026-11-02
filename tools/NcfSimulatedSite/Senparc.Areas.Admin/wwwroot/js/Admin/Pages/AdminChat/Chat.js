@@ -4,6 +4,28 @@
   data() {
     return {
       currentSessionId: 0,
+      memoryEnabled: false,
+      memoryMode: 0,
+      memoryEntries: [],
+      memoryHistory: [],
+      memoryWorkspaceId: '',
+      memoryEntryDraft: null,
+      memoryUsage: null,
+      memoryUsageSessionId: 0,
+      memoryRevision: '',
+      memoryBusy: false,
+      memoryReady: false,
+      memoryLoadSequence: 0,
+      memoryDialogVisible: false,
+      memoryDialogSessionId: 0,
+      memoryDraftRevision: '',
+      memoryMarkdown: '',
+      memorySavedMarkdown: '',
+      memorySystemMessage: '',
+      memoryTab: 'preview',
+      globalChatRevision: '',
+      globalChatSystemMessage: '',
+      globalChatLoaded: false,
       currentSessionTitle: '',
       currentSessionModules: [],
       currentSessionWorkflows: [],
@@ -188,6 +210,206 @@
     this.clearPendingAttachments();
   },
   methods: {
+    async memoryRequest(method, body, get = false) {
+      const base = '/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.';
+      const response = get ? await service.get(base + method) : await service.post(base + method, body);
+      if (!response.data || !response.data.success || !response.data.data) {
+        throw new Error((response.data && response.data.errorMessage) || ncfT('AdminChat.Memory.Failed'));
+      }
+      return response.data.data;
+    },
+
+    reportMemoryUpdate(status, usage, sessionId = this.currentSessionId) {
+      if (usage) {
+        this.memoryUsage = usage;
+        this.memoryUsageSessionId = sessionId;
+      }
+      if (status && !['disabled', 'updated', 'unchanged', 'read-only', 'skipped-input'].includes(status)) {
+        this.$message.warning(ncfT('AdminChat.Memory.UpdateWarning') + ' (' + status + ')');
+      }
+    },
+
+    formatMemoryContent(markdown) {
+      if (typeof DOMPurify === 'undefined') return '';
+      return DOMPurify.sanitize(this.formatMessageContent(markdown), {
+        FORBID_TAGS: ['img', 'iframe', 'video', 'audio', 'source', 'svg', 'math', 'style', 'form'],
+        FORBID_ATTR: ['src', 'srcset', 'href', 'style']
+      });
+    },
+
+    async loadMemoryMode() {
+      const sessionId = this.currentSessionId;
+      const sequence = ++this.memoryLoadSequence;
+      this.memoryEnabled = false;
+      this.memoryMode = 0;
+      this.memoryRevision = '';
+      this.memoryReady = false;
+      this.memoryBusy = true;
+      try {
+        const data = await this.memoryRequest(`GetMemoryAsync?sessionId=${sessionId}`, null, true);
+        if (sessionId !== this.currentSessionId || sequence !== this.memoryLoadSequence) return;
+        this.memoryEnabled = data.enabled;
+        this.memoryMode = data.mode == null ? (data.enabled ? 2 : 0) : data.mode;
+        this.memoryRevision = data.revision;
+        this.memoryReady = true;
+      } catch (error) {
+        if (sequence === this.memoryLoadSequence) this.$message.error(error.message);
+      } finally {
+        if (sessionId === this.currentSessionId && sequence === this.memoryLoadSequence) this.memoryBusy = false;
+      }
+    },
+
+    memoryModeLabel(mode) {
+      return ncfT('AdminChat.Memory.Mode' + ['Off', 'ReadOnly', 'Learn'][Number(mode) || 0]);
+    },
+
+    handleMemoryCommand(command, launcher = false) {
+      if (command === 'settings') return this.openMemoryDialog();
+      const mode = Number(command);
+      if (launcher) this.launcherMemoryMode = mode;
+      else return this.changeMemoryMode(mode);
+    },
+
+    async changeMemoryMode(mode) {
+      if (typeof mode === 'boolean') mode = mode ? 2 : 0;
+      const sessionId = this.currentSessionId;
+      if (this.memoryBusy || this.isSending) return;
+      this.memoryBusy = true;
+      try {
+        const data = await this.memoryRequest('SetMemoryEnabledAsync', {
+          sessionId, revision: this.memoryRevision, mode
+        });
+        if (sessionId !== this.currentSessionId) return;
+        this.memoryEnabled = data.enabled;
+        this.memoryMode = data.mode == null ? (data.enabled ? 2 : 0) : data.mode;
+        this.memoryRevision = data.revision;
+      } catch (error) {
+        this.$message.error(error.message);
+        await this.loadMemoryMode();
+      } finally {
+        if (sessionId === this.currentSessionId) this.memoryBusy = false;
+      }
+    },
+
+    async openMemoryDialog() {
+      if (this.memoryDialogVisible || this.memoryBusy) return;
+      this.memoryBusy = true;
+      const sessionId = this.currentSessionId;
+      try {
+        const data = await this.memoryRequest(`GetMemoryAsync?sessionId=${sessionId}`, null, true);
+        if (sessionId !== this.currentSessionId) return;
+        this.memoryDialogSessionId = sessionId;
+        this.memoryDraftRevision = data.revision;
+        this.memoryMarkdown = data.markdown;
+        this.memorySavedMarkdown = data.markdown;
+        this.memorySystemMessage = data.systemMessage;
+        this.memoryEntries = data.entries || [];
+        this.memoryHistory = data.history || [];
+        this.memoryWorkspaceId = data.workspaceId || '';
+        this.memoryEntryDraft = null;
+        this.globalChatLoaded = false;
+        this.memoryTab = 'entries';
+        this.memoryDialogVisible = true;
+        if (this.isSuperAdmin) {
+          const global = await this.memoryRequest('GetGlobalChatSystemMessageAsync', null, true);
+          this.globalChatRevision = global.revision;
+          this.globalChatSystemMessage = global.systemMessage;
+          this.globalChatLoaded = true;
+        }
+      } catch (error) {
+        this.$message.error(error.message);
+      } finally {
+        this.memoryBusy = false;
+      }
+    },
+
+    async saveMemory() {
+      this.memoryBusy = true;
+      try {
+        const data = await this.memoryRequest('SaveMemoryAsync', {
+          sessionId: this.memoryDialogSessionId, revision: this.memoryDraftRevision,
+          markdown: this.memoryMarkdown, systemMessage: this.memorySystemMessage
+        });
+        this.memoryDraftRevision = data.revision;
+        this.memoryMarkdown = data.markdown;
+        this.memorySavedMarkdown = data.markdown;
+        this.memoryEntries = data.entries || [];
+        this.memoryHistory = data.history || [];
+        if (this.memoryDialogSessionId === this.currentSessionId) this.memoryRevision = data.revision;
+        this.$message.success(ncfT('AdminChat.Memory.Saved'));
+      } catch (error) {
+        this.$message.error(error.message);
+      } finally {
+        this.memoryBusy = false;
+      }
+    },
+
+    editMemoryEntry(entry) {
+      if (this.memoryMarkdown !== this.memorySavedMarkdown) {
+        this.$message.warning(ncfT('AdminChat.Memory.UnsavedMarkdown'));
+        return;
+      }
+      this.memoryEntryDraft = entry ? {
+        id: entry.id, version: entry.version, text: entry.text, topic: entry.topic,
+        tier: entry.tier, kind: entry.kind, pinned: entry.pinned,
+        scope: entry.workspaceId ? 'workspace' : 'global', expiresAt: entry.expiresAt, remove: false
+      } : {
+        id: '', version: 0, text: '', topic: '', tier: 'core', kind: 'preference',
+        pinned: true, scope: 'global', expiresAt: null, remove: false
+      };
+    },
+
+    async saveMemoryEntry(remove = false) {
+      if (!this.memoryEntryDraft || this.memoryBusy) return;
+      if (this.memoryMarkdown !== this.memorySavedMarkdown) {
+        this.$message.warning(ncfT('AdminChat.Memory.UnsavedMarkdown'));
+        return;
+      }
+      this.memoryBusy = true;
+      try {
+        const data = await this.memoryRequest('EditMemoryEntryAsync', {
+          sessionId: this.memoryDialogSessionId, revision: this.memoryDraftRevision,
+          entry: { ...this.memoryEntryDraft, remove }
+        });
+        this.memoryDraftRevision = data.revision;
+        this.memoryEntries = data.entries || [];
+        this.memoryHistory = data.history || [];
+        this.memoryEntryDraft = null;
+        this.memoryMarkdown = data.markdown;
+        this.memorySavedMarkdown = data.markdown;
+        if (this.memoryDialogSessionId === this.currentSessionId) this.memoryRevision = data.revision;
+        this.$message.success(ncfT('AdminChat.Memory.Saved'));
+      } catch (error) {
+        this.$message.error(error.message);
+      } finally {
+        this.memoryBusy = false;
+      }
+    },
+
+    async saveGlobalChatSystemMessage() {
+      this.memoryBusy = true;
+      try {
+        const data = await this.memoryRequest('SaveGlobalChatSystemMessageAsync', {
+          revision: this.globalChatRevision, systemMessage: this.globalChatSystemMessage
+        });
+        this.globalChatRevision = data.revision;
+        this.$message.success(ncfT('AdminChat.Memory.Saved'));
+      } catch (error) {
+        this.$message.error(error.message);
+      } finally {
+        this.memoryBusy = false;
+      }
+    },
+
+    downloadMemory() {
+      const url = URL.createObjectURL(new Blob([this.memoryMarkdown], { type: 'text/markdown;charset=utf-8' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'Memory.md';
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    },
+
     chooseWorkspaceFiles() {
       this.$refs.workspaceFileInput.click();
     },
@@ -1060,6 +1282,8 @@
         }
         const data = response.data.data;
         const harness = data.harness || {};
+        this.reportMemoryUpdate(data.memoryUpdateStatus, data.memoryUsage, data.sessionId || this.currentSessionId);
+        await this.loadMemoryMode();
         if (action === 'fork' && data.sessionId) {
           await this.loadSessionList();
           await this.switchSession(data.sessionId);
@@ -1106,6 +1330,8 @@
         }
         const data = response.data.data;
         const harness = data.harness || {};
+        this.reportMemoryUpdate(data.memoryUpdateStatus, data.memoryUsage, data.sessionId || this.currentSessionId);
+        await this.loadMemoryMode();
         if (data.assistantMessage) {
           data.assistantMessage.trajectoryId = harness.trajectoryId || trajectoryId;
           data.assistantMessage.trajectorySequence = harness.trajectorySequence || 0;
@@ -1171,6 +1397,7 @@
           this.currentSessionAiModelId = this.getSessionAiModelId(this.currentSessionId);
           this.clearMessageSelection();
           this.isManageMode = false;
+          await this.loadMemoryMode();
           
           this.$nextTick(() => {
             this.scrollToBottom();
@@ -1420,6 +1647,8 @@
         try { payload = JSON.parse(raw); } catch (error) { /* keep text payload */ }
         if (eventName === 'done') {
           streamDone = true;
+          this.reportMemoryUpdate(payload && payload.memoryUpdateStatus, payload && payload.memoryUsage);
+          this.loadMemoryMode();
           return;
         }
         this.handleLiveStreamEvent(eventName, payload, tempMessageId);
@@ -1445,7 +1674,7 @@
     },
 
     async sendMessage() {
-      if (this.isSending || this.workspaceUploading) return;
+      if (this.isSending || this.workspaceUploading || this.memoryBusy || !this.memoryReady) return;
 
       if ((!this.inputMessage || this.inputMessage.trim().length === 0) && this.pendingAttachments.length === 0) {
         this.$message.warning(ncfT('AdminChat.InputRequired'));

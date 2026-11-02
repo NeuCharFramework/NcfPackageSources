@@ -73,6 +73,7 @@ namespace Senparc.Areas.Admin.Domain.Models
         /// 管理后台聊天会话
         /// </summary>
         public DbSet<AdminChatSession> AdminChatSessions { get; set; }
+        public DbSet<AdminChatMemoryState> AdminChatMemoryStates { get; set; }
 
         /// <summary>
         /// 管理后台聊天消息
@@ -198,6 +199,9 @@ namespace Senparc.Areas.Admin.Domain.Models
                 .IsUnique();
 
             var providerName = Database.ProviderName ?? string.Empty;
+            if (providerName.Contains("Oracle", StringComparison.OrdinalIgnoreCase)
+                || providerName.Contains("Dm", StringComparison.OrdinalIgnoreCase))
+                modelBuilder.Entity<AdminChatMemoryState>().Property(row => row.Payload).HasColumnType("BLOB");
             var largeTextType = providerName.Contains("Oracle", StringComparison.OrdinalIgnoreCase)
                 ? "NCLOB"
                 : providerName.Contains("Dm", StringComparison.OrdinalIgnoreCase)

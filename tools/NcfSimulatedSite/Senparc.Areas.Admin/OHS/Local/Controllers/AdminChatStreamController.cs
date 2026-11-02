@@ -201,6 +201,8 @@ public sealed class AdminChatStreamController : ControllerBase
             await WriteEventAsync("done", new
             {
                 sessionId = request.SessionId,
+                memoryUpdateStatus = _chatAiService.MemoryUpdateStatus,
+                memoryUsage = _chatAiService.MemoryUsage,
                 mode = request.Mode,
                 trajectoryId = result.Harness?.TrajectoryId ?? 0,
                 trajectorySequence = result.Harness?.TrajectorySequence ?? 0,

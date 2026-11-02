@@ -34,6 +34,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.11.1 返回最近任务、工作区上下文和会话标题
 
+    修改标识：Senparc - 20261102
+    修改描述：提供当前用户 Memory 编辑、会话开关及租户 SystemMessage 设置
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -106,6 +109,79 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
             _localizer = localizer;
             _eventBus = serviceProvider.GetService<IEventBus>();
             _workspaceStorage = workspaceStorage;
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<AdminChatMemoryView>> GetMemoryAsync(int sessionId = 0)
+        {
+            return await this.GetResponseAsync<AppResponseBase<AdminChatMemoryView>, AdminChatMemoryView>(
+                async (response, logger) => await ServiceProvider.GetRequiredService<AdminChatMemoryService>()
+                    .GetAsync(GetCurrentAdminUserInfoId(), sessionId));
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<AdminChatMemoryView>> SaveMemoryAsync([FromBody] SaveAdminChatMemoryRequest request)
+        {
+            return await this.GetResponseAsync<AppResponseBase<AdminChatMemoryView>, AdminChatMemoryView>(
+                async (response, logger) =>
+                {
+                    if (request == null) throw new NcfExceptionBase("Memory request required.");
+                    return await ServiceProvider.GetRequiredService<AdminChatMemoryService>().SaveAsync(
+                        GetCurrentAdminUserInfoId(), request.SessionId, request.Revision, request.Markdown, request.SystemMessage);
+                });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<AdminChatMemoryView>> SetMemoryEnabledAsync([FromBody] SetAdminChatMemoryRequest request)
+        {
+            return await this.GetResponseAsync<AppResponseBase<AdminChatMemoryView>, AdminChatMemoryView>(
+                async (response, logger) =>
+                {
+                    if (request == null) throw new NcfExceptionBase("Memory request required.");
+                    return await ServiceProvider.GetRequiredService<AdminChatMemoryService>().SetModeAsync(
+                        GetCurrentAdminUserInfoId(), request.SessionId, request.Revision,
+                        request.Mode ?? (request.Enabled ? AdminChatMemoryMode.Learn : AdminChatMemoryMode.Off));
+                });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<AdminChatMemoryView>> EditMemoryEntryAsync([FromBody] EditAdminChatMemoryRequest request)
+        {
+            return await this.GetResponseAsync<AppResponseBase<AdminChatMemoryView>, AdminChatMemoryView>(
+                async (response, logger) =>
+                {
+                    if (request == null) throw new NcfExceptionBase("Memory request required.");
+                    return await ServiceProvider.GetRequiredService<AdminChatMemoryService>().EditAsync(
+                        GetCurrentAdminUserInfoId(), request.SessionId, request.Revision, request.Entry);
+                });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<AdminChatSystemMessageView>> GetGlobalChatSystemMessageAsync()
+        {
+            return await this.GetResponseAsync<AppResponseBase<AdminChatSystemMessageView>, AdminChatSystemMessageView>(
+                async (response, logger) =>
+                {
+                    if (!IsCurrentAdminSuperAdmin()) throw new NcfExceptionBase("Super administrator required.");
+                    var profile = await ServiceProvider.GetRequiredService<AdminChatMemoryService>().GetGlobalAsync();
+                    return new AdminChatSystemMessageView(profile.Revision, profile.SystemMessage);
+                });
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<AdminChatSystemMessageView>> SaveGlobalChatSystemMessageAsync(
+            [FromBody] AdminChatSystemMessageView request)
+        {
+            return await this.GetResponseAsync<AppResponseBase<AdminChatSystemMessageView>, AdminChatSystemMessageView>(
+                async (response, logger) =>
+                {
+                    if (!IsCurrentAdminSuperAdmin()) throw new NcfExceptionBase("Super administrator required.");
+                    if (request == null) throw new NcfExceptionBase("SystemMessage request required.");
+                    var profile = await ServiceProvider.GetRequiredService<AdminChatMemoryService>()
+                        .SaveGlobalAsync(request.Revision, request.SystemMessage);
+                    logger.Append("Updated tenant-wide AdminChat SystemMessage.");
+                    return new AdminChatSystemMessageView(profile.Revision, profile.SystemMessage);
+                });
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
@@ -269,12 +345,20 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                     }
                 }
 
+                var memory = ServiceProvider.GetRequiredService<AdminChatMemoryService>();
+                var memoryMode = request.MemoryMode ?? (request.UseMemory ? AdminChatMemoryMode.Learn : AdminChatMemoryMode.Off);
+                await memory.PrepareModeAsync(memoryMode);
                 var session = await _sessionService.CreateSessionAsync(
                     title,
                     userId,
                     workspaceId,
                     request.WorkspaceWriteEnabled,
                     request.WorkspaceCliEnabled);
+                if (memoryMode != AdminChatMemoryMode.Off)
+                {
+                    var profile = await memory.GetAsync(userId, session.Id);
+                    await memory.SetModeAsync(userId, session.Id, profile.Revision, memoryMode);
+                }
 
                 var moduleUidSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 if (request.ModuleUids != null && request.ModuleUids.Any())
@@ -623,6 +707,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 return new SendMessageResponse
                 {
+                    MemoryUpdateStatus = _chatAiService.MemoryUpdateStatus,
+                    MemoryUsage = _chatAiService.MemoryUsage,
                     UserMessage = AdminChatMessageDto.CreateFromEntity(userMessage),
                     AssistantMessage = AdminChatMessageDto.CreateFromEntity(assistantMessage),
                     Mode = mode,
@@ -794,6 +880,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 return new SendTrajectoryResponse
                 {
+                    MemoryUpdateStatus = _chatAiService.MemoryUpdateStatus,
+                    MemoryUsage = _chatAiService.MemoryUsage,
                     SessionId = trajectory.SessionId,
                     UserMessage = AdminChatMessageDto.CreateFromEntity(userMessage),
                     AssistantMessage = AdminChatMessageDto.CreateFromEntity(assistantMessage),
@@ -862,6 +950,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 return new SendTrajectoryResponse
                 {
+                    MemoryUpdateStatus = _chatAiService.MemoryUpdateStatus,
+                    MemoryUsage = _chatAiService.MemoryUsage,
                     SessionId = branchSession.Id,
                     UserMessage = AdminChatMessageDto.CreateFromEntity(userMessage),
                     AssistantMessage = AdminChatMessageDto.CreateFromEntity(assistantMessage),
@@ -908,6 +998,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
                 return new SendTrajectoryResponse
                 {
+                    MemoryUpdateStatus = "unchanged",
+                    MemoryUsage = _chatAiService.MemoryUsage,
                     SessionId = trajectory.SessionId,
                     AssistantMessage = AdminChatMessageDto.CreateFromEntity(assistantMessage),
                     Harness = harness
@@ -1517,6 +1609,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     /// </summary>
     public class SendMessageResponse
     {
+        public string MemoryUpdateStatus { get; set; }
+        public AdminChatMemoryUsage MemoryUsage { get; set; }
         public AdminChatMessageDto UserMessage { get; set; }
         public AdminChatMessageDto AssistantMessage { get; set; }
 
@@ -1608,6 +1702,8 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
 
     public class SendTrajectoryResponse
     {
+        public string MemoryUpdateStatus { get; set; }
+        public AdminChatMemoryUsage MemoryUsage { get; set; }
         public int SessionId { get; set; }
         public AdminChatMessageDto UserMessage { get; set; }
         public AdminChatMessageDto AssistantMessage { get; set; }

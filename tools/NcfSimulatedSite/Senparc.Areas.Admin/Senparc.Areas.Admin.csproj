@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.9</Version>
+		<Version>0.12.11</Version>
 		<PackageReleaseNotes>
     [2026-10-16] 增加 PromptRange Skill 目录、执行与 AdminChat 暴露能力
     1、通过 PromptRange.Abstractions 暴露可移植 Skill 契约
     2、将发布的 PromptRange Skill 注入 AdminChat 工具调用
+    [2026-11-02] Upgrade Memory with database encryption, Workspace scopes, Off/Read-only/Learn modes, evidence/history, token budgets and compact dropdown settings.
+    [2026-11-02] Add private per-user tiered Chat Memory, opt-in automatic extraction with PromptRange, revision-safe editing, and personal/tenant SystemMessage settings.
     [2026-11-02] Route AdminChat large attachments through streaming Workspace processing
     1. Support files above the local parsing limit through a 300 MiB streaming upload endpoint.
     2. Skip full-text extraction for large attachments and expose Workspace/Python batch-processing guidance with file size metadata.
@@ -128,6 +130,11 @@
 		<Configurations>Debug;Release;Debug-Dapr;ModifyPublish;ModifyPublish</Configurations>
 			<NoWarn>$(NoWarn);MEAI001;MAAI001</NoWarn>
 	</PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.ML.Tokenizers" Version="2.0.0" />
+        <PackageReference Include="Microsoft.ML.Tokenizers.Data.O200kBase" Version="2.0.0" />
+        <PackageReference Include="Microsoft.ML.Tokenizers.Data.Cl100kBase" Version="2.0.0" />
+    </ItemGroup>
 	<ItemGroup>
 		<!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
 

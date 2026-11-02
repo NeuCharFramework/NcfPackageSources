@@ -457,8 +457,13 @@
             font-size: 12px;
         }
 
+        .resource-monitor-chart-scroll {
+            overflow-x: auto;
+        }
+
         .resource-monitor-chart {
             position: relative;
+            min-width: 280px;
             height: 340px;
             margin-top: 4px;
             cursor: crosshair;
@@ -1474,7 +1479,9 @@
                 <i class="fa fa-exclamation-circle"></i> {{resourceMonitorError}}
             </span>
         </div>
-        <div id="resourceMonitorChart" class="resource-monitor-chart"></div>
+        <div class="resource-monitor-chart-scroll">
+            <div id="resourceMonitorChart" class="resource-monitor-chart"></div>
+        </div>
     </el-card>
 </div>
 
