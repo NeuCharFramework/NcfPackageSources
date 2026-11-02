@@ -259,6 +259,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Dm
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<int?>("SortOrder")
+                        .HasColumnType("INT");
+
                     b.Property<int>("Status")
                         .HasColumnType("INT");
 

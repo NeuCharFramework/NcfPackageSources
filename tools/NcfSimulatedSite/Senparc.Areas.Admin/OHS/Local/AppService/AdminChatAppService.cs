@@ -37,6 +37,9 @@
     修改标识：Senparc - 20261102
     修改描述：提供当前用户 Memory 编辑、会话开关及租户 SystemMessage 设置
 
+    修改标识：Senparc - 20261103
+    修改描述：提供同账号跨设备会话排序接口
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -444,6 +447,26 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
+        /// 保存当前用户分类内的会话顺序。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<AppResponseBase<List<AdminChatSessionDto>>> ReorderSessionAsync(
+            [FromBody] ReorderSessionRequest request)
+        {
+            return await this.GetResponseAsync<AppResponseBase<List<AdminChatSessionDto>>, List<AdminChatSessionDto>>(
+                async (response, logger) =>
+                {
+                    if (request == null) throw new NcfExceptionBase("Session order request required.");
+                    var userId = GetCurrentAdminUserInfoId();
+                    var sessions = await _sessionService.ReorderSessionAsync(
+                        userId, request.SessionId, request.TargetSessionId, request.InsertAfter);
+                    logger.Append($"Reordered session: SessionId={request.SessionId}, UserId={userId}");
+                    await PublishSyncEventAsync(userId, request.SessionId, "session-reordered");
+                    return sessions.Select(AdminChatSessionDto.CreateFromEntity).ToList();
+                });
+        }
+
+        /// <summary>
         /// 异步生成首轮会话标题。标题生成只读取首条用户消息，不阻塞正常回复流。
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
@@ -708,6 +731,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 return new SendMessageResponse
                 {
                     MemoryUpdateStatus = _chatAiService.MemoryUpdateStatus,
+                    MemoryUpdateResult = _chatAiService.MemoryUpdateResult,
                     MemoryUsage = _chatAiService.MemoryUsage,
                     UserMessage = AdminChatMessageDto.CreateFromEntity(userMessage),
                     AssistantMessage = AdminChatMessageDto.CreateFromEntity(assistantMessage),
@@ -881,6 +905,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 return new SendTrajectoryResponse
                 {
                     MemoryUpdateStatus = _chatAiService.MemoryUpdateStatus,
+                    MemoryUpdateResult = _chatAiService.MemoryUpdateResult,
                     MemoryUsage = _chatAiService.MemoryUsage,
                     SessionId = trajectory.SessionId,
                     UserMessage = AdminChatMessageDto.CreateFromEntity(userMessage),
@@ -951,6 +976,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 return new SendTrajectoryResponse
                 {
                     MemoryUpdateStatus = _chatAiService.MemoryUpdateStatus,
+                    MemoryUpdateResult = _chatAiService.MemoryUpdateResult,
                     MemoryUsage = _chatAiService.MemoryUsage,
                     SessionId = branchSession.Id,
                     UserMessage = AdminChatMessageDto.CreateFromEntity(userMessage),
@@ -999,6 +1025,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 return new SendTrajectoryResponse
                 {
                     MemoryUpdateStatus = "unchanged",
+                    MemoryUpdateResult = _chatAiService.MemoryUpdateResult,
                     MemoryUsage = _chatAiService.MemoryUsage,
                     SessionId = trajectory.SessionId,
                     AssistantMessage = AdminChatMessageDto.CreateFromEntity(assistantMessage),
@@ -1508,6 +1535,13 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     /// <summary>
     /// 获取会话列表响应
     /// </summary>
+    public class ReorderSessionRequest
+    {
+        public int SessionId { get; set; }
+        public int TargetSessionId { get; set; }
+        public bool InsertAfter { get; set; }
+    }
+
     public class GetSessionListResponse
     {
         public List<AdminChatSessionDto> Sessions { get; set; }
@@ -1610,6 +1644,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     public class SendMessageResponse
     {
         public string MemoryUpdateStatus { get; set; }
+        public AdminChatMemoryUpdateResult MemoryUpdateResult { get; set; }
         public AdminChatMemoryUsage MemoryUsage { get; set; }
         public AdminChatMessageDto UserMessage { get; set; }
         public AdminChatMessageDto AssistantMessage { get; set; }
@@ -1703,6 +1738,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
     public class SendTrajectoryResponse
     {
         public string MemoryUpdateStatus { get; set; }
+        public AdminChatMemoryUpdateResult MemoryUpdateResult { get; set; }
         public AdminChatMemoryUsage MemoryUsage { get; set; }
         public int SessionId { get; set; }
         public AdminChatMessageDto UserMessage { get; set; }

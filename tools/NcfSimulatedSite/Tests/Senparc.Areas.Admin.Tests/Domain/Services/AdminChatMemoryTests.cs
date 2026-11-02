@@ -164,11 +164,11 @@ public class AdminChatMemoryTests
     public void Merge_RequiresVerbatimEvidence_ValidatesEntireBatchBeforeMutation()
     {
         var profile = new AdminChatMemoryProfile();
-        Assert.ThrowsException<NcfExceptionBase>(() => AdminChatMemoryDocument.Merge(profile, Changes(), "hello"));
+        Assert.ThrowsException<AdminChatMemoryValidationException>(() => AdminChatMemoryDocument.Merge(profile, Changes(), "hello"));
         Assert.AreEqual(0, profile.Entries.Count);
         Assert.IsTrue(AdminChatMemoryDocument.Merge(profile, Changes(), "Prefer concise replies"));
         Assert.IsFalse(AdminChatMemoryDocument.Merge(profile, Changes(), "Prefer concise replies"));
-        Assert.ThrowsException<NcfExceptionBase>(() => AdminChatMemoryDocument.Merge(profile,
+        Assert.ThrowsException<AdminChatMemoryValidationException>(() => AdminChatMemoryDocument.Merge(profile,
             Changes("api key: private", "api key: private"), "api key: private"));
         Assert.AreEqual(1, profile.Entries.Count);
         Assert.ThrowsException<JsonException>(() => AdminChatMemoryDocument.Merge(profile, "not json", "hello"));
@@ -441,10 +441,97 @@ public class AdminChatMemoryTests
             key = "test-command", text = "Use dotnet test", topic = "tests", tier = "topic",
             evidence = "Remember: use dotnet test", remove = false, scope = "workspace", kind = "project"
         }});
-        Assert.ThrowsException<NcfExceptionBase>(() => AdminChatMemoryDocument.Merge(profile, json, "Remember: use dotnet test"));
+        Assert.ThrowsException<AdminChatMemoryValidationException>(() => AdminChatMemoryDocument.Merge(profile, json, "Remember: use dotnet test"));
         Assert.IsTrue(AdminChatMemoryDocument.Merge(profile, json, "Remember: use dotnet test", "alpha", 1, 2));
         Assert.AreEqual("alpha", profile.Entries.Single().WorkspaceId);
-        Assert.ThrowsException<NcfExceptionBase>(() => AdminChatMemoryDocument.Merge(profile,
+        Assert.ThrowsException<AdminChatMemoryValidationException>(() => AdminChatMemoryDocument.Merge(profile,
             Changes(remove: true), "Prefer concise replies"));
+    }
+
+    [TestMethod]
+    public async Task AutomaticUpdate_ReportedTimePreference_PersistsInDatabaseAndLoadsNextTurn()
+    {
+        const string message = "以后都要记住这个规则（对话结束后返回当前时间）";
+        const string preference = "每次回复结束时返回当前时间；无实时工具时说明无法获取，不虚构时间。";
+        Assert.IsTrue(AdminChatMemoryRetrieval.ShouldLearn(message));
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+        await using var db = new MemoryDb(new DbContextOptionsBuilder<MemoryDb>().UseSqlite(connection).Options);
+        await db.Database.EnsureCreatedAsync();
+        var store = new AdminChatMemoryDatabaseStore(db, _store, _protection);
+        var profile = await store.UpdateAsync(1, 12, "", value => value.SessionModes[3] = AdminChatMemoryMode.Learn);
+        using var services = new ServiceCollection().AddSingleton<IMemoryPromptProvider>(new TestPromptProvider()).BuildServiceProvider();
+        var service = new AdminChatMemoryService(store, null!, services, NullLogger<AdminChatMemoryService>.Instance);
+        await service.CompleteAsync(new(1, 12, 3, profile, true, "", AdminChatMemoryMode.Learn, "alpha", 123), message, 0,
+            (_, input, _) =>
+            {
+                StringAssert.Contains(input, message);
+                return Task.FromResult(JsonSerializer.Serialize(new[] {
+                    new { key = "reply-current-time", text = preference, topic = "", tier = "core",
+                        evidence = message, remove = false, scope = "global", kind = "preference" }
+                }));
+            }, default);
+        Assert.AreEqual("updated", service.UpdateResult.Status);
+        Assert.AreEqual("saved", service.UpdateResult.Reason);
+        Assert.AreEqual(1, service.UpdateResult.GlobalChanges);
+        Assert.AreEqual(0, service.UpdateResult.WorkspaceChanges);
+        Assert.IsTrue(service.UpdateResult.Requested);
+        var saved = await store.ReadAsync(1, 12);
+        StringAssert.Contains(AdminChatMemoryDocument.Export(saved.Entries), preference);
+        Assert.AreEqual(123, saved.Entries.Single().SourceMessageId);
+        StringAssert.Contains(AdminChatMemoryRetrieval.Build(saved, "other-workspace", "你好", "gpt-4o").Context, preference);
+        Assert.IsFalse(Directory.Exists(Path.Combine(_root, "alpha")), "Private Memory does not create shared Workspace files.");
+    }
+
+    [TestMethod]
+    public async Task UpdateResult_DistinguishesEmptyPinnedInvalidAndSavedWorkspace()
+    {
+        const string message = "Remember: Prefer concise replies";
+        var profile = await _store.UpdateAsync(1, 12, "", value => value.SessionModes[3] = AdminChatMemoryMode.Learn);
+        var service = Service();
+        await service.CompleteAsync(new(1, 12, 3, profile, true, ""), message, 0, (_, _, _) => Task.FromResult("[]"), default);
+        Assert.AreEqual("no-candidates", service.UpdateResult.Reason);
+        Assert.AreEqual(0, service.UpdateResult.GlobalChanges);
+        Assert.AreEqual(profile.Revision, (await _store.ReadAsync(1, 12)).Revision);
+        Assert.AreEqual("test-T1-A1", service.UpdateResult.PromptCode);
+        await service.CompleteAsync(new(1, 12, 3, profile, true, ""), message, 0,
+            (_, _, _) => Task.FromResult("not json"), default);
+        Assert.AreEqual("invalid-json", service.UpdateResult.Reason);
+        Assert.AreEqual(0, service.UpdateResult.GlobalChanges);
+        profile = await _store.UpdateAsync(1, 12, profile.Revision, value => value.Entries.Add(
+            new("response-style", "Prefer concise replies", "", "core", true, DateTimeOffset.UtcNow)));
+        await service.CompleteAsync(new(1, 12, 3, profile, true, ""), message, 0,
+            (_, _, _) => Task.FromResult(Changes()), default);
+        Assert.AreEqual("pinned", service.UpdateResult.Reason);
+        Assert.AreEqual("unchanged", service.UpdateResult.Status);
+        var workspaceOutput = JsonSerializer.Serialize(new[] {
+            new { key = "response-style", text = "Prefer concise replies", topic = "", tier = "core",
+                evidence = "Prefer concise replies", remove = false, scope = "workspace", kind = "preference" }
+        });
+        await service.CompleteAsync(new(1, 12, 3, profile, true, "", AdminChatMemoryMode.Learn, "alpha"), message, 0,
+            (_, _, _) => Task.FromResult(workspaceOutput), default);
+        Assert.AreEqual("updated", service.UpdateResult.Status);
+        Assert.AreEqual(0, service.UpdateResult.GlobalChanges);
+        Assert.AreEqual(1, service.UpdateResult.WorkspaceChanges);
+        var saved = await _store.ReadAsync(1, 12);
+        Assert.AreEqual(1, saved.Entries.Count(entry => entry.WorkspaceId == "alpha"));
+        Assert.AreEqual(0, AdminChatMemoryRetrieval.Eligible(saved, "beta").Count(entry => entry.WorkspaceId == "alpha"));
+    }
+
+    [TestMethod]
+    public void PromptUpgrade_ChangesOnlyUntouchedUnscoredDefault_AndKeepsCustomScores()
+    {
+        var item = MemoryPromptProvider.CreateDefaultPrompt(1, "2026.11.03.1", 0);
+        item.UpdateContent(MemoryPromptProvider.PreviousDefaultPrompt);
+        Assert.IsTrue(MemoryPromptProvider.UpgradeUnmodifiedDefault(item));
+        Assert.AreEqual(MemoryPromptProvider.DefaultPrompt, item.Content);
+        Assert.IsFalse(MemoryPromptProvider.UpgradeUnmodifiedDefault(item), "Upgrade must be idempotent.");
+        item.UpdateContent("Custom prompt");
+        Assert.IsFalse(MemoryPromptProvider.UpgradeUnmodifiedDefault(item));
+        item.UpdateContent(MemoryPromptProvider.PreviousDefaultPrompt).UpdateEvalAvgScore(90);
+        Assert.IsFalse(MemoryPromptProvider.UpgradeUnmodifiedDefault(item), "Never overwrite a user-scored prompt.");
+        StringAssert.Contains(MemoryPromptProvider.DefaultPrompt, "以后都要记住这个规则");
+        StringAssert.Contains(AdminChatMemoryService.StorageInstructions(AdminChatMemoryMode.Learn), "AFTER your reply");
+        StringAssert.Contains(AdminChatMemoryService.StorageInstructions(AdminChatMemoryMode.Off), "Never claim");
     }
 }

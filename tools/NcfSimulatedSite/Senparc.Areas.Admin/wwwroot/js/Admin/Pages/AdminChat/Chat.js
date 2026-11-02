@@ -12,6 +12,8 @@
       memoryEntryDraft: null,
       memoryUsage: null,
       memoryUsageSessionId: 0,
+      memoryUpdateResult: null,
+      memoryUpdateSessionId: 0,
       memoryRevision: '',
       memoryBusy: false,
       memoryReady: false,
@@ -49,6 +51,16 @@
       aiKernelAvailable: false,
       loadingAiModelOptions: false,
       sessionList: [],
+      sidebarWidth: 250,
+      sidebarCollapsed: false,
+      collapsedSessionGroups: [],
+      sidebarResizeHandler: null,
+      sidebarResizeEndHandler: null,
+      draggingSessionId: 0,
+      dropSessionId: 0,
+      dropAfter: false,
+      savingSessionOrder: false,
+      runningSessionId: 0,
       messageList: [],
       inputMessage: '',
       loadingSessions: false,
@@ -152,6 +164,8 @@
         }
         groupMap.get(key).sessions.push(session);
       });
+      groups.forEach(group => group.sessions.sort((a, b) =>
+        (a.sortOrder ?? Number.MAX_SAFE_INTEGER) - (b.sortOrder ?? Number.MAX_SAFE_INTEGER)));
       return groups;
     }
   },
@@ -186,6 +200,7 @@
 
     this.currentSessionAiModelId = this.getSessionAiModelId(this.currentSessionId);
     this.launcherAiModelId = this.currentSessionAiModelId;
+    this.loadSidebarPreferences();
 
     this.loadAiModelOptions();
     this.loadSessionList();
@@ -207,9 +222,159 @@
       this.activeRequestController = null;
     }
     this.stopWorkspacePreviewResize();
+    this.stopSidebarResize();
     this.clearPendingAttachments();
   },
   methods: {
+    sidebarStorageKey() {
+      return `ncf.admin.chat.sidebar.${this.currentUserId}`;
+    },
+    loadSidebarPreferences() {
+      try {
+        const raw = localStorage.getItem(this.sidebarStorageKey());
+        if (!raw) return;
+        const preferences = JSON.parse(raw);
+        if (!preferences || typeof preferences !== 'object'
+          || !Number.isFinite(preferences.width) || typeof preferences.collapsed !== 'boolean'
+          || !Array.isArray(preferences.groups) || !preferences.groups.every(key => typeof key === 'string')) {
+          throw new Error('Invalid sidebar preferences.');
+        }
+        this.sidebarWidth = Math.max(215, Math.min(420, preferences.width));
+        this.sidebarCollapsed = preferences.collapsed;
+        this.collapsedSessionGroups = preferences.groups;
+      } catch (error) {
+        console.error('Loading AdminChat sidebar preferences failed:', error);
+        this.$message.warning(ncfT('AdminChat.Sidebar.PreferencesFailed'));
+      }
+    },
+    saveSidebarPreferences() {
+      try {
+        localStorage.setItem(this.sidebarStorageKey(), JSON.stringify({
+          width: this.sidebarWidth, collapsed: this.sidebarCollapsed, groups: this.collapsedSessionGroups
+        }));
+      } catch (error) {
+        console.error('Saving AdminChat sidebar preferences failed:', error);
+        this.$message.warning(ncfT('AdminChat.Sidebar.PreferencesFailed'));
+      }
+    },
+    toggleSidebar() {
+      this.sidebarCollapsed = !this.sidebarCollapsed;
+      this.saveSidebarPreferences();
+      this.$nextTick(() => this.updateWorkspacePreviewLayout());
+    },
+    isSessionGroupCollapsed(key) {
+      return this.collapsedSessionGroups.includes(key);
+    },
+    toggleSessionGroup(key) {
+      this.collapsedSessionGroups = this.isSessionGroupCollapsed(key)
+        ? this.collapsedSessionGroups.filter(item => item !== key)
+        : this.collapsedSessionGroups.concat(key);
+      this.saveSidebarPreferences();
+    },
+    setSidebarWidth(width) {
+      this.sidebarWidth = Math.max(215, Math.min(420, width));
+      this.$nextTick(() => this.updateWorkspacePreviewLayout());
+    },
+    resizeSidebarByKeyboard(delta) {
+      this.setSidebarWidth(this.sidebarWidth + delta);
+      this.saveSidebarPreferences();
+    },
+    startSidebarResize(event) {
+      if (event.button !== 0 || this.sidebarCollapsed) return;
+      event.preventDefault();
+      this.stopSidebarResize();
+      const startX = event.clientX;
+      const startWidth = event.currentTarget.parentElement.getBoundingClientRect().width;
+      const pointerId = event.pointerId;
+      this.sidebarResizeHandler = move => {
+        if (move.pointerId === pointerId) this.setSidebarWidth(startWidth + move.clientX - startX);
+      };
+      this.sidebarResizeEndHandler = end => {
+        if (end.pointerId !== undefined && end.pointerId !== pointerId) return;
+        this.stopSidebarResize();
+        this.saveSidebarPreferences();
+      };
+      document.addEventListener('pointermove', this.sidebarResizeHandler);
+      document.addEventListener('pointerup', this.sidebarResizeEndHandler);
+      document.addEventListener('pointercancel', this.sidebarResizeEndHandler);
+      window.addEventListener('blur', this.sidebarResizeEndHandler);
+      document.body.classList.add('is-resizing-chat-sidebar');
+    },
+    stopSidebarResize() {
+      document.removeEventListener('pointermove', this.sidebarResizeHandler);
+      document.removeEventListener('pointerup', this.sidebarResizeEndHandler);
+      document.removeEventListener('pointercancel', this.sidebarResizeEndHandler);
+      window.removeEventListener('blur', this.sidebarResizeEndHandler);
+      document.body.classList.remove('is-resizing-chat-sidebar');
+      this.sidebarResizeHandler = null;
+      this.sidebarResizeEndHandler = null;
+    },
+    isSessionRunning(session) {
+      return this.isSending && this.runningSessionId === session.id;
+    },
+    startSessionDrag(event, session) {
+      if (this.savingSessionOrder) { event.preventDefault(); return; }
+      this.draggingSessionId = session.id;
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', String(session.id));
+    },
+    canDropSession(session) {
+      const source = this.sessionList.find(item => item.id === this.draggingSessionId);
+      return !this.savingSessionOrder && !!source && source.id !== session.id
+        && (source.workspaceId || '') === (session.workspaceId || '');
+    },
+    handleSessionDragOver(event, session) {
+      if (!this.canDropSession(session)) {
+        this.dropSessionId = 0;
+        return;
+      }
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+      this.dropSessionId = session.id;
+      const bounds = event.currentTarget.getBoundingClientRect();
+      this.dropAfter = event.clientY > bounds.top + bounds.height / 2;
+    },
+    async handleSessionDrop(event, session) {
+      if (!this.canDropSession(session)) return;
+      event.preventDefault();
+      const bounds = event.currentTarget.getBoundingClientRect();
+      const insertAfter = event.clientY > bounds.top + bounds.height / 2;
+      const sessionId = this.draggingSessionId;
+      this.endSessionDrag();
+      await this.saveSessionOrder(sessionId, session.id, insertAfter);
+    },
+    endSessionDrag() {
+      this.draggingSessionId = 0;
+      this.dropSessionId = 0;
+      this.dropAfter = false;
+    },
+    async moveSessionByKeyboard(session, direction) {
+      if (this.savingSessionOrder) return;
+      const group = this.groupedSessionList.find(item => item.sessions.some(value => value.id === session.id));
+      const index = group.sessions.findIndex(item => item.id === session.id);
+      const target = group.sessions[index + direction];
+      if (target) await this.saveSessionOrder(session.id, target.id, direction > 0);
+    },
+    async saveSessionOrder(sessionId, targetSessionId, insertAfter) {
+      if (this.savingSessionOrder) return;
+      this.savingSessionOrder = true;
+      try {
+        const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.ReorderSessionAsync',
+          { sessionId, targetSessionId, insertAfter });
+        if (!response.data || !response.data.success || !Array.isArray(response.data.data)) {
+          throw new Error(response.data && response.data.errorMessage || ncfT('AdminChat.Sidebar.SortFailed'));
+        }
+        const ranks = new Map(response.data.data.map(session => [session.id, session.sortOrder]));
+        this.sessionList = this.sessionList.map(session => ranks.has(session.id)
+          ? { ...session, sortOrder: ranks.get(session.id) } : session);
+        this.$message.success(ncfT('AdminChat.Sidebar.SortSaved'));
+      } catch (error) {
+        console.error('Reordering AdminChat sessions failed:', error);
+        this.$message.error(error.message || ncfT('AdminChat.Sidebar.SortFailed'));
+      } finally {
+        this.savingSessionOrder = false;
+      }
+    },
     async memoryRequest(method, body, get = false) {
       const base = '/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.';
       const response = get ? await service.get(base + method) : await service.post(base + method, body);
@@ -219,14 +384,27 @@
       return response.data.data;
     },
 
-    reportMemoryUpdate(status, usage, sessionId = this.currentSessionId) {
+    reportMemoryUpdate(status, usage, sessionId = this.currentSessionId, result = null) {
       if (usage) {
         this.memoryUsage = usage;
         this.memoryUsageSessionId = sessionId;
       }
+      this.memoryUpdateResult = result;
+      this.memoryUpdateSessionId = sessionId;
       if (status && !['disabled', 'updated', 'unchanged', 'read-only', 'skipped-input'].includes(status)) {
         this.$message.warning(ncfT('AdminChat.Memory.UpdateWarning') + ' (' + status + ')');
       }
+    },
+
+    memoryUpdateText(result) {
+      if (!result) return '';
+      if (result.status === 'updated') {
+        return ncfT('AdminChat.Memory.UpdateSaved', result.globalChanges, result.workspaceChanges);
+      }
+      const knownReasons = ['mode-off', 'read-only', 'input-not-eligible', 'no-candidates',
+        'pinned', 'no-difference', 'revision-conflict', 'timeout', 'invalid-change', 'capacity', 'invalid-json', 'pending'];
+      const reason = knownReasons.includes(result.reason) ? result.reason : 'update-failed';
+      return ncfT('AdminChat.Memory.UpdateReason.' + reason);
     },
 
     formatMemoryContent(markdown) {
@@ -1272,6 +1450,8 @@
     },
 
     async runTrajectoryAction(action, payload) {
+      if (this.isSending) return;
+      this.runningSessionId = this.currentSessionId;
       this.isSending = true;
       this.isAIResponding = true;
       try {
@@ -1282,7 +1462,7 @@
         }
         const data = response.data.data;
         const harness = data.harness || {};
-        this.reportMemoryUpdate(data.memoryUpdateStatus, data.memoryUsage, data.sessionId || this.currentSessionId);
+        this.reportMemoryUpdate(data.memoryUpdateStatus, data.memoryUsage, data.sessionId || this.currentSessionId, data.memoryUpdateResult);
         await this.loadMemoryMode();
         if (action === 'fork' && data.sessionId) {
           await this.loadSessionList();
@@ -1308,11 +1488,14 @@
         this.$message.error(error.message || '任务执行失败');
       } finally {
         this.isSending = false;
+        this.runningSessionId = 0;
         this.isAIResponding = false;
       }
     },
 
     async respondApproval(trajectoryId, approval, approved) {
+      if (this.isSending) return;
+      this.runningSessionId = this.currentSessionId;
       this.isSending = true;
       this.isAIResponding = true;
       try {
@@ -1330,7 +1513,7 @@
         }
         const data = response.data.data;
         const harness = data.harness || {};
-        this.reportMemoryUpdate(data.memoryUpdateStatus, data.memoryUsage, data.sessionId || this.currentSessionId);
+        this.reportMemoryUpdate(data.memoryUpdateStatus, data.memoryUsage, data.sessionId || this.currentSessionId, data.memoryUpdateResult);
         await this.loadMemoryMode();
         if (data.assistantMessage) {
           data.assistantMessage.trajectoryId = harness.trajectoryId || trajectoryId;
@@ -1346,6 +1529,7 @@
         this.$message.error(error.message || '审批处理失败');
       } finally {
         this.isSending = false;
+        this.runningSessionId = 0;
         this.isAIResponding = false;
       }
     },
@@ -1362,13 +1546,20 @@
     async loadSessionList() {
       this.loadingSessions = true;
       try {
-        const response = await service.get('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetSessionListAsync?pageIndex=1&pageSize=50');
-        
-        if (response.data && response.data.success && response.data.data) {
-          this.sessionList = response.data.data.sessions || [];
-        } else {
-          console.error('加载会话列表失败:', response.data.errorMessage);
-        }
+        const sessions = [];
+        let totalCount;
+        let pageIndex = 1;
+        do {
+          const response = await service.get(`/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetSessionListAsync?pageIndex=${pageIndex++}&pageSize=100`);
+          const data = response.data && response.data.success && response.data.data;
+          if (!data || !Array.isArray(data.sessions) || !Number.isInteger(data.totalCount)
+            || (data.sessions.length === 0 && sessions.length < data.totalCount)) {
+            throw new Error(response.data && response.data.errorMessage || ncfT('AdminChat.LoadSessionFailed'));
+          }
+          sessions.push(...data.sessions);
+          totalCount = data.totalCount;
+        } while (sessions.length < totalCount);
+        this.sessionList = Array.from(new Map(sessions.map(session => [session.id, session])).values());
       } catch (error) {
         console.error('加载会话列表异常:', error);
         this.$message.error(ncfT('AdminChat.LoadSessionFailed'));
@@ -1647,7 +1838,8 @@
         try { payload = JSON.parse(raw); } catch (error) { /* keep text payload */ }
         if (eventName === 'done') {
           streamDone = true;
-          this.reportMemoryUpdate(payload && payload.memoryUpdateStatus, payload && payload.memoryUsage);
+          this.reportMemoryUpdate(payload && payload.memoryUpdateStatus, payload && payload.memoryUsage,
+            requestData.sessionId, payload && payload.memoryUpdateResult);
           this.loadMemoryMode();
           return;
         }
@@ -1689,6 +1881,7 @@
       const messageContent = (this.inputMessage || '').trim() || '请先查看本轮附件的目录和解析限制，并询问我希望如何处理。';
       const sendingAttachments = this.pendingAttachments.slice();
       const sendingSessionId = this.currentSessionId;
+      this.runningSessionId = sendingSessionId;
       this.pendingAttachments = [];
       const isFirstGeneration = !this.messageList.some((message) => message.roleType === 1);
       this.inputMessage = '';
@@ -1767,6 +1960,7 @@
         }
         this.isStopping = false;
         this.isSending = false;
+        this.runningSessionId = 0;
         this.isAIResponding = false;
       }
     },

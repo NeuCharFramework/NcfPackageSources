@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.11.1 保存会话工作区与标题
 
+    修改标识：Senparc - 20261103
+    修改描述：验证分类和所有权并原子保存会话排序
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +23,7 @@ using Senparc.Areas.Admin.ACL;
 using Senparc.Areas.Admin.Domain.Models;
 using Senparc.Areas.Admin.Domain.Models.DatabaseModel;
 using Senparc.Ncf.Service;
+using Senparc.Ncf.Core.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +69,41 @@ namespace Senparc.Areas.Admin.Domain.Services
         {
             var session = await base.GetObjectAsync(s => s.Id == sessionId && s.UserId == userId);
             return session;
+        }
+
+        public async Task<List<AdminChatSession>> ReorderSessionAsync(
+            int userId, int sessionId, int targetSessionId, bool insertAfter)
+        {
+            if (userId <= 0 || sessionId <= 0 || targetSessionId <= 0 || sessionId == targetSessionId)
+                throw new NcfExceptionBase("Invalid session order request.");
+
+            var source = await GetSessionByIdAsync(sessionId, userId);
+            var target = await GetSessionByIdAsync(targetSessionId, userId);
+            if (source == null || target == null || source.Status != ChatSessionStatus.Active
+                || target.Status != ChatSessionStatus.Active
+                || source.TenantId != target.TenantId
+                || (source.WorkspaceId ?? "") != (target.WorkspaceId ?? ""))
+                throw new NcfExceptionBase("Only your active sessions in the same Workspace can be reordered.");
+
+            var db = BaseData.BaseDB.BaseDataContext;
+            var sessions = await db.Set<AdminChatSession>()
+                .Where(s => s.TenantId == source.TenantId && s.UserId == userId && !s.Flag
+                    && s.Status == ChatSessionStatus.Active && s.WorkspaceId == source.WorkspaceId)
+                .OrderBy(s => s.SortOrder ?? int.MaxValue)
+                .ThenByDescending(s => s.LastMessageTime)
+                .ThenByDescending(s => s.Id)
+                .ToListAsync();
+            var moved = sessions.Single(s => s.Id == sessionId);
+            sessions.Remove(moved);
+            sessions.Insert(sessions.FindIndex(s => s.Id == targetSessionId) + (insertAfter ? 1 : 0), moved);
+            for (var index = 0; index < sessions.Count; index++)
+            {
+                sessions[index].SetSortOrder(index);
+                // Concurrent reorder requests must replace the whole order, not merge changed ranks.
+                db.Entry(sessions[index]).Property(s => s.SortOrder).IsModified = true;
+            }
+            await db.SaveChangesAsync();
+            return sessions;
         }
 
         /// <summary>

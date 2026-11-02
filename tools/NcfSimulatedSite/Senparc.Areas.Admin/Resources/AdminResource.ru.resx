@@ -1,5 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Развернуть панель чатов</value></data>
+  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Свернуть панель чатов</value></data>
+  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Изменить ширину панели (стрелки влево/вправо)</value></data>
+  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>Перетащите внутри группы или нажмите Alt + Вверх/Вниз</value></data>
+  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>Выполняется</value></data>
+  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>Остановка</value></data>
+  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>Порядок сохранён для этой учётной записи на всех устройствах</value></data>
+  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>Не удалось сохранить порядок. Повторите попытку.</value></data>
+  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>Не удалось прочитать или сохранить настройки панели. Этот вид действует только на текущей странице.</value></data>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>

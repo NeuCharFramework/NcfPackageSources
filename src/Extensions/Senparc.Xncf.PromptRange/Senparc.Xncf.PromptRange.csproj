@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.7</Version>
+    <Version>0.20.8</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -23,10 +23,6 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-      [2026-11-02] Fix Memory default prompt note length and support scoped, evidence-based incremental extraction.
-      [2026-11-02] Add the AdminChat.Memory system prompt provider with published-version score selection.
-      [2026-11-02] Return prompt scores and support server-side average-score and PromptCode sorting in the reusable selector.
-      [2026-11-02] Add authorized prompt selector APIs for range/lane options, paginated keyword search and on-demand prompt content.
       [2024-08-06] v0.9.6.0-preview1 update Senparc.AI.Kernel
       [2024-08-29] v0.9.9.0-preview1 更新首页统计
       [2024-08-31] v0.10.0-preview1 PromptRange 支持 Markdown 输出格式展示
@@ -149,6 +145,11 @@
       3、执行请求可附带策略，并适配 Senparc.AI.AgentKernel 0.1.15-preview2
       [2026-10-21] v0.20.2 upgrade Skill management with GitHub folder import, AI Draft generation, version tree preview, and safer content inspection
       [2026-10-22] v0.20.3 persist Skill package artifacts through FileManager and add source metadata to PromptRange
+      [2026-11-02] Fix Memory default prompt note length and support scoped, evidence-based incremental extraction.
+      [2026-11-02] Add the AdminChat.Memory system prompt provider with published-version score selection.
+      [2026-11-02] Return prompt scores and support server-side average-score and PromptCode sorting in the reusable selector.
+      [2026-11-02] Add authorized prompt selector APIs for range/lane options, paginated keyword search and on-demand prompt content.
+      [2026-11-03] Recognize durable reply preferences and safely refresh unchanged, unscored Memory defaults without replacing customized or scored prompts.
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

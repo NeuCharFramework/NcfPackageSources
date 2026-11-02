@@ -33,6 +33,9 @@ public sealed record AdminChatMemoryView(string Revision, string Markdown, strin
 public sealed record AdminChatMemoryEdit(string Id, int Version, string Text, string Topic, string Tier,
     string Kind, bool Pinned, string Scope, DateTimeOffset? ExpiresAt, bool Remove);
 
+public sealed record AdminChatMemoryUpdateResult(string Status, string Reason, bool Requested,
+    int GlobalChanges, int WorkspaceChanges, string PromptCode);
+
 public sealed class AdminChatMemoryService
 {
     private readonly IAdminChatMemoryStore _store;
@@ -41,6 +44,25 @@ public sealed class AdminChatMemoryService
     private readonly ILogger<AdminChatMemoryService> _logger;
     public string UpdateStatus { get; private set; } = "disabled";
     public AdminChatMemoryUsage Usage { get; private set; }
+    private string _updateReason = "mode-off";
+    private bool _updateRequested;
+    private int _globalChanges;
+    private int _workspaceChanges;
+    private string _promptCode;
+    public AdminChatMemoryUpdateResult UpdateResult =>
+        new(UpdateStatus, _updateReason, _updateRequested, _globalChanges, _workspaceChanges, _promptCode);
+
+    public static string StorageInstructions(AdminChatMemoryMode mode) =>
+        "\n[Memory persistence contract]\nCurrent Memory mode: " + mode + ". "
+        + "Long-term Memory is private per-user database storage, not a Workspace Memory.md file. "
+        + "Workspace files named Memory.md are not automatically imported. "
+        + "In Learn mode a separate service may extract and validate this user's preferences AFTER your reply. "
+        + "You have not received its save result. Never claim a preference has been recorded, saved or updated "
+        + "in long-term Memory or in a file based only on the user's request or your intention. "
+        + "You may acknowledge the request for this conversation, explaining that the system's Memory update report "
+        + "is the persistence confirmation. Off and ReadOnly modes never learn automatically. "
+        + "Do not invent a timestamp or a format the user did not specify; use a trusted time tool when available "
+        + "and disclose when real-time access is unavailable.\n";
 
     public AdminChatMemoryService(IAdminChatMemoryStore store, AdminChatSessionService sessions,
         IServiceProvider services, ILogger<AdminChatMemoryService> logger)
@@ -207,6 +229,10 @@ public sealed class AdminChatMemoryService
         var profile = await _store.ReadAsync(tenant, userId, cancellationToken);
         var global = await _store.ReadAsync(tenant, 0, cancellationToken);
         var mode = profile.ModeFor(sessionId);
+        _updateRequested = AdminChatMemoryRetrieval.ShouldLearn(userMessage);
+        _globalChanges = _workspaceChanges = 0;
+        _promptCode = null;
+        _updateReason = mode == AdminChatMemoryMode.Learn ? "pending" : mode == AdminChatMemoryMode.ReadOnly ? "read-only" : "mode-off";
         var enabled = mode != AdminChatMemoryMode.Off;
         UpdateStatus = mode == AdminChatMemoryMode.Learn ? "pending" : enabled ? "read-only" : "disabled";
         var workspace = session.WorkspaceId ?? "";
@@ -228,17 +254,27 @@ public sealed class AdminChatMemoryService
         if (profile.SystemMessage.Length > 0) instructions += "\n[Current user's SystemMessage]\n" + profile.SystemMessage;
         if (context.Length > 0)
             instructions += context;
+        instructions += StorageInstructions(mode);
         return new AdminChatMemoryContext(tenant, userId, sessionId, profile, enabled, instructions, mode, workspace, sourceMessageId);
     }
 
     public async Task CompleteAsync(AdminChatMemoryContext context, string userMessage, int modelId,
         Func<string, string, CancellationToken, Task<string>> generate, CancellationToken cancellationToken)
     {
-        if (context?.Enabled != true || context.Mode != AdminChatMemoryMode.Learn) return;
+        _updateRequested = AdminChatMemoryRetrieval.ShouldLearn(userMessage);
+        _globalChanges = _workspaceChanges = 0;
+        _promptCode = null;
+        if (context?.Enabled != true || context.Mode != AdminChatMemoryMode.Learn)
+        {
+            UpdateStatus = context?.Enabled == true ? "read-only" : "disabled";
+            _updateReason = context?.Enabled == true ? "read-only" : "mode-off";
+            return;
+        }
         // Never use an assistant answer, retrieved document, tool output or an entire transcript as evidence.
         if (!AdminChatMemoryRetrieval.ShouldLearn(userMessage))
         {
             UpdateStatus = "skipped-input";
+            _updateReason = "input-not-eligible";
             return;
         }
         try
@@ -247,6 +283,7 @@ public sealed class AdminChatMemoryService
             if (current.Revision != context.Profile.Revision)
             {
                 UpdateStatus = "conflict";
+                _updateReason = "revision-conflict";
                 return;
             }
             var provider = _services.GetService<IMemoryPromptProvider>()
@@ -254,6 +291,7 @@ public sealed class AdminChatMemoryService
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             timeout.CancelAfter(TimeSpan.FromSeconds(45));
             var prompt = await provider.GetAsync(modelId, timeout.Token);
+            _promptCode = prompt.PromptCode;
             var input = JsonSerializer.Serialize(new
             {
                 currentUserMessage = userMessage,
@@ -265,10 +303,12 @@ public sealed class AdminChatMemoryService
                         Scope = entry.WorkspaceId.Length == 0 ? "global" : "workspace" })
             }, new JsonSerializerOptions { Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
             var output = await generate(prompt.Content, input, timeout.Token);
-            if (!AdminChatMemoryDocument.Merge(context.Profile, output, userMessage,
-                context.WorkspaceId, context.SourceMessageId, context.SessionId))
+            var merge = AdminChatMemoryDocument.MergeWithResult(context.Profile, output, userMessage,
+                context.WorkspaceId, context.SourceMessageId, context.SessionId);
+            if (!merge.Changed)
             {
                 UpdateStatus = "unchanged";
+                _updateReason = merge.Reason;
                 return;
             }
             await _store.UpdateAsync(context.TenantId, context.UserId, context.Profile.Revision,
@@ -278,12 +318,16 @@ public sealed class AdminChatMemoryService
                     profile.History = context.Profile.History;
                 }, timeout.Token);
             UpdateStatus = "updated";
+            _updateReason = "saved";
+            _globalChanges = merge.GlobalChanges;
+            _workspaceChanges = merge.WorkspaceChanges;
             _logger.LogInformation("AdminChat Memory updated for user {UserId}, session {SessionId}, prompt {PromptCode}",
                 context.UserId, context.SessionId, prompt.PromptCode);
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
         {
             UpdateStatus = "timeout";
+            _updateReason = "timeout";
             _logger.LogWarning("AdminChat Memory update timed out for session {SessionId}", context.SessionId);
         }
         catch (Exception error) when (error is NcfExceptionBase or JsonException or IOException
@@ -292,6 +336,8 @@ public sealed class AdminChatMemoryService
             or System.ClientModel.ClientResultException or Azure.RequestFailedException or TimeoutException)
         {
             UpdateStatus = "failed";
+            _updateReason = error is AdminChatMemoryValidationException validation ? validation.Reason
+                : error is JsonException ? "invalid-json" : "update-failed";
             // Do not log model output or exception messages which might contain private memories.
             _logger.LogWarning("AdminChat Memory update failed for session {SessionId}: {ErrorType}",
                 context.SessionId, error.GetType().Name);

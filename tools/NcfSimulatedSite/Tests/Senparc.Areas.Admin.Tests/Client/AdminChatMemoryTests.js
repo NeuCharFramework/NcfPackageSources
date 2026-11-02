@@ -8,10 +8,15 @@ const admin = path.resolve(__dirname, '../../../Senparc.Areas.Admin');
 let options;
 const requests = [];
 const errors = [];
+const labels = {
+    'AdminChat.Memory.UpdateSaved': 'Saved: global {0}, workspace {1}',
+    'AdminChat.Memory.UpdateReason.no-candidates': 'No candidates; not saved',
+    'AdminChat.Memory.UpdateReason.update-failed': 'Update failed'
+};
 const sandbox = {
     window: { ChatLauncherMixin: {} },
     Vue: function (value) { options = value; },
-    ncfT: key => key,
+    ncfT: (key, ...args) => (labels[key] || key).replace(/\{(\d+)\}/g, (_, index) => args[index]),
     console,
     service: {
         get: async url => {
@@ -94,6 +99,8 @@ async function run() {
     assert.ok(!page.includes('v-model="launcherUseMemory"'), 'The oversized Memory checkbox must be removed.');
     assert.ok(page.includes('memoryModeLabel(memoryMode)'));
     assert.ok(page.includes('@@on-confirm="saveMemoryEntry(true)"'), 'Use the installed Element UI confirmation event.');
+    assert.ok(page.includes('memoryUpdateText(memoryUpdateResult)'), 'Show the server save result independently of the answer.');
+    assert.ok(page.includes('AdminChat.Memory.StorageNotice'), 'Explain database storage versus Workspace files.');
     vm.runInNewContext(fs.readFileSync(path.join(admin, 'wwwroot/js/Admin/Pages/AdminChat/ChatLauncherMixin.js'), 'utf8'), sandbox);
     const mixin = sandbox.window.ChatLauncherMixin;
     const launcher = Object.assign(mixin.data(), {
@@ -111,6 +118,17 @@ async function run() {
     app.memorySavedMarkdown = '';
     app.editMemoryEntry(null);
     assert.strictEqual(app.memoryEntryDraft, null, 'Entry editing must not discard an unsaved Markdown draft.');
+    app.reportMemoryUpdate('unchanged', null, 42,
+        { status: 'unchanged', reason: 'no-candidates', requested: true, globalChanges: 0, workspaceChanges: 0 });
+    assert.strictEqual(app.memoryUpdateSessionId, 42);
+    assert.strictEqual(app.memoryUpdateText(app.memoryUpdateResult), 'No candidates; not saved');
+    app.reportMemoryUpdate('updated', null, 43,
+        { status: 'updated', reason: 'saved', requested: true, globalChanges: 1, workspaceChanges: 0 });
+    assert.strictEqual(app.memoryUpdateText(app.memoryUpdateResult), 'Saved: global 1, workspace 0');
+    assert.strictEqual(app.memoryUpdateText({ status: 'failed', reason: '<script>untrusted</script>' }), 'Update failed',
+        'Never render exception/model text as a save reason.');
+    app.reportMemoryUpdate('disabled', null, 43);
+    assert.strictEqual(app.memoryUpdateResult, null, 'A response without a report must not retain an older save confirmation.');
     console.log('AdminChat Memory client tests passed.');
 }
 

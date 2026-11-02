@@ -265,6 +265,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
+                    b.Property<int?>("SortOrder")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 

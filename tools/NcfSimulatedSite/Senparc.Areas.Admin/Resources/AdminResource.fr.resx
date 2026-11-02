@@ -1,5 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Développer le volet des conversations</value></data>
+  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Réduire le volet des conversations</value></data>
+  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Redimensionner le volet (flèches gauche/droite)</value></data>
+  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>Glisser dans ce groupe, ou Alt + Haut/Bas</value></data>
+  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>En cours</value></data>
+  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>Arrêt en cours</value></data>
+  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>Ordre enregistré pour ce compte sur tous les appareils</value></data>
+  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>Impossible d’enregistrer l’ordre. Réessayez.</value></data>
+  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>Impossible de lire ou d’enregistrer les préférences du volet. Cette disposition ne s’applique qu’à cette page.</value></data>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>

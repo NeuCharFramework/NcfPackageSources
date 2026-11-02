@@ -265,6 +265,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.MySql
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
 
+                    b.Property<int?>("SortOrder")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 

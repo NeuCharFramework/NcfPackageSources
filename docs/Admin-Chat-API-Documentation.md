@@ -10,6 +10,25 @@
 
 ## 📡 API 接口列表
 
+### 会话侧栏与分类排序（2026-11-03）
+
+- 侧栏顶部按钮可收起/展开整个侧栏，右边界可拖动调整宽度（215–420px）；聚焦边界后也可用左右方向键调整。Workspace 分类标题可折叠。布局偏好按账号保存在当前浏览器，不跨设备同步。
+- 分类内会话通过拖动条目左侧手柄排序，也可聚焦手柄按 `Alt + ↑/↓`。不允许跨 Workspace 移动；“未使用 Workspace”分类同样支持排序。
+- 排序保存在数据库，同一账号在其他浏览器/设备重新打开或刷新列表后读取。未手动排序时维持最近消息优先；已有手动顺序的分类中，新会话排在手动排序条目后面。排序不会改变消息时间。
+- 本页发起的发送、继续执行、分支执行和审批请求，在原会话条目显示渐变状态条、动态音量柱及“进行中/正在停止”文字。收起分类或侧栏后仍保留活动圆点；系统开启减少动态效果时使用静态指示。此状态不代表跨设备任务监控。
+
+**排序接口**：`POST /api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.ReorderSessionAsync`
+
+使用现有管理员 Cookie/JWT 认证，用户与租户身份由服务端读取，请求不能指定用户：
+
+```json
+{ "sessionId": 123, "targetSessionId": 456, "insertAfter": false }
+```
+
+将 `sessionId` 放在同分类的 `targetSessionId` 前方，`insertAfter: true` 表示后方。两个会话都必须属于当前用户及租户且未删除/归档，否则明确返回错误，不保存部分顺序。成功响应的 `data` 是该分类完整会话 DTO 数组，包含持久化的 `id` / `sortOrder`。列表和详情 DTO 也包含可空的 `sortOrder`（空值表示尚未手动排序）。
+
+部署前应用对应数据库的 `Add_AdminChat_Session_SortOrder` Migration，详见 [Migration 指南](./Admin-Chat-Migration-Guide.md)。
+
 ### 1. 创建会话
 
 **接口**: `CreateSession`  
