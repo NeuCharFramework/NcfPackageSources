@@ -114,6 +114,20 @@ test("log follow mode only follows when the user is already at the bottom", () =
     assert.equal(app.isMetricLogAtBottom(), true);
 });
 
+test("event monitor layout can switch and expand", () => {
+    const { app } = instance();
+    assert.equal(app.eventLayout, "split");
+    app.setEventLayout("stacked");
+    assert.equal(app.eventLayout, "stacked");
+    app.setEventLayout("invalid");
+    assert.equal(app.eventLayout, "stacked");
+    assert.equal(app.eventExpanded, false);
+    app.toggleEventExpanded();
+    assert.equal(app.eventExpanded, true);
+    app.toggleEventExpanded();
+    assert.equal(app.eventExpanded, false);
+});
+
 test("polling cannot overlap and reconnect uses the persisted event cursor", async () => {
     const { app, timers } = instance();
     const gate = deferred();

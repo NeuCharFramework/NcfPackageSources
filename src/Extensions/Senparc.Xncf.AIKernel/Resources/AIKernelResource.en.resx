@@ -475,6 +475,11 @@
   <data name="FineTuning.MetricLog" xml:space="preserve"><value>Metrics stream</value></data>
   <data name="FineTuning.MetricLogHelp" xml:space="preserve"><value>Periodic GPU, loss, step and timing values</value></data>
   <data name="FineTuning.NoMetrics" xml:space="preserve"><value>No metrics received yet</value></data>
+  <data name="FineTuning.EventsLayoutHelp" xml:space="preserve"><value>Choose a side-by-side or stacked view; expand for a larger monitoring workspace.</value></data>
+  <data name="FineTuning.EventsSideBySide" xml:space="preserve"><value>Side by side</value></data>
+  <data name="FineTuning.EventsStacked" xml:space="preserve"><value>Stacked</value></data>
+  <data name="FineTuning.ExpandEvents" xml:space="preserve"><value>Expand</value></data>
+  <data name="FineTuning.RestoreEvents" xml:space="preserve"><value>Restore</value></data>
   <data name="FineTuning.Replaying" xml:space="preserve">
     <value>Replaying persisted events</value>
   </data>

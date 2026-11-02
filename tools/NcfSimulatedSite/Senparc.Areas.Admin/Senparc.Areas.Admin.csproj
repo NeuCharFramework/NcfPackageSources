@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.16</Version>
+		<Version>0.12.17</Version>
 		<PackageReleaseNotes>
     [2026-10-16] 增加 PromptRange Skill 目录、执行与 AdminChat 暴露能力
     1、通过 PromptRange.Abstractions 暴露可移植 Skill 契约
@@ -171,6 +171,7 @@
     4、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.6-preview10
     5、Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.3.1
     [2026-11-03] Expand bilingual documentation help to all interactive Admin pages, legacy forms and contextual panels; validate every route and anchor.
+    [2026-11-03] Add bilingual Memory documentation and contextual help for Chat launchers, modes, entries, loading reports, Markdown and SystemMessage settings.
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
