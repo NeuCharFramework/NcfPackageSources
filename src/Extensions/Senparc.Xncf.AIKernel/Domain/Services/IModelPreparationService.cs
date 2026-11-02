@@ -21,6 +21,8 @@ namespace Senparc.Xncf.AIKernel.Domain.Services;
 
 public interface IModelPreparationService
 {
+    Task<IReadOnlyList<ModelSearchItem>> SearchAsync(ModelSearchRequest request,
+        CancellationToken cancellationToken = default);
     Task<ModelPreparationStatus> GetStatusAsync(ModelPreparationRequest request,
         CancellationToken cancellationToken = default);
     Task<ModelPreparationResult> DownloadAsync(ModelPreparationRequest request,

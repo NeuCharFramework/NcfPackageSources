@@ -16,6 +16,10 @@ var app = new Vue({
             modelPreparationStatus: null,
             modelPreparationBusy: false,
             modelPreparationDownloadBusy: false,
+            modelSearchQuery: "",
+            modelSearchResults: [],
+            modelSearchError: "",
+            modelSearchBusy: false,
             workerVersion: 0,
             health: null,
             models: [],
@@ -579,6 +583,18 @@ var app = new Vue({
                 try {
                     this.validation = await this.request("StartValidationAsync", payload, true);
                 } catch (error) {
+                    if (!this.validationMismatchWarning
+                        && this.validationBackend === "mlx"
+                        && (!this.job.request.backend || this.job.request.backend === "mlx")
+                        && this.isLegacyValidationRequestError(error)) {
+                        var legacyPayload = Object.assign({}, payload);
+                        delete legacyPayload.backend;
+                        delete legacyPayload.method;
+                        delete legacyPayload.confirmMismatch;
+                        this.validation = await this.request("StartValidationAsync", legacyPayload, true);
+                        this.requestPoll();
+                        return;
+                    }
                     if (!this.validationMismatchWarning || !this.$confirm) { throw error; }
                     try {
                         await this.$confirm(this.t("ValidationMismatchConfirm") + "\n" + this.validationMismatchWarning,
@@ -596,6 +612,13 @@ var app = new Vue({
             } finally {
                 this.validationBusy = false;
             }
+        },
+        isLegacyValidationRequestError(error) {
+            var message = error && error.message ? error.message : String(error || "");
+            return message.indexOf("body.backend") >= 0
+                && message.indexOf("Extra inputs are not permitted") >= 0
+                && message.indexOf("body.method") >= 0
+                && message.indexOf("body.confirmMismatch") >= 0;
         },
         selectWorker() {
             this.workerVersion++;
@@ -717,6 +740,33 @@ var app = new Vue({
             } finally {
                 this.modelPreparationBusy = false;
             }
+        },
+        async searchModels() {
+            if (this.modelSearchBusy || !this.modelPreparation.provider || !this.modelSearchQuery) { return; }
+            this.modelSearchBusy = true;
+            this.modelSearchError = "";
+            try {
+                var response = await service.post("/api/aikernel/model-preparation/search", {
+                    provider: this.modelPreparation.provider,
+                    query: this.modelSearchQuery,
+                    limit: 20
+                }, { customAlert: true, timeout: 30000 });
+                this.modelSearchResults = Array.isArray(response.data) ? response.data : [];
+                if (!this.modelSearchResults.length) { this.modelSearchError = this.t("ModelSearchEmpty"); }
+            } catch (error) {
+                this.modelSearchResults = [];
+                this.modelSearchError = error.message;
+            } finally {
+                this.modelSearchBusy = false;
+            }
+        },
+        selectModelSearchResult(result) {
+            this.modelPreparation.provider = result.provider;
+            this.modelPreparation.model = result.model;
+            this.modelPreparation.revision = result.revision;
+            this.modelPreparationStatus = null;
+            this.modelSearchError = "";
+            this.checkModelPreparation();
         },
         async downloadModel() {
             if (this.modelPreparationDownloadBusy || !this.modelPreparationStatus) { return; }

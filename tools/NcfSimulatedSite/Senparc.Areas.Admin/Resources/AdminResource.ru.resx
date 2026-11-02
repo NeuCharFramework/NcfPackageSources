@@ -216,7 +216,7 @@
   <data name="Admin.Common.NoTime" xml:space="preserve"><value>Нет времени</value></data>
   <data name="Admin.Common.CopySuccess" xml:space="preserve"><value>Скопировано. Используйте Ctrl+V для вставки.</value></data>
   <data name="Admin.Home.Header" xml:space="preserve"><value>Панель администратора NeuCharFramework</value></data>
-  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>Текущее состояние хоста</value></data>
+  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>Монитор ресурсов хоста</value></data>
   <data name="Admin.Home.HostMetricsRealtime" xml:space="preserve"><value>В реальном времени · каждые 2 секунды</value></data>
   <data name="Admin.Home.HostCpu" xml:space="preserve"><value>CPU хоста (общая)</value></data>
   <data name="Admin.Home.HostCpuDetail" xml:space="preserve"><value>Общая загрузка хоста</value></data>
@@ -231,7 +231,7 @@
   <data name="Admin.Home.HostProcessCpu" xml:space="preserve"><value>CPU веб-процесса</value></data>
   <data name="Admin.Home.HostProcessWorkingSet" xml:space="preserve"><value>Рабочий набор памяти</value></data>
   <data name="Admin.Home.HostProcessUptime" xml:space="preserve"><value>Время работы</value></data>
-  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>Последние 30 замеров (только эта страница)</value></data>
+  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>Динамика ресурсов</value></data>
   <data name="Admin.Home.HostNetworkReceive" xml:space="preserve"><value>Приём</value></data>
   <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>Передача</value></data>
   <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>API метрик хоста вернул недопустимые данные</value></data>
@@ -239,8 +239,16 @@
   <data name="Admin.Home.WebProcessMemory" xml:space="preserve"><value>Память процесса Web</value></data>
   <data name="Admin.Home.ResourceMonitor" xml:space="preserve"><value>Монитор ресурсов (последние 24 часа)</value></data>
   <data name="Admin.Home.ResourceMonitorRealtime" xml:space="preserve"><value>Запись каждые 10 с в фоне · кэш до 24 ч</value></data>
-  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>Слева — дальше, справа — сейчас · растяните рамку, чтобы приблизить диапазон</value></data>
-  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>Сбросить к 24 часам</value></data>
+  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>Выделите область или используйте колесо для масштаба; двойной щелчок сбрасывает диапазон</value></data>
+  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>Сбросить диапазон</value></data>
+  <data name="Admin.Home.ResourceMonitorRange" xml:space="preserve"><value>Диапазон времени</value></data>
+  <data name="Admin.Home.ResourceMonitor5Minutes" xml:space="preserve"><value>5 мин</value></data>
+  <data name="Admin.Home.ResourceMonitor30Minutes" xml:space="preserve"><value>30 мин</value></data>
+  <data name="Admin.Home.ResourceMonitor6Hours" xml:space="preserve"><value>6 ч</value></data>
+  <data name="Admin.Home.ResourceMonitor24Hours" xml:space="preserve"><value>24 ч</value></data>
+  <data name="Admin.Home.ResourceMonitorReturnLive" xml:space="preserve"><value>Вернуться к текущим данным</value></data>
+  <data name="Admin.Home.ResourceMonitorFollowing" xml:space="preserve"><value>Текущие данные</value></data>
+  <data name="Admin.Home.ResourceMonitorPaused" xml:space="preserve"><value>Просмотр на паузе (запись продолжается)</value></data>
   <data name="Admin.Home.ResourceMonitorEmpty" xml:space="preserve"><value>Фоновая запись запускается (~10 с) или в этом диапазоне пока нет данных</value></data>
   <data name="Admin.Home.ResourceMonitorUnavailable" xml:space="preserve"><value>Сейчас нельзя получить данные монитора ресурсов</value></data>
   <data name="Admin.Home.ResourceMonitorNow" xml:space="preserve"><value>сейчас</value></data>

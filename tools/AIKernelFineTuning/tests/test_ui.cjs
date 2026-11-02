@@ -131,6 +131,29 @@ test("polling cannot overlap and reconnect uses the persisted event cursor", asy
     assert.equal(app.cursor, 42);
 });
 
+test("MLX validation retries the legacy request shape against an older Worker", async () => {
+    const { app } = instance();
+    app.job = { ...job("mlx-job"), state: "Succeeded", request: { backend: "mlx", method: "lora" } };
+    app.validationBackend = "mlx";
+    app.validationMethod = "lora";
+    app.validationPrompts = "hello";
+    let calls = 0;
+    app.request = async (method, payload) => {
+        calls++;
+        if (calls === 1) {
+            assert.equal(payload.backend, "mlx");
+            throw new Error('Request failed: body.backend Extra inputs are not permitted; body.method Extra inputs are not permitted; body.confirmMismatch Extra inputs are not permitted');
+        }
+        assert.equal(payload.backend, undefined);
+        assert.equal(payload.method, undefined);
+        assert.equal(payload.confirmMismatch, undefined);
+        return { status: "Running", completed: 0, total: 1, results: [], error: null };
+    };
+    app.requestPoll = () => {};
+    await app.startValidation();
+    assert.equal(calls, 2);
+});
+
 test("job switching prevents stale requests from updating another job", async () => {
     const { app } = instance();
     const gate = deferred();

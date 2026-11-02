@@ -216,7 +216,7 @@
   <data name="Admin.Common.NoTime" xml:space="preserve"><value>Sin hora</value></data>
   <data name="Admin.Common.CopySuccess" xml:space="preserve"><value>Copiado correctamente. Use Ctrl+V para pegar.</value></data>
   <data name="Admin.Home.Header" xml:space="preserve"><value>Panel de administración de NeuCharFramework</value></data>
-  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>Estado actual del host</value></data>
+  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>Monitor de recursos del host</value></data>
   <data name="Admin.Home.HostMetricsRealtime" xml:space="preserve"><value>En vivo · se actualiza cada 2 segundos</value></data>
   <data name="Admin.Home.HostCpu" xml:space="preserve"><value>CPU del host (total)</value></data>
   <data name="Admin.Home.HostCpuDetail" xml:space="preserve"><value>Uso total del host</value></data>
@@ -231,7 +231,7 @@
   <data name="Admin.Home.HostProcessCpu" xml:space="preserve"><value>CPU del proceso web</value></data>
   <data name="Admin.Home.HostProcessWorkingSet" xml:space="preserve"><value>Memoria del conjunto de trabajo</value></data>
   <data name="Admin.Home.HostProcessUptime" xml:space="preserve"><value>Tiempo activo</value></data>
-  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>Últimas 30 muestras (solo esta página)</value></data>
+  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>Tendencias de recursos</value></data>
   <data name="Admin.Home.HostNetworkReceive" xml:space="preserve"><value>Recepción</value></data>
   <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>Envío</value></data>
   <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>La API de métricas del host devolvió datos no válidos</value></data>
@@ -239,8 +239,16 @@
   <data name="Admin.Home.WebProcessMemory" xml:space="preserve"><value>Memoria del proceso web</value></data>
   <data name="Admin.Home.ResourceMonitor" xml:space="preserve"><value>Monitor de recursos (últimas 24 horas)</value></data>
   <data name="Admin.Home.ResourceMonitorRealtime" xml:space="preserve"><value>Grabado cada 10 s en segundo plano · caché de hasta 24 h</value></data>
-  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>Izquierda = más lejos, derecha = ahora · arrastra para ampliar un rango</value></data>
-  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>Restablecer 24 h</value></data>
+  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>Arrastre o use la rueda para ampliar; haga doble clic para restablecer</value></data>
+  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>Restablecer rango</value></data>
+  <data name="Admin.Home.ResourceMonitorRange" xml:space="preserve"><value>Intervalo de tiempo</value></data>
+  <data name="Admin.Home.ResourceMonitor5Minutes" xml:space="preserve"><value>5 min</value></data>
+  <data name="Admin.Home.ResourceMonitor30Minutes" xml:space="preserve"><value>30 min</value></data>
+  <data name="Admin.Home.ResourceMonitor6Hours" xml:space="preserve"><value>6 h</value></data>
+  <data name="Admin.Home.ResourceMonitor24Hours" xml:space="preserve"><value>24 h</value></data>
+  <data name="Admin.Home.ResourceMonitorReturnLive" xml:space="preserve"><value>Volver al directo</value></data>
+  <data name="Admin.Home.ResourceMonitorFollowing" xml:space="preserve"><value>Siguiendo en directo</value></data>
+  <data name="Admin.Home.ResourceMonitorPaused" xml:space="preserve"><value>Vista pausada (la grabación continúa)</value></data>
   <data name="Admin.Home.ResourceMonitorEmpty" xml:space="preserve"><value>El grabador se está iniciando (~10 s) o no hay datos en este rango</value></data>
   <data name="Admin.Home.ResourceMonitorUnavailable" xml:space="preserve"><value>No se pueden obtener los datos del monitor de recursos</value></data>
   <data name="Admin.Home.ResourceMonitorNow" xml:space="preserve"><value>ahora</value></data>

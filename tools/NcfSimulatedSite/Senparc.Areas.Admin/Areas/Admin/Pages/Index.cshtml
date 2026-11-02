@@ -402,42 +402,28 @@
             line-height: 1.55;
         }
 
-        .host-metrics-chart {
-            height: 285px;
-            margin-top: 4px;
-        }
-
         .host-metrics-error {
             color: #f56c6c;
         }
 
-        .resource-monitor-section {
-            margin-top: 18px;
-        }
-
-        .resource-monitor-card .el-card__header {
-            padding: 12px 16px;
-        }
-
-        .resource-monitor-header {
+        .resource-monitor-toolbar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
             flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid #ebeef5;
         }
 
-        .resource-monitor-title {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 15px;
-            font-weight: 600;
+        .resource-monitor-heading {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 10px;
             color: #303133;
-        }
-
-        .resource-monitor-title .fa {
-            color: #8c52ff;
+            font-size: 15px;
         }
 
         .resource-monitor-meta {
@@ -449,7 +435,18 @@
         .resource-monitor-actions {
             display: inline-flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 10px;
+        }
+
+        .resource-monitor-details {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px 14px;
+            margin-top: 12px;
+            color: #909399;
+            font-size: 12px;
         }
 
         .resource-monitor-hint {
@@ -1325,7 +1322,7 @@
     </el-card>
 </section>
 
-<!-- 当前 Host 实时指标：只在浏览器内保留最近 30 个采样点，不写入服务端缓存 -->
+<!-- Host 实时指标与历史资源监控共用一个面板 -->
 <div class="host-metrics-section">
     <el-card class="host-metrics-card" v-loading="hostMetricsLoading && !hostMetrics.sampledAt">
         <div slot="header" class="host-metrics-header">
@@ -1434,36 +1431,48 @@
             </el-col>
         </el-row>
 
-        <div id="hostMetricsChart" class="host-metrics-chart"></div>
-    </el-card>
-</div>
-
-<!-- 资源监控：后台每 10 秒记录，CO2NET 缓存最多 24 小时；非线性时间轴 + 框选放大 -->
-<div class="resource-monitor-section">
-    <el-card class="resource-monitor-card">
-        <div slot="header" class="resource-monitor-header">
-            <div class="resource-monitor-title">
-                <i class="fa fa-line-chart"></i>
-                <span>@AR["Admin.Home.ResourceMonitor"]</span>
+        <div class="resource-monitor-toolbar">
+            <div class="resource-monitor-heading">
+                <strong>@AR["Admin.Home.HostMetricsChart"]</strong>
                 <span class="resource-monitor-meta">@AR["Admin.Home.ResourceMonitorRealtime"]</span>
             </div>
             <div class="resource-monitor-actions">
-                <span class="resource-monitor-hint">
-                    <i class="fa fa-mouse-pointer"></i>
-                    @AR["Admin.Home.ResourceMonitorHint"]
-                </span>
-                <span v-if="resourceMonitorError" class="host-metrics-error">
-                    <i class="fa fa-exclamation-circle"></i> {{resourceMonitorError}}
-                </span>
+                <el-radio-group v-model="resourceMonitorRange" size="mini"
+                                aria-label="@AR["Admin.Home.ResourceMonitorRange"]"
+                                @@change="selectResourceMonitorRange">
+                    <el-radio-button :label="300000">@AR["Admin.Home.ResourceMonitor5Minutes"]</el-radio-button>
+                    <el-radio-button :label="1800000">@AR["Admin.Home.ResourceMonitor30Minutes"]</el-radio-button>
+                    <el-radio-button :label="21600000">@AR["Admin.Home.ResourceMonitor6Hours"]</el-radio-button>
+                    <el-radio-button :label="86400000">@AR["Admin.Home.ResourceMonitor24Hours"]</el-radio-button>
+                </el-radio-group>
                 <el-button v-if="resourceMonitorZoomed"
                            size="mini"
-                           type="primary"
                            plain
                            icon="el-icon-refresh-left"
                            @@click="resetResourceMonitorZoom">
                     @AR["Admin.Home.ResourceMonitorReset"]
                 </el-button>
+                <el-button v-if="!resourceMonitorLive"
+                           size="mini"
+                           type="primary"
+                           plain
+                           icon="el-icon-video-play"
+                           @@click="returnResourceMonitorToLive">
+                    @AR["Admin.Home.ResourceMonitorReturnLive"]
+                </el-button>
             </div>
+        </div>
+        <div class="resource-monitor-details">
+            <span v-if="resourceMonitorStart && resourceMonitorEnd">
+                {{formatResourceMonitorTime(resourceMonitorStart)}} — {{formatResourceMonitorTime(resourceMonitorEnd)}}
+                · {{resourceMonitorLive ? ncfT('Admin.Home.ResourceMonitorFollowing') : ncfT('Admin.Home.ResourceMonitorPaused')}}
+            </span>
+            <span class="resource-monitor-hint">
+                <i class="fa fa-mouse-pointer"></i> @AR["Admin.Home.ResourceMonitorHint"]
+            </span>
+            <span v-if="resourceMonitorError" class="host-metrics-error">
+                <i class="fa fa-exclamation-circle"></i> {{resourceMonitorError}}
+            </span>
         </div>
         <div id="resourceMonitorChart" class="resource-monitor-chart"></div>
     </el-card>

@@ -1,8 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.3</Version>
+		<Version>0.12.7</Version>
 		<PackageReleaseNotes>
+    [2026-11-02] Merge live Host metrics and historical resource trends into one linear, zoomable monitor with network throughput and selectable time ranges.
+    [2026-11-02] Display average/highest prompt scores and add score/PromptCode sorting to the shared PromptRange picker.
+    [2026-11-02] Add the reusable v-prompt-range selector with range/lane filters, keyword search, preview and cursor insertion; integrate both AdminChat composers.
+    [2026-11-02] Fix sparse resource-monitor rendering with ECharts 3 and reuse Host panel spacing, borders and header styles.
     [2026-11-02] Restore the GetHostMetrics API binding and show specific global Pivot access denial reasons without changing access policies.
     [2026-11-02] Add streamed large-file Workspace uploads and clean up unsubmitted Chat attachments
     1. Add a multi-file Workspace management upload flow with a 300 MiB per-file limit and tenant-aware ownership checks.

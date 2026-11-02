@@ -20,6 +20,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -33,6 +34,7 @@ namespace Senparc.Xncf.AIKernel.Domain.Services;
 public sealed class ModelPreparationService : IModelPreparationService
 {
     private const long MaxManifestBytes = 16 * 1024 * 1024;
+    private const long MaxSearchBytes = 2 * 1024 * 1024;
     private readonly HttpClient _http;
     private readonly ModelPreparationOptions _options;
     private readonly string _contentRoot;
@@ -54,6 +56,59 @@ public sealed class ModelPreparationService : IModelPreparationService
         var manifest = await GetManifestAsync(validated.Provider, validated.Model, validated.Revision,
             cancellationToken);
         return BuildStatus(validated, manifest);
+    }
+
+    public async Task<IReadOnlyList<ModelSearchItem>> SearchAsync(ModelSearchRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (!_options.Enabled)
+            throw new NcfExceptionBase("Model preparation is disabled.");
+        if (request is null || string.IsNullOrWhiteSpace(request.Provider) ||
+            string.IsNullOrWhiteSpace(request.Query))
+            throw new NcfExceptionBase("Provider and search query are required.");
+        if (request.Query.Length > 100 || request.Limit is < 1 or > 50)
+            throw new NcfExceptionBase("Search query must be at most 100 characters and limit must be between 1 and 50.");
+        if (!_options.Providers.TryGetValue(request.Provider, out var provider) ||
+            string.IsNullOrWhiteSpace(provider.SearchPathTemplate))
+            throw new NcfExceptionBase("The provider has no configured safe model catalog.");
+        ValidateProvider(provider);
+
+        var searchTemplate = provider.SearchPathTemplate
+            .Replace("{query}", Uri.EscapeDataString(request.Query), StringComparison.Ordinal)
+            .Replace("{limit}", request.Limit.ToString(System.Globalization.CultureInfo.InvariantCulture), StringComparison.Ordinal);
+        var uri = BuildProviderUri(provider, "", "", "", searchTemplate);
+        using var response = await _http.GetAsync(new Uri(uri, UriKind.Absolute),
+            HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+        response.EnsureSuccessStatusCode();
+        if (response.Content.Headers.ContentLength is > MaxSearchBytes)
+            throw new NcfExceptionBase("The model search response is too large.");
+        await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+        using var limited = new LimitedReadStream(stream, MaxSearchBytes);
+        var root = await JsonNode.ParseAsync(limited, cancellationToken: cancellationToken);
+        var items = root is JsonArray array ? array : root?["models"] as JsonArray;
+        if (items is null)
+            throw new NcfExceptionBase("The model search response must be an array or an object with a models array.");
+
+        var results = new List<ModelSearchItem>();
+        foreach (var node in items)
+        {
+            var model = node?["model"]?.GetValue<string>() ?? "";
+            var revision = node?["revision"]?.GetValue<string>() ?? "";
+            if (string.IsNullOrWhiteSpace(model) || string.IsNullOrWhiteSpace(revision) ||
+                !_options.AllowedModels.TryGetValue(request.Provider, out var models) ||
+                !models.TryGetValue(model, out var revisions) ||
+                !revisions.Contains(revision, StringComparer.Ordinal))
+                continue;
+            results.Add(new ModelSearchItem
+            {
+                Provider = request.Provider,
+                Model = model,
+                Revision = revision,
+                Description = node?["description"]?.GetValue<string>() ?? "",
+                SizeBytes = node?["sizeBytes"]?.GetValue<long>() ?? 0
+            });
+        }
+        return results;
     }
 
     public async Task<ModelPreparationResult> DownloadAsync(ModelPreparationRequest request,
@@ -114,12 +169,9 @@ public sealed class ModelPreparationService : IModelPreparationService
         if (request is null || string.IsNullOrWhiteSpace(request.Provider) ||
             string.IsNullOrWhiteSpace(request.Model) || string.IsNullOrWhiteSpace(request.Revision))
             throw new NcfExceptionBase("Provider, model and revision are required.");
-        if (!_options.Providers.TryGetValue(request.Provider, out var provider) ||
-            !Uri.TryCreate(provider.BaseUrl, UriKind.Absolute, out var baseUri) ||
-            (baseUri.Scheme != Uri.UriSchemeHttps && baseUri.Scheme != Uri.UriSchemeHttp) ||
-            !string.IsNullOrEmpty(baseUri.UserInfo) || !string.IsNullOrEmpty(baseUri.Query) ||
-            !string.IsNullOrEmpty(baseUri.Fragment))
-            throw new NcfExceptionBase("The provider is not configured with a safe HTTP(S) endpoint.");
+        if (!_options.Providers.TryGetValue(request.Provider, out var provider))
+            throw new NcfExceptionBase("The provider is not configured.");
+        ValidateProvider(provider);
         if (!_options.AllowedModels.TryGetValue(request.Provider, out var models) ||
             !models.TryGetValue(request.Model, out var revisions) ||
             !revisions.Contains(request.Revision, StringComparer.Ordinal))
@@ -256,6 +308,15 @@ public sealed class ModelPreparationService : IModelPreparationService
             uri.Scheme != baseUri.Scheme)
             throw new NcfExceptionBase("The provider URL resolved outside its allowlisted host.");
         return uri;
+    }
+
+    private static void ValidateProvider(ModelProviderOptions provider)
+    {
+        if (!Uri.TryCreate(provider.BaseUrl, UriKind.Absolute, out var baseUri) ||
+            (baseUri.Scheme != Uri.UriSchemeHttps && baseUri.Scheme != Uri.UriSchemeHttp) ||
+            !string.IsNullOrEmpty(baseUri.UserInfo) || !string.IsNullOrEmpty(baseUri.Query) ||
+            !string.IsNullOrEmpty(baseUri.Fragment))
+            throw new NcfExceptionBase("The provider is not configured with a safe HTTP(S) endpoint.");
     }
 
     private sealed record PreparedRequest(string Provider, string Model, string Revision,

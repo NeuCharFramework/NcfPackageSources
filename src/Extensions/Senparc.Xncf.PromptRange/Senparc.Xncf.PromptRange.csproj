@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.3</Version>
+    <Version>0.20.5</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -23,6 +23,8 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
+      [2026-11-02] Return prompt scores and support server-side average-score and PromptCode sorting in the reusable selector.
+      [2026-11-02] Add authorized prompt selector APIs for range/lane options, paginated keyword search and on-demand prompt content.
       [2024-08-06] v0.9.6.0-preview1 update Senparc.AI.Kernel
       [2024-08-29] v0.9.9.0-preview1 更新首页统计
       [2024-08-31] v0.10.0-preview1 PromptRange 支持 Markdown 输出格式展示

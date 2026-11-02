@@ -4,6 +4,17 @@
 
 如果你狠狠心，也可以将此模块删除，这不会影响系统的正常运行，只不过你无法再进入管理后台。当然对黑客来说也一样。
 
+## Host 资源监控
+
+管理后台首页的 Host 资源监控在一个面板中展示实时状态和历史趋势：
+
+- 实时指标每 2 秒刷新；当前页面保留最近 5 分钟的实时图表采样。
+- 后台每 10 秒记录一次，分别保留最近 30 分钟的 10 秒采样、6 小时的 1 分钟聚合和 24 小时的 5 分钟聚合。图表在时间重叠时优先使用更精细的数据。
+- 支持最近 5 分钟、30 分钟、6 小时和 24 小时的线性时间视图。拖拽或滚轮可缩放；缩放会暂停视图跟随，但后台仍继续记录。可重置所选范围或回到实时。
+- Host 和 Web 进程的 CPU、内存使用百分比使用左侧纵轴；网络上下行吞吐量使用右侧 Mbps 纵轴。点击图例可显示或隐藏曲线。
+
+历史数据保存在 CO2NET 对象缓存中，不写入数据库；具体存储取决于缓存配置。24 小时是最大保留范围，不保证已有完整 24 小时数据，缓存失效或清除后历史也可能消失。
+
 ## 个人微信 Claw 与 Admin 集成
 
 个人微信通道由 `Senparc.Xncf.WeixinManager` 提供，Admin 只通过
@@ -75,6 +86,39 @@ SQLite、SQL Server、MySQL、Oracle、PostgreSQL 和 DM 六种数据库。
 前端在 `Areas/Admin/Pages/AdminChat/Chat.cshtml` 提供模式切换、轨迹抽屉、事件回放、恢复、分叉和工具审批按钮。数据库迁移名为 `Add_AdminChatHarnessTrajectory`，覆盖 SQLite、SQL Server、MySQL、Oracle、PostgreSQL 和 DM。
 
 详细发布和真实包安装说明见 `docs/Admin-Chat-Harness-Trajectory.md` 与 Senparc.AI 仓库的 `docs/AgentKernel-Harness-Release.md`。
+
+## PromptRange 可复用提示词选择器
+
+使用 `_Layout_Vue` 的页面已全局加载选择器。为 Element UI 文本输入框添加
+`v-prompt-range`，即可在右上角显示 PromptRange 按钮，不需要修改页面 Vue 的 methods 或 data：
+
+```html
+<el-input type="textarea" v-model="message" v-prompt-range="!isSending"></el-input>
+```
+
+原生输入框使用标记容器（每个容器只放一个 textarea 或 text input）：
+
+```html
+<div v-prompt-range>
+    <textarea v-model="message"></textarea>
+</div>
+```
+
+- AdminChat 的新建会话、已有会话以及 Footer 内嵌聊天使用同一组件。
+- 支持靶场、靶道联动筛选；关键词搜索名称、正文、靶场别名和完整版本号；分页加载并按需预览完整正文。
+- 默认按平均分从高到低排序，未评分项置后，同分时较新记录优先；可切换为 PromptCode 字符串升序。
+  排序作用于全部搜索结果后再分页，切换排序回到第一页。列表和预览均显示平均分、最高分（保留一位小数），
+  未评分显示“未评分”，零分正常显示为 `0.0`。
+- 仅列出 Prompt 类型靶场中的提示词（含明确标记的草稿），不执行 Skill 或 AI 请求。
+- 点击“插入提示词”在打开弹窗时的光标位置插入，选中文字会被替换；原有其余内容保留。
+  插入触发原生 `input` 事件，兼容 Vue/Element UI 的 `v-model`，但不会发送聊天消息、展开变量或应用模型参数。
+- 传入 `false`、禁用或只读输入框均不可选择；关闭弹窗不更改输入内容。
+  输入框被移除、内容在弹窗期间发生更改或超过 `maxlength` 时，不会覆盖输入内容。
+- 后端沿用 PromptRange 管理员权限、租户和软删除过滤。模块未安装/未更新、无权限和请求失败会显示错误及重新加载入口；
+  不影响未标记输入框或普通聊天。加载页面时不请求提示词接口。
+- 其他布局需在 Vue、Element UI、后台 `service` 和本地化脚本之后引入
+  `wwwroot/js/Admin/Shared/PromptRangeSelector.js`，并引入对应的
+  `wwwroot/css/Admin/Shared/PromptRangeSelector.css`，且在创建页面 Vue 实例之前注册指令。
 
 ## NeuBell WebHook（WebAPI）通知设置
 

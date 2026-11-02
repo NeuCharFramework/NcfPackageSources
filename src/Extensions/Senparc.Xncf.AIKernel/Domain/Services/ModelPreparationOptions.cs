@@ -35,6 +35,7 @@ public sealed class ModelPreparationOptions
 public sealed class ModelProviderOptions
 {
     public string BaseUrl { get; set; } = "";
+    public string SearchPathTemplate { get; set; } = "";
     public string ManifestPathTemplate { get; set; } =
         "models/{model}/resolve/{revision}/manifest.json";
     public string FilePathTemplate { get; set; } =
