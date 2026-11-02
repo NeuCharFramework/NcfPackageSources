@@ -801,12 +801,19 @@
   <data name="FineTuning.DiagnosticsModels" xml:space="preserve"><value>Available models</value></data>
   <data name="FineTuning.DiagnosticsFileManager" xml:space="preserve"><value>FileManager</value></data>
   <data name="FineTuning.ModelPreparationTitle" xml:space="preserve"><value>Secure model preparation</value></data>
-  <data name="FineTuning.ModelPreparationHelp" xml:space="preserve"><value>Only allowlisted providers, models and revisions are accepted, and downloads stay inside a controlled directory. No commands are executed and tokens are never exposed to the browser.</value></data>
+  <data name="FineTuning.ModelPreparationHelp" xml:space="preserve"><value>Search is available only through an operator-configured allowlisted provider catalog. Selected models and revisions still pass manifest, size, path and integrity checks before download; no commands are executed and tokens are never exposed to the browser.</value></data>
   <data name="FineTuning.Provider" xml:space="preserve"><value>Provider</value></data>
   <data name="FineTuning.Revision" xml:space="preserve"><value>Revision</value></data>
   <data name="FineTuning.TargetDirectory" xml:space="preserve"><value>Target directory</value></data>
   <data name="FineTuning.CheckModel" xml:space="preserve"><value>Check model</value></data>
   <data name="FineTuning.DownloadModel" xml:space="preserve"><value>Download model</value></data>
+  <data name="FineTuning.SearchModels" xml:space="preserve"><value>Search models</value></data>
+  <data name="FineTuning.ModelSearchPlaceholder" xml:space="preserve"><value>Search the configured provider catalog</value></data>
+  <data name="FineTuning.ModelSearchUnavailable" xml:space="preserve"><value>Model search unavailable</value></data>
+  <data name="FineTuning.ModelSearchEmpty" xml:space="preserve"><value>No allowlisted models matched the search.</value></data>
+  <data name="FineTuning.SelectSearchModel" xml:space="preserve"><value>Select</value></data>
+  <data name="FineTuning.Description" xml:space="preserve"><value>Description</value></data>
+  <data name="FineTuning.Action" xml:space="preserve"><value>Action</value></data>
   <data name="FineTuning.ModelReady" xml:space="preserve"><value>Model is ready</value></data>
   <data name="FineTuning.ModelIncomplete" xml:space="preserve"><value>Model files are incomplete</value></data>
   <data name="FineTuning.ModelDownloadCompleted" xml:space="preserve"><value>Model download completed</value></data>

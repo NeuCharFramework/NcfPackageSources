@@ -195,6 +195,9 @@ namespace Senparc.Xncf.AIKernel
             {
                 var group = endpoints.MapGroup("/api/aikernel/model-preparation")
                     .RequireAuthorization(NcfAuthorizationPolicyNames.AdminOnly);
+                group.MapPost("/search", async (ModelSearchRequest request,
+                    IModelPreparationService service, CancellationToken cancellationToken) =>
+                    Results.Ok(await service.SearchAsync(request, cancellationToken)));
                 group.MapPost("/status", async (ModelPreparationRequest request,
                     IModelPreparationService service, CancellationToken cancellationToken) =>
                     Results.Ok(await service.GetStatusAsync(request, cancellationToken)));

@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Senparc.Areas.Admin.OHS.Local.AppService;
 using Senparc.CO2NET;
 using Senparc.CO2NET.ApiBind;
@@ -30,7 +31,11 @@ public class StatAppServiceTests
             bindings.Add(ApiBindOn.Method, category, method, attributes[0]);
         }
 
-        var engine = new WebApiEngine(options => options.CopyCustomAttributes = true);
+        var engine = new WebApiEngine(options =>
+        {
+            options.DefaultRequestMethod = ApiRequestMethod.Get;
+            options.CopyCustomAttributes = true;
+        });
         WebApiEngine.ApiAssemblyNames.TryGetValue(category, out var originalAssemblyName);
         try
         {
@@ -43,7 +48,10 @@ public class StatAppServiceTests
                 var action = controller.GetMethods().Single(z =>
                     z.GetCustomAttribute<RouteAttribute>()?.Template?.TrimStart('/') ==
                     $"api/Senparc.Areas.Admin/StatAppService/Areas.Admin_StatAppService.{name}");
-                Assert.IsNotNull(action.GetCustomAttribute<HttpGetAttribute>());
+                var verbs = action.GetCustomAttributes().OfType<IActionHttpMethodProvider>()
+                    .SelectMany(attribute => attribute.HttpMethods).ToArray();
+                Assert.IsTrue(verbs.Length == 0 || verbs.Contains("GET", StringComparer.OrdinalIgnoreCase),
+                    $"{name} must accept GET requests.");
             }
         }
         finally

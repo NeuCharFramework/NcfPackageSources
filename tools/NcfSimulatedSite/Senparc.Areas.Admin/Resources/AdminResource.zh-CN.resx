@@ -216,7 +216,7 @@
   <data name="Admin.Common.NoTime" xml:space="preserve"><value>暂无时间</value></data>
   <data name="Admin.Common.CopySuccess" xml:space="preserve"><value>复制成功！请使用 Ctrl+V 组合键进行粘贴操作。</value></data>
   <data name="Admin.Home.Header" xml:space="preserve"><value>NeuCharFramework 管理员后台</value></data>
-  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>当前 Host 实时状态</value></data>
+  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>Host 资源监控</value></data>
   <data name="Admin.Home.HostMetricsRealtime" xml:space="preserve"><value>实时 · 每 2 秒刷新</value></data>
   <data name="Admin.Home.HostCpu" xml:space="preserve"><value>Host CPU（整体）</value></data>
   <data name="Admin.Home.HostCpuDetail" xml:space="preserve"><value>Host 整体使用率</value></data>
@@ -231,7 +231,7 @@
   <data name="Admin.Home.HostProcessCpu" xml:space="preserve"><value>Web 进程 CPU</value></data>
   <data name="Admin.Home.HostProcessWorkingSet" xml:space="preserve"><value>工作集内存</value></data>
   <data name="Admin.Home.HostProcessUptime" xml:space="preserve"><value>运行时长</value></data>
-  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>最近 30 次采样趋势（仅当前页面）</value></data>
+  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>资源趋势</value></data>
   <data name="Admin.Home.HostNetworkReceive" xml:space="preserve"><value>下行</value></data>
   <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>上行</value></data>
   <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>Host 指标接口返回了无效数据</value></data>
@@ -239,8 +239,16 @@
   <data name="Admin.Home.WebProcessMemory" xml:space="preserve"><value>Web 进程内存</value></data>
   <data name="Admin.Home.ResourceMonitor" xml:space="preserve"><value>资源监控（最近 24 小时）</value></data>
   <data name="Admin.Home.ResourceMonitorRealtime" xml:space="preserve"><value>后台每 10 秒记录 · CO2NET 缓存最多保留 24 小时</value></data>
-  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>左远右近 · 按住鼠标拖拽框选时间范围放大</value></data>
-  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>重置 24 小时</value></data>
+  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>拖拽选择范围或滚轮缩放；双击重置范围</value></data>
+  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>重置范围</value></data>
+  <data name="Admin.Home.ResourceMonitorRange" xml:space="preserve"><value>时间范围</value></data>
+  <data name="Admin.Home.ResourceMonitor5Minutes" xml:space="preserve"><value>5 分钟</value></data>
+  <data name="Admin.Home.ResourceMonitor30Minutes" xml:space="preserve"><value>30 分钟</value></data>
+  <data name="Admin.Home.ResourceMonitor6Hours" xml:space="preserve"><value>6 小时</value></data>
+  <data name="Admin.Home.ResourceMonitor24Hours" xml:space="preserve"><value>24 小时</value></data>
+  <data name="Admin.Home.ResourceMonitorReturnLive" xml:space="preserve"><value>回到实时</value></data>
+  <data name="Admin.Home.ResourceMonitorFollowing" xml:space="preserve"><value>跟随实时</value></data>
+  <data name="Admin.Home.ResourceMonitorPaused" xml:space="preserve"><value>视图已暂停（仍在记录）</value></data>
   <data name="Admin.Home.ResourceMonitorEmpty" xml:space="preserve"><value>后台记录启动中（约 10 秒），或该时间范围暂无数据</value></data>
   <data name="Admin.Home.ResourceMonitorUnavailable" xml:space="preserve"><value>暂时无法获取资源监控数据</value></data>
   <data name="Admin.Home.ResourceMonitorNow" xml:space="preserve"><value>现在</value></data>

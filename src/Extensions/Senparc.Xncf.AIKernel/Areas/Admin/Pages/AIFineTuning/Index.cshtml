@@ -136,6 +136,24 @@
             <el-form-item :label="t('Revision')"><el-input v-model="modelPreparation.revision" maxlength="200"></el-input></el-form-item>
             <el-form-item :label="t('TargetDirectory')"><el-input v-model="modelPreparation.targetDirectory" maxlength="500"></el-input></el-form-item>
         </el-form>
+        <div class="ft-model-search">
+            <el-input v-model="modelSearchQuery" :placeholder="t('ModelSearchPlaceholder')" maxlength="100"></el-input>
+            <el-button size="small" :loading="modelSearchBusy"
+                       :disabled="!modelPreparation.provider || !modelSearchQuery"
+                       @@click="searchModels">{{ t('SearchModels') }}</el-button>
+        </div>
+        <el-alert v-if="modelSearchError" type="warning" :closable="false"
+                  :title="t('ModelSearchUnavailable')" :description="modelSearchError" show-icon></el-alert>
+        <el-table v-if="modelSearchResults.length" :data="modelSearchResults" size="small" class="ft-model-search-results">
+            <el-table-column prop="model" :label="t('Model')" min-width="220"></el-table-column>
+            <el-table-column prop="revision" :label="t('Revision')" min-width="160"></el-table-column>
+            <el-table-column prop="description" :label="t('Description')" min-width="260"></el-table-column>
+            <el-table-column :label="t('Action')" width="110">
+                <template slot-scope="scope">
+                    <el-button type="text" size="small" @@click="selectModelSearchResult(scope.row)">{{ t('SelectSearchModel') }}</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
         <el-button type="primary" :loading="modelPreparationDownloadBusy"
                    :disabled="!modelPreparationStatus || modelPreparationStatus.isComplete"
                    @@click="downloadModel">{{ t('DownloadModel') }}</el-button>

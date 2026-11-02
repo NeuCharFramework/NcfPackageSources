@@ -216,7 +216,7 @@
   <data name="Admin.Common.NoTime" xml:space="preserve"><value>Aucune heure</value></data>
   <data name="Admin.Common.CopySuccess" xml:space="preserve"><value>Copie réussie. Utilisez Ctrl+V pour coller.</value></data>
   <data name="Admin.Home.Header" xml:space="preserve"><value>Administration NeuCharFramework</value></data>
-  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>État actuel de l’hôte</value></data>
+  <data name="Admin.Home.HostMetrics" xml:space="preserve"><value>Moniteur des ressources de l’hôte</value></data>
   <data name="Admin.Home.HostMetricsRealtime" xml:space="preserve"><value>En direct · actualisation toutes les 2 secondes</value></data>
   <data name="Admin.Home.HostCpu" xml:space="preserve"><value>CPU de l’hôte (global)</value></data>
   <data name="Admin.Home.HostCpuDetail" xml:space="preserve"><value>Utilisation globale de l’hôte</value></data>
@@ -231,7 +231,7 @@
   <data name="Admin.Home.HostProcessCpu" xml:space="preserve"><value>CPU du processus web</value></data>
   <data name="Admin.Home.HostProcessWorkingSet" xml:space="preserve"><value>Mémoire de travail</value></data>
   <data name="Admin.Home.HostProcessUptime" xml:space="preserve"><value>Durée d’exécution</value></data>
-  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>30 derniers échantillons (cette page uniquement)</value></data>
+  <data name="Admin.Home.HostMetricsChart" xml:space="preserve"><value>Évolution des ressources</value></data>
   <data name="Admin.Home.HostNetworkReceive" xml:space="preserve"><value>Réception</value></data>
   <data name="Admin.Home.HostNetworkSend" xml:space="preserve"><value>Envoi</value></data>
   <data name="Admin.Home.HostMetricsInvalidResponse" xml:space="preserve"><value>L’API des métriques de l’hôte a renvoyé des données invalides</value></data>
@@ -239,8 +239,16 @@
   <data name="Admin.Home.WebProcessMemory" xml:space="preserve"><value>Mémoire du processus Web</value></data>
   <data name="Admin.Home.ResourceMonitor" xml:space="preserve"><value>Moniteur de ressources (24 dernières heures)</value></data>
   <data name="Admin.Home.ResourceMonitorRealtime" xml:space="preserve"><value>Enregistré toutes les 10 s en arrière-plan · cache jusqu'à 24 h</value></data>
-  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>Gauche = plus loin, droite = maintenant · glisser pour sélectionner un intervalle et zoomer</value></data>
-  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>Réinitialiser 24 h</value></data>
+  <data name="Admin.Home.ResourceMonitorHint" xml:space="preserve"><value>Glissez ou utilisez la molette pour zoomer ; double-cliquez pour réinitialiser</value></data>
+  <data name="Admin.Home.ResourceMonitorReset" xml:space="preserve"><value>Réinitialiser l’intervalle</value></data>
+  <data name="Admin.Home.ResourceMonitorRange" xml:space="preserve"><value>Intervalle de temps</value></data>
+  <data name="Admin.Home.ResourceMonitor5Minutes" xml:space="preserve"><value>5 min</value></data>
+  <data name="Admin.Home.ResourceMonitor30Minutes" xml:space="preserve"><value>30 min</value></data>
+  <data name="Admin.Home.ResourceMonitor6Hours" xml:space="preserve"><value>6 h</value></data>
+  <data name="Admin.Home.ResourceMonitor24Hours" xml:space="preserve"><value>24 h</value></data>
+  <data name="Admin.Home.ResourceMonitorReturnLive" xml:space="preserve"><value>Revenir au direct</value></data>
+  <data name="Admin.Home.ResourceMonitorFollowing" xml:space="preserve"><value>Suivi en direct</value></data>
+  <data name="Admin.Home.ResourceMonitorPaused" xml:space="preserve"><value>Vue en pause (enregistrement maintenu)</value></data>
   <data name="Admin.Home.ResourceMonitorEmpty" xml:space="preserve"><value>Démarrage de l'enregistrement (~10 s), ou aucune donnée dans cet intervalle</value></data>
   <data name="Admin.Home.ResourceMonitorUnavailable" xml:space="preserve"><value>Impossible de récupérer les données du moniteur de ressources</value></data>
   <data name="Admin.Home.ResourceMonitorNow" xml:space="preserve"><value>maintenant</value></data>

@@ -25,3 +25,26 @@
 - `PromptResult_TextEmbeddingSearchRequest` and `PromptResult_TextEmbeddingSearchResponse` model vector-search calls.
 
 The module records prompts, model usage, scores, and generated output. Apply tenant isolation, data retention, PII redaction, provider quotas, and authorization at the host boundary.
+
+## Reusable prompt picker
+
+Admin's shared `v-prompt-range` directive provides an on-demand picker for text inputs,
+including both AdminChat composers and the Footer's embedded chat. See the
+[integration guide](../../../tools/NcfSimulatedSite/Senparc.Areas.Admin/readme.md#promptrange-可复用提示词选择器).
+
+The following GET methods on `PromptItemAppService` use the existing AdminOnly policy
+and preserve tenant/soft-delete filters on both ranges and items:
+
+- `GetSelectorOptionsAsync`: distinct range/lane metadata for Prompt-kind ranges.
+- `SearchSelectorAsync`: `rangeId` (0 = all), exact `tactic`, `keyword` (up to 200 characters),
+  `pageIndex` (1-based), `pageSize` (1–50, default 10). Returns `items` and `totalCount`;
+  each item's `content` is a preview of at most 240 characters. Searches name, content,
+  range alias and full version. `sortBy=score` (default) orders by average score descending,
+  with unrated items last and newer IDs breaking ties; `sortBy=promptCode` orders by the full
+  PromptCode string ascending, with newer IDs breaking ties. Sorting runs before pagination.
+  Items and full-content responses include `evalAvgScore` and `evalMaxScore` (`-1` means unrated).
+  The picker displays both scores to one decimal place and resets to page 1 when sorting changes.
+- `GetSelectorPromptAsync(id)`: fetches full content only for the selected prompt.
+
+Drafts are labeled and selectable. Selection inserts literal content only; it does not
+execute prompts/skills, expand variables, copy model settings or send a chat message.

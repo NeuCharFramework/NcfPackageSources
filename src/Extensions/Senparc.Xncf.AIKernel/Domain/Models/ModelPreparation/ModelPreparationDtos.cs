@@ -26,6 +26,22 @@ public sealed record ModelPreparationRequest
     public string TargetDirectory { get; init; } = "";
 }
 
+public sealed record ModelSearchRequest
+{
+    public string Provider { get; init; } = "";
+    public string Query { get; init; } = "";
+    public int Limit { get; init; } = 20;
+}
+
+public sealed record ModelSearchItem
+{
+    public string Provider { get; init; } = "";
+    public string Model { get; init; } = "";
+    public string Revision { get; init; } = "";
+    public string Description { get; init; } = "";
+    public long SizeBytes { get; init; }
+}
+
 public sealed record ModelFileStatus(string Path, long Length, bool Exists);
 
 public sealed record ModelPreparationStatus
@@ -44,4 +60,3 @@ public sealed record ModelPreparationResult
     public ModelPreparationStatus Status { get; init; } = new();
     public bool Downloaded { get; init; }
 }
-

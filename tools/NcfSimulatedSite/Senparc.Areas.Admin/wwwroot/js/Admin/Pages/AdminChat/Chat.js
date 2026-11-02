@@ -339,7 +339,7 @@
 
     async deletePendingAttachments() {
       const attachments = this.pendingAttachments.slice();
-      if (!attachments.length) return;
+      if (!attachments.length) return true;
 
       const failed = [];
       for (const attachment of attachments) {
@@ -362,6 +362,7 @@
         this.$message.warning('部分待提交附件未能自动清理，请在原会话中重试。');
       }
       this.workspaceUploadCapabilities = null;
+      return failed.length === 0;
     },
 
     clearPendingAttachments() {
@@ -1554,8 +1555,8 @@
       if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再切换会话。'); return; }
       if (this.currentSessionId === sessionId) return;
 
+      if (!await this.deletePendingAttachments()) return;
       this.resetWorkspacePreview();
-      await this.deletePendingAttachments();
       this.clearPendingAttachments();
       this.currentSessionId = sessionId;
       this.currentSessionAiModelId = this.getSessionAiModelId(sessionId);
@@ -1576,8 +1577,8 @@
 
     async createNewSession() {
       if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再新建会话。'); return; }
+      if (!await this.deletePendingAttachments()) return;
       this.resetWorkspacePreview();
-      await this.deletePendingAttachments();
       this.clearPendingAttachments();
       this.launcherAiModelId = this.currentSessionAiModelId || this.launcherAiModelId || 0;
       this.currentSessionId = 0;

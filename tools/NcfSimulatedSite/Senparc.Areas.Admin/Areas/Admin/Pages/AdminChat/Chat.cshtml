@@ -445,6 +445,7 @@
                 <el-input
                     type="textarea"
                     v-model="inputMessage"
+                    v-prompt-range="!isSending"
                     placeholder="@AR["AdminChat.InputPlaceholder"]"
                     :rows="3"
                     :disabled="!currentSessionId || isSending"
@@ -544,6 +545,7 @@
                                 <el-input
                                     type="textarea"
                                     v-model="chatInputText"
+                                    v-prompt-range="!isCreatingSession"
                                     placeholder="@AR["Admin.Home.AiPlaceholder"]"
                                     :rows="4"
                                     :autosize="{ minRows: 4, maxRows: 8 }"
