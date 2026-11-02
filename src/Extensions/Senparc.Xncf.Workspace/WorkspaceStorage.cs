@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261102
     修改描述：增加流式上传落盘与租户可见性校验
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.2.2 add streamed large-file Workspace uploads with tenant-aware ownership checks
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Concurrent;

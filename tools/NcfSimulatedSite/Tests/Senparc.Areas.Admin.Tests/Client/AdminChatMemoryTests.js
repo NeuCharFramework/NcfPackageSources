@@ -101,6 +101,17 @@ async function run() {
     assert.ok(page.includes('@@on-confirm="saveMemoryEntry(true)"'), 'Use the installed Element UI confirmation event.');
     assert.ok(page.includes('memoryUpdateText(memoryUpdateResult)'), 'Show the server save result independently of the answer.');
     assert.ok(page.includes('AdminChat.Memory.StorageNotice'), 'Explain database storage versus Workspace files.');
+    const dialog = page.slice(page.indexOf('<el-dialog :title="ncfT(\'AdminChat.Memory.Settings\')'));
+    assert.ok(dialog.includes('slot="title" class="chat-memory-heading"'), 'Keep the dialog title and subtitle structured.');
+    assert.ok(dialog.includes('<details class="chat-memory-help">'), 'Keep long guidance collapsed and keyboard-accessible.');
+    assert.ok(!dialog.includes('<details class="chat-memory-help" open'), 'Guidance should not crowd the default view.');
+    assert.ok(dialog.includes('class="chat-memory-footer"'), 'Group dialog-level actions in a separate footer.');
+    assert.ok(dialog.includes('@@click="memoryEntryDraft = null"'), 'Entry drafts must have a cancel action.');
+    assert.ok(dialog.includes('AdminChat.Memory.SaveEntry'), 'Distinguish entry saves from dialog settings saves.');
+    assert.ok(dialog.includes('AdminChat.Memory.EmptyLoaded'), 'Explain the absence of a loading report.');
+    const css = fs.readFileSync(path.join(admin, 'wwwroot/css/Admin/Pages/AdminChat/Chat.css'), 'utf8');
+    assert.ok(css.includes('.chat-memory-dialog .el-dialog__footer'), 'The appended dialog must have independently scoped styles.');
+    assert.ok(css.includes('grid-template-columns: repeat(2, minmax(0, 1fr))'), 'Keep narrow-screen footer actions aligned.');
     vm.runInNewContext(fs.readFileSync(path.join(admin, 'wwwroot/js/Admin/Pages/AdminChat/ChatLauncherMixin.js'), 'utf8'), sandbox);
     const mixin = sandbox.window.ChatLauncherMixin;
     const launcher = Object.assign(mixin.data(), {

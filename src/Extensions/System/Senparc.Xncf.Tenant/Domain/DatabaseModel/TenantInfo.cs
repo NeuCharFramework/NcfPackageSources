@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.15.11 0.15.11 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.15.14 维护TenantInfo 相关实现
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

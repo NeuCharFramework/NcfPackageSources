@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.11.1 为 AdminChat 会话增加工作区字段迁移
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 支持 Add_AdminChatWorkspace 数据库迁移
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore.Migrations;

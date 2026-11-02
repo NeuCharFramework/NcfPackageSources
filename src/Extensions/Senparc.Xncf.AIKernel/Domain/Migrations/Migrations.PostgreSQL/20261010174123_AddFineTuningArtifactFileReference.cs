@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 增加微调产物文件引用数据库迁移
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 支持 AddFineTuningArtifactFileReference 数据库迁移
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore.Migrations;

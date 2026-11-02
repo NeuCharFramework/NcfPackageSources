@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：WeixinClawMediaPlaybackService.cs
+    文件功能描述：WeixinClawMediaPlaybackService 相关定义与实现
+
+
+    创建标识：Senparc - 20261004
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.24.16 Remove DatabaseSample and related components from MCP extension
+
+----------------------------------------------------------------*/
+
 using SilkSharp.Codec;
 using SilkSharp.Exception;
 using System;

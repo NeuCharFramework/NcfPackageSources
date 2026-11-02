@@ -28,6 +28,9 @@
     修改标识：Senparc - 20261009
     修改描述：v0.18.3 增强 Agent Studio、群组配置与任务管理交互
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 enhance Agent Studio, group configuration, and task management interactions
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.FunctionRenders;

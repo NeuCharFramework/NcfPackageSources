@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 汇总微调诊断信息
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.AIKernel.Domain.Models.FineTuning;

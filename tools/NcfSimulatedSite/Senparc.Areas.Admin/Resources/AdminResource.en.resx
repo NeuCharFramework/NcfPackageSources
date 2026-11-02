@@ -1,5 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AdminChat.Memory.Subtitle" xml:space="preserve"><value>Manage lasting preferences for more personal conversations</value></data>
+  <data name="AdminChat.Memory.Private" xml:space="preserve"><value>Private memory</value></data>
+  <data name="AdminChat.Memory.SaveChanges" xml:space="preserve"><value>Save changes</value></data>
+  <data name="AdminChat.Memory.ClearDraft" xml:space="preserve"><value>Clear draft</value></data>
+  <data name="AdminChat.Memory.EntriesHint" xml:space="preserve"><value>Your global and current Workspace memories in one place</value></data>
+  <data name="AdminChat.Memory.Guide" xml:space="preserve"><value>Scopes, learning rules and storage</value></data>
+  <data name="AdminChat.Memory.FormatGuide" xml:space="preserve"><value>Markdown format and saving rules</value></data>
+  <data name="AdminChat.Memory.SaveEntry" xml:space="preserve"><value>Save entry</value></data>
+  <data name="AdminChat.Memory.EmptyEntries" xml:space="preserve"><value>No memories yet. Add your first preference to get started.</value></data>
+  <data name="AdminChat.Memory.EmptyLoaded" xml:space="preserve"><value>No loading report yet. Enable Memory and send a message to see it here.</value></data>
   <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Expand chat sidebar</value></data>
   <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Collapse chat sidebar</value></data>
   <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Resize sidebar (Left/Right arrow keys)</value></data>

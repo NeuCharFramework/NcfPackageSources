@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：PromptItemService.Selector.cs
+    文件功能描述：PromptItemService.Selector 相关定义与实现
+
+
+    创建标识：Senparc - 20261102
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 add PromptRange selector service, UI components, and tests
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

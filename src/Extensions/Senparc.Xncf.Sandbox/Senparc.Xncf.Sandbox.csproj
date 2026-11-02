@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.0</Version>
+    <Version>0.4.1</Version>
     <AssemblyName>Senparc.Xncf.Sandbox</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -16,10 +16,6 @@
     <Title>沙箱环境</Title>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-      [2026-10-24] v0.4.0 统一 Docker 隔离运行时底层能力
-      1、DockerSandboxRuntime 改为 IIsolatedRuntimeProvider 业务适配器
-      2、容器启动、执行、日志、销毁、查询与进程超时由共享 Provider 管理
-      3、Exec 与 Jupyter 统一应用结构化挂载、资源、网络及 capability 策略
       v0.1.0-preview1 创世：独立沙箱模块骨架
       1、引入 ISandboxRuntime 抽象（Docker + Wasm Stub）
       2、Session 生命周期、配额与 TTL 回收
@@ -42,6 +38,9 @@
       1、补充 Sandbox 模块迁移文件，支持当前数据库初始化流程
       2、保持工作区文件树和路径边界校验行为稳定
       [2026-09-16] v0.3.2 Dependency updates from Senparc.Web to 0.39.1
+      [2026-09-17] v0.3.3 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
+      1、同步受影响的基础库、AI 模块或宿主项目版本
+      2、保持项目引用链与当前功能兼容
       [2026-09-18] v0.3.3 增强 JupyterLab 外部控制与会话管理
       1、创建 JupyterLab 容器支持可选附加端口映射（loopback 或外部 0.0.0.0 绑定），容器内 Web 站点可被外部访问
       2、新增 创建 Notebook Function：在 Lab 工作区生成 Python / C#（dotnet-interactive）.ipynb 文件
@@ -49,9 +48,6 @@
       4、每用户沙箱并发上限由 2 提高到 10（全局上限由 20 提高到 50）
       5、会话支持可选别名（创建时设置或随时修改/清除），管理页列表展示别名与附加端口并提供重命名入口
       6、新增 SandboxSession.Alias / ExtraPorts 持久化列（含六种数据库迁移），别名与端口记录不随容器销毁清除
-      [2026-09-17] v0.3.3 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
-      1、同步受影响的基础库、AI 模块或宿主项目版本
-      2、保持项目引用链与当前功能兼容
       [2026-09-18] v0.3.3 增强 JupyterLab 外部控制与会话管理
       1、创建 JupyterLab 容器支持可选附加端口映射（loopback 或外部 0.0.0.0 绑定），容器内 Web 站点可被外部访问
       2、新增 创建 Notebook Function：在 Lab 工作区生成 Python / C#（dotnet-interactive）.ipynb 文件
@@ -65,6 +61,14 @@
       [2026-10-21] v0.3.5 沙箱创建与 Notebook 缺少模板或语言时不再静默回退到 Python
       1、创建请求缺少模板时返回明确错误
       2、Notebook 缺少语言时要求明确填写 python 或 csharp
+      [2026-11-03] v0.4.0 统一 Docker 隔离运行时底层能力
+      1、DockerSandboxRuntime 改为 IIsolatedRuntimeProvider 业务适配器
+      2、容器启动、执行、日志、销毁、查询与进程超时由共享 Provider 管理
+      3、Exec 与 Jupyter 统一应用结构化挂载、资源、网络及 capability 策略
+      4、支持沙箱批量文件上传和隔离运行时连接
+      5、按租户恢复沙箱编排上下文并迭代执行后台回收
+      6、Dependency update from Senparc.Xncf.Sandbox.Abstractions to 0.3.1
+    [2026-11-03] Reuse shared documentation help and automatically select the current documentation language.
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

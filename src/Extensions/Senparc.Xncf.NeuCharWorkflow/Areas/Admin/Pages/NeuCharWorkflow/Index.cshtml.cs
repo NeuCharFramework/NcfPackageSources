@@ -19,6 +19,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.4.4 管理端支持导出和导入工作流文件
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.4 enhance fine-tuning functionality with artifact tracking and import/export capabilities
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;

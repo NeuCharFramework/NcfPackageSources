@@ -19,10 +19,11 @@
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'TemplateRelease'">true</GeneratePackageOnBuild>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <PackageReleaseNotes>
-      [2026-10-24] v0.1.0-preview1 统一 Workspace 与 Sandbox 的 Docker 隔离底层能力
+      [2026-11-03] v0.1.0-preview1 统一 Workspace 与 Sandbox 的 Docker 隔离底层能力
       1、结构化管理镜像、挂载、端口、网络、资源和安全选项
       2、支持 attached、one-shot、exec、logs、remove 和容器查询
       3、统一超时、取消、有限输出和参数边界
+      4、提供 Docker 隔离运行时、结构化命令参数和运行时连接管理
     </PackageReleaseNotes>
   </PropertyGroup>
 

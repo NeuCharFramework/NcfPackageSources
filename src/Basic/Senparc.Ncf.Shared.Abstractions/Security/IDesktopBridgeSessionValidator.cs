@@ -5,6 +5,10 @@
     文件功能描述：桌面桥接会话验证公共契约
 
     创建标识：Senparc - 20261024
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.7.0-preview1 implement connection manager and workspace file system provider
+
 ----------------------------------------------------------------*/
 
 using System.Threading;

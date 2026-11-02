@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.20.0 开放 Skill 查询、执行与测试
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 add Skill management page and functionality
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;

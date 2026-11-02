@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 提供微调任务、数据集与产物控制面
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 enhance job management and telemetry features
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Repository;

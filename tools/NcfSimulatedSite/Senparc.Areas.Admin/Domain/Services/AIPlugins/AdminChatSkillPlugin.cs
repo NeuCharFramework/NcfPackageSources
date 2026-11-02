@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.11.1 把已发布 Skill 注入后台对话
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 update AdminChat with PromptRange Skill integration
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;

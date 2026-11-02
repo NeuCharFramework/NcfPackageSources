@@ -4,8 +4,13 @@
     文件名：AIFineTuningMigration.cs
     文件功能描述：微调数据迁移记录模型
 
+    创建标识：Senparc - 20261014
+
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 记录微调迁移结果
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
 
 ----------------------------------------------------------------*/
 

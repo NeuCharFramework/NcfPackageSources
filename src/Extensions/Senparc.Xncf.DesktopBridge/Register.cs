@@ -18,6 +18,9 @@
     修改标识：Senparc - 20260808
     修改描述：v0.4.0-preview4 注册桌面管理员换票交接相关服务
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.8 implement connection manager and workspace file system provider
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;

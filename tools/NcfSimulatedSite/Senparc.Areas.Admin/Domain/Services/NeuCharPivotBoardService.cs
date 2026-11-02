@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261101
     修改描述：自定义 Pivot 缺失 Function 时保留引用状态并提供初始化引导
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 enhance job management and telemetry features
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

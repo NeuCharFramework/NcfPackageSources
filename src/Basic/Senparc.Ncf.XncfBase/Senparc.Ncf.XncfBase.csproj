@@ -19,7 +19,7 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-			[2026-10-02] 注册统一后台租户作用域工厂，供模块后台任务复用
+			[2024-08-07] v0.21.0.0-preview1 111
 			v0.1.0 创世
 			v0.2.100 完成基础架构，功能跑通
 			v0.3.100 优化 Function 返回值
@@ -36,7 +36,6 @@
 			v0.13.2 添加 VersionHelper，统一处理版本
 			v0.15.0 SelectionItem 支持 BindData 属性
 			v0.15.4 删除 ScanTypeKind.IFunction 枚举
-			[2024-08-07] v0.21.0.0-preview1 111
 			[2024-08-11] v0.21.1.0-preview1 新增 DtoBase&lt;T&gt; 类型
 			[2024-08-11] v0.21.2.0-preview1 新增 DtoBase&lt;T&gt; 类型
 			[2024-08-12] v0.21.3-preview1 添加 TableData 的数据插入方法，通过单元测试
@@ -91,9 +90,14 @@
 			[2026-09-17] v0.28.0 增强 FunctionRender 的 AI schema 选择元数据支持
 			1、为 FunctionRender AI schema 注入 SelectionList 选项与显示文本元数据
 			2、保持原有函数调用和参数处理兼容
-			[2026-10-05] v0.28.1 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
+			[2026-10-02] 注册统一后台租户作用域工厂，供模块后台任务复用
+			[2026-11-03] v0.28.1 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
 			1、Updated Senparc.Ncf.XncfBase project behavior and integration for the latest feature and reliability improvements.
-			2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
+			2、chore: update package versions and dependencies across multiple projects
+			3、扩展 FunctionRender 文件引用、文件存储及参数规范化能力
+			4、完善 AI 函数参数 Schema 与文件上传交互
+			5、Dependency update from Senparc.Ncf.Database to 0.21.11
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

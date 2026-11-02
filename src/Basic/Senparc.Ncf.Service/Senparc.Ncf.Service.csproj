@@ -17,9 +17,6 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-				[2026-10-01] v0.23.10-preview9 提供可等待的菜单与权限初始化 API
-				1、新增 InitAsync，使安装数据写入失败不再被 async void 吞掉
-				2、保留同步兼容入口并标记迁移提示
 				v0.1.0 创世
 				v0.11.7 优化 DeleteAllAsync() 方法，提供 deleteItemAction 参数
 				v0.14.0 解决模块安装后直接授权菜单问题
@@ -50,6 +47,11 @@
 				[2026-08-15] v0.23.8-preview8 Dependency update from Senparc.Ncf.Core to 0.29.0-preview8
 				[2026-08-29] v0.23.9-preview9 Dependency updates from Senparc.Ncf.Core to 0.30.0-preview9
 				1、Dependency update from Senparc.Ncf.Core to 0.30.0-preview9
+				[2026-11-03] v0.23.10-preview9 提供可等待的菜单与权限初始化 API
+				1、新增 InitAsync，使安装数据写入失败不再被 async void 吞掉
+				2、保留同步兼容入口并标记迁移提示
+				3、维护租户菜单和角色权限服务
+				4、Dependency update from Senparc.Ncf.SMS to 0.20.10-preview10
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

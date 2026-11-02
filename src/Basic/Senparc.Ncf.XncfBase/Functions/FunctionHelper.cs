@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.26.0 增强 XNCF 基础注册与函数参数处理能力
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Extensions;

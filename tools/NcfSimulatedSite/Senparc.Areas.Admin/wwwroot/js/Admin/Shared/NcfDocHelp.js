@@ -9,7 +9,7 @@
     let opener;
 
     function pageTopic(path) {
-        const normalized = (path || '').split(/[?#]/)[0].replace(/\/+$/, '').toLowerCase();
+        const normalized = (path || '').split(/[?#]/)[0].replace(/\/+$/, '').toLowerCase().replace(/\/index$/, '');
         return Object.prototype.hasOwnProperty.call(catalog.pages, normalized) ? catalog.pages[normalized] : null;
     }
 
@@ -101,10 +101,10 @@
         return dialog;
     }
 
-    function open(topic, trigger) {
+    function open(topic, trigger, culture) {
         let url;
         try {
-            url = resolve(topic, document.documentElement.lang);
+            url = resolve(topic, culture || document.documentElement.lang);
         } catch (error) {
             console.error('[NcfDocHelp]', error);
             Vue.prototype.$message.error(t('InvalidTopic'));
@@ -121,14 +121,15 @@
     Vue.component('ncf-doc-help', {
         props: {
             topic: { type: String, default: '' },
-            pagePath: { type: String, default: '' }
+            pagePath: { type: String, default: '' },
+            culture: { type: String, default: '' }
         },
         computed: {
             resolvedTopic: function () { return this.topic || pageTopic(this.pagePath); }
         },
         methods: {
             t: t,
-            show: function (event) { open(this.resolvedTopic, event.currentTarget); }
+            show: function (event) { open(this.resolvedTopic, event.currentTarget, this.culture); }
         },
         template: `
             <button v-if="resolvedTopic" type="button" class="ncf-doc-help-button"

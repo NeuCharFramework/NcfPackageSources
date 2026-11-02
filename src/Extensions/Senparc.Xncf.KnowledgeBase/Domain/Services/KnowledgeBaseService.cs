@@ -25,6 +25,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.7.0 保持知识库页面与向量状态服务兼容
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;

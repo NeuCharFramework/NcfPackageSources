@@ -18,10 +18,9 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
-      [2026-11-02] Add the Memory updater prompt provider contract.
-      v0.1.0 创世
       [2026-07-26] v0.2.2-preview2 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.3.0-preview2
       1、Dependency update from Senparc.Ncf.Shared.Abstractions to 0.3.0-preview2
+      v0.1.0 创世
       [2026-08-04] v0.2.3-preview3 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.4.0-preview3
       [2026-08-08] v0.2.4-preview4 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.5.0-preview4
       [2026-08-13] v0.2.5-preview5 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.6.0-preview5
@@ -29,6 +28,8 @@
       1、新增 SkillKind、测试隔离、风险等级与执行策略
       2、新增 ISkillTestRunner 与 AgentSkillBinding
       3、Skill 查询可按允许的 Skill 列表过滤
+      [2026-11-02] Add the Memory updater prompt provider contract.
+      [2026-11-03] v0.3.1-preview6 提供 Skill 包管理、来源文件和聊天记忆提示词契约
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

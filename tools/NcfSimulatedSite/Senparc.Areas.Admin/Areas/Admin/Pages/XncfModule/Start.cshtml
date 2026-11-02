@@ -84,6 +84,7 @@
                          :class="['box-card', {'function-card-highlight': isFocusedFunction(item)}]">
                     <div slot="header" class="clearfix">
                         <span><i class="fa fa-terminal"></i> {{item.key.name}}</span>
+                        <ncf-doc-help topic="modules.functions"></ncf-doc-help>
                             <span type="text" :class="[data.xncfModule.state===1?'box-card-action':'box-card-action2']" @@click="openRun(item,data.xncfModule.state)">@AR["Xncf.Execute"]</span>
                         <p class="box-card-des">{{item.key.description}}</p>
                     </div>

@@ -9,6 +9,9 @@
     修改标识：Senparc - 20260915
     修改描述：v0.16.0 新增 AI Token 用量监控与模型选择能力
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 维护AITokenMonitorAppService Token 监控相关实现
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;

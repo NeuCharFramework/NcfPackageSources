@@ -25,6 +25,9 @@
     修改标识：Senparc - 20261102
     修改描述：v0.12.3 恢复 GetHostMetrics 的 API 注册，移除资源监控方法的重复标记
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 add streamed large-file Workspace uploads with tenant-aware ownership checks
+
 ----------------------------------------------------------------*/
 
 using Senparc.Areas.Admin.OHS.Local.PL;

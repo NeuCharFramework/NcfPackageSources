@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.0 维护Sandbox_SandboxSessionConfigurationMapping.cs implementation and project behavior
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

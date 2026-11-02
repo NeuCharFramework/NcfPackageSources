@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261102
     修改描述：增加 Workspace 服务器端流式文件上传契约
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.2.0 add streamed large-file Workspace uploads with tenant-aware ownership checks
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Workspace.Abstractions;

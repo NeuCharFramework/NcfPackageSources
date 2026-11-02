@@ -5,6 +5,10 @@
     文件功能描述：共享 Docker 隔离运行时实现
 
     创建标识：Senparc - 20261024
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.1.0-preview1 implement connection manager and workspace file system provider
+
 ----------------------------------------------------------------*/
 
 using System.Diagnostics;

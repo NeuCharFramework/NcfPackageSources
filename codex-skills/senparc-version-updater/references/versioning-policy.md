@@ -35,11 +35,13 @@
 
 1. 提交路径并集中位于项目目录内的任意文件（包括 `.cs`、`.cshtml`、`.js`、`.resx`、`.axaml` 等）都必须反向映射到对应项目并加入 `changed_csprojs`；直接发生变化的 `.csproj` 同样必须加入。
 2. 对每个 changed `.props` 文件，必须解析显式 `<Import Project="..." />`，支持 `$(MSBuildThisFileDirectory)`、`$(MSBuildProjectDirectory)`，并递归跟踪 `.props` 引用链。
-3. 直接或间接导入 changed `.props` 的所有项目都必须加入 `changed_csprojs`，即使这些项目自身没有 `.cs` 文件变化。
+3. 直接或间接导入 changed `.props` 的所有非测试项目都必须加入 `changed_csprojs`，即使这些项目自身没有 `.cs` 文件变化。
 4. `changed_csprojs` 中的每个项目都必须更新自身 `.csproj`（版本与发布说明）。
 5. 不允许只更新单一主项目并忽略其他已变更代码所在项目或 `.props` 导入项目。
 6. 本次执行中只要编辑了 `.cs` 文件（包含仅头注释更新），其映射到的项目都必须同步合并更新当前窗口版本号下的 `<PackageReleaseNotes>`（禁止只改 `.cs` 不改 `.csproj`）。
 7. `.props` 文件不添加 C# 文件头；其依赖版本、兼容性或构建行为影响必须写入每个导入项目的功能性发布说明。
+8. 测试项目（包括 `*.Tests.csproj`、`*Tests.csproj` 和位于 `Tests`、`*.Tests`、`*Tests` 目录下的项目）不发布，不新增、升级或删除 `<Version>`，也不要求新增包发布说明；已有发布说明如果顺序错误，可保留内容并调整整条记录的顺序。
+9. 测试项目不参与版本更新，但遍历递归依赖时仍须穿过测试项目，以发现后续非测试项目。
 
 ## 预览版处理
 

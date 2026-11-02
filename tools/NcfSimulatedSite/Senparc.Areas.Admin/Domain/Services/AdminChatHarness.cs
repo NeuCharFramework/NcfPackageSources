@@ -18,6 +18,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.11.1 整理最近任务与会话标题
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 enhance AdminChat with recent tasks and session title generation
+
 ----------------------------------------------------------------*/
 
 using System;

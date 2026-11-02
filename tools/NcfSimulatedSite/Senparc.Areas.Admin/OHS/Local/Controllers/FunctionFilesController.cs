@@ -4,6 +4,11 @@
     文件名：FunctionFilesController.cs
     文件功能描述：FunctionRender 文件引用上传接口
 
+    创建标识：Senparc - 20261101
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;

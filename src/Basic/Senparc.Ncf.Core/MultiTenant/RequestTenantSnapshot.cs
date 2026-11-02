@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261028
     修改描述：新增 From(RequestTenantInfo) 工厂方法，供租户作用域内直接构造快照
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.30.3-preview9 Workflow 运行协调器与定时宿主服务恢复/按租户传播租户上下文
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

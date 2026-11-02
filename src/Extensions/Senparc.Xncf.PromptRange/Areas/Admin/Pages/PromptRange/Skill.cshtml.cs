@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.20.0 提供 Skill 管理页
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 enhance Sandbox functionality with language validation and request handling improvements
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Service;

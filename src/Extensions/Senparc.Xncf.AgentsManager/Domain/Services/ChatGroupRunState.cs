@@ -7,6 +7,9 @@
     创建标识：Senparc - 20260927
     创建描述：拆分 ChatGroupService，集中管理工作流事件循环中的可变状态
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 update AgentsManager with new features and improvements
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;

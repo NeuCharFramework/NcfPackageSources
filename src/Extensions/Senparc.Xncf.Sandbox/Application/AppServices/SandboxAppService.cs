@@ -29,6 +29,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.3.5 缺少模板或语言时拒绝静默回退到 Python
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.0 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using System.Net;

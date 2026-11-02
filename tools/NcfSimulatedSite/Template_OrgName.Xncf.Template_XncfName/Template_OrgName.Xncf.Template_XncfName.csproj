@@ -59,9 +59,11 @@
       [2026-10-29] v1.1.12 模板依赖与资源条件化
       1、Senparc.Ncf.DatabasePlant 引用改为条件包含（Database 或 Sample 开启时才生成）
       2、Sample 关闭时不再生成 databaseSampleIndex 静态资源
-      [2026-10-29] v1.1.13 修复无数据库变体无法编译的问题
+      [2026-11-03] v1.1.13 修复无数据库变体无法编译的问题
       1、Register.cs 的数据库相关代码（迁移、初始化、卸载删表、DI 注册）改用 XNCF_HAS_DATABASE 条件编译
-      2、csproj 仅在 Database 或 Sample 开启时定义 XNCF_HAS_DATABASE 并包含 DatabasePlant 引用</PackageReleaseNotes>
+      2、csproj 仅在 Database 或 Sample 开启时定义 XNCF_HAS_DATABASE 并包含 DatabasePlant 引用
+      3、修复模板参数默认值及数据库和静态资源的条件引用
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

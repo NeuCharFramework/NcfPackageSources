@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.24.16 公众号 AI 回复写入 Token 用量
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.24.16 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using System;

@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260822
     修改描述：v0.16.0 增强 Agent 工作流校验、函数绑定与任务管理交互
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 update AgentsManager with new features and improvements
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;

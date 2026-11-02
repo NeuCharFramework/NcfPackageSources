@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.20.0 注册 Skill 目录、执行与测试服务
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 implement AdminChat memory storage and management system
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;

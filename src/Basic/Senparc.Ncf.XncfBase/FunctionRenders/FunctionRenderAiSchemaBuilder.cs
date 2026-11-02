@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261101
     修改描述：增加 Function 文件引用及批量文件参数的 AI schema 元数据
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.Functions;

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.3.0</Version>
+    <Version>0.3.1</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -26,6 +26,7 @@
       [2026-08-13] v0.2.5-preview5 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.6.0-preview5
       [2026-08-22] v0.3.0-preview6 新增 AgentsManager 与工作流之间的引用校验契约
       1、提供 AgentWorkflowReference 和跨模块工作流引用校验契约，支持宿主在保存图前验证 Agent 与 Group 引用
+      [2026-11-03] v0.3.1 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.7.0-preview1
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

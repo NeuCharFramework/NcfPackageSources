@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261003
     修改描述：v0.5.7 端点连接测试传递传输类型及请求取消信号
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.5.10 add comprehensive tests for MCP endpoint management and background tenant scope
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

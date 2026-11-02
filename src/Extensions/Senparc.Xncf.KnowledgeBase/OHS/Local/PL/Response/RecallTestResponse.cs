@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260813
     修改描述：v0.6.0-preview8 完善知识库文件删除保护、召回测试与管理界面
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+
 ----------------------------------------------------------------*/
 
 using System;

@@ -111,7 +111,7 @@
                 <p class="search-method-tip">系统将问题和资料片段转换为向量后按语义相近程度排序。不同模型和向量库的分数范围可能不同，因此不要把它当作固定百分比或召回率。</p>
             </div>
             <div class="search-settings-item">
-                <div class="search-settings-label">返回片段数量（Top K）</div>
+                <div class="search-settings-label">返回片段数量（Top K）<ncf-doc-help topic="knowledge.recall"></ncf-doc-help></div>
                 <p class="search-method-tip">先从 5 开始。结果太少可提高，结果太杂可降低；本设置只影响当前页面后续测试。</p>
                 <div class="topk-row">
                     <el-slider v-model="topK" :min="1" :max="20" :step="1" show-stops></el-slider>

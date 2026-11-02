@@ -4,8 +4,13 @@
     文件名：AIFineTuningDataset.cs
     文件功能描述：微调数据集数据模型
 
+    创建标识：Senparc - 20261014
+
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 记录微调数据集及其存储身份
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
 
 ----------------------------------------------------------------*/
 

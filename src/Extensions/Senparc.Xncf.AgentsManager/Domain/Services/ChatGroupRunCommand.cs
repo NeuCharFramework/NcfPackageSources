@@ -7,6 +7,9 @@
     创建标识：Senparc - 20260927
     创建描述：将 ChatGroupService 的执行入口与 Application 层 HTTP/UI 绑定模型（ChatGroup_RunGroupRequest）解耦
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 update AgentsManager with new features and improvements
+
 ----------------------------------------------------------------*/
 
 using System.Threading;

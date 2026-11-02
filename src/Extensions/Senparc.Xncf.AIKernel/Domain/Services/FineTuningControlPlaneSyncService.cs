@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261028
     修改描述：多租户模式下按租户迭代同步微调控制面，避免根作用域缺失租户上下文
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 enhance event synchronization with concurrent cursor management
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

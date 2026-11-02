@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261001
     修改描述：通过现有 TenantInfoRepository 查询租户缓存数据
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.15.14 维护FullTenantInfoCache 相关实现
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;

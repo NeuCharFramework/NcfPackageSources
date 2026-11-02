@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <AssemblyName>Senparc.Xncf.MCP.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -20,9 +20,10 @@
     <PackageReleaseNotes>
       v0.1.0 创世
       [2026-09-24] v0.1.0 新增 MCP Endpoint 跨模块查询的 EventBus 请求-响应契约，供 AgentsManager 等模块通过列表选择 MCP
-    
       [2026-10-05] v0.1.0 feat: add MCP endpoint selection feature in AgentsManager
-      1、Updated Senparc.Xncf.MCP.Abstractions project behavior and integration for the latest feature and reliability improvements.</PackageReleaseNotes>
+      1、Updated Senparc.Xncf.MCP.Abstractions project behavior and integration for the latest feature and reliability improvements.
+      [2026-11-03] v0.1.1 提供 MCP 端点信息和跨模块端点查询事件契约
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

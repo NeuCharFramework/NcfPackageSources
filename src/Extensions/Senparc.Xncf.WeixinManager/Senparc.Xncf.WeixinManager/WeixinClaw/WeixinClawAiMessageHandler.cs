@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：WeixinClawAiMessageHandler.cs
+    文件功能描述：WeixinClawAiMessageHandler 相关定义与实现
+
+
+    创建标识：Senparc - 20260925
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.24.16 AI 会话缓存（IWantToRun）Key 增加账号维度，防止多租户跨租户复用
+
+----------------------------------------------------------------*/
+
 using System;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;

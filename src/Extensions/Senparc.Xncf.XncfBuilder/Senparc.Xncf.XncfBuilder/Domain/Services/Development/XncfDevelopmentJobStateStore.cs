@@ -15,6 +15,9 @@
     修改标识：Senparc - 20261028
     修改描述：多租户模式下支持平台级（TenantId=0）租户上下文还原
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.41.7 XncfBuilder 状态存储支持平台级（TenantId=0）租户上下文
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

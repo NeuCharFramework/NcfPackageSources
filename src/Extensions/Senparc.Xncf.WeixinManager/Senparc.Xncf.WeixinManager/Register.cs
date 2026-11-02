@@ -16,6 +16,9 @@
     修改标识：Senparc - 20260731
     修改描述：v0.24.0-preview5 将不支持的平台类型提示接入模块多语言资源
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.24.16 Remove DatabaseSample and related components from MCP extension
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;

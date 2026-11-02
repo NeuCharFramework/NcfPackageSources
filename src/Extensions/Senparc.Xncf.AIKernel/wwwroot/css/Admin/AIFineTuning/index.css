@@ -137,8 +137,12 @@
 .ft-validation-result { margin-top: 16px; padding: 12px; border: 1px solid #dcdfe6; border-radius: 4px; background: #fff; }
 .ft-validation-result p { margin: 8px 0; }
 .ft-validation-result pre { margin: 0; padding: 10px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #f5f7fa; }
+.ft-event-columns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.ft-event-pane { min-width: 0; }
+.ft-event-pane h3 { margin-top: 0; }
 .ft-log-heading { justify-content: space-between; margin: 12px 0; font-size: 13px; }
 .ft-log { background: #18212f; color: #f1f5f9; max-height: 360px; overflow: auto; padding: 12px; font: 12px/1.7 monospace; }
+.ft-metric-log { background: #202b3c; }
 .ft-log-line { white-space: pre-wrap; overflow-wrap: anywhere; border-bottom: 1px solid #344054; padding: 4px 0; }
 .ft-log-time { color: #b8c7dc; }
 .ft-log-line strong { margin: 0 6px; }
@@ -155,6 +159,7 @@
     .ft-heading { align-items: flex-start; }
     .ft-chart { height: 280px; }
     .ft-workflow { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .ft-event-columns { grid-template-columns: minmax(0, 1fr); }
     .ft-workflow-step { padding: 2px 0 0; }
     .ft-workflow-step:not(:last-child)::after {
         top: 30px;

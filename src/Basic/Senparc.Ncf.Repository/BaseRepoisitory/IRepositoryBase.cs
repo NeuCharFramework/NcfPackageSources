@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261001
     修改描述：开放已跟踪实体按指定字段保存的通用接口
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.10-preview9 维护IRepositoryBase 相关实现
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：WorkspaceFilesController.cs
+    文件功能描述：WorkspaceFilesController 相关定义与实现
+
+
+    创建标识：Senparc - 20261102
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 add streamed large-file Workspace uploads with tenant-aware ownership checks
+
+----------------------------------------------------------------*/
+
 using System;
 using System.IO;
 using System.Linq;

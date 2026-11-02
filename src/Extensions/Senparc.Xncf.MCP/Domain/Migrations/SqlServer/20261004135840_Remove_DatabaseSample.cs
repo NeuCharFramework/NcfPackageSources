@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20261004135840_Remove_DatabaseSample.cs
+    文件功能描述：20261004135840_Remove_DatabaseSample 相关定义与实现
+
+
+    创建标识：Senparc - 20210108
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.5.10 支持 Remove_DatabaseSample 数据库迁移
+
+----------------------------------------------------------------*/
+
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 定义微调文件存储契约
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.FileManager.Abstractions;

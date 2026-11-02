@@ -20,10 +20,13 @@ async page => {
     const raw = await page.evaluate(() => fetch('/template').then(response => response.text()));
     const aside = raw.slice(raw.indexOf('<el-aside'), raw.indexOf('</el-aside>') + '</el-aside>'.length)
         .replace(/@AR\["([^"]+)"\]/g, '$1').replace(/@@/g, '@');
+    const livePanel = raw.slice(raw.indexOf('<div v-if="isAIResponding'),
+        raw.indexOf('            </div>\n\n            <div class="input-container"'))
+        .replace(/@AR\["([^"]+)"\]/g, '$1').replace(/@@/g, '@');
     await page.setContent(`<div id="app"><div class="admin-chat-container">
         <el-container ref="workspaceContainer" class="chat-main-container"
             :style="{ '--chat-sidebar-width': sidebarWidth + 'px' }">
-            ${aside}<el-main class="chat-content">Conversation content</el-main>
+            ${aside}<el-main class="chat-content">${livePanel}</el-main>
         </el-container></div></div>`);
     await page.addStyleTag({ path: web + '/lib/element-ui_2.13.2/element.css' });
     await page.addStyleTag({ path: admin + '/wwwroot/css/Admin/Pages/AdminChat/Chat.css' });
@@ -44,7 +47,11 @@ async page => {
         const options = window.sidebarOptions;
         window.sidebarTestApp = new Vue({
             el: '#app', data: options.data, computed: options.computed,
-            methods: { ...options.methods, switchSession(id) { this.currentSessionId = id; } }
+            methods: {
+                ...options.methods,
+                switchSession(id) { this.currentSessionId = id; },
+                formatMessageContent(text) { return text; }
+            }
         });
         sidebarTestApp.currentUserId = 12;
         sidebarTestApp.$message = {
@@ -109,8 +116,24 @@ async page => {
     await page.evaluate(() => {
         sidebarTestApp.runningSessionId = 3;
         sidebarTestApp.isSending = true;
+        sidebarTestApp.isAIResponding = true;
         sidebarTestApp.currentSessionId = 1;
+        sidebarTestApp.handleLiveStreamEvent('assistant-phase', {
+            text: 'Only session three reasoning',
+            trajectoryEvent: { eventType: 'TextReasoningContent', sequence: 1, content: 'Only session three reasoning' }
+        }, 'temp', 3);
+        sidebarTestApp.handleLiveStreamEvent('trajectory-event', {
+            trajectoryEvent: { eventType: 'tool.call', sequence: 2, content: 'Only session three tool trace' }
+        }, 'temp', 3);
     });
+    check(await page.locator('.live-run-panel').count() === 0, 'Other sessions must not render the running session thinking or trajectory panel');
+    await group.locator('.session-item').filter({ hasText: 'Alpha third' }).click();
+    check(await page.locator('.live-run-panel').isVisible(), 'Returning to the running session must restore its live panel');
+    check((await page.locator('.live-thinking-content').textContent()) === 'Only session three reasoning', 'Live reasoning must survive navigation');
+    await page.locator('.live-trajectory-collapse .el-collapse-item__header').click();
+    check((await page.locator('.live-trajectory-event-content').allTextContents()).includes('Only session three tool trace'), 'Live trajectory must remain available only in the owning session');
+    await group.locator('.session-item').filter({ hasText: 'Alpha first' }).click();
+    check(await page.locator('.live-run-panel').count() === 0, 'Navigating away must hide live state again');
     const running = group.locator('.session-item.is-running');
     check((await running.locator('.session-title').textContent()) === 'Alpha third', 'Run indicator must stay with the originating session');
     check(!await running.evaluate(el => el.classList.contains('active')), 'Running is distinct from selected');
@@ -129,5 +152,5 @@ async page => {
     await page.evaluate(() => { sidebarTestApp.isSending = false; });
     check(await page.locator('.is-running').count() === 0, 'Completed tasks must return to idle styling');
     check(failures.length === 0, 'Browser errors: ' + failures.join('; '));
-    return 'Sidebar browser checks passed: collapse, pointer/keyboard resize, group folding, drag/keyboard order, cross-group rejection, activity and reduced motion.';
+    return 'Sidebar browser checks passed: collapse, resize, ordering, session-isolated thinking/trajectory panels, preserved live progress, activity and reduced motion.';
 }

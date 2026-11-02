@@ -13,6 +13,9 @@
     修改标识：Senparc - 20260702
     修改描述：v0.11.0-preview2 同步 master/main 基线范围内改动并完成递归依赖版本处理
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 update AgentsManager with new features and improvements
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET;

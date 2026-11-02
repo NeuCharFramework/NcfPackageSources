@@ -7,6 +7,9 @@
     创建标识：Senparc - 20260927
     创建描述：抽取 AgentTemplateRunner 与 ChatGroupService 的重复回退逻辑，行为取两者并集
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 update AgentsManager with new features and improvements
+
 ----------------------------------------------------------------*/
 
 using Senparc.AI;

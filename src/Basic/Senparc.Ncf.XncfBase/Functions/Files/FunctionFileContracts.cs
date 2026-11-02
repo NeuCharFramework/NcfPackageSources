@@ -4,6 +4,11 @@
     文件名：FunctionFileContracts.cs
     文件功能描述：FunctionRender 文件引用与文件存储契约
 
+    创建标识：Senparc - 20261101
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using System.Security.Cryptography;

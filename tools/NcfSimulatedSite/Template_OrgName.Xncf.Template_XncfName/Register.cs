@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260726
     修改描述：v1.1.0 补充示例模板 EventBus 请求-响应回环与多语言能力
 
+    修改标识：Senparc - 20261103
+    修改描述：v1.1.13 XNCF 模板无数据库变体编译修复
+
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.XncfBase;

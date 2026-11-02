@@ -30,6 +30,9 @@
     修改标识：Senparc - 20261028
     修改描述：多租户模式下单例编排器恢复请求租户上下文，后台 TTL/孤儿回收按租户迭代
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.0 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;

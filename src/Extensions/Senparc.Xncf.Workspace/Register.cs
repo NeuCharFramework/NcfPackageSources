@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261028
     修改描述：注册 IHttpContextAccessor，供单例存储捕获请求租户上下文
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.2.2 Workspace 单例存储的元数据读写恢复请求租户上下文
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 准备微调所需模型与数据
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add bilingual contextual documentation help with iframe dialog and new-window access
+
 ----------------------------------------------------------------*/
 
 #nullable enable

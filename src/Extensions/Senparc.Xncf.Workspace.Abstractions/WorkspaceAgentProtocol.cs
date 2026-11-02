@@ -5,6 +5,10 @@
     文件功能描述：Workspace Agent 跨进程协议
 
     创建标识：Senparc - 20261024
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.2.0 implement connection manager and workspace file system provider
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;

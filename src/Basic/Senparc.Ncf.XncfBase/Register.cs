@@ -22,6 +22,9 @@
     修改标识：Senparc - 20261002
     修改描述：注册统一后台租户作用域工厂
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using System;

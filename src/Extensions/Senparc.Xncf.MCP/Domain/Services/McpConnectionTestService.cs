@@ -14,6 +14,9 @@
     修改标识：Senparc - 20261003
     修改描述：v0.5.7 按端点类型连接并为初始化及工具发现设置可取消的整体超时
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.5.10 add comprehensive tests for MCP endpoint management and background tenant scope
+
 ----------------------------------------------------------------*/
 
 using System;

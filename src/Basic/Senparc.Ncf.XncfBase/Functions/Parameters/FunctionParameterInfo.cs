@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.28.1 0.28.1 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.28.1 add bulk file upload functionality to Sandbox Lab
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase.Functions;

@@ -6,6 +6,9 @@
 
     创建标识：Senparc - 20260926
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 add image captcha for admin login (required after 2 failed attempts)
+
 ----------------------------------------------------------------*/
 
 using Senparc.CO2NET.Cache;

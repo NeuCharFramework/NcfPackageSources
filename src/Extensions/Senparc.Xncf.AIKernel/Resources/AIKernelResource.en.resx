@@ -470,6 +470,11 @@
   <data name="FineTuning.LogHelp" xml:space="preserve">
     <value>Only the latest 1,000 log entries and 1,000 chart points are retained in the browser.</value>
   </data>
+  <data name="FineTuning.CommandLog" xml:space="preserve"><value>Command and event log</value></data>
+  <data name="FineTuning.CommandLogHelp" xml:space="preserve"><value>Training commands, warnings and errors</value></data>
+  <data name="FineTuning.MetricLog" xml:space="preserve"><value>Metrics stream</value></data>
+  <data name="FineTuning.MetricLogHelp" xml:space="preserve"><value>Periodic GPU, loss, step and timing values</value></data>
+  <data name="FineTuning.NoMetrics" xml:space="preserve"><value>No metrics received yet</value></data>
   <data name="FineTuning.Replaying" xml:space="preserve">
     <value>Replaying persisted events</value>
   </data>
