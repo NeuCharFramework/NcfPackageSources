@@ -265,6 +265,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
 
+                    b.Property<int?>("SortOrder")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<int>("Status")
                         .HasColumnType("NUMBER(10)");
 

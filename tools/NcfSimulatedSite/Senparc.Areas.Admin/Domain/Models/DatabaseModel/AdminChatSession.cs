@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.11.1 会话关联工作区
 
+    修改标识：Senparc - 20261103
+    修改描述：保存分类内会话排序
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -55,6 +58,14 @@ namespace Senparc.Areas.Admin.Domain.Models.DatabaseModel
         public bool WorkspaceWriteEnabled { get; private set; }
 
         public bool WorkspaceCliEnabled { get; private set; }
+
+        public int? SortOrder { get; private set; }
+
+        public void SetSortOrder(int sortOrder)
+        {
+            if (sortOrder < 0) throw new ArgumentOutOfRangeException(nameof(sortOrder));
+            SortOrder = sortOrder;
+        }
 
         /// <summary>
         /// 私有构造函数（供 EF Core 使用）

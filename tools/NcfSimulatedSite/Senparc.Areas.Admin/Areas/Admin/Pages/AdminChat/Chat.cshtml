@@ -22,13 +22,24 @@
     <el-container
         ref="workspaceContainer"
         class="chat-main-container"
+        :style="{ '--chat-sidebar-width': sidebarWidth + 'px' }"
         :class="{ 'is-workspace-preview-open': currentSessionWorkspaceId && workspacePreviewOpen, 'is-workspace-preview-overlay': workspacePreviewOverlay }">
         <!-- 左侧会话历史 -->
-        <el-aside width="280px" class="chat-sidebar">
+        <el-aside class="chat-sidebar" :class="{ 'is-collapsed': sidebarCollapsed }">
+            <div class="sidebar-heading">
+                <span v-show="!sidebarCollapsed">@AR["AdminChat.History"]</span>
+                <button type="button" class="sidebar-toggle"
+                        :title="ncfT(sidebarCollapsed ? 'AdminChat.Sidebar.Expand' : 'AdminChat.Sidebar.Collapse')"
+                        :aria-label="ncfT(sidebarCollapsed ? 'AdminChat.Sidebar.Expand' : 'AdminChat.Sidebar.Collapse')"
+                        :aria-expanded="String(!sidebarCollapsed)" aria-controls="chat-sidebar-body"
+                        @@click="toggleSidebar">
+                    <i :class="sidebarCollapsed ? 'el-icon-s-unfold' : 'el-icon-s-fold'" aria-hidden="true"></i>
+                </button>
+                <span v-if="sidebarCollapsed && isSending" class="sidebar-running-dot"
+                      role="status" :aria-label="ncfT('AdminChat.Sidebar.Running')"></span>
+            </div>
+            <div id="chat-sidebar-body" class="sidebar-body" v-show="!sidebarCollapsed">
             <div class="sidebar-header">
-                <h3 class="sidebar-title">
-                    <i class="fa fa-comments"></i> @AR["AdminChat.History"]
-                </h3>
                 <div class="sidebar-actions">
                     <el-button size="small" icon="el-icon-notebook-2" :title="ncfT('AdminChat.Memory.Settings')"
                                :disabled="memoryBusy" @@click="openMemoryDialog">
@@ -55,19 +66,44 @@
             
             <div class="session-list" v-loading="loadingSessions">
                 <div v-for="group in groupedSessionList" :key="group.key" class="session-group">
-                    <div class="session-group-title">
-                        <i :class="group.key === '__no_workspace__' ? 'fa fa-comments-o' : 'fa fa-folder-open'"></i>
+                    <button type="button" class="session-group-title"
+                            :aria-expanded="String(!isSessionGroupCollapsed(group.key))"
+                            :aria-controls="'session-group-' + group.key"
+                            @@click="toggleSessionGroup(group.key)">
+                        <i :class="isSessionGroupCollapsed(group.key) ? 'el-icon-arrow-right' : 'el-icon-arrow-down'" aria-hidden="true"></i>
+                        <i :class="group.key === '__no_workspace__' ? 'fa fa-comments-o' : 'fa fa-folder-open'" aria-hidden="true"></i>
                         <span>{{ group.name }}</span>
+                        <span v-if="group.sessions.some(isSessionRunning)" class="sidebar-running-dot"
+                              role="status" :aria-label="ncfT('AdminChat.Sidebar.Running')"></span>
                         <span class="session-group-count">{{ group.sessions.length }}</span>
-                    </div>
+                    </button>
+                    <div :id="'session-group-' + group.key" v-show="!isSessionGroupCollapsed(group.key)">
                     <div
                         v-for="session in group.sessions"
                         :key="session.id"
-                        :class="['session-item', { 'active': currentSessionId === session.id }]"
+                        :class="['session-item', { 'active': currentSessionId === session.id, 'is-running': isSessionRunning(session),
+                            'is-dragging': draggingSessionId === session.id,
+                            'is-drop-before': dropSessionId === session.id && !dropAfter,
+                            'is-drop-after': dropSessionId === session.id && dropAfter }]"
+                        @@dragover="handleSessionDragOver($event, session)"
+                        @@drop="handleSessionDrop($event, session)"
                         @@click="switchSession(session.id)">
+                        <button type="button" class="session-drag-handle" :draggable="!savingSessionOrder"
+                                :disabled="savingSessionOrder" :title="ncfT('AdminChat.Sidebar.Reorder')"
+                                :aria-label="ncfT('AdminChat.Sidebar.Reorder')"
+                                @@click.stop @@dragstart.stop="startSessionDrag($event, session)"
+                                @@dragend="endSessionDrag"
+                                @@keydown.alt.up.prevent.stop="moveSessionByKeyboard(session, -1)"
+                                @@keydown.alt.down.prevent.stop="moveSessionByKeyboard(session, 1)">
+                            <i class="el-icon-rank" aria-hidden="true"></i>
+                        </button>
                         <div class="session-info">
                             <div class="session-title">{{ session.title }}</div>
-                            <div class="session-time">{{ formatTime(session.lastMessageTime) }}</div>
+                            <div v-if="isSessionRunning(session)" class="session-run-status" role="status">
+                                <span class="session-run-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+                                {{ ncfT(isStopping ? 'AdminChat.Sidebar.Stopping' : 'AdminChat.Sidebar.Running') }}
+                            </div>
+                            <div v-else class="session-time">{{ formatTime(session.lastMessageTime) }}</div>
                         </div>
                         <el-dropdown trigger="click" @@command="handleSessionCommand">
                             <span class="session-actions" @@click.stop>
@@ -80,6 +116,7 @@
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
+                    </div>
                 </div>
                 
                 <div v-if="sessionList.length === 0 && !loadingSessions" class="empty-sessions">
@@ -87,6 +124,13 @@
                     <p>@AR["AdminChat.EmptyHistory"]</p>
                 </div>
             </div>
+            </div>
+            <div v-show="!sidebarCollapsed" class="chat-sidebar-resizer" role="separator" tabindex="0"
+                 aria-orientation="vertical" :aria-label="ncfT('AdminChat.Sidebar.Resize')"
+                 :aria-valuenow="sidebarWidth" :aria-valuemin="215" :aria-valuemax="420"
+                 @@pointerdown="startSidebarResize"
+                 @@keydown.left.prevent="resizeSidebarByKeyboard(-20)"
+                 @@keydown.right.prevent="resizeSidebarByKeyboard(20)"></div>
         </el-aside>
 
         <!-- 右侧对话窗口 -->
@@ -364,6 +408,16 @@
                         </div>
                     </div>
                 </div>
+
+                <el-alert v-if="memoryUpdateResult && memoryUpdateSessionId === currentSessionId && (memoryUpdateResult.requested || memoryUpdateResult.status === 'updated')"
+                          class="chat-memory-update-result"
+                          :title="memoryUpdateText(memoryUpdateResult)"
+                          :type="memoryUpdateResult.status === 'updated' ? 'success' : 'warning'"
+                          :closable="false" show-icon>
+                    <el-button type="text" size="mini" :disabled="memoryBusy" @@click="openMemoryDialog">
+                        @AR["AdminChat.Memory.Settings"]
+                    </el-button>
+                </el-alert>
 
                 <div v-if="messageList.length === 0 && !loadingMessages" class="empty-messages">
                     <i class="fa fa-comment-o"></i>
@@ -1018,6 +1072,7 @@
     <el-dialog :title="ncfT('AdminChat.Memory.Settings')" :visible.sync="memoryDialogVisible"
                width="760px" custom-class="chat-memory-dialog" :close-on-click-modal="false" append-to-body>
         <el-alert :title="ncfT('AdminChat.Memory.Notice')" type="info" :closable="false"></el-alert>
+        <p>@AR["AdminChat.Memory.StorageNotice"]</p>
         <el-tabs v-model="memoryTab">
             <el-tab-pane :label="ncfT('AdminChat.Memory.Entries')" name="entries">
                 <p>@AR["AdminChat.Memory.ScopeNotice"]</p>
@@ -1082,6 +1137,12 @@
             </el-tab-pane>
             <el-tab-pane :label="ncfT('AdminChat.Memory.Loaded')" name="loaded">
                 <p>@AR["AdminChat.Memory.LoadedNotice"]</p>
+                <el-alert v-if="memoryUpdateResult && memoryUpdateSessionId === memoryDialogSessionId"
+                          :title="memoryUpdateText(memoryUpdateResult)"
+                          :type="memoryUpdateResult.status === 'updated' ? 'success' : 'info'" :closable="false"></el-alert>
+                <p v-if="memoryUpdateResult && memoryUpdateSessionId === memoryDialogSessionId && memoryUpdateResult.promptCode">
+                    PromptCode: {{ memoryUpdateResult.promptCode }}
+                </p>
                 <template v-if="memoryUsage && memoryUsageSessionId === memoryDialogSessionId">
                     <p>{{ memoryUsage.tokens }} / {{ memoryUsage.budget }} tokens · {{ memoryUsage.counter }}</p>
                     <el-table :data="memoryUsage.entries" size="mini">

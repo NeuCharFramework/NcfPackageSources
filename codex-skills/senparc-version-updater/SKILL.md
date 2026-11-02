@@ -128,7 +128,7 @@ For all projects in `changed_csprojs` (any changed project-contained file, direc
 
 In every `.csproj` in `changed_csprojs` (the selected primary must also satisfy Step 4 when affected):
 
-1. Append new lines to existing `<PackageReleaseNotes>` content.
+1. Add new entries to existing `<PackageReleaseNotes>` in chronological order, normally at the end.
 2. Keep the same leading spaces as the previous line.
 3. Do not insert blank lines inside `<PackageReleaseNotes>` (including between entries and detail lines).
 4. Use this structure:
@@ -145,6 +145,10 @@ In every `.csproj` in `changed_csprojs` (the selected primary must also satisfy 
 12. `<Version>` must be located after `<TargetFramework>` or `<TargetFrameworks>` in the `.csproj` file.
 13. `<Version>` does not need to be immediately adjacent to `<TargetFramework>`/`<TargetFrameworks>`. If it is already after framework tags, keep its current position.
 14. If `<Version>` appears before `<TargetFramework>`/`<TargetFrameworks>`, move `<Version>` to any valid location after framework tags while preserving indentation/content.
+15. Inspect the existing entries and reorder dated entries from oldest to newest, so newer entries appear below older entries. Move each entry together with all of its detail lines.
+16. Preserve the relative order of entries with the same date unless their actual sequence is known. Add a new same-date entry after existing entries for that date.
+17. Preserve undated legacy entries and their relative order; do not attach them to unrelated dated entries or invent dates. If their chronological position cannot be established reliably, report them for manual review.
+18. When merging changes into an existing current-version block, use the date of the most recent included change and move the whole block to its chronological position.
 
 If `<PackageReleaseNotes>` does not exist, create it under the first `<PropertyGroup>` and match surrounding indentation.
 
@@ -175,7 +179,12 @@ Validate:
 9. In every edited `.csproj`, resulting `<Version>` is not lower than its pre-update `<Version>`.
 10. All commits in `comparison_base..HEAD` are reflected by updated files/projects in this workflow.
 11. For every edited `.cs` file in this run, its mapped `.csproj` has a release-note merge/update in current window version block.
-12. Optional: run project build/tests before commit.
+12. In every edited `.csproj`, dated release-note blocks are ordered from oldest to newest, and each block retains its original detail lines.
+13. Optional: run project build/tests before commit.
+
+## Learnings
+
+- `<PackageReleaseNotes>` is chronological history: older entries belong above newer entries. Preserve complete entry blocks and avoid guessing dates for undated legacy notes.
 
 ## Suggested Command Sequence
 

@@ -1,5 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Expandir el panel de conversaciones</value></data>
+  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Contraer el panel de conversaciones</value></data>
+  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Ajustar ancho del panel (flechas izquierda/derecha)</value></data>
+  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>Arrastrar dentro del grupo, o Alt + Arriba/Abajo</value></data>
+  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>En curso</value></data>
+  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>Deteniendo</value></data>
+  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>Orden guardado para esta cuenta en todos los dispositivos</value></data>
+  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>No se pudo guardar el orden. Inténtelo de nuevo.</value></data>
+  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>No se pudieron leer o guardar las preferencias del panel. Este diseño solo se aplica a esta página.</value></data>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>

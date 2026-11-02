@@ -1,5 +1,11 @@
 # 管理后台 AI 对话功能 - Migration 指南
 
+## 2026-11-03：跨设备分类内会话排序
+
+新增 `Add_AdminChat_Session_SortOrder` Migration（Sqlite / SqlServer / MySql / PostgreSQL / Oracle / Dm），为 `ADMIN_AdminChatSession` 增加可空的整数列 `SortOrder`。旧数据保持空值，不改变原来的最近消息排序；首次分类内拖动时才保存该分类的顺序。
+
+部署前按实际数据库选择 `AdminSenparcEntities_<Provider>`，通过 NCF 模块升级或部署流程应用迁移。不要对示例库或错误的租户库执行更新。侧栏宽度、收起与分类折叠只保存到浏览器；仅会话排序写入数据库并支持跨设备读取。
+
 ## 📋 执行清单
 
 ### ✅ 已完成的工作

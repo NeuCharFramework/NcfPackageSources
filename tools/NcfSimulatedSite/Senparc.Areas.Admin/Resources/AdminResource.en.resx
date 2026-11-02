@@ -1,6 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Expand chat sidebar</value></data>
+  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Collapse chat sidebar</value></data>
+  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Resize sidebar (Left/Right arrow keys)</value></data>
+  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>Drag within this group, or press Alt + Up/Down</value></data>
+  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>Running</value></data>
+  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>Stopping</value></data>
+  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>Order saved for this account across devices</value></data>
+  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>Could not save order. Please retry.</value></data>
+  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>Could not read or save sidebar preferences. This layout applies to this page only.</value></data>
   <data name="AdminChat.Memory.Settings" xml:space="preserve"><value>Memory / Chat settings</value></data>
+  <data name="AdminChat.Memory.UpdateSaved" xml:space="preserve"><value>Memory saved: {0} global and {1} current Workspace changes (private database storage, no file created).</value></data>
+  <data name="AdminChat.Memory.UpdateReason.mode-off" xml:space="preserve"><value>Long-term Memory was not saved: Memory is off for this chat. The assistant's acknowledgement is not proof of persistence.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.read-only" xml:space="preserve"><value>Long-term Memory was not saved: this chat is read-only. Switch to Learn or edit entries manually.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.input-not-eligible" xml:space="preserve"><value>Memory was not updated: the input did not meet learning triggers or exceeded the length limit.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-candidates" xml:space="preserve"><value>Memory was not updated: the extractor returned no long-term memories. Add an entry manually or check this turn's PromptCode. The assistant saying it remembers is not a save confirmation.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pinned" xml:space="preserve"><value>Memory was not updated: the relevant entry is pinned against AI changes or deletion. Edit it manually.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-difference" xml:space="preserve"><value>Memory unchanged: the returned content already exists, or there was no matching entry to delete.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.revision-conflict" xml:space="preserve"><value>Memory was not saved: it changed during this turn. The newer version was preserved; review before retrying.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.timeout" xml:space="preserve"><value>Memory was not saved: extraction timed out. Retry or add the entry manually.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.invalid-change" xml:space="preserve"><value>Memory was not saved: evidence, safety, scope or field validation rejected the entire batch.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.capacity" xml:space="preserve"><value>Memory was not saved: the 80-entry limit was reached. Delete unused entries first.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.invalid-json" xml:space="preserve"><value>Memory was not saved: the extractor did not return valid JSON in the required format. Check the prompt.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending" xml:space="preserve"><value>No Memory save has been confirmed. Do not treat the assistant's promise as proof of persistence.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.update-failed" xml:space="preserve"><value>Memory update failed; saving was not confirmed. Check prompt, model or database configuration. Existing memories were preserved.</value></data>
+  <data name="AdminChat.Memory.StorageNotice" xml:space="preserve"><value>Memories live in your private database, not in Workspace files. A Workspace Memory.md is an ordinary file and is not created or imported automatically. Manage entries here; trust the system update result, not an assistant's textual acknowledgement.</value></data>
   <data name="AdminChat.Memory.Use" xml:space="preserve"><value>Use my global Memory</value></data>
   <data name="AdminChat.Memory.Notice" xml:space="preserve"><value>Off: no retrieval or learning. Read-only: retrieval only. Learn: updates on explicit preferences, remember or correction cues. Private user-global + current Workspace scopes; expired/archive entries excluded. Budget: 1000 tokens, Core up to 300; unknown models use a conservative estimate. Never store secrets or sensitive information.</value></data>
   <data name="AdminChat.Memory.ModeOff" xml:space="preserve"><value>Off</value></data>

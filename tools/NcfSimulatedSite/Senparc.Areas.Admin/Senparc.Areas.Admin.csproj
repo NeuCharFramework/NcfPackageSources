@@ -1,47 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.11</Version>
+		<Version>0.12.13</Version>
 		<PackageReleaseNotes>
-    [2026-11-02] Upgrade Memory with database encryption, Workspace scopes, Off/Read-only/Learn modes, evidence/history, token budgets and compact dropdown settings.
-    [2026-11-02] Add private per-user tiered Chat Memory, opt-in automatic extraction with PromptRange, revision-safe editing, and personal/tenant SystemMessage settings.
-    [2026-11-02] Route AdminChat large attachments through streaming Workspace processing
-    1. Support files above the local parsing limit through a 300 MiB streaming upload endpoint.
-    2. Skip full-text extraction for large attachments and expose Workspace/Python batch-processing guidance with file size metadata.
-    [2026-11-02] Add shared bilingual contextual documentation help with an iframe dialog, new-window access and page/feature pilots.
-    [2026-11-02] Merge live Host metrics and historical resource trends into one linear, zoomable monitor with network throughput and selectable time ranges.
-    [2026-11-02] Display average/highest prompt scores and add score/PromptCode sorting to the shared PromptRange picker.
-    [2026-11-02] Add the reusable v-prompt-range selector with range/lane filters, keyword search, preview and cursor insertion; integrate both AdminChat composers.
-    [2026-11-02] Fix sparse resource-monitor rendering with ECharts 3 and reuse Host panel spacing, borders and header styles.
-    [2026-11-02] Restore the GetHostMetrics API binding and show specific global Pivot access denial reasons without changing access policies.
-    [2026-11-02] Add streamed large-file Workspace uploads and clean up unsubmitted Chat attachments
-    1. Add a multi-file Workspace management upload flow with a 300 MiB per-file limit and tenant-aware ownership checks.
-    2. Remove unsubmitted Chat attachment resources through a protected server endpoint and preserve submitted attachment files.
-    3. Allow the first Chat turn to be attachment-only and clean up pending resources when changing sessions.
-    [2026-11-01] Improve missing custom NeuCharPivot Block handling
-    1. Show a friendly placeholder with the missing module UID and Function Code instead of opening an error popup.
-    2. Add hover/click guidance and prefilled links to the Pivot and module settings pages.
-    3. Preserve missing-block metadata when loading Admin home panels and cover the client fallback behavior with regression tests.
-    [2026-10-24] Add private Workspace attachments, bounded local Office/PDF reading and explicit opt-in image vision. Preserve attachment references and original files; never insert binary Base64 into text prompts. Refresh live Markdown styles in the running host.
-    1. Upload, paste or drop up to 4 files per message. User uploads do not grant AI write/CLI permission. Read/write size limits come from Workspace configuration and are displayed by the upload control.
-    2. DOCX/XLSX/PPTX and text use local extraction; PDF text is read per page, up to 200 pages. Old DOC/XLS/PPT are stored without claiming text extraction. Scanned pages require OCR or explicitly authorized image screenshots; no paid OCR is called automatically.
-    3. Document tools paginate up to 4000 characters per call and share a 16000-character per-turn output budget with Workspace listing/reading/search. These are character safeguards, not exact token estimates; model-reported Usage remains authoritative.
-    4. Vision is off by default and limited to 2 images per message. Browsers create an EXIF-free JPEG preview with a maximum 1536-pixel side and 512 KB; original files remain unchanged. The selected model must support image input.
-    5. Chat messages persist only canonical attachment references and ETags in a nullable AttachmentsJson column. File changes invalidate stale references; generated migrations cover all six database providers.
-    6. Admin design-time factories locate the real Senparc.Web configuration when launched from DatabasePlant and refuse to silently target its example database.
-    [2026-10-24] Add authenticated HTML browser previews, bounded file/ZIP downloads, and expiring revocable read-only snapshot shares. Anonymous snapshots disable scripts and external resources; keep App_Data and Data Protection keys private and persistent.
-    1. Browser preview and downloads require session and Workspace ownership; anonymous links grant read-only access to a frozen HTML snapshot, never directory access or downloads.
-    2. Snapshots expire after 1 hour, 24 hours or 7 days; up to 10 active shares per owner. Revocation/expiry blocks new requests, not previously saved copies. Expired snapshots are purged on access or owner management.
-    3. HTML and each resource are limited to 2 MB, generated snapshots to 8 MB and 100 resources. ZIPs are limited to 1000 entries, 32 levels and 64 MB uncompressed; per-file reads also honor Workspace configuration.
-    4. App_Data/WorkspaceAssetShares is private encrypted storage outside wwwroot. Persist it and Data Protection keys together; replicas must share both. Use HTTPS, exclude capability URLs from access logs and keep App_Data out of static-file mappings/backups accessible to clients.
-    5. Fix doubled live Markdown line breaks without changing stream text, paragraphs or code-block whitespace.
-    [2026-10-24] Expand Workspace previews while preserving Chat minimum width; render Markdown with a source toggle.
-    [2026-10-24] Fix Chat Workspace asset panel template nesting, file entry fields, and split-pane resizing.
-    [2026-10-05] v0.10.3 持久化微信 Claw 会话上下文，支持 NeuBell 启动补偿推送与重复通知去重
-    [2026-10-01] v0.10.2 等待租户菜单与权限初始化完成
-    1、初始化失败会在租户创建流程中显式传播，不再继续执行后续模块安装
-    [2026-10-01] v0.10.1 修复 NeuBell WebHook 监控订阅资源泄漏
-    1、轮询与事件订阅竞争结束后统一取消并等待未完成任务，确保 Channel 订阅及时释放
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
     2、优化 AgentsManager 前端界面与历史消息展示效果
@@ -108,6 +69,11 @@
     2、同一账号连续密码错误达到 2 次后登录必须通过图形验证码校验；验证码一次性、2 分钟时效，存于 CO2NET 对象缓存
     3、登录页支持按用户名预判是否需要验证码、点击图片刷新，验证码错误/密码错误时服务端直接下发新验证码
     4、补齐 6 语言资源（zh/en/ja/fr/es/ru）验证码相关文案
+    [2026-10-01] v0.10.2 等待租户菜单与权限初始化完成
+    1、初始化失败会在租户创建流程中显式传播，不再继续执行后续模块安装
+    [2026-10-01] v0.10.1 修复 NeuBell WebHook 监控订阅资源泄漏
+    1、轮询与事件订阅竞争结束后统一取消并等待未完成任务，确保 Channel 订阅及时释放
+    [2026-10-05] v0.10.3 持久化微信 Claw 会话上下文，支持 NeuBell 启动补偿推送与重复通知去重
     [2026-10-09] v0.11.0 增强后台 Admin Chat 群组配置与提示词上下文控制
     1、支持 Admin Chat 群组创建、提示词配置和模块助手上下文整理
     2、限制历史消息与当前输入长度，提升后台对话稳定性和可控性
@@ -117,7 +83,43 @@
     3、调整对话布局、模块展示和助手头像样式
     4、为会话增加工作区字段，并补齐各数据库迁移
     5、适配 Senparc.AI.AgentKernel 0.1.15-preview2
+    [2026-10-24] Add private Workspace attachments, bounded local Office/PDF reading and explicit opt-in image vision. Preserve attachment references and original files; never insert binary Base64 into text prompts. Refresh live Markdown styles in the running host.
+    1. Upload, paste or drop up to 4 files per message. User uploads do not grant AI write/CLI permission. Read/write size limits come from Workspace configuration and are displayed by the upload control.
+    2. DOCX/XLSX/PPTX and text use local extraction; PDF text is read per page, up to 200 pages. Old DOC/XLS/PPT are stored without claiming text extraction. Scanned pages require OCR or explicitly authorized image screenshots; no paid OCR is called automatically.
+    3. Document tools paginate up to 4000 characters per call and share a 16000-character per-turn output budget with Workspace listing/reading/search. These are character safeguards, not exact token estimates; model-reported Usage remains authoritative.
+    4. Vision is off by default and limited to 2 images per message. Browsers create an EXIF-free JPEG preview with a maximum 1536-pixel side and 512 KB; original files remain unchanged. The selected model must support image input.
+    5. Chat messages persist only canonical attachment references and ETags in a nullable AttachmentsJson column. File changes invalidate stale references; generated migrations cover all six database providers.
+    6. Admin design-time factories locate the real Senparc.Web configuration when launched from DatabasePlant and refuse to silently target its example database.
+    [2026-10-24] Add authenticated HTML browser previews, bounded file/ZIP downloads, and expiring revocable read-only snapshot shares. Anonymous snapshots disable scripts and external resources; keep App_Data and Data Protection keys private and persistent.
+    1. Browser preview and downloads require session and Workspace ownership; anonymous links grant read-only access to a frozen HTML snapshot, never directory access or downloads.
+    2. Snapshots expire after 1 hour, 24 hours or 7 days; up to 10 active shares per owner. Revocation/expiry blocks new requests, not previously saved copies. Expired snapshots are purged on access or owner management.
+    3. HTML and each resource are limited to 2 MB, generated snapshots to 8 MB and 100 resources. ZIPs are limited to 1000 entries, 32 levels and 64 MB uncompressed; per-file reads also honor Workspace configuration.
+    4. App_Data/WorkspaceAssetShares is private encrypted storage outside wwwroot. Persist it and Data Protection keys together; replicas must share both. Use HTTPS, exclude capability URLs from access logs and keep App_Data out of static-file mappings/backups accessible to clients.
+    5. Fix doubled live Markdown line breaks without changing stream text, paragraphs or code-block whitespace.
+    [2026-10-24] Expand Workspace previews while preserving Chat minimum width; render Markdown with a source toggle.
+    [2026-10-24] Fix Chat Workspace asset panel template nesting, file entry fields, and split-pane resizing.
+    [2026-11-01] Improve missing custom NeuCharPivot Block handling
+    1. Show a friendly placeholder with the missing module UID and Function Code instead of opening an error popup.
+    2. Add hover/click guidance and prefilled links to the Pivot and module settings pages.
+    3. Preserve missing-block metadata when loading Admin home panels and cover the client fallback behavior with regression tests.
+    [2026-11-02] Upgrade Memory with database encryption, Workspace scopes, Off/Read-only/Learn modes, evidence/history, token budgets and compact dropdown settings.
+    [2026-11-02] Add private per-user tiered Chat Memory, opt-in automatic extraction with PromptRange, revision-safe editing, and personal/tenant SystemMessage settings.
+    [2026-11-02] Route AdminChat large attachments through streaming Workspace processing
+    1. Support files above the local parsing limit through a 300 MiB streaming upload endpoint.
+    2. Skip full-text extraction for large attachments and expose Workspace/Python batch-processing guidance with file size metadata.
+    [2026-11-02] Add shared bilingual contextual documentation help with an iframe dialog, new-window access and page/feature pilots.
+    [2026-11-02] Merge live Host metrics and historical resource trends into one linear, zoomable monitor with network throughput and selectable time ranges.
+    [2026-11-02] Display average/highest prompt scores and add score/PromptCode sorting to the shared PromptRange picker.
+    [2026-11-02] Add the reusable v-prompt-range selector with range/lane filters, keyword search, preview and cursor insertion; integrate both AdminChat composers.
+    [2026-11-02] Fix sparse resource-monitor rendering with ECharts 3 and reuse Host panel spacing, borders and header styles.
+    [2026-11-02] Restore the GetHostMetrics API binding and show specific global Pivot access denial reasons without changing access policies.
+    [2026-11-02] Add streamed large-file Workspace uploads and clean up unsubmitted Chat attachments
+    1. Add a multi-file Workspace management upload flow with a 300 MiB per-file limit and tenant-aware ownership checks.
+    2. Remove unsubmitted Chat attachment resources through a protected server endpoint and preserve submitted attachment files.
+    3. Allow the first Chat turn to be attachment-only and clean up pending resources when changing sessions.
     [2026-11-02] v0.12.1 修复分支合并遗留的微信 Claw 绑定重复声明，保留实体及索引功能
+    [2026-11-03] Report verified Memory save outcomes and scopes, distinguish skipped/rejected extraction, and prevent assistant-only persistence claims; clarify private database storage.
+    [2026-11-03] Add collapsible Workspace groups, resizable/collapsible Chat sidebar, account-owned persistent in-group session ordering across devices, and reduced-motion-aware live task indicators.
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

@@ -1,5 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>会話サイドバーを展開</value></data>
+  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>会話サイドバーを折りたたむ</value></data>
+  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>サイドバーの幅を調整（左右キー）</value></data>
+  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>グループ内でドラッグ、または Alt + 上下キー</value></data>
+  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>実行中</value></data>
+  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>停止中</value></data>
+  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>順序を保存しました。同じアカウントで端末間共有できます。</value></data>
+  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>順序を保存できませんでした。再試行してください。</value></data>
+  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>サイドバー設定の読み込みまたは保存に失敗しました。このページでのみ有効です。</value></data>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>

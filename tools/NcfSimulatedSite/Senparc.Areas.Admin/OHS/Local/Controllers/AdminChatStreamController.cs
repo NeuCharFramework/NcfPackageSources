@@ -202,6 +202,7 @@ public sealed class AdminChatStreamController : ControllerBase
             {
                 sessionId = request.SessionId,
                 memoryUpdateStatus = _chatAiService.MemoryUpdateStatus,
+                memoryUpdateResult = _chatAiService.MemoryUpdateResult,
                 memoryUsage = _chatAiService.MemoryUsage,
                 mode = request.Mode,
                 trajectoryId = result.Harness?.TrajectoryId ?? 0,

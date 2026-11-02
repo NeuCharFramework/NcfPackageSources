@@ -59,6 +59,14 @@ public sealed record AdminChatMemoryChange(
     public string Kind { get; init; } = "preference";
 }
 
+public sealed record AdminChatMemoryMergeResult(bool Changed, string Reason, int GlobalChanges, int WorkspaceChanges);
+
+public sealed class AdminChatMemoryValidationException : NcfExceptionBase
+{
+    public string Reason { get; }
+    public AdminChatMemoryValidationException(string reason) : base("Memory update rejected: " + reason) => Reason = reason;
+}
+
 public static class AdminChatMemoryDocument
 {
     public const int MaxEntries = 80;
@@ -157,6 +165,10 @@ public static class AdminChatMemoryDocument
     }
 
     public static bool Merge(AdminChatMemoryProfile profile, string json, string userMessage,
+        string workspaceId = "", int? sourceMessageId = null, int? sourceSessionId = null) =>
+        MergeWithResult(profile, json, userMessage, workspaceId, sourceMessageId, sourceSessionId).Changed;
+
+    public static AdminChatMemoryMergeResult MergeWithResult(AdminChatMemoryProfile profile, string json, string userMessage,
         string workspaceId = "", int? sourceMessageId = null, int? sourceSessionId = null)
     {
         if (json == null || json.Length > 12000) throw new NcfExceptionBase("Memory updater returned oversized output.");
@@ -180,15 +192,20 @@ public static class AdminChatMemoryDocument
                 || change.Remove && !Regex.IsMatch(userMessage ?? "", @"忘记|删除|不要再|forget|remove|delete",
                     RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100))
                 || UnsafeAutomaticText.IsMatch(change.Text + " " + change.Evidence))
-                throw new NcfExceptionBase("Memory updater returned an unsupported or unsafe change; nothing was saved.");
+                throw new AdminChatMemoryValidationException("invalid-change");
         }
         var updated = profile.Entries.ToList();
         var revisions = new List<(AdminChatMemoryEntry Before, AdminChatMemoryEntry After)>();
+        var pinned = false;
         foreach (var change in changes)
         {
             var scope = change.Scope == "workspace" ? workspaceId : "";
             var previous = updated.Find(entry => entry.Key == change.Key && entry.WorkspaceId == scope);
-            if (previous?.Pinned == true || updated.Any(entry => entry.Pinned && entry.Text == change.Text && entry.WorkspaceId == scope)) continue;
+            if (previous?.Pinned == true || updated.Any(entry => entry.Pinned && entry.Text == change.Text && entry.WorkspaceId == scope))
+            {
+                pinned = true;
+                continue;
+            }
             if (!change.Remove && updated.Any(entry =>
                 entry.Text == change.Text && entry.Topic == change.Topic && entry.Tier == change.Tier && entry.WorkspaceId == scope)) continue;
             if (previous != null) updated.Remove(previous);
@@ -205,10 +222,12 @@ public static class AdminChatMemoryDocument
             }
             if (previous != null || next != null) revisions.Add((previous, next));
         }
-        if (updated.Count > MaxEntries) throw new NcfExceptionBase("Memory is full; remove entries manually.");
-        if (updated.SequenceEqual(profile.Entries)) return false;
+        if (updated.Count > MaxEntries) throw new AdminChatMemoryValidationException("capacity");
+        if (updated.SequenceEqual(profile.Entries))
+            return new(false, changes.Count == 0 ? "no-candidates" : pinned ? "pinned" : "no-difference", 0, 0);
         profile.Entries = updated;
         foreach (var revision in revisions) profile.Record(revision.Before, revision.After, "automatic");
-        return true;
+        return new(true, "saved", revisions.Count(item => (item.After ?? item.Before).WorkspaceId.Length == 0),
+            revisions.Count(item => (item.After ?? item.Before).WorkspaceId.Length > 0));
     }
 }
