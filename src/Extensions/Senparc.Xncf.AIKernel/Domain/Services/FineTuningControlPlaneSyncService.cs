@@ -23,6 +23,7 @@ using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.AIKernel.Domain.Models.FineTuning;
 using Senparc.Xncf.AIKernel.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,6 +35,7 @@ public sealed class FineTuningControlPlaneSyncService : BackgroundService
     private readonly IBackgroundTenantScopeFactory _tenantScopeFactory;
     private readonly ILogger<FineTuningControlPlaneSyncService> _logger;
     private readonly IOptions<FineTuningWorkerOptions> _options;
+    private readonly ConcurrentDictionary<string, long> _eventCursors = new();
 
     public FineTuningControlPlaneSyncService(IBackgroundTenantScopeFactory tenantScopeFactory,
         ILogger<FineTuningControlPlaneSyncService> logger,
@@ -80,7 +82,7 @@ public sealed class FineTuningControlPlaneSyncService : BackgroundService
                             continue;
                         }
 
-                        await SynchronizeWorkerAsync(profile.Alias, worker, controlPlane, ct).ConfigureAwait(false);
+                        await SynchronizeWorkerAsync(profile.Alias, worker, controlPlane, _eventCursors, ct).ConfigureAwait(false);
                     }
                 },
                 stoppingToken).ConfigureAwait(false);
@@ -95,7 +97,8 @@ public sealed class FineTuningControlPlaneSyncService : BackgroundService
     }
 
     private static async Task SynchronizeWorkerAsync(string workerAlias, FineTuningWorkerClient worker,
-        IFineTuningControlPlaneService controlPlane, CancellationToken cancellationToken)
+        IFineTuningControlPlaneService controlPlane, ConcurrentDictionary<string, long> eventCursors,
+        CancellationToken cancellationToken)
     {
         var jobs = await worker.GetJobsPageAsync(workerAlias, 0, 50, cancellationToken);
         foreach (var job in jobs.Items)
@@ -112,13 +115,33 @@ public sealed class FineTuningControlPlaneSyncService : BackgroundService
                     artifact.Name, artifact.Bytes), cancellationToken);
             }
 
-            var events = await worker.GetEventsAsync(workerAlias, job.Id, 0, 200, cancellationToken);
-            foreach (var item in events.Events)
+            var cursorKey = $"{workerAlias}/{job.Id}";
+            eventCursors.TryGetValue(cursorKey, out var after);
+            var active = job.State is "Queued" or "Running" or "Pausing" or "Paused" or "Resuming" or "Cancelling";
+            if (!active && job.LastEventSequence <= after)
             {
-                await controlPlane.UpsertEventAsync(new AIFineTuningEvent(workerAlias, job.Id, item.Sequence,
-                    item.TimestampUtc.UtcDateTime, item.Kind, item.Message ?? string.Empty,
-                    System.Text.Json.JsonSerializer.Serialize(item.Metrics)), cancellationToken);
+                continue;
             }
+
+            var hasMore = true;
+            while (hasMore && after < job.LastEventSequence)
+            {
+                var events = await worker.GetEventsAsync(workerAlias, job.Id, after, 200, cancellationToken);
+                foreach (var item in events.Events)
+                {
+                    await controlPlane.UpsertEventAsync(new AIFineTuningEvent(workerAlias, job.Id, item.Sequence,
+                        item.TimestampUtc.UtcDateTime, item.Kind, item.Message ?? string.Empty,
+                        System.Text.Json.JsonSerializer.Serialize(item.Metrics)), cancellationToken);
+                }
+
+                if (events.NextCursor <= after)
+                {
+                    break;
+                }
+                after = events.NextCursor;
+                hasMore = events.HasMore;
+            }
+            eventCursors[cursorKey] = after;
         }
     }
 }
