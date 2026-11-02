@@ -17,7 +17,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Senparc.Xncf.Workspace.Abstractions;
 
-namespace Senparc.Xncf.Workspace.Agent;
+namespace Senparc.Xncf.WorkspaceAgent;
 
 public sealed class WorkspaceFileSystemEngine
 {
