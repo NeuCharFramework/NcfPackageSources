@@ -514,6 +514,11 @@
   <data name="FineTuning.MetricLog" xml:space="preserve"><value>指标流</value></data>
   <data name="FineTuning.MetricLogHelp" xml:space="preserve"><value>周期性的 GPU、损失、步数和时间数据</value></data>
   <data name="FineTuning.NoMetrics" xml:space="preserve"><value>尚未收到指标</value></data>
+  <data name="FineTuning.EventsLayoutHelp" xml:space="preserve"><value>可切换左右并排或上下排列；展开后可获得更大的监控区域。</value></data>
+  <data name="FineTuning.EventsSideBySide" xml:space="preserve"><value>左右并排</value></data>
+  <data name="FineTuning.EventsStacked" xml:space="preserve"><value>上下排列</value></data>
+  <data name="FineTuning.ExpandEvents" xml:space="preserve"><value>展开</value></data>
+  <data name="FineTuning.RestoreEvents" xml:space="preserve"><value>还原</value></data>
   <data name="FineTuning.Replaying" xml:space="preserve">
     <value>正在回放已保存的事件</value>
   </data>

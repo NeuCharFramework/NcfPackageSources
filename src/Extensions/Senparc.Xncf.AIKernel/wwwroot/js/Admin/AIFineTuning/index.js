@@ -44,6 +44,8 @@ var app = new Vue({
             catchingUp: false,
             eventsTruncated: false,
             followLog: true,
+            eventLayout: "split",
+            eventExpanded: false,
             chartPoints: [],
             chartAvailable: typeof echarts !== "undefined",
             pollBusy: false,
@@ -520,6 +522,22 @@ var app = new Vue({
             this.catchingUp = false;
             this.eventsTruncated = false;
             if (this._chart) { this._chart.dispose(); this._chart = null; }
+        },
+        setEventLayout(layout) {
+            if (layout === "split" || layout === "stacked") {
+                this.eventLayout = layout;
+            }
+        },
+        toggleEventExpanded() {
+            this.eventExpanded = !this.eventExpanded;
+            this.$nextTick(() => {
+                if (this.followLog && this.isLogAtBottom() && this.$refs.eventLog) {
+                    this.$refs.eventLog.scrollTop = this.$refs.eventLog.scrollHeight;
+                }
+                if (this.followLog && this.isMetricLogAtBottom() && this.$refs.metricLog) {
+                    this.$refs.metricLog.scrollTop = this.$refs.metricLog.scrollHeight;
+                }
+            });
         },
         async pollSelectedJob() {
             var id = this.selectedId;

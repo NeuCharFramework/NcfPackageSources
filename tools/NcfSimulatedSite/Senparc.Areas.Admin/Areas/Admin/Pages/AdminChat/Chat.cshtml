@@ -45,6 +45,7 @@
                                :disabled="memoryBusy" @@click="openMemoryDialog">
                         Memory
                     </el-button>
+                    <ncf-doc-help topic="admin.memory"></ncf-doc-help>
                     <el-button
                         type="primary"
                         size="small"
@@ -142,6 +143,7 @@
                             <i class="fa fa-magic"></i> {{ currentSessionTitle || ncfT('Admin.Home.AiTitle') }}
                         </h3>
                         <div class="chat-header-actions">
+                            <ncf-doc-help topic="admin.chat"></ncf-doc-help>
                             <el-button
                                 size="mini"
                                 :type="isManageMode ? 'default' : 'primary'"
@@ -570,6 +572,7 @@
                                     <el-dropdown-item command="settings" divided>@AR["AdminChat.Memory.Settings"]</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
+                            <ncf-doc-help topic="admin.memory.modes"></ncf-doc-help>
                         </div>
                     </details>
                     <div class="input-send-actions">
@@ -608,6 +611,7 @@
                             <div class="chat-entrance-content">
                                 <h3 class="chat-entrance-title">
                                     <i class="fa fa-magic"></i> @AR["Admin.Home.AiTitle"]
+                                    <ncf-doc-help topic="admin.chat"></ncf-doc-help>
                                 </h3>
                                 <p class="chat-entrance-subtitle">@AR["AdminChat.NewSessionDescription"]</p>
                             </div>
@@ -705,6 +709,7 @@
                                         <el-dropdown-item command="settings" divided>@AR["AdminChat.Memory.Settings"]</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
+                                <ncf-doc-help topic="admin.memory.modes"></ncf-doc-help>
 
                                 <el-popover
                                     placement="top-start"
@@ -1079,7 +1084,7 @@
         <div slot="title" class="chat-memory-heading">
             <span class="chat-memory-heading-icon"><i class="el-icon-collection" aria-hidden="true"></i></span>
             <div>
-                <h2>@AR["AdminChat.Memory.Settings"]</h2>
+                <h2>@AR["AdminChat.Memory.Settings"]<ncf-doc-help topic="admin.memory"></ncf-doc-help></h2>
                 <p>@AR["AdminChat.Memory.Subtitle"]</p>
             </div>
             <span class="chat-memory-private"><i class="el-icon-lock" aria-hidden="true"></i> @AR["AdminChat.Memory.Private"]</span>
@@ -1088,7 +1093,7 @@
             <el-tab-pane :label="ncfT('AdminChat.Memory.Entries')" name="entries">
                 <div class="chat-memory-panel-heading">
                     <div>
-                        <h3>@AR["AdminChat.Memory.Entries"] <span class="chat-memory-count">{{ memoryEntries.length }}</span></h3>
+                        <h3>@AR["AdminChat.Memory.Entries"] <span class="chat-memory-count">{{ memoryEntries.length }}</span><ncf-doc-help topic="admin.memory.entries"></ncf-doc-help></h3>
                         <p>@AR["AdminChat.Memory.EntriesHint"]</p>
                     </div>
                     <el-button type="primary" size="small" icon="el-icon-plus" :disabled="memoryBusy" @@click="editMemoryEntry(null)">
@@ -1164,7 +1169,7 @@
                 </el-table>
             </el-tab-pane>
             <el-tab-pane :label="ncfT('AdminChat.Memory.Loaded')" name="loaded">
-                <div class="chat-memory-panel-heading"><h3>@AR["AdminChat.Memory.Loaded"]</h3></div>
+                <div class="chat-memory-panel-heading"><h3>@AR["AdminChat.Memory.Loaded"]<ncf-doc-help topic="admin.memory.loaded"></ncf-doc-help></h3></div>
                 <details class="chat-memory-help">
                     <summary><i class="el-icon-info" aria-hidden="true"></i> @AR["AdminChat.Memory.Guide"]</summary>
                     <p>@AR["AdminChat.Memory.LoadedNotice"]</p>
@@ -1205,7 +1210,7 @@
                      v-html="formatMemoryContent(memoryMarkdown)"></div>
             </el-tab-pane>
             <el-tab-pane :label="ncfT('AdminChat.Memory.Edit')" name="edit">
-                <div class="chat-memory-panel-heading"><h3>@AR["AdminChat.Memory.Edit"]</h3></div>
+                <div class="chat-memory-panel-heading"><h3>@AR["AdminChat.Memory.Edit"]<ncf-doc-help topic="admin.memory.markdown"></ncf-doc-help></h3></div>
                 <p class="chat-memory-caption">@AR["AdminChat.Memory.MarkdownScope"]</p>
                 <details class="chat-memory-help">
                     <summary><i class="el-icon-info" aria-hidden="true"></i> @AR["AdminChat.Memory.FormatGuide"]</summary>
@@ -1215,7 +1220,7 @@
                           :disabled="memoryBusy"></el-input>
             </el-tab-pane>
             <el-tab-pane :label="ncfT('AdminChat.Memory.SystemMessage')" name="system">
-                <div class="chat-memory-panel-heading"><h3>@AR["AdminChat.Memory.SystemMessage"]</h3></div>
+                <div class="chat-memory-panel-heading"><h3>@AR["AdminChat.Memory.SystemMessage"]<ncf-doc-help topic="admin.memory.system"></ncf-doc-help></h3></div>
                 <p class="chat-memory-caption">@AR["AdminChat.Memory.SystemNotice"]</p>
                 <el-input type="textarea" :rows="6" v-model="memorySystemMessage" :maxlength="2000"
                           :disabled="memoryBusy"></el-input>

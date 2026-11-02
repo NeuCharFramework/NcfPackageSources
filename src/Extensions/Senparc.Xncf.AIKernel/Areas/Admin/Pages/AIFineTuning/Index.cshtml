@@ -460,8 +460,27 @@
                 </div>
             </div>
         </div>
-        <el-alert v-if="eventsTruncated" type="warning" :closable="false" :title="t('EventsTruncated')" show-icon></el-alert>
-        <div class="ft-event-columns">
+        <div class="ft-events-section" :class="{ 'is-stacked': eventLayout === 'stacked', 'is-expanded': eventExpanded }">
+            <el-alert v-if="eventsTruncated" type="warning" :closable="false" :title="t('EventsTruncated')" show-icon></el-alert>
+            <div class="ft-events-heading">
+                <div>
+                    <h3>{{ t('Events') }}</h3>
+                    <p class="ft-muted">{{ t('EventsLayoutHelp') }}</p>
+                </div>
+                <div class="ft-events-actions">
+                    <el-button-group>
+                        <el-button size="small" :type="eventLayout === 'split' ? 'primary' : 'default'"
+                                   @@click="setEventLayout('split')">{{ t('EventsSideBySide') }}</el-button>
+                        <el-button size="small" :type="eventLayout === 'stacked' ? 'primary' : 'default'"
+                                   @@click="setEventLayout('stacked')">{{ t('EventsStacked') }}</el-button>
+                    </el-button-group>
+                    <el-button size="small" icon="el-icon-full-screen"
+                               @@click="toggleEventExpanded">
+                        {{ eventExpanded ? t('RestoreEvents') : t('ExpandEvents') }}
+                    </el-button>
+                </div>
+            </div>
+            <div class="ft-event-columns">
             <section class="ft-event-pane">
                 <h3>{{ t('CommandLog') }}</h3>
                 <div class="ft-log-heading">
