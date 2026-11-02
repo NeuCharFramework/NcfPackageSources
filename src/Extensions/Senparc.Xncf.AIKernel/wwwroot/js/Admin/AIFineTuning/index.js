@@ -531,14 +531,17 @@ var app = new Vue({
                 }
                 if (!this.runtimeBusy) { this.runtimeMinutes = job.request.maxDurationMinutes; }
                 this.detailError = "";
-                for (var page = 0; page < 3; page++) {
-                    var before = this.cursor;
-                    var batch = await this.request("GetEventsAsync", { id: id, after: before, limit: 200 }, false, alias);
-                    if (this._disposed || this.selectionVersion !== version) { return; }
-                    this.applyEvents(batch, before);
-                    if (!batch.hasMore) { break; }
+                var activeStates = ["Queued", "Running", "Pausing", "Paused", "Resuming", "Cancelling"];
+                if (activeStates.indexOf(job.state) >= 0 || this.cursor < job.lastEventSequence) {
+                    for (var page = 0; page < 3; page++) {
+                        var before = this.cursor;
+                        var batch = await this.request("GetEventsAsync", { id: id, after: before, limit: 200 }, false, alias);
+                        if (this._disposed || this.selectionVersion !== version) { return; }
+                        this.applyEvents(batch, before);
+                        if (!batch.hasMore) { break; }
+                    }
                 }
-                if (job.state === "Succeeded") {
+                if (job.state === "Succeeded" && ["Idle", "Running"].indexOf(this.validation.status) >= 0) {
                     var validation = await this.request("GetValidationAsync", { id: id }, false, alias);
                     if (this._disposed || this.selectionVersion !== version) { return; }
                     this.validation = validation;
