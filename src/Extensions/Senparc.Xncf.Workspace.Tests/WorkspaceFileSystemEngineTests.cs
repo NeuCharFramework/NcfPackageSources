@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using Senparc.Ncf.IsolatedRuntime;
 using Senparc.Ncf.Shared.Abstractions.Isolation;
 using Senparc.Xncf.Workspace.Abstractions;
-using Senparc.Xncf.Workspace.Agent;
+using Senparc.Xncf.WorkspaceAgent;
 
 namespace Senparc.Xncf.Workspace.Tests;
 
@@ -185,9 +185,13 @@ public sealed class WorkspaceFileSystemEngineTests
     [TestMethod]
     public async Task NativeAgentProcessPool_RoundTripsOverPersistentStdio()
     {
+        foreach (var extension in new[] { ".dll", ".deps.json", ".runtimeconfig.json" })
+        {
+            Assert.IsTrue(File.Exists(Path.Combine(AppContext.BaseDirectory, "Senparc.Xncf.WorkspaceAgent" + extension)));
+        }
+
         var options = Options.Create(new WorkspaceOptions
         {
-            AgentPath = Path.Combine(AppContext.BaseDirectory, "Senparc.Xncf.Workspace.Agent.dll"),
             RuntimeProvider = "NativeAgent",
             AllowNativeExecution = false,
             MaxWorkspaceBytes = 1024 * 1024,

@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Senparc.Xncf.Workspace.Agent\Senparc.Xncf.Workspace.Agent.csproj" />
+    <ProjectReference Include="..\Senparc.Xncf.WorkspaceAgent\Senparc.Xncf.WorkspaceAgent.csproj" />
     <ProjectReference Include="..\Senparc.Xncf.Workspace\Senparc.Xncf.Workspace.csproj" />
   </ItemGroup>
 

@@ -203,13 +203,13 @@ public sealed class WorkspaceAgentProcessFactory
             return configuredPath;
         }
 
-        var assemblyPath = Path.Combine(AppContext.BaseDirectory, "Senparc.Xncf.Workspace.Agent.dll");
+        var assemblyPath = Path.Combine(AppContext.BaseDirectory, "Senparc.Xncf.WorkspaceAgent.dll");
         if (File.Exists(assemblyPath))
         {
             return assemblyPath;
         }
 
-        var executablePath = Path.Combine(AppContext.BaseDirectory, "Senparc.Xncf.Workspace.Agent");
+        var executablePath = Path.Combine(AppContext.BaseDirectory, "Senparc.Xncf.WorkspaceAgent");
         if (File.Exists(executablePath))
         {
             return executablePath;

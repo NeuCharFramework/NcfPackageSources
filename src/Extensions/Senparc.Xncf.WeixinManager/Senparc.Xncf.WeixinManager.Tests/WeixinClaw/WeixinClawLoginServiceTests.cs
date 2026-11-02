@@ -23,7 +23,7 @@ public class WeixinClawLoginServiceTests
             """{"status":"wait"}""");
         using var httpClient = new HttpClient(handler);
         using var services = new ServiceCollection()
-            .AddTransient(_ => new WeixinClawApi(httpClient))
+            .AddScoped(_ => new WeixinClawApi(httpClient))
             .BuildServiceProvider(new ServiceProviderOptions { ValidateScopes = true });
         var loginService = new WeixinClawLoginService(
             services.GetRequiredService<IServiceScopeFactory>());

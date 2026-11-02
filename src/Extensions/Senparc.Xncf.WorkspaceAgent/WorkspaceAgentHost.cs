@@ -14,7 +14,7 @@
 using System.Text.Json;
 using Senparc.Xncf.Workspace.Abstractions;
 
-namespace Senparc.Xncf.Workspace.Agent;
+namespace Senparc.Xncf.WorkspaceAgent;
 
 public static class WorkspaceAgentHost
 {
