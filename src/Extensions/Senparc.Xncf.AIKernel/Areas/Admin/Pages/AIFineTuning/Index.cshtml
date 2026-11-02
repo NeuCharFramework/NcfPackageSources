@@ -47,8 +47,7 @@
                 </li>
             </ol>
             <p>
-                <a href="https://doc.ncf.pub/zh/NcfPackageSources/xncf/aikernel-local-fine-tuning.html" target="_blank" rel="noopener noreferrer">{{ t('Guide.ChineseDocs') }}</a>
-                · <a href="https://doc.ncf.pub/NcfPackageSources/xncf/aikernel-local-fine-tuning.html" target="_blank" rel="noopener noreferrer">{{ t('Guide.EnglishDocs') }}</a>
+                <ncf-doc-help topic="ai.fine-tuning"></ncf-doc-help>
             </p>
         </el-collapse-item>
         <el-collapse-item :title="t('SetupHelp')" name="setup">
@@ -65,7 +64,7 @@
 
     <el-card class="ft-card">
         <div slot="header" class="ft-detail-heading">
-            <h2>{{ t('Worker') }}</h2>
+            <h2>{{ t('Worker') }}<ncf-doc-help topic="ai.workers"></ncf-doc-help></h2>
             <el-button size="mini" icon="el-icon-plus" :disabled="uploadBusy || createBusy || cancelBusy || datasetMoreBusy" @@click="openWorkerEditor()">{{ t('AddWorker') }}</el-button>
         </div>
         <el-select v-model="workerAlias" filterable :placeholder="t('SelectWorker')" :aria-label="t('Worker')"
@@ -461,21 +460,38 @@
                 </div>
             </div>
         </div>
-        <h3>{{ t('Events') }}</h3>
         <el-alert v-if="eventsTruncated" type="warning" :closable="false" :title="t('EventsTruncated')" show-icon></el-alert>
-        <div class="ft-log-heading">
-            <span>{{ t('LogHelp') }}</span>
-            <span role="status" aria-live="polite">{{ !connectionHealthy || detailError ? t('Stale') : catchingUp ? t('Replaying') : t('Live') }} · {{ t('Cursor') }}: {{ cursor }}</span>
-            <el-checkbox v-model="followLog">{{ t('FollowLog') }}</el-checkbox>
-        </div>
-        <div ref="eventLog" class="ft-log" tabindex="0" :aria-label="t('Events')">
-            <p v-if="!events.length">{{ t('NoEvents') }}</p>
-            <div v-for="event in events" :key="event.sequence" class="ft-log-line">
-                <span class="ft-log-time">#{{ event.sequence }} {{ formatDate(event.timestampUtc) }}</span>
-                <strong>[{{ event.kind }}]</strong>
-                <span>{{ event.message }}</span>
-                <span v-if="Object.keys(event.metrics).length">{{ JSON.stringify(event.metrics) }}</span>
-            </div>
+        <div class="ft-event-columns">
+            <section class="ft-event-pane">
+                <h3>{{ t('CommandLog') }}</h3>
+                <div class="ft-log-heading">
+                    <span>{{ t('CommandLogHelp') }}</span>
+                    <span role="status" aria-live="polite">{{ !connectionHealthy || detailError ? t('Stale') : catchingUp ? t('Replaying') : t('Live') }} · {{ t('Cursor') }}: {{ cursor }}</span>
+                    <el-checkbox v-model="followLog">{{ t('FollowLog') }}</el-checkbox>
+                </div>
+                <div ref="eventLog" class="ft-log" tabindex="0" :aria-label="t('CommandLog')">
+                    <p v-if="!logEvents.length">{{ t('NoEvents') }}</p>
+                    <div v-for="event in logEvents" :key="event.sequence" class="ft-log-line">
+                        <span class="ft-log-time">#{{ event.sequence }} {{ formatDate(event.timestampUtc) }}</span>
+                        <strong>[{{ event.kind }}]</strong>
+                        <span>{{ event.message }}</span>
+                    </div>
+                </div>
+            </section>
+            <section class="ft-event-pane">
+                <h3>{{ t('MetricLog') }}</h3>
+                <div class="ft-log-heading">
+                    <span>{{ t('MetricLogHelp') }}</span>
+                    <span>{{ metricEvents.length }}</span>
+                </div>
+                <div ref="metricLog" class="ft-log ft-metric-log" tabindex="0" :aria-label="t('MetricLog')">
+                    <p v-if="!metricEvents.length">{{ t('NoMetrics') }}</p>
+                    <div v-for="event in metricEvents" :key="event.sequence" class="ft-log-line">
+                        <span class="ft-log-time">#{{ event.sequence }} {{ formatDate(event.timestampUtc) }}</span>
+                        <span>{{ JSON.stringify(event.metrics) }}</span>
+                    </div>
+                </div>
+            </section>
         </div>
     </el-card>
 </div>

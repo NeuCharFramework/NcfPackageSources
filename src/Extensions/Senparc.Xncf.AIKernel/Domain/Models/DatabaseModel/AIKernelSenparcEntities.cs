@@ -19,6 +19,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 纳入微调控制面实体
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

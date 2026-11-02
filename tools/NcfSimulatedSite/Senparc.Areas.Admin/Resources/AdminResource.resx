@@ -1,5 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AdminChat.Memory.Subtitle" xml:space="preserve"><value>管理长期偏好，让每一次对话更懂你</value></data>
+  <data name="AdminChat.Memory.Private" xml:space="preserve"><value>私有记忆</value></data>
+  <data name="AdminChat.Memory.SaveChanges" xml:space="preserve"><value>保存更改</value></data>
+  <data name="AdminChat.Memory.ClearDraft" xml:space="preserve"><value>清空草稿</value></data>
+  <data name="AdminChat.Memory.EntriesHint" xml:space="preserve"><value>集中管理我的全局与当前 Workspace 记忆</value></data>
+  <data name="AdminChat.Memory.Guide" xml:space="preserve"><value>作用域、学习规则与存储说明</value></data>
+  <data name="AdminChat.Memory.FormatGuide" xml:space="preserve"><value>Markdown 格式与保存规则</value></data>
+  <data name="AdminChat.Memory.SaveEntry" xml:space="preserve"><value>保存条目</value></data>
+  <data name="AdminChat.Memory.EmptyEntries" xml:space="preserve"><value>暂无记忆，添加第一条偏好开始使用</value></data>
+  <data name="AdminChat.Memory.EmptyLoaded" xml:space="preserve"><value>暂无本轮加载报告。启用 Memory 并发送消息后可在此查看。</value></data>
   <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>展开会话侧栏</value></data>
   <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>收起会话侧栏</value></data>
   <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>调整侧栏宽度（左右方向键）</value></data>

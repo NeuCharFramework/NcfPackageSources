@@ -27,6 +27,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.19.0 运行模板时应用 Skill 绑定与工作区策略
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;

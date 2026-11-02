@@ -9,6 +9,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 定义 Token 用量记录入口
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.AIKernel.Domain.Models.Usage;

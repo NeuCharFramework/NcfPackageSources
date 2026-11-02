@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.24.16</Version>
+    <Version>0.24.17</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -29,11 +29,11 @@
     <PackageProjectUrl>https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</PackageProjectUrl>
     <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
     <PackageReleaseNotes>
-		[2026-10-05] v0.24.14 持久化微信 Claw 会话上下文，支持 NeuBell 重启补偿推送并记录去重状态
-		[2026-10-04] v0.24.13 支持微信 SILK 语音缓存解码和视频播放、Range 请求，修复首屏连接状态加载并移除重复发送面板
-		[2026-10-03] v0.24.12 修复微信 Claw 下行 JSON 字段大小写、可选响应字段、媒体密钥编码及轮询会话上下文丢失，按官方 2.4.9 协议补充契约和发送链路测试
-		[2026-10-02] 微信后台轮询复用统一租户作用域，移除反射及重复上下文设置并完善任务取消释放
-		[2026-10-01] 个人微信后台按租户作用域调用账号服务和现有 Repository 查询，保留统一软删除过滤
+		[2024-09-13] v0.16.4-preview1 升级基础库
+		[2024-10-09] v0.16.5-preview1 升级基础库
+		[2024-12-07] v0.16.6-preview1 更新基础库
+		[2025-01-10] v0.17.0-preview1 添加达梦（DM）和 Oracle 数据库支持
+		[2025-05-29] v0.18.0-preview.1 升级基础库
 		v0.1 创世
 		v0.2 完成公众号管理、用户管理等功能
 		v0.3 优化UI，匹配新版本NCF
@@ -54,11 +54,6 @@
 		v0.15.0 支持最新 Senparc.AI
 		v0.16.1 支持基础新架构
 		v0.16.2 更新基础库
-		[2024-09-13] v0.16.4-preview1 升级基础库
-		[2024-10-09] v0.16.5-preview1 升级基础库
-		[2024-12-07] v0.16.6-preview1 更新基础库
-		[2025-01-10] v0.17.0-preview1 添加达梦（DM）和 Oracle 数据库支持
-		[2025-05-29] v0.18.0-preview.1 升级基础库
 		[2025-07-12] v0.18.1-preview.3 fix: SqlServerDatabaseConfiguration 命名统一
 		[2025-07-12] v0.19.0-preview.1 migratie Senparc.Xncf.WeixinManager to NcfPackageResource repository
 		[2025-07-13] v0.20.0-preview.1 upgrade MpAccount loading progress in UseXncfModule
@@ -66,8 +61,8 @@
 		[2025-07-26] v0.20.2-preview.1 update Weixin(WeChat) API search function
 		[2025-08-18] v0.21.0-preview.1 feat: support for McpRouter of Weixin
 		[2025-08-19] v0.21.1-preview.1 fix: Set ApiBind DefaultRequestMethod to GET
-		[2026-03-24] v0.21.5-preview.1 update Senparc.AI.Kernel to v0.28.0 and Senparc.Weixin.MP to v16.24.2
 		[2025-11-01] update basic libraries, including Senparc.AI
+		[2026-03-24] v0.21.5-preview.1 update Senparc.AI.Kernel to v0.28.0 and Senparc.Weixin.MP to v16.24.2
 		[2026-07-02] v0.22.2-preview1 支持流式输出并优化交互体验，新增 PromptRange 与 AgentsManager 使用记录能力
 		1、支持流式输出并优化交互体验
 		2、新增 PromptRange 与 AgentsManager 使用记录能力
@@ -123,10 +118,22 @@
 		2、修复长轮询超时被误判为账号错误、NotifyStart 失败不重试、LastMessageAt 未更新的问题
 		3、修复 WeixinClawLoginService 单例捕获 Scoped 客户端的 DI 生命周期问题，并清理过期登录会话
 		4、登录面板补齐验证代码（verify_code）输入与错误提示，保存/发送失败时显示服务端原因
+		[2026-10-01] 个人微信后台按租户作用域调用账号服务和现有 Repository 查询，保留统一软删除过滤
+		[2026-10-02] 微信后台轮询复用统一租户作用域，移除反射及重复上下文设置并完善任务取消释放
+		[2026-10-03] v0.24.12 修复微信 Claw 下行 JSON 字段大小写、可选响应字段、媒体密钥编码及轮询会话上下文丢失，按官方 2.4.9 协议补充契约和发送链路测试
+		[2026-10-04] v0.24.13 支持微信 SILK 语音缓存解码和视频播放、Range 请求，修复首屏连接状态加载并移除重复发送面板
+		[2026-10-05] v0.24.14 持久化微信 Claw 会话上下文，支持 NeuBell 重启补偿推送并记录去重状态
 		[2026-10-09] v0.24.15 Dependency update from Senparc.Xncf.PromptRange to 0.19.8
-		[2026-10-21] v0.24.16 公众号 AI 回复接入 Token 用量记录
+		[2026-11-03] v0.24.16 公众号 AI 回复接入 Token 用量记录
 		1、消息处理对话结果写入 Token 用量
 		2、适配 Senparc.AI.AgentKernel 0.1.15-preview2
+		3、完善微信 Claw 消息收发、回执完整性与绑定配置交互
+		4、隔离 AI 会话缓存并在登录确认时恢复请求租户上下文
+		5、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.11
+		6、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.11
+		7、Dependency update from Senparc.Ncf.Database to 0.21.11
+		8、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.6-preview10
+    [2026-11-03] Add shared documentation help to the official-account edit form.
 </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

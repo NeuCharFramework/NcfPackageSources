@@ -43,6 +43,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 对话调用统一记录 Token 用量
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;

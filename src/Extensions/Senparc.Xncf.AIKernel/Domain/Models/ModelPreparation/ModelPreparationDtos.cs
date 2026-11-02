@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 补充模型准备传输对象
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add PromptRange selector service, UI components, and tests
+
 ----------------------------------------------------------------*/
 
 #nullable enable

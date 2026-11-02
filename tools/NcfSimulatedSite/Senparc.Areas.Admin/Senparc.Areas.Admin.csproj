@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.13</Version>
+		<Version>0.12.16</Version>
 		<PackageReleaseNotes>
     [2026-10-16] 增加 PromptRange Skill 目录、执行与 AdminChat 暴露能力
     1、通过 PromptRange.Abstractions 暴露可移植 Skill 契约
@@ -162,6 +162,15 @@
     [2026-11-02] v0.12.1 修复分支合并遗留的微信 Claw 绑定重复声明，保留实体及索引功能
     [2026-11-03] Report verified Memory save outcomes and scopes, distinguish skipped/rejected extraction, and prevent assistant-only persistence claims; clarify private database storage.
     [2026-11-03] Add collapsible Workspace groups, resizable/collapsible Chat sidebar, account-owned persistent in-group session ordering across devices, and reduced-motion-aware live task indicators.
+    [2026-11-03] Isolate AdminChat live generation, streamed messages, usage and trajectory callbacks by originating session; reject stale detail responses when navigating between sessions.
+    [2026-11-03] Redesign Memory settings with a structured header, collapsible guidance, consistent actions, scope badges and responsive layouts.
+    [2026-11-03] v0.12.15 增强 AdminChat 记忆存储、作用域及检索，并支持会话排序和侧栏调整
+    1、支持 Workspace 附件、流式大文件上传、预览与受控分享
+    2、增加 PromptRange 选择、双语上下文帮助、登录验证码和资源监控
+    3、完善多租户访问控制、数据库迁移和后台界面交互
+    4、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.6-preview10
+    5、Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.3.1
+    [2026-11-03] Expand bilingual documentation help to all interactive Admin pages, legacy forms and contextual panels; validate every route and anchor.
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

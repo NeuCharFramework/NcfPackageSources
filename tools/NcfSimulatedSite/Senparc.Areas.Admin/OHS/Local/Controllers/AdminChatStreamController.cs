@@ -21,6 +21,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.11.1 流式输出携带工作区与会话标题
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 implement AdminChat memory storage and management system
+
 ----------------------------------------------------------------*/
 
 using System;

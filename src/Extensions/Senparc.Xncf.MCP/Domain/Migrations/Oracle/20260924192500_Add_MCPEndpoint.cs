@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.5.6 0.5.6 feat: add MCP endpoint selection feature in AgentsManager
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.5.10 支持 Add_MCPEndpoint 数据库迁移
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore.Migrations;

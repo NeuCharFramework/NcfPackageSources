@@ -509,6 +509,11 @@
   <data name="FineTuning.LogHelp" xml:space="preserve">
     <value>浏览器仅保留最近 1,000 条日志和 1,000 个图表数据点。</value>
   </data>
+  <data name="FineTuning.CommandLog" xml:space="preserve"><value>命令与事件日志</value></data>
+  <data name="FineTuning.CommandLogHelp" xml:space="preserve"><value>训练命令、警告和错误</value></data>
+  <data name="FineTuning.MetricLog" xml:space="preserve"><value>指标流</value></data>
+  <data name="FineTuning.MetricLogHelp" xml:space="preserve"><value>周期性的 GPU、损失、步数和时间数据</value></data>
+  <data name="FineTuning.NoMetrics" xml:space="preserve"><value>尚未收到指标</value></data>
   <data name="FineTuning.Replaying" xml:space="preserve">
     <value>正在回放已保存的事件</value>
   </data>

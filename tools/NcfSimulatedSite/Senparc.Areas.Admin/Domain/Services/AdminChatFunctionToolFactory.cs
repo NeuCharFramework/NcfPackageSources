@@ -19,6 +19,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.11.1 按当前模块构建函数工具
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 enhance Sandbox functionality with language validation and request handling improvements
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;

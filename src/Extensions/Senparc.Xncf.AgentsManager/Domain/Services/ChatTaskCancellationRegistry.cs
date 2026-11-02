@@ -6,6 +6,10 @@
 
     创建标识：Senparc - 20260927
     修改描述：v0.18.1 为运行中的 ChatTask 提供可真正中断模型调用的取消令牌
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 update AgentsManager with new features and improvements
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Concurrent;

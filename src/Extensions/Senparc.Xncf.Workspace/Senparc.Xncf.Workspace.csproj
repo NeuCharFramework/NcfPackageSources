@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.2</Version>
+    <Version>0.2.3</Version>
     <PackageReleaseNotes>
-      [2026-10-24] v0.2.2 补齐 Workspace 标准 EF 设计时迁移链路
-      1、接入 Senparc.Web.DatabasePlant 作为迁移启动项目
-      2、补充六类数据库的设计时 DbContext 工厂
+      [2026-10-21] v0.1.1 提供按所有者隔离的工作区存储，并持久化元数据
+      1、支持工作区创建、文件访问、命令执行与访问策略
+      2、描述符支持所有者类型、Agent 模板关联与存储提供方
+      3、持久化工作区元数据，并在模块安装时迁移数据库
       [2026-10-24] v0.2.1 复用共享 Docker 隔离运行时
       1、Workspace Docker Agent 通过 IIsolatedRuntimeProvider 启动
       2、与 Sandbox 统一镜像、挂载、网络、资源和安全参数生成
@@ -14,10 +15,12 @@
       2、新增 Docker 隔离运行时与 Docker-free NativeAgent 安全回退
       3、新增 DesktopBridge + Admin JWT 双重保护的 VS Code/Cursor 网关
       4、新增 ETag、原子写入、二进制文件、变更流和现代管理页面
-      [2026-10-21] v0.1.1 提供按所有者隔离的工作区存储，并持久化元数据
-      1、支持工作区创建、文件访问、命令执行与访问策略
-      2、描述符支持所有者类型、Agent 模板关联与存储提供方
-      3、持久化工作区元数据，并在模块安装时迁移数据库
+      [2026-11-03] v0.2.2 补齐 Workspace 标准 EF 设计时迁移链路
+      1、接入 Senparc.Web.DatabasePlant 作为迁移启动项目
+      2、补充六类数据库的设计时 DbContext 工厂
+      3、支持租户隔离的 Workspace 文件管理、流式大文件上传及持久化
+      4、提供工作区文件预览和跨模块文件引用
+    [2026-11-03] Add shared contextual documentation for Workspace access boundaries.
 </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.Workspace</AssemblyName>
     <RootNamespace>Senparc.Xncf.Workspace</RootNamespace>

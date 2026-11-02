@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260915
     修改描述：v0.7.2 修复知识库管理端敏感信息泄露并优化检索交互
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.0 upgrade KnowledgeBase retrieval with configurable chunking and re-ranking (backward compatible)
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;

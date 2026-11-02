@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.2.0 增加 FineTuning 文件资源类型
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.2.0 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+
 ----------------------------------------------------------------*/
 
 using System;

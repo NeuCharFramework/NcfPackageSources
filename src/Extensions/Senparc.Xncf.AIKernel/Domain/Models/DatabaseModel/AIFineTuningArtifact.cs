@@ -4,8 +4,13 @@
     文件名：AIFineTuningArtifact.cs
     文件功能描述：微调产物数据模型
 
+    创建标识：Senparc - 20261014
+
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 记录微调产物并关联文件引用
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add AITokenUsageRecorder and related services for token usage tracking
 
 ----------------------------------------------------------------*/
 

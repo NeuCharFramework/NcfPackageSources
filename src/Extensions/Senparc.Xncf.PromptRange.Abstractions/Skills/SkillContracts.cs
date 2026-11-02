@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.3.0-preview6 扩展 Skill 类型、测试隔离、风险策略与 Agent 绑定
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.3.1-preview6 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+
 ----------------------------------------------------------------*/
 
 using System;

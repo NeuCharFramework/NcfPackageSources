@@ -22,6 +22,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.19.0 接收 Skill 绑定、执行权限与工作区策略
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 enhance Agent Studio, group configuration, and task management interactions
+
 ----------------------------------------------------------------*/
 
 using log4net.Core;

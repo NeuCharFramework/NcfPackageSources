@@ -19,6 +19,9 @@
     修改标识：Senparc - 20260915
     修改描述：v0.7.0 优化文件管理、标签与回收站交互
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.1 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http;

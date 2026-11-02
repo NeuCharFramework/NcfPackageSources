@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20261102152313_Add_AdminChat_Memory_State.cs
+    文件功能描述：20261102152313_Add_AdminChat_Memory_State 相关定义与实现
+
+
+    创建标识：Senparc - 20220818
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 支持 Add_AdminChat_Memory_State 数据库迁移
+
+----------------------------------------------------------------*/
+
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

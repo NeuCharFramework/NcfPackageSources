@@ -57,6 +57,9 @@
     修改标识：Senparc - 20261028
     修改描述：多租户模式下 ChatGroup/Studio 后台执行与隔离状态更新恢复请求租户上下文
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 Enhance ChatGroupService with task management and concurrency handling
+
 ----------------------------------------------------------------*/
 
 #nullable enable annotations

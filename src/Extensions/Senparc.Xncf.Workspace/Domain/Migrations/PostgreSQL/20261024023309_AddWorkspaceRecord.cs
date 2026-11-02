@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20261024023309_AddWorkspaceRecord.cs
+    文件功能描述：20261024023309_AddWorkspaceRecord 相关定义与实现
+
+
+    创建标识：Senparc - 20211114
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.2.2 支持 AddWorkspaceRecord 数据库迁移
+
+----------------------------------------------------------------*/
+
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 

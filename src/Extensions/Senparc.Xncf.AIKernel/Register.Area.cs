@@ -25,6 +25,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 更新 AI Token 监控入口图标
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add new Workspace projects and update AITokenMonitor icon
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Hosting;

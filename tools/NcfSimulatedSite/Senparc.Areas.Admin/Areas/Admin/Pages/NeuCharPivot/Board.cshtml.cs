@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261101
     修改描述：首页 Pivot 块缺失时返回可操作的状态信息
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 enhance job management and telemetry features
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;

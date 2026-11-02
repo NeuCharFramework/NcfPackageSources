@@ -28,6 +28,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 注册 Token 用量记录与微调控制面服务
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add PromptRange selector service, UI components, and tests
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Enums;

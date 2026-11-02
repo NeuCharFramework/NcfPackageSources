@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.20.0 输出 Prompt 或 Skill 类型
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;

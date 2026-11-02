@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260915
     修改描述：v0.8.0 增强 Admin Chat Harness、轨迹回放与 NeuBell 管理能力
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+
 ----------------------------------------------------------------*/
 using Senparc.Ncf.Core.Models;
 using System;

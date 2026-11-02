@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.19.0 按绑定策略调用 PromptRange Skill
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 update AdminChat with PromptRange Skill integration
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;

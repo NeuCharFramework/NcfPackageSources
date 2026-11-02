@@ -5,6 +5,10 @@
     文件功能描述：基于 NDJSON/stdin/stdout 的跨平台 Workspace Agent 宿主
 
     创建标识：Senparc - 20261024
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.2.1 implement connection manager and workspace file system provider
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;

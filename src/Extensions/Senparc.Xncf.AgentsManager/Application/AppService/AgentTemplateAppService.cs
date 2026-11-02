@@ -48,6 +48,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.19.0 保存 Agent 模板的 Skill 绑定与工作区策略
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 update chat avatar icon and improve assistant message styling
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Http.Timeouts;

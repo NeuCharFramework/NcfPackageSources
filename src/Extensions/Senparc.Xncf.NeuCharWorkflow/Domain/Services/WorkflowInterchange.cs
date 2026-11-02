@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.4.4 实现工作流 JSON/YAML 导入导出与脱敏校验
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.4 enhance fine-tuning functionality with artifact tracking and import/export capabilities
+
 ----------------------------------------------------------------*/
 
 using System.Collections;

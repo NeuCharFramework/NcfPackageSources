@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <PackageType>Template</PackageType>
     <PackageVersion>0.14.0</PackageVersion>
     <PackageId>Senparc.Xncf.XncfBuilder.Template</PackageId>
@@ -70,6 +70,7 @@
       [2026-09-15] v0.1.1 修正模板 README 文件名大小写与打包路径
       1、将模板根目录 README.md 纳入正确的排除和打包配置
       2、避免大小写敏感文件系统下模板包缺少说明文件
+      [2026-11-03] v0.1.2 修正 XNCF 模板示例命令中的数据库参数名称
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

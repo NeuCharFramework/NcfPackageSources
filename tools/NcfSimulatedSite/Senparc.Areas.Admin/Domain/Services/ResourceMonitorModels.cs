@@ -8,6 +8,9 @@
     创建标识：Senparc - 20260926
     修改描述：v0.12.0 新增资源监控（后台 10 秒级记录，最多保留 24 小时）
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 Admin home resource monitor - per-Web-process CPU/memory lines + nonlinear 24h time-axis chart
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;

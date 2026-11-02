@@ -49,6 +49,9 @@
     修改标识：Senparc - 20261102
     修改描述：接入用户分层 Memory、受限自动更新及全局 SystemMessage
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 implement AdminChat memory storage and management system
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;

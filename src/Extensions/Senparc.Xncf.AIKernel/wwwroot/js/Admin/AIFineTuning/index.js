@@ -135,6 +135,12 @@ var app = new Vue({
         effectiveBatchSize() {
             return this.form.batchSize * this.form.gradientAccumulationSteps;
         },
+        logEvents() {
+            return this.events.filter(event => event.kind !== "metrics");
+        },
+        metricEvents() {
+            return this.events.filter(event => event.kind === "metrics");
+        },
         validationMismatchWarning() {
             if (!this.job || !this.job.request) { return ""; }
             var recordedBackend = this.validation.recordedBackend || this.job.request.backend;
@@ -552,11 +558,16 @@ var app = new Vue({
                         this.validationMethod = validation.recordedMethod;
                     }
                 }
+                var shouldFollowLog = this.followLog && this.isLogAtBottom();
+                var shouldFollowMetrics = this.followLog && this.isMetricLogAtBottom();
                 this.$nextTick(() => {
                     if (this._disposed || this.selectionVersion !== version) { return; }
                     this.renderChart();
-                    if (this.followLog && this.$refs.eventLog) {
+                    if (shouldFollowLog && this.$refs.eventLog) {
                         this.$refs.eventLog.scrollTop = this.$refs.eventLog.scrollHeight;
+                    }
+                    if (shouldFollowMetrics && this.$refs.metricLog) {
+                        this.$refs.metricLog.scrollTop = this.$refs.metricLog.scrollHeight;
                     }
                 });
             } catch (error) {
@@ -622,6 +633,16 @@ var app = new Vue({
                 && message.indexOf("Extra inputs are not permitted") >= 0
                 && message.indexOf("body.method") >= 0
                 && message.indexOf("body.confirmMismatch") >= 0;
+        },
+        isLogAtBottom() {
+            var log = this.$refs && this.$refs.eventLog;
+            if (!log) { return true; }
+            return log.scrollHeight - log.scrollTop - log.clientHeight <= 8;
+        },
+        isMetricLogAtBottom() {
+            var log = this.$refs && this.$refs.metricLog;
+            if (!log) { return true; }
+            return log.scrollHeight - log.scrollTop - log.clientHeight <= 8;
         },
         selectWorker() {
             this.workerVersion++;

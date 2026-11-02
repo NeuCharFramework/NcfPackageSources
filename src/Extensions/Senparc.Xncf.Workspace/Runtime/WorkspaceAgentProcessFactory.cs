@@ -5,6 +5,10 @@
     文件功能描述：创建跨平台原生或 Docker Workspace Agent 进程
 
     创建标识：Senparc - 20261024
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.2.2 enhance workspace functionality with file preview and management features
+
 ----------------------------------------------------------------*/
 
 using System.Diagnostics;

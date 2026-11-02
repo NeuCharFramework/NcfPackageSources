@@ -31,6 +31,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.20.0 结果记录附带 Skill 执行策略
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;

@@ -9,6 +9,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.5.0-preview5 新增文件文本提取与文件管理服务
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.1 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+
 ----------------------------------------------------------------*/
 
 using System;

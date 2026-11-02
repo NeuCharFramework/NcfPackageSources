@@ -36,6 +36,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.19.0 注册 PromptRange Skill 插件与工作区契约
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+
 ----------------------------------------------------------------*/
 
 using A2A.AspNetCore;

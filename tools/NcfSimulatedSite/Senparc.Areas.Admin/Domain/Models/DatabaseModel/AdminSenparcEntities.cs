@@ -37,6 +37,9 @@
     修改标识：Senparc - 20261102
     修改描述：移除合并遗留的微信 Claw 绑定重复声明和索引配置，保留原有映射
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 implement AdminChat memory storage and management system
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;

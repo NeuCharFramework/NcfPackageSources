@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 保存微调数据集与产物文件
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;

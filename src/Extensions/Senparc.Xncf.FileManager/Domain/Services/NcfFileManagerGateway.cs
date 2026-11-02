@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.8.0 允许导入微调产物文件
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.1 add FileId reference to AIFineTuningDataset and implement FineTuningFileReferenceProvider
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase;

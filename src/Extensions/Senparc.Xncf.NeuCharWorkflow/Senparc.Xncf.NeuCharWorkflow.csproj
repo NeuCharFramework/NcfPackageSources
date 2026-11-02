@@ -39,13 +39,18 @@
       [2026-09-17] v0.4.2 Dependency updates from Senparc.Ncf.XncfBase to 0.28.0
       1、同步受影响的基础库、AI 模块或宿主项目版本
       2、保持项目引用链与当前功能兼容
+    [2026-10-01] 使用现有 Repository 查询能力，运行状态通过基础仓储局部更新
       [2026-10-05] v0.4.3 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
       1、Updated Senparc.Xncf.NeuCharWorkflow project behavior and integration for the latest feature and reliability improvements.
       2、chore: update package versions and dependencies across multiple projects
-      [2026-10-21] v0.4.4 增加标准化工作流 JSON/YAML 导入导出
+      [2026-11-03] v0.4.4 增加标准化工作流 JSON/YAML 导入导出
       1、提供带 schemaVersion 的 ncf.workflow 文件格式，兼容现有 GraphJson 执行链路
       2、增加安全脱敏、导入校验、禁用草稿导入和管理端导出接口
       3、增加 YamlDotNet 支持并限制 YAML 类型标签与文档大小
+      4、为工作流运行和定时执行恢复并传播租户上下文
+      5、完善工作流函数 Schema、文件参数和交互页面
+      6、Dependency update from Senparc.Xncf.AgentsManager.Abstractions to 0.3.1
+      7、Dependency update from Senparc.Xncf.NeuCharWorkflow.Abstractions to 0.3.1
 </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>

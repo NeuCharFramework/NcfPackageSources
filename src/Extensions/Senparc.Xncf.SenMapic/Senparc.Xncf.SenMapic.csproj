@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.9</Version>
+    <Version>0.4.10</Version>
     <AssemblyName>Senparc.Xncf.SenMapic</AssemblyName>
     <RootNamespace>Senparc.Xncf.SenMapic</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -19,9 +19,9 @@
     <PackageIcon>icon.jpg</PackageIcon>
     <PackageReleaseNotes>
       v0.1.0 创世
+      [2025-01-20] v0.1.3-alpha3 update UID
       [2025-01-25] v0.1.2-alpha2 Update Agents functions, support for function calling
       [2025-01-28] v0.1.3-alpha2 update Senparc.AI
-      [2025-01-20] v0.1.3-alpha3 update UID
       [2025-04-29] v0.1.5-alpha3 Update CO2NET and AIKernel
       [2025-05-18] v0.1.6-alpha4 Update Installation
       [2025-06-20] v0.1.8-alpha Add MCP functions in XncfRegisterBase class
@@ -62,7 +62,9 @@
       2、保持项目引用链与当前功能兼容
       [2026-10-05] v0.4.9 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
       1、Updated Senparc.Xncf.SenMapic project behavior and integration for the latest feature and reliability improvements.
-      2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
+      2、chore: update package versions and dependencies across multiple projects
+    [2026-11-03] Add shared documentation help to inherited-layout crawl task pages.
+</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

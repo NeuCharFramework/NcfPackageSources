@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.8.0 按 FineTuning 资源类型校验访问
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.1 add SourceFileId, SourceType, and SourceUrl columns to PromptRange table for PostgreSQL, SQL Server, and SQLite
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.StaticFiles;

@@ -22,6 +22,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.5.10 函数对话结果写入 Token 用量
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.5.10 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 #pragma warning disable OPENAI001 // 类型仅用于评估，在将来的更新中可能会被更改或删除。取消此诊断以继续。

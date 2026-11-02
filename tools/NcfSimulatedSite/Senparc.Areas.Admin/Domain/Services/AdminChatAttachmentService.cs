@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：AdminChatAttachmentService.cs
+    文件功能描述：AdminChatAttachmentService 相关定义与实现
+
+
+    创建标识：Senparc - 20261026
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 add bilingual contextual documentation help with iframe dialog and new-window access
+
+----------------------------------------------------------------*/
+
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;

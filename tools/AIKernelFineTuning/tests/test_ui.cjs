@@ -100,6 +100,20 @@ test("event replay is bounded, monotonic and explicitly identifies retained part
     assert.equal(app.cursor, 0);
 });
 
+test("log follow mode only follows when the user is already at the bottom", () => {
+    const { app } = instance();
+    app.$refs.eventLog = { scrollTop: 100, clientHeight: 200, scrollHeight: 500 };
+    assert.equal(app.isLogAtBottom(), false);
+    app.$refs.eventLog.scrollTop = 292;
+    assert.equal(app.isLogAtBottom(), true);
+    app.$refs.metricLog = { scrollTop: 0, clientHeight: 100, scrollHeight: 250 };
+    assert.equal(app.isMetricLogAtBottom(), false);
+    app.$refs.eventLog = null;
+    app.$refs.metricLog = null;
+    assert.equal(app.isLogAtBottom(), true);
+    assert.equal(app.isMetricLogAtBottom(), true);
+});
+
 test("polling cannot overlap and reconnect uses the persisted event cursor", async () => {
     const { app, timers } = instance();
     const gate = deferred();

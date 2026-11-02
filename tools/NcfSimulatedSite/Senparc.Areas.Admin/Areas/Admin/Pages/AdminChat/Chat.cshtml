@@ -424,7 +424,7 @@
                     <p>@AR["AdminChat.StartPrompt"]</p>
                 </div>
 
-                <div v-if="isAIResponding" :class="['message-item', 'message-assistant', 'ai-thinking', 'live-run-panel', { 'is-generating': !!liveAssistantText }]">
+                <div v-if="isAIResponding && isCurrentSessionRunning" :class="['message-item', 'message-assistant', 'ai-thinking', 'live-run-panel', { 'is-generating': !!liveAssistantText }]">
                     <div class="message-avatar">
                         <i class="fa fa-android"></i>
                     </div>
@@ -515,6 +515,7 @@
                     <el-button type="text" size="mini" aria-label="上传资料" :title="attachmentUploadHint"
                         :loading="workspaceUploading" :disabled="!canUploadWorkspaceFiles || isSending"
                         @@click="chooseWorkspaceFiles"><i class="fa fa-paperclip"></i></el-button>
+                    <ncf-doc-help topic="admin.attachments"></ncf-doc-help>
                     <span class="input-tip">
                         <i class="fa fa-info-circle"></i> @AR["AdminChat.SendHint"]
                     </span>
@@ -555,6 +556,7 @@
                                     <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
                                 </el-radio-button>
                             </el-radio-group>
+                            <ncf-doc-help topic="admin.harness"></ncf-doc-help>
                             <el-dropdown trigger="click" @@command="handleMemoryCommand($event)">
                                 <el-button size="mini" class="chat-memory-trigger"
                                            :disabled="memoryBusy || isSending || !memoryReady">
@@ -572,7 +574,7 @@
                     </details>
                     <div class="input-send-actions">
                         <el-button
-                            v-if="isSending"
+                            v-if="isCurrentSessionRunning"
                             type="danger"
                             icon="el-icon-close"
                             :loading="isStopping"
@@ -584,7 +586,7 @@
                             v-else
                             type="primary"
                             icon="el-icon-s-promotion"
-                            :disabled="!currentSessionId || workspaceUploading || ((!inputMessage || inputMessage.trim().length === 0) && pendingAttachments.length === 0)"
+                            :disabled="!currentSessionId || isSending || workspaceUploading || ((!inputMessage || inputMessage.trim().length === 0) && pendingAttachments.length === 0)"
                             @@click="sendMessage">
                             @AR["AdminChat.Send"]
                         </el-button>
@@ -629,6 +631,7 @@
                                     <el-button type="text" size="mini" aria-label="上传资料" :title="attachmentUploadHint"
                                         :loading="workspaceUploading" :disabled="!canUploadWorkspaceFiles || isCreatingSession"
                                         @@click="chooseWorkspaceFiles"><i class="fa fa-paperclip"></i></el-button>
+                                    <ncf-doc-help topic="admin.attachments"></ncf-doc-help>
                                     <span class="chat-entrance-input-tip">
                                         <i class="fa fa-keyboard-o"></i>
                                         按 Ctrl + Enter 或 Cmd + Enter 开始
@@ -687,6 +690,7 @@
                                             <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
                                         </el-radio-button>
                                     </el-radio-group>
+                                    <ncf-doc-help topic="admin.harness"></ncf-doc-help>
                                 </div>
 
                                 <el-dropdown trigger="click" @@command="handleMemoryCommand($event, true)">
@@ -735,6 +739,7 @@
                                         <div class="launcher-popover-options">
                                             <el-checkbox v-model="workspaceWriteEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId">允许 AI 写入文件</el-checkbox>
                                             <el-checkbox v-model="workspaceCliEnabled" :disabled="!isSuperAdmin || !selectedWorkspaceId || !workspaceWriteEnabled">允许 AI 执行 Python</el-checkbox>
+                                            <ncf-doc-help topic="workspace.permissions"></ncf-doc-help>
                                         </div>
                                         <div class="launcher-workspace-help">
                                             Python 仅能执行 Workspace 内的 .py 文件，并优先使用 Workspace 内的 .venv。
@@ -1070,15 +1075,32 @@
     </el-dialog>
 
     <el-dialog :title="ncfT('AdminChat.Memory.Settings')" :visible.sync="memoryDialogVisible"
-               width="760px" custom-class="chat-memory-dialog" :close-on-click-modal="false" append-to-body>
-        <el-alert :title="ncfT('AdminChat.Memory.Notice')" type="info" :closable="false"></el-alert>
-        <p>@AR["AdminChat.Memory.StorageNotice"]</p>
+               width="960px" top="6vh" custom-class="chat-memory-dialog" :close-on-click-modal="false" append-to-body>
+        <div slot="title" class="chat-memory-heading">
+            <span class="chat-memory-heading-icon"><i class="el-icon-collection" aria-hidden="true"></i></span>
+            <div>
+                <h2>@AR["AdminChat.Memory.Settings"]</h2>
+                <p>@AR["AdminChat.Memory.Subtitle"]</p>
+            </div>
+            <span class="chat-memory-private"><i class="el-icon-lock" aria-hidden="true"></i> @AR["AdminChat.Memory.Private"]</span>
+        </div>
         <el-tabs v-model="memoryTab">
             <el-tab-pane :label="ncfT('AdminChat.Memory.Entries')" name="entries">
-                <p>@AR["AdminChat.Memory.ScopeNotice"]</p>
-                <el-button size="mini" icon="el-icon-plus" :disabled="memoryBusy" @@click="editMemoryEntry(null)">
-                    @AR["AdminChat.Memory.Add"]
-                </el-button>
+                <div class="chat-memory-panel-heading">
+                    <div>
+                        <h3>@AR["AdminChat.Memory.Entries"] <span class="chat-memory-count">{{ memoryEntries.length }}</span></h3>
+                        <p>@AR["AdminChat.Memory.EntriesHint"]</p>
+                    </div>
+                    <el-button type="primary" size="small" icon="el-icon-plus" :disabled="memoryBusy" @@click="editMemoryEntry(null)">
+                        @AR["AdminChat.Memory.Add"]
+                    </el-button>
+                </div>
+                <details class="chat-memory-help">
+                    <summary><i class="el-icon-info" aria-hidden="true"></i> @AR["AdminChat.Memory.Guide"]</summary>
+                    <p>@AR["AdminChat.Memory.ScopeNotice"]</p>
+                    <p>@AR["AdminChat.Memory.Notice"]</p>
+                    <p>@AR["AdminChat.Memory.StorageNotice"]</p>
+                </details>
                 <div v-if="memoryEntryDraft" class="chat-memory-entry-editor">
                     <el-form label-position="top" size="mini">
                         <el-form-item :label="ncfT('AdminChat.Memory.Text')">
@@ -1110,12 +1132,16 @@
                         </div>
                         <el-checkbox v-model="memoryEntryDraft.pinned">@AR["AdminChat.Memory.Pinned"]</el-checkbox>
                     </el-form>
-                    <el-button type="primary" size="mini" :loading="memoryBusy" @@click="saveMemoryEntry(false)">@AR["AdminChat.Memory.Save"]</el-button>
+                    <div class="chat-memory-editor-actions">
                     <el-popconfirm v-if="memoryEntryDraft.id" :title="ncfT('AdminChat.Memory.DeleteNotice')" @@on-confirm="saveMemoryEntry(true)">
-                        <el-button slot="reference" type="danger" size="mini" :disabled="memoryBusy">@AR["AdminChat.Memory.Delete"]</el-button>
+                        <el-button slot="reference" type="danger" plain size="small" :disabled="memoryBusy">@AR["AdminChat.Memory.Delete"]</el-button>
                     </el-popconfirm>
+                    <span class="chat-memory-action-spacer"></span>
+                    <el-button size="small" :disabled="memoryBusy" @@click="memoryEntryDraft = null">@AR["Common.取消"]</el-button>
+                    <el-button type="primary" size="small" :loading="memoryBusy" @@click="saveMemoryEntry(false)">@AR["AdminChat.Memory.SaveEntry"]</el-button>
+                    </div>
                 </div>
-                <el-table :data="memoryEntries" size="mini" max-height="360">
+                <el-table :data="memoryEntries" size="small" :empty-text="ncfT('AdminChat.Memory.EmptyEntries')">
                     <el-table-column type="expand">
                         <template slot-scope="props">
                             <p>{{ props.row.kind }} · {{ props.row.tier }} · v{{ props.row.version }} · {{ props.row.source }}</p>
@@ -1126,17 +1152,23 @@
                     </el-table-column>
                     <el-table-column prop="text" :label="ncfT('AdminChat.Memory.Text')"></el-table-column>
                     <el-table-column :label="ncfT('AdminChat.Memory.Scope')" width="110">
-                        <template slot-scope="props">{{ props.row.workspaceId ? 'Workspace' : ncfT('AdminChat.Memory.ScopeGlobal') }}</template>
+                        <template slot-scope="props">
+                            <span class="chat-memory-scope" :class="{ 'is-workspace': props.row.workspaceId }">{{ props.row.workspaceId ? 'Workspace' : ncfT('AdminChat.Memory.ScopeGlobal') }}</span>
+                        </template>
                     </el-table-column>
                     <el-table-column width="60">
                         <template slot-scope="props">
-                            <el-button type="text" icon="el-icon-edit" :disabled="memoryBusy" :title="ncfT('AdminChat.Memory.Edit')" @@click="editMemoryEntry(props.row)"></el-button>
+                            <el-button class="chat-memory-edit-button" type="text" icon="el-icon-edit" :disabled="memoryBusy" :title="ncfT('AdminChat.Memory.Edit')" :aria-label="ncfT('AdminChat.Memory.Edit')" @@click="editMemoryEntry(props.row)"></el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </el-tab-pane>
             <el-tab-pane :label="ncfT('AdminChat.Memory.Loaded')" name="loaded">
-                <p>@AR["AdminChat.Memory.LoadedNotice"]</p>
+                <div class="chat-memory-panel-heading"><h3>@AR["AdminChat.Memory.Loaded"]</h3></div>
+                <details class="chat-memory-help">
+                    <summary><i class="el-icon-info" aria-hidden="true"></i> @AR["AdminChat.Memory.Guide"]</summary>
+                    <p>@AR["AdminChat.Memory.LoadedNotice"]</p>
+                </details>
                 <el-alert v-if="memoryUpdateResult && memoryUpdateSessionId === memoryDialogSessionId"
                           :title="memoryUpdateText(memoryUpdateResult)"
                           :type="memoryUpdateResult.status === 'updated' ? 'success' : 'info'" :closable="false"></el-alert>
@@ -1144,16 +1176,18 @@
                     PromptCode: {{ memoryUpdateResult.promptCode }}
                 </p>
                 <template v-if="memoryUsage && memoryUsageSessionId === memoryDialogSessionId">
-                    <p>{{ memoryUsage.tokens }} / {{ memoryUsage.budget }} tokens · {{ memoryUsage.counter }}</p>
+                    <div class="chat-memory-token-meter"><strong>{{ memoryUsage.tokens }} <small>/ {{ memoryUsage.budget }} tokens</small></strong><span>{{ memoryUsage.counter }}</span></div>
                     <el-table :data="memoryUsage.entries" size="mini">
                         <el-table-column prop="text" :label="ncfT('AdminChat.Memory.Text')"></el-table-column>
                         <el-table-column prop="scope" :label="ncfT('AdminChat.Memory.Scope')" width="100"></el-table-column>
                         <el-table-column prop="reason" :label="ncfT('AdminChat.Memory.Reason')" width="130"></el-table-column>
                     </el-table>
                 </template>
+                <div v-else class="chat-memory-empty"><i class="el-icon-data-analysis" aria-hidden="true"></i><p>@AR["AdminChat.Memory.EmptyLoaded"]</p></div>
             </el-tab-pane>
             <el-tab-pane :label="ncfT('AdminChat.Memory.History')" name="history">
-                <el-table :data="memoryHistory" size="mini" max-height="400">
+                <div class="chat-memory-panel-heading"><h3>@AR["AdminChat.Memory.History"]</h3></div>
+                <el-table :data="memoryHistory" size="small">
                     <el-table-column prop="at" :label="ncfT('AdminChat.Memory.Time')" width="180"></el-table-column>
                     <el-table-column :label="ncfT('AdminChat.Memory.Text')">
                         <template slot-scope="props">
@@ -1165,36 +1199,46 @@
                 </el-table>
             </el-tab-pane>
             <el-tab-pane :label="ncfT('AdminChat.Memory.Preview')" name="preview">
-                <div class="markdown-body" style="max-height:420px;overflow:auto;"
+                <div class="chat-memory-panel-heading"><h3>@AR["AdminChat.Memory.Preview"]</h3></div>
+                <p class="chat-memory-caption">@AR["AdminChat.Memory.MarkdownScope"]</p>
+                <div class="markdown-body chat-memory-preview"
                      v-html="formatMemoryContent(memoryMarkdown)"></div>
             </el-tab-pane>
             <el-tab-pane :label="ncfT('AdminChat.Memory.Edit')" name="edit">
-                <p>@AR["AdminChat.Memory.MarkdownScope"]</p>
-                <p>@AR["AdminChat.Memory.Format"]</p>
+                <div class="chat-memory-panel-heading"><h3>@AR["AdminChat.Memory.Edit"]</h3></div>
+                <p class="chat-memory-caption">@AR["AdminChat.Memory.MarkdownScope"]</p>
+                <details class="chat-memory-help">
+                    <summary><i class="el-icon-info" aria-hidden="true"></i> @AR["AdminChat.Memory.FormatGuide"]</summary>
+                    <p>@AR["AdminChat.Memory.Format"]</p>
+                </details>
                 <el-input type="textarea" :rows="14" v-model="memoryMarkdown" :maxlength="32000"
                           :disabled="memoryBusy"></el-input>
             </el-tab-pane>
             <el-tab-pane :label="ncfT('AdminChat.Memory.SystemMessage')" name="system">
-                <p>@AR["AdminChat.Memory.SystemNotice"]</p>
+                <div class="chat-memory-panel-heading"><h3>@AR["AdminChat.Memory.SystemMessage"]</h3></div>
+                <p class="chat-memory-caption">@AR["AdminChat.Memory.SystemNotice"]</p>
                 <el-input type="textarea" :rows="6" v-model="memorySystemMessage" :maxlength="2000"
                           :disabled="memoryBusy"></el-input>
                 <template v-if="isSuperAdmin && globalChatLoaded">
+                    <div class="chat-memory-system-divider"></div>
                     <h4>@AR["AdminChat.Memory.GlobalSystem"]</h4>
-                    <p>@AR["AdminChat.Memory.GlobalNotice"]</p>
+                    <p class="chat-memory-caption">@AR["AdminChat.Memory.GlobalNotice"]</p>
                     <el-input type="textarea" :rows="6" v-model="globalChatSystemMessage" :maxlength="2000"
                               :disabled="memoryBusy"></el-input>
-                    <el-button @@click="saveGlobalChatSystemMessage" :disabled="memoryBusy">
+                    <el-button class="chat-memory-tenant-save" size="small" @@click="saveGlobalChatSystemMessage" :disabled="memoryBusy">
                         @AR["AdminChat.Memory.SaveGlobal"]
                     </el-button>
                 </template>
             </el-tab-pane>
         </el-tabs>
-        <div slot="footer">
-            <el-button @@click="downloadMemory">@AR["AdminChat.Memory.Download"]</el-button>
-            <el-button v-if="memoryTab === 'edit'" :disabled="memoryBusy" @@click="memoryMarkdown = '# Memory\n\n## Core\n\n## Archive\n'; memoryTab = 'edit'">
-                @AR["AdminChat.Memory.Clear"]
+        <div slot="footer" class="chat-memory-footer">
+            <el-button type="text" size="small" icon="el-icon-download" @@click="downloadMemory">@AR["AdminChat.Memory.Download"]</el-button>
+            <span class="chat-memory-action-spacer"></span>
+            <el-button v-if="memoryTab === 'edit'" type="danger" plain size="small" :title="ncfT('AdminChat.Memory.Clear')" :disabled="memoryBusy" @@click="memoryMarkdown = '# Memory\n\n## Core\n\n## Archive\n'; memoryTab = 'edit'">
+                @AR["AdminChat.Memory.ClearDraft"]
             </el-button>
-            <el-button v-if="memoryTab === 'edit' || memoryTab === 'system'" type="primary" :loading="memoryBusy" @@click="saveMemory">@AR["AdminChat.Memory.Save"]</el-button>
+            <el-button size="small" :disabled="memoryBusy" @@click="memoryDialogVisible = false">@AR["Xncf.CloseDialog"]</el-button>
+            <el-button v-if="memoryTab === 'edit' || memoryTab === 'system'" type="primary" size="small" :loading="memoryBusy" @@click="saveMemory">@AR["AdminChat.Memory.SaveChanges"]</el-button>
         </div>
     </el-dialog>
 

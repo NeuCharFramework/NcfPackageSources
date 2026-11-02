@@ -5,6 +5,10 @@
     文件功能描述：Workspace Agent 受限文件系统与进程执行引擎
 
     创建标识：Senparc - 20261024
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.2.1 implement connection manager and workspace file system provider
+
 ----------------------------------------------------------------*/
 
 using System.ComponentModel;

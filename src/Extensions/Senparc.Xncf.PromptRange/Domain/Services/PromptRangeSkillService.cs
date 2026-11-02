@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.20.0 按策略提供 Skill 目录与执行
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 add local upload functionality for Skill packages with size validation
+
 ----------------------------------------------------------------*/
 
 using System;

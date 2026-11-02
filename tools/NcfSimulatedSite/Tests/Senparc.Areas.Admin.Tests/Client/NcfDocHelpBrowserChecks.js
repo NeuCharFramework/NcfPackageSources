@@ -2,8 +2,22 @@ async page => {
     const admin = 'tools/NcfSimulatedSite/Senparc.Areas.Admin';
     const web = 'tools/NcfSimulatedSite/Senparc.Web/wwwroot';
     const origin = 'http://ncf-doc-help.test';
+    const docsDist = await page.evaluate(() => window.NCF_DOC_HELP_TEST_DIST || '');
+    const missingDocAssets = new Set();
+    const serveDocs = async route => {
+        const pathname = route.request().url().slice('https://doc.ncf.pub/'.length).split('?')[0];
+        try {
+            await route.fulfill({ path: docsDist + '/' + (pathname.endsWith('/') || !pathname ? pathname + 'index.html' : pathname) });
+        } catch (error) {
+            if (error.code !== 'ENOENT' || !pathname.startsWith('assets/')) throw error;
+            missingDocAssets.add(pathname);
+            await route.fulfill({ status: 404, body: 'Missing build asset: ' + pathname });
+        }
+    };
+    if (docsDist) await page.context().route('https://doc.ncf.pub/**', serveDocs);
     const failures = [];
     const check = (condition, message) => { if (!condition) throw new Error(message); };
+    const canonical = url => url.replace(/\/index\.html(?=[?#]|$)/, '/');
     page.on('pageerror', error => failures.push(error.message));
     await page.route(origin + '/**', async route => {
         const pathname = route.request().url().slice(origin.length).split('?')[0];
@@ -11,6 +25,12 @@ async page => {
             await route.fulfill({ path: admin + '/Resources/AdminResource.' + pathname.split('/').pop() + '.resx' });
         } else if (pathname.startsWith('/fonts/')) {
             await route.fulfill({ path: web + '/lib/element-ui_2.13.2' + pathname });
+        } else if (pathname.startsWith('/help-assets/')) {
+            const name = pathname.split('/').pop();
+            const asset = name === 'vue.js' ? web + '/lib/vue/vue.js'
+                : name === 'element.js' ? web + '/lib/element-ui_2.13.2/element.js'
+                : admin + '/wwwroot/js/Admin/Shared/' + name;
+            await route.fulfill({ path: asset });
         } else {
             await route.fulfill({ contentType: 'text/html', body: '<!doctype html><html><head></head><body></body></html>' });
         }
@@ -83,9 +103,9 @@ async page => {
             const popupPromise = page.waitForEvent('popup');
             await external.click();
             const popup = await popupPromise;
-            await popup.waitForURL(expected);
+            await popup.waitForURL(url => canonical(url.href) === canonical(expected));
             await popup.waitForLoadState('domcontentloaded');
-            check(popup.url() === expected, 'New window must open the matching locale');
+            check(canonical(popup.url()) === canonical(expected), 'New window must open the matching locale');
             check(await popup.evaluate(() => window.opener === null), 'New window must not access the Admin opener');
             await popup.close();
             await close();
@@ -113,8 +133,62 @@ async page => {
         check(!(await page.locator('.ncf-doc-help-dialog').innerText()).includes('DocHelp.'), 'Missing help translation');
         await close();
     }
-    await mount('en', '/Admin/KnowledgeBase/Index');
-    check(await page.locator('.ncf-doc-help-header').count() === 0, 'Unapproved pages must not show a pilot help entry');
+    await page.evaluate(() => {
+        window.helpTestExistingApp = window.helpTestApp;
+        const host = document.createElement('div');
+        host.setAttribute('data-ncf-doc-help-root', '');
+        document.body.appendChild(host);
+    });
+    await page.addScriptTag({ path: admin + '/wwwroot/js/Admin/Shared/NcfDocHelpStandalone.js' });
+    check(await page.locator('[data-ncf-doc-help-root]').count() === 0, 'Inherited Vue layouts must not show duplicate help');
+    check(await page.evaluate(() => window.helpTestApp === window.helpTestExistingApp), 'Standalone loading must preserve the page Vue root');
+    if (docsDist) {
+        for (const culture of ['zh-CN', 'en']) {
+            await mount(culture, '/Admin/KnowledgeBase/Index');
+            const topics = await page.evaluate(() => Object.keys(NcfDocHelpCatalog.topics));
+            for (const topic of topics) {
+                await page.evaluate(topic => NcfDocHelp.open(topic), topic);
+                const url = await page.locator('.ncf-doc-help-frame').getAttribute('src');
+                const fragment = url.split('#')[1];
+                await page.frameLocator('.ncf-doc-help-frame').locator(fragment
+                    ? '[id="' + decodeURIComponent(fragment) + '"]' : 'h1').first().waitFor({ state: 'attached', timeout: 25000 });
+                await close();
+            }
+            results.push(culture + ': every configured topic rendered from production VuePress output');
+        }
+    }
+
+    // Legacy pages must reuse the same help implementation without a page Vue root.
+    for (const culture of ['zh-CN', 'en']) {
+        await page.goto(origin + '/standalone');
+        await page.addStyleTag({ path: web + '/lib/element-ui_2.13.2/element.css' });
+        await page.addStyleTag({ path: admin + '/wwwroot/css/Admin/Shared/NcfDocHelp.css' });
+        await page.evaluate(async culture => {
+            const xml = new DOMParser().parseFromString(await fetch('/resources/' + culture).then(r => r.text()), 'text/xml');
+            const labels = Object.fromEntries(Array.from(xml.querySelectorAll('data'))
+                .filter(node => node.getAttribute('name').startsWith('DocHelp.'))
+                .map(node => [node.getAttribute('name'), node.querySelector('value').textContent]));
+            document.documentElement.lang = 'en';
+            const host = document.createElement('div');
+            host.setAttribute('data-ncf-doc-help-root', '');
+            Object.assign(host.dataset, {
+                topic: 'admin.login', culture, labels: JSON.stringify(labels),
+                vue: '/help-assets/vue.js', element: '/help-assets/element.js',
+                catalog: '/help-assets/NcfDocHelpCatalog.js', help: '/help-assets/NcfDocHelp.js'
+            });
+            document.body.appendChild(host);
+        }, culture);
+        await page.addScriptTag({ path: admin + '/wwwroot/js/Admin/Shared/NcfDocHelpStandalone.js' });
+        const button = page.locator('.ncf-doc-help-standalone button');
+        await button.click();
+        const url = await page.locator('iframe').getAttribute('src');
+        check(url.includes('/zh/') === (culture === 'zh-CN'), 'Standalone help must use server culture, not a legacy html lang');
+        await page.frameLocator('.ncf-doc-help-frame').locator('h1').first().waitFor({ timeout: 25000 });
+        await close();
+        results.push(culture + ': standalone lazy dependencies, culture and dialog passed');
+    }
+    await mount('en', '/Admin/Unknown/Index');
+    check(await page.locator('.ncf-doc-help-header').count() === 0, 'Unknown pages must not show an unrelated help entry');
 
     await page.route('https://doc.ncf.pub/**', route => route.abort());
     await page.locator('form .ncf-doc-help-button').click();
@@ -141,5 +215,10 @@ async page => {
 
     check(failures.length === 0, failures.join('\n'));
     await page.unroute(origin + '/**');
-    return { passed: results, additional: 'All non-Chinese locales, unapproved pages, blocked iframe, timeout and retry passed' };
+    if (docsDist) await page.context().unroute('https://doc.ncf.pub/**', serveDocs);
+    return {
+        passed: results,
+        additional: 'All non-Chinese locales, unknown pages, blocked iframe, timeout and retry passed',
+        missingDocAssets: Array.from(missingDocAssets)
+    };
 }

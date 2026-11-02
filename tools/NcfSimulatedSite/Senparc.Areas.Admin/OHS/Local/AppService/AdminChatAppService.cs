@@ -40,6 +40,9 @@
     修改标识：Senparc - 20261103
     修改描述：提供同账号跨设备会话排序接口
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 完善后台聊天会话管理与排序
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;

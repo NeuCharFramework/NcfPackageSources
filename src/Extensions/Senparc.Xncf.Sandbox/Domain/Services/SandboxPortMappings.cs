@@ -11,6 +11,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.3.4 0.3.4 Merge branch 'Developer-MAF-V3-Spark' of https://github.com/NeuCharFramework/NcfPackageSources into Developer-MAF-V3-Spark
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.0 维护沙箱附加端口映射解析与校验
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.Sandbox.Domain.Services.Runtime;

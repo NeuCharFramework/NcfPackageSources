@@ -19,6 +19,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.19.0 格式化输出时记录 Token 用量
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.19.1 add AITokenUsageRecorder and related services for token usage tracking
+
 ----------------------------------------------------------------*/
 
 using Microsoft.SemanticKernel;

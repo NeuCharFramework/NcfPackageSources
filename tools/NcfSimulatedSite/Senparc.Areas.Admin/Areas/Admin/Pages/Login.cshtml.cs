@@ -1,4 +1,18 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：Login.cshtml.cs
+    文件功能描述：Login.cshtml 相关定义与实现
+
+
+    创建标识：Senparc - 20241028
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 add image captcha for admin login (required after 2 failed attempts)
+
+----------------------------------------------------------------*/
+
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;

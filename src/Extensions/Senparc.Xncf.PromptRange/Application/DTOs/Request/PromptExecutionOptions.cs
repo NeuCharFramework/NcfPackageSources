@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.20.0 执行选项携带 Skill 策略
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.20.8 维护PromptExecutionOptions 数据传输对象定义
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.PL.Request

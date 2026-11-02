@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 定义微调控制面服务契约
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 enhance job management and telemetry features
+
 ----------------------------------------------------------------*/
 
 using Senparc.Xncf.AIKernel.Models;

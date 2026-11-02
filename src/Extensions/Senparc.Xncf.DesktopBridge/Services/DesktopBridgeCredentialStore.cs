@@ -12,6 +12,9 @@
     修改标识：Senparc - 20260804
     修改描述：v0.3.0-preview3 将同步提供程序统一更名为 NeuBell/纽铃
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.8 维护DesktopBridge 配对请求和短期会话凭据存储
+
 ----------------------------------------------------------------*/
 
 using System.Security.Cryptography;

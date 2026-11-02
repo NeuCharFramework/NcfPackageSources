@@ -107,10 +107,15 @@
 		  [2026-10-05] v0.0.15 Enhanced Senparc.IntegrationSample functionality and compatibility
 		  1、Updated Senparc.IntegrationSample project behavior and integration for the latest feature and reliability improvements.
 		  [2026-10-09] v0.0.16 Dependency update from Senparc.Xncf.AIKernel to 0.16.4
-		  [2026-10-21] v0.0.17 Dependency update from Senparc.Xncf.AIKernel to 0.17.0
+		  [2026-11-03] v0.0.17 Dependency update from Senparc.Xncf.AIKernel to 0.17.0
 		  1、Dependency update from Senparc.Xncf.PromptRange to 0.20.0
 		  2、Dependency update from Senparc.Xncf.WeixinManager to 0.24.16
 		  3、Dependency update from Senparc.Xncf.XncfBuilder to 0.41.7
+		  4、Dependency update from Senparc.Ncf.Database.SqlServer to 0.20.11
+		  5、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.11
+		  6、Dependency update from Senparc.Ncf.Database to 0.21.11
+		  7、Dependency update from Senparc.Ncf.SMS to 0.20.10-preview10
+		  8、Dependency update from [5990]Senparc.Xncf.Tenant.Interface to 0.10.10-preview10
 </PackageReleaseNotes>
 		<Configurations>Debug;Release;TemplateRelease</Configurations>
 		<ImplicitUsings>enable</ImplicitUsings>

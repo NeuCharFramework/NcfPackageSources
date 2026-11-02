@@ -5,6 +5,10 @@
     文件功能描述：Workspace Agent 持久 stdio 协议连接
 
     创建标识：Senparc - 20261024
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.2.2 implement connection manager and workspace file system provider
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json;

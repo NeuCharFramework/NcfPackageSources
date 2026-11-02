@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261024
     修改描述：空查询时回退为目录列表，避免 AI 首次浏览 Workspace 失败
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;

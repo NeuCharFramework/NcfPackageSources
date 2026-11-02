@@ -9,6 +9,9 @@
     修改标识：Senparc - 20260726
     修改描述：v0.1.0-preview2 同步模块功能与兼容性改进
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.4.8 implement connection manager and workspace file system provider
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Shared.Abstractions.Security;

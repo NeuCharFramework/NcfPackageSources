@@ -1,3 +1,17 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：FileManagerImportRequestedEventHandler.cs
+    文件功能描述：FileManagerImportRequestedEventHandler 相关定义与实现
+
+
+    创建标识：Senparc - 20261001
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.8.1 支持文件流上传、跨模块文件引用与资源访问策略
+
+----------------------------------------------------------------*/
+
 using Microsoft.Extensions.Logging;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.MultiTenant;

@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261102
     修改描述：增加默认 300 MiB 手动上传上限
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.2.2 add streamed large-file Workspace uploads with tenant-aware ownership checks
+
 ----------------------------------------------------------------*/
 
 namespace Senparc.Xncf.Workspace;

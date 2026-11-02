@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261021
     修改描述：v0.17.0 开放微调导入、导出与产物查询
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 enhance job management and telemetry features
+
 ----------------------------------------------------------------*/
 
 #nullable enable

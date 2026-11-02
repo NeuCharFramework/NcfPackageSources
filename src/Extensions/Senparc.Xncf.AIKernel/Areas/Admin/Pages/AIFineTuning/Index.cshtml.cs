@@ -1,6 +1,20 @@
 /*----------------------------------------------------------------
     Copyright (C) 2026 Senparc
 
+    文件名：Index.cshtml.cs
+    文件功能描述：Index.cshtml 相关定义与实现
+
+
+    创建标识：Senparc - 20261009
+
+    修改标识：Senparc - 20261103
+    修改描述：v0.17.0 enhance Agent Studio, group configuration, and task management interactions
+
+----------------------------------------------------------------*/
+
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
     File: Index.cshtml.cs
     Description: Local fine-tuning administration page.
     Created: Senparc - 20261002

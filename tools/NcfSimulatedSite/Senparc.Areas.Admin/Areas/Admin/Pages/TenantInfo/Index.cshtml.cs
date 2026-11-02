@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261005
     修改描述：v0.10.1 0.10.1 Enhanced Senparc.Areas.Admin functionality and compatibility
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 租户注册表管理限制为平台管理员，封堵跨租户提权
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;

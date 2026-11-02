@@ -13,8 +13,9 @@
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <PackageReleaseNotes>
     [2026-10-01] v0.1.1 增加跨模块私有附件导入的 EventBus 请求响应契约
-    [2026-10-21] v0.2.0 增加微调产物文件资源类型
+    [2026-11-03] v0.2.0 增加微调产物文件资源类型
     1、FileManagerResourceKind 新增 FineTuning，供微调产物导入引用
+    2、扩展文件管理跨模块契约与流式文件上传能力
 </PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>

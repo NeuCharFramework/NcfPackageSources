@@ -18,6 +18,9 @@
     修改标识：Senparc - 20261102
     修改描述：v0.12.7 更新合并后资源监控图表的说明
 
+    修改标识：Senparc - 20261103
+    修改描述：v0.12.15 add PromptRange selector service, UI components, and tests
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Hosting;
