@@ -11,7 +11,7 @@
 
 ----------------------------------------------------------------*/
 
-namespace Senparc.Xncf.Workspace.Agent;
+namespace Senparc.Xncf.WorkspaceAgent;
 
 public sealed record WorkspaceAgentOptions(
     string RootPath,

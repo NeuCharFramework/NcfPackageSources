@@ -1,0 +1,6 @@
+<Project>
+  <!-- This Visual Studio legacy ruleset is not shipped with the .NET SDK; keep SDK analyzer defaults instead. -->
+  <PropertyGroup Condition="'$(CodeAnalysisRuleSet)' == 'MinimumRecommendedRules.ruleset' And !Exists('$(MSBuildProjectDirectory)/$(CodeAnalysisRuleSet)')">
+    <CodeAnalysisRuleSet />
+  </PropertyGroup>
+</Project>

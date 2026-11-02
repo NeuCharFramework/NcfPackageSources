@@ -243,7 +243,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Xncf.Workspace", "E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Xncf.Workspace.Abstractions", "Extensions\Senparc.Xncf.Workspace.Abstractions\Senparc.Xncf.Workspace.Abstractions.csproj", "{6DFF2FC1-EC88-4F04-8635-52E017FBD325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Xncf.Workspace.Agent", "Extensions\Senparc.Xncf.Workspace.Agent\Senparc.Xncf.Workspace.Agent.csproj", "{FB1FFE3D-CBFF-4883-890E-23F14CE4DE62}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Xncf.WorkspaceAgent", "Extensions\Senparc.Xncf.WorkspaceAgent\Senparc.Xncf.WorkspaceAgent.csproj", "{FB1FFE3D-CBFF-4883-890E-23F14CE4DE62}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senparc.Xncf.Workspace.Tests", "Extensions\Senparc.Xncf.Workspace.Tests\Senparc.Xncf.Workspace.Tests.csproj", "{425E6784-4A54-4970-95B3-DCF7E8DCC7DC}"
 EndProject

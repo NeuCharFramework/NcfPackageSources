@@ -81,6 +81,16 @@ dotnet run
 |  src/Extensions  |  可选的扩展包，以 `Senparc.Xncf.` 开头 <br> Optional extension packages, prefixed with `Senparc.Xncf.`
 |  src/Extensions/System  | 系统模块 <br> System modules
 
+### Workspace Agent 构建与部署 / Build and Deployment
+
+工作区运行时项目统一命名为 `Senparc.Xncf.WorkspaceAgent`（仅在 `Xncf` 两侧保留两个点），目录、程序集、命名空间和 Docker 入口使用同一名称。
+
+The Workspace runtime project is named `Senparc.Xncf.WorkspaceAgent`, with exactly two dots around `Xncf`; its directory, assembly, namespace and Docker entry point use the same name.
+
+`Workspace` 通过项目引用获取 Agent 的实际输出路径，并将 `.dll`、`.deps.json` 和 `.runtimeconfig.json` 传递至管理端及宿主的 build/publish 输出。不要根据宿主的 `$(Configuration)` 拼接 Agent 路径；解决方案中的依赖项目可能采用不同配置。自定义 `SenparcXncfWorkspace:AgentPath` 时需同步更新文件名。
+
+`Workspace` resolves the Agent's actual output paths through its project reference and propagates the `.dll`, `.deps.json` and `.runtimeconfig.json` to Admin and host build/publish outputs. Do not construct Agent paths from the host's `$(Configuration)`: solution dependencies may use a different configuration. Update the filename in any custom `SenparcXncfWorkspace:AgentPath` setting.
+
 ## 模块加载顺序 / Module Loading Order
 
 使用 `[XncfOrder(x)]` 特性指定模块的加载顺序，为降序排列，数字越大越在前：
@@ -256,4 +266,3 @@ Apache License Version 2.0
 [nuget-Senparc.Xncf.Tenant.Interface]: https://www.nuget.org/packages/Senparc.Xncf.Tenant.Interface
 [badge-Senparc.Xncf.XncfModuleManager]: https://img.shields.io/nuget/v/Senparc.Xncf.XncfModuleManager.svg
 [nuget-Senparc.Xncf.XncfModuleManager]: https://www.nuget.org/packages/Senparc.Xncf.XncfModuleManager
-
