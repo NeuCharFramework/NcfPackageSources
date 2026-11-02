@@ -438,7 +438,7 @@
                             v-model="attachment.useVision" :disabled="!attachment.canUseVision || isSending"
                             title="仅本轮授权发送压缩图片给视觉模型，可能产生额外 Token。"
                             @@change="validatePendingVision(attachment)">视觉</el-checkbox>
-                        <button type="button" :disabled="isSending" title="从本轮移除（保留 Workspace 原文件）"
+                        <button type="button" :disabled="isSending || workspaceUploading" title="从本轮移除并删除 Workspace 文件"
                             @@click="removePendingAttachment(attachment)"><i class="el-icon-close"></i></button>
                     </div>
                 </div>

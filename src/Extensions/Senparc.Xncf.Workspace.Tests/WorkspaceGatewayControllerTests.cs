@@ -1,3 +1,8 @@
+/*----------------------------------------------------------------
+    修改标识：Senparc - 20261102
+    修改描述：适配 Workspace 流式存储契约
+----------------------------------------------------------------*/
+
 using System.Net;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
@@ -166,6 +171,12 @@ public sealed class WorkspaceGatewayControllerTests
         public Task<WorkspaceWriteFileResult> WriteFileBytesAsync(
             string workspaceId,
             WorkspaceWriteFileRequest request,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<WorkspaceWriteFileResult> WriteFileStreamAsync(
+            string workspaceId,
+            WorkspaceStreamWriteRequest request,
+            Stream content,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task CreateDirectoryAsync(

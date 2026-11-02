@@ -318,9 +318,50 @@
       }
     },
 
-    removePendingAttachment(attachment) {
+    async removePendingAttachment(attachment) {
+      if (this.currentSessionId) {
+        try {
+          const response = await service.post(
+            this.workspaceAssetsUrl('attachments/delete'),
+            { relativePath: attachment.relativePath, eTag: attachment.eTag },
+            { customAlert: true });
+          if (!response.data || response.data.deleted !== true) {
+            throw new Error('附件删除响应无效。');
+          }
+        } catch (error) {
+          await this.showWorkspaceAssetError(error);
+          return;
+        }
+      }
       if (attachment.localPreviewUrl) URL.revokeObjectURL(attachment.localPreviewUrl);
       this.pendingAttachments = this.pendingAttachments.filter(item => item !== attachment);
+    },
+
+    async deletePendingAttachments() {
+      const attachments = this.pendingAttachments.slice();
+      if (!attachments.length) return;
+
+      const failed = [];
+      for (const attachment of attachments) {
+        try {
+          if (this.currentSessionId) {
+            const response = await service.post(
+              this.workspaceAssetsUrl('attachments/delete'),
+              { relativePath: attachment.relativePath, eTag: attachment.eTag },
+              { customAlert: true });
+            if (!response.data || response.data.deleted !== true) throw new Error('附件删除响应无效。');
+          }
+          if (attachment.localPreviewUrl) URL.revokeObjectURL(attachment.localPreviewUrl);
+        } catch (error) {
+          console.error('清理待提交 Workspace 附件失败:', error);
+          failed.push(attachment);
+        }
+      }
+      this.pendingAttachments = failed;
+      if (failed.length) {
+        this.$message.warning('部分待提交附件未能自动清理，请在原会话中重试。');
+      }
+      this.workspaceUploadCapabilities = null;
     },
 
     clearPendingAttachments() {
@@ -1514,6 +1555,7 @@
       if (this.currentSessionId === sessionId) return;
 
       this.resetWorkspacePreview();
+      await this.deletePendingAttachments();
       this.clearPendingAttachments();
       this.currentSessionId = sessionId;
       this.currentSessionAiModelId = this.getSessionAiModelId(sessionId);
@@ -1535,6 +1577,7 @@
     async createNewSession() {
       if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再新建会话。'); return; }
       this.resetWorkspacePreview();
+      await this.deletePendingAttachments();
       this.clearPendingAttachments();
       this.launcherAiModelId = this.currentSessionAiModelId || this.launcherAiModelId || 0;
       this.currentSessionId = 0;

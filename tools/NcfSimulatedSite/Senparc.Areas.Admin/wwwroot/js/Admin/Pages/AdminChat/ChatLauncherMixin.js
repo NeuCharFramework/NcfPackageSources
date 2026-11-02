@@ -519,7 +519,8 @@ window.ChatLauncherMixin = {
     },
 
     async startChatSession() {
-      if (!this.chatInputText || this.chatInputText.trim().length === 0) {
+      if ((!this.chatInputText || this.chatInputText.trim().length === 0)
+        && (!this.pendingAttachments || this.pendingAttachments.length === 0)) {
         this.$message.warning(ncfT('AdminChat.InputRequired'));
         return;
       }
