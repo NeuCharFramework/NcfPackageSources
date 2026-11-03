@@ -78,94 +78,270 @@
   <data name="Parameter.Power.Cube.Help" xml:space="preserve">
     <value>对上述结果计算三次方</value>
   </data>
-  <data name="Frontend.001" xml:space="preserve"><value>+ 新增属性||+ 新增属性</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>+ 新增标签||+ 新增标签</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>上传文件||上传文件</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>上传时间||上传时间</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>个召回段落||个召回段落</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>了解更多关于检索方法。||了解更多关于检索方法。</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>保存||保存</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>倒排索引||倒排索引</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。||倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>关键词||关键词</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>关闭||关闭</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>内容||内容</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>内容类型||内容类型</value></data>
-  <data name="Frontend.014" xml:space="preserve"><value>删除||删除</value></data>
-  <data name="Frontend.015" xml:space="preserve"><value>取消||取消</value></data>
-  <data name="Frontend.016" xml:space="preserve"><value>召回测试||召回测试</value></data>
-  <data name="Frontend.017" xml:space="preserve"><value>召回率||召回率</value></data>
-  <data name="Frontend.018" xml:space="preserve"><value>名称||名称</value></data>
-  <data name="Frontend.019" xml:space="preserve"><value>向量化||向量化</value></data>
-  <data name="Frontend.020" xml:space="preserve"><value>向量化结果||向量化结果</value></data>
-  <data name="Frontend.021" xml:space="preserve"><value>向量化进度||向量化进度</value></data>
-  <data name="Frontend.022" xml:space="preserve"><value>字符||字符</value></data>
-  <data name="Frontend.023" xml:space="preserve"><value>属性名||属性名</value></data>
-  <data name="Frontend.024" xml:space="preserve"><value>属性管理||属性管理</value></data>
-  <data name="Frontend.025" xml:space="preserve"><value>已选择:||已选择:</value></data>
-  <data name="Frontend.026" xml:space="preserve"><value>当前选中 {0} 行||当前选中 {0} 行</value></data>
-  <data name="Frontend.027" xml:space="preserve"><value>打开||打开</value></data>
-  <data name="Frontend.028" xml:space="preserve"><value>扩展模块||扩展模块</value></data>
-  <data name="Frontend.029" xml:space="preserve"><value>批量删除||批量删除</value></data>
-  <data name="Frontend.030" xml:space="preserve"><value>搜索||搜索</value></data>
-  <data name="Frontend.031" xml:space="preserve"><value>操作||操作</value></data>
-  <data name="Frontend.032" xml:space="preserve"><value>数据源||数据源</value></data>
-  <data name="Frontend.033" xml:space="preserve"><value>文件列表||文件列表</value></data>
-  <data name="Frontend.034" xml:space="preserve"><value>文件名||文件名</value></data>
-  <data name="Frontend.035" xml:space="preserve"><value>文件名称||文件名称</value></data>
-  <data name="Frontend.036" xml:space="preserve"><value>文件大小||文件大小</value></data>
-  <data name="Frontend.037" xml:space="preserve"><value>新增||新增</value></data>
-  <data name="Frontend.038" xml:space="preserve"><value>新建文件||新建文件</value></data>
-  <data name="Frontend.039" xml:space="preserve"><value>时间↓||时间↓</value></data>
-  <data name="Frontend.040" xml:space="preserve"><value>暂无召回结果，请选择知识库、输入源文本并点击「测试」||暂无召回结果，请选择知识库、输入源文本并点击「测试」</value></data>
-  <data name="Frontend.041" xml:space="preserve"><value>查询||查询</value></data>
-  <data name="Frontend.042" xml:space="preserve"><value>查询内容||查询内容</value></data>
-  <data name="Frontend.043" xml:space="preserve"><value>标签名||标签名</value></data>
-  <data name="Frontend.044" xml:space="preserve"><value>标签管理||标签管理</value></data>
-  <data name="Frontend.045" xml:space="preserve"><value>根据给定的查询文本测试知识的召回效果。||根据给定的查询文本测试知识的召回效果。</value></data>
-  <data name="Frontend.046" xml:space="preserve"><value>检索方法||检索方法</value></data>
-  <data name="Frontend.047" xml:space="preserve"><value>检索设置||检索设置</value></data>
-  <data name="Frontend.048" xml:space="preserve"><value>段落详情||段落详情</value></data>
-  <data name="Frontend.049" xml:space="preserve"><value>测试||测试</value></data>
-  <data name="Frontend.050" xml:space="preserve"><value>添加时间||添加时间</value></data>
-  <data name="Frontend.051" xml:space="preserve"><value>源文本||源文本</value></data>
-  <data name="Frontend.052" xml:space="preserve"><value>知识库||知识库</value></data>
-  <data name="Frontend.053" xml:space="preserve"><value>知识库管理||知识库管理</value></data>
-  <data name="Frontend.054" xml:space="preserve"><value>知识库管理列表||知识库管理列表</value></data>
-  <data name="Frontend.055" xml:space="preserve"><value>知识库管理管理||知识库管理管理</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>确定||确定</value></data>
-  <data name="Frontend.057" xml:space="preserve"><value>确认||确认</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>确认删除此知识库管理吗？||确认删除此知识库管理吗？</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>筛选列||筛选列</value></data>
-  <data name="Frontend.060" xml:space="preserve"><value>编辑||编辑</value></data>
-  <data name="Frontend.061" xml:space="preserve"><value>记录||记录</value></data>
-  <data name="Frontend.062" xml:space="preserve"><value>请填写||请填写</value></data>
-  <data name="Frontend.063" xml:space="preserve"><value>请输入关键字||请输入关键字</value></data>
-  <data name="Frontend.064" xml:space="preserve"><value>请输入内容||请输入内容</value></data>
-  <data name="Frontend.065" xml:space="preserve"><value>请输入名称||请输入名称</value></data>
-  <data name="Frontend.066" xml:space="preserve"><value>请输入查询文本||请输入查询文本</value></data>
-  <data name="Frontend.067" xml:space="preserve"><value>请选择内容类型||请选择内容类型</value></data>
-  <data name="Frontend.068" xml:space="preserve"><value>输入关键字搜索并选择知识库||输入关键字搜索并选择知识库</value></data>
-  <data name="Frontend.069" xml:space="preserve"><value>选择Embedding模型||选择Embedding模型</value></data>
-  <data name="Frontend.070" xml:space="preserve"><value>选择向量数据库||选择向量数据库</value></data>
-  <data name="Frontend.071" xml:space="preserve"><value>选择对话模型||选择对话模型</value></data>
-  <data name="Frontend.072" xml:space="preserve"><value>选择文件||选择文件</value></data>
-  <data name="Frontend.073" xml:space="preserve"><value>选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联||选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联</value></data>
-  <data name="Frontend.074" xml:space="preserve"><value>配置||配置</value></data>
-  <data name="Frontend.075" xml:space="preserve"><value>重置||重置</value></data>
-  <data name="Frontend.076" xml:space="preserve"><value>获取列表失败||获取列表失败</value></data>
-  <data name="Frontend.077" xml:space="preserve"><value>添加成功||添加成功</value></data>
-  <data name="Frontend.078" xml:space="preserve"><value>添加失败||添加失败</value></data>
-  <data name="Frontend.079" xml:space="preserve"><value>编辑成功||编辑成功</value></data>
-  <data name="Frontend.080" xml:space="preserve"><value>编辑失败||编辑失败</value></data>
-  <data name="Frontend.081" xml:space="preserve"><value>删除成功||删除成功</value></data>
-  <data name="Frontend.082" xml:space="preserve"><value>删除失败||删除失败</value></data>
-  <data name="Frontend.083" xml:space="preserve"><value>上传成功||上传成功</value></data>
-  <data name="Frontend.084" xml:space="preserve"><value>上传失败||上传失败</value></data>
-  <data name="Frontend.085" xml:space="preserve"><value>向量化失败||向量化失败</value></data>
-  <data name="Frontend.086" xml:space="preserve"><value>加载失败||加载失败</value></data>
-  <data name="Frontend.087" xml:space="preserve"><value>暂无数据||暂无数据</value></data>
-  <data name="Frontend.088" xml:space="preserve"><value>提示||提示</value></data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>+ 新增属性||+ 新增属性</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>+ 新增标签||+ 新增标签</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>上传文件||上传文件</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>上传时间||上传时间</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>个召回段落||个召回段落</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>了解更多关于检索方法。||了解更多关于检索方法。</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>保存||保存</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>倒排索引||倒排索引</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。||倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>关键词||关键词</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>关闭||关闭</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>内容||内容</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>内容类型||内容类型</value>
+  </data>
+  <data name="Frontend.014" xml:space="preserve">
+    <value>删除||删除</value>
+  </data>
+  <data name="Frontend.015" xml:space="preserve">
+    <value>取消||取消</value>
+  </data>
+  <data name="Frontend.016" xml:space="preserve">
+    <value>召回测试||召回测试</value>
+  </data>
+  <data name="Frontend.017" xml:space="preserve">
+    <value>召回率||召回率</value>
+  </data>
+  <data name="Frontend.018" xml:space="preserve">
+    <value>名称||名称</value>
+  </data>
+  <data name="Frontend.019" xml:space="preserve">
+    <value>向量化||向量化</value>
+  </data>
+  <data name="Frontend.020" xml:space="preserve">
+    <value>向量化结果||向量化结果</value>
+  </data>
+  <data name="Frontend.021" xml:space="preserve">
+    <value>向量化进度||向量化进度</value>
+  </data>
+  <data name="Frontend.022" xml:space="preserve">
+    <value>字符||字符</value>
+  </data>
+  <data name="Frontend.023" xml:space="preserve">
+    <value>属性名||属性名</value>
+  </data>
+  <data name="Frontend.024" xml:space="preserve">
+    <value>属性管理||属性管理</value>
+  </data>
+  <data name="Frontend.025" xml:space="preserve">
+    <value>已选择:||已选择:</value>
+  </data>
+  <data name="Frontend.026" xml:space="preserve">
+    <value>当前选中 {0} 行||当前选中 {0} 行</value>
+  </data>
+  <data name="Frontend.027" xml:space="preserve">
+    <value>打开||打开</value>
+  </data>
+  <data name="Frontend.028" xml:space="preserve">
+    <value>扩展模块||扩展模块</value>
+  </data>
+  <data name="Frontend.029" xml:space="preserve">
+    <value>批量删除||批量删除</value>
+  </data>
+  <data name="Frontend.030" xml:space="preserve">
+    <value>搜索||搜索</value>
+  </data>
+  <data name="Frontend.031" xml:space="preserve">
+    <value>操作||操作</value>
+  </data>
+  <data name="Frontend.032" xml:space="preserve">
+    <value>数据源||数据源</value>
+  </data>
+  <data name="Frontend.033" xml:space="preserve">
+    <value>文件列表||文件列表</value>
+  </data>
+  <data name="Frontend.034" xml:space="preserve">
+    <value>文件名||文件名</value>
+  </data>
+  <data name="Frontend.035" xml:space="preserve">
+    <value>文件名称||文件名称</value>
+  </data>
+  <data name="Frontend.036" xml:space="preserve">
+    <value>文件大小||文件大小</value>
+  </data>
+  <data name="Frontend.037" xml:space="preserve">
+    <value>新增||新增</value>
+  </data>
+  <data name="Frontend.038" xml:space="preserve">
+    <value>新建文件||新建文件</value>
+  </data>
+  <data name="Frontend.039" xml:space="preserve">
+    <value>时间↓||时间↓</value>
+  </data>
+  <data name="Frontend.040" xml:space="preserve">
+    <value>暂无召回结果，请选择知识库、输入源文本并点击「测试」||暂无召回结果，请选择知识库、输入源文本并点击「测试」</value>
+  </data>
+  <data name="Frontend.041" xml:space="preserve">
+    <value>查询||查询</value>
+  </data>
+  <data name="Frontend.042" xml:space="preserve">
+    <value>查询内容||查询内容</value>
+  </data>
+  <data name="Frontend.043" xml:space="preserve">
+    <value>标签名||标签名</value>
+  </data>
+  <data name="Frontend.044" xml:space="preserve">
+    <value>标签管理||标签管理</value>
+  </data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>根据给定的查询文本测试知识的召回效果。||根据给定的查询文本测试知识的召回效果。</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>检索方法||检索方法</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>检索设置||检索设置</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>段落详情||段落详情</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>测试||测试</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>添加时间||添加时间</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>源文本||源文本</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>知识库||知识库</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>知识库管理||知识库管理</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>知识库管理列表||知识库管理列表</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>知识库管理管理||知识库管理管理</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>确定||确定</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>确认||确认</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>确认删除此知识库管理吗？||确认删除此知识库管理吗？</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>筛选列||筛选列</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>编辑||编辑</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>记录||记录</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>请填写||请填写</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>请输入关键字||请输入关键字</value>
+  </data>
+  <data name="Frontend.064" xml:space="preserve">
+    <value>请输入内容||请输入内容</value>
+  </data>
+  <data name="Frontend.065" xml:space="preserve">
+    <value>请输入名称||请输入名称</value>
+  </data>
+  <data name="Frontend.066" xml:space="preserve">
+    <value>请输入查询文本||请输入查询文本</value>
+  </data>
+  <data name="Frontend.067" xml:space="preserve">
+    <value>请选择内容类型||请选择内容类型</value>
+  </data>
+  <data name="Frontend.068" xml:space="preserve">
+    <value>输入关键字搜索并选择知识库||输入关键字搜索并选择知识库</value>
+  </data>
+  <data name="Frontend.069" xml:space="preserve">
+    <value>选择Embedding模型||选择Embedding模型</value>
+  </data>
+  <data name="Frontend.070" xml:space="preserve">
+    <value>选择向量数据库||选择向量数据库</value>
+  </data>
+  <data name="Frontend.071" xml:space="preserve">
+    <value>选择对话模型||选择对话模型</value>
+  </data>
+  <data name="Frontend.072" xml:space="preserve">
+    <value>选择文件||选择文件</value>
+  </data>
+  <data name="Frontend.073" xml:space="preserve">
+    <value>选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联||选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联</value>
+  </data>
+  <data name="Frontend.074" xml:space="preserve">
+    <value>配置||配置</value>
+  </data>
+  <data name="Frontend.075" xml:space="preserve">
+    <value>重置||重置</value>
+  </data>
+  <data name="Frontend.076" xml:space="preserve">
+    <value>获取列表失败||获取列表失败</value>
+  </data>
+  <data name="Frontend.077" xml:space="preserve">
+    <value>添加成功||添加成功</value>
+  </data>
+  <data name="Frontend.078" xml:space="preserve">
+    <value>添加失败||添加失败</value>
+  </data>
+  <data name="Frontend.079" xml:space="preserve">
+    <value>编辑成功||编辑成功</value>
+  </data>
+  <data name="Frontend.080" xml:space="preserve">
+    <value>编辑失败||编辑失败</value>
+  </data>
+  <data name="Frontend.081" xml:space="preserve">
+    <value>删除成功||删除成功</value>
+  </data>
+  <data name="Frontend.082" xml:space="preserve">
+    <value>删除失败||删除失败</value>
+  </data>
+  <data name="Frontend.083" xml:space="preserve">
+    <value>上传成功||上传成功</value>
+  </data>
+  <data name="Frontend.084" xml:space="preserve">
+    <value>上传失败||上传失败</value>
+  </data>
+  <data name="Frontend.085" xml:space="preserve">
+    <value>向量化失败||向量化失败</value>
+  </data>
+  <data name="Frontend.086" xml:space="preserve">
+    <value>加载失败||加载失败</value>
+  </data>
+  <data name="Frontend.087" xml:space="preserve">
+    <value>暂无数据||暂无数据</value>
+  </data>
+  <data name="Frontend.088" xml:space="preserve">
+    <value>提示||提示</value>
+  </data>
   <data name="Page.EditKnowledgeBase" xml:space="preserve">
     <value>编辑知识库</value>
   </data>
@@ -430,4 +606,5 @@
   <data name="Frontend.174" xml:space="preserve">
     <value>保存成功||保存成功</value>
   </data>
+
 </root>

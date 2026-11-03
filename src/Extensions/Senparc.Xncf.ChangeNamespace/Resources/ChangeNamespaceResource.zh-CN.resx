@@ -30,4 +30,5 @@
   <data name="Parameter.ChangeNamespace.CurrentNamespace" xml:space="preserve">
     <value>当前自定义命名空间||命名空间根通常以句点结尾，例如 [My.Namespace.]；最终将替换为 [Senparc.Ncf.] 或 [Senparc.]</value>
   </data>
+
 </root>

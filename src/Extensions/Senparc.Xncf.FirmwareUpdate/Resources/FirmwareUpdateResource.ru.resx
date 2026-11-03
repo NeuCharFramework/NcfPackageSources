@@ -18,18 +18,6 @@
   <data name="Module.FirmwareUpdate.Description" xml:space="preserve">
     <value>Синхронизирует пакеты NCF Host и NcfDesktop с GitHub в отдельные каталоги и манифесты host/desktop.</value>
   </data>
-  <data name="Function.FirmwareUpdate.Settings.Name" xml:space="preserve">
-    <value>Настройки зеркала</value>
-  </data>
-  <data name="Function.FirmwareUpdate.Settings.Description" xml:space="preserve">
-    <value>Включает синхронизацию NCF Host и NcfDesktop с GitHub и задаёт интервал проверки 1–24 часа</value>
-  </data>
-  <data name="Function.FirmwareUpdate.Sync.Name" xml:space="preserve">
-    <value>Синхронизировать сейчас</value>
-  </data>
-  <data name="Function.FirmwareUpdate.Sync.Description" xml:space="preserve">
-    <value>Получает последние Releases NCF Host и NcfDesktop и обновляет локальные пакеты и манифесты</value>
-  </data>
   <data name="Parameter.FirmwareUpdate.AutoMirror" xml:space="preserve">
     <value>Включить автоматическое зеркало||Синхронизировать NCF Host и NcfDesktop в ~/wwwroot/NcfPackages/host и desktop</value>
   </data>
@@ -42,4 +30,17 @@
   <data name="Parameter.FirmwareUpdate.Interval.Help" xml:space="preserve">
     <value>Проверять каждые {0} ч.</value>
   </data>
+  <data name="Function.FirmwareUpdate.Settings.Name" xml:space="preserve">
+    <value>Настройки зеркала</value>
+  </data>
+  <data name="Function.FirmwareUpdate.Settings.Description" xml:space="preserve">
+    <value>Включает синхронизацию NCF Host и NcfDesktop с GitHub и задаёт интервал проверки 1–24 часа</value>
+  </data>
+  <data name="Function.FirmwareUpdate.Sync.Name" xml:space="preserve">
+    <value>Синхронизировать сейчас</value>
+  </data>
+  <data name="Function.FirmwareUpdate.Sync.Description" xml:space="preserve">
+    <value>Получает последние Releases NCF Host и NcfDesktop и обновляет локальные пакеты и манифесты</value>
+  </data>
+
 </root>

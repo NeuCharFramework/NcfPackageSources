@@ -18,18 +18,6 @@
   <data name="Module.XncfBuilder.Description" xml:space="preserve">
     <value>快速生成 XNCF 模块基础代码和示例，并据此扩展应用</value>
   </data>
-  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve">
-    <value>Add-Migration 命令</value>
-  </data>
-  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve">
-    <value>以可视化方式为多个数据库执行 add-migration；过程可能需要 30–60 秒</value>
-  </data>
-  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve">
-    <value>生成 XNCF</value>
-  </data>
-  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
-    <value>根据配置生成 XNCF 模块</value>
-  </data>
   <data name="Function.XncfBuilder.Preview.Name" xml:space="preserve">
     <value>启动 / 更新 XNCF 独立预览</value>
   </data>
@@ -47,24 +35,6 @@
   </data>
   <data name="Function.XncfBuilder.StopPreview.Description" xml:space="preserve">
     <value>停止选中的预览进程并清理其临时发布目录</value>
-  </data>
-  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
-    <value>[AI] 生成数据库实体</value>
-  </data>
-  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve">
-    <value>生成符合 DDD 约束的数据库实体及其方法。仅在开发环境使用，并提前备份代码</value>
-  </data>
-  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve">
-    <value>生成 AppService 接口代码</value>
-  </data>
-  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve">
-    <value>为指定模块的 AppService 生成接口代码</value>
-  </data>
-  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve">
-    <value>初始化 Prompt</value>
-  </data>
-  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve">
-    <value>初始化 AI 代码生成所需的全部 Prompt</value>
   </data>
   <data name="Common.Yes" xml:space="preserve">
     <value>是</value>
@@ -387,29 +357,110 @@
   <data name="XncfBuilder.Preview.Monitor" xml:space="preserve">
     <value>XNCF 预览监控</value>
   </data>
-  <data name="XncfBuilder.Preview.Stage.Queued" xml:space="preserve"><value>排队中</value></data>
-  <data name="XncfBuilder.Preview.Stage.PreparingSource" xml:space="preserve"><value>锁定源码快照</value></data>
-  <data name="XncfBuilder.Preview.Stage.Validating" xml:space="preserve"><value>校验宿主引用</value></data>
-  <data name="XncfBuilder.Preview.Stage.Restoring" xml:space="preserve"><value>还原依赖</value></data>
-  <data name="XncfBuilder.Preview.Stage.Building" xml:space="preserve"><value>隔离构建</value></data>
-  <data name="XncfBuilder.Preview.Stage.Verifying" xml:space="preserve"><value>校验产物</value></data>
-  <data name="XncfBuilder.Preview.Stage.Starting" xml:space="preserve"><value>启动新预览</value></data>
-  <data name="XncfBuilder.Preview.Stage.HealthChecking" xml:space="preserve"><value>健康检查</value></data>
-  <data name="XncfBuilder.Preview.Stage.Replacing" xml:space="preserve"><value>原子替换</value></data>
-  <data name="XncfBuilder.Preview.Stage.Running" xml:space="preserve"><value>运行中</value></data>
-  <data name="XncfBuilder.Preview.Stage.Stopping" xml:space="preserve"><value>停止中</value></data>
-  <data name="XncfBuilder.Preview.Stage.Stopped" xml:space="preserve"><value>已停止</value></data>
-  <data name="XncfBuilder.Preview.Stage.Replaced" xml:space="preserve"><value>已替换</value></data>
-  <data name="XncfBuilder.Preview.Stage.Failed" xml:space="preserve"><value>失败</value></data>
-  <data name="XncfBuilder.Preview.Stage.Cancelled" xml:space="preserve"><value>已取消</value></data>
-  <data name="XncfBuilder.Preview.Stage.Interrupted" xml:space="preserve"><value>已中断</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.NotCreated" xml:space="preserve"><value>未创建</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Starting" xml:space="preserve"><value>启动中</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.HealthChecking" xml:space="preserve"><value>健康检查</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Healthy" xml:space="preserve"><value>健康</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Stopping" xml:space="preserve"><value>停止中</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Stopped" xml:space="preserve"><value>已停止</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Replaced" xml:space="preserve"><value>已替换</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Failed" xml:space="preserve"><value>失败</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Interrupted" xml:space="preserve"><value>已中断</value></data>
+  <data name="XncfBuilder.Preview.Stage.Queued" xml:space="preserve">
+    <value>排队中</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.PreparingSource" xml:space="preserve">
+    <value>锁定源码快照</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Validating" xml:space="preserve">
+    <value>校验宿主引用</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Restoring" xml:space="preserve">
+    <value>还原依赖</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Building" xml:space="preserve">
+    <value>隔离构建</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Verifying" xml:space="preserve">
+    <value>校验产物</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Starting" xml:space="preserve">
+    <value>启动新预览</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.HealthChecking" xml:space="preserve">
+    <value>健康检查</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Replacing" xml:space="preserve">
+    <value>原子替换</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Running" xml:space="preserve">
+    <value>运行中</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Stopping" xml:space="preserve">
+    <value>停止中</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Stopped" xml:space="preserve">
+    <value>已停止</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Replaced" xml:space="preserve">
+    <value>已替换</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Failed" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Cancelled" xml:space="preserve">
+    <value>已取消</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Interrupted" xml:space="preserve">
+    <value>已中断</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.NotCreated" xml:space="preserve">
+    <value>未创建</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Starting" xml:space="preserve">
+    <value>启动中</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.HealthChecking" xml:space="preserve">
+    <value>健康检查</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Healthy" xml:space="preserve">
+    <value>健康</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Stopping" xml:space="preserve">
+    <value>停止中</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Stopped" xml:space="preserve">
+    <value>已停止</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Replaced" xml:space="preserve">
+    <value>已替换</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Failed" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Interrupted" xml:space="preserve">
+    <value>已中断</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve">
+    <value>Add-Migration 命令</value>
+  </data>
+  <data name="Function.XncfBuilder.AddMigration.Description" xml:space="preserve">
+    <value>以可视化方式为多个数据库执行 add-migration；过程可能需要 30–60 秒</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Name" xml:space="preserve">
+    <value>生成 XNCF</value>
+  </data>
+  <data name="Function.XncfBuilder.Generate.Description" xml:space="preserve">
+    <value>根据配置生成 XNCF 模块</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Name" xml:space="preserve">
+    <value>[AI] 生成数据库实体</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateEntity.Description" xml:space="preserve">
+    <value>生成符合 DDD 约束的数据库实体及其方法。仅在开发环境使用，并提前备份代码</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Name" xml:space="preserve">
+    <value>生成 AppService 接口代码</value>
+  </data>
+  <data name="Function.XncfBuilder.GenerateInterface.Description" xml:space="preserve">
+    <value>为指定模块的 AppService 生成接口代码</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Name" xml:space="preserve">
+    <value>初始化 Prompt</value>
+  </data>
+  <data name="Function.XncfBuilder.InitPrompt.Description" xml:space="preserve">
+    <value>初始化 AI 代码生成所需的全部 Prompt</value>
+  </data>
+
 </root>

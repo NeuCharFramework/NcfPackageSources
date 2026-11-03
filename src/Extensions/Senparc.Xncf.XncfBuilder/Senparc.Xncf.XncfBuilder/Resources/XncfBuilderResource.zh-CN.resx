@@ -357,29 +357,80 @@
   <data name="XncfBuilder.Preview.Monitor" xml:space="preserve">
     <value>XNCF 预览监控</value>
   </data>
-  <data name="XncfBuilder.Preview.Stage.Queued" xml:space="preserve"><value>排队中</value></data>
-  <data name="XncfBuilder.Preview.Stage.PreparingSource" xml:space="preserve"><value>锁定源码快照</value></data>
-  <data name="XncfBuilder.Preview.Stage.Validating" xml:space="preserve"><value>校验宿主引用</value></data>
-  <data name="XncfBuilder.Preview.Stage.Restoring" xml:space="preserve"><value>还原依赖</value></data>
-  <data name="XncfBuilder.Preview.Stage.Building" xml:space="preserve"><value>隔离构建</value></data>
-  <data name="XncfBuilder.Preview.Stage.Verifying" xml:space="preserve"><value>校验产物</value></data>
-  <data name="XncfBuilder.Preview.Stage.Starting" xml:space="preserve"><value>启动新预览</value></data>
-  <data name="XncfBuilder.Preview.Stage.HealthChecking" xml:space="preserve"><value>健康检查</value></data>
-  <data name="XncfBuilder.Preview.Stage.Replacing" xml:space="preserve"><value>原子替换</value></data>
-  <data name="XncfBuilder.Preview.Stage.Running" xml:space="preserve"><value>运行中</value></data>
-  <data name="XncfBuilder.Preview.Stage.Stopping" xml:space="preserve"><value>停止中</value></data>
-  <data name="XncfBuilder.Preview.Stage.Stopped" xml:space="preserve"><value>已停止</value></data>
-  <data name="XncfBuilder.Preview.Stage.Replaced" xml:space="preserve"><value>已替换</value></data>
-  <data name="XncfBuilder.Preview.Stage.Failed" xml:space="preserve"><value>失败</value></data>
-  <data name="XncfBuilder.Preview.Stage.Cancelled" xml:space="preserve"><value>已取消</value></data>
-  <data name="XncfBuilder.Preview.Stage.Interrupted" xml:space="preserve"><value>已中断</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.NotCreated" xml:space="preserve"><value>未创建</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Starting" xml:space="preserve"><value>启动中</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.HealthChecking" xml:space="preserve"><value>健康检查</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Healthy" xml:space="preserve"><value>健康</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Stopping" xml:space="preserve"><value>停止中</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Stopped" xml:space="preserve"><value>已停止</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Replaced" xml:space="preserve"><value>已替换</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Failed" xml:space="preserve"><value>失败</value></data>
-  <data name="XncfBuilder.Preview.HostStatus.Interrupted" xml:space="preserve"><value>已中断</value></data>
+  <data name="XncfBuilder.Preview.Stage.Queued" xml:space="preserve">
+    <value>排队中</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.PreparingSource" xml:space="preserve">
+    <value>锁定源码快照</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Validating" xml:space="preserve">
+    <value>校验宿主引用</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Restoring" xml:space="preserve">
+    <value>还原依赖</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Building" xml:space="preserve">
+    <value>隔离构建</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Verifying" xml:space="preserve">
+    <value>校验产物</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Starting" xml:space="preserve">
+    <value>启动新预览</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.HealthChecking" xml:space="preserve">
+    <value>健康检查</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Replacing" xml:space="preserve">
+    <value>原子替换</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Running" xml:space="preserve">
+    <value>运行中</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Stopping" xml:space="preserve">
+    <value>停止中</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Stopped" xml:space="preserve">
+    <value>已停止</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Replaced" xml:space="preserve">
+    <value>已替换</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Failed" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Cancelled" xml:space="preserve">
+    <value>已取消</value>
+  </data>
+  <data name="XncfBuilder.Preview.Stage.Interrupted" xml:space="preserve">
+    <value>已中断</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.NotCreated" xml:space="preserve">
+    <value>未创建</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Starting" xml:space="preserve">
+    <value>启动中</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.HealthChecking" xml:space="preserve">
+    <value>健康检查</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Healthy" xml:space="preserve">
+    <value>健康</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Stopping" xml:space="preserve">
+    <value>停止中</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Stopped" xml:space="preserve">
+    <value>已停止</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Replaced" xml:space="preserve">
+    <value>已替换</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Failed" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="XncfBuilder.Preview.HostStatus.Interrupted" xml:space="preserve">
+    <value>已中断</value>
+  </data>
+
 </root>

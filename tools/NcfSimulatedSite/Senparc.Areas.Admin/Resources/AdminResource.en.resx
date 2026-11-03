@@ -1,14 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Waiting for further content or confirmation to save. No Memory changes were saved this turn.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>No present intent to update long-term Memory was identified. Nothing was saved this turn.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Candidates from earlier messages are ready but not saved. Review and save each entry; assistant statements may be inaccurate.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>The recent context did not identify what to remember. Send “Remember: …” with the complete fact in one message; check this turn's PromptCode if needed.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>You have reviewed and saved this batch of candidates.</value></data>
-  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Review candidate</value></data>
-  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>This candidate comes from earlier messages and is not saved. Check its content and scope, then Save entry; deletion candidates require Delete and confirmation. AI cannot rewrite pinned manual entries.</value></data>
-  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Finish the current draft and close settings before reviewing a candidate.</value></data>
-  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Source excerpt (unverified)</value></data>
+
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
   <data name="AdminChat.Memory.Subtitle" xml:space="preserve"><value>Manage lasting preferences for more personal conversations</value></data>
   <data name="AdminChat.Memory.Private" xml:space="preserve"><value>Private memory</value></data>
   <data name="AdminChat.Memory.SaveChanges" xml:space="preserve"><value>Save changes</value></data>
@@ -84,45 +115,6 @@
   <data name="AdminChat.Memory.Saved" xml:space="preserve"><value>Saved.</value></data>
   <data name="AdminChat.Memory.Failed" xml:space="preserve"><value>Memory operation failed. Reload before retrying.</value></data>
   <data name="AdminChat.Memory.UpdateWarning" xml:space="preserve"><value>Memory was not updated this turn; existing memories were retained. Check PromptRange or reopen Memory settings.</value></data>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
   <data name="Admin.Title" xml:space="preserve">
     <value>NCF Admin Panel</value>
   </data>
@@ -198,11 +190,11 @@
   <data name="Admin.Login.Error.PasswordRequired" xml:space="preserve">
     <value>Password is required</value>
   </data>
-  <data name="Admin.Login.Error.InvalidCredentials" xml:space="preserve">
-    <value>Invalid username or password.</value>
-  </data>
   <data name="Admin.Language.SelectLanguage" xml:space="preserve">
     <value>Select Language</value>
+  </data>
+  <data name="Admin.Login.Error.InvalidCredentials" xml:space="preserve">
+    <value>Invalid username or password.</value>
   </data>
   <data name="Common.系统管理" xml:space="preserve"><value>System Management</value></data>
   <data name="Common.增加" xml:space="preserve"><value>Add</value></data>
@@ -256,6 +248,7 @@
   <data name="Tenant.KeyExists" xml:space="preserve"><value>Tenant matching rule {0} already exists</value></data>
   <data name="Tenant.SaveSuccess.Edit" xml:space="preserve"><value>Tenant updated successfully</value></data>
   <data name="Tenant.SaveSuccess.Create" xml:space="preserve"><value>Tenant created successfully</value></data>
+  <data name="Tenant.PlatformAdminOnly" xml:space="preserve"><value>In multi-tenant mode, only the platform administrator can manage tenant information!</value></data>
   <data name="Tenant.NotFound" xml:space="preserve"><value>Tenant not found</value></data>
   <data name="Tenant.SetInfoFailed" xml:space="preserve"><value>Failed to set tenant information</value></data>
   <data name="Tenant.InitializeSuccess" xml:space="preserve"><value>Initialization completed successfully</value></data>
@@ -409,7 +402,6 @@
   <data name="AdminChat.SendHint" xml:space="preserve"><value>Press Ctrl + Enter or Cmd + Enter to send</value></data>
   <data name="AdminChat.Send" xml:space="preserve"><value>Send</value></data>
   <data name="AdminChat.Thinking" xml:space="preserve"><value>Thinking...</value></data>
-
   <data name="AdminChat.ModeSimple" xml:space="preserve"><value>Chat</value></data>
   <data name="AdminChat.ModeHarness" xml:space="preserve"><value>Harness</value></data>
   <data name="AdminChat.HarnessSteps" xml:space="preserve"><value>Harness Steps</value></data>
@@ -664,6 +656,114 @@
   <data name="AdminChat.NoMenuOrFunctions" xml:space="preserve"><value>This module has no available menus or functions.</value></data>
   <data name="AdminChat.NoMatchingModules" xml:space="preserve"><value>No matching modules</value></data>
   <data name="AdminChat.ConfirmAdd" xml:space="preserve"><value>Confirm add</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>扩展模块||扩展模块</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>首页||首页</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>数据库操作示例||数据库操作示例</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>新增||新增</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>添加||添加</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>编辑||编辑</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>删除||删除</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>取消||取消</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>确定||确定</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>确认||确认</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>保存||保存</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>关闭||关闭</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>返回||返回</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>搜索||搜索</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>查询||查询</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>重置||重置</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>刷新||刷新</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>操作||操作</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>名称||名称</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>类型||类型</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>状态||状态</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>备注||备注</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>说明||说明</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>详情||详情</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>配置||配置</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>管理||管理</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>列表||列表</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>上传||上传</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>下载||下载</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>导入||导入</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>导出||导出</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>启用||启用</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>停用||停用</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>全部||全部</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>暂无数据||暂无数据</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>暂无内容||暂无内容</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>请选择||请选择</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>请填写||请填写</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>请输入||请输入</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>添加时间||添加时间</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>开始时间||开始时间</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>结束时间||结束时间</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>创建时间||创建时间</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>更新时间||更新时间</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>文件名||文件名</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>文件大小||文件大小</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>上传时间||上传时间</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>批量删除||批量删除</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>新增文件||新增文件</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>选择文件||选择文件</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>上一页||上一页</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>下一页||下一页</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>成功||成功</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>失败||失败</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>操作成功||操作成功</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>操作失败||操作失败</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>加载失败||加载失败</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>添加成功||添加成功</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>添加失败||添加失败</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>编辑成功||编辑成功</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>编辑失败||编辑失败</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>删除成功||删除成功</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>删除失败||删除失败</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>上传成功||上传成功</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>上传失败||上传失败</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>复制成功||复制成功</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>复制失败||复制失败</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>提示||提示</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>警告||警告</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>错误||错误</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>是||是</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>否||否</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>开启||开启</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>未知||未知</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>未设置||未设置</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>暂无记录||暂无记录</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>请输入关键字||请输入关键字</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>选择类型||选择类型</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>选择状态||选择状态</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>创建||创建</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>提交||提交</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>查看||查看</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>设为默认||设为默认</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>测试||测试</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>连接成功||连接成功</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>连接失败||连接失败</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>密码为必填项！||密码为必填项！</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>{0} 重复||{0} 重复</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>管理员不能删除自己！||管理员不能删除自己！</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>管理员不存在！||管理员不存在！</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>删除成功！||删除成功！</value></data>
+  <data name="Frontend.092" xml:space="preserve"><value>微信日志文件不存在：||微信日志文件不存在：</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>{0} 必须大于 16 位！||{0} 必须大于 16 位！</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>当前会话没有关联任何 XNCF 模块。||当前会话没有关联任何 XNCF 模块。</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>未找到匹配的模块：&quot;{0}&quot;。请先调用 GetSessionModuleList 确认当前会话中的模块列表。||未找到匹配的模块：&quot;{0}&quot;。请先调用 GetSessionModuleList 确认当前会话中的模块列表。</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>未找到模块：&quot;{0}&quot;。请先调用 GetSessionModuleList 确认可用模块。||未找到模块：&quot;{0}&quot;。请先调用 GetSessionModuleList 确认可用模块。</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>模块 {0} 的运行时注册未找到，无法读取数据库信息。||模块 {0} 的运行时注册未找到，无法读取数据库信息。</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>系统中没有已注册的模块。||系统中没有已注册的模块。</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>未读取到 SenparcAiSetting，请检查 appsettings.json 配置。||未读取到 SenparcAiSetting，请检查 appsettings.json 配置。</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>SenparcAiSetting.AiPlatform 仍为 UnSet，请先在 appsettings.json 中设置可用平台。||SenparcAiSetting.AiPlatform 仍为 UnSet，请先在 appsettings.json 中设置可用平台。</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>当前系统未安装或未启用 AIKernel 模块，无法切换到指定 AI 模型。||当前系统未安装或未启用 AIKernel 模块，无法切换到指定 AI 模型。</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>未能解析 AIModelService，无法加载指定 AI 模型。||未能解析 AIModelService，无法加载指定 AI 模型。</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>当前选择的 AI 模型不存在：{0}||当前选择的 AI 模型不存在：{0}</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>当前选择的 AI 模型不是 Chat 类型：{0}||当前选择的 AI 模型不是 Chat 类型：{0}</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>当前用户未登录，无法续期。||当前用户未登录，无法续期。</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>用户信息不存在！||用户信息不存在！</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>用户名不存在或密码不正确：{0}！||用户名不存在或密码不正确：{0}！</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>用户名不存在或密码不正确！||用户名不存在或密码不正确！</value></data>
   <data name="Admin.Home.AgentsOverview" xml:space="preserve"><value>Agents operations overview</value></data>
   <data name="Admin.Home.AgentsOverviewLive" xml:space="preserve"><value>Live</value></data>
   <data name="Admin.Home.AgentsManage" xml:space="preserve"><value>Manage Agents</value></data>
@@ -700,6 +800,15 @@
     <value>No sortable menus or pages</value>
   </data>
   <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>WebHook Settings</value></data>
+  <data name="DocHelp.Help" xml:space="preserve"><value>Help</value></data>
+  <data name="DocHelp.Title" xml:space="preserve"><value>Feature documentation</value></data>
+  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>Open in new window</value></data>
+  <data name="DocHelp.Close" xml:space="preserve"><value>Close</value></data>
+  <data name="DocHelp.Loading" xml:space="preserve"><value>Loading documentation...</value></data>
+  <data name="DocHelp.Notice" xml:space="preserve"><value>If the document is blank or blocked, open it in a new window.</value></data>
+  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>Document loading failed or timed out. Retry or open in a new window.</value></data>
+  <data name="DocHelp.Retry" xml:space="preserve"><value>Retry</value></data>
+  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>The documentation index is invalid. Please contact your administrator.</value></data>
   <data name="AdminChat.UserStats" xml:space="preserve"><value>Usage Stats</value></data>
   <data name="AdminChat.UserStatsTitle" xml:space="preserve"><value>User Usage Statistics (AdminChat)</value></data>
   <data name="AdminChat.UserStatsTip" xml:space="preserve"><value>Only the per-account session/message counts are shown. No session or message content is exposed.</value></data>
@@ -717,7 +826,6 @@
   <data name="Tenant.DeleteLastTenantNotAllowed" xml:space="preserve"><value>The system must keep at least one enabled tenant; the last tenant cannot be deleted!</value></data>
   <data name="Tenant.DeleteHasAdminUsers" xml:space="preserve"><value>Tenant {0} still has {1} admin account(s). Reassign or delete them before deleting the tenant!</value></data>
   <data name="Tenant.DeleteNotFound" xml:space="preserve"><value>Tenant not found!</value></data>
-  <data name="Tenant.PlatformAdminOnly" xml:space="preserve"><value>In multi-tenant mode, only the platform administrator can manage tenant information!</value></data>
   <data name="PromptSelector.Title" xml:space="preserve"><value>PromptRange · Select a prompt</value></data>
   <data name="PromptSelector.Range" xml:space="preserve"><value>All ranges</value></data>
   <data name="PromptSelector.Tactic" xml:space="preserve"><value>All lanes</value></data>
@@ -737,20 +845,21 @@
   <data name="PromptSelector.TargetChanged" xml:space="preserve"><value>The input changed or is no longer editable. Close the picker and select again.</value></data>
   <data name="PromptSelector.TooLong" xml:space="preserve"><value>The inserted content would exceed the input length limit. Shorten it first.</value></data>
   <data name="PromptSelector.Sort" xml:space="preserve"><value>Sort by</value></data>
-  <data name="PromptSelector.SortScore" xml:space="preserve"><value>Score (current, high to low)</value></data>
+  <data name="PromptSelector.SortScore" xml:space="preserve"><value>Score (average, high to low)</value></data>
   <data name="PromptSelector.SortPromptCode" xml:space="preserve"><value>PromptCode (ascending)</value></data>
   <data name="PromptSelector.AverageScore" xml:space="preserve"><value>Average score</value></data>
   <data name="PromptSelector.MaxScore" xml:space="preserve"><value>Highest score</value></data>
   <data name="PromptSelector.Unrated" xml:space="preserve"><value>Not rated</value></data>
-  <data name="DocHelp.Help" xml:space="preserve"><value>Help</value></data>
-  <data name="DocHelp.Title" xml:space="preserve"><value>Feature documentation</value></data>
-  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>Open in new window</value></data>
-  <data name="DocHelp.Close" xml:space="preserve"><value>Close</value></data>
-  <data name="DocHelp.Loading" xml:space="preserve"><value>Loading documentation...</value></data>
-  <data name="DocHelp.Notice" xml:space="preserve"><value>If the document is blank or blocked, open it in a new window.</value></data>
-  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>Document loading failed or timed out. Retry or open in a new window.</value></data>
-  <data name="DocHelp.Retry" xml:space="preserve"><value>Retry</value></data>
-  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>The documentation index is invalid. Please contact your administrator.</value></data>
+
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Waiting for further content or confirmation to save. No Memory changes were saved this turn.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>No present intent to update long-term Memory was identified. Nothing was saved this turn.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Candidates from earlier messages are ready but not saved. Review and save each entry; assistant statements may be inaccurate.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>The recent context did not identify what to remember. Send “Remember: …” with the complete fact in one message; check this turn's PromptCode if needed.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>You have reviewed and saved this batch of candidates.</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Review candidate</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>This candidate comes from earlier messages and is not saved. Check its content and scope, then Save entry; deletion candidates require Delete and confirmation. AI cannot rewrite pinned manual entries.</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Finish the current draft and close settings before reviewing a candidate.</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Source excerpt (unverified)</value></data>
   <data name="PromptSelector.CurrentScore" xml:space="preserve"><value>Current score</value></data>
   <data name="PromptReference.Score" xml:space="preserve"><value>Rate (0–10)</value></data>
   <data name="PromptReference.View" xml:space="preserve"><value>View prompt</value></data>

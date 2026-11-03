@@ -164,6 +164,19 @@
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Token output speed</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>User satisfaction</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>Total messages</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>当前实体已删除或不存在!||当前实体已删除或不存在!</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>错误：当前系统未配置 NeuChar 开发者账号，请到【系统管理】模块，设置页面，使用【更新 NeuChar 云账户信息】绑定 NeuChar 开发者账号！||错误：当前系统未配置 NeuChar 开发者账号，请到【系统管理】模块，设置页面，使用【更新 NeuChar 云账户信息】绑定 NeuChar 开发者账号！</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>AppKey 或 AppSecret 错误！请重新设置！||AppKey 或 AppSecret 错误！请重新设置！</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>所提供和 DeveloperId 和系统配置的 AppKey 不一致，请检查或更新后重试！||所提供和 DeveloperId 和系统配置的 AppKey 不一致，请检查或更新后重试！</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>更新成功！||更新成功！</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>未查询到实体!||未查询到实体!</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>尚未支持：{0} 模型在 BuildSenparcAiSetting 中的处理||尚未支持：{0} 模型在 BuildSenparcAiSetting 中的处理</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel 暂时不支持 {0} 类型||Senparc.Xncf.AIKernel 暂时不支持 {0} 类型</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting 不能为空||SenparcAiSetting 不能为空</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>模型数据不存在，请检查是否已部署，或是否具备权限！||模型数据不存在，请检查是否已部署，或是否具备权限！</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>已成功添加 {0} 个模型，更新 {1} 个模型信息。||已成功添加 {0} 个模型，更新 {1} 个模型信息。</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>PromptRange 暂时不支持 {0} 类型||PromptRange 暂时不支持 {0} 类型</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>必须至少设置一个 Chat 类型的模型才能自动打分（在 AIKernel 模块中）||必须至少设置一个 Chat 类型的模型才能自动打分（在 AIKernel 模块中）</value></data>
   <data name="Area.AIKernel.TokenMonitor" xml:space="preserve">
     <value>Token Monitor</value>
   </data>
@@ -851,4 +864,5 @@
   <data name="FineTuning.TokensUnit" xml:space="preserve"><value>tokens</value></data>
   <data name="FineTuning.TokensPerSampleUnit" xml:space="preserve"><value>tokens/sample</value></data>
   <data name="FineTuning.TruncatedSamples" xml:space="preserve"><value>Truncated</value></data>
+
 </root>

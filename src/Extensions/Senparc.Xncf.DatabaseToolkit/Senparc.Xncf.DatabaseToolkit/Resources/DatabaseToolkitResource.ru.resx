@@ -18,78 +18,6 @@
   <data name="Module.DatabaseToolkit.Description" xml:space="preserve">
     <value>Инструменты работы с базой данных. Изменения могут повредить данные; изучите функции и создайте резервную копию.</value>
   </data>
-  <data name="Function.Database.AgentPrompt.Name" xml:space="preserve">
-    <value>Получить системный промпт AI Agent</value>
-  </data>
-  <data name="Function.Database.AgentPrompt.Description" xml:space="preserve">
-    <value>Получает системный промпт и роль, настроенные для AI Agent</value>
-  </data>
-  <data name="Function.Database.Backup.Name" xml:space="preserve">
-    <value>Создать резервную копию базы</value>
-  </data>
-  <data name="Function.Database.Backup.Description" xml:space="preserve">
-    <value>Сохраняет текущую базу по пути, недоступному публично</value>
-  </data>
-  <data name="Function.Database.CheckBackup.Name" xml:space="preserve">
-    <value>Проверить автоматическое резервирование</value>
-  </data>
-  <data name="Function.Database.CheckBackup.Description" xml:space="preserve">
-    <value>Проверяет, что интервал резервирования задан и больше нуля</value>
-  </data>
-  <data name="Function.Database.CheckUpdate.Name" xml:space="preserve">
-    <value>Проверить обновления базы</value>
-  </data>
-  <data name="Function.Database.CheckUpdate.Description" xml:space="preserve">
-    <value>Находит неприменённые миграции EF Core; при наличии запустите Merge EF Core</value>
-  </data>
-  <data name="Function.Database.ConfigTypes.Name" xml:space="preserve">
-    <value>Показать типы конфигурации базы</value>
-  </data>
-  <data name="Function.Database.ConfigTypes.Description" xml:space="preserve">
-    <value>Показывает типы, реализующие IDatabaseConfiguration</value>
-  </data>
-  <data name="Function.Database.ExportSql.Name" xml:space="preserve">
-    <value>Экспортировать SQL текущей базы</value>
-  </data>
-  <data name="Function.Database.ExportSql.Description" xml:space="preserve">
-    <value>Экспортирует SQL всех таблиц текущего сайта</value>
-  </data>
-  <data name="Function.Database.Merge.Name" xml:space="preserve">
-    <value>Merge EF Core</value>
-  </data>
-  <data name="Function.Database.Merge.Description" xml:space="preserve">
-    <value>Обновляет базу через EF Core Code First до текущей версии приложения</value>
-  </data>
-  <data name="Function.Database.QueryRecords.Name" xml:space="preserve">
-    <value>Запросить записи базы</value>
-  </data>
-  <data name="Function.Database.QueryRecords.Description" xml:space="preserve">
-    <value>Запрашивает таблицу с фильтрацией условий и выбором полей</value>
-  </data>
-  <data name="Function.Database.QueryTemplates.Name" xml:space="preserve">
-    <value>Получить шаблоны запросов</value>
-  </data>
-  <data name="Function.Database.QueryTemplates.Description" xml:space="preserve">
-    <value>Возвращает готовые шаблоны и примеры запросов</value>
-  </data>
-  <data name="Function.Database.Schema.Name" xml:space="preserve">
-    <value>Запросить схему базы</value>
-  </data>
-  <data name="Function.Database.Schema.Description" xml:space="preserve">
-    <value>Запрашивает доступные модули, таблицы и поля</value>
-  </data>
-  <data name="Function.Database.Settings.Name" xml:space="preserve">
-    <value>Настроить параметры базы</value>
-  </data>
-  <data name="Function.Database.Settings.Description" xml:space="preserve">
-    <value>Задаёт интервалы и пути резервного копирования</value>
-  </data>
-  <data name="Function.Database.Statistics.Name" xml:space="preserve">
-    <value>Получить статистику базы</value>
-  </data>
-  <data name="Function.Database.Statistics.Description" xml:space="preserve">
-    <value>Возвращает число строк, размер данных и другую статистику</value>
-  </data>
   <data name="Parameter.DatabaseBackup.Path" xml:space="preserve">
     <value>Путь||Локальный физический путь с именем файла, например E:\Senparc\Database-Backup\NCF.bak; предоставьте веб-процессу доступ</value>
   </data>
@@ -222,4 +150,77 @@
   <data name="Parameter.Database.Config.Path" xml:space="preserve">
     <value>Путь резервной копии||Локальный физический путь, например: E:\Senparc\Ncf\NCF.bak</value>
   </data>
+  <data name="Function.Database.AgentPrompt.Name" xml:space="preserve">
+    <value>Получить системный промпт AI Agent</value>
+  </data>
+  <data name="Function.Database.AgentPrompt.Description" xml:space="preserve">
+    <value>Получает системный промпт и роль, настроенные для AI Agent</value>
+  </data>
+  <data name="Function.Database.Backup.Name" xml:space="preserve">
+    <value>Создать резервную копию базы</value>
+  </data>
+  <data name="Function.Database.Backup.Description" xml:space="preserve">
+    <value>Сохраняет текущую базу по пути, недоступному публично</value>
+  </data>
+  <data name="Function.Database.CheckBackup.Name" xml:space="preserve">
+    <value>Проверить автоматическое резервирование</value>
+  </data>
+  <data name="Function.Database.CheckBackup.Description" xml:space="preserve">
+    <value>Проверяет, что интервал резервирования задан и больше нуля</value>
+  </data>
+  <data name="Function.Database.CheckUpdate.Name" xml:space="preserve">
+    <value>Проверить обновления базы</value>
+  </data>
+  <data name="Function.Database.CheckUpdate.Description" xml:space="preserve">
+    <value>Находит неприменённые миграции EF Core; при наличии запустите Merge EF Core</value>
+  </data>
+  <data name="Function.Database.ConfigTypes.Name" xml:space="preserve">
+    <value>Показать типы конфигурации базы</value>
+  </data>
+  <data name="Function.Database.ConfigTypes.Description" xml:space="preserve">
+    <value>Показывает типы, реализующие IDatabaseConfiguration</value>
+  </data>
+  <data name="Function.Database.ExportSql.Name" xml:space="preserve">
+    <value>Экспортировать SQL текущей базы</value>
+  </data>
+  <data name="Function.Database.ExportSql.Description" xml:space="preserve">
+    <value>Экспортирует SQL всех таблиц текущего сайта</value>
+  </data>
+  <data name="Function.Database.Merge.Name" xml:space="preserve">
+    <value>Merge EF Core</value>
+  </data>
+  <data name="Function.Database.Merge.Description" xml:space="preserve">
+    <value>Обновляет базу через EF Core Code First до текущей версии приложения</value>
+  </data>
+  <data name="Function.Database.QueryRecords.Name" xml:space="preserve">
+    <value>Запросить записи базы</value>
+  </data>
+  <data name="Function.Database.QueryRecords.Description" xml:space="preserve">
+    <value>Запрашивает таблицу с фильтрацией условий и выбором полей</value>
+  </data>
+  <data name="Function.Database.QueryTemplates.Name" xml:space="preserve">
+    <value>Получить шаблоны запросов</value>
+  </data>
+  <data name="Function.Database.QueryTemplates.Description" xml:space="preserve">
+    <value>Возвращает готовые шаблоны и примеры запросов</value>
+  </data>
+  <data name="Function.Database.Schema.Name" xml:space="preserve">
+    <value>Запросить схему базы</value>
+  </data>
+  <data name="Function.Database.Schema.Description" xml:space="preserve">
+    <value>Запрашивает доступные модули, таблицы и поля</value>
+  </data>
+  <data name="Function.Database.Settings.Name" xml:space="preserve">
+    <value>Настроить параметры базы</value>
+  </data>
+  <data name="Function.Database.Settings.Description" xml:space="preserve">
+    <value>Задаёт интервалы и пути резервного копирования</value>
+  </data>
+  <data name="Function.Database.Statistics.Name" xml:space="preserve">
+    <value>Получить статистику базы</value>
+  </data>
+  <data name="Function.Database.Statistics.Description" xml:space="preserve">
+    <value>Возвращает число строк, размер данных и другую статистику</value>
+  </data>
+
 </root>

@@ -18,4 +18,5 @@
   <data name="Module.SystemCore.Description" xml:space="preserve">
     <value>Módulo central para estructuras y datos de ejecución. No lo elimine y haga una copia antes de modificar.</value>
   </data>
+
 </root>

@@ -18,6 +18,12 @@
   <data name="Module.XncfModuleManager.Description" xml:space="preserve">
     <value>Основной компонент установки, обновления и управления модулями XNCF</value>
   </data>
+  <data name="Parameter.XncfManager.ShowFunctions.Module" xml:space="preserve">
+    <value>Модуль XNCF||Показать состояние функций указанного модуля</value>
+  </data>
+  <data name="Parameter.XncfManager.Install.Module" xml:space="preserve">
+    <value>Модуль XNCF||Выберите модуль для установки и включения</value>
+  </data>
   <data name="Function.XncfManager.GetAllModules.Name" xml:space="preserve">
     <value>Получить все модули XNCF</value>
   </data>
@@ -42,10 +48,5 @@
   <data name="Function.XncfManager.ViewFunctionStatus.Description" xml:space="preserve">
     <value>Показывает состояние загрузки функций текущего модуля XNCF</value>
   </data>
-  <data name="Parameter.XncfManager.ShowFunctions.Module" xml:space="preserve">
-    <value>Модуль XNCF||Показать состояние функций указанного модуля</value>
-  </data>
-  <data name="Parameter.XncfManager.Install.Module" xml:space="preserve">
-    <value>Модуль XNCF||Выберите модуль для установки и включения</value>
-  </data>
+
 </root>
