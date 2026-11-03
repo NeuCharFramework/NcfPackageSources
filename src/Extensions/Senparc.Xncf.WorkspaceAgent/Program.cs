@@ -12,7 +12,7 @@
 
 ----------------------------------------------------------------*/
 
-using Senparc.Xncf.Workspace.Agent;
+using Senparc.Xncf.WorkspaceAgent;
 
 var exitCode = await WorkspaceAgentHost.RunAsync(
     args,

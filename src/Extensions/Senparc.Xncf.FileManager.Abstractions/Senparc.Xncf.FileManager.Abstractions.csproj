@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.2.0</Version>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
     <AssemblyName>Senparc.Xncf.FileManager.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.FileManager.Abstractions</RootNamespace>
     <Description>Contracts for optional integrations with Senparc.Xncf.FileManager.</Description>

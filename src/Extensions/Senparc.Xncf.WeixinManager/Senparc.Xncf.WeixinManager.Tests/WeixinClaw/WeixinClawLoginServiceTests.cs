@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Senparc.Xncf.WeixinManager.Tests.WeixinClaw;
 
 [TestClass]
-public class WeixinClawLoginServiceTests : BaseTest
+public class WeixinClawLoginServiceTests
 {
     [TestMethod]
     public async Task PollAsync_UsesRedirectHostForSubsequentRequests()
@@ -22,9 +22,11 @@ public class WeixinClawLoginServiceTests : BaseTest
             """{"status":"scanned_but_redirect","redirect_host":"redirect-host.example.test"}""",
             """{"status":"wait"}""");
         using var httpClient = new HttpClient(handler);
+        using var serviceProvider = new ServiceCollection()
+            .AddScoped(_ => new WeixinClawApi(httpClient))
+            .BuildServiceProvider();
         var loginService = new WeixinClawLoginService(
-            new WeixinClawApi(httpClient),
-            ServiceProvider.GetRequiredService<IServiceScopeFactory>());
+            serviceProvider.GetRequiredService<IServiceScopeFactory>());
 
         var start = await loginService.StartAsync("个人微信", "prompt-range");
         var statuses = await Task.WhenAll(

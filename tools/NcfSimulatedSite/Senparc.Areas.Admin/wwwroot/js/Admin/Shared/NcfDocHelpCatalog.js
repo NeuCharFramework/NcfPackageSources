@@ -5,6 +5,10 @@
         path: 'NcfPackageSources/xncf/admin-operations.html',
         anchors: { zh: 'help-' + anchor, en: 'help-' + anchor }
     });
+    const memory = anchor => ({
+        path: 'NcfPackageSources/xncf/adminchat-memory.html',
+        anchors: { zh: 'help-memory-' + anchor, en: 'help-memory-' + anchor }
+    });
 
     // Validate against the bilingual VuePress output before publishing NcfDocs.
     window.NcfDocHelpCatalog = {
@@ -20,6 +24,12 @@
             'admin.accounts': operations('accounts'),
             'admin.monitor': operations('host-monitor'),
             'admin.chat': operations('admin-chat'),
+            'admin.memory': { path: 'NcfPackageSources/xncf/adminchat-memory.html' },
+            'admin.memory.modes': memory('modes'),
+            'admin.memory.entries': memory('entries'),
+            'admin.memory.loaded': memory('loaded'),
+            'admin.memory.markdown': memory('markdown'),
+            'admin.memory.system': memory('system'),
             'admin.attachments': operations('chat-attachments'),
             'admin.harness': operations('chat-harness'),
             'admin.neubell': operations('neubell'),
