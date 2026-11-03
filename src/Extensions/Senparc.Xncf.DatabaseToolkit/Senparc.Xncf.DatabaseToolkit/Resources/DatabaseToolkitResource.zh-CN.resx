@@ -150,4 +150,5 @@
   <data name="Parameter.Database.Config.Path" xml:space="preserve">
     <value>备份路径||本地物理路径，例如：E:\Senparc\Ncf\NCF.bak</value>
   </data>
+
 </root>

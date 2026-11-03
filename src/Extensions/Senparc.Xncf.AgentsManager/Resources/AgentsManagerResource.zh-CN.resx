@@ -912,4 +912,5 @@
   <data name="Studio.Paused" xml:space="preserve"><value>暂停</value></data>
   <data name="Studio.Working" xml:space="preserve"><value>工作中</value></data>
   <data name="Studio.Ready" xml:space="preserve"><value>待命</value></data>
+
 </root>

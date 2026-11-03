@@ -18,4 +18,5 @@
   <data name="Module.SystemCore.Description" xml:space="preserve">
     <value>Module central des structures et données d’exécution. Ne le supprimez pas et sauvegardez avant toute modification.</value>
   </data>
+
 </root>

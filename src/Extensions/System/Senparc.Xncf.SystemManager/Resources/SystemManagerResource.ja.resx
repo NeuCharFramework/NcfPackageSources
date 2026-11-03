@@ -18,6 +18,15 @@
   <data name="Module.SystemManager.Description" xml:space="preserve">
     <value>システム設定と主要な実行データを管理します。削除せず、変更前にデータをバックアップしてください。</value>
   </data>
+  <data name="Parameter.SystemManager.AppKey" xml:space="preserve">
+    <value>NeuChar AppKey||https://www.neuchar.com/Developer/Developer で AppKey を確認できます</value>
+  </data>
+  <data name="Parameter.SystemManager.AppSecret" xml:space="preserve">
+    <value>NeuChar AppSecret||https://www.neuchar.com/Developer/Developer で Secret を確認できます。外部に漏らさないでください。</value>
+  </data>
+  <data name="Parameter.SystemManager.RequestTempId" xml:space="preserve">
+    <value>RequestTempId||AppService が返す requestTempId（例：RequestTempId-639189862069965960-fc2ab5f5）</value>
+  </data>
   <data name="Function.SystemManager.UpdateCloudAccount.Name" xml:space="preserve">
     <value>NeuChar クラウドアカウントを更新</value>
   </data>
@@ -30,13 +39,5 @@
   <data name="Function.SystemManager.ViewTempLog.Description" xml:space="preserve">
     <value>AppService が返した RequestTempId で有効期間内のログを検索します</value>
   </data>
-  <data name="Parameter.SystemManager.AppKey" xml:space="preserve">
-    <value>NeuChar AppKey||https://www.neuchar.com/Developer/Developer で AppKey を確認できます</value>
-  </data>
-  <data name="Parameter.SystemManager.AppSecret" xml:space="preserve">
-    <value>NeuChar AppSecret||https://www.neuchar.com/Developer/Developer で Secret を確認できます。外部に漏らさないでください。</value>
-  </data>
-  <data name="Parameter.SystemManager.RequestTempId" xml:space="preserve">
-    <value>RequestTempId||AppService が返す requestTempId（例：RequestTempId-639189862069965960-fc2ab5f5）</value>
-  </data>
+
 </root>

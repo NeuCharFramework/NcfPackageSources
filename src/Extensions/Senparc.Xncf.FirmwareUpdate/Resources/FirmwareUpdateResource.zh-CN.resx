@@ -30,4 +30,5 @@
   <data name="Parameter.FirmwareUpdate.Interval.Help" xml:space="preserve">
     <value>每 {0} 小时检查一次</value>
   </data>
+
 </root>

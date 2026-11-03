@@ -18,4 +18,5 @@
   <data name="Module.Tenant.Description" xml:space="preserve">
     <value>マルチテナントのコアモジュールです。削除せず、変更前にデータをバックアップしてください。</value>
   </data>
+
 </root>

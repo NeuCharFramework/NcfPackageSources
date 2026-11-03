@@ -18,4 +18,5 @@
   <data name="Module.Tenant.Description" xml:space="preserve">
     <value>系统多租户核心模块，请勿删除；操作前请备份数据。</value>
   </data>
+
 </root>
