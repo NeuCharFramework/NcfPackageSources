@@ -91,6 +91,16 @@ The Workspace runtime project is named `Senparc.Xncf.WorkspaceAgent`, with exact
 
 `Workspace` resolves the Agent's actual output paths through its project reference and propagates the `.dll`, `.deps.json` and `.runtimeconfig.json` to Admin and host build/publish outputs. Do not construct Agent paths from the host's `$(Configuration)`: solution dependencies may use a different configuration. Update the filename in any custom `SenparcXncfWorkspace:AgentPath` setting.
 
+### NuGet 打包与发布 / Packaging and Publishing
+
+[ADO 流水线](./azure-pipelines.yml) 使用 Release 构建，由各项目的 `GeneratePackageOnBuild` 配置生成 `.nupkg`，随后自动发现并推送包。新增需要发布的库（包括 Abstractions 契约项目）时，必须启用 Release 自动打包；仅添加项目引用不会生成依赖项目的 NuGet 包。
+
+The ADO pipeline builds in Release and relies on each project's `GeneratePackageOnBuild` setting to create `.nupkg` files before discovery and push. Enable Release packaging for every new published library, including abstraction contracts; a project reference alone does not generate its dependency's NuGet package.
+
+推送前会按 MSBuild 求值后的包 ID、版本和输出目录检查 FileManager.Abstractions 与 Workspace.Abstractions 的包文件。构建或检查失败时不执行推送。修复漏发包后重新运行流水线即可补发缺失版本，已存在版本仍通过 `--skip-duplicate` 跳过。
+
+Before pushing, the pipeline checks the FileManager.Abstractions and Workspace.Abstractions package files using their evaluated MSBuild package IDs, versions and output directories. Build or validation failures prevent pushing. Rerun the pipeline to publish missing versions after fixing packaging; existing versions are skipped with `--skip-duplicate`.
+
 ## 模块加载顺序 / Module Loading Order
 
 使用 `[XncfOrder(x)]` 特性指定模块的加载顺序，为降序排列，数字越大越在前：

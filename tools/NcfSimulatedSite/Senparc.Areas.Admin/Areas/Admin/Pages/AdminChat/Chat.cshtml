@@ -45,7 +45,6 @@
                                :disabled="memoryBusy" @@click="openMemoryDialog">
                         Memory
                     </el-button>
-                    <ncf-doc-help topic="admin.memory"></ncf-doc-help>
                     <el-button
                         type="primary"
                         size="small"
@@ -514,10 +513,12 @@
                     class="message-input">
                 </el-input>
                 <div class="input-actions">
-                    <el-button type="text" size="mini" aria-label="上传资料" :title="attachmentUploadHint"
-                        :loading="workspaceUploading" :disabled="!canUploadWorkspaceFiles || isSending"
-                        @@click="chooseWorkspaceFiles"><i class="fa fa-paperclip"></i></el-button>
-                    <ncf-doc-help topic="admin.attachments"></ncf-doc-help>
+                    <span class="ncf-doc-help-group">
+                        <el-button type="text" size="mini" aria-label="上传资料" :title="attachmentUploadHint"
+                            :loading="workspaceUploading" :disabled="!canUploadWorkspaceFiles || isSending"
+                            @@click="chooseWorkspaceFiles"><i class="fa fa-paperclip"></i></el-button>
+                        <ncf-doc-help topic="admin.attachments"></ncf-doc-help>
+                    </span>
                     <span class="input-tip">
                         <i class="fa fa-info-circle"></i> @AR["AdminChat.SendHint"]
                     </span>
@@ -550,29 +551,33 @@
                                     </div>
                                 </el-option>
                             </el-select>
-                            <el-radio-group v-model="chatMode" size="mini" class="chat-mode-toggle" :disabled="isSending">
-                                <el-radio-button label="simple">
-                                    <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
-                                </el-radio-button>
-                                <el-radio-button label="harness">
-                                    <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
-                                </el-radio-button>
-                            </el-radio-group>
-                            <ncf-doc-help topic="admin.harness"></ncf-doc-help>
-                            <el-dropdown trigger="click" @@command="handleMemoryCommand($event)">
-                                <el-button size="mini" class="chat-memory-trigger"
-                                           :disabled="memoryBusy || isSending || !memoryReady">
-                                    Memory · {{ memoryModeLabel(memoryMode) }} <i class="el-icon-arrow-down"></i>
-                                </el-button>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item v-for="mode in [0,1,2]" :key="mode" :command="mode"
-                                                      :icon="memoryMode === mode ? 'el-icon-check' : ''">
-                                        {{ memoryModeLabel(mode) }}
-                                    </el-dropdown-item>
-                                    <el-dropdown-item command="settings" divided>@AR["AdminChat.Memory.Settings"]</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                            <ncf-doc-help topic="admin.memory.modes"></ncf-doc-help>
+                            <span class="ncf-doc-help-group">
+                                <el-radio-group v-model="chatMode" size="mini" class="chat-mode-toggle" :disabled="isSending">
+                                    <el-radio-button label="simple">
+                                        <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
+                                    </el-radio-button>
+                                    <el-radio-button label="harness">
+                                        <i class="fa fa-rocket"></i> @AR["AdminChat.ModeHarness"]
+                                    </el-radio-button>
+                                </el-radio-group>
+                                <ncf-doc-help topic="admin.harness"></ncf-doc-help>
+                            </span>
+                            <span class="ncf-doc-help-group">
+                                <el-dropdown trigger="click" @@command="handleMemoryCommand($event)">
+                                    <el-button size="mini" class="chat-memory-trigger"
+                                               :disabled="memoryBusy || isSending || !memoryReady">
+                                        Memory · {{ memoryModeLabel(memoryMode) }} <i class="el-icon-arrow-down"></i>
+                                    </el-button>
+                                    <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item v-for="mode in [0,1,2]" :key="mode" :command="mode"
+                                                          :icon="memoryMode === mode ? 'el-icon-check' : ''">
+                                            {{ memoryModeLabel(mode) }}
+                                        </el-dropdown-item>
+                                        <el-dropdown-item command="settings" divided>@AR["AdminChat.Memory.Settings"]</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                                <ncf-doc-help topic="admin.memory.modes"></ncf-doc-help>
+                            </span>
                         </div>
                     </details>
                     <div class="input-send-actions">
@@ -632,10 +637,12 @@
                                     resize="none">
                                 </el-input>
                                 <div class="chat-entrance-composer-footer">
-                                    <el-button type="text" size="mini" aria-label="上传资料" :title="attachmentUploadHint"
-                                        :loading="workspaceUploading" :disabled="!canUploadWorkspaceFiles || isCreatingSession"
-                                        @@click="chooseWorkspaceFiles"><i class="fa fa-paperclip"></i></el-button>
-                                    <ncf-doc-help topic="admin.attachments"></ncf-doc-help>
+                                    <span class="ncf-doc-help-group">
+                                        <el-button type="text" size="mini" aria-label="上传资料" :title="attachmentUploadHint"
+                                            :loading="workspaceUploading" :disabled="!canUploadWorkspaceFiles || isCreatingSession"
+                                            @@click="chooseWorkspaceFiles"><i class="fa fa-paperclip"></i></el-button>
+                                        <ncf-doc-help topic="admin.attachments"></ncf-doc-help>
+                                    </span>
                                     <span class="chat-entrance-input-tip">
                                         <i class="fa fa-keyboard-o"></i>
                                         按 Ctrl + Enter 或 Cmd + Enter 开始
@@ -697,19 +704,21 @@
                                     <ncf-doc-help topic="admin.harness"></ncf-doc-help>
                                 </div>
 
-                                <el-dropdown trigger="click" @@command="handleMemoryCommand($event, true)">
-                                    <el-button size="mini" class="chat-memory-trigger" :disabled="memoryBusy || isCreatingSession">
-                                        Memory · {{ memoryModeLabel(launcherMemoryMode) }} <i class="el-icon-arrow-down"></i>
-                                    </el-button>
-                                    <el-dropdown-menu slot="dropdown">
-                                        <el-dropdown-item v-for="mode in [0,1,2]" :key="mode" :command="mode"
-                                                          :icon="launcherMemoryMode === mode ? 'el-icon-check' : ''">
-                                            {{ memoryModeLabel(mode) }}
-                                        </el-dropdown-item>
-                                        <el-dropdown-item command="settings" divided>@AR["AdminChat.Memory.Settings"]</el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </el-dropdown>
-                                <ncf-doc-help topic="admin.memory.modes"></ncf-doc-help>
+                                <span class="ncf-doc-help-group">
+                                    <el-dropdown trigger="click" @@command="handleMemoryCommand($event, true)">
+                                        <el-button size="mini" class="chat-memory-trigger" :disabled="memoryBusy || isCreatingSession">
+                                            Memory · {{ memoryModeLabel(launcherMemoryMode) }} <i class="el-icon-arrow-down"></i>
+                                        </el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item v-for="mode in [0,1,2]" :key="mode" :command="mode"
+                                                              :icon="launcherMemoryMode === mode ? 'el-icon-check' : ''">
+                                                {{ memoryModeLabel(mode) }}
+                                            </el-dropdown-item>
+                                            <el-dropdown-item command="settings" divided>@AR["AdminChat.Memory.Settings"]</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                    <ncf-doc-help topic="admin.memory.modes"></ncf-doc-help>
+                                </span>
 
                                 <el-popover
                                     placement="top-start"

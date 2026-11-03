@@ -55,6 +55,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.12.15 implement AdminChat memory storage and management system
 
+    修改标识：Senparc - 20261103
+    修改描述：将嵌入式静态资源接入文件版本计算，避免帮助索引缓存与页面不一致
+
 ----------------------------------------------------------------*/
 
 /* 
@@ -70,6 +73,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -402,9 +406,13 @@ namespace Senparc.Areas.Admin
         }
         public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
         {
+            var files = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot");
+            var environment = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
+            // Version tags must hash the same embedded assets that the middleware serves.
+            environment.WebRootFileProvider = new CompositeFileProvider(environment.WebRootFileProvider, files);
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new ManifestEmbeddedFileProvider(Assembly.GetExecutingAssembly(), "wwwroot")
+                FileProvider = files
             });
 
             return base.UseXncfModule(app, registerService);
