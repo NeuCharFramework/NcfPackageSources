@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.18</Version>
+		<Version>0.12.19</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -131,6 +131,7 @@
     [2026-11-03] Expand bilingual documentation help to all interactive Admin pages, legacy forms and contextual panels; validate every route and anchor.
     [2026-11-03] Add bilingual Memory documentation and contextual help for Chat launchers, modes, entries, loading reports, Markdown and SystemMessage settings.
     [2026-11-03] Receive WorkspaceAgent runtime files through project references to fix mixed-configuration CI builds and publishing.
+    [2026-11-03] Version embedded Admin assets with content hashes to prevent stale documentation catalogs; keep contextual help attached to Chat controls without crowding sidebar actions.
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

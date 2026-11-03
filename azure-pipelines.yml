@@ -119,6 +119,32 @@ jobs:
   #     versionSpec: 5.2.0
   #     checkLatest: true
 
+  - powershell: |
+      $ErrorActionPreference = 'Stop'
+      $requiredProjects = @(
+        'src/Extensions/Senparc.Xncf.FileManager.Abstractions/Senparc.Xncf.FileManager.Abstractions.csproj',
+        'src/Extensions/Senparc.Xncf.Workspace.Abstractions/Senparc.Xncf.Workspace.Abstractions.csproj'
+      )
+      foreach ($relativePath in $requiredProjects) {
+        $project = Join-Path "$(Build.SourcesDirectory)" $relativePath
+        $output = & dotnet msbuild $project "-p:Configuration=$(buildConfiguration)" '-getProperty:GeneratePackageOnBuild,PackageId,PackageVersion,PackageOutputPath,MSBuildProjectDirectory'
+        if ($LASTEXITCODE -ne 0) {
+          throw "Failed to evaluate package properties for $project (exit code $LASTEXITCODE)."
+        }
+        $properties = (($output -join "`n") | ConvertFrom-Json).Properties
+        if ($properties.GeneratePackageOnBuild -ne 'true') {
+          throw "Release packaging is disabled for $project. Set GeneratePackageOnBuild to true."
+        }
+        $packageDirectory = [System.IO.Path]::Combine($properties.MSBuildProjectDirectory, $properties.PackageOutputPath)
+        $packagePath = Join-Path $packageDirectory ("{0}.{1}.nupkg" -f $properties.PackageId, $properties.PackageVersion)
+        if (-not (Test-Path -LiteralPath $packagePath -PathType Leaf)) {
+          throw "Required package was not generated: $packagePath. No packages will be pushed."
+        }
+        Write-Host "Validated required package: $packagePath"
+      }
+    displayName: 'Validate required abstraction packages before push'
+    condition: succeeded()
+
   # 自动发现并推送 Senparc.Ncf.* / Senparc.Xncf.* 的 .nupkg（仅 .nupkg；符号包 .snupkg 未包含，可按需扩展）
   # 凭据：通过 Library 变量组 Nuget_Key 中的机密变量 NUGET_API_KEY 注入（见 variables → group: Nuget_Key)
   - powershell: |
@@ -279,7 +305,7 @@ jobs:
       }
       exit 0
     displayName: 'Push Senparc .nupkg (auto-discover, skip duplicates)'
-    condition: succeededOrFailed()
+    condition: succeeded()
     env:
       NUGET_API_KEY: $(NUGET_API_KEY)
 

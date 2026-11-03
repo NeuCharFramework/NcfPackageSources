@@ -77,9 +77,17 @@ KnowledgeBase 空的 Edit handler 视图。安装器、独立前端及生成模�
 404：新增操作指南、微调、AgentsManager HIL/3D、Workflow、Workspace、隔离开发的双语版本。
 
 AdminChat 的当前会话、新建会话标题均有 Chat 帮助，嵌入 Footer 时也可访问；
-Memory 帮助覆盖侧栏、两处模式选择器、设置弹窗标题，以及条目、本轮加载、
+Memory 帮助覆盖两处模式选择器、设置弹窗标题，以及条目、本轮加载、
 Markdown 编辑、SystemMessage 面板。全部复用中央索引和语言切换，不调用聊天或 Memory API。
 文档区分数据库记忆、Workspace 文件、聊天历史、加载报告和持久化回执。
+侧栏保留 Memory 设置入口，不再单独放置重复帮助按钮，以免挤压主要操作。
+附件和模式选择器通过 `ncf-doc-help-group` 与问号组合，整体换行，不将问号作为工具栏的独立项目。
+
+帮助资源是 Admin 程序集中的嵌入式文件。模块注册时将同一个文件提供程序加入
+`WebRootFileProvider`，让 `asp-append-version` 和独立入口真正生成内容哈希 `?v=...`；
+仅提供静态文件中间件并不能保证版本参数生效。宿主物理文件仍优先覆盖模块资源。
+修改后需重新构建、部署并重启宿主，再重新打开页面；已打开页面不会自动替换旧脚本。
+如提示“索引配置无效”，检查浏览器控制台的具体主题及脚本版本；这与文档站的 404 不同。
 
 ### 验证
 
@@ -115,10 +123,18 @@ playwright-cli -s=ncf-doc-help close
 检查还覆盖新窗口、相邻按钮隔离、移动端、关闭/焦点、其余四种 UI 语言、
 未知页面、独立入口按需加载、阻止加载、超时与重试。它不等同于登录后所有业务页面的整页验收。
 
-Memory 专项浏览器检查使用实际 Razor 局部标记和 Chat 数据/方法，但不运行业务初始化。
-同样先设置 `window.NCF_DOC_HELP_TEST_DIST`，然后运行
+Memory 专项浏览器检查使用实际 Razor 局部标记、父容器布局、样式和 Chat 数据/方法，
+但不运行业务初始化；默认检查线上文档，发布前可设置 `window.NCF_DOC_HELP_TEST_DIST`。运行
 `tools/NcfSimulatedSite/Tests/Senparc.Areas.Admin.Tests/Client/AdminChatMemoryHelpBrowserChecks.js`，
-验证双语文档、嵌套弹窗层级、关闭后的草稿/焦点，以及帮助点击不会触发请求或切换模式。
+验证双语文档、嵌套弹窗层级、关闭后的草稿/焦点、帮助点击隔离，
+以及 1440/1100/768/390 像素视口下的图标贴合和侧栏按钮完整显示。
+
+资源版本回归测试通过真实 Razor 渲染和临时 HTTP 服务器，核对 URL 哈希与返回内容，
+覆盖嵌入式文件、宿主覆盖以及 PathBase，不访问业务数据库：
+
+```bash
+dotnet test tools/NcfSimulatedSite/Tests/Senparc.Areas.Admin.Tests/Senparc.Areas.Admin.Tests.csproj --no-restore --filter FullyQualifiedName~AdminDocHelpAssetTests
+```
 
 ## Host 资源监控
 
