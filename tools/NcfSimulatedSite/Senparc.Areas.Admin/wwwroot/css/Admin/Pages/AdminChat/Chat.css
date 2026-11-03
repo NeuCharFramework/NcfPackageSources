@@ -2382,6 +2382,7 @@ body.is-resizing-chat-sidebar iframe {
 }
 
 .admin-chat-container .sidebar-actions .el-button {
+    flex: 1 0 auto;
     min-height: 32px;
     border-radius: 8px;
     font-weight: 500;
@@ -3143,6 +3144,16 @@ body.is-resizing-chat-sidebar iframe {
     border-top: 1px solid #edf0f4;
 }
 
+.admin-chat-container .ncf-doc-help-button,
+.chat-memory-dialog .ncf-doc-help-button {
+    box-sizing: border-box;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
+}
+
 .admin-chat-container .chat-entrance-input-wrapper {
     container-type: inline-size;
 }
@@ -3159,6 +3170,12 @@ body.is-resizing-chat-sidebar iframe {
     }
     .admin-chat-container .chat-entrance-input-wrapper .launcher-toolbar-model .chat-ai-model-select {
         width: 120px;
+    }
+}
+
+@container (max-width: 480px) {
+    .admin-chat-container .chat-entrance-input-tip {
+        display: none;
     }
 }
 
@@ -3204,6 +3221,7 @@ body.is-resizing-chat-sidebar iframe {
 }
 
 .admin-chat-container .launcher-toolbar-mode {
+    gap: 3px;
     padding-right: 3px;
 }
 

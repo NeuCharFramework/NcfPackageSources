@@ -76,12 +76,12 @@ test('global routing accepts Razor Index aliases and ignores unknown pages and m
     assert.equal(component.computed.resolvedTopic.call({ topic: 'modules.publish', pagePath: '/Admin' }), 'modules.publish');
 });
 
-test('Chat and Memory help cover both composers, the sidebar and settings without business handlers', () => {
+test('Chat and Memory help cover both composers and settings without crowding sidebar actions', () => {
     const { api } = setup();
     assert.equal(api.pageTopic('/Admin/AdminChat/Chat?embedded=1'), 'admin.chat');
     const source = fs.readFileSync(path.join(admin, 'Areas/Admin/Pages/AdminChat/Chat.cshtml'), 'utf8');
     for (const [topic, count] of Object.entries({
-        'admin.chat': 2, 'admin.memory': 2, 'admin.memory.modes': 2,
+        'admin.chat': 2, 'admin.memory': 1, 'admin.memory.modes': 2,
         'admin.memory.entries': 1, 'admin.memory.loaded': 1,
         'admin.memory.markdown': 1, 'admin.memory.system': 1
     })) {
@@ -99,6 +99,9 @@ test('Chat and Memory help cover both composers, the sidebar and settings withou
         const dropdown = source.slice(source.indexOf('@@command="' + handler + '"'));
         assert.match(dropdown, /<\/el-dropdown>\s*<ncf-doc-help topic="admin.memory.modes"><\/ncf-doc-help>/);
     }
+    const sidebar = source.slice(source.indexOf('<el-aside'), source.indexOf('</el-aside>'));
+    assert.ok(!sidebar.includes('<ncf-doc-help'), 'Sidebar actions must not be squeezed by redundant help');
+    assert.equal((source.match(/<span class="ncf-doc-help-group">/g) || []).length, 5);
 });
 
 test('invalid keys, paths and incomplete bilingual anchors fail explicitly without opening a dialog', () => {
