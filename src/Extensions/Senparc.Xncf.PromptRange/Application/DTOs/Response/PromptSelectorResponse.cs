@@ -41,3 +41,10 @@ public class PromptSelectorSearchResponse
     public List<PromptSelectorItem> Items { get; set; }
     public int TotalCount { get; set; }
 }
+
+public class PromptSelectorScoreItem : PromptSelectorOption
+{
+    public int Id { get; set; }
+    public string FullVersion { get; set; }
+    public decimal CurrentScore { get; set; }
+}

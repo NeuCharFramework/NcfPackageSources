@@ -40,6 +40,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>等待你提供后续内容或确认保存，本轮未写入 Memory。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>本轮未识别到立即更新长期记忆的意图，未写入 Memory。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>本批候选包含助手来源的信息，尚未保存。请逐条核对并保存；助手的说法可能不准确。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>未能从近期前文确定要记住的具体内容。请在同一条消息中写明“记住：……”及完整事实；必要时检查本轮 PromptCode。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>本批候选已由你核对并保存。</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>核对候选</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>这是从前文整理的候选，尚未保存。请核对内容与作用域，再点击“保存条目”；删除候选需点击“删除”并确认。锁定的手工条目不会被 AI 自动改写。</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>请先处理当前编辑草稿并关闭设置，再核对候选。</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>参考原文（待核实）</value></data>
   <data name="AdminChat.Memory.Subtitle" xml:space="preserve"><value>管理长期偏好，让每一次对话更懂你</value></data>
   <data name="AdminChat.Memory.Private" xml:space="preserve"><value>私有记忆</value></data>
   <data name="AdminChat.Memory.SaveChanges" xml:space="preserve"><value>保存更改</value></data>
@@ -852,13 +861,4 @@
   <data name="DocHelp.Retry" xml:space="preserve"><value>重试</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>帮助文档索引配置无效，请联系管理员。</value></data>
 
-  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>等待你提供后续内容或确认保存，本轮未写入 Memory。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>本轮未识别到立即更新长期记忆的意图，未写入 Memory。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>已整理前文候选，尚未保存。请逐条核对并保存；助手回复中的信息可能不准确。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>未能从近期前文确定要记住的具体内容。请在同一条消息中写明“记住：……”及完整事实；必要时检查本轮 PromptCode。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>本批候选已由你核对并保存。</value></data>
-  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>核对候选</value></data>
-  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>这是从前文整理的候选，尚未保存。请核对内容与作用域，再点击“保存条目”；删除候选需点击“删除”并确认。锁定的手工条目不会被 AI 自动改写。</value></data>
-  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>请先处理当前编辑草稿并关闭设置，再核对候选。</value></data>
-  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>参考原文（待核实）</value></data>
 </root>

@@ -40,6 +40,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>等待你提供后续内容或确认保存，本轮未写入 Memory。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>本轮未识别到立即更新长期记忆的意图，未写入 Memory。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>本批候选包含助手来源的信息，尚未保存。请逐条核对并保存；助手的说法可能不准确。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>未能从近期前文确定要记住的具体内容。请在同一条消息中写明“记住：……”及完整事实；必要时检查本轮 PromptCode。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>本批候选已由你核对并保存。</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>核对候选</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>这是从前文整理的候选，尚未保存。请核对内容与作用域，再点击“保存条目”；删除候选需点击“删除”并确认。锁定的手工条目不会被 AI 自动改写。</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>请先处理当前编辑草稿并关闭设置，再核对候选。</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>参考原文（待核实）</value></data>
   <data name="AdminChat.Memory.Subtitle" xml:space="preserve"><value>管理长期偏好，让每一次对话更懂你</value></data>
   <data name="AdminChat.Memory.Private" xml:space="preserve"><value>私有记忆</value></data>
   <data name="AdminChat.Memory.SaveChanges" xml:space="preserve"><value>保存更改</value></data>
@@ -889,21 +898,11 @@
   <data name="PromptSelector.TargetChanged" xml:space="preserve"><value>输入框已更改或不可编辑，请关闭后重新选择提示词。</value></data>
   <data name="PromptSelector.TooLong" xml:space="preserve"><value>插入后的内容超过输入框长度限制，请先缩短内容。</value></data>
   <data name="PromptSelector.Sort" xml:space="preserve"><value>排序</value></data>
-  <data name="PromptSelector.SortScore" xml:space="preserve"><value>评分（平均分从高到低）</value></data>
+  <data name="PromptSelector.SortScore" xml:space="preserve"><value>评分（当前分数从高到低）</value></data>
   <data name="PromptSelector.SortPromptCode" xml:space="preserve"><value>PromptCode（升序）</value></data>
   <data name="PromptSelector.AverageScore" xml:space="preserve"><value>平均分</value></data>
   <data name="PromptSelector.MaxScore" xml:space="preserve"><value>最高分</value></data>
   <data name="PromptSelector.Unrated" xml:space="preserve"><value>未评分</value></data>
-
-  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>等待你提供后续内容或确认保存，本轮未写入 Memory。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>本轮未识别到立即更新长期记忆的意图，未写入 Memory。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>已整理前文候选，尚未保存。请逐条核对并保存；助手回复中的信息可能不准确。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>未能从近期前文确定要记住的具体内容。请在同一条消息中写明“记住：……”及完整事实；必要时检查本轮 PromptCode。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>本批候选已由你核对并保存。</value></data>
-  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>核对候选</value></data>
-  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>这是从前文整理的候选，尚未保存。请核对内容与作用域，再点击“保存条目”；删除候选需点击“删除”并确认。锁定的手工条目不会被 AI 自动改写。</value></data>
-  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>请先处理当前编辑草稿并关闭设置，再核对候选。</value></data>
-  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>参考原文（待核实）</value></data>
   <data name="PromptSelector.CurrentScore" xml:space="preserve"><value>当前评分</value></data>
   <data name="PromptReference.Score" xml:space="preserve"><value>打分（0~10）</value></data>
   <data name="PromptReference.View" xml:space="preserve"><value>快速查看提示词</value></data>
@@ -920,4 +919,15 @@
   <data name="PromptReference.Cancel" xml:space="preserve"><value>取消</value></data>
   <data name="PromptReference.Save" xml:space="preserve"><value>保存手动评分</value></data>
   <data name="PromptReference.TooMany" xml:space="preserve"><value>每条消息最多标注 32 段提示词，请先移除不需要的引用。</value></data>
+  <data name="PromptReference.RangeScores" xml:space="preserve"><value>Range 评分总览</value></data>
+  <data name="PromptReference.ScoringTarget" xml:space="preserve"><value>本次评分对象</value></data>
+  <data name="PromptReference.LocateTarget" xml:space="preserve"><value>定位评分对象</value></data>
+  <data name="PromptReference.DraftHint" xml:space="preserve"><value>拖动仅预览分数和绿色柱子的高度；点击“保存手动评分”后才生效。</value></data>
+  <data name="PromptReference.ChartHint" xml:space="preserve"><value>绿色柱为本次评分对象，蓝框为正在查看的版本。点击柱子只查看，不改变评分对象；可横向滚动浏览全部版本。</value></data>
+  <data name="PromptReference.PreviewOnly" xml:space="preserve"><value>只读查看 · 不影响本次打分</value></data>
+  <data name="PromptReference.CurrentScore" xml:space="preserve"><value>当前已保存分数</value></data>
+  <data name="PromptReference.HumanScore" xml:space="preserve"><value>手动评分</value></data>
+  <data name="PromptReference.RobotScore" xml:space="preserve"><value>AI 评分</value></data>
+  <data name="PromptReference.Retry" xml:space="preserve"><value>重试</value></data>
+
 </root>

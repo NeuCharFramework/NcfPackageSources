@@ -382,10 +382,10 @@ body {
 }
 
 /* XncfModule tabs and tables. */
-.admin-content > .ifram-wrapper > .common-layout > .el-header {
+.admin-content > .ifram-wrapper > .common-layout > .el-container > .el-header {
     height: auto !important;
-    min-height: 0;
-    padding: 0;
+    min-height: 52px;
+    padding: 14px 18px;
     overflow: visible;
     border: 0;
     background: transparent;
@@ -397,7 +397,7 @@ body {
     width: 100%;
     box-sizing: border-box;
     margin: 0 !important;
-    padding: 0 0 10px;
+    padding: 10px 16px;
 }
 
 .admin-content .common-layout > .el-container > .el-header > .filter-container > * {
@@ -440,10 +440,11 @@ body {
 
 /* The four module summary tiles on the admin home page. */
 .admin-content .xncf-stat-item {
-    min-height: 120px;
-    height: auto;
-    margin-bottom: 14px;
-    padding: 18px 62px 18px 18px;
+    min-height: 0;
+    height: 125px;
+    margin-bottom: 0;
+    box-sizing: border-box;
+    padding: 14px 54px 14px 16px;
     border: 1px solid var(--admin-border-soft);
     border-radius: 14px;
     background: linear-gradient(145deg, #fff 0%, #fafbff 100%);
@@ -520,7 +521,8 @@ body {
     }
 
     .admin-content .xncf-stat-item {
-        min-height: 104px;
+        min-height: 0;
+        height: 104px;
         margin-bottom: 10px;
     }
 }

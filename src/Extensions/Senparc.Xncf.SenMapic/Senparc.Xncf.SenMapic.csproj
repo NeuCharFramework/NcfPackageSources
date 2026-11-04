@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.10</Version>
+    <Version>0.4.11</Version>
     <AssemblyName>Senparc.Xncf.SenMapic</AssemblyName>
     <RootNamespace>Senparc.Xncf.SenMapic</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -64,6 +64,7 @@
       1、Updated Senparc.Xncf.SenMapic project behavior and integration for the latest feature and reliability improvements.
       2、chore: update package versions and dependencies across multiple projects
     [2026-11-03] Add shared documentation help to inherited-layout crawl task pages.
+    [2026-11-05] Point crawl task details help to result inspection rather than task creation.
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

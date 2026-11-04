@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.12</Version>
+    <Version>0.20.14</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -156,6 +156,8 @@
     [2026-11-04] Extend default Memory extraction to ordinary facts and explicit context references requiring review; migrate untouched prior defaults without replacing customized or scored prompts.
     [2026-11-04] Add explicit PromptCode references, shared last-successful AI/manual scoring, current-score selection and six-provider migrations.
     [2026-11-04] Add Memory intent classification and structured update/defer/none output; upgrade untouched context-extraction defaults while preserving custom prompts.
+    [2026-11-05] Support short contextual Memory save commands and evidence-based review rules; upgrade untouched intent prompts without overwriting custom or scored versions.
+    [2026-11-05] Expose authorized lightweight Range score overviews for all PromptCode versions without loading prompt content.
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

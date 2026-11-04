@@ -40,6 +40,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Waiting for further content or confirmation to save. No Memory changes were saved this turn.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>No present intent to update long-term Memory was identified. Nothing was saved this turn.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>This batch includes assistant-sourced information and is not saved. Review and save each entry; assistant claims may be inaccurate.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>The recent context did not identify what to remember. Send “Remember: …” with the complete fact in one message; check this turn's PromptCode if needed.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>You have reviewed and saved this batch of candidates.</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Review candidate</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>This candidate comes from earlier messages and is not saved. Check its content and scope, then Save entry; deletion candidates require Delete and confirmation. AI cannot rewrite pinned manual entries.</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Finish the current draft and close settings before reviewing a candidate.</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Source excerpt (unverified)</value></data>
   <data name="AdminChat.Memory.Subtitle" xml:space="preserve"><value>Manage lasting preferences for more personal conversations</value></data>
   <data name="AdminChat.Memory.Private" xml:space="preserve"><value>Private memory</value></data>
   <data name="AdminChat.Memory.SaveChanges" xml:space="preserve"><value>Save changes</value></data>
@@ -845,21 +854,11 @@
   <data name="PromptSelector.TargetChanged" xml:space="preserve"><value>The input changed or is no longer editable. Close the picker and select again.</value></data>
   <data name="PromptSelector.TooLong" xml:space="preserve"><value>The inserted content would exceed the input length limit. Shorten it first.</value></data>
   <data name="PromptSelector.Sort" xml:space="preserve"><value>Sort by</value></data>
-  <data name="PromptSelector.SortScore" xml:space="preserve"><value>Score (average, high to low)</value></data>
+  <data name="PromptSelector.SortScore" xml:space="preserve"><value>Score (current, high to low)</value></data>
   <data name="PromptSelector.SortPromptCode" xml:space="preserve"><value>PromptCode (ascending)</value></data>
   <data name="PromptSelector.AverageScore" xml:space="preserve"><value>Average score</value></data>
   <data name="PromptSelector.MaxScore" xml:space="preserve"><value>Highest score</value></data>
   <data name="PromptSelector.Unrated" xml:space="preserve"><value>Not rated</value></data>
-
-  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Waiting for further content or confirmation to save. No Memory changes were saved this turn.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>No present intent to update long-term Memory was identified. Nothing was saved this turn.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Candidates from earlier messages are ready but not saved. Review and save each entry; assistant statements may be inaccurate.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>The recent context did not identify what to remember. Send “Remember: …” with the complete fact in one message; check this turn's PromptCode if needed.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>You have reviewed and saved this batch of candidates.</value></data>
-  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Review candidate</value></data>
-  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>This candidate comes from earlier messages and is not saved. Check its content and scope, then Save entry; deletion candidates require Delete and confirmation. AI cannot rewrite pinned manual entries.</value></data>
-  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Finish the current draft and close settings before reviewing a candidate.</value></data>
-  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Source excerpt (unverified)</value></data>
   <data name="PromptSelector.CurrentScore" xml:space="preserve"><value>Current score</value></data>
   <data name="PromptReference.Score" xml:space="preserve"><value>Rate (0–10)</value></data>
   <data name="PromptReference.View" xml:space="preserve"><value>View prompt</value></data>
@@ -876,4 +875,15 @@
   <data name="PromptReference.Cancel" xml:space="preserve"><value>Cancel</value></data>
   <data name="PromptReference.Save" xml:space="preserve"><value>Save manual score</value></data>
   <data name="PromptReference.TooMany" xml:space="preserve"><value>At most 32 prompt references are allowed per message. Remove unused references first.</value></data>
+  <data name="PromptReference.RangeScores" xml:space="preserve"><value>Range score overview</value></data>
+  <data name="PromptReference.ScoringTarget" xml:space="preserve"><value>Rating this PromptCode</value></data>
+  <data name="PromptReference.LocateTarget" xml:space="preserve"><value>Locate rating target</value></data>
+  <data name="PromptReference.DraftHint" xml:space="preserve"><value>Dragging only previews the score and green bar height. Changes take effect after saving the manual score.</value></data>
+  <data name="PromptReference.ChartHint" xml:space="preserve"><value>Green marks the rating target; a blue outline marks the preview. Clicking only previews a version and never changes the rating target. Scroll horizontally to browse all versions.</value></data>
+  <data name="PromptReference.PreviewOnly" xml:space="preserve"><value>Read-only preview · does not affect your rating</value></data>
+  <data name="PromptReference.CurrentScore" xml:space="preserve"><value>Current saved score</value></data>
+  <data name="PromptReference.HumanScore" xml:space="preserve"><value>Manual score</value></data>
+  <data name="PromptReference.RobotScore" xml:space="preserve"><value>AI score</value></data>
+  <data name="PromptReference.Retry" xml:space="preserve"><value>Retry</value></data>
+
 </root>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.22</Version>
+		<Version>0.12.25</Version>
 		<PackageReleaseNotes>
     [2026-10-16] 增加 PromptRange Skill 目录、执行与 AdminChat 暴露能力
     1、通过 PromptRange.Abstractions 暴露可移植 Skill 契约
@@ -177,6 +177,9 @@
     [2026-11-04] Allow explicitly requested ordinary person facts in Memory; resolve bounded same-session references into user-reviewed candidates without automatic persistence of assistant claims.
     [2026-11-04] Add reusable PromptCode annotations, clean chat reference persistence, shared manual/AI scoring and read-only prompt lookup.
     [2026-11-04] Gate automatic Memory changes on present saving intent; report deferred content and non-saving requests without writes, with strict extraction-envelope validation.
+    [2026-11-05] Resolve multi-turn Memory save commands using bounded context; automatically persist user-stated evidence while requiring review for assistant-derived changes and avoiding phantom review actions.
+    [2026-11-05] Add slider-based PromptCode scoring with live draft bars, independent Range comparison and read-only prompt previews.
+    [2026-11-05] Align all contextual help with audited bilingual UI chapters and stable anchors; distinguish page overviews from control-specific help.
 </PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->

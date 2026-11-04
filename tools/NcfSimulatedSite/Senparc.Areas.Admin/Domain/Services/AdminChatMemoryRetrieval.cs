@@ -90,7 +90,7 @@ public static class AdminChatMemoryRetrieval
         && Regex.IsMatch(text,
             @"记住|记得|记录|保存|记下|记好|以后|今后|始终|偏好|更正|纠正|忘记|不要再|约定|决定|规范|(?:修改|更新|补充).{0,8}(?:记忆|memory)|remember|forget|prefer|\b(save|store|record|note)\b|from now on|always|never|correction|we decided|(?:update|correct).{0,12}memory",
             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100))
-        && !Regex.IsMatch(text, @"不要.{0,6}(记住|记录|保存)|(?:do not|don't|never)\s+(?:remember|store|save)",
+        && !Regex.IsMatch(text, @"不要.{0,6}(记住|记录|保存|记下|记好)|(?:do not|don't|never)\s+(?:remember|store|save|record|note)",
             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
 
     public static bool NeedsConversationContext(string text) => ShouldLearn(text)

@@ -1,6 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
 
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>続きの内容または保存の確認を待っています。このターンでは Memory を更新していません。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>長期 Memory を今更新する意図が確認できなかったため、このターンでは保存していません。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>この候補にはアシスタント由来の情報が含まれ、まだ保存されていません。発言は正確とは限らないため、各項目を確認して保存してください。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>直近の文脈では記憶対象を特定できません。「記住：…」または「Remember: …」と完全な事実を同じメッセージで指定してください。必要に応じて PromptCode を確認してください。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>この候補一覧は確認・保存されました。</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>候補を確認</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>前文からの未保存の候補です。内容と範囲を確認して項目を保存してください。削除候補は削除と確認が必要です。固定された手動項目は AI が変更できません。</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>編集中の下書きを処理し、設定を閉じてから候補を確認してください。</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>原文抜粋（未確認）</value></data>
+  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>会話サイドバーを展開</value></data>
+  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>会話サイドバーを折りたたむ</value></data>
+  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>サイドバーの幅を調整（左右キー）</value></data>
+  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>グループ内でドラッグ、または Alt + 上下キー</value></data>
+  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>実行中</value></data>
+  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>停止中</value></data>
+  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>順序を保存しました。同じアカウントで端末間共有できます。</value></data>
+  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>順序を保存できませんでした。再試行してください。</value></data>
+  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>サイドバー設定の読み込みまたは保存に失敗しました。このページでのみ有効です。</value></data>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -50,15 +68,6 @@
   <data name="AdminChat.Memory.SaveEntry" xml:space="preserve"><value>保存条目</value></data>
   <data name="AdminChat.Memory.EmptyEntries" xml:space="preserve"><value>暂无记忆，添加第一条偏好开始使用</value></data>
   <data name="AdminChat.Memory.EmptyLoaded" xml:space="preserve"><value>暂无本轮加载报告。启用 Memory 并发送消息后可在此查看。</value></data>
-  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>会話サイドバーを展開</value></data>
-  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>会話サイドバーを折りたたむ</value></data>
-  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>サイドバーの幅を調整（左右キー）</value></data>
-  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>グループ内でドラッグ、または Alt + 上下キー</value></data>
-  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>実行中</value></data>
-  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>停止中</value></data>
-  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>順序を保存しました。同じアカウントで端末間共有できます。</value></data>
-  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>順序を保存できませんでした。再試行してください。</value></data>
-  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>サイドバー設定の読み込みまたは保存に失敗しました。このページでのみ有効です。</value></data>
   <data name="AdminChat.Memory.Settings" xml:space="preserve"><value>Memory / 对话设置</value></data>
   <data name="AdminChat.Memory.UpdateSaved" xml:space="preserve"><value>Memory 已保存：我的全局 {0} 项，当前 Workspace {1} 项变更（数据库存储，不创建文件）。</value></data>
   <data name="AdminChat.Memory.UpdateReason.mode-off" xml:space="preserve"><value>未保存长期 Memory：当前对话已关闭 Memory。助手的口头确认不代表保存成功。</value></data>
@@ -808,13 +817,4 @@
   <data name="DocHelp.Retry" xml:space="preserve"><value>再試行</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>ドキュメントの設定が無効です。管理者にお問い合わせください。</value></data>
 
-  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>続きの内容または保存の確認を待っています。このターンでは Memory を更新していません。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>長期 Memory を今更新する意図が確認できなかったため、このターンでは保存していません。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>前のメッセージから候補を整理しましたが、未保存です。各項目を確認して保存してください。AI の発言は正確とは限りません。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>直近の文脈では記憶対象を特定できません。「記住：…」または「Remember: …」と完全な事実を同じメッセージで指定してください。必要に応じて PromptCode を確認してください。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>この候補一覧は確認・保存されました。</value></data>
-  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>候補を確認</value></data>
-  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>前文からの未保存の候補です。内容と範囲を確認して項目を保存してください。削除候補は削除と確認が必要です。固定された手動項目は AI が変更できません。</value></data>
-  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>編集中の下書きを処理し、設定を閉じてから候補を確認してください。</value></data>
-  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>原文抜粋（未確認）</value></data>
 </root>

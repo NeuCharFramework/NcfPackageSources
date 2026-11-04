@@ -1,6 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
 
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Esperando más contenido o confirmación para guardar. No se guardaron cambios en Memory en este turno.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>No se identificó intención de actualizar ahora la memoria a largo plazo. No se guardó nada en este turno.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Este lote incluye información del asistente y no está guardado. Revise y guarde cada entrada; sus afirmaciones pueden ser inexactas.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>El contexto reciente no identifica qué recordar. Envíe «Remember: …» con el hecho completo en un solo mensaje; compruebe el PromptCode si es necesario.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>Ha revisado y guardado este grupo de propuestas.</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Revisar propuesta</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>Esta propuesta del contexto aún no está guardada. Revise contenido y ámbito y guarde la entrada. Las eliminaciones requieren confirmación. La IA no modifica entradas manuales fijadas.</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Termine el borrador y cierre los ajustes antes de revisar una propuesta.</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Texto original (sin verificar)</value></data>
+  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Expandir el panel de conversaciones</value></data>
+  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Contraer el panel de conversaciones</value></data>
+  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Ajustar ancho del panel (flechas izquierda/derecha)</value></data>
+  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>Arrastrar dentro del grupo, o Alt + Arriba/Abajo</value></data>
+  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>En curso</value></data>
+  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>Deteniendo</value></data>
+  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>Orden guardado para esta cuenta en todos los dispositivos</value></data>
+  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>No se pudo guardar el orden. Inténtelo de nuevo.</value></data>
+  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>No se pudieron leer o guardar las preferencias del panel. Este diseño solo se aplica a esta página.</value></data>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -50,15 +68,6 @@
   <data name="AdminChat.Memory.SaveEntry" xml:space="preserve"><value>保存条目</value></data>
   <data name="AdminChat.Memory.EmptyEntries" xml:space="preserve"><value>暂无记忆，添加第一条偏好开始使用</value></data>
   <data name="AdminChat.Memory.EmptyLoaded" xml:space="preserve"><value>暂无本轮加载报告。启用 Memory 并发送消息后可在此查看。</value></data>
-  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Expandir el panel de conversaciones</value></data>
-  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Contraer el panel de conversaciones</value></data>
-  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Ajustar ancho del panel (flechas izquierda/derecha)</value></data>
-  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>Arrastrar dentro del grupo, o Alt + Arriba/Abajo</value></data>
-  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>En curso</value></data>
-  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>Deteniendo</value></data>
-  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>Orden guardado para esta cuenta en todos los dispositivos</value></data>
-  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>No se pudo guardar el orden. Inténtelo de nuevo.</value></data>
-  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>No se pudieron leer o guardar las preferencias del panel. Este diseño solo se aplica a esta página.</value></data>
   <data name="AdminChat.Memory.Settings" xml:space="preserve"><value>Memory / 对话设置</value></data>
   <data name="AdminChat.Memory.UpdateSaved" xml:space="preserve"><value>Memory 已保存：我的全局 {0} 项，当前 Workspace {1} 项变更（数据库存储，不创建文件）。</value></data>
   <data name="AdminChat.Memory.UpdateReason.mode-off" xml:space="preserve"><value>未保存长期 Memory：当前对话已关闭 Memory。助手的口头确认不代表保存成功。</value></data>
@@ -808,13 +817,4 @@
   <data name="DocHelp.Retry" xml:space="preserve"><value>Reintentar</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>La configuración de la documentación no es válida. Contacte con su administrador.</value></data>
 
-  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Esperando más contenido o confirmación para guardar. No se guardaron cambios en Memory en este turno.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>No se identificó intención de actualizar ahora la memoria a largo plazo. No se guardó nada en este turno.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Las propuestas de mensajes anteriores están listas, pero no guardadas. Revise y guarde cada entrada; las afirmaciones del asistente pueden ser inexactas.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>El contexto reciente no identifica qué recordar. Envíe «Remember: …» con el hecho completo en un solo mensaje; compruebe el PromptCode si es necesario.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>Ha revisado y guardado este grupo de propuestas.</value></data>
-  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Revisar propuesta</value></data>
-  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>Esta propuesta del contexto aún no está guardada. Revise contenido y ámbito y guarde la entrada. Las eliminaciones requieren confirmación. La IA no modifica entradas manuales fijadas.</value></data>
-  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Termine el borrador y cierre los ajustes antes de revisar una propuesta.</value></data>
-  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Texto original (sin verificar)</value></data>
 </root>

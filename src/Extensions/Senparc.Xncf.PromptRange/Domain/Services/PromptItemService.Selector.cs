@@ -125,4 +125,23 @@ public partial class PromptItemService
         return await SelectorQuery().SingleOrDefaultAsync(item => item.Id == id)
             ?? throw new NcfExceptionBase("The selected prompt is no longer available.");
     }
+
+    public async Task<List<PromptSelectorScoreItem>> GetSelectorRangeScoresAsync(int id)
+    {
+        var rangeId = await SelectorQuery().Where(item => item.Id == id)
+            .Select(item => (int?)item.RangeId).SingleOrDefaultAsync()
+            ?? throw new NcfExceptionBase("The selected prompt is no longer available.");
+        return await SelectorQuery().Where(item => item.RangeId == rangeId)
+            .OrderBy(item => item.FullVersion).ThenBy(item => item.Id)
+            .Select(item => new PromptSelectorScoreItem
+            {
+                Id = item.Id,
+                RangeId = item.RangeId,
+                RangeName = item.RangeName,
+                RangeAlias = item.RangeAlias,
+                Tactic = item.Tactic,
+                FullVersion = item.FullVersion,
+                CurrentScore = item.CurrentScore
+            }).ToListAsync();
+    }
 }

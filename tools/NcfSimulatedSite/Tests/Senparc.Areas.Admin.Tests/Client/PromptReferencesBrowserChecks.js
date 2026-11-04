@@ -2,6 +2,7 @@
 async page => {
     const root = 'tools/NcfSimulatedSite';
     const errors = [];
+    await page.setViewportSize({ width: 1280, height: 900 });
     page.on('pageerror', error => errors.push(error.message));
     await page.setContent(`<div id="test" style="max-width:760px;margin:24px">
         <el-input type="textarea" v-model="text" v-prompt-range ref="input"></el-input>
@@ -19,8 +20,8 @@ async page => {
             2: { promptItemId: 2, promptCode: '2026.11.04.1-T2-A1', currentScore: -1, humanScore: -1, robotScore: -1, hasBenchmark: true }
         };
         window.items = [
-            { id: 1, fullVersion: infos[1].promptCode, rangeId: 1, tactic: '1', content: 'Alpha prompt', currentScore: 8 },
-            { id: 2, fullVersion: infos[2].promptCode, rangeId: 1, tactic: '2', content: 'Beta prompt', currentScore: -1 }
+            { id: 1, fullVersion: infos[1].promptCode, rangeId: 1, rangeName: '2026.11.04.1', rangeAlias: 'Test range', tactic: '1', content: 'Alpha prompt', currentScore: 8 },
+            { id: 2, fullVersion: infos[2].promptCode, rangeId: 1, rangeName: '2026.11.04.1', rangeAlias: 'Test range', tactic: '2', content: 'Beta prompt', currentScore: -1 }
         ];
         window.service = {
             async get(url, config) {
@@ -28,6 +29,7 @@ async page => {
                 requests.push({ method, params: config.params });
                 const data = method === 'GetSelectorOptionsAsync' ? []
                     : method === 'SearchSelectorAsync' ? { items, totalCount: 2 }
+                    : method === 'GetSelectorRangeScoresAsync' ? items.map(item => ({ ...item, currentScore: infos[item.id].currentScore }))
                     : method === 'GetReferenceInfoAsync' ? infos[config.params.id]
                     : items.find(item => item.id === config.params.id);
                 return { data: { success: true, data } };
@@ -73,9 +75,28 @@ async page => {
     });
     await page.locator('.ncf-prompt-reference-content .ncf-prompt-reference-pill').first().click();
     await page.locator('.el-dropdown-menu:visible .el-dropdown-menu__item').filter({ hasText: /^Score$/ }).click();
-    await page.locator('.el-input-number input').fill('6.4');
+    await page.locator('.ncf-prompt-score-column').first().waitFor();
+    await page.waitForFunction(() => document.querySelector('.ncf-prompt-score-preview pre')?.textContent === 'Alpha prompt');
+    await page.locator('.ncf-prompt-score-dialog').evaluate(async element => {
+        await Promise.all(element.getAnimations().map(animation => animation.finished));
+    });
+    await page.locator('.ncf-prompt-score-editor .el-slider__button-wrapper').hover();
+    const runway = await page.locator('.ncf-prompt-score-editor .el-slider__runway').boundingBox();
+    const handle = await page.locator('.ncf-prompt-score-editor .el-slider__button-wrapper').boundingBox();
+    await page.mouse.move(handle.x + handle.width / 2, handle.y + handle.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(runway.x + runway.width * 0.64, runway.y + runway.height / 2, { steps: 6 });
+    await page.mouse.up();
+    await page.waitForFunction(() => document.querySelector('.ncf-prompt-score-column.is-target .ncf-prompt-score-bar').style.height === '64%');
+    if (await page.evaluate(() => infos[1].currentScore) !== 8) throw new Error('Dragging saved a score before confirmation');
+    await page.locator('.ncf-prompt-score-column[data-prompt-id="2"]').click();
+    await page.waitForFunction(() => document.querySelector('.ncf-prompt-score-preview pre')?.textContent === 'Beta prompt');
+    if (await page.locator('.el-input-number input').inputValue() !== '6.4') throw new Error('Previewing another prompt changed the draft score');
+    if (await page.locator('.ncf-prompt-score-column.is-target').getAttribute('data-prompt-id') !== '1') throw new Error('Preview changed the rating target');
+    if (await page.evaluate(() => requests.some(request => request.method === 'ScoreReferenceAsync'))) throw new Error('Preview sent a score write');
     await page.getByRole('button', { name: 'Save', exact: true }).click();
     await page.waitForFunction(() => NcfPromptReferences.scores[1].currentScore === 6.4);
+    if (await page.evaluate(() => requests.find(request => request.method === 'ScoreReferenceAsync').body.id) !== 1) throw new Error('Save rated the preview instead of the referenced prompt');
     const matching = await page.locator('.ncf-prompt-reference-pill').allTextContents();
     if (matching.filter(text => text.includes('T1-A1') && text.includes('6.4')).length !== 2) throw new Error('Shared score not reflected in composer and history');
     await page.locator('.ncf-prompt-reference-content .ncf-prompt-reference-pill').first().click();
@@ -85,6 +106,17 @@ async page => {
     await page.waitForFunction(() => NcfPromptReferences.scores[1].currentScore === 3.1);
     if (await page.evaluate(() => NcfPromptReferences.scores[1].humanScore) !== 6.4) throw new Error('AI erased manual source score');
     await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+    await page.locator('.ncf-prompt-reference-content .ncf-prompt-reference-pill').first().click();
+    await page.locator('.el-dropdown-menu:visible .el-dropdown-menu__item').filter({ hasText: /^Score$/ }).click();
+    await page.locator('.ncf-prompt-score-column').first().waitFor();
+    await page.locator('.el-input-number input').fill('1.2');
+    await page.locator('.el-input-number input').press('Tab');
+    await page.waitForFunction(() => document.querySelector('.ncf-prompt-score-column.is-target .ncf-prompt-score-bar').style.height === '12%');
+    await page.setViewportSize({ width: 390, height: 844 });
+    const dialog = await page.locator('.ncf-prompt-score-dialog').boundingBox();
+    if (dialog.x < 0 || dialog.x + dialog.width > 391) throw new Error('Rating dialog overflows mobile');
+    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+    if (await page.evaluate(() => infos[1].currentScore) !== 3.1) throw new Error('Cancel saved the draft');
     await textarea.evaluate(input => { input.focus(); input.setSelectionRange(10, 10); });
     await page.keyboard.insertText('x');
     const edited = await page.evaluate(() => NcfPromptReferences.capture(document.querySelector('#test textarea')));

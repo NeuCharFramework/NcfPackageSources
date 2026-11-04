@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.1</Version>
+    <Version>0.4.2</Version>
     <AssemblyName>Senparc.Xncf.Sandbox</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -69,6 +69,7 @@
       5、按租户恢复沙箱编排上下文并迭代执行后台回收
       6、Dependency update from Senparc.Xncf.Sandbox.Abstractions to 0.3.1
     [2026-11-03] Reuse shared documentation help and automatically select the current documentation language.
+    [2026-11-05] Separate environment setup help from Sandbox session dashboard operations.
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

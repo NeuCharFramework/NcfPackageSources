@@ -1,6 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
 
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Ожидается дальнейшее содержимое или подтверждение сохранения. В этом ходе Memory не изменена.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>Намерение обновить долговременную память сейчас не обнаружено. В этом ходе ничего не сохранено.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Эта группа содержит сведения от ассистента и ещё не сохранена. Проверьте и сохраните каждую запись: утверждения ассистента могут быть неточными.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>Недавний контекст не позволяет определить, что запомнить. Отправьте «Remember: …» с полным фактом в одном сообщении; при необходимости проверьте PromptCode.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>Вы проверили и сохранили эти предложения.</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Проверить предложение</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>Предложение из контекста ещё не сохранено. Проверьте текст и область, затем сохраните запись. Удаление требует подтверждения. ИИ не изменяет закреплённые ручные записи.</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Завершите черновик и закройте настройки перед проверкой предложения.</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Исходный текст (не проверен)</value></data>
+  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Развернуть панель чатов</value></data>
+  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Свернуть панель чатов</value></data>
+  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Изменить ширину панели (стрелки влево/вправо)</value></data>
+  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>Перетащите внутри группы или нажмите Alt + Вверх/Вниз</value></data>
+  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>Выполняется</value></data>
+  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>Остановка</value></data>
+  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>Порядок сохранён для этой учётной записи на всех устройствах</value></data>
+  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>Не удалось сохранить порядок. Повторите попытку.</value></data>
+  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>Не удалось прочитать или сохранить настройки панели. Этот вид действует только на текущей странице.</value></data>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -50,15 +68,6 @@
   <data name="AdminChat.Memory.SaveEntry" xml:space="preserve"><value>保存条目</value></data>
   <data name="AdminChat.Memory.EmptyEntries" xml:space="preserve"><value>暂无记忆，添加第一条偏好开始使用</value></data>
   <data name="AdminChat.Memory.EmptyLoaded" xml:space="preserve"><value>暂无本轮加载报告。启用 Memory 并发送消息后可在此查看。</value></data>
-  <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Развернуть панель чатов</value></data>
-  <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Свернуть панель чатов</value></data>
-  <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Изменить ширину панели (стрелки влево/вправо)</value></data>
-  <data name="AdminChat.Sidebar.Reorder" xml:space="preserve"><value>Перетащите внутри группы или нажмите Alt + Вверх/Вниз</value></data>
-  <data name="AdminChat.Sidebar.Running" xml:space="preserve"><value>Выполняется</value></data>
-  <data name="AdminChat.Sidebar.Stopping" xml:space="preserve"><value>Остановка</value></data>
-  <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>Порядок сохранён для этой учётной записи на всех устройствах</value></data>
-  <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>Не удалось сохранить порядок. Повторите попытку.</value></data>
-  <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>Не удалось прочитать или сохранить настройки панели. Этот вид действует только на текущей странице.</value></data>
   <data name="AdminChat.Memory.Settings" xml:space="preserve"><value>Memory / 对话设置</value></data>
   <data name="AdminChat.Memory.UpdateSaved" xml:space="preserve"><value>Memory 已保存：我的全局 {0} 项，当前 Workspace {1} 项变更（数据库存储，不创建文件）。</value></data>
   <data name="AdminChat.Memory.UpdateReason.mode-off" xml:space="preserve"><value>未保存长期 Memory：当前对话已关闭 Memory。助手的口头确认不代表保存成功。</value></data>
@@ -808,13 +817,4 @@
   <data name="DocHelp.Retry" xml:space="preserve"><value>Повторить</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>Неверная настройка документации. Обратитесь к администратору.</value></data>
 
-  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Ожидается дальнейшее содержимое или подтверждение сохранения. В этом ходе Memory не изменена.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>Намерение обновить долговременную память сейчас не обнаружено. В этом ходе ничего не сохранено.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Подготовлены предложения из предыдущих сообщений; они ещё не сохранены. Проверьте и сохраните каждую запись: утверждения ассистента могут быть неточными.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>Недавний контекст не позволяет определить, что запомнить. Отправьте «Remember: …» с полным фактом в одном сообщении; при необходимости проверьте PromptCode.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>Вы проверили и сохранили эти предложения.</value></data>
-  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Проверить предложение</value></data>
-  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>Предложение из контекста ещё не сохранено. Проверьте текст и область, затем сохраните запись. Удаление требует подтверждения. ИИ не изменяет закреплённые ручные записи.</value></data>
-  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Завершите черновик и закройте настройки перед проверкой предложения.</value></data>
-  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Исходный текст (не проверен)</value></data>
 </root>
