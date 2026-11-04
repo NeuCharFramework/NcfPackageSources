@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.4</Version>
+    <Version>0.2.5</Version>
     <PackageReleaseNotes>
       [2026-10-21] v0.1.1 提供按所有者隔离的工作区存储，并持久化元数据
       1、支持工作区创建、文件访问、命令执行与访问策略
@@ -22,6 +22,10 @@
       4、提供工作区文件预览和跨模块文件引用
     [2026-11-03] Add shared contextual documentation for Workspace access boundaries.
     [2026-11-03] Use Senparc.Xncf.WorkspaceAgent and transitive runtime content instead of configuration-dependent copy paths.
+      [2026-11-04] v0.2.5 Workspace 首页 UI 现代化，对齐 AdminChat 设计语言
+      1、玻璃拟态渐变横幅 + 运行时状态胶囊（存储/隔离/执行）
+      2、工作区列表由表格改为卡片布局，含相对时间与悬浮上传进度卡
+      3、保留全部原有功能：创建工作区、文件上传 API、桌面桥接与安全说明
 </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.Workspace</AssemblyName>
     <RootNamespace>Senparc.Xncf.Workspace</RootNamespace>

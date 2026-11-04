@@ -13,149 +13,355 @@
 }
 
 <style>
-    .workspace-shell { max-width: 1180px; margin: 0 auto; }
+    .workspace-shell { max-width: 1180px; margin: 0 auto; padding: 4px 2px 24px; }
+
+    /* ===== 顶部横幅（AdminChat 渐变） ===== */
     .workspace-hero {
-        padding: 28px;
-        border-radius: 18px;
+        position: relative;
+        overflow: hidden;
+        padding: 30px 32px;
+        border-radius: 16px;
         color: #fff;
-        background: linear-gradient(135deg, #2563eb 0%, #4f46e5 54%, #7c3aed 100%);
-        box-shadow: 0 18px 48px rgba(79,70,229,.22);
-        margin-bottom: 22px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 14px 40px rgba(102, 126, 234, .28);
+        margin-bottom: 20px;
     }
-    .workspace-hero h1 { margin: 0 0 8px; font-size: 27px; font-weight: 700; }
-    .workspace-hero p { margin: 0; opacity: .9; line-height: 1.7; }
-    .workspace-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 16px; margin: 18px 0; }
-    .workspace-card { border: 1px solid #e8ecf4; border-radius: 14px; padding: 19px; background: #fff; }
-    .workspace-card h3 { margin: 0 0 8px; font-size: 16px; color: #18212f; }
-    .workspace-card p { margin: 0; color: #687386; line-height: 1.65; }
-    .runtime-row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:14px; }
-    .workspace-create { display:flex; gap:12px; align-items:center; margin:18px 0; }
-    .workspace-create .el-input { max-width:360px; }
-    .workspace-name { font-weight:600; color:#1f2937; }
-    .workspace-id { font-family: ui-monospace,SFMono-Regular,Menlo,monospace; color:#64748b; font-size:12px; }
-    .step-list { margin: 10px 0 0; padding-left: 20px; color:#4b5563; line-height:1.9; }
-    @@media(max-width:680px) {
-        .workspace-hero { padding:22px; }
-        .workspace-create { align-items:stretch; flex-direction:column; }
-        .workspace-create .el-input { max-width:none; }
+    .workspace-hero::before,
+    .workspace-hero::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, .10);
+        pointer-events: none;
+    }
+    .workspace-hero::before { width: 260px; height: 260px; top: -120px; right: -60px; }
+    .workspace-hero::after { width: 180px; height: 180px; bottom: -90px; right: 140px; background: rgba(255,255,255,.07); }
+    .workspace-hero-head { display: flex; align-items: center; gap: 16px; position: relative; z-index: 1; }
+    .workspace-hero-icon {
+        width: 52px; height: 52px; flex: 0 0 52px;
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 14px; font-size: 24px;
+        background: rgba(255, 255, 255, .18);
+        border: 1px solid rgba(255, 255, 255, .30);
+        backdrop-filter: blur(6px);
+    }
+    .workspace-hero h1 { margin: 0 0 4px; font-size: 25px; font-weight: 700; letter-spacing: .3px; }
+    .workspace-hero .hero-sub { margin: 0; opacity: .92; line-height: 1.7; max-width: 860px; font-size: 13.5px; }
+    .workspace-hero .hero-sub code {
+        background: rgba(255, 255, 255, .18);
+        border-radius: 4px; padding: 1px 6px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;
+    }
+    .workspace-status-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; position: relative; z-index: 1; }
+    .status-pill {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 6px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 500;
+        background: rgba(255, 255, 255, .16);
+        border: 1px solid rgba(255, 255, 255, .30);
+        backdrop-filter: blur(6px);
+    }
+    .status-pill .dot { width: 8px; height: 8px; border-radius: 50%; background: #c3cbe0; box-shadow: 0 0 0 3px rgba(255,255,255,.15); }
+    .status-pill.is-success .dot { background: #36cfc9; }
+    .status-pill.is-warning .dot { background: #f7ba2a; }
+    .status-pill.is-info .dot { background: #909399; }
+
+    /* ===== 区块标题 ===== */
+    .ws-section { margin-top: 26px; }
+    .ws-section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .ws-section-head .sec-icon {
+        width: 34px; height: 34px; border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, .30);
+    }
+    .ws-section-head h2 { margin: 0; font-size: 17px; font-weight: 700; color: #1f2d3d; }
+    .ws-section-head .count-pill {
+        margin-left: auto; padding: 3px 12px; border-radius: 999px;
+        font-size: 12px; color: #667eea; background: rgba(102, 126, 234, .10);
+        border: 1px solid rgba(102, 126, 234, .22);
+    }
+
+    /* ===== 创建工作区 ===== */
+    .ws-create-card {
+        border: 1px solid #e8ecf4; border-radius: 14px;
+        padding: 18px 20px; background: #fff;
+        box-shadow: 0 2px 12px rgba(32, 38, 51, .05);
+    }
+    .ws-create-card .create-label { font-size: 13px; color: #687386; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .workspace-create { display: flex; gap: 12px; align-items: center; }
+    .workspace-create .el-input { max-width: 380px; }
+    .ws-create-btn {
+        border: none; color: #fff; font-size: 14px;
+        padding: 11px 22px; border-radius: 9px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, .35);
+        transition: all .3s ease;
+    }
+    .ws-create-btn:hover, .ws-create-btn:focus { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(102, 126, 234, .45); color: #fff; }
+    .ws-create-btn i { margin-right: 6px; }
+
+    /* ===== 工作区卡片 ===== */
+    .ws-list { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
+    .ws-item {
+        display: flex; align-items: center; gap: 16px;
+        border: 1px solid #e8ecf4; border-radius: 14px;
+        padding: 18px 20px; background: #fff;
+        transition: all .3s ease;
+        box-shadow: 0 1px 3px rgba(32, 38, 51, .04);
+    }
+    .ws-item:hover { transform: translateY(-2px); border-color: rgba(102, 126, 234, .45); box-shadow: 0 10px 28px rgba(82, 103, 217, .12); }
+    .ws-item-icon {
+        width: 46px; height: 46px; flex: 0 0 46px; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: 19px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 6px 14px rgba(102, 126, 234, .30);
+    }
+    .ws-item-body { flex: 1 1 auto; min-width: 0; }
+    .ws-item-name { font-size: 15.5px; font-weight: 600; color: #1f2d3d; word-break: break-all; }
+    .ws-item-id {
+        margin-top: 3px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11.5px; color: #8a94a6; word-break: break-all;
+    }
+    .ws-item-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 9px; align-items: center; }
+    .ws-item-meta .el-tag { border-radius: 999px; }
+    .ws-time { font-size: 12px; color: #8a94a6; display: inline-flex; align-items: center; gap: 5px; }
+    .ws-time .fa { font-size: 11px; color: #b6bfce; }
+    .ws-item-actions { flex: 0 0 auto; display: flex; gap: 8px; align-items: center; }
+    .ws-upload-btn { border-radius: 9px; }
+
+    /* ===== 空状态 ===== */
+    .ws-empty {
+        border: 1.5px dashed #d5dbe8; border-radius: 14px;
+        padding: 46px 24px; text-align: center; background: #fbfcfe;
+    }
+    .ws-empty .empty-icon {
+        width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; font-size: 26px;
+        color: #667eea; background: rgba(102, 126, 234, .10);
+    }
+    .ws-empty h3 { margin: 0 0 8px; font-size: 16px; color: #1f2d3d; }
+    .ws-empty p { margin: 0 auto; max-width: 460px; color: #8a94a6; font-size: 13px; line-height: 1.8; }
+
+    /* ===== 特性与指南卡片 ===== */
+    .workspace-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 16px; }
+    .workspace-card {
+        border: 1px solid #e8ecf4; border-radius: 14px; padding: 20px;
+        background: #fff; transition: all .3s ease;
+        box-shadow: 0 1px 3px rgba(32, 38, 51, .04);
+    }
+    .workspace-card:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(82, 103, 217, .10); border-color: rgba(102, 126, 234, .35); }
+    .workspace-card .card-icon {
+        width: 40px; height: 40px; border-radius: 11px; margin-bottom: 12px;
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: 16px;
+    }
+    .card-icon.tone-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 6px 14px rgba(102, 126, 234, .30); }
+    .card-icon.tone-teal { background: linear-gradient(135deg, #36cfc9 0%, #409eff 100%); box-shadow: 0 6px 14px rgba(54, 207, 201, .30); }
+    .card-icon.tone-sun { background: linear-gradient(135deg, #f7ba2a 0%, #f0932b 100%); box-shadow: 0 6px 14px rgba(247, 186, 42, .30); }
+    .card-icon.tone-slate { background: linear-gradient(135deg, #8a94a6 0%, #5d6b7f 100%); box-shadow: 0 6px 14px rgba(93, 107, 127, .25); }
+    .workspace-card h3 { margin: 0 0 8px; font-size: 15.5px; color: #1f2d3d; font-weight: 600; }
+    .workspace-card p { margin: 0; color: #687386; line-height: 1.7; font-size: 13px; }
+    .workspace-card code {
+        background: #f2f4f9; border-radius: 4px; padding: 1px 6px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: #5a6b8c;
+    }
+
+    /* ===== 步骤列表 ===== */
+    .step-list { margin: 12px 0 0; padding: 0; list-style: none; }
+    .step-list li { position: relative; padding: 0 0 14px 38px; color: #4b5563; font-size: 13px; line-height: 1.6; }
+    .step-list li::before {
+        content: attr(data-step);
+        position: absolute; left: 0; top: 0;
+        width: 26px; height: 26px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12px; font-weight: 700; color: #fff;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 4px 10px rgba(102, 126, 234, .30);
+    }
+    .step-list li::after {
+        content: ""; position: absolute; left: 12.5px; top: 28px; bottom: 2px; width: 1.5px;
+        background: linear-gradient(180deg, rgba(102, 126, 234, .40), rgba(102, 126, 234, .08));
+    }
+    .step-list li:last-child { padding-bottom: 0; }
+    .step-list li:last-child::after { display: none; }
+
+    /* ===== 浮动上传进度 ===== */
+    .ws-upload-toast {
+        position: fixed; right: 24px; bottom: 28px; z-index: 3000;
+        width: 320px; padding: 16px 18px;
+        border-radius: 14px; background: #fff;
+        border: 1px solid #e8ecf4;
+        box-shadow: 0 18px 48px rgba(24, 35, 57, .18);
+    }
+    .ws-upload-toast .toast-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .ws-upload-toast .toast-icon {
+        width: 34px; height: 34px; border-radius: 10px; flex: 0 0 34px;
+        display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px;
+        background: linear-gradient(135deg, #36cfc9 0%, #409eff 100%);
+    }
+    .ws-upload-toast .toast-file { font-size: 13px; font-weight: 600; color: #1f2d3d; word-break: break-all; line-height: 1.4; }
+    .ws-upload-toast .el-progress__text { font-size: 12px !important; color: #667eea !important; }
+
+    .workspace-alert { margin: 14px 0; border-radius: 10px; }
+
+    @@media (max-width: 680px) {
+        .workspace-hero { padding: 24px 22px; }
+        .workspace-hero-head { flex-direction: column; align-items: flex-start; }
+        .workspace-create { flex-direction: column; align-items: stretch; }
+        .workspace-create .el-input { max-width: none; }
+        .ws-item { flex-wrap: wrap; }
+        .ws-item-actions { width: 100%; }
     }
 </style>
 
 <div class="workspace-shell">
     <input ref="workspaceUploadInput" type="file" hidden multiple
         @@change="handleWorkspaceUpload" />
+
     <div class="workspace-hero">
-        <h1><i class="fa fa-code"></i>&nbsp; 安全远程工作区</h1>
-        <p>文件始终保存在 NCF 配置的持久化目录中；AdminChat、VS Code 和 Cursor 统一通过 Workspace Agent 访问，不再直接操作宿主文件。可在下方直接上传多个文件到 <code>input/</code>，默认单文件上限 300 MiB。</p>
-        <div class="runtime-row">
-            <el-tag effect="dark" type="success">@runtime.Provider</el-tag>
-            <el-tag effect="dark">@runtime.IsolationLevel</el-tag>
+        <div class="workspace-hero-head">
+            <div class="workspace-hero-icon"><i class="fa fa-code"></i></div>
+            <div>
+                <h1>安全远程工作区</h1>
+                <p class="hero-sub">文件始终保存在 NCF 配置的持久化目录中；AdminChat、VS Code 和 Cursor 统一通过 Workspace Agent 访问，不再直接操作宿主文件。可在下方直接上传多个文件到 <code>input/</code>，默认单文件上限 300 MiB。</p>
+            </div>
+        </div>
+        <div class="workspace-status-row">
+            <span class="status-pill is-success"><span class="dot"></span>存储：<b>&nbsp;@runtime.Provider</b></span>
+            <span class="status-pill"><span class="dot"></span>隔离级别：<b>&nbsp;@runtime.IsolationLevel</b></span>
             @if (runtime.ExecutionEnabled)
             {
-                <el-tag effect="dark" type="warning">允许受控执行</el-tag>
+                <span class="status-pill is-warning"><span class="dot"></span>允许受控执行</span>
             }
             else
             {
-                <el-tag effect="dark" type="info">仅文件访问 · 执行已关闭</el-tag>
+                <span class="status-pill is-info"><span class="dot"></span>仅文件访问 · 执行已关闭</span>
             }
         </div>
     </div>
 
     @if (TempData["WorkspaceMessage"] is string message)
     {
-        <el-alert title="@message" type="success" show-icon :closable="false"></el-alert>
+        <el-alert class="workspace-alert" title="@message" type="success" show-icon :closable="false"></el-alert>
     }
     @if (TempData["WorkspaceError"] is string error)
     {
-        <el-alert title="@error" type="error" show-icon :closable="false"></el-alert>
+        <el-alert class="workspace-alert" title="@error" type="error" show-icon :closable="false"></el-alert>
     }
 
-    <div class="workspace-grid">
-        <div class="workspace-card">
-            <h3><i class="fa fa-shield"></i>&nbsp; 双重身份保护<ncf-doc-help topic="workspace.permissions"></ncf-doc-help></h3>
-            <p>远程网关同时验证 DesktopBridge 设备会话和管理员 JWT，并只显示当前管理员拥有的工作区。</p>
+    <div class="ws-section">
+        <div class="ws-section-head">
+            <div class="sec-icon"><i class="fa fa-folder-open"></i></div>
+            <h2>我的工作区</h2>
+            <span class="count-pill">{{ workspaces.length }} 个</span>
         </div>
-        <div class="workspace-card">
-            <h3><i class="fa fa-random"></i>&nbsp; 跨平台统一协议</h3>
-            <p>Windows、Linux、macOS 均使用长驻 stdio Agent；无需依赖特定的 Unix Socket 或 Named Pipe。</p>
+
+        <div class="ws-create-card">
+            <div class="create-label"><i class="fa fa-plus-circle" style="color:#667eea"></i> 给新任务起个名字，马上拥有一个专属远程工作区</div>
+            <form method="post" asp-page-handler="Create" class="workspace-create">
+                <input type="hidden" name="Uid" value="@Model.Uid" />
+                <el-input name="NewWorkspaceName" placeholder="例如：订单系统重构" maxlength="100" show-word-limit></el-input>
+                <button type="submit" class="ws-create-btn">
+                    <i class="fa fa-plus"></i>创建工作区
+                </button>
+            </form>
         </div>
-        <div class="workspace-card">
-            <h3><i class="fa fa-cube"></i>&nbsp; Docker 可选</h3>
-            <p>有 Docker 时可启用容器隔离；没有 Docker 时保留原生文件访问，且默认禁止执行代码。</p>
+
+        <div class="ws-empty" v-if="!workspaces.length">
+            <div class="empty-icon"><i class="fa fa-folder-o"></i></div>
+            <h3>还没有工作区</h3>
+            <p>工作区是一间「云端小工坊」：把资料放进去，AI 对话和编辑器都能在安全边界里读写它。输入一个名字，点击「创建工作区」即可开始。</p>
+        </div>
+
+        <div class="ws-list" v-if="workspaces.length">
+            <div class="ws-item" v-for="ws in workspaces" :key="ws.id">
+                <div class="ws-item-icon"><i class="fa fa-cube"></i></div>
+                <div class="ws-item-body">
+                    <div class="ws-item-name">{{ ws.name }}</div>
+                    <div class="ws-item-id">{{ ws.id }}</div>
+                    <div class="ws-item-meta">
+                        <el-tag size="mini" type="info" effect="plain">{{ ws.ownerType }}</el-tag>
+                        <el-tag size="mini" type="success" effect="plain">{{ ws.storageProvider }}</el-tag>
+                        <span class="ws-time" :title="formatDate(ws.createdUtc)"><i class="fa fa-calendar"></i>创建于 {{ relativeTime(ws.createdUtc) }}</span>
+                        <span class="ws-time" :title="formatDate(ws.lastAccessedUtc)"><i class="fa fa-clock-o"></i>最近访问 {{ relativeTime(ws.lastAccessedUtc) }}</span>
+                    </div>
+                </div>
+                <div class="ws-item-actions">
+                    <el-button
+                        class="ws-upload-btn"
+                        type="primary"
+                        size="small"
+                        :loading="manualUploadWorkspaceId === ws.id && manualUploading"
+                        :disabled="manualUploading"
+                        @@click="chooseWorkspaceUpload(ws.id)">
+                        <i class="el-icon-upload2"></i> 上传文件
+                    </el-button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <el-card shadow="never">
-        <div slot="header">
-            <span><i class="fa fa-folder-open"></i>&nbsp;工作区</span>
-            <el-tag size="small" style="float:right">@Model.Workspaces.Count 个</el-tag>
+    <div class="ws-section">
+        <div class="ws-section-head">
+            <div class="sec-icon"><i class="fa fa-shield"></i></div>
+            <h2>安全与协议</h2>
         </div>
-
-        <form method="post" asp-page-handler="Create" class="workspace-create">
-            <input type="hidden" name="Uid" value="@Model.Uid" />
-            <el-input name="NewWorkspaceName" placeholder="例如：订单系统重构" maxlength="100" show-word-limit></el-input>
-            <button type="submit" class="el-button el-button--primary">
-                <i class="el-icon-plus"></i><span>创建工作区</span>
-            </button>
-        </form>
-
-        <el-table :data="workspaces" border stripe empty-text="尚未创建工作区">
-            <el-table-column label="名称" min-width="220">
-                <template slot-scope="scope">
-                    <div class="workspace-name">{{ scope.row.name }}</div>
-                    <div class="workspace-id">{{ scope.row.id }}</div>
-                </template>
-            </el-table-column>
-            <el-table-column prop="ownerType" label="所有者类型" width="120"></el-table-column>
-            <el-table-column prop="storageProvider" label="持久化存储" width="140"></el-table-column>
-            <el-table-column label="创建时间" min-width="180">
-                <template slot-scope="scope">{{ formatDate(scope.row.createdUtc) }}</template>
-            </el-table-column>
-            <el-table-column label="最近访问" min-width="180">
-                <template slot-scope="scope">{{ formatDate(scope.row.lastAccessedUtc) }}</template>
-            </el-table-column>
-            <el-table-column label="手动上传" width="130">
-                <template slot-scope="scope">
-                    <el-button
-                        type="primary"
-                        size="mini"
-                        :loading="manualUploadWorkspaceId === scope.row.id && manualUploading"
-                        :disabled="manualUploading"
-                        @@click="chooseWorkspaceUpload(scope.row.id)">
-                        <i class="el-icon-upload2"></i> 上传文件
-                    </el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-alert
-            v-if="manualUploading"
-            style="margin-top:16px"
-            type="info"
-            show-icon
-            :closable="false"
-            :title="manualUploadFileName + ' 上传中：' + manualUploadProgress + '%'">
-        </el-alert>
-    </el-card>
-
-    <div class="workspace-grid">
-        <div class="workspace-card">
-            <h3>在 VS Code / Cursor 中连接</h3>
-            <ol class="step-list">
-                <li>安装 “NCF Workspace” 扩展。</li>
-                <li>运行 “NCF: 连接工作区”。</li>
-                <li>输入站点地址并在浏览器中确认配对。</li>
-                <li>选择工作区，文件会作为远程文件夹打开。</li>
-            </ol>
-        </div>
-        <div class="workspace-card">
-            <h3>需要执行构建或测试？</h3>
-            <p>推荐将 <code>SenparcXncfWorkspace:RuntimeProvider</code> 设置为 <code>Docker</code> 并部署官方 Agent 镜像。NativeAgent 默认只提供安全文件编辑。</p>
-            <div style="margin-top:14px">
-                <a class="el-button el-button--default el-button--small" href="/Admin/DesktopBridge/Index?uid=E9A9D870-A285-4BCE-9D4D-26A219C41252">
-                    <i class="fa fa-desktop"></i><span>管理设备配对</span>
-                </a>
+        <div class="workspace-grid">
+            <div class="workspace-card">
+                <div class="card-icon tone-primary"><i class="fa fa-user-shield"></i></div>
+                <h3>双重身份保护<ncf-doc-help topic="workspace.permissions"></ncf-doc-help></h3>
+                <p>远程网关同时验证 DesktopBridge 设备会话和管理员 JWT，并只显示当前管理员拥有的工作区。</p>
+            </div>
+            <div class="workspace-card">
+                <div class="card-icon tone-teal"><i class="fa fa-random"></i></div>
+                <h3>跨平台统一协议</h3>
+                <p>Windows、Linux、macOS 均使用长驻 stdio Agent；无需依赖特定的 Unix Socket 或 Named Pipe。</p>
+            </div>
+            <div class="workspace-card">
+                <div class="card-icon tone-sun"><i class="fa fa-cube"></i></div>
+                <h3>Docker 可选</h3>
+                <p>有 Docker 时可启用容器隔离；没有 Docker 时保留原生文件访问，且默认禁止执行代码。</p>
             </div>
         </div>
+    </div>
+
+    <div class="ws-section">
+        <div class="ws-section-head">
+            <div class="sec-icon"><i class="fa fa-rocket"></i></div>
+            <h2>开始使用</h2>
+        </div>
+        <div class="workspace-grid">
+            <div class="workspace-card">
+                <div class="card-icon tone-slate"><i class="fa fa-desktop"></i></div>
+                <h3>在 VS Code / Cursor 中连接</h3>
+                <ol class="step-list">
+                    <li data-step="1">安装 “NCF Workspace” 扩展。</li>
+                    <li data-step="2">运行 “NCF: 连接工作区”。</li>
+                    <li data-step="3">输入站点地址并在浏览器中确认配对。</li>
+                    <li data-step="4">选择工作区，文件会作为远程文件夹打开。</li>
+                </ol>
+            </div>
+            <div class="workspace-card">
+                <div class="card-icon tone-teal"><i class="fa fa-cog"></i></div>
+                <h3>需要执行构建或测试？</h3>
+                <p>推荐将 <code>SenparcXncfWorkspace:RuntimeProvider</code> 设置为 <code>Docker</code> 并部署官方 Agent 镜像。NativeAgent 默认只提供安全文件编辑。</p>
+                <div style="margin-top:16px">
+                    <a class="el-button el-button--default el-button--small" style="border-radius:9px" href="/Admin/DesktopBridge/Index?uid=E9A9D870-A285-4BCE-9D4D-26A219C41252">
+                        <i class="fa fa-desktop"></i><span>管理设备配对</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ws-upload-toast" v-if="manualUploading">
+        <div class="toast-head">
+            <div class="toast-icon"><i class="fa fa-cloud-upload"></i></div>
+            <div class="toast-file">{{ manualUploadFileName }}</div>
+        </div>
+        <el-progress :percentage="manualUploadProgress" :stroke-width="8" :show-text="true"></el-progress>
     </div>
 </div>
 
@@ -184,6 +390,21 @@
             methods: {
                 formatDate: function (value) {
                     return value ? new Date(value).toLocaleString() : "—";
+                },
+                relativeTime: function (value) {
+                    if (!value) return "—";
+                    var diff = Date.now() - new Date(value).getTime();
+                    if (diff < 0) diff = 0;
+                    var min = Math.floor(diff / 60000);
+                    if (min < 1) return "刚刚";
+                    if (min < 60) return min + " 分钟前";
+                    var hour = Math.floor(min / 60);
+                    if (hour < 24) return hour + " 小时前";
+                    var day = Math.floor(hour / 24);
+                    if (day < 30) return day + " 天前";
+                    var month = Math.floor(day / 30);
+                    if (month < 12) return month + " 个月前";
+                    return Math.floor(month / 12) + " 年前";
                 },
                 chooseWorkspaceUpload: function (workspaceId) {
                     this.manualUploadWorkspaceId = workspaceId;
