@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.5</Version>
+    <Version>0.2.6</Version>
     <PackageReleaseNotes>
       [2026-10-21] v0.1.1 提供按所有者隔离的工作区存储，并持久化元数据
       1、支持工作区创建、文件访问、命令执行与访问策略
@@ -26,6 +26,10 @@
       1、玻璃拟态渐变横幅 + 运行时状态胶囊（存储/隔离/执行）
       2、工作区列表由表格改为卡片布局，含相对时间与悬浮上传进度卡
       3、保留全部原有功能：创建工作区、文件上传 API、桌面桥接与安全说明
+      [2026-11-04] v0.2.6 精简 Workspace 首页，去除冗余信息与样式
+      1、移除运行时状态胶囊、工作区 UUID/属主/存储标签与“安全与协议”区块
+      2、页面收敛为「我的工作区 + 连接指南」两大区块，样式同步瘦身
+      3、保留创建、上传进度、文档帮助与设备配对入口
 </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.Workspace</AssemblyName>
     <RootNamespace>Senparc.Xncf.Workspace</RootNamespace>
