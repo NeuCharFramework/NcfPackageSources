@@ -46,6 +46,11 @@ and preserve tenant/soft-delete filters on both ranges and items:
   `evalAvgScore` and `evalMaxScore` remain available for older clients as result statistics.
   The picker displays the current score to one decimal place and resets to page 1 when sorting changes.
 - `GetSelectorPromptAsync(id)`: fetches full content only for the selected prompt.
+- `GetSelectorRangeScoresAsync(id)`: resolves an accessible PromptCode and returns lightweight
+  ID/code/range/lane/current-score entries for all accessible versions in its range, ordered by
+  PromptCode and ID. It contains no prompt text and is not limited to the picker's current page.
+  Admin's independent score-chart component uses this read-only endpoint, loading content and
+  AI/manual score details only when a bar is clicked. It does not create a range-level rating.
 
 Drafts are labeled and selectable. Selection inserts literal content only; it does not
 execute prompts/skills, expand variables, copy model settings or send a chat message.
@@ -58,6 +63,10 @@ records. Each version keeps its AI and manual source scores; **the last successf
 score wins, regardless of source**. `FinalScore` is only the cached current value, not a
 third scoring dimension. Existing PromptResult manual/AI scoring also updates that version.
 New scores must be between 0 and 10 with at most one decimal place.
+
+The reusable rating dialog provides a 0.1-step slider and a live draft bar. Dragging or
+clicking comparison bars never writes scores or changes the rating target. Saving applies
+only to the explicitly referenced PromptCode; cancelling discards the manual draft.
 
 Before a version receives its first shared score, its old average result score is used
 for compatibility; historical result scores have no reliable cross-result rating timestamp.

@@ -112,7 +112,7 @@ public sealed class MemoryPromptProvider : IMemoryPromptProvider
         Mandatory Memory intent gate: classify currentUserMessage BEFORE extracting changes.
         A keyword such as remember, always, 记住 or 以后 is only a trigger, not permission to save.
         intent update: the user currently requests a durable addition, correction or deletion and supplies
-        concrete content, or explicitly asks now to remember identifiable earlier content for review.
+        concrete content, or explicitly asks now to remember identifiable earlier content.
         intent defer: the user asks you to wait, announces rules/content they will provide later, or postpones saving.
         intent none: a question about Memory, a quotation/translation, a hypothetical example, a negated save request,
         temporary task chatter, or uncertain intent. A polite question containing a concrete save request can be update.
@@ -126,7 +126,7 @@ public sealed class MemoryPromptProvider : IMemoryPromptProvider
         以后请使用中文回复 / Please remember to use concise replies from now on => update.
         Could you remember that I prefer concise replies? => update.
         我稍后补充更多规则，先记住：以后用中文回复 => update for the concrete rule only.
-        记住上述内容 / Forget the rule above => update; resolve only the requested content for review.
+        记住上述内容 / Forget the rule above => update; resolve only the requested content with source-dependent review.
         Never store the announcement, the intent to provide rules, ""let's begin"", or a fabricated rule as a durable fact.
         Future tense alone is not defer: distinguish a supplied future response preference from missing future content.
         Decide from the current user's communicative intent, never from keywords in quoted or earlier messages.

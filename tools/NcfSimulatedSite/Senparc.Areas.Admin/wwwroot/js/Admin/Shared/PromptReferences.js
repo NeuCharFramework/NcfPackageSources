@@ -6,14 +6,18 @@
     const t = key => window.ncfT('PromptReference.' + key);
     const api = '/api/Senparc.Xncf.PromptRange/PromptItemAppService/Xncf.PromptRange_PromptItemAppService.';
 
-    async function request(method, data, post) {
+    async function apiRequest(method, data, post) {
         const response = post
             ? await service.post(api + method, data, { customAlert: true })
             : await service.get(api + method, { params: data, customAlert: true });
         if (!response || !response.data || !response.data.success || !response.data.data) {
             throw new Error(response && response.data && response.data.errorMessage || t('Unavailable'));
         }
-        const info = response.data.data;
+        return response.data.data;
+    }
+
+    async function request(method, data, post) {
+        const info = await apiRequest(method, data, post);
         Vue.set(scores, info.promptItemId, info);
         if (post) window.dispatchEvent(new CustomEvent('ncf-prompt-score-changed', { detail: info }));
         return info;
@@ -151,9 +155,128 @@
         }
     };
 
+    Vue.component('prompt-reference-score-chart', {
+        props: { reference: { type: Object, required: true }, score: Number },
+        data() {
+            return {
+                items: [], scores, loading: false, error: '', previewId: 0,
+                preview: null, previewLoading: false, previewError: '', version: 0, previewVersion: 0
+            };
+        },
+        computed: {
+            rangeLabel() {
+                const item = this.items[0];
+                return item ? [item.rangeName, item.rangeAlias].filter(Boolean).join(' · ') : '';
+            },
+            axisMax() {
+                return this.items.reduce((max, item) => {
+                    const value = this.columnScore(item);
+                    return Number.isFinite(value) ? Math.max(max, value) : max;
+                }, 10);
+            },
+            previewInfo() { return this.scores[this.previewId]; }
+        },
+        mounted() { this.reload(); },
+        beforeDestroy() { this.version++; this.previewVersion++; },
+        methods: {
+            t,
+            format(value) { return Number.isFinite(value) && value >= 0 ? value.toFixed(1) : t('Unrated'); },
+            savedScore(item) {
+                return this.scores[item.id] ? this.scores[item.id].currentScore : item.currentScore;
+            },
+            columnScore(item) {
+                return item.id === this.reference.promptItemId ? this.score : this.savedScore(item);
+            },
+            height(item) { return Math.max(0, this.columnScore(item) || 0) / this.axisMax * 100 + '%'; },
+            locateTarget() {
+                const target = this.$el.querySelector('.ncf-prompt-score-column.is-target');
+                if (target) target.scrollIntoView({ block: 'nearest', inline: 'center' });
+            },
+            async reload() {
+                const version = ++this.version;
+                const previousScores = { ...this.scores };
+                this.loading = true; this.error = '';
+                try {
+                    const items = await apiRequest('GetSelectorRangeScoresAsync', { id: this.reference.promptItemId });
+                    if (version !== this.version) return;
+                    if (!Array.isArray(items) || !items.some(item => item.id === this.reference.promptItemId)) {
+                        throw new Error(t('Unavailable'));
+                    }
+                    this.items = items;
+                    for (const item of items) {
+                        const info = this.scores[item.id];
+                        // Refresh cached scores unless a newer read or save completed during this request.
+                        if (info && info === previousScores[item.id]) {
+                            Vue.set(this.scores, item.id, { ...info, currentScore: item.currentScore });
+                        }
+                    }
+                    this.$nextTick(this.locateTarget);
+                    this.select(this.reference.promptItemId);
+                } catch (error) {
+                    if (version === this.version) this.error = error.message || t('Unavailable');
+                } finally { if (version === this.version) this.loading = false; }
+            },
+            async select(id) {
+                const version = ++this.previewVersion;
+                this.previewId = id; this.preview = null; this.previewError = ''; this.previewLoading = true;
+                try {
+                    const [prompt] = await Promise.all([
+                        apiRequest('GetSelectorPromptAsync', { id }), load(id)
+                    ]);
+                    if (version === this.previewVersion) this.preview = prompt;
+                } catch (error) {
+                    if (version === this.previewVersion) this.previewError = error.message || t('Unavailable');
+                } finally { if (version === this.previewVersion) this.previewLoading = false; }
+            }
+        },
+        template: `<section class="ncf-prompt-score-overview" :aria-label="t('RangeScores')">
+            <div class="ncf-prompt-score-heading">
+                <strong>{{ t('RangeScores') }} <span>{{ rangeLabel }}</span></strong>
+                <el-button size="mini" :disabled="loading || !items.length" @click="locateTarget">{{ t('LocateTarget') }}</el-button>
+            </div>
+            <p class="ncf-prompt-selector-hint">{{ t('ChartHint') }}</p>
+            <p v-if="error" role="alert" class="ncf-prompt-selector-error">{{ error }}
+                <el-button size="mini" @click="reload">{{ t('Retry') }}</el-button>
+            </p>
+            <div v-loading="loading" class="ncf-prompt-score-plot">
+                <div class="ncf-prompt-score-axis" aria-hidden="true"><span>{{ format(axisMax) }}</span><span>{{ format(axisMax / 2) }}</span><span>0</span></div>
+                <div class="ncf-prompt-score-scroll">
+                    <div class="ncf-prompt-score-columns">
+                        <button v-for="item in items" :key="item.id" type="button"
+                            class="ncf-prompt-score-column" :data-prompt-id="item.id"
+                            :class="{'is-target': item.id === reference.promptItemId, 'is-preview': item.id === previewId}"
+                            :aria-pressed="item.id === previewId" :aria-label="item.fullVersion + ' · ' + format(columnScore(item))"
+                            :title="item.fullVersion + ' · ' + format(columnScore(item))" @click="select(item.id)">
+                            <span class="ncf-prompt-score-track"><span class="ncf-prompt-score-bar"
+                                :style="{height: height(item)}" :class="{'is-unrated': columnScore(item) < 0}">
+                                <span class="ncf-prompt-score-bar-value">{{ format(columnScore(item)) }}</span>
+                            </span></span>
+                            <span class="ncf-prompt-score-code">{{ item.fullVersion.slice(item.rangeName.length + 1) }}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div v-loading="previewLoading" class="ncf-prompt-score-preview" aria-live="polite">
+                <strong>{{ t('PreviewOnly') }}</strong>
+                <p v-if="previewError" role="alert" class="ncf-prompt-selector-error">{{ previewError }}
+                    <el-button size="mini" @click="select(previewId)">{{ t('Retry') }}</el-button>
+                </p>
+                <template v-if="preview">
+                    <p class="ncf-prompt-score-preview-code">{{ preview.fullVersion }}</p>
+                    <p v-if="previewInfo" class="ncf-prompt-score-details">
+                        <span>{{ t('CurrentScore') }}: {{ format(previewInfo.currentScore) }}</span>
+                        <span>{{ t('HumanScore') }}: {{ format(previewInfo.humanScore) }}</span>
+                        <span>{{ t('RobotScore') }}: {{ format(previewInfo.robotScore) }}</span>
+                    </p>
+                    <pre>{{ preview.content }}</pre>
+                </template>
+            </div>
+        </section>`
+    });
+
     Vue.component('prompt-reference-tag', {
         props: { reference: { type: Object, required: true }, removable: Boolean, aiScore: Function },
-        data() { return { scores, error: '', visible: false, busy: false, score: null }; },
+        data() { return { scores, error: '', visible: false, busy: false, scoreLoading: false, score: 0 }; },
         computed: {
             info() { return this.scores[this.reference.promptItemId]; },
             label() {
@@ -174,8 +297,10 @@
                 if (command === 'remove') { this.$emit('remove'); return; }
                 if (command === 'locate') { this.$emit('locate'); return; }
                 this.visible = true;
+                this.scoreLoading = true;
                 await this.refresh();
-                this.score = this.info && this.info.currentScore >= 0 ? this.info.currentScore : null;
+                this.score = this.info && this.info.currentScore >= 0 ? Math.min(10, this.info.currentScore) : 0;
+                this.scoreLoading = false;
             },
             async save() {
                 if (!Number.isFinite(this.score) || this.score < 0 || this.score > 10 ||
@@ -215,18 +340,25 @@
                 </el-dropdown-menu>
             </el-dropdown>
             <el-dialog v-if="visible" :visible.sync="visible" :title="reference.promptCode"
-                append-to-body width="min(460px, 94vw)" :close-on-click-modal="false"
+                append-to-body width="min(920px, 96vw)" top="4vh" custom-class="ncf-prompt-score-dialog" :close-on-click-modal="false"
                 :show-close="!busy" :close-on-press-escape="!busy">
                 <p>{{ t('LastScoreWins') }}</p>
                 <p v-if="error" role="alert" class="ncf-prompt-selector-error">{{ error }}</p>
-                <el-input-number v-model="score" :min="0" :max="10" :precision="1" :step="0.1"
-                    :disabled="busy" :aria-label="t('Score')"></el-input-number>
+                <div v-loading="scoreLoading" class="ncf-prompt-score-editor">
+                    <div class="ncf-prompt-score-heading"><strong>{{ t('ScoringTarget') }}: {{ reference.promptCode }}</strong>
+                        <output class="ncf-prompt-score-value">{{ Number.isFinite(score) ? score.toFixed(1) : '—' }} / 10</output>
+                    </div>
+                    <el-slider v-if="!scoreLoading" v-model="score" :min="0" :max="10" :step="0.1" show-input :show-input-controls="false"
+                        :disabled="busy" :format-tooltip="value => value.toFixed(1)" :aria-label="t('Score')"></el-slider>
+                    <p class="ncf-prompt-selector-hint">{{ t('DraftHint') }}</p>
+                </div>
+                <prompt-reference-score-chart v-if="!scoreLoading" :reference="reference" :score="score"></prompt-reference-score-chart>
                 <p v-if="!info || !info.hasBenchmark || !aiScore">{{ t('AIUnavailable') }}</p>
                 <div slot="footer">
                     <el-button :disabled="busy" @click="visible=false">{{ t('Cancel') }}</el-button>
-                    <el-button v-if="aiScore" :disabled="busy || !info || !info.hasBenchmark"
+                    <el-button v-if="aiScore" :disabled="busy || scoreLoading || !info || !info.hasBenchmark"
                         @click="autoScore">{{ t('AIScore') }}</el-button>
-                    <el-button type="primary" :loading="busy" @click="save">{{ t('Save') }}</el-button>
+                    <el-button type="primary" :loading="busy" :disabled="scoreLoading" @click="save">{{ t('Save') }}</el-button>
                 </div>
             </el-dialog>
         </span>`

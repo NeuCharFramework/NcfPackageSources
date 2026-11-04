@@ -3,7 +3,7 @@
 
   <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>En attente du contenu suivant ou de la confirmation. Aucune modification de Memory enregistrée pour ce tour.</value></data>
   <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>Aucune intention actuelle de modifier la mémoire à long terme identifiée. Rien n’a été enregistré pour ce tour.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Des propositions issues des messages précédents sont prêtes, mais non enregistrées. Vérifiez et enregistrez chaque entrée ; les propos de l’assistant peuvent être inexacts.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Ce lot contient des informations provenant de l’assistant et n’est pas enregistré. Vérifiez et enregistrez chaque entrée ; ses affirmations peuvent être inexactes.</value></data>
   <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>Le contexte récent ne précise pas quoi mémoriser. Envoyez « Remember: … » et le fait complet dans un même message ; vérifiez le PromptCode si nécessaire.</value></data>
   <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>Vous avez vérifié et enregistré ces propositions.</value></data>
   <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Vérifier la proposition</value></data>

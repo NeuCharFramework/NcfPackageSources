@@ -416,6 +416,9 @@ public class AdminChatMemoryTests
         Assert.AreEqual(profile.Revision, (await _store.ReadAsync(1, 12)).Revision);
         Assert.IsFalse(AdminChatMemoryRetrieval.ShouldLearn("不要记住这条信息"));
         Assert.IsFalse(AdminChatMemoryRetrieval.ShouldLearn("Don't store this preference"));
+        Assert.IsFalse(AdminChatMemoryRetrieval.ShouldLearn("不要记下这条信息"));
+        Assert.IsFalse(AdminChatMemoryRetrieval.ShouldLearn("Don't record that"));
+        Assert.IsFalse(AdminChatMemoryRetrieval.ShouldLearn("Do not note it down"));
         Assert.IsTrue(AdminChatMemoryRetrieval.ShouldLearn("以后请使用中文回复"));
     }
 
@@ -429,6 +432,8 @@ public class AdminChatMemoryTests
     [DataRow("翻译“请记住简洁回答”", "none", "no-save-intent")]
     [DataRow("Translate \"remember to be concise\"", "none", "no-save-intent")]
     [DataRow("假如我说“记住简洁回答”，会发生什么？", "none", "no-save-intent")]
+    [DataRow("Save the CSV file", "none", "no-save-intent")]
+    [DataRow("请记录程序输出到日志文件", "none", "no-save-intent")]
     public async Task IntentGate_DeferredAndNonSavingDecisions_PreserveMemory(
         string message, string intent, string reason)
     {
@@ -712,38 +717,58 @@ public class AdminChatMemoryTests
     public async Task ReferencedFacts_UseActualEvidenceRoleToDecideReview(string role, string expectedStatus)
     {
         const string fact = "测试角色甲的小名是小甲，也叫Alpha。";
-            var profile = await _store.ReadAsync(1, 12);
-            var service = Service();
-            var context = new AdminChatMemoryContext(1, 12, 3, profile, true, "")
-            { RecentMessages = [new(21, role, fact)] };
-            await service.CompleteAsync(context, "记住上述内容", 0, (_, input, _) =>
-            {
-                using var json = JsonDocument.Parse(input);
-                Assert.IsFalse(json.RootElement.TryGetProperty("reviewRequired", out _));
-                Assert.AreEqual(role, json.RootElement.GetProperty("recentMessages")[0].GetProperty("Role").GetString());
-                return Task.FromResult(Extraction(FactChange(fact)));
-            }, default);
-            Assert.AreEqual(expectedStatus, service.UpdateStatus);
-            if (role == "user")
-            {
-                var saved = (await _store.ReadAsync(1, 12)).Entries.Single();
-                Assert.AreEqual(fact, saved.Text);
-                Assert.AreEqual(21, saved.SourceMessageId);
-                Assert.AreEqual("user-message", saved.Source);
-                Assert.AreEqual(1, service.UpdateResult.GlobalChanges);
-                Assert.AreEqual(0, service.UpdateResult.Proposals.Count);
-                return;
-            }
-            Assert.AreEqual(profile.Revision, service.UpdateResult.Revision);
-            Assert.AreEqual(0, service.UpdateResult.GlobalChanges);
-            var proposal = service.UpdateResult.Proposals.Single();
-            Assert.AreEqual(fact, proposal.Entry.Text);
-            Assert.AreEqual("", proposal.Entry.Id);
-            Assert.AreEqual(0, proposal.Entry.Version);
-            Assert.IsTrue(proposal.Entry.Pinned);
-            Assert.AreEqual(0, profile.Entries.Count, "Review must not mutate the turn snapshot.");
-            Assert.AreEqual(profile.Revision, (await _store.ReadAsync(1, 12)).Revision);
-            Assert.AreEqual(0, (await _store.ReadAsync(1, 12)).Entries.Count, "No approval means no persistence.");
+        var profile = await _store.ReadAsync(1, 12);
+        var service = Service();
+        var context = new AdminChatMemoryContext(1, 12, 3, profile, true, "")
+        { RecentMessages = [new(21, role, fact)] };
+        await service.CompleteAsync(context, "记住上述内容", 0, (_, input, _) =>
+        {
+            using var json = JsonDocument.Parse(input);
+            Assert.IsFalse(json.RootElement.TryGetProperty("reviewRequired", out _));
+            Assert.AreEqual(role, json.RootElement.GetProperty("recentMessages")[0].GetProperty("Role").GetString());
+            return Task.FromResult(Extraction(FactChange(fact)));
+        }, default);
+        Assert.AreEqual(expectedStatus, service.UpdateStatus);
+        if (role == "user")
+        {
+            var saved = (await _store.ReadAsync(1, 12)).Entries.Single();
+            Assert.AreEqual(fact, saved.Text);
+            Assert.AreEqual(21, saved.SourceMessageId);
+            Assert.AreEqual("user-message", saved.Source);
+            Assert.AreEqual(1, service.UpdateResult.GlobalChanges);
+            Assert.AreEqual(0, service.UpdateResult.Proposals.Count);
+            return;
+        }
+        Assert.AreEqual(profile.Revision, service.UpdateResult.Revision);
+        Assert.AreEqual(0, service.UpdateResult.GlobalChanges);
+        var proposal = service.UpdateResult.Proposals.Single();
+        Assert.AreEqual(fact, proposal.Entry.Text);
+        Assert.AreEqual("", proposal.Entry.Id);
+        Assert.AreEqual(0, proposal.Entry.Version);
+        Assert.IsTrue(proposal.Entry.Pinned);
+        Assert.AreEqual(0, profile.Entries.Count, "Review must not mutate the turn snapshot.");
+        Assert.AreEqual(profile.Revision, (await _store.ReadAsync(1, 12)).Revision);
+        Assert.AreEqual(0, (await _store.ReadAsync(1, 12)).Entries.Count, "No approval means no persistence.");
+    }
+
+    [DataTestMethod]
+    [DataRow("请记录")]
+    [DataRow("立即保存")]
+    [DataRow("请你使用 “审查候选记忆”功能 进行保存")]
+    [DataRow("Please save it now.")]
+    [DataRow("Record that.")]
+    [DataRow("Note it down.")]
+    public async Task ShortSaveCommands_WithoutResolvableContext_DoNotInventFacts(string message)
+    {
+        Assert.IsTrue(AdminChatMemoryRetrieval.ShouldLearn(message));
+        Assert.IsTrue(AdminChatMemoryRetrieval.NeedsConversationContext(message));
+        var profile = await _store.ReadAsync(1, 12);
+        var service = Service();
+        await service.CompleteAsync(new(1, 12, 3, profile, true, ""), message, 0,
+            (_, _, _) => Task.FromResult(Extraction("[]")), default);
+        Assert.AreEqual("unresolved-reference", service.UpdateResult.Reason);
+        Assert.AreEqual(0, service.UpdateResult.Proposals.Count);
+        Assert.AreEqual(profile.Revision, (await _store.ReadAsync(1, 12)).Revision);
     }
 
     [TestMethod]

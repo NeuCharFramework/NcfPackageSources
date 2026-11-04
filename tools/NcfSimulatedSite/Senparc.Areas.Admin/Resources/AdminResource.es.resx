@@ -3,7 +3,7 @@
 
   <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Esperando más contenido o confirmación para guardar. No se guardaron cambios en Memory en este turno.</value></data>
   <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>No se identificó intención de actualizar ahora la memoria a largo plazo. No se guardó nada en este turno.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Las propuestas de mensajes anteriores están listas, pero no guardadas. Revise y guarde cada entrada; las afirmaciones del asistente pueden ser inexactas.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Este lote incluye información del asistente y no está guardado. Revise y guarde cada entrada; sus afirmaciones pueden ser inexactas.</value></data>
   <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>El contexto reciente no identifica qué recordar. Envíe «Remember: …» con el hecho completo en un solo mensaje; compruebe el PromptCode si es necesario.</value></data>
   <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>Ha revisado y guardado este grupo de propuestas.</value></data>
   <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Revisar propuesta</value></data>

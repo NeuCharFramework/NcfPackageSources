@@ -3,7 +3,7 @@
 
   <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Ожидается дальнейшее содержимое или подтверждение сохранения. В этом ходе Memory не изменена.</value></data>
   <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>Намерение обновить долговременную память сейчас не обнаружено. В этом ходе ничего не сохранено.</value></data>
-  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Подготовлены предложения из предыдущих сообщений; они ещё не сохранены. Проверьте и сохраните каждую запись: утверждения ассистента могут быть неточными.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Эта группа содержит сведения от ассистента и ещё не сохранена. Проверьте и сохраните каждую запись: утверждения ассистента могут быть неточными.</value></data>
   <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>Недавний контекст не позволяет определить, что запомнить. Отправьте «Remember: …» с полным фактом в одном сообщении; при необходимости проверьте PromptCode.</value></data>
   <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>Вы проверили и сохранили эти предложения.</value></data>
   <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Проверить предложение</value></data>

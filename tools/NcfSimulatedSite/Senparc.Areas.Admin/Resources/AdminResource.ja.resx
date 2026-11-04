@@ -3,7 +3,7 @@
 
   <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>続きの内容または保存の確認を待っています。このターンでは Memory を更新していません。</value></data>
   <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>長期 Memory を今更新する意図が確認できなかったため、このターンでは保存していません。</value></data>
-  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>前のメッセージから候補を整理しましたが、未保存です。各項目を確認して保存してください。AI の発言は正確とは限りません。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>この候補にはアシスタント由来の情報が含まれ、まだ保存されていません。発言は正確とは限らないため、各項目を確認して保存してください。</value></data>
   <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>直近の文脈では記憶対象を特定できません。「記住：…」または「Remember: …」と完全な事実を同じメッセージで指定してください。必要に応じて PromptCode を確認してください。</value></data>
   <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>この候補一覧は確認・保存されました。</value></data>
   <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>候補を確認</value></data>

@@ -86,10 +86,42 @@ public class PromptSelectorTests
         var service = CreateService(context, provider);
         Assert.AreEqual(visible.Id, (await service.GetSelectorOptionsAsync()).Single().RangeId);
         Assert.AreEqual(good.Id, (await service.SearchSelectorAsync(0, null!, null!, 1, 10)).Items.Single().Id);
+        Assert.AreEqual(good.Id, (await service.GetSelectorRangeScoresAsync(good.Id)).Single().Id);
         foreach (var id in new[] { deletedItem.Id, deletedRangeItem.Id, skillItem.Id, otherItem.Id, int.MaxValue })
         {
             await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => service.GetSelectorPromptAsync(id));
+            await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => service.GetSelectorRangeScoresAsync(id));
         }
+    }
+
+    [TestMethod]
+    public async Task RangeScores_ReturnAllVersionsWithoutContentAndUseSharedCurrentScores()
+    {
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+        await using var context = CreateContext(connection, 11);
+        await context.Database.EnsureCreatedAsync();
+        var range = new RangeEntity("2026.11.05.1", "Overview");
+        var otherRange = new RangeEntity("2026.11.05.2", "Other range");
+        context.AddRange(range, otherRange);
+        await context.SaveChangesAsync();
+        var items = Enumerable.Range(1, 53)
+            .Select(index => CreateItem(range, index.ToString(), "Prompt", new string('x', 1000))).ToList();
+        items[0].SetReferenceScore(7.3m, false);
+        items[1].SetReferenceScore(0, true);
+        context.AddRange(items);
+        context.Add(CreateItem(otherRange, "1", "Other", "Must not leak"));
+        await context.SaveChangesAsync();
+        using var provider = new ServiceCollection().BuildServiceProvider();
+        var scores = await CreateService(context, provider).GetSelectorRangeScoresAsync(items[0].Id);
+        Assert.AreEqual(53, scores.Count, "The overview must not inherit the selector's page-size limit.");
+        Assert.IsTrue(scores.All(item => item.RangeId == range.Id && item.RangeAlias == "Overview"));
+        Assert.AreEqual(7.3m, scores.Single(item => item.Id == items[0].Id).CurrentScore);
+        Assert.AreEqual(0m, scores.Single(item => item.Id == items[1].Id).CurrentScore);
+        Assert.AreEqual(-1m, scores.Single(item => item.Id == items[2].Id).CurrentScore);
+        Assert.IsNull(scores[0].GetType().GetProperty("Content"), "Full prompt content is loaded only on selection.");
+        CollectionAssert.AreEqual(scores.OrderBy(item => item.FullVersion, StringComparer.Ordinal).ThenBy(item => item.Id)
+            .Select(item => item.Id).ToArray(), scores.Select(item => item.Id).ToArray());
     }
 
     [TestMethod]

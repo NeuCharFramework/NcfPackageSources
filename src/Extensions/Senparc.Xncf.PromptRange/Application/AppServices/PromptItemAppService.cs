@@ -92,6 +92,13 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public Task<AppResponseBase<List<PromptSelectorScoreItem>>> GetSelectorRangeScoresAsync(int id)
+        {
+            return this.GetResponseAsync<List<PromptSelectorScoreItem>>(
+                async (response, logger) => await _promptItemService.GetSelectorRangeScoresAsync(id));
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public Task<AppResponseBase<PromptReferenceInfo>> GetReferenceInfoAsync(int id)
         {
             return this.GetResponseAsync<PromptReferenceInfo>(
