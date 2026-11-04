@@ -143,6 +143,260 @@
     }
 </style>
 
+<style>
+    /* Workspace follows the AdminChat surface, spacing and interaction language. */
+    .workspace-shell {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 4px 4px 28px;
+    }
+
+    .workspace-hero {
+        position: relative;
+        overflow: hidden;
+        align-items: flex-start;
+        padding: 26px 30px;
+        border: 1px solid rgba(255, 255, 255, .18);
+        border-radius: 16px;
+        background:
+            radial-gradient(circle at 90% 15%, rgba(255, 255, 255, .16), transparent 34%),
+            linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 14px 34px rgba(102, 126, 234, .24);
+    }
+
+    .workspace-hero::after {
+        position: absolute;
+        right: -54px;
+        bottom: -82px;
+        width: 220px;
+        height: 220px;
+        border: 1px solid rgba(255, 255, 255, .12);
+        border-radius: 50%;
+        content: "";
+    }
+
+    .workspace-hero-icon {
+        position: relative;
+        z-index: 1;
+        width: 50px;
+        height: 50px;
+        flex-basis: 50px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, .18);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2);
+    }
+
+    .workspace-hero > div:last-child {
+        position: relative;
+        z-index: 1;
+        min-width: 0;
+    }
+
+    .workspace-hero h1 {
+        font-size: 22px;
+        letter-spacing: .01em;
+    }
+
+    .workspace-hero p {
+        max-width: 760px;
+    }
+
+    .workspace-alert {
+        margin: 16px 0;
+        border-radius: 10px;
+    }
+
+    .ws-section {
+        margin-top: 22px;
+    }
+
+    .ws-section-head {
+        min-height: 30px;
+        margin-bottom: 12px;
+    }
+
+    .ws-section-head h2 {
+        color: #303133;
+        font-size: 17px;
+        letter-spacing: .01em;
+    }
+
+    .ws-section-head h2::before {
+        width: 4px;
+        height: 18px;
+        border-radius: 4px;
+        background: linear-gradient(180deg, #667eea, #764ba2);
+        content: "";
+    }
+
+    .ws-section-head .count-pill {
+        border-color: rgba(102, 126, 234, .2);
+        background: rgba(102, 126, 234, .09);
+        color: #5b6fd7;
+    }
+
+    .ws-create,
+    .ws-guide {
+        border-color: #e4e7ed;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(31, 45, 61, .045);
+    }
+
+    .ws-create {
+        padding: 18px 20px;
+    }
+
+    .ws-create .el-input {
+        max-width: 520px;
+    }
+
+    .ws-create-btn {
+        min-height: 38px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        box-shadow: 0 6px 16px rgba(102, 126, 234, .24);
+    }
+
+    .ws-create-btn:hover,
+    .ws-create-btn:focus {
+        background: linear-gradient(135deg, #748cf0, #8357ad);
+        box-shadow: 0 10px 22px rgba(102, 126, 234, .3);
+    }
+
+    .ws-empty {
+        margin-top: 12px;
+        border-color: #d9e0ed;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, .62);
+    }
+
+    .ws-empty i {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+        background: #eef1ff;
+        color: #7285df;
+    }
+
+    .ws-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 14px;
+        margin-top: 12px;
+    }
+
+    .ws-item {
+        min-width: 0;
+        padding: 17px 18px;
+        border-color: #e4e7ed;
+        border-radius: 12px;
+        box-shadow: 0 5px 16px rgba(31, 45, 61, .04);
+    }
+
+    .ws-item:hover {
+        border-color: rgba(102, 126, 234, .4);
+        box-shadow: 0 12px 26px rgba(82, 103, 217, .12);
+    }
+
+    .ws-item-icon {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+
+    .ws-item-name {
+        color: #303133;
+        font-size: 15px;
+    }
+
+    .ws-item-meta {
+        gap: 8px 14px;
+    }
+
+    .ws-item-actions {
+        align-self: flex-start;
+    }
+
+    .ws-upload-btn,
+    .ws-pair-btn {
+        border-radius: 8px;
+    }
+
+    .ws-guide {
+        grid-template-columns: minmax(0, 1.45fr) minmax(250px, 1fr);
+        padding: 22px;
+    }
+
+    .ws-guide h3 {
+        color: #303133;
+    }
+
+    .ws-guide h3 .fa {
+        color: #667eea;
+    }
+
+    .step-list li::before {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        box-shadow: 0 4px 10px rgba(102, 126, 234, .2);
+    }
+
+    .ws-guide-side {
+        border-left-color: #ebeef5;
+    }
+
+    .ws-upload-toast {
+        right: 24px;
+        bottom: 42px;
+        border-color: #e4e7ed;
+        border-radius: 12px;
+        box-shadow: 0 18px 48px rgba(24, 35, 57, .18);
+    }
+
+    @@media (max-width: 900px) {
+        .ws-list {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .workspace-shell {
+            padding: 0 0 20px;
+        }
+
+        .workspace-hero {
+            padding: 22px 20px;
+        }
+
+        .ws-create {
+            padding: 16px;
+        }
+
+        .ws-item-actions {
+            width: 100%;
+        }
+
+        .ws-upload-btn {
+            width: 100%;
+        }
+
+        .ws-guide {
+            padding: 18px;
+        }
+
+        .ws-upload-toast {
+            right: 12px;
+            bottom: 48px;
+            width: calc(100vw - 24px);
+            box-sizing: border-box;
+        }
+    }
+</style>
+
 <div class="workspace-shell">
     <input ref="workspaceUploadInput" type="file" hidden multiple
         @@change="handleWorkspaceUpload" />
