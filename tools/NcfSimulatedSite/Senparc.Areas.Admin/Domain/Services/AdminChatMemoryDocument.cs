@@ -73,7 +73,10 @@ public sealed record AdminChatMemoryChange(
     public string Kind { get; init; } = "preference";
 }
 
-public sealed record AdminChatMemoryMergeResult(bool Changed, string Reason, int GlobalChanges, int WorkspaceChanges);
+public sealed record AdminChatMemoryMergeResult(bool Changed, string Reason, int GlobalChanges, int WorkspaceChanges)
+{
+    public bool RequiresReview { get; init; }
+}
 
 public sealed class AdminChatMemoryValidationException : NcfExceptionBase
 {
@@ -199,19 +202,26 @@ public static class AdminChatMemoryDocument
 
     public static AdminChatMemoryMergeResult MergeWithResult(AdminChatMemoryProfile profile, string json, string userMessage,
         string workspaceId = "", int? sourceMessageId = null, int? sourceSessionId = null,
-        IReadOnlyList<string> reviewSources = null)
+        IReadOnlyList<AdminChatMemorySource> recentMessages = null)
     {
         if (json == null || json.Length > 12000) throw new NcfExceptionBase("Memory updater returned oversized output.");
         var changes = JsonSerializer.Deserialize<List<AdminChatMemoryChange>>(json,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true, UnmappedMemberHandling = System.Text.Json.Serialization.JsonUnmappedMemberHandling.Disallow })
             ?? throw new NcfExceptionBase("Memory updater returned null.");
         if (changes.Count > 5) throw new NcfExceptionBase("Memory updater returned too many changes.");
+        AdminChatMemorySource EvidenceSource(string evidence) =>
+            string.IsNullOrWhiteSpace(evidence) ? null
+            : (userMessage ?? "").Contains(evidence, StringComparison.Ordinal)
+                ? new(sourceMessageId ?? 0, "user", userMessage)
+                : recentMessages?.Where(source => source.Role is "user" or "assistant"
+                        && source.Text.Contains(evidence, StringComparison.Ordinal))
+                    .OrderBy(source => source.Role == "user" ? 0 : 1)
+                    .ThenByDescending(source => source.MessageId).FirstOrDefault();
         foreach (var change in changes)
         {
             if (change == null || change.Key == null || !KeyPattern.IsMatch(change.Key)
                 || string.IsNullOrWhiteSpace(change.Evidence) || change.Evidence.Length > 600
-                || !((userMessage ?? "").Contains(change.Evidence, StringComparison.Ordinal)
-                    || reviewSources?.Any(source => source.Contains(change.Evidence, StringComparison.Ordinal)) == true)
+                || EvidenceSource(change.Evidence) == null
                 || change.Tier is not ("core" or "topic")
                 || string.IsNullOrWhiteSpace(change.Text) || change.Text.Length > 300
                 || change.Topic == null || change.Topic.Length > 40 || change.Tier == "topic" && change.Topic.Length == 0
@@ -228,6 +238,7 @@ public static class AdminChatMemoryDocument
         var updated = profile.Entries.ToList();
         var revisions = new List<(AdminChatMemoryEntry Before, AdminChatMemoryEntry After)>();
         var pinned = false;
+        var requiresReview = false;
         foreach (var change in changes)
         {
             var scope = change.Scope == "workspace" ? workspaceId : "";
@@ -239,6 +250,7 @@ public static class AdminChatMemoryDocument
             }
             if (!change.Remove && updated.Any(entry =>
                 entry.Text == change.Text && entry.Topic == change.Topic && entry.Tier == change.Tier && entry.WorkspaceId == scope)) continue;
+            var source = EvidenceSource(change.Evidence);
             if (previous != null) updated.Remove(previous);
             AdminChatMemoryEntry next = null;
             if (!change.Remove)
@@ -246,12 +258,17 @@ public static class AdminChatMemoryDocument
                 next = new AdminChatMemoryEntry(change.Key, change.Text, change.Topic, change.Tier, false, DateTimeOffset.UtcNow)
                 {
                     Id = previous?.Id ?? Guid.NewGuid().ToString("N"), Version = (previous?.Version ?? 0) + 1,
-                    WorkspaceId = scope, Kind = change.Kind, Source = "user-message",
-                    SourceMessageId = sourceMessageId, SourceSessionId = sourceSessionId, Evidence = change.Evidence
+                    WorkspaceId = scope, Kind = change.Kind, Source = source.Role + "-message",
+                    SourceMessageId = source.MessageId > 0 ? source.MessageId : null,
+                    SourceSessionId = sourceSessionId, Evidence = change.Evidence
                 };
                 updated.Add(next);
             }
-            if (previous != null || next != null) revisions.Add((previous, next));
+            if (previous != null || next != null)
+            {
+                revisions.Add((previous, next));
+                requiresReview |= source.Role == "assistant";
+            }
         }
         if (updated.Count > MaxEntries) throw new AdminChatMemoryValidationException("capacity");
         if (updated.SequenceEqual(profile.Entries))
@@ -259,6 +276,7 @@ public static class AdminChatMemoryDocument
         profile.Entries = updated;
         foreach (var revision in revisions) profile.Record(revision.Before, revision.After, "automatic");
         return new(true, "saved", revisions.Count(item => (item.After ?? item.Before).WorkspaceId.Length == 0),
-            revisions.Count(item => (item.After ?? item.Before).WorkspaceId.Length > 0));
+            revisions.Count(item => (item.After ?? item.Before).WorkspaceId.Length > 0))
+        { RequiresReview = requiresReview };
     }
 }

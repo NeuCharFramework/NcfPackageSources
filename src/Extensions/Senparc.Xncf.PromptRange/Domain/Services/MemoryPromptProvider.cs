@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261104
     修改描述：提取前判断当前保存意图，区分等待后续内容与立即更新
 
+    修改标识：Senparc - 20261105
+    修改描述：支持省略保存对象的跨轮请求，并区分用户事实与助手候选
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -132,9 +135,23 @@ public sealed class MemoryPromptProvider : IMemoryPromptProvider
         For defer or none, changes MUST be []. For update with no eligible facts, changes is also [].
         The changes array follows the entry schema and all safety/evidence limits in the task guidance.
         This envelope and intent gate override any legacy instruction to output only an array.
+        Resolve short present commands such as 请记录, 立即保存, 请你使用“审查候选记忆”功能进行保存,
+        save it now, record that, or note it down using the bounded recentMessages.
+        Those commands can authorize storing concrete facts supplied by the user in earlier messages.
+        Do not require the literal word above or 上述. If no unambiguous concrete referent exists, return empty changes.
+        An earlier announcement to provide information is not standing permission to save every subsequent fact:
+        wait for the current user's save request. Bare factual messages without such a request are not completion.
+        Saving files, recording audio, or logging program output are not long-term Memory requests.
+        For a self-contained request, extract only its stated facts, never unrelated recent information.
+        Quote the concrete fact as evidence, not a generic save command, confirmation or the assistant's acknowledgement.
+        Prefer exact evidence from the user's own statements and corrections. Ordinary user-stated facts may save
+        automatically when explicitly requested now. Assistant-derived evidence always requires user review;
+        never rewrite it as user evidence or infer user endorsement from a short save command.
+        The server determines review from evidence provenance, not from whether a request refers to earlier messages.
+        Input has no reviewRequired flag; these source rules override legacy instructions requiring review for all context.
         ";
 
-    public static readonly string DefaultPrompt = PreviousContextPrompt
+    public static readonly string PreviousIntentPrompt = PreviousContextPrompt
         .Replace("return [] rather than guess.", "return empty changes rather than guess.")
         .Replace("Extract durable preferences and facts explicitly requested by the user.",
             "First distinguish a present Memory update request from deferred content and non-saving intent. "
@@ -143,6 +160,18 @@ public sealed class MemoryPromptProvider : IMemoryPromptProvider
         .Replace("Return ONLY a JSON array with at most 5 objects, or [] when there is nothing eligible.",
             "Return ONLY a JSON object with intent (update, defer or none) and changes (at most 5 entry objects). "
             + "Use empty changes for defer/none or when nothing is eligible. Classify intent before extracting changes.");
+
+    public static readonly string DefaultPrompt = PreviousIntentPrompt
+        .Replace("workspaceAvailable, reviewRequired and recentMessages.", "workspaceAvailable and recentMessages.")
+        .Replace(@"With reviewRequired false, evidence must come only from currentUserMessage.
+        With reviewRequired true, resolve the user's explicit reference using recentMessages, preferring user
+        statements and corrections. Assistant content is unverified: prepare candidates for review, not confirmed facts.",
+            @"Self-contained requests use evidence from currentUserMessage. Short commands such as 请记录,
+        立即保存 or save it now resolve their object from recentMessages, preferring the user's concrete statements
+        and corrections. A current save request may authorize those user-stated facts without manual review.
+        Assistant content is unverified: prepare candidates for review, not confirmed facts.
+        Evidence quotes the concrete fact, never just a save command or acknowledgement.
+        An earlier announcement to provide information does not authorize saving every later message.");
 
     public MemoryPromptProvider(PromptRangeService ranges, PromptItemService items)
     {
@@ -192,7 +221,7 @@ public sealed class MemoryPromptProvider : IMemoryPromptProvider
     {
         if (item.Note != RangeAlias || item.IsDraft || item.EvalAvgScore != 0 || item.EvalMaxScore != 0
             || item.Content != PreviousDefaultPrompt && item.Content != PreviousResponsePreferencePrompt
-                && item.Content != PreviousContextPrompt) return false;
+                && item.Content != PreviousContextPrompt && item.Content != PreviousIntentPrompt) return false;
         item.UpdateContent(DefaultPrompt);
         return true;
     }

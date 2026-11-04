@@ -623,7 +623,7 @@ public class AdminChatMemoryTests
     }
 
     [TestMethod]
-    public async Task DirectOrdinaryFacts_CanUseGlobalScope_WithoutConversationInput()
+    public async Task DirectOrdinaryFacts_CanUseGlobalScope_WithoutSavingUnrelatedContext()
     {
         const string fact = "测试角色甲的小名是小甲，也叫Alpha。";
         var profile = await _store.UpdateAsync(1, 12, "", value => value.SessionModes[3] = AdminChatMemoryMode.Learn);
@@ -634,7 +634,9 @@ public class AdminChatMemoryTests
         };
         await service.CompleteAsync(context, "记住：" + fact, 0, (_, input, _) =>
         {
-            Assert.IsFalse(input.Contains("Unrelated earlier answer"));
+            using var json = JsonDocument.Parse(input);
+            Assert.AreEqual("记住：" + fact, json.RootElement.GetProperty("currentUserMessage").GetString());
+            Assert.IsFalse(json.RootElement.TryGetProperty("reviewRequired", out _));
             return Task.FromResult(Extraction(FactChange(fact)));
         }, default);
         Assert.AreEqual("updated", service.UpdateStatus);
@@ -652,11 +654,64 @@ public class AdminChatMemoryTests
         }});
 
     [TestMethod]
-    public async Task ReferencedUserOrAssistantFacts_OnlyProduceReviewCandidates()
+    public async Task MixedSources_RequireReviewForWholeBatch_AndCannotPromoteAssistantEvidence()
+    {
+        const string userFact = "测试角色甲也叫Alpha。";
+        const string assistantFact = "测试角色乙也叫Beta。";
+        var profile = await _store.ReadAsync(1, 12);
+        var service = Service();
+        var context = new AdminChatMemoryContext(1, 12, 3, profile, true, "")
+        { RecentMessages = [new(20, "user", userFact), new(21, "assistant", assistantFact)] };
+        using var first = JsonDocument.Parse(FactChange(userFact));
+        using var second = JsonDocument.Parse(FactChange(assistantFact).Replace("fictional-alias", "fictional-beta"));
+        var changes = JsonSerializer.Serialize(new[] { first.RootElement[0], second.RootElement[0] });
+        await service.CompleteAsync(context, "立即保存", 0, (_, _, _) => Task.FromResult(Extraction(changes)), default);
+        Assert.AreEqual("pending-review", service.UpdateStatus);
+        Assert.AreEqual(2, service.UpdateResult.Proposals.Count);
+        Assert.AreEqual(profile.Revision, (await _store.ReadAsync(1, 12)).Revision);
+        Assert.AreEqual(0, profile.Entries.Count);
+
+        context = context with { RecentMessages = [new(21, "assistant", assistantFact)] };
+        await service.CompleteAsync(context, "请记录", 0,
+            (_, _, _) => Task.FromResult(Extraction(FactChange(assistantFact))), default);
+        Assert.AreEqual("pending-review", service.UpdateStatus, "A short command is not user evidence for an assistant claim.");
+        Assert.AreEqual(21, service.UpdateResult.Proposals.Single().Entry.SourceMessageId);
+        Assert.AreEqual(profile.Revision, (await _store.ReadAsync(1, 12)).Revision);
+    }
+
+    [TestMethod]
+    public async Task PriorUserCorrections_AutoSaveWithOriginalId_AndStillProtectPins()
+    {
+        const string before = "测试角色甲叫Alpha。";
+        const string after = "测试角色甲叫Alpha，也叫小甲。";
+        var profile = await _store.UpdateAsync(1, 12, "", value =>
+            AdminChatMemoryDocument.Merge(value, FactChange(before), before));
+        var original = profile.Entries.Single();
+        var service = Service();
+        var context = new AdminChatMemoryContext(1, 12, 3, profile, true, "")
+        { RecentMessages = [new(20, "user", after), new(21, "assistant", after)] };
+        await service.CompleteAsync(context, "请记录", 0,
+            (_, _, _) => Task.FromResult(Extraction(FactChange(after))), default);
+        var saved = await _store.ReadAsync(1, 12);
+        Assert.AreEqual("updated", service.UpdateStatus);
+        Assert.AreEqual(original.Id, saved.Entries.Single().Id);
+        Assert.AreEqual(original.Version + 1, saved.Entries.Single().Version);
+        Assert.AreEqual(20, saved.Entries.Single().SourceMessageId, "Prefer the actual user assertion over its assistant echo.");
+        profile = await _store.UpdateAsync(1, 12, saved.Revision, value =>
+            value.Entries[0] = value.Entries[0] with { Pinned = true });
+        context = context with { Profile = profile, RecentMessages = [new(22, "user", before)] };
+        await service.CompleteAsync(context, "请记录", 0,
+            (_, _, _) => Task.FromResult(Extraction(FactChange(before))), default);
+        Assert.AreEqual("pinned", service.UpdateResult.Reason);
+        Assert.AreEqual(profile.Revision, (await _store.ReadAsync(1, 12)).Revision);
+    }
+
+    [DataTestMethod]
+    [DataRow("user", "updated")]
+    [DataRow("assistant", "pending-review")]
+    public async Task ReferencedFacts_UseActualEvidenceRoleToDecideReview(string role, string expectedStatus)
     {
         const string fact = "测试角色甲的小名是小甲，也叫Alpha。";
-        foreach (var role in new[] { "user", "assistant" })
-        {
             var profile = await _store.ReadAsync(1, 12);
             var service = Service();
             var context = new AdminChatMemoryContext(1, 12, 3, profile, true, "")
@@ -664,11 +719,21 @@ public class AdminChatMemoryTests
             await service.CompleteAsync(context, "记住上述内容", 0, (_, input, _) =>
             {
                 using var json = JsonDocument.Parse(input);
-                Assert.IsTrue(json.RootElement.GetProperty("reviewRequired").GetBoolean());
+                Assert.IsFalse(json.RootElement.TryGetProperty("reviewRequired", out _));
                 Assert.AreEqual(role, json.RootElement.GetProperty("recentMessages")[0].GetProperty("Role").GetString());
                 return Task.FromResult(Extraction(FactChange(fact)));
             }, default);
-            Assert.AreEqual("pending-review", service.UpdateStatus);
+            Assert.AreEqual(expectedStatus, service.UpdateStatus);
+            if (role == "user")
+            {
+                var saved = (await _store.ReadAsync(1, 12)).Entries.Single();
+                Assert.AreEqual(fact, saved.Text);
+                Assert.AreEqual(21, saved.SourceMessageId);
+                Assert.AreEqual("user-message", saved.Source);
+                Assert.AreEqual(1, service.UpdateResult.GlobalChanges);
+                Assert.AreEqual(0, service.UpdateResult.Proposals.Count);
+                return;
+            }
             Assert.AreEqual(profile.Revision, service.UpdateResult.Revision);
             Assert.AreEqual(0, service.UpdateResult.GlobalChanges);
             var proposal = service.UpdateResult.Proposals.Single();
@@ -679,7 +744,6 @@ public class AdminChatMemoryTests
             Assert.AreEqual(0, profile.Entries.Count, "Review must not mutate the turn snapshot.");
             Assert.AreEqual(profile.Revision, (await _store.ReadAsync(1, 12)).Revision);
             Assert.AreEqual(0, (await _store.ReadAsync(1, 12)).Entries.Count, "No approval means no persistence.");
-        }
     }
 
     [TestMethod]
@@ -733,7 +797,7 @@ public class AdminChatMemoryTests
         var existing = profile.Entries.Single();
         var service = Service();
         var context = new AdminChatMemoryContext(1, 12, 3, profile, true, "")
-        { RecentMessages = [new(21, "user", after)] };
+        { RecentMessages = [new(21, "assistant", after)] };
         await service.CompleteAsync(context, "更正上述记忆", 0,
             (_, _, _) => Task.FromResult(Extraction(FactChange(after))), default);
         var proposal = service.UpdateResult.Proposals.Single();
@@ -770,6 +834,10 @@ public class AdminChatMemoryTests
         item.UpdateContent(MemoryPromptProvider.PreviousContextPrompt);
         Assert.IsTrue(MemoryPromptProvider.UpgradeUnmodifiedDefault(item));
         StringAssert.Contains(item.Content, "Classify intent before extracting changes");
+        item.UpdateContent(MemoryPromptProvider.PreviousIntentPrompt);
+        Assert.IsTrue(MemoryPromptProvider.UpgradeUnmodifiedDefault(item));
+        StringAssert.Contains(item.Content, "立即保存 or save it now");
+        Assert.IsFalse(item.Content.Contains("reviewRequired"));
         item.UpdateContent("Custom prompt");
         Assert.IsFalse(MemoryPromptProvider.UpgradeUnmodifiedDefault(item));
         item.UpdateContent(MemoryPromptProvider.PreviousDefaultPrompt).UpdateEvalAvgScore(90);
@@ -777,5 +845,6 @@ public class AdminChatMemoryTests
         StringAssert.Contains(MemoryPromptProvider.DefaultPrompt, "以后都要记住这个规则");
         StringAssert.Contains(AdminChatMemoryService.StorageInstructions(AdminChatMemoryMode.Learn), "AFTER your reply");
         StringAssert.Contains(AdminChatMemoryService.StorageInstructions(AdminChatMemoryMode.Off), "Never claim");
+        StringAssert.Contains(AdminChatMemoryService.StorageInstructions(AdminChatMemoryMode.Learn), "never claim candidates");
     }
 }

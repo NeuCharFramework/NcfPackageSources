@@ -88,13 +88,13 @@ public static class AdminChatMemoryRetrieval
 
     public static bool ShouldLearn(string text) => !string.IsNullOrWhiteSpace(text) && text.Length <= 7500
         && Regex.IsMatch(text,
-            @"记住|记得|以后|今后|始终|偏好|更正|纠正|忘记|不要再|约定|决定|规范|(?:修改|更新|补充).{0,8}(?:记忆|memory)|remember|forget|prefer|from now on|always|never|correction|we decided|(?:update|correct).{0,12}memory",
+            @"记住|记得|记录|保存|记下|记好|以后|今后|始终|偏好|更正|纠正|忘记|不要再|约定|决定|规范|(?:修改|更新|补充).{0,8}(?:记忆|memory)|remember|forget|prefer|\b(save|store|record|note)\b|from now on|always|never|correction|we decided|(?:update|correct).{0,12}memory",
             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100))
         && !Regex.IsMatch(text, @"不要.{0,6}(记住|记录|保存)|(?:do not|don't|never)\s+(?:remember|store|save)",
             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
 
     public static bool NeedsConversationContext(string text) => ShouldLearn(text)
         && Regex.IsMatch(text,
-            @"上述|上面|以上|前面|刚才|刚刚|前文|记住(?:它|这些|那些)|\b(above|earlier|previous|preceding)\b|\bremember\s+(this|that|it|these|those)\s*[.!?。！?]*$",
+            @"上述|上面|以上|前面|刚才|刚刚|前文|记住(?:它|这些|那些)|(?:记住|记录|保存|记下|记好)\s*[。！!？?]*$|\b(above|earlier|previous|preceding)\b|\b(?:remember|save|store|record|note)(?:\s+(?:this|that|it|these|those|now|please|down))*\s*[.!?。！?]*$",
             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
 }

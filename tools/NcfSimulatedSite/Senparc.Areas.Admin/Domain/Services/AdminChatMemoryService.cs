@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261104
     修改描述：在自动落库和生成候选前校验保存意图，等待后续内容时不写入
 
+    修改标识：Senparc - 20261105
+    修改描述：支持跨轮保存短指令，按真实证据来源决定自动保存或人工核对
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -92,9 +95,13 @@ public sealed class AdminChatMemoryService
         + "Do not refuse ordinary person facts merely because they are not work preferences. "
         + "In Learn mode an explicit self-contained remember request already authorizes extraction; "
         + "do not ask again whether the user wants long-term Memory. Report no success before the system receipt. "
-        + "When the request refers to earlier messages, the service prepares candidates from a bounded recent "
-        + "conversation window for user review, not automatic storage. Direct the user to the system's Review "
-        + "candidate action to inspect and save exact entries; do not ask for a redundant conversational confirmation. "
+        + "A present request such as '请记录', '立即保存' or 'save it now' can refer to facts the user supplied "
+        + "in recent messages. The service resolves that reference after your reply; user-stated facts may save "
+        + "automatically after validation. Only changes relying on assistant-generated content require UI review. "
+        + "A future announcement does not authorize saving each following message before the user asks to save. "
+        + "You cannot click the review UI. No candidate result has been issued to you: never claim candidates "
+        + "exist or direct the user to a supposed review screen. Acknowledge the request and let the actual system "
+        + "receipt show any available review action. Do not require redundant confirmation for user-stated facts. "
         + "You have not received its save result. Never claim a fact or preference has been recorded, saved or updated "
         + "in long-term Memory or in a file based only on the user's request or your intention. "
         + "You may acknowledge the request for this conversation, explaining that the system's Memory update report "
@@ -288,7 +295,7 @@ public sealed class AdminChatMemoryService
                 && message.RoleType == ChatMessageRoleType.User, message => message.Id,
                 Senparc.Ncf.Core.Enums.OrderingType.Descending)).FirstOrDefault();
             if (latest?.Content == userMessage) sourceMessageId = latest.Id;
-            if (sourceMessageId.HasValue && AdminChatMemoryRetrieval.NeedsConversationContext(userMessage))
+            if (sourceMessageId.HasValue && AdminChatMemoryRetrieval.ShouldLearn(userMessage))
             {
                 var previous = await messages.GetObjectListAsync(1, 6, message =>
                     message.SessionId == sessionId && message.Id < sourceMessageId.Value
@@ -360,12 +367,10 @@ public sealed class AdminChatMemoryService
             timeout.CancelAfter(TimeSpan.FromSeconds(45));
             var prompt = await provider.GetAsync(modelId, timeout.Token);
             _promptCode = prompt.PromptCode;
-            var reviewRequired = AdminChatMemoryRetrieval.NeedsConversationContext(userMessage);
-            var recentMessages = reviewRequired ? context.RecentMessages : Array.Empty<AdminChatMemorySource>();
+            var recentMessages = context.RecentMessages;
             var input = JsonSerializer.Serialize(new
             {
                 currentUserMessage = userMessage,
-                reviewRequired,
                 recentMessages,
                 workspaceAvailable = context.WorkspaceId.Length > 0,
                 existing = AdminChatMemoryRetrieval.Eligible(context.Profile, context.WorkspaceId)
@@ -391,14 +396,15 @@ public sealed class AdminChatMemoryService
             };
             var merge = AdminChatMemoryDocument.MergeWithResult(working, extraction.Changes, userMessage,
                 context.WorkspaceId, context.SourceMessageId, context.SessionId,
-                reviewRequired ? recentMessages.Select(message => message.Text).ToArray() : null);
+                recentMessages);
             if (!merge.Changed)
             {
                 UpdateStatus = "unchanged";
-                _updateReason = reviewRequired && merge.Reason == "no-candidates" ? "unresolved-reference" : merge.Reason;
+                _updateReason = AdminChatMemoryRetrieval.NeedsConversationContext(userMessage)
+                    && merge.Reason == "no-candidates" ? "unresolved-reference" : merge.Reason;
                 return;
             }
-            if (reviewRequired)
+            if (merge.RequiresReview)
             {
                 _proposals = working.Entries.Where(entry => !context.Profile.Entries.Contains(entry))
                     .Select(entry =>
