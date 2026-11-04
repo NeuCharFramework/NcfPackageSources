@@ -24,4 +24,5 @@
   <data name="Parameter.Terminal.Command" xml:space="preserve">
     <value>&gt; 命令||命令行，例如：dir /?</value>
   </data>
+
 </root>

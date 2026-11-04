@@ -18,4 +18,5 @@
   <data name="Module.Dapr.Description" xml:space="preserve">
     <value>Fournit les capacités Dapr aux autres modules</value>
   </data>
+
 </root>

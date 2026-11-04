@@ -18,4 +18,5 @@
   <data name="Module.AreasBase.Description" xml:space="preserve">
     <value>Proporciona la base de ejecución para Razor Pages y áreas de interfaz relacionadas</value>
   </data>
+
 </root>

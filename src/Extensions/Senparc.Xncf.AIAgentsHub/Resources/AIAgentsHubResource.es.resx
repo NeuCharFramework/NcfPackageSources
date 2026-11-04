@@ -24,12 +24,6 @@
   <data name="Area.DatabaseSample" xml:space="preserve">
     <value>Ejemplo de operaciones de base de datos</value>
   </data>
-  <data name="Function.Sample.Name" xml:space="preserve">
-    <value>Función de ejemplo</value>
-  </data>
-  <data name="Function.Sample.Description" xml:space="preserve">
-    <value>Demuestra parámetros y valores de retorno de FunctionRender</value>
-  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>Nombre||El texto anterior a la doble barra es el nombre del parámetro; el posterior es la ayuda</value>
   </data>
@@ -102,4 +96,11 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Aleatorio</value>
   </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>Función de ejemplo</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>Demuestra parámetros y valores de retorno de FunctionRender</value>
+  </data>
+
 </root>

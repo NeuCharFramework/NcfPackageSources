@@ -1,5 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
   <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>等待你提供后续内容或确认保存，本轮未写入 Memory。</value></data>
   <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>本轮未识别到立即更新长期记忆的意图，未写入 Memory。</value></data>
   <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>已整理前文候选，尚未保存。请逐条核对并保存；助手回复中的信息可能不准确。</value></data>
@@ -84,45 +124,6 @@
   <data name="AdminChat.Memory.Saved" xml:space="preserve"><value>已保存。</value></data>
   <data name="AdminChat.Memory.Failed" xml:space="preserve"><value>Memory 操作失败，请重新加载后重试。</value></data>
   <data name="AdminChat.Memory.UpdateWarning" xml:space="preserve"><value>本轮 Memory 未更新，已有记忆保留。请检查 PromptRange 或重新打开 Memory 设置。</value></data>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
   <data name="Admin.Title" xml:space="preserve">
     <value>NCF 管理后台</value>
   </data>
@@ -198,11 +199,11 @@
   <data name="Admin.Login.Error.PasswordRequired" xml:space="preserve">
     <value>请输入密码</value>
   </data>
-  <data name="Admin.Login.Error.InvalidCredentials" xml:space="preserve">
-    <value>账号或密码错误！</value>
-  </data>
   <data name="Admin.Language.SelectLanguage" xml:space="preserve">
     <value>选择语言</value>
+  </data>
+  <data name="Admin.Login.Error.InvalidCredentials" xml:space="preserve">
+    <value>账号或密码错误！</value>
   </data>
   <data name="Common.系统管理" xml:space="preserve"><value>系统管理</value></data>
   <data name="Common.增加" xml:space="preserve"><value>增加</value></data>
@@ -256,6 +257,7 @@
   <data name="Tenant.KeyExists" xml:space="preserve"><value>{0} 租户匹配规则已存在</value></data>
   <data name="Tenant.SaveSuccess.Edit" xml:space="preserve"><value>编辑租户成功</value></data>
   <data name="Tenant.SaveSuccess.Create" xml:space="preserve"><value>新增租户成功</value></data>
+  <data name="Tenant.PlatformAdminOnly" xml:space="preserve"><value>多租户模式下，仅平台管理员（系统级账号）可以管理租户信息！</value></data>
   <data name="Tenant.NotFound" xml:space="preserve"><value>租户不存在</value></data>
   <data name="Tenant.SetInfoFailed" xml:space="preserve"><value>租户信息设置失败</value></data>
   <data name="Tenant.InitializeSuccess" xml:space="preserve"><value>初始化成功</value></data>
@@ -288,24 +290,6 @@
   <data name="AdminChat.SelectAtLeastOneMessage" xml:space="preserve"><value>请至少选择一条消息</value></data>
   <data name="AdminChat.SelectAtLeastOneModule" xml:space="preserve"><value>请至少选择一个 XNCF 模块</value></data>
   <data name="AdminChat.DeleteMessagesSuccess" xml:space="preserve"><value>删除成功，共删除 {0} 条消息</value></data>
-  <data name="AdminChat.UserStats" xml:space="preserve"><value>用量统计</value></data>
-  <data name="AdminChat.UserStatsTitle" xml:space="preserve"><value>用户用量统计（AdminChat）</value></data>
-  <data name="AdminChat.UserStatsTip" xml:space="preserve"><value>仅统计各账号的会话与消息数量，不展示任何会话或消息内容。</value></data>
-  <data name="AdminChat.UserStatsCol.User" xml:space="preserve"><value>账号</value></data>
-  <data name="AdminChat.UserStatsCol.Total" xml:space="preserve"><value>会话总数</value></data>
-  <data name="AdminChat.UserStatsCol.Active" xml:space="preserve"><value>活跃</value></data>
-  <data name="AdminChat.UserStatsCol.Archived" xml:space="preserve"><value>已归档</value></data>
-  <data name="AdminChat.UserStatsCol.Deleted" xml:space="preserve"><value>已删除</value></data>
-  <data name="AdminChat.UserStatsCol.Messages" xml:space="preserve"><value>消息数</value></data>
-  <data name="AdminChat.UserStatsCol.LastActive" xml:space="preserve"><value>最后活跃</value></data>
-  <data name="AdminChat.UserStatsLoadFailed" xml:space="preserve"><value>加载用户用量统计失败</value></data>
-  <data name="AdminChat.SuperAdminOnly" xml:space="preserve"><value>仅超级管理员可以查看各账号的用量统计</value></data>
-  <data name="Tenant.AdminUserCount" xml:space="preserve"><value>管理员数</value></data>
-  <data name="Tenant.DeleteCurrentTenantNotAllowed" xml:space="preserve"><value>不能删除当前正在使用的租户！</value></data>
-  <data name="Tenant.DeleteLastTenantNotAllowed" xml:space="preserve"><value>系统必须至少保留一个启用的租户，不能删除最后一个租户！</value></data>
-  <data name="Tenant.DeleteHasAdminUsers" xml:space="preserve"><value>租户 {0} 下仍有 {1} 个管理员账号，请先转移或删除相关账号后再删除租户！</value></data>
-  <data name="Tenant.DeleteNotFound" xml:space="preserve"><value>租户不存在！</value></data>
-  <data name="Tenant.PlatformAdminOnly" xml:space="preserve"><value>多租户模式下，仅平台管理员（系统级账号）可以管理租户信息！</value></data>
   <data name="AdminChat.AddModulesSuccess" xml:space="preserve"><value>添加成功</value></data>
   <data name="Admin.Layout.Account" xml:space="preserve"><value>我的账号</value></data>
   <data name="Admin.Layout.CurrentAccount" xml:space="preserve"><value>当前账号：{0}</value></data>
@@ -427,7 +411,6 @@
   <data name="AdminChat.SendHint" xml:space="preserve"><value>Ctrl + Enter 或 Cmd + Enter 发送</value></data>
   <data name="AdminChat.Send" xml:space="preserve"><value>发送</value></data>
   <data name="AdminChat.Thinking" xml:space="preserve"><value>正在思考中...</value></data>
-
   <data name="AdminChat.ModeSimple" xml:space="preserve"><value>普通对话</value></data>
   <data name="AdminChat.ModeHarness" xml:space="preserve"><value>长任务</value></data>
   <data name="AdminChat.HarnessSteps" xml:space="preserve"><value>执行步骤</value></data>
@@ -870,6 +853,32 @@
     <value>暂无可排序的菜单或页面</value>
   </data>
   <data name="Admin.Footer.NeuBellWebHookSettings" xml:space="preserve"><value>WebHook 设置</value></data>
+  <data name="DocHelp.Help" xml:space="preserve"><value>帮助</value></data>
+  <data name="DocHelp.Title" xml:space="preserve"><value>功能文档</value></data>
+  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>在新窗口打开</value></data>
+  <data name="DocHelp.Close" xml:space="preserve"><value>关闭</value></data>
+  <data name="DocHelp.Loading" xml:space="preserve"><value>正在加载文档…</value></data>
+  <data name="DocHelp.Notice" xml:space="preserve"><value>若文档空白或被浏览器阻止，请在新窗口打开。</value></data>
+  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>文档加载失败或等待超时，请重试或在新窗口打开。</value></data>
+  <data name="DocHelp.Retry" xml:space="preserve"><value>重试</value></data>
+  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>帮助文档索引配置无效，请联系管理员。</value></data>
+  <data name="AdminChat.UserStats" xml:space="preserve"><value>用量统计</value></data>
+  <data name="AdminChat.UserStatsTitle" xml:space="preserve"><value>用户用量统计（AdminChat）</value></data>
+  <data name="AdminChat.UserStatsTip" xml:space="preserve"><value>仅统计各账号的会话与消息数量，不展示任何会话或消息内容。</value></data>
+  <data name="AdminChat.UserStatsCol.User" xml:space="preserve"><value>账号</value></data>
+  <data name="AdminChat.UserStatsCol.Total" xml:space="preserve"><value>会话总数</value></data>
+  <data name="AdminChat.UserStatsCol.Active" xml:space="preserve"><value>活跃</value></data>
+  <data name="AdminChat.UserStatsCol.Archived" xml:space="preserve"><value>已归档</value></data>
+  <data name="AdminChat.UserStatsCol.Deleted" xml:space="preserve"><value>已删除</value></data>
+  <data name="AdminChat.UserStatsCol.Messages" xml:space="preserve"><value>消息数</value></data>
+  <data name="AdminChat.UserStatsCol.LastActive" xml:space="preserve"><value>最后活跃</value></data>
+  <data name="AdminChat.UserStatsLoadFailed" xml:space="preserve"><value>加载用户用量统计失败</value></data>
+  <data name="AdminChat.SuperAdminOnly" xml:space="preserve"><value>仅超级管理员可以查看各账号的用量统计</value></data>
+  <data name="Tenant.AdminUserCount" xml:space="preserve"><value>管理员数</value></data>
+  <data name="Tenant.DeleteCurrentTenantNotAllowed" xml:space="preserve"><value>不能删除当前正在使用的租户！</value></data>
+  <data name="Tenant.DeleteLastTenantNotAllowed" xml:space="preserve"><value>系统必须至少保留一个启用的租户，不能删除最后一个租户！</value></data>
+  <data name="Tenant.DeleteHasAdminUsers" xml:space="preserve"><value>租户 {0} 下仍有 {1} 个管理员账号，请先转移或删除相关账号后再删除租户！</value></data>
+  <data name="Tenant.DeleteNotFound" xml:space="preserve"><value>租户不存在！</value></data>
   <data name="PromptSelector.Title" xml:space="preserve"><value>PromptRange · 选择提示词</value></data>
   <data name="PromptSelector.Range" xml:space="preserve"><value>全部靶场</value></data>
   <data name="PromptSelector.Tactic" xml:space="preserve"><value>全部靶道</value></data>
@@ -894,15 +903,6 @@
   <data name="PromptSelector.AverageScore" xml:space="preserve"><value>平均分</value></data>
   <data name="PromptSelector.MaxScore" xml:space="preserve"><value>最高分</value></data>
   <data name="PromptSelector.Unrated" xml:space="preserve"><value>未评分</value></data>
-  <data name="DocHelp.Help" xml:space="preserve"><value>帮助</value></data>
-  <data name="DocHelp.Title" xml:space="preserve"><value>功能文档</value></data>
-  <data name="DocHelp.OpenWindow" xml:space="preserve"><value>在新窗口打开</value></data>
-  <data name="DocHelp.Close" xml:space="preserve"><value>关闭</value></data>
-  <data name="DocHelp.Loading" xml:space="preserve"><value>正在加载文档…</value></data>
-  <data name="DocHelp.Notice" xml:space="preserve"><value>若文档空白或被浏览器阻止，请在新窗口打开。</value></data>
-  <data name="DocHelp.LoadFailed" xml:space="preserve"><value>文档加载失败或等待超时，请重试或在新窗口打开。</value></data>
-  <data name="DocHelp.Retry" xml:space="preserve"><value>重试</value></data>
-  <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>帮助文档索引配置无效，请联系管理员。</value></data>
   <data name="PromptSelector.CurrentScore" xml:space="preserve"><value>当前评分</value></data>
   <data name="PromptReference.Score" xml:space="preserve"><value>打分（0~10）</value></data>
   <data name="PromptReference.View" xml:space="preserve"><value>快速查看提示词</value></data>
@@ -919,4 +919,5 @@
   <data name="PromptReference.Cancel" xml:space="preserve"><value>取消</value></data>
   <data name="PromptReference.Save" xml:space="preserve"><value>保存手动评分</value></data>
   <data name="PromptReference.TooMany" xml:space="preserve"><value>每条消息最多标注 32 段提示词，请先移除不需要的引用。</value></data>
+
 </root>

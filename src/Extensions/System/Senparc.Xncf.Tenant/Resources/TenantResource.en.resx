@@ -18,4 +18,5 @@
   <data name="Module.Tenant.Description" xml:space="preserve">
     <value>Core multi-tenant system module. Do not remove it; back up data before changes.</value>
   </data>
+
 </root>
