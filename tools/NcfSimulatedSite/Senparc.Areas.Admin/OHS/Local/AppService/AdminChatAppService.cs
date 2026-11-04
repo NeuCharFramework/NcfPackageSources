@@ -694,11 +694,12 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 var attachments = await ServiceProvider.GetRequiredService<AdminChatAttachmentService>()
                     .ValidateAsync(session, request.Attachments);
                 var content = string.IsNullOrWhiteSpace(request.Content)
-                    ? AdminChatAttachmentService.AttachmentOnlyMessage : request.Content.Trim();
+                    ? AdminChatAttachmentService.AttachmentOnlyMessage
+                    : request.PromptReferences?.Count > 0 ? request.Content : request.Content.Trim();
                 var userMessage = await _messageService.AddMessageAsync(
                     request.SessionId,
                     ChatMessageRoleType.User,
-                    content, attachments: attachments);
+                    content, attachments: attachments, promptReferences: request.PromptReferences);
 
                 await _sessionService.UpdateLastMessageTimeAsync(request.SessionId);
 

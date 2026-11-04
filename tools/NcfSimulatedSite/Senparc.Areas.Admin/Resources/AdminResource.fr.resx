@@ -1,5 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>En attente du contenu suivant ou de la confirmation. Aucune modification de Memory enregistrée pour ce tour.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>Aucune intention actuelle de modifier la mémoire à long terme identifiée. Rien n’a été enregistré pour ce tour.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Des propositions issues des messages précédents sont prêtes, mais non enregistrées. Vérifiez et enregistrez chaque entrée ; les propos de l’assistant peuvent être inexacts.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>Le contexte récent ne précise pas quoi mémoriser. Envoyez « Remember: … » et le fait complet dans un même message ; vérifiez le PromptCode si nécessaire.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>Vous avez vérifié et enregistré ces propositions.</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Vérifier la proposition</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>Cette proposition issue du contexte n’est pas enregistrée. Vérifiez le contenu et la portée, puis enregistrez l’entrée. Une suppression exige une confirmation. L’IA ne modifie pas les entrées manuelles épinglées.</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Terminez le brouillon et fermez les paramètres avant de vérifier une proposition.</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Extrait source (non vérifié)</value></data>
   <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Développer le volet des conversations</value></data>
   <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Réduire le volet des conversations</value></data>
   <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Redimensionner le volet (flèches gauche/droite)</value></data>

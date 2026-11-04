@@ -4,6 +4,46 @@
     box-sizing: border-box;
 }
 
+.ncf-prompt-reference-labels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 4px 0;
+}
+
+.ncf-prompt-reference-pill {
+    border: 1px solid #c6d8f0;
+    border-radius: 12px;
+    background: #edf5ff;
+    color: #1765ad;
+    padding: 3px 9px;
+    font-size: 12px;
+    cursor: pointer;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+.ncf-prompt-reference-content {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.ncf-prompt-reference-segment {
+    display: block;
+    border-left: 3px solid #80afe8;
+    padding: 6px 10px;
+    margin: 5px 0;
+    background: #f4f8ff;
+    border-radius: 5px;
+}
+
+.ncf-prompt-reference-segment > .ncf-prompt-reference-tag {
+    display: block;
+    white-space: normal;
+    margin-bottom: 5px;
+}
+
 .ncf-prompt-selector-trigger {
     position: absolute;
     top: 2px;

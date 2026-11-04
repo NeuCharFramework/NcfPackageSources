@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.3.1-preview6</Version>
+    <Version>0.3.2-preview6</Version>
     <AssemblyName>Senparc.Xncf.PromptRange.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.PromptRange.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -30,6 +30,7 @@
       3、Skill 查询可按允许的 Skill 列表过滤
       [2026-11-02] Add the Memory updater prompt provider contract.
       [2026-11-03] v0.3.1-preview6 提供 Skill 包管理、来源文件和聊天记忆提示词契约
+      [2026-11-04] Add portable PromptCode reference validation, score information and shared scoring provider contracts.
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

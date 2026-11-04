@@ -32,6 +32,7 @@ public class PromptSelectorItem : PromptSelectorOption
     public bool IsDraft { get; set; }
     public decimal EvalAvgScore { get; set; }
     public decimal EvalMaxScore { get; set; }
+    public decimal CurrentScore { get; set; }
     public string Content { get; set; }
 }
 

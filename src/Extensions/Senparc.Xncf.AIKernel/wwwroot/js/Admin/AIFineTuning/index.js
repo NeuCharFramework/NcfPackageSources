@@ -36,7 +36,7 @@ var app = new Vue({
             events: [],
             validation: { status: "Idle", startedUtc: null, finishedUtc: null, completed: 0, total: 0, results: [], error: null, recordedBackend: null, recordedMethod: null },
             validationPrompts: "",
-            validationMaxTokens: 128,
+            validationMaxTokens: 2048,
             validationBackend: "",
             validationMethod: "",
             validationBusy: false,

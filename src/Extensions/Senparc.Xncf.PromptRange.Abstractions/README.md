@@ -52,3 +52,23 @@ only creates a Draft and never publishes or executes the newly installed Skill
 automatically.
 
 Event payloads may contain prompts and model output. Apply authorization, tenant ownership, redaction, and retention controls before publishing or persisting them.
+
+## PromptCode reference integration
+
+`References/PromptReference.cs` supplies optional, implementation-independent integration:
+
+- `PromptReference`: `PromptItemId`, exact full `PromptCode`, UTF-16 `Start` and `Length`.
+  Store metadata separately from the original content; never send labels or scores to the LLM.
+  `ValidateRanges` checks ordered, nonoverlapping spans, with a maximum of 32 references.
+- `IPromptReferenceService.ValidateAsync` additionally verifies the accessible version and exact text.
+- `GetInfoAsync`, `ScoreAsync` and `ScoreWithAIAsync` expose version-level information and scoring.
+  Only AI and manual source scores exist; whichever was saved last becomes `CurrentScore`.
+  Scores are 0–10, at most one decimal; `-1` in info means unrated.
+- AI scoring requires a benchmark and a nonempty result; context/result each allow 64,000 characters.
+  The caller must authorize the stored reference and the corresponding result, not accept arbitrary
+  message IDs or another user's conversation. A missing provider must reject annotated submissions
+  explicitly while leaving plain-text behavior unchanged.
+
+The Admin shared components provide draft tracking, history labels, manual scoring and quick view.
+Hosts can supply their own authorized AI callback without a dependency on AdminChat entities.
+See the [Admin integration guide](../../../tools/NcfSimulatedSite/Senparc.Areas.Admin/readme.md#promptcode-引用标注与统一评分).

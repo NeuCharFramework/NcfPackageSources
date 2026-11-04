@@ -1,5 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Ожидается дальнейшее содержимое или подтверждение сохранения. В этом ходе Memory не изменена.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>Намерение обновить долговременную память сейчас не обнаружено. В этом ходе ничего не сохранено.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Подготовлены предложения из предыдущих сообщений; они ещё не сохранены. Проверьте и сохраните каждую запись: утверждения ассистента могут быть неточными.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>Недавний контекст не позволяет определить, что запомнить. Отправьте «Remember: …» с полным фактом в одном сообщении; при необходимости проверьте PromptCode.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>Вы проверили и сохранили эти предложения.</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Проверить предложение</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>Предложение из контекста ещё не сохранено. Проверьте текст и область, затем сохраните запись. Удаление требует подтверждения. ИИ не изменяет закреплённые ручные записи.</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Завершите черновик и закройте настройки перед проверкой предложения.</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Исходный текст (не проверен)</value></data>
   <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Развернуть панель чатов</value></data>
   <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Свернуть панель чатов</value></data>
   <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Изменить ширину панели (стрелки влево/вправо)</value></data>

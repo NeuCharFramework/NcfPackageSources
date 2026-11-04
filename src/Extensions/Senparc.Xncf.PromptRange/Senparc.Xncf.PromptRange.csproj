@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.9</Version>
+    <Version>0.20.12</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -153,6 +153,9 @@
       [2026-11-03] v0.20.8 支持 Skill 管理、包上传和来源文件关联，并补齐多数据库迁移
       1、提供 PromptRange 选择与评分信息，支持聊天记忆提示词
     [2026-11-03] Add shared contextual documentation beside prompt range selection.
+    [2026-11-04] Extend default Memory extraction to ordinary facts and explicit context references requiring review; migrate untouched prior defaults without replacing customized or scored prompts.
+    [2026-11-04] Add explicit PromptCode references, shared last-successful AI/manual scoring, current-score selection and six-provider migrations.
+    [2026-11-04] Add Memory intent classification and structured update/defer/none output; upgrade untouched context-extraction defaults while preserving custom prompts.
 </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>

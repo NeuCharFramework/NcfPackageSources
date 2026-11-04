@@ -146,6 +146,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL
                     b.Property<string>("ExpectedResultsJson")
                         .HasColumnType("text");
 
+                    b.Property<decimal?>("FinalScore")
+                        .HasColumnType("numeric");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("boolean");
 
@@ -156,6 +159,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<decimal?>("HumanScore")
+                        .HasColumnType("numeric");
 
                     b.Property<bool>("IsAIGrade")
                         .HasColumnType("boolean");
@@ -207,6 +213,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
+
+                    b.Property<decimal?>("RobotScore")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("StopSequences")
                         .HasColumnType("text");

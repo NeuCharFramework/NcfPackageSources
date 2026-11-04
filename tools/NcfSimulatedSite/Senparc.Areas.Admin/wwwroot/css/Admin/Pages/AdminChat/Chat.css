@@ -1988,6 +1988,19 @@ body.is-resizing-chat-sidebar iframe {
     right: 24px;
 }
 
+.chat-memory-proposal {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 6px 0;
+    overflow-wrap: anywhere;
+}
+
+.chat-memory-proposal > span {
+    flex: 1 1 240px;
+}
+
 .chat-memory-heading,
 .chat-memory-panel-heading,
 .chat-memory-editor-actions,

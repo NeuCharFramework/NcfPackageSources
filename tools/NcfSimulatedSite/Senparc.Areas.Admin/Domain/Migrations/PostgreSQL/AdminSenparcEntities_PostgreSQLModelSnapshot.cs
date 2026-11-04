@@ -219,6 +219,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("PromptReferencesJson")
+                        .HasColumnType("text");
+
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");

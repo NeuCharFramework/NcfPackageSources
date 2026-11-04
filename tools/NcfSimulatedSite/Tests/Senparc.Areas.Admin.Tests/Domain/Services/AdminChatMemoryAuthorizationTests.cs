@@ -69,6 +69,41 @@ public class AdminChatMemoryAuthorizationTests : TestBase
             await store.UpdateAsync(0, 12, off.Revision, profile => profile.SessionModes[alpha.Id] = AdminChatMemoryMode.Learn);
             var learnContext = await service.BeginAsync(12, alpha.Id, "Remember: prefer typed APIs", default, "gpt-4o");
             Assert.AreEqual(latest.Id, learnContext.SourceMessageId, "Evidence must link to the current message, not an earlier duplicate.");
+            Assert.AreEqual(0, learnContext.RecentMessages.Count);
+            const string fact = "测试角色乙的昵称是Beta。";
+            var source = await messages.AddMessageAsync(alpha.Id, ChatMessageRoleType.Assistant, fact);
+            await messages.AddMessageAsync(beta.Id, ChatMessageRoleType.User, "Other session must never enter extraction.");
+            await messages.AddMessageAsync(alpha.Id, ChatMessageRoleType.System, "System message must never enter extraction.");
+            var request = await messages.AddMessageAsync(alpha.Id, ChatMessageRoleType.User, "记住上述内容");
+            var referenced = await service.BeginAsync(12, alpha.Id, "记住上述内容", default);
+            Assert.AreEqual(request.Id, referenced.SourceMessageId);
+            Assert.IsTrue(referenced.RecentMessages.Any(item => item.MessageId == source.Id && item.Role == "assistant"));
+            Assert.IsFalse(referenced.RecentMessages.Any(item => item.Text.Contains("must never")));
+            await messages.AddMessageAsync(alpha.Id, ChatMessageRoleType.Assistant, "Later answer is not prior context");
+            Assert.IsFalse(referenced.RecentMessages.Any(item => item.Text.Contains("Later answer")));
+            await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => service.BeginAsync(13, alpha.Id, "记住上述内容", default));
+
+            var prompt = new Mock<IMemoryPromptProvider>();
+            prompt.Setup(item => item.GetAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new MemoryUpdatePrompt("test", "test-T1-A1"));
+            using var reviewServices = new ServiceCollection().AddSingleton(prompt.Object).BuildServiceProvider();
+            var reviewService = new AdminChatMemoryService(store, sessions, reviewServices, NullLogger<AdminChatMemoryService>.Instance);
+            var output = System.Text.Json.JsonSerializer.Serialize(new { intent = "update", changes = new[] { new {
+                key = "fictional-beta", text = fact, topic = "Beta", tier = "topic",
+                kind = "reference", scope = "global", evidence = fact, remove = false
+            }} });
+            await reviewService.CompleteAsync(referenced, "记住上述内容", 0, (_, _, _) => Task.FromResult(output), default);
+            Assert.AreEqual("pending-review", reviewService.UpdateStatus);
+            var candidate = reviewService.UpdateResult.Proposals.Single().Entry;
+            var change = new AdminChatMemoryEdit(candidate.Id, candidate.Version, candidate.Text, candidate.Topic,
+                candidate.Tier, candidate.Kind, candidate.Pinned, "global", candidate.ExpiresAt, false);
+            await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() =>
+                service.EditAsync(13, alpha.Id, reviewService.UpdateResult.Revision, change));
+            var confirmed = await service.EditAsync(12, alpha.Id, reviewService.UpdateResult.Revision, change);
+            Assert.IsTrue(confirmed.Entries.Any(item => item.Text == fact && item.Pinned && item.Source == "manual"));
+            await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() =>
+                service.EditAsync(12, alpha.Id, reviewService.UpdateResult.Revision, change));
+            StringAssert.Contains((await service.BeginAsync(12, alpha.Id, "Beta", default)).Instructions, fact);
         }
         finally
         {

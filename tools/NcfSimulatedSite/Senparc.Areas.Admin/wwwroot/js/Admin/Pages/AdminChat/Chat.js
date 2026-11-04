@@ -10,6 +10,7 @@
       memoryHistory: [],
       memoryWorkspaceId: '',
       memoryEntryDraft: null,
+      memoryProposalReview: null,
       memoryUsage: null,
       memoryUsageSessionId: 0,
       memoryUpdateResult: null,
@@ -204,6 +205,13 @@
       sessionStorage.removeItem(initialMessageKey);
       this.inputMessage = initialMessageParam;
       this.pendingInitialSend = true;
+      const referenceKey = `ncf.admin.chat.initialReferences.${this.currentSessionId}`;
+      const references = sessionStorage.getItem(referenceKey);
+      sessionStorage.removeItem(referenceKey);
+      if (references) {
+        try { this.restorePromptReferences('promptMessageInput', JSON.parse(references)); }
+        catch (error) { this.$message.error(error.message); }
+      }
     }
 
     this.currentSessionAiModelId = this.getSessionAiModelId(this.currentSessionId);
@@ -399,7 +407,7 @@
       }
       this.memoryUpdateResult = result;
       this.memoryUpdateSessionId = sessionId;
-      if (status && !['disabled', 'updated', 'unchanged', 'read-only', 'skipped-input'].includes(status)) {
+      if (status && !['disabled', 'updated', 'unchanged', 'read-only', 'skipped-input', 'pending-review'].includes(status)) {
         this.$message.warning(ncfT('AdminChat.Memory.UpdateWarning') + ' (' + status + ')');
       }
     },
@@ -410,7 +418,8 @@
         return ncfT('AdminChat.Memory.UpdateSaved', result.globalChanges, result.workspaceChanges);
       }
       const knownReasons = ['mode-off', 'read-only', 'input-not-eligible', 'no-candidates',
-        'pinned', 'no-difference', 'revision-conflict', 'timeout', 'invalid-change', 'capacity', 'invalid-json', 'pending'];
+        'pinned', 'no-difference', 'revision-conflict', 'timeout', 'invalid-change', 'capacity', 'invalid-json', 'pending',
+        'pending-review', 'unresolved-reference', 'review-complete', 'intent-deferred', 'no-save-intent'];
       const reason = knownReasons.includes(result.reason) ? result.reason : 'update-failed';
       return ncfT('AdminChat.Memory.UpdateReason.' + reason);
     },
@@ -493,6 +502,7 @@
         this.memoryHistory = data.history || [];
         this.memoryWorkspaceId = data.workspaceId || '';
         this.memoryEntryDraft = null;
+        this.memoryProposalReview = null;
         this.globalChatLoaded = false;
         this.memoryTab = 'entries';
         this.memoryDialogVisible = true;
@@ -535,6 +545,7 @@
         this.$message.warning(ncfT('AdminChat.Memory.UnsavedMarkdown'));
         return;
       }
+      this.memoryProposalReview = null;
       this.memoryEntryDraft = entry ? {
         id: entry.id, version: entry.version, text: entry.text, topic: entry.topic,
         tier: entry.tier, kind: entry.kind, pinned: entry.pinned,
@@ -545,12 +556,35 @@
       };
     },
 
+    async reviewMemoryProposal(proposal) {
+      const result = this.memoryUpdateResult;
+      const sessionId = this.currentSessionId;
+      if (this.memoryBusy || this.isSending || !result || this.memoryUpdateSessionId !== sessionId
+          || !(result.proposals || []).includes(proposal)) return;
+      if (this.memoryDialogVisible) {
+        this.$message.warning(ncfT('AdminChat.Memory.ReviewClose'));
+        return;
+      }
+      await this.openMemoryDialog();
+      if (!this.memoryDialogVisible || this.currentSessionId !== sessionId
+          || this.memoryDialogSessionId !== sessionId || this.memoryUpdateResult !== result) return;
+      if (this.memoryDraftRevision !== result.revision) {
+        this.$message.warning(ncfT('AdminChat.Memory.UpdateReason.revision-conflict'));
+        return;
+      }
+      this.editMemoryEntry(proposal.entry);
+      this.memoryTab = 'entries';
+      this.memoryProposalReview = { result, proposal, draft: this.memoryEntryDraft };
+    },
+
     async saveMemoryEntry(remove = false) {
       if (!this.memoryEntryDraft || this.memoryBusy) return;
       if (this.memoryMarkdown !== this.memorySavedMarkdown) {
         this.$message.warning(ncfT('AdminChat.Memory.UnsavedMarkdown'));
         return;
       }
+      const review = this.memoryProposalReview;
+      const reviewing = review && review.draft === this.memoryEntryDraft;
       this.memoryBusy = true;
       try {
         const data = await this.memoryRequest('EditMemoryEntryAsync', {
@@ -561,9 +595,18 @@
         this.memoryEntries = data.entries || [];
         this.memoryHistory = data.history || [];
         this.memoryEntryDraft = null;
+        this.memoryProposalReview = null;
         this.memoryMarkdown = data.markdown;
         this.memorySavedMarkdown = data.markdown;
         if (this.memoryDialogSessionId === this.currentSessionId) this.memoryRevision = data.revision;
+        if (reviewing && this.memoryUpdateResult === review.result) {
+          const proposals = review.result.proposals.filter(proposal => proposal !== review.proposal);
+          this.memoryUpdateResult = {
+            ...review.result, revision: data.revision, proposals,
+            status: proposals.length ? 'pending-review' : 'reviewed',
+            reason: proposals.length ? 'pending-review' : 'review-complete'
+          };
+        }
         this.$message.success(ncfT('AdminChat.Memory.Saved'));
       } catch (error) {
         this.$message.error(error.message);
@@ -626,6 +669,7 @@
 
     async ensureAttachmentSession() {
       if (this.currentSessionId) return;
+      const promptReferences = this.capturePromptReferences('promptLauncherInput');
       const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.CreateSessionAsync',
         this.launcherSessionRequest((this.chatInputText || '').trim().slice(0, 60) || '附件对话'));
       if (!response.data || !response.data.success || !response.data.data || !response.data.data.sessionId) {
@@ -637,6 +681,7 @@
       this.chatMode = this.launcherChatMode;
       this.inputMessage = this.chatInputText;
       this.chatInputText = '';
+      this.restorePromptReferences('promptMessageInput', promptReferences);
       await this.loadSessionDetail();
       if (!this.currentSessionWorkspaceId) throw new Error('会话已创建，但没有读到 Workspace，请刷新后重试。');
       const url = new URL(window.location.href);
@@ -1918,7 +1963,9 @@
         return;
       }
 
-      const messageContent = (this.inputMessage || '').trim() || '请先查看本轮附件的目录和解析限制，并询问我希望如何处理。';
+      const promptReferences = this.capturePromptReferences('promptMessageInput');
+      const messageContent = (promptReferences.length ? this.inputMessage : (this.inputMessage || '').trim())
+        || '请先查看本轮附件的目录和解析限制，并询问我希望如何处理。';
       const sendingAttachments = this.pendingAttachments.slice();
       const sendingSessionId = this.currentSessionId;
       const sendingAiModelId = this.currentSessionAiModelId;
@@ -1944,7 +1991,8 @@
         content: messageContent,
         addTime: new Date().toISOString(),
         userFeedback: 0,
-        attachments: sendingAttachments
+        attachments: sendingAttachments,
+        promptReferences
       };
       this.messageList.push(tempUserMessage);
       this.runningMessages = this.messageList;
@@ -1957,6 +2005,7 @@
           sessionId: this.currentSessionId,
           aiModelId: this.normalizeAiModelId(this.currentSessionAiModelId),
           content: messageContent,
+          promptReferences,
           mode: this.chatMode === 'harness' ? 1 : 0,
           attachments: sendingAttachments.map(attachment => ({
             relativePath: attachment.relativePath, eTag: attachment.eTag,
@@ -1987,6 +2036,7 @@
           if (this.currentSessionId === sendingSessionId) {
             this.messageList = this.runningMessages;
             this.inputMessage = messageContent;
+            this.restorePromptReferences('promptMessageInput', promptReferences);
             await this.loadSessionDetail(false);
             if (this.currentSessionId === sendingSessionId) await this.loadTrajectoryList();
           }
@@ -1999,6 +2049,7 @@
           if (this.currentSessionId === sendingSessionId) {
             this.messageList = this.runningMessages;
             this.inputMessage = messageContent;
+            this.restorePromptReferences('promptMessageInput', promptReferences);
           }
         }
       } finally {
@@ -2014,6 +2065,39 @@
         this.isAIResponding = false;
         this.runningMessages = [];
       }
+    },
+
+    capturePromptReferences(refName) {
+      const component = this.$refs[refName];
+      const input = component && component.$el.querySelector('textarea');
+      return input && window.NcfPromptReferences ? window.NcfPromptReferences.capture(input) : [];
+    },
+
+    restorePromptReferences(refName, references) {
+      this.$nextTick(() => {
+        const component = this.$refs[refName];
+        const input = component && component.$el.querySelector('textarea');
+        if (input && window.NcfPromptReferences) {
+          try { window.NcfPromptReferences.restore(input, references); }
+          catch (error) { this.$message.error(error.message); }
+        }
+      });
+    },
+
+    promptReferenceAiScorer(message) {
+      if (this.isSending || !Number.isInteger(message.id) || message.id <= 0) return undefined;
+      const index = this.messageList.indexOf(message);
+      const next = this.messageList[index + 1];
+      if (!next || next.roleType !== 1) return undefined;
+      return async promptItemId => {
+        const response = await service.post(
+          '/api/Senparc.Areas.Admin/AdminChatPromptReferenceAppService/Areas.Admin_AdminChatPromptReferenceAppService.ScoreWithAIAsync',
+          { messageId: message.id, promptItemId }, { customAlert: true });
+        if (!response.data || !response.data.success || !response.data.data) {
+          throw new Error(response.data && response.data.errorMessage || ncfT('PromptReference.Unavailable'));
+        }
+        return response.data.data;
+      };
     },
 
     async setFeedback(messageId, feedbackType) {

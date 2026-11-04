@@ -143,6 +143,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Dm
                     b.Property<string>("ExpectedResultsJson")
                         .HasColumnType("NVARCHAR2(32767)");
 
+                    b.Property<decimal?>("FinalScore")
+                        .HasColumnType("DECIMAL(29,4)");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("BIT");
 
@@ -153,6 +156,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Dm
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("NVARCHAR2(50)");
+
+                    b.Property<decimal?>("HumanScore")
+                        .HasColumnType("DECIMAL(29,4)");
 
                     b.Property<bool>("IsAIGrade")
                         .HasColumnType("BIT");
@@ -204,6 +210,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Dm
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("NVARCHAR2(300)");
+
+                    b.Property<decimal?>("RobotScore")
+                        .HasColumnType("DECIMAL(29,4)");
 
                     b.Property<string>("StopSequences")
                         .HasColumnType("NVARCHAR2(32767)");

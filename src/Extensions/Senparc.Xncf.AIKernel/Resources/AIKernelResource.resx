@@ -819,7 +819,7 @@
   <data name="FineTuning.ValidationTitle" xml:space="preserve"><value>训练后快速验证</value></data>
   <data name="FineTuning.ValidationRunHelp" xml:space="preserve"><value>对已成功任务运行最多 8 条离线测试提示。有 manifest 时默认使用任务配置；旧任务可手动选择。选择不一致时必须确认，Worker 仍会校验所选运行时。</value></data>
   <data name="FineTuning.ValidationPromptPlaceholder" xml:space="preserve"><value>每行输入一个测试问题，例如：请用小红书风格介绍一款适合通勤的保温杯。</value></data>
-  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>最多 8 条；输出上限 16–256 tokens</value></data>
+  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>最多 8 条；输出上限 16–32,768 tokens，并受模型上下文窗口限制</value></data>
   <data name="FineTuning.RunValidation" xml:space="preserve"><value>运行验证</value></data>
   <data name="FineTuning.ValidationFailed" xml:space="preserve"><value>验证失败</value></data>
   <data name="FineTuning.ValidationPrompt" xml:space="preserve"><value>测试提示</value></data>
