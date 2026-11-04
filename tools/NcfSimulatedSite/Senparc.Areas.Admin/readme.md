@@ -4,6 +4,20 @@
 
 如果你狠狠心，也可以将此模块删除，这不会影响系统的正常运行，只不过你无法再进入管理后台。当然对黑客来说也一样。
 
+## Memory 保存意图（2026-11-04）
+
+关键词只决定是否启动检查。同一次提取先区分 `update`（当前更新）、`defer`（等待后续内容/确认）
+与 `none`（无当前保存意图），输出 `{"intent":"update|defer|none","changes":[]}`。
+只有 `update` 进入原有证据、作用域、锁定及版本校验；其余不写入、不生成候选，
+分别显示 `intent-deferred` / `no-save-intent` 信息回执。
+“我会给你定义一些规则，到时候请你记住，让我们开始”应等待，不能保存这句预告；
+“以后请使用中文回复”已包含具体规则，仍可学习。引用、翻译、回忆问题和假设不是保存请求。
+本次不增加额外模型调用，也不创建等待队列或自动保存后续所有消息。
+
+强制意图协议包裹所有 PromptCode（包括自定义/已评分提示词）；旧默认提示词仅在未修改、未评分时升级。
+缺少意图、旧的裸数组、未知意图或非更新意图携带非空变更都明确报校验失败，不回退成直接保存。
+自定义提示词应更新到新协议以避免输出冲突；不会自动覆盖用户内容。
+
 ## 全局上下文文档帮助
 
 Vue 公共布局在顶部语言/账号区域提供问号帮助图标，默认在独立的 Element UI 弹窗中加载
@@ -136,6 +150,21 @@ Memory 专项浏览器检查使用实际 Razor 局部标记、父容器布局、
 dotnet test tools/NcfSimulatedSite/Tests/Senparc.Areas.Admin.Tests/Senparc.Areas.Admin.Tests.csproj --no-restore --filter FullyQualifiedName~AdminDocHelpAssetTests
 ```
 
+## Memory 前文指代与事实记忆
+
+学习模式支持用户明确要求保存的普通姓名、昵称、人物特征等 `reference` 事实，不再仅限工作偏好。
+完整事实仍从当前用户消息提取并校验；“记住上述内容”在已授权会话中读取请求之前
+最多六条用户/助手消息（单条最多 2000 字符、合计最多 6000 字符），只生成待核对候选。
+不会通过候选路径直接写入数据库，也不把后续回答或其他会话带入提取。
+候选通过现有条目编辑接口明确保存/删除，继续执行所有权、作用域和 revision/version 校验。
+用户可编辑候选并查看参考原文；关闭、取消和冲突不等于保存。确认条目默认锁定，可手工取消锁定。
+前文无法确定时返回 `unresolved-reference`；待核对使用 `pending-review`，不能显示为已保存。
+候选仅保留在本页最近一次回执中，不是服务端持久队列。自定义或已评分的旧 Memory 提示词不会自动覆盖。
+双语使用说明在 NcfDocs 的 `adminchat-memory.md`，发布后由现有帮助链接访问。
+`Client/AdminChatMemoryReviewBrowserChecks.js` 使用真实 Razor 局部标记和 Vue 方法、
+模拟授权接口响应，验证中英文候选核对、参考原文转义、取消、编辑保存和二次确认删除；
+通过 `playwright-cli run-code --filename=...` 运行，不调用模型或业务数据库。
+
 ## Host 资源监控
 
 管理后台首页的 Host 资源监控在一个面板中展示实时状态和历史趋势：
@@ -240,8 +269,8 @@ Admin Chat 待提交附件在移除或切换会话时通过受保护接口删除
 
 - AdminChat 的新建会话、已有会话以及 Footer 内嵌聊天使用同一组件。
 - 支持靶场、靶道联动筛选；关键词搜索名称、正文、靶场别名和完整版本号；分页加载并按需预览完整正文。
-- 默认按平均分从高到低排序，未评分项置后，同分时较新记录优先；可切换为 PromptCode 字符串升序。
-  排序作用于全部搜索结果后再分页，切换排序回到第一页。列表和预览均显示平均分、最高分（保留一位小数），
+- 默认按当前分数从高到低排序，未评分项置后，同分时较新记录优先；可切换为 PromptCode 字符串升序。
+  排序作用于全部搜索结果后再分页，切换排序回到第一页。列表和预览均显示当前分数（保留一位小数），
   未评分显示“未评分”，零分正常显示为 `0.0`。
 - 仅列出 Prompt 类型靶场中的提示词（含明确标记的草稿），不执行 Skill 或 AI 请求。
 - 点击“插入提示词”在打开弹窗时的光标位置插入，选中文字会被替换；原有其余内容保留。
@@ -250,9 +279,52 @@ Admin Chat 待提交附件在移除或切换会话时通过受保护接口删除
   输入框被移除、内容在弹窗期间发生更改或超过 `maxlength` 时，不会覆盖输入内容。
 - 后端沿用 PromptRange 管理员权限、租户和软删除过滤。模块未安装/未更新、无权限和请求失败会显示错误及重新加载入口；
   不影响未标记输入框或普通聊天。加载页面时不请求提示词接口。
-- 其他布局需在 Vue、Element UI、后台 `service` 和本地化脚本之后引入
-  `wwwroot/js/Admin/Shared/PromptRangeSelector.js`，并引入对应的
+- 其他布局需在 Vue、Element UI、后台 `service` 和本地化脚本之后依次引入
+  `wwwroot/js/Admin/Shared/PromptReferences.js`、`wwwroot/js/Admin/Shared/PromptRangeSelector.js`，并引入对应的
   `wwwroot/css/Admin/Shared/PromptRangeSelector.css`，且在创建页面 Vue 实例之前注册指令。
+
+### PromptCode 引用标注与统一评分
+
+- 插入后自动显示 `PromptCode · 当前分数` 标签；支持同一输入框中的多个提示词。
+  编辑某段引用只取消该段标注；编辑外部文字会移动标注位置而不取消其他引用。
+  撤销编辑不会自动认领引用，程序整体替换文本会清除标注；下拉菜单可定位或只移除标注而保留文字。
+- AdminChat 发送、失败恢复、新建会话跳转和附件创建会话均保留引用信息。
+  历史记录按原始文字范围标注；带引用的消息按字面文本显示，不再进行 Markdown 转换，避免位置错乱。
+  已有无标注消息沿用原来的显示和发送行为。
+- 每个完整 PromptCode 共享 AI 分和手动分，**最后一次成功评分决定当前分数，手动分没有优先权**。
+  下拉“评分”可填写 0～10、最多一位小数，覆盖该版本的手动分；“快速查看”在现有弹窗只读定位版本。
+  旧版本首次获得共享评分前兼容显示原平均分；此后平均分/最高分仅保留为原结果统计。
+- 历史记录有 benchmark 且紧接着有完整 AI 回复时，可主动触发 AI 评分，确认后产生模型调用。
+  服务端校验当前用户拥有会话及该消息的明确引用，只使用本轮用户文字与紧接的 AI 回复；
+  不跨越下一条用户消息，也不对 Range 或未明确引用的版本自动评分。失败不覆盖旧分。
+- 标注元数据与 `content` 分离存储及传输，AI 仍只收到干净的消息文字；引用消息不裁剪首尾空白。
+  同页相同版本标签共享最新分数，不提供跨浏览器实时推送。
+
+其他表单接入时，指令已负责插入和草稿标签，只需按业务持久化引用：
+
+```js
+const input = this.$refs.promptInput.$el.querySelector('textarea');
+const promptReferences = NcfPromptReferences.capture(input);
+// 与原始 content 一起提交，但独立存储，后端调用 IPromptReferenceService.ValidateAsync。
+// 恢复草稿时，先恢复 content，待 Vue 更新后恢复元数据：
+this.$nextTick(() => NcfPromptReferences.restore(input, promptReferences));
+```
+
+监听原生 `prompt-references-change` 可获取独立的元数据副本。历史展示复用：
+
+```html
+<prompt-reference-content :content="message.content"
+    :references="message.promptReferences" :ai-score="scoreReferencedResult"></prompt-reference-content>
+```
+
+`ai-score` 可省略；提供时是 `async (promptItemId) => PromptReferenceInfo`，必须调用本业务的鉴权接口，
+由服务端从持久化引用及结果构造评分上下文，而不是让客户端指定任意会话内容。
+AdminChat 使用 `AdminChatPromptReferenceAppService.ScoreWithAIAsync({ messageId, promptItemId })`。
+每条消息最多 32 个非重叠引用，位置采用 UTF-16 索引；AI 评分的上下文和结果分别最多 64,000 字符。
+未安装 PromptRange 时普通文字仍可发送，带引用提交会明确报错，可移除标注后重试。
+
+部署前请升级 PromptRange 和 Admin 模块数据库：本次分别增加版本评分列和聊天引用 JSON 列，
+已提供六种数据库的迁移文件，旧消息无需回填。生成迁移文件不等于已执行数据库升级。
 
 ## NeuBell WebHook（WebAPI）通知设置
 

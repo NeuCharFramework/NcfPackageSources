@@ -1,5 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>等待你提供后续内容或确认保存，本轮未写入 Memory。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>本轮未识别到立即更新长期记忆的意图，未写入 Memory。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>已整理前文候选，尚未保存。请逐条核对并保存；助手回复中的信息可能不准确。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>未能从近期前文确定要记住的具体内容。请在同一条消息中写明“记住：……”及完整事实；必要时检查本轮 PromptCode。</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>本批候选已由你核对并保存。</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>核对候选</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>这是从前文整理的候选，尚未保存。请核对内容与作用域，再点击“保存条目”；删除候选需点击“删除”并确认。锁定的手工条目不会被 AI 自动改写。</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>请先处理当前编辑草稿并关闭设置，再核对候选。</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>参考原文（待核实）</value></data>
   <data name="AdminChat.Memory.Subtitle" xml:space="preserve"><value>管理长期偏好，让每一次对话更懂你</value></data>
   <data name="AdminChat.Memory.Private" xml:space="preserve"><value>私有记忆</value></data>
   <data name="AdminChat.Memory.SaveChanges" xml:space="preserve"><value>保存更改</value></data>
@@ -880,7 +889,7 @@
   <data name="PromptSelector.TargetChanged" xml:space="preserve"><value>输入框已更改或不可编辑，请关闭后重新选择提示词。</value></data>
   <data name="PromptSelector.TooLong" xml:space="preserve"><value>插入后的内容超过输入框长度限制，请先缩短内容。</value></data>
   <data name="PromptSelector.Sort" xml:space="preserve"><value>排序</value></data>
-  <data name="PromptSelector.SortScore" xml:space="preserve"><value>评分（平均分从高到低）</value></data>
+  <data name="PromptSelector.SortScore" xml:space="preserve"><value>评分（当前分数从高到低）</value></data>
   <data name="PromptSelector.SortPromptCode" xml:space="preserve"><value>PromptCode（升序）</value></data>
   <data name="PromptSelector.AverageScore" xml:space="preserve"><value>平均分</value></data>
   <data name="PromptSelector.MaxScore" xml:space="preserve"><value>最高分</value></data>
@@ -894,4 +903,20 @@
   <data name="DocHelp.LoadFailed" xml:space="preserve"><value>文档加载失败或等待超时，请重试或在新窗口打开。</value></data>
   <data name="DocHelp.Retry" xml:space="preserve"><value>重试</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>帮助文档索引配置无效，请联系管理员。</value></data>
+  <data name="PromptSelector.CurrentScore" xml:space="preserve"><value>当前评分</value></data>
+  <data name="PromptReference.Score" xml:space="preserve"><value>打分（0~10）</value></data>
+  <data name="PromptReference.View" xml:space="preserve"><value>快速查看提示词</value></data>
+  <data name="PromptReference.Locate" xml:space="preserve"><value>定位引用文本</value></data>
+  <data name="PromptReference.Remove" xml:space="preserve"><value>取消引用标注（保留正文）</value></data>
+  <data name="PromptReference.Unrated" xml:space="preserve"><value>未评分</value></data>
+  <data name="PromptReference.Unavailable" xml:space="preserve"><value>PromptRange 不可用或请求失败，请重试。</value></data>
+  <data name="PromptReference.InvalidReference" xml:space="preserve"><value>提示词引用已失效，请重新插入。</value></data>
+  <data name="PromptReference.InvalidScore" xml:space="preserve"><value>请输入 0~10 的分数，最多一位小数。</value></data>
+  <data name="PromptReference.LastScoreWins" xml:space="preserve"><value>最后一次成功评分生效。手动评分与 AI 评分均可覆盖当前分数，所有引用处共享。</value></data>
+  <data name="PromptReference.AIConfirm" xml:space="preserve"><value>根据此轮输入、回复及该 PromptCode 的 benchmark 调用 AI 打分，可能产生模型费用；成功后将覆盖当前评分。继续？</value></data>
+  <data name="PromptReference.AIScore" xml:space="preserve"><value>AI 自动打分</value></data>
+  <data name="PromptReference.AIUnavailable" xml:space="preserve"><value>AI 打分需要已配置 benchmark 且存在对应的完整回复。</value></data>
+  <data name="PromptReference.Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="PromptReference.Save" xml:space="preserve"><value>保存手动评分</value></data>
+  <data name="PromptReference.TooMany" xml:space="preserve"><value>每条消息最多标注 32 段提示词，请先移除不需要的引用。</value></data>
 </root>

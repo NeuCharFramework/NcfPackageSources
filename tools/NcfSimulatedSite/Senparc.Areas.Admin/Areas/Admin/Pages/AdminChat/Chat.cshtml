@@ -346,7 +346,10 @@
                             <span class="message-role">{{ getRoleTypeName(message.roleType) }}</span>
                             <span class="message-time">{{ formatTime(message.addTime) }}</span>
                         </div>
-                        <div class="message-text" v-html="formatMessageContent(message.content)"></div>
+                        <prompt-reference-content v-if="message.promptReferences && message.promptReferences.length"
+                            class="message-text" :content="message.content" :references="message.promptReferences"
+                            :ai-score="promptReferenceAiScorer(message)"></prompt-reference-content>
+                        <div v-else class="message-text" v-html="formatMessageContent(message.content)"></div>
                         <div v-if="message.attachments && message.attachments.length" class="chat-message-attachments">
                             <button v-for="attachment in message.attachments" :key="attachment.relativePath"
                                 type="button" :title="'下载原文件：' + attachment.name"
@@ -413,11 +416,19 @@
                 <el-alert v-if="memoryUpdateResult && memoryUpdateSessionId === currentSessionId && (memoryUpdateResult.requested || memoryUpdateResult.status === 'updated')"
                           class="chat-memory-update-result"
                           :title="memoryUpdateText(memoryUpdateResult)"
-                          :type="memoryUpdateResult.status === 'updated' ? 'success' : 'warning'"
+                          :type="['updated', 'reviewed'].includes(memoryUpdateResult.status) ? 'success' : ['intent-deferred', 'no-save-intent'].includes(memoryUpdateResult.reason) ? 'info' : 'warning'"
                           :closable="false" show-icon>
                     <el-button type="text" size="mini" :disabled="memoryBusy" @@click="openMemoryDialog">
                         @AR["AdminChat.Memory.Settings"]
                     </el-button>
+                    <div v-for="(proposal, index) in (memoryUpdateResult.proposals || [])" :key="index" class="chat-memory-proposal">
+                        <span>{{ proposal.remove ? ncfT('AdminChat.Memory.Delete') : ncfT('AdminChat.Memory.ReviewCandidate') }}：
+                            {{ proposal.entry.text }}</span>
+                        <small>{{ proposal.entry.workspaceId ? 'Workspace' : ncfT('AdminChat.Memory.ScopeGlobal') }}</small>
+                        <el-button type="text" size="mini" :disabled="memoryBusy || isSending" @@click="reviewMemoryProposal(proposal)">
+                            @AR["AdminChat.Memory.ReviewCandidate"]
+                        </el-button>
+                    </div>
                 </el-alert>
 
                 <div v-if="messageList.length === 0 && !loadingMessages" class="empty-messages">
@@ -504,6 +515,7 @@
                 <el-input
                     type="textarea"
                     v-model="inputMessage"
+                    ref="promptMessageInput"
                     v-prompt-range="!isSending"
                     placeholder="@AR["AdminChat.InputPlaceholder"]"
                     :rows="3"
@@ -627,6 +639,7 @@
                                 <el-input
                                     type="textarea"
                                     v-model="chatInputText"
+                                    ref="promptLauncherInput"
                                     v-prompt-range="!isCreatingSession"
                                     placeholder="@AR["Admin.Home.AiPlaceholder"]"
                                     :rows="4"
@@ -1116,6 +1129,13 @@
                     <p>@AR["AdminChat.Memory.StorageNotice"]</p>
                 </details>
                 <div v-if="memoryEntryDraft" class="chat-memory-entry-editor">
+                    <p v-if="memoryProposalReview && memoryProposalReview.draft === memoryEntryDraft" class="chat-memory-caption">
+                        @AR["AdminChat.Memory.ReviewNotice"]
+                    </p>
+                    <details v-if="memoryProposalReview && memoryProposalReview.draft === memoryEntryDraft" class="chat-memory-help">
+                        <summary>@AR["AdminChat.Memory.CandidateEvidence"]</summary>
+                        <p>{{ memoryProposalReview.proposal.entry.evidence }}</p>
+                    </details>
                     <el-form label-position="top" size="mini">
                         <el-form-item :label="ncfT('AdminChat.Memory.Text')">
                             <el-input type="textarea" :rows="3" :maxlength="300" v-model="memoryEntryDraft.text"></el-input>
@@ -1152,7 +1172,8 @@
                     </el-popconfirm>
                     <span class="chat-memory-action-spacer"></span>
                     <el-button size="small" :disabled="memoryBusy" @@click="memoryEntryDraft = null">@AR["Common.取消"]</el-button>
-                    <el-button type="primary" size="small" :loading="memoryBusy" @@click="saveMemoryEntry(false)">@AR["AdminChat.Memory.SaveEntry"]</el-button>
+                    <el-button v-if="!memoryProposalReview || memoryProposalReview.draft !== memoryEntryDraft || !memoryProposalReview.proposal.remove"
+                               type="primary" size="small" :loading="memoryBusy" @@click="saveMemoryEntry(false)">@AR["AdminChat.Memory.SaveEntry"]</el-button>
                     </div>
                 </div>
                 <el-table :data="memoryEntries" size="small" :empty-text="ncfT('AdminChat.Memory.EmptyEntries')">

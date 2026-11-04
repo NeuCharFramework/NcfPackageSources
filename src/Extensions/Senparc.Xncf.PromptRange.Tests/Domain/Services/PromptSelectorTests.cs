@@ -6,6 +6,7 @@ using Senparc.Ncf.Core.Models;
 using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Ncf.Repository;
 using Senparc.Xncf.PromptRange.Abstractions.Skills;
+using Senparc.Xncf.PromptRange.Abstractions.References;
 using Senparc.Xncf.PromptRange.Domain.Models.DatabaseModel;
 using Senparc.Xncf.PromptRange.Domain.Services;
 using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
@@ -133,6 +134,129 @@ public class PromptSelectorTests
     }
 
     [TestMethod]
+    public async Task References_ValidateExactSegmentsAndPersistLastScoreRegardlessOfSource()
+    {
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+        await using var context = CreateContext(connection, 11);
+        await context.Database.EnsureCreatedAsync();
+        var range = new RangeEntity("2026.11.04.1", "References");
+        context.Add(range);
+        await context.SaveChangesAsync();
+        var item = CreateItem(range, "1", "Prompt", "Hello 🌟");
+        var other = CreateItem(range, "2", "Other", "Other", 5, 5);
+        context.AddRange(item, other);
+        await context.SaveChangesAsync();
+        var provider = new PromptReferenceService(new RepositoryBase<PromptItem>(new TestDbData(context)), null!);
+        const string content = "prefix Hello 🌟 suffix";
+        var reference = new PromptReference { PromptItemId = item.Id, PromptCode = item.FullVersion, Start = 7, Length = item.Content.Length };
+        await provider.ValidateAsync(content, new[] { reference });
+        await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => provider.ValidateAsync(content.Replace("Hello", "Hallo"), new[] { reference }));
+        reference.PromptCode = range.RangeName;
+        await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => provider.ValidateAsync(content, new[] { reference }));
+        reference.PromptCode = item.FullVersion;
+        await Assert.ThrowsExceptionAsync<ArgumentException>(() => provider.ValidateAsync(content, new[] { reference, reference }));
+        foreach (var score in new[] { -0.1m, 10.1m, 5.55m })
+            await Assert.ThrowsExceptionAsync<ArgumentOutOfRangeException>(() => provider.ScoreAsync(item.Id, score));
+        Assert.AreEqual(0m, (await provider.ScoreAsync(item.Id, 0)).CurrentScore);
+        var human = await provider.ScoreAsync(item.Id, 9.1m);
+        Assert.AreEqual(9.1m, human.HumanScore);
+        item.SetReferenceScore(3.2m, true);
+        await context.SaveChangesAsync();
+        var robot = await provider.GetInfoAsync(item.Id);
+        Assert.AreEqual(3.2m, robot.CurrentScore);
+        Assert.AreEqual(9.1m, robot.HumanScore);
+        Assert.AreEqual(3.2m, robot.RobotScore);
+        var last = await provider.ScoreAsync(item.Id, 8.8m);
+        Assert.AreEqual(8.8m, last.CurrentScore);
+        Assert.AreEqual(3.2m, last.RobotScore);
+        using var services = new ServiceCollection().BuildServiceProvider();
+        var selector = CreateService(context, services);
+        Assert.AreEqual(item.Id, (await selector.SearchSelectorAsync(0, null!, null!, 1, 10)).Items.First().Id);
+        Assert.AreEqual(8.8m, (await selector.GetSelectorPromptAsync(item.Id)).CurrentScore);
+        await using (var concurrent = CreateContext(connection, 11))
+        {
+            var concurrentItem = await concurrent.Set<PromptItem>().SingleAsync(value => value.Id == item.Id);
+            concurrentItem.SetReferenceScore(2.1m, true);
+            await concurrent.SaveChangesAsync();
+        }
+        var repeated = await provider.ScoreAsync(item.Id, 8.8m);
+        Assert.AreEqual(2.1m, repeated.RobotScore);
+        await context.Entry(item).ReloadAsync();
+        Assert.AreEqual(8.8m, item.FinalScore, "Saving the same cached manual value must overwrite an intervening AI score.");
+        Assert.AreEqual(2.1m, item.RobotScore, "An intervening source score must not be erased.");
+        item.UpdateExpectedResultsJson("[null, \"\", \" \"]");
+        await context.SaveChangesAsync();
+        Assert.IsFalse((await provider.GetInfoAsync(item.Id)).HasBenchmark);
+        await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => provider.ScoreWithAIAsync(item.Id, content, "answer"));
+        Assert.AreEqual(8.8m, (await provider.GetInfoAsync(item.Id)).CurrentScore, "Failed AI rating must not change the current score.");
+        item.UpdateExpectedResultsJson("invalid json");
+        await context.SaveChangesAsync();
+        Assert.IsFalse((await provider.ScoreAsync(item.Id, 8.8m)).HasBenchmark,
+            "Invalid legacy benchmarks must not prevent manual scoring.");
+        await using var otherTenant = CreateContext(connection, 22);
+        var denied = new PromptReferenceService(new RepositoryBase<PromptItem>(new TestDbData(otherTenant)), null!);
+        await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => denied.ScoreAsync(item.Id, 10));
+        item.Flag = true;
+        await context.SaveChangesAsync();
+        await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => provider.GetInfoAsync(item.Id));
+    }
+
+    [TestMethod]
+    public void ScoreMigrations_OnlyAddThreeNullableColumns()
+    {
+        Microsoft.EntityFrameworkCore.Migrations.Migration[] migrations =
+        {
+            new Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite.Add_PromptCode_Scores(),
+            new Senparc.Xncf.PromptRange.Domain.Migrations.SqlServer.Add_PromptCode_Scores(),
+            new Senparc.Xncf.PromptRange.Domain.Migrations.MySql.Add_PromptCode_Scores(),
+            new Senparc.Xncf.PromptRange.Domain.Migrations.PostgreSQL.Add_PromptCode_Scores(),
+            new Senparc.Xncf.PromptRange.Domain.Migrations.Oracle.Add_PromptCode_Scores(),
+            new Senparc.Xncf.PromptRange.Domain.Migrations.Dm.Add_PromptCode_Scores()
+        };
+        foreach (var migration in migrations)
+        {
+            var columns = migration.UpOperations.OfType<Microsoft.EntityFrameworkCore.Migrations.Operations.AddColumnOperation>().ToList();
+            Assert.AreEqual(3, migration.UpOperations.Count);
+            Assert.AreEqual(3, columns.Count);
+            CollectionAssert.AreEquivalent(new[] { "RobotScore", "HumanScore", "FinalScore" }, columns.Select(column => column.Name).ToArray());
+            Assert.IsTrue(columns.All(column => column.IsNullable && column.Table == "Senparc_PromptRange_PromptItem"));
+            Assert.AreEqual(3, migration.DownOperations.Count);
+        }
+    }
+
+    [TestMethod]
+    public async Task ExistingResultManualScore_UpdatesTheSharedPromptCodeScore()
+    {
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+        await using var context = CreateContext(connection, 11);
+        await context.Database.EnsureCreatedAsync();
+        var range = new RangeEntity("2026.11.04.1", "References");
+        context.Add(range);
+        await context.SaveChangesAsync();
+        var item = CreateItem(range, "1", "Prompt", "Prompt");
+        context.Add(item);
+        await context.SaveChangesAsync();
+        var result = new PromptResult(new PromptResultDto { PromptItemId = item.Id, PromptItemVersion = item.FullVersion, ResultString = "Answer" });
+        context.Add(result);
+        await context.SaveChangesAsync();
+        using var services = new ServiceCollection().BuildServiceProvider();
+        var results = new PromptResultService(new RepositoryBase<PromptResult>(new TestDbData(context)), services,
+            CreateService(context, services), null!, null!, null!, null!, null!);
+        await results.ManualScoreAsync(result.Id, 7.6m);
+        Assert.AreEqual(7.6m, item.FinalScore);
+        Assert.AreEqual(7.6m, item.HumanScore);
+        Assert.AreEqual(7.6m, result.FinalScore);
+        var evaluator = typeof(PromptResultService).GetMethod("EvaluateScoreAsync",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+        var evaluated = (Task<decimal>)evaluator.Invoke(results, new object?[] {
+            new PromptItemDto(), "Answer", new List<string> { "=Answer" }, "Context"
+        })!;
+        Assert.AreEqual(10m, await evaluated, "Existing exact benchmark scoring must remain available without model calls.");
+    }
+
+    [TestMethod]
     public async Task Selector_RejectsInvalidFiltersAndPagination()
     {
         await using var connection = new SqliteConnection("Data Source=:memory:");
@@ -176,6 +300,7 @@ public class PromptSelectorTests
     {
         public DbSet<PromptItem> Items => Set<PromptItem>();
         public DbSet<RangeEntity> Ranges => Set<RangeEntity>();
+        public DbSet<PromptResult> Results => Set<PromptResult>();
 
         public SelectorContext(DbContextOptions options, int tenant) : base(options, null!)
         {

@@ -178,12 +178,28 @@ public static class AdminChatMemoryDocument
         return result.Count == 0 ? "" : JsonSerializer.Serialize(result, ContextJson);
     }
 
+    public static (string Intent, string Changes) ReadExtraction(string json)
+    {
+        if (json == null || json.Length > 12000)
+            throw new AdminChatMemoryValidationException("invalid-change");
+        using var document = JsonDocument.Parse(json);
+        var root = document.RootElement;
+        if (root.ValueKind != JsonValueKind.Object || root.EnumerateObject().Count() != 2
+            || !root.TryGetProperty("intent", out var intent) || intent.ValueKind != JsonValueKind.String
+            || !root.TryGetProperty("changes", out var changes) || changes.ValueKind != JsonValueKind.Array
+            || intent.GetString() is not ("update" or "defer" or "none")
+            || intent.GetString() != "update" && changes.GetArrayLength() != 0)
+            throw new AdminChatMemoryValidationException("invalid-change");
+        return (intent.GetString(), changes.GetRawText());
+    }
+
     public static bool Merge(AdminChatMemoryProfile profile, string json, string userMessage,
         string workspaceId = "", int? sourceMessageId = null, int? sourceSessionId = null) =>
         MergeWithResult(profile, json, userMessage, workspaceId, sourceMessageId, sourceSessionId).Changed;
 
     public static AdminChatMemoryMergeResult MergeWithResult(AdminChatMemoryProfile profile, string json, string userMessage,
-        string workspaceId = "", int? sourceMessageId = null, int? sourceSessionId = null)
+        string workspaceId = "", int? sourceMessageId = null, int? sourceSessionId = null,
+        IReadOnlyList<string> reviewSources = null)
     {
         if (json == null || json.Length > 12000) throw new NcfExceptionBase("Memory updater returned oversized output.");
         var changes = JsonSerializer.Deserialize<List<AdminChatMemoryChange>>(json,
@@ -194,7 +210,8 @@ public static class AdminChatMemoryDocument
         {
             if (change == null || change.Key == null || !KeyPattern.IsMatch(change.Key)
                 || string.IsNullOrWhiteSpace(change.Evidence) || change.Evidence.Length > 600
-                || !(userMessage ?? "").Contains(change.Evidence, StringComparison.Ordinal)
+                || !((userMessage ?? "").Contains(change.Evidence, StringComparison.Ordinal)
+                    || reviewSources?.Any(source => source.Contains(change.Evidence, StringComparison.Ordinal)) == true)
                 || change.Tier is not ("core" or "topic")
                 || string.IsNullOrWhiteSpace(change.Text) || change.Text.Length > 300
                 || change.Topic == null || change.Topic.Length > 40 || change.Tier == "topic" && change.Topic.Length == 0
@@ -202,7 +219,7 @@ public static class AdminChatMemoryDocument
                 || change.Scope is not ("global" or "workspace")
                 || change.Scope == "workspace" && string.IsNullOrEmpty(workspaceId)
                 || change.Kind is not ("preference" or "decision" or "project" or "reference")
-                || change.Kind != "preference" && change.Scope != "workspace"
+                || change.Kind is not ("preference" or "reference") && change.Scope != "workspace"
                 || change.Remove && !Regex.IsMatch(userMessage ?? "", @"忘记|删除|不要再|forget|remove|delete",
                     RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100))
                 || UnsafeAutomaticText.IsMatch(change.Text + " " + change.Evidence))

@@ -780,7 +780,7 @@
   <data name="FineTuning.ValidationTitle" xml:space="preserve"><value>Post-training quick validation</value></data>
   <data name="FineTuning.ValidationRunHelp" xml:space="preserve"><value>Run up to 8 offline test prompts for a successful job. The selection defaults from the task manifest when available; older jobs can be selected manually. A mismatch requires confirmation, and the Worker still verifies the selected runtime.</value></data>
   <data name="FineTuning.ValidationPromptPlaceholder" xml:space="preserve"><value>One test prompt per line, for example: Write a Xiaohongshu-style post about a commuter thermos.</value></data>
-  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>Up to 8 cases; output limit 16–256 tokens</value></data>
+  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>Up to 8 cases; output limit 16–32,768 tokens, bounded by the model context window</value></data>
   <data name="FineTuning.RunValidation" xml:space="preserve"><value>Run validation</value></data>
   <data name="FineTuning.ValidationFailed" xml:space="preserve"><value>Validation failed</value></data>
   <data name="FineTuning.ValidationPrompt" xml:space="preserve"><value>Test prompt</value></data>

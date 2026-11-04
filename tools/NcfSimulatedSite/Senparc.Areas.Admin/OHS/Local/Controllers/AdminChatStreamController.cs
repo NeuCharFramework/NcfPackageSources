@@ -108,6 +108,10 @@ public sealed class AdminChatStreamController : ControllerBase
         }
 
         IReadOnlyList<AdminChatAttachment> attachments = Array.Empty<AdminChatAttachment>();
+        var content = string.IsNullOrWhiteSpace(request.Content)
+            ? AdminChatAttachmentService.AttachmentOnlyMessage
+            : request.PromptReferences?.Count > 0 ? request.Content : request.Content.Trim();
+        AdminChatMessage userMessage;
         try
         {
             if (request.Attachments?.Count > 0)
@@ -117,20 +121,18 @@ public sealed class AdminChatStreamController : ControllerBase
                 attachments = await HttpContext.RequestServices.GetRequiredService<AdminChatAttachmentService>()
                     .ValidateAsync(session, request.Attachments, cancellationToken);
             }
+            userMessage = await _messageService.AddMessageAsync(
+                request.SessionId, ChatMessageRoleType.User, content,
+                attachments: attachments, promptReferences: request.PromptReferences);
         }
         catch (Exception error) when (error is ArgumentException or InvalidOperationException
-            or UnauthorizedAccessException or IOException or NotSupportedException or System.Xml.XmlException)
+            or UnauthorizedAccessException or IOException or NotSupportedException or System.Xml.XmlException
+            or Senparc.Ncf.Core.Exceptions.NcfExceptionBase)
         {
             Response.StatusCode = error is UnauthorizedAccessException ? StatusCodes.Status403Forbidden : StatusCodes.Status400BadRequest;
             await Response.WriteAsJsonAsync(new { success = false, errorMessage = error.Message }, cancellationToken);
             return;
         }
-        var content = string.IsNullOrWhiteSpace(request.Content)
-            ? AdminChatAttachmentService.AttachmentOnlyMessage : request.Content.Trim();
-        var userMessage = await _messageService.AddMessageAsync(
-            request.SessionId,
-            ChatMessageRoleType.User,
-            content, attachments: attachments);
         await _sessionService.UpdateLastMessageTimeAsync(request.SessionId);
 
         Response.Headers.CacheControl = "no-cache";

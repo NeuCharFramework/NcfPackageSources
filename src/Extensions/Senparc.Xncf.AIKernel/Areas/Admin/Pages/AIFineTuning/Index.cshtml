@@ -442,7 +442,7 @@
                 <el-input type="textarea" :rows="4" v-model="validationPrompts"
                           :placeholder="t('ValidationPromptPlaceholder')"></el-input>
                 <div class="ft-validation-options">
-                    <el-input-number v-model="validationMaxTokens" :min="16" :max="256"></el-input-number>
+                    <el-input-number v-model="validationMaxTokens" :min="16" :max="32768"></el-input-number>
                     <el-button type="primary" size="small" :loading="validationBusy || validation.status === 'Running'"
                                :disabled="validation.status === 'Running'" @@click="startValidation">
                         {{ t('RunValidation') }}

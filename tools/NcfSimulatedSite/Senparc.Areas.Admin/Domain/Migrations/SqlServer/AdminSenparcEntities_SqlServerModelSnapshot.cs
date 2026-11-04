@@ -219,6 +219,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("PromptReferencesJson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");

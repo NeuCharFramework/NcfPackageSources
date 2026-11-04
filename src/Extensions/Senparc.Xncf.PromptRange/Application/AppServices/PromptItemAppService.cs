@@ -46,6 +46,7 @@ using Senparc.Xncf.PromptRange.Models.DatabaseModel.Dto;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Request;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.response;
 using Senparc.Xncf.PromptRange.OHS.Local.PL.Response;
+using Senparc.Xncf.PromptRange.Abstractions.References;
 
 
 namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
@@ -88,6 +89,20 @@ namespace Senparc.Xncf.PromptRange.OHS.Local.AppService
             return this.GetResponseAsync<PromptSelectorSearchResponse>(
                 async (response, logger) => await _promptItemService.SearchSelectorAsync(
                     rangeId, tactic, keyword, pageIndex, pageSize, sortBy));
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public Task<AppResponseBase<PromptReferenceInfo>> GetReferenceInfoAsync(int id)
+        {
+            return this.GetResponseAsync<PromptReferenceInfo>(
+                async (response, logger) => await GetService<IPromptReferenceService>().GetInfoAsync(id));
+        }
+
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public Task<AppResponseBase<PromptReferenceInfo>> ScoreReferenceAsync(PromptReferenceScoreRequest request)
+        {
+            return this.GetResponseAsync<PromptReferenceInfo>(
+                async (response, logger) => await GetService<IPromptReferenceService>().ScoreAsync(request.Id, request.Score));
         }
 
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]

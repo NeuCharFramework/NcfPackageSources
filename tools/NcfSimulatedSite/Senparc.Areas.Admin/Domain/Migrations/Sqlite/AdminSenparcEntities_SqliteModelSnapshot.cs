@@ -206,6 +206,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Sqlite
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("PromptReferencesJson")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("TEXT");

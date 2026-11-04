@@ -137,6 +137,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                     b.Property<string>("ExpectedResultsJson")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal?>("FinalScore")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
 
@@ -146,6 +149,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                     b.Property<string>("FullVersion")
                         .IsRequired()
                         .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("HumanScore")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsAIGrade")
@@ -197,6 +203,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("RobotScore")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("StopSequences")

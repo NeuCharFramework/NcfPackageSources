@@ -241,7 +241,7 @@ public sealed class FineTuningValidationCase
 {
     [Required, StringLength(50)]
     public string Id { get; set; } = "";
-    [Required, StringLength(4096)]
+    [Required, StringLength(65536)]
     public string Prompt { get; set; } = "";
 }
 

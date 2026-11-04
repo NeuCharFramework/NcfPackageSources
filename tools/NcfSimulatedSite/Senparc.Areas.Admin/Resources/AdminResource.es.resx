@@ -1,5 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Esperando más contenido o confirmación para guardar. No se guardaron cambios en Memory en este turno.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>No se identificó intención de actualizar ahora la memoria a largo plazo. No se guardó nada en este turno.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Las propuestas de mensajes anteriores están listas, pero no guardadas. Revise y guarde cada entrada; las afirmaciones del asistente pueden ser inexactas.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>El contexto reciente no identifica qué recordar. Envíe «Remember: …» con el hecho completo en un solo mensaje; compruebe el PromptCode si es necesario.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>Ha revisado y guardado este grupo de propuestas.</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Revisar propuesta</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>Esta propuesta del contexto aún no está guardada. Revise contenido y ámbito y guarde la entrada. Las eliminaciones requieren confirmación. La IA no modifica entradas manuales fijadas.</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Termine el borrador y cierre los ajustes antes de revisar una propuesta.</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Texto original (sin verificar)</value></data>
   <data name="AdminChat.Sidebar.Expand" xml:space="preserve"><value>Expandir el panel de conversaciones</value></data>
   <data name="AdminChat.Sidebar.Collapse" xml:space="preserve"><value>Contraer el panel de conversaciones</value></data>
   <data name="AdminChat.Sidebar.Resize" xml:space="preserve"><value>Ajustar ancho del panel (flechas izquierda/derecha)</value></data>

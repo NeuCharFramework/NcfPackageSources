@@ -76,12 +76,12 @@ class RuntimeRequest(StrictModel):
 
 class ValidationCase(StrictModel):
     id: str = Field(min_length=1, max_length=50)
-    prompt: str = Field(min_length=1, max_length=4096)
+    prompt: str = Field(min_length=1, max_length=65536)
 
 
 class ValidationRequest(StrictModel):
     cases: list[ValidationCase] = Field(min_length=1, max_length=8)
-    maxTokens: int = Field(default=128, ge=16, le=256)
+    maxTokens: int = Field(default=2048, ge=16, le=32768)
     backend: Literal["cpu", "cuda", "mlx"] | None = None
     method: Literal["lora", "qlora"] | None = None
     confirmMismatch: bool = False

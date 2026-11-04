@@ -1,5 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
+  <data name="AdminChat.Memory.UpdateReason.intent-deferred" xml:space="preserve"><value>Waiting for further content or confirmation to save. No Memory changes were saved this turn.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.no-save-intent" xml:space="preserve"><value>No present intent to update long-term Memory was identified. Nothing was saved this turn.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.pending-review" xml:space="preserve"><value>Candidates from earlier messages are ready but not saved. Review and save each entry; assistant statements may be inaccurate.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.unresolved-reference" xml:space="preserve"><value>The recent context did not identify what to remember. Send “Remember: …” with the complete fact in one message; check this turn's PromptCode if needed.</value></data>
+  <data name="AdminChat.Memory.UpdateReason.review-complete" xml:space="preserve"><value>You have reviewed and saved this batch of candidates.</value></data>
+  <data name="AdminChat.Memory.ReviewCandidate" xml:space="preserve"><value>Review candidate</value></data>
+  <data name="AdminChat.Memory.ReviewNotice" xml:space="preserve"><value>This candidate comes from earlier messages and is not saved. Check its content and scope, then Save entry; deletion candidates require Delete and confirmation. AI cannot rewrite pinned manual entries.</value></data>
+  <data name="AdminChat.Memory.ReviewClose" xml:space="preserve"><value>Finish the current draft and close settings before reviewing a candidate.</value></data>
+  <data name="AdminChat.Memory.CandidateEvidence" xml:space="preserve"><value>Source excerpt (unverified)</value></data>
   <data name="AdminChat.Memory.Subtitle" xml:space="preserve"><value>Manage lasting preferences for more personal conversations</value></data>
   <data name="AdminChat.Memory.Private" xml:space="preserve"><value>Private memory</value></data>
   <data name="AdminChat.Memory.SaveChanges" xml:space="preserve"><value>Save changes</value></data>
@@ -728,7 +737,7 @@
   <data name="PromptSelector.TargetChanged" xml:space="preserve"><value>The input changed or is no longer editable. Close the picker and select again.</value></data>
   <data name="PromptSelector.TooLong" xml:space="preserve"><value>The inserted content would exceed the input length limit. Shorten it first.</value></data>
   <data name="PromptSelector.Sort" xml:space="preserve"><value>Sort by</value></data>
-  <data name="PromptSelector.SortScore" xml:space="preserve"><value>Score (average, high to low)</value></data>
+  <data name="PromptSelector.SortScore" xml:space="preserve"><value>Score (current, high to low)</value></data>
   <data name="PromptSelector.SortPromptCode" xml:space="preserve"><value>PromptCode (ascending)</value></data>
   <data name="PromptSelector.AverageScore" xml:space="preserve"><value>Average score</value></data>
   <data name="PromptSelector.MaxScore" xml:space="preserve"><value>Highest score</value></data>
@@ -742,4 +751,20 @@
   <data name="DocHelp.LoadFailed" xml:space="preserve"><value>Document loading failed or timed out. Retry or open in a new window.</value></data>
   <data name="DocHelp.Retry" xml:space="preserve"><value>Retry</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>The documentation index is invalid. Please contact your administrator.</value></data>
+  <data name="PromptSelector.CurrentScore" xml:space="preserve"><value>Current score</value></data>
+  <data name="PromptReference.Score" xml:space="preserve"><value>Rate (0–10)</value></data>
+  <data name="PromptReference.View" xml:space="preserve"><value>View prompt</value></data>
+  <data name="PromptReference.Locate" xml:space="preserve"><value>Locate referenced text</value></data>
+  <data name="PromptReference.Remove" xml:space="preserve"><value>Remove reference (keep text)</value></data>
+  <data name="PromptReference.Unrated" xml:space="preserve"><value>Not rated</value></data>
+  <data name="PromptReference.Unavailable" xml:space="preserve"><value>PromptRange is unavailable or the request failed. Please retry.</value></data>
+  <data name="PromptReference.InvalidReference" xml:space="preserve"><value>The prompt reference is invalid. Insert the prompt again.</value></data>
+  <data name="PromptReference.InvalidScore" xml:space="preserve"><value>Enter a score from 0 to 10 with at most one decimal place.</value></data>
+  <data name="PromptReference.LastScoreWins" xml:space="preserve"><value>The last successful rating wins, whether manual or AI. All references share the current score.</value></data>
+  <data name="PromptReference.AIConfirm" xml:space="preserve"><value>Evaluate this input and reply against the PromptCode benchmark using AI? Model charges may apply. A successful rating replaces the current score.</value></data>
+  <data name="PromptReference.AIScore" xml:space="preserve"><value>Rate with AI</value></data>
+  <data name="PromptReference.AIUnavailable" xml:space="preserve"><value>AI rating requires a benchmark and a corresponding completed reply.</value></data>
+  <data name="PromptReference.Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="PromptReference.Save" xml:space="preserve"><value>Save manual score</value></data>
+  <data name="PromptReference.TooMany" xml:space="preserve"><value>At most 32 prompt references are allowed per message. Remove unused references first.</value></data>
 </root>

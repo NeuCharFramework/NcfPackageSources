@@ -29,7 +29,8 @@ def run_validation(root: Path, model_path: Path, adapter_path: Path, request, em
 
             def generate_response(prompt):
                 # mlx-lm 0.28.x uses deterministic argmax by default.
-                return generate(model, tokenizer, prompt=prompt, max_tokens=request.maxTokens)
+                max_tokens = available_tokens(tokenizer, prompt, request.maxTokens)
+                return generate(model, tokenizer, prompt=prompt, max_tokens=max_tokens)
         else:
             if method == "qlora":
                 raise RuntimeError("PyTorch QLoRA validation requires the matching quantization runtime and is not enabled by this validator.")
@@ -50,15 +51,16 @@ def run_validation(root: Path, model_path: Path, adapter_path: Path, request, em
 
             def generate_response(prompt):
                 inputs = tokenizer(prompt, return_tensors="pt").to(device)
+                max_tokens = available_tokens(tokenizer, prompt, request.maxTokens)
                 with torch.no_grad():
-                    output = model.generate(**inputs, max_new_tokens=request.maxTokens, do_sample=False)
+                    output = model.generate(**inputs, max_new_tokens=max_tokens, do_sample=False)
                 return tokenizer.decode(output[0], skip_special_tokens=True)
 
         for case in request.cases:
             result = {
                 "id": case.id,
                 "prompt": case.prompt,
-                "response": generate_response(case.prompt)[:8192],
+                "response": generate_response(case.prompt)[:131072],
                 "completedUtc": utc_now(),
             }
             state["results"].append(result)
@@ -73,3 +75,16 @@ def run_validation(root: Path, model_path: Path, adapter_path: Path, request, em
     finally:
         state["finishedUtc"] = utc_now()
         save()
+
+
+def available_tokens(tokenizer, prompt, requested):
+    encoded = tokenizer(prompt, add_special_tokens=True, truncation=False)
+    input_tokens = len(encoded["input_ids"])
+    context_limit = getattr(tokenizer, "model_max_length", 0)
+    if not isinstance(context_limit, int) or context_limit <= 0 or context_limit > 1_000_000:
+        return requested
+    available = context_limit - input_tokens
+    if available < 16:
+        raise RuntimeError(
+            f"Prompt uses {input_tokens} tokens, leaving fewer than 16 tokens in the model context window ({context_limit}).")
+    return min(requested, available)
