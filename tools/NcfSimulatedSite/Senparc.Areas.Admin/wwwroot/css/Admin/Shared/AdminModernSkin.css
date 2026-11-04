@@ -383,10 +383,25 @@ body {
 
 /* XncfModule tabs and tables. */
 .admin-content > .ifram-wrapper > .common-layout > .el-header {
+    height: auto !important;
+    min-height: 0;
+    padding: 0;
     overflow: visible;
     border: 0;
     background: transparent;
     box-shadow: none;
+}
+
+.admin-content .common-layout > .el-container > .el-header > .filter-container {
+    justify-content: flex-end;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 !important;
+    padding: 0 0 10px;
+}
+
+.admin-content .common-layout > .el-container > .el-header > .filter-container > * {
+    flex-shrink: 0;
 }
 
 .admin-content .common-layout > .el-container > .el-main {
