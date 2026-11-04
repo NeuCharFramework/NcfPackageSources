@@ -262,6 +262,65 @@ body {
     background: #f7f9ff;
 }
 
+.admin-content .el-table,
+.admin-content .el-table__header-wrapper,
+.admin-content .el-table__body-wrapper {
+    border-radius: var(--admin-radius) !important;
+}
+
+.admin-content .el-table__header-wrapper {
+    border-radius: var(--admin-radius) var(--admin-radius) 0 0 !important;
+}
+
+.admin-content .el-table__body-wrapper {
+    border-radius: 0 0 var(--admin-radius) var(--admin-radius) !important;
+}
+
+.admin-content .el-table__header-wrapper thead tr:first-child th:first-child {
+    border-top-left-radius: var(--admin-radius);
+}
+
+.admin-content .el-table__header-wrapper thead tr:first-child th:last-child {
+    border-top-right-radius: var(--admin-radius);
+}
+
+.admin-content .el-table__body-wrapper tbody tr:last-child td:first-child {
+    border-bottom-left-radius: var(--admin-radius);
+}
+
+.admin-content .el-table__body-wrapper tbody tr:last-child td:last-child {
+    border-bottom-right-radius: var(--admin-radius);
+}
+
+/* Native tables used by several XNCF pages. Element UI's internal tables are excluded. */
+.admin-content table:not(.el-table__header):not(.el-table__body):not(.el-table__footer) {
+    border: 1px solid var(--admin-border-soft);
+    border-collapse: separate;
+    border-radius: var(--admin-radius) !important;
+    border-spacing: 0;
+    box-shadow: 0 5px 16px rgba(31, 45, 61, .04);
+    overflow: hidden;
+}
+
+.admin-content table:not(.el-table__header):not(.el-table__body):not(.el-table__footer) th,
+.admin-content table:not(.el-table__header):not(.el-table__body):not(.el-table__footer) td {
+    border-bottom: 1px solid var(--admin-border-soft);
+}
+
+.admin-content table:not(.el-table__header):not(.el-table__body):not(.el-table__footer) thead th {
+    background: #f8fafc;
+    color: #606266;
+    font-weight: 600;
+}
+
+.admin-content table:not(.el-table__header):not(.el-table__body):not(.el-table__footer) tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.admin-content table:not(.el-table__header):not(.el-table__body):not(.el-table__footer) tbody tr:hover td {
+    background: #f7f9ff;
+}
+
 .admin-content .pagination-container {
     margin-top: 14px;
     border: 1px solid var(--admin-border-soft);
