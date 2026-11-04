@@ -322,6 +322,105 @@ body {
     box-shadow: 0 4px 14px rgba(31, 45, 61, .04);
 }
 
+/* XncfModule tabs and tables. */
+.admin-content > .ifram-wrapper > .common-layout > .el-header {
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.admin-content .common-layout > .el-container > .el-main {
+    padding-top: 14px;
+}
+
+.admin-content .common-layout .el-tabs--border-card {
+    overflow: hidden;
+    border: 1px solid var(--admin-border-soft);
+    border-radius: 14px;
+    background: var(--admin-surface);
+    box-shadow: var(--admin-shadow);
+}
+
+.admin-content .common-layout .el-tabs--border-card > .el-tabs__header {
+    border-bottom: 1px solid var(--admin-border-soft);
+    background: #f8fafc;
+}
+
+.admin-content .common-layout .el-tabs--border-card > .el-tabs__header .el-tabs__item {
+    border: 0;
+    border-radius: 8px 8px 0 0;
+}
+
+.admin-content .common-layout .el-tabs--border-card > .el-tabs__content {
+    padding: 18px;
+}
+
+.admin-content .common-layout .el-table {
+    margin-bottom: 0 !important;
+}
+
+.admin-content .common-layout .el-table .el-input__inner {
+    min-height: 30px;
+}
+
+/* The four module summary tiles on the admin home page. */
+.admin-content .xncf-stat-item {
+    min-height: 120px;
+    height: auto;
+    margin-bottom: 14px;
+    padding: 18px 62px 18px 18px;
+    border: 1px solid var(--admin-border-soft);
+    border-radius: 14px;
+    background: linear-gradient(145deg, #fff 0%, #fafbff 100%);
+    box-shadow: 0 5px 16px rgba(31, 45, 61, .05);
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+.admin-content .xncf-stat-item:hover {
+    border-color: rgba(102, 126, 234, .34);
+    box-shadow: 0 12px 26px rgba(82, 103, 217, .12);
+    transform: translateY(-2px);
+}
+
+.admin-content .xncf-stat-item .icon {
+    right: 18px;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, .12), rgba(118, 75, 162, .12));
+    color: #667eea;
+    font-size: 22px;
+    line-height: 42px;
+    text-align: center;
+}
+
+.admin-content .xncf-stat-item .count {
+    color: #303133;
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+.admin-content .xncf-stat-item .tit {
+    margin-top: 7px;
+    color: #909399;
+    font-size: 13px;
+}
+
+.el-popover,
+.el-dropdown-menu,
+.el-select-dropdown,
+.el-picker-panel,
+.el-message,
+.el-notification {
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(24, 35, 57, .14);
+}
+
+.el-popover {
+    border-color: var(--admin-border-soft);
+}
+
 @media (max-width: 720px) {
     .admin-content > .ifram-wrapper > .el-container > .el-main,
     .admin-content > .ifram-wrapper > .module-main {
@@ -340,5 +439,14 @@ body {
 
     .admin-content .el-form {
         padding: 14px;
+    }
+
+    .admin-content .common-layout .el-tabs--border-card > .el-tabs__content {
+        padding: 12px;
+    }
+
+    .admin-content .xncf-stat-item {
+        min-height: 104px;
+        margin-bottom: 10px;
     }
 }
