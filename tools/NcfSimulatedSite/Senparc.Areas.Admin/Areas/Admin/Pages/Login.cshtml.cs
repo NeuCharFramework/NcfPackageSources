@@ -33,6 +33,7 @@ using Senparc.Ncf.Core.Config;
 using Senparc.Xncf.Tenant.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Senparc.CO2NET.Cache;
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
 {
@@ -168,7 +169,20 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             if (userInfo == null)
             {
                 SenparcTrace.SendCustomLog("登录失败", $"用户名：{loginInDto.Name}, 错误：账号或密码错误！101");
-                return new JsonResult(LoginResultDto.Fail(_localizer["Admin.Login.Error.InvalidCredentials"]));
+                //防用户名枚举：对不存在的用户名与真实用户错误密码保持一致的失败计数/锁定/验证码行为，
+                //使响应无法区分“用户不存在”与“密码错误”
+                try
+                {
+                    return new JsonResult(await SimulateUnknownUserFailedLoginAsync(loginInDto.Name));
+                }
+                catch (LoginLockException ex)
+                {
+                    SenparcTrace.SendCustomLog("登录失败", $"用户名：{loginInDto.Name}, 错误：{ex.Message}");
+                    return new JsonResult(LoginResultDto.Fail(
+                        ex.Message,
+                        captchaRequired: true,
+                        captcha: await _captchaService.CreateAsync()));
+                }
                 //ModelState.AddModelError(nameof(this.Password), "账号或密码错误！");
             }
 
@@ -237,27 +251,72 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         /// <summary>
         /// 查询指定用户名当前是否需要图形验证码（连续密码错误达到阈值）
         /// </summary>
+        /// <remarks>
+        /// 安全说明：此匿名端点统一返回 false。是否需要验证码的真实状态由登录接口（OnPostLoginAsync）
+        /// 在响应中下发（captchaRequired + 验证码图像），前端据此展示；
+        /// 若此处按用户名返回真实状态，攻击者可零成本探测“某用户名是否存在/当前是否处于失败计数状态”（用户名枚举）。
+        /// </remarks>
         public async Task<IActionResult> OnGetCaptchaRequired(string name)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                return Ok(false);
-            }
+            await Task.CompletedTask;
+            return Ok(false);
+        }
 
-            AdminUserInfo userInfo = null;
-            try
+        /// <summary>
+        /// 对不存在的用户名模拟一次登录失败：累加失败计数、应用与真实用户相同的锁定规则、达到阈值后要求验证码。
+        /// 保证“用户不存在”与“密码错误”的响应行为一致，消除用户名枚举预言机。
+        /// </summary>
+        private async Task<LoginResultDto> SimulateUnknownUserFailedLoginAsync(string submittedName)
+        {
+            var cache = CO2NET.Cache.CacheStrategyFactory.GetObjectCacheStrategyInstance();
+            string failedLoginKey = $"FailedLogin:{submittedName}";
+            string lockTimeKey = $"LockTime:{submittedName}";
+            using (var cacheLock = await cache.BeginCacheLockAsync("LoginLock-Admin", submittedName))
             {
-                userInfo = await _userInfoService.GetUserInfoAsync(name);
-            }
-            catch
-            {
-                userInfo = null;
-            }
+                var lockEndTime = await cache.GetAsync<DateTime?>(lockTimeKey);
+                if (lockEndTime.HasValue && lockEndTime.Value > DateTime.Now)
+                {
+                    throw new LoginLockException(lockEndTime.Value);
+                }
 
-            int failedCount = userInfo == null
-                ? 0
-                : await _userInfoService.GetFailedLoginCountAsync(userInfo.UserName);
-            return Ok(failedCount >= LoginCaptchaService.CaptchaRequiredFailedCount);
+                var failedCount = await cache.GetAsync<int>(failedLoginKey);
+                failedCount++;
+                await cache.SetAsync(failedLoginKey, failedCount, TimeSpan.FromHours(24));
+
+                DateTime? lockTime = null;
+                if (failedCount >= 20)
+                {
+                    lockTime = DateTime.Now.AddHours(failedCount * 2);
+                }
+                else if (failedCount >= 10)
+                {
+                    lockTime = DateTime.Now.AddHours(2);
+                }
+                else if (failedCount >= 7)
+                {
+                    lockTime = DateTime.Now.AddMinutes(30);
+                }
+                else if (failedCount >= 5)
+                {
+                    lockTime = DateTime.Now.AddMinutes(5);
+                }
+
+                if (lockTime.HasValue)
+                {
+                    await cache.SetAsync(lockTimeKey, lockTime.Value, TimeSpan.FromHours(24));
+                    throw new LoginLockException(lockTime.Value, showWrongLoginMessage: true);
+                }
+
+                if (failedCount >= LoginCaptchaService.CaptchaRequiredFailedCount)
+                {
+                    return LoginResultDto.Fail(
+                        _localizer["Admin.Login.Error.InvalidCredentials"],
+                        captchaRequired: true,
+                        captcha: await _captchaService.CreateAsync());
+                }
+
+                return LoginResultDto.Fail(_localizer["Admin.Login.Error.InvalidCredentials"]);
+            }
         }
 
         public async Task<IActionResult> OnGetLogoutAsync(string ReturnUrl)
