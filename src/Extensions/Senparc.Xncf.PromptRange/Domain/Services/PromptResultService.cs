@@ -34,6 +34,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.20.8 add AITokenUsageRecorder and related services for token usage tracking
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 同步 Prompt 评分结果的读取与更新
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Agents.AI;

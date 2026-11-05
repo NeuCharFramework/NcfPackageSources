@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.12.26 消息传输对象同步 Prompt 引用
+
 ----------------------------------------------------------------*/
 using Senparc.Areas.Admin.Domain.Services;
 using Senparc.Ncf.Core.Models;

@@ -66,6 +66,13 @@ body {
 .el-menu-item.is-active {
     background: linear-gradient(135deg, rgba(102, 126, 234, .92), rgba(118, 75, 162, .92)) !important;
     box-shadow: 0 6px 16px rgba(31, 45, 61, .18);
+    color: #fff !important;
+}
+
+.el-menu-item.is-active i,
+.el-submenu.is-active > .el-submenu__title,
+.el-submenu.is-active > .el-submenu__title i {
+    color: #fff !important;
 }
 
 .admin-workspace > .el-header {
@@ -480,6 +487,29 @@ body {
     margin-top: 7px;
     color: #909399;
     font-size: 13px;
+}
+
+/* Keep the Workspace cards as a responsive grid without affecting other module pages. */
+.admin-content .workspace-shell .ws-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 14px;
+}
+
+.admin-content .workspace-shell .ws-item {
+    display: flex;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.admin-content .workspace-shell .ws-item-body {
+    min-width: 0;
+}
+
+@media (max-width: 900px) {
+    .admin-content .workspace-shell .ws-list {
+        grid-template-columns: 1fr;
+    }
 }
 
 .el-popover,

@@ -93,7 +93,10 @@ async page => {
             ['/Admin/PromptRange/Prompt', 'prompts.workbench'],
             ['/Admin/Workspace/Index', 'workspace.manage'],
             ['/Admin/Sandbox/Index', 'sandbox.manage'],
-            ['/Admin/Sandbox/Setup', 'sandbox.setup']
+            ['/Admin/Sandbox/Setup', 'sandbox.setup'],
+            ['/Admin/KnowledgeBase/Index', 'knowledge.manage'],
+            ['/Admin/PromptRange/Skill', 'prompts.skills'],
+            ['/Admin/AgentsManager/Index', 'agents.manage']
         ]) {
             await mount(culture, pagePath);
             const icon = page.locator('.ncf-doc-help-header');
@@ -136,7 +139,7 @@ async page => {
     for (const culture of ['ja', 'fr', 'es', 'ru']) {
         await mount(culture, '/Admin/MCP');
         await page.locator('.ncf-doc-help-header').click();
-        check(await page.locator('iframe').getAttribute('src') === 'https://doc.ncf.pub/NcfPackageSources/xncf/admin-operations.html#help-mcp-manager', culture + ' must use English documentation');
+        check(await page.locator('iframe').getAttribute('src') === 'https://doc.ncf.pub/NcfPackageSources/xncf/mcp-manager.html#help-mcp-manager', culture + ' must use English documentation');
         check(!(await page.locator('.ncf-doc-help-dialog').innerText()).includes('DocHelp.'), 'Missing help translation');
         await close();
     }

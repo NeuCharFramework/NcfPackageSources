@@ -52,6 +52,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.12.15 implement AdminChat memory storage and management system
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.12.26 生成回复时处理 Prompt 引用与记忆上下文
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;

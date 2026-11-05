@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.11</Version>
+    <Version>0.5.12</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -88,7 +88,15 @@
       3、维护 MCP 端点管理、模块菜单与后台租户作用域
       4、Dependency update from Senparc.Xncf.MCP.Abstractions to 0.1.1
     [2026-11-03] Add shared contextual documentation beside MCP client connections.
-</PackageReleaseNotes>
+    [2026-11-03] v0.5.12 以中文资源为基准统一整理多语言文案
+    1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+    2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+    3、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+    4、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+    5、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
+    6、Dependency update from Senparc.Xncf.SenMapic to 0.4.11
+    7、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

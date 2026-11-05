@@ -158,7 +158,19 @@
     [2026-11-04] Add Memory intent classification and structured update/defer/none output; upgrade untouched context-extraction defaults while preserving custom prompts.
     [2026-11-05] Support short contextual Memory save commands and evidence-based review rules; upgrade untouched intent prompts without overwriting custom or scored versions.
     [2026-11-05] Expose authorized lightweight Range score overviews for all PromptCode versions without loading prompt content.
-</PackageReleaseNotes>
+    [2026-11-05] v0.20.14 完善 PromptCode 评分、记忆保存规则与多语言文案
+    1、提供 PromptCode 引用、共享评分、轻量分数总览和只读预览
+    2、支持带证据审核的短上下文记忆保存，并避免覆盖已自定义或已评分提示词
+    3、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+    4、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+    5、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+    6、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
+    7、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+    8、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+    9、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
+    10、Dependency update from Senparc.Xncf.Tenant to 0.15.15
+    11、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview6
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">

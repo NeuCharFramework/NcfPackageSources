@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.24.17</Version>
+    <Version>0.24.18</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -134,7 +134,20 @@
 		7、Dependency update from Senparc.Ncf.Database to 0.21.11
 		8、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.6-preview10
     [2026-11-03] Add shared documentation help to the official-account edit form.
-</PackageReleaseNotes>
+    [2026-11-03] v0.24.18 以中文资源为基准统一整理多语言文案
+    1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+    2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+    3、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+    4、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.12
+    5、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.12
+    6、Dependency update from Senparc.Ncf.Database to 0.21.12
+    7、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.7-preview11
+    8、Dependency update from Senparc.Ncf.Repository to 0.20.11-preview10
+    9、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+    10、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+    11、Dependency update from Senparc.Xncf.PromptRange to 0.20.14
+    12、Dependency update from Senparc.Xncf.Swagger to 0.20.10
+    </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>

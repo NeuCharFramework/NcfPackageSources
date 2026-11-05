@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>1.1.13</Version>
+    <Version>1.1.14</Version>
     <XncfHasDatabase>Template_Database</XncfHasDatabase>
     <XncfIsSample>Template_Sample</XncfIsSample>
     <AssemblyName>Template_OrgName.Xncf.Template_XncfName</AssemblyName>
@@ -63,7 +63,11 @@
       1、Register.cs 的数据库相关代码（迁移、初始化、卸载删表、DI 注册）改用 XNCF_HAS_DATABASE 条件编译
       2、csproj 仅在 Database 或 Sample 开启时定义 XNCF_HAS_DATABASE 并包含 DatabasePlant 引用
       3、修复模板参数默认值及数据库和静态资源的条件引用
-</PackageReleaseNotes>
+      [2026-11-03] v1.1.14 以中文资源为基准统一整理多语言文案
+      1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+      2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+      3、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

@@ -1,4 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20261104144656_Add_PromptCode_Scores.cs
+    文件功能描述：PromptCode 评分数据库迁移
+
+
+    创建标识：Senparc - 20261104
+
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 增加 PromptItem 的 PromptCode 评分字段并更新数据库迁移
+
+----------------------------------------------------------------*/
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
