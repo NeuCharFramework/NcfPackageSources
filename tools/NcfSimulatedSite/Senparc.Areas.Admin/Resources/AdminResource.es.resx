@@ -853,4 +853,8 @@
   <data name="DocHelp.Retry" xml:space="preserve"><value>Reintentar</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>La configuración de la documentación no es válida. Contacte con su administrador.</value></data>
 
+  <data name="Admin.Login.SlideCaptchaDrag" xml:space="preserve"><value>Mantenga y arrastre el deslizador hasta la ranura</value></data>
+  <data name="Admin.Login.SlideCaptchaChecking" xml:space="preserve"><value>Verificando…</value></data>
+  <data name="Admin.Login.SlideCaptchaFailed" xml:space="preserve"><value>Falló la verificación, reinténtelo</value></data>
+  <data name="Admin.Login.RateLimited" xml:space="preserve"><value>Demasiadas solicitudes, inténtelo de nuevo más tarde</value></data>
 </root>

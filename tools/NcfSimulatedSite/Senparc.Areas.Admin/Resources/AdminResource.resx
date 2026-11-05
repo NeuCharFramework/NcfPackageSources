@@ -966,4 +966,8 @@
   <data name="PromptReference.RobotScore" xml:space="preserve"><value>AI 评分</value></data>
   <data name="PromptReference.Retry" xml:space="preserve"><value>重试</value></data>
 
+  <data name="Admin.Login.SlideCaptchaDrag" xml:space="preserve"><value>按住滑块拖动到缺口处</value></data>
+  <data name="Admin.Login.SlideCaptchaChecking" xml:space="preserve"><value>校验中…</value></data>
+  <data name="Admin.Login.SlideCaptchaFailed" xml:space="preserve"><value>验证失败，请重试</value></data>
+  <data name="Admin.Login.RateLimited" xml:space="preserve"><value>请求过于频繁，请稍后再试</value></data>
 </root>

@@ -226,6 +226,8 @@
 		<EmbeddedResource Remove="Areas\Admin\Pages\Dto\**" />
 
 		<None Remove="Areas\Admin\Pages\Dto\**" />
+
+		<PackageReference Include="Lazy.SlideCaptcha.Core" Version="2.0.1" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.2" />
 		<PackageReference Include="AngleSharp" Version="1.3.0" />
 		<PackageReference Include="PdfPig" Version="0.1.16" />

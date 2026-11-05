@@ -853,4 +853,8 @@
   <data name="DocHelp.Retry" xml:space="preserve"><value>再試行</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>ドキュメントの設定が無効です。管理者にお問い合わせください。</value></data>
 
+  <data name="Admin.Login.SlideCaptchaDrag" xml:space="preserve"><value>スライダーをドラッグして欠けに合わせてください</value></data>
+  <data name="Admin.Login.SlideCaptchaChecking" xml:space="preserve"><value>検証中…</value></data>
+  <data name="Admin.Login.SlideCaptchaFailed" xml:space="preserve"><value>検証に失敗しました、再試行してください</value></data>
+  <data name="Admin.Login.RateLimited" xml:space="preserve"><value>リクエストが多すぎます。しばらくしてから再試行してください</value></data>
 </root>

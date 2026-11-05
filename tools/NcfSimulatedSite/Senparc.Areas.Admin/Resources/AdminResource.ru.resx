@@ -853,4 +853,8 @@
   <data name="DocHelp.Retry" xml:space="preserve"><value>Повторить</value></data>
   <data name="DocHelp.InvalidTopic" xml:space="preserve"><value>Неверная настройка документации. Обратитесь к администратору.</value></data>
 
+  <data name="Admin.Login.SlideCaptchaDrag" xml:space="preserve"><value>Зажмите и перетащите ползунок к пазу</value></data>
+  <data name="Admin.Login.SlideCaptchaChecking" xml:space="preserve"><value>Проверка…</value></data>
+  <data name="Admin.Login.SlideCaptchaFailed" xml:space="preserve"><value>Проверка не пройдена, повторите</value></data>
+  <data name="Admin.Login.RateLimited" xml:space="preserve"><value>Слишком много запросов, повторите позже</value></data>
 </root>

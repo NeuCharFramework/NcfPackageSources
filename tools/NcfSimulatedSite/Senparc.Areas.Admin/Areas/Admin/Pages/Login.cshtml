@@ -61,10 +61,25 @@
                             <el-form-item prop="pass">
                                 <el-input type="password" v-model="ruleForm.pass" placeholder="@AR["Admin.Login.PasswordPlaceholder"]" autocomplete="off"></el-input>
                             </el-form-item>
-                            <el-form-item prop="captcha" v-if="captchaRequired">
+                            <el-form-item prop="captcha" v-if="captchaRequired && captchaType === 'text'">
                                 <div style="display: flex; align-items: center;">
                                     <el-input v-model="ruleForm.captcha" placeholder="@AR["Admin.Login.CaptchaPlaceholder"]" maxlength="6" style="flex: 1;"></el-input>
                                     <img v-if="captchaImage" :src="captchaImage" title="@AR["Admin.Login.CaptchaRefresh"]" @@click="refreshCaptcha()" style="width: 120px; height: 40px; margin-left: 10px; cursor: pointer; border-radius: 3px;" />
+                                </div>
+                            </el-form-item>
+                            <el-form-item v-if="captchaRequired && captchaType === 'slide'">
+                                <div class="slide-captcha">
+                                    <div class="slide-captcha-view">
+                                        <img v-if="slideCaptcha" :src="slideCaptcha.backgroundImage" class="slide-captcha-bg" alt="" />
+                                        <img v-if="slideCaptcha" :src="slideCaptcha.sliderImage" class="slide-captcha-piece" :style="slidePieceStyle" @@load="onSlidePieceLoad" alt="" />
+                                        <div class="slide-captcha-fail-mask" v-if="slideVerified === false"></div>
+                                    </div>
+                                    <div class="slide-captcha-bar" @@mousedown.prevent="onSlideDown" @@touchstart.prevent="onSlideTouchStart">
+                                        <span class="slide-captcha-tip" :class="{ 'is-success': slideVerified === true, 'is-fail': slideVerified === false }" v-text="slideTip"></span>
+                                        <div class="slide-captcha-block" :style="{ left: sliderX + 'px' }">
+                                            <i class="slide-captcha-arrow" :class="{ 'is-success': slideVerified === true, 'is-fail': slideVerified === false }"></i>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-form-item>
                             <el-button :loading="loading" style="width: 100%;" type="primary" @@click="submitForm('ruleForm')">@AR["Admin.Login.Submit"]</el-button>
@@ -90,6 +105,10 @@
             captchaPlaceholder: '@AR["Admin.Login.CaptchaPlaceholder"]',
             captchaRequired: '@AR["Admin.Login.CaptchaRequired"]',
             captchaRefresh: '@AR["Admin.Login.CaptchaRefresh"]',
+            slideCaptchaDrag: '@AR["Admin.Login.SlideCaptchaDrag"]',
+            slideCaptchaChecking: '@AR["Admin.Login.SlideCaptchaChecking"]',
+            slideCaptchaFailed: '@AR["Admin.Login.SlideCaptchaFailed"]',
+            rateLimited: '@AR["Admin.Login.RateLimited"]',
             loginFailed: '@AR["Admin.Login.Error.LoginFailed"]',
             loginRetry: '@AR["Admin.Login.Error.LoginRetry"]'
         };

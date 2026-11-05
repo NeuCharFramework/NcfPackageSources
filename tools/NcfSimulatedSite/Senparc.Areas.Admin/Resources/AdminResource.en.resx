@@ -922,4 +922,8 @@
   <data name="PromptReference.RobotScore" xml:space="preserve"><value>AI score</value></data>
   <data name="PromptReference.Retry" xml:space="preserve"><value>Retry</value></data>
 
+  <data name="Admin.Login.SlideCaptchaDrag" xml:space="preserve"><value>Hold and drag the slider to the gap</value></data>
+  <data name="Admin.Login.SlideCaptchaChecking" xml:space="preserve"><value>Verifying…</value></data>
+  <data name="Admin.Login.SlideCaptchaFailed" xml:space="preserve"><value>Verification failed, please retry</value></data>
+  <data name="Admin.Login.RateLimited" xml:space="preserve"><value>Too many requests, please try again later</value></data>
 </root>

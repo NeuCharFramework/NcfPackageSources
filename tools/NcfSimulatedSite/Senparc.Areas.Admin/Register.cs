@@ -58,6 +58,9 @@
     修改标识：Senparc - 20261103
     修改描述：将嵌入式静态资源接入文件版本计算，避免帮助索引缓存与页面不一致
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.5.15 登录安全加强：滑块验证码（Lazy.SlideCaptcha.Core/MIT）+ 登录端点 IP 滑动窗口限流
+
 ----------------------------------------------------------------*/
 
 /* 
@@ -249,6 +252,27 @@ namespace Senparc.Areas.Admin
             services.AddScoped<AdminAuthConfigService>();
             // 管理员登录图形验证码（纯 SVG 生成 + CO2NET 缓存，无第三方依赖）
             services.AddScoped<LoginCaptchaService>();
+
+            // ===== 登录安全加强：滑块验证码（Lazy.SlideCaptcha.Core, MIT License）+ IP 滑动窗口限流 =====
+            // 滑块验证码存储依赖 IDistributedCache；宿主未注册时退化为进程内内存缓存
+            if (!services.Any(s => s.ServiceType == typeof(Microsoft.Extensions.Caching.Distributed.IDistributedCache)))
+            {
+                services.AddDistributedMemoryCache();
+            }
+            services.AddSlideCaptcha(configuration, options =>
+            {
+                options.ExpirySeconds = 300;   // 滑块验证码 5 分钟内有效
+                options.Tolerant = 0.04f;      // 位置容差（0~1 背景宽度比例，约 4%≈22px），兼顾缩放显示下的操作误差
+                // 背景改为程序化生成（SkiaSharp），仓库不内置图片资源
+                options.Backgrounds = new System.Collections.Generic.List<Lazy.SlideCaptcha.Core.Resources.Resource>
+                {
+                    new Lazy.SlideCaptcha.Core.Resources.Resource(Senparc.Areas.Admin.Domain.Services.ProceduralSlideBackgroundHandler.TYPE, "procedural")
+                };
+            })
+                .AddResourceHandler<Senparc.Areas.Admin.Domain.Services.ProceduralSlideBackgroundHandler>()
+                .ReplaceValidator<Senparc.Areas.Admin.Domain.Services.LoginBehaviorSlideValidator>();
+            services.AddSingleton<Senparc.Areas.Admin.Domain.Services.ILoginRateLimitStore, Senparc.Areas.Admin.Domain.Services.Co2NetLoginRateLimitStore>();
+            services.AddScoped<Senparc.Areas.Admin.Domain.Services.LoginIpThrottleService>();
             services.AddScoped<IDesktopAdminAuthTokenIssuer, DesktopAdminAuthTokenIssuer>();
 
             // 聊天功能相关服务注册

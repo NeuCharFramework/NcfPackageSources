@@ -209,3 +209,83 @@ body {
     padding: 0 10px 10px;
     text-align: center;
 }
+
+/* ===== 登录滑块验证码（Lazy.SlideCaptcha.Core/MIT） ===== */
+.slide-captcha {
+    width: 300px;
+}
+.slide-captcha-view {
+    position: relative;
+    width: 300px;
+    height: 187px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #e9eef3;
+}
+.slide-captcha-bg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.slide-captcha-piece {
+    position: absolute;
+    top: 0;
+    pointer-events: none;
+}
+.slide-captcha-fail-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(245, 108, 108, .18);
+}
+.slide-captcha-bar {
+    position: relative;
+    height: 40px;
+    margin-top: 8px;
+    background: #f5f7fa;
+    border: 1px solid #e4e7ed;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    touch-action: none;
+}
+.slide-captcha-tip {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    line-height: 38px;
+    font-size: 12px;
+    color: #909399;
+    pointer-events: none;
+}
+.slide-captcha-tip.is-success { color: #67c23a; }
+.slide-captcha-tip.is-fail { color: #f56c6c; }
+.slide-captcha-block {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 28px;
+    height: 38px;
+    background: #ecf5ff;
+    border: 1px solid #d9ecff;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+}
+.slide-captcha-block:active { cursor: grabbing; }
+.slide-captcha-arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid #409eff;
+}
+.slide-captcha-arrow.is-success { border-left-color: #67c23a; }
+.slide-captcha-arrow.is-fail { border-left-color: #f56c6c; }

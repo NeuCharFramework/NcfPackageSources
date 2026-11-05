@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.12.15 add image captcha for admin login (required after 2 failed attempts)
 
+    修改标识：Senparc - 20261105
+    修改描述：登录安全加强：滑块验证码（Lazy.SlideCaptcha.Core/MIT，含行为轨迹校验）+ 登录端点 IP 滑动窗口限流（429 + Retry-After）
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -33,7 +36,12 @@ using Senparc.Ncf.Core.Config;
 using Senparc.Xncf.Tenant.Domain.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Configuration;
 using Senparc.CO2NET.Cache;
+using System.Text.Json;
+using System.Linq;
+using Lazy.SlideCaptcha.Core;
+using Lazy.SlideCaptcha.Core.Validator;
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
 {
@@ -62,13 +70,20 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         private readonly TenantInfoService _tenantInfoService;
         private readonly LoginCaptchaService _captchaService;
         private readonly IStringLocalizer<AdminResource> _localizer;
+        private readonly ICaptcha _slideCaptcha;
+        private readonly LoginIpThrottleService _ipThrottle;
+        private readonly IConfiguration _configuration;
         public LoginModel(AdminUserInfoService userInfoService, TenantInfoService tenantInfoService,
-            LoginCaptchaService captchaService, IStringLocalizer<AdminResource> localizer)
+            LoginCaptchaService captchaService, IStringLocalizer<AdminResource> localizer,
+            ICaptcha slideCaptcha, LoginIpThrottleService ipThrottle, IConfiguration configuration)
         {
             this._userInfoService = userInfoService;
             this._tenantInfoService = tenantInfoService;
             this._captchaService = captchaService;
             this._localizer = localizer;
+            this._slideCaptcha = slideCaptcha;
+            this._ipThrottle = ipThrottle;
+            this._configuration = configuration;
         }
 
 
@@ -133,6 +148,13 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 return Ok(new { loginInDto.Name, loginInDto.Password });
             }
 
+            // IP 滑动窗口限流：在源头掐断高频重试风暴（429 + Retry-After）
+            var ipThrottle = await _ipThrottle.TryConsumeAsync(GetClientIp(), LoginIpThrottleService.ActionLogin);
+            if (!ipThrottle.Allowed)
+            {
+                return CreateThrottledResponse(ipThrottle);
+            }
+
             // 移除不必要的验证，因为ValidateTenant总是返回true
             // 租户名称不是必填项，无需验证
 
@@ -181,22 +203,22 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                     return new JsonResult(LoginResultDto.Fail(
                         ex.Message,
                         captchaRequired: true,
-                        captcha: await _captchaService.CreateAsync()));
+                        challenge: await BuildCaptchaChallengeAsync()));
                 }
                 //ModelState.AddModelError(nameof(this.Password), "账号或密码错误！");
             }
 
-            // ===== 图形验证码门槛：连续密码错误达到阈值后，必须先通过验证码校验 =====
+            // ===== 人机校验门槛：连续密码错误达到阈值后，必须先通过人机校验（滑块验证码优先，文本验证码兜底） =====
             int failedCount = await _userInfoService.GetFailedLoginCountAsync(userInfo.UserName);
             if (failedCount >= LoginCaptchaService.CaptchaRequiredFailedCount)
             {
-                if (!await _captchaService.ValidateAsync(loginInDto.CaptchaToken, loginInDto.CaptchaCode))
+                if (!await ValidateCaptchaChallengeAsync(loginInDto))
                 {
-                    SenparcTrace.SendCustomLog("登录失败", $"用户名：{loginInDto.Name}, 错误：图形验证码错误");
+                    SenparcTrace.SendCustomLog("登录失败", $"用户名：{loginInDto.Name}, 错误：人机校验失败");
                     return new JsonResult(LoginResultDto.Fail(
                         _localizer["Admin.Login.Error.CaptchaInvalid"],
                         captchaRequired: true,
-                        captcha: await _captchaService.CreateAsync()));
+                        challenge: await BuildCaptchaChallengeAsync()));
                 }
             }
 
@@ -214,7 +236,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                         return new JsonResult(LoginResultDto.Fail(
                             _localizer["Admin.Login.Error.InvalidCredentials"],
                             captchaRequired: true,
-                            captcha: await _captchaService.CreateAsync()));
+                            challenge: await BuildCaptchaChallengeAsync()));
                     }
                     return new JsonResult(LoginResultDto.Fail(_localizer["Admin.Login.Error.InvalidCredentials"]));
                 }
@@ -227,7 +249,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 return new JsonResult(LoginResultDto.Fail(
                     ex.Message,
                     captchaRequired: true,
-                    captcha: await _captchaService.CreateAsync()));
+                    challenge: await BuildCaptchaChallengeAsync()));
             }
             catch (Exception ex)
             {
@@ -236,6 +258,123 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 return new JsonResult(LoginResultDto.Fail(_localizer["Admin.Login.Error.InvalidCredentials"]));
             }
         }
+
+        #region 登录安全加强（滑块验证码 + IP 限流）
+
+        /// <summary>
+        /// 客户端 IP（反向代理部署下优先取 X-Forwarded-For；限流仅用于提高重试成本，不作为安全边界）
+        /// </summary>
+        private string GetClientIp()
+        {
+            var forwarded = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            if (!forwarded.IsNullOrEmpty())
+            {
+                var first = forwarded.Split(',')[0].Trim();
+                if (!first.IsNullOrEmpty())
+                {
+                    return first;
+                }
+            }
+            return HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        }
+
+        /// <summary>
+        /// 429 限流响应（带 Retry-After 头）
+        /// </summary>
+        private JsonResult CreateThrottledResponse(ThrottleResult throttle)
+        {
+            HttpContext.Response.Headers["Retry-After"] = throttle.RetryAfterSeconds.ToString();
+            return new JsonResult(LoginResultDto.Fail(
+                _localizer["Admin.Login.RateLimited"],
+                retryAfterSeconds: throttle.RetryAfterSeconds))
+            {
+                StatusCode = 429
+            };
+        }
+
+        /// <summary>
+        /// 构建人机校验挑战：滑块验证码优先（AdminLogin:SlideCaptcha:Enabled，默认 true），
+        /// 生成异常（如 SkiaSharp 原生库缺失）时自动退化为文本验证码，保证登录始终可用
+        /// </summary>
+        /// <summary>
+        /// 滑块验证码开关（AdminLogin:SlideCaptcha:Enabled，默认 true）
+        /// </summary>
+        private bool IsSlideCaptchaEnabled()
+        {
+            var raw = _configuration["AdminLogin:SlideCaptcha:Enabled"];
+            return !(raw != null && bool.TryParse(raw, out var value) && !value);
+        }
+
+        private async Task<LoginCaptchaChallenge> BuildCaptchaChallengeAsync()
+        {
+            if (IsSlideCaptchaEnabled())
+            {
+                try
+                {
+                    var data = _slideCaptcha.Generate(Guid.NewGuid().ToString("N"));
+                    if (data != null && !data.Id.IsNullOrEmpty())
+                    {
+                        return LoginCaptchaChallenge.Slide(data.Id, data.BackgroundImage, data.SliderImage);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    SenparcTrace.SendCustomLog("滑块验证码生成失败，退化为文本验证码", ex.Message);
+                }
+            }
+            var text = await _captchaService.CreateAsync();
+            return LoginCaptchaChallenge.Text(text.Token, text.Image);
+        }
+
+        /// <summary>
+        /// 人机校验：请求携带滑块轨迹时走滑块校验（位置 + 行为校验），否则按文本验证码兜底
+        /// </summary>
+        private async Task<bool> ValidateCaptchaChallengeAsync(LoginInDto loginInDto)
+        {
+            if (!loginInDto.SlideCaptchaId.IsNullOrEmpty())
+            {
+                try
+                {
+                    var track = string.IsNullOrEmpty(loginInDto.SlideTrack)
+                        ? null
+                        : JsonSerializer.Deserialize<SlideTrack>(loginInDto.SlideTrack,
+                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    if (track != null)
+                    {
+                        var result = _slideCaptcha.Validate(loginInDto.SlideCaptchaId, track);
+                        return result != null && result.Result == ValidateResult.ValidateResultType.Success;
+                    }
+                }
+                catch
+                {
+                    // 轨迹数据非法一律视为校验失败
+                }
+                return false;
+            }
+            return await _captchaService.ValidateAsync(loginInDto.CaptchaToken, loginInDto.CaptchaCode);
+        }
+
+        /// <summary>
+        /// 下发新人机校验挑战（滑块优先，文本兜底）；按 IP 限流防止无限刷取
+        /// </summary>
+        public async Task<IActionResult> OnGetSlideCaptcha()
+        {
+            var throttle = await _ipThrottle.TryConsumeAsync(GetClientIp(), LoginIpThrottleService.ActionCaptcha);
+            if (!throttle.Allowed)
+            {
+                return CreateThrottledResponse(throttle);
+            }
+
+            var challenge = await BuildCaptchaChallengeAsync();
+            HttpContext.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";
+            if (challenge.Type == LoginCaptchaChallenge.TypeSlide)
+            {
+                return Ok(new { challenge.SlideId, backgroundImage = challenge.SlideBackground, sliderImage = challenge.SlideImage });
+            }
+            return Ok(new { challenge.TextToken, image = challenge.TextImage, textFallback = true });
+        }
+
+        #endregion
 
         /// <summary>
         /// 获取图形验证码（纯 SVG 高干扰，一次性、短时效）
@@ -312,7 +451,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                     return LoginResultDto.Fail(
                         _localizer["Admin.Login.Error.InvalidCredentials"],
                         captchaRequired: true,
-                        captcha: await _captchaService.CreateAsync());
+                        challenge: await BuildCaptchaChallengeAsync());
                 }
 
                 return LoginResultDto.Fail(_localizer["Admin.Login.Error.InvalidCredentials"]);
@@ -348,6 +487,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public string Tenant { get; set; }
         public string CaptchaToken { get; set; }
         public string CaptchaCode { get; set; }
+        public string SlideCaptchaId { get; set; }
+        public string SlideTrack { get; set; }
 
         public bool ValidateTenant()
         {
@@ -375,6 +516,8 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         public string Msg { get; set; }
         public bool CaptchaRequired { get; set; }
         public LoginCaptchaDto Captcha { get; set; }
+        public LoginSlideCaptchaDto SlideCaptcha { get; set; }
+        public int RetryAfterSeconds { get; set; }
 
         public static LoginResultDto Ok()
         {
@@ -384,19 +527,73 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             };
         }
 
-        public static LoginResultDto Fail(string msg, bool captchaRequired = false, LoginCaptchaService.CaptchaModel captcha = null)
+        public static LoginResultDto Fail(string msg, bool captchaRequired = false, LoginCaptchaChallenge challenge = null, int retryAfterSeconds = 0)
         {
             return new LoginResultDto
             {
                 Success = false,
                 Msg = msg,
                 CaptchaRequired = captchaRequired,
-                Captcha = captcha == null ? null : new LoginCaptchaDto
+                RetryAfterSeconds = retryAfterSeconds,
+                Captcha = challenge != null && challenge.TextToken != null ? new LoginCaptchaDto
                 {
-                    Token = captcha.Token,
-                    Image = captcha.Image
-                }
+                    Token = challenge.TextToken,
+                    Image = challenge.TextImage
+                } : null,
+                SlideCaptcha = challenge != null && challenge.SlideId != null ? new LoginSlideCaptchaDto
+                {
+                    Id = challenge.SlideId,
+                    BackgroundImage = challenge.SlideBackground,
+                    SliderImage = challenge.SlideImage
+                } : null
             };
         }
+    }
+
+    /// <summary>
+    /// 登录响应携带的人机校验挑战：滑块验证码（优先）或文本验证码（兜底）
+    /// </summary>
+    public class LoginCaptchaChallenge
+    {
+        public const string TypeSlide = "slide";
+        public const string TypeText = "text";
+
+        public string Type { get; private set; }
+        public string SlideId { get; private set; }
+        public string SlideBackground { get; private set; }
+        public string SlideImage { get; private set; }
+        public string TextToken { get; private set; }
+        public string TextImage { get; private set; }
+
+        public static LoginCaptchaChallenge Slide(string id, string backgroundImage, string sliderImage)
+        {
+            return new LoginCaptchaChallenge
+            {
+                Type = TypeSlide,
+                SlideId = id,
+                SlideBackground = backgroundImage,
+                SlideImage = sliderImage
+            };
+        }
+
+        public static LoginCaptchaChallenge Text(string token, string image)
+        {
+            return new LoginCaptchaChallenge
+            {
+                Type = TypeText,
+                TextToken = token,
+                TextImage = image
+            };
+        }
+    }
+
+    /// <summary>
+    /// 登录响应中的滑块验证码信息
+    /// </summary>
+    public class LoginSlideCaptchaDto
+    {
+        public string Id { get; set; }
+        public string BackgroundImage { get; set; }
+        public string SliderImage { get; set; }
     }
 }
