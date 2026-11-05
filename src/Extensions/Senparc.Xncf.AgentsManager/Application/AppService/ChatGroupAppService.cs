@@ -36,6 +36,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.19.1 enhance Agent Studio, group configuration, and task management interactions
 
+    修改标识：Senparc - 20261105
+    修改描述：工作室建组与拖入成员改用可重试事务，兼容 SQL Server EnableRetryOnFailure
+
 ----------------------------------------------------------------*/
 
 using Microsoft.CodeAnalysis.CSharp;
@@ -46,6 +49,7 @@ using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Exceptions;
+using Senparc.Ncf.Service.ServiceBase;
 using Senparc.Ncf.Utility;
 using Senparc.Ncf.Core.WorkContext.Provider;
 using Senparc.Xncf.AgentsManager.Domain.Models.DatabaseModel;
@@ -732,7 +736,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
 
                 var group = new ChatGroup(new ChatGroupDto(request.Name.Trim(), true, ChatGroupState.Unstart,
                     request.Description, admin.Id, entry.Id));
-                await _chatGroupService.BeginTransactionAsync(async () =>
+                await ExecuteStudioTransactionAsync(async () =>
                 {
                     await _chatGroupService.SaveObjectAsync(group);
                     foreach (var participant in participants)
@@ -770,7 +774,7 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                         await ValidateStudioParticipantAsync(participant.Remote, participant.Id);
                     }
 
-                    await _chatGroupService.BeginTransactionAsync(async () =>
+                    await ExecuteStudioTransactionAsync(async () =>
                     {
                         if (!remove)
                         {
@@ -799,6 +803,16 @@ namespace Senparc.Xncf.AgentsManager.OHS.Local.AppService
                 logger.Append($"Studio membership: group={groupId}, participant={participantKey}, remove={remove}");
                 return AgentsManagerResource.Get(remove ? "Studio.MemberRemoved" : "Studio.MemberAdded");
             });
+        }
+
+        /// <summary>
+        /// SQL Server 启用 EnableRetryOnFailure 后，不能直接 BeginTransaction。
+        /// 成员写入与建组必须包在 CreateExecutionStrategy 返回的可重试单元里。
+        /// </summary>
+        private Task ExecuteStudioTransactionAsync(Func<Task> action)
+        {
+            var context = _chatGroupService.BaseData.BaseDB.BaseDataContext;
+            return ResilientTransaction.New(context).ExecuteAsync(action);
         }
 
         private static (bool Remote, int Id) ParseStudioParticipant(string key)
