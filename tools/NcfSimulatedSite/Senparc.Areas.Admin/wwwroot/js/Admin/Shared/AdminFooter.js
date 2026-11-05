@@ -338,7 +338,12 @@
                 footerDisposed: false,
                 footerPageHideHandler: null,
                 footerPageShowHandler: null,
-                footerVisibilityHandler: null
+                footerVisibilityHandler: null,
+                voiceNavEmbedded: !!initialState.embedded,
+                voiceNavListening: false,
+                voiceNavPanelVisible: false,
+                voiceNavMessage: '',
+                voiceNavChoices: []
             };
         },
         computed: {
@@ -366,6 +371,9 @@
             },
             neuBellToastOverflowCount() {
                 return Math.max(0, (this.neuBellToastEntries || []).length - maximumVisibleNeuBellToasts);
+            },
+            voiceNavTitle() {
+                return window.NcfVoiceNavigation ? window.NcfVoiceNavigation.text('title') : '';
             }
         },
         mounted() {
@@ -724,8 +732,23 @@
                     this.footerClockTimer = window.setInterval(() => { this.footerClockTick += 1; }, 1000);
                 }
             },
+            toggleVoiceNav() {
+                if (!this.footerCommunicationOwner || this.voiceNavEmbedded || !window.NcfVoiceNavigation) {
+                    return;
+                }
+                window.NcfVoiceNavigation.toggle(this);
+            },
+            chooseVoiceNav(choice) {
+                if (!window.NcfVoiceNavigation) {
+                    return;
+                }
+                window.NcfVoiceNavigation.choose(this, choice);
+            },
             pauseFooter() {
-                // 后台页签不应保留 SSE、轮询或挂起的 HTTP 请求。
+                // 后台页签不应保留 SSE、轮询、挂起的 HTTP 请求，或仍在监听的麦克风。
+                if (window.NcfVoiceNavigation) {
+                    window.NcfVoiceNavigation.stop(this);
+                }
                 this.footerPaused = true;
                 stopFooterFireworks();
                 if (this.footerClockTimer) {

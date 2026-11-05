@@ -155,6 +155,24 @@
                             @Html.Raw(FooterContentSanitizer.Sanitize(Model?.FullSystemConfig?.FooterContent))
                         </div>
                     </el-footer>
+                    <div class="admin-voice-nav" v-if="!voiceNavEmbedded">
+                        <button type="button"
+                                class="admin-voice-nav-button"
+                                :class="{ 'is-listening': voiceNavListening }"
+                                :aria-pressed="voiceNavListening ? 'true' : 'false'"
+                                :title="voiceNavTitle"
+                                @@click="toggleVoiceNav">
+                            <i class="fa" :class="voiceNavListening ? 'fa-stop' : 'fa-microphone'"></i>
+                        </button>
+                        <div v-if="voiceNavPanelVisible" class="admin-voice-nav-panel" role="status">
+                            <p class="admin-voice-nav-text">{{ voiceNavMessage }}</p>
+                            <button v-for="choice in voiceNavChoices"
+                                    :key="choice.label"
+                                    type="button"
+                                    class="admin-voice-nav-choice"
+                                    @@click="chooseVoiceNav(choice)">{{ choice.label }}</button>
+                        </div>
+                    </div>
                 </el-container>
             </el-container>
         </div>
@@ -284,6 +302,7 @@
             embedded: @(isEmbedded ? "true" : "false")
         };
     </script>
+    <script src="~/js/Admin/Shared/VoiceNavigation.js" asp-append-version="true"></script>
     <script src="~/js/Admin/Shared/AdminFooter.js" asp-append-version="true"></script>
     <script src="~/js/Admin/Shared/PromptReferences.js" asp-append-version="true"></script>
     <script src="~/js/Admin/Shared/PromptRangeSelector.js" asp-append-version="true"></script>

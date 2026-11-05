@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.17.0 enhance job management and telemetry features
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.17.2 放宽微调校验提示词长度上限
+
 ----------------------------------------------------------------*/
 
 #nullable enable

@@ -448,8 +448,97 @@ li {
 
 .ncf-admin-embedded .el-aside-index,
 .ncf-admin-embedded .el-header,
-.ncf-admin-embedded .footer {
+.ncf-admin-embedded .footer,
+.ncf-admin-embedded .admin-voice-nav {
     display: none !important;
+}
+
+.admin-voice-nav {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 12px;
+    background: #f7f9fb;
+    border-top: 1px solid #e4e7ed;
+}
+
+.admin-voice-nav-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    color: #5a738e;
+    background: #fff;
+    border: 1px solid #dcdfe6;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.admin-voice-nav-button:hover,
+.admin-voice-nav-button:focus {
+    color: #409eff;
+    border-color: #c6e2ff;
+    outline: none;
+}
+
+.admin-voice-nav-button.is-listening {
+    color: #fff;
+    background: #f56c6c;
+    border-color: #f56c6c;
+    animation: ncf-voice-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes ncf-voice-pulse {
+    50% {
+        box-shadow: 0 0 0 4px rgba(245, 108, 108, 0.28);
+    }
+}
+
+.admin-voice-nav-panel {
+    position: absolute;
+    left: 12px;
+    bottom: 30px;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: min(360px, calc(100vw - 48px));
+    max-height: 240px;
+    overflow: auto;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid #e4e7ed;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 21, 41, 0.12);
+}
+
+.admin-voice-nav-text {
+    margin: 0;
+    color: #606266;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.admin-voice-nav-choice {
+    padding: 4px 6px;
+    color: #303133;
+    font-size: 12px;
+    text-align: left;
+    background: #f5f7fa;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.admin-voice-nav-choice:hover,
+.admin-voice-nav-choice:focus {
+    color: #409eff;
+    background: #ecf5ff;
+    outline: none;
 }
 
 .ncf-admin-embedded .admin-content {

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.8.2</Version>
+    <Version>0.8.3</Version>
     <AssemblyName>Senparc.Xncf.FileManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.FileManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -74,7 +74,13 @@
       [2026-11-03] v0.8.1 支持文件流上传、跨模块文件引用与资源访问策略
       1、完善文件管理页面、本地文本提取和文件导入服务
     [2026-11-03] Add shared contextual documentation beside upload settings.
-</PackageReleaseNotes>
+    [2026-11-03] v0.8.3 以中文资源为基准统一整理多语言文案
+    1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+    2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+    3、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+    4、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+    5、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

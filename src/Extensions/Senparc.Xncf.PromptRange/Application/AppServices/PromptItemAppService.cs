@@ -23,6 +23,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.20.8 add PromptRange selector service, UI components, and tests
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 补充 PromptCode 评分与选择相关应用服务
+
 ----------------------------------------------------------------*/
 
 using System;

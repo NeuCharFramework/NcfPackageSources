@@ -53,10 +53,10 @@ function setup() {
 test('Chinese locales use /zh/; all other UI languages use the English root', () => {
     const { api } = setup();
     for (const culture of ['zh', 'zh-CN', 'zh-TW', 'ZH-hans']) {
-        assert.equal(api.resolve('mcp.home', culture), 'https://doc.ncf.pub/zh/NcfPackageSources/xncf/admin-operations.html#help-mcp-manager');
+        assert.equal(api.resolve('mcp.home', culture), 'https://doc.ncf.pub/zh/NcfPackageSources/xncf/mcp-manager.html#help-mcp-manager');
     }
     for (const culture of ['en', 'en-US', 'ja', 'fr', 'es', 'ru', '', undefined, 'zhinvalid']) {
-        assert.equal(api.resolve('mcp.home', culture), 'https://doc.ncf.pub/NcfPackageSources/xncf/admin-operations.html#help-mcp-manager');
+        assert.equal(api.resolve('mcp.home', culture), 'https://doc.ncf.pub/NcfPackageSources/xncf/mcp-manager.html#help-mcp-manager');
     }
     assert.equal(api.resolve('modules.publish', 'zh-CN').split('#')[1], 'help-module-publish');
     assert.equal(api.resolve('modules.publish', 'fr').split('#')[1], 'help-module-publish');
@@ -135,7 +135,7 @@ test('dialog is lazy and shared; stale loads, timeout, retry, locale changes and
     state.context.document.documentElement.lang = 'ja';
     state.api.open('mcp.home', opener);
     assert.equal(state.creations, 1);
-    assert.equal(dialog.url, 'https://doc.ncf.pub/NcfPackageSources/xncf/admin-operations.html#help-mcp-manager');
+    assert.equal(dialog.url, 'https://doc.ncf.pub/NcfPackageSources/xncf/mcp-manager.html#help-mcp-manager');
     assert.equal(state.timers.size, 1);
     dialog.frameLoaded(oldVersion);
     assert.equal(dialog.loading, true);
@@ -236,6 +236,61 @@ test('page overviews and nearby controls retain their audited contextual topics'
         const file = path.join(root, 'src/Extensions/Senparc.Xncf.' + module, 'Areas/Admin/Pages', page + '.cshtml');
         assert.match(fs.readFileSync(file, 'utf8'), pattern, file);
     }
+    const recall = fs.readFileSync(path.join(root,
+        'src/Extensions/Senparc.Xncf.KnowledgeBase/Areas/Admin/Pages/KnowledgeBase/RecallTest.cshtml'), 'utf8');
+    const topKControls = [...recall.matchAll(/<el-(?:slider|input-number)\b[^>]*v-model="topK"[^>]*>/g)];
+    assert.equal(topKControls.length, 2);
+    for (const [control] of topKControls) {
+        for (const attribute of [':min="1"', ':max="20"', ':step="1"']) assert.ok(control.includes(attribute));
+    }
+    assert.match(recall, /先从 5 开始/);
+});
+
+test('substantial help opens its owning guide directly, not the general directory', () => {
+    const { api, context } = setup();
+    const owners = [
+        ['start/start-develop/admin-background', ['admin.home', 'admin.monitor', 'admin.users', 'admin.roles', 'admin.menus']],
+        ['start/start-develop/admin-login', ['admin.login']],
+        ['start/start-develop/admin-module-manage', ['modules.manage', 'modules.publish', 'modules.lifecycle', 'modules.functions']],
+        ['start/config/mutiple-tenant', ['admin.tenants']],
+        ['start/xncf-develop/isolated-xncf-development', ['builder.preview']],
+        ['admin-operations', ['admin.config', 'admin.accounts', 'agents.hub', 'modules.database-sample']],
+        ['admin-logs', ['admin.logs', 'admin.logs.details']],
+        ['adminchat', ['admin.chat', 'admin.harness', 'admin.attachments']],
+        ['adminchat-memory', ['admin.memory', 'admin.memory.modes', 'admin.memory.entries', 'admin.memory.loaded', 'admin.memory.markdown', 'admin.memory.system']],
+        ['neubell-webhooks', ['admin.neubell']],
+        ['neuchar-pivot', ['pivot.boards', 'pivot.aggregate', 'pivot.access']],
+        ['mcp-manager', ['mcp.home', 'mcp.connections']],
+        ['aikernel-admin', ['ai.models', 'ai.vectors', 'ai.tokens', 'ai.dashboard']],
+        ['aikernel-local-fine-tuning', ['ai.fine-tuning', 'ai.workers']],
+        ['knowledge-base', ['knowledge.manage', 'knowledge.create', 'knowledge.recall', 'knowledge.recall.top-k']],
+        ['prompt-range', ['prompts.dashboard', 'prompts.workbench', 'prompts.manage', 'prompts.models']],
+        ['skills', ['prompts.skills']],
+        ['file-manager', ['files.manage', 'files.uploads']],
+        ['agents-manager', ['agents.manage']],
+        ['agents-manager-3d-status', ['agents.status']],
+        ['neuchar-workflow', ['workflow.designer', 'workflow.tasks', 'workflow.replay', 'workflow.analytics']],
+        ['workspace-adminchat', ['workspace.manage', 'workspace.permissions', 'desktop.pairing']],
+        ['sandbox-environment', ['sandbox.manage', 'sandbox.setup']],
+        ['dynamic-data', ['dynamic.home', 'dynamic.tables', 'dynamic.layouts', 'dynamic.pages', 'dynamic.render']],
+        ['senmapic', ['crawler.tasks', 'crawler.detail']],
+        ['weixin-manager', ['weixin.overview', 'weixin.accounts', 'weixin.users']],
+        ['weixin-bot', ['weixin.claw', 'weixin.integration']]
+    ];
+    const classified = [];
+    for (const [document, topics] of owners) {
+        for (const topic of topics) {
+            classified.push(topic);
+            for (const culture of ['zh-CN', 'en', 'ja']) {
+                const url = new URL(api.resolve(topic, culture));
+                const expected = (culture === 'zh-CN' ? '/zh/' : '/') +
+                    (document.startsWith('start/') ? document : 'NcfPackageSources/xncf/' + document) + '.html';
+                assert.equal(url.pathname, expected, topic);
+                assert.match(url.hash, /^#help-/);
+            }
+        }
+    }
+    assert.deepEqual(classified.sort(), Object.keys(context.window.NcfDocHelpCatalog.topics).sort());
 });
 
 test('audited chapters describe the specific controls in both languages', { skip: !process.env.NCF_DOCS_ROOT }, () => {

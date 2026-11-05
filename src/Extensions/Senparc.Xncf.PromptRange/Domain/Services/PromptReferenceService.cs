@@ -1,3 +1,16 @@
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：PromptReferenceService.cs
+    文件功能描述：PromptCode 引用校验、查询与评分服务
+
+
+    创建标识：Senparc - 20261104
+
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 提供 PromptCode 引用校验、查询与评分
+
+----------------------------------------------------------------*/
 using System;
 using System.Collections.Generic;
 using System.Linq;

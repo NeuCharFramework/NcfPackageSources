@@ -43,6 +43,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.12.15 完善后台聊天会话管理与排序
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.12.26 后台聊天接入记忆与 Prompt 引用
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;

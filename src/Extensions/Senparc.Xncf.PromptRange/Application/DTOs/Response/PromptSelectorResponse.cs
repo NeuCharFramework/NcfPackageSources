@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.20.8 add PromptRange selector service, UI components, and tests
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 补充选择结果中的评分信息
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Generic;

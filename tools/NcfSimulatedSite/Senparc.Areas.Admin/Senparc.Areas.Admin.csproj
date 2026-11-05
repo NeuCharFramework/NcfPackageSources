@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.25</Version>
+		<Version>0.12.26</Version>
 		<PackageReleaseNotes>
     [2026-07-02] v0.0.2 支持流式输出并优化交互体验，优化 AgentsManager 前端界面与历史消息展示效果
     1、支持流式输出并优化交互体验
@@ -138,7 +138,28 @@
     [2026-11-05] Resolve multi-turn Memory save commands using bounded context; automatically persist user-stated evidence while requiring review for assistant-derived changes and avoiding phantom review actions.
     [2026-11-05] Add slider-based PromptCode scoring with live draft bars, independent Range comparison and read-only prompt previews.
     [2026-11-05] Align all contextual help with audited bilingual UI chapters and stable anchors; distinguish page overviews from control-specific help.
-</PackageReleaseNotes>
+    [2026-11-05] v0.12.26 完善后台上下文帮助、现代皮肤与本地语音导航
+    1、上下文帮助直接打开对应双语功能说明，概览仅保留简短提示并兼容旧章节链接
+    2、调整管理端现代皮肤、布局间距和页脚交互
+    3、新增浏览器本地语音导航，菜单匹配不上传音频或文本
+    4、为 Workspace 首页提供独立样式表
+    5、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+    6、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+    7、Dependency update from Senparc.Ncf.Mvc.UI to 0.22.7-preview11
+    8、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+    9、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview6
+    10、Dependency update from Senparc.Xncf.Workspace to 0.2.7
+    11、Dependency update from Senparc.Xncf.FileManager to 0.8.3
+    12、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+    13、Dependency update from Senparc.Xncf.WeixinManager to 0.24.18
+    14、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+    15、Dependency update from Senparc.Xncf.Menu to 0.14.12
+    16、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+    17、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
+    18、Dependency update from Senparc.Xncf.SystemPermission to 0.15.12
+    19、Dependency update from Senparc.Xncf.Tenant to 0.15.15
+    20、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
+		</PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

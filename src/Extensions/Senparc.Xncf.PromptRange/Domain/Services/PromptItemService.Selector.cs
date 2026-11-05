@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.20.8 add PromptRange selector service, UI components, and tests
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 选择器返回评分并支持按评分排序
+
 ----------------------------------------------------------------*/
 
 using System;

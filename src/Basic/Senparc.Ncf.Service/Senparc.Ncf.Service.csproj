@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.23.10-preview9</Version>
+    <Version>0.23.11-preview10</Version>
     <AssemblyName>Senparc.Ncf.Service</AssemblyName>
     <RootNamespace>Senparc.Ncf.Service</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -52,7 +52,11 @@
 				2、保留同步兼容入口并标记迁移提示
 				3、维护租户菜单和角色权限服务
 				4、Dependency update from Senparc.Ncf.SMS to 0.20.10-preview10
-</PackageReleaseNotes>
+				[2026-11-05] v0.23.11-preview10 同步直接依赖项目版本
+				1、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+				2、Dependency update from Senparc.Ncf.Repository to 0.20.11-preview10
+				3、Dependency update from Senparc.Ncf.SMS to 0.20.11-preview11
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

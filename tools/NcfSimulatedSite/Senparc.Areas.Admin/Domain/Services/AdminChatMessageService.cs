@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.12.15 add comprehensive unit tests for AdminChatWorkspaceAssetService functionality
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.12.26 持久化消息、Prompt 引用与评分
+
 ----------------------------------------------------------------*/
 using Microsoft.EntityFrameworkCore;
 using Senparc.Areas.Admin.ACL;

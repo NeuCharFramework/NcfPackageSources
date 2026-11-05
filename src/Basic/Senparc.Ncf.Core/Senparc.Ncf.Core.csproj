@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.30.3-preview9</Version>
+    <Version>0.30.4-preview10</Version>
     <AssemblyName>Senparc.Ncf.Core</AssemblyName>
     <RootNamespace>Senparc.Ncf.Core</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -85,7 +85,9 @@
 				2、保持 fail-closed 语义：未匹配或作用域已释放时不修改目标作用域租户上下文
 				3、配合各模块修复 ChatGroup、A2A、Token 用量、沙箱、Workspace、Workflow 等后台/跨作用域场景的租户隔离
 				4、提供请求租户快照与后台租户作用域，支持隔离作用域恢复租户上下文
-</PackageReleaseNotes>
+				[2026-11-03] v0.30.4-preview10 以中文资源为基准统一整理多语言文案
+				1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>
