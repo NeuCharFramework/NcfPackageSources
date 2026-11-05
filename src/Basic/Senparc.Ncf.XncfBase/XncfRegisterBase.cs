@@ -16,6 +16,7 @@
 ----------------------------------------------------------------*/
 
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -495,7 +496,9 @@ namespace Senparc.Ncf.XncfBase
                 var routePattern = $"mcp-{Name.Replace(".", "-").ToLower()}";
                 try
                 {
-                    endpoints.MapMcp(routePattern);
+                    //安全要求：MCP 端点必须显式声明授权（默认策略：需要已认证用户，即有效 JWT/Cookie），
+                    //不依赖 SDK 的默认行为，防止 MCP 工具被匿名调用
+                    endpoints.MapMcp(routePattern).RequireAuthorization();
                 }
                 catch (Exception ex)
                 {
