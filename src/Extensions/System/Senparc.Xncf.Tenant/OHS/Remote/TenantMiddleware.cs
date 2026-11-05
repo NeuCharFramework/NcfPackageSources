@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.Trace;
 using Senparc.Ncf.Core;
 using Senparc.Ncf.Core.Config;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Core.MultiTenant;
 using Senparc.Xncf.Tenant.Domain.Services;
 using System;
@@ -117,6 +118,13 @@ namespace Senparc.Xncf.Tenant.OHS.Remote
                     var tenantInfoService = serviceProvider.GetRequiredService<TenantInfoService>();
                     var requestTenantInfo = await tenantInfoService.SetScopedRequestTenantInfoAsync(context);//设置当前 Request 的 RequestTenantInfo 参数
                 }
+            }
+            catch (NcfTenantNotFoundException tenantNotFoundEx)
+            {
+                //请求携带的 TenantKey 无法匹配到任何租户：直接返回 403（fail-closed），不进入后续管道
+                SenparcTrace.SendCustomLog("TenantMiddleware - TenantKey 无法匹配到任何租户", tenantNotFoundEx.Message);
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                return;
             }
             catch (NcfUninstallException unInstallEx)
             {

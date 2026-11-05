@@ -136,6 +136,12 @@ namespace Senparc.Xncf.Tenant.Domain.Services
             else
             {
                 //Console.WriteLine($"\t\t 未匹配到 tenantKey：{tenantKey}");
+                if (SiteConfig.SenparcCoreSetting.EnableMultiTenant && !string.IsNullOrEmpty(tenantKey))
+                {
+                    //多租户已启用且请求显式携带 TenantKey，但无法匹配到任何租户：
+                    //fail-closed 直接拒绝，防止静默降级到默认租户（Id=0，平台数据空间）
+                    throw new NcfTenantNotFoundException(tenantKey);
+                }
                 requestTenantInfo.Name = SiteConfig.TENANT_DEFAULT_NAME;
                 requestTenantInfo.TryMatch(tenantKey == null || false);
             }
