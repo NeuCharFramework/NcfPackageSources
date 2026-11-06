@@ -16,6 +16,7 @@
 }
 
 <div class="fine-tuning">
+    <div class="ft-page">
     <header class="ft-heading">
         <div>
             <h1>{{ t('Title') }}</h1>
@@ -24,17 +25,19 @@
         <el-button icon="el-icon-refresh" :loading="pollBusy" :disabled="datasetMoreBusy" @@click="refresh">{{ t('Refresh') }}</el-button>
     </header>
 
-    <nav class="ft-workflow" :aria-label="t('Guide.Title')">
-        <div v-for="(step, index) in workflowSteps" :key="step"
-             class="ft-workflow-step"
-             :class="'is-' + workflowStepState(index)"
-             :aria-current="workflowStepState(index) === 'current' ? 'step' : null">
+    <div class="ft-workflow-sentinel" aria-hidden="true"></div>
+    <nav class="ft-workflow" :class="{ 'is-stuck': workflowStuck }" :aria-label="t('Guide.Title')">
+        <button v-for="(step, index) in workflowSteps" :key="step" type="button"
+                class="ft-workflow-step"
+                :class="['is-' + workflowStepState(index), { 'is-located': locatedStep === step }]"
+                :aria-current="workflowStepState(index) === 'current' ? 'step' : null"
+                @@click="scrollToStep(step)">
             <span class="ft-workflow-index">{{ index + 1 }}</span>
-            <div class="ft-workflow-copy">
+            <span class="ft-workflow-copy">
                 <strong>{{ t('Guide.' + step + 'Title') }}</strong>
                 <span>{{ t('Guide.' + step) }}</span>
-            </div>
-        </div>
+            </span>
+        </button>
     </nav>
 
     <el-collapse class="ft-help" v-model="helpOpen">
@@ -62,7 +65,7 @@
         </el-collapse-item>
     </el-collapse>
 
-    <el-card class="ft-card">
+    <el-card id="ft-worker" class="ft-card" data-ft-section="ft-worker" data-ft-step="Worker">
         <div slot="header" class="ft-detail-heading">
             <h2>{{ t('Worker') }}<ncf-doc-help topic="ai.workers"></ncf-doc-help></h2>
             <div>
@@ -92,7 +95,7 @@
         </el-button>
     </el-card>
 
-    <el-card class="ft-card">
+    <el-card id="ft-control-plane" class="ft-card" data-ft-section="ft-control-plane" data-ft-step="Worker">
         <div slot="header" class="ft-detail-heading">
             <h2>{{ t('ControlPlaneTitle') }}</h2>
             <el-button type="primary" size="mini"
@@ -111,7 +114,7 @@
         </el-alert>
     </el-card>
 
-    <el-card class="ft-card">
+    <el-card id="ft-diagnostics" class="ft-card" data-ft-section="ft-diagnostics" data-ft-step="Worker">
         <div slot="header" class="ft-detail-heading">
             <h2>{{ t('DiagnosticsTitle') }}</h2>
             <el-button size="mini" :loading="diagnosticsBusy" :disabled="!workerAlias"
@@ -127,7 +130,7 @@
         </div>
     </el-card>
 
-    <el-card class="ft-card">
+    <el-card id="ft-model-prep" class="ft-card" data-ft-section="ft-model-prep" data-ft-step="Worker">
         <div slot="header" class="ft-detail-heading">
             <h2>{{ t('ModelPreparationTitle') }}</h2>
             <el-button size="mini" :loading="modelPreparationBusy"
@@ -168,7 +171,7 @@
         </el-alert>
     </el-card>
 
-    <el-dialog :title="t('WorkerConfiguration')" :visible.sync="workerEditorVisible" width="760px" custom-class="ft-worker-dialog">
+    <el-dialog :title="t('WorkerConfiguration')" :visible.sync="workerEditorVisible" width="760px" custom-class="ft-worker-dialog" data-ft-section="ft-worker-editor" data-ft-step="Worker">
         <el-alert type="warning" :closable="false" :title="t('WorkerSecretNotice')" show-icon></el-alert>
         <el-form :model="workerEditor" label-position="top">
             <el-form-item :label="t('WorkerAlias')"><el-input v-model="workerEditor.alias" maxlength="50" :disabled="workerEditor.id > 0"></el-input></el-form-item>
@@ -220,6 +223,7 @@
         </span>
     </el-dialog>
 
+    <div id="ft-preflight" data-ft-section="ft-preflight" data-ft-step="Worker">
     <div class="ft-status" role="status" aria-live="polite">
         <el-tag :type="connectionHealthy ? 'success' : workerSetupRequired ? 'info' : 'warning'">{{ connectionHealthy ? t('Connected') : workerSetupRequired ? t('WorkerSetupTitle') : t('Stale') }}</el-tag>
         <span>{{ t('LastUpdate') }}: {{ formatDate(lastConnectedUtc) }}</span>
@@ -248,9 +252,10 @@
         </div>
         <p class="ft-muted">{{ t('PreflightHelp') }}</p>
     </el-card>
+    </div>
 
     <div class="ft-setup-grid">
-        <el-card class="ft-card">
+        <el-card id="ft-datasets" class="ft-card" data-ft-section="ft-datasets" data-ft-step="Data">
             <div slot="header"><h2>{{ t('Datasets') }}</h2></div>
             <p>{{ t('DatasetHelp') }}</p>
             <el-collapse class="ft-help">
@@ -290,7 +295,7 @@
                        :disabled="pollBusy || uploadBusy || createBusy || !connectionHealthy" @@click="loadMoreDatasets">{{ t('LoadMoreDatasets') }}</el-button>
         </el-card>
 
-        <el-card class="ft-card">
+        <el-card id="ft-training" class="ft-card" data-ft-section="ft-training" data-ft-step="Training">
             <div slot="header"><h2>{{ t('CreateJob') }}</h2></div>
             <el-form :model="form" label-position="top" @@submit.native.prevent="createJob">
                 <div class="ft-form-grid">
@@ -363,7 +368,7 @@
         </el-card>
     </div>
 
-    <el-card class="ft-card">
+    <el-card id="ft-jobs" class="ft-card" data-ft-section="ft-jobs" data-ft-step="Monitor">
         <div slot="header"><h2>{{ t('Jobs') }}</h2></div>
         <p class="ft-muted">{{ t('JobsHelp') }}</p>
         <el-table :data="pagedJobs" :empty-text="t('NoJobs')" row-key="id" border highlight-current-row
@@ -388,7 +393,7 @@
                        class="ft-pagination"></el-pagination>
     </el-card>
 
-    <el-card v-if="selectedId" class="ft-card" v-loading="detailLoading">
+    <el-card v-if="selectedId" id="ft-monitor" class="ft-card" data-ft-section="ft-monitor" data-ft-step="Monitor" v-loading="detailLoading">
         <div slot="header" class="ft-detail-heading">
             <h2>{{ t('Monitor') }}: {{ job ? job.name : selectedId }}</h2>
             <span>
@@ -453,6 +458,7 @@
                     <pre class="ft-snapshot">{{ JSON.stringify(job.request, null, 2) }}</pre>
                 </el-collapse-item>
             </el-collapse>
+            <div id="ft-publish" data-ft-section="ft-publish" data-ft-step="Publish">
             <h3>{{ t('Artifacts') }}</h3>
             <el-alert v-if="job.state !== 'Succeeded' && job.artifacts.length" type="warning" :closable="false"
                       :title="t('PartialArtifactsTitle')" :description="t('PartialArtifactsHelp')" show-icon></el-alert>
@@ -496,12 +502,13 @@
                           :title="t('ValidationFailed')" :description="validation.error" show-icon></el-alert>
                 <div v-for="result in validation.results" :key="result.id" class="ft-validation-result">
                     <strong>{{ result.id }}</strong>
-                    <p><span class="ft-muted">{{ t('ValidationPrompt') }}:</span> {{ result.prompt }}</p>
+                    <p class="ft-validation-prompt"><span class="ft-muted">{{ t('ValidationPrompt') }}:</span> {{ result.prompt }}</p>
                     <pre>{{ result.response }}</pre>
                 </div>
             </div>
+            </div>
         </div>
-        <div class="ft-events-section" :class="{ 'is-stacked': eventLayout === 'stacked', 'is-expanded': eventExpanded }">
+        <div id="ft-events" class="ft-events-section" data-ft-section="ft-events" data-ft-step="Monitor" :class="{ 'is-stacked': eventLayout === 'stacked', 'is-expanded': eventExpanded }">
             <el-alert v-if="eventsTruncated" type="warning" :closable="false" :title="t('EventsTruncated')" show-icon></el-alert>
             <div class="ft-events-heading">
                 <div>
@@ -553,7 +560,20 @@
                 </div>
             </section>
         </div>
+        </div>
     </el-card>
+    </div>
+    <div class="ft-rail-column">
+        <nav class="ft-section-rail" :aria-label="t('SectionNav')">
+            <button v-for="section in pageSections" :key="section.id" type="button"
+                    :class="{ 'is-located': locatedSection === section.id }"
+                    :aria-current="locatedSection === section.id ? 'location' : null"
+                    @@click="scrollToSection(section.id)">
+                <span class="ft-section-rail-index">{{ workflowSteps.indexOf(section.step) + 1 }}</span>
+                <span>{{ t(section.labelKey) }}</span>
+            </button>
+        </nav>
+    </div>
 </div>
 
 @section scripts {

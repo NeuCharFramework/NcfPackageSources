@@ -1,9 +1,14 @@
 .fine-tuning {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 188px;
+    column-gap: 16px;
+    align-items: stretch;
     max-width: 1600px;
     margin: 0 auto;
     color: #303133;
     font-size: 14px;
 }
+.ft-page { min-width: 0; }
 
 .fine-tuning h1 { font-size: 24px; margin: 0 0 8px; }
 .fine-tuning h2 { font-size: 18px; margin: 0; }
@@ -35,7 +40,11 @@
 .ft-status { font-size: 13px; overflow-wrap: anywhere; }
 .ft-help code { white-space: normal; overflow-wrap: anywhere; }
 .ft-help a { color: #1766b5; text-decoration: underline; }
+.ft-workflow-sentinel { height: 1px; margin-top: -1px; }
 .ft-workflow {
+    position: sticky;
+    top: 0;
+    z-index: 30;
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 0;
@@ -45,14 +54,31 @@
     border-radius: 4px;
     background: #fff;
 }
+.ft-workflow.is-stuck {
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 8px 18px rgba(31, 45, 61, 0.12);
+}
+.ft-workflow.is-stuck .ft-workflow-copy > span { display: none; }
 .ft-workflow-step {
     position: relative;
     display: flex;
     align-items: flex-start;
+    width: 100%;
     min-width: 0;
     gap: 10px;
+    margin: 0;
     padding: 2px 16px 6px 0;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
     color: #909399;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+.ft-workflow-step.is-located {
+    background: #ecf5ff;
+    box-shadow: inset 0 0 0 2px #409eff;
 }
 .ft-workflow-step:not(:last-child)::after {
     position: absolute;
@@ -99,6 +125,47 @@
 }
 .ft-workflow-step.is-done::after { background: #67c23a; }
 .ft-workflow-step.is-done .ft-workflow-copy strong { color: #606266; }
+.ft-workflow-step:focus-visible { outline: 2px solid #409eff; outline-offset: 2px; }
+.fine-tuning [data-ft-section] { scroll-margin-top: 112px; }
+.fine-tuning [data-ft-section].is-located { outline: 2px solid #409eff; outline-offset: 2px; }
+.ft-rail-column { min-width: 0; }
+.ft-section-rail {
+    position: sticky;
+    top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: calc(100vh - 150px);
+    overflow: auto;
+    padding: 8px;
+    border: 1px solid #dcdfe6;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 8px 24px rgba(31, 45, 61, 0.08);
+}
+.ft-section-rail button {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+    margin: 0;
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #606266;
+    font: inherit;
+    line-height: 1.4;
+    text-align: left;
+    cursor: pointer;
+}
+.ft-section-rail button.is-located { background: #ecf5ff; color: #303133; box-shadow: inset 3px 0 0 #409eff; }
+.ft-section-rail button:focus-visible { outline: 2px solid #409eff; outline-offset: 2px; }
+.ft-section-rail-index {
+    flex: 0 0 18px;
+    color: #909399;
+    font-weight: 600;
+}
 .ft-guide { padding-left: 24px; }
 .ft-guide li { margin: 12px 0; }
 .ft-guide p { margin: 4px 0; }
@@ -138,7 +205,8 @@
 .ft-validation-options { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
 .ft-validation-result { margin-top: 16px; padding: 12px; border: 1px solid #dcdfe6; border-radius: 4px; background: #fff; }
 .ft-validation-result p { margin: 8px 0; }
-.ft-validation-result pre { margin: 0; padding: 10px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #f5f7fa; }
+.ft-validation-prompt { max-height: 120px; overflow: auto; }
+.ft-validation-result pre { max-height: 280px; margin: 0; padding: 10px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: #f5f7fa; }
 .ft-events-section {
     margin-top: 28px;
     padding: 22px;
@@ -177,8 +245,14 @@
     .ft-workflow { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 0; }
 }
 
+@media (max-width: 960px) {
+    .fine-tuning { display: block; }
+    .ft-rail-column { display: none; }
+}
+
 @media (max-width: 600px) {
     .ft-form-grid { grid-template-columns: minmax(0, 1fr); }
+    .ft-workflow-copy > span { display: none; }
     .fine-tuning .el-card__body { padding: 12px; }
     .ft-heading { align-items: flex-start; }
     .ft-chart { height: 280px; }

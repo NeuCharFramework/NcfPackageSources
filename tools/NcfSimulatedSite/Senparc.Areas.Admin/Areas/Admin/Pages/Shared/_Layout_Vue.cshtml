@@ -37,7 +37,7 @@
     <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon">
     <!-- 引入样式 -->
     <link href="~/lib/element-ui_2.13.2/element.css" rel="stylesheet" />
-    <link href="~/css/Admin/Shared/layout.css" rel="stylesheet" />
+    <link href="~/css/Admin/Shared/layout.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/Admin/Shared/AdminModernSkin.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/Admin/Shared/PromptRangeSelector.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/Admin/Shared/NcfDocHelp.css" rel="stylesheet" asp-append-version="true" />
@@ -58,10 +58,24 @@
                         </a>
                     </div>
                     <div v-show="!Store.state.navMenu.isCollapse" class="admin-nav-search">
+                        @* 不设置 name。固定 name（例如 name=xxx）会成为浏览器输入历史的键，拦不住自动填充。 *@
                         <el-input v-model="Store.state.navMenu.searchKeyword"
                                   size="mini"
                                   clearable
                                   prefix-icon="el-icon-search"
+                                  :readonly="Store.state.navMenu.searchInputLocked"
+                                  :autocomplete="ncfNavSearchAutocomplete"
+                                  autocorrect="off"
+                                  autocapitalize="off"
+                                  spellcheck="false"
+                                  role="searchbox"
+                                  aria-autocomplete="none"
+                                  data-lpignore="true"
+                                  data-1p-ignore="true"
+                                  data-form-type="other"
+                                  @@mousedown.native="unlockNavMenuSearch"
+                                  @@touchstart.native="unlockNavMenuSearch"
+                                  @@focus="unlockNavMenuSearch"
                                   placeholder="@AR["Admin.Nav.SearchPlaceholder"]">
                         </el-input>
                     </div>
@@ -134,6 +148,30 @@
                     </el-main>
                     <el-footer class="footer" height="36px">
                         <div class="admin-footer-tools">
+                            <div class="admin-voice-nav" v-if="!voiceNavEmbedded">
+                                <button type="button"
+                                        class="admin-voice-nav-button"
+                                        :class="{ 'is-listening': voiceNavListening }"
+                                        :aria-pressed="voiceNavListening ? 'true' : 'false'"
+                                        :title="voiceNavTitle"
+                                        @@click="toggleVoiceNav">
+                                    <i class="fa" :class="voiceNavListening ? 'fa-stop' : 'fa-microphone'"></i>
+                                </button>
+                                <div v-if="voiceNavPanelVisible" class="admin-voice-nav-panel" role="status">
+                                    <p class="admin-voice-nav-text">{{ voiceNavMessage }}</p>
+                                    <input class="admin-voice-nav-input"
+                                           type="text"
+                                           v-model="voiceNavDraft"
+                                           :placeholder="voiceNavPlaceholder"
+                                           @@keydown.enter.prevent="submitVoiceNav"
+                                           @@click.stop>
+                                    <button v-for="choice in voiceNavChoices"
+                                            :key="choice.url"
+                                            type="button"
+                                            class="admin-voice-nav-choice"
+                                            @@click="chooseVoiceNav(choice)">{{ choice.label }}</button>
+                                </div>
+                            </div>
                             <button type="button" class="admin-footer-action" @@click="openFooterAi" title="AI 快捷对话">
                                 <i class="fa fa-comments-o"></i><span>AI</span>
                             </button>
@@ -155,24 +193,6 @@
                             @Html.Raw(FooterContentSanitizer.Sanitize(Model?.FullSystemConfig?.FooterContent))
                         </div>
                     </el-footer>
-                    <div class="admin-voice-nav" v-if="!voiceNavEmbedded">
-                        <button type="button"
-                                class="admin-voice-nav-button"
-                                :class="{ 'is-listening': voiceNavListening }"
-                                :aria-pressed="voiceNavListening ? 'true' : 'false'"
-                                :title="voiceNavTitle"
-                                @@click="toggleVoiceNav">
-                            <i class="fa" :class="voiceNavListening ? 'fa-stop' : 'fa-microphone'"></i>
-                        </button>
-                        <div v-if="voiceNavPanelVisible" class="admin-voice-nav-panel" role="status">
-                            <p class="admin-voice-nav-text">{{ voiceNavMessage }}</p>
-                            <button v-for="choice in voiceNavChoices"
-                                    :key="choice.label"
-                                    type="button"
-                                    class="admin-voice-nav-choice"
-                                    @@click="chooseVoiceNav(choice)">{{ choice.label }}</button>
-                        </div>
-                    </div>
                 </el-container>
             </el-container>
         </div>
@@ -286,11 +306,11 @@
     <script src="~/lib/vuex.js"></script>
     @await Html.PartialAsync("_LocalizationScripts")
     <!--js-->
-    <script src="~/js/Admin/store.js"></script>
+    <script src="~/js/Admin/store.js" asp-append-version="true"></script>
     <script src="~/js/Admin/axios.js" asp-append-version="true"></script>
     <script src="~/js/Admin/global.js"></script>
     <!--菜单栏-->
-    <script src="~/js/Admin/navMenu.js"></script>
+    <script src="~/js/Admin/navMenu.js" asp-append-version="true"></script>
     <script src="~/js/Admin/vuePermission.js"></script>
     <script src="~/js/Admin/Pages/Components/Components.js"></script>
     <script src="~/js/Admin/dompurify.min.js"></script>

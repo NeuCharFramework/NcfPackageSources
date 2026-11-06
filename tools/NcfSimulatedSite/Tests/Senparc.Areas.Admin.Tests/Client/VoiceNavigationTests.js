@@ -123,6 +123,21 @@ test('menu names come from the current menu response', () => {
     assert.equal(result.target.url, '/Admin/New/Index');
 });
 
+test('an unfinished recognition result is still usable', () => {
+    const api = load();
+    const interimOnly = api.pickTranscripts({ finals: [], interim: '打开知识库。' });
+    assert.equal(interimOnly.length, 1);
+    assert.equal(interimOnly[0], '打开知识库');
+
+    const finalWins = api.pickTranscripts({ finals: ['打开菜单管理'], interim: '打开' });
+    assert.equal(finalWins.length, 1);
+    assert.equal(finalWins[0], '打开菜单管理');
+
+    const blankFinal = api.pickTranscripts({ finals: ['。'], interim: '用户管理' });
+    assert.equal(blankFinal.length, 1);
+    assert.equal(blankFinal[0], '用户管理');
+});
+
 test('unknown speech does not navigate', () => {
     const api = load();
     const result = api.match('打开一个不存在的页面', api.indexMenus(menus));

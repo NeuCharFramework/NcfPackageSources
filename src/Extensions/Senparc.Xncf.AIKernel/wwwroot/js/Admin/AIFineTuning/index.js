@@ -79,6 +79,22 @@ var app = new Vue({
             datasetFile: null,
             helpOpen: ["workflow"],
             workflowSteps: ["Worker", "Data", "Training", "Monitor", "Publish"],
+            pageSections: [
+                { id: "ft-worker", step: "Worker", labelKey: "Worker" },
+                { id: "ft-control-plane", step: "Worker", labelKey: "ControlPlaneTitle" },
+                { id: "ft-diagnostics", step: "Worker", labelKey: "DiagnosticsTitle" },
+                { id: "ft-model-prep", step: "Worker", labelKey: "ModelPreparationTitle" },
+                { id: "ft-preflight", step: "Worker", labelKey: "Preflight" },
+                { id: "ft-datasets", step: "Data", labelKey: "Datasets" },
+                { id: "ft-training", step: "Training", labelKey: "CreateJob" },
+                { id: "ft-jobs", step: "Monitor", labelKey: "Jobs" },
+                { id: "ft-monitor", step: "Monitor", labelKey: "Monitor" },
+                { id: "ft-publish", step: "Publish", labelKey: "Artifacts" },
+                { id: "ft-events", step: "Monitor", labelKey: "Events" }
+            ],
+            locatedStep: "",
+            locatedSection: "",
+            workflowStuck: false,
             datasetExample: "prompt",
             datasetExamples: {
                 prompt: [
@@ -218,6 +234,7 @@ var app = new Vue({
         };
         window.addEventListener("resize", this._resizeHandler);
         document.addEventListener("visibilitychange", this._visibilityHandler);
+        this.bindSectionLocator();
         this.loadFineTuningRuntime();
         this.poll();
     },
@@ -227,6 +244,7 @@ var app = new Vue({
         clearInterval(this._clockTimer);
         window.removeEventListener("resize", this._resizeHandler);
         document.removeEventListener("visibilitychange", this._visibilityHandler);
+        this.unbindSectionLocator();
         if (this._chart) { this._chart.dispose(); }
     },
     methods: {
@@ -242,6 +260,71 @@ var app = new Vue({
             if (index < current) { return "done"; }
             if (index === current) { return "current"; }
             return "upcoming";
+        },
+        bindSectionLocator() {
+            var root = this.$el && this.$el.querySelector ? this.$el.querySelector(".fine-tuning") : null;
+            if (!root || !root.addEventListener) { return; }
+            this._sectionRoot = root;
+            this._locatePointer = event => this.locateFromTarget(event.target);
+            this._locateFocus = event => {
+                var target = event.target;
+                if (!target || typeof target.closest !== "function") { return; }
+                if (!target.closest("input, textarea, select, [contenteditable='true']")) { return; }
+                this.locateFromTarget(target);
+            };
+            root.addEventListener("pointermove", this._locatePointer);
+            root.addEventListener("focusin", this._locateFocus);
+            var sentinel = root.querySelector(".ft-workflow-sentinel");
+            if (sentinel && typeof IntersectionObserver === "function") {
+                this._workflowObserver = new IntersectionObserver(entries => {
+                    this.workflowStuck = entries.length > 0 && !entries[0].isIntersecting;
+                }, { root: this.scrollParent(root), threshold: 0 });
+                this._workflowObserver.observe(sentinel);
+            }
+        },
+        unbindSectionLocator() {
+            var root = this._sectionRoot;
+            if (root && this._locatePointer) { root.removeEventListener("pointermove", this._locatePointer); }
+            if (root && this._locateFocus) { root.removeEventListener("focusin", this._locateFocus); }
+            if (this._workflowObserver) { this._workflowObserver.disconnect(); }
+            if (this._locatedNode && this._locatedNode.classList) { this._locatedNode.classList.remove("is-located"); }
+        },
+        scrollParent(node) {
+            var current = node ? node.parentElement : null;
+            while (current && current !== document.body && current !== document.documentElement) {
+                var style = window.getComputedStyle ? window.getComputedStyle(current) : null;
+                var overflow = style ? style.overflowY || style.overflow : "";
+                if (overflow === "auto" || overflow === "scroll") { return current; }
+                current = current.parentElement;
+            }
+            return null;
+        },
+        locateFromTarget(target) {
+            if (!target || typeof target.closest !== "function") { return; }
+            var section = target.closest("[data-ft-section]");
+            if (!section || typeof section.getAttribute !== "function") { return; }
+            var step = section.getAttribute("data-ft-step");
+            var id = section.getAttribute("data-ft-section");
+            if (this.workflowSteps.indexOf(step) < 0 || !id) { return; }
+            this.locatedStep = step;
+            this.locatedSection = id;
+            if (this._locatedNode && this._locatedNode !== section && this._locatedNode.classList) {
+                this._locatedNode.classList.remove("is-located");
+            }
+            this._locatedNode = section;
+            if (section.classList) { section.classList.add("is-located"); }
+        },
+        scrollToStep(step) {
+            var section = this.pageSections.find(item => item.step === step);
+            if (section) { this.scrollToSection(section.id); }
+        },
+        scrollToSection(id) {
+            var node = document.getElementById(id);
+            if (!node || node.id !== id) { return; }
+            this.locateFromTarget(node);
+            if (typeof node.scrollIntoView === "function") {
+                node.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
         },
         isRecord(value) {
             return value !== null && typeof value === "object" && !Array.isArray(value);
