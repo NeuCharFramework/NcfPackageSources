@@ -45,13 +45,13 @@
     <value>Sélectionner la langue</value>
   </data>
   <data name="Language.zh-CN" xml:space="preserve">
-    <value>简体中文</value>
+    <value>Chinois simplifié</value>
   </data>
   <data name="Language.en" xml:space="preserve">
     <value>English</value>
   </data>
   <data name="Language.ja" xml:space="preserve">
-    <value>日本語</value>
+    <value>Japonais</value>
   </data>
   <data name="Language.fr" xml:space="preserve">
     <value>Français</value>

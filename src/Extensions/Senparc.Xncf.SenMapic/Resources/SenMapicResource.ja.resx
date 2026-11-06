@@ -127,7 +127,7 @@
     <value>最大クロール時間（分）</value>
   </data>
   <data name="Task.MaxDepth" xml:space="preserve">
-    <value>最大深度</value>
+    <value>最大の深さ</value>
   </data>
   <data name="Task.MaxPages" xml:space="preserve">
     <value>最大ページ数</value>
@@ -163,7 +163,7 @@
     <value>URL 総数</value>
   </data>
   <data name="Task.SuccessCount" xml:space="preserve">
-    <value>成功数</value>
+    <value>成功件数</value>
   </data>
   <data name="Task.FailureCount" xml:space="preserve">
     <value>失敗数</value>
@@ -172,7 +172,7 @@
     <value>親 URL</value>
   </data>
   <data name="Task.Depth" xml:space="preserve">
-    <value>深度</value>
+    <value>深さ</value>
   </data>
   <data name="Task.CrawlTime" xml:space="preserve">
     <value>クロール時刻</value>
@@ -187,7 +187,7 @@
     <value>ステータス</value>
   </data>
   <data name="Common.Actions" xml:space="preserve">
-    <value>操作</value>
+    <value>アクション</value>
   </data>
   <data name="Common.Start" xml:space="preserve">
     <value>開始</value>
@@ -253,31 +253,31 @@
     <value>削除に失敗しました</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>抛出异常测试，传输参数：{0} {1}||抛出异常测试，传输参数：{0} {1}</value>
+    <value>例外を送出するテスト。引き渡しパラメーター：{0} {1}||例外を送出するテスト。引き渡しパラメーター：{0} {1}</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>被除数不能为0！||被除数不能为0！</value>
+    <value>除数は0にできません！||除数は0にできません！</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>未知的运算符：{0}||未知的运算符：{0}</value>
+    <value>不明な演算子：{0}||不明な演算子：{0}</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>未知操作符||未知操作符</value>
+    <value>不明な演算子||不明な演算子</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>请提供正确的网址！||请提供正确的网址！</value>
+    <value>正しい URL を入力してください！||正しい URL を入力してください！</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>目标主机解析为非公网地址，已拒绝连接。||目标主机解析为非公网地址，已拒绝连接。</value>
+    <value>対象ホストが非公開アドレスに解決されたため、接続を拒否しました。||対象ホストが非公開アドレスに解決されたため、接続を拒否しました。</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>无法连接到已通过公网地址校验的目标主机。||无法连接到已通过公网地址校验的目标主机。</value>
+    <value>公開アドレスの確認を通過した対象ホストに接続できません。||公開アドレスの確認を通過した対象ホストに接続できません。</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>目标 URL 不允许访问。||目标 URL 不允许访问。</value>
+    <value>対象 URL へのアクセスは許可されていません。||対象 URL へのアクセスは許可されていません。</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>重定向目标 URL 不允许访问。||重定向目标 URL 不允许访问。</value>
+    <value>リダイレクト先の URL へのアクセスは許可されていません。||リダイレクト先の URL へのアクセスは許可されていません。</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>サンプル関数</value>

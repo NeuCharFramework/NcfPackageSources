@@ -97,193 +97,193 @@
     <value>ランダム</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>上传到：||上传到：</value>
+    <value>アップロード先：||アップロード先：</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>上传文件||上传文件</value>
+    <value>ファイルをアップロード||ファイルをアップロード</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>上传时间||上传时间</value>
+    <value>アップロード日時||アップロード日時</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>下载||下载</value>
+    <value>ダウンロード||ダウンロード</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>代码||代码</value>
+    <value>コード||コード</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>其他||其他</value>
+    <value>その他||その他</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>删除||删除</value>
+    <value>削除||削除</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>刷新文件夹||刷新文件夹</value>
+    <value>フォルダを更新||フォルダを更新</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>取 消||取 消</value>
+    <value>キャンセル||キャンセル</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>可以选择多个文件同时上传||可以选择多个文件同时上传</value>
+    <value>複数ファイルを同時にアップロードできます||複数ファイルを同時にアップロードできます</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>名称||名称</value>
+    <value>名前||名前</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>备注||备注</value>
+    <value>メモ||メモ</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>备注（可选）||备注（可选）</value>
+    <value>備考（任意）||備考（任意）</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>大小||大小</value>
+    <value>サイズ||サイズ</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>扩展模块||扩展模块</value>
+    <value>拡張モジュール||拡張モジュール</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>操作||操作</value>
+    <value>アクション||アクション</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>文件名||文件名</value>
+    <value>ファイル名||ファイル名</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>文件夹||文件夹</value>
+    <value>フォルダ||フォルダ</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>文件管理||文件管理</value>
+    <value>ファイル管理||ファイル管理</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>文本||文本</value>
+    <value>テキスト||テキスト</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>新建||新建</value>
+    <value>新規||新規</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>新建文件夹||新建文件夹</value>
+    <value>新規フォルダ||新規フォルダ</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>根目录||根目录</value>
+    <value>ルート||ルート</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>确 定||确 定</value>
+    <value>OK||OK</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>类型||类型</value>
+    <value>種類||種類</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>表Id||表Id</value>
+    <value>テーブルId||テーブルId</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>请输入文件夹名称||请输入文件夹名称</value>
+    <value>フォルダー名を入力||フォルダー名を入力</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>选择文件||选择文件</value>
+    <value>ファイルを選択||ファイルを選択</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>首页||首页</value>
+    <value>ホーム||ホーム</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>获取列表失败||获取列表失败</value>
+    <value>リストの読み込みに失敗||リストの読み込みに失敗</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>上传成功||上传成功</value>
+    <value>アップロード完了||アップロード完了</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>上传失败||上传失败</value>
+    <value>アップロード失敗||アップロード失敗</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>修改成功||修改成功</value>
+    <value>更新しました||更新しました</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>修改失败||修改失败</value>
+    <value>変更に失敗しました||変更に失敗しました</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>确认删除该文件吗?||确认删除该文件吗?</value>
+    <value>このファイルを削除してよろしいですか?||このファイルを削除してよろしいですか?</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>提示||提示</value>
+    <value>通知||通知</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>确定||确定</value>
+    <value>確認||確認</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>取消||取消</value>
+    <value>キャンセル||キャンセル</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>删除成功||删除成功</value>
+    <value>削除しました||削除しました</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>删除失败||删除失败</value>
+    <value>削除に失敗しました||削除に失敗しました</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>创建成功||创建成功</value>
+    <value>作成しました||作成しました</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>创建失败||创建失败</value>
+    <value>作成に失敗しました||作成に失敗しました</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>上传失败：{0}||上传失败：{0}</value>
+    <value>アップロードに失敗：{0}||アップロードに失敗：{0}</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>请输入{0}的备注||请输入{0}的备注</value>
+    <value>{0}のメモを入力||{0}のメモを入力</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>FileManager 首页||FileManager 首页</value>
+    <value>FileManager ホーム||FileManager ホーム</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>文件夹 #{0}||文件夹 #{0}</value>
+    <value>フォルダー #{0}||フォルダー #{0}</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>请输入{0}的备注||请输入{0}的备注</value>
+    <value>{0}のメモを入力||{0}のメモを入力</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>更新成功||更新成功</value>
+    <value>更新しました||更新しました</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>更新失败||更新失败</value>
+    <value>更新失敗||更新失敗</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>确认删除该文件?||确认删除该文件?</value>
+    <value>このファイルを削除しますか?||このファイルを削除しますか?</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>请选择要上传的文件||请选择要上传的文件</value>
+    <value>アップロードするファイルを選択||アップロードするファイルを選択</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>上传失败：||上传失败：</value>
+    <value>アップロード失敗：||アップロード失敗：</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>抛出异常测试，传输参数：{0} {1}||抛出异常测试，传输参数：{0} {1}</value>
+    <value>例外を送出するテスト。引き渡しパラメーター：{0} {1}||例外を送出するテスト。引き渡しパラメーター：{0} {1}</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>被除数不能为0！||被除数不能为0！</value>
+    <value>除数は0にできません！||除数は0にできません！</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>未知的运算符：{0}||未知的运算符：{0}</value>
+    <value>不明な演算子：{0}||不明な演算子：{0}</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>一次最多上传 {0} 个文件。||一次最多上传 {0} 个文件。</value>
+    <value>一度にアップロードできるファイルは最大 {0} 件です。||一度にアップロードできるファイルは最大 {0} 件です。</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>单次上传总大小不能超过 {0} MB。||单次上传总大小不能超过 {0} MB。</value>
+    <value>1 回のアップロードの合計サイズは {0} MB を超えられません。||1 回のアップロードの合計サイズは {0} MB を超えられません。</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>上传文件不能为空。||上传文件不能为空。</value>
+    <value>アップロードファイルは空にできません。||アップロードファイルは空にできません。</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>单个文件不能超过 {0} MB。||单个文件不能超过 {0} MB。</value>
+    <value>1 ファイルのサイズは {0} MB を超えられません。||1 ファイルのサイズは {0} MB を超えられません。</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>不允许上传该文件类型。仅支持常见文档、图片、文本和压缩包格式。||不允许上传该文件类型。仅支持常见文档、图片、文本和压缩包格式。</value>
+    <value>このファイル形式はアップロードできません。一般的な文書、画像、テキスト、圧縮ファイルのみ対応しています。||このファイル形式はアップロードできません。一般的な文書、画像、テキスト、圧縮ファイルのみ対応しています。</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>文件不存在！||文件不存在！</value>
+    <value>ファイルが存在しません！||ファイルが存在しません！</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>文件物理路径信息无效。||文件物理路径信息无效。</value>
+    <value>ファイルの物理パス情報が無効です。||ファイルの物理パス情報が無効です。</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>文件物理路径越界。||文件物理路径越界。</value>
+    <value>ファイルの物理パスが範囲外です。||ファイルの物理パスが範囲外です。</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>サンプル関数</value>

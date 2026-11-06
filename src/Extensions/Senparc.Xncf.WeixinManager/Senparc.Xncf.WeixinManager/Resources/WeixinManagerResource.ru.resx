@@ -55,220 +55,220 @@
     <value>Отправить</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>扩展模块||Модули расширения</value>
+    <value>Модули расширения||Модули расширения</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>模块管理||Управление модулями</value>
+    <value>Управление модулями||Управление модулями</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>微信管理||Управление WeChat</value>
+    <value>Управление Weixin||Управление Weixin</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>公众号控制中心||Панель официальных аккаунтов</value>
+    <value>Центр управления официальным аккаунтом||Центр управления официальным аккаунтом</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>公众号数量||Официальные аккаунты</value>
+    <value>Число официальных аккаунтов||Число официальных аккаунтов</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>已经录入系统的公众号||Официальные аккаунты, добавленные в систему</value>
+    <value>Официальные аккаунты, уже внесённые в систему||Официальные аккаунты, уже внесённые в систему</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>运行账号数量||Активные аккаунты</value>
+    <value>Число запущенных аккаунтов||Число запущенных аккаунтов</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>已经生效并连接微信服务器的账号数量||Аккаунты, активные и подключенные к серверам WeChat</value>
+    <value>Число учётных записей, которые активны и подключены к серверу WeChat||Число учётных записей, которые активны и подключены к серверу WeChat</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>总微信用户数||Всего пользователей WeChat</value>
+    <value>Всего пользователей WeChat||Всего пользователей WeChat</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>在当前平台交互过或自动拉取关注的用户数||Пользователи, взаимодействовавшие с платформой или синхронизированные автоматически</value>
+    <value>Число пользователей, которые взаимодействовали на этой платформе или были автоматически загружены как подписчики||Число пользователей, которые взаимодействовали на этой платформе или были автоматически загружены как подписчики</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>今日新增用户数||Новые пользователи сегодня</value>
+    <value>Новые пользователи за сегодня||Новые пользователи за сегодня</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>当天已经同步或添加到平台的用户数量||Пользователи, синхронизированные или добавленные сегодня</value>
+    <value>Число пользователей, синхронизированных или добавленных на платформу сегодня||Число пользователей, синхронизированных или добавленных на платформу сегодня</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>查看用户||Просмотреть пользователей</value>
+    <value>Просмотр пользователей||Просмотр пользователей</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>查看分组||Просмотреть группы</value>
+    <value>Просмотр групп||Просмотр групп</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>查看标签||Просмотреть теги</value>
+    <value>Просмотр тегов||Просмотр тегов</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>对话||Диалоги</value>
+    <value>Диалог||Диалог</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>编辑||Изменить</value>
+    <value>Изменить||Изменить</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>AccessToken 凭证有效期||Срок действия AccessToken</value>
+    <value>Срок действия учётных данных AccessToken||Срок действия учётных данных AccessToken</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>AccessToken 凭证状态||Состояние AccessToken</value>
+    <value>Состояние учётных данных AccessToken||Состояние учётных данных AccessToken</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>公众号管理||Управление официальными аккаунтами</value>
+    <value>Управление официальными аккаунтами||Управление официальными аккаунтами</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>增加||Добавить</value>
+    <value>Добавить||Добавить</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>删除||Удалить</value>
+    <value>Удалить||Удалить</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>名称||Название</value>
+    <value>Имя||Имя</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>备注||Примечание</value>
+    <value>Примечания||Примечания</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>说明||Описание</value>
+    <value>Описание||Описание</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>添加时间||Дата добавления</value>
+    <value>Время добавления||Время добавления</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>消息URL||URL сообщений</value>
+    <value>URL сообщения||URL сообщения</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>打开||Открыть</value>
+    <value>Открыть||Открыть</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>操作||Действия</value>
+    <value>Действия||Действия</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>用户管理||Управление пользователями</value>
+    <value>Управление пользователями||Управление пользователями</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>公众号名称||Название официального аккаунта</value>
+    <value>Имя официального аккаунта||Имя официального аккаунта</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>微信后台配置的服务器地址(URL)||URL сервера, настроенный в WeChat</value>
+    <value>Адрес сервера (URL), заданный в консоли администрирования WeChat||Адрес сервера (URL), заданный в консоли администрирования WeChat</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>[您的域名]||[Ваш домен]</value>
+    <value>[Ваш домен]||[Ваш домен]</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>[你的域名]||[Ваш домен]</value>
+    <value>[Ваш домен]||[Ваш домен]</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>注意：“公众号名称”必须与所对应的 MessageHandler 所标记的 [MpMessageHandler(name)] 中的 name 对应||Примечание: название официального аккаунта должно совпадать с name в [MpMessageHandler(name)] соответствующего MessageHandler.</value>
+    <value>Внимание: «имя официального аккаунта» должно совпадать с name в [MpMessageHandler(name)] у соответствующего MessageHandler||Внимание: «имя официального аккаунта» должно совпадать с name в [MpMessageHandler(name)] у соответствующего MessageHandler</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>取 消||Отмена</value>
+    <value>Отмена||Отмена</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>确 认||Подтвердить</value>
+    <value>Подтвердить||Подтвердить</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>请输入公众号名称||Введите название официального аккаунта</value>
+    <value>Введите имя официального аккаунта||Введите имя официального аккаунта</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>请输入AppId||Введите AppId</value>
+    <value>Введите AppId||Введите AppId</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>请输入AppSecret||Введите AppSecret</value>
+    <value>Введите AppSecret||Введите AppSecret</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>请输入Token||Введите Token</value>
+    <value>Введите Token||Введите Token</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>长度在 1 至 100 之间||Длина должна быть от 1 до 100 символов</value>
+    <value>Длина должна быть от 1 до 100||Длина должна быть от 1 до 100</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>长度在 1 至 500 之间||Длина должна быть от 1 до 500 символов</value>
+    <value>Длина должна быть от 1 до 500||Длина должна быть от 1 до 500</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>新增公众号||Добавить официальный аккаунт</value>
+    <value>Добавить официальный аккаунт||Добавить официальный аккаунт</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>编辑公众号||Изменить официальный аккаунт</value>
+    <value>Изменить официальный аккаунт||Изменить официальный аккаунт</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>新增公众号成功||Официальный аккаунт добавлен</value>
+    <value>Официальный аккаунт добавлен||Официальный аккаунт добавлен</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>编辑公众号成功||Официальный аккаунт обновлён</value>
+    <value>Официальный аккаунт обновлён||Официальный аккаунт обновлён</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>成功||Успешно</value>
+    <value>Успешно||Успешно</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>警告||Предупреждение</value>
+    <value>Предупреждение||Предупреждение</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>请勾选公众号||Выберите хотя бы один официальный аккаунт</value>
+    <value>Выберите хотя бы один официальный аккаунт||Выберите хотя бы один официальный аккаунт</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>是否删除所都选的项目？||Удалить все выбранные элементы?</value>
+    <value>Удалить все выбранные элементы?||Удалить все выбранные элементы?</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>已成功删除{0}条||Удалено элементов: {0}</value>
+    <value>Удалено элементов: {0}||Удалено элементов: {0}</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>追加新增关注||Добавить новых подписчиков</value>
+    <value>Добавить новых подписчиков||Добавить новых подписчиков</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>同步所有关注||Синхронизировать всех подписчиков</value>
+    <value>Синхронизировать всех подписчиков||Синхронизировать всех подписчиков</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>注意：如果用户数量众多，可能会消耗非常长的时间！||Примечание: при большом числе пользователей операция может занять много времени.</value>
+    <value>Внимание: при большом числе пользователей это может занять очень много времени!||Внимание: при большом числе пользователей это может занять очень много времени!</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>昵称||Псевдоним</value>
+    <value>Псевдоним||Псевдоним</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>头像||Аватар</value>
+    <value>Аватар||Аватар</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>性别||Пол</value>
+    <value>Пол||Пол</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>男||Мужской</value>
+    <value>Муж.||Муж.</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>女||Женский</value>
+    <value>Жен.||Жен.</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>未知||Неизвестно</value>
+    <value>Неизвестно||Неизвестно</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>地区||Регион</value>
+    <value>Регион||Регион</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>分组||Группа</value>
+    <value>Группа||Группа</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>关注时间||Дата подписки</value>
+    <value>Дата подписки||Дата подписки</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>关注状态||Статус подписки</value>
+    <value>Статус подписки||Статус подписки</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>已关注||Подписан</value>
+    <value>Подписан||Подписан</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>未关注||Не подписан</value>
+    <value>Не подписан||Не подписан</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>关注场景||Источник подписки</value>
+    <value>Источник подписки||Источник подписки</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>标签||Теги</value>
+    <value>Теги||Теги</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>无||Нет</value>
+    <value>Нет||Нет</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>所有用户||Все пользователи</value>
+    <value>Все пользователи||Все пользователи</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>{0}的用户||Пользователи {0}</value>
+    <value>Пользователи {0}||Пользователи {0}</value>
   </data>
   <data name="User.AccountUsers" xml:space="preserve">
     <value>Пользователи {0}</value>
@@ -277,10 +277,10 @@
     <value>Все пользователи</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>[您的域名]/WeixinMp/{0}||[Ваш домен]/WeixinMp/{0}</value>
+    <value>[Ваш домен]/WeixinMp/{0}||[Ваш домен]/WeixinMp/{0}</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>[你的域名]/WeixinMp/{0}||[Ваш домен]/WeixinMp/{0}</value>
+    <value>[Ваш домен]/WeixinMp/{0}||[Ваш домен]/WeixinMp/{0}</value>
   </data>
   <data name="Public.ToggleNavigation" xml:space="preserve">
     <value>Переключить навигацию</value>

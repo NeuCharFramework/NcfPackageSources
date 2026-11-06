@@ -97,193 +97,193 @@
     <value>Случайно</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>上传到：||上传到：</value>
+    <value>Загрузить в:||Загрузить в:</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>上传文件||上传文件</value>
+    <value>Загрузить файл||Загрузить файл</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>上传时间||上传时间</value>
+    <value>Время загрузки||Время загрузки</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>下载||下载</value>
+    <value>Скачать||Скачать</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>代码||代码</value>
+    <value>Код||Код</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>其他||其他</value>
+    <value>Другое||Другое</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>删除||删除</value>
+    <value>Удалить||Удалить</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>刷新文件夹||刷新文件夹</value>
+    <value>Обновить папки||Обновить папки</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>取 消||取 消</value>
+    <value>Отмена||Отмена</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>可以选择多个文件同时上传||可以选择多个文件同时上传</value>
+    <value>Можно загрузить несколько файлов сразу||Можно загрузить несколько файлов сразу</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>名称||名称</value>
+    <value>Имя||Имя</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>备注||备注</value>
+    <value>Примечания||Примечания</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>备注（可选）||备注（可选）</value>
+    <value>Примечания (необязательно)||Примечания (необязательно)</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>大小||大小</value>
+    <value>Размер||Размер</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>扩展模块||扩展模块</value>
+    <value>Модули расширения||Модули расширения</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>操作||操作</value>
+    <value>Действия||Действия</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>文件名||文件名</value>
+    <value>Имя файла||Имя файла</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>文件夹||文件夹</value>
+    <value>Папка||Папка</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>文件管理||文件管理</value>
+    <value>Файловый менеджер||Файловый менеджер</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>文本||文本</value>
+    <value>Текст||Текст</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>新建||新建</value>
+    <value>Создать||Создать</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>新建文件夹||新建文件夹</value>
+    <value>Новая папка||Новая папка</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>根目录||根目录</value>
+    <value>Корень||Корень</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>确 定||确 定</value>
+    <value>ОК||ОК</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>类型||类型</value>
+    <value>Тип||Тип</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>表Id||表Id</value>
+    <value>Id таблицы||Id таблицы</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>请输入文件夹名称||请输入文件夹名称</value>
+    <value>Введите имя папки||Введите имя папки</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>选择文件||选择文件</value>
+    <value>Выбрать файл||Выбрать файл</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>首页||首页</value>
+    <value>Главная||Главная</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>获取列表失败||获取列表失败</value>
+    <value>Не удалось загрузить список||Не удалось загрузить список</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>上传成功||上传成功</value>
+    <value>Загружено||Загружено</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>上传失败||上传失败</value>
+    <value>Ошибка загрузки||Ошибка загрузки</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>修改成功||修改成功</value>
+    <value>Изменено||Изменено</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>修改失败||修改失败</value>
+    <value>Ошибка изменения||Ошибка изменения</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>确认删除该文件吗?||确认删除该文件吗?</value>
+    <value>Подтвердить удаление этого файла?||Подтвердить удаление этого файла?</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>提示||提示</value>
+    <value>Уведомление||Уведомление</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>确定||确定</value>
+    <value>Подтвердить||Подтвердить</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>取消||取消</value>
+    <value>Отмена||Отмена</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>删除成功||删除成功</value>
+    <value>Удалено успешно||Удалено успешно</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>删除失败||删除失败</value>
+    <value>Ошибка удаления||Ошибка удаления</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>创建成功||创建成功</value>
+    <value>Создано успешно||Создано успешно</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>创建失败||创建失败</value>
+    <value>Не удалось создать||Не удалось создать</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>上传失败：{0}||上传失败：{0}</value>
+    <value>Не удалось загрузить: {0}||Не удалось загрузить: {0}</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>请输入{0}的备注||请输入{0}的备注</value>
+    <value>Введите примечание для {0}||Введите примечание для {0}</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>FileManager 首页||FileManager 首页</value>
+    <value>Главная FileManager||Главная FileManager</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>文件夹 #{0}||文件夹 #{0}</value>
+    <value>Папка #{0}||Папка #{0}</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>请输入{0}的备注||请输入{0}的备注</value>
+    <value>Введите примечание для {0}||Введите примечание для {0}</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>更新成功||更新成功</value>
+    <value>Успешно обновлено||Успешно обновлено</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>更新失败||更新失败</value>
+    <value>Ошибка обновления||Ошибка обновления</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>确认删除该文件?||确认删除该文件?</value>
+    <value>Удалить этот файл?||Удалить этот файл?</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>请选择要上传的文件||请选择要上传的文件</value>
+    <value>Выберите файл для загрузки||Выберите файл для загрузки</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>上传失败：||上传失败：</value>
+    <value>Ошибка загрузки:||Ошибка загрузки:</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>抛出异常测试，传输参数：{0} {1}||抛出异常测试，传输参数：{0} {1}</value>
+    <value>Тест выброса исключения, передаваемые параметры: {0} {1}||Тест выброса исключения, передаваемые параметры: {0} {1}</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>被除数不能为0！||被除数不能为0！</value>
+    <value>Делитель не может быть равен 0!||Делитель не может быть равен 0!</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>未知的运算符：{0}||未知的运算符：{0}</value>
+    <value>Неизвестный оператор: {0}||Неизвестный оператор: {0}</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>一次最多上传 {0} 个文件。||一次最多上传 {0} 个文件。</value>
+    <value>За один раз можно загрузить не более {0} файлов.||За один раз можно загрузить не более {0} файлов.</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>单次上传总大小不能超过 {0} MB。||单次上传总大小不能超过 {0} MB。</value>
+    <value>Общий размер одной загрузки не может превышать {0} MB.||Общий размер одной загрузки не может превышать {0} MB.</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>上传文件不能为空。||上传文件不能为空。</value>
+    <value>Загружаемый файл не может быть пустым.||Загружаемый файл не может быть пустым.</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>单个文件不能超过 {0} MB。||单个文件不能超过 {0} MB。</value>
+    <value>Один файл не может превышать {0} MB.||Один файл не может превышать {0} MB.</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>不允许上传该文件类型。仅支持常见文档、图片、文本和压缩包格式。||不允许上传该文件类型。仅支持常见文档、图片、文本和压缩包格式。</value>
+    <value>Этот тип файла не допускается. Поддерживаются только распространённые форматы документов, изображений, текста и архивов.||Этот тип файла не допускается. Поддерживаются только распространённые форматы документов, изображений, текста и архивов.</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>文件不存在！||文件不存在！</value>
+    <value>Файл не существует!||Файл не существует!</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>文件物理路径信息无效。||文件物理路径信息无效。</value>
+    <value>Сведения о физическом пути файла недействительны.||Сведения о физическом пути файла недействительны.</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>文件物理路径越界。||文件物理路径越界。</value>
+    <value>Физический путь файла выходит за пределы.||Физический путь файла выходит за пределы.</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Пример функции</value>

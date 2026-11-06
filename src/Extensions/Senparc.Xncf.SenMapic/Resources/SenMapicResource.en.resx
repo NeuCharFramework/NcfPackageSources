@@ -253,31 +253,31 @@
     <value>Deletion failed</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>抛出异常测试，传输参数：{0} {1}||抛出异常测试，传输参数：{0} {1}</value>
+    <value>Exception-throw test, parameters passed: {0} {1}||Exception-throw test, parameters passed: {0} {1}</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>被除数不能为0！||被除数不能为0！</value>
+    <value>Divisor cannot be 0!||Divisor cannot be 0!</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>未知的运算符：{0}||未知的运算符：{0}</value>
+    <value>Unknown operator: {0}||Unknown operator: {0}</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>未知操作符||未知操作符</value>
+    <value>Unknown operator||Unknown operator</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>请提供正确的网址！||请提供正确的网址！</value>
+    <value>Enter a valid URL!||Enter a valid URL!</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>目标主机解析为非公网地址，已拒绝连接。||目标主机解析为非公网地址，已拒绝连接。</value>
+    <value>The target host resolved to a non-public address. The connection was refused.||The target host resolved to a non-public address. The connection was refused.</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>无法连接到已通过公网地址校验的目标主机。||无法连接到已通过公网地址校验的目标主机。</value>
+    <value>Unable to connect to the target host that passed the public-address check.||Unable to connect to the target host that passed the public-address check.</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>目标 URL 不允许访问。||目标 URL 不允许访问。</value>
+    <value>The target URL is not allowed.||The target URL is not allowed.</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>重定向目标 URL 不允许访问。||重定向目标 URL 不允许访问。</value>
+    <value>The redirect target URL is not allowed.||The redirect target URL is not allowed.</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Sample function</value>

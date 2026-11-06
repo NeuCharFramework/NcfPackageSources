@@ -44,7 +44,7 @@
     }
 
     function compact(value) {
-        return String(value || '').toLowerCase().replace(/[\s\-_'"’.]+/g, '');
+        return String(value || '').toLowerCase().replace(/[\s\-_'"’./／]+/g, '');
     }
 
     function isAscii(phrase) {
@@ -278,6 +278,113 @@
             + (outcome.weak ? -100 : 0);
     }
 
+    function isSetupPage(name) {
+        return compact(name) === compact('设置/执行');
+    }
+
+    function sameMenuNode(left, right) {
+        if (!left || !right) {
+            return false;
+        }
+        if (left.id && right.id) {
+            return String(left.id) === String(right.id);
+        }
+        return compact(left.name) === compact(right.name);
+    }
+
+    function moduleNodes(entries) {
+        const nodes = [];
+        const seen = {};
+        (entries || []).forEach(function (entry) {
+            if (!isSetupPage(entry.name)) {
+                return;
+            }
+            const ancestors = entry.ancestors || [];
+            const moduleNode = ancestors[ancestors.length - 1];
+            if (!moduleNode || !moduleNode.name) {
+                return;
+            }
+            const key = moduleNode.id || moduleNode.name;
+            if (seen[key]) {
+                return;
+            }
+            seen[key] = true;
+            nodes.push(moduleNode);
+        });
+        return nodes;
+    }
+
+    function pagesInside(entries, moduleNode) {
+        return (entries || []).filter(function (entry) {
+            return (entry.ancestors || []).some(function (ancestor) {
+                return sameMenuNode(ancestor, moduleNode);
+            });
+        });
+    }
+
+    // XNCF 模块节点没有自己的地址。第一个子节点是「设置/执行」，真正的首页是它后面的第一个页面。
+    function moduleLanding(entries, moduleNode) {
+        const pages = pagesInside(entries, moduleNode);
+        const setupIndex = pages.findIndex(function (page) {
+            const parent = (page.ancestors || [])[page.ancestors.length - 1];
+            return isSetupPage(page.name) && sameMenuNode(parent, moduleNode);
+        });
+        if (setupIndex < 0) {
+            return null;
+        }
+        return pages[setupIndex + 1] || null;
+    }
+
+    function moduleFallback(phrase, entries) {
+        const keyword = phrase;
+        const ranked = [];
+        moduleNodes(entries).forEach(function (moduleNode) {
+            const phraseKey = compact(phrase);
+            const moduleKey = compact(moduleNode.name);
+            // 只有说出的就是模块名时才进入模块。更长的句子里偶然包含模块名，不能把具体页面请求改写成模块首页。
+            if (!phraseKey || !moduleKey || phraseKey.length > moduleKey.length) {
+                return;
+            }
+            const matchedName = nameScore(phrase, moduleNode.name);
+            if (matchedName < 600) {
+                return;
+            }
+            const page = moduleLanding(entries, moduleNode);
+            if (!page) {
+                return;
+            }
+            ranked.push({
+                entry: page,
+                score: matchedName,
+                exact: matchedName === 1000
+            });
+            console.debug('[ncf-voice] module landing', moduleNode.name, page.label);
+        });
+        ranked.sort(function (left, right) {
+            return right.score - left.score || (right.exact ? 1 : 0) - (left.exact ? 1 : 0);
+        });
+        if (!ranked.length) {
+            return { status: 'none', target: null, choices: [], keyword: keyword, heard: phrase, score: 0, exact: false, weak: false };
+        }
+        const close = ranked.filter(function (item) {
+            return ranked[0].score - item.score < 50;
+        });
+        const choices = close.slice(0, 6).map(function (item) { return item.entry; });
+        if (close.length > 1) {
+            return { status: 'choose', target: null, choices: choices, keyword: keyword, heard: phrase, score: ranked[0].score, exact: false, weak: false };
+        }
+        return {
+            status: 'navigate',
+            target: ranked[0].entry,
+            choices: [],
+            keyword: keyword,
+            heard: phrase,
+            score: ranked[0].score,
+            exact: ranked[0].exact,
+            weak: false
+        };
+    }
+
     function interpret(phrase, entries) {
         const parsed = splitPath(phrase);
         const plain = scoreEntries({ parents: [], target: phrase, explicit: false, weak: false }, entries, phrase);
@@ -299,7 +406,8 @@
         });
         let best = { status: 'none', target: null, choices: [], keyword: stripped || normalized, heard: stripped || normalized, score: 0, exact: false, weak: false };
         phrases.forEach(function (phrase) {
-            const outcome = interpret(phrase, entries || []);
+            const direct = interpret(phrase, entries || []);
+            const outcome = direct.status === 'none' ? moduleFallback(phrase, entries || []) : direct;
             if (rank(outcome) > rank(best)) {
                 best = outcome;
             }
