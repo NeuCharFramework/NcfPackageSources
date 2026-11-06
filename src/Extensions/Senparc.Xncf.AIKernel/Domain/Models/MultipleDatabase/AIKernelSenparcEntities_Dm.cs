@@ -22,7 +22,7 @@ namespace Senparc.Xncf.AIKernel.Models
     /// <summary>
     /// 设计时 DbContext 创建（仅在开发时创建 Code-First 的数据库 Migration 使用，在生产环境不会执行）
     /// <para>1、切换至 Debug 模式</para>
-    /// <para>2、运行：PM> add-migration [更新名称] -c AIKernelSenparcEntities_Dm -o Domain/Migrations/Migrations.Dm </para>
+    /// <para>2、运行：PM> add-migration [更新名称] -c AIKernelSenparcEntities_Dm -o Domain/Migrations/Dm </para>
     /// </summary>
     public class SenparcDbContextFactory_Dm : SenparcDesignTimeDbContextFactoryBase<AIKernelSenparcEntities_Dm, Register>
     {

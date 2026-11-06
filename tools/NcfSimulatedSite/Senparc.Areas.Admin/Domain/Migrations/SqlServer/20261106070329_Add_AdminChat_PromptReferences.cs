@@ -1,17 +1,4 @@
-﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-
-    文件名：20261104145012_Add_AdminChat_PromptReferences.cs
-    文件功能描述：AdminChat Prompt 引用数据库迁移
-
-
-    创建标识：Senparc - 20210105
-
-    修改标识：Senparc - 20261105
-    修改描述：v0.12.26 增加 AdminChat 消息的 Prompt 引用字段并更新数据库迁移
-
-----------------------------------------------------------------*/
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 

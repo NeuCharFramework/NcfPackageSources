@@ -103,6 +103,8 @@
 .ft-guide li { margin: 12px 0; }
 .ft-guide p { margin: 4px 0; }
 .ft-worker-dialog { max-width: calc(100vw - 24px); }
+.ft-worker-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.ft-worker-logs, .ft-command { max-height: 180px; overflow: auto; background: #111; color: #d6d6d6; padding: 8px; font-size: 12px; white-space: pre-wrap; }
 .ft-muted { color: #606266; font-size: 13px; }
 .ft-error { color: #b42318; white-space: pre-wrap; overflow-wrap: anywhere; }
 .ft-capabilities { display: flex; flex-wrap: wrap; gap: 16px; }

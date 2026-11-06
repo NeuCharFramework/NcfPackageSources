@@ -307,7 +307,7 @@
     <value>Worker setup and troubleshooting</value>
   </data>
   <data name="FineTuning.EndpointHelp" xml:space="preserve">
-    <value>Create a Worker profile here with its alias, private endpoint and timeout (1–300 seconds). On the NCF host, enable SenparcXncfAIKernel:FineTuning:Enabled, allow the endpoint host in AllowedHosts, and set WorkerApiKeys:&lt;alias&gt; to the worker's NCF_WORKER_KEY (at least 32 characters). Legacy WorkerEndpoint/WorkerApiKey settings do not configure database profiles. In Docker, localhost refers to the container, not the host. Credentials are never entered or exposed here.</value>
+    <value>Create a worker here. NCF can start a local Python worker: model directory, data directory, port and project path are stored in the database, and the key is written to a user-only file under the site App_Data directory. FineTuning:WorkerApiKeys:&lt;alias&gt; still overrides that file. Loopback addresses do not need AllowedHosts; other hosts are added when the worker is saved. The page never shows the key. In Docker, localhost refers to the container.</value>
   </data>
   <data name="FineTuning.BackendHelp" xml:space="preserve">
     <value>CPU is suitable for small smoke tests. CUDA needs a compatible NVIDIA GPU and CUDA-enabled worker/container. MLX runs natively on macOS Apple Silicon; a Linux Docker container cannot access Apple's Metal/MLX backend. Start a native MLX worker and configure a reachable endpoint. Available methods depend on the worker's reported capabilities, not on the browser.</value>
@@ -722,7 +722,7 @@
     <value>Use all-linear or comma-separated literal module names without spaces or regex, at most 512 characters.</value>
   </data>
   <data name="FineTuning.Error.Disabled" xml:space="preserve">
-    <value>Local fine-tuning is disabled. Configure SenparcXncfAIKernel:FineTuning and start the worker.</value>
+    <value>Local fine-tuning is off. Turn it on from the fine-tuning page, or set SenparcXncfAIKernel:FineTuning:Enabled.</value>
   </data>
   <data name="FineTuning.Error.Unreachable" xml:space="preserve">
     <value>The fine-tuning worker is unreachable. Check WorkerEndpoint, worker status and network connectivity.</value>
@@ -743,7 +743,7 @@
   <data name="FineTuning.AddWorker" xml:space="preserve"><value>Add worker</value></data>
   <data name="FineTuning.EditWorker" xml:space="preserve"><value>Edit worker</value></data>
   <data name="FineTuning.WorkerConfiguration" xml:space="preserve"><value>Worker configuration</value></data>
-  <data name="FineTuning.WorkerSecretNotice" xml:space="preserve"><value>The API key is intentionally not stored or editable here. Set FineTuning:WorkerApiKeys:&lt;alias&gt; through your secret provider and allow the endpoint host in FineTuning:AllowedHosts.</value></data>
+  <data name="FineTuning.WorkerSecretNotice" xml:space="preserve"><value>API keys are not stored in the database and are never shown on this page. Generate a separate key file for each worker, or keep using FineTuning:WorkerApiKeys:&lt;alias&gt; as an override. Loopback addresses do not need AllowedHosts.</value></data>
   <data name="FineTuning.WorkerAlias" xml:space="preserve"><value>Alias</value></data>
   <data name="FineTuning.WorkerName" xml:space="preserve"><value>Name</value></data>
   <data name="FineTuning.WorkerEndpoint" xml:space="preserve"><value>Endpoint</value></data>
@@ -863,5 +863,31 @@
   <data name="FineTuning.TokensUnit" xml:space="preserve"><value>tokens</value></data>
   <data name="FineTuning.TokensPerSampleUnit" xml:space="preserve"><value>tokens/sample</value></data>
   <data name="FineTuning.TruncatedSamples" xml:space="preserve"><value>Truncated</value></data>
+  <data name="FineTuning.RuntimeEnabled" xml:space="preserve"><value>Enable local fine-tuning</value></data>
+  <data name="FineTuning.RuntimeEnabledHelp" xml:space="preserve"><value>NCF connects to workers only after this is on. No site restart is required. Turning it off is saved and kept on the next startup.</value></data>
+  <data name="FineTuning.ManagedWorker" xml:space="preserve"><value>Start from NCF</value></data>
+  <data name="FineTuning.ManagedWorkerHelp" xml:space="preserve"><value>NCF starts this worker with local Python and stops it when the site stops. Use a distinct port and data directory for each worker.</value></data>
+  <data name="FineTuning.BindHost" xml:space="preserve"><value>Bind address</value></data>
+  <data name="FineTuning.WorkerPort" xml:space="preserve"><value>Port</value></data>
+  <data name="FineTuning.ModelsRoot" xml:space="preserve"><value>Models directory</value></data>
+  <data name="FineTuning.ModelsRootHelp" xml:space="preserve"><value>Absolute path, for example ~/AIModels. Workers may share the models directory.</value></data>
+  <data name="FineTuning.DataRoot" xml:space="preserve"><value>Data directory</value></data>
+  <data name="FineTuning.DataRootHelp" xml:space="preserve"><value>Leave empty to use a private directory under the site App_Data folder. It must not overlap the models directory or another worker's data directory.</value></data>
+  <data name="FineTuning.PythonPath" xml:space="preserve"><value>Python path</value></data>
+  <data name="FineTuning.WorkerProjectPath" xml:space="preserve"><value>Worker project path</value></data>
+  <data name="FineTuning.AutoStart" xml:space="preserve"><value>Start after the site starts</value></data>
+  <data name="FineTuning.GenerateSecret" xml:space="preserve"><value>Generate key file</value></data>
+  <data name="FineTuning.StartWorker" xml:space="preserve"><value>Start worker</value></data>
+  <data name="FineTuning.StopWorker" xml:space="preserve"><value>Stop worker</value></data>
+  <data name="FineTuning.RefreshWorkerStatus" xml:space="preserve"><value>Refresh status</value></data>
+  <data name="FineTuning.WorkerProcess" xml:space="preserve"><value>Process</value></data>
+  <data name="FineTuning.WorkerLogs" xml:space="preserve"><value>Recent logs</value></data>
+  <data name="FineTuning.LaunchCommand" xml:space="preserve"><value>Start command</value></data>
+  <data name="FineTuning.WorkerStarted" xml:space="preserve"><value>Worker started.</value></data>
+  <data name="FineTuning.WorkerStopped" xml:space="preserve"><value>Worker stopped.</value></data>
+  <data name="FineTuning.SecretGenerated" xml:space="preserve"><value>Key file created. The key is never shown on this page.</value></data>
+  <data name="FineTuning.SecretAlreadyExists" xml:space="preserve"><value>Key file already exists and was left unchanged.</value></data>
+  <data name="FineTuning.SaveBeforeLaunch" xml:space="preserve"><value>Save first, then generate a key and start the worker.</value></data>
+  <data name="FineTuning.Optional" xml:space="preserve"><value>Optional</value></data>
 
 </root>

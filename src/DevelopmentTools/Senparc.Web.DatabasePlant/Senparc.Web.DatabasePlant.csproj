@@ -58,6 +58,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\tools\NcfSimulatedSite\Senparc.Areas.Admin\Senparc.Areas.Admin.csproj" />
 	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AgentsManager\Senparc.Xncf.AgentsManager.csproj" />
+	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.AIKernel\Senparc.Xncf.AIKernel.csproj" />
 	  <ProjectReference Include="..\..\Extensions\Senparc.Xncf.Workspace\Senparc.Xncf.Workspace.csproj" />
 	</ItemGroup>
 

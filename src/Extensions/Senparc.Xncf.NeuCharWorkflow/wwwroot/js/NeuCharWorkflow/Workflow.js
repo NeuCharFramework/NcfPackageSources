@@ -3173,10 +3173,13 @@ new Vue({
             });
         },
         resetParameterManual(node, parameter) {
-            let value = parameter.parameterType === 2 ||
-                (parameter.parameterType === 6 && parameter.allowMultiple)
-                ? []
-                : parameter.parameterType === 4 ? false : '';
+            const ui = typeof NeuCharWorkflowUi !== 'undefined' ? NeuCharWorkflowUi : null;
+            const value = ui && typeof ui.defaultParameterValue === 'function'
+                ? ui.defaultParameterValue(parameter)
+                : (parameter && (parameter.parameterType === 2 ||
+                    (parameter.parameterType === 6 && parameter.allowMultiple))
+                    ? []
+                    : parameter && parameter.parameterType === 4 ? false : '');
             this.$set(node.config.parameters, parameter.name, value);
         },
         formatFileSize(value) {
