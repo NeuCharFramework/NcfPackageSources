@@ -64,6 +64,9 @@ li {
     gap: 16px;
     min-width: 0;
     padding: 0 12px;
+    overflow: visible;
+    position: relative;
+    z-index: 8;
     color: #5A738E;
     background: #fff;
     border-top: 1px solid #e4e7ed;
@@ -455,13 +458,13 @@ li {
 
 .admin-voice-nav {
     position: relative;
-    z-index: 5;
-    display: flex;
+    z-index: 9;
+    display: inline-flex;
     align-items: center;
-    height: 28px;
-    padding: 0 12px;
-    background: #f7f9fb;
-    border-top: 1px solid #e4e7ed;
+    height: 26px;
+    padding: 0;
+    background: transparent;
+    border: 0;
 }
 
 .admin-voice-nav-button {
@@ -500,9 +503,9 @@ li {
 
 .admin-voice-nav-panel {
     position: absolute;
-    left: 12px;
-    bottom: 30px;
-    z-index: 6;
+    left: 0;
+    bottom: calc(100% + 6px);
+    z-index: 9;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -514,6 +517,23 @@ li {
     border: 1px solid #e4e7ed;
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0, 21, 41, 0.12);
+}
+
+.admin-voice-nav-input {
+    width: 100%;
+    height: 28px;
+    padding: 0 8px;
+    color: #303133;
+    font-size: 12px;
+    background: #fff;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.admin-voice-nav-input:focus {
+    border-color: #409eff;
+    outline: none;
 }
 
 .admin-voice-nav-text {
@@ -756,6 +776,23 @@ li {
 .admin-nav-search .el-input__icon {
     color: rgba(191, 203, 217, 0.65);
     line-height: 30px;
+}
+
+@keyframes ncf-nav-search-autofill-start {
+    from { }
+    to { }
+}
+
+/* 浏览器仍可能给输入框套上自动填充底色；这里抹掉，并触发动画以便脚本清掉被写入的值。 */
+.admin-nav-search .el-input__inner:-webkit-autofill,
+.admin-nav-search .el-input__inner:-webkit-autofill:hover,
+.admin-nav-search .el-input__inner:-webkit-autofill:focus {
+    -webkit-text-fill-color: #bfcbd9;
+    caret-color: #bfcbd9;
+    box-shadow: 0 0 0 1000px #3b4b61 inset;
+    transition: background-color 99999s ease-out 0s;
+    animation-name: ncf-nav-search-autofill-start;
+    animation-duration: 1ms;
 }
 
 .admin-nav-search-empty {

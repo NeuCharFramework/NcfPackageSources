@@ -343,7 +343,8 @@
                 voiceNavListening: false,
                 voiceNavPanelVisible: false,
                 voiceNavMessage: '',
-                voiceNavChoices: []
+                voiceNavChoices: [],
+                voiceNavDraft: ''
             };
         },
         computed: {
@@ -373,7 +374,13 @@
                 return Math.max(0, (this.neuBellToastEntries || []).length - maximumVisibleNeuBellToasts);
             },
             voiceNavTitle() {
-                return window.NcfVoiceNavigation ? window.NcfVoiceNavigation.text('title') : '';
+                if (!window.NcfVoiceNavigation) {
+                    return '';
+                }
+                return window.NcfVoiceNavigation.text(this.voiceNavListening ? 'stop' : 'title');
+            },
+            voiceNavPlaceholder() {
+                return window.NcfVoiceNavigation ? window.NcfVoiceNavigation.text('placeholder') : '';
             }
         },
         mounted() {
@@ -733,10 +740,18 @@
                 }
             },
             toggleVoiceNav() {
-                if (!this.footerCommunicationOwner || this.voiceNavEmbedded || !window.NcfVoiceNavigation) {
+                // 麦克风只依赖当前页面，不跟纽铃通讯的 Owner 绑定。
+                // 否则布局根实例没抢到 Owner 时，按钮可见但点击没有任何反应。
+                if (this.voiceNavEmbedded || !window.NcfVoiceNavigation) {
                     return;
                 }
                 window.NcfVoiceNavigation.toggle(this);
+            },
+            submitVoiceNav() {
+                if (this.voiceNavEmbedded || !window.NcfVoiceNavigation) {
+                    return;
+                }
+                window.NcfVoiceNavigation.submitText(this, this.voiceNavDraft);
             },
             chooseVoiceNav(choice) {
                 if (!window.NcfVoiceNavigation) {

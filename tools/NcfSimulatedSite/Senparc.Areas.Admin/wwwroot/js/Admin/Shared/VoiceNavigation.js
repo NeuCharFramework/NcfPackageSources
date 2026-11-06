@@ -319,12 +319,12 @@
     }
 
     const texts = {
-        zh: { title: '语音打开页面', listening: '请说要打开的页面名称', unsupported: '当前浏览器不能语音识别。请使用 Chrome 或 Edge。', denied: '需要允许麦克风后才能语音跳转。', none: '没有找到页面', choose: '有多个相近页面，请选择', heard: '听到' },
-        en: { title: 'Open a page by voice', listening: 'Say the name of the page to open', unsupported: 'This browser cannot recognize speech. Use Chrome or Edge.', denied: 'Allow the microphone to jump by voice.', none: 'No matching page', choose: 'Several pages match. Choose one', heard: 'Heard' },
-        ja: { title: '音声でページを開く', listening: '開きたいページ名を話してください', unsupported: 'このブラウザは音声認識に対応していません。Chrome または Edge を使ってください。', denied: '音声で移動するにはマイクを許可してください。', none: '該当するページがありません', choose: '候補が複数あります。選択してください', heard: '認識' },
-        fr: { title: 'Ouvrir une page à la voix', listening: 'Dites le nom de la page à ouvrir', unsupported: 'Ce navigateur ne reconnaît pas la voix. Utilisez Chrome ou Edge.', denied: 'Autorisez le microphone pour la navigation vocale.', none: 'Aucune page correspondante', choose: 'Plusieurs pages correspondent. Choisissez-en une', heard: 'Entendu' },
-        es: { title: 'Abrir una página por voz', listening: 'Diga el nombre de la página que desea abrir', unsupported: 'Este navegador no reconoce la voz. Use Chrome o Edge.', denied: 'Permita el micrófono para saltar por voz.', none: 'No hay una página coincidente', choose: 'Hay varias páginas. Elija una', heard: 'Oído' },
-        ru: { title: 'Открыть страницу голосом', listening: 'Назовите страницу, которую нужно открыть', unsupported: 'Этот браузер не распознаёт речь. Используйте Chrome или Edge.', denied: 'Разрешите микрофон для голосового перехода.', none: 'Страница не найдена', choose: 'Подходит несколько страниц. Выберите одну', heard: 'Распознано' }
+        zh: { title: '语音打开页面', stop: '结束并打开页面', listening: '请说要打开的页面名称，说完后再次点击麦克风', placeholder: '或输入页面名称后回车', unsupported: '当前浏览器不能语音识别。请直接输入页面名称后回车。', denied: '需要允许麦克风后才能语音跳转，也可以直接输入页面名称。', network: '语音服务暂时连不上。请直接输入页面名称后回车。', noSpeech: '没有听清。请再说一次，或输入页面名称后回车。', audio: '没有检测到麦克风。请直接输入页面名称后回车。', none: '没有找到页面', choose: '有多个相近页面，请选择', heard: '听到' },
+        en: { title: 'Open a page by voice', stop: 'Finish and open the page', listening: 'Say the page name, then click the microphone again', placeholder: 'Or type a page name and press Enter', unsupported: 'This browser cannot recognize speech. Type a page name and press Enter.', denied: 'Allow the microphone, or type a page name.', network: 'The speech service is unreachable. Type a page name and press Enter.', noSpeech: 'Nothing was heard. Try again, or type a page name.', audio: 'No microphone was found. Type a page name and press Enter.', none: 'No matching page', choose: 'Several pages match. Choose one', heard: 'Heard' },
+        ja: { title: '音声でページを開く', stop: '終了してページを開く', listening: 'ページ名を話してから、もう一度マイクを押してください', placeholder: 'またはページ名を入力して Enter', unsupported: 'このブラウザは音声認識に対応していません。ページ名を入力して Enter を押してください。', denied: 'マイクを許可するか、ページ名を入力してください。', network: '音声サービスに接続できません。ページ名を入力して Enter を押してください。', noSpeech: '聞き取れませんでした。もう一度話すか、ページ名を入力してください。', audio: 'マイクが見つかりません。ページ名を入力して Enter を押してください。', none: '該当するページがありません', choose: '候補が複数あります。選択してください', heard: '認識' },
+        fr: { title: 'Ouvrir une page à la voix', stop: 'Terminer et ouvrir la page', listening: 'Dites le nom de la page, puis cliquez à nouveau sur le micro', placeholder: 'Ou saisissez un nom de page et appuyez sur Entrée', unsupported: 'Ce navigateur ne reconnaît pas la voix. Saisissez un nom de page.', denied: 'Autorisez le microphone, ou saisissez un nom de page.', network: 'Le service vocal est injoignable. Saisissez un nom de page.', noSpeech: 'Rien n’a été entendu. Réessayez ou saisissez un nom de page.', audio: 'Aucun microphone détecté. Saisissez un nom de page.', none: 'Aucune page correspondante', choose: 'Plusieurs pages correspondent. Choisissez-en une', heard: 'Entendu' },
+        es: { title: 'Abrir una página por voz', stop: 'Terminar y abrir la página', listening: 'Diga el nombre de la página y pulse el micrófono otra vez', placeholder: 'O escriba un nombre y pulse Intro', unsupported: 'Este navegador no reconoce la voz. Escriba el nombre de la página.', denied: 'Permita el micrófono o escriba el nombre de la página.', network: 'No se puede conectar al servicio de voz. Escriba el nombre de la página.', noSpeech: 'No se oyó nada. Inténtelo de nuevo o escriba el nombre.', audio: 'No se detectó un micrófono. Escriba el nombre de la página.', none: 'No hay una página coincidente', choose: 'Hay varias páginas. Elija una', heard: 'Oído' },
+        ru: { title: 'Открыть страницу голосом', stop: 'Завершить и открыть страницу', listening: 'Назовите страницу и нажмите микрофон ещё раз', placeholder: 'Или введите название и нажмите Enter', unsupported: 'Этот браузер не распознаёт речь. Введите название страницы.', denied: 'Разрешите микрофон или введите название страницы.', network: 'Служба распознавания недоступна. Введите название страницы.', noSpeech: 'Речь не распознана. Повторите или введите название.', audio: 'Микрофон не найден. Введите название страницы.', none: 'Страница не найдена', choose: 'Подходит несколько страниц. Выберите одну', heard: 'Распознано' }
     };
 
     function text(key) {
@@ -411,15 +411,66 @@
         window.location.assign(choice.url);
     }
 
-    function finish(vm, session) {
+    function pickTranscripts(session) {
+        const finals = (session && session.finals || []).map(function (item) {
+            return normalize(item);
+        }).filter(Boolean);
+        if (finals.length) {
+            return finals;
+        }
+        const interim = normalize(session && session.interim || '');
+        return interim ? [interim] : [];
+    }
+
+    function failureText(session) {
         if (session.error === 'not-allowed' || session.error === 'service-not-allowed') {
-            show(vm, text('denied'), []);
-            console.debug('[ncf-voice] denied', session.error);
+            return text('denied');
+        }
+        if (session.error === 'network') {
+            return text('network');
+        }
+        if (session.error === 'audio-capture') {
+            return text('audio');
+        }
+        if (session.error === 'no-speech') {
+            return text('noSpeech');
+        }
+        return '';
+    }
+
+    function present(vm, transcripts, menus) {
+        let best = null;
+        transcripts.forEach(function (transcript) {
+            const outcome = match(transcript, menus || []);
+            outcome.transcript = transcript;
+            if (!best || rank(outcome) > rank(best)) {
+                best = outcome;
+            }
+        });
+        console.debug('[ncf-voice] result', {
+            transcripts: transcripts,
+            keyword: best && best.keyword,
+            status: best && best.status,
+            target: best && best.target && best.target.label
+        });
+        if (best && best.status === 'navigate') {
+            choose(vm, best.target);
             return;
         }
-        const transcripts = (session.finals || []).map(function (item) { return normalize(item); }).filter(Boolean);
+        const keyword = best && best.keyword || transcripts[0];
+        const prefix = text('heard') + ': ' + keyword + '. ';
+        show(vm, prefix + text(best && best.status === 'choose' ? 'choose' : 'none'), best ? best.choices : []);
+    }
+
+    function finish(vm, session) {
+        if (!session || session.cancelled || session.finished) {
+            return;
+        }
+        session.finished = true;
+        const transcripts = pickTranscripts(session);
         if (!transcripts.length) {
-            show(vm, text('none'), []);
+            const message = failureText(session) || text('noSpeech');
+            show(vm, message, []);
             console.debug('[ncf-voice] empty', session.error || '');
             return;
         }
@@ -428,36 +479,25 @@
             if (session.cancelled) {
                 return;
             }
-            let best = null;
-            transcripts.forEach(function (transcript) {
-                const outcome = match(transcript, menus || []);
-                outcome.transcript = transcript;
-                if (!best || rank(outcome) > rank(best)) {
-                    best = outcome;
-                }
-            });
-            console.debug('[ncf-voice] result', {
-                transcripts: transcripts,
-                keyword: best.keyword,
-                status: best.status,
-                target: best.target && best.target.label
-            });
-            if (best.status === 'navigate') {
-                choose(vm, best.target);
-                return;
-            }
-            const prefix = text('heard') + ': ' + (best.keyword || transcripts[0]) + '. ';
-            show(vm, prefix + text(best.status === 'choose' ? 'choose' : 'none'), best.choices);
+            present(vm, transcripts, menus);
         });
     }
 
     function toggle(vm) {
         if (active) {
-            stop(vm);
-            vm.voiceNavPanelVisible = false;
-            vm.voiceNavMessage = '';
-            vm.voiceNavChoices = [];
-            console.debug('[ncf-voice] cancelled');
+            const session = active;
+            try {
+                // stop() 会把已经听到的内容整理成结果；abort() 会直接丢掉。
+                session.recognition.stop();
+                console.debug('[ncf-voice] commit');
+            } catch (error) {
+                console.debug('[ncf-voice] commit failed', error && error.message);
+                if (active === session) {
+                    active = null;
+                }
+                vm.voiceNavListening = false;
+                finish(vm, session);
+            }
             return;
         }
         const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -467,7 +507,7 @@
             return;
         }
         const recognition = new Recognition();
-        const session = { recognition: recognition, cancelled: false, finals: [], error: '', menus: loadLiveMenus() };
+        const session = { recognition: recognition, cancelled: false, finished: false, finals: [], interim: '', error: '', menus: loadLiveMenus() };
         active = session;
         recognition.lang = recognitionLang();
         recognition.continuous = false;
@@ -494,11 +534,19 @@
                 session.finals = finals;
             }
             if (interim) {
+                session.interim = interim;
                 vm.voiceNavMessage = text('heard') + ': ' + interim;
+                console.debug('[ncf-voice] interim', interim);
             }
         };
         recognition.onerror = function (event) {
-            session.error = event && event.error || '';
+            const code = event && event.error || '';
+            // 用户结束识别时浏览器可能回报 aborted，这时不能清掉已经听到的文本。
+            if (code === 'aborted') {
+                console.debug('[ncf-voice] aborted');
+                return;
+            }
+            session.error = code;
             console.debug('[ncf-voice] error', session.error);
         };
         recognition.onend = function () {
@@ -522,14 +570,45 @@
         }
     }
 
+    function submitText(vm, utterance) {
+        const phrase = String(utterance || '').trim();
+        const session = active;
+        if (session) {
+            session.cancelled = true;
+            session.finished = true;
+            try {
+                session.recognition.abort();
+            } catch (error) {
+                console.debug('[ncf-voice] submit stop', error && error.message);
+            }
+            if (active === session) {
+                active = null;
+            }
+        }
+        if (vm) {
+            vm.voiceNavListening = false;
+        }
+        if (!phrase) {
+            show(vm, text('placeholder'), []);
+            return;
+        }
+        console.debug('[ncf-voice] submit', phrase);
+        const pending = session && session.menus || loadLiveMenus();
+        pending.then(function (menus) {
+            present(vm, [phrase], menus);
+        });
+    }
+
     window.NcfVoiceNavigation = {
         indexMenus: indexMenus,
         menuListFromResponse: menuListFromResponse,
         isSafeUrl: isSafeUrl,
         match: match,
         stripCommand: stripCommand,
+        pickTranscripts: pickTranscripts,
         text: text,
         toggle: toggle,
+        submitText: submitText,
         choose: choose,
         stop: stop
     };

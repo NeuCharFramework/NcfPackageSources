@@ -53,6 +53,8 @@ var Store = new Vuex.Store({
         navMenu: { //侧边栏数据
             navMenuList: [],
             searchKeyword: '',
+            // 初始只读，避免浏览器在页面加载时把历史输入写进搜索框；获得焦点后再放开。
+            searchInputLocked: true,
             isCollapse:JSON.parse( window.sessionStorage.getItem('isCollapse'))|| false,
             openedMenus: getStoredNavMenuOpenedMenus(),
             variables: {
@@ -119,6 +121,10 @@ var Store = new Vuex.Store({
         // 设置菜单搜索关键字
         setNavMenuSearchKeyword(state, data) {
             state.navMenu.searchKeyword = data || '';
+        },
+        // 用户准备输入菜单搜索时，取消初始只读
+        unlockNavMenuSearch(state) {
+            state.navMenu.searchInputLocked = false;
         }
     }
 });
