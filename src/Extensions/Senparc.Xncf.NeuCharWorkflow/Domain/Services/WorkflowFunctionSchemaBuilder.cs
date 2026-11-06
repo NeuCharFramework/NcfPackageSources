@@ -13,12 +13,17 @@
     修改标识：Senparc - 20261103
     修改描述：v0.4.4 add bulk file upload functionality to Sandbox Lab
 
+    修改标识：Senparc - 20261106
+    修改描述：执行 Function 时补齐已声明的默认值，并只自动选中明确的唯一选项
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.XncfBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Senparc.Xncf.NeuCharWorkflow.Domain.Services;
 
@@ -65,17 +70,23 @@ public static class WorkflowFunctionSchemaBuilder
     public static Dictionary<string, object> BuildDefaults(IEnumerable<WorkflowFunctionParameterSchema> parameters)
     {
         var result = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-        foreach (var parameter in parameters)
+        foreach (var parameter in parameters ?? Array.Empty<WorkflowFunctionParameterSchema>())
         {
             object value = parameter.DefaultValue;
+            var options = parameter.Options ?? new List<WorkflowFunctionParameterOption>();
             if (parameter.ParameterType == (int)ParameterType.CheckBoxList)
             {
-                value = parameter.Options.Where(z => z.DefaultSelected).Select(z => z.Value).ToArray();
+                value = options.Where(z => z.DefaultSelected).Select(z => z.Value).ToArray();
             }
-            else if (parameter.ParameterType == (int)ParameterType.DropDownList && value == null)
+            else if (parameter.ParameterType == (int)ParameterType.DropDownList && IsBlank(value))
             {
-                value = parameter.Options.FirstOrDefault(z => z.DefaultSelected)?.Value
-                    ?? parameter.Options.FirstOrDefault()?.Value;
+                // 只采用明确标记的默认项。必填下拉框仅在唯一选项时自动选中，
+                // 避免 Workflow 在多个模型或数据集之间误选第一项。
+                value = options.FirstOrDefault(z => z.DefaultSelected)?.Value;
+                if (value == null && parameter.Required && options.Count == 1)
+                {
+                    value = options[0].Value;
+                }
             }
             else if (parameter.ParameterType == (int)ParameterType.CheckBox && value == null)
             {
@@ -88,6 +99,122 @@ public static class WorkflowFunctionSchemaBuilder
             result[parameter.Name] = value;
         }
         return result;
+    }
+
+    /// <summary>
+    /// 用 Function 元数据中的默认值和明确选项补齐空参数。已填写的值、模板和上游绑定保持不变。
+    /// </summary>
+    public static string MergeMissingDefaults(string parametersJson, IReadOnlyList<FunctionParameterInfo> parameters)
+    {
+        JsonNode parsed;
+        try
+        {
+            parsed = JsonNode.Parse(string.IsNullOrWhiteSpace(parametersJson) ? "{}" : parametersJson);
+        }
+        catch (JsonException)
+        {
+            return parametersJson;
+        }
+
+        if (parsed is not JsonObject obj)
+        {
+            return parametersJson;
+        }
+
+        var schema = Build(new NeuCharFunctionDescriptor(
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            true,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            parameters ?? Array.Empty<FunctionParameterInfo>()));
+        foreach (var parameter in schema)
+        {
+            if (parameter.HasSyntheticName || string.IsNullOrWhiteSpace(parameter.Name) ||
+                HasUsableValue(obj, parameter.Name))
+            {
+                continue;
+            }
+
+            if (!BuildDefaults(new[] { parameter }).TryGetValue(parameter.Name, out var fallback) ||
+                !HasRuntimeValue(fallback))
+            {
+                continue;
+            }
+
+            RemoveIgnoreCase(obj, parameter.Name);
+            obj[parameter.Name] = JsonSerializer.SerializeToNode(fallback);
+        }
+
+        return obj.ToJsonString();
+    }
+
+    private static bool IsBlank(object value) =>
+        value == null || (value is string text && string.IsNullOrWhiteSpace(text));
+
+    private static bool HasRuntimeValue(object value)
+    {
+        switch (value)
+        {
+            case null:
+                return false;
+            case string text:
+                return !string.IsNullOrWhiteSpace(text);
+            case System.Collections.IEnumerable enumerable:
+                foreach (var unused in enumerable)
+                {
+                    _ = unused;
+                    return true;
+                }
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    private static bool HasUsableValue(JsonObject obj, string name)
+    {
+        if (!TryGetPropertyIgnoreCase(obj, name, out _, out var node) || node == null)
+        {
+            return false;
+        }
+
+        if (node is JsonValue jsonValue && jsonValue.TryGetValue<string>(out var text))
+        {
+            return !string.IsNullOrWhiteSpace(text);
+        }
+
+        return node is not JsonArray array || array.Count > 0;
+    }
+
+    private static bool TryGetPropertyIgnoreCase(JsonObject obj, string name, out string key, out JsonNode node)
+    {
+        foreach (var property in obj)
+        {
+            if (string.Equals(property.Key, name, StringComparison.OrdinalIgnoreCase))
+            {
+                key = property.Key;
+                node = property.Value;
+                return true;
+            }
+        }
+
+        key = null;
+        node = null;
+        return false;
+    }
+
+    private static void RemoveIgnoreCase(JsonObject obj, string name)
+    {
+        var keys = obj.Select(property => property.Key)
+            .Where(key => string.Equals(key, name, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        foreach (var key in keys)
+        {
+            obj.Remove(key);
+        }
     }
 }
 

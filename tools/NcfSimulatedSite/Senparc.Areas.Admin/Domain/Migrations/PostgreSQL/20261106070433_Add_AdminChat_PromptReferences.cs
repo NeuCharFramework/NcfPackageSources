@@ -1,21 +1,8 @@
-﻿/*----------------------------------------------------------------
-    Copyright (C) 2026 Senparc
-
-    文件名：20261104145023_Add_AdminChat_PromptReferences.cs
-    文件功能描述：AdminChat Prompt 引用数据库迁移
-
-
-    创建标识：Senparc - 20250120
-
-    修改标识：Senparc - 20261105
-    修改描述：v0.12.26 增加 AdminChat 消息的 Prompt 引用字段并更新数据库迁移
-
-----------------------------------------------------------------*/
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
+namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
 {
     /// <inheritdoc />
     public partial class Add_AdminChat_PromptReferences : Migration
@@ -26,7 +13,7 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
             migrationBuilder.AddColumn<string>(
                 name: "PromptReferencesJson",
                 table: "ADMIN_AdminChatMessage",
-                type: "NVARCHAR2(2000)",
+                type: "text",
                 nullable: true);
         }
 

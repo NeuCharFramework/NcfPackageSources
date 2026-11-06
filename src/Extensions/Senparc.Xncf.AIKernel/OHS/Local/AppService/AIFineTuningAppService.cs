@@ -16,6 +16,12 @@
     修改标识：Senparc - 20261103
     修改描述：v0.17.0 enhance job management and telemetry features
 
+    修改标识：Senparc - 20261106
+    修改描述：微调 Function 自动载入 Worker、模型和数据集，并允许 Workflow 按默认值执行
+
+    修改标识：Senparc - 20261106
+    修改描述：支持在 NCF 启动后配置并启停多个本机微调 Worker
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -37,6 +43,7 @@ using Senparc.CO2NET;
 using Senparc.CO2NET.WebApi;
 using Senparc.Ncf.Core.AppServices;
 using Senparc.Ncf.Core.Authorization;
+using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Utility;
 using Senparc.Xncf.AIKernel.Domain.Models.FineTuning;
 using Senparc.Xncf.AIKernel.Domain.Services;
@@ -59,12 +66,16 @@ public class AIFineTuningAppService : AppServiceBase
     private readonly IFineTuningControlPlaneService _controlPlane;
     private readonly FineTuningMigrationService _migrationService;
     private readonly IFineTuningFileStore _fileStore;
+    private readonly FineTuningSecretStore _secrets;
+    private readonly FineTuningRuntimeSettings _runtime;
+    private readonly FineTuningWorkerSupervisor _supervisor;
 
     public AIFineTuningAppService(IServiceProvider serviceProvider, FineTuningWorkerClient worker,
         IFineTuningWorkerConfigurationProvider configuration, AIFineTuningWorkerService workerService,
         IOptions<FineTuningWorkerOptions> workerOptions, IHttpContextAccessor context,
         ILogger<AIFineTuningAppService> logger, IFineTuningControlPlaneService controlPlane,
-        FineTuningMigrationService migrationService, IFineTuningFileStore fileStore) : base(serviceProvider)
+        FineTuningMigrationService migrationService, IFineTuningFileStore fileStore,
+        FineTuningSecretStore secrets, FineTuningRuntimeSettings runtime, FineTuningWorkerSupervisor supervisor) : base(serviceProvider)
     {
         _worker = worker;
         _configuration = configuration;
@@ -75,6 +86,9 @@ public class AIFineTuningAppService : AppServiceBase
         _controlPlane = controlPlane;
         _migrationService = migrationService;
         _fileStore = fileStore;
+        _secrets = secrets;
+        _runtime = runtime;
+        _supervisor = supervisor;
     }
 
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
@@ -82,12 +96,23 @@ public class AIFineTuningAppService : AppServiceBase
         this.GetResponseAsync<List<AIFineTuningWorkerDto>>((response, logger) => _configuration.GetWorkersAsync(CancellationToken));
 
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-    [FunctionRender("检查微调 Worker", "检查指定微调 Worker 的健康状态、能力和队列情况。", typeof(Register), AllowAiInvocation = true)]
     public Task<AppResponseBase<FineTuningHealth>> HealthAsync(string workerAlias) =>
         this.GetResponseAsync<FineTuningHealth>((response, logger) => _worker.HealthAsync(workerAlias, CancellationToken));
 
+    [FunctionRender("检查微调 Worker", "检查指定微调 Worker 的健康状态、能力和队列情况。只配置了一个可用 Worker 时会自动选中。", typeof(Register), AllowAiInvocation = true)]
+    public Task<AppResponseBase<FineTuningHealth>> CheckFineTuningWorkerAsync(FineTuningWorkerFunctionRequest request)
+    {
+        if (request == null)
+        {
+            return this.GetResponseAsync<FineTuningHealth>((response, logger) =>
+                Task.FromException<FineTuningHealth>(new ArgumentNullException(nameof(request))));
+        }
+
+        _logger.LogInformation("Check fine-tuning worker from Function. worker={Worker}", request.WorkerAlias);
+        return HealthAsync(request.WorkerAlias);
+    }
+
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
-    [FunctionRender("检查微调环境", "检查微调开关、密钥、Worker、模型目录和 FileManager 状态，不执行安装或命令。", typeof(Register), AllowAiInvocation = true)]
     public Task<AppResponseBase<FineTuningDiagnostics>> DiagnosticsAsync(string workerAlias) =>
         this.GetResponseAsync<FineTuningDiagnostics>(async (response, logger) =>
         {
@@ -95,7 +120,8 @@ public class AIFineTuningAppService : AppServiceBase
             {
                 WorkerAlias = workerAlias,
                 FineTuningEnabled = _workerOptions.Enabled,
-                SecretConfigured = _workerOptions.ConfiguredWorkerAliases.Contains(workerAlias, StringComparer.OrdinalIgnoreCase)
+                SecretConfigured = _secrets.TryRead(workerAlias, out _)
+                    || _workerOptions.ConfiguredWorkerAliases.Contains(workerAlias, StringComparer.OrdinalIgnoreCase)
             };
             if (!diagnostics.FineTuningEnabled || !diagnostics.SecretConfigured)
             {
@@ -122,6 +148,19 @@ public class AIFineTuningAppService : AppServiceBase
             return diagnostics;
         });
 
+    [FunctionRender("检查微调环境", "检查微调开关、密钥、Worker、模型目录和 FileManager 状态，不执行安装或命令。只配置了一个可用 Worker 时会自动选中。", typeof(Register), AllowAiInvocation = true)]
+    public Task<AppResponseBase<FineTuningDiagnostics>> CheckFineTuningEnvironmentAsync(FineTuningWorkerFunctionRequest request)
+    {
+        if (request == null)
+        {
+            return this.GetResponseAsync<FineTuningDiagnostics>((response, logger) =>
+                Task.FromException<FineTuningDiagnostics>(new ArgumentNullException(nameof(request))));
+        }
+
+        _logger.LogInformation("Check fine-tuning environment from Function. worker={Worker}", request.WorkerAlias);
+        return DiagnosticsAsync(request.WorkerAlias);
+    }
+
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<List<FineTuningModel>>> GetModelsAsync(string workerAlias) =>
         this.GetResponseAsync<List<FineTuningModel>>((response, logger) => _worker.GetModelsAsync(workerAlias, CancellationToken));
@@ -146,7 +185,6 @@ public class AIFineTuningAppService : AppServiceBase
         this.GetResponseAsync<FineTuningDataset>((response, logger) => _worker.GetDatasetAsync(workerAlias, id, CancellationToken));
 
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-    [FunctionRender("创建微调数据集", "保存经过 Worker 校验的 JSONL 微调数据集。内容必须是受支持的 JSONL 文本。", typeof(Register), AllowAiInvocation = true)]
     // The dynamic API binds subsequent parameters from query; keep the body DTO first.
     public Task<AppResponseBase<FineTuningDataset>> UploadDatasetAsync([FromBody] FineTuningDatasetRequest request, string workerAlias) =>
         this.GetResponseAsync<FineTuningDataset>(async (response, logger) =>
@@ -250,6 +288,29 @@ public class AIFineTuningAppService : AppServiceBase
         }
     }
 
+    [FunctionRender("创建微调数据集", "保存经过 Worker 校验的 JSONL 微调数据集。Worker 会自动载入；适合在 Workflow 中提交小规模 JSONL 文本。", typeof(Register), AllowAiInvocation = true)]
+    public Task<AppResponseBase<FineTuningDataset>> CreateDatasetFromTextAsync(FineTuningDatasetFunctionRequest request) =>
+        this.GetResponseAsync<FineTuningDataset>(async (response, logger) =>
+        {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            if (string.IsNullOrWhiteSpace(request.WorkerAlias))
+            {
+                throw new InvalidOperationException("请选择微调 Worker。当前没有可自动载入的已启用 Worker。");
+            }
+
+            _logger.LogInformation(
+                "Create fine-tuning dataset from Function. worker={Worker} name={Name} contentLength={Length}",
+                request.WorkerAlias, request.Name, request.Content?.Length ?? 0);
+            var content = request.Content ?? string.Empty;
+            await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(content), writable: false);
+            return await UploadDatasetAndStoreAsync(request.WorkerAlias, request.Name, $"{request.Name}.jsonl",
+                stream, stream.Length, "application/x-ndjson");
+        });
+
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
     public Task<AppResponseBase<List<FineTuningJob>>> GetJobsAsync(string workerAlias) =>
         this.GetResponseAsync<List<FineTuningJob>>((response, logger) => _worker.GetJobsAsync(workerAlias, CancellationToken));
@@ -261,12 +322,42 @@ public class AIFineTuningAppService : AppServiceBase
             _worker.GetJobsPageAsync(workerAlias, offset, limit, CancellationToken));
 
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
-    [FunctionRender("创建微调任务", "使用已批准的本地模型、数据集和训练参数创建微调任务。任务会由 Worker 排队执行。", typeof(Register), AllowAiInvocation = true)]
     public Task<AppResponseBase<FineTuningJob>> CreateJobAsync([FromBody] FineTuningJobRequest request, string workerAlias) =>
         this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
         {
             var job = await _worker.CreateJobAsync(workerAlias, request, CancellationToken);
             await MirrorJobAsync(workerAlias, job);
+            Audit("job-created", $"{workerAlias}/{job.Id}");
+            return job;
+        });
+
+    [FunctionRender("创建微调任务", "使用已批准的本地模型、数据集和训练参数创建微调任务。Worker、模型和数据集会自动载入，训练参数带有默认值，Workflow 可以按这些默认值直接运行。", typeof(Register), AllowAiInvocation = true)]
+    public Task<AppResponseBase<FineTuningJob>> StartFineTuningJobAsync(FineTuningStartJobFunctionRequest request) =>
+        this.GetResponseAsync<FineTuningJob>(async (response, logger) =>
+        {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            var workerAlias = request.ResolveWorkerAlias();
+            var jobRequest = request.ToJobRequest();
+            _logger.LogInformation(
+                "Start fine-tuning from Function. worker={Worker} name={Name} model={Model} dataset={Dataset} eval={Eval} backend={Backend} method={Method} epochs={Epochs} maxSteps={MaxSteps} learningRate={LearningRate} batchSize={BatchSize} maxDurationMinutes={MaxDuration}",
+                workerAlias,
+                jobRequest.Name,
+                jobRequest.ModelId,
+                jobRequest.DatasetId,
+                jobRequest.EvalDatasetId,
+                jobRequest.Backend,
+                jobRequest.Method,
+                jobRequest.Epochs,
+                jobRequest.MaxSteps,
+                jobRequest.LearningRate,
+                jobRequest.BatchSize,
+                jobRequest.MaxDurationMinutes);
+            var job = await _worker.CreateJobAsync(workerAlias!, jobRequest, CancellationToken);
+            await MirrorJobAsync(workerAlias!, job);
             Audit("job-created", $"{workerAlias}/{job.Id}");
             return job;
         });
@@ -367,11 +458,86 @@ public class AIFineTuningAppService : AppServiceBase
             return deleted;
         });
 
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+    public Task<AppResponseBase<FineTuningRuntimeStatus>> GetFineTuningRuntimeAsync() =>
+        this.GetResponseAsync<FineTuningRuntimeStatus>((response, logger) => Task.FromResult(_runtime.GetStatus()));
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public Task<AppResponseBase<FineTuningRuntimeStatus>> SetFineTuningEnabledAsync([FromBody] FineTuningEnabledRequest request) =>
+        this.GetResponseAsync<FineTuningRuntimeStatus>((response, logger) =>
+        {
+            var status = _runtime.SetEnabled(request?.Enabled == true);
+            Audit(status.Enabled ? "fine-tuning-enabled" : "fine-tuning-disabled", status.SettingsPath);
+            return Task.FromResult(status);
+        });
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public Task<AppResponseBase<FineTuningSecretStatus>> GenerateWorkerSecretAsync(string workerAlias) =>
+        this.GetResponseAsync<FineTuningSecretStatus>(async (response, logger) =>
+        {
+            var worker = await _workerService.GetRequiredAsync(workerAlias, CancellationToken);
+            var generated = _secrets.Generate(worker.Alias);
+            _logger.LogInformation("Fine-tuning worker secret {Action} for {Alias} at {Path}.",
+                generated.Created ? "created" : "already present", worker.Alias, generated.Path);
+            Audit(generated.Created ? "worker-secret-created" : "worker-secret-present", worker.Alias);
+            return new FineTuningSecretStatus
+            {
+                Alias = worker.Alias,
+                Configured = true,
+                Path = generated.Path,
+                Created = generated.Created
+            };
+        });
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public Task<AppResponseBase<FineTuningManagedWorkerStatus>> StartManagedWorkerAsync(string workerAlias) =>
+        this.GetResponseAsync<FineTuningManagedWorkerStatus>(async (response, logger) =>
+        {
+            var worker = await _workerService.GetEnabledAsync(workerAlias, CancellationToken);
+            var peers = await _workerService.GetAllAsync(CancellationToken);
+            _logger.LogInformation("Start managed fine-tuning worker {Alias} at {Endpoint}.", worker.Alias, worker.Endpoint);
+            var status = await _supervisor.StartAsync(worker, peers, CancellationToken);
+            Audit("worker-started", worker.Alias);
+            return status;
+        });
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+    public Task<AppResponseBase<FineTuningManagedWorkerStatus>> StopManagedWorkerAsync(string workerAlias) =>
+        this.GetResponseAsync<FineTuningManagedWorkerStatus>(async (response, logger) =>
+        {
+            var worker = await _workerService.GetRequiredAsync(workerAlias, CancellationToken);
+            await _supervisor.StopWorkerAsync(worker.Alias, CancellationToken);
+            Audit("worker-stopped", worker.Alias);
+            return _supervisor.GetStatus(worker);
+        });
+
+    [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+    public Task<AppResponseBase<FineTuningManagedWorkerStatus>> GetManagedWorkerStatusAsync(string workerAlias) =>
+        this.GetResponseAsync<FineTuningManagedWorkerStatus>(async (response, logger) =>
+        {
+            var worker = await _workerService.GetRequiredAsync(workerAlias, CancellationToken);
+            return _supervisor.GetStatus(worker);
+        });
+
     [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
     public Task<AppResponseBase<AIFineTuningWorkerDto>> SaveWorkerAsync([FromBody] AIFineTuningWorker_CreateOrEditRequest request) =>
         this.GetResponseAsync<AIFineTuningWorkerDto>(async (response, logger) =>
         {
-            var worker = await _workerService.SaveAsync(request, _workerOptions.ConfiguredWorkerAliases, CancellationToken);
+            var aliases = _workerOptions.ConfiguredWorkerAliases.Concat(_secrets.ListConfiguredAliases());
+            var worker = await _workerService.SaveAsync(request, aliases, CancellationToken);
+            if (worker.Enabled)
+                _runtime.SetEnabled(true);
+            if (Uri.TryCreate(worker.Endpoint, UriKind.Absolute, out var endpoint))
+                _runtime.AllowHost(endpoint.Host);
+            try
+            {
+                worker.SecretPath = _secrets.PathFor(worker.Alias);
+            }
+            catch (NcfExceptionBase)
+            {
+                worker.SecretPath = "";
+            }
+
             Audit("worker-saved", worker.Alias);
             return worker;
         });

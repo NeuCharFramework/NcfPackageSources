@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261105
     修改描述：v0.17.2 放宽微调校验提示词长度上限
 
+    修改标识：Senparc - 20261106
+    修改描述：微调任务的后端和方法使用与管理页一致的默认值
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -37,9 +40,9 @@ public sealed class FineTuningJobRequest
     [StringLength(128)]
     public string? EvalDatasetId { get; set; }
     [Required, RegularExpression("^(cpu|cuda|mlx)$")]
-    public string? Backend { get; set; }
+    public string? Backend { get; set; } = "cpu";
     [Required, RegularExpression("^(lora|qlora)$")]
-    public string? Method { get; set; }
+    public string? Method { get; set; } = "lora";
     [Range(1, 100)]
     public int Epochs { get; set; } = 1;
     [Range(0, 1000000)]

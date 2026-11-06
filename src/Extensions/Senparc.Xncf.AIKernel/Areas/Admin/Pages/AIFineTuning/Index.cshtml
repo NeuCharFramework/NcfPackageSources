@@ -65,7 +65,11 @@
     <el-card class="ft-card">
         <div slot="header" class="ft-detail-heading">
             <h2>{{ t('Worker') }}<ncf-doc-help topic="ai.workers"></ncf-doc-help></h2>
-            <el-button size="mini" icon="el-icon-plus" :disabled="uploadBusy || createBusy || cancelBusy || datasetMoreBusy" @@click="openWorkerEditor()">{{ t('AddWorker') }}</el-button>
+            <div>
+                <el-switch v-model="fineTuningEnabled" :disabled="fineTuningRuntimeBusy || !fineTuningRuntimeReady"
+                           :active-text="t('RuntimeEnabled')" @@change="setFineTuningEnabled"></el-switch>
+                <el-button size="mini" icon="el-icon-plus" :disabled="uploadBusy || createBusy || cancelBusy || datasetMoreBusy" @@click="openWorkerEditor()">{{ t('AddWorker') }}</el-button>
+            </div>
         </div>
         <el-select v-model="workerAlias" filterable :placeholder="t('SelectWorker')" :aria-label="t('Worker')"
                    :disabled="fileReading || uploadBusy || createBusy || cancelBusy || workerSaveBusy || datasetMoreBusy"
@@ -77,6 +81,8 @@
                 <span class="ft-muted"> · {{ worker.enabled ? (worker.hasConfiguredSecret ? t('Available') : t('WorkerSecretMissing')) : t('WorkerDisabled') }}</span>
             </el-option>
         </el-select>
+        <p class="ft-muted">{{ t('RuntimeEnabledHelp') }}</p>
+        <p class="ft-muted" v-if="fineTuningRuntime.secretDirectory">{{ fineTuningRuntime.secretDirectory }}</p>
         <p class="ft-muted">{{ t('WorkerRoutingHelp') }}</p>
         <el-alert v-if="workerSetupRequired" type="info" :closable="false"
                   :title="t('WorkerSetupTitle')" :description="workers.length ? t('WorkerSetupExisting') : t('WorkerSetupEmpty')" show-icon></el-alert>
@@ -162,17 +168,52 @@
         </el-alert>
     </el-card>
 
-    <el-dialog :title="t('WorkerConfiguration')" :visible.sync="workerEditorVisible" width="620px" custom-class="ft-worker-dialog">
+    <el-dialog :title="t('WorkerConfiguration')" :visible.sync="workerEditorVisible" width="760px" custom-class="ft-worker-dialog">
         <el-alert type="warning" :closable="false" :title="t('WorkerSecretNotice')" show-icon></el-alert>
         <el-form :model="workerEditor" label-position="top">
-            <el-form-item :label="t('WorkerAlias')"><el-input v-model="workerEditor.alias" maxlength="50"></el-input></el-form-item>
+            <el-form-item :label="t('WorkerAlias')"><el-input v-model="workerEditor.alias" maxlength="50" :disabled="workerEditor.id > 0"></el-input></el-form-item>
             <el-form-item :label="t('WorkerName')"><el-input v-model="workerEditor.name" maxlength="100"></el-input></el-form-item>
-            <el-form-item :label="t('WorkerEndpoint')"><el-input v-model="workerEditor.endpoint" maxlength="250"></el-input></el-form-item>
+            <el-form-item>
+                <el-switch v-model="workerEditor.managed" :active-text="t('ManagedWorker')" @@change="syncManagedEndpoint"></el-switch>
+                <p class="ft-muted">{{ t('ManagedWorkerHelp') }}</p>
+            </el-form-item>
+            <template v-if="workerEditor.managed">
+                <el-form-item :label="t('BindHost')"><el-input v-model="workerEditor.bindHost" maxlength="100" @@change="syncManagedEndpoint"></el-input></el-form-item>
+                <el-form-item :label="t('WorkerPort')"><el-input-number v-model="workerEditor.port" :min="1024" :max="65535" @@change="syncManagedEndpoint"></el-input-number></el-form-item>
+                <el-form-item :label="t('ModelsRoot')">
+                    <el-input v-model="workerEditor.modelsRoot" maxlength="500" placeholder="~/AIModels"></el-input>
+                    <p class="ft-muted">{{ t('ModelsRootHelp') }}</p>
+                </el-form-item>
+                <el-form-item :label="t('DataRoot')">
+                    <el-input v-model="workerEditor.dataRoot" maxlength="500"></el-input>
+                    <p class="ft-muted">{{ t('DataRootHelp') }}</p>
+                </el-form-item>
+                <el-form-item :label="t('PythonPath')"><el-input v-model="workerEditor.pythonPath" maxlength="500" :placeholder="t('Optional')"></el-input></el-form-item>
+                <el-form-item :label="t('WorkerProjectPath')"><el-input v-model="workerEditor.workerProjectPath" maxlength="500" :placeholder="fineTuningRuntime.discoveredWorkerProject || t('Optional')"></el-input></el-form-item>
+                <el-form-item><el-switch v-model="workerEditor.autoStart" :active-text="t('AutoStart')"></el-switch></el-form-item>
+            </template>
+            <el-form-item :label="t('WorkerEndpoint')"><el-input v-model="workerEditor.endpoint" maxlength="250" :readonly="workerEditor.managed"></el-input></el-form-item>
             <el-form-item :label="t('RequestTimeout')"><el-input-number v-model="workerEditor.requestTimeoutSeconds" :min="1" :max="300"></el-input-number></el-form-item>
             <el-form-item><el-switch v-model="workerEditor.enabled" :active-text="t('Enabled')" :inactive-text="t('WorkerDisabled')"></el-switch></el-form-item>
             <p class="ft-muted">{{ t('WorkerDisableHelp') }}</p>
             <el-form-item :label="t('Note')"><el-input type="textarea" v-model="workerEditor.note" maxlength="500"></el-input></el-form-item>
         </el-form>
+        <p class="ft-muted" v-if="!workerEditor.id">{{ t('SaveBeforeLaunch') }}</p>
+        <div v-if="workerEditor.id" class="ft-worker-actions">
+            <el-button size="mini" :loading="workerProcessBusy" @@click="generateWorkerSecret">{{ t('GenerateSecret') }}</el-button>
+            <el-button size="mini" type="primary" :loading="workerProcessBusy" :disabled="!workerEditor.managed" @@click="startManagedWorker">{{ t('StartWorker') }}</el-button>
+            <el-button size="mini" :loading="workerProcessBusy" :disabled="!workerEditor.managed" @@click="stopManagedWorker">{{ t('StopWorker') }}</el-button>
+            <el-button size="mini" :loading="workerProcessBusy" @@click="loadWorkerProcess">{{ t('RefreshWorkerStatus') }}</el-button>
+        </div>
+        <div v-if="workerProcess" class="ft-worker-process">
+            <p>{{ t('WorkerProcess') }}: {{ workerProcess.state }}
+                <span v-if="workerProcess.processId"> · pid {{ workerProcess.processId }}</span>
+                <span v-if="workerProcess.secretConfigured"> · {{ workerProcess.secretPath }}</span>
+            </p>
+            <p v-if="workerProcess.error" class="ft-muted">{{ workerProcess.error }}</p>
+            <pre v-if="workerProcess.commandPreview" class="ft-command">{{ workerProcess.commandPreview }}</pre>
+            <pre v-if="workerProcess.recentLogs && workerProcess.recentLogs.length" class="ft-worker-logs">{{ workerProcess.recentLogs.join('\n') }}</pre>
+        </div>
         <span slot="footer">
             <el-button @@click="workerEditorVisible = false">{{ t('Cancel') }}</el-button>
             <el-button type="primary" :loading="workerSaveBusy" @@click="saveWorker">{{ t('SaveWorker') }}</el-button>
