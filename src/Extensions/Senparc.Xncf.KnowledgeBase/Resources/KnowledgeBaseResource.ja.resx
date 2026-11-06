@@ -79,268 +79,268 @@
     <value>上の結果を 3 乗します</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>+ 新增属性||+ 新增属性</value>
+    <value>+ プロパティを追加||+ プロパティを追加</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>+ 新增标签||+ 新增标签</value>
+    <value>+ タグを追加||+ タグを追加</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>上传文件||上传文件</value>
+    <value>ファイルをアップロード||ファイルをアップロード</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>上传时间||上传时间</value>
+    <value>アップロード日時||アップロード日時</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>个召回段落||个召回段落</value>
+    <value>件の取得パッセージ||件の取得パッセージ</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>了解更多关于检索方法。||了解更多关于检索方法。</value>
+    <value>検索方法の詳細を見る。||検索方法の詳細を見る。</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>保存||保存</value>
+    <value>保存する||保存する</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>倒排索引||倒排索引</value>
+    <value>転置インデックス||転置インデックス</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。||倒排索引是一种用于高效检索的结构。按术语组织，每个术语指向包含它的文档或网页。</value>
+    <value>転置インデックスは、効率よく検索するための構造です。用語ごとに整理され、各用語はそれを含む文書やウェブページを指します。||転置インデックスは、効率よく検索するための構造です。用語ごとに整理され、各用語はそれを含む文書やウェブページを指します。</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>关键词||关键词</value>
+    <value>キーワード||キーワード</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>关闭||关闭</value>
+    <value>閉じる||閉じる</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>内容||内容</value>
+    <value>コンテンツ||コンテンツ</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>内容类型||内容类型</value>
+    <value>コンテンツタイプ||コンテンツタイプ</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>删除||删除</value>
+    <value>削除||削除</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>取消||取消</value>
+    <value>キャンセル||キャンセル</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>召回测试||召回测试</value>
+    <value>検索テスト||検索テスト</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>召回率||召回率</value>
+    <value>再現率||再現率</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>名称||名称</value>
+    <value>名前||名前</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>向量化||向量化</value>
+    <value>ベクトル化||ベクトル化</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>向量化结果||向量化结果</value>
+    <value>ベクトル化結果||ベクトル化結果</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>向量化进度||向量化进度</value>
+    <value>ベクトル化の進捗||ベクトル化の進捗</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>字符||字符</value>
+    <value>文字||文字</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>属性名||属性名</value>
+    <value>プロパティ名||プロパティ名</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>属性管理||属性管理</value>
+    <value>プロパティ管理||プロパティ管理</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>已选择:||已选择:</value>
+    <value>選択中:||選択中:</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>当前选中 {0} 行||当前选中 {0} 行</value>
+    <value>{0} 行を選択中||{0} 行を選択中</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>打开||打开</value>
+    <value>開く||開く</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>扩展模块||扩展模块</value>
+    <value>拡張モジュール||拡張モジュール</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>批量删除||批量删除</value>
+    <value>選択を削除||選択を削除</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>搜索||搜索</value>
+    <value>検索||検索</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>操作||操作</value>
+    <value>アクション||アクション</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>数据源||数据源</value>
+    <value>データソース||データソース</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>文件列表||文件列表</value>
+    <value>ファイル一覧||ファイル一覧</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>文件名||文件名</value>
+    <value>ファイル名||ファイル名</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>文件名称||文件名称</value>
+    <value>ファイル名||ファイル名</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>文件大小||文件大小</value>
+    <value>ファイルサイズ||ファイルサイズ</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>新增||新增</value>
+    <value>追加||追加</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>新建文件||新建文件</value>
+    <value>新規ファイル||新規ファイル</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>时间↓||时间↓</value>
+    <value>時刻↓||時刻↓</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>暂无召回结果，请选择知识库、输入源文本并点击「测试」||暂无召回结果，请选择知识库、输入源文本并点击「测试」</value>
+    <value>リコール結果はまだありません。ナレッジベースを選び、元テキストを入力して「テスト」をクリックしてください。||リコール結果はまだありません。ナレッジベースを選び、元テキストを入力して「テスト」をクリックしてください。</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>查询||查询</value>
+    <value>検索||検索</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>查询内容||查询内容</value>
+    <value>検索内容||検索内容</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>标签名||标签名</value>
+    <value>タグ名||タグ名</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>标签管理||标签管理</value>
+    <value>タグ管理||タグ管理</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>根据给定的查询文本测试知识的召回效果。||根据给定的查询文本测试知识的召回效果。</value>
+    <value>指定したクエリテキストで、ナレッジのリコール精度をテストします。||指定したクエリテキストで、ナレッジのリコール精度をテストします。</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>检索方法||检索方法</value>
+    <value>検索方法||検索方法</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>检索设置||检索设置</value>
+    <value>検索設定||検索設定</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>段落详情||段落详情</value>
+    <value>パッセージの詳細||パッセージの詳細</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>测试||测试</value>
+    <value>テスト||テスト</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>添加时间||添加时间</value>
+    <value>追加日時||追加日時</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>源文本||源文本</value>
+    <value>ソーステキスト||ソーステキスト</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>知识库||知识库</value>
+    <value>ナレッジベース||ナレッジベース</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>知识库管理||知识库管理</value>
+    <value>ナレッジベース管理||ナレッジベース管理</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>知识库管理列表||知识库管理列表</value>
+    <value>ナレッジベース一覧||ナレッジベース一覧</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>知识库管理管理||知识库管理管理</value>
+    <value>ナレッジベース管理||ナレッジベース管理</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>确定||确定</value>
+    <value>確認||確認</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>确认||确认</value>
+    <value>確認||確認</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>确认删除此知识库管理吗？||确认删除此知识库管理吗？</value>
+    <value>このナレッジベースを削除しますか？||このナレッジベースを削除しますか？</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>筛选列||筛选列</value>
+    <value>列を絞り込む||列を絞り込む</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>编辑||编辑</value>
+    <value>編集||編集</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>记录||记录</value>
+    <value>記録||記録</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>请填写||请填写</value>
+    <value>記入してください||記入してください</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>请输入关键字||请输入关键字</value>
+    <value>キーワードを入力してください||キーワードを入力してください</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>请输入内容||请输入内容</value>
+    <value>内容を入力||内容を入力</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>请输入名称||请输入名称</value>
+    <value>名前を入力||名前を入力</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>请输入查询文本||请输入查询文本</value>
+    <value>検索テキストを入力||検索テキストを入力</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>请选择内容类型||请选择内容类型</value>
+    <value>コンテンツ種別を選択||コンテンツ種別を選択</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>输入关键字搜索并选择知识库||输入关键字搜索并选择知识库</value>
+    <value>キーワードを入力してナレッジベースを検索し、選択してください||キーワードを入力してナレッジベースを検索し、選択してください</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>选择Embedding模型||选择Embedding模型</value>
+    <value>Embedding モデルを選択||Embedding モデルを選択</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>选择向量数据库||选择向量数据库</value>
+    <value>ベクトルデータベースを選択||ベクトルデータベースを選択</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>选择对话模型||选择对话模型</value>
+    <value>チャットモデルを選択||チャットモデルを選択</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>选择文件||选择文件</value>
+    <value>ファイルを選択||ファイルを選択</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联||选择文件后将上传至文件管理，并可在下方文件列表中勾选后与当前知识库关联</value>
+    <value>ファイルを選ぶとファイル管理へアップロードされます。下の一覧でチェックすると、現在のナレッジベースに関連付けられます。||ファイルを選ぶとファイル管理へアップロードされます。下の一覧でチェックすると、現在のナレッジベースに関連付けられます。</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>配置||配置</value>
+    <value>構成||構成</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
-    <value>重置||重置</value>
+    <value>リセット||リセット</value>
   </data>
   <data name="Frontend.076" xml:space="preserve">
-    <value>获取列表失败||获取列表失败</value>
+    <value>リストの読み込みに失敗||リストの読み込みに失敗</value>
   </data>
   <data name="Frontend.077" xml:space="preserve">
-    <value>添加成功||添加成功</value>
+    <value>追加に成功しました||追加に成功しました</value>
   </data>
   <data name="Frontend.078" xml:space="preserve">
-    <value>添加失败||添加失败</value>
+    <value>追加に失敗しました||追加に失敗しました</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>编辑成功||编辑成功</value>
+    <value>更新成功||更新成功</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
-    <value>编辑失败||编辑失败</value>
+    <value>編集に失敗しました||編集に失敗しました</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
-    <value>删除成功||删除成功</value>
+    <value>削除しました||削除しました</value>
   </data>
   <data name="Frontend.082" xml:space="preserve">
-    <value>删除失败||删除失败</value>
+    <value>削除に失敗しました||削除に失敗しました</value>
   </data>
   <data name="Frontend.083" xml:space="preserve">
-    <value>上传成功||上传成功</value>
+    <value>アップロード完了||アップロード完了</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>上传失败||上传失败</value>
+    <value>アップロード失敗||アップロード失敗</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>向量化失败||向量化失败</value>
+    <value>ベクトル化失敗||ベクトル化失敗</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
-    <value>加载失败||加载失败</value>
+    <value>読み込み失敗||読み込み失敗</value>
   </data>
   <data name="Frontend.087" xml:space="preserve">
-    <value>暂无数据||暂无数据</value>
+    <value>データなし||データなし</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
-    <value>提示||提示</value>
+    <value>通知||通知</value>
   </data>
   <data name="Page.EditKnowledgeBase" xml:space="preserve">
     <value>ナレッジベースを編集</value>
@@ -349,262 +349,262 @@
     <value>ナレッジベースを作成</value>
   </data>
   <data name="Frontend.089" xml:space="preserve">
-    <value>类型||类型</value>
+    <value>種類||種類</value>
   </data>
   <data name="Frontend.090" xml:space="preserve">
-    <value>来源||来源</value>
+    <value>ソース||ソース</value>
   </data>
   <data name="Frontend.091" xml:space="preserve">
     <value>重要||重要</value>
   </data>
   <data name="Frontend.092" xml:space="preserve">
-    <value>待审核||待审核</value>
+    <value>審査待ち||審査待ち</value>
   </data>
   <data name="Frontend.093" xml:space="preserve">
-    <value>演示||演示</value>
+    <value>デモ||デモ</value>
   </data>
   <data name="Frontend.094" xml:space="preserve">
-    <value>分段-{0}||分段-{0}</value>
+    <value>セグメント-{0}||セグメント-{0}</value>
   </data>
   <data name="Frontend.095" xml:space="preserve">
-    <value>知识库-{0}||知识库-{0}</value>
+    <value>ナレッジベース-{0}||ナレッジベース-{0}</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>检索设置已保存||检索设置已保存</value>
+    <value>検索設定を保存しました||検索設定を保存しました</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
-    <value>请输入属性名||请输入属性名</value>
+    <value>属性名を入力||属性名を入力</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>保存成功||保存成功</value>
+    <value>保存しました||保存しました</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
-    <value>确认删除该属性？||确认删除该属性？</value>
+    <value>この属性を削除しますか？||この属性を削除しますか？</value>
   </data>
   <data name="Frontend.100" xml:space="preserve">
-    <value>已删除||已删除</value>
+    <value>削除済み||削除済み</value>
   </data>
   <data name="Frontend.101" xml:space="preserve">
-    <value>请输入标签名||请输入标签名</value>
+    <value>タグ名を入力||タグ名を入力</value>
   </data>
   <data name="Frontend.102" xml:space="preserve">
-    <value>确认删除该标签？||确认删除该标签？</value>
+    <value>このタグを削除しますか？||このタグを削除しますか？</value>
   </data>
   <data name="Frontend.103" xml:space="preserve">
-    <value>请先选择知识库||请先选择知识库</value>
+    <value>先にナレッジベースを選択してください||先にナレッジベースを選択してください</value>
   </data>
   <data name="Frontend.104" xml:space="preserve">
-    <value>[召回示例1]||[召回示例1]</value>
+    <value>[検索の例1]||[検索の例1]</value>
   </data>
   <data name="Frontend.105" xml:space="preserve">
-    <value>离线评估召回完成||离线评估召回完成</value>
+    <value>オフライン評価の検索が完了しました||オフライン評価の検索が完了しました</value>
   </data>
   <data name="Frontend.106" xml:space="preserve">
-    <value>在线评估召回完成||在线评估召回完成</value>
+    <value>オンライン評価の検索が完了しました||オンライン評価の検索が完了しました</value>
   </data>
   <data name="Frontend.107" xml:space="preserve">
-    <value>错误||错误</value>
+    <value>エラー||エラー</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>向量化处理出错，请检查配置||向量化处理出错，请检查配置</value>
+    <value>ベクトル化に失敗しました。設定を確認してください。||ベクトル化に失敗しました。設定を確認してください。</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
-    <value>首页||首页</value>
+    <value>ホーム||ホーム</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>知识库管理列表页面||知识库管理列表页面</value>
+    <value>ナレッジベース一覧ページ||ナレッジベース一覧ページ</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>Embedding模型Id||Embedding模型Id</value>
+    <value>Embedding モデル Id||Embedding モデル Id</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
-    <value>向量数据库Id||向量数据库Id</value>
+    <value>ベクトルデータベースId||ベクトルデータベースId</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>对话模型Id||对话模型Id</value>
+    <value>チャットモデルId||チャットモデルId</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
-    <value>请输入Embedding模型Id||请输入Embedding模型Id</value>
+    <value>Embedding モデルの Id を入力してください||Embedding モデルの Id を入力してください</value>
   </data>
   <data name="Frontend.115" xml:space="preserve">
-    <value>请输入向量数据库Id||请输入向量数据库Id</value>
+    <value>ベクトルデータベースIdを入力||ベクトルデータベースIdを入力</value>
   </data>
   <data name="Frontend.116" xml:space="preserve">
-    <value>请输入对话模型Id||请输入对话模型Id</value>
+    <value>チャットモデルIdを入力||チャットモデルIdを入力</value>
   </data>
   <data name="Frontend.117" xml:space="preserve">
-    <value>编辑知识库关联||编辑知识库关联</value>
+    <value>ナレッジベース関連を編集||ナレッジベース関連を編集</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>新增知识库关联||新增知识库关联</value>
+    <value>ナレッジベース関連を追加||ナレッジベース関連を追加</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>当前选中 {0} 行||当前选中 {0} 行</value>
+    <value>{0} 行を選択中||{0} 行を選択中</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>打开||打开</value>
+    <value>開く||開く</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>召回返回的片段数量||召回返回的片段数量</value>
+    <value>検索で返された断片数||検索で返された断片数</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
-    <value>知识库Id||知识库Id</value>
+    <value>ナレッジベースId||ナレッジベースId</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
-    <value>输入||输入</value>
+    <value>入力||入力</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
-    <value>文件||文件</value>
+    <value>ファイル||ファイル</value>
   </data>
   <data name="Frontend.125" xml:space="preserve">
-    <value>采集外部数据||采集外部数据</value>
+    <value>外部データを収集||外部データを収集</value>
   </data>
   <data name="Frontend.126" xml:space="preserve">
-    <value>新增知识库管理详情||新增知识库管理详情</value>
+    <value>ナレッジベース詳細を追加||ナレッジベース詳細を追加</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
-    <value>知识库管理详情名称为必填项||知识库管理详情名称为必填项</value>
+    <value>ナレッジベース管理の詳細名は必須です||ナレッジベース管理の詳細名は必須です</value>
   </data>
   <data name="Frontend.128" xml:space="preserve">
-    <value>知识库管理详情详情||知识库管理详情详情</value>
+    <value>ナレッジベース詳細の詳細||ナレッジベース詳細の詳細</value>
   </data>
   <data name="Frontend.129" xml:space="preserve">
-    <value>成功||成功</value>
+    <value>成功しました||成功しました</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>恭喜你，上传成功||恭喜你，上传成功</value>
+    <value>アップロードに成功しました||アップロードに成功しました</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
-    <value>失败||失败</value>
+    <value>失敗||失敗</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
-    <value>上传失败，请重新上传||上传失败，请重新上传</value>
+    <value>アップロードに失敗しました。再度アップロードしてください||アップロードに失敗しました。再度アップロードしてください</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
-    <value>编辑知识库管理详情||编辑知识库管理详情</value>
+    <value>ナレッジベース詳細を編集||ナレッジベース詳細を編集</value>
   </data>
   <data name="Frontend.134" xml:space="preserve">
-    <value>正在准备...||正在准备...</value>
+    <value>準備しています...||準備しています...</value>
   </data>
   <data name="Frontend.135" xml:space="preserve">
-    <value>新增知识库管理||新增知识库管理</value>
+    <value>ナレッジベースを追加||ナレッジベースを追加</value>
   </data>
   <data name="Frontend.136" xml:space="preserve">
-    <value>知识库管理名称为必填项||知识库管理名称为必填项</value>
+    <value>ナレッジベース名は必須です||ナレッジベース名は必須です</value>
   </data>
   <data name="Frontend.137" xml:space="preserve">
-    <value>知识库管理详情||知识库管理详情</value>
+    <value>ナレッジベース詳細||ナレッジベース詳細</value>
   </data>
   <data name="Frontend.138" xml:space="preserve">
-    <value>请选择||请选择</value>
+    <value>選択してください||選択してください</value>
   </data>
   <data name="Frontend.139" xml:space="preserve">
-    <value>文件已上传至文件管理||文件已上传至文件管理</value>
+    <value>ファイルをファイル管理にアップロードしました||ファイルをファイル管理にアップロードしました</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>上传失败，请重试||上传失败，请重试</value>
+    <value>アップロードに失敗しました。再試行してください||アップロードに失敗しました。再試行してください</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
-    <value>编辑知识库管理||编辑知识库管理</value>
+    <value>ナレッジベースを編集||ナレッジベースを編集</value>
   </data>
   <data name="Frontend.142" xml:space="preserve">
-    <value>请至少选择一个文件后再保存||请至少选择一个文件后再保存</value>
+    <value>保存する前にファイルを 1 つ以上選択してください||保存する前にファイルを 1 つ以上選択してください</value>
   </data>
   <data name="Frontend.143" xml:space="preserve">
-    <value>文件已关联到知识库并写入条目||文件已关联到知识库并写入条目</value>
+    <value>ファイルをナレッジベースに関連付け、エントリを書き込みました||ファイルをナレッジベースに関連付け、エントリを書き込みました</value>
   </data>
   <data name="Frontend.144" xml:space="preserve">
-    <value>文件导入失败||文件导入失败</value>
+    <value>ファイルのインポートに失敗||ファイルのインポートに失敗</value>
   </data>
   <data name="Frontend.145" xml:space="preserve">
-    <value>文件导入失败:||文件导入失败:</value>
+    <value>ファイルのインポートに失敗：||ファイルのインポートに失敗：</value>
   </data>
   <data name="Frontend.146" xml:space="preserve">
-    <value>已保存||已保存</value>
+    <value>保存済み||保存済み</value>
   </data>
   <data name="Frontend.147" xml:space="preserve">
-    <value>知识库保存成功||知识库保存成功</value>
+    <value>ナレッジベースを保存しました||ナレッジベースを保存しました</value>
   </data>
   <data name="Frontend.148" xml:space="preserve">
-    <value>保存失败，请检查数据||保存失败，请检查数据</value>
+    <value>保存に失敗しました。データを確認してください||保存に失敗しました。データを確認してください</value>
   </data>
   <data name="Frontend.149" xml:space="preserve">
-    <value>保存出错：||保存出错：</value>
+    <value>保存エラー：||保存エラー：</value>
   </data>
   <data name="Frontend.150" xml:space="preserve">
-    <value>确认删除文件「{0}」吗？删除后数据库与物理文件均会移除。||确认删除文件「{0}」吗？删除后数据库与物理文件均会移除。</value>
+    <value>ファイル「{0}」を削除しますか？削除すると、データベース上の記録と物理ファイルの両方が除去されます。||ファイル「{0}」を削除しますか？削除すると、データベース上の記録と物理ファイルの両方が除去されます。</value>
   </data>
   <data name="Frontend.151" xml:space="preserve">
-    <value>删除确认||删除确认</value>
+    <value>削除の確認||削除の確認</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
-    <value>请先勾选需要删除的文件||请先勾选需要删除的文件</value>
+    <value>先に削除するファイルを選択してください||先に削除するファイルを選択してください</value>
   </data>
   <data name="Frontend.153" xml:space="preserve">
-    <value>确认删除已选中的 {0} 个文件吗？删除后数据库与物理文件均会移除。||确认删除已选中的 {0} 个文件吗？删除后数据库与物理文件均会移除。</value>
+    <value>選択した {0} 件のファイルを削除しますか？削除すると、データベース上の記録と物理ファイルの両方が除去されます。||選択した {0} 件のファイルを削除しますか？削除すると、データベース上の記録と物理ファイルの両方が除去されます。</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
-    <value>批量删除确认||批量删除确认</value>
+    <value>一括削除の確認||一括削除の確認</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
-    <value>部分完成||部分完成</value>
+    <value>一部完了||一部完了</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>已删除 {0}/{1} 个文件||已删除 {0}/{1} 个文件</value>
+    <value>{0}/{1} 件のファイルを削除しました||{0}/{1} 件のファイルを削除しました</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
-    <value>文件已删除||文件已删除</value>
+    <value>ファイル削除済み||ファイル削除済み</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>删除失败:||删除失败:</value>
+    <value>削除失敗:||削除失敗:</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
-    <value>向量化确认||向量化确认</value>
+    <value>ベクトル化を確認||ベクトル化を確認</value>
   </data>
   <data name="Frontend.160" xml:space="preserve">
-    <value>正在向量化处理中...||正在向量化处理中...</value>
+    <value>ベクトル化しています...||ベクトル化しています...</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>向量化完成||向量化完成</value>
+    <value>ベクトル化完了||ベクトル化完了</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
-    <value>知识库「{0}」向量化已完成。||知识库「{0}」向量化已完成。</value>
+    <value>ナレッジベース「{0}」のベクトル化が完了しました。||ナレッジベース「{0}」のベクトル化が完了しました。</value>
   </data>
   <data name="Frontend.163" xml:space="preserve">
-    <value>处理出错：||处理出错：</value>
+    <value>処理エラー：||処理エラー：</value>
   </data>
   <data name="Frontend.164" xml:space="preserve">
-    <value>确认关闭？||确认关闭？</value>
+    <value>今すぐ閉じますか？||今すぐ閉じますか？</value>
   </data>
   <data name="Frontend.165" xml:space="preserve">
-    <value>抛出异常测试，传输参数：{0} {1}||抛出异常测试，传输参数：{0} {1}</value>
+    <value>例外を送出するテスト。引き渡しパラメーター：{0} {1}||例外を送出するテスト。引き渡しパラメーター：{0} {1}</value>
   </data>
   <data name="Frontend.166" xml:space="preserve">
-    <value>被除数不能为0！||被除数不能为0！</value>
+    <value>除数は0にできません！||除数は0にできません！</value>
   </data>
   <data name="Frontend.167" xml:space="preserve">
-    <value>未知的运算符：{0}||未知的运算符：{0}</value>
+    <value>不明な演算子：{0}||不明な演算子：{0}</value>
   </data>
   <data name="Frontend.168" xml:space="preserve">
-    <value>知识库 '{0}' 未配置 Embedding 模型，请先在'配置'中选择模型。||知识库 '{0}' 未配置 Embedding 模型，请先在'配置'中选择模型。</value>
+    <value>ナレッジベース '{0}' には Embedding モデルが設定されていません。先に「設定」でモデルを選択してください。||ナレッジベース '{0}' には Embedding モデルが設定されていません。先に「設定」でモデルを選択してください。</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>Embedding 模型 ID {0} 不存在。||Embedding 模型 ID {0} 不存在。</value>
+    <value>Embedding モデル ID {0} は存在しません。||Embedding モデル ID {0} は存在しません。</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
-    <value>Embedding 向量库 ID {0} 不存在。||Embedding 向量库 ID {0} 不存在。</value>
+    <value>Embedding ベクトルストア ID {0} は存在しません。||Embedding ベクトルストア ID {0} は存在しません。</value>
   </data>
   <data name="Frontend.171" xml:space="preserve">
-    <value>Embedding 模型 AIKernel 模型未找到：{0}。||Embedding 模型 AIKernel 模型未找到：{0}。</value>
+    <value>Embedding モデルの AIKernel モデルが見つかりません：{0}。||Embedding モデルの AIKernel モデルが見つかりません：{0}。</value>
   </data>
   <data name="Frontend.172" xml:space="preserve">
-    <value>知识库 '{0}' 向量化完成！||知识库 '{0}' 向量化完成！</value>
+    <value>ナレッジベース '{0}' のベクトル化が完了しました！||ナレッジベース '{0}' のベクトル化が完了しました！</value>
   </data>
   <data name="Frontend.173" xml:space="preserve">
-    <value>数据为空||数据为空</value>
+    <value>データなし||データなし</value>
   </data>
   <data name="Frontend.174" xml:space="preserve">
-    <value>保存成功||保存成功</value>
+    <value>保存しました||保存しました</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>サンプル関数</value>

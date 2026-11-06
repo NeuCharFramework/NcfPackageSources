@@ -138,6 +138,41 @@ test('an unfinished recognition result is still usable', () => {
     assert.equal(blankFinal[0], '用户管理');
 });
 
+test('a module name opens the first page after its setup entry', () => {
+    const api = load();
+    const modules = [
+        {
+            menuName: '扩展模块', url: '', children: [
+                {
+                    menuName: '微信管理', url: '', id: 'weixin', children: [
+                        { menuName: '设置/执行', url: '/Admin/XncfModule/Start?uid=weixin', id: 'weixin-setup', children: [] },
+                        { menuName: '首页', url: '/Admin/WeixinManager/Index?uid=weixin', id: 'weixin-home', children: [] },
+                        { menuName: '公众号管理', url: '/Admin/WeixinManager/MpAccount?uid=weixin', id: 'weixin-mp', children: [] }
+                    ]
+                },
+                {
+                    menuName: '文件管理', url: '', id: 'files', children: [
+                        { menuName: '设置/执行', url: '/Admin/XncfModule/Start?uid=files', id: 'files-setup', children: [] },
+                        { menuName: '文件资源管理', url: '/Admin/FileManager/Index?uid=files', id: 'files-home', children: [] }
+                    ]
+                }
+            ]
+        }
+    ];
+    const entries = api.indexMenus(modules);
+    const landing = api.match('请打开微信管理', entries);
+    assert.equal(landing.status, 'navigate');
+    assert.equal(landing.target.url, '/Admin/WeixinManager/Index?uid=weixin');
+
+    const child = api.match('打开公众号管理', entries);
+    assert.equal(child.status, 'navigate');
+    assert.equal(child.target.url, '/Admin/WeixinManager/MpAccount?uid=weixin');
+
+    const setup = api.match('打开微信管理的设置/执行', entries);
+    assert.equal(setup.status, 'navigate');
+    assert.equal(setup.target.url, '/Admin/XncfModule/Start?uid=weixin');
+});
+
 test('unknown speech does not navigate', () => {
     const api = load();
     const result = api.match('打开一个不存在的页面', api.indexMenus(menus));

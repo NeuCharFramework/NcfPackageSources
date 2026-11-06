@@ -780,6 +780,7 @@
   <data name="FineTuning.SaveWorker" xml:space="preserve"><value>保存 Worker</value></data>
   <data name="FineTuning.WorkerSaved" xml:space="preserve"><value>Worker 已保存。</value></data>
   <data name="FineTuning.Guide.Title" xml:space="preserve"><value>从这里开始：微调操作教程</value></data>
+  <data name="FineTuning.SectionNav" xml:space="preserve"><value>页面区域</value></data>
   <data name="FineTuning.Guide.Purpose" xml:space="preserve"><value>LoRA/QLoRA 通过训练适配器调整任务行为、风格或输出格式，不替代 KnowledgeBase/RAG，不部署推理，也不会自动注册模型。</value></data>
   <data name="FineTuning.Guide.WorkerTitle" xml:space="preserve"><value>准备并连接 Worker</value></data>
   <data name="FineTuning.Guide.Worker" xml:space="preserve"><value>独立部署 CPU/CUDA 或原生 Apple Silicon Worker，准备经批准的离线模型，配置全局开关、主机白名单和别名对应密钥。在本页添加并选择 Worker 配置，先读取能力检查及不可用原因。</value></data>

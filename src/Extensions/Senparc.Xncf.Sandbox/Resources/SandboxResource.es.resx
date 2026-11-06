@@ -13,16 +13,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Module.Sandbox.MenuName" xml:space="preserve">
-    <value>沙箱环境</value>
+    <value>Zona de pruebas</value>
   </data>
   <data name="Module.Sandbox.Description" xml:space="preserve">
-    <value>NCF 独立沙箱编排：Docker/Wasm 快速创建与销毁实验环境</value>
+    <value>Orquestación de entornos aislados de NCF con Docker/Wasm para crear y destruir laboratorios rápidamente</value>
   </data>
   <data name="Area.Menu.Home" xml:space="preserve">
-    <value>沙箱面板</value>
+    <value>Panel de la zona de pruebas</value>
   </data>
   <data name="Area.Menu.Setup" xml:space="preserve">
-    <value>环境准备</value>
+    <value>Preparación del entorno</value>
   </data>
   <data name="Area.Home" xml:space="preserve">
     <value>Inicio</value>

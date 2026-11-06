@@ -253,31 +253,31 @@
     <value>Error al eliminar</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>抛出异常测试，传输参数：{0} {1}||抛出异常测试，传输参数：{0} {1}</value>
+    <value>Prueba de lanzamiento de excepción, parámetros enviados: {0} {1}||Prueba de lanzamiento de excepción, parámetros enviados: {0} {1}</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>被除数不能为0！||被除数不能为0！</value>
+    <value>El divisor no puede ser 0!||El divisor no puede ser 0!</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>未知的运算符：{0}||未知的运算符：{0}</value>
+    <value>Operador desconocido: {0}||Operador desconocido: {0}</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>未知操作符||未知操作符</value>
+    <value>Operador desconocido||Operador desconocido</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>请提供正确的网址！||请提供正确的网址！</value>
+    <value>Introduzca una URL válida!||Introduzca una URL válida!</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>目标主机解析为非公网地址，已拒绝连接。||目标主机解析为非公网地址，已拒绝连接。</value>
+    <value>El host de destino se resolvió en una dirección no pública. Se rechazó la conexión.||El host de destino se resolvió en una dirección no pública. Se rechazó la conexión.</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>无法连接到已通过公网地址校验的目标主机。||无法连接到已通过公网地址校验的目标主机。</value>
+    <value>No se puede conectar con el host de destino que superó la comprobación de dirección pública.||No se puede conectar con el host de destino que superó la comprobación de dirección pública.</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>目标 URL 不允许访问。||目标 URL 不允许访问。</value>
+    <value>No se permite acceder a la URL de destino.||No se permite acceder a la URL de destino.</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>重定向目标 URL 不允许访问。||重定向目标 URL 不允许访问。</value>
+    <value>No se permite acceder a la URL de destino de la redirección.||No se permite acceder a la URL de destino de la redirección.</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Función de ejemplo</value>

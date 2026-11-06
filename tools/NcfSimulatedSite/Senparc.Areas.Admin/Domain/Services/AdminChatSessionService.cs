@@ -19,6 +19,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.12.15 完善后台聊天会话管理与排序
 
+    修改标识：Senparc - 20261106
+    修改描述：归档会话只从进行中列表移出，并支持单独查询
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +63,21 @@ namespace Senparc.Areas.Admin.Domain.Services
                 pageSize, 
                 s => s.UserId == userId && s.Status == ChatSessionStatus.Active, 
                 s => s.LastMessageTime, 
+                Ncf.Core.Enums.OrderingType.Descending);
+
+            return (result.ToList(), result.TotalCount);
+        }
+
+        /// <summary>
+        /// 获取用户已归档、尚未删除的会话。
+        /// </summary>
+        public async Task<(List<AdminChatSession> sessions, int totalCount)> GetUserArchivedSessionsAsync(int userId, int pageIndex = 1, int pageSize = 20)
+        {
+            var result = await base.GetObjectListAsync(
+                pageIndex,
+                pageSize,
+                s => s.UserId == userId && s.Status == ChatSessionStatus.Archived,
+                s => s.LastMessageTime,
                 Ncf.Core.Enums.OrderingType.Descending);
 
             return (result.ToList(), result.TotalCount);
@@ -161,7 +179,8 @@ namespace Senparc.Areas.Admin.Domain.Services
         public async Task<bool> ArchiveSessionAsync(int sessionId, int userId)
         {
             var session = await GetSessionByIdAsync(sessionId, userId);
-            if (session == null) return false;
+            if (session == null || session.Status == ChatSessionStatus.Deleted) return false;
+            if (session.Status == ChatSessionStatus.Archived) return true;
 
             session.Archive();
             await base.SaveObjectAsync(session);

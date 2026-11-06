@@ -19,28 +19,28 @@
     <value>XNCF モジュールの基盤コードとサンプルをすばやく生成します</value>
   </data>
   <data name="Function.XncfBuilder.Preview.Name" xml:space="preserve">
-    <value>启动 / 更新 XNCF 独立预览</value>
+    <value>分離された XNCF プレビューを起動または更新</value>
   </data>
   <data name="Function.XncfBuilder.Preview.Description" xml:space="preserve">
-    <value>验证并发布指定 XNCF 的当前源码，再在不重启当前站点的情况下启动独立预览实例</value>
+    <value>現在の XNCF ソースを検証して公開し、現在のサイトを再起動せずに分離プレビューを起動する</value>
   </data>
   <data name="Function.XncfBuilder.PreviewStatus.Name" xml:space="preserve">
-    <value>查看 XNCF 预览状态</value>
+    <value>XNCF プレビューの状態を表示</value>
   </data>
   <data name="Function.XncfBuilder.PreviewStatus.Description" xml:space="preserve">
-    <value>查看当前站点管理的独立 XNCF 预览进程</value>
+    <value>このサイトが管理する分離された XNCF プレビュープロセスを表示</value>
   </data>
   <data name="Function.XncfBuilder.StopPreview.Name" xml:space="preserve">
-    <value>停止 XNCF 独立预览</value>
+    <value>分離された XNCF プレビューを停止</value>
   </data>
   <data name="Function.XncfBuilder.StopPreview.Description" xml:space="preserve">
-    <value>停止选中的预览进程并清理其临时发布目录</value>
+    <value>選択したプレビュープロセスを停止し、一時公開ディレクトリをクリーンアップする</value>
   </data>
   <data name="Common.Yes" xml:space="preserve">
     <value>はい</value>
   </data>
   <data name="Common.Use" xml:space="preserve">
-    <value>使用</value>
+    <value>使う</value>
   </data>
   <data name="Parameter.XncfBuilder.SolutionPath" xml:space="preserve">
     <value>ソリューション（.sln）パス||NCF ソリューションの完全な物理パス。モジュールは同じ階層に生成されます</value>
@@ -82,61 +82,61 @@
     <value>サンプルをインストール||</value>
   </data>
   <data name="Parameter.XncfBuilder.Preview.StartAfterBuild" xml:space="preserve">
-    <value>生成后启动独立预览||主站不会重启；预览使用独立进程和临时发布目录</value>
+    <value>生成後に独立プレビューを起動||メインサイトは再起動しません。プレビューは独立したプロセスと一時的な発行ディレクトリを使います</value>
   </data>
   <data name="Parameter.XncfBuilder.Preview.ModuleProjectName" xml:space="preserve">
-    <value>要验证并预览的 XNCF 项目名称||不含 .csproj，例如 Senparc.Xncf.Sample；它不是临时站点名称</value>
+    <value>検証してプレビューする XNCF プロジェクト名||.csproj は含めません。例：Senparc.Xncf.Sample。これは一時サイト名ではありません</value>
   </data>
   <data name="Parameter.XncfBuilder.Preview.Port" xml:space="preserve">
-    <value>预览端口||填写 0 自动分配回环端口；自定义端口必须位于 1024–65535</value>
+    <value>プレビューポート||0 を入力するとループバックポートが自動で割り当てられます。任意のポートは 1024〜65535 の範囲にしてください</value>
   </data>
   <data name="Parameter.XncfBuilder.Preview.Timeout" xml:space="preserve">
-    <value>启动超时（秒）||等待预览站点通过 HTTP 健康检查的最长时间</value>
+    <value>起動タイムアウト（秒）||プレビューサイトが HTTP ヘルスチェックを通過するまでの最大待ち時間</value>
   </data>
   <data name="Parameter.XncfBuilder.Preview.Environment" xml:space="preserve">
-    <value>预览环境||默认 XncfPreview 会强制使用预览目录中的本地 SQLite 和本地缓存</value>
+    <value>プレビュー環境||既定では、XncfPreview はプレビューディレクトリ内のローカル SQLite とローカルキャッシュを強制的に使います</value>
   </data>
   <data name="Parameter.XncfBuilder.Preview.IncludeOutput" xml:space="preserve">
-    <value>显示预览日志||在状态结果中包含最近的进程输出</value>
+    <value>プレビューログを表示||ステータス結果に最新のプロセス出力を含める</value>
   </data>
   <data name="Parameter.XncfBuilder.Preview.SessionId" xml:space="preserve">
-    <value>预览会话||选择需要停止的 XNCF 预览实例</value>
+    <value>プレビューセッション||停止する XNCF プレビューインスタンスを選択してください</value>
   </data>
   <data name="XncfBuilder.Option.Preview.StartAfterBuild" xml:space="preserve">
-    <value>生成成功后立即启动</value>
+    <value>生成後すぐに起動</value>
   </data>
   <data name="XncfBuilder.Option.Preview.StartAfterBuild.Help" xml:space="preserve">
-    <value>适用于生成后无需继续修改代码的情况；若还要由 AI 编写代码，请完成写入后再执行“启动 / 更新 XNCF 独立预览”</value>
+    <value>これ以上コードを変更しない場合に使います。AI がモジュールを編集するときは、すべての書き込みが終わってから分離プレビューを起動または更新してください</value>
   </data>
   <data name="XncfBuilder.Option.Preview.IncludeOutput" xml:space="preserve">
-    <value>包含最近日志</value>
+    <value>最近のログを含める</value>
   </data>
   <data name="XncfBuilder.Option.Preview.IncludeOutput.Help" xml:space="preserve">
-    <value>最多显示每个预览进程最近 300 行输出</value>
+    <value>各プレビュープロセスの最新 300 行の出力まで表示する</value>
   </data>
   <data name="XncfBuilder.Preview.Running" xml:space="preserve">
-    <value>运行中</value>
+    <value>実行中</value>
   </data>
   <data name="XncfBuilder.Preview.Stopped" xml:space="preserve">
-    <value>已停止</value>
+    <value>停止済み</value>
   </data>
   <data name="XncfBuilder.Preview.RequestMissing" xml:space="preserve">
-    <value>预览启动失败：未提供预览参数。</value>
+    <value>プレビューの起動に失敗しました。プレビューオプションが指定されていません。</value>
   </data>
   <data name="XncfBuilder.Preview.NoSessions" xml:space="preserve">
-    <value>当前没有 XNCF 独立预览会话。</value>
+    <value>分離された XNCF プレビューセッションはありません。</value>
   </data>
   <data name="XncfBuilder.Preview.SessionRequired" xml:space="preserve">
-    <value>请选择需要停止的预览会话。</value>
+    <value>停止するプレビューセッションを選択してください。</value>
   </data>
   <data name="XncfBuilder.Preview.StartSucceeded" xml:space="preserve">
-    <value>XNCF 独立预览已启动，当前 Senparc.Web 未重启。</value>
+    <value>分離された XNCF プレビューは実行中です。現在の Senparc.Web プロセスは再起動されていません。</value>
   </data>
   <data name="XncfBuilder.Preview.StopSucceeded" xml:space="preserve">
-    <value>XNCF 独立预览已停止，临时发布目录已清理。</value>
+    <value>分離された XNCF プレビューを停止し、一時公開ディレクトリをクリーンアップしました。</value>
   </data>
   <data name="XncfBuilder.Preview.SessionNotFound" xml:space="preserve">
-    <value>没有找到指定预览会话；它可能已经停止。</value>
+    <value>プレビューセッションが見つかりません。すでに停止している可能性があります。</value>
   </data>
   <data name="XncfBuilder.Option.Solution.Backup" xml:space="preserve">
     <value>.sln をバックアップ（推奨）</value>
@@ -355,82 +355,82 @@
     <value>新しいエンティティ名の複数形</value>
   </data>
   <data name="XncfBuilder.Preview.Monitor" xml:space="preserve">
-    <value>XNCF 预览监控</value>
+    <value>XNCF プレビューモニター</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Queued" xml:space="preserve">
-    <value>排队中</value>
+    <value>キュー待ち</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.PreparingSource" xml:space="preserve">
-    <value>锁定源码快照</value>
+    <value>ソーススナップショットをロック</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Validating" xml:space="preserve">
-    <value>校验宿主引用</value>
+    <value>ホスト参照を検証</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Restoring" xml:space="preserve">
-    <value>还原依赖</value>
+    <value>依存関係を復元</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Building" xml:space="preserve">
-    <value>隔离构建</value>
+    <value>分離ビルド</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Verifying" xml:space="preserve">
-    <value>校验产物</value>
+    <value>成果物を検証</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Starting" xml:space="preserve">
-    <value>启动新预览</value>
+    <value>新しいプレビューを開始</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.HealthChecking" xml:space="preserve">
-    <value>健康检查</value>
+    <value>ヘルスチェック</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Replacing" xml:space="preserve">
-    <value>原子替换</value>
+    <value>アトミック置換</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Running" xml:space="preserve">
-    <value>运行中</value>
+    <value>実行中</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Stopping" xml:space="preserve">
-    <value>停止中</value>
+    <value>停止しています</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Stopped" xml:space="preserve">
-    <value>已停止</value>
+    <value>停止済み</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Replaced" xml:space="preserve">
-    <value>已替换</value>
+    <value>置換済み</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Failed" xml:space="preserve">
-    <value>失败</value>
+    <value>失敗</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Cancelled" xml:space="preserve">
-    <value>已取消</value>
+    <value>キャンセル済み</value>
   </data>
   <data name="XncfBuilder.Preview.Stage.Interrupted" xml:space="preserve">
-    <value>已中断</value>
+    <value>中断済み</value>
   </data>
   <data name="XncfBuilder.Preview.HostStatus.NotCreated" xml:space="preserve">
-    <value>未创建</value>
+    <value>未作成</value>
   </data>
   <data name="XncfBuilder.Preview.HostStatus.Starting" xml:space="preserve">
-    <value>启动中</value>
+    <value>起動中</value>
   </data>
   <data name="XncfBuilder.Preview.HostStatus.HealthChecking" xml:space="preserve">
-    <value>健康检查</value>
+    <value>ヘルスチェック</value>
   </data>
   <data name="XncfBuilder.Preview.HostStatus.Healthy" xml:space="preserve">
-    <value>健康</value>
+    <value>正常</value>
   </data>
   <data name="XncfBuilder.Preview.HostStatus.Stopping" xml:space="preserve">
-    <value>停止中</value>
+    <value>停止しています</value>
   </data>
   <data name="XncfBuilder.Preview.HostStatus.Stopped" xml:space="preserve">
-    <value>已停止</value>
+    <value>停止済み</value>
   </data>
   <data name="XncfBuilder.Preview.HostStatus.Replaced" xml:space="preserve">
-    <value>已替换</value>
+    <value>置換済み</value>
   </data>
   <data name="XncfBuilder.Preview.HostStatus.Failed" xml:space="preserve">
-    <value>失败</value>
+    <value>失敗</value>
   </data>
   <data name="XncfBuilder.Preview.HostStatus.Interrupted" xml:space="preserve">
-    <value>已中断</value>
+    <value>中断済み</value>
   </data>
   <data name="Function.XncfBuilder.AddMigration.Name" xml:space="preserve">
     <value>Add-Migration コマンド</value>

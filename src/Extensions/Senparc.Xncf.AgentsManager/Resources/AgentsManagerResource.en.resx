@@ -157,997 +157,997 @@
     <value>You are a professional translator fluent in {0}. Translate the user's text accurately and output only the translation.</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>AgentsManager 首页||AgentsManager 首页</value>
+    <value>AgentsManager Home||AgentsManager Home</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>扩展模块||扩展模块</value>
+    <value>Extension Modules||Extension Modules</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>Agents 管理模块||Agents 管理模块</value>
+    <value>Agents Manager||Agents Manager</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>首页||首页</value>
+    <value>Home||Home</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>智能体||智能体</value>
+    <value>Agent||Agent</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>智能体列表||智能体列表</value>
+    <value>Agent list||Agent list</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>请输入名称搜索||请输入名称搜索</value>
+    <value>Search by name||Search by name</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>按时间排序||按时间排序</value>
+    <value>Sort by time||Sort by time</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>选择状态||选择状态</value>
+    <value>Select status||Select status</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>全部智能体||全部智能体</value>
+    <value>All agents||All agents</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>暂无数据||暂无数据</value>
+    <value>No Data||No Data</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>面板视图||面板视图</value>
+    <value>Panel view||Panel view</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>3D视图||3D视图</value>
+    <value>3D view||3D view</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>参加中||参加中</value>
+    <value>Participating||Participating</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>评分||评分</value>
+    <value>Score||Score</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>编辑||编辑</value>
+    <value>Edit||Edit</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>详情||详情</value>
+    <value>Details||Details</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>删除||删除</value>
+    <value>Delete||Delete</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>全部组||全部组</value>
+    <value>All groups||All groups</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>任务状态||任务状态</value>
+    <value>Task status||Task status</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>等待||等待</value>
+    <value>Waiting||Waiting</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>聊天中||聊天中</value>
+    <value>Chatting||Chatting</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>暂停||暂停</value>
+    <value>Paused||Paused</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>完成||完成</value>
+    <value>Done||Done</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>取消||取消</value>
+    <value>Cancel||Cancel</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>仅运行中组||仅运行中组</value>
+    <value>Running groups only||Running groups only</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>快速进入组||快速进入组</value>
+    <value>Quick-open group||Quick-open group</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>进入组||进入组</value>
+    <value>Open group||Open group</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>快速进入任务||快速进入任务</value>
+    <value>Quick-open task||Quick-open task</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>进入任务||进入任务</value>
+    <value>Open task||Open task</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>悬停 Group 柱体可高亮组成员；点击 Group 可锁定/取消锁定；顶部数字展示该组运行任务状态统计。||悬停 Group 柱体可高亮组成员；点击 Group 可锁定/取消锁定；顶部数字展示该组运行任务状态统计。</value>
+    <value>Hover a Group column to highlight its members; click a Group to lock or unlock it; the numbers at the top show running-task status counts for that group.||Hover a Group column to highlight its members; click a Group to lock or unlock it; the numbers at the top show running-task status counts for that group.</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>参与组||参与组</value>
+    <value>Groups||Groups</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>参与任务||参与任务</value>
+    <value>Tasks||Tasks</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>运行中任务||运行中任务</value>
+    <value>Running tasks||Running tasks</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>靶场:||靶场:</value>
+    <value>Range:||Range:</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>靶道:||靶道:</value>
+    <value>Tactic:||Tactic:</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>打靶||打靶</value>
+    <value>Run||Run</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>模型:||模型:</value>
+    <value>Model:||Model:</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>管理AI模型||管理AI模型</value>
+    <value>Manage AI models||Manage AI models</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>模型参数||模型参数</value>
+    <value>Model parameters||Model parameters</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>模型评分:||模型评分:</value>
+    <value>Model score:||Model score:</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>状态:||状态:</value>
+    <value>Status:||Status:</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>停用||停用</value>
+    <value>Disabled||Disabled</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>启用||启用</value>
+    <value>Enabled||Enabled</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>组||组</value>
+    <value>Groups||Groups</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>任务||任务</value>
+    <value>Jobs||Jobs</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>退出组||退出组</value>
+    <value>Leave group||Leave group</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>启动||启动</value>
+    <value>Start||Start</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>批量启动||批量启动</value>
+    <value>Start selected||Start selected</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>批量停止||批量停止</value>
+    <value>Stop selected||Stop selected</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>批量删除||批量删除</value>
+    <value>Delete selected||Delete selected</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>任务数:||任务数:</value>
+    <value>Tasks:||Tasks:</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>群主:||群主:</value>
+    <value>Owner:||Owner:</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>对接人:||对接人:</value>
+    <value>Contact:||Contact:</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>组成员：||组成员：</value>
+    <value>Group members:||Group members:</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>运行任务||运行任务</value>
+    <value>Running task||Running task</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>开始时间||开始时间</value>
+    <value>Started||Started</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>持续时长||持续时长</value>
+    <value>Duration||Duration</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>模型名称||模型名称</value>
+    <value>Model name||Model name</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>任务描述||任务描述</value>
+    <value>Task description||Task description</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>操作||操作</value>
+    <value>Actions||Actions</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>智能体参数||智能体参数</value>
+    <value>Agent parameters||Agent parameters</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>再次执行||再次执行</value>
+    <value>Run again||Run again</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>强制停止||强制停止</value>
+    <value>Force stop||Force stop</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>用量统计||用量统计</value>
+    <value>Usage analytics||Usage analytics</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>任务开始时间:||任务开始时间:</value>
+    <value>Task start time:||Task start time:</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>任务结束时间:||任务结束时间:</value>
+    <value>Task end time:||Task end time:</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>打分:||打分:</value>
+    <value>Score:||Score:</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>任务评价:||任务评价:</value>
+    <value>Task review:||Task review:</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>用量概览||用量概览</value>
+    <value>Usage overview||Usage overview</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>消息总数||消息总数</value>
+    <value>Total messages||Total messages</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>总 Token（输入+输出）||总 Token（输入+输出）</value>
+    <value>Total Token (input+output)||Total Token (input+output)</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>平均响应时长||平均响应时长</value>
+    <value>Average response time||Average response time</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>最大时长||最大时长</value>
+    <value>Maximum duration||Maximum duration</value>
   </data>
   <data name="Frontend.075" xml:space="preserve">
-    <value>机器人·||机器人·</value>
+    <value>Agents ·||Agents ·</value>
   </data>
   <data name="Frontend.076" xml:space="preserve">
-    <value>任务用量统计||任务用量统计</value>
+    <value>Task usage analytics||Task usage analytics</value>
   </data>
   <data name="Frontend.077" xml:space="preserve">
-    <value>任务：||任务：</value>
+    <value>Task:||Task:</value>
   </data>
   <data name="Frontend.078" xml:space="preserve">
-    <value>至||至</value>
+    <value>to||to</value>
   </data>
   <data name="Frontend.079" xml:space="preserve">
-    <value>开始时间||开始时间</value>
+    <value>Started||Started</value>
   </data>
   <data name="Frontend.080" xml:space="preserve">
-    <value>结束时间||结束时间</value>
+    <value>Finished||Finished</value>
   </data>
   <data name="Frontend.081" xml:space="preserve">
-    <value>全部 Agents||全部 Agents</value>
+    <value>All Agents||All Agents</value>
   </data>
   <data name="Frontend.082" xml:space="preserve">
-    <value>查询||查询</value>
+    <value>Search||Search</value>
   </data>
   <data name="Frontend.083" xml:space="preserve">
-    <value>重置||重置</value>
+    <value>Reset||Reset</value>
   </data>
   <data name="Frontend.084" xml:space="preserve">
-    <value>总 Token||总 Token</value>
+    <value>Total Token||Total Token</value>
   </data>
   <data name="Frontend.085" xml:space="preserve">
-    <value>输入 / 输出 Token||输入 / 输出 Token</value>
+    <value>Input / output Token||Input / output Token</value>
   </data>
   <data name="Frontend.086" xml:space="preserve">
-    <value>P95 / 最大时长||P95 / 最大时长</value>
+    <value>P95 / max duration||P95 / max duration</value>
   </data>
   <data name="Frontend.087" xml:space="preserve">
-    <value>单轮对话||单轮对话</value>
+    <value>Conversation rounds||Conversation rounds</value>
   </data>
   <data name="Frontend.088" xml:space="preserve">
-    <value>轮次||轮次</value>
+    <value>Round||Round</value>
   </data>
   <data name="Frontend.089" xml:space="preserve">
-    <value>消息数||消息数</value>
+    <value>Messages||Messages</value>
   </data>
   <data name="Frontend.090" xml:space="preserve">
-    <value>输入 Token||输入 Token</value>
+    <value>Input Tokens||Input Tokens</value>
   </data>
   <data name="Frontend.091" xml:space="preserve">
-    <value>输出 Token||输出 Token</value>
+    <value>Output Tokens||Output Tokens</value>
   </data>
   <data name="Frontend.092" xml:space="preserve">
-    <value>平均响应(ms)||平均响应(ms)</value>
+    <value>Average response (ms)||Average response (ms)</value>
   </data>
   <data name="Frontend.093" xml:space="preserve">
-    <value>单个 Agents||单个 Agents</value>
+    <value>Individual Agents||Individual Agents</value>
   </data>
   <data name="Frontend.094" xml:space="preserve">
-    <value>按时间统计||按时间统计</value>
+    <value>By time||By time</value>
   </data>
   <data name="Frontend.095" xml:space="preserve">
-    <value>时间桶（小时）||时间桶（小时）</value>
+    <value>Time bucket (hours)||Time bucket (hours)</value>
   </data>
   <data name="Frontend.096" xml:space="preserve">
-    <value>编辑智能体||编辑智能体</value>
+    <value>Edit agent||Edit agent</value>
   </data>
   <data name="Frontend.097" xml:space="preserve">
-    <value>新增智能体||新增智能体</value>
+    <value>Add agent||Add agent</value>
   </data>
   <data name="Frontend.098" xml:space="preserve">
-    <value>智能体名称||智能体名称</value>
+    <value>Agent name||Agent name</value>
   </data>
   <data name="Frontend.099" xml:space="preserve">
-    <value>请填写||请填写</value>
+    <value>Please fill in||Please fill in</value>
   </data>
   <data name="Frontend.100" xml:space="preserve">
-    <value>自选||自选</value>
+    <value>Select||Select</value>
   </data>
   <data name="Frontend.101" xml:space="preserve">
-    <value>手动||手动</value>
+    <value>Manual||Manual</value>
   </data>
   <data name="Frontend.102" xml:space="preserve">
-    <value>请选择||请选择</value>
+    <value>Select||Select</value>
   </data>
   <data name="Frontend.103" xml:space="preserve">
-    <value>手动输入||手动输入</value>
+    <value>Manual entry||Manual entry</value>
   </data>
   <data name="Frontend.104" xml:space="preserve">
-    <value>是否启用||是否启用</value>
+    <value>Enabled||Enabled</value>
   </data>
   <data name="Frontend.105" xml:space="preserve">
-    <value>启用智能体||启用智能体</value>
+    <value>Enable agent||Enable agent</value>
   </data>
   <data name="Frontend.106" xml:space="preserve">
-    <value>外接平台||外接平台</value>
+    <value>External platform||External platform</value>
   </data>
   <data name="Frontend.107" xml:space="preserve">
-    <value>外接平台参数||外接平台参数</value>
+    <value>External platform parameters||External platform parameters</value>
   </data>
   <data name="Frontend.108" xml:space="preserve">
-    <value>自动附加所有 XNCF 功能插件||自动附加所有 XNCF 功能插件</value>
+    <value>Automatically attach all XNCF feature plugins||Automatically attach all XNCF feature plugins</value>
   </data>
   <data name="Frontend.109" xml:space="preserve">
-    <value>手动选择||手动选择</value>
+    <value>Manual selection||Manual selection</value>
   </data>
   <data name="Frontend.110" xml:space="preserve">
-    <value>开启后将自动附加所有已注册的 XNCF 功能插件，使智能体能自动识别并触发对应模块的功能||开启后将自动附加所有已注册的 XNCF 功能插件，使智能体能自动识别并触发对应模块的功能</value>
+    <value>When enabled, all registered XNCF feature plugins are attached automatically, so the Agent can recognize and trigger the features of the matching Module||When enabled, all registered XNCF feature plugins are attached automatically, so the Agent can recognize and trigger the features of the matching Module</value>
   </data>
   <data name="Frontend.111" xml:space="preserve">
-    <value>可输入 Plugin 类名，或带有命名空间的完整名称||可输入 Plugin 类名，或带有命名空间的完整名称</value>
+    <value>You can enter a Plugin class name, or a full name that includes the namespace||You can enter a Plugin class name, or a full name that includes the namespace</value>
   </data>
   <data name="Frontend.112" xml:space="preserve">
-    <value>+ 添加||+ 添加</value>
+    <value>+ Add||+ Add</value>
   </data>
   <data name="Frontend.113" xml:space="preserve">
-    <value>可用插件类型:||可用插件类型:</value>
+    <value>Available plugin types:||Available plugin types:</value>
   </data>
   <data name="Frontend.114" xml:space="preserve">
-    <value>连接成功||连接成功</value>
+    <value>Connected successfully||Connected successfully</value>
   </data>
   <data name="Frontend.115" xml:space="preserve">
-    <value>查看工具列表||查看工具列表</value>
+    <value>View tools||View tools</value>
   </data>
   <data name="Frontend.116" xml:space="preserve">
-    <value>连接失败:||连接失败:</value>
+    <value>Connection failed:||Connection failed:</value>
   </data>
   <data name="Frontend.117" xml:space="preserve">
-    <value>测试连接||测试连接</value>
+    <value>Test connection||Test connection</value>
   </data>
   <data name="Frontend.118" xml:space="preserve">
-    <value>+ 添加 MCP Endpoint||+ 添加 MCP Endpoint</value>
+    <value>+ Add MCP Endpoint||+ Add MCP Endpoint</value>
   </data>
   <data name="Frontend.119" xml:space="preserve">
-    <value>编辑 MCP Endpoint||编辑 MCP Endpoint</value>
+    <value>Edit MCP Endpoint||Edit MCP Endpoint</value>
   </data>
   <data name="Frontend.120" xml:space="preserve">
-    <value>添加 MCP Endpoint||添加 MCP Endpoint</value>
+    <value>Add MCP Endpoint||Add MCP Endpoint</value>
   </data>
   <data name="Frontend.121" xml:space="preserve">
-    <value>Endpoint 名称 (例如: mcp-server-NCF-7)||Endpoint 名称 (例如: mcp-server-NCF-7)</value>
+    <value>Endpoint name (for example: mcp-server-NCF-7)||Endpoint name (for example: mcp-server-NCF-7)</value>
   </data>
   <data name="Frontend.122" xml:space="preserve">
-    <value>确认||确认</value>
+    <value>Confirm||Confirm</value>
   </data>
   <data name="Frontend.123" xml:space="preserve">
-    <value>备注||备注</value>
+    <value>Notes||Notes</value>
   </data>
   <data name="Frontend.124" xml:space="preserve">
-    <value>请填写(仅管理员可见)||请填写(仅管理员可见)</value>
+    <value>Fill in (administrators only)||Fill in (administrators only)</value>
   </data>
   <data name="Frontend.125" xml:space="preserve">
-    <value>编辑组||编辑组</value>
+    <value>Edit group||Edit group</value>
   </data>
   <data name="Frontend.126" xml:space="preserve">
-    <value>新增组||新增组</value>
+    <value>Add group||Add group</value>
   </data>
   <data name="Frontend.127" xml:space="preserve">
-    <value>组名称||组名称</value>
+    <value>Group name||Group name</value>
   </data>
   <data name="Frontend.128" xml:space="preserve">
-    <value>组成员||组成员</value>
+    <value>Group members||Group members</value>
   </data>
   <data name="Frontend.129" xml:space="preserve">
-    <value>搜索||搜索</value>
+    <value>Search||Search</value>
   </data>
   <data name="Frontend.130" xml:space="preserve">
-    <value>已选择:||已选择:</value>
+    <value>Selected:||Selected:</value>
   </data>
   <data name="Frontend.131" xml:space="preserve">
-    <value>描述||描述</value>
+    <value>Description||Description</value>
   </data>
   <data name="Frontend.132" xml:space="preserve">
-    <value>群主||群主</value>
+    <value>Owner||Owner</value>
   </data>
   <data name="Frontend.133" xml:space="preserve">
-    <value>对接人||对接人</value>
+    <value>Contact||Contact</value>
   </data>
   <data name="Frontend.134" xml:space="preserve">
-    <value>说明||说明</value>
+    <value>Description||Description</value>
   </data>
   <data name="Frontend.135" xml:space="preserve">
-    <value>启动群组||启动群组</value>
+    <value>Start group||Start group</value>
   </data>
   <data name="Frontend.136" xml:space="preserve">
-    <value>选择群组||选择群组</value>
+    <value>Select group||Select group</value>
   </data>
   <data name="Frontend.137" xml:space="preserve">
-    <value>任务标题||任务标题</value>
+    <value>Task title||Task title</value>
   </data>
   <data name="Frontend.138" xml:space="preserve">
-    <value>选择模型||选择模型</value>
+    <value>Select model||Select model</value>
   </data>
   <data name="Frontend.139" xml:space="preserve">
-    <value>个性化智能体||个性化智能体</value>
+    <value>Personalized agent||Personalized agent</value>
   </data>
   <data name="Frontend.140" xml:space="preserve">
-    <value>采用个性化参数运行智能体||采用个性化参数运行智能体</value>
+    <value>Run Agent with personalized parameters||Run Agent with personalized parameters</value>
   </data>
   <data name="Frontend.141" xml:space="preserve">
-    <value>我能帮你做什么||我能帮你做什么</value>
+    <value>What can I help you with?||What can I help you with?</value>
   </data>
   <data name="Frontend.142" xml:space="preserve">
-    <value>MCP 工具列表||MCP 工具列表</value>
+    <value>MCP tool list||MCP tool list</value>
   </data>
   <data name="Frontend.143" xml:space="preserve">
-    <value>工具名称||工具名称</value>
+    <value>Tool name||Tool name</value>
   </data>
   <data name="Frontend.144" xml:space="preserve">
-    <value>参数||参数</value>
+    <value>Parameters||Parameters</value>
   </data>
   <data name="Frontend.145" xml:space="preserve">
-    <value>无参数||无参数</value>
+    <value>No parameters||No parameters</value>
   </data>
   <data name="Frontend.146" xml:space="preserve">
-    <value>没有可用的工具||没有可用的工具</value>
+    <value>No tools available||No tools available</value>
   </data>
   <data name="Frontend.147" xml:space="preserve">
-    <value>关闭||关闭</value>
+    <value>Close||Close</value>
   </data>
   <data name="Frontend.148" xml:space="preserve">
-    <value>全部||全部</value>
+    <value>All||All</value>
   </data>
   <data name="Frontend.149" xml:space="preserve">
-    <value>活动||活动</value>
+    <value>Events||Events</value>
   </data>
   <data name="Frontend.150" xml:space="preserve">
-    <value>待命||待命</value>
+    <value>Standby||Standby</value>
   </data>
   <data name="Frontend.151" xml:space="preserve">
-    <value>停顿||停顿</value>
+    <value>Paused||Paused</value>
   </data>
   <data name="Frontend.152" xml:space="preserve">
-    <value>失败||失败</value>
+    <value>Failed||Failed</value>
   </data>
   <data name="Frontend.153" xml:space="preserve">
-    <value>归档||归档</value>
+    <value>Archive||Archive</value>
   </data>
   <data name="Frontend.154" xml:space="preserve">
-    <value>进行中||进行中</value>
+    <value>Running||Running</value>
   </data>
   <data name="Frontend.155" xml:space="preserve">
-    <value>聊天||聊天</value>
+    <value>Chat||Chat</value>
   </data>
   <data name="Frontend.156" xml:space="preserve">
-    <value>请输入Function Call名称||请输入Function Call名称</value>
+    <value>Enter the Function Call name||Enter the Function Call name</value>
   </data>
   <data name="Frontend.157" xml:space="preserve">
-    <value>刷新||刷新</value>
+    <value>Refresh||Refresh</value>
   </data>
   <data name="Frontend.158" xml:space="preserve">
-    <value>管理PromptRange||管理PromptRange</value>
+    <value>Manage PromptRange||Manage PromptRange</value>
   </data>
   <data name="Frontend.159" xml:space="preserve">
-    <value>无描述||无描述</value>
+    <value>No description||No description</value>
   </data>
   <data name="Frontend.160" xml:space="preserve">
-    <value>参数:||参数:</value>
+    <value>Parameters:||Parameters:</value>
   </data>
   <data name="Frontend.161" xml:space="preserve">
-    <value>该智能体当前不在任何组成员中。||该智能体当前不在任何组成员中。</value>
+    <value>This Agent is not currently a member of any group.||This Agent is not currently a member of any group.</value>
   </data>
   <data name="Frontend.162" xml:space="preserve">
-    <value>请填写||请填写</value>
+    <value>Please fill in||Please fill in</value>
   </data>
   <data name="Frontend.163" xml:space="preserve">
-    <value>目标字符串||目标字符串</value>
+    <value>Target string||Target string</value>
   </data>
   <data name="Frontend.164" xml:space="preserve">
-    <value>非目标字符串||非目标字符串</value>
+    <value>Non-target string||Non-target string</value>
   </data>
   <data name="Frontend.165" xml:space="preserve">
-    <value>保存成功||保存成功</value>
+    <value>Saved successfully||Saved successfully</value>
   </data>
   <data name="Frontend.166" xml:space="preserve">
-    <value>删除成功||删除成功</value>
+    <value>Deleted successfully||Deleted successfully</value>
   </data>
   <data name="Frontend.167" xml:space="preserve">
-    <value>操作成功||操作成功</value>
+    <value>Success||Success</value>
   </data>
   <data name="Frontend.168" xml:space="preserve">
-    <value>操作失败||操作失败</value>
+    <value>Operation failed||Operation failed</value>
   </data>
   <data name="Frontend.169" xml:space="preserve">
-    <value>请选择至少一项||请选择至少一项</value>
+    <value>Select at least one item||Select at least one item</value>
   </data>
   <data name="Frontend.170" xml:space="preserve">
-    <value>是否继续？||是否继续？</value>
+    <value>Continue?||Continue?</value>
   </data>
   <data name="Frontend.171" xml:space="preserve">
-    <value>提示||提示</value>
+    <value>Notice||Notice</value>
   </data>
   <data name="Frontend.172" xml:space="preserve">
-    <value>确定||确定</value>
+    <value>Confirm||Confirm</value>
   </data>
   <data name="Frontend.173" xml:space="preserve">
-    <value>加载失败||加载失败</value>
+    <value>Failed to load||Failed to load</value>
   </data>
   <data name="Frontend.174" xml:space="preserve">
-    <value>暂无内容||暂无内容</value>
+    <value>No content||No content</value>
   </data>
   <data name="Frontend.175" xml:space="preserve">
-    <value>秒||秒</value>
+    <value>sec||sec</value>
   </data>
   <data name="Frontend.176" xml:space="preserve">
-    <value>分钟||分钟</value>
+    <value>min||min</value>
   </data>
   <data name="Frontend.177" xml:space="preserve">
-    <value>小时||小时</value>
+    <value>hr||hr</value>
   </data>
   <data name="Frontend.178" xml:space="preserve">
-    <value>天||天</value>
+    <value>days||days</value>
   </data>
   <data name="Frontend.179" xml:space="preserve">
-    <value>复制成功||复制成功</value>
+    <value>Copied successfully||Copied successfully</value>
   </data>
   <data name="Frontend.180" xml:space="preserve">
-    <value>复制失败||复制失败</value>
+    <value>Copy failed||Copy failed</value>
   </data>
   <data name="Frontend.181" xml:space="preserve">
-    <value>任务描述:||任务描述:</value>
+    <value>Task description:||Task description:</value>
   </data>
   <data name="Frontend.182" xml:space="preserve">
-    <value>组列表||组列表</value>
+    <value>Group List||Group List</value>
   </data>
   <data name="Frontend.183" xml:space="preserve">
-    <value>任务数||任务数</value>
+    <value>Tasks||Tasks</value>
   </data>
   <data name="Frontend.184" xml:space="preserve">
-    <value>最近运行时间||最近运行时间</value>
+    <value>Last run||Last run</value>
   </data>
   <data name="Frontend.185" xml:space="preserve">
-    <value>任务列表||任务列表</value>
+    <value>Task List||Task List</value>
   </data>
   <data name="Frontend.186" xml:space="preserve">
-    <value>取消归档||取消归档</value>
+    <value>Unarchive||Unarchive</value>
   </data>
   <data name="Frontend.187" xml:space="preserve">
-    <value>归档||归档</value>
+    <value>Archive||Archive</value>
   </data>
   <data name="Frontend.188" xml:space="preserve">
-    <value>任务：（#）||任务：（#）</value>
+    <value>Task: (#)||Task: (#)</value>
   </data>
   <data name="Frontend.189" xml:space="preserve">
-    <value>Agent 头像||Agent 头像</value>
+    <value>Agent avatar||Agent avatar</value>
   </data>
   <data name="Frontend.190" xml:space="preserve">
-    <value>Endpoint URL (例如: http://localhost:5000/mcp/sse)||Endpoint URL (例如: http://localhost:5000/mcp/sse)</value>
+    <value>Endpoint URL (for example: http://localhost:5000/mcp/sse)||Endpoint URL (for example: http://localhost:5000/mcp/sse)</value>
   </data>
   <data name="Frontend.191" xml:space="preserve">
-    <value>取 消||取 消</value>
+    <value>Cancel||Cancel</value>
   </data>
   <data name="Frontend.192" xml:space="preserve">
-    <value>确 定||确 定</value>
+    <value>OK||OK</value>
   </data>
   <data name="Frontend.193" xml:space="preserve">
-    <value>瞄准:||瞄准:</value>
+    <value>Aim:||Aim:</value>
   </data>
   <data name="Frontend.194" xml:space="preserve">
-    <value>平均分:||平均分:</value>
+    <value>Average score:||Average score:</value>
   </data>
   <data name="Frontend.195" xml:space="preserve">
-    <value>最高分:||最高分:</value>
+    <value>Highest score:||Highest score:</value>
   </data>
   <data name="Frontend.196" xml:space="preserve">
-    <value>[耗时(毫秒):]||[耗时(毫秒):]</value>
+    <value>[Elapsed (ms):]||[Elapsed (ms):]</value>
   </data>
   <data name="Frontend.197" xml:space="preserve">
-    <value>复制带格式的 HTML 代码||复制带格式的 HTML 代码</value>
+    <value>Copy formatted HTML code||Copy formatted HTML code</value>
   </data>
   <data name="Frontend.198" xml:space="preserve">
-    <value>复制原始内容（例如将复制 markdown 标记）||复制原始内容（例如将复制 markdown 标记）</value>
+    <value>Copy raw content (for example, markdown markers will be copied)||Copy raw content (for example, markdown markers will be copied)</value>
   </data>
   <data name="Frontend.199" xml:space="preserve">
-    <value>原始||原始</value>
+    <value>Raw||Raw</value>
   </data>
   <data name="Frontend.200" xml:space="preserve">
-    <value>关 闭||关 闭</value>
+    <value>Close||Close</value>
   </data>
   <data name="Frontend.201" xml:space="preserve">
-    <value>任务评价||任务评价</value>
+    <value>Task Evaluation||Task Evaluation</value>
   </data>
   <data name="Frontend.202" xml:space="preserve">
-    <value>请输入评分(0-10分)||请输入评分(0-10分)</value>
+    <value>Enter a score (0-10)||Enter a score (0-10)</value>
   </data>
   <data name="Frontend.203" xml:space="preserve">
-    <value>请输入评价||请输入评价</value>
+    <value>Enter an evaluation||Enter an evaluation</value>
   </data>
   <data name="Frontend.204" xml:space="preserve">
-    <value>数据库操作示例||数据库操作示例</value>
+    <value>Database sample||Database sample</value>
   </data>
   <data name="Frontend.205" xml:space="preserve">
-    <value>当前还没有可执行的任务||当前还没有可执行的任务</value>
+    <value>No executable tasks yet||No executable tasks yet</value>
   </data>
   <data name="Frontend.206" xml:space="preserve">
-    <value>获取统计数据失败||获取统计数据失败</value>
+    <value>Failed to load statistics||Failed to load statistics</value>
   </data>
   <data name="Frontend.207" xml:space="preserve">
-    <value>{0}失败||{0}失败</value>
+    <value>{0} failed||{0} failed</value>
   </data>
   <data name="Frontend.208" xml:space="preserve">
-    <value>{0}成功||{0}成功</value>
+    <value>{0} succeeded||{0} succeeded</value>
   </data>
   <data name="Frontend.209" xml:space="preserve">
-    <value>{0}失败：{1}||{0}失败：{1}</value>
+    <value>{0} failed: {1}||{0} failed: {1}</value>
   </data>
   <data name="Frontend.210" xml:space="preserve">
-    <value>未知错误||未知错误</value>
+    <value>Unknown error||Unknown error</value>
   </data>
   <data name="Frontend.211" xml:space="preserve">
-    <value>确认关闭？||确认关闭？</value>
+    <value>Close now?||Close now?</value>
   </data>
   <data name="Frontend.212" xml:space="preserve">
-    <value>是否确认将{0}智能体停用？||是否确认将{0}智能体停用？</value>
+    <value>Disable Agent {0}?||Disable Agent {0}?</value>
   </data>
   <data name="Frontend.213" xml:space="preserve">
-    <value>此智能体将不会参与后续新任务||此智能体将不会参与后续新任务</value>
+    <value>This Agent will not take part in later new tasks||This Agent will not take part in later new tasks</value>
   </data>
   <data name="Frontend.214" xml:space="preserve">
-    <value>是否确认将{0}智能体启用？||是否确认将{0}智能体启用？</value>
+    <value>Enable Agent {0}?||Enable Agent {0}?</value>
   </data>
   <data name="Frontend.215" xml:space="preserve">
-    <value>是否确认从{0}组退出？||是否确认从{0}组退出？</value>
+    <value>Leave group {0}?||Leave group {0}?</value>
   </data>
   <data name="Frontend.216" xml:space="preserve">
-    <value>移除出后将无法看到之前参与的任务记录||移除出后将无法看到之前参与的任务记录</value>
+    <value>After removal, task records you previously took part in will no longer be visible||After removal, task records you previously took part in will no longer be visible</value>
   </data>
   <data name="Frontend.217" xml:space="preserve">
-    <value>操作确认||操作确认</value>
+    <value>Confirm Action||Confirm Action</value>
   </data>
   <data name="Frontend.218" xml:space="preserve">
-    <value>操作成功!||操作成功!</value>
+    <value>Operation succeeded!||Operation succeeded!</value>
   </data>
   <data name="Frontend.219" xml:space="preserve">
-    <value>已取消操作||已取消操作</value>
+    <value>Operation canceled||Operation canceled</value>
   </data>
   <data name="Frontend.220" xml:space="preserve">
-    <value>智能体「{0}」当前不可删除。||智能体「{0}」当前不可删除。</value>
+    <value>Agent "{0}" cannot be deleted right now.||Agent "{0}" cannot be deleted right now.</value>
   </data>
   <data name="Frontend.221" xml:space="preserve">
-    <value>作为群主的组：{0}||作为群主的组：{0}</value>
+    <value>Groups as Owner: {0}||Groups as Owner: {0}</value>
   </data>
   <data name="Frontend.222" xml:space="preserve">
-    <value>作为对接人的组：{0}||作为对接人的组：{0}</value>
+    <value>Groups as Contact: {0}||Groups as Contact: {0}</value>
   </data>
   <data name="Frontend.223" xml:space="preserve">
-    <value>请先在对应组中替换群主/对接人后再删除。||请先在对应组中替换群主/对接人后再删除。</value>
+    <value>Replace the Owner/Contact in the corresponding group before deleting.||Replace the Owner/Contact in the corresponding group before deleting.</value>
   </data>
   <data name="Frontend.224" xml:space="preserve">
-    <value>删除受阻||删除受阻</value>
+    <value>Deletion Blocked||Deletion Blocked</value>
   </data>
   <data name="Frontend.225" xml:space="preserve">
-    <value>我知道了||我知道了</value>
+    <value>Got It||Got It</value>
   </data>
   <data name="Frontend.226" xml:space="preserve">
-    <value>确认删除智能体「{0}」吗？||确认删除智能体「{0}」吗？</value>
+    <value>Delete Agent "{0}"?||Delete Agent "{0}"?</value>
   </data>
   <data name="Frontend.227" xml:space="preserve">
-    <value>将移出成员组：{0}||将移出成员组：{0}</value>
+    <value>Groups the member will leave: {0}||Groups the member will leave: {0}</value>
   </data>
   <data name="Frontend.228" xml:space="preserve">
-    <value>同时会删除与该智能体相关的历史消息记录，且不可恢复。||同时会删除与该智能体相关的历史消息记录，且不可恢复。</value>
+    <value>Message history related to this Agent will also be deleted and cannot be recovered.||Message history related to this Agent will also be deleted and cannot be recovered.</value>
   </data>
   <data name="Frontend.229" xml:space="preserve">
-    <value>删除成功!||删除成功!</value>
+    <value>Deleted successfully!||Deleted successfully!</value>
   </data>
   <data name="Frontend.230" xml:space="preserve">
-    <value>删除预检查失败，请稍后重试||删除预检查失败，请稍后重试</value>
+    <value>Deletion pre-check failed. Please try again later.||Deletion pre-check failed. Please try again later.</value>
   </data>
   <data name="Frontend.231" xml:space="preserve">
-    <value>确认删除数据吗？||确认删除数据吗？</value>
+    <value>Delete this data?||Delete this data?</value>
   </data>
   <data name="Frontend.232" xml:space="preserve">
-    <value>请先选择要删除的组||请先选择要删除的组</value>
+    <value>Select groups to delete first||Select groups to delete first</value>
   </data>
   <data name="Frontend.233" xml:space="preserve">
-    <value>确认批量删除数据吗？||确认批量删除数据吗？</value>
+    <value>Delete the selected data in batch?||Delete the selected data in batch?</value>
   </data>
   <data name="Frontend.234" xml:space="preserve">
-    <value>请先选择要启动的任务||请先选择要启动的任务</value>
+    <value>Select tasks to start first||Select tasks to start first</value>
   </data>
   <data name="Frontend.235" xml:space="preserve">
-    <value>确认批量启动数据吗？||确认批量启动数据吗？</value>
+    <value>Start the selected data in batch?||Start the selected data in batch?</value>
   </data>
   <data name="Frontend.236" xml:space="preserve">
-    <value>请先选择要删除的任务||请先选择要删除的任务</value>
+    <value>Select tasks to delete first||Select tasks to delete first</value>
   </data>
   <data name="Frontend.237" xml:space="preserve">
-    <value>确认强制停止该任务吗？||确认强制停止该任务吗？</value>
+    <value>Force stop this task?||Force stop this task?</value>
   </data>
   <data name="Frontend.238" xml:space="preserve">
-    <value>请先选择要停止的任务||请先选择要停止的任务</value>
+    <value>Select tasks to stop first||Select tasks to stop first</value>
   </data>
   <data name="Frontend.239" xml:space="preserve">
-    <value>确认批量强制停止所选任务吗？||确认批量强制停止所选任务吗？</value>
+    <value>Force-stop the selected tasks?||Force-stop the selected tasks?</value>
   </data>
   <data name="Frontend.240" xml:space="preserve">
-    <value>未设置||未设置</value>
+    <value>Not set||Not set</value>
   </data>
   <data name="Frontend.241" xml:space="preserve">
-    <value>(草稿)||(草稿)</value>
+    <value>(Draft)||(Draft)</value>
   </data>
   <data name="Frontend.242" xml:space="preserve">
-    <value>未命名工具||未命名工具</value>
+    <value>Unnamed tool||Unnamed tool</value>
   </data>
   <data name="Frontend.243" xml:space="preserve">
-    <value>连接测试成功||连接测试成功</value>
+    <value>Connection test succeeded||Connection test succeeded</value>
   </data>
   <data name="Frontend.244" xml:space="preserve">
-    <value>连接测试失败:||连接测试失败:</value>
+    <value>Connection test failed:||Connection test failed:</value>
   </data>
   <data name="Frontend.245" xml:space="preserve">
-    <value>连接测试出错:||连接测试出错:</value>
+    <value>Connection test error:||Connection test error:</value>
   </data>
   <data name="Frontend.246" xml:space="preserve">
-    <value>获取插件类型失败||获取插件类型失败</value>
+    <value>Failed to load plugin types||Failed to load plugin types</value>
   </data>
   <data name="Frontend.247" xml:space="preserve">
-    <value>名称和URL不能为空||名称和URL不能为空</value>
+    <value>Name and URL cannot be empty||Name and URL cannot be empty</value>
   </data>
   <data name="Frontend.248" xml:space="preserve">
-    <value>endpoint参数为空||endpoint参数为空</value>
+    <value>endpoint parameter is empty||endpoint parameter is empty</value>
   </data>
   <data name="Frontend.249" xml:space="preserve">
-    <value>没有可用的工具信息||没有可用的工具信息</value>
+    <value>No tool information available||No tool information available</value>
   </data>
   <data name="Frontend.250" xml:space="preserve">
-    <value>工具列表 ({0}个)||工具列表 ({0}个)</value>
+    <value>Tool list ({0})||Tool list ({0})</value>
   </data>
   <data name="Frontend.251" xml:space="preserve">
-    <value>无描述||无描述</value>
+    <value>No description||No description</value>
   </data>
   <data name="Frontend.252" xml:space="preserve">
-    <value>参数:||参数:</value>
+    <value>Parameters:||Parameters:</value>
   </data>
   <data name="Frontend.253" xml:space="preserve">
-    <value>无参数||无参数</value>
+    <value>No parameters||No parameters</value>
   </data>
   <data name="Frontend.254" xml:space="preserve">
-    <value>MCP工具列表||MCP工具列表</value>
+    <value>MCP tool list||MCP tool list</value>
   </data>
   <data name="Frontend.255" xml:space="preserve">
-    <value>关闭||关闭</value>
+    <value>Close||Close</value>
   </data>
   <data name="Frontend.256" xml:space="preserve">
-    <value>{0} 年||{0} 年</value>
+    <value>{0} years||{0} years</value>
   </data>
   <data name="Frontend.257" xml:space="preserve">
-    <value>{0} 天||{0} 天</value>
+    <value>{0} days||{0} days</value>
   </data>
   <data name="Frontend.258" xml:space="preserve">
-    <value>{0} 小时||{0} 小时</value>
+    <value>{0} hours||{0} hours</value>
   </data>
   <data name="Frontend.259" xml:space="preserve">
-    <value>{0} 分钟||{0} 分钟</value>
+    <value>{0} minutes||{0} minutes</value>
   </data>
   <data name="Frontend.260" xml:space="preserve">
-    <value>{0} 秒||{0} 秒</value>
+    <value>{0} seconds||{0} seconds</value>
   </data>
   <data name="Frontend.261" xml:space="preserve">
-    <value>管理模型||管理模型</value>
+    <value>Manage models||Manage models</value>
   </data>
   <data name="Frontend.262" xml:space="preserve">
-    <value>Agent ID||智能体 ID</value>
+    <value>Agent ID||Agent ID</value>
   </data>
   <data name="Frontend.263" xml:space="preserve">
-    <value>SystemMessage||系统消息</value>
+    <value>SystemMessage||System message</value>
   </data>
   <data name="Frontend.264" xml:space="preserve">
-    <value>None||无</value>
+    <value>None||None</value>
   </data>
   <data name="Frontend.265" xml:space="preserve">
-    <value>Function Calls||函数调用</value>
+    <value>Function Calls||Function Call</value>
   </data>
   <data name="Frontend.266" xml:space="preserve">
-    <value>MCP Endpoints||MCP 端点</value>
+    <value>MCP Endpoints||MCP Endpoint</value>
   </data>
   <data name="Frontend.267" xml:space="preserve">
-    <value>Endpoint 名称 (例如: mcp-server-NCF-7)||端点名称（例如：mcp-server-NCF-7）</value>
+    <value>Endpoint name (for example: mcp-server-NCF-7)||Endpoint name (for example: mcp-server-NCF-7)</value>
   </data>
   <data name="Frontend.268" xml:space="preserve">
-    <value>Endpoint URL (例如: http://localhost:5000/mcp/sse)||端点 URL（例如：http://localhost:5000/mcp/sse）</value>
+    <value>Endpoint URL (for example: http://localhost:5000/mcp/sse)||Endpoint URL (for example: http://localhost:5000/mcp/sse)</value>
   </data>
   <data name="Frontend.269" xml:space="preserve">
-    <value>MCP 工具列表||MCP 工具列表</value>
+    <value>MCP tool list||MCP tool list</value>
   </data>
   <data name="Frontend.270" xml:space="preserve">
     <value>Top_p:||Top P：</value>
   </data>
   <data name="Frontend.271" xml:space="preserve">
-    <value>MaxToken:||最大 Token 数：</value>
+    <value>MaxToken:||Max Token count:</value>
   </data>
   <data name="Frontend.272" xml:space="preserve">
-    <value>Presence_penalty:||存在惩罚：</value>
+    <value>Presence_penalty:||Presence penalty:</value>
   </data>
   <data name="Frontend.273" xml:space="preserve">
-    <value>Temperature:||温度：</value>
+    <value>Temperature:||Temperature:</value>
   </data>
   <data name="Frontend.274" xml:space="preserve">
-    <value>Frequeny_penalty:||频率惩罚：</value>
+    <value>Frequeny_penalty:||Frequency penalty:</value>
   </data>
   <data name="Frontend.275" xml:space="preserve">
-    <value>StopSequences:||停止序列：</value>
+    <value>StopSequences:||Stop sequence:</value>
   </data>
   <data name="Frontend.276" xml:space="preserve">
-    <value>未找到可用的 Chat 类型 AI Model。数据库中共有 {0} 个模型，但没有 Chat 类型的。请先在 AIKernel 模块中配置至少一个 Chat Model。||未找到可用的 Chat 类型 AI Model。数据库中共有 {0} 个模型，但没有 Chat 类型的。请先在 AIKernel 模块中配置至少一个 Chat Model。</value>
+    <value>No available Chat AI Model was found. The database has {0} models, but none are Chat. Configure at least one Chat Model in the AIKernel Module first.||No available Chat AI Model was found. The database has {0} models, but none are Chat. Configure at least one Chat Model in the AIKernel Module first.</value>
   </data>
   <data name="Frontend.277" xml:space="preserve">
-    <value>获取失败: {0}||获取失败: {0}</value>
+    <value>Failed to load: {0}||Failed to load: {0}</value>
   </data>
   <data name="Frontend.278" xml:space="preserve">
-    <value>请选择一个有效的 AI Model||请选择一个有效的 AI Model</value>
+    <value>Select a valid AI Model||Select a valid AI Model</value>
   </data>
   <data name="Frontend.279" xml:space="preserve">
-    <value>未找到 ID 为 {0} 的 AI Model||未找到 ID 为 {0} 的 AI Model</value>
+    <value>No AI Model with ID {0} was found||No AI Model with ID {0} was found</value>
   </data>
   <data name="Frontend.280" xml:space="preserve">
-    <value>Model '{0}' 不是 Chat 类型，请选择 Chat 类型的 Model||Model '{0}' 不是 Chat 类型，请选择 Chat 类型的 Model</value>
+    <value>Model '{0}' is not a Chat type. Please select a Chat Model.||Model '{0}' is not a Chat type. Please select a Chat Model.</value>
   </data>
   <data name="Frontend.281" xml:space="preserve">
-    <value>初始化成功||初始化成功</value>
+    <value>Initialization completed successfully||Initialization completed successfully</value>
   </data>
   <data name="Frontend.282" xml:space="preserve">
-    <value>优化请求超时: {0}||优化请求超时: {0}</value>
+    <value>Optimization request timed out: {0}||Optimization request timed out: {0}</value>
   </data>
   <data name="Frontend.283" xml:space="preserve">
-    <value>聊天组不存在：{0}||聊天组不存在：{0}</value>
+    <value>Chat group not found: {0}||Chat group not found: {0}</value>
   </data>
   <data name="Frontend.284" xml:space="preserve">
-    <value>当前选择的 AI 模型不存在：{0}||当前选择的 AI 模型不存在：{0}</value>
+    <value>The selected AI model does not exist: {0}||The selected AI model does not exist: {0}</value>
   </data>
   <data name="Frontend.285" xml:space="preserve">
-    <value>聊天组【{0}】没有可用的启用智能体。||聊天组【{0}】没有可用的启用智能体。</value>
+    <value>Chat group [{0}] has no enabled agents available.||Chat group [{0}] has no enabled agents available.</value>
   </data>
   <data name="Frontend.286" xml:space="preserve">
-    <value>聊天组【{0}】未找到有效群主智能体（ID：{1}）。||聊天组【{0}】未找到有效群主智能体（ID：{1}）。</value>
+    <value>No valid admin agent (ID: {1}) was found in chat group [{0}].||No valid admin agent (ID: {1}) was found in chat group [{0}].</value>
   </data>
   <data name="Frontend.287" xml:space="preserve">
-    <value>聊天组【{0}】多智能体协作至少需要两个启用智能体。||聊天组【{0}】多智能体协作至少需要两个启用智能体。</value>
+    <value>Chat group [{0}] needs at least two enabled agents for multi-agent collaboration.||Chat group [{0}] needs at least two enabled agents for multi-agent collaboration.</value>
   </data>
   <data name="Frontend.288" xml:space="preserve">
-    <value>多智能体工作流等待外部响应，当前执行路径无法自动继续。||多智能体工作流等待外部响应，当前执行路径无法自动继续。</value>
+    <value>The multi-agent workflow is waiting for an external response, and the current execution path cannot continue automatically.||The multi-agent workflow is waiting for an external response, and the current execution path cannot continue automatically.</value>
   </data>
   <data name="Frontend.289" xml:space="preserve">
-    <value>系统提示：多智能体编排失败（{0}），且降级执行未返回可显示文本。||系统提示：多智能体编排失败（{0}），且降级执行未返回可显示文本。</value>
+    <value>System message: multi-agent orchestration failed ({0}), and fallback execution returned no text to display.||System message: multi-agent orchestration failed ({0}), and fallback execution returned no text to display.</value>
   </data>
   <data name="Frontend.290" xml:space="preserve">
-    <value>系统提示：AI 服务返回 403（Forbidden），当前任务无法继续。请检查模型权限、API Key 或所选模型可用性。||系统提示：AI 服务返回 403（Forbidden），当前任务无法继续。请检查模型权限、API Key 或所选模型可用性。</value>
+    <value>System message: the AI service returned 403 (Forbidden), and the current task cannot continue. Check model permissions, the API Key, or whether the selected model is available.||System message: the AI service returned 403 (Forbidden), and the current task cannot continue. Check model permissions, the API Key, or whether the selected model is available.</value>
   </data>
   <data name="Frontend.291" xml:space="preserve">
-    <value>系统提示：AI 服务认证失败（401），请检查 API Key / Endpoint 配置。||系统提示：AI 服务认证失败（401），请检查 API Key / Endpoint 配置。</value>
+    <value>System message: AI service authentication failed (401). Check the API Key / Endpoint configuration.||System message: AI service authentication failed (401). Check the API Key / Endpoint configuration.</value>
   </data>
   <data name="Frontend.292" xml:space="preserve">
-    <value>系统提示：AI 服务调用失败，任务已中断。原因：{0}||系统提示：AI 服务调用失败，任务已中断。原因：{0}</value>
+    <value>System message: the AI service call failed and the task was interrupted. Reason: {0}||System message: the AI service call failed and the task was interrupted. Reason: {0}</value>
   </data>
   <data name="Frontend.293" xml:space="preserve">
-    <value>模型配置为空（AIModelDto == null）||模型配置为空（AIModelDto == null）</value>
+    <value>Model configuration is empty (AIModelDto == null)||Model configuration is empty (AIModelDto == null)</value>
   </data>
   <data name="Frontend.294" xml:space="preserve">
-    <value>PromptCatalyzer ChatGroup 未找到，请先完成初始化。||PromptCatalyzer ChatGroup 未找到，请先完成初始化。</value>
+    <value>PromptCatalyzer ChatGroup was not found. Finish initialization first.||PromptCatalyzer ChatGroup was not found. Finish initialization first.</value>
   </data>
   <data name="Frontend.295" xml:space="preserve">
-    <value>PromptCatalyzer Agent 未找到，请先完成初始化。||PromptCatalyzer Agent 未找到，请先完成初始化。</value>
+    <value>PromptCatalyzer Agent was not found. Finish initialization first.||PromptCatalyzer Agent was not found. Finish initialization first.</value>
   </data>
   <data name="Frontend.296" xml:space="preserve">
-    <value>Agent 对话失败: {0}||Agent 对话失败: {0}</value>
+    <value>Agent conversation failed: {0}||Agent conversation failed: {0}</value>
   </data>
   <data name="Frontend.297" xml:space="preserve">
-    <value>请选择或手动输入 PromptCode||请选择或手动输入 PromptCode</value>
+    <value>Select or manually enter a PromptCode||Select or manually enter a PromptCode</value>
   </data>
   <data name="Frontend.298" xml:space="preserve">
-    <value>请输入智能体名称||请输入智能体名称</value>
+    <value>Enter Agent name||Enter Agent name</value>
   </data>
   <data name="Frontend.299" xml:space="preserve">
-    <value>请输入搜索词（名称、PromptCode 或关键字）||请输入搜索词（名称、PromptCode 或关键字）</value>
+    <value>Enter a search term (name, PromptCode, or keyword)||Enter a search term (name, PromptCode, or keyword)</value>
   </data>
   <data name="Frontend.300" xml:space="preserve">
-    <value>请输入有效搜索词||请输入有效搜索词</value>
+    <value>Enter a valid search term||Enter a valid search term</value>
   </data>
   <data name="Frontend.301" xml:space="preserve">
-    <value>已完成启用||已完成启用</value>
+    <value>Enabled successfully||Enabled successfully</value>
   </data>
   <data name="Frontend.302" xml:space="preserve">
-    <value>已完成停用||已完成停用</value>
+    <value>Disabled successfully||Disabled successfully</value>
   </data>
   <data name="Frontend.303" xml:space="preserve">
-    <value>连接成功||连接成功</value>
+    <value>Connected successfully||Connected successfully</value>
   </data>
   <data name="Frontend.304" xml:space="preserve">
-    <value>连接失败||连接失败</value>
+    <value>Connection failed||Connection failed</value>
   </data>
   <data name="Frontend.305" xml:space="preserve">
-    <value>未提供 Agent ID||未提供 Agent ID</value>
+    <value>Agent ID not provided||Agent ID not provided</value>
   </data>
   <data name="Frontend.306" xml:space="preserve">
-    <value>PromptCatalyzer 初始化超时（2 分钟）||PromptCatalyzer 初始化超时（2 分钟）</value>
+    <value>PromptCatalyzer initialization timed out (2 minutes)||PromptCatalyzer initialization timed out (2 minutes)</value>
   </data>
   <data name="Frontend.307" xml:space="preserve">
-    <value>Prompt 初始化失败: {0}||Prompt 初始化失败: {0}</value>
+    <value>Prompt initialization failed: {0}||Prompt initialization failed: {0}</value>
   </data>
   <data name="Frontend.308" xml:space="preserve">
-    <value>Prompt 初始化返回的 PromptCode 为空||Prompt 初始化返回的 PromptCode 为空</value>
+    <value>The PromptCode returned by Prompt initialization is empty||The PromptCode returned by Prompt initialization is empty</value>
   </data>
   <data name="Frontend.309" xml:space="preserve">
-    <value>该 Prompt 已有优化任务正在执行，请勿重复提交（例如避免双击）。||该 Prompt 已有优化任务正在执行，请勿重复提交（例如避免双击）。</value>
+    <value>An optimization task is already running for this Prompt. Do not submit it again (for example, avoid double-clicking).||An optimization task is already running for this Prompt. Do not submit it again (for example, avoid double-clicking).</value>
   </data>
   <data name="Frontend.310" xml:space="preserve">
-    <value>Prompt 优化请求超时（15 分钟）||Prompt 优化请求超时（15 分钟）</value>
+    <value>Prompt optimization request timed out (15 minutes)||Prompt optimization request timed out (15 minutes)</value>
   </data>
   <data name="Frontend.311" xml:space="preserve">
-    <value>未找到需要编辑的 ChatGroup，ID：{0}||未找到需要编辑的 ChatGroup，ID：{0}</value>
+    <value>The ChatGroup to edit was not found. ID: {0}||The ChatGroup to edit was not found. ID: {0}</value>
   </data>
   <data name="Frontend.312" xml:space="preserve">
-    <value>群成员选择失败：{0}||群成员选择失败：{0}</value>
+    <value>Failed to select group members: {0}||Failed to select group members: {0}</value>
   </data>
   <data name="Frontend.313" xml:space="preserve">
-    <value>请至少提供一个群成员（支持 ID 或名称）||请至少提供一个群成员（支持 ID 或名称）</value>
+    <value>Provide at least one group member (ID or name)||Provide at least one group member (ID or name)</value>
   </data>
   <data name="Frontend.314" xml:space="preserve">
-    <value>未找到可用的 Chat 类型 AI 模型，无法自动创建主持人 Agent||未找到可用的 Chat 类型 AI 模型，无法自动创建主持人 Agent</value>
+    <value>No available Chat AI model was found, so a host Agent cannot be created automatically||No available Chat AI model was found, so a host Agent cannot be created automatically</value>
   </data>
   <data name="Frontend.315" xml:space="preserve">
-    <value>输入为空，请传入 Agent ID、名称或 PromptCode||输入为空，请传入 Agent ID、名称或 PromptCode</value>
+    <value>Input is empty. Pass an Agent ID, name, or PromptCode.||Input is empty. Pass an Agent ID, name, or PromptCode.</value>
   </data>
   <data name="Frontend.316" xml:space="preserve">
-    <value>未找到启用状态的 Agent，ID：{0}||未找到启用状态的 Agent，ID：{0}</value>
+    <value>No enabled Agent was found. ID: {0}||No enabled Agent was found. ID: {0}</value>
   </data>
   <data name="Frontend.317" xml:space="preserve">
-    <value>输入“{0}”匹配到多个 Agent，请指定 ID：{1}||输入“{0}”匹配到多个 Agent，请指定 ID：{1}</value>
+    <value>"{0}" matched multiple Agents. Please specify an ID: {1}||"{0}" matched multiple Agents. Please specify an ID: {1}</value>
   </data>
   <data name="Frontend.318" xml:space="preserve">
-    <value>未找到匹配的 Agent：{0}||未找到匹配的 Agent：{0}</value>
+    <value>No matching Agent found: {0}||No matching Agent found: {0}</value>
   </data>
   <data name="Frontend.319" xml:space="preserve">
-    <value>至少选择一个组！||至少选择一个组！</value>
+    <value>Select at least one group!||Select at least one group!</value>
   </data>
   <data name="Frontend.320" xml:space="preserve">
-    <value>已创建并启动任务，请到 ChatTask 列表查看执行状态。||已创建并启动任务，请到 ChatTask 列表查看执行状态。</value>
+    <value>The task was created and started. Check its status in the ChatTask list.||The task was created and started. Check its status in the ChatTask list.</value>
   </data>
   <data name="Frontend.321" xml:space="preserve">
-    <value>请选择要删除的对话！||请选择要删除的对话！</value>
+    <value>Select conversations to delete!||Select conversations to delete!</value>
   </data>
   <data name="Frontend.322" xml:space="preserve">
-    <value>请勾选&quot;确认删除&quot;复选框来确认删除操作！||请勾选&quot;确认删除&quot;复选框来确认删除操作！</value>
+    <value>Check the "Confirm deletion" box to confirm the deletion!||Check the "Confirm deletion" box to confirm the deletion!</value>
   </data>
   <data name="Frontend.323" xml:space="preserve">
-    <value>未提供组 ID||未提供组 ID</value>
+    <value>Group ID not provided||Group ID not provided</value>
   </data>
   <data name="Frontend.324" xml:space="preserve">
-    <value>任务不存在：{0}||任务不存在：{0}</value>
+    <value>Task does not exist: {0}||Task does not exist: {0}</value>
   </data>
   <data name="Frontend.325" xml:space="preserve">
-    <value>归档成功||归档成功</value>
+    <value>Archived successfully||Archived successfully</value>
   </data>
   <data name="Frontend.326" xml:space="preserve">
-    <value>已取消归档||已取消归档</value>
+    <value>Unarchived successfully||Unarchived successfully</value>
   </data>
   <data name="Frontend.327" xml:space="preserve">
-    <value>未提供任务 ID||未提供任务 ID</value>
+    <value>Task ID not provided||Task ID not provided</value>
   </data>
   <data name="Frontend.328" xml:space="preserve">
-    <value>未找到可启动的任务||未找到可启动的任务</value>
+    <value>No startable task found||No startable task found</value>
   </data>
   <data name="Frontend.329" xml:space="preserve">
-    <value>批量启动完成：成功 {0} 条，跳过 {1} 条||批量启动完成：成功 {0} 条，跳过 {1} 条</value>
+    <value>Batch start finished: {0} succeeded, {1} skipped||Batch start finished: {0} succeeded, {1} skipped</value>
   </data>
   <data name="Frontend.330" xml:space="preserve">
-    <value>强制停止完成：成功 {0} 条，跳过 {1} 条||强制停止完成：成功 {0} 条，跳过 {1} 条</value>
+    <value>Force stop finished: {0} succeeded, {1} skipped||Force stop finished: {0} succeeded, {1} skipped</value>
   </data>
   <data name="Frontend.331" xml:space="preserve">
-    <value>删除任务完成：成功 {0} 条||删除任务完成：成功 {0} 条</value>
+    <value>Task deletion finished: {0} succeeded||Task deletion finished: {0} succeeded</value>
   </data>
   <data name="Agents.Error.MissingRunRequest" xml:space="preserve">
     <value>No chat group run request was provided.</value>
@@ -1180,283 +1180,283 @@
     <value>No valid admin agent (ID: {1}) was found in chat group [{0}].</value>
   </data>
   <data name="Studio.Title" xml:space="preserve">
-    <value>智能体工作室</value>
+    <value>Agent Studio</value>
   </data>
   <data name="Studio.Live" xml:space="preserve">
-    <value>实时同步</value>
+    <value>Live sync</value>
   </data>
   <data name="Studio.Disconnected" xml:space="preserve">
-    <value>同步暂不可用</value>
+    <value>Sync temporarily unavailable</value>
   </data>
   <data name="Studio.NewAgent" xml:space="preserve">
-    <value>新增智能体</value>
+    <value>Add agent</value>
   </data>
   <data name="Studio.RemoteAgent" xml:space="preserve">
-    <value>远程 A2A</value>
+    <value>Remote A2A</value>
   </data>
   <data name="Studio.NewTeam" xml:space="preserve">
-    <value>创建团队</value>
+    <value>Create team</value>
   </data>
   <data name="Studio.Refresh" xml:space="preserve">
-    <value>刷新</value>
+    <value>Refresh</value>
   </data>
   <data name="Studio.LocalAgents" xml:space="preserve">
-    <value>本地智能体</value>
+    <value>Local agents</value>
   </data>
   <data name="Studio.Groups" xml:space="preserve">
-    <value>团队</value>
+    <value>Team</value>
   </data>
   <data name="Studio.ActiveTasks" xml:space="preserve">
-    <value>活跃任务</value>
+    <value>Active tasks</value>
   </data>
   <data name="Studio.HumanPending" xml:space="preserve">
-    <value>等待人工介入</value>
+    <value>Awaiting human input</value>
   </data>
   <data name="Studio.Updated" xml:space="preserve">
-    <value>更新于</value>
+    <value>Updated at</value>
   </data>
   <data name="Studio.Retry" xml:space="preserve">
-    <value>重试</value>
+    <value>Retry</value>
   </data>
   <data name="Studio.Search" xml:space="preserve">
-    <value>搜索智能体 / 团队 / 任务</value>
+    <value>Search Agents / teams / tasks</value>
   </data>
   <data name="Studio.Agents" xml:space="preserve">
-    <value>智能体</value>
+    <value>Agent</value>
   </data>
   <data name="Studio.Tasks" xml:space="preserve">
-    <value>任务</value>
+    <value>Jobs</value>
   </data>
   <data name="Studio.RosterHint" xml:space="preserve">
-    <value>拖动智能体到团队工位，或点击 + 选择成员。</value>
+    <value>Drag an Agent to a team station, or click + to select members.</value>
   </data>
   <data name="Studio.NoAgents" xml:space="preserve">
-    <value>暂无智能体，可点击上方按钮创建。</value>
+    <value>No Agents yet. Click the button above to create one.</value>
   </data>
   <data name="Studio.GroupHint" xml:space="preserve">
-    <value>拖动智能体到这里即可加入，不会覆盖已有成员。</value>
+    <value>Drag an Agent here to join. Existing members will not be replaced.</value>
   </data>
   <data name="Studio.Members" xml:space="preserve">
-    <value>成员</value>
+    <value>Member</value>
   </data>
   <data name="Studio.Disabled" xml:space="preserve">
-    <value>已停用</value>
+    <value>disabled</value>
   </data>
   <data name="Studio.NoGroups" xml:space="preserve">
-    <value>暂无匹配团队，可选择智能体快速组队。</value>
+    <value>No matching teams. Select Agents to form a team quickly.</value>
   </data>
   <data name="Studio.NoTasks" xml:space="preserve">
-    <value>暂无匹配任务。</value>
+    <value>No matching tasks.</value>
   </data>
   <data name="Studio.AllGroups" xml:space="preserve">
-    <value>全部团队</value>
+    <value>All teams</value>
   </data>
   <data name="Studio.TaskStatus" xml:space="preserve">
-    <value>任务状态</value>
+    <value>Task status</value>
   </data>
   <data name="Studio.OnlyActive" xml:space="preserve">
-    <value>仅活跃团队</value>
+    <value>Active teams only</value>
   </data>
   <data name="Studio.ResetCamera" xml:space="preserve">
-    <value>重置工作室视角</value>
+    <value>Reset studio view</value>
   </data>
   <data name="Studio.Overview" xml:space="preserve">
-    <value>全景</value>
+    <value>Overview</value>
   </data>
   <data name="Studio.SceneFallback" xml:space="preserve">
-    <value>仍可使用两侧面板管理智能体、团队和任务。</value>
+    <value>You can still use the side panels to manage Agents, teams, and tasks.</value>
   </data>
   <data name="Studio.SceneHint" xml:space="preserve">
-    <value>拖到工位加入团队 · 点击查看与管理 · 拖动空白旋转视角 · 滚轮缩放</value>
+    <value>Drag onto a station to join the team · Click to view and manage · Drag empty space to rotate the view · Scroll to zoom</value>
   </data>
   <data name="Studio.DropHint" xml:space="preserve">
-    <value>在团队工位或团队名称上松开，即可加入。</value>
+    <value>Release on a team station or team name to join.</value>
   </data>
   <data name="Studio.Inspector" xml:space="preserve">
-    <value>查看与管理</value>
+    <value>View and manage</value>
   </data>
   <data name="Studio.Close" xml:space="preserve">
-    <value>关闭选择</value>
+    <value>Close selection</value>
   </data>
   <data name="Studio.Human" xml:space="preserve">
-    <value>人类参与者</value>
+    <value>Human participant</value>
   </data>
   <data name="Studio.Local" xml:space="preserve">
-    <value>本地</value>
+    <value>Local</value>
   </data>
   <data name="Studio.Edit" xml:space="preserve">
-    <value>编辑</value>
+    <value>Edit</value>
   </data>
   <data name="Studio.Disable" xml:space="preserve">
-    <value>停用</value>
+    <value>Disabled</value>
   </data>
   <data name="Studio.Enable" xml:space="preserve">
-    <value>启用</value>
+    <value>Enabled</value>
   </data>
   <data name="Studio.SelectMember" xml:space="preserve">
-    <value>选择组队</value>
+    <value>Select for team</value>
   </data>
   <data name="Studio.Task" xml:space="preserve">
-    <value>任务</value>
+    <value>Jobs</value>
   </data>
   <data name="Studio.Stop" xml:space="preserve">
-    <value>停止</value>
+    <value>Stop</value>
   </data>
   <data name="Studio.Archive" xml:space="preserve">
-    <value>归档</value>
+    <value>Archive</value>
   </data>
   <data name="Studio.ReviewHuman" xml:space="preserve">
-    <value>审批 / 人工输入</value>
+    <value>Approval / manual input</value>
   </data>
   <data name="Studio.FullDetails" xml:space="preserve">
-    <value>完整详情</value>
+    <value>Full details</value>
   </data>
   <data name="Studio.Loading" xml:space="preserve">
-    <value>加载中…</value>
+    <value>Loading…</value>
   </data>
   <data name="Studio.Rounds" xml:space="preserve">
-    <value>轮对话</value>
+    <value>rounds</value>
   </data>
   <data name="Studio.Conversation" xml:space="preserve">
-    <value>对话记录</value>
+    <value>Conversation log</value>
   </data>
   <data name="Studio.Agent" xml:space="preserve">
-    <value>智能体</value>
+    <value>Agent</value>
   </data>
   <data name="Studio.LoadMore" xml:space="preserve">
-    <value>加载更多</value>
+    <value>Load more</value>
   </data>
   <data name="Studio.RunTask" xml:space="preserve">
-    <value>运行任务</value>
+    <value>Running task</value>
   </data>
   <data name="Studio.MembershipHint" xml:space="preserve">
-    <value>成员变更对新任务生效；运行中的任务保持原团队。</value>
+    <value>Member changes apply to new tasks. Tasks already running keep the original team.</value>
   </data>
   <data name="Studio.Owner" xml:space="preserve">
-    <value>群主</value>
+    <value>Owner</value>
   </data>
   <data name="Studio.Entry" xml:space="preserve">
-    <value>对接人</value>
+    <value>Contact</value>
   </data>
   <data name="Studio.RemoveMember" xml:space="preserve">
-    <value>移除成员</value>
+    <value>Remove member</value>
   </data>
   <data name="Studio.Welcome" xml:space="preserve">
-    <value>智能体协作空间</value>
+    <value>Agent collaboration space</value>
   </data>
   <data name="Studio.WelcomeHint" xml:space="preserve">
-    <value>点击智能体、团队工位或任务卡片，即可在同一看板中查看详情、快速组队并开始工作。</value>
+    <value>Click an Agent, a team station, or a task card to view details, form a team quickly, and start work on the same board.</value>
   </data>
   <data name="Studio.TeamTray" xml:space="preserve">
-    <value>组队托盘</value>
+    <value>Team tray</value>
   </data>
   <data name="Studio.TeamTrayHint" xml:space="preserve">
-    <value>拖到这里组建新团队</value>
+    <value>Drag here to form a new team</value>
   </data>
   <data name="Studio.SelectAgentsHint" xml:space="preserve">
-    <value>从列表选择本地或远程智能体。</value>
+    <value>Select a local or remote Agent from the list.</value>
   </data>
   <data name="Studio.TeamAndRun" xml:space="preserve">
-    <value>组队并运行</value>
+    <value>Form team &amp; run</value>
   </data>
   <data name="Studio.TeamSavedRetry" xml:space="preserve">
-    <value>团队已保存，请修正任务请求后重试，将复用同一个团队。</value>
+    <value>The team was saved. Correct the task request and try again. The same team will be reused.</value>
   </data>
   <data name="Studio.TeamName" xml:space="preserve">
-    <value>团队名称</value>
+    <value>Team name</value>
   </data>
   <data name="Studio.TaskName" xml:space="preserve">
-    <value>任务标题</value>
+    <value>Task title</value>
   </data>
   <data name="Studio.Command" xml:space="preserve">
-    <value>希望团队完成什么？</value>
+    <value>What should the team accomplish?</value>
   </data>
   <data name="Studio.Model" xml:space="preserve">
-    <value>AI 模型</value>
+    <value>AI model</value>
   </data>
   <data name="Studio.DefaultModel" xml:space="preserve">
-    <value>继承群主 / 系统模型</value>
+    <value>Inherit Owner / system model</value>
   </data>
   <data name="Studio.Approval" xml:space="preserve">
-    <value>工具调用需要人工审批</value>
+    <value>Tool calls require human approval</value>
   </data>
   <data name="Studio.Cancel" xml:space="preserve">
-    <value>取消</value>
+    <value>Cancel</value>
   </data>
   <data name="Studio.CreateOnly" xml:space="preserve">
-    <value>仅创建团队</value>
+    <value>Create team only</value>
   </data>
   <data name="Studio.InvalidTeamName" xml:space="preserve">
-    <value>请输入 1–150 字的团队名称。</value>
+    <value>Enter a team name of 1–150 characters.</value>
   </data>
   <data name="Studio.SelectMembers" xml:space="preserve">
-    <value>请至少选择一位团队成员。</value>
+    <value>Select at least one team member.</value>
   </data>
   <data name="Studio.LocalRolesRequired" xml:space="preserve">
-    <value>群主和对接人必须是已启用的本地非人类成员。</value>
+    <value>The Owner and Contact must be enabled local non-human members.</value>
   </data>
   <data name="Studio.GroupNotFound" xml:space="preserve">
-    <value>团队已不存在，请刷新工作室。</value>
+    <value>The team no longer exists. Please refresh the studio.</value>
   </data>
   <data name="Studio.RoleCannotRemove" xml:space="preserve">
-    <value>请先编辑团队，更换群主或对接人后再移除该成员。</value>
+    <value>Edit the team and change the Owner or Contact before removing this member.</value>
   </data>
   <data name="Studio.MemberRemoved" xml:space="preserve">
-    <value>已从团队移除成员。</value>
+    <value>Member removed from the team.</value>
   </data>
   <data name="Studio.MemberAdded" xml:space="preserve">
-    <value>已将成员加入团队。</value>
+    <value>Member added to the team.</value>
   </data>
   <data name="Studio.InvalidParticipant" xml:space="preserve">
-    <value>智能体参与者标识无效。</value>
+    <value>Agent participant identifier is invalid.</value>
   </data>
   <data name="Studio.ParticipantUnavailable" xml:space="preserve">
-    <value>智能体不存在或已停用，请刷新并选择已启用的智能体。</value>
+    <value>The Agent does not exist or is disabled. Refresh and select an enabled Agent.</value>
   </data>
   <data name="Studio.GroupUnavailable" xml:space="preserve">
-    <value>团队不存在或已停用，请先启用团队再运行任务。</value>
+    <value>The team does not exist or is disabled. Enable the team before running tasks.</value>
   </data>
   <data name="Studio.ModelUnavailable" xml:space="preserve">
-    <value>所选聊天模型不可用。</value>
+    <value>The selected chat model is unavailable.</value>
   </data>
   <data name="Studio.AlreadyMember" xml:space="preserve">
-    <value>该智能体已在团队中。</value>
+    <value>This Agent is already on the team.</value>
   </data>
   <data name="Studio.RequestFailed" xml:space="preserve">
-    <value>操作失败，请检查连接后重试。</value>
+    <value>The operation failed. Check the connection and try again.</value>
   </data>
   <data name="Studio.TeamRequired" xml:space="preserve">
-    <value>请填写团队名称、选择成员，并指定本地群主和对接人。</value>
+    <value>Enter a team name, select members, and assign a local Owner and Contact.</value>
   </data>
   <data name="Studio.TaskRequired" xml:space="preserve">
-    <value>请填写任务标题和任务要求。</value>
+    <value>Enter the task title and task requirements.</value>
   </data>
   <data name="Studio.TaskQueued" xml:space="preserve">
-    <value>任务已提交，请在任务看板查看执行状态和输出。</value>
+    <value>The task was submitted. View status and output on the task board.</value>
   </data>
   <data name="Studio.TeamCreated" xml:space="preserve">
-    <value>团队已创建。</value>
+    <value>Team created.</value>
   </data>
   <data name="Studio.ConfirmStop" xml:space="preserve">
-    <value>确定停止该任务？此操作将取消当前执行。</value>
+    <value>Stop this task? This will cancel the current execution.</value>
   </data>
   <data name="Studio.SceneUnavailable" xml:space="preserve">
-    <value>3D 场景暂不可用，请检查 WebGL 或硬件加速设置。</value>
+    <value>The 3D scene is unavailable. Check WebGL or hardware acceleration settings.</value>
   </data>
   <data name="Studio.ReadyArea" xml:space="preserve">
-    <value>智能体待命区</value>
+    <value>Agent lounge</value>
   </data>
   <data name="Studio.Enabled" xml:space="preserve">
-    <value>已启用</value>
+    <value>Enabled</value>
   </data>
   <data name="Studio.Paused" xml:space="preserve">
-    <value>暂停</value>
+    <value>Paused</value>
   </data>
   <data name="Studio.Working" xml:space="preserve">
-    <value>工作中</value>
+    <value>Working</value>
   </data>
   <data name="Studio.Ready" xml:space="preserve">
-    <value>待命</value>
+    <value>Standby</value>
   </data>
   <data name="Function.Agents.TemplateManagement.Name" xml:space="preserve">
     <value>Agent template management</value>

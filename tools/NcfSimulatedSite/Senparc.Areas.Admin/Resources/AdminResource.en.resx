@@ -665,114 +665,114 @@
   <data name="AdminChat.NoMenuOrFunctions" xml:space="preserve"><value>This module has no available menus or functions.</value></data>
   <data name="AdminChat.NoMatchingModules" xml:space="preserve"><value>No matching modules</value></data>
   <data name="AdminChat.ConfirmAdd" xml:space="preserve"><value>Confirm add</value></data>
-  <data name="Frontend.001" xml:space="preserve"><value>扩展模块||扩展模块</value></data>
-  <data name="Frontend.002" xml:space="preserve"><value>首页||首页</value></data>
-  <data name="Frontend.003" xml:space="preserve"><value>数据库操作示例||数据库操作示例</value></data>
-  <data name="Frontend.004" xml:space="preserve"><value>新增||新增</value></data>
-  <data name="Frontend.005" xml:space="preserve"><value>添加||添加</value></data>
-  <data name="Frontend.006" xml:space="preserve"><value>编辑||编辑</value></data>
-  <data name="Frontend.007" xml:space="preserve"><value>删除||删除</value></data>
-  <data name="Frontend.008" xml:space="preserve"><value>取消||取消</value></data>
-  <data name="Frontend.009" xml:space="preserve"><value>确定||确定</value></data>
-  <data name="Frontend.010" xml:space="preserve"><value>确认||确认</value></data>
-  <data name="Frontend.011" xml:space="preserve"><value>保存||保存</value></data>
-  <data name="Frontend.012" xml:space="preserve"><value>关闭||关闭</value></data>
-  <data name="Frontend.013" xml:space="preserve"><value>返回||返回</value></data>
-  <data name="Frontend.014" xml:space="preserve"><value>搜索||搜索</value></data>
-  <data name="Frontend.015" xml:space="preserve"><value>查询||查询</value></data>
-  <data name="Frontend.016" xml:space="preserve"><value>重置||重置</value></data>
-  <data name="Frontend.017" xml:space="preserve"><value>刷新||刷新</value></data>
-  <data name="Frontend.018" xml:space="preserve"><value>操作||操作</value></data>
-  <data name="Frontend.019" xml:space="preserve"><value>名称||名称</value></data>
-  <data name="Frontend.020" xml:space="preserve"><value>类型||类型</value></data>
-  <data name="Frontend.021" xml:space="preserve"><value>状态||状态</value></data>
-  <data name="Frontend.022" xml:space="preserve"><value>备注||备注</value></data>
-  <data name="Frontend.023" xml:space="preserve"><value>说明||说明</value></data>
-  <data name="Frontend.024" xml:space="preserve"><value>详情||详情</value></data>
-  <data name="Frontend.025" xml:space="preserve"><value>配置||配置</value></data>
-  <data name="Frontend.026" xml:space="preserve"><value>管理||管理</value></data>
-  <data name="Frontend.027" xml:space="preserve"><value>列表||列表</value></data>
-  <data name="Frontend.028" xml:space="preserve"><value>上传||上传</value></data>
-  <data name="Frontend.029" xml:space="preserve"><value>下载||下载</value></data>
-  <data name="Frontend.030" xml:space="preserve"><value>导入||导入</value></data>
-  <data name="Frontend.031" xml:space="preserve"><value>导出||导出</value></data>
-  <data name="Frontend.032" xml:space="preserve"><value>启用||启用</value></data>
-  <data name="Frontend.033" xml:space="preserve"><value>停用||停用</value></data>
-  <data name="Frontend.034" xml:space="preserve"><value>全部||全部</value></data>
-  <data name="Frontend.035" xml:space="preserve"><value>暂无数据||暂无数据</value></data>
-  <data name="Frontend.036" xml:space="preserve"><value>暂无内容||暂无内容</value></data>
-  <data name="Frontend.037" xml:space="preserve"><value>请选择||请选择</value></data>
-  <data name="Frontend.038" xml:space="preserve"><value>请填写||请填写</value></data>
-  <data name="Frontend.039" xml:space="preserve"><value>请输入||请输入</value></data>
-  <data name="Frontend.040" xml:space="preserve"><value>添加时间||添加时间</value></data>
-  <data name="Frontend.041" xml:space="preserve"><value>开始时间||开始时间</value></data>
-  <data name="Frontend.042" xml:space="preserve"><value>结束时间||结束时间</value></data>
-  <data name="Frontend.043" xml:space="preserve"><value>创建时间||创建时间</value></data>
-  <data name="Frontend.044" xml:space="preserve"><value>更新时间||更新时间</value></data>
-  <data name="Frontend.045" xml:space="preserve"><value>文件名||文件名</value></data>
-  <data name="Frontend.046" xml:space="preserve"><value>文件大小||文件大小</value></data>
-  <data name="Frontend.047" xml:space="preserve"><value>上传时间||上传时间</value></data>
-  <data name="Frontend.048" xml:space="preserve"><value>批量删除||批量删除</value></data>
-  <data name="Frontend.049" xml:space="preserve"><value>新增文件||新增文件</value></data>
-  <data name="Frontend.050" xml:space="preserve"><value>选择文件||选择文件</value></data>
-  <data name="Frontend.051" xml:space="preserve"><value>上一页||上一页</value></data>
-  <data name="Frontend.052" xml:space="preserve"><value>下一页||下一页</value></data>
-  <data name="Frontend.053" xml:space="preserve"><value>成功||成功</value></data>
-  <data name="Frontend.054" xml:space="preserve"><value>失败||失败</value></data>
-  <data name="Frontend.055" xml:space="preserve"><value>操作成功||操作成功</value></data>
-  <data name="Frontend.056" xml:space="preserve"><value>操作失败||操作失败</value></data>
-  <data name="Frontend.057" xml:space="preserve"><value>加载失败||加载失败</value></data>
-  <data name="Frontend.058" xml:space="preserve"><value>添加成功||添加成功</value></data>
-  <data name="Frontend.059" xml:space="preserve"><value>添加失败||添加失败</value></data>
-  <data name="Frontend.060" xml:space="preserve"><value>编辑成功||编辑成功</value></data>
-  <data name="Frontend.061" xml:space="preserve"><value>编辑失败||编辑失败</value></data>
-  <data name="Frontend.062" xml:space="preserve"><value>删除成功||删除成功</value></data>
-  <data name="Frontend.063" xml:space="preserve"><value>删除失败||删除失败</value></data>
-  <data name="Frontend.064" xml:space="preserve"><value>上传成功||上传成功</value></data>
-  <data name="Frontend.065" xml:space="preserve"><value>上传失败||上传失败</value></data>
-  <data name="Frontend.066" xml:space="preserve"><value>复制成功||复制成功</value></data>
-  <data name="Frontend.067" xml:space="preserve"><value>复制失败||复制失败</value></data>
-  <data name="Frontend.068" xml:space="preserve"><value>提示||提示</value></data>
-  <data name="Frontend.069" xml:space="preserve"><value>警告||警告</value></data>
-  <data name="Frontend.070" xml:space="preserve"><value>错误||错误</value></data>
-  <data name="Frontend.071" xml:space="preserve"><value>是||是</value></data>
-  <data name="Frontend.072" xml:space="preserve"><value>否||否</value></data>
-  <data name="Frontend.073" xml:space="preserve"><value>开启||开启</value></data>
-  <data name="Frontend.074" xml:space="preserve"><value>未知||未知</value></data>
-  <data name="Frontend.075" xml:space="preserve"><value>未设置||未设置</value></data>
-  <data name="Frontend.076" xml:space="preserve"><value>暂无记录||暂无记录</value></data>
-  <data name="Frontend.077" xml:space="preserve"><value>请输入关键字||请输入关键字</value></data>
-  <data name="Frontend.078" xml:space="preserve"><value>选择类型||选择类型</value></data>
-  <data name="Frontend.079" xml:space="preserve"><value>选择状态||选择状态</value></data>
-  <data name="Frontend.080" xml:space="preserve"><value>创建||创建</value></data>
-  <data name="Frontend.081" xml:space="preserve"><value>提交||提交</value></data>
-  <data name="Frontend.082" xml:space="preserve"><value>查看||查看</value></data>
-  <data name="Frontend.083" xml:space="preserve"><value>设为默认||设为默认</value></data>
-  <data name="Frontend.084" xml:space="preserve"><value>测试||测试</value></data>
-  <data name="Frontend.085" xml:space="preserve"><value>连接成功||连接成功</value></data>
-  <data name="Frontend.086" xml:space="preserve"><value>连接失败||连接失败</value></data>
-  <data name="Frontend.087" xml:space="preserve"><value>密码为必填项！||密码为必填项！</value></data>
-  <data name="Frontend.088" xml:space="preserve"><value>{0} 重复||{0} 重复</value></data>
-  <data name="Frontend.089" xml:space="preserve"><value>管理员不能删除自己！||管理员不能删除自己！</value></data>
-  <data name="Frontend.090" xml:space="preserve"><value>管理员不存在！||管理员不存在！</value></data>
-  <data name="Frontend.091" xml:space="preserve"><value>删除成功！||删除成功！</value></data>
-  <data name="Frontend.092" xml:space="preserve"><value>微信日志文件不存在：||微信日志文件不存在：</value></data>
-  <data name="Frontend.093" xml:space="preserve"><value>{0} 必须大于 16 位！||{0} 必须大于 16 位！</value></data>
-  <data name="Frontend.094" xml:space="preserve"><value>当前会话没有关联任何 XNCF 模块。||当前会话没有关联任何 XNCF 模块。</value></data>
-  <data name="Frontend.095" xml:space="preserve"><value>未找到匹配的模块：&quot;{0}&quot;。请先调用 GetSessionModuleList 确认当前会话中的模块列表。||未找到匹配的模块：&quot;{0}&quot;。请先调用 GetSessionModuleList 确认当前会话中的模块列表。</value></data>
-  <data name="Frontend.096" xml:space="preserve"><value>未找到模块：&quot;{0}&quot;。请先调用 GetSessionModuleList 确认可用模块。||未找到模块：&quot;{0}&quot;。请先调用 GetSessionModuleList 确认可用模块。</value></data>
-  <data name="Frontend.097" xml:space="preserve"><value>模块 {0} 的运行时注册未找到，无法读取数据库信息。||模块 {0} 的运行时注册未找到，无法读取数据库信息。</value></data>
-  <data name="Frontend.098" xml:space="preserve"><value>系统中没有已注册的模块。||系统中没有已注册的模块。</value></data>
-  <data name="Frontend.099" xml:space="preserve"><value>未读取到 SenparcAiSetting，请检查 appsettings.json 配置。||未读取到 SenparcAiSetting，请检查 appsettings.json 配置。</value></data>
-  <data name="Frontend.100" xml:space="preserve"><value>SenparcAiSetting.AiPlatform 仍为 UnSet，请先在 appsettings.json 中设置可用平台。||SenparcAiSetting.AiPlatform 仍为 UnSet，请先在 appsettings.json 中设置可用平台。</value></data>
-  <data name="Frontend.101" xml:space="preserve"><value>当前系统未安装或未启用 AIKernel 模块，无法切换到指定 AI 模型。||当前系统未安装或未启用 AIKernel 模块，无法切换到指定 AI 模型。</value></data>
-  <data name="Frontend.102" xml:space="preserve"><value>未能解析 AIModelService，无法加载指定 AI 模型。||未能解析 AIModelService，无法加载指定 AI 模型。</value></data>
-  <data name="Frontend.103" xml:space="preserve"><value>当前选择的 AI 模型不存在：{0}||当前选择的 AI 模型不存在：{0}</value></data>
-  <data name="Frontend.104" xml:space="preserve"><value>当前选择的 AI 模型不是 Chat 类型：{0}||当前选择的 AI 模型不是 Chat 类型：{0}</value></data>
-  <data name="Frontend.105" xml:space="preserve"><value>当前用户未登录，无法续期。||当前用户未登录，无法续期。</value></data>
-  <data name="Frontend.106" xml:space="preserve"><value>用户信息不存在！||用户信息不存在！</value></data>
-  <data name="Frontend.107" xml:space="preserve"><value>用户名不存在或密码不正确：{0}！||用户名不存在或密码不正确：{0}！</value></data>
-  <data name="Frontend.108" xml:space="preserve"><value>用户名不存在或密码不正确！||用户名不存在或密码不正确！</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Extension Modules||Extension Modules</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Home||Home</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Database sample||Database sample</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Add||Add</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Add||Add</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Edit||Edit</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Delete||Delete</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Cancel||Cancel</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>Confirm||Confirm</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Confirm||Confirm</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Save||Save</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>Close||Close</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Back||Back</value></data>
+  <data name="Frontend.014" xml:space="preserve"><value>Search||Search</value></data>
+  <data name="Frontend.015" xml:space="preserve"><value>Search||Search</value></data>
+  <data name="Frontend.016" xml:space="preserve"><value>Reset||Reset</value></data>
+  <data name="Frontend.017" xml:space="preserve"><value>Refresh||Refresh</value></data>
+  <data name="Frontend.018" xml:space="preserve"><value>Actions||Actions</value></data>
+  <data name="Frontend.019" xml:space="preserve"><value>Name||Name</value></data>
+  <data name="Frontend.020" xml:space="preserve"><value>Kind||Kind</value></data>
+  <data name="Frontend.021" xml:space="preserve"><value>Status||Status</value></data>
+  <data name="Frontend.022" xml:space="preserve"><value>Notes||Notes</value></data>
+  <data name="Frontend.023" xml:space="preserve"><value>Description||Description</value></data>
+  <data name="Frontend.024" xml:space="preserve"><value>Details||Details</value></data>
+  <data name="Frontend.025" xml:space="preserve"><value>Configure||Configure</value></data>
+  <data name="Frontend.026" xml:space="preserve"><value>Manage||Manage</value></data>
+  <data name="Frontend.027" xml:space="preserve"><value>List||List</value></data>
+  <data name="Frontend.028" xml:space="preserve"><value>Upload||Upload</value></data>
+  <data name="Frontend.029" xml:space="preserve"><value>Download||Download</value></data>
+  <data name="Frontend.030" xml:space="preserve"><value>Import||Import</value></data>
+  <data name="Frontend.031" xml:space="preserve"><value>Export||Export</value></data>
+  <data name="Frontend.032" xml:space="preserve"><value>Enabled||Enabled</value></data>
+  <data name="Frontend.033" xml:space="preserve"><value>Disabled||Disabled</value></data>
+  <data name="Frontend.034" xml:space="preserve"><value>All||All</value></data>
+  <data name="Frontend.035" xml:space="preserve"><value>No Data||No Data</value></data>
+  <data name="Frontend.036" xml:space="preserve"><value>No content||No content</value></data>
+  <data name="Frontend.037" xml:space="preserve"><value>Select||Select</value></data>
+  <data name="Frontend.038" xml:space="preserve"><value>Please fill in||Please fill in</value></data>
+  <data name="Frontend.039" xml:space="preserve"><value>Please enter||Please enter</value></data>
+  <data name="Frontend.040" xml:space="preserve"><value>Added time||Added time</value></data>
+  <data name="Frontend.041" xml:space="preserve"><value>Started||Started</value></data>
+  <data name="Frontend.042" xml:space="preserve"><value>Finished||Finished</value></data>
+  <data name="Frontend.043" xml:space="preserve"><value>Created||Created</value></data>
+  <data name="Frontend.044" xml:space="preserve"><value>Updated at||Updated at</value></data>
+  <data name="Frontend.045" xml:space="preserve"><value>File name||File name</value></data>
+  <data name="Frontend.046" xml:space="preserve"><value>File size||File size</value></data>
+  <data name="Frontend.047" xml:space="preserve"><value>Upload time||Upload time</value></data>
+  <data name="Frontend.048" xml:space="preserve"><value>Delete selected||Delete selected</value></data>
+  <data name="Frontend.049" xml:space="preserve"><value>Add file||Add file</value></data>
+  <data name="Frontend.050" xml:space="preserve"><value>Select file||Select file</value></data>
+  <data name="Frontend.051" xml:space="preserve"><value>Previous||Previous</value></data>
+  <data name="Frontend.052" xml:space="preserve"><value>Next||Next</value></data>
+  <data name="Frontend.053" xml:space="preserve"><value>Success||Success</value></data>
+  <data name="Frontend.054" xml:space="preserve"><value>Failed||Failed</value></data>
+  <data name="Frontend.055" xml:space="preserve"><value>Success||Success</value></data>
+  <data name="Frontend.056" xml:space="preserve"><value>Operation failed||Operation failed</value></data>
+  <data name="Frontend.057" xml:space="preserve"><value>Failed to load||Failed to load</value></data>
+  <data name="Frontend.058" xml:space="preserve"><value>Modules added successfully||Modules added successfully</value></data>
+  <data name="Frontend.059" xml:space="preserve"><value>Add failed||Add failed</value></data>
+  <data name="Frontend.060" xml:space="preserve"><value>Updated successfully||Updated successfully</value></data>
+  <data name="Frontend.061" xml:space="preserve"><value>Update failed||Update failed</value></data>
+  <data name="Frontend.062" xml:space="preserve"><value>Deleted successfully||Deleted successfully</value></data>
+  <data name="Frontend.063" xml:space="preserve"><value>Delete failed||Delete failed</value></data>
+  <data name="Frontend.064" xml:space="preserve"><value>Uploaded successfully||Uploaded successfully</value></data>
+  <data name="Frontend.065" xml:space="preserve"><value>Upload failed||Upload failed</value></data>
+  <data name="Frontend.066" xml:space="preserve"><value>Copied successfully||Copied successfully</value></data>
+  <data name="Frontend.067" xml:space="preserve"><value>Copy failed||Copy failed</value></data>
+  <data name="Frontend.068" xml:space="preserve"><value>Notice||Notice</value></data>
+  <data name="Frontend.069" xml:space="preserve"><value>Warning||Warning</value></data>
+  <data name="Frontend.070" xml:space="preserve"><value>Error||Error</value></data>
+  <data name="Frontend.071" xml:space="preserve"><value>Yes||Yes</value></data>
+  <data name="Frontend.072" xml:space="preserve"><value>No||No</value></data>
+  <data name="Frontend.073" xml:space="preserve"><value>Enabled||Enabled</value></data>
+  <data name="Frontend.074" xml:space="preserve"><value>Unknown||Unknown</value></data>
+  <data name="Frontend.075" xml:space="preserve"><value>Not set||Not set</value></data>
+  <data name="Frontend.076" xml:space="preserve"><value>No records||No records</value></data>
+  <data name="Frontend.077" xml:space="preserve"><value>Enter a keyword||Enter a keyword</value></data>
+  <data name="Frontend.078" xml:space="preserve"><value>Select a type||Select a type</value></data>
+  <data name="Frontend.079" xml:space="preserve"><value>Select status||Select status</value></data>
+  <data name="Frontend.080" xml:space="preserve"><value>Create||Create</value></data>
+  <data name="Frontend.081" xml:space="preserve"><value>Submit||Submit</value></data>
+  <data name="Frontend.082" xml:space="preserve"><value>View||View</value></data>
+  <data name="Frontend.083" xml:space="preserve"><value>Set as default||Set as default</value></data>
+  <data name="Frontend.084" xml:space="preserve"><value>Test||Test</value></data>
+  <data name="Frontend.085" xml:space="preserve"><value>Connected successfully||Connected successfully</value></data>
+  <data name="Frontend.086" xml:space="preserve"><value>Connection failed||Connection failed</value></data>
+  <data name="Frontend.087" xml:space="preserve"><value>Password is required!||Password is required!</value></data>
+  <data name="Frontend.088" xml:space="preserve"><value>{0} is duplicated.||{0} is duplicated.</value></data>
+  <data name="Frontend.089" xml:space="preserve"><value>Administrators cannot delete themselves!||Administrators cannot delete themselves!</value></data>
+  <data name="Frontend.090" xml:space="preserve"><value>Administrator does not exist!||Administrator does not exist!</value></data>
+  <data name="Frontend.091" xml:space="preserve"><value>Deleted successfully!||Deleted successfully!</value></data>
+  <data name="Frontend.092" xml:space="preserve"><value>WeChat log file does not exist:||WeChat log file does not exist:</value></data>
+  <data name="Frontend.093" xml:space="preserve"><value>{0} must be longer than 16 characters!||{0} must be longer than 16 characters!</value></data>
+  <data name="Frontend.094" xml:space="preserve"><value>The current session is not linked to any XNCF Module.||The current session is not linked to any XNCF Module.</value></data>
+  <data name="Frontend.095" xml:space="preserve"><value>No matching Module was found: "{0}". Call GetSessionModuleList first to confirm the modules in the current session.||No matching Module was found: "{0}". Call GetSessionModuleList first to confirm the modules in the current session.</value></data>
+  <data name="Frontend.096" xml:space="preserve"><value>Module not found: "{0}". Call GetSessionModuleList first to confirm the available modules.||Module not found: "{0}". Call GetSessionModuleList first to confirm the available modules.</value></data>
+  <data name="Frontend.097" xml:space="preserve"><value>Runtime registration for Module {0} was not found, so database information cannot be read.||Runtime registration for Module {0} was not found, so database information cannot be read.</value></data>
+  <data name="Frontend.098" xml:space="preserve"><value>No Module is registered in the system.||No Module is registered in the system.</value></data>
+  <data name="Frontend.099" xml:space="preserve"><value>SenparcAiSetting was not loaded. Check the appsettings.json configuration.||SenparcAiSetting was not loaded. Check the appsettings.json configuration.</value></data>
+  <data name="Frontend.100" xml:space="preserve"><value>SenparcAiSetting.AiPlatform is still UnSet. Set an available platform in appsettings.json first.||SenparcAiSetting.AiPlatform is still UnSet. Set an available platform in appsettings.json first.</value></data>
+  <data name="Frontend.101" xml:space="preserve"><value>The AIKernel Module is not installed or not enabled, so the system cannot switch to the specified AI model.||The AIKernel Module is not installed or not enabled, so the system cannot switch to the specified AI model.</value></data>
+  <data name="Frontend.102" xml:space="preserve"><value>AIModelService could not be resolved, so the specified AI model cannot be loaded.||AIModelService could not be resolved, so the specified AI model cannot be loaded.</value></data>
+  <data name="Frontend.103" xml:space="preserve"><value>The selected AI model does not exist: {0}||The selected AI model does not exist: {0}</value></data>
+  <data name="Frontend.104" xml:space="preserve"><value>The selected AI model is not a Chat type: {0}||The selected AI model is not a Chat type: {0}</value></data>
+  <data name="Frontend.105" xml:space="preserve"><value>The current user is not signed in, so renewal is not possible.||The current user is not signed in, so renewal is not possible.</value></data>
+  <data name="Frontend.106" xml:space="preserve"><value>User information does not exist!||User information does not exist!</value></data>
+  <data name="Frontend.107" xml:space="preserve"><value>The username does not exist or the password is incorrect: {0}!||The username does not exist or the password is incorrect: {0}!</value></data>
+  <data name="Frontend.108" xml:space="preserve"><value>The username does not exist or the password is incorrect!||The username does not exist or the password is incorrect!</value></data>
   <data name="Admin.Home.AgentsOverview" xml:space="preserve"><value>Agents operations overview</value></data>
   <data name="Admin.Home.AgentsOverviewLive" xml:space="preserve"><value>Live</value></data>
   <data name="Admin.Home.AgentsManage" xml:space="preserve"><value>Manage Agents</value></data>

@@ -46,6 +46,9 @@
     修改标识：Senparc - 20261105
     修改描述：v0.12.26 后台聊天接入记忆与 Prompt 引用
 
+    修改标识：Senparc - 20261106
+    修改描述：提供会话归档与已归档列表
+
 ----------------------------------------------------------------*/
 using Microsoft.AspNetCore.Mvc;
 using Senparc.Areas.Admin.Domain;
@@ -581,6 +584,59 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
                 logger.Append($"删除会话: SessionId={sessionId}, UserId={userId}");
                 await PublishSyncEventAsync(userId, sessionId, "session-deleted");
                 return _localizer["AdminChat.DeleteSessionSuccess"];
+            });
+        }
+
+        /// <summary>
+        /// 将进行中的会话标记为已完成并移出左侧列表。已归档会话保持可打开、可删除。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Post)]
+        public async Task<StringAppResponse> ArchiveSessionAsync([FromBody] ArchiveSessionRequest request)
+        {
+            return await this.GetResponseAsync<StringAppResponse, string>(async (response, logger) =>
+            {
+                var userId = GetCurrentAdminUserInfoId();
+                if (userId <= 0)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
+                }
+
+                var sessionId = request?.SessionId ?? 0;
+                var success = await _sessionService.ArchiveSessionAsync(sessionId, userId);
+                if (!success)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.SessionNotFoundOrForbidden"]);
+                }
+
+                logger.Append($"归档会话: SessionId={sessionId}, UserId={userId}");
+                await PublishSyncEventAsync(userId, sessionId, "session-archived");
+                return _localizer["AdminChat.ArchiveSessionSuccess"];
+            });
+        }
+
+        /// <summary>
+        /// 获取当前用户已归档的会话，供右上角菜单单独查看和删除。
+        /// </summary>
+        [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
+        public async Task<AppResponseBase<GetSessionListResponse>> GetArchivedSessionListAsync(int pageIndex = 1, int pageSize = 20)
+        {
+            return await this.GetResponseAsync<AppResponseBase<GetSessionListResponse>, GetSessionListResponse>(async (response, logger) =>
+            {
+                var userId = GetCurrentAdminUserInfoId();
+                if (userId <= 0)
+                {
+                    throw new NcfExceptionBase(_localizer["AdminChat.UserNotLoggedIn"]);
+                }
+
+                var (sessions, totalCount) = await _sessionService.GetUserArchivedSessionsAsync(userId, pageIndex, pageSize);
+                var sessionDtos = sessions.Select(AdminChatSessionDto.CreateFromEntity).ToList();
+                await AttachWorkspaceNamesAsync(sessionDtos);
+
+                return new GetSessionListResponse
+                {
+                    Sessions = sessionDtos,
+                    TotalCount = totalCount
+                };
             });
         }
 
@@ -1547,6 +1603,11 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         public int SessionId { get; set; }
         public int TargetSessionId { get; set; }
         public bool InsertAfter { get; set; }
+    }
+
+    public class ArchiveSessionRequest
+    {
+        public int SessionId { get; set; }
     }
 
     public class GetSessionListResponse

@@ -253,31 +253,31 @@
     <value>Не удалось удалить</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>抛出异常测试，传输参数：{0} {1}||抛出异常测试，传输参数：{0} {1}</value>
+    <value>Тест выброса исключения, передаваемые параметры: {0} {1}||Тест выброса исключения, передаваемые параметры: {0} {1}</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>被除数不能为0！||被除数不能为0！</value>
+    <value>Делитель не может быть равен 0!||Делитель не может быть равен 0!</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>未知的运算符：{0}||未知的运算符：{0}</value>
+    <value>Неизвестный оператор: {0}||Неизвестный оператор: {0}</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>未知操作符||未知操作符</value>
+    <value>Неизвестный оператор||Неизвестный оператор</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>请提供正确的网址！||请提供正确的网址！</value>
+    <value>Укажите правильный URL!||Укажите правильный URL!</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>目标主机解析为非公网地址，已拒绝连接。||目标主机解析为非公网地址，已拒绝连接。</value>
+    <value>Целевой узел разрешился в непубличный адрес. Соединение отклонено.||Целевой узел разрешился в непубличный адрес. Соединение отклонено.</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>无法连接到已通过公网地址校验的目标主机。||无法连接到已通过公网地址校验的目标主机。</value>
+    <value>Не удаётся подключиться к целевому узлу, прошедшему проверку публичного адреса.||Не удаётся подключиться к целевому узлу, прошедшему проверку публичного адреса.</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>目标 URL 不允许访问。||目标 URL 不允许访问。</value>
+    <value>Доступ к целевому URL запрещён.||Доступ к целевому URL запрещён.</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>重定向目标 URL 不允许访问。||重定向目标 URL 不允许访问。</value>
+    <value>Доступ к целевому URL перенаправления запрещён.||Доступ к целевому URL перенаправления запрещён.</value>
   </data>
   <data name="Function.Sample.Name" xml:space="preserve">
     <value>Пример функции</value>
