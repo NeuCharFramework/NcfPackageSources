@@ -234,7 +234,7 @@ public sealed class FineTuningValidationRequest
 {
     [Required, MinLength(1), MaxLength(8)]
     public List<FineTuningValidationCase> Cases { get; set; } = new();
-    [Range(16, 256)]
+    [Range(16, 32768)]
     public int MaxTokens { get; set; } = 128;
     [RegularExpression("^(cpu|cuda|mlx)$")]
     public string? Backend { get; set; }

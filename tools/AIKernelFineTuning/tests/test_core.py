@@ -13,6 +13,7 @@ from worker.datasets import encode_row, parse_json, split_rows, validate_dataset
 from worker.models import list_models, validate_model_request
 from worker.runner import batch_groups, schedule_rate
 from worker.storage import Store, atomic_write
+from worker.validation import available_tokens
 
 ROWS = [{"prompt": f"Question {index}", "completion": f"Answer {index}"} for index in range(6)]
 CONTENT = "".join(json.dumps(row) + "\n" for row in ROWS)
@@ -302,6 +303,37 @@ class LoopTests(unittest.TestCase):
         self.assertEqual(sorted(index for _, _, indices in groups for index in indices), list(range(5)))
         self.assertEqual([len(batch) for batch in groups[0][0]], [2, 2])
         self.assertEqual(len(groups[1][2]), 1)
+
+
+class AvailableTokenTests(unittest.TestCase):
+    def test_mlx_tokenizer_wrapper_is_counted_without_calling_it(self):
+        class TokenizerWrapper:
+            model_max_length = 32768
+
+            def encode(self, text, add_special_tokens=True, truncation=False):
+                self.seen = (text, add_special_tokens, truncation)
+                return [11, 12, 13]
+
+            def __call__(self, *args, **kwargs):
+                raise AssertionError("TokenizerWrapper is not a Hugging Face callable tokenizer")
+
+        tokenizer = TokenizerWrapper()
+        self.assertEqual(available_tokens(tokenizer, "hello", 2048), 2048)
+        self.assertEqual(tokenizer.seen, ("hello", True, False))
+
+    def test_context_window_limits_generation(self):
+        class Tokenizer:
+            def __init__(self, length, context=32):
+                self.model_max_length = context
+                self.length = length
+
+            def encode(self, text, add_special_tokens=True, truncation=False):
+                return [1] * self.length
+
+        self.assertEqual(available_tokens(Tokenizer(10), "prompt", 2048), 22)
+        self.assertEqual(available_tokens(Tokenizer(10, context=2_000_000), "prompt", 2048), 2048)
+        with self.assertRaises(RuntimeError):
+            available_tokens(Tokenizer(20), "prompt", 16)
 
 
 if __name__ == "__main__":

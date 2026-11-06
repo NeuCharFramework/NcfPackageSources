@@ -102,8 +102,9 @@ def run_validation(root: Path, model_path: Path, adapter_path: Path, request, em
 
 
 def available_tokens(tokenizer, prompt, requested):
-    encoded = tokenizer(prompt, add_special_tokens=True, truncation=False)
-    input_tokens = len(encoded["input_ids"])
+    # mlx-lm TokenizerWrapper forwards encode() but is not callable.
+    encoded = tokenizer.encode(prompt, add_special_tokens=True, truncation=False)
+    input_tokens = len(encoded)
     context_limit = getattr(tokenizer, "model_max_length", 0)
     if not isinstance(context_limit, int) or context_limit <= 0 or context_limit > 1_000_000:
         return requested
