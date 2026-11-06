@@ -530,8 +530,9 @@
                                         </template>
                                     </div>
                                     <div class="df-wn task-main">
-                                        <div class="taskmain-record">
-                                            <el-scrollbar ref="agentDetailsGroupTaskHistoryScrollbar"
+                                    <div class="taskmain-record">
+                                        <conversation-length-rail :items="agentDetailsGroupTaskHistoryList" list-type="agentGroupTask"></conversation-length-rail>
+                                        <el-scrollbar ref="agentDetailsGroupTaskHistoryScrollbar"
                                                 class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
                                                 <div class="df-wn flex-dc taskrecord-listWrap">
                                                     <div v-for="ritem in agentDetailsGroupTaskHistoryList"
@@ -670,6 +671,7 @@
                                 </div>
                                 <div class="df-wn task-main">
                                     <div class="taskmain-record">
+                                        <conversation-length-rail :items="agentDetailsTaskHistoryList" list-type="agentTask"></conversation-length-rail>
                                         <el-scrollbar ref="agentDetailsTaskHistoryScrollbar"
                                             class="sidebar-taskrecord-container" wrap-class="scrollbar-wrapper">
                                             <div class="df-wn flex-dc taskrecord-listWrap">
@@ -1036,6 +1038,7 @@
                     </div>
                     <div class="df-wn task-main">
                         <div class="taskmain-record">
+                            <conversation-length-rail :items="groupTaskHistoryList" list-type="groupTask"></conversation-length-rail>
                             <el-scrollbar ref="groupTaskHistoryScrollbar" class="sidebar-taskrecord-container"
                                 wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskrecord-listWrap">
@@ -1306,6 +1309,7 @@
                     </div>
                     <div class="df-wn task-main">
                         <div class="taskmain-record">
+                            <conversation-length-rail :items="taskHistoryList" list-type="task"></conversation-length-rail>
                             <el-scrollbar ref="taskHistoryScrollbar" class="sidebar-taskrecord-container"
                                 wrap-class="scrollbar-wrapper">
                                 <div class="df-wn flex-dc taskrecord-listWrap">
