@@ -105,6 +105,13 @@
                             </div>
                             <div v-else class="session-time">{{ formatTime(session.lastMessageTime) }}</div>
                         </div>
+                        <button type="button" class="session-archive-button"
+                                :disabled="isSessionRunning(session) || archivingSessionId === session.id"
+                                :title="ncfT(isSessionRunning(session) ? 'AdminChat.Sidebar.ArchiveRunning' : 'AdminChat.Sidebar.Archive')"
+                                :aria-label="ncfT('AdminChat.Sidebar.Archive')"
+                                @@click.stop="archiveSession(session)">
+                            <i class="el-icon-check" aria-hidden="true"></i>
+                        </button>
                         <el-dropdown trigger="click" @@command="handleSessionCommand">
                             <span class="session-actions" @@click.stop>
                                 <i class="el-icon-more"></i>
@@ -135,11 +142,45 @@
 
         <!-- 右侧对话窗口 -->
         <el-main class="chat-content">
+            <div class="chat-archive-anchor">
+                <el-popover v-model="archiveMenuVisible" placement="bottom-end" trigger="click"
+                            popper-class="chat-archive-popover" :visible-arrow="false">
+                    <div class="chat-archive-panel" role="menu" :aria-label="ncfT('AdminChat.Archive.Menu')">
+                        <div class="chat-archive-panel-title">{{ ncfT('AdminChat.Archive.Menu') }}</div>
+                        <div v-if="archivedSessionList.length === 0" class="chat-archive-empty">{{ ncfT('AdminChat.Archive.Empty') }}</div>
+                        <div v-else class="chat-archive-list">
+                            <div v-for="session in archivedSessionList" :key="session.id"
+                                 :class="['chat-archive-item', { 'is-current': currentSessionId === session.id }]">
+                                <button type="button" class="chat-archive-open" :title="session.title"
+                                        :aria-label="ncfT('AdminChat.Archive.Open', session.title)"
+                                        @@click="openArchivedSession(session)">
+                                    <i class="el-icon-check" aria-hidden="true"></i>
+                                    <span>{{ session.title }}</span>
+                                    <small>{{ formatTime(session.lastMessageTime) }}</small>
+                                </button>
+                                <button type="button" class="chat-archive-delete" :title="ncfT('Common.删除')"
+                                        :aria-label="ncfT('AdminChat.Archive.Delete', session.title)"
+                                        @@click="deleteArchivedSession(session)">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button slot="reference" type="button" class="chat-archive-trigger"
+                            :aria-expanded="String(archiveMenuVisible)" :aria-label="ncfT('AdminChat.Archive.Menu')">
+                        <i class="el-icon-folder-checked" aria-hidden="true"></i>
+                        <span>{{ ncfT('AdminChat.Archive.Menu') }}</span>
+                        <em v-if="archivedSessionList.length">{{ archivedSessionList.length }}</em>
+                    </button>
+                </el-popover>
+            </div>
             <div class="chat-header" v-if="currentSessionId">
                 <div class="chat-header-info">
                     <div class="chat-header-top">
                         <h3 class="chat-title">
-                            <i class="fa fa-magic"></i> {{ currentSessionTitle || ncfT('Admin.Home.AiTitle') }}
+                            <i class="fa fa-magic"></i>
+                            <span>{{ currentSessionTitle || ncfT('Admin.Home.AiTitle') }}</span>
+                            <el-tag v-if="currentSessionStatus === 1" size="mini" type="success" class="chat-archived-tag">{{ ncfT('AdminChat.Archive.Tag') }}</el-tag>
                         </h3>
                         <div class="chat-header-actions">
                             <ncf-doc-help topic="admin.chat"></ncf-doc-help>
@@ -313,7 +354,8 @@
                 </div>
             </div>
 
-            <div class="messages-container" ref="messagesContainer" v-loading="loadingMessages" v-if="currentSessionId">
+            <div class="messages-stage" v-if="currentSessionId">
+            <div class="messages-container" ref="messagesContainer" v-loading="loadingMessages" @@scroll="updateActiveUserMarker">
                 <div class="message-manage-toolbar" v-if="isManageMode">
                     <el-checkbox
                         :value="messageList.length > 0 && selectedMessageIds.length === messageList.length"
@@ -330,6 +372,7 @@
                 <div 
                     v-for="message in messageList" 
                     :key="message.id"
+                    :data-message-id="message.id"
                     :class="['message-item', `message-${getRoleTypeClass(message.roleType)}`, { 'is-selected': isManageMode && isMessageSelected(message.id) }]">
                     <div class="message-select" v-if="isManageMode">
                         <el-checkbox
@@ -492,6 +535,30 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <nav v-if="messageRail.length" class="chat-message-rail" :aria-label="ncfT('AdminChat.Rail.Label')">
+                <div v-show="messageRailOpen" ref="messageRailMenu" class="chat-message-rail-menu" role="menu"
+                     :style="{ top: messageRailMenuTop + 'px' }"
+                     @@mouseenter="openMessageRail" @@mouseleave="scheduleCloseMessageRail">
+                    <button v-for="marker in messageRail" :key="'rail-item-' + marker.id" type="button"
+                            :class="{ 'is-active': marker.id === messageRailActiveId }"
+                            :title="marker.full" :aria-label="ncfT('AdminChat.Rail.Jump')"
+                            @@mouseenter="focusRailMarker(marker.id)"
+                            @@click="scrollToUserMessage(marker.id)">
+                        <i class="chat-message-rail-menu-dot" aria-hidden="true"></i>
+                        <span>{{ marker.preview }}</span>
+                    </button>
+                </div>
+                <button v-for="marker in messageRail" :key="'rail-dot-' + marker.id" type="button"
+                        class="chat-message-rail-dot"
+                        :class="{ 'is-active': marker.id === messageRailActiveId }"
+                        :style="{ top: marker.top + 'px' }"
+                        :title="marker.preview" :aria-label="marker.preview"
+                        @@mouseenter="focusRailMarker(marker.id)"
+                        @@mouseleave="scheduleCloseMessageRail"
+                        @@focus="focusRailMarker(marker.id)"
+                        @@click="scrollToUserMessage(marker.id)"></button>
+            </nav>
             </div>
 
             <div class="input-container" v-if="currentSessionId"

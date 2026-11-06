@@ -20,13 +20,15 @@ async page => {
     const raw = await page.evaluate(() => fetch('/template').then(response => response.text()));
     const aside = raw.slice(raw.indexOf('<el-aside'), raw.indexOf('</el-aside>') + '</el-aside>'.length)
         .replace(/@AR\["([^"]+)"\]/g, '$1').replace(/@@/g, '@');
+    const archiveAnchor = raw.slice(raw.indexOf('<div class="chat-archive-anchor">'), raw.indexOf('<div class="chat-header"'))
+        .replace(/@AR\["([^"]+)"\]/g, '$1').replace(/@@/g, '@');
     const livePanel = raw.slice(raw.indexOf('<div v-if="isAIResponding'),
-        raw.indexOf('            </div>\n\n            <div class="input-container"'))
+        raw.indexOf('            </div>\n            <nav v-if="messageRail.length"'))
         .replace(/@AR\["([^"]+)"\]/g, '$1').replace(/@@/g, '@');
     await page.setContent(`<div id="app"><div class="admin-chat-container">
         <el-container ref="workspaceContainer" class="chat-main-container"
             :style="{ '--chat-sidebar-width': sidebarWidth + 'px' }">
-            ${aside}<el-main class="chat-content">${livePanel}</el-main>
+            ${aside}<el-main class="chat-content">${archiveAnchor}${livePanel}</el-main>
         </el-container></div></div>`);
     await page.addStyleTag({ path: web + '/lib/element-ui_2.13.2/element.css' });
     await page.addStyleTag({ path: admin + '/wwwroot/css/Admin/Pages/AdminChat/Chat.css' });
@@ -104,9 +106,16 @@ async page => {
     check(!await group.locator('.session-item').first().isVisible(), 'Group collapse must hide its sessions');
     await group.locator('.session-group-title').click();
     const titles = () => group.locator('.session-title').allTextContents();
-    await group.locator('.session-drag-handle').nth(2).dragTo(group.locator('.session-item').first(), { targetPosition: { x: 80, y: 3 } });
+    await page.mouse.move(0, 0);
+    const idleHandle = group.locator('.session-drag-handle').first();
+    check(await idleHandle.evaluate(el => getComputedStyle(el).opacity) === '0', 'Reorder handle stays hidden until hover');
+    const third = group.locator('.session-item').nth(2);
+    await third.hover();
+    check(await third.locator('.session-drag-handle').evaluate(el => getComputedStyle(el).opacity) === '1', 'Reorder handle appears on hover');
+    await third.locator('.session-drag-handle').dragTo(group.locator('.session-item').first(), { targetPosition: { x: 80, y: 3 } });
     check(JSON.stringify(await titles()) === JSON.stringify(['Alpha third', 'Alpha first', 'Alpha second']), 'Real browser dragging must reorder within group');
     check(await page.evaluate(() => sidebarRequests.length) === 1, 'Drop must save exactly once');
+    await group.locator('.session-item').first().hover();
     await group.locator('.session-drag-handle').first().dragTo(page.locator('.session-group').nth(1).locator('.session-item'));
     check(await page.evaluate(() => sidebarRequests.length) === 1, 'Cross-Workspace drops must not call the server');
     await group.locator('.session-drag-handle').first().focus();
@@ -138,6 +147,9 @@ async page => {
     check((await running.locator('.session-title').textContent()) === 'Alpha third', 'Run indicator must stay with the originating session');
     check(!await running.evaluate(el => el.classList.contains('active')), 'Running is distinct from selected');
     check(await running.evaluate(el => getComputedStyle(el, '::before').animationName) === 'chat-session-flow', 'Running rail must animate');
+    check((await running.evaluate(el => getComputedStyle(el, '::before').backgroundImage)).includes('rgb(255, 61, 138)'), 'Running rail uses a distinct neon color');
+    check((await running.evaluate(el => getComputedStyle(el, '::before').boxShadow)) !== 'none', 'Running rail keeps a visible glow');
+    check(await running.locator('.session-archive-button').isDisabled(), 'Running session cannot be archived');
     await page.emulateMedia({ reducedMotion: 'reduce' });
     check(await running.evaluate(el => getComputedStyle(el, '::before').animationName) === 'none', 'Respect reduced motion');
     await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -151,6 +163,26 @@ async page => {
     check(await width() === 330, 'Expansion must preserve custom width at narrow viewports');
     await page.evaluate(() => { sidebarTestApp.isSending = false; });
     check(await page.locator('.is-running').count() === 0, 'Completed tasks must return to idle styling');
+    await page.evaluate(() => {
+        const reorder = window.service.post.bind(window.service);
+        window.service.post = async (url, data) => {
+            if (String(url).includes('ArchiveSessionAsync')) {
+                sidebarRequests.push({ archive: data.sessionId });
+                return { data: { success: true } };
+            }
+            return reorder(url, data);
+        };
+    });
+    const beta = page.locator('.session-item').filter({ hasText: 'Beta first' });
+    await beta.hover();
+    check(await beta.locator('.el-dropdown').count() === 1, 'Active sessions keep the original delete menu');
+    await beta.locator('.session-archive-button').click();
+    check(await page.locator('.session-title', { hasText: 'Beta first' }).count() === 0, 'Archived session leaves the sidebar');
+    check(await page.evaluate(() => sidebarTestApp.archivedSessionList.some(session => session.title === 'Beta first' && session.status === 1)), 'Archived session stays available for the corner menu');
+    await page.locator('.chat-archive-trigger').click();
+    const archivedItem = page.locator('.chat-archive-open').filter({ hasText: 'Beta first' });
+    check(await archivedItem.isVisible(), 'Corner menu lists the archived session');
+    check(await page.locator('.chat-archive-item').filter({ hasText: 'Beta first' }).locator('.chat-archive-delete').isVisible(), 'Corner menu can delete an archived session');
     check(failures.length === 0, 'Browser errors: ' + failures.join('; '));
     return 'Sidebar browser checks passed: collapse, resize, ordering, session-isolated thinking/trajectory panels, preserved live progress, activity and reduced motion.';
 }
