@@ -132,9 +132,14 @@
                         <div class="studio-metrics"><span>{{ studioTaskDetail.totalRounds }} {{ st('Rounds') }}</span><span>{{ studioTaskDetail.totalTokens }} Token</span></div>
                     </template>
                     <h3>{{ st('Conversation') }}</h3>
-                    <div v-for="history in studioHistories" :key="history.id" class="studio-history">
-                        <strong>{{ history.fromParticipantName || (history.fromAgentTemplate && history.fromAgentTemplate.name) || st('Agent') }}</strong>
-                        <div v-html="history.messageHtml"></div>
+                    <div class="studio-conversation">
+                        <conversation-length-rail :items="studioHistories" list-type="studio"></conversation-length-rail>
+                        <div class="studio-conversation-list">
+                            <div v-for="history in studioHistories" :key="history.id" class="studio-history" :data-history-id="history.id">
+                                <strong>{{ history.fromParticipantName || (history.fromAgentTemplate && history.fromAgentTemplate.name) || st('Agent') }}</strong>
+                                <div v-html="history.messageHtml"></div>
+                            </div>
+                        </div>
                     </div>
                     <el-button v-if="studioHistoryMore" size="mini" :loading="studioHistoryRequesting" @@click="studioLoadHistory()">{{ st('LoadMore') }}</el-button>
                 </template>
