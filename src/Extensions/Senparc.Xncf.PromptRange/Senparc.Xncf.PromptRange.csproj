@@ -153,23 +153,21 @@
       [2026-11-03] v0.20.8 支持 Skill 管理、包上传和来源文件关联，并补齐多数据库迁移
       1、提供 PromptRange 选择与评分信息，支持聊天记忆提示词
     [2026-11-03] Add shared contextual documentation beside prompt range selection.
-    [2026-11-04] Extend default Memory extraction to ordinary facts and explicit context references requiring review; migrate untouched prior defaults without replacing customized or scored prompts.
-    [2026-11-04] Add explicit PromptCode references, shared last-successful AI/manual scoring, current-score selection and six-provider migrations.
-    [2026-11-04] Add Memory intent classification and structured update/defer/none output; upgrade untouched context-extraction defaults while preserving custom prompts.
-    [2026-11-05] Support short contextual Memory save commands and evidence-based review rules; upgrade untouched intent prompts without overwriting custom or scored versions.
-    [2026-11-05] Expose authorized lightweight Range score overviews for all PromptCode versions without loading prompt content.
     [2026-11-05] v0.20.14 完善 PromptCode 评分、记忆保存规则与多语言文案
-    1、提供 PromptCode 引用、共享评分、轻量分数总览和只读预览
-    2、支持带证据审核的短上下文记忆保存，并避免覆盖已自定义或已评分提示词
-    3、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
-    4、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-    5、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-    6、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
-    7、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-    8、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
-    9、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
-    10、Dependency update from Senparc.Xncf.Tenant to 0.15.15
-    11、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview6
+    1、将默认记忆抽取扩展到普通事实和需要审核的显式上下文引用，并迁移未被改动的旧默认项，不替换已自定义或已评分提示词
+    2、提供显式 PromptCode 引用、共享的最近一次人工或 AI 评分、当前分数选择，并补齐六类数据库迁移
+    3、增加记忆意图分类和结构化的更新、延后或不处理输出，升级未被改动的上下文抽取默认项
+    4、支持带证据审核的短上下文记忆保存，并避免覆盖已自定义或已评分提示词
+    5、提供授权的轻量 Range 分数总览和只读预览，不必加载提示词正文
+    6、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+    7、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+    8、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+    9、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
+    10、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+    11、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+    12、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
+    13、Dependency update from Senparc.Xncf.Tenant to 0.15.15
+    14、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview7
     </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
