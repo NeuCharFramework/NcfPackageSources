@@ -1964,6 +1964,14 @@ height:100%;
 
 .task-main .taskmain-record {
     flex-grow: 1;
+    display: flex;
+    align-items: stretch;
+    min-width: 0;
+}
+
+.task-main .taskmain-record > .sidebar-taskrecord-container {
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .sidebar-taskrecord-container {
@@ -3204,4 +3212,80 @@ height:100%;
 .mcp-endpoint-actions {
     display: flex;
     align-items: center;
+}
+
+.conversation-rail {
+    position: relative;
+    z-index: 6;
+    flex: 0 0 14px;
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    width: 14px;
+    min-height: 160px;
+}
+
+.conversation-rail-track {
+    display: flex;
+    flex-direction: column;
+    width: 14px;
+    height: 100%;
+}
+
+.conversation-rail-bar {
+    flex-basis: 0;
+    min-height: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .72);
+    cursor: pointer;
+}
+
+.conversation-rail-bar.is-active,
+.conversation-rail-bar.is-selected {
+    box-shadow: inset 0 0 0 2px #16324a;
+}
+
+.conversation-rail-pop {
+    position: absolute;
+    left: calc(100% - 2px);
+    z-index: 7;
+    width: 232px;
+    padding: 10px 12px;
+    border: 1px solid #d7e3ef;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 22px rgba(22, 40, 60, .16);
+    color: #243140;
+}
+
+.conversation-rail-pop strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.conversation-rail-pop p {
+    max-height: 54px;
+    margin: 0 0 8px;
+    overflow: hidden;
+    color: #5d6b7a;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.conversation-rail-pop button {
+    border: 0;
+    padding: 0;
+    color: #2a82e4;
+    background: transparent;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.taskrecord-listWrap-item.is-rail-selected {
+    border-color: #8ebff5;
+    background: #f3f8ff;
 }

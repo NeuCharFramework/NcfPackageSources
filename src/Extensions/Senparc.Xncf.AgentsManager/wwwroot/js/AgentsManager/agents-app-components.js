@@ -396,3 +396,137 @@ Vue.component('load-more-select', {
     }
   },
 })
+
+// 对话长度导航：长条高度按文本长度分配，彼此相接，弹层贴在右侧供点选。
+Vue.component('conversation-length-rail', {
+  props: {
+    items: { type: Array, default: function () { return [] } },
+    listType: { type: String, default: 'studio' }
+  },
+  data: function () {
+    return { hoverIndex: -1, selectedId: null, popTop: 0, closeTimer: null }
+  },
+  beforeDestroy: function () {
+    clearTimeout(this.closeTimer)
+  },
+  computed: {
+    bars: function () {
+      const host = this.$parent
+      const colors = ['#3d8bfd', '#2faf9a', '#e09a3e', '#7b6fe0', '#d25d88', '#4aa0c4', '#6ea344', '#c47b4a']
+      return (this.items || []).filter(function (item) {
+        if (!item || item._generating) return false
+        if (this.listType === 'studio' || !host || typeof host.historyMatchesMemberFilter !== 'function') return true
+        const filters = {
+          task: ['taskMemberfilter', 'taskMemberfilterList'],
+          agentTask: ['agentTaskMemberfilter', 'agentTaskMemberfilterList'],
+          agentGroupTask: ['agentGroupTaskMemberfilter', 'agentGroupTaskMemberfilterList'],
+          groupTask: ['groupTaskMemberfilter', 'groupTaskMemberfilterList']
+        }[this.listType]
+        return !filters || host.historyMatchesMemberFilter(item, host[filters[0]], host[filters[1]])
+      }.bind(this)).map(function (item) {
+        const text = String(item.message || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+        const name = this.speakerName(item)
+        let hash = 0
+        for (let i = 0; i < name.length; i++) hash = (hash + name.charCodeAt(i)) % colors.length
+        return {
+          id: item.id,
+          item: item,
+          name: name,
+          excerpt: text.slice(0, 90) || '…',
+          weight: Math.max(text.length, 12),
+          color: colors[hash]
+        }
+      }.bind(this))
+    },
+    active: function () {
+      return this.hoverIndex >= 0 ? this.bars[this.hoverIndex] : null
+    }
+  },
+  watch: {
+    bars: function () {
+      if (this.hoverIndex >= this.bars.length) this.hoverIndex = -1
+    }
+  },
+  methods: {
+    speakerName: function (item) {
+      const host = this.$parent
+      if (this.listType !== 'studio' && host && typeof host.getTaskSenderName === 'function') {
+        return host.getTaskSenderName(this.listType, item) || ''
+      }
+      return item.fromParticipantName
+        || (item.fromAgentTemplate && item.fromAgentTemplate.name)
+        || (typeof ncfT === 'function' ? ncfT('AgentsManager.Studio.Agent') : 'Agent')
+    },
+    locateLabel: function () {
+      const key = 'AgentsManager.Studio.RailLocate'
+      const translated = typeof ncfT === 'function' ? ncfT(key) : ''
+      return translated && translated !== key ? translated : '定位到这条'
+    },
+    cancelClose: function () {
+      clearTimeout(this.closeTimer)
+    },
+    closeSoon: function () {
+      const self = this
+      clearTimeout(this.closeTimer)
+      this.closeTimer = setTimeout(function () { self.hoverIndex = -1 }, 220)
+    },
+    open: function (index, event) {
+      this.cancelClose()
+      this.hoverIndex = index
+      const bar = event.currentTarget
+      const rail = this.$el.getBoundingClientRect()
+      const box = bar.getBoundingClientRect()
+      const popHeight = 132
+      let top = box.top - rail.top
+      const maxTop = Math.max(0, rail.height - popHeight)
+      top = Math.min(Math.max(0, top), maxTop)
+      if (top > box.bottom - rail.top - 12) top = Math.max(0, box.bottom - rail.top - 12)
+      this.popTop = top
+    },
+    choose: function (bar) {
+      if (!bar) return
+      this.selectedId = bar.id
+      this.hoverIndex = this.bars.findIndex(function (item) { return item.id === bar.id })
+      const host = this.$el.parentElement
+      if (!host) return
+      host.querySelectorAll('.is-rail-selected').forEach(function (node) {
+        node.classList.remove('is-rail-selected')
+      })
+      const target = host.querySelector('[data-history-id="' + bar.id + '"]')
+      if (!target) return
+      target.classList.add('is-rail-selected')
+      target.scrollIntoView({ block: 'center', behavior: 'smooth' })
+    },
+    move: function (event) {
+      if (!this.bars.length || (event.key !== 'ArrowDown' && event.key !== 'ArrowUp')) return
+      event.preventDefault()
+      const next = event.key === 'ArrowDown'
+        ? Math.min(this.bars.length - 1, Math.max(0, this.hoverIndex) + 1)
+        : Math.max(0, (this.hoverIndex < 0 ? 0 : this.hoverIndex) - 1)
+      const button = this.$el.querySelectorAll('.conversation-rail-bar')[next]
+      if (button) {
+        button.focus()
+        this.open(next, { currentTarget: button })
+      }
+    }
+  },
+  template: `
+    <aside v-if="bars.length" class="conversation-rail" :class="{'is-studio': listType === 'studio'}"
+      @mouseleave="closeSoon" @mouseenter="cancelClose" @keydown="move">
+      <div class="conversation-rail-track" role="listbox" aria-label="对话">
+        <button v-for="(bar, index) in bars" :key="bar.id" type="button"
+          class="conversation-rail-bar" role="option"
+          :class="{'is-active': index === hoverIndex, 'is-selected': bar.id === selectedId}"
+          :style="{ flexGrow: bar.weight, background: bar.color }"
+          :aria-selected="bar.id === selectedId" :title="bar.name"
+          @mouseenter="open(index, $event)" @focus="open(index, $event)" @click="choose(bar)"></button>
+      </div>
+      <div v-if="active" class="conversation-rail-pop" :style="{ top: popTop + 'px' }"
+        @mouseenter="cancelClose">
+        <strong>{{ active.name }}</strong>
+        <p>{{ active.excerpt }}</p>
+        <button type="button" @click="choose(active)">{{ locateLabel() }}</button>
+      </div>
+    </aside>
+  `
+})

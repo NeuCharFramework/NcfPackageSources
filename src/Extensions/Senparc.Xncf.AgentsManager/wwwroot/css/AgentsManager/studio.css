@@ -111,7 +111,27 @@
 .studio-member button:first-child { flex: 1; text-align: left; overflow-wrap: anywhere; }
 .studio-member button:disabled { opacity: .4; cursor: not-allowed; }
 .studio-metrics { display: flex; gap: 10px; color: #67ddc6; font-size: 12px; }
+.studio-conversation { display: flex; align-items: flex-start; min-width: 0; }
+.studio-conversation-list { flex: 1; min-width: 0; }
+.studio-conversation .conversation-rail {
+    position: sticky;
+    top: 8px;
+    height: min(520px, calc(100vh - 390px));
+    margin-right: 8px;
+}
+.studio-conversation .conversation-rail-pop {
+    width: 196px;
+    border-color: #3c6178;
+    background: #173246;
+    color: #e9f3fc;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .28);
+}
+.studio-conversation .conversation-rail-pop p { color: #b7c9d8; }
+.studio-conversation .conversation-rail-pop button { color: #8ecbff; }
+.studio-conversation .conversation-rail-bar.is-active,
+.studio-conversation .conversation-rail-bar.is-selected { box-shadow: inset 0 0 0 2px #f4fbff; }
 .studio-history { padding: 12px; margin-bottom: 10px; border: 1px solid var(--studio-border); border-radius: 8px; background: #172d3e; overflow-wrap: anywhere; }
+.studio-history.is-rail-selected { border-color: #8ecbff; background: #1c3c52; }
 .studio-history > strong { color: #78d7d1; font-size: 11px; }
 .studio-history > div { line-height: 1.7; }
 .studio-history pre { max-width: 100%; overflow: auto; padding: 8px; background: #0b1c2a; }

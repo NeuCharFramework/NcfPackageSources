@@ -866,6 +866,7 @@
   <data name="Studio.Loading" xml:space="preserve"><value>Loading…</value></data>
   <data name="Studio.Rounds" xml:space="preserve"><value>rounds</value></data>
   <data name="Studio.Conversation" xml:space="preserve"><value>Conversation</value></data>
+  <data name="Studio.RailLocate" xml:space="preserve"><value>Jump to this message</value></data>
   <data name="Studio.Agent" xml:space="preserve"><value>Agent</value></data>
   <data name="Studio.LoadMore" xml:space="preserve"><value>Load more</value></data>
   <data name="Studio.RunTask" xml:space="preserve"><value>Run task</value></data>

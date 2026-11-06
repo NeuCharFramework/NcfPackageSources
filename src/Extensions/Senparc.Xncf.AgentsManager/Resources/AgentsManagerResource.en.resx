@@ -1320,6 +1320,9 @@
   <data name="Studio.Conversation" xml:space="preserve">
     <value>Conversation log</value>
   </data>
+  <data name="Studio.RailLocate" xml:space="preserve">
+    <value>定位到这条</value>
+  </data>
   <data name="Studio.Agent" xml:space="preserve">
     <value>Agent</value>
   </data>

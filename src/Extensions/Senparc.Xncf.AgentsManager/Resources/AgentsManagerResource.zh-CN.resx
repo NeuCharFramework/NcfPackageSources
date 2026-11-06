@@ -866,6 +866,7 @@
   <data name="Studio.Loading" xml:space="preserve"><value>加载中…</value></data>
   <data name="Studio.Rounds" xml:space="preserve"><value>轮对话</value></data>
   <data name="Studio.Conversation" xml:space="preserve"><value>对话记录</value></data>
+  <data name="Studio.RailLocate" xml:space="preserve"><value>定位到这条</value></data>
   <data name="Studio.Agent" xml:space="preserve"><value>智能体</value></data>
   <data name="Studio.LoadMore" xml:space="preserve"><value>加载更多</value></data>
   <data name="Studio.RunTask" xml:space="preserve"><value>运行任务</value></data>
