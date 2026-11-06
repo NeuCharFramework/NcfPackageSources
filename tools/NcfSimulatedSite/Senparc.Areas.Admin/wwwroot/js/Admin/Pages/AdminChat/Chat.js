@@ -52,6 +52,16 @@
       aiKernelAvailable: false,
       loadingAiModelOptions: false,
       sessionList: [],
+      archivedSessionList: [],
+      archiveMenuVisible: false,
+      archivingSessionId: 0,
+      currentSessionStatus: 0,
+      messageRail: [],
+      messageRailOpen: false,
+      messageRailActiveId: 0,
+      messageRailMenuTop: 0,
+      messageRailCloseTimer: null,
+      messageRailObserver: null,
       sidebarWidth: 250,
       sidebarCollapsed: false,
       collapsedSessionGroups: [],
@@ -178,6 +188,14 @@
       return groups;
     }
   },
+  watch: {
+    messageList() {
+      this.$nextTick(() => {
+        this.observeMessageRail();
+        this.refreshMessageRail();
+      });
+    }
+  },
   mounted() {
     this.workspacePreviewResizeObserver = new ResizeObserver(() => this.updateWorkspacePreviewLayout());
     this.workspacePreviewResizeObserver.observe(this.$refs.workspaceContainer.$el);
@@ -220,6 +238,7 @@
 
     this.loadAiModelOptions();
     this.loadSessionList();
+    this.loadArchivedSessionList();
     
     if (this.currentSessionId > 0) {
       this.loadSessionDetail().then(() => {
@@ -232,6 +251,8 @@
     }
   },
   beforeDestroy() {
+    if (this.messageRailObserver) this.messageRailObserver.disconnect();
+    clearTimeout(this.messageRailCloseTimer);
     this.workspacePreviewResizeObserver.disconnect();
     if (this.activeRequestController) {
       this.activeRequestController.abort();
@@ -1643,6 +1664,67 @@
       }
     },
 
+    async loadArchivedSessionList() {
+      try {
+        const sessions = [];
+        let totalCount;
+        let pageIndex = 1;
+        do {
+          const response = await service.get(`/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetArchivedSessionListAsync?pageIndex=${pageIndex++}&pageSize=100`);
+          const data = response.data && response.data.success && response.data.data;
+          if (!data || !Array.isArray(data.sessions) || !Number.isInteger(data.totalCount)
+            || (data.sessions.length === 0 && sessions.length < data.totalCount)) {
+            throw new Error(response.data && response.data.errorMessage || ncfT('AdminChat.Archive.LoadFailed'));
+          }
+          sessions.push(...data.sessions);
+          totalCount = data.totalCount;
+        } while (sessions.length < totalCount);
+        this.archivedSessionList = Array.from(new Map(sessions.map(session => [session.id, session])).values());
+      } catch (error) {
+        console.error('加载归档会话异常:', error);
+        this.$message.error(ncfT('AdminChat.Archive.LoadFailed'));
+      }
+    },
+
+    async archiveSession(session) {
+      if (!session || this.isSessionRunning(session) || this.archivingSessionId) return;
+      this.archivingSessionId = session.id;
+      try {
+        const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.ArchiveSessionAsync', {
+          sessionId: session.id
+        });
+        if (!(response.data && response.data.success)) {
+          throw new Error(response.data && response.data.errorMessage || ncfT('AdminChat.Archive.Failed'));
+        }
+        console.info('AdminChat session archived:', session.id);
+        this.sessionList = this.sessionList.filter(item => item.id !== session.id);
+        if (!this.archivedSessionList.some(item => item.id === session.id)) {
+          this.archivedSessionList.unshift({ ...session, status: 1 });
+        }
+        if (this.currentSessionId === session.id) this.currentSessionStatus = 1;
+        this.$message.success(ncfT('AdminChat.Archive.Success'));
+      } catch (error) {
+        console.error('归档会话异常:', error);
+        this.$message.error(ncfT('AdminChat.Archive.Failed'));
+        await this.loadSessionList();
+        await this.loadArchivedSessionList();
+      } finally {
+        this.archivingSessionId = 0;
+      }
+    },
+
+    async openArchivedSession(session) {
+      this.archiveMenuVisible = false;
+      if (!session) return;
+      if (this.currentSessionId !== session.id) await this.switchSession(session.id);
+      if (this.currentSessionId === session.id) this.currentSessionStatus = 1;
+    },
+
+    deleteArchivedSession(session) {
+      this.archiveMenuVisible = false;
+      if (session) this.handleSessionCommand({ action: 'delete', id: session.id });
+    },
+
     async loadSessionDetail(preserveRunningMessages = true) {
       if (!this.currentSessionId) return;
 
@@ -1657,6 +1739,7 @@
         if (response.data && response.data.success && response.data.data) {
           const session = response.data.data.session;
           this.currentSessionTitle = session.title;
+          this.currentSessionStatus = this.normalizeSessionStatus(session.status);
           this.messageList = preserveRunningMessages && this.isCurrentSessionRunning
             ? this.runningMessages : runningMessages || session.messages || [];
           this.currentSessionModules = session.modules || [];
@@ -2127,6 +2210,7 @@
       await this.deletePendingAttachments();
       this.clearPendingAttachments();
       this.currentSessionId = sessionId;
+      this.currentSessionStatus = 0;
       this.resetSessionTrajectoryView();
       this.currentSessionAiModelId = this.getSessionAiModelId(sessionId);
       this.messageList = [];
@@ -2152,6 +2236,7 @@
       this.clearPendingAttachments();
       this.launcherAiModelId = this.currentSessionAiModelId || this.launcherAiModelId || 0;
       this.currentSessionId = 0;
+      this.currentSessionStatus = 0;
       this.resetSessionTrajectoryView();
       this.currentSessionTitle = '';
       this.currentSessionModules = [];
@@ -2320,6 +2405,7 @@
               
               if (this.currentSessionId === command.id) {
                 this.currentSessionId = 0;
+                this.currentSessionStatus = 0;
                 this.messageList = [];
                 this.currentSessionTitle = '';
                 this.currentSessionModules = [];
@@ -2331,6 +2417,7 @@
               }
               
               await this.loadSessionList();
+              await this.loadArchivedSessionList();
             } else {
               this.$message.error(ncfT('AdminChat.DeleteFailed'));
             }
@@ -2351,6 +2438,130 @@
       if (container) {
         container.scrollTop = container.scrollHeight;
       }
+    },
+
+    normalizeSessionStatus(status) {
+      if (status === 1 || status === '1' || status === 'Archived') return 1;
+      if (status === 2 || status === '2' || status === 'Deleted') return 2;
+      return 0;
+    },
+
+    messagePreviewText(content, limit) {
+      const text = String(content || '')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/```[\s\S]*?```/g, ' ')
+        .replace(/`([^`]*)`/g, '$1')
+        .replace(/!\[[^\]]*]\([^)]*\)/g, ' ')
+        .replace(/\[([^\]]*)]\([^)]*\)/g, '$1')
+        .replace(/^#{1,6}\s+/gm, '')
+        .replace(/[*_~>/#-]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      const max = limit || 42;
+      if (!text) return ncfT('AdminChat.Rail.EmptyMessage');
+      return text.length > max ? text.slice(0, max) + '…' : text;
+    },
+
+    observeMessageRail() {
+      if (this.messageRailObserver) {
+        this.messageRailObserver.disconnect();
+        this.messageRailObserver = null;
+      }
+      const container = this.$refs.messagesContainer;
+      if (!container || typeof ResizeObserver === 'undefined') return;
+      this.messageRailObserver = new ResizeObserver(() => this.refreshMessageRail());
+      this.messageRailObserver.observe(container);
+    },
+
+    refreshMessageRail() {
+      const container = this.$refs.messagesContainer;
+      const messages = (this.messageList || []).filter(message => message && (message.roleType === 0 || message.roleType === 'User'));
+      if (!container || messages.length === 0) {
+        this.messageRail = [];
+        return;
+      }
+      const railHeight = Math.max(container.clientHeight - 24, 24);
+      const scrollHeight = Math.max(container.scrollHeight, 1);
+      const markers = messages.map((message, index) => {
+        const selector = `[data-message-id="${window.CSS && CSS.escape ? CSS.escape(String(message.id)) : String(message.id)}"]`;
+        const element = container.querySelector(selector);
+        const ratio = element
+          ? Math.min(1, Math.max(0, element.offsetTop / scrollHeight))
+          : (messages.length === 1 ? 0 : index / (messages.length - 1));
+        return {
+          id: message.id,
+          preview: this.messagePreviewText(message.content, 42),
+          full: this.messagePreviewText(message.content, 180),
+          top: Math.round(ratio * Math.max(railHeight - 10, 0))
+        };
+      });
+      const minGap = markers.length * 12 > railHeight
+        ? Math.max(8, Math.floor((railHeight - 8) / Math.max(markers.length, 1)))
+        : 12;
+      for (let index = 1; index < markers.length; index++) {
+        markers[index].top = Math.max(markers[index].top, markers[index - 1].top + minGap);
+      }
+      const last = markers[markers.length - 1];
+      const limit = Math.max(railHeight - 10, 0);
+      if (last && last.top > limit && last.top > 0) {
+        const scale = limit / last.top;
+        markers.forEach(marker => { marker.top = Math.round(marker.top * scale); });
+      }
+      this.messageRail = markers;
+      this.updateActiveUserMarker();
+    },
+
+    updateActiveUserMarker() {
+      const container = this.$refs.messagesContainer;
+      if (!container || !this.messageRail.length) return;
+      const line = container.scrollTop + 48;
+      let active = this.messageRail[0].id;
+      this.messageRail.forEach(marker => {
+        const selector = `[data-message-id="${window.CSS && CSS.escape ? CSS.escape(String(marker.id)) : String(marker.id)}"]`;
+        const element = container.querySelector(selector);
+        if (element && element.offsetTop <= line) active = marker.id;
+      });
+      this.messageRailActiveId = active;
+    },
+
+    openMessageRail() {
+      clearTimeout(this.messageRailCloseTimer);
+      this.messageRailOpen = true;
+      this.$nextTick(() => this.scrollRailMenuToActive());
+    },
+
+    scheduleCloseMessageRail() {
+      clearTimeout(this.messageRailCloseTimer);
+      this.messageRailCloseTimer = setTimeout(() => { this.messageRailOpen = false; }, 180);
+    },
+
+    focusRailMarker(id) {
+      const container = this.$refs.messagesContainer;
+      const railHeight = container ? Math.max(container.clientHeight - 24, 24) : 240;
+      const estimated = Math.min(360, this.messageRail.length * 36 + 12);
+      const marker = this.messageRail.find(item => item.id === id);
+      const top = marker ? marker.top : 0;
+      this.messageRailMenuTop = Math.max(0, Math.min(top - 12, Math.max(railHeight - estimated, 0)));
+      this.messageRailActiveId = id;
+      this.openMessageRail();
+    },
+
+    scrollRailMenuToActive() {
+      const menu = this.$refs.messageRailMenu;
+      const active = menu && menu.querySelector('.is-active');
+      if (!menu || !active) return;
+      menu.scrollTop = Math.max(0, active.offsetTop - menu.clientHeight / 2 + active.clientHeight / 2);
+    },
+
+    scrollToUserMessage(id) {
+      const container = this.$refs.messagesContainer;
+      const selector = `[data-message-id="${window.CSS && CSS.escape ? CSS.escape(String(id)) : String(id)}"]`;
+      const element = container && container.querySelector(selector);
+      if (!container || !element) return;
+      this.autoScrollEnabled = false;
+      this.messageRailActiveId = id;
+      container.scrollTo({ top: Math.max(0, element.offsetTop - 12), behavior: 'smooth' });
+      console.info('AdminChat jumped to user message:', id);
     },
 
     getRoleTypeClass(roleType) {

@@ -19,6 +19,20 @@
   <data name="AdminChat.Sidebar.SortSaved" xml:space="preserve"><value>Orden guardado para esta cuenta en todos los dispositivos</value></data>
   <data name="AdminChat.Sidebar.SortFailed" xml:space="preserve"><value>No se pudo guardar el orden. Inténtelo de nuevo.</value></data>
   <data name="AdminChat.Sidebar.PreferencesFailed" xml:space="preserve"><value>No se pudieron leer o guardar las preferencias del panel. Este diseño solo se aplica a esta página.</value></data>
+  <data name="AdminChat.Sidebar.Archive" xml:space="preserve"><value>Archivar y marcar como terminada</value></data>
+  <data name="AdminChat.Sidebar.ArchiveRunning" xml:space="preserve"><value>Esta conversación sigue en curso. Archívela al terminar.</value></data>
+  <data name="AdminChat.Archive.Menu" xml:space="preserve"><value>Archivadas</value></data>
+  <data name="AdminChat.Archive.Empty" xml:space="preserve"><value>No hay conversaciones archivadas</value></data>
+  <data name="AdminChat.Archive.Open" xml:space="preserve"><value>Abrir conversación archivada: {0}</value></data>
+  <data name="AdminChat.Archive.Delete" xml:space="preserve"><value>Eliminar conversación archivada: {0}</value></data>
+  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>Archivada. Use Archivadas en la esquina superior derecha para verla o eliminarla.</value></data>
+  <data name="AdminChat.Archive.Failed" xml:space="preserve"><value>No se pudo archivar la conversación. Inténtelo de nuevo.</value></data>
+  <data name="AdminChat.Archive.Tag" xml:space="preserve"><value>Archivada</value></data>
+  <data name="AdminChat.Archive.LoadFailed" xml:space="preserve"><value>No se pudieron cargar las conversaciones archivadas</value></data>
+  <data name="AdminChat.ArchiveSessionSuccess" xml:space="preserve"><value>Conversación archivada</value></data>
+  <data name="AdminChat.Rail.Label" xml:space="preserve"><value>Mis mensajes</value></data>
+  <data name="AdminChat.Rail.Jump" xml:space="preserve"><value>Ir a este mensaje</value></data>
+  <data name="AdminChat.Rail.EmptyMessage" xml:space="preserve"><value>(Mensaje vacío)</value></data>
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
