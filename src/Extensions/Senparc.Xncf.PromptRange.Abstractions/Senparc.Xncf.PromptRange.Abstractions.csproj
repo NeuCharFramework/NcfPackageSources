@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>0.3.2-preview7</Version>
+    <Version>0.3.3-preview8</Version>
     <AssemblyName>Senparc.Xncf.PromptRange.Abstractions</AssemblyName>
     <RootNamespace>Senparc.Xncf.PromptRange.Abstractions</RootNamespace>
     <LangVersion>10.0</LangVersion>
@@ -17,8 +17,7 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      [2026-07-26] v0.2.2-preview2 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.3.0-preview2
+    <PackageReleaseNotes>      [2026-07-26] v0.2.2-preview2 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.3.0-preview2
       1、Dependency update from Senparc.Ncf.Shared.Abstractions to 0.3.0-preview2
       v0.1.0 创世
       [2026-08-04] v0.2.3-preview3 Dependency update from Senparc.Ncf.Shared.Abstractions to 0.4.0-preview3
@@ -33,7 +32,9 @@
       [2026-11-04] Add portable PromptCode reference validation, score information and shared scoring provider contracts.
       [2026-11-04] v0.3.2-preview7 提供可移植的 PromptCode 引用校验、评分信息与共享评分契约
       1、定义引用范围校验、评分信息以及人工与 AI 评分的共享服务契约
-    </PackageReleaseNotes>
+      [2026-11-08] v0.3.3-preview8 PromptReference 打分字段扩展
+      1、PromptReference 增加打分、选择相关字段
+      2、更新 README 文档</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

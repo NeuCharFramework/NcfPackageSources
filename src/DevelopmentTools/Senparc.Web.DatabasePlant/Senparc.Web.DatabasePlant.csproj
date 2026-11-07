@@ -3,9 +3,8 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 
-		<Version>0.0.22</Version>
-		<PackageReleaseNotes>
-		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
+		<Version>0.0.23</Version>
+		<PackageReleaseNotes>		  [2026-07-04] v0.0.1 Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  1、Dependency update from Senparc.Xncf.XncfBuilder to 0.36.2-preview1
 		  [2026-07-05] v0.0.2 Dependency update from Senparc.Xncf.AgentsManager to 0.11.1-preview3
 		  [2026-07-05] v0.0.3 Dependency update from Senparc.Xncf.AgentsManager to 0.11.2-preview4
@@ -43,7 +42,7 @@
 		  1、Dependency update from Senparc.Areas.Admin to 0.12.26
 		  2、Dependency update from Senparc.Xncf.AgentsManager to 0.19.2
 		  3、Dependency update from Senparc.Xncf.Workspace to 0.2.7
-		</PackageReleaseNotes>
+		  [2026-11-08] v0.0.23 版本同步</PackageReleaseNotes>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>

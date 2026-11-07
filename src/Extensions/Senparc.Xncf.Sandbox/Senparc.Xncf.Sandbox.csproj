@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.2</Version>
+    <Version>0.4.3</Version>
     <AssemblyName>Senparc.Xncf.Sandbox</AssemblyName>
     <RootNamespace>Senparc.Xncf.Sandbox</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -15,8 +15,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Title>沙箱环境</Title>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      v0.1.0-preview1 创世：独立沙箱模块骨架
+    <PackageReleaseNotes>      v0.1.0-preview1 创世：独立沙箱模块骨架
       1、引入 ISandboxRuntime 抽象（Docker + Wasm Stub）
       2、Session 生命周期、配额与 TTL 回收
       3、Function/Admin 管理入口与 Jupyter/Exec 模板占位
@@ -76,7 +75,7 @@
     4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
     5、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
     6、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-    </PackageReleaseNotes>
+    [2026-11-08] v0.4.3 多语言资源同步与页面微调</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <Nullable>enable</Nullable>

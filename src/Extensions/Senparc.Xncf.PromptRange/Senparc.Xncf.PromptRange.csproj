@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.14</Version>
+    <Version>0.21.0</Version>
     <!--<TargetFramework>net5.0</TargetFramework>-->
     <!--<RazorLangVersion>2.0</RazorLangVersion>-->
     <LangVersion>10.0</LangVersion>
@@ -22,8 +22,7 @@
     https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      [2024-08-06] v0.9.6.0-preview1 update Senparc.AI.Kernel
+    <PackageReleaseNotes>      [2024-08-06] v0.9.6.0-preview1 update Senparc.AI.Kernel
       [2024-08-29] v0.9.9.0-preview1 更新首页统计
       [2024-08-31] v0.10.0-preview1 PromptRange 支持 Markdown 输出格式展示
       [2024-09-03] v0.10.1-preview1 PromptRange 结果提供“复制”功能
@@ -168,7 +167,11 @@
     12、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
     13、Dependency update from Senparc.Xncf.Tenant to 0.15.15
     14、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview7
-    </PackageReleaseNotes>
+    [2026-11-08] v0.21.0 Prompt 参考打分、预览与记忆感知提示
+    1、新增 Prompt 参考打分请求/响应与打分、预览能力
+    2、PromptItem 增加 PromptCode_Scores 相关字段与多数据库迁移
+    3、MemoryPromptProvider 记忆感知提示注入，Prompt 选择器增强
+    4、设计时数据库工厂对齐 DbContextOptions 处理</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Debug-Dapr;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
     <DefineConstants Condition="'$(Configuration)|$(Platform)'=='NcfDebugForPromptRange|AnyCPU'">

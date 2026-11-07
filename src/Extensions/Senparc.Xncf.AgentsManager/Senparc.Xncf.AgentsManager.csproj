@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.19.2</Version>
+    <Version>0.20.0</Version>
     <AssemblyName>Senparc.Xncf.AgentsManager</AssemblyName>
     <RootNamespace>Senparc.Xncf.AgentsManager</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -17,8 +17,7 @@
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-		[2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
+    <PackageReleaseNotes>		[2024-08-06] v0.4.4.0-preview1 update Senparc.AI.Kernel
 		[2024-08-31] v0.5.0-preview1 PromptRange 支持 Markdown 输出格式展示
 		v0.1.0 创世
 		[2024-09-03] v0.5.1-preview1 PromptRange 结果提供“复制”功能
@@ -196,7 +195,10 @@
         6、Dependency update from Senparc.Xncf.KnowledgeBase to 0.8.2
         7、Dependency update from Senparc.Xncf.PromptRange.Abstractions to 0.3.2-preview6
         8、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
-    </PackageReleaseNotes>
+        [2026-11-08] v0.20.0 会话历史增加会话长度标尺 conversation-length-rail
+        1、任务/群任务历史列表与 Studio 会话历史增加 conversation-length-rail 会话长度标尺
+        2、组件样式实现与 7 语言多语言文案
+        3、ChatGroupAppService 群组会话处理增强</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

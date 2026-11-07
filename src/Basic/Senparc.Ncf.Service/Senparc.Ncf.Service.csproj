@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.23.11-preview10</Version>
+    <Version>0.23.12-preview11</Version>
     <AssemblyName>Senparc.Ncf.Service</AssemblyName>
     <RootNamespace>Senparc.Ncf.Service</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -16,8 +16,7 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-				v0.1.0 创世
+    <PackageReleaseNotes>				v0.1.0 创世
 				v0.11.7 优化 DeleteAllAsync() 方法，提供 deleteItemAction 参数
 				v0.14.0 解决模块安装后直接授权菜单问题
 				[2024-08-13] v0.20.0-preview1 优化 ServiceBase，提供 Mapping&lt;T&gt;(entity) 快捷方法；为 DynamicData 添加根据 Entity 类型自动创建表结构的功能
@@ -56,7 +55,7 @@
 				1、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
 				2、Dependency update from Senparc.Ncf.Repository to 0.20.11-preview10
 				3、Dependency update from Senparc.Ncf.SMS to 0.20.11-preview11
-    </PackageReleaseNotes>
+				[2026-11-08] v0.23.12-preview11 版本同步</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

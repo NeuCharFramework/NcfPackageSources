@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.5</Version>
+    <Version>0.4.6</Version>
     <PackageReleaseNotes>
       [2026-10-14] 增加标准化 Workflow JSON/YAML 导入导出能力
       1、提供带 schemaVersion 的 ncf.workflow 文件格式，兼容现有 GraphJson 执行链路
@@ -59,7 +59,10 @@
       5、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
       6、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
       7、Dependency update from Senparc.Xncf.SystemManager to 0.15.12
-    </PackageReleaseNotes>
+      [2026-11-08] v0.4.6 工作流函数 Schema 与引擎增强
+      1、WorkflowFunctionSchemaBuilder 函数 Schema 生成增强
+      2、NeuCharWorkflowEngine 与 NeuCharWorkflowFunctionService 逻辑增强
+      3、前端 Workflow.js/common.js 交互与参数处理优化</PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharWorkflow</AssemblyName>
     <RootNamespace>Senparc.Xncf.NeuCharWorkflow</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

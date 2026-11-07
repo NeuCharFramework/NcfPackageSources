@@ -1,4 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20261106065020_AddFineTuningWorkerLaunchProfile.cs
+    文件功能描述：Oracle 数据库迁移 AddFineTuningWorkerLaunchProfile
+
+    创建标识：Senparc - 20261106
+
+    修改标识：Senparc - 20261108
+    修改描述：v0.18.0 Oracle 数据库迁移 AddFineTuningWorkerLaunchProfile
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 

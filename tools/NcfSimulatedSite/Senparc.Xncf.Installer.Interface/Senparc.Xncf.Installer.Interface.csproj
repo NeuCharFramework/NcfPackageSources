@@ -4,7 +4,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<Version>0.2.3</Version>
+		<Version>0.2.4</Version>
 		<AssemblyName>Senparc.Xncf.Installer.Interface</AssemblyName>
 		<RootNamespace>Senparc.Xncf.Installer.Interface</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -18,8 +18,7 @@
 		<!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIconUrl>https://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>-->
-		<PackageReleaseNotes>
-			v0.1 创世
+		<PackageReleaseNotes>			v0.1 创世
 			[2026-07-17] v0.1.1 同步上游项目版本并适配统一本地化能力
 			1、Dependency update from Senparc.Xncf.Tenant to 0.15.0-preview2
 			2、增加模块默认选择元数据，并完善内嵌 WebView 导航所需信息
@@ -43,7 +42,7 @@
 			1、Updated Senparc.Xncf.Installer.Interface project behavior and integration for the latest feature and reliability improvements.
 			2、chore: update package versions and dependencies across multiple projects
 			[2026-11-05] v0.2.3 Dependency update from Senparc.Xncf.Tenant to 0.15.15
-		</PackageReleaseNotes>
+			[2026-11-08] v0.2.4 版本同步</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease;NcfDebugForPromptRange</Configurations>
 	</PropertyGroup>

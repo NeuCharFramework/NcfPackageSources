@@ -1,4 +1,17 @@
-﻿using System;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20240208132057_Init.cs
+    文件功能描述：Oracle 数据库迁移 Init
+
+    创建标识：Senparc - 20261106
+
+    修改标识：Senparc - 20261108
+    修改描述：v0.18.0 Oracle 数据库迁移 Init
+
+----------------------------------------------------------------*/
+
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

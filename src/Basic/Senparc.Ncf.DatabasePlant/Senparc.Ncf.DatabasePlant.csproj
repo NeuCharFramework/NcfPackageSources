@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.21.14</Version>
+    <Version>0.21.15</Version>
     <AssemblyName>Senparc.Ncf.DatabasePlant</AssemblyName>
     <RootNamespace>Senparc.Ncf.DatabasePlant</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -20,8 +20,7 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-				v0.1.0 创世
+    <PackageReleaseNotes>				v0.1.0 创世
 				v0.11.3 添加 Oracle 库引用：Senparc.Ncf.Database.Oracle
 				v0.13.5 完成 .NET 8.0 当前所有数据库 EF Core 的集成
 				v0.16.0 添加大梦（Dm）数据库支持
@@ -100,7 +99,7 @@
 				8、Dependency update from Senparc.Ncf.Database.Sqlite to 0.20.12
 				9、Dependency update from Senparc.Ncf.Database.PostgreSQL to 0.13.12
 				10、Dependency update from Senparc.Ncf.Database.Oracle to 0.10.12
-    </PackageReleaseNotes>
+				[2026-11-08] v0.21.15 版本同步</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.5.12</Version>
+    <Version>0.5.13</Version>
     <AssemblyName>Senparc.Xncf.MCP</AssemblyName>
     <RootNamespace>Senparc.Xncf.MCP</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -17,8 +17,7 @@
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-      [2025-06-20] v0.2.1-beta Add MCP functions in XncfRegisterBase class
+    <PackageReleaseNotes>      [2025-06-20] v0.2.1-beta Add MCP functions in XncfRegisterBase class
       [2025-06-20] v0.2.2-beta Add MCP functions in XncfRegisterBase class
       v0.1.0 创世
       v0.2.0 Update new ModelContextProtocol library
@@ -96,7 +95,7 @@
     5、Dependency update from Senparc.Xncf.AIKernel to 0.17.2
     6、Dependency update from Senparc.Xncf.SenMapic to 0.4.11
     7、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-    </PackageReleaseNotes>
+    [2026-11-08] v0.5.13 多语言资源同步（以中文版为基准整理）</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

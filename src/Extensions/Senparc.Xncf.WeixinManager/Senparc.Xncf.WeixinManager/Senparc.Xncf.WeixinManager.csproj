@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <!--<RazorLangVersion>3.0</RazorLangVersion>-->
-    <Version>0.24.18</Version>
+    <Version>0.24.19</Version>
     <!--<GenerateProgramFile>false</GenerateProgramFile>-->
     <!--https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1511#issuecomment-696682962-->
     <OpenApiGenerateDocumentsOnBuild>false</OpenApiGenerateDocumentsOnBuild>
@@ -28,8 +28,7 @@
     <ProjectUrl>https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</PackageProjectUrl>
     <PackageIconUrl>http://sdk.weixin.senparc.com/Images/logo-square-ncf.jpg</PackageIconUrl>
-    <PackageReleaseNotes>
-		[2024-09-13] v0.16.4-preview1 升级基础库
+    <PackageReleaseNotes>		[2024-09-13] v0.16.4-preview1 升级基础库
 		[2024-10-09] v0.16.5-preview1 升级基础库
 		[2024-12-07] v0.16.6-preview1 更新基础库
 		[2025-01-10] v0.17.0-preview1 添加达梦（DM）和 Oracle 数据库支持
@@ -147,7 +146,7 @@
     10、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
     11、Dependency update from Senparc.Xncf.PromptRange to 0.20.14
     12、Dependency update from Senparc.Xncf.Swagger to 0.20.10
-    </PackageReleaseNotes>
+    [2026-11-08] v0.24.19 多语言资源同步（以中文版为基准整理）</PackageReleaseNotes>
     <RepositoryUrl> https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>

@@ -10,6 +10,10 @@
     修改标识：Senparc - 20261105
     修改描述：v0.20.14 增加 PromptItem 的 PromptCode 评分字段并更新数据库迁移
 
+-----------------------------------------------------------
+
+    修改标识：Senparc - 20261108
+    修改描述：v0.21.0 Sqlite 数据库迁移 Add_PromptCode_Scores
 ----------------------------------------------------------------*/
 using Microsoft.EntityFrameworkCore.Migrations;
 

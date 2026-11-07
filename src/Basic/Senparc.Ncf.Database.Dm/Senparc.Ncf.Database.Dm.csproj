@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.7.12</Version>
+    <Version>0.7.13</Version>
     <Nullable>enable</Nullable>
     <AssemblyName>Senparc.Ncf.Database.Dm</AssemblyName>
     <RootNamespace>Senparc.Ncf.Database.Dm</RootNamespace>
@@ -17,8 +17,7 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-				v0.1.0 创世
+    <PackageReleaseNotes>				v0.1.0 创世
 				[2024-09-10] v0.4.4-preview1 升级缓存基础库
 				[2024-10-21] v0.5.0-preview1 支持 Dm 最新版本，支持 EF Core 8.0
 				[2025-01-25] v0.6.5-preview1 Update Agents functions, support for function calling
@@ -47,7 +46,7 @@
 				[2026-11-05] v0.7.12 同步直接依赖项目版本
 				1、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
 				2、Dependency update from Senparc.Ncf.Database to 0.21.12
-    </PackageReleaseNotes>
+				[2026-11-08] v0.7.13 版本同步</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.12.26</Version>
+		<Version>0.13.0</Version>
 		<PackageReleaseNotes>
     [2026-10-16] 增加 PromptRange Skill 目录、执行与 AdminChat 暴露能力
     1、通过 PromptRange.Abstractions 暴露可移植 Skill 契约
@@ -200,7 +200,13 @@
     23、Dependency update from Senparc.Xncf.SystemPermission to 0.15.12
     24、Dependency update from Senparc.Xncf.Tenant to 0.15.15
     25、Dependency update from Senparc.Xncf.XncfModuleManager to 0.15.12
-		</PackageReleaseNotes>
+    [2026-11-08] v0.13.0 AdminChat 会话归档与未读、Prompt 参考打分、登录安全加强、会话长度标尺
+    1、AdminChat 支持会话归档管理，侧边栏增加未读会话标识与归档工具
+    2、新增 AdminChat Prompt 参考打分与预览（PromptReference），会话模型增加 HasUnread 字段与多数据库迁移
+    3、登录安全加强：自研纯 C# + SVG 滑块验证码（程序化场景 + 拼图缺口 + 行为轨迹校验）替换第三方组件，文本验证码兜底
+    4、新增登录/验证码端点 IP 滑动窗口限流（429 + Retry-After），防止高频重试与验证码刷取
+    5、登录端点统一不存在用户与错误密码行为，消除用户名枚举预言机
+    6、Studio 会话历史与任务/群任务历史增加 conversation-length-rail 会话长度标尺</PackageReleaseNotes>
 		<!--<TargetFramework>net5.0</TargetFramework>-->
 		<!--<RazorLangVersion>2.0</RazorLangVersion>-->
 		<GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>

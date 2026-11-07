@@ -1,4 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+
+    文件名：20261106070548_Add_AdminChat_PromptReferences.cs
+    文件功能描述：Oracle 数据库迁移 Add_AdminChat_PromptReferences
+
+    创建标识：Senparc - 20261106
+
+    修改标识：Senparc - 20261108
+    修改描述：v0.13.0 Oracle 数据库迁移 Add_AdminChat_PromptReferences
+
+----------------------------------------------------------------*/
+
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 

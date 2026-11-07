@@ -13,6 +13,10 @@
     修改标识：Senparc - 20261103
     修改描述：v0.17.0 支持 AddFineTuningArtifactFileReference 数据库迁移
 
+-----------------------------------------------------------
+
+    修改标识：Senparc - 20261108
+    修改描述：v0.18.0 MySql 数据库迁移 AddFineTuningArtifactFileReference
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore.Migrations;

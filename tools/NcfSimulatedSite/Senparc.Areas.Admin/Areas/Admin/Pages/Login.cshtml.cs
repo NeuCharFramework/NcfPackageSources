@@ -16,6 +16,10 @@
     修改标识：Senparc - 20261107
     修改描述：滑块验证码改为纯 C# + SVG 自研（LoginSlideCaptchaService），移除 Lazy.SlideCaptcha.Core/SkiaSharp 第三方依赖
 
+-----------------------------------------------------------
+
+    修改标识：Senparc - 20261108
+    修改描述：v0.13.0 登录页接入滑块验证码与 IP 限流
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;

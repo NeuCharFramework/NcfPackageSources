@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.17.2</Version>
+    <Version>0.18.0</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -17,8 +17,7 @@
     <!--<ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>-->
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-		[2024-08-06] v0.8.6-preview1 update Senparc.AI.Kernel
+    <PackageReleaseNotes>		[2024-08-06] v0.8.6-preview1 update Senparc.AI.Kernel
 		[2024-08-18] v0.8.10 NeuCharAI 模型提供快速选择；解决 Chat/TextCompetion 编辑选中 bug
 		[2024-08-28] v0.8.9 添加 NeuChar 模型获取接口
 		v0.1.0 创世
@@ -145,7 +144,11 @@
     3、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
     4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
     5、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
-    </PackageReleaseNotes>
+    [2026-11-08] v0.18.0 微调 Worker 启动配置与微调控制台增强
+    1、新增 FineTuningWorkerLaunchProfile 启动配置，Worker 启动、监督与运行时配置服务（Launch/Supervisor/SecretStore/Options）
+    2、微调管理控制台导航与布局增强，Worker 管理与配置能力
+    3、模型加载增加 CUDA 设备与 dtype 校验处理
+    4、新增并补全 Dm/MySql/Oracle/PostgreSQL/SqlServer/Sqlite 多数据库迁移</PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

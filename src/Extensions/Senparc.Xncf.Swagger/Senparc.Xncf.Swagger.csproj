@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.20.10</Version>
+    <Version>0.20.11</Version>
     <!--<LangVersion>lastest</LangVersion>-->
     <LangVersion>preview</LangVersion>
     <AssemblyName>Senparc.Xncf.Swagger</AssemblyName>
@@ -17,8 +17,7 @@
     <ProjectUrl>https://github.com/NeuCharFramework/NCF</ProjectUrl>
     <PackageProjectUrl>https://github.com/NeuCharFramework/NcfPackageSources</PackageProjectUrl>
     <PackageIcon>icon.jpg</PackageIcon>
-    <PackageReleaseNotes>
-				v0.1.0 创世
+    <PackageReleaseNotes>				v0.1.0 创世
 				v0.6.6 添加 Enable 开关选项
 				v0.11.0 加载默认的 appsettings.json
 				[2024-09-10] v0.14.4-preview1 升级缓存基础库
@@ -71,7 +70,7 @@
 				1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
 				2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
 				3、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
-    </PackageReleaseNotes>
+				[2026-11-08] v0.20.11 多语言资源同步（以中文版为基准整理）</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
