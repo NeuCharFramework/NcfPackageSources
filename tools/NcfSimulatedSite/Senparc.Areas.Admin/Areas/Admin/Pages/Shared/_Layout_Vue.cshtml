@@ -203,12 +203,14 @@
             width="min(1080px, 92vw)"
             top="6vh"
             custom-class="admin-footer-ai-dialog"
-            :close-on-click-modal="false">
+            append-to-body
+            :close-on-click-modal="true"
+            :close-on-press-escape="true">
             <div class="admin-footer-ai-frame" v-if="footerAiDialogVisible">
                 <iframe :src="footerAiUrl" title="Admin Chat 快捷对话"></iframe>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @@click="footerAiDialogVisible = false">关闭</el-button>
+                <el-button class="admin-footer-ai-close" @@click="footerAiDialogVisible = false">关闭</el-button>
                 <el-button type="primary" @@click="openFullAdminChat">切换到正式页面</el-button>
             </span>
         </el-dialog>

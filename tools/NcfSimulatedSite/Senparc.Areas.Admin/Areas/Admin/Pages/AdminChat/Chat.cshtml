@@ -37,14 +37,12 @@
                 </button>
                 <span v-if="sidebarCollapsed && isSending" class="sidebar-running-dot"
                       role="status" :aria-label="ncfT('AdminChat.Sidebar.Running')"></span>
+                <span v-else-if="sidebarCollapsed && unreadSessionIds.length" class="sidebar-unread-dot"
+                      role="status" :aria-label="ncfT('AdminChat.Sidebar.Unread')"></span>
             </div>
             <div id="chat-sidebar-body" class="sidebar-body" v-show="!sidebarCollapsed">
             <div class="sidebar-header">
                 <div class="sidebar-actions">
-                    <el-button size="small" icon="el-icon-notebook-2" :title="ncfT('AdminChat.Memory.Settings')"
-                               :disabled="memoryBusy" @@click="openMemoryDialog">
-                        Memory
-                    </el-button>
                     <el-button
                         type="primary"
                         size="small"
@@ -52,15 +50,52 @@
                         @@click="createNewSession">
                         @AR["AdminChat.NewConversation"]
                     </el-button>
-                    <el-button
-                        v-if="isSuperAdmin"
-                        type="warning"
-                        size="small"
-                        icon="el-icon-data-line"
-                        @@click="openUserStatsDrawer"
-                        class="user-stats-button">
-                        @AR["AdminChat.UserStats"]
-                    </el-button>
+                    <el-popover v-model="sidebarToolsVisible" placement="bottom-end" trigger="click"
+                                popper-class="chat-sidebar-tools-popover" :visible-arrow="false">
+                        <div class="sidebar-tools-panel">
+                            <button type="button" class="sidebar-tools-action" :disabled="memoryBusy"
+                                    @@click="sidebarToolsVisible = false; openMemoryDialog()">
+                                <i class="el-icon-notebook-2" aria-hidden="true"></i>
+                                <span>Memory</span>
+                            </button>
+                            <button v-if="isSuperAdmin" type="button" class="sidebar-tools-action"
+                                    @@click="sidebarToolsVisible = false; openUserStatsDrawer()">
+                                <i class="el-icon-data-line" aria-hidden="true"></i>
+                                <span>@AR["AdminChat.UserStats"]</span>
+                            </button>
+                            <div class="chat-archive-panel" role="menu" :aria-label="ncfT('AdminChat.Archive.Menu')">
+                                <div class="chat-archive-panel-title">
+                                    {{ ncfT('AdminChat.Archive.Menu') }}
+                                    <em v-if="archivedSessionList.length">{{ archivedSessionList.length }}</em>
+                                </div>
+                                <div v-if="archivedSessionList.length === 0" class="chat-archive-empty">{{ ncfT('AdminChat.Archive.Empty') }}</div>
+                                <div v-else class="chat-archive-list">
+                                    <div v-for="session in archivedSessionList" :key="session.id"
+                                         :class="['chat-archive-item', { 'is-current': currentSessionId === session.id }]">
+                                        <button type="button" class="chat-archive-open" :title="session.title"
+                                                :aria-label="ncfT('AdminChat.Archive.Open', session.title)"
+                                                @@click="openArchivedSession(session)">
+                                            <i class="el-icon-check" aria-hidden="true"></i>
+                                            <span>{{ session.title }}</span>
+                                            <small>{{ formatTime(session.lastMessageTime) }}</small>
+                                        </button>
+                                        <button type="button" class="chat-archive-delete" :title="ncfT('Common.删除')"
+                                                :aria-label="ncfT('AdminChat.Archive.Delete', session.title)"
+                                                @@click="deleteArchivedSession(session)">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button slot="reference" type="button" class="sidebar-tools-trigger"
+                                :aria-expanded="String(sidebarToolsVisible)"
+                                :aria-label="ncfT('AdminChat.Sidebar.Tools')"
+                                :title="ncfT('AdminChat.Sidebar.Tools')">
+                            <i class="el-icon-more" aria-hidden="true"></i>
+                            <em v-if="archivedSessionList.length">{{ archivedSessionList.length }}</em>
+                        </button>
+                    </el-popover>
                 </div>
             </div>
             
@@ -75,6 +110,8 @@
                         <span>{{ group.name }}</span>
                         <span v-if="group.sessions.some(isSessionRunning)" class="sidebar-running-dot"
                               role="status" :aria-label="ncfT('AdminChat.Sidebar.Running')"></span>
+                        <span v-else-if="group.sessions.some(isSessionUnread)" class="sidebar-unread-dot"
+                              role="status" :aria-label="ncfT('AdminChat.Sidebar.Unread')"></span>
                         <span class="session-group-count">{{ group.sessions.length }}</span>
                     </button>
                     <div :id="'session-group-' + group.key" v-show="!isSessionGroupCollapsed(group.key)">
@@ -82,6 +119,7 @@
                         v-for="session in group.sessions"
                         :key="session.id"
                         :class="['session-item', { 'active': currentSessionId === session.id, 'is-running': isSessionRunning(session),
+                            'is-unread': isSessionUnread(session),
                             'is-dragging': draggingSessionId === session.id,
                             'is-drop-before': dropSessionId === session.id && !dropAfter,
                             'is-drop-after': dropSessionId === session.id && dropAfter }]"
@@ -103,6 +141,7 @@
                                 <span class="session-run-bars" aria-hidden="true"><i></i><i></i><i></i></span>
                                 {{ ncfT(isStopping ? 'AdminChat.Sidebar.Stopping' : 'AdminChat.Sidebar.Running') }}
                             </div>
+                            <div v-else-if="isSessionUnread(session)" class="session-unread-status" role="status">{{ ncfT('AdminChat.Sidebar.Unread') }}</div>
                             <div v-else class="session-time">{{ formatTime(session.lastMessageTime) }}</div>
                         </div>
                         <button type="button" class="session-archive-button"
@@ -142,38 +181,6 @@
 
         <!-- 右侧对话窗口 -->
         <el-main class="chat-content">
-            <div class="chat-archive-anchor">
-                <el-popover v-model="archiveMenuVisible" placement="bottom-end" trigger="click"
-                            popper-class="chat-archive-popover" :visible-arrow="false">
-                    <div class="chat-archive-panel" role="menu" :aria-label="ncfT('AdminChat.Archive.Menu')">
-                        <div class="chat-archive-panel-title">{{ ncfT('AdminChat.Archive.Menu') }}</div>
-                        <div v-if="archivedSessionList.length === 0" class="chat-archive-empty">{{ ncfT('AdminChat.Archive.Empty') }}</div>
-                        <div v-else class="chat-archive-list">
-                            <div v-for="session in archivedSessionList" :key="session.id"
-                                 :class="['chat-archive-item', { 'is-current': currentSessionId === session.id }]">
-                                <button type="button" class="chat-archive-open" :title="session.title"
-                                        :aria-label="ncfT('AdminChat.Archive.Open', session.title)"
-                                        @@click="openArchivedSession(session)">
-                                    <i class="el-icon-check" aria-hidden="true"></i>
-                                    <span>{{ session.title }}</span>
-                                    <small>{{ formatTime(session.lastMessageTime) }}</small>
-                                </button>
-                                <button type="button" class="chat-archive-delete" :title="ncfT('Common.删除')"
-                                        :aria-label="ncfT('AdminChat.Archive.Delete', session.title)"
-                                        @@click="deleteArchivedSession(session)">
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <button slot="reference" type="button" class="chat-archive-trigger"
-                            :aria-expanded="String(archiveMenuVisible)" :aria-label="ncfT('AdminChat.Archive.Menu')">
-                        <i class="el-icon-folder-checked" aria-hidden="true"></i>
-                        <span>{{ ncfT('AdminChat.Archive.Menu') }}</span>
-                        <em v-if="archivedSessionList.length">{{ archivedSessionList.length }}</em>
-                    </button>
-                </el-popover>
-            </div>
             <div class="chat-header" v-if="currentSessionId">
                 <div class="chat-header-info">
                     <div class="chat-header-top">

@@ -25,7 +25,9 @@
   <data name="AdminChat.Archive.Empty" xml:space="preserve"><value>Нет архивных чатов</value></data>
   <data name="AdminChat.Archive.Open" xml:space="preserve"><value>Открыть архивный чат: {0}</value></data>
   <data name="AdminChat.Archive.Delete" xml:space="preserve"><value>Удалить архивный чат: {0}</value></data>
-  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>Чат архивирован. Откройте «Архив» справа сверху, чтобы просмотреть или удалить его.</value></data>
+  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>Чат архивирован. Откройте меню «Ещё» рядом с «Новый чат», чтобы просмотреть или удалить его.</value></data>
+  <data name="AdminChat.Sidebar.Tools" xml:space="preserve"><value>Ещё</value></data>
+  <data name="AdminChat.Sidebar.Unread" xml:space="preserve"><value>Не прочитано</value></data>
   <data name="AdminChat.Archive.Failed" xml:space="preserve"><value>Не удалось архивировать чат. Повторите попытку.</value></data>
   <data name="AdminChat.Archive.Tag" xml:space="preserve"><value>В архиве</value></data>
   <data name="AdminChat.Archive.LoadFailed" xml:space="preserve"><value>Не удалось загрузить архивные чаты</value></data>

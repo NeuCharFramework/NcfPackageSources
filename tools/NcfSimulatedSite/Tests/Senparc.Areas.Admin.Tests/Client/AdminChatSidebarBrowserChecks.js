@@ -20,15 +20,13 @@ async page => {
     const raw = await page.evaluate(() => fetch('/template').then(response => response.text()));
     const aside = raw.slice(raw.indexOf('<el-aside'), raw.indexOf('</el-aside>') + '</el-aside>'.length)
         .replace(/@AR\["([^"]+)"\]/g, '$1').replace(/@@/g, '@');
-    const archiveAnchor = raw.slice(raw.indexOf('<div class="chat-archive-anchor">'), raw.indexOf('<div class="chat-header"'))
-        .replace(/@AR\["([^"]+)"\]/g, '$1').replace(/@@/g, '@');
     const livePanel = raw.slice(raw.indexOf('<div v-if="isAIResponding'),
         raw.indexOf('            </div>\n            <nav v-if="messageRail.length"'))
         .replace(/@AR\["([^"]+)"\]/g, '$1').replace(/@@/g, '@');
     await page.setContent(`<div id="app"><div class="admin-chat-container">
         <el-container ref="workspaceContainer" class="chat-main-container"
             :style="{ '--chat-sidebar-width': sidebarWidth + 'px' }">
-            ${aside}<el-main class="chat-content">${archiveAnchor}${livePanel}</el-main>
+            ${aside}<el-main class="chat-content">${livePanel}</el-main>
         </el-container></div></div>`);
     await page.addStyleTag({ path: web + '/lib/element-ui_2.13.2/element.css' });
     await page.addStyleTag({ path: admin + '/wwwroot/css/Admin/Pages/AdminChat/Chat.css' });
@@ -163,6 +161,22 @@ async page => {
     check(await width() === 330, 'Expansion must preserve custom width at narrow viewports');
     await page.evaluate(() => { sidebarTestApp.isSending = false; });
     check(await page.locator('.is-running').count() === 0, 'Completed tasks must return to idle styling');
+    if (await group.locator('.session-group-title').getAttribute('aria-expanded') === 'false') {
+        await group.locator('.session-group-title').click();
+    }
+    await page.evaluate(() => {
+        sidebarTestApp.currentSessionId = 1;
+        sidebarTestApp.markSessionUnread(1);
+        sidebarTestApp.markSessionUnread(3);
+    });
+    const unread = group.locator('.session-item.is-unread');
+    check(await unread.count() === 1, 'Only a background session becomes unread');
+    check((await unread.locator('.session-title').textContent()) === 'Alpha third', 'Unread marker stays on the finished session');
+    check((await unread.locator('.session-unread-status').textContent()).trim() === 'AdminChat.Sidebar.Unread', 'Unread session shows a readable label');
+    check(await unread.evaluate(el => getComputedStyle(el, '::before').animationName) === 'chat-session-unread', 'Unread rail breathes');
+    check((await unread.evaluate(el => getComputedStyle(el, '::before').backgroundColor)).includes('34, 197, 94'), 'Unread rail is green');
+    await page.evaluate(() => sidebarTestApp.clearSessionUnread(3));
+    check(await page.locator('.is-unread').count() === 0, 'Opening the finished session clears the unread reminder');
     await page.evaluate(() => {
         const reorder = window.service.post.bind(window.service);
         window.service.post = async (url, data) => {
@@ -178,11 +192,13 @@ async page => {
     check(await beta.locator('.el-dropdown').count() === 1, 'Active sessions keep the original delete menu');
     await beta.locator('.session-archive-button').click();
     check(await page.locator('.session-title', { hasText: 'Beta first' }).count() === 0, 'Archived session leaves the sidebar');
-    check(await page.evaluate(() => sidebarTestApp.archivedSessionList.some(session => session.title === 'Beta first' && session.status === 1)), 'Archived session stays available for the corner menu');
-    await page.locator('.chat-archive-trigger').click();
+    check(await page.evaluate(() => sidebarTestApp.archivedSessionList.some(session => session.title === 'Beta first' && session.status === 1)), 'Archived session stays available in the sidebar menu');
+    await page.locator('.sidebar-tools-trigger').click();
+    check(await page.locator('.sidebar-tools-action').filter({ hasText: 'Memory' }).isVisible(), 'More menu keeps Memory beside New conversation');
     const archivedItem = page.locator('.chat-archive-open').filter({ hasText: 'Beta first' });
-    check(await archivedItem.isVisible(), 'Corner menu lists the archived session');
-    check(await page.locator('.chat-archive-item').filter({ hasText: 'Beta first' }).locator('.chat-archive-delete').isVisible(), 'Corner menu can delete an archived session');
+    check(await archivedItem.isVisible(), 'More menu lists the archived session');
+    check(await page.locator('.chat-archive-item').filter({ hasText: 'Beta first' }).locator('.chat-archive-delete').isVisible(), 'More menu can delete an archived session');
+    check(await page.locator('.chat-archive-trigger').count() === 0, 'Archived conversations stay out of the chat header');
     check(failures.length === 0, 'Browser errors: ' + failures.join('; '));
     return 'Sidebar browser checks passed: collapse, resize, ordering, session-isolated thinking/trajectory panels, preserved live progress, activity and reduced motion.';
 }
