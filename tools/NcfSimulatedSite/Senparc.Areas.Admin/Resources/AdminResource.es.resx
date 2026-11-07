@@ -25,7 +25,9 @@
   <data name="AdminChat.Archive.Empty" xml:space="preserve"><value>No hay conversaciones archivadas</value></data>
   <data name="AdminChat.Archive.Open" xml:space="preserve"><value>Abrir conversación archivada: {0}</value></data>
   <data name="AdminChat.Archive.Delete" xml:space="preserve"><value>Eliminar conversación archivada: {0}</value></data>
-  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>Archivada. Use Archivadas en la esquina superior derecha para verla o eliminarla.</value></data>
+  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>Archivada. Revísela o elimínela desde el menú Más, junto a Nueva conversación.</value></data>
+  <data name="AdminChat.Sidebar.Tools" xml:space="preserve"><value>Más</value></data>
+  <data name="AdminChat.Sidebar.Unread" xml:space="preserve"><value>No leído</value></data>
   <data name="AdminChat.Archive.Failed" xml:space="preserve"><value>No se pudo archivar la conversación. Inténtelo de nuevo.</value></data>
   <data name="AdminChat.Archive.Tag" xml:space="preserve"><value>Archivada</value></data>
   <data name="AdminChat.Archive.LoadFailed" xml:space="preserve"><value>No se pudieron cargar las conversaciones archivadas</value></data>

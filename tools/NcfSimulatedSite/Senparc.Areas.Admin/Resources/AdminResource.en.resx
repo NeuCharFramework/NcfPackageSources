@@ -74,7 +74,9 @@
   <data name="AdminChat.Archive.Empty" xml:space="preserve"><value>No archived conversations</value></data>
   <data name="AdminChat.Archive.Open" xml:space="preserve"><value>Open archived conversation: {0}</value></data>
   <data name="AdminChat.Archive.Delete" xml:space="preserve"><value>Delete archived conversation: {0}</value></data>
-  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>Archived. Use Archived at the top right to review or delete it.</value></data>
+  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>Archived. Review or delete it from the More menu beside New conversation.</value></data>
+  <data name="AdminChat.Sidebar.Tools" xml:space="preserve"><value>More</value></data>
+  <data name="AdminChat.Sidebar.Unread" xml:space="preserve"><value>Unread</value></data>
   <data name="AdminChat.Archive.Failed" xml:space="preserve"><value>Could not archive this conversation. Please retry.</value></data>
   <data name="AdminChat.Archive.Tag" xml:space="preserve"><value>Archived</value></data>
   <data name="AdminChat.Archive.LoadFailed" xml:space="preserve"><value>Could not load archived conversations</value></data>

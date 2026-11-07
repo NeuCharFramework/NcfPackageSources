@@ -25,7 +25,9 @@
   <data name="AdminChat.Archive.Empty" xml:space="preserve"><value>アーカイブした会話はありません</value></data>
   <data name="AdminChat.Archive.Open" xml:space="preserve"><value>アーカイブした会話を開く：{0}</value></data>
   <data name="AdminChat.Archive.Delete" xml:space="preserve"><value>アーカイブした会話を削除：{0}</value></data>
-  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>アーカイブしました。右上の「アーカイブ」から確認または削除できます。</value></data>
+  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>アーカイブしました。左の「新しい会話」横のその他メニューから確認または削除できます。</value></data>
+  <data name="AdminChat.Sidebar.Tools" xml:space="preserve"><value>その他</value></data>
+  <data name="AdminChat.Sidebar.Unread" xml:space="preserve"><value>未読</value></data>
   <data name="AdminChat.Archive.Failed" xml:space="preserve"><value>アーカイブできませんでした。再試行してください。</value></data>
   <data name="AdminChat.Archive.Tag" xml:space="preserve"><value>アーカイブ済み</value></data>
   <data name="AdminChat.Archive.LoadFailed" xml:space="preserve"><value>アーカイブした会話を読み込めませんでした</value></data>

@@ -615,7 +615,7 @@ namespace Senparc.Areas.Admin.OHS.Local.AppService
         }
 
         /// <summary>
-        /// 获取当前用户已归档的会话，供右上角菜单单独查看和删除。
+        /// 获取当前用户已归档的会话，供左侧更多菜单单独查看和删除。
         /// </summary>
         [ApiBind(ApiRequestMethod = ApiRequestMethod.Get)]
         public async Task<AppResponseBase<GetSessionListResponse>> GetArchivedSessionListAsync(int pageIndex = 1, int pageSize = 20)

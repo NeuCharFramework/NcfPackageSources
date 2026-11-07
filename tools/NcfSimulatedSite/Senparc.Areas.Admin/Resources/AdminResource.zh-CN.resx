@@ -74,7 +74,9 @@
   <data name="AdminChat.Archive.Empty" xml:space="preserve"><value>还没有归档会话</value></data>
   <data name="AdminChat.Archive.Open" xml:space="preserve"><value>打开归档会话：{0}</value></data>
   <data name="AdminChat.Archive.Delete" xml:space="preserve"><value>删除归档会话：{0}</value></data>
-  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>已归档。可从右上角「已归档」查看或删除</value></data>
+  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>已归档。可从左侧「新对话」旁的更多菜单查看或删除</value></data>
+  <data name="AdminChat.Sidebar.Tools" xml:space="preserve"><value>更多</value></data>
+  <data name="AdminChat.Sidebar.Unread" xml:space="preserve"><value>未读</value></data>
   <data name="AdminChat.Archive.Failed" xml:space="preserve"><value>归档失败，请重试</value></data>
   <data name="AdminChat.Archive.Tag" xml:space="preserve"><value>已归档</value></data>
   <data name="AdminChat.Archive.LoadFailed" xml:space="preserve"><value>加载归档会话失败</value></data>

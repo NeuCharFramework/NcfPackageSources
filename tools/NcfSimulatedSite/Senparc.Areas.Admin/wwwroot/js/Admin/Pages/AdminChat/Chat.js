@@ -53,7 +53,7 @@
       loadingAiModelOptions: false,
       sessionList: [],
       archivedSessionList: [],
-      archiveMenuVisible: false,
+      sidebarToolsVisible: false,
       archivingSessionId: 0,
       currentSessionStatus: 0,
       messageRail: [],
@@ -72,6 +72,7 @@
       dropAfter: false,
       savingSessionOrder: false,
       runningSessionId: 0,
+      unreadSessionIds: [],
       runningMessages: [],
       sessionUsage: {},
       sessionDetailSequence: 0,
@@ -348,6 +349,19 @@
     },
     isSessionRunning(session) {
       return this.isSending && this.runningSessionId === session.id;
+    },
+    isSessionUnread(session) {
+      return !!session && !this.isSessionRunning(session) && this.unreadSessionIds.includes(session.id);
+    },
+    markSessionUnread(sessionId) {
+      const id = Number(sessionId);
+      if (!id || id === this.currentSessionId || this.unreadSessionIds.includes(id)) return;
+      this.unreadSessionIds.push(id);
+      console.info('AdminChat session unread:', id);
+    },
+    clearSessionUnread(sessionId) {
+      const id = Number(sessionId);
+      this.unreadSessionIds = this.unreadSessionIds.filter(item => item !== id);
     },
     startSessionDrag(event, session) {
       if (this.savingSessionOrder) { event.preventDefault(); return; }
@@ -1575,6 +1589,7 @@
         console.error('Harness 轨迹操作失败:', error);
         this.$message.error(error.message || '任务执行失败');
       } finally {
+        this.markSessionUnread(sessionId);
         this.isSending = false;
         this.runningSessionId = 0;
         this.isAIResponding = false;
@@ -1623,6 +1638,7 @@
         console.error('处理 Harness 审批失败:', error);
         this.$message.error(error.message || '审批处理失败');
       } finally {
+        this.markSessionUnread(sessionId);
         this.isSending = false;
         this.runningSessionId = 0;
         this.isAIResponding = false;
@@ -1697,6 +1713,7 @@
           throw new Error(response.data && response.data.errorMessage || ncfT('AdminChat.Archive.Failed'));
         }
         console.info('AdminChat session archived:', session.id);
+        this.clearSessionUnread(session.id);
         this.sessionList = this.sessionList.filter(item => item.id !== session.id);
         if (!this.archivedSessionList.some(item => item.id === session.id)) {
           this.archivedSessionList.unshift({ ...session, status: 1 });
@@ -1714,14 +1731,14 @@
     },
 
     async openArchivedSession(session) {
-      this.archiveMenuVisible = false;
+      this.sidebarToolsVisible = false;
       if (!session) return;
       if (this.currentSessionId !== session.id) await this.switchSession(session.id);
       if (this.currentSessionId === session.id) this.currentSessionStatus = 1;
     },
 
     deleteArchivedSession(session) {
-      this.archiveMenuVisible = false;
+      this.sidebarToolsVisible = false;
       if (session) this.handleSessionCommand({ action: 'delete', id: session.id });
     },
 
@@ -2143,6 +2160,7 @@
           this.activeRequestController = null;
         }
         this.isStopping = false;
+        this.markSessionUnread(sendingSessionId);
         this.isSending = false;
         this.runningSessionId = 0;
         this.isAIResponding = false;
@@ -2210,6 +2228,7 @@
       await this.deletePendingAttachments();
       this.clearPendingAttachments();
       this.currentSessionId = sessionId;
+      this.clearSessionUnread(sessionId);
       this.currentSessionStatus = 0;
       this.resetSessionTrajectoryView();
       this.currentSessionAiModelId = this.getSessionAiModelId(sessionId);
@@ -2403,6 +2422,7 @@
             if (response.data && response.data.success) {
               this.$message.success(ncfT('AdminChat.DeleteSessionSuccess'));
               
+              this.clearSessionUnread(command.id);
               if (this.currentSessionId === command.id) {
                 this.currentSessionId = 0;
                 this.currentSessionStatus = 0;

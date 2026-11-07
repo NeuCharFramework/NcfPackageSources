@@ -151,8 +151,53 @@ li {
     color: #c0c4cc;
 }
 
+.admin-footer-ai-dialog .el-dialog__header {
+    position: relative;
+    padding-right: 64px;
+}
+
+.admin-footer-ai-dialog .el-dialog__headerbtn {
+    top: 14px;
+    right: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    color: #606266;
+    background: #f4f6fb;
+    border-radius: 50%;
+    transition: color .18s ease, background-color .18s ease, transform .18s ease;
+}
+
+.admin-footer-ai-dialog .el-dialog__headerbtn:hover,
+.admin-footer-ai-dialog .el-dialog__headerbtn:focus {
+    color: #fff;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    transform: rotate(90deg);
+}
+
 .admin-footer-ai-dialog .el-dialog__body {
     padding: 0 14px;
+}
+
+.admin-footer-ai-dialog .el-dialog__footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.admin-footer-ai-close {
+    color: #606266;
+    background: #f4f6fb;
+    border-color: transparent;
+}
+
+.admin-footer-ai-close:hover,
+.admin-footer-ai-close:focus {
+    color: #667eea;
+    background: #eef1ff;
+    border-color: transparent;
 }
 
 .admin-footer-ai-frame {
