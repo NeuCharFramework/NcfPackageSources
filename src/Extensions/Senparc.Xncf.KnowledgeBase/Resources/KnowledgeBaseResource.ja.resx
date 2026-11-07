@@ -27,12 +27,6 @@
   <data name="Area.KnowledgeBase.RecallTest" xml:space="preserve">
     <value>検索テスト</value>
   </data>
-  <data name="Function.Sample.Name" xml:space="preserve">
-    <value>サンプル関数</value>
-  </data>
-  <data name="Function.Sample.Description" xml:space="preserve">
-    <value>FunctionRender のパラメーターと戻り値を示します</value>
-  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>名前||二重縦線の前はパラメーター名、後ろは説明です</value>
   </data>
@@ -84,10 +78,539 @@
   <data name="Parameter.Power.Cube.Help" xml:space="preserve">
     <value>上の結果を 3 乗します</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>+ プロパティを追加||+ プロパティを追加</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>+ タグを追加||+ タグを追加</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>ファイルをアップロード||ファイルをアップロード</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>アップロード日時||アップロード日時</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>件の取得パッセージ||件の取得パッセージ</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>検索方法の詳細を見る。||検索方法の詳細を見る。</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>保存する||保存する</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>転置インデックス||転置インデックス</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>転置インデックスは、効率よく検索するための構造です。用語ごとに整理され、各用語はそれを含む文書やウェブページを指します。||転置インデックスは、効率よく検索するための構造です。用語ごとに整理され、各用語はそれを含む文書やウェブページを指します。</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>キーワード||キーワード</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>閉じる||閉じる</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>コンテンツ||コンテンツ</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>コンテンツタイプ||コンテンツタイプ</value>
+  </data>
+  <data name="Frontend.014" xml:space="preserve">
+    <value>削除||削除</value>
+  </data>
+  <data name="Frontend.015" xml:space="preserve">
+    <value>キャンセル||キャンセル</value>
+  </data>
+  <data name="Frontend.016" xml:space="preserve">
+    <value>検索テスト||検索テスト</value>
+  </data>
+  <data name="Frontend.017" xml:space="preserve">
+    <value>再現率||再現率</value>
+  </data>
+  <data name="Frontend.018" xml:space="preserve">
+    <value>名前||名前</value>
+  </data>
+  <data name="Frontend.019" xml:space="preserve">
+    <value>ベクトル化||ベクトル化</value>
+  </data>
+  <data name="Frontend.020" xml:space="preserve">
+    <value>ベクトル化結果||ベクトル化結果</value>
+  </data>
+  <data name="Frontend.021" xml:space="preserve">
+    <value>ベクトル化の進捗||ベクトル化の進捗</value>
+  </data>
+  <data name="Frontend.022" xml:space="preserve">
+    <value>文字||文字</value>
+  </data>
+  <data name="Frontend.023" xml:space="preserve">
+    <value>プロパティ名||プロパティ名</value>
+  </data>
+  <data name="Frontend.024" xml:space="preserve">
+    <value>プロパティ管理||プロパティ管理</value>
+  </data>
+  <data name="Frontend.025" xml:space="preserve">
+    <value>選択中:||選択中:</value>
+  </data>
+  <data name="Frontend.026" xml:space="preserve">
+    <value>{0} 行を選択中||{0} 行を選択中</value>
+  </data>
+  <data name="Frontend.027" xml:space="preserve">
+    <value>開く||開く</value>
+  </data>
+  <data name="Frontend.028" xml:space="preserve">
+    <value>拡張モジュール||拡張モジュール</value>
+  </data>
+  <data name="Frontend.029" xml:space="preserve">
+    <value>選択を削除||選択を削除</value>
+  </data>
+  <data name="Frontend.030" xml:space="preserve">
+    <value>検索||検索</value>
+  </data>
+  <data name="Frontend.031" xml:space="preserve">
+    <value>アクション||アクション</value>
+  </data>
+  <data name="Frontend.032" xml:space="preserve">
+    <value>データソース||データソース</value>
+  </data>
+  <data name="Frontend.033" xml:space="preserve">
+    <value>ファイル一覧||ファイル一覧</value>
+  </data>
+  <data name="Frontend.034" xml:space="preserve">
+    <value>ファイル名||ファイル名</value>
+  </data>
+  <data name="Frontend.035" xml:space="preserve">
+    <value>ファイル名||ファイル名</value>
+  </data>
+  <data name="Frontend.036" xml:space="preserve">
+    <value>ファイルサイズ||ファイルサイズ</value>
+  </data>
+  <data name="Frontend.037" xml:space="preserve">
+    <value>追加||追加</value>
+  </data>
+  <data name="Frontend.038" xml:space="preserve">
+    <value>新規ファイル||新規ファイル</value>
+  </data>
+  <data name="Frontend.039" xml:space="preserve">
+    <value>時刻↓||時刻↓</value>
+  </data>
+  <data name="Frontend.040" xml:space="preserve">
+    <value>リコール結果はまだありません。ナレッジベースを選び、元テキストを入力して「テスト」をクリックしてください。||リコール結果はまだありません。ナレッジベースを選び、元テキストを入力して「テスト」をクリックしてください。</value>
+  </data>
+  <data name="Frontend.041" xml:space="preserve">
+    <value>検索||検索</value>
+  </data>
+  <data name="Frontend.042" xml:space="preserve">
+    <value>検索内容||検索内容</value>
+  </data>
+  <data name="Frontend.043" xml:space="preserve">
+    <value>タグ名||タグ名</value>
+  </data>
+  <data name="Frontend.044" xml:space="preserve">
+    <value>タグ管理||タグ管理</value>
+  </data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>指定したクエリテキストで、ナレッジのリコール精度をテストします。||指定したクエリテキストで、ナレッジのリコール精度をテストします。</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>検索方法||検索方法</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>検索設定||検索設定</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>パッセージの詳細||パッセージの詳細</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>テスト||テスト</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>追加日時||追加日時</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>ソーステキスト||ソーステキスト</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>ナレッジベース||ナレッジベース</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>ナレッジベース管理||ナレッジベース管理</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>ナレッジベース一覧||ナレッジベース一覧</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>ナレッジベース管理||ナレッジベース管理</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>確認||確認</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>確認||確認</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>このナレッジベースを削除しますか？||このナレッジベースを削除しますか？</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>列を絞り込む||列を絞り込む</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>編集||編集</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>記録||記録</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>記入してください||記入してください</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>キーワードを入力してください||キーワードを入力してください</value>
+  </data>
+  <data name="Frontend.064" xml:space="preserve">
+    <value>内容を入力||内容を入力</value>
+  </data>
+  <data name="Frontend.065" xml:space="preserve">
+    <value>名前を入力||名前を入力</value>
+  </data>
+  <data name="Frontend.066" xml:space="preserve">
+    <value>検索テキストを入力||検索テキストを入力</value>
+  </data>
+  <data name="Frontend.067" xml:space="preserve">
+    <value>コンテンツ種別を選択||コンテンツ種別を選択</value>
+  </data>
+  <data name="Frontend.068" xml:space="preserve">
+    <value>キーワードを入力してナレッジベースを検索し、選択してください||キーワードを入力してナレッジベースを検索し、選択してください</value>
+  </data>
+  <data name="Frontend.069" xml:space="preserve">
+    <value>Embedding モデルを選択||Embedding モデルを選択</value>
+  </data>
+  <data name="Frontend.070" xml:space="preserve">
+    <value>ベクトルデータベースを選択||ベクトルデータベースを選択</value>
+  </data>
+  <data name="Frontend.071" xml:space="preserve">
+    <value>チャットモデルを選択||チャットモデルを選択</value>
+  </data>
+  <data name="Frontend.072" xml:space="preserve">
+    <value>ファイルを選択||ファイルを選択</value>
+  </data>
+  <data name="Frontend.073" xml:space="preserve">
+    <value>ファイルを選ぶとファイル管理へアップロードされます。下の一覧でチェックすると、現在のナレッジベースに関連付けられます。||ファイルを選ぶとファイル管理へアップロードされます。下の一覧でチェックすると、現在のナレッジベースに関連付けられます。</value>
+  </data>
+  <data name="Frontend.074" xml:space="preserve">
+    <value>構成||構成</value>
+  </data>
+  <data name="Frontend.075" xml:space="preserve">
+    <value>リセット||リセット</value>
+  </data>
+  <data name="Frontend.076" xml:space="preserve">
+    <value>リストの読み込みに失敗||リストの読み込みに失敗</value>
+  </data>
+  <data name="Frontend.077" xml:space="preserve">
+    <value>追加に成功しました||追加に成功しました</value>
+  </data>
+  <data name="Frontend.078" xml:space="preserve">
+    <value>追加に失敗しました||追加に失敗しました</value>
+  </data>
+  <data name="Frontend.079" xml:space="preserve">
+    <value>更新成功||更新成功</value>
+  </data>
+  <data name="Frontend.080" xml:space="preserve">
+    <value>編集に失敗しました||編集に失敗しました</value>
+  </data>
+  <data name="Frontend.081" xml:space="preserve">
+    <value>削除しました||削除しました</value>
+  </data>
+  <data name="Frontend.082" xml:space="preserve">
+    <value>削除に失敗しました||削除に失敗しました</value>
+  </data>
+  <data name="Frontend.083" xml:space="preserve">
+    <value>アップロード完了||アップロード完了</value>
+  </data>
+  <data name="Frontend.084" xml:space="preserve">
+    <value>アップロード失敗||アップロード失敗</value>
+  </data>
+  <data name="Frontend.085" xml:space="preserve">
+    <value>ベクトル化失敗||ベクトル化失敗</value>
+  </data>
+  <data name="Frontend.086" xml:space="preserve">
+    <value>読み込み失敗||読み込み失敗</value>
+  </data>
+  <data name="Frontend.087" xml:space="preserve">
+    <value>データなし||データなし</value>
+  </data>
+  <data name="Frontend.088" xml:space="preserve">
+    <value>通知||通知</value>
+  </data>
   <data name="Page.EditKnowledgeBase" xml:space="preserve">
     <value>ナレッジベースを編集</value>
   </data>
   <data name="Page.CreateKnowledgeBase" xml:space="preserve">
     <value>ナレッジベースを作成</value>
   </data>
+  <data name="Frontend.089" xml:space="preserve">
+    <value>種類||種類</value>
+  </data>
+  <data name="Frontend.090" xml:space="preserve">
+    <value>ソース||ソース</value>
+  </data>
+  <data name="Frontend.091" xml:space="preserve">
+    <value>重要||重要</value>
+  </data>
+  <data name="Frontend.092" xml:space="preserve">
+    <value>審査待ち||審査待ち</value>
+  </data>
+  <data name="Frontend.093" xml:space="preserve">
+    <value>デモ||デモ</value>
+  </data>
+  <data name="Frontend.094" xml:space="preserve">
+    <value>セグメント-{0}||セグメント-{0}</value>
+  </data>
+  <data name="Frontend.095" xml:space="preserve">
+    <value>ナレッジベース-{0}||ナレッジベース-{0}</value>
+  </data>
+  <data name="Frontend.096" xml:space="preserve">
+    <value>検索設定を保存しました||検索設定を保存しました</value>
+  </data>
+  <data name="Frontend.097" xml:space="preserve">
+    <value>属性名を入力||属性名を入力</value>
+  </data>
+  <data name="Frontend.098" xml:space="preserve">
+    <value>保存しました||保存しました</value>
+  </data>
+  <data name="Frontend.099" xml:space="preserve">
+    <value>この属性を削除しますか？||この属性を削除しますか？</value>
+  </data>
+  <data name="Frontend.100" xml:space="preserve">
+    <value>削除済み||削除済み</value>
+  </data>
+  <data name="Frontend.101" xml:space="preserve">
+    <value>タグ名を入力||タグ名を入力</value>
+  </data>
+  <data name="Frontend.102" xml:space="preserve">
+    <value>このタグを削除しますか？||このタグを削除しますか？</value>
+  </data>
+  <data name="Frontend.103" xml:space="preserve">
+    <value>先にナレッジベースを選択してください||先にナレッジベースを選択してください</value>
+  </data>
+  <data name="Frontend.104" xml:space="preserve">
+    <value>[検索の例1]||[検索の例1]</value>
+  </data>
+  <data name="Frontend.105" xml:space="preserve">
+    <value>オフライン評価の検索が完了しました||オフライン評価の検索が完了しました</value>
+  </data>
+  <data name="Frontend.106" xml:space="preserve">
+    <value>オンライン評価の検索が完了しました||オンライン評価の検索が完了しました</value>
+  </data>
+  <data name="Frontend.107" xml:space="preserve">
+    <value>エラー||エラー</value>
+  </data>
+  <data name="Frontend.108" xml:space="preserve">
+    <value>ベクトル化に失敗しました。設定を確認してください。||ベクトル化に失敗しました。設定を確認してください。</value>
+  </data>
+  <data name="Frontend.109" xml:space="preserve">
+    <value>ホーム||ホーム</value>
+  </data>
+  <data name="Frontend.110" xml:space="preserve">
+    <value>ナレッジベース一覧ページ||ナレッジベース一覧ページ</value>
+  </data>
+  <data name="Frontend.111" xml:space="preserve">
+    <value>Embedding モデル Id||Embedding モデル Id</value>
+  </data>
+  <data name="Frontend.112" xml:space="preserve">
+    <value>ベクトルデータベースId||ベクトルデータベースId</value>
+  </data>
+  <data name="Frontend.113" xml:space="preserve">
+    <value>チャットモデルId||チャットモデルId</value>
+  </data>
+  <data name="Frontend.114" xml:space="preserve">
+    <value>Embedding モデルの Id を入力してください||Embedding モデルの Id を入力してください</value>
+  </data>
+  <data name="Frontend.115" xml:space="preserve">
+    <value>ベクトルデータベースIdを入力||ベクトルデータベースIdを入力</value>
+  </data>
+  <data name="Frontend.116" xml:space="preserve">
+    <value>チャットモデルIdを入力||チャットモデルIdを入力</value>
+  </data>
+  <data name="Frontend.117" xml:space="preserve">
+    <value>ナレッジベース関連を編集||ナレッジベース関連を編集</value>
+  </data>
+  <data name="Frontend.118" xml:space="preserve">
+    <value>ナレッジベース関連を追加||ナレッジベース関連を追加</value>
+  </data>
+  <data name="Frontend.119" xml:space="preserve">
+    <value>{0} 行を選択中||{0} 行を選択中</value>
+  </data>
+  <data name="Frontend.120" xml:space="preserve">
+    <value>開く||開く</value>
+  </data>
+  <data name="Frontend.121" xml:space="preserve">
+    <value>検索で返された断片数||検索で返された断片数</value>
+  </data>
+  <data name="Frontend.122" xml:space="preserve">
+    <value>ナレッジベースId||ナレッジベースId</value>
+  </data>
+  <data name="Frontend.123" xml:space="preserve">
+    <value>入力||入力</value>
+  </data>
+  <data name="Frontend.124" xml:space="preserve">
+    <value>ファイル||ファイル</value>
+  </data>
+  <data name="Frontend.125" xml:space="preserve">
+    <value>外部データを収集||外部データを収集</value>
+  </data>
+  <data name="Frontend.126" xml:space="preserve">
+    <value>ナレッジベース詳細を追加||ナレッジベース詳細を追加</value>
+  </data>
+  <data name="Frontend.127" xml:space="preserve">
+    <value>ナレッジベース管理の詳細名は必須です||ナレッジベース管理の詳細名は必須です</value>
+  </data>
+  <data name="Frontend.128" xml:space="preserve">
+    <value>ナレッジベース詳細の詳細||ナレッジベース詳細の詳細</value>
+  </data>
+  <data name="Frontend.129" xml:space="preserve">
+    <value>成功しました||成功しました</value>
+  </data>
+  <data name="Frontend.130" xml:space="preserve">
+    <value>アップロードに成功しました||アップロードに成功しました</value>
+  </data>
+  <data name="Frontend.131" xml:space="preserve">
+    <value>失敗||失敗</value>
+  </data>
+  <data name="Frontend.132" xml:space="preserve">
+    <value>アップロードに失敗しました。再度アップロードしてください||アップロードに失敗しました。再度アップロードしてください</value>
+  </data>
+  <data name="Frontend.133" xml:space="preserve">
+    <value>ナレッジベース詳細を編集||ナレッジベース詳細を編集</value>
+  </data>
+  <data name="Frontend.134" xml:space="preserve">
+    <value>準備しています...||準備しています...</value>
+  </data>
+  <data name="Frontend.135" xml:space="preserve">
+    <value>ナレッジベースを追加||ナレッジベースを追加</value>
+  </data>
+  <data name="Frontend.136" xml:space="preserve">
+    <value>ナレッジベース名は必須です||ナレッジベース名は必須です</value>
+  </data>
+  <data name="Frontend.137" xml:space="preserve">
+    <value>ナレッジベース詳細||ナレッジベース詳細</value>
+  </data>
+  <data name="Frontend.138" xml:space="preserve">
+    <value>選択してください||選択してください</value>
+  </data>
+  <data name="Frontend.139" xml:space="preserve">
+    <value>ファイルをファイル管理にアップロードしました||ファイルをファイル管理にアップロードしました</value>
+  </data>
+  <data name="Frontend.140" xml:space="preserve">
+    <value>アップロードに失敗しました。再試行してください||アップロードに失敗しました。再試行してください</value>
+  </data>
+  <data name="Frontend.141" xml:space="preserve">
+    <value>ナレッジベースを編集||ナレッジベースを編集</value>
+  </data>
+  <data name="Frontend.142" xml:space="preserve">
+    <value>保存する前にファイルを 1 つ以上選択してください||保存する前にファイルを 1 つ以上選択してください</value>
+  </data>
+  <data name="Frontend.143" xml:space="preserve">
+    <value>ファイルをナレッジベースに関連付け、エントリを書き込みました||ファイルをナレッジベースに関連付け、エントリを書き込みました</value>
+  </data>
+  <data name="Frontend.144" xml:space="preserve">
+    <value>ファイルのインポートに失敗||ファイルのインポートに失敗</value>
+  </data>
+  <data name="Frontend.145" xml:space="preserve">
+    <value>ファイルのインポートに失敗：||ファイルのインポートに失敗：</value>
+  </data>
+  <data name="Frontend.146" xml:space="preserve">
+    <value>保存済み||保存済み</value>
+  </data>
+  <data name="Frontend.147" xml:space="preserve">
+    <value>ナレッジベースを保存しました||ナレッジベースを保存しました</value>
+  </data>
+  <data name="Frontend.148" xml:space="preserve">
+    <value>保存に失敗しました。データを確認してください||保存に失敗しました。データを確認してください</value>
+  </data>
+  <data name="Frontend.149" xml:space="preserve">
+    <value>保存エラー：||保存エラー：</value>
+  </data>
+  <data name="Frontend.150" xml:space="preserve">
+    <value>ファイル「{0}」を削除しますか？削除すると、データベース上の記録と物理ファイルの両方が除去されます。||ファイル「{0}」を削除しますか？削除すると、データベース上の記録と物理ファイルの両方が除去されます。</value>
+  </data>
+  <data name="Frontend.151" xml:space="preserve">
+    <value>削除の確認||削除の確認</value>
+  </data>
+  <data name="Frontend.152" xml:space="preserve">
+    <value>先に削除するファイルを選択してください||先に削除するファイルを選択してください</value>
+  </data>
+  <data name="Frontend.153" xml:space="preserve">
+    <value>選択した {0} 件のファイルを削除しますか？削除すると、データベース上の記録と物理ファイルの両方が除去されます。||選択した {0} 件のファイルを削除しますか？削除すると、データベース上の記録と物理ファイルの両方が除去されます。</value>
+  </data>
+  <data name="Frontend.154" xml:space="preserve">
+    <value>一括削除の確認||一括削除の確認</value>
+  </data>
+  <data name="Frontend.155" xml:space="preserve">
+    <value>一部完了||一部完了</value>
+  </data>
+  <data name="Frontend.156" xml:space="preserve">
+    <value>{0}/{1} 件のファイルを削除しました||{0}/{1} 件のファイルを削除しました</value>
+  </data>
+  <data name="Frontend.157" xml:space="preserve">
+    <value>ファイル削除済み||ファイル削除済み</value>
+  </data>
+  <data name="Frontend.158" xml:space="preserve">
+    <value>削除失敗:||削除失敗:</value>
+  </data>
+  <data name="Frontend.159" xml:space="preserve">
+    <value>ベクトル化を確認||ベクトル化を確認</value>
+  </data>
+  <data name="Frontend.160" xml:space="preserve">
+    <value>ベクトル化しています...||ベクトル化しています...</value>
+  </data>
+  <data name="Frontend.161" xml:space="preserve">
+    <value>ベクトル化完了||ベクトル化完了</value>
+  </data>
+  <data name="Frontend.162" xml:space="preserve">
+    <value>ナレッジベース「{0}」のベクトル化が完了しました。||ナレッジベース「{0}」のベクトル化が完了しました。</value>
+  </data>
+  <data name="Frontend.163" xml:space="preserve">
+    <value>処理エラー：||処理エラー：</value>
+  </data>
+  <data name="Frontend.164" xml:space="preserve">
+    <value>今すぐ閉じますか？||今すぐ閉じますか？</value>
+  </data>
+  <data name="Frontend.165" xml:space="preserve">
+    <value>例外を送出するテスト。引き渡しパラメーター：{0} {1}||例外を送出するテスト。引き渡しパラメーター：{0} {1}</value>
+  </data>
+  <data name="Frontend.166" xml:space="preserve">
+    <value>除数は0にできません！||除数は0にできません！</value>
+  </data>
+  <data name="Frontend.167" xml:space="preserve">
+    <value>不明な演算子：{0}||不明な演算子：{0}</value>
+  </data>
+  <data name="Frontend.168" xml:space="preserve">
+    <value>ナレッジベース '{0}' には Embedding モデルが設定されていません。先に「設定」でモデルを選択してください。||ナレッジベース '{0}' には Embedding モデルが設定されていません。先に「設定」でモデルを選択してください。</value>
+  </data>
+  <data name="Frontend.169" xml:space="preserve">
+    <value>Embedding モデル ID {0} は存在しません。||Embedding モデル ID {0} は存在しません。</value>
+  </data>
+  <data name="Frontend.170" xml:space="preserve">
+    <value>Embedding ベクトルストア ID {0} は存在しません。||Embedding ベクトルストア ID {0} は存在しません。</value>
+  </data>
+  <data name="Frontend.171" xml:space="preserve">
+    <value>Embedding モデルの AIKernel モデルが見つかりません：{0}。||Embedding モデルの AIKernel モデルが見つかりません：{0}。</value>
+  </data>
+  <data name="Frontend.172" xml:space="preserve">
+    <value>ナレッジベース '{0}' のベクトル化が完了しました！||ナレッジベース '{0}' のベクトル化が完了しました！</value>
+  </data>
+  <data name="Frontend.173" xml:space="preserve">
+    <value>データなし||データなし</value>
+  </data>
+  <data name="Frontend.174" xml:space="preserve">
+    <value>保存しました||保存しました</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>サンプル関数</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>FunctionRender のパラメーターと戻り値を示します</value>
+  </data>
+
 </root>

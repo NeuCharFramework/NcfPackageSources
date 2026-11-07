@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.20.8 add PromptRange selector service, UI components, and tests
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 选择器返回评分并支持按评分排序
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -46,6 +49,7 @@ public partial class PromptItemService
                    IsDraft = item.IsDraft,
                    EvalAvgScore = item.EvalAvgScore,
                    EvalMaxScore = item.EvalMaxScore,
+                   CurrentScore = item.FinalScore ?? item.EvalAvgScore,
                    Content = item.Content
                };
     }
@@ -96,7 +100,7 @@ public partial class PromptItemService
         // SQLite cannot order decimal columns directly; scores use a numeric cast, not text ordering.
         var orderedQuery = sortBy == "promptCode"
             ? query.OrderBy(item => item.FullVersion).ThenByDescending(item => item.Id)
-            : query.OrderByDescending(item => (double)item.EvalAvgScore).ThenByDescending(item => item.Id);
+            : query.OrderByDescending(item => (double)item.CurrentScore).ThenByDescending(item => item.Id);
         var items = await orderedQuery
             .Skip((pageIndex - 1) * pageSize).Take(pageSize)
             .Select(item => new PromptSelectorItem
@@ -111,6 +115,7 @@ public partial class PromptItemService
                 IsDraft = item.IsDraft,
                 EvalAvgScore = item.EvalAvgScore,
                 EvalMaxScore = item.EvalMaxScore,
+                CurrentScore = item.CurrentScore,
                 Content = item.Content == null ? "" :
                     item.Content.Length > 240 ? item.Content.Substring(0, 240) : item.Content
             }).ToListAsync();
@@ -122,5 +127,24 @@ public partial class PromptItemService
     {
         return await SelectorQuery().SingleOrDefaultAsync(item => item.Id == id)
             ?? throw new NcfExceptionBase("The selected prompt is no longer available.");
+    }
+
+    public async Task<List<PromptSelectorScoreItem>> GetSelectorRangeScoresAsync(int id)
+    {
+        var rangeId = await SelectorQuery().Where(item => item.Id == id)
+            .Select(item => (int?)item.RangeId).SingleOrDefaultAsync()
+            ?? throw new NcfExceptionBase("The selected prompt is no longer available.");
+        return await SelectorQuery().Where(item => item.RangeId == rangeId)
+            .OrderBy(item => item.FullVersion).ThenBy(item => item.Id)
+            .Select(item => new PromptSelectorScoreItem
+            {
+                Id = item.Id,
+                RangeId = item.RangeId,
+                RangeName = item.RangeName,
+                RangeAlias = item.RangeAlias,
+                Tactic = item.Tactic,
+                FullVersion = item.FullVersion,
+                CurrentScore = item.CurrentScore
+            }).ToListAsync();
     }
 }

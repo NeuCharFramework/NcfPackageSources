@@ -18,6 +18,12 @@
   <data name="Module.XncfModuleManager.Description" xml:space="preserve">
     <value>Componente central para instalar, actualizar y administrar módulos XNCF</value>
   </data>
+  <data name="Parameter.XncfManager.ShowFunctions.Module" xml:space="preserve">
+    <value>Módulo XNCF||Ver el estado de Function de un módulo específico</value>
+  </data>
+  <data name="Parameter.XncfManager.Install.Module" xml:space="preserve">
+    <value>Módulo XNCF||Elija el módulo que desea instalar y habilitar</value>
+  </data>
   <data name="Function.XncfManager.GetAllModules.Name" xml:space="preserve">
     <value>Obtener todos los módulos XNCF</value>
   </data>
@@ -42,10 +48,5 @@
   <data name="Function.XncfManager.ViewFunctionStatus.Description" xml:space="preserve">
     <value>Muestra el estado de carga de funciones del módulo XNCF actual</value>
   </data>
-  <data name="Parameter.XncfManager.ShowFunctions.Module" xml:space="preserve">
-    <value>Módulo XNCF||Ver el estado de Function de un módulo específico</value>
-  </data>
-  <data name="Parameter.XncfManager.Install.Module" xml:space="preserve">
-    <value>Módulo XNCF||Elija el módulo que desea instalar y habilitar</value>
-  </data>
+
 </root>

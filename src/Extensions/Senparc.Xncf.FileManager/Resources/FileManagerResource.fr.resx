@@ -27,12 +27,6 @@
   <data name="Area.FileManager.Files" xml:space="preserve">
     <value>Gestion des fichiers</value>
   </data>
-  <data name="Function.Sample.Name" xml:space="preserve">
-    <value>Fonction d’exemple</value>
-  </data>
-  <data name="Function.Sample.Description" xml:space="preserve">
-    <value>Illustre les paramètres et retours FunctionRender</value>
-  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>Nom||Le texte avant la double barre est le nom du paramètre ; celui après est l’aide</value>
   </data>
@@ -102,4 +96,200 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Aléatoire</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>Téléverser vers :||Téléverser vers :</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>Téléverser un fichier||Téléverser un fichier</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>Heure de téléversement||Heure de téléversement</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>Télécharger||Télécharger</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>Code||Code</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>Autre||Autre</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>Supprimer||Supprimer</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>Actualiser les dossiers||Actualiser les dossiers</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>Annuler||Annuler</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>Vous pouvez téléverser plusieurs fichiers à la fois||Vous pouvez téléverser plusieurs fichiers à la fois</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>Nom||Nom</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>Notes||Notes</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>Notes (facultatif)||Notes (facultatif)</value>
+  </data>
+  <data name="Frontend.014" xml:space="preserve">
+    <value>Taille||Taille</value>
+  </data>
+  <data name="Frontend.015" xml:space="preserve">
+    <value>Modules d’extension||Modules d’extension</value>
+  </data>
+  <data name="Frontend.016" xml:space="preserve">
+    <value>Actions||Actions</value>
+  </data>
+  <data name="Frontend.017" xml:space="preserve">
+    <value>Nom de fichier||Nom de fichier</value>
+  </data>
+  <data name="Frontend.018" xml:space="preserve">
+    <value>Dossier||Dossier</value>
+  </data>
+  <data name="Frontend.019" xml:space="preserve">
+    <value>Gestionnaire de fichiers||Gestionnaire de fichiers</value>
+  </data>
+  <data name="Frontend.020" xml:space="preserve">
+    <value>Texte||Texte</value>
+  </data>
+  <data name="Frontend.021" xml:space="preserve">
+    <value>Nouveau||Nouveau</value>
+  </data>
+  <data name="Frontend.022" xml:space="preserve">
+    <value>Nouveau dossier||Nouveau dossier</value>
+  </data>
+  <data name="Frontend.023" xml:space="preserve">
+    <value>Racine||Racine</value>
+  </data>
+  <data name="Frontend.024" xml:space="preserve">
+    <value>OK||OK</value>
+  </data>
+  <data name="Frontend.025" xml:space="preserve">
+    <value>Type||Type</value>
+  </data>
+  <data name="Frontend.026" xml:space="preserve">
+    <value>Id de table||Id de table</value>
+  </data>
+  <data name="Frontend.027" xml:space="preserve">
+    <value>Saisissez le nom du dossier||Saisissez le nom du dossier</value>
+  </data>
+  <data name="Frontend.028" xml:space="preserve">
+    <value>Sélectionner un fichier||Sélectionner un fichier</value>
+  </data>
+  <data name="Frontend.029" xml:space="preserve">
+    <value>Accueil||Accueil</value>
+  </data>
+  <data name="Frontend.030" xml:space="preserve">
+    <value>Échec du chargement de la liste||Échec du chargement de la liste</value>
+  </data>
+  <data name="Frontend.031" xml:space="preserve">
+    <value>Téléversé||Téléversé</value>
+  </data>
+  <data name="Frontend.032" xml:space="preserve">
+    <value>Échec du téléversement||Échec du téléversement</value>
+  </data>
+  <data name="Frontend.033" xml:space="preserve">
+    <value>Modifié||Modifié</value>
+  </data>
+  <data name="Frontend.034" xml:space="preserve">
+    <value>Échec de la modification||Échec de la modification</value>
+  </data>
+  <data name="Frontend.035" xml:space="preserve">
+    <value>Confirmer la suppression de ce fichier ?||Confirmer la suppression de ce fichier ?</value>
+  </data>
+  <data name="Frontend.036" xml:space="preserve">
+    <value>Information||Information</value>
+  </data>
+  <data name="Frontend.037" xml:space="preserve">
+    <value>Confirmer||Confirmer</value>
+  </data>
+  <data name="Frontend.038" xml:space="preserve">
+    <value>Annuler||Annuler</value>
+  </data>
+  <data name="Frontend.039" xml:space="preserve">
+    <value>Suppression réussie||Suppression réussie</value>
+  </data>
+  <data name="Frontend.040" xml:space="preserve">
+    <value>Échec de la suppression||Échec de la suppression</value>
+  </data>
+  <data name="Frontend.041" xml:space="preserve">
+    <value>Création réussie||Création réussie</value>
+  </data>
+  <data name="Frontend.042" xml:space="preserve">
+    <value>Échec de la création||Échec de la création</value>
+  </data>
+  <data name="Frontend.043" xml:space="preserve">
+    <value>Échec du téléversement : {0}||Échec du téléversement : {0}</value>
+  </data>
+  <data name="Frontend.044" xml:space="preserve">
+    <value>Saisissez les notes pour {0}||Saisissez les notes pour {0}</value>
+  </data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>Accueil FileManager||Accueil FileManager</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>Dossier #{0}||Dossier #{0}</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>Saisissez les notes pour {0}||Saisissez les notes pour {0}</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>Mis à jour||Mis à jour</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>Échec de la mise à jour||Échec de la mise à jour</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>Supprimer ce fichier ?||Supprimer ce fichier ?</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>Sélectionnez un fichier à téléverser||Sélectionnez un fichier à téléverser</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>Échec du téléversement :||Échec du téléversement :</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>Test de levée d'exception, paramètres transmis : {0} {1}||Test de levée d'exception, paramètres transmis : {0} {1}</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>Le diviseur ne peut pas être 0 !||Le diviseur ne peut pas être 0 !</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>Opérateur inconnu : {0}||Opérateur inconnu : {0}</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>Vous pouvez téléverser au plus {0} fichiers à la fois.||Vous pouvez téléverser au plus {0} fichiers à la fois.</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>La taille totale d'un envoi ne peut pas dépasser {0} MB.||La taille totale d'un envoi ne peut pas dépasser {0} MB.</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>Le fichier téléversé ne peut pas être vide.||Le fichier téléversé ne peut pas être vide.</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>Un fichier seul ne peut pas dépasser {0} MB.||Un fichier seul ne peut pas dépasser {0} MB.</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>Ce type de fichier n'est pas autorisé. Seuls les formats courants de document, d'image, de texte et d'archive sont pris en charge.||Ce type de fichier n'est pas autorisé. Seuls les formats courants de document, d'image, de texte et d'archive sont pris en charge.</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>Le fichier n'existe pas !||Le fichier n'existe pas !</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>Les informations du chemin physique du fichier sont invalides.||Les informations du chemin physique du fichier sont invalides.</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>Le chemin physique du fichier est hors limites.||Le chemin physique du fichier est hors limites.</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>Fonction d’exemple</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>Illustre les paramètres et retours FunctionRender</value>
+  </data>
+
 </root>

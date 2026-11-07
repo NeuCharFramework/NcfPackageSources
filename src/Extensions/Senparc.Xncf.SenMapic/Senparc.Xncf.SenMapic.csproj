@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.4.10</Version>
+    <Version>0.4.11</Version>
     <AssemblyName>Senparc.Xncf.SenMapic</AssemblyName>
     <RootNamespace>Senparc.Xncf.SenMapic</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -64,7 +64,14 @@
       1、Updated Senparc.Xncf.SenMapic project behavior and integration for the latest feature and reliability improvements.
       2、chore: update package versions and dependencies across multiple projects
     [2026-11-03] Add shared documentation help to inherited-layout crawl task pages.
-</PackageReleaseNotes>
+    [2026-11-05] v0.4.11 将采集任务详情帮助定位到结果检查，并统一多语言文案
+    1、任务详情帮助改为指向结果检查，不再指向任务创建
+    2、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+    3、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+    4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+    5、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+    6、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

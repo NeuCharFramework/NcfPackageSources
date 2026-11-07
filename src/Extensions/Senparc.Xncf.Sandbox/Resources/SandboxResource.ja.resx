@@ -12,6 +12,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Module.Sandbox.MenuName" xml:space="preserve">
+    <value>サンドボックス</value>
+  </data>
+  <data name="Module.Sandbox.Description" xml:space="preserve">
+    <value>NCF のサンドボックス編成：Docker/Wasm で実験環境をすばやく作成・破棄</value>
+  </data>
+  <data name="Area.Menu.Home" xml:space="preserve">
+    <value>サンドボックスパネル</value>
+  </data>
+  <data name="Area.Menu.Setup" xml:space="preserve">
+    <value>環境の準備</value>
+  </data>
   <data name="Area.Home" xml:space="preserve">
     <value>ホーム</value>
   </data>
@@ -90,4 +102,5 @@
   <data name="Page.Random" xml:space="preserve">
     <value>ランダム</value>
   </data>
+
 </root>

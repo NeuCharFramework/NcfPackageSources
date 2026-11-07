@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.17.0 enhance Agent Studio, group configuration, and task management interactions
 
+    修改标识：Senparc - 20261106
+    修改描述：保存本机启动配置，并按别名读取密钥文件
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -22,6 +25,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 using Senparc.Ncf.Core.Exceptions;
 using Senparc.Ncf.Repository;
 using Senparc.Ncf.Service;
@@ -33,9 +37,13 @@ namespace Senparc.Xncf.AIKernel.Domain.Services;
 
 public sealed class AIFineTuningWorkerService : ServiceBase<AIFineTuningWorker>
 {
-    public AIFineTuningWorkerService(IRepositoryBase<AIFineTuningWorker> repo, IServiceProvider serviceProvider)
+    private readonly IHostEnvironment _environment;
+
+    public AIFineTuningWorkerService(IRepositoryBase<AIFineTuningWorker> repo, IServiceProvider serviceProvider,
+        IHostEnvironment environment)
         : base(repo, serviceProvider)
     {
+        _environment = environment;
     }
 
     public async Task<List<AIFineTuningWorkerDto>> GetListAsync(IEnumerable<string> configuredAliases,
@@ -47,9 +55,19 @@ public sealed class AIFineTuningWorkerService : ServiceBase<AIFineTuningWorker>
             .Select(z => new AIFineTuningWorkerDto(z, configured.Contains(z.Alias))).ToList();
     }
 
+    public async Task<List<AIFineTuningWorker>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        var workers = await GetFullListAsync(z => true).ConfigureAwait(false);
+        return workers.ToList();
+    }
+
     public async Task<AIFineTuningWorkerDto> SaveAsync(AIFineTuningWorker_CreateOrEditRequest request,
         IEnumerable<string> configuredAliases, CancellationToken cancellationToken = default)
     {
+        var peers = await GetFullListAsync(z => z.Id != request.Id).ConfigureAwait(false);
+        var profile = FineTuningWorkerLaunch.Prepare(request, _environment.ContentRootPath,
+            peers.Select(peer => new FineTuningWorkerPeer(peer.Alias, peer.LaunchProfileJson)));
+        var launchJson = profile.ToJson();
         ValidateEndpoint(request.Endpoint);
         var duplicate = await GetObjectAsync(z => z.Alias == request.Alias && z.Id != request.Id).ConfigureAwait(false);
         if (duplicate != null)
@@ -59,19 +77,27 @@ public sealed class AIFineTuningWorkerService : ServiceBase<AIFineTuningWorker>
         if (request.Id == 0)
         {
             worker = new AIFineTuningWorker(request.Alias, request.Name, request.Endpoint,
-                request.RequestTimeoutSeconds, request.Enabled, request.Note);
+                request.RequestTimeoutSeconds, request.Enabled, request.Note, launchJson);
         }
         else
         {
             worker = await GetObjectAsync(z => z.Id == request.Id).ConfigureAwait(false)
                 ?? throw new NcfExceptionBase("The fine-tuning worker does not exist.");
             worker.Update(request.Alias, request.Name, request.Endpoint, request.RequestTimeoutSeconds,
-                request.Enabled, request.Note);
+                request.Enabled, request.Note, launchJson);
         }
 
         await SaveObjectAsync(worker).ConfigureAwait(false);
         return new AIFineTuningWorkerDto(worker,
             configuredAliases.Contains(worker.Alias, StringComparer.OrdinalIgnoreCase));
+    }
+
+    public async Task<AIFineTuningWorker> GetRequiredAsync(string workerAlias, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(workerAlias))
+            throw new NcfExceptionBase("A fine-tuning worker must be selected.");
+        return await GetObjectAsync(z => z.Alias == workerAlias).ConfigureAwait(false)
+            ?? throw new NcfExceptionBase("The selected fine-tuning worker does not exist.");
     }
 
     public async Task<AIFineTuningWorker> GetEnabledAsync(string workerAlias, CancellationToken cancellationToken = default)

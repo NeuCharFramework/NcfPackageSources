@@ -18,4 +18,5 @@
   <data name="Module.SystemCore.Description" xml:space="preserve">
     <value>Core system module for foundational structures and runtime data. Do not remove it; back up data before changes.</value>
   </data>
+
 </root>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1</TargetFrameworks>
-    <Version>0.22.11</Version>
+    <Version>0.22.12</Version>
     <AssemblyName>Senparc.Xncf.ChangeNamespace</AssemblyName>
     <RootNamespace>Senparc.Xncf.ChangeNamespace</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -49,7 +49,11 @@
       2、保持项目引用链与当前功能兼容
       [2026-10-05] v0.22.11 Merge remote-tracking branch 'origin/Developer-MAF-V3' into Developer-MAF-V3-Spark
       1、Updated Senparc.Xncf.ChangeNamespace project behavior and integration for the latest feature and reliability improvements.
-      2、chore: update package versions and dependencies across multiple projects</PackageReleaseNotes>
+      2、chore: update package versions and dependencies across multiple projects
+      [2026-11-03] v0.22.12 以中文资源为基准统一整理多语言文案
+      1、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+      2、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+    </PackageReleaseNotes>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
   </PropertyGroup>

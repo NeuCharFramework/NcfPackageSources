@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.17.1</Version>
+    <Version>0.17.2</Version>
     <AssemblyName>Senparc.Xncf.AIKernel</AssemblyName>
     <RootNamespace>Senparc.Xncf.AIKernel</RootNamespace>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
@@ -139,7 +139,13 @@
 		6、按租户记录 Token 用量并同步微调控制面，改进事件游标的并发管理
 		7、完善微调管理页、任务遥测和多语言配置引导
     [2026-11-03] Add localized contextual documentation for fine-tuning Workers and vector storage.
-</PackageReleaseNotes>
+    [2026-11-04] v0.17.2 放宽微调校验提示词长度与生成上限，并统一多语言文案
+    1、校验提示词长度上限提高到 65536，单次校验最大 Token 上限提高到 32768，默认值为 2048
+    2、补齐并校正各语言资源条目，使模块界面文案与中文基准保持一致
+    3、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+    4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+    5、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+    </PackageReleaseNotes>
     <PackageIcon>icon.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
     <Configurations>Debug;Release;Test;TemplateRelease</Configurations>

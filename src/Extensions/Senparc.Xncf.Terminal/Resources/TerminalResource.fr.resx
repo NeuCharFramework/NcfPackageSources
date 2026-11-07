@@ -21,13 +21,14 @@
   <data name="Module.Terminal.AvailableCommands" xml:space="preserve">
     <value>Commandes actuellement disponibles :</value>
   </data>
+  <data name="Parameter.Terminal.Command" xml:space="preserve">
+    <value>&gt; Commande||Ligne de commande, par exemple : dir /?</value>
+  </data>
   <data name="Function.Terminal.Command.Name" xml:space="preserve">
     <value>Invite de commandes</value>
   </data>
   <data name="Function.Terminal.Command.Description" xml:space="preserve">
     <value>Exécute une commande de terminal sur le serveur et renvoie son résultat</value>
   </data>
-  <data name="Parameter.Terminal.Command" xml:space="preserve">
-    <value>&gt; Commande||Ligne de commande, par exemple : dir /?</value>
-  </data>
+
 </root>

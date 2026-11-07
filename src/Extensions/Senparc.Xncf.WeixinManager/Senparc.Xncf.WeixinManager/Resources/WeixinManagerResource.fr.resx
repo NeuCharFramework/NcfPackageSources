@@ -55,220 +55,220 @@
     <value>Envoyer</value>
   </data>
   <data name="Frontend.001" xml:space="preserve">
-    <value>扩展模块||Modules d’extension</value>
+    <value>Modules d’extension||Modules d’extension</value>
   </data>
   <data name="Frontend.002" xml:space="preserve">
-    <value>模块管理||Gestion des modules</value>
+    <value>Gestion des modules||Gestion des modules</value>
   </data>
   <data name="Frontend.003" xml:space="preserve">
-    <value>微信管理||Gestion WeChat</value>
+    <value>Gestion Weixin||Gestion Weixin</value>
   </data>
   <data name="Frontend.004" xml:space="preserve">
-    <value>公众号控制中心||Tableau de bord des comptes officiels</value>
+    <value>Centre de contrôle du compte officiel||Centre de contrôle du compte officiel</value>
   </data>
   <data name="Frontend.005" xml:space="preserve">
-    <value>公众号数量||Comptes officiels</value>
+    <value>Nombre de comptes officiels||Nombre de comptes officiels</value>
   </data>
   <data name="Frontend.006" xml:space="preserve">
-    <value>已经录入系统的公众号||Comptes officiels ajoutés au système</value>
+    <value>Comptes officiels déjà enregistrés dans le système||Comptes officiels déjà enregistrés dans le système</value>
   </data>
   <data name="Frontend.007" xml:space="preserve">
-    <value>运行账号数量||Comptes actifs</value>
+    <value>Nombre de comptes en cours||Nombre de comptes en cours</value>
   </data>
   <data name="Frontend.008" xml:space="preserve">
-    <value>已经生效并连接微信服务器的账号数量||Comptes actifs et connectés aux serveurs WeChat</value>
+    <value>Nombre de comptes actifs et connectés au serveur WeChat||Nombre de comptes actifs et connectés au serveur WeChat</value>
   </data>
   <data name="Frontend.009" xml:space="preserve">
-    <value>总微信用户数||Nombre total d’utilisateurs WeChat</value>
+    <value>Nombre total d'utilisateurs WeChat||Nombre total d'utilisateurs WeChat</value>
   </data>
   <data name="Frontend.010" xml:space="preserve">
-    <value>在当前平台交互过或自动拉取关注的用户数||Utilisateurs ayant interagi avec la plateforme ou synchronisés automatiquement</value>
+    <value>Nombre d'utilisateurs ayant interagi sur cette plateforme ou récupérés automatiquement comme abonnés||Nombre d'utilisateurs ayant interagi sur cette plateforme ou récupérés automatiquement comme abonnés</value>
   </data>
   <data name="Frontend.011" xml:space="preserve">
-    <value>今日新增用户数||Nouveaux utilisateurs aujourd’hui</value>
+    <value>Nouveaux utilisateurs aujourd'hui||Nouveaux utilisateurs aujourd'hui</value>
   </data>
   <data name="Frontend.012" xml:space="preserve">
-    <value>当天已经同步或添加到平台的用户数量||Utilisateurs synchronisés ou ajoutés aujourd’hui</value>
+    <value>Nombre d'utilisateurs synchronisés ou ajoutés à la plateforme aujourd'hui||Nombre d'utilisateurs synchronisés ou ajoutés à la plateforme aujourd'hui</value>
   </data>
   <data name="Frontend.013" xml:space="preserve">
-    <value>查看用户||Voir les utilisateurs</value>
+    <value>Voir les utilisateurs||Voir les utilisateurs</value>
   </data>
   <data name="Frontend.014" xml:space="preserve">
-    <value>查看分组||Voir les groupes</value>
+    <value>Voir les groupes||Voir les groupes</value>
   </data>
   <data name="Frontend.015" xml:space="preserve">
-    <value>查看标签||Voir les étiquettes</value>
+    <value>Voir les étiquettes||Voir les étiquettes</value>
   </data>
   <data name="Frontend.016" xml:space="preserve">
-    <value>对话||Conversations</value>
+    <value>Conversation||Conversation</value>
   </data>
   <data name="Frontend.017" xml:space="preserve">
-    <value>编辑||Modifier</value>
+    <value>Modifier||Modifier</value>
   </data>
   <data name="Frontend.018" xml:space="preserve">
-    <value>AccessToken 凭证有效期||Validité de l’AccessToken</value>
+    <value>Durée de validité des identifiants AccessToken||Durée de validité des identifiants AccessToken</value>
   </data>
   <data name="Frontend.019" xml:space="preserve">
-    <value>AccessToken 凭证状态||État de l’AccessToken</value>
+    <value>État des identifiants AccessToken||État des identifiants AccessToken</value>
   </data>
   <data name="Frontend.020" xml:space="preserve">
-    <value>公众号管理||Gestion des comptes officiels</value>
+    <value>Gestion des comptes officiels||Gestion des comptes officiels</value>
   </data>
   <data name="Frontend.021" xml:space="preserve">
-    <value>增加||Ajouter</value>
+    <value>Ajouter||Ajouter</value>
   </data>
   <data name="Frontend.022" xml:space="preserve">
-    <value>删除||Supprimer</value>
+    <value>Supprimer||Supprimer</value>
   </data>
   <data name="Frontend.023" xml:space="preserve">
-    <value>名称||Nom</value>
+    <value>Nom||Nom</value>
   </data>
   <data name="Frontend.024" xml:space="preserve">
-    <value>备注||Note</value>
+    <value>Notes||Notes</value>
   </data>
   <data name="Frontend.025" xml:space="preserve">
-    <value>说明||Description</value>
+    <value>Description||Description</value>
   </data>
   <data name="Frontend.026" xml:space="preserve">
-    <value>添加时间||Ajouté le</value>
+    <value>Date d’ajout||Date d’ajout</value>
   </data>
   <data name="Frontend.027" xml:space="preserve">
-    <value>消息URL||URL des messages</value>
+    <value>URL du message||URL du message</value>
   </data>
   <data name="Frontend.028" xml:space="preserve">
-    <value>打开||Ouvrir</value>
+    <value>Ouvrir||Ouvrir</value>
   </data>
   <data name="Frontend.029" xml:space="preserve">
-    <value>操作||Actions</value>
+    <value>Actions||Actions</value>
   </data>
   <data name="Frontend.030" xml:space="preserve">
-    <value>用户管理||Gestion des utilisateurs</value>
+    <value>Gestion des utilisateurs||Gestion des utilisateurs</value>
   </data>
   <data name="Frontend.031" xml:space="preserve">
-    <value>公众号名称||Nom du compte officiel</value>
+    <value>Nom du compte officiel||Nom du compte officiel</value>
   </data>
   <data name="Frontend.032" xml:space="preserve">
-    <value>微信后台配置的服务器地址(URL)||URL du serveur configurée dans WeChat</value>
+    <value>Adresse du serveur (URL) configurée dans la console d'administration WeChat||Adresse du serveur (URL) configurée dans la console d'administration WeChat</value>
   </data>
   <data name="Frontend.033" xml:space="preserve">
-    <value>[您的域名]||[Votre domaine]</value>
+    <value>[Votre domaine]||[Votre domaine]</value>
   </data>
   <data name="Frontend.034" xml:space="preserve">
-    <value>[你的域名]||[Votre domaine]</value>
+    <value>[Votre domaine]||[Votre domaine]</value>
   </data>
   <data name="Frontend.035" xml:space="preserve">
-    <value>注意：“公众号名称”必须与所对应的 MessageHandler 所标记的 [MpMessageHandler(name)] 中的 name 对应||Remarque : le nom du compte officiel doit correspondre au nom de [MpMessageHandler(name)] sur le MessageHandler associé.</value>
+    <value>Attention : le « nom du compte officiel » doit correspondre au name de [MpMessageHandler(name)] sur le MessageHandler concerné||Attention : le « nom du compte officiel » doit correspondre au name de [MpMessageHandler(name)] sur le MessageHandler concerné</value>
   </data>
   <data name="Frontend.036" xml:space="preserve">
-    <value>取 消||Annuler</value>
+    <value>Annuler||Annuler</value>
   </data>
   <data name="Frontend.037" xml:space="preserve">
-    <value>确 认||Confirmer</value>
+    <value>Confirmer||Confirmer</value>
   </data>
   <data name="Frontend.038" xml:space="preserve">
-    <value>请输入公众号名称||Saisissez le nom du compte officiel</value>
+    <value>Saisissez le nom du compte officiel||Saisissez le nom du compte officiel</value>
   </data>
   <data name="Frontend.039" xml:space="preserve">
-    <value>请输入AppId||Saisissez l’AppId</value>
+    <value>Saisissez AppId||Saisissez AppId</value>
   </data>
   <data name="Frontend.040" xml:space="preserve">
-    <value>请输入AppSecret||Saisissez l’AppSecret</value>
+    <value>Saisissez AppSecret||Saisissez AppSecret</value>
   </data>
   <data name="Frontend.041" xml:space="preserve">
-    <value>请输入Token||Saisissez le Token</value>
+    <value>Saisissez Token||Saisissez Token</value>
   </data>
   <data name="Frontend.042" xml:space="preserve">
-    <value>长度在 1 至 100 之间||La longueur doit être comprise entre 1 et 100 caractères</value>
+    <value>La longueur doit être comprise entre 1 et 100||La longueur doit être comprise entre 1 et 100</value>
   </data>
   <data name="Frontend.043" xml:space="preserve">
-    <value>长度在 1 至 500 之间||La longueur doit être comprise entre 1 et 500 caractères</value>
+    <value>La longueur doit être comprise entre 1 et 500||La longueur doit être comprise entre 1 et 500</value>
   </data>
   <data name="Frontend.044" xml:space="preserve">
-    <value>新增公众号||Ajouter un compte officiel</value>
+    <value>Ajouter un compte officiel||Ajouter un compte officiel</value>
   </data>
   <data name="Frontend.045" xml:space="preserve">
-    <value>编辑公众号||Modifier le compte officiel</value>
+    <value>Modifier le compte officiel||Modifier le compte officiel</value>
   </data>
   <data name="Frontend.046" xml:space="preserve">
-    <value>新增公众号成功||Compte officiel ajouté</value>
+    <value>Compte officiel ajouté||Compte officiel ajouté</value>
   </data>
   <data name="Frontend.047" xml:space="preserve">
-    <value>编辑公众号成功||Compte officiel mis à jour</value>
+    <value>Compte officiel mis à jour||Compte officiel mis à jour</value>
   </data>
   <data name="Frontend.048" xml:space="preserve">
-    <value>成功||Succès</value>
+    <value>Réussi||Réussi</value>
   </data>
   <data name="Frontend.049" xml:space="preserve">
-    <value>警告||Avertissement</value>
+    <value>Avertissement||Avertissement</value>
   </data>
   <data name="Frontend.050" xml:space="preserve">
-    <value>请勾选公众号||Sélectionnez au moins un compte officiel</value>
+    <value>Sélectionnez au moins un compte officiel||Sélectionnez au moins un compte officiel</value>
   </data>
   <data name="Frontend.051" xml:space="preserve">
-    <value>是否删除所都选的项目？||Supprimer tous les éléments sélectionnés ?</value>
+    <value>Supprimer tous les éléments sélectionnés ?||Supprimer tous les éléments sélectionnés ?</value>
   </data>
   <data name="Frontend.052" xml:space="preserve">
-    <value>已成功删除{0}条||{0} éléments supprimés</value>
+    <value>{0} éléments supprimés||{0} éléments supprimés</value>
   </data>
   <data name="Frontend.053" xml:space="preserve">
-    <value>追加新增关注||Ajouter les nouveaux abonnés</value>
+    <value>Ajouter les nouveaux abonnés||Ajouter les nouveaux abonnés</value>
   </data>
   <data name="Frontend.054" xml:space="preserve">
-    <value>同步所有关注||Synchroniser tous les abonnés</value>
+    <value>Synchroniser tous les abonnés||Synchroniser tous les abonnés</value>
   </data>
   <data name="Frontend.055" xml:space="preserve">
-    <value>注意：如果用户数量众多，可能会消耗非常长的时间！||Remarque : cette opération peut être très longue si les utilisateurs sont nombreux.</value>
+    <value>Attention : s'il y a beaucoup d'utilisateurs, cela peut prendre très longtemps !||Attention : s'il y a beaucoup d'utilisateurs, cela peut prendre très longtemps !</value>
   </data>
   <data name="Frontend.056" xml:space="preserve">
-    <value>昵称||Surnom</value>
+    <value>Pseudo||Pseudo</value>
   </data>
   <data name="Frontend.057" xml:space="preserve">
-    <value>头像||Avatar</value>
+    <value>Avatar||Avatar</value>
   </data>
   <data name="Frontend.058" xml:space="preserve">
-    <value>性别||Genre</value>
+    <value>Genre||Genre</value>
   </data>
   <data name="Frontend.059" xml:space="preserve">
-    <value>男||Homme</value>
+    <value>Homme||Homme</value>
   </data>
   <data name="Frontend.060" xml:space="preserve">
-    <value>女||Femme</value>
+    <value>Femme||Femme</value>
   </data>
   <data name="Frontend.061" xml:space="preserve">
-    <value>未知||Inconnu</value>
+    <value>Inconnu||Inconnu</value>
   </data>
   <data name="Frontend.062" xml:space="preserve">
-    <value>地区||Région</value>
+    <value>Région||Région</value>
   </data>
   <data name="Frontend.063" xml:space="preserve">
-    <value>分组||Groupe</value>
+    <value>Groupe||Groupe</value>
   </data>
   <data name="Frontend.064" xml:space="preserve">
-    <value>关注时间||Date d’abonnement</value>
+    <value>Date du suivi||Date du suivi</value>
   </data>
   <data name="Frontend.065" xml:space="preserve">
-    <value>关注状态||État de l’abonnement</value>
+    <value>Statut du suivi||Statut du suivi</value>
   </data>
   <data name="Frontend.066" xml:space="preserve">
-    <value>已关注||Abonné</value>
+    <value>Abonné||Abonné</value>
   </data>
   <data name="Frontend.067" xml:space="preserve">
-    <value>未关注||Non abonné</value>
+    <value>Non suivi||Non suivi</value>
   </data>
   <data name="Frontend.068" xml:space="preserve">
-    <value>关注场景||Source de l’abonnement</value>
+    <value>Source du suivi||Source du suivi</value>
   </data>
   <data name="Frontend.069" xml:space="preserve">
-    <value>标签||Étiquettes</value>
+    <value>Étiquettes||Étiquettes</value>
   </data>
   <data name="Frontend.070" xml:space="preserve">
-    <value>无||Aucun</value>
+    <value>Aucun||Aucun</value>
   </data>
   <data name="Frontend.071" xml:space="preserve">
-    <value>所有用户||Tous les utilisateurs</value>
+    <value>Tous les utilisateurs||Tous les utilisateurs</value>
   </data>
   <data name="Frontend.072" xml:space="preserve">
-    <value>{0}的用户||Utilisateurs de {0}</value>
+    <value>Utilisateurs de {0}||Utilisateurs de {0}</value>
   </data>
   <data name="User.AccountUsers" xml:space="preserve">
     <value>Utilisateurs de {0}</value>
@@ -277,10 +277,10 @@
     <value>Tous les utilisateurs</value>
   </data>
   <data name="Frontend.073" xml:space="preserve">
-    <value>[您的域名]/WeixinMp/{0}||[Votre domaine]/WeixinMp/{0}</value>
+    <value>[Votre domaine]/WeixinMp/{0}||[Votre domaine]/WeixinMp/{0}</value>
   </data>
   <data name="Frontend.074" xml:space="preserve">
-    <value>[你的域名]/WeixinMp/{0}||[Votre domaine]/WeixinMp/{0}</value>
+    <value>[Votre domaine]/WeixinMp/{0}||[Votre domaine]/WeixinMp/{0}</value>
   </data>
   <data name="Public.ToggleNavigation" xml:space="preserve">
     <value>Afficher ou masquer la navigation</value>
@@ -312,4 +312,5 @@
   <data name="Error.MessageHandlerConstructor" xml:space="preserve">
     <value>{0} doit fournir un constructeur avec les paramètres dans l’ordre suivant : (MpAccountDto mpAccountDto, Stream inputStream, PostModel postModel, int maxRecordCount, IServiceProvider serviceProvider)</value>
   </data>
+
 </root>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
-		<Version>0.3.26</Version>
+		<Version>0.3.27</Version>
 		<AssemblyName>Senparc.Ncf.UnitTestExtension</AssemblyName>
 		<RootNamespace>Senparc.Ncf.UnitTestExtension</RootNamespace>
 		<GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -79,7 +79,16 @@
 				1、同步受影响的基础库、AI 模块或宿主项目版本
 				2、保持项目引用链与当前功能兼容
 				[2026-10-05] v0.3.26 Enhanced Senparc.Ncf.UnitTestExtension functionality and compatibility
-				1、Updated Senparc.Ncf.UnitTestExtension project behavior and integration for the latest feature and reliability improvements.</PackageReleaseNotes>
+				1、Updated Senparc.Ncf.UnitTestExtension project behavior and integration for the latest feature and reliability improvements.
+				[2026-11-05] v0.3.27 同步直接依赖项目版本
+				1、Dependency update from Senparc.Xncf.AreasBase to 0.13.12
+				2、Dependency update from Senparc.Xncf.SystemCore to 0.14.12
+				3、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+				4、Dependency update from Senparc.Ncf.DatabasePlant to 0.21.14
+				5、Dependency update from Senparc.Ncf.Repository to 0.20.11-preview10
+				6、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+				7、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+		</PackageReleaseNotes>
 		<RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
 		<Configurations>Debug;Release;Test;TemplateRelease</Configurations>
 	</PropertyGroup>

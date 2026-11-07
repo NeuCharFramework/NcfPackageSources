@@ -42,6 +42,8 @@
     1、覆盖 Skill 类型、执行策略、测试隔离与 Agent 绑定契约
     [2026-11-02] Verify numeric score ordering, unrated and zero scores, tie-breaking, PromptCode sorting and pagination.
     [2026-11-02] Cover prompt selector SQL filtering, paging, content projection, tenant isolation and input validation.
+    [2026-11-04] Verify exact references, last-save scoring, concurrent same-value updates, benchmark validation and tenant isolation.
+    [2026-11-05] Verify complete Range score overviews, shared current scores, lightweight responses and access isolation.
 </PackageReleaseNotes>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>

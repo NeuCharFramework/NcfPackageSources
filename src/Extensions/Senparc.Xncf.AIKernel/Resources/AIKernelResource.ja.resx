@@ -100,7 +100,7 @@
   <data name="Vector.DatabaseType" xml:space="preserve"><value>ベクトルデータベースの種類</value></data>
   <data name="Vector.Note" xml:space="preserve"><value>メモ</value></data>
   <data name="Vector.AddTime" xml:space="preserve"><value>追加日時</value></data>
-  <data name="Vector.Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Vector.Actions" xml:space="preserve"><value>アクション</value></data>
   <data name="Vector.Edit" xml:space="preserve"><value>編集</value></data>
   <data name="Vector.Delete" xml:space="preserve"><value>削除</value></data>
   <data name="Vector.AddTitle" xml:space="preserve"><value>ベクトルデータベースを追加</value></data>
@@ -158,10 +158,351 @@
   <data name="Dashboard.LastSevenDays" xml:space="preserve"><value>過去 7 日間</value></data>
   <data name="Dashboard.TimesUnit" xml:space="preserve"><value>回</value></data>
   <data name="Dashboard.ActiveUsers" xml:space="preserve"><value>アクティブユーザー数</value></data>
-  <data name="Dashboard.PeopleUnit" xml:space="preserve"><value>人</value></data>
+  <data name="Dashboard.PeopleUnit" xml:space="preserve"><value>ユーザー</value></data>
   <data name="Dashboard.AverageInteractions" xml:space="preserve"><value>平均セッション対話数</value></data>
   <data name="Dashboard.TokenSpeedWithUnit" xml:space="preserve"><value>Token 出力速度（Token/秒）</value></data>
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Token 出力速度</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>ユーザー満足度</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>全メッセージ数</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>このエンティティは削除されたか存在しません！||このエンティティは削除されたか存在しません！</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>エラー：このシステムには NeuChar 開発者アカウントが設定されていません。【システム管理】モジュールの設定ページで、【NeuChar クラウドアカウント情報を更新】を使い、NeuChar 開発者アカウントを紐付けてください！||エラー：このシステムには NeuChar 開発者アカウントが設定されていません。【システム管理】モジュールの設定ページで、【NeuChar クラウドアカウント情報を更新】を使い、NeuChar 開発者アカウントを紐付けてください！</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>AppKey または AppSecret が正しくありません！設定し直してください！||AppKey または AppSecret が正しくありません！設定し直してください！</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>指定された DeveloperId が、システムに設定された AppKey と一致しません。確認または更新してから再試行してください！||指定された DeveloperId が、システムに設定された AppKey と一致しません。確認または更新してから再試行してください！</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>更新しました。||更新しました。</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>エンティティが見つかりません！||エンティティが見つかりません！</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>未対応：BuildSenparcAiSetting での {0} モデルの処理||未対応：BuildSenparcAiSetting での {0} モデルの処理</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel は、現在 {0} タイプに対応していません||Senparc.Xncf.AIKernel は、現在 {0} タイプに対応していません</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting は空にできません||SenparcAiSetting は空にできません</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>モデルデータが存在しません。デプロイ済みか、権限があるかを確認してください！||モデルデータが存在しません。デプロイ済みか、権限があるかを確認してください！</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>モデルを {0} 件追加し、{1} 件のモデル情報を更新しました。||モデルを {0} 件追加し、{1} 件のモデル情報を更新しました。</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>PromptRange は、現在 {0} タイプに対応していません||PromptRange は、現在 {0} タイプに対応していません</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>自動採点には、Chat タイプのモデルを少なくとも 1 つ設定する必要があります（AIKernel モジュール内）||自動採点には、Chat タイプのモデルを少なくとも 1 つ設定する必要があります（AIKernel モジュール内）</value></data>
+  <data name="Area.AIKernel.TokenMonitor" xml:space="preserve"><value>Token モニター</value></data>
+  <data name="TokenMonitor.Title" xml:space="preserve"><value>Token モニター</value></data>
+  <data name="TokenMonitor.TotalTokens" xml:space="preserve"><value>合計 Token</value></data>
+  <data name="TokenMonitor.TotalCalls" xml:space="preserve"><value>総呼び出し回数</value></data>
+  <data name="TokenMonitor.SuccessError" xml:space="preserve"><value>成功 / エラー</value></data>
+  <data name="TokenMonitor.AverageDuration" xml:space="preserve"><value>平均所要時間</value></data>
+  <data name="TokenMonitor.InputTokens" xml:space="preserve"><value>入力 Token</value></data>
+  <data name="TokenMonitor.OutputTokens" xml:space="preserve"><value>出力 Token</value></data>
+  <data name="TokenMonitor.RunMonitor" xml:space="preserve"><value>モニター付きで実行</value></data>
+  <data name="TokenMonitor.Model" xml:space="preserve"><value>モデル</value></data>
+  <data name="TokenMonitor.Prompt" xml:space="preserve"><value>プロンプト</value></data>
+  <data name="TokenMonitor.Run" xml:space="preserve"><value>実行</value></data>
+  <data name="TokenMonitor.Elapsed" xml:space="preserve"><value>経過</value></data>
+  <data name="TokenMonitor.Status" xml:space="preserve"><value>ステータス</value></data>
+  <data name="TokenMonitor.OutputPreview" xml:space="preserve"><value>出力プレビュー</value></data>
+  <data name="TokenMonitor.Source" xml:space="preserve"><value>ソース</value></data>
+  <data name="TokenMonitor.Success" xml:space="preserve"><value>成功しました</value></data>
+  <data name="TokenMonitor.Failed" xml:space="preserve"><value>失敗</value></data>
+  <data name="TokenMonitor.Refresh" xml:space="preserve"><value>更新</value></data>
+  <data name="TokenMonitor.SelectModel" xml:space="preserve"><value>モデルを選択してください</value></data>
+  <data name="TokenMonitor.InputPrompt" xml:space="preserve"><value>プロンプトを入力してください</value></data>
+  <data name="TokenMonitor.RunDone" xml:space="preserve"><value>実行完了</value></data>
+  <data name="TokenMonitor.Running" xml:space="preserve"><value>実行中</value></data>
+  <data name="TokenMonitor.Completed" xml:space="preserve"><value>完了</value></data>
+  <data name="TokenMonitor.DailyTitle" xml:space="preserve"><value>Token 使用量（直近 7 日間）</value></data>
+  <data name="TokenMonitor.ModelTitle" xml:space="preserve"><value>Model 別の Token 使用量</value></data>
+  <data name="TokenMonitor.ConfirmDelete" xml:space="preserve"><value>この token 使用記録を削除しますか？</value></data>
+  <data name="TokenMonitor.LastUsed" xml:space="preserve"><value>最終使用</value></data>
+  <data name="TokenMonitor.SearchPlaceholder" xml:space="preserve"><value>モデル別名で検索</value></data>
+  <data name="TokenMonitor.Search" xml:space="preserve"><value>検索</value></data>
+  <data name="FineTuning.Title" xml:space="preserve"><value>ローカルモデルのファインチューニング</value></data>
+  <data name="FineTuning.Subtitle" xml:space="preserve"><value>ローカルアダプターを学習し、ライブのフィードバックを確認し、成果物をダウンロードします。既存の推論登録は変更しません。</value></data>
+  <data name="FineTuning.Refresh" xml:space="preserve"><value>更新 / 再接続</value></data>
+  <data name="FineTuning.Connected" xml:space="preserve"><value>接続済み</value></data>
+  <data name="FineTuning.Stale" xml:space="preserve"><value>接続が古い / 利用不可</value></data>
+  <data name="FineTuning.LastUpdate" xml:space="preserve"><value>最終の成功した更新</value></data>
+  <data name="FineTuning.WorkerVersion" xml:space="preserve"><value>ワーカーのバージョン</value></data>
+  <data name="FineTuning.RunningCount" xml:space="preserve"><value>実行中</value></data>
+  <data name="FineTuning.QueuedCount" xml:space="preserve"><value>キュー待ち</value></data>
+  <data name="FineTuning.Unavailable" xml:space="preserve"><value>利用不可</value></data>
+  <data name="FineTuning.ConnectionError" xml:space="preserve"><value>worker の状態を更新できません。表示中のデータは古い可能性があります。</value></data>
+  <data name="FineTuning.ActionError" xml:space="preserve"><value>エラー</value></data>
+  <data name="FineTuning.SetupHelp" xml:space="preserve"><value>worker のセットアップとトラブルシューティング</value></data>
+  <data name="FineTuning.EndpointHelp" xml:space="preserve"><value>ここで worker を作成します。NCF はローカルの Python worker を起動できます。モデルディレクトリ、データディレクトリ、ポート、プロジェクトパスはデータベースに保存され、キーはサイトの App_Data 配下で現在のユーザーだけが読めるファイルに書き込まれます。FineTuning:WorkerApiKeys:&lt;alias&gt; は引き続きそのファイルより優先されます。ループバックアドレスは AllowedHosts に不要です。その他のホストは worker の保存時に許可リストへ追加されます。ページにキーは表示されません。Docker では localhost はコンテナー自身を指します。</value></data>
+  <data name="FineTuning.BackendHelp" xml:space="preserve"><value>CPU は小さなスモークテストに向いています。CUDA には互換のある NVIDIA GPU と、CUDA が有効な worker またはコンテナーが必要です。MLX は macOS Apple Silicon 上でネイティブに動きます。Linux の Docker コンテナーは Apple の Metal/MLX バックエンドにアクセスできません。ネイティブの MLX worker を起動し、到達できる endpoint を設定してください。使える手法は、ブラウザーではなく worker が報告する能力によります。</value></data>
+  <data name="FineTuning.SecurityHelp" xml:space="preserve"><value>学習の管理は、信頼できるグローバル管理者だけが行うべきです。worker のデータはテナント分離されていません。worker はプライベートに保ち、アップロード前にシークレットと不要な個人データを除き、モデルとデータのライセンスを確認してください。Endpoints は Worker プロファイルで管理します。キーとエンドポイント許可リストはインフラ設定に残します。</value></data>
+  <data name="FineTuning.Preflight" xml:space="preserve"><value>事前チェックの能力</value></data>
+  <data name="FineTuning.AwaitingHealth" xml:space="preserve"><value>worker の能力はまだ利用できません。</value></data>
+  <data name="FineTuning.Available" xml:space="preserve"><value>利用可能</value></data>
+  <data name="FineTuning.PreflightHelp" xml:space="preserve"><value>能力が利用できることは、メモリが十分であることや学習が成功することを保証しません。選択したモデル、バックエンド、手法を確認し、既定の 10 ステップのスモークテストから始めてください。</value></data>
+  <data name="FineTuning.Datasets" xml:space="preserve"><value>データセット</value></data>
+  <data name="FineTuning.DatasetHelp" xml:space="preserve"><value>UTF-8 の .jsonl をアップロードします。行数は 2–1,000,000、サイズは最大 512 MiB です。各行には対応オブジェクトを 1 つだけ置きます。空行、JSON 配列、余分なフィールドは拒否されます。ブラウザーはファイルをストリームとして検証しますが、最終判断は worker の検証です。データセットは FileManager と選択した Worker に保存されます。</value></data>
+  <data name="FineTuning.DatasetName" xml:space="preserve"><value>データセット名</value></data>
+  <data name="FineTuning.DatasetFile" xml:space="preserve"><value>UTF-8 の JSONL ファイル（最大 512 MiB）</value></data>
+  <data name="FineTuning.ReadingFile" xml:space="preserve"><value>ファイルを読み取り、検証しています…</value></data>
+  <data name="FineTuning.Upload" xml:space="preserve"><value>データセットをアップロード</value></data>
+  <data name="FineTuning.NoDatasets" xml:space="preserve"><value>データセットはまだありません</value></data>
+  <data name="FineTuning.Rows" xml:space="preserve"><value>行の数</value></data>
+  <data name="FineTuning.Created" xml:space="preserve"><value>作成</value></data>
+  <data name="FineTuning.Sha256" xml:space="preserve"><value>SHA-256</value></data>
+  <data name="FineTuning.CreateJob" xml:space="preserve"><value>学習の設定</value></data>
+  <data name="FineTuning.JobName" xml:space="preserve"><value>タスク名</value></data>
+  <data name="FineTuning.Model" xml:space="preserve"><value>ベースモデル</value></data>
+  <data name="FineTuning.SelectModel" xml:space="preserve"><value>worker のモデルを選択</value></data>
+  <data name="FineTuning.TrainingDataset" xml:space="preserve"><value>学習データセット</value></data>
+  <data name="FineTuning.SelectDataset" xml:space="preserve"><value>アップロード済みのデータセットを選択</value></data>
+  <data name="FineTuning.ValidationDataset" xml:space="preserve"><value>ホールドアウト検証データセット（任意）</value></data>
+  <data name="FineTuning.NoValidation" xml:space="preserve"><value>自動ホールドアウト分割</value></data>
+  <data name="FineTuning.Backend" xml:space="preserve"><value>バックエンド</value></data>
+  <data name="FineTuning.Method" xml:space="preserve"><value>方法</value></data>
+  <data name="FineTuning.ValidationHelp" xml:space="preserve"><value>別のホールドアウトデータセットを使ってください。学習と評価の行が重なると拒否されます。未選択の場合、worker は seed を使い、異なる行の約 20%（少なくとも 1 行）を自動で取り分けます。</value></data>
+  <data name="FineTuning.BackendUnavailable" xml:space="preserve"><value>選択したバックエンドは利用できません</value></data>
+  <data name="FineTuning.ModelBackendMismatch" xml:space="preserve"><value>選択したモデルはこの学習バックエンドに対応していません。</value></data>
+  <data name="FineTuning.MethodMismatch" xml:space="preserve"><value>選択したバックエンドはこの手法に対応していません。</value></data>
+  <data name="FineTuning.Advanced" xml:space="preserve"><value>詳細パラメータ（学習前に確認）</value></data>
+  <data name="FineTuning.SubmitJob" xml:space="preserve"><value>学習ジョブを作成</value></data>
+  <data name="FineTuning.Jobs" xml:space="preserve"><value>永続化された学習ジョブ</value></data>
+  <data name="FineTuning.JobsHelp" xml:space="preserve"><value>ジョブを選ぶと、サーバーに永続化された状態へ再接続し、イベントを差分再生できます。このページを閉じても、ジョブは worker 上で続行します。</value></data>
+  <data name="FineTuning.NoJobs" xml:space="preserve"><value>学習ジョブはまだありません</value></data>
+  <data name="FineTuning.State" xml:space="preserve"><value>ステータス</value></data>
+  <data name="FineTuning.Actions" xml:space="preserve"><value>アクション</value></data>
+  <data name="FineTuning.Monitor" xml:space="preserve"><value>モニター</value></data>
+  <data name="FineTuning.CancelJob" xml:space="preserve"><value>ジョブをキャンセル</value></data>
+  <data name="FineTuning.Started" xml:space="preserve"><value>開始時刻</value></data>
+  <data name="FineTuning.Finished" xml:space="preserve"><value>終了時刻</value></data>
+  <data name="FineTuning.JobId" xml:space="preserve"><value>ジョブ ID</value></data>
+  <data name="FineTuning.TrainingError" xml:space="preserve"><value>学習に失敗しました</value></data>
+  <data name="FineTuning.Steps" xml:space="preserve"><value>ステップ / 総ステップ数</value></data>
+  <data name="FineTuning.ProgressUnknown" xml:space="preserve"><value>worker が step と totalSteps を報告するまで進捗は表示されません。時間による見積もりは使いません。</value></data>
+  <data name="FineTuning.CancellingHelp" xml:space="preserve"><value>キャンセルが要求されています。worker が終了を確認するまで待ってください。リソースはまだ使用中の可能性があります。</value></data>
+  <data name="FineTuning.MetricsHelp" xml:space="preserve"><value>リソース指標と学習コンテキストは worker が報告します。イベントログには、学習分割のサンプル番号、batch/token 数、シーケンス長の範囲、切り詰め数が含まれます。生のサンプル本文は永続化しません。未対応、欠落、数値でない値は利用不可と表示し、決して 0 にはしません。複数コアでは CPU 使用率が 100% を超えることがあります。</value></data>
+  <data name="FineTuning.ChartTitle" xml:space="preserve"><value>実際の学習ステップごとの学習損失、評価損失、学習率</value></data>
+  <data name="FineTuning.ChartUnavailable" xml:space="preserve"><value>ECharts が読み込まれていないため、グラフは利用できません。指標とログは引き続き利用できます。</value></data>
+  <data name="FineTuning.AwaitingMetrics" xml:space="preserve"><value>数値の学習ステップ指標を待っています…</value></data>
+  <data name="FineTuning.Loss" xml:space="preserve"><value>損失</value></data>
+  <data name="FineTuning.ConfigSnapshot" xml:space="preserve"><value>読み取り専用の学習設定スナップショット</value></data>
+  <data name="FineTuning.Artifacts" xml:space="preserve"><value>学習の成果物</value></data>
+  <data name="FineTuning.DeploymentHelp" xml:space="preserve"><value>アダプター、tokenizer、学習設定をダウンロードして確認してください。互換のある推論ランタイムで、アダプターを正確なベースモデルに読み込むかマージし、デプロイ前にテストします。成果物は AIKernel の推論モデルとして自動登録されません。</value></data>
+  <data name="FineTuning.NoArtifacts" xml:space="preserve"><value>成果物はまだ報告されていません</value></data>
+  <data name="FineTuning.Download" xml:space="preserve"><value>ダウンロード</value></data>
+  <data name="FineTuning.Events" xml:space="preserve"><value>増分イベントログ</value></data>
+  <data name="FineTuning.LogHelp" xml:space="preserve"><value>ブラウザーには最新の 1,000 件のログと 1,000 個のグラフ点だけが保持されます。</value></data>
+  <data name="FineTuning.CommandLog" xml:space="preserve"><value>コマンドとイベントのログ</value></data>
+  <data name="FineTuning.CommandLogHelp" xml:space="preserve"><value>学習コマンド、警告、エラー</value></data>
+  <data name="FineTuning.MetricLog" xml:space="preserve"><value>メトリクスストリーム</value></data>
+  <data name="FineTuning.MetricLogHelp" xml:space="preserve"><value>定期的な GPU、損失、ステップ、時間の値</value></data>
+  <data name="FineTuning.NoMetrics" xml:space="preserve"><value>メトリクスはまだ受信していません</value></data>
+  <data name="FineTuning.EventsLayoutHelp" xml:space="preserve"><value>左右並びまたは上下配置を選べます。展開すると、より広い監視領域になります。</value></data>
+  <data name="FineTuning.EventsSideBySide" xml:space="preserve"><value>左右並び</value></data>
+  <data name="FineTuning.EventsStacked" xml:space="preserve"><value>上下配置</value></data>
+  <data name="FineTuning.ExpandEvents" xml:space="preserve"><value>展開</value></data>
+  <data name="FineTuning.RestoreEvents" xml:space="preserve"><value>復元</value></data>
+  <data name="FineTuning.Replaying" xml:space="preserve"><value>永続化されたイベントを再生しています</value></data>
+  <data name="FineTuning.Live" xml:space="preserve"><value>イベントカーソルに追いつきました</value></data>
+  <data name="FineTuning.Cursor" xml:space="preserve"><value>カーソル</value></data>
+  <data name="FineTuning.FollowLog" xml:space="preserve"><value>最新ログに追従</value></data>
+  <data name="FineTuning.NoEvents" xml:space="preserve"><value>イベントはまだ受信していません</value></data>
+  <data name="FineTuning.UploadSucceeded" xml:space="preserve"><value>データセットはアップロードされ、worker によって検証されました。</value></data>
+  <data name="FineTuning.JobSubmitted" xml:space="preserve"><value>学習ジョブを送信しました。下で実際の状態を確認してください。</value></data>
+  <data name="FineTuning.CancelConfirm" xml:space="preserve"><value>この待機中または実行中のジョブをキャンセルしますか？部分的な成果物が残ることがあります。worker が確認するまでキャンセルは完了しません。</value></data>
+  <data name="FineTuning.Confirm" xml:space="preserve"><value>キャンセルを確認</value></data>
+  <data name="FineTuning.KeepTraining" xml:space="preserve"><value>学習を続ける</value></data>
+  <data name="FineTuning.CancelRequested" xml:space="preserve"><value>キャンセル要求を受け付けました。worker の最終状態を待ってください。</value></data>
+  <data name="FineTuning.State.Queued" xml:space="preserve"><value>キュー待ち</value></data>
+  <data name="FineTuning.State.Running" xml:space="preserve"><value>実行中</value></data>
+  <data name="FineTuning.State.Cancelling" xml:space="preserve"><value>キャンセル中</value></data>
+  <data name="FineTuning.State.Cancelled" xml:space="preserve"><value>キャンセル済み</value></data>
+  <data name="FineTuning.State.Succeeded" xml:space="preserve"><value>成功</value></data>
+  <data name="FineTuning.State.Failed" xml:space="preserve"><value>失敗</value></data>
+  <data name="FineTuning.State.Interrupted" xml:space="preserve"><value>中断済み</value></data>
+  <data name="FineTuning.Metric.trainLoss" xml:space="preserve"><value>学習損失</value></data>
+  <data name="FineTuning.Metric.evalLoss" xml:space="preserve"><value>評価損失</value></data>
+  <data name="FineTuning.Metric.learningRate" xml:space="preserve"><value>学習率</value></data>
+  <data name="FineTuning.Metric.rss" xml:space="preserve"><value>プロセスの RSS</value></data>
+  <data name="FineTuning.Metric.cpu" xml:space="preserve"><value>プロセスの CPU</value></data>
+  <data name="FineTuning.Metric.gpuUtil" xml:space="preserve"><value>GPU の使用率</value></data>
+  <data name="FineTuning.Metric.gpuMemory" xml:space="preserve"><value>使用中の GPU メモリ</value></data>
+  <data name="FineTuning.Metric.gpuTemperature" xml:space="preserve"><value>GPU の温度</value></data>
+  <data name="FineTuning.Parameter.epochs" xml:space="preserve"><value>エポック</value></data>
+  <data name="FineTuning.Tip.epochs" xml:space="preserve"><value>データセットを通す完全な回数（1–100）。maxSteps が正のときはこちらが優先されます。</value></data>
+  <data name="FineTuning.Parameter.maxSteps" xml:space="preserve"><value>最大ステップ数</value></data>
+  <data name="FineTuning.Tip.maxSteps" xml:space="preserve"><value>0 は epochs を使います。正の値はオプティマイザのステップ数を上限にします（最大 1,000,000）。既定の 10 はスモークテストであり、本番の学習実行ではありません。</value></data>
+  <data name="FineTuning.Parameter.learningRate" xml:space="preserve"><value>学習率</value></data>
+  <data name="FineTuning.Tip.learningRate" xml:space="preserve"><value>オプティマイザの学習率（0.00000001–0.1）。既定値: 0.0002。</value></data>
+  <data name="FineTuning.Parameter.batchSize" xml:space="preserve"><value>バッチサイズ</value></data>
+  <data name="FineTuning.Tip.batchSize" xml:space="preserve"><value>デバイスあたり、マイクロバッチあたりのサンプル数（1–64）。大きい値ほど多くのメモリが必要です。</value></data>
+  <data name="FineTuning.Parameter.gradientAccumulationSteps" xml:space="preserve"><value>勾配累積</value></data>
+  <data name="FineTuning.Tip.gradientAccumulationSteps" xml:space="preserve"><value>オプティマイザの 1 ステップあたりに累積するマイクロバッチ数（1–1,024）。大きなバッチを 1 つ確保しなくても、有効バッチサイズは増えます。</value></data>
+  <data name="FineTuning.Parameter.maxSequenceLength" xml:space="preserve"><value>最大シーケンス長</value></data>
+  <data name="FineTuning.Tip.maxSequenceLength" xml:space="preserve"><value>例あたりの Token 上限（32–32,768）。長い例は切り詰められることがあります。上限を大きくすると、より多くのメモリが必要です。</value></data>
+  <data name="FineTuning.Parameter.loraRank" xml:space="preserve"><value>LoRA ランク</value></data>
+  <data name="FineTuning.Tip.loraRank" xml:space="preserve"><value>低ランクアダプターの次元（1–256）。ランクを大きくすると、学習可能なパラメータとメモリ使用量が増えます。</value></data>
+  <data name="FineTuning.Parameter.loraAlpha" xml:space="preserve"><value>LoRA alpha</value></data>
+  <data name="FineTuning.Tip.loraAlpha" xml:space="preserve"><value>Adapter のスケーリング係数（1–1,024）。通常は LoRA のランクとの関係で考えます。</value></data>
+  <data name="FineTuning.Parameter.loraDropout" xml:space="preserve"><value>LoRA ドロップアウト</value></data>
+  <data name="FineTuning.Tip.loraDropout" xml:space="preserve"><value>Adapter のドロップアウト確率（0–0.9）。バックエンド対応は worker が検証します。</value></data>
+  <data name="FineTuning.Parameter.targetModules" xml:space="preserve"><value>対象モジュール</value></data>
+  <data name="FineTuning.Tip.targetModules" xml:space="preserve"><value>all-linear、または選択したモデルとバックエンドが対応するカンマ区切りのモジュール名を使ってください（最大 512 文字）。</value></data>
+  <data name="FineTuning.Parameter.warmupRatio" xml:space="preserve"><value>ウォームアップ比率</value></data>
+  <data name="FineTuning.Tip.warmupRatio" xml:space="preserve"><value>学習率ウォームアップに使う学習ステップの割合（0–0.5）。</value></data>
+  <data name="FineTuning.Parameter.weightDecay" xml:space="preserve"><value>重み減衰</value></data>
+  <data name="FineTuning.Tip.weightDecay" xml:space="preserve"><value>オプティマイザの重み減衰係数（0–1）。既定値 0 は重み減衰を無効にします。</value></data>
+  <data name="FineTuning.Parameter.loggingSteps" xml:space="preserve"><value>ログ間隔</value></data>
+  <data name="FineTuning.Tip.loggingSteps" xml:space="preserve"><value>学習指標ログの間隔となるオプティマイザステップ数（1–10,000）。</value></data>
+  <data name="FineTuning.Parameter.saveSteps" xml:space="preserve"><value>チェックポイント間隔</value></data>
+  <data name="FineTuning.Tip.saveSteps" xml:space="preserve"><value>チェックポイント保存の間隔となるオプティマイザステップ数（1–100,000）。最終成果物は worker が別に報告します。</value></data>
+  <data name="FineTuning.Parameter.evalSteps" xml:space="preserve"><value>評価間隔</value></data>
+  <data name="FineTuning.Tip.evalSteps" xml:space="preserve"><value>ホールドアウト評価の間隔となるオプティマイザステップ数（1–100,000）。自動分割を含みます。</value></data>
+  <data name="FineTuning.Parameter.seed" xml:space="preserve"><value>ランダムシード</value></data>
+  <data name="FineTuning.Tip.seed" xml:space="preserve"><value>シード（0–2,147,483,647）。再現性は引き続きバックエンド、モデル、ハードウェアに依存します。</value></data>
+  <data name="FineTuning.Parameter.maxDurationMinutes" xml:space="preserve"><value>最大時間（分）</value></data>
+  <data name="FineTuning.Tip.maxDurationMinutes" xml:space="preserve"><value>worker が強制する実行時間の上限（1–10,080 分）。進捗の見積もりではありません。</value></data>
+  <data name="FineTuning.Error.InvalidResponse" xml:space="preserve"><value>サーバーが無効なファインチューニング応答を返しました。</value></data>
+  <data name="FineTuning.Error.Authorization" xml:space="preserve"><value>管理者認証が必要か、アクセスが拒否されました。再度サインインするか、権限を確認してください。</value></data>
+  <data name="FineTuning.Error.Request" xml:space="preserve"><value>ファインチューニングのリクエストに失敗しました</value></data>
+  <data name="FineTuning.Error.Cursor" xml:space="preserve"><value>worker が無効なイベントカーソルを返しました。worker のログを確認してから再接続してください。</value></data>
+  <data name="FineTuning.Error.FileType" xml:space="preserve"><value>.jsonl ファイルを選択してください。</value></data>
+  <data name="FineTuning.Error.FileSize" xml:space="preserve"><value>JSONL ファイルは 512 MiB を超えてはなりません。</value></data>
+  <data name="FineTuning.Error.FileRead" xml:space="preserve"><value>ファイルを読み取れませんでした。もう一度選択してください。</value></data>
+  <data name="FineTuning.Error.Utf8" xml:space="preserve"><value>ファイルは有効な UTF-8 ではありません。アップロード前にエンコーディングを変換してください。</value></data>
+  <data name="FineTuning.Error.JsonLine" xml:space="preserve"><value>行の JSON オブジェクトが無効です</value></data>
+  <data name="FineTuning.Error.EmptyDataset" xml:space="preserve"><value>データセットには少なくとも 2 つの JSON オブジェクトが必要です。</value></data>
+  <data name="FineTuning.Error.NotConnected" xml:space="preserve"><value>送信する前に worker へ再接続してください。</value></data>
+  <data name="FineTuning.Error.DatasetRequired" xml:space="preserve"><value>データセット名を入力し、有効な JSONL ファイルを選択してください。</value></data>
+  <data name="FineTuning.Error.JobRequired" xml:space="preserve"><value>ジョブ名を入力し、既存のモデルと学習データセットを選択してください。</value></data>
+  <data name="FineTuning.Error.Heldout" xml:space="preserve"><value>検証には、学習データセットとは別で内容も異なるデータセットを使ってください。</value></data>
+  <data name="FineTuning.Error.Parameter" xml:space="preserve"><value>高度なパラメータが無効です</value></data>
+  <data name="FineTuning.Error.TargetModules" xml:space="preserve"><value>all-linear、または空白や正規表現を含まないカンマ区切りのリテラルなモジュール名を使ってください。最大 512 文字です。</value></data>
+  <data name="FineTuning.Error.Disabled" xml:space="preserve"><value>ローカルのファインチューニングはオフです。ファインチューニングのページでオンにするか、SenparcXncfAIKernel:FineTuning:Enabled を設定してください。</value></data>
+  <data name="FineTuning.Error.Unreachable" xml:space="preserve"><value>ファインチューニングの worker に到達できません。WorkerEndpoint、worker の状態、ネットワーク接続を確認してください。</value></data>
+  <data name="FineTuning.EventsTruncated" xml:space="preserve"><value>古いイベントは worker の保持上限により整理されました。これは部分的な履歴です。学習記録は指標のエクスポートを確認してください。</value></data>
+  <data name="FineTuning.Metric.gpuAllocated" xml:space="preserve"><value>バックエンドが割り当てた GPU メモリ</value></data>
+  <data name="FineTuning.Metric.gradNorm" xml:space="preserve"><value>勾配ノルム</value></data>
+  <data name="FineTuning.Metric.tokensPerSecond" xml:space="preserve"><value>処理済み tokens のスループット</value></data>
+  <data name="FineTuning.Metric.elapsedSeconds" xml:space="preserve"><value>経過時間</value></data>
+  <data name="FineTuning.Metric.diskFree" xml:space="preserve"><value>ディスクの空き容量</value></data>
+  <data name="FineTuning.Metric.jobOutput" xml:space="preserve"><value>ジョブの出力サイズ</value></data>
+  <data name="FineTuning.Worker" xml:space="preserve"><value>Worker</value></data>
+  <data name="FineTuning.SelectWorker" xml:space="preserve"><value>worker を選択</value></data>
+  <data name="FineTuning.WorkerRequired" xml:space="preserve"><value>ファインチューニングを管理する前に、設定済みの worker を選択してください。</value></data>
+  <data name="FineTuning.WorkerSecretMissing" xml:space="preserve"><value>シークレットがありません</value></data>
+  <data name="FineTuning.WorkerDisabled" xml:space="preserve"><value>無効</value></data>
+  <data name="FineTuning.WorkerRoutingHelp" xml:space="preserve"><value>データセット、ジョブ、ログ、成果物は選択した worker に残ります。シークレットはデータベースの外で設定してください。</value></data>
+  <data name="FineTuning.AddWorker" xml:space="preserve"><value>worker を追加</value></data>
+  <data name="FineTuning.EditWorker" xml:space="preserve"><value>worker を編集</value></data>
+  <data name="FineTuning.WorkerConfiguration" xml:space="preserve"><value>Worker の設定</value></data>
+  <data name="FineTuning.WorkerSecretNotice" xml:space="preserve"><value>API キーはデータベースに保存されず、このページには表示されません。各 worker 用に個別のキーファイルを生成するか、FineTuning:WorkerApiKeys:&lt;alias&gt; を上書きとして使い続けてください。ループバックアドレスは AllowedHosts に追加する必要はありません。</value></data>
+  <data name="FineTuning.WorkerAlias" xml:space="preserve"><value>エイリアス</value></data>
+  <data name="FineTuning.WorkerName" xml:space="preserve"><value>名前</value></data>
+  <data name="FineTuning.WorkerEndpoint" xml:space="preserve"><value>Endpoint</value></data>
+  <data name="FineTuning.RequestTimeout" xml:space="preserve"><value>リクエストのタイムアウト（秒）</value></data>
+  <data name="FineTuning.Enabled" xml:space="preserve"><value>有効</value></data>
+  <data name="FineTuning.Note" xml:space="preserve"><value>メモ</value></data>
+  <data name="FineTuning.Cancel" xml:space="preserve"><value>キャンセル</value></data>
+  <data name="FineTuning.SaveWorker" xml:space="preserve"><value>worker を保存</value></data>
+  <data name="FineTuning.WorkerSaved" xml:space="preserve"><value>Worker を保存しました。</value></data>
+  <data name="FineTuning.Guide.Title" xml:space="preserve"><value>ここから開始：ファインチューニングのチュートリアル</value></data>
+  <data name="FineTuning.SectionNav" xml:space="preserve"><value>ページのセクション</value></data>
+  <data name="FineTuning.Guide.Purpose" xml:space="preserve"><value>LoRA/QLoRA はアダプターを学習し、タスクの振る舞い、スタイル、出力形式を変えます。KnowledgeBase/RAG の代替、推論のデプロイ、モデルの自動登録は行いません。</value></data>
+  <data name="FineTuning.Guide.WorkerTitle" xml:space="preserve"><value>Worker を準備して接続</value></data>
+  <data name="FineTuning.Guide.Worker" xml:space="preserve"><value>別の CPU/CUDA Worker、またはネイティブの Apple Silicon Worker をデプロイし、承認済みのオフラインモデルを用意して、グローバルスイッチ、ホスト許可リスト、別名用シークレットを設定します。ここで Worker プロファイルを追加または選択し、先に能力の理由を読んでから進んでください。</value></data>
+  <data name="FineTuning.Guide.DataTitle" xml:space="preserve"><value>独立したデータセットを準備</value></data>
+  <data name="FineTuning.Guide.Data" xml:space="preserve"><value>下のデータセットの例を展開して JSONL をダウンロードしてください。見本の行を、許諾済みで整備したデータに置き換え、学習用と検証用を別々にアップロードします。最終テストセットで学習しないでください。明示的な検証がない場合、Worker は異なる行の約 20% を取り分けます。</value></data>
+  <data name="FineTuning.Guide.TrainingTitle" xml:space="preserve"><value>範囲を限定したスモークテストを送信</value></data>
+  <data name="FineTuning.Guide.Training" xml:space="preserve"><value>ジョブに名前を付け、モデル、データセット、互換バックエンド、LoRA/QLoRA の手法を選んでください。まずは既定のオプティマイザ 10 ステップから始め、詳細パラメータを展開して意味とリソース予算を確認します。CPU は QLoRA に対応していません。</value></data>
+  <data name="FineTuning.Guide.MonitorTitle" xml:space="preserve"><value>実際の進捗を確認し、安全に復旧する</value></data>
+  <data name="FineTuning.Guide.Monitor" xml:space="preserve"><value>ジョブを選ぶと、実際のステップ、学習/検証の損失、リソース、ログ、設定を確認できます。更新すると保持された履歴が戻ります。接続が古くても学習が止まったわけではありません。タイムアウトした送信を再試行する前に、ジョブの状態を更新してください。キャンセルは一時停止や再開ではありません。</value></data>
+  <data name="FineTuning.Guide.PublishTitle" xml:space="preserve"><value>推論をデプロイする前に評価する</value></data>
+  <data name="FineTuning.Guide.Publish" xml:space="preserve"><value>エクスポートをダウンロードし、マニフェストを確認してください。Succeeded は学習処理が完了したことを意味し、品質が合格したことではありません。未使用のタスクで、同じプロンプトと RAG コンテキストを使い、ベースとアダプターを比較します。互換のある推論ランタイムをデプロイし、その推論エンドポイントをモデル管理に登録してください。</value></data>
+  <data name="FineTuning.Guide.ChineseDocs" xml:space="preserve"><value>中国語チュートリアル</value></data>
+  <data name="FineTuning.Guide.EnglishDocs" xml:space="preserve"><value>英語チュートリアル</value></data>
+  <data name="FineTuning.Guide.Troubleshooting" xml:space="preserve"><value>よくある問題と次の対応</value></data>
+  <data name="FineTuning.Guide.Error.Connection" xml:space="preserve"><value>無効 / シークレット不足 / 接続失敗：グローバルな Enabled スイッチ、別名用の有効なキー、AllowedHosts、プロファイルの有効状態、ネットワーク名前空間、Worker のログを確認してください。環境変数を変えたあとは NCF を再起動し、その後更新してください。</value></data>
+  <data name="FineTuning.Guide.Error.Dataset" xml:space="preserve"><value>データセットは拒否されました。指摘された行、フィールドの形、UTF-8 エンコーディング、サイズと行数の上限を修正してください。Messages にはモデル tokenizer の chat template が必要です。データセットの IDs が違ってもデータ漏えいは防げません。学習と重なる検証行は拒否されます。</value></data>
+  <data name="FineTuning.Guide.Error.Memory" xml:space="preserve"><value>メモリ不足 / 損失が不安定：実際のエラーと指標を確認し、バッチサイズ、シーケンス長、rank を下げるか、対応する量子化バックエンドを選んでください。原因を直したあと、範囲を限定した新しいジョブを作成します。利用できないセンサーを 0 と読んではいけません。</value></data>
+  <data name="FineTuning.Guide.Error.Interrupted" xml:space="preserve"><value>キャンセル / 中断 / 失敗：保持されたチェックポイントとイベントを確認してください。再起動した実行中ジョブは成功ではなく Interrupted です。この版には自動再開、オンライン削除、自動デプロイはありません。本番の前にバックアップと保持の方針を決めてください。</value></data>
+  <data name="FineTuning.Guide.DatasetExample" xml:space="preserve"><value>データ例とダウンロード</value></data>
+  <data name="FineTuning.Guide.DatasetSchema" xml:space="preserve"><value>各行は prompt + completion だけ、または messages だけを使います。テキストは空にできず、最大 65,536 文字で、NUL を含みません。Messages は 2–128 件の role/content です。先頭の system は任意、その後は user/assistant を交互にし、assistant で終わります。tool メッセージや余分なフィールドは使えません。</value></data>
+  <data name="FineTuning.Guide.SampleNotice" xml:space="preserve"><value>この 4 つの異なる行はファイル構造の見本であり、モデル品質や学習データの十分さを示すものではありません。Messages には承認された tokenizer の chat template が必要です。ない場合は prompt/completion を使ってください。ダウンロードしてもアップロードやジョブ送信は行われません。</value></data>
+  <data name="FineTuning.Guide.DownloadSample" xml:space="preserve"><value>JSONL の例をダウンロード</value></data>
+  <data name="FineTuning.Guide.EffectiveBatch" xml:space="preserve"><value>単一デバイスの概算有効バッチ（microbatch × accumulation）</value></data>
+  <data name="FineTuning.Guide.SmokeNotice" xml:space="preserve"><value>既定の 10 ステップはパイプラインの確認であり、本番品質を表しません。正の maxSteps は epochs より優先されます。最終ステップでも検証が実行されます。</value></data>
+  <data name="FineTuning.Error.RowLimit" xml:space="preserve"><value>データセットが 1,000,000 行を超えています。</value></data>
+  <data name="FineTuning.Error.DatasetSchema" xml:space="preserve"><value>サポートされていないデータセット行の構造です。データセットの例を参照してください。行:</value></data>
+  <data name="FineTuning.Error.WorkerChanged" xml:space="preserve"><value>Worker の選択が変わりました。再試行する前に、元の Worker のジョブとデータセットの状態を確認してください。その応答をこの Worker には適用できません。</value></data>
+  <data name="FineTuning.DatasetHistory" xml:space="preserve"><value>このビューで利用できるデータセット / 保存済み合計</value></data>
+  <data name="FineTuning.LoadMoreDatasets" xml:space="preserve"><value>より古いデータセットを読み込む</value></data>
+  <data name="FineTuning.StoreChanged" xml:space="preserve"><value>この Worker のストレージ識別子が変わりました。キャッシュされたジョブ、データセット、カーソルは消去されました。先に新しいストレージのリソースを選んでから操作してください。</value></data>
+  <data name="FineTuning.WorkerNotReady" xml:space="preserve"><value>Worker は停止中または異常なため、新しい学習ジョブを受け付けられません。状態とログを確認してください。</value></data>
+  <data name="FineTuning.WorkerVersionMismatch" xml:space="preserve"><value>このコンソールには、カタログのページングと永続的なストレージ識別子を備えた Worker 1.1 以降が必要です。ジョブを送信する前に、対応する Worker をアップグレードしてください。</value></data>
+  <data name="FineTuning.WorkerDisableHelp" xml:space="preserve"><value>このプロファイルを無効にすると、管理アクセスは遮断されますが、進行中の学習は止まりません。終了が必要なときは、先にジョブをキャンセルするか、運用手順に従って Worker を停止してください。</value></data>
+  <data name="FineTuning.WorkerSetupTitle" xml:space="preserve"><value>worker のセットアップが必要です</value></data>
+  <data name="FineTuning.WorkerSetupEmpty" xml:space="preserve"><value>Worker プロファイルはまだ追加されていません。学習用 Worker をデプロイし、NCF で対応するシークレットと許可ホストを設定してから、「worker を追加」で別名とプライベート endpoint を設定してください。接続に成功すると、アップロードと学習が利用できます。</value></data>
+  <data name="FineTuning.WorkerSetupExisting" xml:space="preserve"><value>選択できる Worker がありません。プロファイルを編集して有効にし、NCF でその別名用の有効なシークレットを設定してから更新してください。これは設定手順であり、失敗した学習ジョブではありません。</value></data>
+  <data name="FineTuning.ValidationTitle" xml:space="preserve"><value>学習後のクイック検証</value></data>
+  <data name="FineTuning.ValidationRunHelp" xml:space="preserve"><value>成功したジョブに対して、オフラインのテストプロンプトを最大 8 件実行します。マニフェストがある場合はタスク設定が既定になり、古いジョブは手動で選べます。不一致は確認が必要で、Worker は選択したランタイムを引き続き検証します。</value></data>
+  <data name="FineTuning.ValidationPromptPlaceholder" xml:space="preserve"><value>1 行に 1 つのテストプロンプト。例：通勤用の魔法瓶について、Xiaohongshu 風の投稿を書いてください。</value></data>
+  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>最多 8 条；输出上限 16–256 tokens</value></data>
+  <data name="FineTuning.RunValidation" xml:space="preserve"><value>検証を実行</value></data>
+  <data name="FineTuning.ValidationFailed" xml:space="preserve"><value>検証に失敗しました</value></data>
+  <data name="FineTuning.ValidationPrompt" xml:space="preserve"><value>プロンプトをテスト</value></data>
+  <data name="FineTuning.ValidationPromptError" xml:space="preserve"><value>テストプロンプトを 1–8 件、1 行に 1 件入力してください。</value></data>
+  <data name="FineTuning.ValidationBackend" xml:space="preserve"><value>検証バックエンド</value></data>
+  <data name="FineTuning.ValidationMethod" xml:space="preserve"><value>検証方法</value></data>
+  <data name="FineTuning.BackendCpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="FineTuning.BackendCuda" xml:space="preserve"><value>CUDA</value></data>
+  <data name="FineTuning.BackendMlx" xml:space="preserve"><value>MLX</value></data>
+  <data name="FineTuning.MethodLora" xml:space="preserve"><value>LoRA</value></data>
+  <data name="FineTuning.MethodQlora" xml:space="preserve"><value>QLoRA</value></data>
+  <data name="FineTuning.ValidationMismatchWarning" xml:space="preserve"><value>手動選択が学習マニフェストと異なります</value></data>
+  <data name="FineTuning.ValidationMismatchConfirm" xml:space="preserve"><value>選択したバックエンドまたは手法は、記録された設定と異なります。Adapter の形式とランタイムが互換である場合のみ続行してください。</value></data>
+  <data name="FineTuning.PartialArtifactsTitle" xml:space="preserve"><value>これらは部分的な学習成果物です</value></data>
+  <data name="FineTuning.PartialArtifactsHelp" xml:space="preserve"><value>ジョブは正常に完了していません。これらのファイルは、タイムアウトまたは中断の前に保存されたチェックポイントです。manifest.json の status、completedSteps、エラー詳細、Adapter の整合性を確認してください。直接デプロイしたり、学習完了モデルとして扱ったりしないでください。</value></data>
+  <data name="FineTuning.ControlPlaneTitle" xml:space="preserve"><value>コントロールプレーンのデータベースとレガシー移行</value></data>
+  <data name="FineTuning.ControlPlaneHelp" xml:space="preserve"><value>この Worker の履歴を NCF の主データベースへべき等に同期します。元の SQLite、datasets、jobs のファイルは削除されません。失敗した移行は再試行できます。</value></data>
+  <data name="FineTuning.MigrateLegacy" xml:space="preserve"><value>旧データを移行</value></data>
+  <data name="FineTuning.MigrationDatasets" xml:space="preserve"><value>データセット</value></data>
+  <data name="FineTuning.MigrationJobs" xml:space="preserve"><value>ジョブ</value></data>
+  <data name="FineTuning.MigrationEvents" xml:space="preserve"><value>イベント</value></data>
+  <data name="FineTuning.MigrationArtifacts" xml:space="preserve"><value>成果物</value></data>
+  <data name="FineTuning.MigrationCompleted" xml:space="preserve"><value>旧データの移行が完了しました</value></data>
+  <data name="FineTuning.DiagnosticsTitle" xml:space="preserve"><value>環境の診断</value></data>
+  <data name="FineTuning.RunDiagnostics" xml:space="preserve"><value>診断を実行</value></data>
+  <data name="FineTuning.DiagnosticsHelp" xml:space="preserve"><value>設定、Worker、モデルの利用可否、FileManager だけを確認します。ソフトウェアのインストールや任意コマンドの実行はしません。</value></data>
+  <data name="FineTuning.DiagnosticsWorker" xml:space="preserve"><value>Worker</value></data>
+  <data name="FineTuning.DiagnosticsModels" xml:space="preserve"><value>利用可能なモデル</value></data>
+  <data name="FineTuning.DiagnosticsFileManager" xml:space="preserve"><value>FileManager</value></data>
+  <data name="FineTuning.ModelPreparationTitle" xml:space="preserve"><value>モデルの安全な準備</value></data>
+  <data name="FineTuning.ModelPreparationHelp" xml:space="preserve"><value>検索は、運用者が設定した許可リストのプロバイダーカタログからのみ行えます。選んだモデルとリビジョンは、ダウンロード前にマニフェスト、サイズ、パス、整合性の検査を通ります。コマンドは実行されず、tokens がブラウザーに露出することはありません。</value></data>
+  <data name="FineTuning.Provider" xml:space="preserve"><value>Provider</value></data>
+  <data name="FineTuning.Revision" xml:space="preserve"><value>Revision</value></data>
+  <data name="FineTuning.TargetDirectory" xml:space="preserve"><value>対象ディレクトリ</value></data>
+  <data name="FineTuning.CheckModel" xml:space="preserve"><value>モデルを確認</value></data>
+  <data name="FineTuning.DownloadModel" xml:space="preserve"><value>モデルをダウンロード</value></data>
+  <data name="FineTuning.SearchModels" xml:space="preserve"><value>モデルを検索</value></data>
+  <data name="FineTuning.ModelSearchPlaceholder" xml:space="preserve"><value>設定済みプロバイダーのカタログを検索</value></data>
+  <data name="FineTuning.ModelSearchUnavailable" xml:space="preserve"><value>モデル検索は利用できません</value></data>
+  <data name="FineTuning.ModelSearchEmpty" xml:space="preserve"><value>検索に一致する許可リストのモデルはありません。</value></data>
+  <data name="FineTuning.Description" xml:space="preserve"><value>説明</value></data>
+  <data name="FineTuning.Action" xml:space="preserve"><value>アクション</value></data>
+  <data name="FineTuning.ModelReady" xml:space="preserve"><value>モデルの準備が完了しました</value></data>
+  <data name="FineTuning.ModelIncomplete" xml:space="preserve"><value>Model ファイルが不完全です</value></data>
+  <data name="FineTuning.ModelDownloadCompleted" xml:space="preserve"><value>モデルのダウンロードが完了しました</value></data>
+  <data name="FineTuning.PauseJob" xml:space="preserve"><value>ジョブを一時停止</value></data>
+  <data name="FineTuning.ResumeJob" xml:space="preserve"><value>ジョブを再開</value></data>
+  <data name="FineTuning.DeleteJob" xml:space="preserve"><value>ジョブを削除</value></data>
+  <data name="FineTuning.DeleteConfirm" xml:space="preserve"><value>このジョブ、そのチェックポイント、エクスポートしたアセットを削除しますか？この操作は元に戻せません。</value></data>
+  <data name="FineTuning.DeleteCompleted" xml:space="preserve"><value>ジョブとそのアセットは削除されました。</value></data>
+  <data name="FineTuning.PauseRequested" xml:space="preserve"><value>一時停止を要求しました。worker は次の安全な境界でチェックポイントを保存します。</value></data>
+  <data name="FineTuning.ResumeRequested" xml:space="preserve"><value>再開を要求しました。ジョブはキューに戻ります。</value></data>
+  <data name="FineTuning.RuntimeInvalid" xml:space="preserve"><value>最大実行時間は 1 から 10,080 までの整数（分）である必要があります。</value></data>
+  <data name="FineTuning.RuntimeUpdated" xml:space="preserve"><value>最大実行時間を更新しました。</value></data>
+  <data name="FineTuning.AverageStepDuration" xml:space="preserve"><value>ステップの平均所要時間</value></data>
+  <data name="FineTuning.EstimatedFinish" xml:space="preserve"><value>推定終了時刻</value></data>
+  <data name="FineTuning.MaxDurationMinutes" xml:space="preserve"><value>最大時間（分）</value></data>
+  <data name="FineTuning.UpdateRuntime" xml:space="preserve"><value>ランタイムを更新</value></data>
+  <data name="FineTuning.PausedCount" xml:space="preserve"><value>一時停止済み</value></data>
+  <data name="FineTuning.State.Pausing" xml:space="preserve"><value>一時停止中</value></data>
+  <data name="FineTuning.State.Paused" xml:space="preserve"><value>一時停止済み</value></data>
+  <data name="FineTuning.State.Resuming" xml:space="preserve"><value>再開中</value></data>
+  <data name="FineTuning.Metric.averageStepDuration" xml:space="preserve"><value>ステップの平均所要時間</value></data>
+  <data name="FineTuning.Metric.estimatedRemaining" xml:space="preserve"><value>推定残り時間</value></data>
+  <data name="FineTuning.CurrentSamples" xml:space="preserve"><value>現在のサンプル</value></data>
+  <data name="FineTuning.SamplesUnit" xml:space="preserve"><value>サンプル</value></data>
+  <data name="FineTuning.TokensUnit" xml:space="preserve"><value>tokens</value></data>
+  <data name="FineTuning.TokensPerSampleUnit" xml:space="preserve"><value>tokens/サンプル</value></data>
+  <data name="FineTuning.TruncatedSamples" xml:space="preserve"><value>切り詰め済み</value></data>
+
 </root>

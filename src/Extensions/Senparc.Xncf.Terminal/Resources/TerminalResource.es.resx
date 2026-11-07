@@ -21,13 +21,14 @@
   <data name="Module.Terminal.AvailableCommands" xml:space="preserve">
     <value>Comandos disponibles actualmente:</value>
   </data>
+  <data name="Parameter.Terminal.Command" xml:space="preserve">
+    <value>&gt; Comando||Línea de comandos, por ejemplo: dir /?</value>
+  </data>
   <data name="Function.Terminal.Command.Name" xml:space="preserve">
     <value>Símbolo del sistema</value>
   </data>
   <data name="Function.Terminal.Command.Description" xml:space="preserve">
     <value>Ejecuta un comando de terminal en el servidor y devuelve el resultado</value>
   </data>
-  <data name="Parameter.Terminal.Command" xml:space="preserve">
-    <value>&gt; Comando||Línea de comandos, por ejemplo: dir /?</value>
-  </data>
+
 </root>

@@ -30,12 +30,6 @@
   <data name="Area.DynamicData.TableSettings" xml:space="preserve">
     <value>数据库表设置</value>
   </data>
-  <data name="Function.Sample.Name" xml:space="preserve">
-    <value>示例函数</value>
-  </data>
-  <data name="Function.Sample.Description" xml:space="preserve">
-    <value>演示 FunctionRender 参数与返回值</value>
-  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>名称||双竖线前为参数名称，双竖线后为参数说明</value>
   </data>
@@ -545,4 +539,11 @@
   <data name="Frontend.308" xml:space="preserve">
     <value>未知的运算符：{0}||Unknown operator: {0}</value>
   </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>示例函数</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>演示 FunctionRender 参数与返回值</value>
+  </data>
+
 </root>

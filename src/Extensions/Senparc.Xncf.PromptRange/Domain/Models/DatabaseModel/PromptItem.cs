@@ -10,6 +10,9 @@
     修改标识：Senparc - 20260704
     修改描述：vNext 补充标准化文件头注释
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 为 PromptItem 增加评分与 PromptCode 字段
+
 ----------------------------------------------------------------*/
 
 using Senparc.Ncf.Core.Models;
@@ -106,6 +109,20 @@ public class PromptItem : EntityBase<int>
     /// </summary>
     [MaxLength(3)]
     public decimal EvalMaxScore { get; private set; } = -1;
+
+    public decimal? RobotScore { get; private set; }
+    public decimal? HumanScore { get; private set; }
+    public decimal? FinalScore { get; private set; }
+
+    public void SetReferenceScore(decimal score, bool isRobot)
+    {
+        if (score < 0 || score > 10 || decimal.Round(score, 1) != score)
+            throw new ArgumentOutOfRangeException(nameof(score), "Score must be 0-10 with at most one decimal place.");
+        if (isRobot) RobotScore = score;
+        else HumanScore = score;
+        FinalScore = score;
+        SetUpdateTime();
+    }
 
     /// <summary>
     /// 期望结果Json

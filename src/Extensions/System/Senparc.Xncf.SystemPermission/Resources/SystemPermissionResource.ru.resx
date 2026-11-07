@@ -18,4 +18,5 @@
   <data name="Module.SystemPermission.Description" xml:space="preserve">
     <value>Управляет ролями и разрешениями системы</value>
   </data>
+
 </root>

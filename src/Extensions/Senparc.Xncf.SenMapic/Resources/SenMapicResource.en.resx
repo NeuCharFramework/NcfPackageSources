@@ -24,18 +24,6 @@
   <data name="Area.DatabaseSample" xml:space="preserve">
     <value>Database operations sample</value>
   </data>
-  <data name="Function.Sample.Name" xml:space="preserve">
-    <value>Sample function</value>
-  </data>
-  <data name="Function.Sample.Description" xml:space="preserve">
-    <value>Demonstrates FunctionRender parameters and return values</value>
-  </data>
-  <data name="Function.SenMapic.Crawl.Name" xml:space="preserve">
-    <value>Web crawler</value>
-  </data>
-  <data name="Function.SenMapic.Crawl.Description" xml:space="preserve">
-    <value>Crawl information from web pages</value>
-  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>Name||Text before the double bar is the parameter name; text after it is help text</value>
   </data>
@@ -264,4 +252,44 @@
   <data name="Message.DeleteFailed" xml:space="preserve">
     <value>Deletion failed</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>Exception-throw test, parameters passed: {0} {1}||Exception-throw test, parameters passed: {0} {1}</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>Divisor cannot be 0!||Divisor cannot be 0!</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>Unknown operator: {0}||Unknown operator: {0}</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>Unknown operator||Unknown operator</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>Enter a valid URL!||Enter a valid URL!</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>The target host resolved to a non-public address. The connection was refused.||The target host resolved to a non-public address. The connection was refused.</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>Unable to connect to the target host that passed the public-address check.||Unable to connect to the target host that passed the public-address check.</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>The target URL is not allowed.||The target URL is not allowed.</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>The redirect target URL is not allowed.||The redirect target URL is not allowed.</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>Sample function</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>Demonstrates FunctionRender parameters and return values</value>
+  </data>
+  <data name="Function.SenMapic.Crawl.Name" xml:space="preserve">
+    <value>Web crawler</value>
+  </data>
+  <data name="Function.SenMapic.Crawl.Description" xml:space="preserve">
+    <value>Crawl information from web pages</value>
+  </data>
+
 </root>

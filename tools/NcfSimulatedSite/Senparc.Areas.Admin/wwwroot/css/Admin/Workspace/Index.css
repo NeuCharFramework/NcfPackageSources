@@ -1,0 +1,351 @@
+.workspace-shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 18px 4px 28px;
+}
+
+.workspace-hero {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px 28px;
+    margin-bottom: 22px;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 16px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, .2);
+}
+
+.workspace-hero-icon {
+    display: flex;
+    flex: 0 0 46px;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border: 1px solid rgba(255, 255, 255, .28);
+    border-radius: 13px;
+    background: rgba(255, 255, 255, .16);
+    font-size: 20px;
+}
+
+.workspace-hero h1 {
+    margin: 0 0 4px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.workspace-hero p {
+    margin: 0;
+    color: rgba(255, 255, 255, .9);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.workspace-alert {
+    margin: 14px 0;
+    border-radius: 10px;
+}
+
+.ws-section {
+    margin-top: 20px;
+}
+
+.ws-section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.ws-section-head h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: #303133;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.ws-section-head .count-pill {
+    padding: 3px 11px;
+    border: 1px solid rgba(102, 126, 234, .2);
+    border-radius: 999px;
+    color: #667eea;
+    background: rgba(102, 126, 234, .1);
+    font-size: 12px;
+}
+
+.ws-create {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid #e4e7ed;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 4px 14px rgba(31, 45, 61, .04);
+}
+
+.ws-create .el-input {
+    flex: 1 1 auto;
+    max-width: none;
+}
+
+.ws-create-btn,
+.ws-upload-btn,
+.ws-pair-btn {
+    border-radius: 8px;
+}
+
+.ws-create-btn {
+    flex: 0 0 auto;
+    min-height: 38px;
+    padding: 0 18px;
+    border: 0;
+    color: #fff;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 5px 14px rgba(102, 126, 234, .22);
+}
+
+.ws-create-btn:hover,
+.ws-create-btn:focus {
+    color: #fff;
+    background: linear-gradient(135deg, #748cf0, #8357ad);
+}
+
+.ws-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 14px;
+    margin-top: 12px;
+}
+
+.ws-item {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: 14px;
+    box-sizing: border-box;
+    padding: 16px 18px;
+    border: 1px solid #e4e7ed;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 5px 16px rgba(31, 45, 61, .05);
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+.ws-item:hover {
+    border-color: rgba(102, 126, 234, .38);
+    box-shadow: 0 12px 26px rgba(82, 103, 217, .12);
+    transform: translateY(-2px);
+}
+
+.ws-item-icon {
+    display: flex;
+    flex: 0 0 42px;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    color: #fff;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.ws-item-body {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.ws-item-name {
+    overflow: hidden;
+    color: #303133;
+    font-size: 15px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ws-item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 12px;
+    margin-top: 6px;
+}
+
+.ws-item-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #909399;
+    font-size: 12px;
+}
+
+.ws-item-meta .fa {
+    color: #aab4c4;
+}
+
+.ws-item-actions {
+    flex: 0 0 auto;
+}
+
+.ws-empty,
+.ws-guide {
+    border: 1px solid #e4e7ed;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 5px 16px rgba(31, 45, 61, .04);
+}
+
+.ws-empty {
+    padding: 42px 24px;
+    text-align: center;
+}
+
+.ws-empty i {
+    color: #7285df;
+    font-size: 34px;
+}
+
+.ws-empty h3 {
+    margin: 12px 0 6px;
+    color: #303133;
+    font-size: 15px;
+}
+
+.ws-empty p {
+    max-width: 420px;
+    margin: 0 auto;
+    color: #909399;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.ws-guide {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(250px, 1fr);
+    gap: 18px;
+    padding: 20px;
+}
+
+.ws-guide h3 {
+    margin: 0 0 12px;
+    color: #303133;
+    font-size: 14px;
+}
+
+.ws-guide h3 .fa {
+    margin-right: 6px;
+    color: #667eea;
+}
+
+.step-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.step-list li {
+    position: relative;
+    padding: 0 0 12px 34px;
+    color: #606266;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.step-list li::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    color: #fff;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    content: attr(data-step);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.ws-guide-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding-left: 18px;
+    border-left: 1px solid #ebeef5;
+}
+
+.ws-guide-side p {
+    margin: 0;
+    color: #909399;
+    font-size: 12.5px;
+    line-height: 1.7;
+}
+
+.ws-upload-toast {
+    position: fixed;
+    right: 24px;
+    bottom: 28px;
+    z-index: 3000;
+    width: 320px;
+    padding: 14px 16px;
+    border: 1px solid #e4e7ed;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 18px 48px rgba(24, 35, 57, .18);
+}
+
+@media (max-width: 900px) {
+    .ws-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .workspace-shell {
+        padding: 12px 0 20px;
+    }
+
+    .workspace-hero {
+        padding: 20px;
+    }
+
+    .ws-create {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .ws-create-btn {
+        width: 100%;
+    }
+
+    .ws-item {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .ws-item-actions {
+        width: 100%;
+    }
+
+    .ws-upload-btn {
+        width: 100%;
+    }
+
+    .ws-guide {
+        grid-template-columns: 1fr;
+    }
+
+    .ws-guide-side {
+        padding: 14px 0 0;
+        border-top: 1px solid #ebeef5;
+        border-left: 0;
+    }
+}

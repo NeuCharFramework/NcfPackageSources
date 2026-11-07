@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>0.4.9</Version>
+    <Version>0.4.10</Version>
     <AssemblyName>Senparc.Xncf.DesktopBridge</AssemblyName>
     <RootNamespace>Senparc.Xncf.DesktopBridge</RootNamespace>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
@@ -68,7 +68,12 @@
       2、Workspace Gateway 可复用配对、撤销和会话寿命而无需实现耦合
       3、完善桌面桥接凭据、会话令牌校验与隔离运行时连接
     [2026-11-03] Add shared contextual documentation beside device pairing approvals.
-</PackageReleaseNotes>
+    [2026-11-05] v0.4.10 同步直接依赖项目版本
+    1、Dependency update from Senparc.Ncf.Core to 0.30.4-preview10
+    2、Dependency update from Senparc.Ncf.AreaBase to 0.23.10
+    3、Dependency update from Senparc.Ncf.Service to 0.23.11-preview10
+    4、Dependency update from Senparc.Ncf.XncfBase to 0.28.2
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

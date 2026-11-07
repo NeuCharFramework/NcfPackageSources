@@ -27,12 +27,6 @@
   <data name="Area.FileManager.Files" xml:space="preserve">
     <value>Управление файлами</value>
   </data>
-  <data name="Function.Sample.Name" xml:space="preserve">
-    <value>Пример функции</value>
-  </data>
-  <data name="Function.Sample.Description" xml:space="preserve">
-    <value>Демонстрирует параметры и возвращаемые значения FunctionRender</value>
-  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>Имя||Текст до двойной черты — имя параметра, после неё — пояснение</value>
   </data>
@@ -102,4 +96,200 @@
   <data name="Page.Random" xml:space="preserve">
     <value>Случайно</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>Загрузить в:||Загрузить в:</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>Загрузить файл||Загрузить файл</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>Время загрузки||Время загрузки</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>Скачать||Скачать</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>Код||Код</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>Другое||Другое</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>Удалить||Удалить</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>Обновить папки||Обновить папки</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>Отмена||Отмена</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>Можно загрузить несколько файлов сразу||Можно загрузить несколько файлов сразу</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>Имя||Имя</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>Примечания||Примечания</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>Примечания (необязательно)||Примечания (необязательно)</value>
+  </data>
+  <data name="Frontend.014" xml:space="preserve">
+    <value>Размер||Размер</value>
+  </data>
+  <data name="Frontend.015" xml:space="preserve">
+    <value>Модули расширения||Модули расширения</value>
+  </data>
+  <data name="Frontend.016" xml:space="preserve">
+    <value>Действия||Действия</value>
+  </data>
+  <data name="Frontend.017" xml:space="preserve">
+    <value>Имя файла||Имя файла</value>
+  </data>
+  <data name="Frontend.018" xml:space="preserve">
+    <value>Папка||Папка</value>
+  </data>
+  <data name="Frontend.019" xml:space="preserve">
+    <value>Файловый менеджер||Файловый менеджер</value>
+  </data>
+  <data name="Frontend.020" xml:space="preserve">
+    <value>Текст||Текст</value>
+  </data>
+  <data name="Frontend.021" xml:space="preserve">
+    <value>Создать||Создать</value>
+  </data>
+  <data name="Frontend.022" xml:space="preserve">
+    <value>Новая папка||Новая папка</value>
+  </data>
+  <data name="Frontend.023" xml:space="preserve">
+    <value>Корень||Корень</value>
+  </data>
+  <data name="Frontend.024" xml:space="preserve">
+    <value>ОК||ОК</value>
+  </data>
+  <data name="Frontend.025" xml:space="preserve">
+    <value>Тип||Тип</value>
+  </data>
+  <data name="Frontend.026" xml:space="preserve">
+    <value>Id таблицы||Id таблицы</value>
+  </data>
+  <data name="Frontend.027" xml:space="preserve">
+    <value>Введите имя папки||Введите имя папки</value>
+  </data>
+  <data name="Frontend.028" xml:space="preserve">
+    <value>Выбрать файл||Выбрать файл</value>
+  </data>
+  <data name="Frontend.029" xml:space="preserve">
+    <value>Главная||Главная</value>
+  </data>
+  <data name="Frontend.030" xml:space="preserve">
+    <value>Не удалось загрузить список||Не удалось загрузить список</value>
+  </data>
+  <data name="Frontend.031" xml:space="preserve">
+    <value>Загружено||Загружено</value>
+  </data>
+  <data name="Frontend.032" xml:space="preserve">
+    <value>Ошибка загрузки||Ошибка загрузки</value>
+  </data>
+  <data name="Frontend.033" xml:space="preserve">
+    <value>Изменено||Изменено</value>
+  </data>
+  <data name="Frontend.034" xml:space="preserve">
+    <value>Ошибка изменения||Ошибка изменения</value>
+  </data>
+  <data name="Frontend.035" xml:space="preserve">
+    <value>Подтвердить удаление этого файла?||Подтвердить удаление этого файла?</value>
+  </data>
+  <data name="Frontend.036" xml:space="preserve">
+    <value>Уведомление||Уведомление</value>
+  </data>
+  <data name="Frontend.037" xml:space="preserve">
+    <value>Подтвердить||Подтвердить</value>
+  </data>
+  <data name="Frontend.038" xml:space="preserve">
+    <value>Отмена||Отмена</value>
+  </data>
+  <data name="Frontend.039" xml:space="preserve">
+    <value>Удалено успешно||Удалено успешно</value>
+  </data>
+  <data name="Frontend.040" xml:space="preserve">
+    <value>Ошибка удаления||Ошибка удаления</value>
+  </data>
+  <data name="Frontend.041" xml:space="preserve">
+    <value>Создано успешно||Создано успешно</value>
+  </data>
+  <data name="Frontend.042" xml:space="preserve">
+    <value>Не удалось создать||Не удалось создать</value>
+  </data>
+  <data name="Frontend.043" xml:space="preserve">
+    <value>Не удалось загрузить: {0}||Не удалось загрузить: {0}</value>
+  </data>
+  <data name="Frontend.044" xml:space="preserve">
+    <value>Введите примечание для {0}||Введите примечание для {0}</value>
+  </data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>Главная FileManager||Главная FileManager</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>Папка #{0}||Папка #{0}</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>Введите примечание для {0}||Введите примечание для {0}</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>Успешно обновлено||Успешно обновлено</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>Ошибка обновления||Ошибка обновления</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>Удалить этот файл?||Удалить этот файл?</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>Выберите файл для загрузки||Выберите файл для загрузки</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>Ошибка загрузки:||Ошибка загрузки:</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>Тест выброса исключения, передаваемые параметры: {0} {1}||Тест выброса исключения, передаваемые параметры: {0} {1}</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>Делитель не может быть равен 0!||Делитель не может быть равен 0!</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>Неизвестный оператор: {0}||Неизвестный оператор: {0}</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>За один раз можно загрузить не более {0} файлов.||За один раз можно загрузить не более {0} файлов.</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>Общий размер одной загрузки не может превышать {0} MB.||Общий размер одной загрузки не может превышать {0} MB.</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>Загружаемый файл не может быть пустым.||Загружаемый файл не может быть пустым.</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>Один файл не может превышать {0} MB.||Один файл не может превышать {0} MB.</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>Этот тип файла не допускается. Поддерживаются только распространённые форматы документов, изображений, текста и архивов.||Этот тип файла не допускается. Поддерживаются только распространённые форматы документов, изображений, текста и архивов.</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>Файл не существует!||Файл не существует!</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>Сведения о физическом пути файла недействительны.||Сведения о физическом пути файла недействительны.</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>Физический путь файла выходит за пределы.||Физический путь файла выходит за пределы.</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>Пример функции</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>Демонстрирует параметры и возвращаемые значения FunctionRender</value>
+  </data>
+
 </root>

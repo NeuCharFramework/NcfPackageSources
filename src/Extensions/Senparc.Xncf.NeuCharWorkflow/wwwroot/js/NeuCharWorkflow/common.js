@@ -88,23 +88,50 @@
         schema.forEach(parameter => {
             const defaultKey = Object.keys(defaults).find(key =>
                 String(key).toLowerCase() === String(parameter.name).toLowerCase());
-            let value = defaultKey
+            const value = defaultKey
                 ? defaults[defaultKey]
                 : parameter.defaultValue;
-            if (parameter.parameterType === 2 && !Array.isArray(value)) {
+            values[parameter.name] = coerceParameterValue(parameter, value);
+        });
+        return values;
+    }
+
+    function coerceParameterValue(parameter, value) {
+        if (!parameter) {
+            return value;
+        }
+        if (parameter.parameterType === 2) {
+            if (!Array.isArray(value)) {
                 value = typeof value === 'string'
                     ? value.split(/[;,，；\n\r|]+/).map(item => item.trim()).filter(Boolean)
                     : [];
-            } else if (parameter.parameterType === 4) {
-                value = value === true || value === 'true' || value === 'True';
-            } else if (parameter.parameterType === 6) {
-                value = parameter.allowMultiple ? [] : '';
-            } else if (value === null || typeof value === 'undefined') {
-                value = '';
             }
-            values[parameter.name] = value;
-        });
-        return values;
+            if (value.length === 0 && Array.isArray(parameter.options)) {
+                const selected = parameter.options
+                    .filter(option => option && option.defaultSelected)
+                    .map(option => option.value);
+                if (selected.length) value = selected;
+            }
+            return value;
+        }
+        if (parameter.parameterType === 1 &&
+            (value === null || typeof value === 'undefined' || value === '')) {
+            const options = Array.isArray(parameter.options) ? parameter.options : [];
+            const selected = options.find(option => option && option.defaultSelected);
+            const only = parameter.required && options.length === 1 ? options[0] : null;
+            return selected ? selected.value : (only ? only.value : '');
+        }
+        if (parameter.parameterType === 4) {
+            return value === true || value === 'true' || value === 'True';
+        }
+        if (parameter.parameterType === 6) {
+            return parameter.allowMultiple ? (Array.isArray(value) ? value : []) : (value || '');
+        }
+        return value === null || typeof value === 'undefined' ? '' : value;
+    }
+
+    function defaultParameterValue(parameter) {
+        return coerceParameterValue(parameter, parameter ? parameter.defaultValue : '');
     }
 
     function firstMissingRequired(fn, values) {
@@ -143,6 +170,7 @@
         unwrap,
         normalizeParameterSchema,
         createParameterValues,
+        defaultParameterValue,
         firstMissingRequired,
         sanitizeHtml
     });

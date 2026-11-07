@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.17.0 enhance Agent Studio, group configuration, and task management interactions
 
+    修改标识：Senparc - 20261106
+    修改描述：环境变量中的密钥优先，缺失时读取站点密钥文件
+
 ----------------------------------------------------------------*/
 
 #nullable enable
@@ -39,12 +42,14 @@ public interface IFineTuningWorkerConfigurationProvider
 public sealed class FineTuningWorkerConfigurationProvider : IFineTuningWorkerConfigurationProvider
 {
     private readonly AIFineTuningWorkerService _workerService;
+    private readonly FineTuningSecretStore _secrets;
     private readonly FineTuningWorkerOptions _options;
 
     public FineTuningWorkerConfigurationProvider(AIFineTuningWorkerService workerService,
-        IOptions<FineTuningWorkerOptions> options)
+        FineTuningSecretStore secrets, IOptions<FineTuningWorkerOptions> options)
     {
         _workerService = workerService;
+        _secrets = secrets;
         _options = options.Value;
     }
 
@@ -52,10 +57,26 @@ public sealed class FineTuningWorkerConfigurationProvider : IFineTuningWorkerCon
     {
         var worker = await _workerService.GetEnabledAsync(workerAlias, cancellationToken).ConfigureAwait(false);
         var endpoint = _options.GetValidatedEndpoint(worker.Alias, worker.Endpoint, worker.RequestTimeoutSeconds);
-        return new FineTuningWorkerConfiguration(worker.Alias, endpoint, _options.GetWorkerApiKey(worker.Alias),
+        return new FineTuningWorkerConfiguration(worker.Alias, endpoint, _secrets.Resolve(_options, worker.Alias),
             worker.RequestTimeoutSeconds);
     }
 
-    public Task<List<AIFineTuningWorkerDto>> GetWorkersAsync(CancellationToken cancellationToken = default) =>
-        _workerService.GetListAsync(_options.ConfiguredWorkerAliases, cancellationToken);
+    public async Task<List<AIFineTuningWorkerDto>> GetWorkersAsync(CancellationToken cancellationToken = default)
+    {
+        var aliases = _options.ConfiguredWorkerAliases.Concat(_secrets.ListConfiguredAliases());
+        var workers = await _workerService.GetListAsync(aliases, cancellationToken).ConfigureAwait(false);
+        foreach (var worker in workers)
+        {
+            try
+            {
+                worker.SecretPath = _secrets.PathFor(worker.Alias);
+            }
+            catch (NcfExceptionBase)
+            {
+                worker.SecretPath = "";
+            }
+        }
+
+        return workers;
+    }
 }

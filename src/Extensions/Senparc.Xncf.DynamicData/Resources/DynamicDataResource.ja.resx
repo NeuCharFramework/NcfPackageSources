@@ -30,12 +30,6 @@
   <data name="Area.DynamicData.TableSettings" xml:space="preserve">
     <value>データベーステーブル設定</value>
   </data>
-  <data name="Function.Sample.Name" xml:space="preserve">
-    <value>サンプル関数</value>
-  </data>
-  <data name="Function.Sample.Description" xml:space="preserve">
-    <value>FunctionRender のパラメーターと戻り値を示します</value>
-  </data>
   <data name="Parameter.Sample.Name" xml:space="preserve">
     <value>名前||二重縦線の前はパラメーター名、後ろは説明です</value>
   </data>
@@ -105,4 +99,935 @@
   <data name="Page.Random" xml:space="preserve">
     <value>ランダム</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>0フィールド||0フィールド</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>個の条件||個の条件</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>中央揃え1||中央揃え1</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>イベント||イベント</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>イベント設定||イベント設定</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>コードを表示||コードを表示</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>位置||位置</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>削除を許可||削除を許可</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>エクスポートを許可||エクスポートを許可</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>並べ替えを許可||並べ替えを許可</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>編集を許可||編集を許可</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>入力パラメータ||入力パラメータ</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>すべてのフィールド||すべてのフィールド</value>
+  </data>
+  <data name="Frontend.014" xml:space="preserve">
+    <value>ページを閉じる||ページを閉じる</value>
+  </data>
+  <data name="Frontend.015" xml:space="preserve">
+    <value>出力パラメータ||出力パラメータ</value>
+  </data>
+  <data name="Frontend.016" xml:space="preserve">
+    <value>ページ設定||ページ設定</value>
+  </data>
+  <data name="Frontend.017" xml:space="preserve">
+    <value>列名||列名</value>
+  </data>
+  <data name="Frontend.018" xml:space="preserve">
+    <value>列幅||列幅</value>
+  </data>
+  <data name="Frontend.019" xml:space="preserve">
+    <value>列プロパティ||列プロパティ</value>
+  </data>
+  <data name="Frontend.020" xml:space="preserve">
+    <value>列プロパティ設定||列プロパティ設定</value>
+  </data>
+  <data name="Frontend.021" xml:space="preserve">
+    <value>列タイトル||列タイトル</value>
+  </data>
+  <data name="Frontend.022" xml:space="preserve">
+    <value>列の管理||列の管理</value>
+  </data>
+  <data name="Frontend.023" xml:space="preserve">
+    <value>列の選択||列の選択</value>
+  </data>
+  <data name="Frontend.024" xml:space="preserve">
+    <value>1件作成||1件作成</value>
+  </data>
+  <data name="Frontend.025" xml:space="preserve">
+    <value>レイアウトを作成||レイアウトを作成</value>
+  </data>
+  <data name="Frontend.026" xml:space="preserve">
+    <value>削除||削除</value>
+  </data>
+  <data name="Frontend.027" xml:space="preserve">
+    <value>1件削除||1件削除</value>
+  </data>
+  <data name="Frontend.028" xml:space="preserve">
+    <value>1件のデータを削除||1件のデータを削除</value>
+  </data>
+  <data name="Frontend.029" xml:space="preserve">
+    <value>レイアウトを削除||レイアウトを削除</value>
+  </data>
+  <data name="Frontend.030" xml:space="preserve">
+    <value>動的データ基盤||動的データ基盤</value>
+  </data>
+  <data name="Frontend.031" xml:space="preserve">
+    <value>昇順||昇順</value>
+  </data>
+  <data name="Frontend.032" xml:space="preserve">
+    <value>ダブルクリック||ダブルクリック</value>
+  </data>
+  <data name="Frontend.033" xml:space="preserve">
+    <value>公開||公開</value>
+  </data>
+  <data name="Frontend.034" xml:space="preserve">
+    <value>キャンセル||キャンセル</value>
+  </data>
+  <data name="Frontend.035" xml:space="preserve">
+    <value>キャンセルボタンの文字||キャンセルボタンの文字</value>
+  </data>
+  <data name="Frontend.036" xml:space="preserve">
+    <value>キャンセル操作の設定||キャンセル操作の設定</value>
+  </data>
+  <data name="Frontend.037" xml:space="preserve">
+    <value>1ページだけのときは非表示||1ページだけのときは非表示</value>
+  </data>
+  <data name="Frontend.038" xml:space="preserve">
+    <value>右||右</value>
+  </data>
+  <data name="Frontend.039" xml:space="preserve">
+    <value>右揃え||右揃え</value>
+  </data>
+  <data name="Frontend.040" xml:space="preserve">
+    <value>ページングを有効化||ページングを有効化</value>
+  </data>
+  <data name="Frontend.041" xml:space="preserve">
+    <value>固定列||固定列</value>
+  </data>
+  <data name="Frontend.042" xml:space="preserve">
+    <value>固定方向||固定方向</value>
+  </data>
+  <data name="Frontend.043" xml:space="preserve">
+    <value>塗りつぶし||塗りつぶし</value>
+  </data>
+  <data name="Frontend.044" xml:space="preserve">
+    <value>レイアウトをコピー||レイアウトをコピー</value>
+  </data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>より大きい||より大きい</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>氏名||氏名</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>子コンポーネント||子コンポーネント</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>子コンポーネントの有効化とレイアウト||子コンポーネントの有効化とレイアウト</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>フィールド||フィールド</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>フィールド名||フィールド名</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>フィールド説明||フィールド説明</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>フィールド検索範囲||フィールド検索範囲</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>揃え||揃え</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>インポート||インポート</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>エクスポート||エクスポート</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>より小さい||より小さい</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>表示内容||表示内容</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>表示内容テキスト||表示内容テキスト</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>表示内容テキスト1||表示内容テキスト1</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>表示タイプ||表示タイプ</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>プロパティ||プロパティ</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>左||左</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>左揃え||左揃え</value>
+  </data>
+  <data name="Frontend.064" xml:space="preserve">
+    <value>idを引き継ぐ||idを引き継ぐ</value>
+  </data>
+  <data name="Frontend.065" xml:space="preserve">
+    <value>年齢||年齢</value>
+  </data>
+  <data name="Frontend.066" xml:space="preserve">
+    <value>ダイアログ設定||ダイアログ設定</value>
+  </data>
+  <data name="Frontend.067" xml:space="preserve">
+    <value>ダイアログ||ダイアログ</value>
+  </data>
+  <data name="Frontend.068" xml:space="preserve">
+    <value>ダイアログ設定||ダイアログ設定</value>
+  </data>
+  <data name="Frontend.069" xml:space="preserve">
+    <value>このモジュールは自動生成されました||このモジュールは自動生成されました</value>
+  </data>
+  <data name="Frontend.070" xml:space="preserve">
+    <value>ダイアログを開く||ダイアログを開く</value>
+  </data>
+  <data name="Frontend.071" xml:space="preserve">
+    <value>ダイアログを開く||ダイアログを開く</value>
+  </data>
+  <data name="Frontend.072" xml:space="preserve">
+    <value>ページを開く||ページを開く</value>
+  </data>
+  <data name="Frontend.073" xml:space="preserve">
+    <value>実行メソッド||実行メソッド</value>
+  </data>
+  <data name="Frontend.074" xml:space="preserve">
+    <value>拡張モジュール||拡張モジュール</value>
+  </data>
+  <data name="Frontend.075" xml:space="preserve">
+    <value>ボタン||ボタン</value>
+  </data>
+  <data name="Frontend.076" xml:space="preserve">
+    <value>ボタンイベント||ボタンイベント</value>
+  </data>
+  <data name="Frontend.077" xml:space="preserve">
+    <value>ボタン名||ボタン名</value>
+  </data>
+  <data name="Frontend.078" xml:space="preserve">
+    <value>ボタンプロパティ||ボタンプロパティ</value>
+  </data>
+  <data name="Frontend.079" xml:space="preserve">
+    <value>ボタンタイプ||ボタンタイプ</value>
+  </data>
+  <data name="Frontend.080" xml:space="preserve">
+    <value>ボタン設定||ボタン設定</value>
+  </data>
+  <data name="Frontend.081" xml:space="preserve">
+    <value>並び順||並び順</value>
+  </data>
+  <data name="Frontend.082" xml:space="preserve">
+    <value>並べ替えフィールド||並べ替えフィールド</value>
+  </data>
+  <data name="Frontend.083" xml:space="preserve">
+    <value>並べ替え順||並べ替え順</value>
+  </data>
+  <data name="Frontend.084" xml:space="preserve">
+    <value>並べ替え設定||並べ替え設定</value>
+  </data>
+  <data name="Frontend.085" xml:space="preserve">
+    <value>アウトライン||アウトライン</value>
+  </data>
+  <data name="Frontend.086" xml:space="preserve">
+    <value>説明||説明</value>
+  </data>
+  <data name="Frontend.087" xml:space="preserve">
+    <value>送信||送信</value>
+  </data>
+  <data name="Frontend.088" xml:space="preserve">
+    <value>送信失敗状態の設定||送信失敗状態の設定</value>
+  </data>
+  <data name="Frontend.089" xml:space="preserve">
+    <value>送信成功状態の設定||送信成功状態の設定</value>
+  </data>
+  <data name="Frontend.090" xml:space="preserve">
+    <value>メッセージ内容||メッセージ内容</value>
+  </data>
+  <data name="Frontend.091" xml:space="preserve">
+    <value>ヒント文||ヒント文</value>
+  </data>
+  <data name="Frontend.092" xml:space="preserve">
+    <value>メッセージ時間||メッセージ時間</value>
+  </data>
+  <data name="Frontend.093" xml:space="preserve">
+    <value>メッセージ表示時間||メッセージ表示時間</value>
+  </data>
+  <data name="Frontend.094" xml:space="preserve">
+    <value>ヒント：フィールドを追加するには、先にデータテーブルを追加してください||ヒント：フィールドを追加するには、先にデータテーブルを追加してください</value>
+  </data>
+  <data name="Frontend.095" xml:space="preserve">
+    <value>アクション||アクション</value>
+  </data>
+  <data name="Frontend.096" xml:space="preserve">
+    <value>操作列||操作列</value>
+  </data>
+  <data name="Frontend.097" xml:space="preserve">
+    <value>データ形式||データ形式</value>
+  </data>
+  <data name="Frontend.098" xml:space="preserve">
+    <value>データ形式テキスト||データ形式テキスト</value>
+  </data>
+  <data name="Frontend.099" xml:space="preserve">
+    <value>データ形式テキスト1||データ形式テキスト1</value>
+  </data>
+  <data name="Frontend.100" xml:space="preserve">
+    <value>データモデルの英語識別子です。データモデルの一意な識別子として重複できません。||データモデルの英語識別子です。データモデルの一意な識別子として重複できません。</value>
+  </data>
+  <data name="Frontend.101" xml:space="preserve">
+    <value>データ絞り込み||データ絞り込み</value>
+  </data>
+  <data name="Frontend.102" xml:space="preserve">
+    <value>データ型||データ型</value>
+  </data>
+  <data name="Frontend.103" xml:space="preserve">
+    <value>データテーブル||データテーブル</value>
+  </data>
+  <data name="Frontend.104" xml:space="preserve">
+    <value>データテーブルテキスト||データテーブルテキスト</value>
+  </data>
+  <data name="Frontend.105" xml:space="preserve">
+    <value>データテーブルテキスト1||データテーブルテキスト1</value>
+  </data>
+  <data name="Frontend.106" xml:space="preserve">
+    <value>データグリッド||データグリッド</value>
+  </data>
+  <data name="Frontend.107" xml:space="preserve">
+    <value>データテーブル設定||データテーブル設定</value>
+  </data>
+  <data name="Frontend.108" xml:space="preserve">
+    <value>データテーブルを選択||データテーブルを選択</value>
+  </data>
+  <data name="Frontend.109" xml:space="preserve">
+    <value>データ設定||データ設定</value>
+  </data>
+  <data name="Frontend.110" xml:space="preserve">
+    <value>データ詳細||データ詳細</value>
+  </data>
+  <data name="Frontend.111" xml:space="preserve">
+    <value>データセット||データセット</value>
+  </data>
+  <data name="Frontend.112" xml:space="preserve">
+    <value>テキスト||テキスト</value>
+  </data>
+  <data name="Frontend.113" xml:space="preserve">
+    <value>追加||追加</value>
+  </data>
+  <data name="Frontend.114" xml:space="preserve">
+    <value>フィールドを追加||フィールドを追加</value>
+  </data>
+  <data name="Frontend.115" xml:space="preserve">
+    <value>データテーブルを追加||データテーブルを追加</value>
+  </data>
+  <data name="Frontend.116" xml:space="preserve">
+    <value>画面を追加||画面を追加</value>
+  </data>
+  <data name="Frontend.117" xml:space="preserve">
+    <value>メニューを追加||メニューを追加</value>
+  </data>
+  <data name="Frontend.118" xml:space="preserve">
+    <value>ページを追加||ページを追加</value>
+  </data>
+  <data name="Frontend.119" xml:space="preserve">
+    <value>ページボタンに背景色を付ける||ページボタンに背景色を付ける</value>
+  </data>
+  <data name="Frontend.120" xml:space="preserve">
+    <value>小型ページングを使う||小型ページングを使う</value>
+  </data>
+  <data name="Frontend.121" xml:space="preserve">
+    <value>一意||一意</value>
+  </data>
+  <data name="Frontend.122" xml:space="preserve">
+    <value>必須||必須</value>
+  </data>
+  <data name="Frontend.123" xml:space="preserve">
+    <value>ゼブラ縞を表示||ゼブラ縞を表示</value>
+  </data>
+  <data name="Frontend.124" xml:space="preserve">
+    <value>メッセージを表示||メッセージを表示</value>
+  </data>
+  <data name="Frontend.125" xml:space="preserve">
+    <value>ヘッダーを表示||ヘッダーを表示</value>
+  </data>
+  <data name="Frontend.126" xml:space="preserve">
+    <value>枠線を表示||枠線を表示</value>
+  </data>
+  <data name="Frontend.127" xml:space="preserve">
+    <value>通常列||通常列</value>
+  </data>
+  <data name="Frontend.128" xml:space="preserve">
+    <value>最大長||最大長</value>
+  </data>
+  <data name="Frontend.129" xml:space="preserve">
+    <value>最大ページボタン数||最大ページボタン数</value>
+  </data>
+  <data name="Frontend.130" xml:space="preserve">
+    <value>最小長||最小長</value>
+  </data>
+  <data name="Frontend.131" xml:space="preserve">
+    <value>レイアウトを表示||レイアウトを表示</value>
+  </data>
+  <data name="Frontend.132" xml:space="preserve">
+    <value>識別子id||識別子id</value>
+  </data>
+  <data name="Frontend.133" xml:space="preserve">
+    <value>タイトル内容||タイトル内容</value>
+  </data>
+  <data name="Frontend.134" xml:space="preserve">
+    <value>タイトル文字||タイトル文字</value>
+  </data>
+  <data name="Frontend.135" xml:space="preserve">
+    <value>スタイル||スタイル</value>
+  </data>
+  <data name="Frontend.136" xml:space="preserve">
+    <value>スタイル設定||スタイル設定</value>
+  </data>
+  <data name="Frontend.137" xml:space="preserve">
+    <value>形式||形式</value>
+  </data>
+  <data name="Frontend.138" xml:space="preserve">
+    <value>書式テキスト||書式テキスト</value>
+  </data>
+  <data name="Frontend.139" xml:space="preserve">
+    <value>書式テキスト2||書式テキスト2</value>
+  </data>
+  <data name="Frontend.140" xml:space="preserve">
+    <value>ページあたりの件数||ページあたりの件数</value>
+  </data>
+  <data name="Frontend.141" xml:space="preserve">
+    <value>追加||追加</value>
+  </data>
+  <data name="Frontend.142" xml:space="preserve">
+    <value>列を追加||列を追加</value>
+  </data>
+  <data name="Frontend.143" xml:space="preserve">
+    <value>ボタンを追加||ボタンを追加</value>
+  </data>
+  <data name="Frontend.144" xml:space="preserve">
+    <value>並べ替えルールを追加||並べ替えルールを追加</value>
+  </data>
+  <data name="Frontend.145" xml:space="preserve">
+    <value>フィルター条件を追加||フィルター条件を追加</value>
+  </data>
+  <data name="Frontend.146" xml:space="preserve">
+    <value>オプションを追加||オプションを追加</value>
+  </data>
+  <data name="Frontend.147" xml:space="preserve">
+    <value>レイアウトページを描画||レイアウトページを描画</value>
+  </data>
+  <data name="Frontend.148" xml:space="preserve">
+    <value>クリック||クリック</value>
+  </data>
+  <data name="Frontend.149" xml:space="preserve">
+    <value>右側をクリックして属性を追加||右側をクリックして属性を追加</value>
+  </data>
+  <data name="Frontend.150" xml:space="preserve">
+    <value>右側をクリックしてコンポーネントを追加||右側をクリックしてコンポーネントを追加</value>
+  </data>
+  <data name="Frontend.151" xml:space="preserve">
+    <value>ページ設定||ページ設定</value>
+  </data>
+  <data name="Frontend.152" xml:space="preserve">
+    <value>確認||確認</value>
+  </data>
+  <data name="Frontend.153" xml:space="preserve">
+    <value>確認||確認</value>
+  </data>
+  <data name="Frontend.154" xml:space="preserve">
+    <value>確認ボタンの文字||確認ボタンの文字</value>
+  </data>
+  <data name="Frontend.155" xml:space="preserve">
+    <value>確認操作の設定||確認操作の設定</value>
+  </data>
+  <data name="Frontend.156" xml:space="preserve">
+    <value>無効||無効</value>
+  </data>
+  <data name="Frontend.157" xml:space="preserve">
+    <value>等しい||等しい</value>
+  </data>
+  <data name="Frontend.158" xml:space="preserve">
+    <value>フィルター||フィルター</value>
+  </data>
+  <data name="Frontend.159" xml:space="preserve">
+    <value>フィルター設定||フィルター設定</value>
+  </data>
+  <data name="Frontend.160" xml:space="preserve">
+    <value>フィルター条件設定||フィルター条件設定</value>
+  </data>
+  <data name="Frontend.161" xml:space="preserve">
+    <value>タイプテキスト||タイプテキスト</value>
+  </data>
+  <data name="Frontend.162" xml:space="preserve">
+    <value>タイプテキスト1||タイプテキスト1</value>
+  </data>
+  <data name="Frontend.163" xml:space="preserve">
+    <value>コンポーネント||コンポーネント</value>
+  </data>
+  <data name="Frontend.164" xml:space="preserve">
+    <value>コンポーネント名||コンポーネント名</value>
+  </data>
+  <data name="Frontend.165" xml:space="preserve">
+    <value>コンポーネントタイプ||コンポーネントタイプ</value>
+  </data>
+  <data name="Frontend.166" xml:space="preserve">
+    <value>バインドフィールド||バインドフィールド</value>
+  </data>
+  <data name="Frontend.167" xml:space="preserve">
+    <value>バインドフィールドテキスト||バインドフィールドテキスト</value>
+  </data>
+  <data name="Frontend.168" xml:space="preserve">
+    <value>バインド項目テキスト1||バインド項目テキスト1</value>
+  </data>
+  <data name="Frontend.169" xml:space="preserve">
+    <value>編集||編集</value>
+  </data>
+  <data name="Frontend.170" xml:space="preserve">
+    <value>ページを編集||ページを編集</value>
+  </data>
+  <data name="Frontend.171" xml:space="preserve">
+    <value>自動生成||自動生成</value>
+  </data>
+  <data name="Frontend.172" xml:space="preserve">
+    <value>カスタム||カスタム</value>
+  </data>
+  <data name="Frontend.173" xml:space="preserve">
+    <value>カスタムID名||カスタムID名</value>
+  </data>
+  <data name="Frontend.174" xml:space="preserve">
+    <value>カスタム列設定||カスタム列設定</value>
+  </data>
+  <data name="Frontend.175" xml:space="preserve">
+    <value>カスタムボタン||カスタムボタン</value>
+  </data>
+  <data name="Frontend.176" xml:space="preserve">
+    <value>フォーム||フォーム</value>
+  </data>
+  <data name="Frontend.177" xml:space="preserve">
+    <value>フォームプロパティ設定||フォームプロパティ設定</value>
+  </data>
+  <data name="Frontend.178" xml:space="preserve">
+    <value>フォーム実行メソッド||フォーム実行メソッド</value>
+  </data>
+  <data name="Frontend.179" xml:space="preserve">
+    <value>テーブル||テーブル</value>
+  </data>
+  <data name="Frontend.180" xml:space="preserve">
+    <value>テーブル列||テーブル列</value>
+  </data>
+  <data name="Frontend.181" xml:space="preserve">
+    <value>テーブルサイズ||テーブルサイズ</value>
+  </data>
+  <data name="Frontend.182" xml:space="preserve">
+    <value>テーブルスタイル設定||テーブルスタイル設定</value>
+  </data>
+  <data name="Frontend.183" xml:space="preserve">
+    <value>設定||設定</value>
+  </data>
+  <data name="Frontend.184" xml:space="preserve">
+    <value>ゲスト編集ページ||ゲスト編集ページ</value>
+  </data>
+  <data name="Frontend.185" xml:space="preserve">
+    <value>詳細||詳細</value>
+  </data>
+  <data name="Frontend.186" xml:space="preserve">
+    <value>テーブルのフィールドを設定するには、先にデータテーブルを選択してください||テーブルのフィールドを設定するには、先にデータテーブルを選択してください</value>
+  </data>
+  <data name="Frontend.187" xml:space="preserve">
+    <value>名前を入力||名前を入力</value>
+  </data>
+  <data name="Frontend.188" xml:space="preserve">
+    <value>識別子idを入力||識別子idを入力</value>
+  </data>
+  <data name="Frontend.189" xml:space="preserve">
+    <value>入力してください||入力してください</value>
+  </data>
+  <data name="Frontend.190" xml:space="preserve">
+    <value>閉じるページを入力||閉じるページを入力</value>
+  </data>
+  <data name="Frontend.191" xml:space="preserve">
+    <value>内容を入力||内容を入力</value>
+  </data>
+  <data name="Frontend.192" xml:space="preserve">
+    <value>列幅を入力||列幅を入力</value>
+  </data>
+  <data name="Frontend.193" xml:space="preserve">
+    <value>列タイトルを入力||列タイトルを入力</value>
+  </data>
+  <data name="Frontend.194" xml:space="preserve">
+    <value>キャンセルボタンの文字を入力||キャンセルボタンの文字を入力</value>
+  </data>
+  <data name="Frontend.195" xml:space="preserve">
+    <value>名前を入力||名前を入力</value>
+  </data>
+  <data name="Frontend.196" xml:space="preserve">
+    <value>フィールド名を入力||フィールド名を入力</value>
+  </data>
+  <data name="Frontend.197" xml:space="preserve">
+    <value>レイアウト名を入力||レイアウト名を入力</value>
+  </data>
+  <data name="Frontend.198" xml:space="preserve">
+    <value>ボタン名を入力||ボタン名を入力</value>
+  </data>
+  <data name="Frontend.199" xml:space="preserve">
+    <value>説明を入力||説明を入力</value>
+  </data>
+  <data name="Frontend.200" xml:space="preserve">
+    <value>プロンプト内容を入力||プロンプト内容を入力</value>
+  </data>
+  <data name="Frontend.201" xml:space="preserve">
+    <value>ヒント文字を入力||ヒント文字を入力</value>
+  </data>
+  <data name="Frontend.202" xml:space="preserve">
+    <value>プロンプトの表示時間を入力||プロンプトの表示時間を入力</value>
+  </data>
+  <data name="Frontend.203" xml:space="preserve">
+    <value>タイトル文字を入力||タイトル文字を入力</value>
+  </data>
+  <data name="Frontend.204" xml:space="preserve">
+    <value>確認ボタンの文字を入力||確認ボタンの文字を入力</value>
+  </data>
+  <data name="Frontend.205" xml:space="preserve">
+    <value>メニュー名を入力||メニュー名を入力</value>
+  </data>
+  <data name="Frontend.206" xml:space="preserve">
+    <value>選択してください||選択してください</value>
+  </data>
+  <data name="Frontend.207" xml:space="preserve">
+    <value>イベントを選択||イベントを選択</value>
+  </data>
+  <data name="Frontend.208" xml:space="preserve">
+    <value>インタラクションを選択||インタラクションを選択</value>
+  </data>
+  <data name="Frontend.209" xml:space="preserve">
+    <value>位置を選択||位置を選択</value>
+  </data>
+  <data name="Frontend.210" xml:space="preserve">
+    <value>揃え方を選択||揃え方を選択</value>
+  </data>
+  <data name="Frontend.211" xml:space="preserve">
+    <value>表示内容を選択||表示内容を選択</value>
+  </data>
+  <data name="Frontend.212" xml:space="preserve">
+    <value>ボタンイベントを選択||ボタンイベントを選択</value>
+  </data>
+  <data name="Frontend.213" xml:space="preserve">
+    <value>ボタン属性を選択||ボタン属性を選択</value>
+  </data>
+  <data name="Frontend.214" xml:space="preserve">
+    <value>ボタン種別を選択||ボタン種別を選択</value>
+  </data>
+  <data name="Frontend.215" xml:space="preserve">
+    <value>データ形式を選択||データ形式を選択</value>
+  </data>
+  <data name="Frontend.216" xml:space="preserve">
+    <value>データ型を選択||データ型を選択</value>
+  </data>
+  <data name="Frontend.217" xml:space="preserve">
+    <value>データテーブルを選択||データテーブルを選択</value>
+  </data>
+  <data name="Frontend.218" xml:space="preserve">
+    <value>形式を選択||形式を選択</value>
+  </data>
+  <data name="Frontend.219" xml:space="preserve">
+    <value>ページあたりの表示件数を選択||ページあたりの表示件数を選択</value>
+  </data>
+  <data name="Frontend.220" xml:space="preserve">
+    <value>コンポーネントを選択||コンポーネントを選択</value>
+  </data>
+  <data name="Frontend.221" xml:space="preserve">
+    <value>コンポーネント名を選択||コンポーネント名を選択</value>
+  </data>
+  <data name="Frontend.222" xml:space="preserve">
+    <value>コンポーネント種別を選択||コンポーネント種別を選択</value>
+  </data>
+  <data name="Frontend.223" xml:space="preserve">
+    <value>バインド項目を選択||バインド項目を選択</value>
+  </data>
+  <data name="Frontend.224" xml:space="preserve">
+    <value>ページを選択||ページを選択</value>
+  </data>
+  <data name="Frontend.225" xml:space="preserve">
+    <value>データソースのメソッドを呼び出し||データソースのメソッドを呼び出し</value>
+  </data>
+  <data name="Frontend.226" xml:space="preserve">
+    <value>リンクを開く||リンクを開く</value>
+  </data>
+  <data name="Frontend.227" xml:space="preserve">
+    <value>インタラクションを選択||インタラクションを選択</value>
+  </data>
+  <data name="Frontend.228" xml:space="preserve">
+    <value>コンポーネントを選択||コンポーネントを選択</value>
+  </data>
+  <data name="Frontend.229" xml:space="preserve">
+    <value>ページを選択||ページを選択</value>
+  </data>
+  <data name="Frontend.230" xml:space="preserve">
+    <value>オプション||オプション</value>
+  </data>
+  <data name="Frontend.231" xml:space="preserve">
+    <value>オプション label||オプション label</value>
+  </data>
+  <data name="Frontend.232" xml:space="preserve">
+    <value>オプション value||オプション value</value>
+  </data>
+  <data name="Frontend.233" xml:space="preserve">
+    <value>オプション設定||オプション設定</value>
+  </data>
+  <data name="Frontend.234" xml:space="preserve">
+    <value>リンク||リンク</value>
+  </data>
+  <data name="Frontend.235" xml:space="preserve">
+    <value>長さ||長さ</value>
+  </data>
+  <data name="Frontend.236" xml:space="preserve">
+    <value>降順||降順</value>
+  </data>
+  <data name="Frontend.237" xml:space="preserve">
+    <value>上揃え||上揃え</value>
+  </data>
+  <data name="Frontend.238" xml:space="preserve">
+    <value>色||色</value>
+  </data>
+  <data name="Frontend.239" xml:space="preserve">
+    <value>ホーム||ホーム</value>
+  </data>
+  <data name="Frontend.240" xml:space="preserve">
+    <value>lableのフォント色||lableのフォント色</value>
+  </data>
+  <data name="Frontend.241" xml:space="preserve">
+    <value>最小の長さ: 最大の長さ:||最小の長さ: 最大の長さ:</value>
+  </data>
+  <data name="Frontend.242" xml:space="preserve">
+    <value>右に追加||右に追加</value>
+  </data>
+  <data name="Frontend.243" xml:space="preserve">
+    <value>DynamicData のデータテーブル設定||DynamicData のデータテーブル設定</value>
+  </data>
+  <data name="Frontend.244" xml:space="preserve">
+    <value>名前||名前</value>
+  </data>
+  <data name="Frontend.245" xml:space="preserve">
+    <value>はい||はい</value>
+  </data>
+  <data name="Frontend.246" xml:space="preserve">
+    <value>いいえ||いいえ</value>
+  </data>
+  <data name="Frontend.247" xml:space="preserve">
+    <value>イベントテキスト||イベントテキスト</value>
+  </data>
+  <data name="Frontend.248" xml:space="preserve">
+    <value>イベントテキスト2||イベントテキスト2</value>
+  </data>
+  <data name="Frontend.249" xml:space="preserve">
+    <value>DynamicData レイアウトの作成||DynamicData レイアウトの作成</value>
+  </data>
+  <data name="Frontend.250" xml:space="preserve">
+    <value>オプションを追加||オプションを追加</value>
+  </data>
+  <data name="Frontend.251" xml:space="preserve">
+    <value>並べ替え項目を選択||並べ替え項目を選択</value>
+  </data>
+  <data name="Frontend.252" xml:space="preserve">
+    <value>名前を入力||名前を入力</value>
+  </data>
+  <data name="Frontend.253" xml:space="preserve">
+    <value>入力パラメータ||入力パラメータ</value>
+  </data>
+  <data name="Frontend.254" xml:space="preserve">
+    <value>出力パラメータ||出力パラメータ</value>
+  </data>
+  <data name="Frontend.255" xml:space="preserve">
+    <value>キャンセルボタンの文字||キャンセルボタンの文字</value>
+  </data>
+  <data name="Frontend.256" xml:space="preserve">
+    <value>確認ボタンの文字||確認ボタンの文字</value>
+  </data>
+  <data name="Frontend.257" xml:space="preserve">
+    <value>メッセージ表示時間||メッセージ表示時間</value>
+  </data>
+  <data name="Frontend.258" xml:space="preserve">
+    <value>フォーム実行メソッド||フォーム実行メソッド</value>
+  </data>
+  <data name="Frontend.259" xml:space="preserve">
+    <value>DynamicData ホーム||DynamicData ホーム</value>
+  </data>
+  <data name="Frontend.260" xml:space="preserve">
+    <value>DynamicData の画面設定||DynamicData の画面設定</value>
+  </data>
+  <data name="Frontend.261" xml:space="preserve">
+    <value>サムネイル||サムネイル</value>
+  </data>
+  <data name="Frontend.262" xml:space="preserve">
+    <value>DynamicData レイアウト描画ページ||DynamicData レイアウト描画ページ</value>
+  </data>
+  <data name="Frontend.263" xml:space="preserve">
+    <value>識別子Idを入力||識別子Idを入力</value>
+  </data>
+  <data name="Frontend.264" xml:space="preserve">
+    <value>必須かどうかを選択||必須かどうかを選択</value>
+  </data>
+  <data name="Frontend.265" xml:space="preserve">
+    <value>一意かどうかを選択||一意かどうかを選択</value>
+  </data>
+  <data name="Frontend.266" xml:space="preserve">
+    <value>デバイス管理証明書（spot_checkasd）||デバイス管理証明書（spot_checkasd）</value>
+  </data>
+  <data name="Frontend.267" xml:space="preserve">
+    <value>データテーブル1をバインド、データテーブル2をバインド、データテーブル3をバインドデータテーブル1をバインド、データテーブル2をバインド、データテーブル3をバインドデータテーブル1をバインド、データテーブル2をバインド、データテーブル3をバインド||データテーブル1をバインド、データテーブル2をバインド、データテーブル3をバインドデータテーブル1をバインド、データテーブル2をバインド、データテーブル3をバインドデータテーブル1をバインド、データテーブル2をバインド、データテーブル3をバインド</value>
+  </data>
+  <data name="Frontend.268" xml:space="preserve">
+    <value>テスト名1||テスト名1</value>
+  </data>
+  <data name="Frontend.269" xml:space="preserve">
+    <value>説明テキスト||説明テキスト</value>
+  </data>
+  <data name="Frontend.270" xml:space="preserve">
+    <value>名前と説明を入力||名前と説明を入力</value>
+  </data>
+  <data name="Frontend.271" xml:space="preserve">
+    <value>今すぐ閉じますか？||今すぐ閉じますか？</value>
+  </data>
+  <data name="Frontend.272" xml:space="preserve">
+    <value>このファイルを完全に削除します。続行しますか?||このファイルを完全に削除します。続行しますか?</value>
+  </data>
+  <data name="Frontend.273" xml:space="preserve">
+    <value>通知||通知</value>
+  </data>
+  <data name="Frontend.274" xml:space="preserve">
+    <value>削除しました！||削除しました！</value>
+  </data>
+  <data name="Frontend.275" xml:space="preserve">
+    <value>削除をキャンセルしました||削除をキャンセルしました</value>
+  </data>
+  <data name="Frontend.276" xml:space="preserve">
+    <value>メニュー1||メニュー1</value>
+  </data>
+  <data name="Frontend.277" xml:space="preserve">
+    <value>メニュー{0}||メニュー{0}</value>
+  </data>
+  <data name="Frontend.278" xml:space="preserve">
+    <value>このデータを削除しますか||このデータを削除しますか</value>
+  </data>
+  <data name="Frontend.279" xml:space="preserve">
+    <value>削除しました||削除しました</value>
+  </data>
+  <data name="Frontend.280" xml:space="preserve">
+    <value>現在のページを閉じる||現在のページを閉じる</value>
+  </data>
+  <data name="Frontend.281" xml:space="preserve">
+    <value>入力欄||入力欄</value>
+  </data>
+  <data name="Frontend.282" xml:space="preserve">
+    <value>テキスト入力||テキスト入力</value>
+  </data>
+  <data name="Frontend.283" xml:space="preserve">
+    <value>テキストエリア||テキストエリア</value>
+  </data>
+  <data name="Frontend.284" xml:space="preserve">
+    <value>数値入力||数値入力</value>
+  </data>
+  <data name="Frontend.285" xml:space="preserve">
+    <value>スイッチ||スイッチ</value>
+  </data>
+  <data name="Frontend.286" xml:space="preserve">
+    <value>セレクター||セレクター</value>
+  </data>
+  <data name="Frontend.287" xml:space="preserve">
+    <value>任意時刻ピッカー||任意時刻ピッカー</value>
+  </data>
+  <data name="Frontend.288" xml:space="preserve">
+    <value>日付の選択||日付の選択</value>
+  </data>
+  <data name="Frontend.289" xml:space="preserve">
+    <value>年の選択||年の選択</value>
+  </data>
+  <data name="Frontend.290" xml:space="preserve">
+    <value>年ピッカー（複数選択）||年ピッカー（複数選択）</value>
+  </data>
+  <data name="Frontend.291" xml:space="preserve">
+    <value>月の選択||月の選択</value>
+  </data>
+  <data name="Frontend.292" xml:space="preserve">
+    <value>月ピッカー（複数選択）||月ピッカー（複数選択）</value>
+  </data>
+  <data name="Frontend.293" xml:space="preserve">
+    <value>日付ピッカー（複数選択）||日付ピッカー（複数選択）</value>
+  </data>
+  <data name="Frontend.294" xml:space="preserve">
+    <value>週の選択||週の選択</value>
+  </data>
+  <data name="Frontend.295" xml:space="preserve">
+    <value>yyyy 第 WW 週||yyyy 第 WW 週</value>
+  </data>
+  <data name="Frontend.296" xml:space="preserve">
+    <value>日時ピッカー||日時ピッカー</value>
+  </data>
+  <data name="Frontend.297" xml:space="preserve">
+    <value>チェックボックス||チェックボックス</value>
+  </data>
+  <data name="Frontend.298" xml:space="preserve">
+    <value>ラジオボタン||ラジオボタン</value>
+  </data>
+  <data name="Frontend.299" xml:space="preserve">
+    <value>モックデータ||モックデータ</value>
+  </data>
+  <data name="Frontend.300" xml:space="preserve">
+    <value>これはレイアウト名です||これはレイアウト名です</value>
+  </data>
+  <data name="Frontend.301" xml:space="preserve">
+    <value>有効||有効</value>
+  </data>
+  <data name="Frontend.302" xml:space="preserve">
+    <value>無効||無効</value>
+  </data>
+  <data name="Frontend.303" xml:space="preserve">
+    <value>レイアウト名||レイアウト名</value>
+  </data>
+  <data name="Frontend.304" xml:space="preserve">
+    <value>レイアウト名が正しくありません||レイアウト名が正しくありません</value>
+  </data>
+  <data name="Frontend.305" xml:space="preserve">
+    <value>レイアウト名：||レイアウト名：</value>
+  </data>
+  <data name="Frontend.306" xml:space="preserve">
+    <value>例外を送出するテスト。引き渡しパラメーター：{0} {1}||例外を送出するテスト。引き渡しパラメーター：{0} {1}</value>
+  </data>
+  <data name="Frontend.307" xml:space="preserve">
+    <value>除数は0にできません！||除数は0にできません！</value>
+  </data>
+  <data name="Frontend.308" xml:space="preserve">
+    <value>不明な演算子：{0}||不明な演算子：{0}</value>
+  </data>
+  <data name="Function.Sample.Name" xml:space="preserve">
+    <value>サンプル関数</value>
+  </data>
+  <data name="Function.Sample.Description" xml:space="preserve">
+    <value>FunctionRender のパラメーターと戻り値を示します</value>
+  </data>
+
 </root>

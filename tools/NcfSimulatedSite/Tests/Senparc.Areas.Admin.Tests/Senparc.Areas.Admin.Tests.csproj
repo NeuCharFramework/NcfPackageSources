@@ -55,6 +55,8 @@
 [2026-11-02] v0.0.21 同步 AgentsManager 客户端测试的 Studio 脚本加载顺序与浏览器全局上下文
 [2026-11-03] Cover timestamp preference database persistence, subsequent retrieval, accurate save reports, skipped extraction and safe default-prompt upgrades.
 [2026-11-03] Verify sidebar layout persistence, browser drag/keyboard ordering, reduced motion, SQLite session order persistence and user/tenant/Workspace boundaries.
+[2026-11-04] Cover PromptCode range tracking, clean-message persistence, owned-turn scoring, optional providers and browser interactions.
+[2026-11-05] Verify rating slider drag previews, fixed save targets, cancellation, stale detail requests and responsive score charts.
 </PackageReleaseNotes>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

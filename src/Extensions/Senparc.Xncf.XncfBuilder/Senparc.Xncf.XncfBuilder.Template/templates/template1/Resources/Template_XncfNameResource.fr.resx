@@ -102,4 +102,203 @@
   <data name="Function.EventBusRoundTrip.Timeout" xml:space="preserve">
     <value>L’aller-retour EventBus a expiré. Vérifiez que l’hôte a enregistré EventBus et analysé cet assembly XNCF.</value>
   </data>
+  <data name="Frontend.001" xml:space="preserve">
+    <value>Gestion de la base de données Color||Gestion de la base de données Color</value>
+  </data>
+  <data name="Frontend.002" xml:space="preserve">
+    <value>Modules d’extension||Modules d’extension</value>
+  </data>
+  <data name="Frontend.003" xml:space="preserve">
+    <value>Ajouter une couleur||Ajouter une couleur</value>
+  </data>
+  <data name="Frontend.004" xml:space="preserve">
+    <value>Actualiser||Actualiser</value>
+  </data>
+  <data name="Frontend.005" xml:space="preserve">
+    <value>Informations de débogage||Informations de débogage</value>
+  </data>
+  <data name="Frontend.006" xml:space="preserve">
+    <value>Informations de débogage :||Informations de débogage :</value>
+  </data>
+  <data name="Frontend.007" xml:space="preserve">
+    <value>Longueur de tableData :||Longueur de tableData :</value>
+  </data>
+  <data name="Frontend.008" xml:space="preserve">
+    <value>Instance Vue valide :||Instance Vue valide :</value>
+  </data>
+  <data name="Frontend.009" xml:space="preserve">
+    <value>Oui||Oui</value>
+  </data>
+  <data name="Frontend.010" xml:space="preserve">
+    <value>Non||Non</value>
+  </data>
+  <data name="Frontend.011" xml:space="preserve">
+    <value>Premier élément :||Premier élément :</value>
+  </data>
+  <data name="Frontend.012" xml:space="preserve">
+    <value>Test d'affichage simplifié des données :||Test d'affichage simplifié des données :</value>
+  </data>
+  <data name="Frontend.013" xml:space="preserve">
+    <value>Heure :||Heure :</value>
+  </data>
+  <data name="Frontend.014" xml:space="preserve">
+    <value>Aucune donnée à afficher !||Aucune donnée à afficher !</value>
+  </data>
+  <data name="Frontend.015" xml:space="preserve">
+    <value>Valeur du rouge (R)||Valeur du rouge (R)</value>
+  </data>
+  <data name="Frontend.016" xml:space="preserve">
+    <value>Valeur du vert (G)||Valeur du vert (G)</value>
+  </data>
+  <data name="Frontend.017" xml:space="preserve">
+    <value>Valeur du bleu (B)||Valeur du bleu (B)</value>
+  </data>
+  <data name="Frontend.018" xml:space="preserve">
+    <value>Aperçu de la couleur||Aperçu de la couleur</value>
+  </data>
+  <data name="Frontend.019" xml:space="preserve">
+    <value>Créé||Créé</value>
+  </data>
+  <data name="Frontend.020" xml:space="preserve">
+    <value>Mis à jour le||Mis à jour le</value>
+  </data>
+  <data name="Frontend.021" xml:space="preserve">
+    <value>Actions||Actions</value>
+  </data>
+  <data name="Frontend.022" xml:space="preserve">
+    <value>Modifier||Modifier</value>
+  </data>
+  <data name="Frontend.023" xml:space="preserve">
+    <value>Aléatoire||Aléatoire</value>
+  </data>
+  <data name="Frontend.024" xml:space="preserve">
+    <value>Supprimer||Supprimer</value>
+  </data>
+  <data name="Frontend.025" xml:space="preserve">
+    <value>Remarque supplémentaire||Remarque supplémentaire</value>
+  </data>
+  <data name="Frontend.026" xml:space="preserve">
+    <value>Saisissez des remarques supplémentaires sur la couleur...||Saisissez des remarques supplémentaires sur la couleur...</value>
+  </data>
+  <data name="Frontend.027" xml:space="preserve">
+    <value>Couleur aléatoire||Couleur aléatoire</value>
+  </data>
+  <data name="Frontend.028" xml:space="preserve">
+    <value>Annuler||Annuler</value>
+  </data>
+  <data name="Frontend.029" xml:space="preserve">
+    <value>OK||OK</value>
+  </data>
+  <data name="Frontend.030" xml:space="preserve">
+    <value>Modifier la couleur||Modifier la couleur</value>
+  </data>
+  <data name="Frontend.031" xml:space="preserve">
+    <value>Définissez la valeur du rouge||Définissez la valeur du rouge</value>
+  </data>
+  <data name="Frontend.032" xml:space="preserve">
+    <value>La valeur du rouge doit être comprise entre 0 et 255||La valeur du rouge doit être comprise entre 0 et 255</value>
+  </data>
+  <data name="Frontend.033" xml:space="preserve">
+    <value>Définissez la valeur du vert||Définissez la valeur du vert</value>
+  </data>
+  <data name="Frontend.034" xml:space="preserve">
+    <value>La valeur du vert doit être comprise entre 0 et 255||La valeur du vert doit être comprise entre 0 et 255</value>
+  </data>
+  <data name="Frontend.035" xml:space="preserve">
+    <value>Définissez la valeur du bleu||Définissez la valeur du bleu</value>
+  </data>
+  <data name="Frontend.036" xml:space="preserve">
+    <value>La valeur du bleu doit être comprise entre 0 et 255||La valeur du bleu doit être comprise entre 0 et 255</value>
+  </data>
+  <data name="Frontend.037" xml:space="preserve">
+    <value>Échec du chargement des données : {0}||Échec du chargement des données : {0}</value>
+  </data>
+  <data name="Frontend.038" xml:space="preserve">
+    <value>Opération terminée||Opération terminée</value>
+  </data>
+  <data name="Frontend.039" xml:space="preserve">
+    <value>Échec de la création||Échec de la création</value>
+  </data>
+  <data name="Frontend.040" xml:space="preserve">
+    <value>Échec de la mise à jour||Échec de la mise à jour</value>
+  </data>
+  <data name="Frontend.041" xml:space="preserve">
+    <value>Cela supprimera définitivement cette couleur. Continuer ?||Cela supprimera définitivement cette couleur. Continuer ?</value>
+  </data>
+  <data name="Frontend.042" xml:space="preserve">
+    <value>Information||Information</value>
+  </data>
+  <data name="Frontend.043" xml:space="preserve">
+    <value>Confirmer||Confirmer</value>
+  </data>
+  <data name="Frontend.044" xml:space="preserve">
+    <value>Annuler||Annuler</value>
+  </data>
+  <data name="Frontend.045" xml:space="preserve">
+    <value>Échec de la suppression||Échec de la suppression</value>
+  </data>
+  <data name="Frontend.046" xml:space="preserve">
+    <value>Suppression annulée||Suppression annulée</value>
+  </data>
+  <data name="Frontend.047" xml:space="preserve">
+    <value>Échec de la randomisation||Échec de la randomisation</value>
+  </data>
+  <data name="Frontend.048" xml:space="preserve">
+    <value>Données chargées||Données chargées</value>
+  </data>
+  <data name="Frontend.049" xml:space="preserve">
+    <value>Échec du chargement des données : {0}||Échec du chargement des données : {0}</value>
+  </data>
+  <data name="Frontend.050" xml:space="preserve">
+    <value>Les paramètres de la requête ne peuvent pas être vides||Les paramètres de la requête ne peuvent pas être vides</value>
+  </data>
+  <data name="Frontend.051" xml:space="preserve">
+    <value>Couleur créée||Couleur créée</value>
+  </data>
+  <data name="Frontend.052" xml:space="preserve">
+    <value>Échec de la création : {0}||Échec de la création : {0}</value>
+  </data>
+  <data name="Frontend.053" xml:space="preserve">
+    <value>La couleur n'existe pas.||La couleur n'existe pas.</value>
+  </data>
+  <data name="Frontend.054" xml:space="preserve">
+    <value>Couleur mise à jour||Couleur mise à jour</value>
+  </data>
+  <data name="Frontend.055" xml:space="preserve">
+    <value>Échec de la mise à jour : {0}||Échec de la mise à jour : {0}</value>
+  </data>
+  <data name="Frontend.056" xml:space="preserve">
+    <value>Couleur supprimée||Couleur supprimée</value>
+  </data>
+  <data name="Frontend.057" xml:space="preserve">
+    <value>Échec de la suppression : {0}||Échec de la suppression : {0}</value>
+  </data>
+  <data name="Frontend.058" xml:space="preserve">
+    <value>Couleur aléatoire appliquée||Couleur aléatoire appliquée</value>
+  </data>
+  <data name="Frontend.059" xml:space="preserve">
+    <value>Échec de la randomisation : {0}||Échec de la randomisation : {0}</value>
+  </data>
+  <data name="Frontend.060" xml:space="preserve">
+    <value>Échec du chargement : {0}||Échec du chargement : {0}</value>
+  </data>
+  <data name="Frontend.061" xml:space="preserve">
+    <value>Le diviseur ne peut pas être 0 !||Le diviseur ne peut pas être 0 !</value>
+  </data>
+  <data name="Frontend.062" xml:space="preserve">
+    <value>Opérateur inconnu : {0}||Opérateur inconnu : {0}</value>
+  </data>
+  <data name="Frontend.063" xml:space="preserve">
+    <value>Test de levée d'exception, paramètres transmis : {0} {1}||Test de levée d'exception, paramètres transmis : {0} {1}</value>
+  </data>
+  <data name="Frontend.064" xml:space="preserve">
+    <value>La valeur de rouge doit être comprise entre 0 et 255||La valeur de rouge doit être comprise entre 0 et 255</value>
+  </data>
+  <data name="Frontend.065" xml:space="preserve">
+    <value>La valeur de vert doit être comprise entre 0 et 255||La valeur de vert doit être comprise entre 0 et 255</value>
+  </data>
+  <data name="Frontend.066" xml:space="preserve">
+    <value>La valeur de bleu doit être comprise entre 0 et 255||La valeur de bleu doit être comprise entre 0 et 255</value>
+  </data>
+
 </root>

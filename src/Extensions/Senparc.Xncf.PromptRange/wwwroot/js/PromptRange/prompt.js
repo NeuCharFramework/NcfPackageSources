@@ -737,7 +737,10 @@ var app = new Vue({
         },
         
         // 监听content外部变化（如加载数据时更新编辑器）
+        // 编辑器回写时会把 _editorContentStamp 设成同一份文本，避免把未确认拼音写回 DOM
         content(newVal, oldVal) {
+            if (newVal === this._editorContentStamp) return;
+
             const editor = this.$refs.promptEditor;
             if (!editor || this.isComposing) return;
             
@@ -745,8 +748,16 @@ var app = new Vue({
             // 如果编辑器内容与content不一致（外部赋值），更新编辑器
             if (currentText !== newVal && newVal !== oldVal) {
                 this.$nextTick(() => {
+                    if (this.isComposing || this.content !== newVal || newVal === this._editorContentStamp) {
+                        console.log('[IME] skip external content render during composition');
+                        return;
+                    }
+                    const latestEditor = this.$refs.promptEditor;
+                    if (!latestEditor) return;
+                    if ((latestEditor.innerText || '') === newVal) return;
+                    console.log('[prompt editor] apply external content to editor, length:', (newVal || '').length);
                     const html = this.generateHighlightHTML(newVal);
-                    editor.innerHTML = html;
+                    latestEditor.innerHTML = html;
                 });
             }
         }
@@ -813,6 +824,15 @@ var app = new Vue({
         // 组件销毁前移除拖动相关的事件监听器
         document.removeEventListener('mousemove', this.handleResize);
         document.removeEventListener('mouseup', this.stopResize);
+        this.clearHighlightTimer();
+        if (this._compositionFlushTimer) {
+            clearTimeout(this._compositionFlushTimer);
+            this._compositionFlushTimer = null;
+        }
+        if (this._imeFallbackTimer) {
+            clearTimeout(this._imeFallbackTimer);
+            this._imeFallbackTimer = null;
+        }
     },
     methods: {
         getPromptRangeLocale() {
@@ -9866,6 +9886,144 @@ var app = new Vue({
             }
         },
         
+        // 编辑器回写 content 时记下这份文本，避免 watcher 把它当成外部赋值再写回 DOM
+        assignContentFromEditor(text) {
+            this._editorContentStamp = text;
+            this.content = text;
+        },
+
+        clearHighlightTimer() {
+            if (this._highlightTimer) {
+                clearTimeout(this._highlightTimer);
+                this._highlightTimer = null;
+            }
+        },
+
+        // 组字结束后再高亮。组字一开始就取消，避免 150ms 防抖撞上未确认的拼音
+        scheduleHighlight() {
+            if (this.isComposing) {
+                console.log('[IME] highlight not scheduled because composition is active');
+                return;
+            }
+            this.clearHighlightTimer();
+            this._highlightTimer = setTimeout(() => {
+                this._highlightTimer = null;
+                if (this.isComposing) {
+                    console.log('[IME] skip highlight because composition is active');
+                    return;
+                }
+                this.applyHighlight();
+            }, 150);
+        },
+
+        isImeKeyboardEvent(e) {
+            if (!e) return false;
+            // 229 / Process 是输入法组字键。不能把 Unidentified 算进来，否则普通按键也会被锁住。
+            return !!(e.isComposing || e.key === 'Process' || e.keyCode === 229);
+        },
+
+        // 把已确认的正文同步到 content。调用方必须保证当前不在组字中
+        captureEditorText() {
+            if (this.isComposing) {
+                console.log('[IME] capture skipped during composition');
+                return;
+            }
+            const editor = this.$refs.promptEditor;
+            if (!editor) return;
+
+            const text = this.getEditorText();
+            const contentChanged = text !== this.content;
+            console.log('[prompt editor] capture text, changed:', contentChanged, 'length:', text.length);
+            this.assignContentFromEditor(text);
+            if (contentChanged) {
+                this.promptChangeHandel(text, 'content');
+            }
+            this.scheduleHighlight();
+        },
+
+        handleCompositionStart(e) {
+            this.isComposing = true;
+            this._imeSessionStarted = true;
+            this.clearHighlightTimer();
+            if (this._compositionFlushTimer) {
+                clearTimeout(this._compositionFlushTimer);
+                this._compositionFlushTimer = null;
+            }
+            if (this._imeFallbackTimer) {
+                clearTimeout(this._imeFallbackTimer);
+                this._imeFallbackTimer = null;
+            }
+            console.log('[IME] compositionstart', e && e.data);
+        },
+
+        handleCompositionUpdate(e) {
+            // 组字更新只存在于输入法候选中，不能读取或重写编辑器
+            this.isComposing = true;
+            this._imeSessionStarted = true;
+            this.clearHighlightTimer();
+            console.log('[IME] compositionupdate', e && e.data);
+        },
+
+        handleCompositionEnd(e) {
+            console.log('[IME] compositionend', e && e.data);
+            this.clearHighlightTimer();
+            if (this._imeFallbackTimer) {
+                clearTimeout(this._imeFallbackTimer);
+                this._imeFallbackTimer = null;
+            }
+            if (this._compositionFlushTimer) {
+                clearTimeout(this._compositionFlushTimer);
+            }
+            // 保持锁定到下一个宏任务。Chrome 会在 compositionend 之后才把候选汉字写入 DOM，
+            // 同步读取会拿到拼音首字母，再被高亮写回正文。
+            this.isComposing = true;
+            this._compositionFlushTimer = setTimeout(() => {
+                this._compositionFlushTimer = null;
+                this._imeSessionStarted = false;
+                this.isComposing = false;
+                console.log('[IME] composition flushed');
+                this.captureEditorText();
+                // 再等一帧。如果上面读到的仍是拼音，浏览器此时已经换成汉字，需要重新同步。
+                requestAnimationFrame(() => {
+                    if (this.isComposing) return;
+                    const latestText = this.getEditorText();
+                    if (latestText !== this.content) {
+                        console.log('[IME] post-composition text changed, recapture. length:', latestText.length);
+                        this.captureEditorText();
+                    }
+                });
+            }, 0);
+        },
+
+        handleEditorBlur() {
+            if (this.isComposing) {
+                console.log('[IME] ignore blur during composition');
+                return;
+            }
+            this.applyHighlight();
+        },
+
+        handleEditorKeyUp() {
+            // 只在组字尚未结束时取消高亮。确认汉字后的 keyup 往往晚于 flush，
+            // 这时不能清掉刚刚排好的高亮定时器。
+            if (this.isComposing) {
+                this.clearHighlightTimer();
+            }
+        },
+
+        armImeFallback() {
+            if (this._imeFallbackTimer) clearTimeout(this._imeFallbackTimer);
+            // keydown 229 之后如果没有进入 composition，短延时后解除锁定，避免正常输入被吞掉
+            this._imeFallbackTimer = setTimeout(() => {
+                this._imeFallbackTimer = null;
+                if (this.isComposing && !this._imeSessionStarted) {
+                    console.log('[IME] fallback unlock without composition session');
+                    this.isComposing = false;
+                    this.captureEditorText();
+                }
+            }, 80);
+        },
+
         // 处理粘贴事件
         handlePaste(e) {
             const editor = this.$refs.promptEditor;
@@ -9960,6 +10118,10 @@ var app = new Vue({
             requestAnimationFrame(() => {
                 setTimeout(() => {
                     this._isPasting = false;
+                    if (this.isComposing) {
+                        console.log('[IME] skip paste highlight during composition');
+                        return;
+                    }
                     
                     // 计算粘贴后的光标位置：粘贴开始位置 + 粘贴文本长度
                     const newCaretPos = pasteStartPos + pasteTextLength;
@@ -9971,8 +10133,8 @@ var app = new Vue({
                     // 检查内容是否真的发生了变化
                     const contentChanged = text !== this.content;
                     
-                    // 更新 content
-                    this.content = text;
+                    // 更新 content（来自编辑器，不能再触发 watcher 回写 DOM）
+                    this.assignContentFromEditor(text);
                     
                     // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
                     if (contentChanged) {
@@ -9987,6 +10149,19 @@ var app = new Vue({
         
         // 处理键盘按键事件（特别是回车键）
         handleKeyDown(e) {
+            // 拼音组字的 keydown 往往早于 compositionstart，且 keyCode 为 229。
+            // 这里先锁住高亮，避免上一次输入的防抖在首字母阶段重写 DOM。
+            if (this.isImeKeyboardEvent(e) || this.isComposing) {
+                const wasComposing = this.isComposing || this._imeSessionStarted;
+                this.isComposing = true;
+                this.clearHighlightTimer();
+                if (!wasComposing) {
+                    this.armImeFallback();
+                }
+                console.log('[IME] keydown during composition, skip editor mutation', e.key, e.keyCode);
+                return;
+            }
+
             // 如果是回车键，需要特殊处理
             if (e.key === 'Enter' || e.keyCode === 13) {
                 const editor = this.$refs.promptEditor;
@@ -10012,6 +10187,10 @@ var app = new Vue({
                 requestAnimationFrame(() => {
                     setTimeout(() => {
                         this._isEntering = false;
+                        if (this.isComposing) {
+                            console.log('[IME] skip enter highlight during composition');
+                            return;
+                        }
                         
                         // 回车后，光标应该在 BR 标签之后，位置应该是 enterStartPos + 1
                         const newCaretPos = enterStartPos + 1;
@@ -10023,8 +10202,8 @@ var app = new Vue({
                         // 检查内容是否真的发生了变化
                         const contentChanged = text !== this.content;
                         
-                        // 更新 content
-                        this.content = text;
+                        // 更新 content（来自编辑器，不能再触发 watcher 回写 DOM）
+                        this.assignContentFromEditor(text);
                         
                         // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
                         if (contentChanged) {
@@ -10040,29 +10219,17 @@ var app = new Vue({
         
         // 用户输入时（立即更新高亮，使用短防抖优化性能）
         handleEditorInput(e) {
-            if (this.isComposing) return;  // IME输入中不处理
+            const inputType = e && e.inputType ? String(e.inputType) : '';
+            const isCompositionInput = !!(e && (e.isComposing || inputType.indexOf('Composition') !== -1));
+            if (this.isComposing || isCompositionInput) {
+                console.log('[IME] ignore input during composition', inputType, e && e.data);
+                this.clearHighlightTimer();
+                return;
+            }
             if (this._isPasting) return;   // 粘贴操作中不处理，由 handlePaste 处理
             if (this._isEntering) return;  // 回车操作中不处理，由 handleKeyDown 处理
-            
-            const text = this.getEditorText();
-            
-            // 检查内容是否真的发生了变化
-            const contentChanged = text !== this.content;
-            
-            // 更新 content
-            this.content = text;
-            
-            // 如果内容真的发生了变化，触发状态更新（从"连发"切换到"打靶"）
-            if (contentChanged) {
-                this.promptChangeHandel(text, 'content');
-            }
-            
-            // 使用较短的防抖时间（150ms）来平衡性能和响应性
-            // 这样用户输入、删除、剪切等操作时，高亮会立即更新
-            if (this._highlightTimer) clearTimeout(this._highlightTimer);
-            this._highlightTimer = setTimeout(() => {
-                this.applyHighlight();
-            }, 150);
+
+            this.captureEditorText();
         },
         
         // 清理 var-highlight span 周围多余的 <br> 标签和空白文本节点，并规范化 DOM
@@ -10134,6 +10301,10 @@ var app = new Vue({
         
         // 应用高亮（使用指定的光标位置，用于粘贴等操作）
         applyHighlightWithCaretPos(expectedCaretPos) {
+            if (this.isComposing) {
+                console.log('[IME] applyHighlightWithCaretPos blocked during composition');
+                return;
+            }
             const editor = this.$refs.promptEditor;
             if (!editor) return;
             
@@ -10142,7 +10313,7 @@ var app = new Vue({
             
             // 同步 content（但不触发状态变化，因为状态变化应该在 handleEditorInput、handlePaste、handleKeyDown 中处理）
             // 这里只负责高亮显示
-            this.content = text;
+            this.assignContentFromEditor(text);
             
             // 生成高亮HTML
             const html = this.generateHighlightHTML(text);
@@ -10152,11 +10323,16 @@ var app = new Vue({
             
             // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理和恢复光标
             requestAnimationFrame(() => {
+                if (this.isComposing) {
+                    console.log('[IME] skip caret restore during composition');
+                    return;
+                }
                 // 清理多余的 <br> 标签和空白文本节点
                 this.cleanupHighlightBrTags(editor);
                 
                 // 使用 $nextTick 确保清理完成后再恢复光标
                 this.$nextTick(() => {
+                    if (this.isComposing) return;
                     // 使用 innerText 来计算文本长度，确保与 saveCaretPosition 一致
                     const currentText = editor.innerText || '';
                     const currentTextLength = currentText.length;
@@ -10173,6 +10349,10 @@ var app = new Vue({
         
         // 应用高亮（保存光标位置）
         applyHighlight() {
+            if (this.isComposing) {
+                console.log('[IME] applyHighlight blocked during composition');
+                return;
+            }
             const editor = this.$refs.promptEditor;
             if (!editor) return;
             
@@ -10183,8 +10363,8 @@ var app = new Vue({
             const text = this.getEditorText();
             
             // 同步 content（但不触发状态变化，因为状态变化应该在 handleEditorInput 中处理）
-            // 这里只负责高亮显示
-            this.content = text;
+            // 这里只负责高亮显示。标记来源，避免 watcher 在下一帧把 innerHTML 再写一遍
+            this.assignContentFromEditor(text);
             
             // 只有在编辑器有焦点时才保存光标位置
             // 使用基于文本内容的方法，而不是 DOM 遍历，确保与恢复时一致
@@ -10212,6 +10392,10 @@ var app = new Vue({
             
             // 使用 requestAnimationFrame 确保 DOM 完全更新后再清理和恢复光标
             requestAnimationFrame(() => {
+                if (this.isComposing) {
+                    console.log('[IME] skip highlight cleanup during composition');
+                    return;
+                }
                 // 清理多余的 <br> 标签和空白文本节点
                 this.cleanupHighlightBrTags(editor);
                 
@@ -10219,6 +10403,7 @@ var app = new Vue({
                 if (hasFocus && caretPos > 0) {
                     // 使用 $nextTick 确保清理完成后再恢复光标
                     this.$nextTick(() => {
+                        if (this.isComposing) return;
                         // 恢复光标位置（使用相同的遍历逻辑）
                         console.log('[applyHighlight] Restoring caret position:', caretPos);
                         this.restoreCaretPosition(caretPos);

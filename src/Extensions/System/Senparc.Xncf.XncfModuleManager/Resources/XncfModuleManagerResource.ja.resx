@@ -18,6 +18,12 @@
   <data name="Module.XncfModuleManager.Description" xml:space="preserve">
     <value>XNCF モジュールのインストール、更新、管理を行うコアコンポーネント</value>
   </data>
+  <data name="Parameter.XncfManager.ShowFunctions.Module" xml:space="preserve">
+    <value>XNCF モジュール||指定モジュールの Function 状態を表示します</value>
+  </data>
+  <data name="Parameter.XncfManager.Install.Module" xml:space="preserve">
+    <value>XNCF モジュール||インストールして有効化するモジュールを選択します</value>
+  </data>
   <data name="Function.XncfManager.GetAllModules.Name" xml:space="preserve">
     <value>全 XNCF モジュール情報を取得</value>
   </data>
@@ -42,10 +48,5 @@
   <data name="Function.XncfManager.ViewFunctionStatus.Description" xml:space="preserve">
     <value>現在の XNCF モジュールの Function 読み込み状態を表示します</value>
   </data>
-  <data name="Parameter.XncfManager.ShowFunctions.Module" xml:space="preserve">
-    <value>XNCF モジュール||指定モジュールの Function 状態を表示します</value>
-  </data>
-  <data name="Parameter.XncfManager.Install.Module" xml:space="preserve">
-    <value>XNCF モジュール||インストールして有効化するモジュールを選択します</value>
-  </data>
+
 </root>

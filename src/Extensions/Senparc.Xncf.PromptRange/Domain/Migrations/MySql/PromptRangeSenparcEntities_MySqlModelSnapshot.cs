@@ -11,6 +11,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.20.8 更新数据库迁移模型快照
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 同步 PromptCode 评分字段的模型快照
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -146,6 +149,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
                     b.Property<string>("ExpectedResultsJson")
                         .HasColumnType("longtext");
 
+                    b.Property<decimal?>("FinalScore")
+                        .HasColumnType("decimal(65,30)");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("tinyint(1)");
 
@@ -156,6 +162,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<decimal?>("HumanScore")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<bool>("IsAIGrade")
                         .HasColumnType("tinyint(1)");
@@ -207,6 +216,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.MySql
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
                         .HasColumnType("varchar(300)");
+
+                    b.Property<decimal?>("RobotScore")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("StopSequences")
                         .HasColumnType("longtext");

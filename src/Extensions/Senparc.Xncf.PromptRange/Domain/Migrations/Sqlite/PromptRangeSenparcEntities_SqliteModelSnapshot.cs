@@ -11,6 +11,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.20.8 更新数据库迁移模型快照
 
+    修改标识：Senparc - 20261105
+    修改描述：v0.20.14 同步 PromptCode 评分字段的模型快照
+
 ----------------------------------------------------------------*/
 
 using System;
@@ -137,6 +140,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                     b.Property<string>("ExpectedResultsJson")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal?>("FinalScore")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
 
@@ -146,6 +152,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
                     b.Property<string>("FullVersion")
                         .IsRequired()
                         .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("HumanScore")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsAIGrade")
@@ -197,6 +206,9 @@ namespace Senparc.Xncf.PromptRange.Domain.Migrations.Sqlite
 
                     b.Property<string>("Remark")
                         .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("RobotScore")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("StopSequences")

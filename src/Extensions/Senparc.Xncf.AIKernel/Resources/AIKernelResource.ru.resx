@@ -164,4 +164,345 @@
   <data name="Dashboard.TokenSpeed" xml:space="preserve"><value>Скорость вывода токенов</value></data>
   <data name="Dashboard.UserSatisfaction" xml:space="preserve"><value>Удовлетворённость пользователей</value></data>
   <data name="Dashboard.TotalMessages" xml:space="preserve"><value>Всего сообщений</value></data>
+  <data name="Frontend.001" xml:space="preserve"><value>Эта сущность удалена или не существует!||Эта сущность удалена или не существует!</value></data>
+  <data name="Frontend.002" xml:space="preserve"><value>Ошибка: учётная запись разработчика NeuChar не настроена. Откройте Модуль [Управление системой], страницу настроек, и используйте [Обновить сведения облачной учётной записи NeuChar], чтобы привязать учётную запись разработчика NeuChar!||Ошибка: учётная запись разработчика NeuChar не настроена. Откройте Модуль [Управление системой], страницу настроек, и используйте [Обновить сведения облачной учётной записи NeuChar], чтобы привязать учётную запись разработчика NeuChar!</value></data>
+  <data name="Frontend.003" xml:space="preserve"><value>Неверный AppKey или AppSecret! Задайте их снова!||Неверный AppKey или AppSecret! Задайте их снова!</value></data>
+  <data name="Frontend.004" xml:space="preserve"><value>Указанный DeveloperId не совпадает с AppKey, заданным в системе. Проверьте или обновите его и повторите попытку!||Указанный DeveloperId не совпадает с AppKey, заданным в системе. Проверьте или обновите его и повторите попытку!</value></data>
+  <data name="Frontend.005" xml:space="preserve"><value>Успешно обновлено.||Успешно обновлено.</value></data>
+  <data name="Frontend.006" xml:space="preserve"><value>Сущность не найдена!||Сущность не найдена!</value></data>
+  <data name="Frontend.007" xml:space="preserve"><value>Пока не поддерживается: обработка модели {0} в BuildSenparcAiSetting||Пока не поддерживается: обработка модели {0} в BuildSenparcAiSetting</value></data>
+  <data name="Frontend.008" xml:space="preserve"><value>Senparc.Xncf.AIKernel пока не поддерживает тип {0}||Senparc.Xncf.AIKernel пока не поддерживает тип {0}</value></data>
+  <data name="Frontend.009" xml:space="preserve"><value>SenparcAiSetting не может быть пустым||SenparcAiSetting не может быть пустым</value></data>
+  <data name="Frontend.010" xml:space="preserve"><value>Данные модели отсутствуют. Проверьте, развёрнута ли она и есть ли у вас разрешение!||Данные модели отсутствуют. Проверьте, развёрнута ли она и есть ли у вас разрешение!</value></data>
+  <data name="Frontend.011" xml:space="preserve"><value>Успешно добавлено моделей: {0}, обновлены сведения о моделях: {1}.||Успешно добавлено моделей: {0}, обновлены сведения о моделях: {1}.</value></data>
+  <data name="Frontend.012" xml:space="preserve"><value>PromptRange пока не поддерживает тип {0}||PromptRange пока не поддерживает тип {0}</value></data>
+  <data name="Frontend.013" xml:space="preserve"><value>Для автоматической оценки нужно задать хотя бы одну модель типа Chat (в Модуле AIKernel)||Для автоматической оценки нужно задать хотя бы одну модель типа Chat (в Модуле AIKernel)</value></data>
+  <data name="Area.AIKernel.TokenMonitor" xml:space="preserve"><value>Монитор Token</value></data>
+  <data name="TokenMonitor.Title" xml:space="preserve"><value>Монитор Token</value></data>
+  <data name="TokenMonitor.TotalTokens" xml:space="preserve"><value>Всего Token</value></data>
+  <data name="TokenMonitor.TotalCalls" xml:space="preserve"><value>Всего вызовов</value></data>
+  <data name="TokenMonitor.SuccessError" xml:space="preserve"><value>Успех / Ошибка</value></data>
+  <data name="TokenMonitor.AverageDuration" xml:space="preserve"><value>Средняя длительность</value></data>
+  <data name="TokenMonitor.InputTokens" xml:space="preserve"><value>Входные Token</value></data>
+  <data name="TokenMonitor.OutputTokens" xml:space="preserve"><value>Выходные Token</value></data>
+  <data name="TokenMonitor.RunMonitor" xml:space="preserve"><value>Запуск с мониторингом</value></data>
+  <data name="TokenMonitor.Model" xml:space="preserve"><value>Модели</value></data>
+  <data name="TokenMonitor.Prompt" xml:space="preserve"><value>Промпт</value></data>
+  <data name="TokenMonitor.Run" xml:space="preserve"><value>Запуск</value></data>
+  <data name="TokenMonitor.Elapsed" xml:space="preserve"><value>Затрачено</value></data>
+  <data name="TokenMonitor.Status" xml:space="preserve"><value>Состояние</value></data>
+  <data name="TokenMonitor.OutputPreview" xml:space="preserve"><value>Предпросмотр вывода</value></data>
+  <data name="TokenMonitor.Source" xml:space="preserve"><value>Источник</value></data>
+  <data name="TokenMonitor.Success" xml:space="preserve"><value>Успешно</value></data>
+  <data name="TokenMonitor.Failed" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="TokenMonitor.Refresh" xml:space="preserve"><value>Обновить</value></data>
+  <data name="TokenMonitor.SelectModel" xml:space="preserve"><value>Выберите модель</value></data>
+  <data name="TokenMonitor.InputPrompt" xml:space="preserve"><value>Введите промпт</value></data>
+  <data name="TokenMonitor.RunDone" xml:space="preserve"><value>Выполнение завершено</value></data>
+  <data name="TokenMonitor.Running" xml:space="preserve"><value>Выполняется</value></data>
+  <data name="TokenMonitor.Completed" xml:space="preserve"><value>Завершено</value></data>
+  <data name="TokenMonitor.DailyTitle" xml:space="preserve"><value>Использование Token (последние 7 дней)</value></data>
+  <data name="TokenMonitor.ModelTitle" xml:space="preserve"><value>Использование Token по Model</value></data>
+  <data name="TokenMonitor.ConfirmDelete" xml:space="preserve"><value>Удалить эту запись об использовании token?</value></data>
+  <data name="TokenMonitor.LastUsed" xml:space="preserve"><value>Последнее использование</value></data>
+  <data name="TokenMonitor.SearchPlaceholder" xml:space="preserve"><value>Поиск по псевдониму модели</value></data>
+  <data name="TokenMonitor.Search" xml:space="preserve"><value>Поиск</value></data>
+  <data name="FineTuning.Title" xml:space="preserve"><value>Локальная тонкая настройка модели</value></data>
+  <data name="FineTuning.Subtitle" xml:space="preserve"><value>Обучайте локальные адаптеры, просматривайте обратную связь в реальном времени и скачивайте артефакты, не изменяя регистрации инференса.</value></data>
+  <data name="FineTuning.Refresh" xml:space="preserve"><value>Обновить / переподключить</value></data>
+  <data name="FineTuning.Connected" xml:space="preserve"><value>Подключено</value></data>
+  <data name="FineTuning.Stale" xml:space="preserve"><value>Соединение устарело / недоступно</value></data>
+  <data name="FineTuning.LastUpdate" xml:space="preserve"><value>Последнее успешное обновление</value></data>
+  <data name="FineTuning.WorkerVersion" xml:space="preserve"><value>Версия воркера</value></data>
+  <data name="FineTuning.RunningCount" xml:space="preserve"><value>Выполняется</value></data>
+  <data name="FineTuning.QueuedCount" xml:space="preserve"><value>В очереди</value></data>
+  <data name="FineTuning.Unavailable" xml:space="preserve"><value>Недоступно</value></data>
+  <data name="FineTuning.ConnectionError" xml:space="preserve"><value>Не удаётся обновить состояние worker; отображаемые данные могут быть устаревшими.</value></data>
+  <data name="FineTuning.ActionError" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="FineTuning.SetupHelp" xml:space="preserve"><value>Настройка worker и устранение неполадок</value></data>
+  <data name="FineTuning.EndpointHelp" xml:space="preserve"><value>Создайте worker здесь. NCF может запустить локальный worker Python: каталог моделей, каталог данных, порт и путь проекта хранятся в базе данных, а ключ записывается в файл только для пользователя в каталоге App_Data сайта. FineTuning:WorkerApiKeys:&lt;alias&gt; по-прежнему перекрывает этот файл. Адресам замыкания на себя не нужен AllowedHosts; другие хосты добавляются при сохранении worker. Страница никогда не показывает ключ. В Docker localhost означает сам контейнер.</value></data>
+  <data name="FineTuning.BackendHelp" xml:space="preserve"><value>CPU подходит для небольших smoke-тестов. CUDA требует совместимый GPU NVIDIA и worker или контейнер с включённым CUDA. MLX работает нативно на macOS Apple Silicon; контейнер Docker в Linux не может обратиться к бэкенду Metal/MLX от Apple. Запустите нативный worker MLX и настройте доступный endpoint. Доступные методы зависят от возможностей, которые сообщает worker, а не от браузера.</value></data>
+  <data name="FineTuning.SecurityHelp" xml:space="preserve"><value>Обучением должны управлять только доверенные глобальные администраторы: данные worker не изолированы по арендаторам. Держите worker в частной сети, удаляйте секреты и лишние персональные данные перед загрузкой и проверяйте лицензии модели и данных. Endpoints управляются в профилях Worker; ключи и список разрешённых endpoints остаются в инфраструктурной конфигурации.</value></data>
+  <data name="FineTuning.Preflight" xml:space="preserve"><value>Возможности предварительной проверки</value></data>
+  <data name="FineTuning.AwaitingHealth" xml:space="preserve"><value>Возможности worker пока недоступны.</value></data>
+  <data name="FineTuning.Available" xml:space="preserve"><value>Доступно</value></data>
+  <data name="FineTuning.PreflightHelp" xml:space="preserve"><value>Доступность возможности не гарантирует достаточно памяти или успешное обучение. Проверьте выбранные модель, бэкенд и метод и начните со стандартного smoke-теста на 10 шагов.</value></data>
+  <data name="FineTuning.Datasets" xml:space="preserve"><value>Наборы данных</value></data>
+  <data name="FineTuning.DatasetHelp" xml:space="preserve"><value>Загрузите UTF-8 .jsonl с 2–1,000,000 строками и не более 512 MiB. Каждая строка должна содержать один поддерживаемый объект; пустые строки, массивы JSON и лишние поля отклоняются. Браузер проверяет файл как поток; проверка worker остаётся определяющей. Наборы данных сохраняются в FileManager и на выбранном Worker.</value></data>
+  <data name="FineTuning.DatasetName" xml:space="preserve"><value>Имя набора данных</value></data>
+  <data name="FineTuning.DatasetFile" xml:space="preserve"><value>Файл JSONL UTF-8 (максимум 512 MiB)</value></data>
+  <data name="FineTuning.ReadingFile" xml:space="preserve"><value>Чтение и проверка файла…</value></data>
+  <data name="FineTuning.Upload" xml:space="preserve"><value>Загрузить набор данных</value></data>
+  <data name="FineTuning.NoDatasets" xml:space="preserve"><value>Наборов данных пока нет</value></data>
+  <data name="FineTuning.Rows" xml:space="preserve"><value>Строки</value></data>
+  <data name="FineTuning.Created" xml:space="preserve"><value>Создано</value></data>
+  <data name="FineTuning.Sha256" xml:space="preserve"><value>SHA-256</value></data>
+  <data name="FineTuning.CreateJob" xml:space="preserve"><value>Конфигурация обучения</value></data>
+  <data name="FineTuning.JobName" xml:space="preserve"><value>Название задачи</value></data>
+  <data name="FineTuning.Model" xml:space="preserve"><value>Базовая модель</value></data>
+  <data name="FineTuning.SelectModel" xml:space="preserve"><value>Выбрать модель worker</value></data>
+  <data name="FineTuning.TrainingDataset" xml:space="preserve"><value>Обучающий набор данных</value></data>
+  <data name="FineTuning.SelectDataset" xml:space="preserve"><value>Выбрать загруженный набор данных</value></data>
+  <data name="FineTuning.ValidationDataset" xml:space="preserve"><value>Отложенный проверочный набор данных (необязательно)</value></data>
+  <data name="FineTuning.NoValidation" xml:space="preserve"><value>Автоматическое отложенное разбиение</value></data>
+  <data name="FineTuning.Backend" xml:space="preserve"><value>Бэкенд</value></data>
+  <data name="FineTuning.Method" xml:space="preserve"><value>Метод</value></data>
+  <data name="FineTuning.ValidationHelp" xml:space="preserve"><value>Используйте отдельный отложенный набор данных. Пересекающиеся строки обучения и оценки отклоняются. Если набор не выбран, worker откладывает примерно 20% различных строк (не менее одной), используя seed.</value></data>
+  <data name="FineTuning.BackendUnavailable" xml:space="preserve"><value>Выбранный бэкенд недоступен</value></data>
+  <data name="FineTuning.ModelBackendMismatch" xml:space="preserve"><value>Выбранная модель не поддерживает этот бэкенд.</value></data>
+  <data name="FineTuning.MethodMismatch" xml:space="preserve"><value>Выбранный бэкенд не поддерживает этот метод.</value></data>
+  <data name="FineTuning.Advanced" xml:space="preserve"><value>Расширенные параметры (проверьте перед обучением)</value></data>
+  <data name="FineTuning.SubmitJob" xml:space="preserve"><value>Создать задание на обучение</value></data>
+  <data name="FineTuning.Jobs" xml:space="preserve"><value>Сохранённые задания обучения</value></data>
+  <data name="FineTuning.JobsHelp" xml:space="preserve"><value>Выберите задание, чтобы снова подключиться к состоянию, сохранённому на сервере, и воспроизвести события пошагово. Задания продолжаются на worker, когда эта страница закрыта.</value></data>
+  <data name="FineTuning.NoJobs" xml:space="preserve"><value>Заданий на обучение пока нет</value></data>
+  <data name="FineTuning.State" xml:space="preserve"><value>Состояние</value></data>
+  <data name="FineTuning.Actions" xml:space="preserve"><value>Действия</value></data>
+  <data name="FineTuning.Monitor" xml:space="preserve"><value>Монитор</value></data>
+  <data name="FineTuning.CancelJob" xml:space="preserve"><value>Отменить задание</value></data>
+  <data name="FineTuning.Started" xml:space="preserve"><value>Время начала</value></data>
+  <data name="FineTuning.Finished" xml:space="preserve"><value>Время завершения</value></data>
+  <data name="FineTuning.JobId" xml:space="preserve"><value>ID задания</value></data>
+  <data name="FineTuning.TrainingError" xml:space="preserve"><value>Сбой обучения</value></data>
+  <data name="FineTuning.Steps" xml:space="preserve"><value>Шаг / всего шагов</value></data>
+  <data name="FineTuning.ProgressUnknown" xml:space="preserve"><value>Прогресс недоступен, пока worker не сообщит step и totalSteps; оценка по времени не используется.</value></data>
+  <data name="FineTuning.CancellingHelp" xml:space="preserve"><value>Отмена запрошена. Дождитесь подтверждения завершения от worker; ресурсы могут всё ещё использоваться.</value></data>
+  <data name="FineTuning.MetricsHelp" xml:space="preserve"><value>Метрики ресурсов и контекст обучения сообщает worker. Журнал событий включает индексы образцов обучающего разбиения, счётчики batch/token, диапазоны длины последовательности и число усечений; исходный текст образцов никогда не сохраняется. Неподдерживаемые, отсутствующие или нечисловые значения показываются как недоступные, никогда как ноль. Использование CPU может превышать 100% на нескольких ядрах.</value></data>
+  <data name="FineTuning.ChartTitle" xml:space="preserve"><value>Потери обучения, потери оценки и скорость обучения по фактическому шагу обучения</value></data>
+  <data name="FineTuning.ChartUnavailable" xml:space="preserve"><value>Диаграммы недоступны, потому что ECharts не загружен. Метрики и журналы остаются доступны.</value></data>
+  <data name="FineTuning.AwaitingMetrics" xml:space="preserve"><value>Ожидание числовых метрик шагов обучения…</value></data>
+  <data name="FineTuning.Loss" xml:space="preserve"><value>Потери</value></data>
+  <data name="FineTuning.ConfigSnapshot" xml:space="preserve"><value>Снимок конфигурации обучения только для чтения</value></data>
+  <data name="FineTuning.Artifacts" xml:space="preserve"><value>Артефакты обучения</value></data>
+  <data name="FineTuning.DeploymentHelp" xml:space="preserve"><value>Скачайте и проверьте адаптер, tokenizer и конфигурацию обучения. Загрузите или объедините адаптер с точной базовой моделью в совместимой среде инференса, затем протестируйте перед развёртыванием. Артефакты не регистрируются автоматически как модели инференса AIKernel.</value></data>
+  <data name="FineTuning.NoArtifacts" xml:space="preserve"><value>Артефакты пока не сообщены</value></data>
+  <data name="FineTuning.Download" xml:space="preserve"><value>Скачать</value></data>
+  <data name="FineTuning.Events" xml:space="preserve"><value>Инкрементальный журнал событий</value></data>
+  <data name="FineTuning.LogHelp" xml:space="preserve"><value>В браузере сохраняются только последние 1,000 записей журнала и 1,000 точек графика.</value></data>
+  <data name="FineTuning.CommandLog" xml:space="preserve"><value>Журнал команд и событий</value></data>
+  <data name="FineTuning.CommandLogHelp" xml:space="preserve"><value>Команды обучения, предупреждения и ошибки</value></data>
+  <data name="FineTuning.MetricLog" xml:space="preserve"><value>Поток метрик</value></data>
+  <data name="FineTuning.MetricLogHelp" xml:space="preserve"><value>Периодические значения GPU, потерь, шага и времени</value></data>
+  <data name="FineTuning.NoMetrics" xml:space="preserve"><value>Метрики пока не получены</value></data>
+  <data name="FineTuning.EventsLayoutHelp" xml:space="preserve"><value>Выберите вид рядом или друг под другом; разверните для большей области мониторинга.</value></data>
+  <data name="FineTuning.EventsSideBySide" xml:space="preserve"><value>Рядом</value></data>
+  <data name="FineTuning.EventsStacked" xml:space="preserve"><value>Стопкой</value></data>
+  <data name="FineTuning.ExpandEvents" xml:space="preserve"><value>Развернуть</value></data>
+  <data name="FineTuning.RestoreEvents" xml:space="preserve"><value>Восстановить</value></data>
+  <data name="FineTuning.Replaying" xml:space="preserve"><value>Воспроизведение сохранённых событий</value></data>
+  <data name="FineTuning.Live" xml:space="preserve"><value>Курсор событий достигнут</value></data>
+  <data name="FineTuning.Cursor" xml:space="preserve"><value>Курсор</value></data>
+  <data name="FineTuning.FollowLog" xml:space="preserve"><value>Следовать последним журналам</value></data>
+  <data name="FineTuning.NoEvents" xml:space="preserve"><value>События пока не получены</value></data>
+  <data name="FineTuning.UploadSucceeded" xml:space="preserve"><value>Набор данных загружен и проверен worker.</value></data>
+  <data name="FineTuning.JobSubmitted" xml:space="preserve"><value>Задание обучения отправлено. Следите за его фактическим состоянием ниже.</value></data>
+  <data name="FineTuning.CancelConfirm" xml:space="preserve"><value>Отменить это задание в очереди или выполняющееся? Могут остаться частичные артефакты. Отмена не завершена, пока worker её не подтвердит.</value></data>
+  <data name="FineTuning.Confirm" xml:space="preserve"><value>Подтвердить отмену</value></data>
+  <data name="FineTuning.KeepTraining" xml:space="preserve"><value>Продолжить обучение</value></data>
+  <data name="FineTuning.CancelRequested" xml:space="preserve"><value>Запрос на отмену принят; дождитесь итогового состояния worker.</value></data>
+  <data name="FineTuning.State.Queued" xml:space="preserve"><value>В очереди</value></data>
+  <data name="FineTuning.State.Running" xml:space="preserve"><value>Выполняется</value></data>
+  <data name="FineTuning.State.Cancelling" xml:space="preserve"><value>Отменяется</value></data>
+  <data name="FineTuning.State.Cancelled" xml:space="preserve"><value>Отменено</value></data>
+  <data name="FineTuning.State.Succeeded" xml:space="preserve"><value>Успешно</value></data>
+  <data name="FineTuning.State.Failed" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="FineTuning.State.Interrupted" xml:space="preserve"><value>Прервано</value></data>
+  <data name="FineTuning.Metric.trainLoss" xml:space="preserve"><value>Потери обучения</value></data>
+  <data name="FineTuning.Metric.evalLoss" xml:space="preserve"><value>Потери оценки</value></data>
+  <data name="FineTuning.Metric.learningRate" xml:space="preserve"><value>Скорость обучения</value></data>
+  <data name="FineTuning.Metric.rss" xml:space="preserve"><value>RSS процесса</value></data>
+  <data name="FineTuning.Metric.cpu" xml:space="preserve"><value>CPU процесса</value></data>
+  <data name="FineTuning.Metric.gpuUtil" xml:space="preserve"><value>Загрузка GPU</value></data>
+  <data name="FineTuning.Metric.gpuMemory" xml:space="preserve"><value>Использованная память GPU</value></data>
+  <data name="FineTuning.Metric.gpuTemperature" xml:space="preserve"><value>Температура GPU</value></data>
+  <data name="FineTuning.Parameter.epochs" xml:space="preserve"><value>Эпохи</value></data>
+  <data name="FineTuning.Tip.epochs" xml:space="preserve"><value>Полные проходы по набору данных (1–100). maxSteps имеет приоритет, если значение положительное.</value></data>
+  <data name="FineTuning.Parameter.maxSteps" xml:space="preserve"><value>Максимум шагов</value></data>
+  <data name="FineTuning.Tip.maxSteps" xml:space="preserve"><value>0 использует epochs; положительное значение ограничивает шаги оптимизатора (до 1,000,000). Значение по умолчанию 10 — это smoke-тест, а не производственное обучение.</value></data>
+  <data name="FineTuning.Parameter.learningRate" xml:space="preserve"><value>Скорость обучения</value></data>
+  <data name="FineTuning.Tip.learningRate" xml:space="preserve"><value>Скорость обучения оптимизатора (0.00000001–0.1). По умолчанию: 0.0002.</value></data>
+  <data name="FineTuning.Parameter.batchSize" xml:space="preserve"><value>Размер пакета</value></data>
+  <data name="FineTuning.Tip.batchSize" xml:space="preserve"><value>Примеры на устройство на микропакет (1–64). Большие значения требуют больше памяти.</value></data>
+  <data name="FineTuning.Parameter.gradientAccumulationSteps" xml:space="preserve"><value>Накопление градиента</value></data>
+  <data name="FineTuning.Tip.gradientAccumulationSteps" xml:space="preserve"><value>Микропакеты, накапливаемые на шаг оптимизатора (1–1,024). Эффективный размер пакета растёт без выделения одного большого пакета.</value></data>
+  <data name="FineTuning.Parameter.maxSequenceLength" xml:space="preserve"><value>Максимальная длина последовательности</value></data>
+  <data name="FineTuning.Tip.maxSequenceLength" xml:space="preserve"><value>Предел Token на пример (32–32,768). Длинные примеры могут обрезаться; большие пределы требуют больше памяти.</value></data>
+  <data name="FineTuning.Parameter.loraRank" xml:space="preserve"><value>Ранг LoRA</value></data>
+  <data name="FineTuning.Tip.loraRank" xml:space="preserve"><value>Размерность низкорангового адаптера (1–256). Больший ранг увеличивает обучаемые параметры и расход памяти.</value></data>
+  <data name="FineTuning.Parameter.loraAlpha" xml:space="preserve"><value>Alpha LoRA</value></data>
+  <data name="FineTuning.Tip.loraAlpha" xml:space="preserve"><value>Коэффициент масштабирования Adapter (1–1,024), обычно рассматривается относительно ранга LoRA.</value></data>
+  <data name="FineTuning.Parameter.loraDropout" xml:space="preserve"><value>Dropout LoRA</value></data>
+  <data name="FineTuning.Tip.loraDropout" xml:space="preserve"><value>Вероятность dropout Adapter (0–0.9). Поддержку бэкенда проверяет worker.</value></data>
+  <data name="FineTuning.Parameter.targetModules" xml:space="preserve"><value>Целевые модули</value></data>
+  <data name="FineTuning.Tip.targetModules" xml:space="preserve"><value>Используйте all-linear или разделённые запятыми имена модулей, которые поддерживают выбранные модель и бэкенд (не более 512 символов).</value></data>
+  <data name="FineTuning.Parameter.warmupRatio" xml:space="preserve"><value>Доля прогрева</value></data>
+  <data name="FineTuning.Tip.warmupRatio" xml:space="preserve"><value>Доля шагов обучения для разогрева скорости обучения (0–0.5).</value></data>
+  <data name="FineTuning.Parameter.weightDecay" xml:space="preserve"><value>Затухание весов</value></data>
+  <data name="FineTuning.Tip.weightDecay" xml:space="preserve"><value>Коэффициент затухания весов оптимизатора (0–1). Значение по умолчанию 0 отключает затухание весов.</value></data>
+  <data name="FineTuning.Parameter.loggingSteps" xml:space="preserve"><value>Интервал журналирования</value></data>
+  <data name="FineTuning.Tip.loggingSteps" xml:space="preserve"><value>Шаги оптимизатора между журналами метрик обучения (1–10,000).</value></data>
+  <data name="FineTuning.Parameter.saveSteps" xml:space="preserve"><value>Интервал контрольных точек</value></data>
+  <data name="FineTuning.Tip.saveSteps" xml:space="preserve"><value>Шаги оптимизатора между сохранениями контрольных точек (1–100,000). Итоговые артефакты worker сообщает отдельно.</value></data>
+  <data name="FineTuning.Parameter.evalSteps" xml:space="preserve"><value>Интервал оценки</value></data>
+  <data name="FineTuning.Tip.evalSteps" xml:space="preserve"><value>Шаги оптимизатора между отложенными оценками (1–100,000), включая автоматическое разбиение.</value></data>
+  <data name="FineTuning.Parameter.seed" xml:space="preserve"><value>Случайный сид</value></data>
+  <data name="FineTuning.Tip.seed" xml:space="preserve"><value>Начальное значение (0–2,147,483,647). Повторяемость по-прежнему зависит от бэкенда, модели и оборудования.</value></data>
+  <data name="FineTuning.Parameter.maxDurationMinutes" xml:space="preserve"><value>Максимальная длительность (минуты)</value></data>
+  <data name="FineTuning.Tip.maxDurationMinutes" xml:space="preserve"><value>Предел времени выполнения, заданный worker (1–10,080 минут), а не оценка прогресса.</value></data>
+  <data name="FineTuning.Error.InvalidResponse" xml:space="preserve"><value>Сервер вернул недопустимый ответ тонкой настройки.</value></data>
+  <data name="FineTuning.Error.Authorization" xml:space="preserve"><value>Требуется аутентификация администратора, либо доступ запрещён. Войдите снова или проверьте разрешения.</value></data>
+  <data name="FineTuning.Error.Request" xml:space="preserve"><value>Запрос тонкой настройки не выполнен</value></data>
+  <data name="FineTuning.Error.Cursor" xml:space="preserve"><value>Worker вернул недопустимый курсор событий. Переподключитесь после проверки журналов worker.</value></data>
+  <data name="FineTuning.Error.FileType" xml:space="preserve"><value>Выберите файл .jsonl.</value></data>
+  <data name="FineTuning.Error.FileSize" xml:space="preserve"><value>Файл JSONL не должен превышать 512 MiB.</value></data>
+  <data name="FineTuning.Error.FileRead" xml:space="preserve"><value>Не удалось прочитать файл. Выберите его снова.</value></data>
+  <data name="FineTuning.Error.Utf8" xml:space="preserve"><value>Файл не является допустимым UTF-8. Преобразуйте кодировку перед загрузкой.</value></data>
+  <data name="FineTuning.Error.JsonLine" xml:space="preserve"><value>Недопустимый объект JSON в строке</value></data>
+  <data name="FineTuning.Error.EmptyDataset" xml:space="preserve"><value>Набор данных должен содержать не менее двух объектов JSON.</value></data>
+  <data name="FineTuning.Error.NotConnected" xml:space="preserve"><value>Переподключитесь к worker перед отправкой.</value></data>
+  <data name="FineTuning.Error.DatasetRequired" xml:space="preserve"><value>Введите имя набора данных и выберите допустимый файл JSONL.</value></data>
+  <data name="FineTuning.Error.JobRequired" xml:space="preserve"><value>Введите имя задания и выберите существующие модель и набор данных для обучения.</value></data>
+  <data name="FineTuning.Error.Heldout" xml:space="preserve"><value>Для проверки нужен другой набор данных с содержимым, отличным от обучающего набора.</value></data>
+  <data name="FineTuning.Error.Parameter" xml:space="preserve"><value>Недопустимый расширенный параметр</value></data>
+  <data name="FineTuning.Error.TargetModules" xml:space="preserve"><value>Используйте all-linear или буквальные имена модулей через запятую, без пробелов и regex, не более 512 символов.</value></data>
+  <data name="FineTuning.Error.Disabled" xml:space="preserve"><value>Локальная тонкая настройка выключена. Включите её на странице тонкой настройки или задайте SenparcXncfAIKernel:FineTuning:Enabled.</value></data>
+  <data name="FineTuning.Error.Unreachable" xml:space="preserve"><value>Worker тонкой настройки недоступен. Проверьте WorkerEndpoint, состояние worker и сетевое подключение.</value></data>
+  <data name="FineTuning.EventsTruncated" xml:space="preserve"><value>Более старые события удалены по пределу хранения worker. Это частичная история; записи обучения смотрите в экспорте метрик.</value></data>
+  <data name="FineTuning.Metric.gpuAllocated" xml:space="preserve"><value>Память GPU, выделенная бэкендом</value></data>
+  <data name="FineTuning.Metric.gradNorm" xml:space="preserve"><value>Норма градиента</value></data>
+  <data name="FineTuning.Metric.tokensPerSecond" xml:space="preserve"><value>Пропускная способность обработанных tokens</value></data>
+  <data name="FineTuning.Metric.elapsedSeconds" xml:space="preserve"><value>Прошедшее время</value></data>
+  <data name="FineTuning.Metric.diskFree" xml:space="preserve"><value>Свободное место на диске</value></data>
+  <data name="FineTuning.Metric.jobOutput" xml:space="preserve"><value>Размер вывода задания</value></data>
+  <data name="FineTuning.Worker" xml:space="preserve"><value>Worker</value></data>
+  <data name="FineTuning.SelectWorker" xml:space="preserve"><value>Выбрать worker</value></data>
+  <data name="FineTuning.WorkerRequired" xml:space="preserve"><value>Выберите настроенный worker перед управлением тонкой настройкой.</value></data>
+  <data name="FineTuning.WorkerSecretMissing" xml:space="preserve"><value>секрет отсутствует</value></data>
+  <data name="FineTuning.WorkerDisabled" xml:space="preserve"><value>отключено</value></data>
+  <data name="FineTuning.WorkerRoutingHelp" xml:space="preserve"><value>Наборы данных, задания, журналы и артефакты остаются на выбранном worker. Настройте его секрет вне базы данных.</value></data>
+  <data name="FineTuning.AddWorker" xml:space="preserve"><value>Добавить worker</value></data>
+  <data name="FineTuning.EditWorker" xml:space="preserve"><value>Изменить worker</value></data>
+  <data name="FineTuning.WorkerConfiguration" xml:space="preserve"><value>Конфигурация Worker</value></data>
+  <data name="FineTuning.WorkerSecretNotice" xml:space="preserve"><value>Ключи API не сохраняются в базе данных и никогда не отображаются на этой странице. Создайте отдельный файл ключа для каждого worker или продолжайте использовать FineTuning:WorkerApiKeys:&lt;alias&gt; как переопределение. Адреса замыкания на себя не требуют AllowedHosts.</value></data>
+  <data name="FineTuning.WorkerAlias" xml:space="preserve"><value>Псевдоним</value></data>
+  <data name="FineTuning.WorkerName" xml:space="preserve"><value>Имя</value></data>
+  <data name="FineTuning.WorkerEndpoint" xml:space="preserve"><value>Endpoint</value></data>
+  <data name="FineTuning.RequestTimeout" xml:space="preserve"><value>Таймаут запроса (секунды)</value></data>
+  <data name="FineTuning.Enabled" xml:space="preserve"><value>Включено</value></data>
+  <data name="FineTuning.Note" xml:space="preserve"><value>Примечания</value></data>
+  <data name="FineTuning.Cancel" xml:space="preserve"><value>Отмена</value></data>
+  <data name="FineTuning.SaveWorker" xml:space="preserve"><value>Сохранить worker</value></data>
+  <data name="FineTuning.WorkerSaved" xml:space="preserve"><value>Worker сохранён.</value></data>
+  <data name="FineTuning.Guide.Title" xml:space="preserve"><value>Начните здесь: руководство по тонкой настройке</value></data>
+  <data name="FineTuning.SectionNav" xml:space="preserve"><value>Разделы страницы</value></data>
+  <data name="FineTuning.Guide.Purpose" xml:space="preserve"><value>LoRA/QLoRA обучает адаптер, чтобы изменить поведение задачи, стиль или формат вывода. Это не заменяет KnowledgeBase/RAG, не развёртывает инференс и не регистрирует модель автоматически.</value></data>
+  <data name="FineTuning.Guide.WorkerTitle" xml:space="preserve"><value>Подготовить и подключить Worker</value></data>
+  <data name="FineTuning.Guide.Worker" xml:space="preserve"><value>Разверните отдельный Worker CPU/CUDA или нативный Worker Apple Silicon, подготовьте одобренную офлайн-модель и настройте глобальный переключатель, список разрешённых хостов и секрет для псевдонима. Добавьте или выберите здесь профиль Worker, затем прочитайте причины возможностей перед продолжением.</value></data>
+  <data name="FineTuning.Guide.DataTitle" xml:space="preserve"><value>Подготовить независимые наборы данных</value></data>
+  <data name="FineTuning.Guide.Data" xml:space="preserve"><value>Разверните примеры набора данных ниже, чтобы скачать JSONL. Замените демонстрационные строки лицензированными и очищенными данными и загрузите обучение и проверку отдельно. Не обучайте на итоговом тестовом наборе. Без явной проверки Worker откладывает примерно 20% различных строк.</value></data>
+  <data name="FineTuning.Guide.TrainingTitle" xml:space="preserve"><value>Отправить ограниченный smoke-тест</value></data>
+  <data name="FineTuning.Guide.Training" xml:space="preserve"><value>Назовите задание и выберите модель, наборы данных, совместимый бэкенд и метод LoRA/QLoRA. Начните со стандартных 10 шагов оптимизатора; разверните Расширенные параметры для пояснений и бюджетов ресурсов. CPU не поддерживает QLoRA.</value></data>
+  <data name="FineTuning.Guide.MonitorTitle" xml:space="preserve"><value>Просмотреть фактический прогресс и безопасно восстановить</value></data>
+  <data name="FineTuning.Guide.Monitor" xml:space="preserve"><value>Выберите задание, чтобы увидеть фактические шаги, потери обучения и проверки, ресурсы, журналы и конфигурацию. Обновление восстанавливает сохранённую историю. Устаревшее соединение не означает, что обучение остановилось; обновите состояние задания перед повтором отправки с тайм-аутом. Отмена — это не пауза и не возобновление.</value></data>
+  <data name="FineTuning.Guide.PublishTitle" xml:space="preserve"><value>Оценить перед развёртыванием инференса</value></data>
+  <data name="FineTuning.Guide.Publish" xml:space="preserve"><value>Скачайте экспорт и проверьте его манифест. Succeeded означает, что процесс обучения завершился, а не что качество принято. Сравните базу и адаптер на неиспользованных задачах с одинаковыми промптами и контекстом RAG, разверните совместимую среду инференса, затем зарегистрируйте эту точку инференса в управлении моделями.</value></data>
+  <data name="FineTuning.Guide.ChineseDocs" xml:space="preserve"><value>Руководство на китайском</value></data>
+  <data name="FineTuning.Guide.EnglishDocs" xml:space="preserve"><value>Руководство на английском</value></data>
+  <data name="FineTuning.Guide.Troubleshooting" xml:space="preserve"><value>Типичные проблемы и дальнейшие действия</value></data>
+  <data name="FineTuning.Guide.Error.Connection" xml:space="preserve"><value>Отключено / нет секрета / сбой подключения: проверьте глобальный переключатель Enabled, действительный ключ для псевдонима, AllowedHosts, включённое состояние профиля, сетевое пространство имён и журналы Worker. Перезапустите NCF после изменения переменных среды, затем обновите.</value></data>
+  <data name="FineTuning.Guide.Error.Dataset" xml:space="preserve"><value>Набор данных отклонён: исправьте указанную строку, форму полей, кодировку UTF-8 и пределы размера или числа строк. Messages требует chat template tokenizer модели. Разные IDs наборов данных не предотвращают утечку; пересекающиеся строки проверки отклоняются.</value></data>
+  <data name="FineTuning.Guide.Error.Memory" xml:space="preserve"><value>Нехватка памяти / нестабильные потери: изучите фактическую ошибку и метрики, уменьшите размер пакета, длину последовательности или rank, либо выберите поддерживаемый квантованный бэкенд. После устранения причины создайте новое ограниченное задание; недоступные датчики нельзя читать как ноль.</value></data>
+  <data name="FineTuning.Guide.Error.Interrupted" xml:space="preserve"><value>Отменено / прервано / сбой: проверьте сохранённые контрольные точки и события. Активные задания после перезапуска имеют состояние Interrupted, а не успешное. В этой версии нет автоматического возобновления, удаления в сети или автоматического развёртывания. Определите политики резервного копирования и хранения до эксплуатации.</value></data>
+  <data name="FineTuning.Guide.DatasetExample" xml:space="preserve"><value>Примеры набора данных и скачивание</value></data>
+  <data name="FineTuning.Guide.DatasetSchema" xml:space="preserve"><value>Каждая строка использует только prompt + completion или только messages. Текст не может быть пустым, не длиннее 65,536 символов и без NUL. Messages содержит 2–128 записей role/content: необязательный system в начале, затем чередование user/assistant и окончание на assistant. Сообщения tool и лишние поля не поддерживаются.</value></data>
+  <data name="FineTuning.Guide.SampleNotice" xml:space="preserve"><value>Эти четыре различные строки показывают только структуру файла, а не качество модели или достаточность данных. Messages требует одобренный chat template tokenizer; если его нет, используйте prompt/completion. Скачивание не загружает данные и не отправляет задание.</value></data>
+  <data name="FineTuning.Guide.DownloadSample" xml:space="preserve"><value>Скачать пример JSONL</value></data>
+  <data name="FineTuning.Guide.EffectiveBatch" xml:space="preserve"><value>Приблизительный эффективный пакет одного устройства (microbatch × accumulation)</value></data>
+  <data name="FineTuning.Guide.SmokeNotice" xml:space="preserve"><value>Стандартные 10 шагов проверяют конвейер, а не качество для производства. Положительный maxSteps заменяет epochs; проверка также выполняется на последнем шаге.</value></data>
+  <data name="FineTuning.Error.RowLimit" xml:space="preserve"><value>Набор данных превышает 1,000,000 строк.</value></data>
+  <data name="FineTuning.Error.DatasetSchema" xml:space="preserve"><value>Неподдерживаемая структура строки набора данных. См. примеры набора данных; строка:</value></data>
+  <data name="FineTuning.Error.WorkerChanged" xml:space="preserve"><value>Выбор Worker изменился. Перед повтором проверьте состояние задания и набора данных исходного Worker; его ответ нельзя применить к этому Worker.</value></data>
+  <data name="FineTuning.DatasetHistory" xml:space="preserve"><value>Наборы данных в этом представлении / всего сохранено</value></data>
+  <data name="FineTuning.LoadMoreDatasets" xml:space="preserve"><value>Загрузить более старые наборы данных</value></data>
+  <data name="FineTuning.StoreChanged" xml:space="preserve"><value>Идентификатор хранилища этого Worker изменился. Кэшированные задания, наборы данных и курсоры очищены; перед продолжением выберите ресурсы из нового хранилища.</value></data>
+  <data name="FineTuning.WorkerNotReady" xml:space="preserve"><value>Worker останавливается или неисправен и не может принимать новые задания обучения. Проверьте его состояние и журналы.</value></data>
+  <data name="FineTuning.WorkerVersionMismatch" xml:space="preserve"><value>Эта консоль требует Worker 1.1 или новее с постраничным каталогом и постоянным идентификатором хранилища. Обновите соответствующий Worker перед отправкой заданий.</value></data>
+  <data name="FineTuning.WorkerDisableHelp" xml:space="preserve"><value>Отключение этого профиля блокирует административный доступ, а не текущее обучение. Сначала отмените задания или остановите Worker по процедуре оператора, если требуется завершение.</value></data>
+  <data name="FineTuning.WorkerSetupTitle" xml:space="preserve"><value>Требуется настройка worker</value></data>
+  <data name="FineTuning.WorkerSetupEmpty" xml:space="preserve"><value>Профиль Worker ещё не добавлен. Разверните обучающий Worker, настройте в NCF соответствующий секрет и разрешённый хост, затем используйте Добавить worker, чтобы задать псевдоним и частный endpoint. Загрузка и обучение станут доступны после успешного подключения.</value></data>
+  <data name="FineTuning.WorkerSetupExisting" xml:space="preserve"><value>Нет доступного для выбора Worker. Измените профиль, чтобы включить его, и настройте действительный секрет для этого псевдонима в NCF, затем обновите. Это шаг настройки, а не неудавшееся задание обучения.</value></data>
+  <data name="FineTuning.ValidationTitle" xml:space="preserve"><value>Быстрая проверка после обучения</value></data>
+  <data name="FineTuning.ValidationRunHelp" xml:space="preserve"><value>Запустите до 8 офлайн-промптов для успешного задания. Выбор по умолчанию берётся из манифеста задачи, если он есть; старые задания можно выбрать вручную. Несовпадение требует подтверждения, и Worker всё равно проверяет выбранную среду выполнения.</value></data>
+  <data name="FineTuning.ValidationPromptPlaceholder" xml:space="preserve"><value>Один тестовый промпт на строку, например: Напишите пост в стиле Xiaohongshu о термосе для поездок.</value></data>
+  <data name="FineTuning.ValidationLimit" xml:space="preserve"><value>До 8 случаев; предел вывода 16–32,768 tokens, ограничен окном контекста модели</value></data>
+  <data name="FineTuning.RunValidation" xml:space="preserve"><value>Запустить проверку</value></data>
+  <data name="FineTuning.ValidationFailed" xml:space="preserve"><value>Сбой проверки</value></data>
+  <data name="FineTuning.ValidationPrompt" xml:space="preserve"><value>Тестовый промпт</value></data>
+  <data name="FineTuning.ValidationPromptError" xml:space="preserve"><value>Введите 1–8 тестовых промптов, по одному в строке.</value></data>
+  <data name="FineTuning.ValidationBackend" xml:space="preserve"><value>Бэкенд проверки</value></data>
+  <data name="FineTuning.ValidationMethod" xml:space="preserve"><value>Метод проверки</value></data>
+  <data name="FineTuning.BackendCpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="FineTuning.BackendCuda" xml:space="preserve"><value>CUDA</value></data>
+  <data name="FineTuning.BackendMlx" xml:space="preserve"><value>MLX</value></data>
+  <data name="FineTuning.MethodLora" xml:space="preserve"><value>LoRA</value></data>
+  <data name="FineTuning.MethodQlora" xml:space="preserve"><value>QLoRA</value></data>
+  <data name="FineTuning.ValidationMismatchWarning" xml:space="preserve"><value>Ручной выбор отличается от манифеста обучения</value></data>
+  <data name="FineTuning.ValidationMismatchConfirm" xml:space="preserve"><value>Выбранный бэкенд или метод отличается от записанной конфигурации. Продолжайте только если формат Adapter и среда выполнения совместимы.</value></data>
+  <data name="FineTuning.PartialArtifactsTitle" xml:space="preserve"><value>Это частичные артефакты обучения</value></data>
+  <data name="FineTuning.PartialArtifactsHelp" xml:space="preserve"><value>Задание не завершилось успешно. Эти файлы — контрольные точки, сохранённые до тайм-аута или прерывания. Проверьте в manifest.json status, completedSteps, сведения об ошибке и целостность Adapter; не развёртывайте их напрямую и не считайте завершённой моделью обучения.</value></data>
+  <data name="FineTuning.ControlPlaneTitle" xml:space="preserve"><value>База данных плоскости управления и миграция устаревших данных</value></data>
+  <data name="FineTuning.ControlPlaneHelp" xml:space="preserve"><value>Идемпотентно синхронизируйте историю этого Worker в основную базу данных NCF. Исходные файлы SQLite, datasets и jobs никогда не удаляются; неудачные миграции можно повторить.</value></data>
+  <data name="FineTuning.MigrateLegacy" xml:space="preserve"><value>Перенести устаревшие данные</value></data>
+  <data name="FineTuning.MigrationDatasets" xml:space="preserve"><value>Наборы данных</value></data>
+  <data name="FineTuning.MigrationJobs" xml:space="preserve"><value>Задания</value></data>
+  <data name="FineTuning.MigrationEvents" xml:space="preserve"><value>События</value></data>
+  <data name="FineTuning.MigrationArtifacts" xml:space="preserve"><value>Артефакты</value></data>
+  <data name="FineTuning.MigrationCompleted" xml:space="preserve"><value>Миграция устаревших данных завершена</value></data>
+  <data name="FineTuning.DiagnosticsTitle" xml:space="preserve"><value>Диагностика окружения</value></data>
+  <data name="FineTuning.RunDiagnostics" xml:space="preserve"><value>Запустить диагностику</value></data>
+  <data name="FineTuning.DiagnosticsHelp" xml:space="preserve"><value>Проверяет только конфигурацию, Worker, доступность модели и FileManager; не устанавливает программы и не выполняет произвольные команды.</value></data>
+  <data name="FineTuning.DiagnosticsWorker" xml:space="preserve"><value>Worker</value></data>
+  <data name="FineTuning.DiagnosticsModels" xml:space="preserve"><value>Доступные модели</value></data>
+  <data name="FineTuning.DiagnosticsFileManager" xml:space="preserve"><value>FileManager</value></data>
+  <data name="FineTuning.ModelPreparationTitle" xml:space="preserve"><value>Безопасная подготовка модели</value></data>
+  <data name="FineTuning.ModelPreparationHelp" xml:space="preserve"><value>Поиск доступен только через каталог поставщиков из белого списка, настроенный оператором. Выбранные модели и ревизии перед загрузкой всё равно проходят проверки манифеста, размера, пути и целостности; команды не выполняются, и tokens никогда не раскрываются браузеру.</value></data>
+  <data name="FineTuning.Provider" xml:space="preserve"><value>Provider</value></data>
+  <data name="FineTuning.Revision" xml:space="preserve"><value>Revision</value></data>
+  <data name="FineTuning.TargetDirectory" xml:space="preserve"><value>Целевой каталог</value></data>
+  <data name="FineTuning.CheckModel" xml:space="preserve"><value>Проверить модель</value></data>
+  <data name="FineTuning.DownloadModel" xml:space="preserve"><value>Скачать модель</value></data>
+  <data name="FineTuning.SearchModels" xml:space="preserve"><value>Искать модели</value></data>
+  <data name="FineTuning.ModelSearchPlaceholder" xml:space="preserve"><value>Искать в настроенном каталоге поставщиков</value></data>
+  <data name="FineTuning.ModelSearchUnavailable" xml:space="preserve"><value>Поиск моделей недоступен</value></data>
+  <data name="FineTuning.ModelSearchEmpty" xml:space="preserve"><value>Ни одна модель из белого списка не соответствует поиску.</value></data>
+  <data name="FineTuning.Description" xml:space="preserve"><value>Описание</value></data>
+  <data name="FineTuning.Action" xml:space="preserve"><value>Действия</value></data>
+  <data name="FineTuning.ModelReady" xml:space="preserve"><value>Модель готова</value></data>
+  <data name="FineTuning.ModelIncomplete" xml:space="preserve"><value>Файлы Model неполные</value></data>
+  <data name="FineTuning.ModelDownloadCompleted" xml:space="preserve"><value>Скачивание модели завершено</value></data>
+  <data name="FineTuning.PauseJob" xml:space="preserve"><value>Приостановить задание</value></data>
+  <data name="FineTuning.ResumeJob" xml:space="preserve"><value>Возобновить задание</value></data>
+  <data name="FineTuning.DeleteJob" xml:space="preserve"><value>Удалить задание</value></data>
+  <data name="FineTuning.DeleteConfirm" xml:space="preserve"><value>Удалить это задание, его контрольные точки и экспортированные ресурсы? Это нельзя отменить.</value></data>
+  <data name="FineTuning.DeleteCompleted" xml:space="preserve"><value>Задание и его ресурсы удалены.</value></data>
+  <data name="FineTuning.PauseRequested" xml:space="preserve"><value>Запрошена пауза; worker сохранит контрольную точку на следующей безопасной границе.</value></data>
+  <data name="FineTuning.ResumeRequested" xml:space="preserve"><value>Запрошено возобновление; задание вернётся в очередь.</value></data>
+  <data name="FineTuning.RuntimeInvalid" xml:space="preserve"><value>Максимальное время выполнения должно быть целым числом от 1 до 10,080 минут.</value></data>
+  <data name="FineTuning.RuntimeUpdated" xml:space="preserve"><value>Максимальное время выполнения обновлено.</value></data>
+  <data name="FineTuning.AverageStepDuration" xml:space="preserve"><value>Средняя длительность шага</value></data>
+  <data name="FineTuning.EstimatedFinish" xml:space="preserve"><value>Оценка окончания</value></data>
+  <data name="FineTuning.MaxDurationMinutes" xml:space="preserve"><value>Максимальная длительность (минуты)</value></data>
+  <data name="FineTuning.UpdateRuntime" xml:space="preserve"><value>Обновить runtime</value></data>
+  <data name="FineTuning.PausedCount" xml:space="preserve"><value>Приостановлено</value></data>
+  <data name="FineTuning.State.Pausing" xml:space="preserve"><value>Приостанавливается</value></data>
+  <data name="FineTuning.State.Paused" xml:space="preserve"><value>Приостановлено</value></data>
+  <data name="FineTuning.State.Resuming" xml:space="preserve"><value>Возобновляется</value></data>
+  <data name="FineTuning.Metric.averageStepDuration" xml:space="preserve"><value>Средняя длительность шага</value></data>
+  <data name="FineTuning.Metric.estimatedRemaining" xml:space="preserve"><value>Оценка оставшегося</value></data>
+  <data name="FineTuning.CurrentSamples" xml:space="preserve"><value>Текущие образцы</value></data>
+  <data name="FineTuning.SamplesUnit" xml:space="preserve"><value>образцы</value></data>
+  <data name="FineTuning.TokensUnit" xml:space="preserve"><value>tokens</value></data>
+  <data name="FineTuning.TokensPerSampleUnit" xml:space="preserve"><value>tokens/образец</value></data>
+  <data name="FineTuning.TruncatedSamples" xml:space="preserve"><value>Усечено</value></data>
+
 </root>
