@@ -50,6 +50,14 @@ var Store = new Vuex.Store({
     state: {
         pageSrc: '1',
         resourceCodes: [],
+        adminTabs: {
+            enabled: false,
+            shellId: '',
+            activeId: '',
+            tabs: [],
+            canScrollLeft: false,
+            canScrollRight: false
+        },
         navMenu: { //侧边栏数据
             navMenuList: [],
             searchKeyword: '',
@@ -90,6 +98,14 @@ var Store = new Vuex.Store({
         },
         // 菜单渲染键：普通模式保持稳定（展开/收起不重建菜单）；
         // 搜索模式下随“应展开集合”变化而重建，保证新出现的命中分支自动展开。
+        adminIframeTabs: function (state) {
+            if (!state.adminTabs || !state.adminTabs.enabled) {
+                return [];
+            }
+            return state.adminTabs.tabs.filter(function (tab) {
+                return !tab.isShell;
+            });
+        },
         navMenuRenderKey: function (state) {
             var keyword = String(state.navMenu.searchKeyword || '').trim();
             if (!keyword) {

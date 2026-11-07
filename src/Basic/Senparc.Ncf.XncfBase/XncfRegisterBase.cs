@@ -13,12 +13,16 @@
     修改标识：Senparc - 20260804
     修改描述：v0.24.0-preview5 统一数据库设计时工厂与函数参数处理
 
+    修改标识：Senparc - 20261108
+    修改描述：创建模块数据库上下文时对齐 DbContextOptions 的具体类型
+
 ----------------------------------------------------------------*/
 
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -287,30 +291,15 @@ namespace Senparc.Ncf.XncfBase
                     var dbContextTypes = XncfDatabaseDbContextPool.Instance[this.GetType()];
                     foreach (var dbContextType in dbContextTypes.Values)
                     {
-                        var dbOptionBuilderType = dbContextType.GetConstructors()
-                                            .First().GetParameters().First().ParameterType;
-
                         //定义 XncfSenparcEntities 实例生成
                         Func<IServiceProvider, DbContext> implementationFactory = s =>
                         {
-                            DbContextOptionsBuilder dbOptionBuilder;
-                            if (dbOptionBuilderType.GenericTypeArguments.Length > 0)
-                            {
-                                //带泛型
-                                ////准备创建 DbContextOptionsBuilder 实例，定义类型
-                                dbOptionBuilderType = typeof(DbContextOptionsBuilder<>);
-                                //dbOptionBuilderType = typeof(RelationalDbContextOptionsBuilder<,>);
-                                //获取泛型对象类型，如：DbContextOptionsBuilder<SenparcEntities>
-                                dbOptionBuilderType = dbOptionBuilderType.MakeGenericType(dbContextType);
-
-                                //创建 DbContextOptionsBuilder 实例
-                                dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder;
-                            }
-                            else
-                            {
-                                //不带泛型
-                                dbOptionBuilder = new DbContextOptionsBuilder();
-                            }
+                            // 始终按当前上下文类型创建泛型 Builder。非泛型 Builder 的 Options
+                            // 运行时类型是 DbContextOptions<DbContext>，无法匹配
+                            // DbContextOptions<TContext> 构造函数。
+                            var dbOptionBuilderType = typeof(DbContextOptionsBuilder<>).MakeGenericType(dbContextType);
+                            var dbOptionBuilder = Activator.CreateInstance(dbOptionBuilderType) as DbContextOptionsBuilder
+                                ?? throw new InvalidOperationException($"无法创建数据库配置：{dbContextType.FullName}");
 
                             //获取当前数据库配置
                             var currentDatabaseConfiguration = DatabaseConfigurationFactory.Instance.Current;
@@ -381,8 +370,38 @@ namespace Senparc.Ncf.XncfBase
             Type dbContextType,
             DbContextOptions dbContextOptions)
         {
-            return ActivatorUtilities.CreateInstance(serviceProvider, dbContextType, dbContextOptions) as DbContext
+            var options = AlignContextOptions(dbContextType, dbContextOptions);
+            return ActivatorUtilities.CreateInstance(serviceProvider, dbContextType, options) as DbContext
                 ?? throw new InvalidOperationException($"无法创建 XNCF 数据库上下文：{dbContextType.FullName}");
+        }
+
+        /// <summary>
+        /// 让传入的配置满足上下文构造函数要求的 DbContextOptions 类型。
+        /// </summary>
+        private static DbContextOptions AlignContextOptions(Type dbContextType, DbContextOptions dbContextOptions)
+        {
+            var optionsParameter = dbContextType.GetConstructors()
+                .SelectMany(constructor => constructor.GetParameters())
+                .FirstOrDefault(parameter => typeof(DbContextOptions).IsAssignableFrom(parameter.ParameterType));
+            if (optionsParameter == null || optionsParameter.ParameterType.IsInstanceOfType(dbContextOptions))
+            {
+                return dbContextOptions;
+            }
+
+            var targetType = optionsParameter.ParameterType.IsGenericType
+                ? optionsParameter.ParameterType
+                : typeof(DbContextOptions<>).MakeGenericType(dbContextType);
+            var extensions = dbContextOptions.Extensions.ToDictionary(
+                extension => extension.GetType(),
+                extension => (IDbContextOptionsExtension)extension);
+            var aligned = Activator.CreateInstance(targetType, extensions) as DbContextOptions;
+            if (aligned == null)
+            {
+                return dbContextOptions;
+            }
+
+            Console.WriteLine($"[NCF][DbContext] {dbContextType.FullName} 需要 {optionsParameter.ParameterType.Name}，已将 {dbContextOptions.GetType().FullName} 转换为 {aligned.GetType().FullName}。");
+            return aligned;
         }
 
         /// <summary>

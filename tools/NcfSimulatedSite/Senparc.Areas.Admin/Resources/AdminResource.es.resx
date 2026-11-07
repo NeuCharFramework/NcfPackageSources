@@ -151,6 +151,21 @@
   <data name="Admin.Nav.Home" xml:space="preserve">
     <value>Inicio</value>
   </data>
+  <data name="Admin.Tabs.List" xml:space="preserve">
+    <value>Páginas abiertas</value>
+  </data>
+  <data name="Admin.Tabs.Close" xml:space="preserve">
+    <value>Cerrar pestaña</value>
+  </data>
+  <data name="Admin.Tabs.Untitled" xml:space="preserve">
+    <value>Página sin título</value>
+  </data>
+  <data name="Admin.Tabs.ScrollLeft" xml:space="preserve">
+    <value>Desplazar pestañas a la izquierda</value>
+  </data>
+  <data name="Admin.Tabs.ScrollRight" xml:space="preserve">
+    <value>Desplazar pestañas a la derecha</value>
+  </data>
   <data name="Admin.Nav.Search" xml:space="preserve">
     <value>Buscar menú</value>
   </data>

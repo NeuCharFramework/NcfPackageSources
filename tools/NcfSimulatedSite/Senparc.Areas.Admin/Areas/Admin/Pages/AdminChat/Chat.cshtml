@@ -35,7 +35,7 @@
                         @@click="toggleSidebar">
                     <i :class="sidebarCollapsed ? 'el-icon-s-unfold' : 'el-icon-s-fold'" aria-hidden="true"></i>
                 </button>
-                <span v-if="sidebarCollapsed && isSending" class="sidebar-running-dot"
+                <span v-if="sidebarCollapsed && hasRunningSession" class="sidebar-running-dot"
                       role="status" :aria-label="ncfT('AdminChat.Sidebar.Running')"></span>
                 <span v-else-if="sidebarCollapsed && unreadSessionIds.length" class="sidebar-unread-dot"
                       role="status" :aria-label="ncfT('AdminChat.Sidebar.Unread')"></span>
@@ -480,7 +480,7 @@
                         <span>{{ proposal.remove ? ncfT('AdminChat.Memory.Delete') : ncfT('AdminChat.Memory.ReviewCandidate') }}：
                             {{ proposal.entry.text }}</span>
                         <small>{{ proposal.entry.workspaceId ? 'Workspace' : ncfT('AdminChat.Memory.ScopeGlobal') }}</small>
-                        <el-button type="text" size="mini" :disabled="memoryBusy || isSending" @@click="reviewMemoryProposal(proposal)">
+                        <el-button type="text" size="mini" :disabled="memoryBusy || isCurrentSessionRunning" @@click="reviewMemoryProposal(proposal)">
                             @AR["AdminChat.Memory.ReviewCandidate"]
                         </el-button>
                     </div>
@@ -548,28 +548,30 @@
                     </div>
                 </div>
             </div>
-            <nav v-if="messageRail.length" class="chat-message-rail" :aria-label="ncfT('AdminChat.Rail.Label')">
+            <nav v-if="messageRail.length" class="chat-message-rail" :aria-label="ncfT('AdminChat.Rail.Label')"
+                 @@mouseleave="scheduleCloseMessageRail">
                 <div v-show="messageRailOpen" ref="messageRailMenu" class="chat-message-rail-menu" role="menu"
                      :style="{ top: messageRailMenuTop + 'px' }"
-                     @@mouseenter="openMessageRail" @@mouseleave="scheduleCloseMessageRail">
+                     @@mouseenter="messageRailMenuHover = true; openMessageRail()">
                     <button v-for="marker in messageRail" :key="'rail-item-' + marker.id" type="button"
                             :class="{ 'is-active': marker.id === messageRailActiveId }"
                             :title="marker.full" :aria-label="ncfT('AdminChat.Rail.Jump')"
-                            @@mouseenter="focusRailMarker(marker.id)"
+                            @@mouseenter="highlightRailMarker(marker.id)"
                             @@click="scrollToUserMessage(marker.id)">
                         <i class="chat-message-rail-menu-dot" aria-hidden="true"></i>
                         <span>{{ marker.preview }}</span>
                     </button>
                 </div>
-                <button v-for="marker in messageRail" :key="'rail-dot-' + marker.id" type="button"
-                        class="chat-message-rail-dot"
-                        :class="{ 'is-active': marker.id === messageRailActiveId }"
-                        :style="{ top: marker.top + 'px' }"
-                        :title="marker.preview" :aria-label="marker.preview"
-                        @@mouseenter="focusRailMarker(marker.id)"
-                        @@mouseleave="scheduleCloseMessageRail"
-                        @@focus="focusRailMarker(marker.id)"
-                        @@click="scrollToUserMessage(marker.id)"></button>
+                <div class="chat-message-rail-track">
+                    <button v-for="marker in messageRail" :key="'rail-dot-' + marker.id" type="button"
+                            class="chat-message-rail-dot"
+                            :class="{ 'is-active': marker.id === messageRailActiveId }"
+                            :style="{ top: marker.top + 'px', height: marker.height + 'px' }"
+                            :title="marker.preview" :aria-label="marker.preview"
+                            @@mouseenter="focusRailMarker(marker.id)"
+                            @@focus="focusRailMarker(marker.id)"
+                            @@click="scrollToUserMessage(marker.id)"></button>
+                </div>
             </nav>
             </div>
 
@@ -584,10 +586,10 @@
                             <small>{{ attachment.localStatus }}<span v-if="attachment.sectionCount"> · {{ attachment.sectionCount }} 段/页/表</span></small>
                         </div>
                         <el-checkbox v-if="attachment.contentType.indexOf('image/') === 0"
-                            v-model="attachment.useVision" :disabled="!attachment.canUseVision || isSending"
+                            v-model="attachment.useVision" :disabled="!attachment.canUseVision || isCurrentSessionRunning"
                             title="仅本轮授权发送压缩图片给视觉模型，可能产生额外 Token。"
                             @@change="validatePendingVision(attachment)">视觉</el-checkbox>
-                        <button type="button" :disabled="isSending || workspaceUploading" title="从本轮移除并删除 Workspace 文件"
+                        <button type="button" :disabled="isCurrentSessionRunning || workspaceUploading" title="从本轮移除并删除 Workspace 文件"
                             @@click="removePendingAttachment(attachment)"><i class="el-icon-close"></i></button>
                     </div>
                 </div>
@@ -595,10 +597,10 @@
                     type="textarea"
                     v-model="inputMessage"
                     ref="promptMessageInput"
-                    v-prompt-range="!isSending"
+                    v-prompt-range="!isCurrentSessionRunning"
                     placeholder="@AR["AdminChat.InputPlaceholder"]"
                     :rows="3"
-                    :disabled="!currentSessionId || isSending"
+                    :disabled="!currentSessionId || isCurrentSessionRunning"
                     @@keydown.native="handleChatInputKeydown"
                     @@paste.native="handleWorkspacePaste"
                     class="message-input">
@@ -606,7 +608,7 @@
                 <div class="input-actions">
                     <span class="ncf-doc-help-group">
                         <el-button type="text" size="mini" aria-label="上传资料" :title="attachmentUploadHint"
-                            :loading="workspaceUploading" :disabled="!canUploadWorkspaceFiles || isSending"
+                            :loading="workspaceUploading" :disabled="!canUploadWorkspaceFiles || isCurrentSessionRunning"
                             @@click="chooseWorkspaceFiles"><i class="fa fa-paperclip"></i></el-button>
                         <ncf-doc-help topic="admin.attachments"></ncf-doc-help>
                     </span>
@@ -625,7 +627,7 @@
                                 size="mini"
                                 class="chat-ai-model-select input-ai-model-select"
                                 :loading="loadingAiModelOptions"
-                                :disabled="isSending"
+                                :disabled="isCurrentSessionRunning"
                                 filterable
                                 default-first-option
                                 filter-placeholder="搜索模型"
@@ -643,7 +645,7 @@
                                 </el-option>
                             </el-select>
                             <span class="ncf-doc-help-group">
-                                <el-radio-group v-model="chatMode" size="mini" class="chat-mode-toggle" :disabled="isSending">
+                                <el-radio-group v-model="chatMode" size="mini" class="chat-mode-toggle" :disabled="isCurrentSessionRunning">
                                     <el-radio-button label="simple">
                                         <i class="fa fa-comment"></i> @AR["AdminChat.ModeSimple"]
                                     </el-radio-button>
@@ -656,7 +658,7 @@
                             <span class="ncf-doc-help-group">
                                 <el-dropdown trigger="click" @@command="handleMemoryCommand($event)">
                                     <el-button size="mini" class="chat-memory-trigger"
-                                               :disabled="memoryBusy || isSending || !memoryReady">
+                                               :disabled="memoryBusy || isCurrentSessionRunning || !memoryReady">
                                         Memory · {{ memoryModeLabel(memoryMode) }} <i class="el-icon-arrow-down"></i>
                                     </el-button>
                                     <el-dropdown-menu slot="dropdown">
@@ -685,7 +687,7 @@
                             v-else
                             type="primary"
                             icon="el-icon-s-promotion"
-                            :disabled="!currentSessionId || isSending || workspaceUploading || ((!inputMessage || inputMessage.trim().length === 0) && pendingAttachments.length === 0)"
+                            :disabled="!currentSessionId || isCurrentSessionRunning || workspaceUploading || ((!inputMessage || inputMessage.trim().length === 0) && pendingAttachments.length === 0)"
                             @@click="sendMessage">
                             @AR["AdminChat.Send"]
                         </el-button>

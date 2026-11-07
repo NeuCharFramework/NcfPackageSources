@@ -8,6 +8,9 @@ Vue.prototype.toggleSideBar = function () {
 
 // 点击菜单，高亮
 Vue.prototype.menuSelect = function (key, keypath) {
+    if (document.body.classList.contains('ncf-admin-embedded')) {
+        return;
+    }
     window.sessionStorage.setItem('activeMenu', key);
     // 页面跳转前同步保存当前菜单的所有父级，确保新页面仍然展开到当前位置。
     saveOpenedMenus((keypath || []).slice(0, -1), true);
@@ -85,8 +88,11 @@ function getNavMenu() {
             myfunctionMain(temp);
             // 数据存起来
             Store.commit('savenavMenuList', temp);
-            // 菜单异步渲染并恢复展开状态后，再还原它自己的滚动位置。
+            // 菜单异步渲染并恢复展开状态后，再还原滚动位置，并让标签页高亮对应菜单。
             Vue.nextTick(function () {
+                if (typeof window.ncfSyncAdminTabsWithMenu === 'function') {
+                    window.ncfSyncAdminTabsWithMenu(temp);
+                }
                 if (window.requestAnimationFrame) {
                     window.requestAnimationFrame(restoreNavMenuScroll);
                 } else {
@@ -246,7 +252,7 @@ function myfunctionMain(list) {
     for (var i in list) {
         let setNavMenuActive = window.sessionStorage.getItem('setNavMenuActive');
         // 如果有需要单独设置的导航 （例如安装、卸载后激活特定的导航）
-        if (setNavMenuActive && setNavMenuActive !== "null" && list[i].menuName === setNavMenuActive) {
+        if (!document.body.classList.contains('ncf-admin-embedded') && setNavMenuActive && setNavMenuActive !== "null" && list[i].menuName === setNavMenuActive) {
             window.sessionStorage.setItem('setNavMenuActive', null);
             if (list[i].children.length > 0) {
                 window.sessionStorage.setItem('activeMenu', list[i].children[0].id);

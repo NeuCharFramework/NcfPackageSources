@@ -151,6 +151,21 @@
   <data name="Admin.Nav.Home" xml:space="preserve">
     <value>ホーム</value>
   </data>
+  <data name="Admin.Tabs.List" xml:space="preserve">
+    <value>開いているページ</value>
+  </data>
+  <data name="Admin.Tabs.Close" xml:space="preserve">
+    <value>タブを閉じる</value>
+  </data>
+  <data name="Admin.Tabs.Untitled" xml:space="preserve">
+    <value>無題のページ</value>
+  </data>
+  <data name="Admin.Tabs.ScrollLeft" xml:space="preserve">
+    <value>タブを左へ</value>
+  </data>
+  <data name="Admin.Tabs.ScrollRight" xml:space="preserve">
+    <value>タブを右へ</value>
+  </data>
   <data name="Admin.Nav.Search" xml:space="preserve">
     <value>メニューを検索</value>
   </data>

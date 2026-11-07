@@ -96,7 +96,7 @@ async function run() {
 
     const page = fs.readFileSync(path.join(admin, 'Areas/Admin/Pages/AdminChat/Chat.cshtml'), 'utf8');
     assert.ok(page.includes('v-html="formatMemoryContent(memoryMarkdown)"'), 'Preview must use the resource-blocking sanitizing renderer.');
-    assert.ok(page.includes(':disabled="memoryBusy || isSending || !memoryReady"'));
+    assert.ok(page.includes(':disabled="memoryBusy || isCurrentSessionRunning || !memoryReady"'));
     assert.ok(page.includes('handleMemoryCommand($event, true)'));
     assert.ok(!page.includes('v-model="launcherUseMemory"'), 'The oversized Memory checkbox must be removed.');
     assert.ok(page.includes('memoryModeLabel(memoryMode)'));

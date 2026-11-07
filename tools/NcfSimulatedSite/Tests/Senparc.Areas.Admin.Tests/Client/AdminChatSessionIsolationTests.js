@@ -243,15 +243,96 @@ async function streamRouting() {
     assert.strictEqual(app.liveAssistantText, before, 'Events with a different run owner must be rejected.');
 }
 
+function sessionAddress() {
+    const addresses = [];
+    sandbox.URL = URL;
+    sandbox.URLSearchParams = URLSearchParams;
+    sandbox.window.location = {
+        href: 'http://test/Admin/AdminChat/Chat?embedded=1',
+        pathname: '/Admin/AdminChat/Chat',
+        search: '?embedded=1',
+        hash: ''
+    };
+    sandbox.window.history = {
+        state: { kept: true },
+        replaceState(state, title, next) {
+            assert.deepStrictEqual(state, { kept: true });
+            addresses.push(next);
+        }
+    };
+    const app = createApp();
+    assert.strictEqual(app.sessionIdFromLocation(), 0);
+    sandbox.window.location.hash = '#session-15';
+    assert.strictEqual(app.sessionIdFromLocation(), 15, 'A copied hash must select the session when the query is absent.');
+    sandbox.window.location.search = '?sessionId=15';
+    sandbox.window.location.hash = '#session-99';
+    assert.strictEqual(app.sessionIdFromLocation(), 15, 'The query session remains authoritative when both are present.');
+
+    sandbox.window.location.search = '?embedded=1';
+    sandbox.window.location.hash = '';
+    app.currentSessionId = 15;
+    app.chatMode = 'simple';
+    app.syncAdminChatLocation();
+    assert.strictEqual(addresses[0], '/Admin/AdminChat/Chat?embedded=1&sessionId=15&mode=0#session-15');
+    sandbox.window.location.search = '?embedded=1&sessionId=15&mode=0';
+    sandbox.window.location.hash = '#session-15';
+    sandbox.window.location.href = 'http://test' + addresses[0];
+    app.currentSessionId = 0;
+    app.syncAdminChatLocation();
+    assert.strictEqual(addresses[1], '/Admin/AdminChat/Chat?embedded=1&mode=0');
+}
+
+async function concurrentSessions() {
+    const app = createApp();
+    app.currentSessionId = 1;
+    app.memoryReady = true;
+    app.inputMessage = 'A request';
+    const streamA = deferred();
+    const streamB = deferred();
+    let calls = 0;
+    app.consumeAdminChatStream = () => {
+        calls += 1;
+        return calls === 1 ? streamA.promise : streamB.promise;
+    };
+    sandbox.service.get = async () => result({ session: { title: 'session', messages: [] } });
+    const sendingA = app.sendMessage();
+    const controllerA = app.sessionRuns[1].controller;
+    await app.switchSession(2);
+    assert.ok(!app.isCurrentSessionRunning, 'B must accept input while A is generating.');
+    assert.ok(app.isSessionRunning({ id: 1 }));
+    app.memoryReady = true;
+    app.inputMessage = 'B request';
+    const sendingB = app.sendMessage();
+    assert.ok(app.sessionRuns[1] && app.sessionRuns[2], 'Two sessions must generate together.');
+    assert.strictEqual(controllerA.signal.aborted, false, 'Starting B must not abort A.');
+    app.handleLiveStreamEvent('token', { text: 'A token' }, 'temp', 1);
+    assert.strictEqual(app.liveAssistantText, '', 'A tokens must stay out of B.');
+    assert.strictEqual(app.sessionRuns[1].liveAssistantText, 'A token');
+    await app.createNewSession();
+    assert.strictEqual(controllerA.signal.aborted, false, 'New conversation must leave A running.');
+    assert.ok(app.sessionRuns[2], 'New conversation must leave B running.');
+    streamA.resolve();
+    await sendingA;
+    assert.ok(app.sessionRuns[2], 'A completing must not stop B.');
+    streamB.resolve();
+    await sendingB;
+    assert.ok(!app.sessionRuns[1] && !app.sessionRuns[2]);
+}
+
 async function run() {
     await streamingNavigation();
     await backgroundFailure();
     await staleLoads();
     await lateHarnessResults();
     await streamRouting();
+    await concurrentSessions();
+    sessionAddress();
     const page = fs.readFileSync(path.join(admin, 'Areas/Admin/Pages/AdminChat/Chat.cshtml'), 'utf8');
     assert.ok(page.includes('v-if="isAIResponding && isCurrentSessionRunning"'));
     assert.ok(page.includes('v-if="isCurrentSessionRunning"'));
+    assert.ok(page.includes(':disabled="!currentSessionId || isCurrentSessionRunning"'));
+    const css = fs.readFileSync(path.join(admin, 'wwwroot/css/Admin/Pages/AdminChat/Chat.css'), 'utf8');
+    assert.match(css, /\.admin-chat-container \.message-input\.ncf-prompt-selector-input \{\s*padding-top: 0;/);
     console.log('AdminChat session isolation tests passed.');
 }
 run().catch(error => { console.error(error); process.exitCode = 1; });

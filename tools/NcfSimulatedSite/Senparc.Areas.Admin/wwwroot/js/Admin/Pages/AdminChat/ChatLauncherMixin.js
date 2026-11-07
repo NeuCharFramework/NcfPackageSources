@@ -542,11 +542,16 @@ window.ChatLauncherMixin = {
           this.setSessionAiModelId(sessionId, this.launcherAiModelId);
           const pendingMessage = references.length ? initialMessage : response.data.data.initialMessage || initialMessage;
           sessionStorage.setItem(`ncf.admin.chat.initialMessage.${sessionId}`, pendingMessage);
+          if (typeof this.openCreatedChatSession === 'function') {
+            await this.openCreatedChatSession(sessionId, pendingMessage, references);
+            return;
+          }
           if (references.length) {
             sessionStorage.setItem(`ncf.admin.chat.initialReferences.${sessionId}`, JSON.stringify(references));
           }
           window.location.href = '/Admin/AdminChat/Chat?sessionId=' + sessionId
-            + '&mode=' + (this.launcherChatMode === 'harness' ? '1' : '0');
+            + '&mode=' + (this.launcherChatMode === 'harness' ? '1' : '0')
+            + '#session-' + sessionId;
           return;
         }
 

@@ -2902,9 +2902,19 @@ body.is-resizing-chat-sidebar iframe {
     margin: 0;
 }
 
+.admin-chat-container .message-input.ncf-prompt-selector-input {
+    padding-top: 0;
+}
+
+.admin-chat-container .message-input .ncf-prompt-selector-trigger {
+    top: 8px;
+    right: 10px;
+    z-index: 2;
+}
+
 .admin-chat-container .message-input .el-textarea__inner {
     min-height: 92px !important;
-    padding: 14px 15px;
+    padding: 10px 124px 14px 15px;
     border: 1px solid #dfe4ec;
     border-radius: 13px;
     background: #fff;
@@ -3821,43 +3831,59 @@ body.is-resizing-chat-sidebar iframe {
     z-index: 5;
     top: 12px;
     bottom: 12px;
-    left: 8px;
-    width: 16px;
+    left: 6px;
+    width: 22px;
     pointer-events: none;
 }
 
-.chat-message-rail-dot,
+.chat-message-rail-track,
 .chat-message-rail-menu,
 .chat-message-rail-menu button {
     pointer-events: auto;
 }
 
+.chat-message-rail-track {
+    position: absolute;
+    inset: 0;
+}
+
 .chat-message-rail-dot {
     position: absolute;
-    left: 3px;
-    width: 8px;
-    height: 8px;
+    left: 0;
+    width: 100%;
     margin: 0;
     padding: 0;
     border: 0;
-    border-radius: 50%;
-    background: #c5cbd6;
-    box-shadow: 0 0 0 2px #fcfcfd;
+    background: transparent;
     cursor: pointer;
-    transform: translateY(-4px);
 }
 
-.chat-message-rail-dot.is-active,
-.chat-message-rail-dot:hover,
-.chat-message-rail-dot:focus-visible {
+.chat-message-rail-dot::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    border-radius: 999px;
+    background: #c5cbd6;
+}
+
+.chat-message-rail-dot.is-active::before,
+.chat-message-rail-dot:hover::before,
+.chat-message-rail-dot:focus-visible::before {
     background: #3d6bff;
     box-shadow: 0 0 0 3px rgba(61, 107, 255, 0.22);
+}
+
+.chat-message-rail-dot:focus-visible {
     outline: none;
 }
 
 .chat-message-rail-menu {
     position: absolute;
-    left: 22px;
+    z-index: 2;
+    left: 16px;
     width: min(320px, calc(100vw - 360px));
     max-height: min(360px, 100%);
     overflow-y: auto;

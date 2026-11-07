@@ -12,8 +12,7 @@ namespace Senparc.Xncf.Workspace.Domain.Models.MultipleDatabase;
 public sealed class WorkspaceSenparcEntities_SqlServer
     : WorkspaceSenparcEntities
 {
-    public WorkspaceSenparcEntities_SqlServer(
-        DbContextOptions<WorkspaceSenparcEntities_SqlServer> options)
+    public WorkspaceSenparcEntities_SqlServer(DbContextOptions options)
         : base(options)
     {
     }
@@ -23,8 +22,7 @@ public sealed class WorkspaceSenparcEntities_SqlServer
 public sealed class WorkspaceSenparcEntities_MySql
     : WorkspaceSenparcEntities
 {
-    public WorkspaceSenparcEntities_MySql(
-        DbContextOptions<WorkspaceSenparcEntities_MySql> options)
+    public WorkspaceSenparcEntities_MySql(DbContextOptions options)
         : base(options)
     {
     }
@@ -34,8 +32,7 @@ public sealed class WorkspaceSenparcEntities_MySql
 public sealed class WorkspaceSenparcEntities_Oracle
     : WorkspaceSenparcEntities
 {
-    public WorkspaceSenparcEntities_Oracle(
-        DbContextOptions<WorkspaceSenparcEntities_Oracle> options)
+    public WorkspaceSenparcEntities_Oracle(DbContextOptions options)
         : base(options)
     {
     }
@@ -45,8 +42,7 @@ public sealed class WorkspaceSenparcEntities_Oracle
 public sealed class WorkspaceSenparcEntities_PostgreSQL
     : WorkspaceSenparcEntities
 {
-    public WorkspaceSenparcEntities_PostgreSQL(
-        DbContextOptions<WorkspaceSenparcEntities_PostgreSQL> options)
+    public WorkspaceSenparcEntities_PostgreSQL(DbContextOptions options)
         : base(options)
     {
     }
@@ -56,8 +52,7 @@ public sealed class WorkspaceSenparcEntities_PostgreSQL
 public sealed class WorkspaceSenparcEntities_Sqlite
     : WorkspaceSenparcEntities
 {
-    public WorkspaceSenparcEntities_Sqlite(
-        DbContextOptions<WorkspaceSenparcEntities_Sqlite> options)
+    public WorkspaceSenparcEntities_Sqlite(DbContextOptions options)
         : base(options)
     {
     }
@@ -67,8 +62,7 @@ public sealed class WorkspaceSenparcEntities_Sqlite
 public sealed class WorkspaceSenparcEntities_Dm
     : WorkspaceSenparcEntities
 {
-    public WorkspaceSenparcEntities_Dm(
-        DbContextOptions<WorkspaceSenparcEntities_Dm> options)
+    public WorkspaceSenparcEntities_Dm(DbContextOptions options)
         : base(options)
     {
     }

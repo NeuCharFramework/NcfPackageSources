@@ -108,6 +108,12 @@ function highlightWorkspaceSource(source, language) {
   return `<pre class="code-preview"><code>${parts.join('')}</code></pre>`;
 }
 
+function logAdminChat(level, message, detail) {
+  if (typeof console === 'undefined' || !console) return;
+  const write = console[level] || console.error || console.log;
+  if (typeof write === 'function') write.call(console, message, detail === undefined ? '' : detail);
+}
+
 var chatApp = new Vue({
   el: '#app',
   mixins: [window.ChatLauncherMixin],
@@ -171,6 +177,7 @@ var chatApp = new Vue({
       messageRailOpen: false,
       messageRailActiveId: 0,
       messageRailMenuTop: 0,
+      messageRailMenuHover: false,
       messageRailCloseTimer: null,
       messageRailObserver: null,
       sidebarWidth: 250,
@@ -183,6 +190,8 @@ var chatApp = new Vue({
       dropAfter: false,
       savingSessionOrder: false,
       runningSessionId: 0,
+      sessionRuns: {},
+      sessionDrafts: {},
       unreadSessionIds: [],
       unreadPersistGeneration: {},
       runningMessages: [],
@@ -248,7 +257,12 @@ var chatApp = new Vue({
   },
   computed: {
     isCurrentSessionRunning() {
-      return this.isSending && this.runningSessionId === this.currentSessionId;
+      return !!this.sessionRuns[this.currentSessionId]
+        || (this.isSending && this.runningSessionId === this.currentSessionId);
+    },
+    hasRunningSession() {
+      return Object.keys(this.sessionRuns).length > 0
+        || (this.isSending && Number(this.runningSessionId) > 0);
     },
     canUploadWorkspaceFiles() {
       return this.isSuperAdmin && !!(this.currentSessionId ? this.currentSessionWorkspaceId : this.selectedWorkspaceId);
@@ -382,6 +396,11 @@ var chatApp = new Vue({
     const modeParam = new URLSearchParams(window.location.search || '').get('mode');
     if (modeParam === '0') this.chatMode = 'simple';
     if (modeParam === '1') this.chatMode = 'harness';
+    if (!(Number(this.currentSessionId) > 0)) {
+      const linkedSessionId = this.sessionIdFromLocation();
+      if (linkedSessionId > 0) this.currentSessionId = linkedSessionId;
+    }
+    this.syncAdminChatLocation();
     const initialMessageKey = `ncf.admin.chat.initialMessage.${this.currentSessionId}`;
     const initialMessageParam = this.currentSessionId > 0 ? sessionStorage.getItem(initialMessageKey) : '';
     if (initialMessageParam) {
@@ -422,6 +441,10 @@ var chatApp = new Vue({
     if (this.messageRailObserver) this.messageRailObserver.disconnect();
     clearTimeout(this.messageRailCloseTimer);
     this.workspacePreviewResizeObserver.disconnect();
+    Object.keys(this.sessionRuns).forEach((id) => {
+      const controller = this.sessionRuns[id] && this.sessionRuns[id].controller;
+      if (controller) controller.abort();
+    });
     if (this.activeRequestController) {
       // 刷新或离开页面只断开观察，不请求 cancel，服务端任务继续执行。
       this.activeRequestController.abort();
@@ -516,7 +539,8 @@ var chatApp = new Vue({
       this.sidebarResizeEndHandler = null;
     },
     isSessionRunning(session) {
-      return this.isSending && this.runningSessionId === session.id;
+      return !!session && (!!this.sessionRuns[session.id]
+        || (this.isSending && this.runningSessionId === session.id));
     },
     isSessionUnread(session) {
       return !!session && !this.isSessionRunning(session) && this.unreadSessionIds.includes(session.id);
@@ -720,7 +744,7 @@ var chatApp = new Vue({
     async changeMemoryMode(mode) {
       if (typeof mode === 'boolean') mode = mode ? 2 : 0;
       const sessionId = this.currentSessionId;
-      if (this.memoryBusy || this.isSending) return;
+      if (this.memoryBusy || this.isCurrentSessionRunning) return;
       this.memoryBusy = true;
       try {
         const data = await this.memoryRequest('SetMemoryEnabledAsync', {
@@ -811,7 +835,7 @@ var chatApp = new Vue({
     async reviewMemoryProposal(proposal) {
       const result = this.memoryUpdateResult;
       const sessionId = this.currentSessionId;
-      if (this.memoryBusy || this.isSending || !result || this.memoryUpdateSessionId !== sessionId
+      if (this.memoryBusy || this.isCurrentSessionRunning || !result || this.memoryUpdateSessionId !== sessionId
           || !(result.proposals || []).includes(proposal)) return;
       if (this.memoryDialogVisible) {
         this.$message.warning(ncfT('AdminChat.Memory.ReviewClose'));
@@ -931,15 +955,12 @@ var chatApp = new Vue({
       this.currentSessionAiModelId = this.normalizeAiModelId(this.launcherAiModelId);
       this.setSessionAiModelId(this.currentSessionId, this.currentSessionAiModelId);
       this.chatMode = this.launcherChatMode;
+      this.syncAdminChatLocation();
       this.inputMessage = this.chatInputText;
       this.chatInputText = '';
       this.restorePromptReferences('promptMessageInput', promptReferences);
       await this.loadSessionDetail();
       if (!this.currentSessionWorkspaceId) throw new Error('会话已创建，但没有读到 Workspace，请刷新后重试。');
-      const url = new URL(window.location.href);
-      url.searchParams.set('sessionId', this.currentSessionId);
-      url.searchParams.set('mode', this.chatMode === 'harness' ? '1' : '0');
-      window.history.replaceState(window.history.state, '', url.href);
       await this.loadSessionList();
     },
 
@@ -969,7 +990,7 @@ var chatApp = new Vue({
         this.$message.warning('请先选择或创建 Workspace。');
         return;
       }
-      if (this.workspaceUploading || this.isSending) {
+      if (this.workspaceUploading || this.isCurrentSessionRunning) {
         this.$message.warning('正在上传或生成，请稍后再添加附件。');
         return;
       }
@@ -1854,12 +1875,16 @@ var chatApp = new Vue({
     },
 
     async runTrajectoryAction(action, payload) {
-      if (this.isSending) return;
       const sessionId = this.currentSessionId;
+      if (!sessionId || this.sessionRuns[sessionId] || (this.isSending && this.runningSessionId === sessionId)) return;
+      const run = this.beginSessionRun(sessionId, this.messageList);
       this.runningSessionId = sessionId;
-      this.runningMessages = this.messageList;
+      this.runningMessages = run.messages;
       this.resetLiveRun();
+      this.bindRunLiveView(run);
       this.clearRecentTasks();
+      run.recentTasks = [];
+      run.activeTaskId = '';
       this.isSending = true;
       this.isAIResponding = true;
       try {
@@ -1897,20 +1922,21 @@ var chatApp = new Vue({
         this.$message.error(error.message || '任务执行失败');
       } finally {
         this.markSessionUnread(sessionId);
-        this.isSending = false;
-        this.runningSessionId = 0;
-        this.isAIResponding = false;
-        this.runningMessages = [];
+        this.releaseSessionRun(sessionId);
       }
     },
 
     async respondApproval(trajectoryId, approval, approved) {
-      if (this.isSending) return;
       const sessionId = this.currentSessionId;
+      if (!sessionId || this.sessionRuns[sessionId] || (this.isSending && this.runningSessionId === sessionId)) return;
+      const run = this.beginSessionRun(sessionId, this.messageList);
       this.runningSessionId = sessionId;
-      this.runningMessages = this.messageList;
+      this.runningMessages = run.messages;
       this.resetLiveRun();
+      this.bindRunLiveView(run);
       this.clearRecentTasks();
+      run.recentTasks = [];
+      run.activeTaskId = '';
       this.isSending = true;
       this.isAIResponding = true;
       try {
@@ -1946,10 +1972,7 @@ var chatApp = new Vue({
         this.$message.error(error.message || '审批处理失败');
       } finally {
         this.markSessionUnread(sessionId);
-        this.isSending = false;
-        this.runningSessionId = 0;
-        this.isAIResponding = false;
-        this.runningMessages = [];
+        this.releaseSessionRun(sessionId);
       }
     },
 
@@ -1962,51 +1985,113 @@ var chatApp = new Vue({
       // 普通 Enter 保留换行行为。
     },
 
+    waitForSessionListRetry(attempt) {
+      if (typeof setTimeout !== 'function') return Promise.resolve();
+      return new Promise(resolve => setTimeout(resolve, attempt * 200));
+    },
+
+    async readSessionPage(url) {
+      // customAlert 避免全局拦截器再弹一个没有原因的 Error。失败由这里统一重试和提示。
+      const response = await service.get(url, { customAlert: true });
+      const body = response && response.data;
+      const data = body && body.success && body.data;
+      if (!data || !Array.isArray(data.sessions) || !Number.isInteger(data.totalCount)) {
+        throw new Error((body && (body.errorMessage || body.msg || body.exception)) || 'invalid session page');
+      }
+      return data;
+    },
+
+    async collectSessionPages(urlForPage) {
+      const sessions = [];
+      let totalCount = 0;
+      let pageIndex = 1;
+      do {
+        const data = await this.readSessionPage(urlForPage(pageIndex));
+        if (data.sessions.length === 0 && sessions.length < data.totalCount) {
+          throw new Error('incomplete session page');
+        }
+        sessions.push(...data.sessions);
+        totalCount = data.totalCount;
+        pageIndex += 1;
+      } while (sessions.length < totalCount);
+      return Array.from(new Map(sessions.map(session => [session.id, session])).values());
+    },
+
+    async collectSessionPagesWithRetry(urlForPage) {
+      let lastError;
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          return await this.collectSessionPages(urlForPage);
+        } catch (error) {
+          lastError = error;
+          logAdminChat('info', 'AdminChat session list attempt failed:', { attempt, message: error && error.message });
+          if (attempt < 3) await this.waitForSessionListRetry(attempt);
+        }
+      }
+      throw lastError;
+    },
+
     async loadSessionList() {
+      if (this._activeSessionListLoad) {
+        this._sessionListDirty = true;
+        logAdminChat('info', 'AdminChat session list load coalesced.');
+        return this._activeSessionListLoad;
+      }
+      this._activeSessionListLoad = this.performSessionListLoad();
+      try {
+        await this._activeSessionListLoad;
+      } finally {
+        this._activeSessionListLoad = null;
+        if (this._sessionListDirty) {
+          this._sessionListDirty = false;
+          await this.loadSessionList();
+        }
+      }
+    },
+
+    async performSessionListLoad() {
       this.loadingSessions = true;
       try {
-        const sessions = [];
-        let totalCount;
-        let pageIndex = 1;
-        do {
-          const response = await service.get(`/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetSessionListAsync?pageIndex=${pageIndex++}&pageSize=100`);
-          const data = response.data && response.data.success && response.data.data;
-          if (!data || !Array.isArray(data.sessions) || !Number.isInteger(data.totalCount)
-            || (data.sessions.length === 0 && sessions.length < data.totalCount)) {
-            throw new Error(response.data && response.data.errorMessage || ncfT('AdminChat.LoadSessionFailed'));
-          }
-          sessions.push(...data.sessions);
-          totalCount = data.totalCount;
-        } while (sessions.length < totalCount);
-        this.sessionList = Array.from(new Map(sessions.map(session => [session.id, session])).values());
+        const sessions = await this.collectSessionPagesWithRetry(
+          page => `/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetSessionListAsync?pageIndex=${page}&pageSize=100`);
+        this.sessionList = sessions;
         this.applyPersistedUnread(this.sessionList);
+        logAdminChat('info', 'AdminChat session list loaded:', sessions.length);
       } catch (error) {
-        console.error('加载会话列表异常:', error);
-        this.$message.error(ncfT('AdminChat.LoadSessionFailed'));
+        logAdminChat('error', '加载会话列表异常:', error && error.message);
+        if (!this._sessionListDirty) this.$message.error(ncfT('AdminChat.LoadSessionFailed'));
       } finally {
-        this.loadingSessions = false;
+        if (!this._sessionListDirty) this.loadingSessions = false;
       }
     },
 
     async loadArchivedSessionList() {
+      if (this._activeArchivedSessionListLoad) {
+        this._archivedSessionListDirty = true;
+        logAdminChat('info', 'AdminChat archived session list load coalesced.');
+        return this._activeArchivedSessionListLoad;
+      }
+      this._activeArchivedSessionListLoad = this.performArchivedSessionListLoad();
       try {
-        const sessions = [];
-        let totalCount;
-        let pageIndex = 1;
-        do {
-          const response = await service.get(`/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetArchivedSessionListAsync?pageIndex=${pageIndex++}&pageSize=100`);
-          const data = response.data && response.data.success && response.data.data;
-          if (!data || !Array.isArray(data.sessions) || !Number.isInteger(data.totalCount)
-            || (data.sessions.length === 0 && sessions.length < data.totalCount)) {
-            throw new Error(response.data && response.data.errorMessage || ncfT('AdminChat.Archive.LoadFailed'));
-          }
-          sessions.push(...data.sessions);
-          totalCount = data.totalCount;
-        } while (sessions.length < totalCount);
-        this.archivedSessionList = Array.from(new Map(sessions.map(session => [session.id, session])).values());
+        await this._activeArchivedSessionListLoad;
+      } finally {
+        this._activeArchivedSessionListLoad = null;
+        if (this._archivedSessionListDirty) {
+          this._archivedSessionListDirty = false;
+          await this.loadArchivedSessionList();
+        }
+      }
+    },
+
+    async performArchivedSessionListLoad() {
+      try {
+        const sessions = await this.collectSessionPagesWithRetry(
+          page => `/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.GetArchivedSessionListAsync?pageIndex=${page}&pageSize=100`);
+        this.archivedSessionList = sessions;
+        logAdminChat('info', 'AdminChat archived session list loaded:', sessions.length);
       } catch (error) {
-        console.error('加载归档会话异常:', error);
-        this.$message.error(ncfT('AdminChat.Archive.LoadFailed'));
+        logAdminChat('error', '加载归档会话异常:', error && error.message);
+        if (!this._archivedSessionListDirty) this.$message.error(ncfT('AdminChat.Archive.LoadFailed'));
       }
     },
 
@@ -2135,35 +2220,160 @@ var chatApp = new Vue({
       this.liveStatusText = '';
     },
 
-    createRecentTask(content) {
+    beginSessionRun(sessionId, messages) {
+      const run = {
+        controller: null,
+        isStopping: false,
+        messages: messages || [],
+        liveAssistantText: '',
+        liveThinkingText: '',
+        liveTrajectoryEvents: [],
+        livePendingApprovals: [],
+        liveTrajectoryId: 0,
+        liveStatusText: '',
+        recentTasks: [],
+        activeTaskId: '',
+        isAIResponding: true
+      };
+      if (this.$set) this.$set(this.sessionRuns, sessionId, run);
+      else this.sessionRuns[sessionId] = run;
+      return run;
+    },
+
+    bindRunLiveView(run) {
+      run.liveAssistantText = this.liveAssistantText;
+      run.liveThinkingText = this.liveThinkingText;
+      run.liveTrajectoryEvents = this.liveTrajectoryEvents;
+      run.livePendingApprovals = this.livePendingApprovals;
+      run.liveTrajectoryId = this.liveTrajectoryId;
+      run.liveStatusText = this.liveStatusText;
+    },
+
+    releaseSessionRun(sessionId, controller) {
+      const run = this.sessionRuns[sessionId];
+      if (!run) return;
+      if (controller && run.controller && run.controller !== controller) return;
+      if (this.$delete) this.$delete(this.sessionRuns, sessionId);
+      else delete this.sessionRuns[sessionId];
+      const viewingFinished = Number(this.currentSessionId) === Number(sessionId);
+      const currentRun = this.sessionRuns[this.currentSessionId];
+      if (!viewingFinished && currentRun) return;
+      this.isSending = !!currentRun;
+      this.isStopping = currentRun ? !!currentRun.isStopping : false;
+      this.isAIResponding = currentRun ? currentRun.isAIResponding !== false : false;
+      if (!currentRun) {
+        this.runningSessionId = 0;
+        this.activeRequestController = null;
+        this.runningMessages = [];
+      }
+    },
+
+    showSessionRun(sessionId) {
+      const run = this.sessionRuns[sessionId];
+      if (!run || Number(this.currentSessionId) !== Number(sessionId)) return false;
+      this.isSending = true;
+      this.isStopping = !!run.isStopping;
+      this.isAIResponding = run.isAIResponding !== false;
+      this.runningSessionId = sessionId;
+      this.activeRequestController = run.controller;
+      this.runningMessages = run.messages;
+      this.messageList = run.messages;
+      this.liveAssistantText = run.liveAssistantText;
+      this.liveThinkingText = run.liveThinkingText;
+      this.liveTrajectoryEvents = run.liveTrajectoryEvents;
+      this.livePendingApprovals = run.livePendingApprovals;
+      this.liveTrajectoryId = run.liveTrajectoryId;
+      this.liveStatusText = run.liveStatusText;
+      this.recentTasks = run.recentTasks;
+      this.activeTaskId = run.activeTaskId;
+      return true;
+    },
+
+    hideForeignRunView() {
+      if (this.sessionRuns[this.currentSessionId] || Object.keys(this.sessionRuns).length === 0) return;
+      this.isSending = false;
+      this.isStopping = false;
+      this.isAIResponding = false;
+      this.resetLiveRun();
+      this.recentTasks = [];
+      this.activeTaskId = '';
+    },
+
+    rememberSessionDraft(sessionId = this.currentSessionId) {
+      const id = Number(sessionId) || 0;
+      if (id > 0) {
+        if (this.$set) this.$set(this.sessionDrafts, id, this.inputMessage || '');
+        else this.sessionDrafts[id] = this.inputMessage || '';
+      }
+    },
+
+    restoreSessionDraft(sessionId) {
+      const id = Number(sessionId) || 0;
+      this.inputMessage = id > 0 && Object.prototype.hasOwnProperty.call(this.sessionDrafts, id)
+        ? this.sessionDrafts[id] : '';
+    },
+
+    async openCreatedChatSession(sessionId, message, references) {
+      this.currentSessionId = sessionId;
+      this.currentSessionAiModelId = this.normalizeAiModelId(this.launcherAiModelId);
+      this.chatMode = this.launcherChatMode;
+      this.syncAdminChatLocation();
+      this.messageList = [];
+      this.inputMessage = message || '';
+      this.chatInputText = '';
+      if (this.$delete) this.$delete(this.sessionDrafts, sessionId);
+      else delete this.sessionDrafts[sessionId];
+      await this.loadSessionList();
+      if (this.currentSessionId !== sessionId) return;
+      await this.loadSessionDetail();
+      if (this.currentSessionId !== sessionId || this.sessionRuns[sessionId]) return;
+      this.inputMessage = message || '';
+      if (references && references.length) this.restorePromptReferences('promptMessageInput', references);
+      await this.sendMessage();
+    },
+
+    createRecentTask(content, sessionId = this.currentSessionId) {
+      const host = this.sessionRuns[sessionId] || this;
       const taskId = `task-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-      this.recentTasks = this.recentTasks.concat({
+      host.recentTasks = (host.recentTasks || []).concat({
         id: taskId,
         title: this.compactTaskText(content, 42),
         preview: '',
         status: '执行中',
         mode: this.chatMode
       }).slice(-2);
-      this.activeTaskId = taskId;
+      host.activeTaskId = taskId;
+      if (!this.sessionRuns[sessionId] || Number(sessionId) === Number(this.currentSessionId)) {
+        this.recentTasks = host.recentTasks;
+        this.activeTaskId = host.activeTaskId;
+      }
     },
 
-    updateActiveTask(changes) {
-      if (!this.activeTaskId) return;
-      const index = this.recentTasks.findIndex((task) => task.id === this.activeTaskId);
+    updateActiveTask(changes, sessionId = this.currentSessionId) {
+      const host = this.sessionRuns[sessionId] || this;
+      if (!host.activeTaskId) return;
+      const tasks = host.recentTasks || [];
+      const index = tasks.findIndex((task) => task.id === host.activeTaskId);
       if (index < 0) return;
-      const current = this.recentTasks[index];
+      const current = tasks[index];
       const next = Object.assign({}, current, changes, {
         preview: changes.preview === undefined
           ? current.preview
           : this.compactTaskText(changes.preview, 120)
       });
-      this.$set(this.recentTasks, index, next);
+      this.$set(tasks, index, next);
+      if (!this.sessionRuns[sessionId] || Number(sessionId) === Number(this.currentSessionId)) {
+        this.recentTasks = tasks;
+        this.activeTaskId = host.activeTaskId;
+      }
     },
 
-    finishActiveTask(status) {
-      if (!this.activeTaskId) return;
-      this.updateActiveTask({ status });
-      this.activeTaskId = '';
+    finishActiveTask(status, sessionId = this.currentSessionId) {
+      const host = this.sessionRuns[sessionId] || this;
+      if (!host.activeTaskId) return;
+      this.updateActiveTask({ status }, sessionId);
+      host.activeTaskId = '';
+      if (!this.sessionRuns[sessionId] || Number(sessionId) === Number(this.currentSessionId)) this.activeTaskId = '';
     },
 
     clearRecentTasks() {
@@ -2204,13 +2414,21 @@ var chatApp = new Vue({
     },
 
     handleLiveStreamEvent(eventName, payload, tempMessageId, sessionId = this.runningSessionId) {
-      if (sessionId !== this.runningSessionId) return;
+      const run = this.sessionRuns[sessionId];
+      if (!run && sessionId !== this.runningSessionId) return;
+      const show = !run || Number(sessionId) === Number(this.currentSessionId);
+      const write = (field, value) => {
+        if (run) run[field] = value;
+        if (show) this[field] = value;
+      };
+      const read = (field) => (run ? run[field] : this[field]);
+      const messages = run ? run.messages : this.runningMessages;
       if (eventName === 'resume') {
-        this.liveAssistantText = payload && payload.text ? payload.text : '';
-        this.liveThinkingText = payload && payload.thinking ? payload.thinking : '';
-        this.liveStatusText = payload && payload.status ? payload.status : '任务仍在执行…';
-        this.updateActiveTask({ preview: this.liveAssistantText, status: '执行中' });
-        this.scrollLivePreviewToBottom();
+        write('liveAssistantText', payload && payload.text ? payload.text : '');
+        write('liveThinkingText', payload && payload.thinking ? payload.thinking : '');
+        write('liveStatusText', payload && payload.status ? payload.status : '任务仍在执行…');
+        this.updateActiveTask({ preview: read('liveAssistantText'), status: '执行中' }, sessionId);
+        this.scrollLivePreviewToBottom(sessionId);
         return;
       }
       if (eventName === 'cancelled') {
@@ -2219,19 +2437,17 @@ var chatApp = new Vue({
         throw cancelled;
       }
       if (eventName === 'user-message') {
-        const tempIndex = this.runningMessages.findIndex((item) => item.id === tempMessageId);
-        if (tempIndex >= 0 && payload) {
-          this.runningMessages.splice(tempIndex, 1, payload);
-        }
+        const tempIndex = messages.findIndex((item) => item.id === tempMessageId);
+        if (tempIndex >= 0 && payload) messages.splice(tempIndex, 1, payload);
         return;
       }
 
       if (eventName === 'token') {
-        this.liveAssistantText += payload && payload.text ? payload.text : '';
-        this.liveThinkingText = '';
-        this.liveStatusText = '正在生成回答…';
-        this.updateActiveTask({ preview: this.liveAssistantText, status: '生成中' });
-        this.scrollLivePreviewToBottom();
+        write('liveAssistantText', read('liveAssistantText') + (payload && payload.text ? payload.text : ''));
+        write('liveThinkingText', '');
+        write('liveStatusText', '正在生成回答…');
+        this.updateActiveTask({ preview: read('liveAssistantText'), status: '生成中' }, sessionId);
+        this.scrollLivePreviewToBottom(sessionId);
         return;
       }
 
@@ -2242,83 +2458,78 @@ var chatApp = new Vue({
       }
 
       if (eventName === 'assistant-phase') {
-        if (payload && payload.trajectoryId) {
-          this.liveTrajectoryId = payload.trajectoryId;
-        }
+        if (payload && payload.trajectoryId) write('liveTrajectoryId', payload.trajectoryId);
         if (payload && payload.trajectoryEvent) {
           const event = payload.trajectoryEvent;
-          this.upsertLiveTrajectoryEvent(event);
+          this.upsertLiveTrajectoryEvent(event, sessionId);
           if (event.eventType === 'TextReasoningContent') {
-            this.liveThinkingText = payload.text || event.content || '';
-            this.liveStatusText = '正在思考…';
+            write('liveThinkingText', payload.text || event.content || '');
+            write('liveStatusText', '正在思考…');
           } else {
-            this.liveAssistantText = payload.text || event.content || '';
-            this.liveStatusText = '正在生成回答…';
+            write('liveAssistantText', payload.text || event.content || '');
+            write('liveStatusText', '正在生成回答…');
           }
           this.updateActiveTask({
             preview: event.content || payload.text || '',
             status: '生成中'
-          });
-          this.scrollLivePreviewToBottom();
+          }, sessionId);
+          this.scrollLivePreviewToBottom(sessionId);
         }
         return;
       }
 
       if (eventName === 'trajectory-event') {
-        if (payload && payload.trajectoryId) {
-          this.liveTrajectoryId = payload.trajectoryId;
-        }
+        if (payload && payload.trajectoryId) write('liveTrajectoryId', payload.trajectoryId);
         if (payload && payload.trajectoryEvent) {
           if (payload.trajectoryEvent.eventType === 'assistant.text') {
-            this.upsertLiveTrajectoryEvent(payload.trajectoryEvent);
+            this.upsertLiveTrajectoryEvent(payload.trajectoryEvent, sessionId);
           } else {
-            this.liveTrajectoryEvents.push(payload.trajectoryEvent);
+            read('liveTrajectoryEvents').push(payload.trajectoryEvent);
           }
           const eventType = payload.trajectoryEvent.eventType || '';
           if (eventType === 'assistant.text') {
             this.updateActiveTask({
               preview: payload.trajectoryEvent.content || payload.text || '',
               status: '生成中'
-            });
+            }, sessionId);
           }
-          this.liveStatusText = {
+          write('liveStatusText', {
             'tool.call': '正在调用工具…',
             'tool.result': '正在整理工具结果…',
             'approval.request': '等待你的确认…',
             'assistant.text': '正在组织回答…'
-          }[eventType] || '正在处理任务…';
+          }[eventType] || '正在处理任务…');
         }
-        this.livePendingApprovals = payload && payload.pendingApprovals ? payload.pendingApprovals : [];
+        write('livePendingApprovals', payload && payload.pendingApprovals ? payload.pendingApprovals : []);
         return;
       }
 
       if (eventName === 'trajectory-complete') {
-        this.livePendingApprovals = payload && payload.pendingApprovals ? payload.pendingApprovals : [];
-        this.liveStatusText = this.livePendingApprovals.length > 0 ? '等待你的确认…' : '任务已完成，正在保存…';
+        write('livePendingApprovals', payload && payload.pendingApprovals ? payload.pendingApprovals : []);
+        write('liveStatusText', read('livePendingApprovals').length > 0 ? '等待你的确认…' : '任务已完成，正在保存…');
         return;
       }
 
       if (eventName === 'assistant-message') {
         if (payload) {
-          payload.trajectoryId = payload.trajectoryId || this.liveTrajectoryId;
-          payload.trajectoryEvents = this.liveTrajectoryEvents.slice();
-          payload.pendingApprovals = this.livePendingApprovals.slice();
-          this.runningMessages.push(payload);
+          payload.trajectoryId = payload.trajectoryId || read('liveTrajectoryId');
+          payload.trajectoryEvents = read('liveTrajectoryEvents').slice();
+          payload.pendingApprovals = read('livePendingApprovals').slice();
+          messages.push(payload);
         }
-        this.finishActiveTask('已完成');
+        this.finishActiveTask('已完成', sessionId);
         return;
       }
 
       if (eventName === 'error') {
-        this.finishActiveTask('失败');
+        this.finishActiveTask('失败', sessionId);
         throw new Error(payload && payload.message ? payload.message : '对话执行失败');
       }
     },
 
-    scrollLivePreviewToBottom() {
-      const sessionId = this.runningSessionId;
+    scrollLivePreviewToBottom(sessionId = this.runningSessionId) {
       this.$nextTick(() => {
-        if (sessionId !== this.currentSessionId) return;
+        if (Number(sessionId) !== Number(this.currentSessionId)) return;
         ['liveThinkingPreview', 'liveAnswerPreview'].forEach((refName) => {
           const element = this.$refs[refName];
           if (element) {
@@ -2328,17 +2539,16 @@ var chatApp = new Vue({
       });
     },
 
-    upsertLiveTrajectoryEvent(event) {
+    upsertLiveTrajectoryEvent(event, sessionId = this.runningSessionId) {
+      const run = this.sessionRuns[sessionId];
+      const events = run ? run.liveTrajectoryEvents : this.liveTrajectoryEvents;
       const key = event.correlationId || `${event.eventType || 'event'}-${event.sequence || 0}`;
-      const index = this.liveTrajectoryEvents.findIndex((item) => {
+      const index = events.findIndex((item) => {
         const itemKey = item.correlationId || `${item.eventType || 'event'}-${item.sequence || 0}`;
         return itemKey === key;
       });
-      if (index >= 0) {
-        this.liveTrajectoryEvents.splice(index, 1, event);
-      } else {
-        this.liveTrajectoryEvents.push(event);
-      }
+      if (index >= 0) events.splice(index, 1, event);
+      else events.push(event);
     },
 
     async consumeAdminChatStream(requestData, tempMessageId, signal, streamUrl) {
@@ -2399,10 +2609,13 @@ var chatApp = new Vue({
     },
 
     async stopCurrentRequest() {
-      if (!this.activeRequestController || !this.isCurrentSessionRunning) return;
+      const sessionId = this.currentSessionId;
+      const run = this.sessionRuns[sessionId];
+      const controller = run ? run.controller : this.activeRequestController;
+      if (!controller || !this.isCurrentSessionRunning) return;
 
+      if (run) run.isStopping = true;
       this.isStopping = true;
-      const sessionId = this.runningSessionId;
       if (typeof fetch === 'function') {
         try {
           await fetch(`/api/Senparc.Areas.Admin/AdminChatStream/cancel?sessionId=${sessionId}`, {
@@ -2415,12 +2628,12 @@ var chatApp = new Vue({
           console.error('停止后台任务失败:', error);
         }
       }
-      if (this.activeRequestController) this.activeRequestController.abort();
+      controller.abort();
     },
 
     async resumeAdminChatRun() {
       const sessionId = this.currentSessionId;
-      if (!sessionId || this.isSending || typeof fetch !== 'function') return;
+      if (!sessionId || this.sessionRuns[sessionId] || typeof fetch !== 'function') return;
       let status;
       try {
         const response = await fetch(`/api/Senparc.Areas.Admin/AdminChatStream/status?sessionId=${sessionId}`, {
@@ -2438,9 +2651,11 @@ var chatApp = new Vue({
         console.debug('AdminChat 任务刚在后台完成，刷新消息。', sessionId);
         await this.loadSessionDetail(false);
       }
-      if (!status.running || this.currentSessionId !== sessionId || this.isSending) return;
+      if (!status.running || this.currentSessionId !== sessionId || this.sessionRuns[sessionId]) return;
       console.debug('AdminChat 任务仍在后台执行，重新连接。', sessionId, status.status || '');
+      const run = this.beginSessionRun(sessionId, this.messageList);
       this.runningSessionId = sessionId;
+      this.runningMessages = run.messages;
       this.isSending = true;
       this.isAIResponding = true;
       this.isStopping = false;
@@ -2448,9 +2663,10 @@ var chatApp = new Vue({
       this.liveAssistantText = status.text || '';
       this.liveThinkingText = status.thinking || '';
       this.liveStatusText = status.status || '任务仍在执行…';
-      this.createRecentTask(status.text || '继续执行未完成的任务');
-      this.runningMessages = this.messageList;
+      this.bindRunLiveView(run);
+      this.createRecentTask(status.text || '继续执行未完成的任务', sessionId);
       const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      run.controller = controller;
       this.activeRequestController = controller;
       try {
         await this.consumeAdminChatStream(
@@ -2459,34 +2675,30 @@ var chatApp = new Vue({
           controller ? controller.signal : undefined,
           `/api/Senparc.Areas.Admin/AdminChatStream/attach?sessionId=${sessionId}`);
         if (this.currentSessionId === sessionId) await this.loadSessionDetail(false);
-        this.finishActiveTask('已完成');
+        this.finishActiveTask('已完成', sessionId);
       } catch (error) {
         const wasAborted = (error && error.name === 'AbortError')
           || (controller && controller.signal.aborted);
         const cancelled = error && error.name === 'AdminChatCancelled';
-        if (cancelled || (wasAborted && this.isStopping)) {
-          this.finishActiveTask('已终止');
+        const stoppedByUser = !!(this.sessionRuns[sessionId] && this.sessionRuns[sessionId].isStopping);
+        if (cancelled || (wasAborted && stoppedByUser)) {
+          this.finishActiveTask('已终止', sessionId);
           if (this.currentSessionId === sessionId) await this.loadSessionDetail(false);
           this.$message.info('本次请求已终止');
         } else if (wasAborted) {
           console.debug('已离开正在执行的 AdminChat 任务观察。', sessionId);
         } else {
-          this.finishActiveTask('失败');
+          this.finishActiveTask('失败', sessionId);
           console.error('重新连接 AdminChat 任务失败:', error);
           this.$message.error(error.message || '重新连接任务失败');
         }
       } finally {
-        if (this.activeRequestController === controller) this.activeRequestController = null;
-        this.isStopping = false;
-        this.isSending = false;
-        this.runningSessionId = 0;
-        this.isAIResponding = false;
-        this.runningMessages = [];
+        this.releaseSessionRun(sessionId, controller);
       }
     },
 
     async sendMessage() {
-      if (this.isSending || this.workspaceUploading || this.memoryBusy || !this.memoryReady) return;
+      if (this.isCurrentSessionRunning || this.workspaceUploading || this.memoryBusy || !this.memoryReady) return;
 
       if ((!this.inputMessage || this.inputMessage.trim().length === 0) && this.pendingAttachments.length === 0) {
         this.$message.warning(ncfT('AdminChat.InputRequired'));
@@ -2504,18 +2716,24 @@ var chatApp = new Vue({
       const sendingAttachments = this.pendingAttachments.slice();
       const sendingSessionId = this.currentSessionId;
       const sendingAiModelId = this.currentSessionAiModelId;
+      const run = this.beginSessionRun(sendingSessionId, this.messageList);
       this.runningSessionId = sendingSessionId;
+      this.runningMessages = run.messages;
       this.pendingAttachments = [];
       const isFirstGeneration = !this.messageList.some((message) => message.roleType === 1);
       this.inputMessage = '';
+      if (this.$delete) this.$delete(this.sessionDrafts, sendingSessionId);
+      else delete this.sessionDrafts[sendingSessionId];
       this.isSending = true;
       this.isStopping = false;
       this.isAIResponding = true;
       this.resetLiveRun();
-      this.createRecentTask(messageContent);
+      this.bindRunLiveView(run);
+      this.createRecentTask(messageContent, sendingSessionId);
       const requestController = typeof AbortController !== 'undefined'
         ? new AbortController()
         : null;
+      run.controller = requestController;
       this.activeRequestController = requestController;
 
       // 乐观渲染：立即显示“我”的消息，避免等待接口返回期间出现空白。
@@ -2563,18 +2781,22 @@ var chatApp = new Vue({
         });
       } catch (error) {
         if (this.currentSessionId === sendingSessionId) this.pendingAttachments = sendingAttachments;
+        const owned = this.sessionRuns[sendingSessionId];
         const wasAborted = (error && error.name === 'AbortError')
           || (requestController && requestController.signal.aborted);
         const cancelled = error && error.name === 'AdminChatCancelled';
-        if (wasAborted && !this.isStopping && !cancelled) {
+        const stoppedByUser = !!(owned && owned.isStopping);
+        if (wasAborted && !stoppedByUser && !cancelled) {
           console.debug('页面离开，AdminChat 任务继续在后台执行。', sendingSessionId);
           return;
         }
+        const kept = ((owned && owned.messages) || this.runningMessages).filter((item) => item.id !== tempMessageId);
+        if (owned) owned.messages = kept;
         if (wasAborted || cancelled) {
-          this.finishActiveTask('已终止');
-          this.runningMessages = this.runningMessages.filter((item) => item.id !== tempMessageId);
+          this.finishActiveTask('已终止', sendingSessionId);
           if (this.currentSessionId === sendingSessionId) {
-            this.messageList = this.runningMessages;
+            this.runningMessages = kept;
+            this.messageList = kept;
             this.inputMessage = messageContent;
             this.restorePromptReferences('promptMessageInput', promptReferences);
             await this.loadSessionDetail(false);
@@ -2582,12 +2804,12 @@ var chatApp = new Vue({
           }
           this.$message.info('本次请求已终止');
         } else {
-          this.finishActiveTask('失败');
+          this.finishActiveTask('失败', sendingSessionId);
           console.error('发送消息异常:', error);
           this.$message.error(error.message || ncfT('AdminChat.SendFailedRetry'));
-          this.runningMessages = this.runningMessages.filter((item) => item.id !== tempMessageId);
           if (this.currentSessionId === sendingSessionId) {
-            this.messageList = this.runningMessages;
+            this.runningMessages = kept;
+            this.messageList = kept;
             this.inputMessage = messageContent;
             this.restorePromptReferences('promptMessageInput', promptReferences);
           }
@@ -2596,15 +2818,8 @@ var chatApp = new Vue({
         sendingAttachments.filter(attachment => !this.pendingAttachments.includes(attachment)).forEach(attachment => {
           if (attachment.localPreviewUrl) URL.revokeObjectURL(attachment.localPreviewUrl);
         });
-        if (this.activeRequestController === requestController) {
-          this.activeRequestController = null;
-        }
-        this.isStopping = false;
         this.markSessionUnread(sendingSessionId);
-        this.isSending = false;
-        this.runningSessionId = 0;
-        this.isAIResponding = false;
-        this.runningMessages = [];
+        this.releaseSessionRun(sendingSessionId, requestController);
       }
     },
 
@@ -2626,7 +2841,7 @@ var chatApp = new Vue({
     },
 
     promptReferenceAiScorer(message) {
-      if (this.isSending || !Number.isInteger(message.id) || message.id <= 0) return undefined;
+      if (this.isCurrentSessionRunning || !Number.isInteger(message.id) || message.id <= 0) return undefined;
       const index = this.messageList.indexOf(message);
       const next = this.messageList[index + 1];
       if (!next || next.roleType !== 1) return undefined;
@@ -2660,29 +2875,69 @@ var chatApp = new Vue({
       }
     },
 
+    sessionIdFromLocation() {
+      try {
+        if (typeof window === 'undefined' || !window.location || typeof URLSearchParams === 'undefined') return 0;
+        const params = new URLSearchParams(window.location.search || '');
+        const queryId = Number(params.get('sessionId'));
+        if (Number.isInteger(queryId) && queryId > 0) return queryId;
+        const hash = String(window.location.hash || '').match(/^#session[=-](\d+)$/i);
+        const hashId = hash ? Number(hash[1]) : 0;
+        return Number.isInteger(hashId) && hashId > 0 ? hashId : 0;
+      } catch (error) {
+        return 0;
+      }
+    },
+
+    syncAdminChatLocation() {
+      if (typeof window === 'undefined' || !window.location || !window.history
+        || typeof window.history.replaceState !== 'function' || typeof URL === 'undefined') return;
+      let url;
+      try { url = new URL(window.location.href); }
+      catch (error) { return; }
+      const sessionId = Number(this.currentSessionId) || 0;
+      if (sessionId > 0) {
+        url.searchParams.set('sessionId', String(sessionId));
+        url.searchParams.set('mode', this.chatMode === 'harness' ? '1' : '0');
+        url.hash = 'session-' + sessionId;
+      } else {
+        url.searchParams.delete('sessionId');
+        url.hash = '';
+      }
+      const next = url.pathname + url.search + url.hash;
+      const current = window.location.pathname + window.location.search + window.location.hash;
+      if (next !== current) window.history.replaceState(window.history.state, '', next);
+    },
+
     async switchSession(sessionId) {
       if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再切换会话。'); return; }
       if (this.currentSessionId === sessionId) return;
       if (!(await this.confirmDiscardWorkspaceEdit())) return;
 
+      this.rememberSessionDraft();
       this.resetWorkspacePreview();
       await this.deletePendingAttachments();
       this.clearPendingAttachments();
       this.currentSessionId = sessionId;
+      this.syncAdminChatLocation();
       this.clearSessionUnread(sessionId);
       this.currentSessionStatus = 0;
       this.resetSessionTrajectoryView();
       this.currentSessionAiModelId = this.getSessionAiModelId(sessionId);
-      this.messageList = [];
+      const attachedRun = this.showSessionRun(sessionId);
+      if (!attachedRun) {
+        this.hideForeignRunView();
+        this.messageList = [];
+      }
       this.currentSessionModules = [];
       this.currentSessionWorkflows = [];
       this.currentSessionWorkspaceId = '';
       this.currentSessionWorkspaceName = '';
       this.currentSessionWorkspaceWriteEnabled = false;
       this.currentSessionWorkspaceCliEnabled = false;
-      if (!this.isSending) this.clearRecentTasks();
+      if (!this.hasRunningSession) this.clearRecentTasks();
       this.latestUsage = this.sessionUsage[sessionId] || null;
-      this.inputMessage = '';
+      this.restoreSessionDraft(sessionId);
       this.clearMessageSelection();
       this.isManageMode = false;
       await this.loadSessionDetail();
@@ -2695,11 +2950,14 @@ var chatApp = new Vue({
     async createNewSession() {
       if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再新建会话。'); return; }
       if (!(await this.confirmDiscardWorkspaceEdit())) return;
+      this.rememberSessionDraft();
       this.resetWorkspacePreview();
       await this.deletePendingAttachments();
       this.clearPendingAttachments();
       this.launcherAiModelId = this.currentSessionAiModelId || this.launcherAiModelId || 0;
       this.currentSessionId = 0;
+      this.hideForeignRunView();
+      this.syncAdminChatLocation();
       this.currentSessionStatus = 0;
       this.resetSessionTrajectoryView();
       this.currentSessionTitle = '';
@@ -2709,7 +2967,7 @@ var chatApp = new Vue({
       this.currentSessionWorkspaceName = '';
       this.currentSessionWorkspaceWriteEnabled = false;
       this.currentSessionWorkspaceCliEnabled = false;
-      if (!this.isSending) this.clearRecentTasks();
+      if (!this.hasRunningSession) this.clearRecentTasks();
       this.latestUsage = null;
       this.messageList = [];
       this.inputMessage = '';
@@ -2878,6 +3136,7 @@ var chatApp = new Vue({
               this.clearSessionUnread(command.id);
               if (this.currentSessionId === command.id) {
                 this.currentSessionId = 0;
+                this.syncAdminChatLocation();
                 this.currentSessionStatus = 0;
                 this.messageList = [];
                 this.currentSessionTitle = '';
@@ -2955,30 +3214,43 @@ var chatApp = new Vue({
       }
       const railHeight = Math.max(container.clientHeight - 24, 24);
       const scrollHeight = Math.max(container.scrollHeight, 1);
-      const markers = messages.map((message, index) => {
+      const ratios = messages.map((message, index) => {
         const selector = `[data-message-id="${window.CSS && CSS.escape ? CSS.escape(String(message.id)) : String(message.id)}"]`;
         const element = container.querySelector(selector);
-        const ratio = element
+        return element
           ? Math.min(1, Math.max(0, element.offsetTop / scrollHeight))
           : (messages.length === 1 ? 0 : index / (messages.length - 1));
+      });
+      const edges = ratios.map(ratio => ratio * railHeight);
+      edges.push(railHeight);
+      edges[0] = 0;
+      const minHeight = Math.min(8, railHeight / messages.length);
+      for (let index = 1; index < edges.length; index++) {
+        edges[index] = Math.max(edges[index], edges[index - 1] + minHeight);
+      }
+      if (edges[edges.length - 1] > railHeight) {
+        const scale = railHeight / edges[edges.length - 1];
+        for (let index = 1; index < edges.length; index++) edges[index] *= scale;
+      }
+      edges[edges.length - 1] = railHeight;
+      for (let index = 1; index < edges.length; index++) {
+        edges[index] = Math.max(edges[index], edges[index - 1]);
+      }
+      const markers = messages.map((message, index) => {
+        const top = Math.round(edges[index]);
+        const end = index === messages.length - 1 ? railHeight : Math.round(edges[index + 1]);
         return {
           id: message.id,
           preview: this.messagePreviewText(message.content, 42),
           full: this.messagePreviewText(message.content, 180),
-          top: Math.round(ratio * Math.max(railHeight - 10, 0))
+          top: top,
+          height: Math.max(2, end - top)
         };
       });
-      const minGap = markers.length * 12 > railHeight
-        ? Math.max(8, Math.floor((railHeight - 8) / Math.max(markers.length, 1)))
-        : 12;
-      for (let index = 1; index < markers.length; index++) {
-        markers[index].top = Math.max(markers[index].top, markers[index - 1].top + minGap);
-      }
-      const last = markers[markers.length - 1];
-      const limit = Math.max(railHeight - 10, 0);
-      if (last && last.top > limit && last.top > 0) {
-        const scale = limit / last.top;
-        markers.forEach(marker => { marker.top = Math.round(marker.top * scale); });
+      const signature = markers.map(marker => marker.id + '@' + marker.top + 'x' + marker.height).join('|');
+      if (signature !== this.messageRailSignature) {
+        this.messageRailSignature = signature;
+        console.info('AdminChat message rail:', markers.length, 'segments');
       }
       this.messageRail = markers;
       this.updateActiveUserMarker();
@@ -2994,29 +3266,44 @@ var chatApp = new Vue({
         const element = container.querySelector(selector);
         if (element && element.offsetTop <= line) active = marker.id;
       });
+      if (this.messageRailActiveId === active) return;
       this.messageRailActiveId = active;
+      if (this.messageRailOpen && !this.messageRailMenuHover) this.$nextTick(() => this.scrollRailMenuToActive());
     },
 
     openMessageRail() {
       clearTimeout(this.messageRailCloseTimer);
       this.messageRailOpen = true;
-      this.$nextTick(() => this.scrollRailMenuToActive());
     },
 
     scheduleCloseMessageRail() {
       clearTimeout(this.messageRailCloseTimer);
-      this.messageRailCloseTimer = setTimeout(() => { this.messageRailOpen = false; }, 180);
+      this.messageRailCloseTimer = setTimeout(() => {
+        this.messageRailOpen = false;
+        this.messageRailMenuHover = false;
+      }, 180);
+    },
+
+    highlightRailMarker(id) {
+      clearTimeout(this.messageRailCloseTimer);
+      this.messageRailOpen = true;
+      this.messageRailMenuHover = true;
+      if (this.messageRailActiveId === id) return;
+      this.messageRailActiveId = id;
+      console.info('AdminChat rail highlight:', id);
     },
 
     focusRailMarker(id) {
+      this.messageRailMenuHover = false;
       const container = this.$refs.messagesContainer;
       const railHeight = container ? Math.max(container.clientHeight - 24, 24) : 240;
       const estimated = Math.min(360, this.messageRail.length * 36 + 12);
       const marker = this.messageRail.find(item => item.id === id);
-      const top = marker ? marker.top : 0;
-      this.messageRailMenuTop = Math.max(0, Math.min(top - 12, Math.max(railHeight - estimated, 0)));
+      const anchor = marker ? marker.top + marker.height / 2 : 0;
+      this.messageRailMenuTop = Math.max(0, Math.min(anchor - 18, Math.max(railHeight - estimated, 0)));
       this.messageRailActiveId = id;
       this.openMessageRail();
+      this.$nextTick(() => this.scrollRailMenuToActive());
     },
 
     scrollRailMenuToActive() {
