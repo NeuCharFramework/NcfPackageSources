@@ -19,7 +19,7 @@
 -----------------------------------------------------------
 
     修改标识：Senparc - 20261108
-    修改描述：v0.13.0 登录页接入滑块验证码与 IP 限流
+    修改描述：v0.13.0 登录页接入滑块验证码，登录/验证码端点统一 IP 滑动窗口限流（含文本验证码端点）
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Authentication;
@@ -382,10 +382,16 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         #endregion
 
         /// <summary>
-        /// 获取图形验证码（纯 SVG 高干扰，一次性、短时效）
+        /// 获取图形验证码（纯 SVG 高干扰，一次性、短时效）；按 IP 限流防止无限刷取逐张 OCR
         /// </summary>
         public async Task<IActionResult> OnGetCaptcha()
         {
+            var throttle = await _ipThrottle.TryConsumeAsync(GetClientIp(), LoginIpThrottleService.ActionCaptcha);
+            if (!throttle.Allowed)
+            {
+                return CreateThrottledResponse(throttle);
+            }
+
             var captcha = await _captchaService.CreateAsync();
             // 验证码一次性且时效短，禁止浏览器/代理缓存
             HttpContext.Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate";

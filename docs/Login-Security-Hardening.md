@@ -30,14 +30,15 @@
 ├────────────────────────────┤
 │ L1 IP 滑动窗口限流（本次新增） │  请求风暴 → 429 + Retry-After
 │   login  20 次 / 10 分钟/IP  │
-│   captcha 30 次 / 10 分钟/IP │
+│   captcha 30 次 / 10 分钟/IP │  （OnGetSlideCaptcha 与 OnGetCaptcha
+│                               │    两个验证码端点均接入限流）
 └────────────────────────────┘
 ```
 
 ### 2.1 L1：IP 滑动窗口限流
 
 - 新增 `Domain/Services/LoginIpThrottleService.cs`
-  - `OnPostLoginAsync` 与验证码下发端点（`OnGetCaptcha` 走既有逻辑、`OnGetSlideCaptcha` 新增）先按 IP 计数，超阈值返回 **429 + `Retry-After`**
+  - `OnPostLoginAsync` 与两个验证码下发端点（`OnGetSlideCaptcha`、`OnGetCaptcha`）先按 IP 计数，超阈值返回 **429 + `Retry-After`**
   - 窗口状态存 CO2NET 对象缓存，缓存锁内读-改-写，避免并发漂移
   - 存储抽象为 `ILoginRateLimitStore`（默认 `Co2NetLoginRateLimitStore`），单元测试可注入内存实现
 - 配置（`appsettings`，均有默认值）：
