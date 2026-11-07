@@ -258,6 +258,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.PostgreSQL
                     b.Property<bool>("Flag")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("HasUnread")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("LastMessageTime")
                         .HasColumnType("timestamp without time zone");
 

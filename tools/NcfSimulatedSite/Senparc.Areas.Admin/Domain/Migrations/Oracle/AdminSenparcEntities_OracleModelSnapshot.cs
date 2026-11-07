@@ -258,6 +258,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Oracle
                     b.Property<bool>("Flag")
                         .HasColumnType("NUMBER(1)");
 
+                    b.Property<bool>("HasUnread")
+                        .HasColumnType("NUMBER(1)");
+
                     b.Property<DateTime>("LastMessageTime")
                         .HasColumnType("TIMESTAMP(7)");
 

@@ -252,6 +252,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Dm
                     b.Property<bool>("Flag")
                         .HasColumnType("BIT");
 
+                    b.Property<bool>("HasUnread")
+                        .HasColumnType("BIT");
+
                     b.Property<DateTime>("LastMessageTime")
                         .HasColumnType("TIMESTAMP");
 

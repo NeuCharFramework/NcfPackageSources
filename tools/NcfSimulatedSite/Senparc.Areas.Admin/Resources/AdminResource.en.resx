@@ -74,7 +74,12 @@
   <data name="AdminChat.Archive.Empty" xml:space="preserve"><value>No archived conversations</value></data>
   <data name="AdminChat.Archive.Open" xml:space="preserve"><value>Open archived conversation: {0}</value></data>
   <data name="AdminChat.Archive.Delete" xml:space="preserve"><value>Delete archived conversation: {0}</value></data>
-  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>Archived. Review or delete it from the More menu beside New conversation.</value></data>
+  <data name="AdminChat.Archive.Action" xml:space="preserve"><value>Archive</value></data>
+  <data name="AdminChat.Archive.Restore" xml:space="preserve"><value>Restore</value></data>
+  <data name="AdminChat.Archive.RestoreLabel" xml:space="preserve"><value>Restore archived conversation: {0}</value></data>
+  <data name="AdminChat.Archive.RestoreSuccess" xml:space="preserve"><value>Restored to the active list</value></data>
+  <data name="AdminChat.Archive.RestoreFailed" xml:space="preserve"><value>Could not restore this conversation. Please retry.</value></data>
+  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>Archived. Review, restore, or delete it from the More menu beside New conversation.</value></data>
   <data name="AdminChat.Sidebar.Tools" xml:space="preserve"><value>More</value></data>
   <data name="AdminChat.Sidebar.Unread" xml:space="preserve"><value>Unread</value></data>
   <data name="AdminChat.Archive.Failed" xml:space="preserve"><value>Could not archive this conversation. Please retry.</value></data>

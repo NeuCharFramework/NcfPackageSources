@@ -1,4 +1,114 @@
-﻿var chatApp = new Vue({
+﻿function workspaceCodeWords(text, ignoreCase) {
+  const values = text.split(/\s+/).filter(Boolean);
+  return new Set(ignoreCase ? values.map(value => value.toLowerCase()) : values);
+}
+
+function workspaceCodeProfiles() {
+  const cLike = (keywords, ignoreCase) => ({
+    lines: ['//'], block: ['/*', '*/'], keywords: workspaceCodeWords(keywords, ignoreCase)
+  });
+  return {
+    python: {
+      lines: ['#'],
+      keywords: workspaceCodeWords('False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield')
+    },
+    javascript: cLike('async await break case catch class const continue debugger default delete do else export extends false finally for from function if import in instanceof let new null of return static super switch this throw true try typeof var void while with yield'),
+    csharp: cLike('abstract as base bool break byte case catch char checked class const continue decimal default delegate do double else enum event explicit extern false finally fixed float for foreach goto if implicit in int interface internal is lock long namespace new null object operator out override params private protected public readonly ref return sbyte sealed short sizeof stackalloc static string struct switch this throw true try typeof uint ulong unchecked unsafe ushort using virtual void volatile while'),
+    java: cLike('abstract assert boolean break byte case catch char class const continue default do double else enum extends final finally float for goto if implements import instanceof int interface long native new null package private protected public return short static strictfp super switch synchronized this throw throws transient true false try void volatile while'),
+    go: cLike('break case chan const continue default defer else fallthrough for func go goto if import interface map package range return select struct switch type var true false nil'),
+    rust: cLike('as async await break const continue crate dyn else enum extern false fn for if impl in let loop match mod move mut pub ref return self Self static struct super trait true type unsafe use where while'),
+    ruby: { lines: ['#'], keywords: workspaceCodeWords('BEGIN END alias and begin break case class def defined do else elsif end ensure false for if in module next nil not or redo rescue retry return self super then true undef unless until when while yield') },
+    php: { lines: ['//', '#'], block: ['/*', '*/'], keywords: workspaceCodeWords('abstract and array as break callable case catch class clone const continue declare default die do echo else elseif empty enddeclare endfor endforeach endif endswitch endwhile eval exit extends false final finally fn for foreach function global goto if implements include include_once instanceof insteadof interface isset list match namespace new null or print private protected public require require_once return static switch throw trait true try unset use var while xor yield') },
+    shell: { lines: ['#'], keywords: workspaceCodeWords('if then else elif fi for while do done case esac function return exit echo local export') },
+    powershell: { lines: ['#'], block: ['<#', '#>'], keywords: workspaceCodeWords('if else elseif for foreach while do until switch function return param begin process end try catch finally throw') },
+    sql: { lines: ['--'], block: ['/*', '*/'], ignoreCase: true, keywords: workspaceCodeWords('select from where and or not insert update delete create drop table join left right inner outer on group by order having limit as null is in like between distinct values set into', true) },
+    css: { block: ['/*', '*/'], keywords: new Set() },
+    json: { keywords: workspaceCodeWords('true false null') },
+    yaml: { lines: ['#'], keywords: workspaceCodeWords('true false null yes no') },
+    toml: { lines: ['#'], keywords: new Set() },
+    markup: { block: ['<!--', '-->'], keywords: new Set() },
+    lua: { lines: ['--'], block: ['--[[', ']]'], keywords: workspaceCodeWords('and break do else elseif end false for function goto if in local nil not or repeat return then true until while') },
+    plain: { keywords: new Set() }
+  };
+}
+
+function highlightWorkspaceSource(source, language) {
+  const profiles = highlightWorkspaceSource.profiles || (highlightWorkspaceSource.profiles = workspaceCodeProfiles());
+  const profile = profiles[language] || profiles.plain;
+  const text = String(source || '');
+  const parts = [];
+  const push = (chunk, cls) => {
+    if (!chunk) return;
+    const escaped = chunk.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    parts.push(cls ? `<span class="${cls}">${escaped}</span>` : escaped);
+  };
+  const isIdentStart = ch => ch === '_' || ch === '$' || (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
+  const isIdent = ch => isIdentStart(ch) || (ch >= '0' && ch <= '9');
+  const isDigit = ch => ch >= '0' && ch <= '9';
+  let i = 0;
+  while (i < text.length) {
+    const lines = profile.lines || [];
+    const line = lines.find(marker => text.startsWith(marker, i) && (marker !== '//' || i === 0 || text[i - 1] !== ':'));
+    if (line) {
+      let j = i;
+      while (j < text.length && text[j] !== '\n') j += 1;
+      push(text.slice(i, j), 'tok-comment');
+      i = j;
+      continue;
+    }
+    if (profile.block && text.startsWith(profile.block[0], i)) {
+      const close = profile.block[1];
+      const end = text.indexOf(close, i + profile.block[0].length);
+      const stop = end < 0 ? text.length : end + close.length;
+      push(text.slice(i, stop), 'tok-comment');
+      i = stop;
+      continue;
+    }
+    const quote = text[i];
+    if (quote === '"' || quote === "'" || quote === '`') {
+      const triple = quote !== '`' && text[i + 1] === quote && text[i + 2] === quote;
+      let j = i + (triple ? 3 : 1);
+      while (j < text.length) {
+        if (text[j] === '\\') { j += 2; continue; }
+        if (triple && text[j] === quote && text[j + 1] === quote && text[j + 2] === quote) { j += 3; break; }
+        if (!triple && text[j] === quote) { j += 1; break; }
+        if (!triple && quote !== '`' && text[j] === '\n') break;
+        j += 1;
+      }
+      push(text.slice(i, j), 'tok-string');
+      i = j;
+      continue;
+    }
+    if (isDigit(text[i])) {
+      let j = i + 1;
+      const hex = text[i] === '0' && (text[j] === 'x' || text[j] === 'X');
+      if (hex) j += 1;
+      while (j < text.length) {
+        const ch = text[j];
+        if (isDigit(ch) || ch === '_' || ch === '.') { j += 1; continue; }
+        if (hex && ((ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F'))) { j += 1; continue; }
+        break;
+      }
+      push(text.slice(i, j), 'tok-number');
+      i = j;
+      continue;
+    }
+    if (isIdentStart(text[i])) {
+      let j = i + 1;
+      while (j < text.length && isIdent(text[j])) j += 1;
+      const word = text.slice(i, j);
+      const lookup = profile.ignoreCase ? word.toLowerCase() : word;
+      push(word, profile.keywords.has(lookup) ? 'tok-keyword' : '');
+      i = j;
+      continue;
+    }
+    push(text[i], '');
+    i += 1;
+  }
+  return `<pre class="code-preview"><code>${parts.join('')}</code></pre>`;
+}
+
+var chatApp = new Vue({
   el: '#app',
   mixins: [window.ChatLauncherMixin],
   data() {
@@ -55,6 +165,7 @@
       archivedSessionList: [],
       sidebarToolsVisible: false,
       archivingSessionId: 0,
+      restoringSessionId: 0,
       currentSessionStatus: 0,
       messageRail: [],
       messageRailOpen: false,
@@ -73,6 +184,7 @@
       savingSessionOrder: false,
       runningSessionId: 0,
       unreadSessionIds: [],
+      unreadPersistGeneration: {},
       runningMessages: [],
       sessionUsage: {},
       sessionDetailSequence: 0,
@@ -109,6 +221,9 @@
       workspacePreviewMaxWidth: 420,
       workspacePreviewOverlay: false,
       workspacePreviewSource: false,
+      workspacePreviewEditing: false,
+      workspacePreviewDraft: '',
+      workspacePreviewSaving: false,
       pendingAttachments: [],
       workspaceUploading: false,
       workspaceUploadCapabilities: null,
@@ -154,9 +269,58 @@
       return !!this.workspacePreviewData
         && ['text/html', 'text/markdown'].includes(this.workspacePreviewData.contentType);
     },
+    workspacePreviewIsCode() {
+      const data = this.workspacePreviewData;
+      if (!data || !data.isText || this.workspacePreviewIsDocument) return false;
+      const type = data.contentType || '';
+      if (type === 'image/svg+xml' || type === 'text/plain' || type === 'text/csv') return false;
+      return type === 'application/json'
+        || type === 'text/javascript'
+        || type === 'text/typescript'
+        || type === 'text/jsx'
+        || type === 'text/css'
+        || type === 'text/xml'
+        || type === 'text/yaml'
+        || type === 'text/toml'
+        || type.indexOf('text/x-') === 0;
+    },
     workspacePreviewCanShowSource() {
       return !!this.workspacePreviewData && this.workspacePreviewData.isText
-        && (this.workspacePreviewIsDocument || this.workspacePreviewData.contentType === 'image/svg+xml');
+        && !this.workspacePreviewEditing
+        && (this.workspacePreviewIsDocument || this.workspacePreviewIsCode || this.workspacePreviewData.contentType === 'image/svg+xml');
+    },
+    workspacePreviewCanEdit() {
+      return !!this.workspacePreviewData && this.workspacePreviewData.isText && !this.workspacePreviewEditing;
+    },
+    workspacePreviewDirty() {
+      if (!this.workspacePreviewEditing || !this.workspacePreviewData) return false;
+      return this.workspacePreviewDraft !== (this.workspacePreviewData.content || '');
+    },
+    workspacePreviewFrameTitle() {
+      const type = this.workspacePreviewData && this.workspacePreviewData.contentType;
+      if (type === 'text/markdown') return 'Workspace Markdown 预览';
+      if (type === 'text/html') return 'Workspace HTML 预览';
+      if (this.workspacePreviewIsCode) return 'Workspace 代码预览';
+      return 'Workspace 预览';
+    },
+    workspaceCodeLanguage() {
+      const name = this.workspaceEntryName((this.workspacePreviewData && this.workspacePreviewData.path) || this.workspacePreviewFilePath).toLowerCase();
+      const extension = name.includes('.') ? name.slice(name.lastIndexOf('.') + 1) : name;
+      return {
+        py: 'python', pyw: 'python', pyi: 'python',
+        js: 'javascript', mjs: 'javascript', cjs: 'javascript', jsx: 'javascript',
+        ts: 'javascript', tsx: 'javascript', mts: 'javascript', cts: 'javascript', jsonc: 'javascript', json5: 'javascript',
+        cs: 'csharp', csx: 'csharp',
+        java: 'java', kt: 'java', kts: 'java', scala: 'java', gradle: 'java', dart: 'java', swift: 'java',
+        go: 'go', rs: 'rust', rb: 'ruby', php: 'php', gemfile: 'ruby', rakefile: 'ruby',
+        sh: 'shell', bash: 'shell', zsh: 'shell', bat: 'shell', cmd: 'shell', dockerfile: 'shell', makefile: 'shell', jenkinsfile: 'shell',
+        ps1: 'powershell', psm1: 'powershell',
+        sql: 'sql', css: 'css', scss: 'css', sass: 'css', less: 'css',
+        json: 'json', map: 'json', ipynb: 'json',
+        yml: 'yaml', yaml: 'yaml', toml: 'toml',
+        html: 'markup', htm: 'markup', xml: 'markup', vue: 'markup', cshtml: 'markup', razor: 'markup',
+        svg: 'markup', csproj: 'markup', lua: 'lua'
+      }[extension] || 'plain';
     },
     usageStatusText() {
       if (!this.latestUsage || !this.hasUsage(this.latestUsage)) {
@@ -241,12 +405,15 @@
     this.loadSessionList();
     this.loadArchivedSessionList();
     
-    if (this.currentSessionId > 0) {
-      this.loadSessionDetail().then(() => {
+      if (this.currentSessionId > 0) {
+      this.loadSessionDetail().then(async () => {
         this.loadTrajectoryList();
-        if (this.pendingInitialSend) {
+        await this.resumeAdminChatRun();
+        if (this.pendingInitialSend && !this.isSending) {
           this.pendingInitialSend = false;
           this.sendMessage();
+        } else {
+          this.pendingInitialSend = false;
         }
       });
     }
@@ -256,6 +423,7 @@
     clearTimeout(this.messageRailCloseTimer);
     this.workspacePreviewResizeObserver.disconnect();
     if (this.activeRequestController) {
+      // 刷新或离开页面只断开观察，不请求 cancel，服务端任务继续执行。
       this.activeRequestController.abort();
       this.activeRequestController = null;
     }
@@ -355,13 +523,62 @@
     },
     markSessionUnread(sessionId) {
       const id = Number(sessionId);
-      if (!id || id === this.currentSessionId || this.unreadSessionIds.includes(id)) return;
+      if (!id || id === this.currentSessionId || this.unreadSessionIds.includes(id)) return Promise.resolve();
       this.unreadSessionIds.push(id);
       console.info('AdminChat session unread:', id);
+      return this.persistSessionUnread(id, true);
     },
     clearSessionUnread(sessionId) {
       const id = Number(sessionId);
+      if (!id || !this.unreadSessionIds.includes(id)) return Promise.resolve();
       this.unreadSessionIds = this.unreadSessionIds.filter(item => item !== id);
+      return this.persistSessionUnread(id, false);
+    },
+    applyPersistedUnread(sessions) {
+      const current = Number(this.currentSessionId) || 0;
+      (sessions || []).forEach(session => {
+        const id = Number(session && session.id);
+        if (!id) return;
+        const unread = session.hasUnread === true || session.hasUnread === 1;
+        if (id === current) {
+          this.unreadSessionIds = this.unreadSessionIds.filter(item => item !== id);
+          if (unread) this.persistSessionUnread(id, false);
+          session.hasUnread = false;
+          return;
+        }
+        if (unread && !this.unreadSessionIds.includes(id)) this.unreadSessionIds.push(id);
+        if (!unread && this.unreadSessionIds.includes(id) && !(this.unreadPersistPending && this.unreadPersistPending[id])) {
+          this.unreadSessionIds = this.unreadSessionIds.filter(item => item !== id);
+        }
+      });
+    },
+    persistSessionUnread(sessionId, unread) {
+      const id = Number(sessionId);
+      if (!id || typeof service === 'undefined' || !service || typeof service.post !== 'function') return Promise.resolve();
+      const generation = (this.unreadPersistGeneration[id] || 0) + 1;
+      this.unreadPersistGeneration[id] = generation;
+      if (!this.unreadPersistPending) this.unreadPersistPending = {};
+      this.unreadPersistPending[id] = unread;
+      const session = (this.sessionList || []).find(item => item.id === id);
+      if (session) session.hasUnread = unread;
+      console.info('AdminChat persist unread:', id, unread);
+      return service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.SetSessionUnreadAsync', {
+        sessionId: id,
+        unread: unread
+      }).then(response => {
+        if (!(response && response.data && response.data.success)) {
+          console.error('AdminChat unread persist failed:', id, response && response.data);
+          return;
+        }
+        if (this.unreadPersistGeneration[id] !== generation) {
+          const latest = this.unreadSessionIds.includes(id);
+          if (latest !== unread) return this.persistSessionUnread(id, latest);
+          return;
+        }
+        if (this.unreadPersistPending) this.unreadPersistPending[id] = false;
+      }).catch(error => {
+        console.error('AdminChat unread persist failed:', id, error);
+      });
     },
     startSessionDrag(event, session) {
       if (this.savingSessionOrder) { event.preventDefault(); return; }
@@ -1024,9 +1241,99 @@
       }
     },
 
+    async confirmDiscardWorkspaceEdit() {
+      if (!this.workspacePreviewDirty) return true;
+      if (typeof this.$confirm !== 'function') return true;
+      try {
+        await this.$confirm('当前文件有未保存的修改，确定放弃吗？', '放弃修改', {
+          type: 'warning',
+          confirmButtonText: '放弃修改',
+          cancelButtonText: '继续编辑'
+        });
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
+
+    beginWorkspacePreviewEdit() {
+      if (!this.workspacePreviewData || !this.workspacePreviewData.isText) return;
+      this.workspacePreviewDraft = this.workspacePreviewData.content || '';
+      this.workspacePreviewEditing = true;
+      this.workspacePreviewSource = false;
+    },
+
+    cancelWorkspacePreviewEdit() {
+      this.workspacePreviewEditing = false;
+      this.workspacePreviewDraft = this.workspacePreviewData ? (this.workspacePreviewData.content || '') : '';
+    },
+
+    async closeWorkspacePreview() {
+      if (!(await this.confirmDiscardWorkspaceEdit())) return;
+      this.workspacePreviewEditing = false;
+      this.workspacePreviewOpen = false;
+    },
+
+    workspaceFileEtag(data) {
+      if (!data) return '';
+      return data.etag || data.eTag || data.Etag || '';
+    },
+
+    async applyWorkspacePreview(data) {
+      this.workspacePreviewData = data;
+      this.workspacePreviewEditing = false;
+      this.workspacePreviewDraft = data && data.isText ? (data.content || '') : '';
+      this.workspacePreviewSrcdoc = '';
+      if (!data || (!this.workspacePreviewIsDocument && !this.workspacePreviewIsCode)) return;
+      const isMarkdown = data.contentType === 'text/markdown';
+      const previewKind = this.workspacePreviewIsCode ? 'code' : '';
+      const html = isMarkdown
+        ? this.formatMessageContent(data.content || '')
+        : previewKind === 'code'
+          ? this.highlightWorkspaceCode(data.content || '', this.workspaceCodeLanguage)
+          : (data.content || '');
+      console.debug('Workspace 预览:', data.path, data.contentType, previewKind || (isMarkdown ? 'markdown' : 'document'));
+      this.workspacePreviewSrcdoc = await this.buildWorkspaceHtmlPreview(html, data.path, isMarkdown, previewKind);
+    },
+
+    highlightWorkspaceCode(source, language) {
+      return highlightWorkspaceSource(source, language);
+    },
+
+    async saveWorkspacePreview() {
+      if (!this.workspacePreviewEditing || !this.workspacePreviewFilePath || this.workspacePreviewSaving) return;
+      if (!this.workspacePreviewDirty) return;
+      this.workspacePreviewSaving = true;
+      try {
+        const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.SaveWorkspaceFileAsync', {
+          sessionId: this.currentSessionId,
+          relativePath: this.workspacePreviewFilePath,
+          content: this.workspacePreviewDraft,
+          expectedEtag: this.workspaceFileEtag(this.workspacePreviewData)
+        });
+        if (!response.data || !response.data.success || !response.data.data) {
+          throw new Error((response.data && response.data.msg) || '文件保存失败。');
+        }
+        await this.applyWorkspacePreview(response.data.data);
+        const saved = response.data.data;
+        const entry = this.workspaceEntries.find(item => item.relativePath === this.workspacePreviewFilePath);
+        if (entry && saved.size != null) entry.length = saved.size;
+        this.$message.success('文件已保存。');
+        console.debug('Workspace 文本已保存:', this.workspacePreviewFilePath, saved.size);
+      } catch (error) {
+        console.error('保存 Workspace 文件失败:', error);
+        this.$notify({ title: 'Workspace', message: error.message || '文件保存失败。', type: 'error', duration: 3000 });
+      } finally {
+        this.workspacePreviewSaving = false;
+      }
+    },
+
     async handleWorkspaceEntryClick(entry) {
       if (!entry || !entry.relativePath) return;
+      if (!entry.isDirectory && entry.relativePath === this.workspacePreviewFilePath && !this.workspacePreviewEditing) return;
+      if (!(await this.confirmDiscardWorkspaceEdit())) return;
       this.workspacePreviewSource = false;
+      this.workspacePreviewEditing = false;
       if (entry.isDirectory) {
         this.workspacePreviewFilePath = '';
         this.workspacePreviewData = null;
@@ -1046,16 +1353,7 @@
         if (!response.data || !response.data.success || !response.data.data) {
           throw new Error((response.data && response.data.msg) || '文件预览加载失败。');
         }
-        this.workspacePreviewData = response.data.data;
-        if (this.workspacePreviewIsDocument) {
-          const isMarkdown = this.workspacePreviewData.contentType === 'text/markdown';
-          this.workspacePreviewSrcdoc = await this.buildWorkspaceHtmlPreview(
-            isMarkdown
-              ? this.formatMessageContent(this.workspacePreviewData.content)
-              : this.workspacePreviewData.content,
-            this.workspacePreviewData.path,
-            isMarkdown);
-        }
+        await this.applyWorkspacePreview(response.data.data);
       } catch (error) {
         console.error('加载 Workspace 文件预览失败:', error);
         this.$notify({ title: 'Workspace', message: error.message || '文件预览加载失败。', type: 'error', duration: 3000 });
@@ -1064,7 +1362,7 @@
       }
     },
 
-    async buildWorkspaceHtmlPreview(content, filePath, isMarkdown = false) {
+    async buildWorkspaceHtmlPreview(content, filePath, isMarkdown = false, previewKind = '') {
       const parser = new DOMParser();
       const document = parser.parseFromString(content, 'text/html');
       document.querySelectorAll('script, iframe, object, embed, form, base, meta[http-equiv="refresh"]').forEach((element) => element.remove());
@@ -1130,6 +1428,16 @@
           blockquote{margin-left:0;padding-left:14px;border-left:3px solid #d8dee8;color:#667085;}
           img{max-width:100%;height:auto;}
           a{color:#5267d9;}
+        `;
+      }
+      if (previewKind === 'code') {
+        style.textContent += `
+          body{margin:0;padding:16px 18px;box-sizing:border-box;background:#fbfcfe;color:#1f2937;font:12.5px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+          pre{margin:0;white-space:pre;}
+          .tok-keyword{color:#6d28d9;font-weight:600;}
+          .tok-string{color:#0f766e;}
+          .tok-comment{color:#94a3b8;font-style:italic;}
+          .tok-number{color:#b45309;}
         `;
       }
       document.head.appendChild(style);
@@ -1220,19 +1528,18 @@
     },
 
     workspaceFileIcon(path) {
-      const extension = this.workspaceEntryName(path).split('.').pop().toLowerCase();
+      const name = this.workspaceEntryName(path).toLowerCase();
+      if (['dockerfile', 'makefile', 'jenkinsfile'].includes(name)) return 'fa fa-file-code-o';
+      const extension = name.split('.').pop();
+      const code = 'fa fa-file-code-o';
+      const text = 'fa fa-file-text-o';
+      const image = 'fa fa-file-image-o';
       return {
-        html: 'fa fa-file-code-o',
-        htm: 'fa fa-file-code-o',
-        css: 'fa fa-file-code-o',
-        js: 'fa fa-file-code-o',
-        json: 'fa fa-file-text-o',
-        md: 'fa fa-file-text-o',
-        png: 'fa fa-file-image-o',
-        jpg: 'fa fa-file-image-o',
-        jpeg: 'fa fa-file-image-o',
-        gif: 'fa fa-file-image-o',
-        svg: 'fa fa-file-image-o'
+        html: code, htm: code, css: code, scss: code, js: code, jsx: code, ts: code, tsx: code,
+        py: code, pyw: code, cs: code, java: code, go: code, rs: code, php: code, rb: code,
+        sh: code, sql: code, vue: code, xml: code,
+        json: text, yml: text, yaml: text, md: text, txt: text, log: text, csv: text,
+        png: image, jpg: image, jpeg: image, gif: image, svg: image, webp: image
       }[extension] || 'fa fa-file-o';
     },
 
@@ -1672,6 +1979,7 @@
           totalCount = data.totalCount;
         } while (sessions.length < totalCount);
         this.sessionList = Array.from(new Map(sessions.map(session => [session.id, session])).values());
+        this.applyPersistedUnread(this.sessionList);
       } catch (error) {
         console.error('加载会话列表异常:', error);
         this.$message.error(ncfT('AdminChat.LoadSessionFailed'));
@@ -1742,6 +2050,34 @@
       if (session) this.handleSessionCommand({ action: 'delete', id: session.id });
     },
 
+    async restoreArchivedSession(session) {
+      if (!session || this.restoringSessionId) return;
+      this.restoringSessionId = session.id;
+      try {
+        const response = await service.post('/api/Senparc.Areas.Admin/AdminChatAppService/Areas.Admin_AdminChatAppService.RestoreSessionAsync', {
+          sessionId: session.id
+        });
+        if (!(response.data && response.data.success)) {
+          throw new Error(response.data && response.data.errorMessage || ncfT('AdminChat.Archive.RestoreFailed'));
+        }
+        console.info('AdminChat session restored:', session.id);
+        this.archivedSessionList = this.archivedSessionList.filter(item => item.id !== session.id);
+        if (!this.sessionList.some(item => item.id === session.id)) {
+          this.sessionList.push({ ...session, status: 0 });
+        }
+        if (this.currentSessionId === session.id) this.currentSessionStatus = 0;
+        this.sidebarToolsVisible = false;
+        this.$message.success(ncfT('AdminChat.Archive.RestoreSuccess'));
+      } catch (error) {
+        console.error('还原会话异常:', error);
+        this.$message.error(ncfT('AdminChat.Archive.RestoreFailed'));
+        await this.loadSessionList();
+        await this.loadArchivedSessionList();
+      } finally {
+        this.restoringSessionId = 0;
+      }
+    },
+
     async loadSessionDetail(preserveRunningMessages = true) {
       if (!this.currentSessionId) return;
 
@@ -1765,6 +2101,10 @@
           this.currentSessionWorkspaceName = session.workspaceName || '';
           this.currentSessionWorkspaceWriteEnabled = !!session.workspaceWriteEnabled;
           this.currentSessionWorkspaceCliEnabled = !!session.workspaceCliEnabled;
+          if (session.hasUnread && sessionId === this.currentSessionId) {
+            this.unreadSessionIds = this.unreadSessionIds.filter(item => item !== sessionId);
+            this.persistSessionUnread(sessionId, false);
+          }
           this.currentSessionAiModelId = this.getSessionAiModelId(this.currentSessionId);
           this.clearMessageSelection();
           this.isManageMode = false;
@@ -1865,6 +2205,19 @@
 
     handleLiveStreamEvent(eventName, payload, tempMessageId, sessionId = this.runningSessionId) {
       if (sessionId !== this.runningSessionId) return;
+      if (eventName === 'resume') {
+        this.liveAssistantText = payload && payload.text ? payload.text : '';
+        this.liveThinkingText = payload && payload.thinking ? payload.thinking : '';
+        this.liveStatusText = payload && payload.status ? payload.status : '任务仍在执行…';
+        this.updateActiveTask({ preview: this.liveAssistantText, status: '执行中' });
+        this.scrollLivePreviewToBottom();
+        return;
+      }
+      if (eventName === 'cancelled') {
+        const cancelled = new Error(payload && payload.message ? payload.message : '本次请求已终止');
+        cancelled.name = 'AdminChatCancelled';
+        throw cancelled;
+      }
       if (eventName === 'user-message') {
         const tempIndex = this.runningMessages.findIndex((item) => item.id === tempMessageId);
         if (tempIndex >= 0 && payload) {
@@ -1988,17 +2341,19 @@
       }
     },
 
-    async consumeAdminChatStream(requestData, tempMessageId, signal) {
-      const response = await fetch('/api/Senparc.Areas.Admin/AdminChatStream/send', {
-        method: 'POST',
+    async consumeAdminChatStream(requestData, tempMessageId, signal, streamUrl) {
+      const attached = !!streamUrl;
+      const response = await fetch(streamUrl || '/api/Senparc.Areas.Admin/AdminChatStream/send', {
+        method: attached ? 'GET' : 'POST',
         credentials: 'same-origin',
         headers: {
           'Content-Type': 'application/json',
           'X-Requested-With': 'XMLHttpRequest'
         },
-        body: JSON.stringify(requestData),
+        body: attached ? undefined : JSON.stringify(requestData),
         signal
       });
+      if (response.status === 204) return;
       if (!response.ok || !response.body) {
         const data = (response.headers.get('content-type') || '').includes('json') ? await response.json() : null;
         throw new Error((data && (data.errorMessage || data.message || data.title)) || `流式接口请求失败 (${response.status})`);
@@ -2043,11 +2398,91 @@
       if (!streamDone) throw new Error('流式接口未正常结束');
     },
 
-    stopCurrentRequest() {
+    async stopCurrentRequest() {
       if (!this.activeRequestController || !this.isCurrentSessionRunning) return;
 
       this.isStopping = true;
-      this.activeRequestController.abort();
+      const sessionId = this.runningSessionId;
+      if (typeof fetch === 'function') {
+        try {
+          await fetch(`/api/Senparc.Areas.Admin/AdminChatStream/cancel?sessionId=${sessionId}`, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+          });
+          console.debug('AdminChat 已请求停止后台任务:', sessionId);
+        } catch (error) {
+          console.error('停止后台任务失败:', error);
+        }
+      }
+      if (this.activeRequestController) this.activeRequestController.abort();
+    },
+
+    async resumeAdminChatRun() {
+      const sessionId = this.currentSessionId;
+      if (!sessionId || this.isSending || typeof fetch !== 'function') return;
+      let status;
+      try {
+        const response = await fetch(`/api/Senparc.Areas.Admin/AdminChatStream/status?sessionId=${sessionId}`, {
+          credentials: 'same-origin',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+        if (!response.ok) return;
+        status = await response.json();
+      } catch (error) {
+        console.error('读取 AdminChat 任务状态失败:', error);
+        return;
+      }
+      if (!status || this.currentSessionId !== sessionId) return;
+      if (status.justFinished) {
+        console.debug('AdminChat 任务刚在后台完成，刷新消息。', sessionId);
+        await this.loadSessionDetail(false);
+      }
+      if (!status.running || this.currentSessionId !== sessionId || this.isSending) return;
+      console.debug('AdminChat 任务仍在后台执行，重新连接。', sessionId, status.status || '');
+      this.runningSessionId = sessionId;
+      this.isSending = true;
+      this.isAIResponding = true;
+      this.isStopping = false;
+      this.resetLiveRun();
+      this.liveAssistantText = status.text || '';
+      this.liveThinkingText = status.thinking || '';
+      this.liveStatusText = status.status || '任务仍在执行…';
+      this.createRecentTask(status.text || '继续执行未完成的任务');
+      this.runningMessages = this.messageList;
+      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      this.activeRequestController = controller;
+      try {
+        await this.consumeAdminChatStream(
+          { sessionId },
+          null,
+          controller ? controller.signal : undefined,
+          `/api/Senparc.Areas.Admin/AdminChatStream/attach?sessionId=${sessionId}`);
+        if (this.currentSessionId === sessionId) await this.loadSessionDetail(false);
+        this.finishActiveTask('已完成');
+      } catch (error) {
+        const wasAborted = (error && error.name === 'AbortError')
+          || (controller && controller.signal.aborted);
+        const cancelled = error && error.name === 'AdminChatCancelled';
+        if (cancelled || (wasAborted && this.isStopping)) {
+          this.finishActiveTask('已终止');
+          if (this.currentSessionId === sessionId) await this.loadSessionDetail(false);
+          this.$message.info('本次请求已终止');
+        } else if (wasAborted) {
+          console.debug('已离开正在执行的 AdminChat 任务观察。', sessionId);
+        } else {
+          this.finishActiveTask('失败');
+          console.error('重新连接 AdminChat 任务失败:', error);
+          this.$message.error(error.message || '重新连接任务失败');
+        }
+      } finally {
+        if (this.activeRequestController === controller) this.activeRequestController = null;
+        this.isStopping = false;
+        this.isSending = false;
+        this.runningSessionId = 0;
+        this.isAIResponding = false;
+        this.runningMessages = [];
+      }
     },
 
     async sendMessage() {
@@ -2130,7 +2565,12 @@
         if (this.currentSessionId === sendingSessionId) this.pendingAttachments = sendingAttachments;
         const wasAborted = (error && error.name === 'AbortError')
           || (requestController && requestController.signal.aborted);
-        if (wasAborted) {
+        const cancelled = error && error.name === 'AdminChatCancelled';
+        if (wasAborted && !this.isStopping && !cancelled) {
+          console.debug('页面离开，AdminChat 任务继续在后台执行。', sendingSessionId);
+          return;
+        }
+        if (wasAborted || cancelled) {
           this.finishActiveTask('已终止');
           this.runningMessages = this.runningMessages.filter((item) => item.id !== tempMessageId);
           if (this.currentSessionId === sendingSessionId) {
@@ -2223,6 +2663,7 @@
     async switchSession(sessionId) {
       if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再切换会话。'); return; }
       if (this.currentSessionId === sessionId) return;
+      if (!(await this.confirmDiscardWorkspaceEdit())) return;
 
       this.resetWorkspacePreview();
       await this.deletePendingAttachments();
@@ -2245,11 +2686,15 @@
       this.clearMessageSelection();
       this.isManageMode = false;
       await this.loadSessionDetail();
-      if (this.currentSessionId === sessionId) await this.loadTrajectoryList();
+      if (this.currentSessionId === sessionId) {
+        await this.loadTrajectoryList();
+        await this.resumeAdminChatRun();
+      }
     },
 
     async createNewSession() {
       if (this.workspaceUploading) { this.$message.warning('请等待附件上传完成后再新建会话。'); return; }
+      if (!(await this.confirmDiscardWorkspaceEdit())) return;
       this.resetWorkspacePreview();
       await this.deletePendingAttachments();
       this.clearPendingAttachments();
@@ -2279,6 +2724,9 @@
     resetWorkspacePreview() {
       this.workspacePreviewOpen = false;
       this.workspacePreviewSource = false;
+      this.workspacePreviewEditing = false;
+      this.workspacePreviewDraft = '';
+      this.workspacePreviewSaving = false;
       this.workspacePreviewOverlay = false;
       this.workspaceShareDialogVisible = false;
       this.workspaceShares = [];
@@ -2410,6 +2858,11 @@
     },
 
     async handleSessionCommand(command) {
+      if (command.action === 'archive') {
+        const session = this.sessionList.find(item => item.id === command.id);
+        if (session) await this.archiveSession(session);
+        return;
+      }
       if (command.action === 'delete') {
         this.$confirm(ncfT('AdminChat.DeleteConfirm'), ncfT('AdminChat.DeleteConfirmTitle'), {
           confirmButtonText: ncfT('Common.确认'),

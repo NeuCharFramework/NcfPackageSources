@@ -1761,6 +1761,8 @@
     padding: 0 10px 0 14px;
     color: #596273;
     font-size: 11px;
+    flex-wrap: wrap;
+    row-gap: 2px;
 }
 
 .chat-workspace-file-preview-header > span:first-child {
@@ -1796,7 +1798,8 @@
     object-fit: contain;
 }
 
-.chat-workspace-text-preview {
+.chat-workspace-text-preview,
+.chat-workspace-text-editor {
     min-height: 0;
     flex: 1;
     margin: 0;
@@ -1807,6 +1810,21 @@
     font: 12px/1.65 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
+}
+
+.chat-workspace-text-editor {
+    width: 100%;
+    border: 0;
+    resize: none;
+    outline: none;
+    background: #fff;
+    color: #1f2937;
+    white-space: pre;
+    overflow-wrap: normal;
+}
+
+.chat-workspace-text-editor:focus {
+    box-shadow: inset 0 0 0 1px #d6def8;
 }
 
 body.is-resizing-workspace-preview {
@@ -2526,41 +2544,6 @@ body.is-resizing-chat-sidebar iframe {
 .session-item:hover .session-drag-handle,
 .session-drag-handle:focus-visible {
     opacity: 1;
-}
-
-.session-archive-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    margin-right: 2px;
-    padding: 0;
-    border: 0;
-    border-radius: 6px;
-    background: transparent;
-    color: #67c23a;
-    cursor: pointer;
-    opacity: 0;
-}
-
-.session-item:hover .session-archive-button,
-.session-item.active .session-archive-button,
-.session-archive-button:focus-visible {
-    opacity: 1;
-}
-
-.session-archive-button:hover,
-.session-archive-button:focus-visible {
-    color: #3d9a4a;
-    background: #eef8f0;
-}
-
-.session-archive-button:disabled {
-    color: #c5ccd6;
-    cursor: not-allowed;
-    background: transparent;
 }
 
 .session-drag-handle:disabled {
@@ -3746,6 +3729,7 @@ body.is-resizing-chat-sidebar iframe {
 }
 
 .chat-archive-open,
+.chat-archive-restore,
 .chat-archive-delete {
     border: 0;
     background: transparent;
@@ -3783,12 +3767,28 @@ body.is-resizing-chat-sidebar iframe {
     font-size: 11px;
 }
 
+.chat-archive-restore,
 .chat-archive-delete {
     width: 28px;
     height: 28px;
-    margin-right: 4px;
     border-radius: 6px;
     color: #b0b7c3;
+}
+
+.chat-archive-delete {
+    margin-right: 4px;
+}
+
+.chat-archive-restore:hover,
+.chat-archive-restore:focus-visible {
+    color: #3d6bff;
+    background: #eef2ff;
+    outline: none;
+}
+
+.chat-archive-restore:disabled {
+    color: #c5ccd6;
+    cursor: wait;
 }
 
 .chat-archive-delete:hover,

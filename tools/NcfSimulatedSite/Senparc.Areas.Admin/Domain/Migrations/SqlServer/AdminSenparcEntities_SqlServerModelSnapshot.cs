@@ -258,6 +258,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.SqlServer
                     b.Property<bool>("Flag")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("HasUnread")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("LastMessageTime")
                         .HasColumnType("datetime2");
 

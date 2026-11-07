@@ -69,6 +69,7 @@ async page => {
         window.service = {
             async post(url, data) {
                 sidebarRequests.push(data);
+                if (!String(url).includes('ReorderSessionAsync')) return { data: { success: true } };
                 const group = sidebarTestApp.groupedSessionList.find(group => group.sessions.some(s => s.id === data.sessionId));
                 const sessions = group.sessions.slice();
                 const index = sessions.findIndex(s => s.id === data.sessionId);
@@ -147,7 +148,9 @@ async page => {
     check(await running.evaluate(el => getComputedStyle(el, '::before').animationName) === 'chat-session-flow', 'Running rail must animate');
     check((await running.evaluate(el => getComputedStyle(el, '::before').backgroundImage)).includes('rgb(255, 61, 138)'), 'Running rail uses a distinct neon color');
     check((await running.evaluate(el => getComputedStyle(el, '::before').boxShadow)) !== 'none', 'Running rail keeps a visible glow');
-    check(await running.locator('.session-archive-button').isDisabled(), 'Running session cannot be archived');
+    await running.locator('.session-actions').click();
+    check((await page.locator('.el-dropdown-menu__item:visible').filter({ hasText: 'AdminChat.Archive.Action' }).getAttribute('class')).includes('is-disabled'), 'Running session cannot be archived from the menu');
+    await page.keyboard.press('Escape');
     await page.emulateMedia({ reducedMotion: 'reduce' });
     check(await running.evaluate(el => getComputedStyle(el, '::before').animationName) === 'none', 'Respect reduced motion');
     await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -164,10 +167,10 @@ async page => {
     if (await group.locator('.session-group-title').getAttribute('aria-expanded') === 'false') {
         await group.locator('.session-group-title').click();
     }
-    await page.evaluate(() => {
+    await page.evaluate(async () => {
         sidebarTestApp.currentSessionId = 1;
-        sidebarTestApp.markSessionUnread(1);
-        sidebarTestApp.markSessionUnread(3);
+        await sidebarTestApp.markSessionUnread(1);
+        await sidebarTestApp.markSessionUnread(3);
     });
     const unread = group.locator('.session-item.is-unread');
     check(await unread.count() === 1, 'Only a background session becomes unread');
@@ -175,6 +178,9 @@ async page => {
     check((await unread.locator('.session-unread-status').textContent()).trim() === 'AdminChat.Sidebar.Unread', 'Unread session shows a readable label');
     check(await unread.evaluate(el => getComputedStyle(el, '::before').animationName) === 'chat-session-unread', 'Unread rail breathes');
     check((await unread.evaluate(el => getComputedStyle(el, '::before').backgroundColor)).includes('34, 197, 94'), 'Unread rail is green');
+    check(await page.evaluate(() => sidebarRequests.some(item => item.sessionId === 3 && item.unread === true)
+        && !sidebarRequests.some(item => item.sessionId === 1 && Object.prototype.hasOwnProperty.call(item, 'unread'))),
+        'Unread state is saved for the background session');
     await page.evaluate(() => sidebarTestApp.clearSessionUnread(3));
     check(await page.locator('.is-unread').count() === 0, 'Opening the finished session clears the unread reminder');
     await page.evaluate(() => {
@@ -184,13 +190,19 @@ async page => {
                 sidebarRequests.push({ archive: data.sessionId });
                 return { data: { success: true } };
             }
+            if (String(url).includes('RestoreSessionAsync')) {
+                sidebarRequests.push({ restore: data.sessionId });
+                return { data: { success: true } };
+            }
             return reorder(url, data);
         };
     });
     const beta = page.locator('.session-item').filter({ hasText: 'Beta first' });
     await beta.hover();
-    check(await beta.locator('.el-dropdown').count() === 1, 'Active sessions keep the original delete menu');
-    await beta.locator('.session-archive-button').click();
+    check(await page.locator('.session-archive-button').count() === 0, 'Archive is kept inside the session menu');
+    check(await beta.locator('.el-dropdown').count() === 1, 'Active sessions keep the original menu');
+    await beta.locator('.session-actions').click();
+    await page.locator('.el-dropdown-menu__item:visible').filter({ hasText: 'AdminChat.Archive.Action' }).click();
     check(await page.locator('.session-title', { hasText: 'Beta first' }).count() === 0, 'Archived session leaves the sidebar');
     check(await page.evaluate(() => sidebarTestApp.archivedSessionList.some(session => session.title === 'Beta first' && session.status === 1)), 'Archived session stays available in the sidebar menu');
     await page.locator('.sidebar-tools-trigger').click();
@@ -198,6 +210,9 @@ async page => {
     const archivedItem = page.locator('.chat-archive-open').filter({ hasText: 'Beta first' });
     check(await archivedItem.isVisible(), 'More menu lists the archived session');
     check(await page.locator('.chat-archive-item').filter({ hasText: 'Beta first' }).locator('.chat-archive-delete').isVisible(), 'More menu can delete an archived session');
+    await page.locator('.chat-archive-item').filter({ hasText: 'Beta first' }).locator('.chat-archive-restore').click();
+    check(await page.locator('.session-title', { hasText: 'Beta first' }).count() === 1, 'Restore returns the archived session to the active list');
+    check(await page.locator('.chat-archive-open', { hasText: 'Beta first' }).count() === 0, 'Restored session leaves the archive menu');
     check(await page.locator('.chat-archive-trigger').count() === 0, 'Archived conversations stay out of the chat header');
     check(failures.length === 0, 'Browser errors: ' + failures.join('; '));
     return 'Sidebar browser checks passed: collapse, resize, ordering, session-isolated thinking/trajectory panels, preserved live progress, activity and reduced motion.';

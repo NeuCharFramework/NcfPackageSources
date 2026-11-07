@@ -243,6 +243,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.Sqlite
                     b.Property<bool>("Flag")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("HasUnread")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("LastMessageTime")
                         .HasColumnType("TEXT");
 

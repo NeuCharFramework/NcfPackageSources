@@ -79,6 +79,13 @@
                                             <span>{{ session.title }}</span>
                                             <small>{{ formatTime(session.lastMessageTime) }}</small>
                                         </button>
+                                        <button type="button" class="chat-archive-restore"
+                                                :disabled="restoringSessionId === session.id"
+                                                :title="ncfT('AdminChat.Archive.Restore')"
+                                                :aria-label="ncfT('AdminChat.Archive.RestoreLabel', session.title)"
+                                                @@click="restoreArchivedSession(session)">
+                                            <i class="fa fa-undo" aria-hidden="true"></i>
+                                        </button>
                                         <button type="button" class="chat-archive-delete" :title="ncfT('Common.删除')"
                                                 :aria-label="ncfT('AdminChat.Archive.Delete', session.title)"
                                                 @@click="deleteArchivedSession(session)">
@@ -144,18 +151,16 @@
                             <div v-else-if="isSessionUnread(session)" class="session-unread-status" role="status">{{ ncfT('AdminChat.Sidebar.Unread') }}</div>
                             <div v-else class="session-time">{{ formatTime(session.lastMessageTime) }}</div>
                         </div>
-                        <button type="button" class="session-archive-button"
-                                :disabled="isSessionRunning(session) || archivingSessionId === session.id"
-                                :title="ncfT(isSessionRunning(session) ? 'AdminChat.Sidebar.ArchiveRunning' : 'AdminChat.Sidebar.Archive')"
-                                :aria-label="ncfT('AdminChat.Sidebar.Archive')"
-                                @@click.stop="archiveSession(session)">
-                            <i class="el-icon-check" aria-hidden="true"></i>
-                        </button>
                         <el-dropdown trigger="click" @@command="handleSessionCommand">
                             <span class="session-actions" @@click.stop>
                                 <i class="el-icon-more"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item :command="{action: 'archive', id: session.id}"
+                                                  :disabled="isSessionRunning(session) || !!archivingSessionId"
+                                                  :title="ncfT(isSessionRunning(session) ? 'AdminChat.Sidebar.ArchiveRunning' : 'AdminChat.Sidebar.Archive')">
+                                    <i class="el-icon-check"></i> {{ ncfT('AdminChat.Archive.Action') }}
+                                </el-dropdown-item>
                                 <el-dropdown-item :command="{action: 'delete', id: session.id}">
                                     <i class="fa fa-trash"></i> @AR["Common.删除"]
                                 </el-dropdown-item>
@@ -936,7 +941,7 @@
                         @@click="expandWorkspacePreview">
                         <i class="el-icon-full-screen"></i>
                     </el-button>
-                    <el-button type="text" size="mini" title="关闭资产面板" @@click="workspacePreviewOpen = false">
+                    <el-button type="text" size="mini" title="关闭资产面板" @@click="closeWorkspacePreview">
                         <i class="el-icon-close"></i>
                     </el-button>
                 </div>
@@ -1002,6 +1007,36 @@
                             <i class="el-icon-download"></i>
                         </el-button>
                         <el-button
+                            v-if="workspacePreviewCanEdit"
+                            type="text"
+                            size="mini"
+                            title="编辑"
+                            aria-label="编辑文件"
+                            @@click="beginWorkspacePreviewEdit">
+                            <i class="el-icon-edit"></i>
+                        </el-button>
+                        <el-button
+                            v-if="workspacePreviewEditing"
+                            type="text"
+                            size="mini"
+                            title="保存"
+                            aria-label="保存文件"
+                            :loading="workspacePreviewSaving"
+                            :disabled="!workspacePreviewDirty"
+                            @@click="saveWorkspacePreview">
+                            <i class="el-icon-check"></i>
+                        </el-button>
+                        <el-button
+                            v-if="workspacePreviewEditing"
+                            type="text"
+                            size="mini"
+                            title="取消编辑"
+                            aria-label="取消编辑"
+                            @@click="cancelWorkspacePreviewEdit">
+                            <i class="el-icon-refresh-left"></i>
+                        </el-button>
+                        <el-tag v-if="workspacePreviewDirty" size="mini" type="warning">未保存</el-tag>
+                        <el-button
                             v-if="workspacePreviewCanShowSource"
                             type="text"
                             size="mini"
@@ -1016,13 +1051,21 @@
                     <div v-if="workspacePreviewLoading" class="chat-workspace-preview-loading">
                         <i class="el-icon-loading"></i> 正在加载预览…
                     </div>
+                    <textarea
+                        v-else-if="workspacePreviewEditing"
+                        v-model="workspacePreviewDraft"
+                        class="chat-workspace-text-editor"
+                        spellcheck="false"
+                        :aria-label="'编辑 ' + workspaceEntryName(workspacePreviewFilePath)"
+                        @@keydown.ctrl.s.prevent="saveWorkspacePreview"
+                        @@keydown.meta.s.prevent="saveWorkspacePreview"></textarea>
                     <pre v-else-if="workspacePreviewData && workspacePreviewSource && workspacePreviewData.isText" class="chat-workspace-text-preview">{{ workspacePreviewData.content }}</pre>
                     <iframe
-                        v-else-if="workspacePreviewIsDocument"
+                        v-else-if="workspacePreviewIsDocument || workspacePreviewIsCode"
                         class="chat-workspace-html-frame"
                         sandbox="allow-same-origin"
                         :srcdoc="workspacePreviewSrcdoc"
-                        :title="workspacePreviewData.contentType === 'text/markdown' ? 'Workspace Markdown 预览' : 'Workspace HTML 预览'"></iframe>
+                        :title="workspacePreviewFrameTitle"></iframe>
                     <div v-else-if="workspacePreviewData && workspacePreviewData.contentType.indexOf('image/') === 0" class="chat-workspace-image-preview">
                         <img :src="workspacePreviewDataUrl()" :alt="workspacePreviewFilePath" />
                     </div>
