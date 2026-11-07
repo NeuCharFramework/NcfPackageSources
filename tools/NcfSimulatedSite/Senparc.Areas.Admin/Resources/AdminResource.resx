@@ -74,7 +74,12 @@
   <data name="AdminChat.Archive.Empty" xml:space="preserve"><value>还没有归档会话</value></data>
   <data name="AdminChat.Archive.Open" xml:space="preserve"><value>打开归档会话：{0}</value></data>
   <data name="AdminChat.Archive.Delete" xml:space="preserve"><value>删除归档会话：{0}</value></data>
-  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>已归档。可从左侧「新对话」旁的更多菜单查看或删除</value></data>
+  <data name="AdminChat.Archive.Action" xml:space="preserve"><value>归档</value></data>
+  <data name="AdminChat.Archive.Restore" xml:space="preserve"><value>还原</value></data>
+  <data name="AdminChat.Archive.RestoreLabel" xml:space="preserve"><value>还原归档会话：{0}</value></data>
+  <data name="AdminChat.Archive.RestoreSuccess" xml:space="preserve"><value>已还原到进行中的会话</value></data>
+  <data name="AdminChat.Archive.RestoreFailed" xml:space="preserve"><value>还原失败，请重试</value></data>
+  <data name="AdminChat.Archive.Success" xml:space="preserve"><value>已归档。可从左侧「新对话」旁的更多菜单查看、还原或删除</value></data>
   <data name="AdminChat.Sidebar.Tools" xml:space="preserve"><value>更多</value></data>
   <data name="AdminChat.Sidebar.Unread" xml:space="preserve"><value>未读</value></data>
   <data name="AdminChat.Archive.Failed" xml:space="preserve"><value>归档失败，请重试</value></data>

@@ -301,6 +301,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
             gap: 8px;
         }
 
@@ -465,7 +466,7 @@
         <div slot="header" class="wx-table-head">
             <div>
                 <div class="wx-panel-title">
-                    <i class="fa fa-random"></i>
+                    <i class="fa fa-list"></i>
                     <span>可用 Workflow</span>
                 </div>
                 <p>按当前管理员 Id @Model.PageData.WorkflowUserId 查询。手机发送「获取 Workflow 列表」会得到同一份结果。</p>

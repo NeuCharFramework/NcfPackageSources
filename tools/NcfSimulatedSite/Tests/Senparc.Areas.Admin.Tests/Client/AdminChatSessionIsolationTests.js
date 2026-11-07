@@ -9,7 +9,7 @@ let options;
 const sandbox = {
     Vue: function(value) { options = value; },
     window: { ChatLauncherMixin: {} },
-    console: { error() {} },
+    console: { error() {}, info() {}, debug() {}, log() {} },
     ncfT: key => key,
     AbortController, TextDecoder, Uint8Array,
     service: {}

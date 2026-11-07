@@ -22,6 +22,9 @@
     修改标识：Senparc - 20261106
     修改描述：归档会话只从进行中列表移出，并支持单独查询
 
+    修改标识：Senparc - 20261106
+    修改描述：按账号持久化会话未读提醒
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -188,6 +191,20 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
+        /// 保存会话未读状态。只允许会话所属用户修改，已删除会话不再提醒。
+        /// </summary>
+        public async Task<bool> SetSessionUnreadAsync(int sessionId, int userId, bool unread)
+        {
+            var session = await GetSessionByIdAsync(sessionId, userId);
+            if (session == null || session.Status == ChatSessionStatus.Deleted) return false;
+            if (session.HasUnread == unread) return true;
+
+            session.SetUnread(unread);
+            await base.SaveObjectAsync(session);
+            return true;
+        }
+
+        /// <summary>
         /// 删除会话（软删除）
         /// </summary>
         public async Task<bool> DeleteSessionAsync(int sessionId, int userId)
@@ -201,12 +218,13 @@ namespace Senparc.Areas.Admin.Domain.Services
         }
 
         /// <summary>
-        /// 恢复已删除的会话
+        /// 将已归档会话还原为进行中。已删除会话不能还原。
         /// </summary>
         public async Task<bool> RestoreSessionAsync(int sessionId, int userId)
         {
-            var session = await base.GetObjectAsync(s => s.Id == sessionId && s.UserId == userId);
-            if (session == null) return false;
+            var session = await GetSessionByIdAsync(sessionId, userId);
+            if (session == null || session.Status == ChatSessionStatus.Deleted) return false;
+            if (session.Status == ChatSessionStatus.Active) return true;
 
             session.Restore();
             await base.SaveObjectAsync(session);

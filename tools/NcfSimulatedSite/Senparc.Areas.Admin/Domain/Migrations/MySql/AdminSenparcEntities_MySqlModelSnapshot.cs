@@ -258,6 +258,9 @@ namespace Senparc.Areas.Admin.Domain.Migrations.MySql
                     b.Property<bool>("Flag")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("HasUnread")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime>("LastMessageTime")
                         .HasColumnType("datetime(6)");
 
