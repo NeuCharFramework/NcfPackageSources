@@ -611,6 +611,242 @@ li {
     background: #fff;
 }
 
+.ncf-admin-tabbed.ncf-admin-embedded .admin-content {
+    min-height: 0;
+    padding: 18px 20px 20px;
+    background: #f5f7fa;
+    box-sizing: border-box;
+}
+
+/* 标签里的 AdminChat 必须占满框架剩余高度，消息在对话区内部滚动。 */
+.ncf-admin-tabbed.ncf-admin-embedded .admin-content:has(.admin-chat-container) {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    background: #f6f7f9;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .admin-content:has(.admin-chat-container) > .ifram-wrapper {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .admin-chat-container {
+    flex: 1 1 auto;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    overflow: hidden;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .admin-chat-container .chat-main-container,
+.ncf-admin-tabbed.ncf-admin-embedded .admin-chat-container .chat-content,
+.ncf-admin-tabbed.ncf-admin-embedded .admin-chat-container .chat-sidebar,
+.ncf-admin-tabbed.ncf-admin-embedded .admin-chat-container .messages-stage,
+.ncf-admin-tabbed.ncf-admin-embedded .admin-chat-container .messages-container,
+.ncf-admin-tabbed.ncf-admin-embedded .admin-chat-container .session-list {
+    min-height: 0;
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.admin-header .header-menu,
+.admin-header .header-breadcrumb,
+.admin-header .header-account,
+.admin-header .header-language,
+.admin-header .ncf-doc-help-header {
+    float: none;
+}
+
+.admin-header .header-menu {
+    flex: 0 0 auto;
+    height: auto;
+    margin-right: 0;
+}
+
+.admin-header .header-breadcrumb {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: auto;
+}
+
+.admin-header .el-breadcrumb {
+    line-height: 1.4;
+}
+
+.admin-header .header-tools {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.admin-header .header-account,
+.admin-header .header-language {
+    height: auto;
+    margin-right: 0;
+    line-height: 1;
+}
+
+.admin-header .header-account .el-dropdown-link {
+    height: auto;
+}
+
+.admin-header .ncf-doc-help-header {
+    margin-top: 0;
+}
+
+.admin-page-tabs {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.admin-page-tabs-scroller {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.admin-page-tabs-scroller::-webkit-scrollbar {
+    display: none;
+    height: 0;
+}
+
+.admin-page-tabs-arrow {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    color: #606266;
+    background: #fff;
+    border: 1px solid #dcdfe6;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.admin-page-tabs-arrow:hover,
+.admin-page-tabs-arrow:focus {
+    color: #667eea;
+    border-color: #c5cef8;
+    outline: none;
+}
+
+.admin-page-tabs-arrow:disabled {
+    color: #c0c4cc;
+    background: #f5f7fa;
+    cursor: default;
+}
+
+.admin-page-tab {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    max-width: 168px;
+    height: 30px;
+    color: #606266;
+    background: #f5f7fa;
+    border: 1px solid #e4e7ed;
+    border-radius: 8px;
+}
+
+.admin-page-tab.is-active {
+    color: #3d4ea8;
+    background: #eef0ff;
+    border-color: #d5dbfb;
+}
+
+.admin-page-tab-main,
+.admin-page-tab-close {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.admin-page-tab-main {
+    min-width: 0;
+    height: 30px;
+    padding: 0 4px 0 10px;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 30px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-page-tab-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 4px;
+    border-radius: 50%;
+}
+
+.admin-page-tab-close:hover,
+.admin-page-tab-close:focus,
+.admin-page-tab-main:hover,
+.admin-page-tab-main:focus {
+    color: #667eea;
+    outline: none;
+}
+
+.admin-page-tab-close:hover,
+.admin-page-tab-close:focus {
+    background: rgba(102, 126, 234, .12);
+}
+
+.admin-content.is-tab-frame {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #f5f7fa;
+}
+
+.admin-tab-frames {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.admin-tab-frame {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #fff;
+}
+
 .ncf-admin-embedded .admin-chat-container {
     height: 100vh;
 }

@@ -151,6 +151,21 @@
   <data name="Admin.Nav.Home" xml:space="preserve">
     <value>首页</value>
   </data>
+  <data name="Admin.Tabs.List" xml:space="preserve">
+    <value>已打开的页面</value>
+  </data>
+  <data name="Admin.Tabs.Close" xml:space="preserve">
+    <value>关闭标签</value>
+  </data>
+  <data name="Admin.Tabs.Untitled" xml:space="preserve">
+    <value>未命名页面</value>
+  </data>
+  <data name="Admin.Tabs.ScrollLeft" xml:space="preserve">
+    <value>向左查看标签</value>
+  </data>
+  <data name="Admin.Tabs.ScrollRight" xml:space="preserve">
+    <value>向右查看标签</value>
+  </data>
   <data name="Admin.Nav.Search" xml:space="preserve">
     <value>搜索菜单</value>
   </data>

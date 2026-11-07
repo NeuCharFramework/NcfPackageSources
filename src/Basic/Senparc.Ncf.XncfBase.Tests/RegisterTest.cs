@@ -161,6 +161,21 @@ namespace Senparc.Ncf.XncfBase.Tests
         }
 
         [TestMethod]
+        public void CreateXncfDbContext_ShouldAcceptUntypedOptions()
+        {
+            using var serviceProvider = new ServiceCollection().BuildServiceProvider();
+            var untypedOptions = new DbContextOptionsBuilder().Options;
+            Assert.IsFalse(untypedOptions is DbContextOptions<OptionsOnlyDbContext>);
+
+            using var dbContext = new TestModuleRegister().CreateDbContextForTest(
+                serviceProvider,
+                typeof(OptionsOnlyDbContext),
+                untypedOptions);
+
+            Assert.IsInstanceOfType<OptionsOnlyDbContext>(dbContext);
+        }
+
+        [TestMethod]
         public void CreateXncfDbContext_ShouldResolveAdditionalConstructorDependencies()
         {
             var scopeMarker = new ScopeMarker();

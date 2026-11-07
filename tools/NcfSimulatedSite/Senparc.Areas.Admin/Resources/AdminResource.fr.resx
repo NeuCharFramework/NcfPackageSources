@@ -151,6 +151,21 @@
   <data name="Admin.Nav.Home" xml:space="preserve">
     <value>Accueil</value>
   </data>
+  <data name="Admin.Tabs.List" xml:space="preserve">
+    <value>Pages ouvertes</value>
+  </data>
+  <data name="Admin.Tabs.Close" xml:space="preserve">
+    <value>Fermer l'onglet</value>
+  </data>
+  <data name="Admin.Tabs.Untitled" xml:space="preserve">
+    <value>Page sans titre</value>
+  </data>
+  <data name="Admin.Tabs.ScrollLeft" xml:space="preserve">
+    <value>Onglets vers la gauche</value>
+  </data>
+  <data name="Admin.Tabs.ScrollRight" xml:space="preserve">
+    <value>Onglets vers la droite</value>
+  </data>
   <data name="Admin.Nav.Search" xml:space="preserve">
     <value>Rechercher un menu</value>
   </data>

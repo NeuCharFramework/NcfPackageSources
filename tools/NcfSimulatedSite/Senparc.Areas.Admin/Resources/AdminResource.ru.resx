@@ -151,6 +151,21 @@
   <data name="Admin.Nav.Home" xml:space="preserve">
     <value>Главная</value>
   </data>
+  <data name="Admin.Tabs.List" xml:space="preserve">
+    <value>Открытые страницы</value>
+  </data>
+  <data name="Admin.Tabs.Close" xml:space="preserve">
+    <value>Закрыть вкладку</value>
+  </data>
+  <data name="Admin.Tabs.Untitled" xml:space="preserve">
+    <value>Страница без названия</value>
+  </data>
+  <data name="Admin.Tabs.ScrollLeft" xml:space="preserve">
+    <value>Прокрутить вкладки влево</value>
+  </data>
+  <data name="Admin.Tabs.ScrollRight" xml:space="preserve">
+    <value>Прокрутить вкладки вправо</value>
+  </data>
   <data name="Admin.Nav.Search" xml:space="preserve">
     <value>Поиск меню</value>
   </data>

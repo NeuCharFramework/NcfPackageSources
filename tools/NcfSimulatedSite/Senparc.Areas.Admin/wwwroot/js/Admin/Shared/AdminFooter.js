@@ -427,8 +427,47 @@
                 this.footerAiUrl = '/Admin/AdminChat/Chat?embedded=1&footer=' + Date.now();
                 this.footerAiDialogVisible = true;
             },
+            embeddedAdminChatValue(search, name) {
+                const source = String(search || '').replace(/^\?/, '');
+                for (const part of source.split('&')) {
+                    if (!part) continue;
+                    const separator = part.indexOf('=');
+                    const key = decodeURIComponent(separator >= 0 ? part.slice(0, separator) : part);
+                    if (key !== name) continue;
+                    return decodeURIComponent(separator >= 0 ? part.slice(separator + 1) : '');
+                }
+                return '';
+            },
             openFullAdminChat() {
-                window.location.href = '/Admin/AdminChat/Chat';
+                let sessionId = 0;
+                let mode = '';
+                const iframe = document.querySelector('.admin-footer-ai-dialog iframe');
+                try {
+                    const location = iframe && iframe.contentWindow && iframe.contentWindow.location;
+                    if (location) {
+                        sessionId = Number(this.embeddedAdminChatValue(location.search, 'sessionId'));
+                        mode = this.embeddedAdminChatValue(location.search, 'mode');
+                        if (!Number.isInteger(sessionId) || sessionId <= 0) {
+                            const hash = String(location.hash || '').match(/session[=-](\d+)/i);
+                            sessionId = hash ? Number(hash[1]) : 0;
+                        }
+                    }
+                } catch (error) {
+                    sessionId = 0;
+                    mode = '';
+                }
+                const params = [];
+                if (Number.isInteger(sessionId) && sessionId > 0) params.push('sessionId=' + sessionId);
+                if (mode === '0' || mode === '1') params.push('mode=' + mode);
+                const chatUrl = '/Admin/AdminChat/Chat'
+                    + (params.length ? '?' + params.join('&') : '')
+                    + (Number.isInteger(sessionId) && sessionId > 0 ? '#session-' + sessionId : '');
+                console.debug('[NCF][AdminTabs] 从快捷对话打开', chatUrl);
+                if (window.ncfOpenAdminPage && window.ncfOpenAdminPage(chatUrl, 'Admin Chat')) {
+                    this.footerAiDialogVisible = false;
+                    return;
+                }
+                window.location.href = chatUrl;
             },
             handleFooterTimeClick() {
                 const now = Date.now();

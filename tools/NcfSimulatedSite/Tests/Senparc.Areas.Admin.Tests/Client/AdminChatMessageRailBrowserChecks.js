@@ -63,6 +63,19 @@ async page => {
     const dots = page.locator('.chat-message-rail-dot');
     check(await dots.count() === 15, 'One dot per human message, including an empty one');
     check(await page.locator('.message-assistant').count() === 14, 'Assistant replies stay in the transcript');
+    const segments = await page.evaluate(() => railTestApp.messageRail);
+    check(segments[0].top === 0 && segments.every(segment => segment.height >= 2), 'Rail segments cover the conversation from the top');
+    check(segments.every((segment, index) => index === 0 || Math.abs(segment.top - (segments[index - 1].top + segments[index - 1].height)) <= 1), 'Adjacent segments meet so the pointer can travel between them');
+    const varied = await page.evaluate(() => {
+        const item = document.querySelector('[data-message-id="8"]');
+        item.style.minHeight = '420px';
+        railTestApp.refreshMessageRail();
+        const rail = railTestApp.messageRail;
+        const eighth = rail.find(segment => segment.id === 8);
+        const neighbor = rail.find(segment => segment.id === 7);
+        return eighth.height > neighbor.height + 8;
+    });
+    check(varied, 'A longer turn gets a longer rail segment');
     await dots.nth(3).hover();
     const menu = page.locator('.chat-message-rail-menu');
     await menu.waitFor({ state: 'visible' });
@@ -72,8 +85,15 @@ async page => {
     check(previews[14] === 'AdminChat.Rail.EmptyMessage', 'Empty human messages remain selectable');
     check(await menu.evaluate(el => el.scrollHeight > el.clientHeight + 4), 'Long conversations scroll inside the preview menu');
     const before = await page.locator('.messages-container').evaluate(el => el.scrollTop);
+    await menu.locator('button').nth(12).hover();
+    check(await menu.isVisible(), 'The preview stays open when the pointer moves onto it');
+    check(await page.evaluate(() => railTestApp.messageRailActiveId) === 13, 'Hovering a preview row highlights the matching rail segment');
     await menu.locator('button').nth(12).click();
-    await page.waitForFunction(() => document.querySelector('.messages-container').scrollTop > 200);
+    await page.waitForFunction(() => {
+        const message = document.querySelector('[data-message-id="13"]');
+        const container = document.querySelector('.messages-container');
+        return message && Math.abs(container.scrollTop - (message.offsetTop - 12)) < 4;
+    });
     const after = await page.locator('.messages-container').evaluate(el => el.scrollTop);
     check(after > before, 'Choosing a preview jumps to that human message');
     check(await page.evaluate(() => railTestApp.messageRailActiveId) === 13, 'The selected human message stays current');

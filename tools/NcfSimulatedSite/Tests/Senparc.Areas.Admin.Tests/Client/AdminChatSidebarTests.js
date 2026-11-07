@@ -148,6 +148,61 @@ async function run() {
     assert.strictEqual(app.sessionList.length, 2, 'A partial list failure must not discard the prior list.');
     assert.strictEqual(errors.pop(), 'AdminChat.LoadSessionFailed');
 
+    let attempts = 0;
+    const seenConfigs = [];
+    sandbox.service.get = async (url, config) => {
+        seenConfigs.push(config);
+        attempts++;
+        if (attempts < 3) return { data: { success: false, errorMessage: 'database is locked' } };
+        return { data: { success: true, data: { sessions: [{ id: 9 }], totalCount: 1 } } };
+    };
+    await app.loadSessionList();
+    assert.strictEqual(attempts, 3, 'A transient session-list failure must be retried.');
+    assert.strictEqual(app.sessionList.map(session => session.id).join(','), '9');
+    assert.strictEqual(errors.length, 0, 'A recovered session list must not show a failure toast.');
+    assert.ok(seenConfigs.every(config => config && config.customAlert === true));
+
+    let archivedAttempts = 0;
+    app.archivedSessionList = [{ id: 4 }];
+    sandbox.service.get = async () => {
+        archivedAttempts++;
+        if (archivedAttempts === 1) throw new Error('Network Error');
+        return { data: { success: true, data: { sessions: [{ id: 8 }], totalCount: 1 } } };
+    };
+    await app.loadArchivedSessionList();
+    assert.strictEqual(app.archivedSessionList[0].id, 8);
+    assert.strictEqual(errors.length, 0, 'A recovered archive list must not show a failure toast.');
+
+    let releaseList;
+    const listGate = new Promise(resolve => { releaseList = resolve; });
+    let concurrentCalls = 0;
+    sandbox.service.get = async () => {
+        concurrentCalls++;
+        await listGate;
+        return { data: { success: true, data: { sessions: [{ id: 4 }], totalCount: 1 } } };
+    };
+    const firstList = app.loadSessionList();
+    const secondList = app.loadSessionList();
+    assert.strictEqual(concurrentCalls, 1, 'Overlapping session-list loads must share one request.');
+    releaseList();
+    await firstList;
+    await secondList;
+    assert.strictEqual(app.sessionList[0].id, 4);
+    assert.strictEqual(app.loadingSessions, false);
+
+    let queuedCalls = 0;
+    sandbox.service.get = async () => {
+        queuedCalls++;
+        if (queuedCalls <= 3) return { data: { success: false, errorMessage: 'database is locked' } };
+        return { data: { success: true, data: { sessions: [{ id: 11 }], totalCount: 1 } } };
+    };
+    const failedList = app.loadSessionList();
+    const queuedList = app.loadSessionList();
+    await queuedList;
+    await failedList;
+    assert.strictEqual(app.sessionList[0].id, 11);
+    assert.strictEqual(errors.length, 0, 'A queued reload must replace the toast from the failed request.');
+
     assert.ok(page.includes('@@pointerdown="startSidebarResize"'));
     assert.ok(page.includes('@@keydown.alt.up.prevent.stop'));
     assert.ok(page.includes('v-show="!isSessionGroupCollapsed(group.key)"'));

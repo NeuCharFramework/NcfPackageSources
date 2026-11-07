@@ -382,6 +382,20 @@ async function run() {
     capturedMixin.beforeDestroy.call(duplicateLayoutRoot);
     assert.strictEqual(eventSourceCloseCount, 2);
 
+    document.querySelector = () => ({
+        contentWindow: { location: { search: '?embedded=1&sessionId=18&mode=0&footer=9', hash: '#session-18' } }
+    });
+    window.location = { href: '' };
+    createViewModel(layoutElement).openFullAdminChat();
+    assert.strictEqual(window.location.href, '/Admin/AdminChat/Chat?sessionId=18&mode=0#session-18',
+        'Opening the full Chat page must keep the footer dialog session.');
+    document.querySelector = () => ({ contentWindow: { location: { search: '', hash: '#session-27' } } });
+    createViewModel(layoutElement).openFullAdminChat();
+    assert.strictEqual(window.location.href, '/Admin/AdminChat/Chat?sessionId=27#session-27');
+    document.querySelector = () => null;
+    createViewModel(layoutElement).openFullAdminChat();
+    assert.strictEqual(window.location.href, '/Admin/AdminChat/Chat');
+
     process.stdout.write('AdminFooter lifecycle tests passed.\n');
 }
 

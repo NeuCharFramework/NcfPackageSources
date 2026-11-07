@@ -516,6 +516,9 @@
         }
         stop(vm);
         console.debug('[ncf-voice] navigate', choice.label, choice.url);
+        if (window.ncfOpenAdminPage && window.ncfOpenAdminPage(choice.url, choice.label)) {
+            return;
+        }
         window.location.assign(choice.url);
     }
 
