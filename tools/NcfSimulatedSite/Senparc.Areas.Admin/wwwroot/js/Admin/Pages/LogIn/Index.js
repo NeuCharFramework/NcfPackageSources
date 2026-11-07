@@ -138,7 +138,7 @@ var app = new Vue({
                 self.captchaToken = '';
             });
         },
-        // ===== 登录安全加强：滑块验证码（Lazy.SlideCaptcha.Core/MIT，服务端含行为轨迹校验） =====
+        // ===== 登录安全加强：滑块验证码（服务端纯 C# + SVG 自研生成，含行为轨迹校验） =====
         applyCaptchaChallenge(res) {
             if (res.data.slideCaptcha && res.data.slideCaptcha.id) {
                 this.captchaType = 'slide';

@@ -1,7 +1,7 @@
 # 管理员登录安全加强：滑块验证码 + IP 滑动窗口限流
 
 > 分支：`Developer-MAF-V3-Spark-FineTuning-LoginHardening`（基于 `Developer-MAF-V3-Spark-FineTuning`）
-> 日期：2026-11-05
+> 日期：2026-11-05（2026-11-07 更新：滑块验证码改为纯 C# + SVG 自研）
 
 ## 1. 背景与威胁模型
 
@@ -25,7 +25,7 @@
 │ L3 账号阶梯锁定（已有）       │  单账号暴力破解 → 锁账号
 ├────────────────────────────┤
 │ L2 人机校验（本次新增/升级）   │  机器人批量重试 → 滑块+行为校验
-│   滑块验证码（MIT 组件）       │     └ 位置校验 + 轨迹时长/点数/瞬移检测
+│   滑块验证码（纯 C# 自研）      │     └ 位置校验 + 轨迹时长/点数/瞬移检测
 │   文本验证码（兜底，已有）      │
 ├────────────────────────────┤
 │ L1 IP 滑动窗口限流（本次新增） │  请求风暴 → 429 + Retry-After
@@ -49,26 +49,30 @@
 
 ### 2.2 L2：滑块验证码（替换文本验证码为主力，文本保留兜底）
 
-选型（用户要求 **MIT / Apache-2.0** 许可）：
+选型过程（用户要求 **MIT / Apache-2.0** 许可）：
 
 | 候选 | 许可 | 结论 |
 | --- | --- | --- |
-| **LazySlideCaptcha**（`Lazy.SlideCaptcha.Core`，.NET Standard 2.1，SkiaSharp 渲染） | **MIT** | ✅ 采用：滑块+轨迹校验，可替换验证器/资源提供器 |
+| **LazySlideCaptcha**（`Lazy.SlideCaptcha.Core`，.NET Standard 2.1，SkiaSharp 渲染） | MIT | ⚠️ 已评估：功能合适，但依赖 SkiaSharp **原生库**（跨平台部署需额外 runtime 包），与仓库“零第三方依赖”风格冲突 → 弃用 |
 | Kaptcha.NET | MIT | ❌ System.Drawing.Common，Linux 受限，仍是文本 OCR 型 |
 | IconCaptcha | MIT | 备选（图标对比型，无行为维度） |
 | YMJake.FusionCaptcha | 未明确 | ❌ 许可不符合要求 |
 | Cloudflare Turnstile / reCAPTCHA / hCaptcha | 服务 ToS（非 OSS 许可） | 备选（需外部服务，不符合自托管许可要求） |
+| **纯 C# + SVG 自研** | —（仓库自有代码） | ✅ **采用**：与既有 SVG 文本验证码同源，零第三方依赖、零原生库 |
 
-实现要点：
+实现要点（`LoginSlideCaptchaService`，纯 C# + SVG）：
 
-- **程序化背景**：`ProceduralSlideBackgroundHandler`（SkiaSharp 实时绘制 552×344 渐变+几何+噪点），仓库不内置图片资源，每张验证码背景都不同，防止模板预采集
-- **行为校验器**：`LoginBehaviorSlideValidator : BaseValidator`（替换默认 SimpleValidator）：
+- **程序化背景**：SecureRandom 种子驱动，程序化生成 552×344 SVG（随机渐变 + 16 个几何色块 + 120 噪点 + 拼图缺口，缺口凸台位置随机），背景与滑块块由同一场景裁切，每张验证码都不同，防止模板预采集；仓库零图片资源
+- **答案存储**：缺口位置 Percent 存 CO2NET 对象缓存，5 分钟时效、**一次性**（无论校验成败即失效）
+- **校验器**：`LoginSlideTrackValidator`（纯函数，单测可直接覆盖）：
   1. 轨迹点数 ≥ 10（脚本一次性位移伪造通常只有 1~3 个点）
   2. 拖拽时长 ≥ 200ms
   3. 单步 X 位移 ≤ 45px（禁止瞬移）
-  4. 位置校验：`|轨迹终点 Percent − 目标 Percent| ≤ Tolerant`（0~1 背景宽度比例口径，`Tolerant=0.04`≈22px）
+  4. 客户端上报 Percent 与轨迹终点反推值漂移 ≤ 2（防止只伪造 Percent 字段）
+  5. 位置校验：`|轨迹终点 Percent − 目标 Percent| ≤ 4`（0~100 全行程口径，≈22px@552 画布）
   - 阈值均为保守值：拦截明显自动化，不误伤真人
-- **降级开关**：`AdminLogin:SlideCaptcha:Enabled`（默认 true）；滑块生成异常（如 SkiaSharp 原生库缺失）时自动退化为既有 SVG 文本验证码，**登录永远可用**
+- **前端契约不变**：`id/backgroundImage/sliderImage` + 轨迹 JSON（字段名与既有前端逻辑完全一致），前端零改动
+- **降级开关**：`AdminLogin:SlideCaptcha:Enabled`（默认 true）；滑块生成异常时自动退化为既有 SVG 文本验证码，**登录永远可用**
 - 前端：登录页（Vue 2 + Element UI）自绘滑块条（鼠标/触摸），松手即携带 `SlideCaptchaId + SlideTrack`（轨迹点 `{X,Y,T}` + 起止时间 + 尺寸）自动提交登录；429 显示“请求过于频繁”提示
 - 多语言：7 个 resx 新增 4 条文案（zh-CN/en/ja/fr/es/ru）
 
@@ -78,26 +82,26 @@
 
 | 文件 | 说明 |
 | --- | --- |
-| `Senparc.Areas.Admin/Senparc.Areas.Admin.csproj` | + `Lazy.SlideCaptcha.Core` 2.0.1（MIT） |
-| `Senparc.Areas.Admin/Register.cs` | 注册滑块验证码（程序化背景 + 行为校验器 + IDistributedCache 兜底）、限流服务 |
+| `Senparc.Areas.Admin/Senparc.Areas.Admin.csproj` | 无新增第三方包（初版 `Lazy.SlideCaptcha.Core` 已于 2026-11-07 移除） |
+| `Senparc.Areas.Admin/Register.cs` | 注册滑块验证码服务 + 限流服务 |
 | `Senparc.Areas.Admin/Domain/Services/LoginIpThrottleService.cs` | 新增：IP 滑动窗口限流 |
-| `Senparc.Areas.Admin/Domain/Services/LoginSlideCaptchaSupport.cs` | 新增：程序化背景 + 行为校验器 |
+| `Senparc.Areas.Admin/Domain/Services/LoginSlideCaptchaService.cs` | 新增：纯 C# + SVG 滑块验证码（场景生成/拼图路径/缓存/校验器） |
 | `Senparc.Areas.Admin/Areas/Admin/Pages/Login.cshtml.cs` | 限流接入、滑块校验、`OnGetSlideCaptcha`、DTO 扩展（`slideCaptcha`/`retryAfterSeconds`） |
 | `Senparc.Areas.Admin/Areas/Admin/Pages/Login.cshtml` | 滑块 UI（slide/text 双模式） |
 | `Senparc.Areas.Admin/wwwroot/js/Admin/Pages/LogIn/Index.js` | 滑块拖拽/轨迹采集/429 处理 |
 | `Senparc.Areas.Admin/wwwroot/css/Admin/login/index.css` | 滑块样式 |
 | `Senparc.Areas.Admin/Resources/AdminResource*.resx` ×7 | 新增 4 条多语言文案 |
-| `Tests/.../LoginBehaviorSlideValidatorTests.cs` | 新增：行为校验器 5 用例 |
+| `Tests/.../LoginSlideTrackValidatorTests.cs` | 新增：轨迹校验器 8 用例 |
 | `Tests/.../LoginIpThrottleTests.cs` | 新增：限流 5 用例 |
 
 ## 4. 测试
 
 ```bash
 dotnet test tools/NcfSimulatedSite/Tests/Senparc.Areas.Admin.Tests \
-  --filter "FullyQualifiedName~LoginBehaviorSlideValidatorTests|FullyQualifiedName~LoginIpThrottleTests"
+  --filter "FullyQualifiedName~LoginSlideTrackValidatorTests|FullyQualifiedName~LoginIpThrottleTests"
 ```
 
-- 行为校验器：正常轨迹通过；位置错误 / 点数不足 / 过快 / 瞬移 均拒绝
+- 轨迹校验器：正常轨迹通过、容差内通过；位置错误 / 点数不足 / 过快 / 瞬移 / 上报 Percent 漂移 / 空轨迹 均拒绝
 - 限流：默认 20 次窗口、不同 IP 独立、配置覆盖生效、captcha 与 login 独立窗口
 
 手动验证（`tools/NcfSimulatedSite`）：

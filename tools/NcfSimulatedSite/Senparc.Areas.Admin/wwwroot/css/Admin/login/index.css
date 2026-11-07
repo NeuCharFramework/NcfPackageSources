@@ -210,7 +210,7 @@ body {
     text-align: center;
 }
 
-/* ===== 登录滑块验证码（Lazy.SlideCaptcha.Core/MIT） ===== */
+/* ===== 登录滑块验证码（纯 C# + SVG 自研，服务端生成） ===== */
 .slide-captcha {
     width: 300px;
 }

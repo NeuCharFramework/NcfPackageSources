@@ -11,7 +11,10 @@
     修改描述：v0.12.15 add image captcha for admin login (required after 2 failed attempts)
 
     修改标识：Senparc - 20261105
-    修改描述：登录安全加强：滑块验证码（Lazy.SlideCaptcha.Core/MIT，含行为轨迹校验）+ 登录端点 IP 滑动窗口限流（429 + Retry-After）
+    修改描述：登录安全加强：滑块验证码（含行为轨迹校验）+ 登录端点 IP 滑动窗口限流（429 + Retry-After）
+
+    修改标识：Senparc - 20261107
+    修改描述：滑块验证码改为纯 C# + SVG 自研（LoginSlideCaptchaService），移除 Lazy.SlideCaptcha.Core/SkiaSharp 第三方依赖
 
 ----------------------------------------------------------------*/
 
@@ -40,8 +43,7 @@ using Microsoft.Extensions.Configuration;
 using Senparc.CO2NET.Cache;
 using System.Text.Json;
 using System.Linq;
-using Lazy.SlideCaptcha.Core;
-using Lazy.SlideCaptcha.Core.Validator;
+
 
 namespace Senparc.Areas.Admin.Areas.Admin.Pages
 {
@@ -70,12 +72,12 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
         private readonly TenantInfoService _tenantInfoService;
         private readonly LoginCaptchaService _captchaService;
         private readonly IStringLocalizer<AdminResource> _localizer;
-        private readonly ICaptcha _slideCaptcha;
+        private readonly LoginSlideCaptchaService _slideCaptcha;
         private readonly LoginIpThrottleService _ipThrottle;
         private readonly IConfiguration _configuration;
         public LoginModel(AdminUserInfoService userInfoService, TenantInfoService tenantInfoService,
             LoginCaptchaService captchaService, IStringLocalizer<AdminResource> localizer,
-            ICaptcha slideCaptcha, LoginIpThrottleService ipThrottle, IConfiguration configuration)
+            LoginSlideCaptchaService slideCaptcha, LoginIpThrottleService ipThrottle, IConfiguration configuration)
         {
             this._userInfoService = userInfoService;
             this._tenantInfoService = tenantInfoService;
@@ -294,7 +296,7 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
 
         /// <summary>
         /// 构建人机校验挑战：滑块验证码优先（AdminLogin:SlideCaptcha:Enabled，默认 true），
-        /// 生成异常（如 SkiaSharp 原生库缺失）时自动退化为文本验证码，保证登录始终可用
+        /// 生成异常时自动退化为文本验证码，保证登录始终可用
         /// </summary>
         /// <summary>
         /// 滑块验证码开关（AdminLogin:SlideCaptcha:Enabled，默认 true）
@@ -311,10 +313,10 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
             {
                 try
                 {
-                    var data = _slideCaptcha.Generate(Guid.NewGuid().ToString("N"));
-                    if (data != null && !data.Id.IsNullOrEmpty())
+                    var data = await _slideCaptcha.CreateAsync();
+                    if (data != null && !data.Token.IsNullOrEmpty())
                     {
-                        return LoginCaptchaChallenge.Slide(data.Id, data.BackgroundImage, data.SliderImage);
+                        return LoginCaptchaChallenge.Slide(data.Token, data.BackgroundImage, data.SliderImage);
                     }
                 }
                 catch (Exception ex)
@@ -337,12 +339,11 @@ namespace Senparc.Areas.Admin.Areas.Admin.Pages
                 {
                     var track = string.IsNullOrEmpty(loginInDto.SlideTrack)
                         ? null
-                        : JsonSerializer.Deserialize<SlideTrack>(loginInDto.SlideTrack,
+                        : JsonSerializer.Deserialize<LoginSlideTrack>(loginInDto.SlideTrack,
                             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                     if (track != null)
                     {
-                        var result = _slideCaptcha.Validate(loginInDto.SlideCaptchaId, track);
-                        return result != null && result.Result == ValidateResult.ValidateResultType.Success;
+                        return await _slideCaptcha.ValidateAsync(loginInDto.SlideCaptchaId, track);
                     }
                 }
                 catch
