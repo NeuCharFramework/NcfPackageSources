@@ -1349,6 +1349,7 @@
 
 .live-answer-preview::after {
     position: absolute;
+    z-index: 2;
     right: 0;
     bottom: 0;
     width: 76px;
@@ -1358,23 +1359,51 @@
     pointer-events: none;
 }
 
+/* 高光裁在字形上，背景不受影响。渐变只铺在可见的预览盒里，不随正文变长。 */
 .live-run-panel.is-generating .live-answer-preview {
-    color: #8d939c;
+    background-image: linear-gradient(
+        100deg,
+        #8d939c 0%,
+        #8d939c 46%,
+        #b4bec8 48.5%,
+        #d7e0e8 50%,
+        #b4bec8 51.5%,
+        #8d939c 54%,
+        #8d939c 100%
+    );
+    background-size: 220% 100%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: liveTextSheen 2.8s linear infinite;
 }
 
-.live-run-panel.is-generating .live-answer-preview::before {
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    bottom: 0;
-    left: -38%;
-    width: 38%;
-    background: linear-gradient(90deg, rgba(132, 143, 157, 0), rgba(132, 143, 157, 0.22), rgba(132, 143, 157, 0));
-    content: '';
-    filter: blur(1px);
-    mix-blend-mode: normal;
-    pointer-events: none;
-    animation: liveTextSweep 2.2s linear infinite;
+.live-run-panel.is-generating .live-answer-preview :not(pre):not(pre *):not(blockquote):not(blockquote *):not(table):not(table *) {
+    -webkit-text-fill-color: transparent;
+}
+
+.live-run-panel.is-generating .live-answer-preview :not(pre) > code {
+    background-color: transparent;
+}
+
+.live-run-panel.is-generating .live-answer-preview pre,
+.live-run-panel.is-generating .live-answer-preview pre * {
+    color: #24292e;
+    -webkit-text-fill-color: #24292e;
+}
+
+.live-run-panel.is-generating .live-answer-preview blockquote,
+.live-run-panel.is-generating .live-answer-preview blockquote * {
+    color: #6a737d;
+    -webkit-text-fill-color: #6a737d;
+}
+
+.live-run-panel.is-generating .live-answer-preview table,
+.live-run-panel.is-generating .live-answer-preview table * {
+    color: #606266;
+    -webkit-text-fill-color: #606266;
 }
 
 .live-answer-preview > * {
@@ -1385,12 +1414,23 @@
     word-break: break-word;
 }
 
-@keyframes liveTextSweep {
+@keyframes liveTextSheen {
     from {
-        transform: translateX(0);
+        background-position: 100% 0;
     }
     to {
-        transform: translateX(365%);
+        background-position: 0% 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .live-run-panel.is-generating .live-answer-preview {
+        animation: none;
+        background-image: none;
+        -webkit-background-clip: border-box;
+        background-clip: border-box;
+        -webkit-text-fill-color: #8d939c;
+        color: #8d939c;
     }
 }
 
