@@ -411,8 +411,12 @@ var chatApp = new Vue({
       const references = sessionStorage.getItem(referenceKey);
       sessionStorage.removeItem(referenceKey);
       if (references) {
-        try { this.restorePromptReferences('promptMessageInput', JSON.parse(references)); }
-        catch (error) { this.$message.error(error.message); }
+        try {
+          this.pendingReferenceRestore = this.restorePromptReferences(
+            'promptMessageInput', JSON.parse(references));
+        } catch (error) {
+          this.$message.error(error.message);
+        }
       }
     }
 
@@ -423,11 +427,13 @@ var chatApp = new Vue({
     this.loadAiModelOptions();
     this.loadSessionList();
     this.loadArchivedSessionList();
+    this.bindChatSettingsDismiss();
     
       if (this.currentSessionId > 0) {
       this.loadSessionDetail().then(async () => {
         this.loadTrajectoryList();
         await this.resumeAdminChatRun();
+        if (this.pendingReferenceRestore) await this.pendingReferenceRestore;
         if (this.pendingInitialSend && !this.isSending) {
           this.pendingInitialSend = false;
           this.sendMessage();
@@ -453,8 +459,48 @@ var chatApp = new Vue({
     this.stopWorkspacePreviewResize();
     this.stopSidebarResize();
     this.clearPendingAttachments();
+    this.unbindChatSettingsDismiss();
   },
   methods: {
+    bindChatSettingsDismiss() {
+      if (this.chatSettingsPointerHandler) return;
+      this.chatSettingsPointerHandler = (event) => {
+        const openPanel = document.querySelector('details.chat-inline-settings[open]');
+        if (!openPanel) return;
+        const target = event.target;
+        // 模型下拉、Memory 菜单和说明弹层都挂在 body 上，点它们不算离开设置面板。
+        if (target && target.closest && target.closest('details.chat-inline-settings, .el-select-dropdown, .el-dropdown-menu, .el-dialog__wrapper, .el-message-box__wrapper, .ncf-doc-help-dialog')) {
+          return;
+        }
+        openPanel.open = false;
+        console.debug('[NCF][AdminChat] 点击页面其他区域，关闭对话设置');
+      };
+      this.chatSettingsBlurHandler = () => {
+        const openPanel = document.querySelector('details.chat-inline-settings[open]');
+        if (!openPanel) return;
+        openPanel.open = false;
+        console.debug('[NCF][AdminChat] 焦点离开对话页面，关闭对话设置');
+      };
+      document.addEventListener('pointerdown', this.chatSettingsPointerHandler);
+      window.addEventListener('blur', this.chatSettingsBlurHandler);
+    },
+    unbindChatSettingsDismiss() {
+      if (this.chatSettingsPointerHandler) {
+        document.removeEventListener('pointerdown', this.chatSettingsPointerHandler);
+        this.chatSettingsPointerHandler = null;
+      }
+      if (this.chatSettingsBlurHandler) {
+        window.removeEventListener('blur', this.chatSettingsBlurHandler);
+        this.chatSettingsBlurHandler = null;
+      }
+    },
+    closeInlineChatSettings(event) {
+      const host = event && event.currentTarget && event.currentTarget.closest
+        ? event.currentTarget.closest('details.chat-inline-settings')
+        : document.querySelector('details.chat-inline-settings[open]');
+      if (host) host.open = false;
+      console.debug('[NCF][AdminChat] 关闭对话设置');
+    },
     sidebarStorageKey() {
       return `ncf.admin.chat.sidebar.${this.currentUserId}`;
     },
@@ -958,7 +1004,7 @@ var chatApp = new Vue({
       this.syncAdminChatLocation();
       this.inputMessage = this.chatInputText;
       this.chatInputText = '';
-      this.restorePromptReferences('promptMessageInput', promptReferences);
+      await this.restorePromptReferences('promptMessageInput', promptReferences);
       await this.loadSessionDetail();
       if (!this.currentSessionWorkspaceId) throw new Error('会话已创建，但没有读到 Workspace，请刷新后重试。');
       await this.loadSessionList();
@@ -2328,8 +2374,11 @@ var chatApp = new Vue({
       await this.loadSessionDetail();
       if (this.currentSessionId !== sessionId || this.sessionRuns[sessionId]) return;
       this.inputMessage = message || '';
-      if (references && references.length) this.restorePromptReferences('promptMessageInput', references);
-      await this.sendMessage();
+      if (references && references.length) {
+        await this.restorePromptReferences('promptMessageInput', references);
+      }
+      if (this.currentSessionId !== sessionId || this.sessionRuns[sessionId]) return;
+      await this.sendMessage(references && references.length ? references : undefined);
     },
 
     createRecentTask(content, sessionId = this.currentSessionId) {
@@ -2697,7 +2746,7 @@ var chatApp = new Vue({
       }
     },
 
-    async sendMessage() {
+    async sendMessage(presetReferences) {
       if (this.isCurrentSessionRunning || this.workspaceUploading || this.memoryBusy || !this.memoryReady) return;
 
       if ((!this.inputMessage || this.inputMessage.trim().length === 0) && this.pendingAttachments.length === 0) {
@@ -2710,7 +2759,10 @@ var chatApp = new Vue({
         return;
       }
 
-      const promptReferences = this.capturePromptReferences('promptMessageInput');
+      // 新建会话沿用启动器里已经捕获的引用；此时正文输入框可能尚未挂载。
+      const promptReferences = Array.isArray(presetReferences)
+        ? presetReferences.map(reference => ({ ...reference }))
+        : this.capturePromptReferences('promptMessageInput');
       const messageContent = (promptReferences.length ? this.inputMessage : (this.inputMessage || '').trim())
         || '请先查看本轮附件的目录和解析限制，并询问我希望如何处理。';
       const sendingAttachments = this.pendingAttachments.slice();
@@ -2830,13 +2882,31 @@ var chatApp = new Vue({
     },
 
     restorePromptReferences(refName, references) {
-      this.$nextTick(() => {
+      const apply = () => {
         const component = this.$refs[refName];
-        const input = component && component.$el.querySelector('textarea');
-        if (input && window.NcfPromptReferences) {
-          try { window.NcfPromptReferences.restore(input, references); }
-          catch (error) { this.$message.error(error.message); }
-        }
+        const input = component && component.$el && component.$el.querySelector('textarea');
+        if (!input || !window.NcfPromptReferences) return false;
+        const expected = refName === 'promptMessageInput' ? this.inputMessage : this.chatInputText;
+        // Element 可能在本次渲染之后才写回原生值；先对齐模型，避免用空正文校验引用范围。
+        if (typeof expected === 'string' && input.value !== expected) input.value = expected;
+        window.NcfPromptReferences.restore(input, references);
+        return true;
+      };
+      return new Promise(resolve => {
+        const attempt = remaining => {
+          try {
+            if (apply() || remaining <= 0) {
+              resolve();
+              return;
+            }
+          } catch (error) {
+            this.$message.error(error.message);
+            resolve();
+            return;
+          }
+          this.$nextTick(() => attempt(remaining - 1));
+        };
+        this.$nextTick(() => attempt(3));
       });
     },
 

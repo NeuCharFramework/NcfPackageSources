@@ -319,6 +319,50 @@ async function concurrentSessions() {
     assert.ok(!app.sessionRuns[1] && !app.sessionRuns[2]);
 }
 
+async function createdSessionKeepsPromptReference() {
+    const app = createApp();
+    app.memoryReady = true;
+    app.launcherAiModelId = 4;
+    app.launcherChatMode = 'simple';
+    app.syncAdminChatLocation = () => {};
+    app.loadSessionDetail = async () => {};
+    const input = { value: '' };
+    app.$refs.promptMessageInput = { $el: { querySelector: () => input } };
+    app.$nextTick = callback => Promise.resolve().then(callback);
+    const errors = [];
+    app.$message.error = message => errors.push(message);
+    const restored = [];
+    sandbox.window.NcfPromptReferences = {
+        restore(target, references) {
+            restored.push(target.value);
+            for (const reference of references) {
+                if (reference.start + reference.length > target.value.length) {
+                    throw new Error('PromptReference.InvalidReference');
+                }
+            }
+        },
+        capture: () => []
+    };
+    let request;
+    app.consumeAdminChatStream = async data => { request = data; };
+    const references = [{ promptItemId: 7, promptCode: 'range.a', start: 0, length: 6 }];
+    await app.openCreatedChatSession(9, 'PROMPT hello', references);
+    assert.deepStrictEqual(errors, [], 'Restoring onto the new composer must not report an expired reference.');
+    assert.deepStrictEqual(restored, ['PROMPT hello']);
+    assert.strictEqual(request.content, 'PROMPT hello');
+    assert.strictEqual(request.promptReferences[0].promptItemId, 7);
+    assert.strictEqual(app.messageList[0].promptReferences[0].promptCode, 'range.a');
+
+    app.currentSessionId = 9;
+    app.memoryReady = true;
+    app.isSending = false;
+    app.inputMessage = 'follow up';
+    delete app.sessionRuns[9];
+    sandbox.window.NcfPromptReferences.capture = () => [{ promptItemId: 8, promptCode: 'range.b', start: 0, length: 9 }];
+    await app.sendMessage({ type: 'click' });
+    assert.strictEqual(request.promptReferences[0].promptCode, 'range.b', 'A click event must not replace captured references.');
+}
+
 async function run() {
     await streamingNavigation();
     await backgroundFailure();
@@ -326,6 +370,7 @@ async function run() {
     await lateHarnessResults();
     await streamRouting();
     await concurrentSessions();
+    await createdSessionKeepsPromptReference();
     sessionAddress();
     const page = fs.readFileSync(path.join(admin, 'Areas/Admin/Pages/AdminChat/Chat.cshtml'), 'utf8');
     assert.ok(page.includes('v-if="isAIResponding && isCurrentSessionRunning"'));

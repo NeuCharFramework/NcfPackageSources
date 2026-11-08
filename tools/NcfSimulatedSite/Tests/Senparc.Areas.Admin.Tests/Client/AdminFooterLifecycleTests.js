@@ -37,7 +37,8 @@ const fakeConsole = {
     log() { },
     info() { },
     warn() { },
-    error() { }
+    error() { },
+    debug() { }
 };
 const documentListeners = new Map();
 const windowListeners = new Map();

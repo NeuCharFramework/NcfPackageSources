@@ -173,6 +173,22 @@ test('a module name opens the first page after its setup entry', () => {
     assert.equal(setup.target.url, '/Admin/XncfModule/Start?uid=weixin');
 });
 
+test('dismiss closes the voice panel without keeping the draft', () => {
+    const api = load();
+    const vm = {
+        voiceNavPanelVisible: true,
+        voiceNavListening: true,
+        voiceNavChoices: [{ url: '/Admin/Index', label: '首页' }],
+        voiceNavDraft: '菜单'
+    };
+    api.dismiss(vm);
+    assert.equal(vm.voiceNavPanelVisible, false);
+    assert.equal(vm.voiceNavListening, false);
+    assert.equal(vm.voiceNavDraft, '');
+    assert.equal(vm.voiceNavChoices.length, 0);
+    assert.equal(api.text('close'), '关闭');
+});
+
 test('unknown speech does not navigate', () => {
     const api = load();
     const result = api.match('打开一个不存在的页面', api.indexMenus(menus));

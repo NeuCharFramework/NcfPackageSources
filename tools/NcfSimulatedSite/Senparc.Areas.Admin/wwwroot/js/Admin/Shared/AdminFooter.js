@@ -381,6 +381,9 @@
             },
             voiceNavPlaceholder() {
                 return window.NcfVoiceNavigation ? window.NcfVoiceNavigation.text('placeholder') : '';
+            },
+            voiceNavCloseLabel() {
+                return window.NcfVoiceNavigation ? window.NcfVoiceNavigation.text('close') : '关闭';
             }
         },
         mounted() {
@@ -400,6 +403,7 @@
                 return;
             }
 
+            this.bindVoiceNavDismiss();
             this.startFooterClock();
             // pagehide/pageshow 需要兼容 bfcache：隐藏时暂停，恢复时重用同一 Vue 实例。
             this.footerPageHideHandler = () => this.pauseFooter();
@@ -798,11 +802,60 @@
                 }
                 window.NcfVoiceNavigation.choose(this, choice);
             },
-            pauseFooter() {
-                // 后台页签不应保留 SSE、轮询、挂起的 HTTP 请求，或仍在监听的麦克风。
+            closeVoiceNav() {
+                if (!this.voiceNavPanelVisible && !this.voiceNavListening) {
+                    return;
+                }
+                if (window.NcfVoiceNavigation && typeof window.NcfVoiceNavigation.dismiss === 'function') {
+                    window.NcfVoiceNavigation.dismiss(this);
+                    return;
+                }
                 if (window.NcfVoiceNavigation) {
                     window.NcfVoiceNavigation.stop(this);
                 }
+                this.voiceNavPanelVisible = false;
+                this.voiceNavChoices = [];
+                this.voiceNavDraft = '';
+            },
+            bindVoiceNavDismiss() {
+                if (this.voiceNavOutsideHandler) {
+                    return;
+                }
+                this.voiceNavOutsideHandler = (event) => {
+                    if (!this.voiceNavPanelVisible) {
+                        return;
+                    }
+                    const target = event.target;
+                    const host = this.$el && this.$el.querySelector ? this.$el.querySelector('.admin-voice-nav') : null;
+                    if (host && target && host.contains(target)) {
+                        return;
+                    }
+                    console.debug('[ncf-voice] outside');
+                    this.closeVoiceNav();
+                };
+                this.voiceNavEscapeHandler = (event) => {
+                    if (!this.voiceNavPanelVisible || event.key !== 'Escape') {
+                        return;
+                    }
+                    event.preventDefault();
+                    this.closeVoiceNav();
+                };
+                document.addEventListener('pointerdown', this.voiceNavOutsideHandler, true);
+                document.addEventListener('keydown', this.voiceNavEscapeHandler);
+            },
+            unbindVoiceNavDismiss() {
+                if (this.voiceNavOutsideHandler) {
+                    document.removeEventListener('pointerdown', this.voiceNavOutsideHandler, true);
+                    this.voiceNavOutsideHandler = null;
+                }
+                if (this.voiceNavEscapeHandler) {
+                    document.removeEventListener('keydown', this.voiceNavEscapeHandler);
+                    this.voiceNavEscapeHandler = null;
+                }
+            },
+            pauseFooter() {
+                // 后台页签不应保留 SSE、轮询、挂起的 HTTP 请求，或仍在监听的麦克风。
+                this.closeVoiceNav();
                 this.footerPaused = true;
                 stopFooterFireworks();
                 if (this.footerClockTimer) {
@@ -852,6 +905,7 @@
                 if (this.footerVisibilityHandler) {
                     document.removeEventListener('visibilitychange', this.footerVisibilityHandler);
                 }
+                this.unbindVoiceNavDismiss();
                 this.footerCommunicationOwner = false;
                 releaseFooterOwnership(this);
             }

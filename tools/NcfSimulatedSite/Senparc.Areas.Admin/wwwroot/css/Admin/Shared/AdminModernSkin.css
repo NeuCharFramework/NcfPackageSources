@@ -82,6 +82,12 @@ body {
     box-shadow: 0 4px 16px rgba(31, 45, 61, 0.05);
 }
 
+.admin-workspace > .el-header.admin-header {
+    overflow: visible;
+    border-bottom-color: transparent;
+    box-shadow: inset 0 -1px 0 var(--admin-border-soft), 0 4px 16px rgba(31, 45, 61, 0.05);
+}
+
 .header-menu i {
     color: #606266;
     font-size: 21px;

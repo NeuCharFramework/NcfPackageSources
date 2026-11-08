@@ -557,11 +557,35 @@ li {
     width: min(360px, calc(100vw - 48px));
     max-height: 240px;
     overflow: auto;
-    padding: 8px;
+    padding: 8px 30px 8px 8px;
     background: #fff;
     border: 1px solid #e4e7ed;
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0, 21, 41, 0.12);
+}
+
+.admin-voice-nav-close {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    color: #909399;
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.admin-voice-nav-close:hover,
+.admin-voice-nav-close:focus {
+    color: #409eff;
+    background: #f2f6fc;
+    outline: none;
 }
 
 .admin-voice-nav-input {
@@ -709,18 +733,20 @@ li {
 .admin-page-tabs {
     display: flex;
     flex: 1 1 auto;
-    align-items: center;
+    align-self: stretch;
+    align-items: flex-end;
     gap: 4px;
     min-width: 0;
-    height: 100%;
+    height: auto;
     overflow: hidden;
 }
 
 .admin-page-tabs-scroller {
     display: flex;
     flex: 1 1 auto;
-    align-items: center;
+    align-items: flex-end;
     gap: 6px;
+    height: 100%;
     min-width: 0;
     overflow-x: auto;
     scrollbar-width: none;
@@ -738,6 +764,7 @@ li {
     justify-content: center;
     width: 22px;
     height: 22px;
+    margin-bottom: 6px;
     padding: 0;
     color: #606266;
     background: #fff;
@@ -763,18 +790,23 @@ li {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
-    max-width: 168px;
-    height: 30px;
+    max-width: 180px;
+    height: 34px;
     color: #606266;
     background: #f5f7fa;
     border: 1px solid #e4e7ed;
-    border-radius: 8px;
+    border-bottom-color: #e4e7ed;
+    border-radius: 8px 8px 0 0;
+    box-sizing: border-box;
 }
 
 .admin-page-tab.is-active {
-    color: #3d4ea8;
-    background: #eef0ff;
-    border-color: #d5dbfb;
+    position: relative;
+    z-index: 1;
+    color: #303133;
+    background: #fff;
+    border-bottom-color: #fff;
+    box-shadow: inset 0 2px 0 #667eea;
 }
 
 .admin-page-tab-main,
@@ -787,11 +819,11 @@ li {
 
 .admin-page-tab-main {
     min-width: 0;
-    height: 30px;
-    padding: 0 4px 0 10px;
+    height: 32px;
+    padding: 0 4px 0 12px;
     overflow: hidden;
     font-size: 13px;
-    line-height: 30px;
+    line-height: 32px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -909,6 +941,12 @@ li {
     position: relative;
     background: #fff;
     box-shadow: 0 1px 4px rgba(0,21,41,0.08);
+}
+
+.admin-workspace > .el-header.admin-header {
+    overflow: visible;
+    border-bottom-color: transparent;
+    box-shadow: inset 0 -1px 0 #e4e7ed, 0 4px 16px rgba(31, 45, 61, 0.05);
 }
 
 .header-breadcrumb {

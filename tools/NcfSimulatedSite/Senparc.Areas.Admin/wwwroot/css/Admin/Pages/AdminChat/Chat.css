@@ -3036,6 +3036,29 @@ body.is-resizing-chat-sidebar iframe {
     position: relative;
 }
 
+.admin-chat-container .chat-inline-settings-close {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    margin-left: 2px;
+    padding: 0;
+    color: #8b93a1;
+    background: transparent;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.admin-chat-container .chat-inline-settings-close:hover,
+.admin-chat-container .chat-inline-settings-close:focus {
+    color: #409eff;
+    background: #f2f4f8;
+    outline: none;
+}
+
 .admin-chat-container .input-ai-model-select {
     width: 170px;
     margin-left: 0;

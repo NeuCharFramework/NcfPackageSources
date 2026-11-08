@@ -427,12 +427,12 @@
     }
 
     const texts = {
-        zh: { title: '语音打开页面', stop: '结束并打开页面', listening: '请说要打开的页面名称，说完后再次点击麦克风', placeholder: '或输入页面名称后回车', unsupported: '当前浏览器不能语音识别。请直接输入页面名称后回车。', denied: '需要允许麦克风后才能语音跳转，也可以直接输入页面名称。', network: '语音服务暂时连不上。请直接输入页面名称后回车。', noSpeech: '没有听清。请再说一次，或输入页面名称后回车。', audio: '没有检测到麦克风。请直接输入页面名称后回车。', none: '没有找到页面', choose: '有多个相近页面，请选择', heard: '听到' },
-        en: { title: 'Open a page by voice', stop: 'Finish and open the page', listening: 'Say the page name, then click the microphone again', placeholder: 'Or type a page name and press Enter', unsupported: 'This browser cannot recognize speech. Type a page name and press Enter.', denied: 'Allow the microphone, or type a page name.', network: 'The speech service is unreachable. Type a page name and press Enter.', noSpeech: 'Nothing was heard. Try again, or type a page name.', audio: 'No microphone was found. Type a page name and press Enter.', none: 'No matching page', choose: 'Several pages match. Choose one', heard: 'Heard' },
-        ja: { title: '音声でページを開く', stop: '終了してページを開く', listening: 'ページ名を話してから、もう一度マイクを押してください', placeholder: 'またはページ名を入力して Enter', unsupported: 'このブラウザは音声認識に対応していません。ページ名を入力して Enter を押してください。', denied: 'マイクを許可するか、ページ名を入力してください。', network: '音声サービスに接続できません。ページ名を入力して Enter を押してください。', noSpeech: '聞き取れませんでした。もう一度話すか、ページ名を入力してください。', audio: 'マイクが見つかりません。ページ名を入力して Enter を押してください。', none: '該当するページがありません', choose: '候補が複数あります。選択してください', heard: '認識' },
-        fr: { title: 'Ouvrir une page à la voix', stop: 'Terminer et ouvrir la page', listening: 'Dites le nom de la page, puis cliquez à nouveau sur le micro', placeholder: 'Ou saisissez un nom de page et appuyez sur Entrée', unsupported: 'Ce navigateur ne reconnaît pas la voix. Saisissez un nom de page.', denied: 'Autorisez le microphone, ou saisissez un nom de page.', network: 'Le service vocal est injoignable. Saisissez un nom de page.', noSpeech: 'Rien n’a été entendu. Réessayez ou saisissez un nom de page.', audio: 'Aucun microphone détecté. Saisissez un nom de page.', none: 'Aucune page correspondante', choose: 'Plusieurs pages correspondent. Choisissez-en une', heard: 'Entendu' },
-        es: { title: 'Abrir una página por voz', stop: 'Terminar y abrir la página', listening: 'Diga el nombre de la página y pulse el micrófono otra vez', placeholder: 'O escriba un nombre y pulse Intro', unsupported: 'Este navegador no reconoce la voz. Escriba el nombre de la página.', denied: 'Permita el micrófono o escriba el nombre de la página.', network: 'No se puede conectar al servicio de voz. Escriba el nombre de la página.', noSpeech: 'No se oyó nada. Inténtelo de nuevo o escriba el nombre.', audio: 'No se detectó un micrófono. Escriba el nombre de la página.', none: 'No hay una página coincidente', choose: 'Hay varias páginas. Elija una', heard: 'Oído' },
-        ru: { title: 'Открыть страницу голосом', stop: 'Завершить и открыть страницу', listening: 'Назовите страницу и нажмите микрофон ещё раз', placeholder: 'Или введите название и нажмите Enter', unsupported: 'Этот браузер не распознаёт речь. Введите название страницы.', denied: 'Разрешите микрофон или введите название страницы.', network: 'Служба распознавания недоступна. Введите название страницы.', noSpeech: 'Речь не распознана. Повторите или введите название.', audio: 'Микрофон не найден. Введите название страницы.', none: 'Страница не найдена', choose: 'Подходит несколько страниц. Выберите одну', heard: 'Распознано' }
+        zh: { title: '语音打开页面', stop: '结束并打开页面', close: '关闭', listening: '请说要打开的页面名称，说完后再次点击麦克风', placeholder: '或输入页面名称后回车', unsupported: '当前浏览器不能语音识别。请直接输入页面名称后回车。', denied: '需要允许麦克风后才能语音跳转，也可以直接输入页面名称。', network: '语音服务暂时连不上。请直接输入页面名称后回车。', noSpeech: '没有听清。请再说一次，或输入页面名称后回车。', audio: '没有检测到麦克风。请直接输入页面名称后回车。', none: '没有找到页面', choose: '有多个相近页面，请选择', heard: '听到' },
+        en: { title: 'Open a page by voice', stop: 'Finish and open the page', close: 'Close', listening: 'Say the page name, then click the microphone again', placeholder: 'Or type a page name and press Enter', unsupported: 'This browser cannot recognize speech. Type a page name and press Enter.', denied: 'Allow the microphone, or type a page name.', network: 'The speech service is unreachable. Type a page name and press Enter.', noSpeech: 'Nothing was heard. Try again, or type a page name.', audio: 'No microphone was found. Type a page name and press Enter.', none: 'No matching page', choose: 'Several pages match. Choose one', heard: 'Heard' },
+        ja: { title: '音声でページを開く', stop: '終了してページを開く', close: '閉じる', listening: 'ページ名を話してから、もう一度マイクを押してください', placeholder: 'またはページ名を入力して Enter', unsupported: 'このブラウザは音声認識に対応していません。ページ名を入力して Enter を押してください。', denied: 'マイクを許可するか、ページ名を入力してください。', network: '音声サービスに接続できません。ページ名を入力して Enter を押してください。', noSpeech: '聞き取れませんでした。もう一度話すか、ページ名を入力してください。', audio: 'マイクが見つかりません。ページ名を入力して Enter を押してください。', none: '該当するページがありません', choose: '候補が複数あります。選択してください', heard: '認識' },
+        fr: { title: 'Ouvrir une page à la voix', stop: 'Terminer et ouvrir la page', close: 'Fermer', listening: 'Dites le nom de la page, puis cliquez à nouveau sur le micro', placeholder: 'Ou saisissez un nom de page et appuyez sur Entrée', unsupported: 'Ce navigateur ne reconnaît pas la voix. Saisissez un nom de page.', denied: 'Autorisez le microphone, ou saisissez un nom de page.', network: 'Le service vocal est injoignable. Saisissez un nom de page.', noSpeech: 'Rien n’a été entendu. Réessayez ou saisissez un nom de page.', audio: 'Aucun microphone détecté. Saisissez un nom de page.', none: 'Aucune page correspondante', choose: 'Plusieurs pages correspondent. Choisissez-en une', heard: 'Entendu' },
+        es: { title: 'Abrir una página por voz', stop: 'Terminar y abrir la página', close: 'Cerrar', listening: 'Diga el nombre de la página y pulse el micrófono otra vez', placeholder: 'O escriba un nombre y pulse Intro', unsupported: 'Este navegador no reconoce la voz. Escriba el nombre de la página.', denied: 'Permita el micrófono o escriba el nombre de la página.', network: 'No se puede conectar al servicio de voz. Escriba el nombre de la página.', noSpeech: 'No se oyó nada. Inténtelo de nuevo o escriba el nombre.', audio: 'No se detectó un micrófono. Escriba el nombre de la página.', none: 'No hay una página coincidente', choose: 'Hay varias páginas. Elija una', heard: 'Oído' },
+        ru: { title: 'Открыть страницу голосом', stop: 'Завершить и открыть страницу', close: 'Закрыть', listening: 'Назовите страницу и нажмите микрофон ещё раз', placeholder: 'Или введите название и нажмите Enter', unsupported: 'Этот браузер не распознаёт речь. Введите название страницы.', denied: 'Разрешите микрофон или введите название страницы.', network: 'Служба распознавания недоступна. Введите название страницы.', noSpeech: 'Речь не распознана. Повторите или введите название.', audio: 'Микрофон не найден. Введите название страницы.', none: 'Страница не найдена', choose: 'Подходит несколько страниц. Выберите одну', heard: 'Распознано' }
     };
 
     function text(key) {
@@ -509,12 +509,23 @@
         }
     }
 
+    function dismiss(vm) {
+        stop(vm);
+        if (!vm) {
+            return;
+        }
+        vm.voiceNavPanelVisible = false;
+        vm.voiceNavChoices = [];
+        vm.voiceNavDraft = '';
+        console.debug('[ncf-voice] dismiss');
+    }
+
     function choose(vm, choice) {
         if (!choice || !isSafeUrl(choice.url)) {
             console.debug('[ncf-voice] blocked url', choice && choice.url);
             return;
         }
-        stop(vm);
+        dismiss(vm);
         console.debug('[ncf-voice] navigate', choice.label, choice.url);
         if (window.ncfOpenAdminPage && window.ncfOpenAdminPage(choice.url, choice.label)) {
             return;
@@ -721,6 +732,7 @@
         toggle: toggle,
         submitText: submitText,
         choose: choose,
-        stop: stop
+        stop: stop,
+        dismiss: dismiss
     };
 })(window);

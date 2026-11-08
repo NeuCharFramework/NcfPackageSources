@@ -102,6 +102,28 @@ test('标签超出可视宽度时才显示左右滚动', function () {
     assert.deepEqual(tabs.tabScrollState(280, 480, 200), { canScrollLeft: true, canScrollRight: false });
 });
 
+test('当前页面写进外壳锚点，复制后能打开同一页', function () {
+    const state = tabs.openTab(initial(), '/Admin/Role/Index?id=8', '角色', 2, 30, shellHref).state;
+    const active = state.tabs.find(function (tab) { return tab.id === state.activeId; });
+    const home = state.tabs.find(function (tab) { return tab.isShell; });
+    assert.equal(tabs.shellAddress(active), '/Admin/Index?ncfShell=1#/Admin/Role/Index?id=8');
+    assert.equal(tabs.shellAddress(home), '/Admin/Index?ncfShell=1');
+    assert.equal(tabs.pageUrlFromLocationHash('#/Admin/Role/Index?id=8'), '/Admin/Role/Index?id=8');
+    assert.equal(tabs.pageUrlFromLocationHash('#/Admin/AdminChat/Chat?mode=1#session-15'), '/Admin/AdminChat/Chat?mode=1#session-15');
+    assert.equal(tabs.pageUrlFromLocationHash(''), '');
+    assert.equal(tabs.pageUrlFromLocationHash('#session-15'), '');
+    assert.equal(tabs.pageUrlFromLocationHash('#/Admin/Login'), '');
+    assert.equal(tabs.pageUrlFromLocationHash('#/Admin/Login/Index'), '');
+
+    const restored = initial({
+        openUrl: tabs.pageUrlFromLocationHash('#/Admin/AdminChat/Chat?mode=1#session-15')
+    });
+    assert.equal(restored.activeId, '/admin/adminchat/chat?mode=1');
+    const chat = restored.tabs.find(function (tab) { return tab.id === restored.activeId; });
+    assert.equal(chat.url, '/Admin/AdminChat/Chat?mode=1#session-15');
+    assert.equal(chat.frameUrl.includes('#session-15'), true);
+});
+
 test('超出上限时关闭最早且不是当前、也不是首页的标签', function () {
     let state = initial();
     for (let i = 0; i < tabs.MAX_ADMIN_TABS + 2; i++) {

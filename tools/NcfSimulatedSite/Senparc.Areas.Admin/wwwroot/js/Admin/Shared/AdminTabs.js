@@ -1,5 +1,7 @@
 // 后台顶部标签页。
 // 外壳固定为 /Admin/Index?ncfShell=1，左侧菜单打开的页面放进 iframe（embedded=1）。
+// 当前页面写在锚点里，复制后可直接打开，例如：
+// /Admin/Index?ncfShell=1#/Admin/AdminUserInfo/Index
 // 同一个地址只保留一个标签；再次打开时切回该标签，不重新加载。
 (function (root) {
     'use strict';
@@ -401,6 +403,64 @@
         return { state: current, activeTab: active };
     }
 
+    function shellPageHash(tab) {
+        if (!tab || tab.isShell || !tab.url) {
+            return '';
+        }
+        var url = String(tab.url);
+        if (url.charAt(0) !== '/') {
+            return '';
+        }
+        return '#' + url;
+    }
+
+    function shellAddress(tab) {
+        return '/Admin/Index?ncfShell=1' + shellPageHash(tab);
+    }
+
+    // 锚点只接受后台页面。#session-15 这类页面内部锚点、登录地址和其他片段都留给原页面。
+    function pageUrlFromLocationHash(hash) {
+        var value = String(hash || '');
+        if (value.charAt(0) === '#') {
+            value = value.slice(1);
+        }
+        if (!value) {
+            return '';
+        }
+        try {
+            value = decodeURIComponent(value);
+        } catch (error) {
+            console.debug('[NCF][AdminTabs] 锚点无法解码', error && error.message);
+        }
+        if (value.charAt(0) !== '/') {
+            return '';
+        }
+        var path = value.split('?')[0].split('#')[0];
+        if (!/^\/admin(\/|$)/i.test(path) || /^\/admin\/login(\/|$)/i.test(path)) {
+            return '';
+        }
+        return value;
+    }
+
+    function syncShellLocation(state) {
+        if (!root.history || !root.location || typeof root.history.replaceState !== 'function') {
+            return;
+        }
+        var active = null;
+        (state && state.tabs || []).forEach(function (tab) {
+            if (tab.id === state.activeId) {
+                active = tab;
+            }
+        });
+        var next = root.location.pathname + '?ncfShell=1' + shellPageHash(active);
+        var current = root.location.pathname + root.location.search + root.location.hash;
+        if (next === current) {
+            return;
+        }
+        root.history.replaceState(root.history.state, '', next);
+        console.debug('[NCF][AdminTabs] 页面锚点', shellPageHash(active) || '(首页)');
+    }
+
     function readStorage() {
         try {
             var parsed = JSON.parse(root.sessionStorage.getItem(STORAGE_KEY) || '');
@@ -622,6 +682,7 @@
             highlightMenu(active.menuIndex);
         }
         scrollActiveTabIntoView();
+        syncShellLocation(next);
         console.debug('[NCF][AdminTabs]', reason, active && active.url, 'tabs', (next.tabs || []).length);
         return active;
     }
@@ -669,20 +730,39 @@
     function installShell(locationHref) {
         var currentUrl = new URL(locationHref);
         var stored = readStorage();
+        var hashPage = pageUrlFromLocationHash(currentUrl.hash);
         var initial = createInitialState({
             shellHref: locationHref,
             storedTabs: stored.tabs,
             activeId: stored.activeId,
-            openUrl: currentUrl.searchParams.get('ncfOpen'),
+            openUrl: currentUrl.searchParams.get('ncfOpen') || hashPage,
             homeTitle: textOf('home', '首页'),
             untitledTitle: textOf('untitled', '未命名页面'),
             now: Date.now()
         });
         publish(initial, 'ready');
 
-        if (currentUrl.searchParams.has('ncfOpen')) {
-            root.history.replaceState(null, '', currentUrl.pathname + '?ncfShell=1' + currentUrl.hash);
-        }
+        root.addEventListener('hashchange', function () {
+            var pageUrl = pageUrlFromLocationHash(root.location.hash);
+            var current = snapshot();
+            if (!current.enabled) {
+                return;
+            }
+            if (!pageUrl) {
+                if (current.activeId !== current.shellId) {
+                    publish(activateTab(current, current.shellId), 'hash-home');
+                }
+                return;
+            }
+            var parsed = parseAdminUrl(pageUrl, root.location.href);
+            if (!parsed || !parsed.hijack || current.activeId === parsed.id) {
+                return;
+            }
+            var result = openTab(current, pageUrl, '', null, Date.now(), root.location.href);
+            if (result.handled) {
+                publish(result.state, 'hash');
+            }
+        });
 
         root.ncfHasAdminTab = function (url) {
             var parsed = parseAdminUrl(url, root.location.href);
@@ -828,7 +908,10 @@
         activateTab: activateTab,
         closeTab: closeTab,
         applyMenuTitles: applyMenuTitles,
-        tabScrollState: tabScrollState
+        tabScrollState: tabScrollState,
+        shellPageHash: shellPageHash,
+        shellAddress: shellAddress,
+        pageUrlFromLocationHash: pageUrlFromLocationHash
     };
 
     root.NcfAdminTabs = api;

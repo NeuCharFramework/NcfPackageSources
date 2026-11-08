@@ -239,7 +239,14 @@
                                         @@click="toggleVoiceNav">
                                     <i class="fa" :class="voiceNavListening ? 'fa-stop' : 'fa-microphone'"></i>
                                 </button>
-                                <div v-if="voiceNavPanelVisible" class="admin-voice-nav-panel" role="status">
+                                <div v-if="voiceNavPanelVisible" class="admin-voice-nav-panel" role="dialog" :aria-label="voiceNavTitle">
+                                    <button type="button"
+                                            class="admin-voice-nav-close"
+                                            :title="voiceNavCloseLabel"
+                                            :aria-label="voiceNavCloseLabel"
+                                            @@click.stop="closeVoiceNav">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </button>
                                     <p class="admin-voice-nav-text">{{ voiceNavMessage }}</p>
                                     <input class="admin-voice-nav-input"
                                            type="text"
