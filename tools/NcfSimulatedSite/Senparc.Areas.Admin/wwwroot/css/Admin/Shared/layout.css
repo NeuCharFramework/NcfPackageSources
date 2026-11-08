@@ -828,6 +828,11 @@ li {
     white-space: nowrap;
 }
 
+/* 首页没有关闭按钮，左右留白要一样，文字才在标签中间。 */
+.admin-page-tab-main:only-child {
+    padding-right: 12px;
+}
+
 .admin-page-tab-close {
     display: inline-flex;
     align-items: center;
