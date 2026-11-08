@@ -469,7 +469,7 @@ var chatApp = new Vue({
         if (!openPanel) return;
         const target = event.target;
         // 模型下拉、Memory 菜单和说明弹层都挂在 body 上，点它们不算离开设置面板。
-        if (target && target.closest && target.closest('details.chat-inline-settings, .el-select-dropdown, .el-dropdown-menu, .el-dialog__wrapper, .el-message-box__wrapper, .ncf-doc-help-dialog')) {
+        if (target && target.closest && target.closest('details.chat-inline-settings, .el-popper, .el-select-dropdown, .el-dropdown-menu, .el-dialog__wrapper, .el-message-box__wrapper, .ncf-doc-help-dialog')) {
           return;
         }
         openPanel.open = false;
