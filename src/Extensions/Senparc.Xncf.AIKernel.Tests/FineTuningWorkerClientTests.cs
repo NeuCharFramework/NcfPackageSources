@@ -167,11 +167,11 @@ public class FineTuningWorkerClientTests
         }));
         await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => client.CreateJobAsync(new FineTuningJobRequest
         {
-            Name = "test", ModelId = "model", DatasetId = "data", Method = "lora"
+            Name = "test", ModelId = "model", DatasetId = "data", Method = "lora", Backend = null
         }));
         await Assert.ThrowsExceptionAsync<NcfExceptionBase>(() => client.CreateJobAsync(new FineTuningJobRequest
         {
-            Name = "test", ModelId = "model", DatasetId = "data", Backend = "cpu"
+            Name = "test", ModelId = "model", DatasetId = "data", Backend = "cpu", Method = null
         }));
     }
 

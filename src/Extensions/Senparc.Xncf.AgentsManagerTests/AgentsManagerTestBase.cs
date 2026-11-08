@@ -467,10 +467,10 @@ namespace Senparc.Xncf.AgentsManagerTests
             // is available only after a successful empty response and never when tools are enabled.
             Assert.IsNotNull(typeof(AgentTemplateRunner).GetMethod(
                 "ExecuteBuiltResponseRunnerAsync",
-                BindingFlags.NonPublic | BindingFlags.Static));
+                BindingFlags.NonPublic | BindingFlags.Instance));
             Assert.IsNotNull(typeof(AgentTemplateRunner).GetMethod(
                 "ExecuteEmptyResponseStreamingFallbackAsync",
-                BindingFlags.NonPublic | BindingFlags.Static));
+                BindingFlags.NonPublic | BindingFlags.Instance));
         }
 
         [TestMethod]

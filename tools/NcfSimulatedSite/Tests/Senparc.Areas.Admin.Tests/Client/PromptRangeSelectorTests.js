@@ -219,7 +219,7 @@ function deferred() {
     const layout = fs.readFileSync(path.join(admin, 'Areas/Admin/Pages/Shared/_Layout_Vue.cshtml'), 'utf8');
     assert.ok(layout.indexOf('PromptRangeSelector.js') < layout.indexOf('@RenderSection("scripts"'));
     const chat = fs.readFileSync(path.join(admin, 'Areas/Admin/Pages/AdminChat/Chat.cshtml'), 'utf8');
-    assert.match(chat, /v-model="inputMessage"\s+ref="promptMessageInput"\s+v-prompt-range="!isSending"/);
+    assert.match(chat, /v-model="inputMessage"\s+ref="promptMessageInput"\s+v-prompt-range="!isCurrentSessionRunning"/);
     assert.match(chat, /v-model="chatInputText"\s+ref="promptLauncherInput"\s+v-prompt-range="!isCreatingSession"/);
     assert.ok(!source.includes('v-html'), 'Prompt content must be rendered as literal text.');
     assert.match(source, /v-model="sortBy"[\s\S]*?@change="search\(1\)"/);

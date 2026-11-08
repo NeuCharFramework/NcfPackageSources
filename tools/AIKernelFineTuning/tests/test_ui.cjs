@@ -533,16 +533,19 @@ test("creating and editing Workers validates Worker DTOs rather than job DTOs", 
     const { app, context } = instance();
     app.pollBusy = true;
     app.workerEditorVisible = true;
-    app.workerEditor = { id: 0, alias: "cpu_lab", name: "CPU lab", endpoint: "http://127.0.0.1:8091",
+    app.workerEditor = { ...app.blankWorkerEditor(), id: 0, alias: "cpu_lab", name: "CPU lab", endpoint: "http://127.0.0.1:8091",
         requestTimeoutSeconds: 180, enabled: true, note: "" };
     context.service.post = async (url, payload) => ({
-        data: { success: true, data: { ...payload, id: 1, hasConfiguredSecret: true } }
+        data: { success: true, data: { ...payload, id: 1, hasConfiguredSecret: true, secretPath: "" } }
+    });
+    context.service.get = async () => ({
+        data: { success: true, data: { state: "External", secretPath: "", commandPreview: "", recentLogs: [] } }
     });
     await app.saveWorker();
     assert.equal(app.actionError, "");
     assert.equal(app.workers.length, 1);
     assert.equal(app.workerAlias, "cpu_lab");
-    assert.equal(app.workerEditorVisible, false);
+    assert.equal(app.workerEditorVisible, true);
     app.openWorkerEditor(app.workers[0]);
     app.workerEditor.name = "Updated CPU lab";
     app.workerEditor.requestTimeoutSeconds = 60;

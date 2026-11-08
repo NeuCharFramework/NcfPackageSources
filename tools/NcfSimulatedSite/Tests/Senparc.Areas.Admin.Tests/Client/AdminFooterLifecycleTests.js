@@ -34,6 +34,7 @@ let stateProviders = [{
 const eventSources = [];
 const layoutElement = { id: 'app' };
 const fakeConsole = {
+    debug() { },
     log() { },
     info() { },
     warn() { },
