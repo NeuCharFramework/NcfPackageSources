@@ -11,7 +11,7 @@
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
     修改标识：Senparc - 20261108
-    修改描述：v0.2.0-preview1 设置表加入后更新模型与迁移断言（SQLite、SQL Server 各多一个 AddSettings 迁移）
+    修改描述：v0.1.0-preview1 设置表加入后更新模型与迁移断言（SQLite、SQL Server 各多一个 AddSettings 迁移）
 
 ----------------------------------------------------------------*/
 

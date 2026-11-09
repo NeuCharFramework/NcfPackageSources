@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <Version>0.2.0-preview1</Version>
+    <Version>0.1.0-preview1</Version>
     <PackageReleaseNotes>
-      [2026-11-08] v0.2.0-preview1 新增设置表（Senparc_NeuCharBoxLive_Settings）与 LiveSettingsService，补齐六种数据库的迁移
+      [2026-11-08] v0.1.0-preview1 新增设置表（Senparc_NeuCharBoxLive_Settings）与 LiveSettingsService，补齐六种数据库的迁移
       [2026-11-08] v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
     </PackageReleaseNotes>
     <AssemblyName>Senparc.Xncf.NeuCharBoxLive</AssemblyName>

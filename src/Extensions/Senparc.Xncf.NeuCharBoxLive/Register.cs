@@ -11,7 +11,7 @@
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
     修改标识：Senparc - 20261108
-    修改描述：v0.2.0-preview1 模块版本 0.2：新增设置表，并注册 LiveSettingsService
+    修改描述：v0.1.0-preview1 模块版本 0.2：新增设置表，并注册 LiveSettingsService
 
 ----------------------------------------------------------------*/
 

@@ -11,7 +11,7 @@
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
     修改标识：Senparc - 20261108
-    修改描述：v0.2.0-preview1 新增 MySql、PostgreSQL、Oracle、Dm 的设计时 DbContext 工厂
+    修改描述：v0.1.0-preview1 新增 MySql、PostgreSQL、Oracle、Dm 的设计时 DbContext 工厂
 
 ----------------------------------------------------------------*/
 
