@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 隧道守卫已移除：WrongMethod_405_WithJsonBody 去掉经隧道的用例，开发者异常页改在模块分支之后
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json.Nodes;
@@ -938,10 +941,10 @@ public class ApiTests
     [TestMethod]
     public async Task UnexpectedError_500Internal_NoStackTrace()
     {
-        // The developer exception page (on in Development) sits after the guard, as in the NCF host. A broken store must
-        // still answer the contract's 500 internal, with nothing of the exception in it.
+        // The developer exception page (on in Development) sits between the module's branch and routing. A broken store
+        // must still answer the contract's 500 internal, with nothing of the exception in it.
         await using var h = await LiveHost.StartAsync(services: (_, s) => s.AddSingleton<Faults>(),
-            builder: b => b.UseStores<FaultyStore>(), afterGuard: app => app.UseDeveloperExceptionPage());
+            builder: b => b.UseStores<FaultyStore>(), beforeRouting: app => app.UseDeveloperExceptionPage());
         var c = await h.NewCodeAsync();
         var sid = await h.SessionAsync(c);
         h.Get<Faults>().On = m => m == nameof(IInviteStore.FindAsync)
@@ -1134,14 +1137,10 @@ public class ApiTests
             CollectionAssert.Contains(r.Message.Content.Headers.Allow.ToList(), allow, what);
         }
 
-        // Local (any method reaches routing) and through the tunnel (GET and POST pass the guard).
-        var local = await h.RawAsync("PUT", "/live/api/sessions", "127.0.0.1", "localhost:5660");
-        Assert.AreEqual(405, local.Status);
-        StringAssert.Contains(local.Body, "\"error\":\"bad_request\"");
-        var tunnel = await h.RawAsync("GET", "/live/api/apply", "127.0.0.1", "x.ngrok-free.app",
-            new Dictionary<string, string> { ["X-Forwarded-For"] = "198.51.100.9", ["X-Forwarded-Proto"] = "https" });
-        Assert.AreEqual(405, tunnel.Status);
-        StringAssert.Contains(tunnel.Body, "\"error\":\"bad_request\"");
+        // Any method reaches routing.
+        var put = await h.RawAsync("PUT", "/live/api/sessions", "127.0.0.1", "localhost:5660");
+        Assert.AreEqual(405, put.Status);
+        StringAssert.Contains(put.Body, "\"error\":\"bad_request\"");
         var head = await h.RawAsync("HEAD", "/live/api/health", "127.0.0.1", "localhost:5660");
         Assert.AreEqual((405, ""), head, "a HEAD response has no body");
 

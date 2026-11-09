@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 隧道守卫已移除：注释改为后台页面只受 NCF 管理员登录保护
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -22,8 +25,8 @@ using Senparc.Ncf.XncfBase;
 namespace Senparc.Xncf.NeuCharBoxLive
 {
     /// <summary>
-    /// The admin pages, inside the NCF admin area: they need the admin login, and the tunnel guard keeps every path but
-    /// /live/api unreachable from outside, so they work on localhost only.
+    /// The admin pages, inside the NCF admin area: the NCF admin login protects them, like every other module's pages
+    /// (the module's own pipeline branch covers /live/api only).
     /// </summary>
     public partial class Register : IAreaRegister, //注册 XNCF 页面接口
                                     IXncfRazorRuntimeCompilation  //赋能 RazorPage 运行时编译

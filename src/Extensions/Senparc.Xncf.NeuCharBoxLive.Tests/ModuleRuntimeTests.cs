@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 新增模块运行时测试：关闭原因顺序、设置保存即生效、刷新失败、来源与依赖注入
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 模块已关闭（module_closed）时保留设置中的额外来源；未安装与多租户仍只有内置来源
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -136,7 +139,7 @@ public class ModuleRuntimeTests
     [TestMethod]
     public void Constructor_DoesNoIo_AndStartsOffStarting()
     {
-        // The CORS options resolve ILiveRuntime at startup: building the runtime must never read or throw.
+        // The session sweep resolves ILiveRuntime at startup: building the runtime must never read or throw.
         using var rig = new Rig(createTables: false);
         rig.Module.Throw = new InvalidOperationException("no database yet");
         AssertOff(rig.Runtime.Current, LiveOff.Starting);
@@ -386,10 +389,11 @@ public class ModuleRuntimeTests
         CollectionAssert.AreEqual(LiveCors.BuiltIns.Concat(["https://a.example", "http://b.example:81"]).ToList(), s.Origins.ToList());
         CollectionAssert.DoesNotContain(s.Origins.ToList(), LiveCors.Development[0]);
 
-        // The extras come with an off snapshot read from the settings too, but not before the settings are read.
+        // The extras come with an off snapshot read from the settings too (module_closed reads them as well, see
+        // ModuleClosed_KeepsTheSettingsOrigins_NotInstalledAndMultiTenantDoNot), but not before the settings are read.
         await prod.SaveAsync(Good(extra: ["https://a.example"]) with { Enabled = false });
         CollectionAssert.AreEqual(LiveCors.BuiltIns.Append("https://a.example").ToList(), (await prod.RefreshAsync()).Origins.ToList());
-        prod.Module.Status = ModuleStatus.Closed;
+        prod.Module.Status = ModuleStatus.NotInstalled;
         CollectionAssert.AreEqual(LiveCors.BuiltIns.ToList(), (await prod.RefreshAsync()).Origins.ToList());
 
         using var dev = new Rig("Development");
@@ -411,6 +415,52 @@ public class ModuleRuntimeTests
         s = await prod.RefreshAsync();
         Assert.IsTrue(s.On);
         CollectionAssert.AreEqual(LiveCors.BuiltIns.Append("https://c.example").ToList(), s.Origins.ToList());
+    }
+
+    /// <summary>
+    /// Ruling 11: a closed module is installed, so its settings can be read; its snapshot keeps their extra origins (and
+    /// limits), so a demo on an extra origin can still read health and show live as off. Not installed (the table may not
+    /// exist) and multi-tenant (reads are tenant-filtered) keep the built-ins only. A closed module whose settings can't
+    /// be read is still module_closed, on the built-ins, with no warning.
+    /// </summary>
+    [TestMethod]
+    public async Task ModuleClosed_KeepsTheSettingsOrigins_NotInstalledAndMultiTenantDoNot()
+    {
+        using var rig = new Rig();
+        await rig.SaveAsync(Good(extra: ["https://a.example"]) with { PerCodeDaily = 4 });
+        rig.Module.Status = ModuleStatus.Closed;
+        var s = await rig.RefreshAsync();
+        AssertOff(s, LiveOff.ModuleClosed);
+        CollectionAssert.AreEqual(LiveCors.BuiltIns.Append("https://a.example").ToList(), s.Origins.ToList());
+        Assert.AreEqual(4, s.Limits.PerCodeDaily);
+
+        rig.Module.Status = ModuleStatus.NotInstalled;
+        s = await rig.RefreshAsync();
+        AssertOff(s, LiveOff.NotInstalled);
+        CollectionAssert.AreEqual(LiveCors.BuiltIns.ToList(), s.Origins.ToList());
+
+        rig.Module.Status = ModuleStatus.Closed;
+        rig.MultiTenant = true;
+        s = await rig.RefreshAsync();
+        AssertOff(s, LiveOff.MultiTenant);
+        CollectionAssert.AreEqual(LiveCors.BuiltIns.ToList(), s.Origins.ToList());
+
+        // Development: localhost as well as the extras.
+        using var dev = new Rig("Development");
+        await dev.SaveAsync(Good(extra: ["https://a.example"]));
+        dev.Module.Status = ModuleStatus.Closed;
+        CollectionAssert.AreEqual(LiveCors.BuiltIns.Concat(LiveCors.Development).Append("https://a.example").ToList(),
+            (await dev.RefreshAsync()).Origins.ToList());
+
+        // The settings can't be read (no table): still module_closed, not unavailable, on the built-ins and default limits.
+        using var bare = new Rig(createTables: false);
+        bare.Module.Status = ModuleStatus.Closed;
+        s = await bare.RefreshAsync();
+        AssertOff(s, LiveOff.ModuleClosed);
+        CollectionAssert.AreEqual(LiveCors.BuiltIns.ToList(), s.Origins.ToList());
+        Assert.AreEqual(LiveLimits.Defaults, s.Limits);
+        Assert.AreEqual(0, bare.Warnings);
+        Assert.AreEqual(0, bare.Errors);
     }
 
     // ---- the module's registrations ----

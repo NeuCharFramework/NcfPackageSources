@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 按 NCF 顺序搭建：LiveApiPipeline 在 UseRouting 之前；移除隧道守卫、API 兜底与 “fell through” 终端中间件
+
 ----------------------------------------------------------------*/
 
 using System.Net;
@@ -190,15 +193,15 @@ public sealed class SseStream : IAsyncDisposable
 }
 
 /// <summary>
-/// A TestServer host as Task 10's brief builds it: AddNcbLive with a <see cref="StaticLiveRuntime"/> whose snapshot is on
-/// with a scripted model (<see cref="Chat"/>), an instant pacer on a fake clock and the default in-memory stores; the
-/// guard first, then routing and the controllers. A last terminal middleware answers 200 "fell through", so a 404 can
-/// only come from the guard or a route.
+/// A TestServer host: AddNcbLive with a <see cref="StaticLiveRuntime"/> whose snapshot is on with a scripted model
+/// (<see cref="Chat"/>), an instant pacer on a fake clock and the default in-memory stores; then, in NCF's order, the
+/// module's /live/api branch (<see cref="LiveApiPipeline.Use"/>, as Register.UseXncfModule adds it), routing and the
+/// controllers. PipelineTests builds the full NCF-ordered site through the module's UseXncfModule itself.
 /// </summary>
 public sealed class LiveHost : IAsyncDisposable
 {
+    /// <summary>The longest a test waits for anything (an SSE line, a condition, the host to stop).</summary>
     public static readonly TimeSpan Guard = TimeSpan.FromSeconds(20);
-    public const string FellThrough = "fell through";
 
     /// <summary>The model name the default snapshot plans and runs on.</summary>
     public const string Model = Snapshots.Model;
@@ -230,10 +233,11 @@ public sealed class LiveHost : IAsyncDisposable
     /// <param name="snapshot">The runtime's first snapshot: <see cref="OnSnapshot"/> by default; null skips UseRuntime
     /// (AddNcbLive's default, off with no_model).</param>
     /// <param name="builder">More NcbLiveBuilder calls, e.g. UseStores.</param>
-    /// <param name="afterGuard">Middleware right after the guard, where the NCF host has its own (static files, error pages).</param>
+    /// <param name="beforeRouting">Middleware between the module's branch and UseRouting, where the NCF host has its own
+    /// (static files, maintenance mode, cookie policy).</param>
     public static async Task<LiveHost> StartAsync(Func<LiveHost, LiveSnapshot?>? snapshot = null,
         Dictionary<string, string?>? config = null, Action<LiveHost, IServiceCollection>? services = null,
-        Action<NcbLiveBuilder>? builder = null, Action<IApplicationBuilder>? afterGuard = null)
+        Action<NcbLiveBuilder>? builder = null, Action<IApplicationBuilder>? beforeRouting = null)
     {
         var h = new LiveHost();
         var first = snapshot is null ? h.OnSnapshot() : snapshot(h);
@@ -255,12 +259,10 @@ public sealed class LiveHost : IAsyncDisposable
                 })
                 .Configure(app =>
                 {
-                    app.UseNcbLiveGuard();
-                    afterGuard?.Invoke(app);
+                    LiveApiPipeline.Use(app);
+                    beforeRouting?.Invoke(app);
                     app.UseRouting();
                     app.UseEndpoints(e => e.MapControllers());
-                    app.UseNcbLiveApiFallback();
-                    app.Run(ctx => ctx.Response.WriteAsync(FellThrough));
                 }))
             .Build();
         await h.Host.StartAsync();
@@ -338,8 +340,8 @@ public sealed class LiveHost : IAsyncDisposable
         resp.StatusCode == HttpStatusCode.OK ? "" : await resp.Content.ReadAsStringAsync();
 
     /// <summary>
-    /// A request with full control of the connection: the remote address, the Host header and any headers, as the
-    /// tunnel (or a local browser) would send it. Returns the status and the body text.
+    /// A request with full control of the connection: the remote address, the Host header and any headers, as a tunnel
+    /// agent (or a local browser) would send it. Returns the status and the body text.
     /// </summary>
     /// <param name="path">
     /// The decoded path exactly as Kestrel hands it on (it decodes %5C to '\' but keeps %2F). Set through the

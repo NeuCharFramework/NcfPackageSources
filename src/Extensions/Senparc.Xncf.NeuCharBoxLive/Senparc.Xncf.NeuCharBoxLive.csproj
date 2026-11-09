@@ -3,6 +3,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.1.0-preview1</Version>
     <PackageReleaseNotes>
+      [2026-11-09] v0.1.0-preview1 模块在 UseXncfModule 中自行接入 /live/api 分支（按运行时来源的 CORS、私有网络预检、JSON 404/405），移除隧道守卫，宿主无需改 Program.cs；模块关闭时保留设置中的额外来源
       [2026-11-08] v0.1.0-preview1 Live 只在模块已安装且开放、未启用多租户、设置已启用且选了 AI Kernel 模型时开启（ModuleLiveRuntime，每 5 秒及保存设置后刷新）
       [2026-11-08] v0.1.0-preview1 模型客户端改由 AI Kernel 模型构建（NeuCharAI、AzureOpenAI、OpenAI、DeepSeek），移除 NeuChar 环境变量密钥
       [2026-11-08] v0.1.0-preview1 新增设置表（Senparc_NeuCharBoxLive_Settings）与 LiveSettingsService，补齐六种数据库的迁移

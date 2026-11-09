@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 新增 ModuleLiveRuntime：每 5 秒及设置保存后刷新快照，替代临时的 StaticLiveRuntime
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 模块已关闭（module_closed）时尽力读取设置，保留其额外来源与限额；读不到时用内置来源
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Hosting;
@@ -25,11 +28,12 @@ namespace Senparc.Xncf.NeuCharBoxLive.Domain.Services;
 /// <see cref="Period"/> and after every settings save (<see cref="LiveSettingsService.Changed"/>) while the hosted service
 /// runs. Resolve it as <see cref="ILiveRuntime"/>, never as this type: AddNcbLive wraps it when the options have problems.
 /// <para>
-/// The off reason is the first that applies: <see cref="LiveOff.MultiTenant"/>, <see cref="LiveOff.NotInstalled"/>,
-/// <see cref="LiveOff.ModuleClosed"/> (none of these reads the module's tables, which may not exist yet), then from the
-/// settings <see cref="LiveOff.Disabled"/>, <see cref="LiveOff.NoModel"/> (no plan model), <see cref="LiveOff.ModelMissing"/>
-/// and <see cref="LiveOff.ModelUnsupported"/> (either model). A run model of null is the plan model. A snapshot read from
-/// the settings has their limits and extra origins, on or off.
+/// The off reason is the first that applies: <see cref="LiveOff.MultiTenant"/>, <see cref="LiveOff.NotInstalled"/> (neither
+/// reads the module's tables, which may not exist yet or be tenant-filtered: built-in origins only),
+/// <see cref="LiveOff.ModuleClosed"/> (installed, so it reads the settings for their limits and extra origins, best effort:
+/// the built-ins when they can't be read), then from the settings <see cref="LiveOff.Disabled"/>, <see cref="LiveOff.NoModel"/>
+/// (no plan model), <see cref="LiveOff.ModelMissing"/> and <see cref="LiveOff.ModelUnsupported"/> (either model). A run
+/// model of null is the plan model. A snapshot read from the settings has their limits and extra origins, on or off.
 /// </para>
 /// <para>
 /// A refresh that throws (the database is down, the settings table isn't there) turns live off with
@@ -64,7 +68,7 @@ public sealed class ModuleLiveRuntime : ILiveRuntime, IHostedService
     Task? _loop;
     DateTimeOffset? _warnedAt;
 
-    /// <summary>Reads nothing and never throws (the CORS options resolve the runtime at startup): it starts off, <see cref="LiveOff.Starting"/>.</summary>
+    /// <summary>Reads nothing and never throws (the session sweep resolves the runtime at startup): it starts off, <see cref="LiveOff.Starting"/>.</summary>
     /// <param name="multiTenant">Whether NCF runs multi-tenant (SiteConfig.SenparcCoreSetting.EnableMultiTenant); read on every refresh.</param>
     public ModuleLiveRuntime(LiveSettingsService settings, AiKernelChatClients clients, IModuleState module, IAiModelSource models,
         IHostEnvironment env, Func<bool> multiTenant, TimeProvider tp, ILogger<ModuleLiveRuntime> log)
@@ -116,7 +120,7 @@ public sealed class ModuleLiveRuntime : ILiveRuntime, IHostedService
         switch (await _module.GetAsync(ct).ConfigureAwait(false))
         {
             case ModuleStatus.NotInstalled: return LiveSnapshot.Off(LiveOff.NotInstalled, _baseOrigins);
-            case ModuleStatus.Closed: return LiveSnapshot.Off(LiveOff.ModuleClosed, _baseOrigins);
+            case ModuleStatus.Closed: return await ClosedAsync(ct).ConfigureAwait(false);
         }
 
         var s = await _settings.GetAsync(ct).ConfigureAwait(false);
@@ -134,6 +138,24 @@ public sealed class ModuleLiveRuntime : ILiveRuntime, IHostedService
             ? LiveOff.ModelMissing
             : plan.OffReason ?? run.OffReason;
         return reason is null ? new LiveSnapshot(s.Limits, plan.Model, run.Model, origins, null) : Off(reason);
+    }
+
+    /// <summary>
+    /// Off with <see cref="LiveOff.ModuleClosed"/>, with the settings' limits and extra origins, so a demo on an extra origin
+    /// can still read health and show live as off. Best effort: settings that can't be read give the defaults and the
+    /// base origins, with no warning (closing the module is a state, not a failure).
+    /// </summary>
+    async Task<LiveSnapshot> ClosedAsync(CancellationToken ct)
+    {
+        try
+        {
+            var s = await _settings.GetAsync(ct).ConfigureAwait(false);
+            return new LiveSnapshot(s.Limits, null, null, OriginsOf(s), LiveOff.ModuleClosed);
+        }
+        catch (Exception) when (!ct.IsCancellationRequested)
+        {
+            return LiveSnapshot.Off(LiveOff.ModuleClosed, _baseOrigins);
+        }
     }
 
     /// <summary>

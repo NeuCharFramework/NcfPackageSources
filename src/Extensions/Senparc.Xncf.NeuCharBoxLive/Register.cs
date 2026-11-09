@@ -19,13 +19,18 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 改用 ModuleLiveRuntime：模块已安装且开放、未启用多租户、设置已启用且选了模型时才开启 Live
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 UseXncfModule 接入模块自己的 /live/api 分支（LiveApiPipeline），宿主 Program.cs 无需改动
+
 ----------------------------------------------------------------*/
 
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Senparc.Xncf.NeuCharBoxLive.Api;
+using Senparc.CO2NET.RegisterServices;
 using Senparc.Ncf.Core.Config;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Database;
@@ -111,6 +116,17 @@ namespace Senparc.Xncf.NeuCharBoxLive
                 (NeuCharBoxLiveSenparcEntities)sp.GetRequiredService(MultipleDatabasePool.Instance.GetXncfDbContextType(GetType())));
 
             return base.AddXncfModule(services, configuration, env);
+        }
+
+        /// <summary>
+        /// NCF calls this for every scanned module, installed or not, before the host's UseRouting: the module adds its own
+        /// /live/api branch here (<see cref="LiveApiPipeline"/>: CORS on the snapshot's origins, the contract's JSON 404 and
+        /// 405), so the host's Program.cs needs no edit. Nothing outside /live/api goes through it.
+        /// </summary>
+        public override IApplicationBuilder UseXncfModule(IApplicationBuilder app, IRegisterService registerService)
+        {
+            LiveApiPipeline.Use(app);
+            return base.UseXncfModule(app, registerService);
         }
     }
 }

@@ -13,11 +13,11 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 新增 UseRuntime(factory)；配置有问题时的关闭快照保留运行时的限额与来源
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 移除 UseNcbLiveGuard（隧道守卫）与 UseNcbLiveApiFallback，改由 LiveApiPipeline 接入；AddCors 不再注册具名策略
+
 ----------------------------------------------------------------*/
 
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -99,10 +99,11 @@ public static class NcbLiveServiceCollectionExtensions
     /// <summary>
     /// The live server: LiveOptions from section NcbLive (one plain singleton instance), the runtime
     /// (<see cref="NcbLiveBuilder.UseRuntime{TRuntime}"/>) behind ILiveRuntime, the UsageDay of NcbLive:UsageTimeZone,
-    /// the stores, access, sessions, a runner per request, the session sweep, LiveApiController and the CORS policy
-    /// <see cref="LiveCors.Policy"/>. It never throws for the options: when <see cref="LiveOptions.Problems"/> names any,
-    /// they are logged (as an error, by property name, when the runtime is first resolved) and every snapshot the engine
-    /// reads is off with <see cref="LiveOff.Config"/>.
+    /// the stores, access, sessions, a runner per request, the session sweep, LiveApiController and the CORS services. It
+    /// never throws for the options: when <see cref="LiveOptions.Problems"/> names any, they are logged (as an error, by
+    /// property name, when the runtime is first resolved, at the latest by the session sweep at startup) and every snapshot
+    /// the engine reads is off with <see cref="LiveOff.Config"/>. The HTTP side (CORS, the JSON 404 and 405) is
+    /// <see cref="LiveApiPipeline.Use"/>, which the module adds from its UseXncfModule.
     /// </summary>
     public static IServiceCollection AddNcbLive(this IServiceCollection s, IConfiguration cfg, Action<NcbLiveBuilder>? configure = null)
     {
@@ -153,10 +154,9 @@ public static class NcbLiveServiceCollectionExtensions
 
         s.AddHostedService<SessionSweepService>();
         s.AddControllers().AddApplicationPart(typeof(LiveApiController).Assembly);
-        // The origins are the runtime's when the policy is first built (at startup); Task 6 makes them follow the snapshot.
+        // Only so ICorsService exists (AddCors adds nothing a host already has). No named policy and no policy provider:
+        // either would touch the host's own CORS. LiveCorsMiddleware builds the policy per request from the snapshot.
         s.AddCors();
-        s.AddOptions<CorsOptions>().Configure<ILiveRuntime>((o, runtime) =>
-            o.AddPolicy(LiveCors.Policy, p => LiveCors.Build(p, runtime.Current.Origins)));
         return s;
     }
 
@@ -171,54 +171,6 @@ public static class NcbLiveServiceCollectionExtensions
     sealed class ConfigOffRuntime(ILiveRuntime inner) : ILiveRuntime
     {
         public LiveSnapshot Current => inner.Current with { Plan = null, Run = null, OffReason = LiveOff.Config };
-    }
-
-    /// <summary>
-    /// The tunnel guard, then, for /live/api, the JSON body for a 405 and CORS. Call it first, right after building the
-    /// app: nothing may run before the guard. It also builds SessionManager (and so the runtime), so options with
-    /// problems are logged at startup, not on a visitor's first call.
-    /// </summary>
-    public static IApplicationBuilder UseNcbLiveGuard(this IApplicationBuilder app)
-    {
-        _ = app.ApplicationServices.GetRequiredService<SessionManager>();
-        app.UseMiddleware<TunnelGuardMiddleware>();
-        app.UseWhen(ctx => TunnelGuardMiddleware.IsLiveApi(ctx.Request.Path), branch =>
-        {
-            branch.Use(JsonMethodNotAllowedAsync);
-            branch.UseCors(LiveCors.Policy);
-        });
-        return app;
-    }
-
-    /// <summary>
-    /// A wrong method on a live route: routing's 405 (it sets Allow, writes nothing) gets the contract's JSON body,
-    /// <c>{"error":"bad_request","message":…}</c>, keeping the 405 (contract, server final review). It runs around the
-    /// rest of the pipeline, so it holds wherever the host puts routing. A HEAD response stays empty.
-    /// </summary>
-    static async Task JsonMethodNotAllowedAsync(HttpContext ctx, RequestDelegate next)
-    {
-        await next(ctx);
-        if (ctx.Response.StatusCode == StatusCodes.Status405MethodNotAllowed && !ctx.Response.HasStarted
-            && !HttpMethods.IsHead(ctx.Request.Method))
-            await LiveErrors.WriteAsync(ctx, "bad_request", StatusCodes.Status405MethodNotAllowed);
-    }
-
-    /// <summary>
-    /// The end of the live API: any /live/api request that routing found no endpoint for gets a JSON 404
-    /// (<c>no_request</c>), so it never falls through to an NCF page, fallback or default file. Add it after the
-    /// routing and endpoint calls (UseRouting, MapControllers, MapRazorPages), before anything terminal.
-    /// </summary>
-    public static IApplicationBuilder UseNcbLiveApiFallback(this IApplicationBuilder app)
-    {
-        return app.Use(async (ctx, next) =>
-        {
-            if (TunnelGuardMiddleware.IsLiveApi(ctx.Request.Path) && ctx.GetEndpoint() is null)
-            {
-                await LiveErrors.WriteAsync(ctx, "no_request");
-                return;
-            }
-            await next(ctx);
-        });
     }
 
     internal static void Forward<TStore>(IServiceCollection s) where TStore : class, IInviteStore, IApplicationStore, IRunStore

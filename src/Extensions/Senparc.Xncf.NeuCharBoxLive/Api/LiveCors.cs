@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 移除具名策略 NcbLive，改为 PolicyFor(origins)：LiveCorsMiddleware 每个请求按快照的来源构建策略
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -19,12 +22,11 @@ namespace Senparc.Xncf.NeuCharBoxLive.Api;
 /// <summary>
 /// The CORS policy for /live/api (spec 4.4, contract Transport): the runtime snapshot's origins, the methods and headers
 /// the demo sends (Authorization and ngrok-skip-browser-warning make even GET health preflighted), and a 10-minute
-/// preflight cache. No credentials: the invite code travels in the Authorization header.
+/// preflight cache. No credentials: the invite code travels in the Authorization header. It is never registered with the
+/// host's CORS options: <see cref="LiveCorsMiddleware"/> builds it per request.
 /// </summary>
 public static class LiveCors
 {
-    public const string Policy = "NcbLive";
-
     /// <summary>The published demo, allowed in every snapshot.</summary>
     public static IReadOnlyList<string> BuiltIns { get; } = new[] { "https://leozheng265.github.io" };
 
@@ -52,9 +54,11 @@ public static class LiveCors
         return true;
     }
 
-    public static void Build(CorsPolicyBuilder p, IEnumerable<string> origins) => p
+    /// <summary>The policy for these origins (a snapshot's): <see cref="Methods"/>, <see cref="Headers"/>, <see cref="MaxAge"/>.</summary>
+    public static CorsPolicy PolicyFor(IEnumerable<string> origins) => new CorsPolicyBuilder()
         .WithOrigins(origins.ToArray())
         .WithMethods(Methods.ToArray())
         .WithHeaders(Headers.ToArray())
-        .SetPreflightMaxAge(MaxAge);
+        .SetPreflightMaxAge(MaxAge)
+        .Build();
 }
