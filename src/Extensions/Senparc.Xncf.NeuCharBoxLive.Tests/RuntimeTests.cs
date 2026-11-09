@@ -7,6 +7,9 @@
 
     创建标识：Senparc - 20261108
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.1.0-preview1 配置有问题时保留运行时的限额；运行中的请求按自己快照的 Token 预算检查；SetChat 保留关闭原因与来源
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json.Nodes;
@@ -51,26 +54,6 @@ public class RuntimeTests
         Assert.AreEqual(liveEnabled, (bool?)r.Body!["liveEnabled"], r.Body.ToJsonString());
     }
 
-    sealed class ListLoggerProvider : ILoggerProvider
-    {
-        public List<(LogLevel Level, string Message)> Entries { get; } = new();
-
-        public ILogger CreateLogger(string categoryName) => new Logger(this);
-
-        public void Dispose() { }
-
-        sealed class Logger(ListLoggerProvider p) : ILogger
-        {
-            public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
-            public bool IsEnabled(LogLevel logLevel) => true;
-
-            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
-            {
-                lock (p.Entries) p.Entries.Add((logLevel, formatter(state, exception)));
-            }
-        }
-    }
-
     [TestMethod]
     public async Task ConfigProblem_HostStarts_AndHealthIsOff()
     {
@@ -89,8 +72,15 @@ public class RuntimeTests
             Assert.IsTrue(logs.Entries.Any(e => e.Level >= LogLevel.Error && e.Message.Contains(nameof(LiveOptions.SessionIdle))),
                 "the problem is logged by property name");
 
-        // The wrapper keeps the runtime's origins, so the demo can still read health and show live as off.
+        // The wrapper keeps the runtime's origins, so the demo can still read health and show live as off, and its limits.
         CollectionAssert.AreEqual(h.Runtime.Current.Origins.ToList(), h.Get<ILiveRuntime>().Current.Origins.ToList());
+        h.Runtime.Current = h.OnSnapshot(limits: new LiveLimits(3, 4, 5), origins: LiveCors.BuiltIns);
+        var wrapped = h.Get<ILiveRuntime>().Current;
+        Assert.AreEqual(new LiveLimits(3, 4, 5), wrapped.Limits);
+        CollectionAssert.AreEqual(LiveCors.BuiltIns.ToList(), wrapped.Origins.ToList());
+        Assert.IsNull(wrapped.Plan);
+        Assert.IsNull(wrapped.Run);
+        Assert.AreEqual(LiveOff.Config, wrapped.OffReason);
     }
 
     [TestMethod]
@@ -151,6 +141,52 @@ public class RuntimeTests
         Assert.AreEqual("model-a", runs[1].Start.Model, "the run log names the model the request started on");
         Assert.AreEqual("model-b", runs[0].Start.Model);
         Assert.IsNotNull(second);
+    }
+
+    [TestMethod]
+    public async Task Request_KeepsSnapshotBudget_WhenBudgetLoweredMidRequest()
+    {
+        // Ruling 8: a running request checks the token budget of its own snapshot; health, access and admin use the current one.
+        await using var h = await LiveHost.StartAsync();
+        var a = LampOk();
+        h.Runtime.Current = h.OnSnapshot(a, limits: new LiveLimits(20, 300, 1_000_000));
+        var c = await h.NewCodeAsync();
+        var sid = await h.SessionAsync(c);
+        await using var sse = await h.OpenSseAsync(c, sid);
+
+        var rid = await h.RequestAsync(c, sid);
+        await sse.UntilAsync("awaiting_approval"); // the plan call is metered (120 tokens)
+        h.SetLimits(l => l with { DailyTokenBudget = 1 });
+        await AssertHealth(h, false);
+
+        Assert.AreEqual(202, (await h.PostAsync($"sessions/{sid}/requests/{rid}/approve", new { }, c.Code)).Code);
+        Assert.AreEqual("ok", (string?)(await sse.UntilAsync("done"))[^1].Data["outcome"], "the run goes on under its own budget");
+        Assert.AreEqual(4, a.Calls.Count, "plan, run, DONE, summary");
+
+        AssertError(await h.PostAsync($"sessions/{sid}/requests", new { text = "Dim the lamp" }, c.Code), 429, "budget");
+        await AssertHealth(h, false);
+    }
+
+    [TestMethod]
+    public void SetChat_SwapsTheModels_KeepingTheRestOfTheSnapshot()
+    {
+        var rt = new StaticLiveRuntime(new LiveSnapshot(new LiveLimits(1, 2, 3), null, null, LiveCors.BuiltIns, LiveOff.Disabled));
+        var chat = new ScriptedChatClient();
+        rt.SetChat(chat);
+        Assert.AreEqual(LiveOff.Disabled, rt.Current.OffReason);
+        Assert.AreEqual(new LiveLimits(1, 2, 3), rt.Current.Limits);
+        CollectionAssert.AreEqual(LiveCors.BuiltIns.ToList(), rt.Current.Origins.ToList());
+        Assert.AreSame(chat, rt.Current.Plan!.Client);
+        Assert.AreSame(chat, rt.Current.Run!.Client);
+        Assert.AreEqual(Snapshots.Model, rt.Current.Plan.Name);
+
+        rt.Current = rt.Current with { Plan = new LiveModel("plan-x", chat), Run = new LiveModel("run-y", chat), OffReason = null };
+        var other = new ScriptedChatClient();
+        rt.SetChat(other);
+        Assert.AreEqual("plan-x", rt.Current.Plan!.Name);
+        Assert.AreEqual("run-y", rt.Current.Run!.Name);
+        Assert.AreSame(other, rt.Current.Run.Client);
+        Assert.IsTrue(rt.Current.On);
     }
 
     [TestMethod]

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.1.0-preview1 SetChat 只换模型（保留关闭原因、来源与限额）；ListLoggerProvider 移到这里供多个测试共用
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.AI;
@@ -66,6 +69,35 @@ public static class Snapshots
     public static void SetLimits(this StaticLiveRuntime rt, Func<LiveLimits, LiveLimits> change) =>
         rt.Current = rt.Current with { Limits = change(rt.Current.Limits) };
 
-    /// <summary>The same limits with another chat client (both models).</summary>
-    public static void SetChat(this StaticLiveRuntime rt, IChatClient chat) => rt.Current = On(chat, rt.Current.Limits);
+    /// <summary>
+    /// Both models on another chat client, keeping their names (<see cref="Model"/> where there was none) and the rest of the
+    /// snapshot: limits, origins and off reason.
+    /// </summary>
+    public static void SetChat(this StaticLiveRuntime rt, IChatClient chat) => rt.Current = rt.Current with
+    {
+        Plan = new LiveModel(rt.Current.Plan?.Name ?? Model, chat),
+        Run = new LiveModel(rt.Current.Run?.Name ?? Model, chat),
+    };
+}
+
+/// <summary>Keeps every host log entry in memory (register it as an ILoggerProvider), so a test can look for errors.</summary>
+public sealed class ListLoggerProvider : ILoggerProvider
+{
+    /// <summary>Lock it while reading: the host may still be logging.</summary>
+    public List<(LogLevel Level, string Message)> Entries { get; } = new();
+
+    public ILogger CreateLogger(string categoryName) => new Logger(this);
+
+    public void Dispose() { }
+
+    sealed class Logger(ListLoggerProvider p) : ILogger
+    {
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+        {
+            lock (p.Entries) p.Entries.Add((logLevel, formatter(state, exception)));
+        }
+    }
 }

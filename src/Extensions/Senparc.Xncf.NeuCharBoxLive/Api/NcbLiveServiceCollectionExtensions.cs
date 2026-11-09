@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.1.0-preview1 新增 UseRuntime(factory)；配置有问题时的关闭快照保留运行时的限额与来源
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Builder;
@@ -50,10 +53,23 @@ public sealed class NcbLiveBuilder
     /// <summary>
     /// The runtime the engine reads its snapshot from (on/off, models, limits, origins): one <typeparamref name="TRuntime"/>
     /// singleton, built by the container. Without a runtime, live is off (no_model) on <see cref="LiveCors.BuiltIns"/>.
+    /// The concrete type is registered too (for the host's own wiring, such as a hosted service), but it bypasses the
+    /// config-off wrapper: everything else resolves <see cref="ILiveRuntime"/>.
     /// </summary>
     public NcbLiveBuilder UseRuntime<TRuntime>() where TRuntime : class, ILiveRuntime
     {
         Runtime = (s => s.AddSingleton<TRuntime>(), sp => sp.GetRequiredService<TRuntime>());
+        return this;
+    }
+
+    /// <summary>
+    /// The same, with the <typeparamref name="TRuntime"/> singleton built by <paramref name="factory"/>: for a runtime whose
+    /// constructor takes something the container shouldn't hold as a service (the module's multi-tenancy check, a Func&lt;bool&gt;).
+    /// </summary>
+    public NcbLiveBuilder UseRuntime<TRuntime>(Func<IServiceProvider, TRuntime> factory) where TRuntime : class, ILiveRuntime
+    {
+        ArgumentNullException.ThrowIfNull(factory);
+        Runtime = (s => s.AddSingleton(factory), sp => sp.GetRequiredService<TRuntime>());
         return this;
     }
 
@@ -151,10 +167,10 @@ public static class NcbLiveServiceCollectionExtensions
         return (_ => { }, _ => off);
     }
 
-    /// <summary>Options with problems: every snapshot is off (config), on the runtime's own origins.</summary>
+    /// <summary>Options with problems: every snapshot is off (config), with the runtime's own limits and origins.</summary>
     sealed class ConfigOffRuntime(ILiveRuntime inner) : ILiveRuntime
     {
-        public LiveSnapshot Current => LiveSnapshot.Off(LiveOff.Config, inner.Current.Origins);
+        public LiveSnapshot Current => inner.Current with { Plan = null, Run = null, OffReason = LiveOff.Config };
     }
 
     /// <summary>
