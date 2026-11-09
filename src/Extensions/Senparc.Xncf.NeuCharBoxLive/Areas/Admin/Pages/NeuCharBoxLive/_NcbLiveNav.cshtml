@@ -1,0 +1,7 @@
+@model string
+@* The three pages; the model is the current page's name. *@
+<nav>
+    <a asp-page="./Applications" asp-route-uid="@Context.Request.Query["uid"]" class="@(Model == "Applications" ? "on" : null)">Applications</a>
+    <a asp-page="./Codes" asp-route-uid="@Context.Request.Query["uid"]" class="@(Model == "Codes" ? "on" : null)">Codes</a>
+    <a asp-page="./Runs" asp-route-uid="@Context.Request.Query["uid"]" class="@(Model == "Runs" ? "on" : null)">Runs</a>
+</nav>

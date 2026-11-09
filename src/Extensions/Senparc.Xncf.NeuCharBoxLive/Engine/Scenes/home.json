@@ -1,0 +1,111 @@
+{
+  "id": "home",
+  "title": "Home, away for a week",
+  "startDay": "2026-11-13",
+  "startHour": 16.5,
+  "suggestions": [
+    "Movie night, but keep an eye on the plant",
+    "I'm away for the weekend, make it look lived in",
+    "Water the plant only if it needs it"
+  ],
+  "devices": [
+    {
+      "id": "lamp", "name": "Floor lamp", "ref": "the floor lamp",
+      "initial": { "on": false, "brightness": 0, "status": "online" },
+      "edit": [ { "field": "brightness", "kind": "number", "min": 0, "max": 1 } ],
+      "actions": [
+        {
+          "name": "set_lamp", "kind": "Write",
+          "description": "Set the floor lamp brightness from 0 (off) to 100.",
+          "safeWhen": { "brightness": 0 },
+          "parameters": {
+            "type": "object",
+            "properties": { "brightness": { "type": "integer", "minimum": 0, "maximum": 100 } },
+            "required": ["brightness"], "additionalProperties": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "blinds", "name": "Blinds", "ref": "the blinds controller",
+      "initial": { "closed": 0, "flat": false, "jammed": false, "status": "online" },
+      "edit": [ { "field": "closed", "kind": "number", "min": 0, "max": 1 } ],
+      "actions": [
+        {
+          "name": "set_blinds", "kind": "Write",
+          "description": "Set how far the blinds are closed, from 0 (open) to 100 (closed).",
+          "parameters": {
+            "type": "object",
+            "properties": { "closed_percent": { "type": "integer", "minimum": 0, "maximum": 100 } },
+            "required": ["closed_percent"], "additionalProperties": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "soil", "name": "Soil sensor", "ref": "the soil sensor",
+      "initial": { "moisture": 34, "probeOut": false, "status": "online" },
+      "edit": [ { "field": "moisture", "kind": "number", "min": 0, "max": 100 } ],
+      "actions": [
+        {
+          "name": "read_soil", "kind": "Read",
+          "description": "Read the plant's current soil moisture percentage.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false }
+        }
+      ]
+    },
+    {
+      "id": "pump", "name": "Water pump", "ref": "the water pump",
+      "initial": { "running": false, "blocked": false, "status": "online" },
+      "edit": [ { "field": "running", "kind": "bool" } ],
+      "actions": [
+        {
+          "name": "run_pump", "kind": "Write",
+          "description": "Run the water pump for a number of seconds. Confirm watering by reading the soil sensor; the pump itself can't confirm the plant got water.",
+          "parameters": {
+            "type": "object",
+            "properties": { "seconds": { "type": "integer", "minimum": 1, "maximum": 30 } },
+            "required": ["seconds"], "additionalProperties": false
+          }
+        },
+        {
+          "name": "stop_pump", "kind": "Safe",
+          "description": "Stop the water pump right away.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false }
+        }
+      ]
+    },
+    {
+      "id": "camera", "name": "Door camera", "ref": "the door camera",
+      "initial": { "armed": false, "motion": false, "off": false, "status": "online" },
+      "edit": [ { "field": "armed", "kind": "bool" }, { "field": "motion", "kind": "bool" } ],
+      "actions": [
+        {
+          "name": "set_door_camera", "kind": "Write",
+          "description": "Arm or disarm the door camera.",
+          "parameters": {
+            "type": "object",
+            "properties": { "armed": { "type": "boolean" } },
+            "required": ["armed"], "additionalProperties": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "thermostat", "name": "Thermostat", "ref": "the thermostat",
+      "initial": { "target": 21, "current": 21.4, "cold": false, "status": "online" },
+      "edit": [ { "field": "target", "kind": "number", "min": 10, "max": 28 }, { "field": "current", "kind": "number", "min": 5, "max": 35 } ],
+      "actions": [
+        {
+          "name": "set_thermostat", "kind": "Write",
+          "description": "Set the thermostat target temperature in degrees Celsius, from 10 to 28.",
+          "parameters": {
+            "type": "object",
+            "properties": { "celsius": { "type": "number", "minimum": 10, "maximum": 28 } },
+            "required": ["celsius"], "additionalProperties": false
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>0.1.0-preview1</Version>
+    <PackageReleaseNotes>
+      [2026-11-08] v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
+    </PackageReleaseNotes>
+    <AssemblyName>Senparc.Xncf.NeuCharBoxLive</AssemblyName>
+    <RootNamespace>Senparc.Xncf.NeuCharBoxLive</RootNamespace>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <Description>NeuCharBox live AI demo: invite-only live sessions</Description>
+    <Title>NeuCharBox Live</Title>
+    <Authors>Senparc</Authors>
+    <Owners>Senparc</Owners>
+    <Copyright>Senparc</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageTags>Senparc,NeuCharFramework,NCF,Senparc.Xncf.NeuCharBoxLive</PackageTags>
+    <PackageIcon>icon.jpg</PackageIcon>
+    <RepositoryUrl>https://github.com/NeuCharFramework/NcfPackageSources</RepositoryUrl>
+    <Configurations>Debug;Release;Test;TemplateRelease</Configurations>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <DefineConstants>$(DefineConstants);XNCF_HAS_DATABASE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\BuildOutPut</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Senparc.CO2NET.WebApi" Version="2.1.9-preview" />
+    <PackageReference Include="Microsoft.Extensions.AI.Abstractions" Version="10.5.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <!-- The engine's scenes (Engine/Scenes/*.json) are read through GetManifestResourceStream. -->
+    <EmbeddedResource Include="Engine\Scenes\*.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.AreaBase\Senparc.Ncf.AreaBase.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.DatabasePlant\Senparc.Ncf.DatabasePlant.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.Service\Senparc.Ncf.Service.csproj" />
+    <ProjectReference Include="..\..\Basic\Senparc.Ncf.XncfBase\Senparc.Ncf.XncfBase.csproj" />
+    <ProjectReference Include="..\System\Senparc.Xncf.AreasBase\[5955]Senparc.Xncf.AreasBase.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\icon.jpg" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="App_Data\Database\SenparcConfig.config" />
+    <None Include="App_Data\Database\SenparcConfig.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Senparc.Xncf.NeuCharBoxLive.Tests" />
+  </ItemGroup>
+  <!-- NeuChar/ needs Senparc.AI.AgentKernel and Microsoft.Extensions.AI.OpenAI (removed again in Task 4). -->
+  <Import Project="$(MSBuildThisFileDirectory)..\..\Senparc.AI.AgentKernel.props" />
+</Project>

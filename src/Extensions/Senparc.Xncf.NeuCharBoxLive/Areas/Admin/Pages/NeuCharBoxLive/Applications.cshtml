@@ -1,0 +1,97 @@
+@page
+@model ApplicationsModel
+@{
+    ViewData["Title"] = "NeuCharBox Live - Applications";
+    Layout = "_Layout_Vue";
+}
+
+@section Style {
+    <partial name="_NcbLiveStyle" />
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>@XR["Area.Extensions"]</el-breadcrumb-item>
+    <el-breadcrumb-item>NeuCharBox Live</el-breadcrumb-item>
+    <el-breadcrumb-item>Applications</el-breadcrumb-item>
+}
+
+@* v-pre: visitor text must never be compiled as a Vue template. *@
+<div class="ncb" v-pre>
+    <h3>Applications</h3>
+    <partial name="_NcbLiveNav" model="@("Applications")" />
+    <p class="muted lead">
+        Newest first. Approve makes an invite code labelled with the email, good for @Model.PerCodeDaily
+        requests a day (change it on Codes), and shows the message to send. The server sends no email.
+    </p>
+
+    @if (Model.Rows.Count == 0)
+    {
+        <p class="muted">No applications yet.</p>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Submitted (ET)</th>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Interest</th>
+                    <th>Scene</th>
+                    <th>What they would try</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.Rows)
+                {
+                    var a = r.App;
+                    <tr id="application-@a.Id" class="@(Model.Approved == a.Id ? "hl" : null)">
+                        <td class="nowrap">@AdminTime.Eastern16(a.Submitted)</td>
+                        <td>@a.Email</td>
+                        <td>@a.Name</td>
+                        <td>@a.Interest</td>
+                        <td>@a.Scene</td>
+                        <td class="text">@a.WouldTry</td>
+                        <td>
+                            <span class="tag @a.Status">@a.Status</span>
+                            @if (r.Code is { } c)
+                            {
+                                <div class="nowrap">@c.Code@(c.Disabled ? " (disabled)" : "")</div>
+                            }
+                            else if (a.CodeId is { } missing)
+                            {
+                                <div class="muted">code #@missing not found</div>
+                            }
+                        </td>
+                        <td>
+                            @if (a.Status != "approved")
+                            {
+                                <form method="post" class="inline" asp-page-handler="Approve" asp-route-id="@a.Id" asp-route-uid="@Model.Uid">
+                                    <button type="submit" class="el-button el-button--primary el-button--mini">Approve</button>
+                                </form>
+                            }
+                            @if (a.Status == "new")
+                            {
+                                <form method="post" class="inline" asp-page-handler="Decline" asp-route-id="@a.Id" asp-route-uid="@Model.Uid"
+                                      data-confirm="Decline the application from @a.Email?">
+                                    <button type="submit" class="el-button el-button--mini">Decline</button>
+                                </form>
+                            }
+                            @if (r.Message is { } message)
+                            {
+                                <textarea id="message-@a.Id" class="msg" readonly>@message</textarea>
+                                <button type="button" class="el-button el-button--mini" data-copy="message-@a.Id">Copy</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@section scripts {
+    <partial name="_NcbLiveScript" />
+}

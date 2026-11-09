@@ -1,0 +1,1134 @@
+{
+  "version": 1,
+  "maxDevices": 20,
+  "categories": ["Lights","Climate","Sensors","Security","Appliances","Energy","Outdoor","Lab","Warehouse","Studio","Work"],
+  "suggestions": [
+    { "needs": [ "soil_sensor", "water_pump" ], "text": "Water the plant when {soil_sensor} reads below 30%" },
+    { "needs": [ "floor_lamp", "door_camera" ], "text": "Turn on {floor_lamp} when {door_camera} sees motion" },
+    { "needs": [ "bed_sensor", "night_light" ], "text": "Turn on {night_light} when {bed_sensor} shows someone got up" },
+    { "needs": [ "key_light", "on_air_sign" ], "text": "Turn on {on_air_sign} and {key_light} when I go live" },
+    { "needs": [ "laser", "power_meter" ], "text": "Open the shutter of {laser} and read {power_meter}" },
+    { "needs": [ "conveyor", "scanner_arch" ], "text": "Arm {scanner_arch}, then run {conveyor} at half speed" },
+    { "needs": [ "cart", "loading_dock" ], "text": "Send {cart} to the dock and open {loading_dock}" },
+    { "needs": [ "air_conditioner", "ceiling_fan" ], "text": "Turn on {air_conditioner} and {ceiling_fan} at 14:00" },
+    { "needs": [ "robot_vacuum", "air_purifier" ], "text": "Run {robot_vacuum}, then switch on {air_purifier} for an hour" },
+    { "needs": [ "smoke_co_alarm", "siren" ], "text": "Check {smoke_co_alarm}, and sound {siren} if it is alarming" },
+    { "needs": [ "video_doorbell", "smart_lock" ], "text": "Check {video_doorbell}, then lock {smart_lock}" },
+    { "needs": [ "ev_charger", "energy_meter" ], "text": "Start charging {ev_charger}, then read {energy_meter}" },
+    { "needs": [ "printer_3d", "label_printer" ], "text": "Start {printer_3d}, then print 3 labels on {label_printer}" },
+    { "needs": [ "thermostat" ], "text": "Keep {thermostat} at 19 °C overnight" },
+    { "needs": [ "kettle_plug" ], "text": "Tell me if {kettle_plug} is still on after 10 minutes" },
+    { "needs": [ "floor_lamp" ], "text": "Dim {floor_lamp} to 30% at 19:00" },
+    { "needs": [ "linear_stage" ], "text": "Move {linear_stage} to 15 mm" },
+    { "needs": [ "tv" ], "text": "Switch {tv} off at 23:00" },
+    { "needs": [ "garage_door" ], "text": "Close {garage_door} at 21:00" },
+    { "needs": [ "door_window_sensor" ], "text": "Tell me if {door_window_sensor} is open" },
+    { "needs": [ "smart_plug" ], "text": "Switch {smart_plug} off at midnight" },
+    { "needs": [ "sprinkler_valve" ], "text": "Run {sprinkler_valve} for 10 minutes" },
+    { "needs": [ "temp_humidity_sensor" ], "text": "Tell me what {temp_humidity_sensor} reads" },
+    { "needs": [], "text": "Check each device and tell me what it's doing" }
+  ],
+  "types": [
+    {
+      "type": "floor_lamp", "name": "Floor lamp", "ref": "the floor lamp", "category": "Lights", "mount": "floor", "new": false,
+      "initial": { "brightness": 0 }, "faultText": "off the network",
+      "edit": [ { "field": "brightness", "kind": "number", "min": 0, "max": 1 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Set {ref} brightness from 0 (off) to 100.",
+          "parameters": { "type": "object", "properties": { "brightness": { "type": "integer", "minimum": 0, "maximum": 100 } }, "required": [ "brightness" ], "additionalProperties": false },
+          "safeWhen": { "brightness": 0 },
+          "effects": [ { "set": "brightness", "arg": "brightness", "scale": 0.01, "ms": 1200 } ],
+          "label": [
+            { "when": { "brightness": 0 }, "text": "{name} → off" },
+            { "when": { "brightness": 100 }, "text": "{name} → full" },
+            { "text": "{name} → {brightness}%" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "blinds", "name": "Blinds", "ref": "the blinds", "category": "Appliances", "mount": "wall", "new": false,
+      "initial": { "closed": 0 }, "faultText": "not responding",
+      "edit": [ { "field": "closed", "kind": "number", "min": 0, "max": 1 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Set how far {ref} are closed, from 0 (open) to 100 (closed).",
+          "parameters": { "type": "object", "properties": { "closed_percent": { "type": "integer", "minimum": 0, "maximum": 100 } }, "required": [ "closed_percent" ], "additionalProperties": false },
+          "effects": [ { "set": "closed", "arg": "closed_percent", "scale": 0.01, "ms": 3000 } ],
+          "label": [
+            { "when": { "closed_percent": 0 }, "text": "{name} → open" },
+            { "when": { "closed_percent": 100 }, "text": "{name} → closed" },
+            { "text": "{name} → {closed_percent}% closed" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "soil_sensor", "name": "Soil sensor", "ref": "the soil sensor", "category": "Sensors", "mount": "floor", "new": false,
+      "initial": { "moisture": 34 }, "faultText": "not responding",
+      "edit": [ { "field": "moisture", "kind": "number", "min": 0, "max": 100 } ],
+      "drift": [ { "field": "moisture", "perHour": -0.0833, "min": 0 } ],
+      "actions": [
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read the current soil moisture percentage at {ref}.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "moisture", "round": 0, "unit": "%" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "water_pump", "name": "Water pump", "ref": "the water pump", "category": "Appliances", "mount": "floor", "new": false,
+      "initial": { "running": false }, "faultText": "not responding",
+      "edit": [ { "field": "running", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "run", "kind": "Write", "outcome": "commanded",
+          "description": "Run {ref} for a number of seconds, from 1 to 30. Confirm watering by reading a soil sensor; the pump itself can't confirm the plant got water.",
+          "parameters": { "type": "object", "properties": { "seconds": { "type": "integer", "minimum": 1, "maximum": 30 } }, "required": [ "seconds" ], "additionalProperties": false },
+          "effects": [
+            { "set": "running", "value": true },
+            { "set": "running", "value": false, "afterArg": "seconds", "msPerUnit": 500, "minMs": 2500 }
+          ],
+          "label": [ { "text": "{name} → run {seconds} s" } ]
+        },
+        {
+          "verb": "stop", "kind": "Safe", "outcome": "confirmed",
+          "description": "Stop {ref} right away.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "effects": [ { "set": "running", "value": false } ],
+          "label": [ { "text": "{name} → stop" } ]
+        }
+      ]
+    },
+    {
+      "type": "door_camera", "name": "Door camera", "ref": "the door camera", "category": "Security", "mount": "wall", "new": false,
+      "initial": { "armed": false, "motion": false }, "faultText": "off the network",
+      "edit": [
+        { "field": "armed", "kind": "bool" },
+        { "field": "motion", "kind": "bool" }
+      ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Arm or disarm {ref} (true arms it, false disarms it).",
+          "parameters": { "type": "object", "properties": { "armed": { "type": "boolean" } }, "required": [ "armed" ], "additionalProperties": false },
+          "effects": [ { "set": "armed", "arg": "armed", "ms": 600 } ],
+          "label": [
+            { "when": { "armed": true }, "text": "{name} → armed" },
+            { "text": "{name} → disarmed" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "thermostat", "name": "Thermostat", "ref": "the thermostat", "category": "Climate", "mount": "wall", "new": false,
+      "initial": { "target": 21, "current": 21.4 }, "faultText": "not responding",
+      "edit": [
+        { "field": "target", "kind": "number", "min": 10, "max": 28 },
+        { "field": "current", "kind": "number", "min": 5, "max": 35 }
+      ],
+      "drift": [ { "field": "current", "perHour": 0.5, "toward": "target" } ],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Set the target temperature of {ref} in degrees Celsius, from 10 to 28.",
+          "parameters": { "type": "object", "properties": { "celsius": { "type": "number", "minimum": 10, "maximum": 28 } }, "required": [ "celsius" ], "additionalProperties": false },
+          "effects": [ { "set": "target", "arg": "celsius", "ms": 600 } ],
+          "label": [ { "text": "{name} → {celsius} °C" } ]
+        }
+      ]
+    },
+    {
+      "type": "bed_sensor", "name": "Bed sensor", "ref": "the bed sensor", "category": "Sensors", "mount": "floor", "new": false,
+      "initial": { "occupied": true }, "faultText": "no signal",
+      "edit": [ { "field": "occupied", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read whether someone is in bed, from the pressure mat under {ref}.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "occupied", "round": 0, "unit": "" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "bedroom_door", "name": "Bedroom door", "ref": "the bedroom door sensor", "category": "Sensors", "mount": "wall", "new": false,
+      "initial": { "open": false }, "faultText": "no signal",
+      "edit": [ { "field": "open", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read whether the bedroom door is open or closed, from {ref}.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "open", "round": 0, "unit": "" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "hallway_motion", "name": "Hallway motion", "ref": "the hallway motion sensor", "category": "Sensors", "mount": "wall", "new": false,
+      "initial": { "motion": false }, "faultText": "offline",
+      "edit": [ { "field": "motion", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read whether {ref} sees movement right now.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "motion", "round": 0, "unit": "" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "kettle_plug", "name": "Kettle plug", "ref": "the kettle plug", "category": "Appliances", "mount": "floor", "new": false,
+      "initial": { "on": false, "watts": 0 }, "faultText": "off the network",
+      "edit": [ { "field": "on", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Switch {ref} on or off (true is on, false is off). It reports its power draw but can't tell whether the kettle is actually heating.",
+          "parameters": { "type": "object", "properties": { "on": { "type": "boolean" } }, "required": [ "on" ], "additionalProperties": false },
+          "safeWhen": { "on": false },
+          "effects": [
+            { "set": "on", "arg": "on", "ms": 600 },
+            { "set": "watts", "value": 2200, "if": { "on": true }, "ms": 600 },
+            { "set": "watts", "value": 0, "if": { "on": false }, "ms": 600 }
+          ],
+          "label": [
+            { "when": { "on": true }, "text": "{name} → on" },
+            { "text": "{name} → off" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "night_light", "name": "Night light", "ref": "the night light", "category": "Lights", "mount": "wall", "new": false,
+      "initial": { "brightness": 0 }, "faultText": "off the network",
+      "edit": [ { "field": "brightness", "kind": "number", "min": 0, "max": 1 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Set {ref} brightness from 0 (off) to 100.",
+          "parameters": { "type": "object", "properties": { "brightness": { "type": "integer", "minimum": 0, "maximum": 100 } }, "required": [ "brightness" ], "additionalProperties": false },
+          "safeWhen": { "brightness": 0 },
+          "effects": [ { "set": "brightness", "arg": "brightness", "scale": 0.01, "ms": 1000 } ],
+          "label": [
+            { "when": { "brightness": 0 }, "text": "{name} → off" },
+            { "when": { "brightness": 100 }, "text": "{name} → full" },
+            { "text": "{name} → {brightness}%" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "hall_light", "name": "Hall light", "ref": "the hall light", "category": "Lights", "mount": "ceiling", "new": false,
+      "initial": { "brightness": 0 }, "faultText": "off the network",
+      "edit": [ { "field": "brightness", "kind": "number", "min": 0, "max": 1 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Set {ref} brightness from 0 (off) to 100.",
+          "parameters": { "type": "object", "properties": { "brightness": { "type": "integer", "minimum": 0, "maximum": 100 } }, "required": [ "brightness" ], "additionalProperties": false },
+          "safeWhen": { "brightness": 0 },
+          "effects": [ { "set": "brightness", "arg": "brightness", "scale": 0.01, "ms": 1200 } ],
+          "label": [
+            { "when": { "brightness": 0 }, "text": "{name} → off" },
+            { "when": { "brightness": 100 }, "text": "{name} → full" },
+            { "text": "{name} → {brightness}%" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "key_light", "name": "Key light", "ref": "the key light", "category": "Studio", "mount": "floor", "new": false,
+      "initial": { "brightness": 0, "kelvin": 5600 }, "faultText": "not responding",
+      "edit": [ { "field": "brightness", "kind": "number", "min": 0, "max": 1 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Set {ref} brightness from 0 (off) to 100, and optionally its colour temperature in kelvin, from 2700 (warm) to 6500 (cool).",
+          "parameters": { "type": "object", "properties": { "brightness": { "type": "integer", "minimum": 0, "maximum": 100 }, "kelvin": { "type": "integer", "minimum": 2700, "maximum": 6500 } }, "required": [ "brightness" ], "additionalProperties": false },
+          "safeWhen": { "brightness": 0 },
+          "effects": [
+            { "set": "brightness", "arg": "brightness", "scale": 0.01, "ms": 800 },
+            { "set": "kelvin", "arg": "kelvin", "ms": 800 }
+          ],
+          "label": [
+            { "when": { "brightness": 0 }, "text": "{name} → off" },
+            { "when": { "brightness": 100 }, "text": "{name} → full" },
+            { "text": "{name} → {brightness}%" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "main_camera", "name": "Main camera", "ref": "the main camera", "category": "Studio", "mount": "floor", "new": false,
+      "initial": { "on": false }, "faultText": "on, but no picture",
+      "edit": [ { "field": "on", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Switch {ref} on or off (true is on, false is off).",
+          "parameters": { "type": "object", "properties": { "on": { "type": "boolean" } }, "required": [ "on" ], "additionalProperties": false },
+          "safeWhen": { "on": false },
+          "effects": [ { "set": "on", "arg": "on", "ms": 600 } ],
+          "label": [
+            { "when": { "on": true }, "text": "{name} → on" },
+            { "text": "{name} → off" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "mic", "name": "Mic", "ref": "the mic", "category": "Studio", "mount": "floor", "new": false,
+      "initial": { "muted": true }, "faultText": "no input",
+      "edit": [ { "field": "muted", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Mute or unmute {ref} (true mutes it, false makes it live).",
+          "parameters": { "type": "object", "properties": { "muted": { "type": "boolean" } }, "required": [ "muted" ], "additionalProperties": false },
+          "safeWhen": { "muted": true },
+          "effects": [ { "set": "muted", "arg": "muted", "ms": 600 } ],
+          "label": [
+            { "when": { "muted": true }, "text": "{name} → muted" },
+            { "text": "{name} → live" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "capture_card", "name": "Capture card", "ref": "the capture card", "category": "Studio", "mount": "floor", "new": false,
+      "initial": { "input": "HDMI 1", "signal": false }, "faultText": "signal with camera off",
+      "edit": [ { "field": "signal", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Choose which input {ref} takes: HDMI 1, HDMI 2 or USB.",
+          "parameters": { "type": "object", "properties": { "input": { "type": "string", "enum": [ "HDMI 1", "HDMI 2", "USB" ] } }, "required": [ "input" ], "additionalProperties": false },
+          "effects": [ { "set": "input", "arg": "input", "ms": 600 } ],
+          "label": [ { "text": "{name} → {input}" } ]
+        },
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read whether {ref} is receiving a signal.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "signal", "round": 0, "unit": "" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "overlay", "name": "Overlay", "ref": "the overlay app", "category": "Studio", "mount": "floor", "new": false,
+      "initial": { "scene": "idle" }, "faultText": "unreachable",
+      "edit": [],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Switch the stream scene shown by {ref}: idle, starting, live, ending or recording.",
+          "parameters": { "type": "object", "properties": { "scene": { "type": "string", "enum": [ "idle", "starting", "live", "ending", "recording" ] } }, "required": [ "scene" ], "additionalProperties": false },
+          "effects": [ { "set": "scene", "arg": "scene", "ms": 600 } ],
+          "label": [ { "text": "{name} → {scene}" } ]
+        }
+      ]
+    },
+    {
+      "type": "on_air_sign", "name": "On-air sign", "ref": "the on-air sign", "category": "Studio", "mount": "wall", "new": false,
+      "initial": { "on": false }, "faultText": "no response",
+      "edit": [ { "field": "on", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Switch {ref} on or off (true lights it, false turns it off).",
+          "parameters": { "type": "object", "properties": { "on": { "type": "boolean" } }, "required": [ "on" ], "additionalProperties": false },
+          "safeWhen": { "on": false },
+          "effects": [ { "set": "on", "arg": "on", "ms": 600 } ],
+          "label": [
+            { "when": { "on": true }, "text": "{name} → on air" },
+            { "text": "{name} → off" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "led_strip", "name": "LED strip", "ref": "the LED strip", "category": "Studio", "mount": "wall", "new": false,
+      "initial": { "brightness": 0.5, "color": "blue" }, "faultText": "off the network",
+      "edit": [ { "field": "brightness", "kind": "number", "min": 0, "max": 1 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Set {ref} brightness from 0 (off) to 100, and optionally its colour: white, warm, blue, purple, red or green.",
+          "parameters": { "type": "object", "properties": { "brightness": { "type": "integer", "minimum": 0, "maximum": 100 }, "color": { "type": "string", "enum": [ "white", "warm", "blue", "purple", "red", "green" ] } }, "required": [ "brightness" ], "additionalProperties": false },
+          "safeWhen": { "brightness": 0 },
+          "effects": [
+            { "set": "brightness", "arg": "brightness", "scale": 0.01, "ms": 800 },
+            { "set": "color", "arg": "color", "ms": 800 }
+          ],
+          "label": [
+            { "when": { "brightness": 0 }, "text": "{name} → off" },
+            { "when": { "brightness": 100 }, "text": "{name} → full" },
+            { "text": "{name} → {brightness}%" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "laser", "name": "Laser & shutter", "ref": "the laser", "category": "Lab", "mount": "floor", "new": false,
+      "initial": { "open": false, "mW": 5 }, "faultText": "not answering",
+      "edit": [
+        { "field": "open", "kind": "bool" },
+        { "field": "mW", "kind": "number", "min": 0, "max": 20 }
+      ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Open or close the shutter of {ref} (true opens it), and optionally set its power from 0.5 to 20 mW.",
+          "parameters": { "type": "object", "properties": { "open": { "type": "boolean" }, "mW": { "type": "number", "minimum": 0.5, "maximum": 20 } }, "required": [ "open" ], "additionalProperties": false },
+          "safeWhen": { "open": false },
+          "effects": [
+            { "set": "open", "arg": "open", "ms": 600 },
+            { "set": "mW", "arg": "mW", "ms": 600 }
+          ],
+          "label": [
+            { "when": { "open": true }, "text": "{name} → shutter open" },
+            { "text": "{name} → shutter closed" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "mirror", "name": "Mirror", "ref": "the mirror", "category": "Lab", "mount": "floor", "new": false,
+      "initial": { "yaw": 0, "pitch": 0 }, "faultText": "controller offline",
+      "edit": [
+        { "field": "yaw", "kind": "number", "min": -5, "max": 5 },
+        { "field": "pitch", "kind": "number", "min": -5, "max": 5 }
+      ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Tilt {ref}: set its yaw and its pitch, each from -5 to 5 degrees.",
+          "parameters": { "type": "object", "properties": { "yaw": { "type": "number", "minimum": -5, "maximum": 5 }, "pitch": { "type": "number", "minimum": -5, "maximum": 5 } }, "required": [ "yaw", "pitch" ], "additionalProperties": false },
+          "effects": [
+            { "set": "yaw", "arg": "yaw", "ms": 800 },
+            { "set": "pitch", "arg": "pitch", "ms": 800 }
+          ],
+          "label": [ { "text": "{name} → yaw {yaw}, pitch {pitch}" } ]
+        }
+      ]
+    },
+    {
+      "type": "linear_stage", "name": "Linear stage", "ref": "the linear stage", "category": "Lab", "mount": "floor", "new": false,
+      "initial": { "x": 10 }, "faultText": "controller offline",
+      "edit": [ { "field": "x", "kind": "number", "min": 0, "max": 25 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "move", "kind": "Write", "outcome": "confirmed",
+          "description": "Move {ref} to a position from 0 to 25 mm.",
+          "parameters": { "type": "object", "properties": { "x_mm": { "type": "number", "minimum": 0, "maximum": 25 } }, "required": [ "x_mm" ], "additionalProperties": false },
+          "effects": [ { "set": "x", "arg": "x_mm", "ms": 2000 } ],
+          "label": [ { "text": "{name} → {x_mm} mm" } ]
+        }
+      ]
+    },
+    {
+      "type": "power_meter", "name": "Power meter", "ref": "the power meter", "category": "Lab", "mount": "floor", "new": false,
+      "initial": { "mW": 0 }, "faultText": "no reading",
+      "edit": [ { "field": "mW", "kind": "number", "min": 0, "max": 20 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read the optical power that {ref} measures, in mW.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "mW", "round": 2, "unit": " mW" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "conveyor", "name": "Conveyor", "ref": "the conveyor", "category": "Warehouse", "mount": "floor", "new": false,
+      "initial": { "speed": 0 }, "faultText": "motor fault",
+      "edit": [ { "field": "speed", "kind": "number", "min": 0, "max": 0.5 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Set the belt speed of {ref} from 0 (stopped) to 100 (full speed, which is 0.5 m/s). The state's speed field is in m/s, so speed 0.25 is half speed.",
+          "parameters": { "type": "object", "properties": { "speed_percent": { "type": "integer", "minimum": 0, "maximum": 100 } }, "required": [ "speed_percent" ], "additionalProperties": false },
+          "safeWhen": { "speed_percent": 0 },
+          "effects": [ { "set": "speed", "arg": "speed_percent", "scale": 0.005, "ms": 1500 } ],
+          "label": [
+            { "when": { "speed_percent": 0 }, "text": "{name} → stopped" },
+            { "when": { "speed_percent": 100 }, "text": "{name} → full speed" },
+            { "text": "{name} → {speed_percent}% speed" }
+          ]
+        },
+        {
+          "verb": "stop", "kind": "Safe", "outcome": "confirmed",
+          "description": "Stop the belt of {ref} right away.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "effects": [ { "set": "speed", "value": 0, "ms": 1500 } ],
+          "label": [ { "text": "{name} → stopped" } ]
+        }
+      ]
+    },
+    {
+      "type": "scanner_arch", "name": "Scanner arch", "ref": "the scanner arch", "category": "Warehouse", "mount": "floor", "new": false,
+      "initial": { "armed": false, "scanned": 0 }, "faultText": "reads not trusted",
+      "edit": [
+        { "field": "armed", "kind": "bool" },
+        { "field": "scanned", "kind": "number", "min": 0, "max": 999 }
+      ],
+      "drift": [ { "field": "scanned", "perHour": 120, "while": { "armed": true } } ],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Arm or disarm {ref} (true arms it, so it scans every parcel that passes).",
+          "parameters": { "type": "object", "properties": { "armed": { "type": "boolean" } }, "required": [ "armed" ], "additionalProperties": false },
+          "effects": [ { "set": "armed", "arg": "armed", "ms": 600 } ],
+          "label": [
+            { "when": { "armed": true }, "text": "{name} → armed" },
+            { "text": "{name} → disarmed" }
+          ]
+        },
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read how many parcels {ref} has scanned.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "scanned", "round": 0, "unit": "" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "sorter_gate", "name": "Sorter gate", "ref": "the sorter gate", "category": "Warehouse", "mount": "floor", "new": false,
+      "initial": { "lane": "A" }, "faultText": "controller offline",
+      "edit": [],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Send parcels from {ref} down lane A (straight through) or lane B.",
+          "parameters": { "type": "object", "properties": { "lane": { "type": "string", "enum": [ "A", "B" ] } }, "required": [ "lane" ], "additionalProperties": false },
+          "effects": [ { "set": "lane", "arg": "lane", "ms": 800 } ],
+          "label": [ { "text": "{name} → lane {lane}" } ]
+        }
+      ]
+    },
+    {
+      "type": "cart", "name": "Cart", "ref": "the cart", "category": "Warehouse", "mount": "floor", "new": false,
+      "initial": { "driving": false, "at": "dock" }, "faultText": "off the network",
+      "edit": [],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "send", "kind": "Write", "outcome": "confirmed",
+          "description": "Send {ref} to the dock, the aisle or the charger; it drives there and stops.",
+          "parameters": { "type": "object", "properties": { "to": { "type": "string", "enum": [ "dock", "aisle", "charger" ] } }, "required": [ "to" ], "additionalProperties": false },
+          "effects": [
+            { "set": "driving", "value": true },
+            { "set": "at", "arg": "to", "delayMs": 4000 },
+            { "set": "driving", "value": false, "delayMs": 4000 }
+          ],
+          "label": [ { "text": "{name} → {to}" } ]
+        },
+        {
+          "verb": "stop", "kind": "Safe", "outcome": "confirmed",
+          "description": "Stop {ref} where it is, right away.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "effects": [ { "set": "driving", "value": false } ],
+          "label": [ { "text": "{name} → stopped" } ]
+        }
+      ]
+    },
+    {
+      "type": "loading_dock", "name": "Loading dock", "ref": "the loading dock", "category": "Warehouse", "mount": "wall", "new": false,
+      "initial": { "open": false, "parcels": 0 }, "faultText": "door fault",
+      "edit": [
+        { "field": "open", "kind": "bool" },
+        { "field": "parcels", "kind": "number", "min": 0, "max": 500 }
+      ],
+      "drift": [ { "field": "parcels", "perHour": 30, "while": { "open": true }, "max": 500 } ],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Open or close the roller door of {ref} (true opens it, and parcels start to arrive).",
+          "parameters": { "type": "object", "properties": { "open": { "type": "boolean" } }, "required": [ "open" ], "additionalProperties": false },
+          "effects": [ { "set": "open", "arg": "open", "ms": 3000 } ],
+          "label": [
+            { "when": { "open": true }, "text": "{name} → open" },
+            { "text": "{name} → closed" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "smart_plug", "name": "Smart plug", "ref": "the smart plug", "category": "Appliances", "mount": "wall", "new": true,
+      "initial": { "on": false, "watts": 0 }, "faultText": "off the network",
+      "edit": [ { "field": "on", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Switch {ref} on or off (true is on, false is off).",
+          "parameters": { "type": "object", "properties": { "on": { "type": "boolean" } }, "required": [ "on" ], "additionalProperties": false },
+          "safeWhen": { "on": false },
+          "effects": [
+            { "set": "on", "arg": "on", "ms": 600 },
+            { "set": "watts", "value": 60, "if": { "on": true }, "ms": 600 },
+            { "set": "watts", "value": 0, "if": { "on": false }, "ms": 600 }
+          ],
+          "label": [
+            { "when": { "on": true }, "text": "{name} → on" },
+            { "text": "{name} → off" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ceiling_light", "name": "Ceiling light", "ref": "the ceiling light", "category": "Lights", "mount": "ceiling", "new": true,
+      "initial": { "brightness": 0 }, "faultText": "off the network",
+      "edit": [ { "field": "brightness", "kind": "number", "min": 0, "max": 1 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Set {ref} brightness from 0 (off) to 100.",
+          "parameters": { "type": "object", "properties": { "brightness": { "type": "integer", "minimum": 0, "maximum": 100 } }, "required": [ "brightness" ], "additionalProperties": false },
+          "safeWhen": { "brightness": 0 },
+          "effects": [ { "set": "brightness", "arg": "brightness", "scale": 0.01, "ms": 1200 } ],
+          "label": [
+            { "when": { "brightness": 0 }, "text": "{name} → off" },
+            { "when": { "brightness": 100 }, "text": "{name} → full" },
+            { "text": "{name} → {brightness}%" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "colour_bulb", "name": "Colour bulb", "ref": "the colour bulb", "category": "Lights", "mount": "floor", "new": true,
+      "initial": { "brightness": 0, "color": "warm" }, "faultText": "off the network",
+      "edit": [ { "field": "brightness", "kind": "number", "min": 0, "max": 1 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Set {ref} brightness from 0 (off) to 100, and optionally its colour: white, warm, blue, purple, red or green.",
+          "parameters": { "type": "object", "properties": { "brightness": { "type": "integer", "minimum": 0, "maximum": 100 }, "color": { "type": "string", "enum": [ "white", "warm", "blue", "purple", "red", "green" ] } }, "required": [ "brightness" ], "additionalProperties": false },
+          "safeWhen": { "brightness": 0 },
+          "effects": [
+            { "set": "brightness", "arg": "brightness", "scale": 0.01, "ms": 800 },
+            { "set": "color", "arg": "color", "ms": 800 }
+          ],
+          "label": [
+            { "when": { "brightness": 0 }, "text": "{name} → off" },
+            { "when": { "brightness": 100 }, "text": "{name} → full" },
+            { "text": "{name} → {brightness}%" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "tv", "name": "TV", "ref": "the TV", "category": "Appliances", "mount": "wall", "new": true,
+      "initial": { "on": false, "volume": 20 }, "faultText": "not responding",
+      "edit": [
+        { "field": "on", "kind": "bool" },
+        { "field": "volume", "kind": "number", "min": 0, "max": 100 }
+      ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Switch {ref} on or off (true is on), and optionally set its volume from 0 (mute) to 100.",
+          "parameters": { "type": "object", "properties": { "on": { "type": "boolean" }, "volume": { "type": "integer", "minimum": 0, "maximum": 100 } }, "required": [ "on" ], "additionalProperties": false },
+          "safeWhen": { "on": false },
+          "effects": [
+            { "set": "on", "arg": "on", "ms": 600 },
+            { "set": "volume", "arg": "volume", "ms": 600 }
+          ],
+          "label": [
+            { "when": { "on": true }, "text": "{name} → on" },
+            { "text": "{name} → off" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "smart_speaker", "name": "Smart speaker", "ref": "the smart speaker", "category": "Appliances", "mount": "floor", "new": true,
+      "initial": { "playing": false, "volume": 30 }, "faultText": "off the network",
+      "edit": [
+        { "field": "playing", "kind": "bool" },
+        { "field": "volume", "kind": "number", "min": 0, "max": 100 }
+      ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Start or stop playback on {ref} (true plays, false stops), and optionally set its volume from 0 (mute) to 100.",
+          "parameters": { "type": "object", "properties": { "playing": { "type": "boolean" }, "volume": { "type": "integer", "minimum": 0, "maximum": 100 } }, "required": [ "playing" ], "additionalProperties": false },
+          "safeWhen": { "playing": false },
+          "effects": [
+            { "set": "playing", "arg": "playing", "ms": 600 },
+            { "set": "volume", "arg": "volume", "ms": 600 }
+          ],
+          "label": [
+            { "when": { "playing": true }, "text": "{name} → playing" },
+            { "text": "{name} → stopped" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "robot_vacuum", "name": "Robot vacuum", "ref": "the robot vacuum", "category": "Appliances", "mount": "floor", "new": true,
+      "initial": { "cleaning": false, "battery": 100 }, "faultText": "not responding",
+      "edit": [
+        { "field": "cleaning", "kind": "bool" },
+        { "field": "battery", "kind": "number", "min": 0, "max": 100 }
+      ],
+      "drift": [
+        { "field": "battery", "perHour": -30, "while": { "cleaning": true }, "min": 0 },
+        { "field": "battery", "perHour": 50, "while": { "cleaning": false }, "max": 100 }
+      ],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Start or stop cleaning with {ref} (true cleans, false sends it back to its dock).",
+          "parameters": { "type": "object", "properties": { "cleaning": { "type": "boolean" } }, "required": [ "cleaning" ], "additionalProperties": false },
+          "safeWhen": { "cleaning": false },
+          "effects": [ { "set": "cleaning", "arg": "cleaning", "ms": 600 } ],
+          "label": [
+            { "when": { "cleaning": true }, "text": "{name} → cleaning" },
+            { "text": "{name} → docked" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ceiling_fan", "name": "Ceiling fan", "ref": "the ceiling fan", "category": "Climate", "mount": "ceiling", "new": true,
+      "initial": { "speed": 0 }, "faultText": "off the network",
+      "edit": [ { "field": "speed", "kind": "number", "min": 0, "max": 3 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Set the speed of {ref} from 0 (off) to 3 (fastest).",
+          "parameters": { "type": "object", "properties": { "speed": { "type": "integer", "minimum": 0, "maximum": 3 } }, "required": [ "speed" ], "additionalProperties": false },
+          "safeWhen": { "speed": 0 },
+          "effects": [ { "set": "speed", "arg": "speed", "ms": 1500 } ],
+          "label": [
+            { "when": { "speed": 0 }, "text": "{name} → off" },
+            { "text": "{name} → speed {speed}" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "air_conditioner", "name": "Air conditioner", "ref": "the air conditioner", "category": "Climate", "mount": "wall", "new": true,
+      "initial": { "on": false, "target": 24, "room": 27 }, "faultText": "not responding",
+      "edit": [
+        { "field": "on", "kind": "bool" },
+        { "field": "room", "kind": "number", "min": 10, "max": 40 }
+      ],
+      "drift": [
+        { "field": "room", "perHour": 1, "toward": "target", "while": { "on": true } },
+        { "field": "room", "perHour": 0.3, "toward": 27, "while": { "on": false } }
+      ],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Switch {ref} on or off (true is on), and optionally set its target temperature in degrees Celsius, from 16 to 30.",
+          "parameters": { "type": "object", "properties": { "on": { "type": "boolean" }, "celsius": { "type": "number", "minimum": 16, "maximum": 30 } }, "required": [ "on" ], "additionalProperties": false },
+          "safeWhen": { "on": false },
+          "effects": [
+            { "set": "on", "arg": "on", "ms": 600 },
+            { "set": "target", "arg": "celsius", "ms": 600 }
+          ],
+          "label": [
+            { "when": { "on": true }, "text": "{name} → on" },
+            { "text": "{name} → off" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "space_heater", "name": "Space heater", "ref": "the space heater", "category": "Climate", "mount": "floor", "new": true,
+      "initial": { "on": false, "room": 17 }, "faultText": "not responding",
+      "edit": [
+        { "field": "on", "kind": "bool" },
+        { "field": "room", "kind": "number", "min": 0, "max": 35 }
+      ],
+      "drift": [
+        { "field": "room", "perHour": 1, "toward": 24, "while": { "on": true } },
+        { "field": "room", "perHour": 0.5, "toward": 17, "while": { "on": false } }
+      ],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Switch {ref} on or off (true is on, false is off), which warms the room slowly.",
+          "parameters": { "type": "object", "properties": { "on": { "type": "boolean" } }, "required": [ "on" ], "additionalProperties": false },
+          "safeWhen": { "on": false },
+          "effects": [ { "set": "on", "arg": "on", "ms": 600 } ],
+          "label": [
+            { "when": { "on": true }, "text": "{name} → on" },
+            { "text": "{name} → off" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "humidifier", "name": "Humidifier", "ref": "the humidifier", "category": "Climate", "mount": "floor", "new": true,
+      "initial": { "on": false, "humidity": 35 }, "faultText": "off the network",
+      "edit": [
+        { "field": "on", "kind": "bool" },
+        { "field": "humidity", "kind": "number", "min": 0, "max": 100 }
+      ],
+      "drift": [
+        { "field": "humidity", "perHour": 4, "toward": 55, "while": { "on": true } },
+        { "field": "humidity", "perHour": 2, "toward": 35, "while": { "on": false } }
+      ],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Switch {ref} on or off (true is on, false is off), which raises the room's humidity slowly.",
+          "parameters": { "type": "object", "properties": { "on": { "type": "boolean" } }, "required": [ "on" ], "additionalProperties": false },
+          "safeWhen": { "on": false },
+          "effects": [ { "set": "on", "arg": "on", "ms": 600 } ],
+          "label": [
+            { "when": { "on": true }, "text": "{name} → on" },
+            { "text": "{name} → off" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "air_purifier", "name": "Air purifier", "ref": "the air purifier", "category": "Climate", "mount": "floor", "new": true,
+      "initial": { "on": false, "pm25": 18 }, "faultText": "off the network",
+      "edit": [
+        { "field": "on", "kind": "bool" },
+        { "field": "pm25", "kind": "number", "min": 0, "max": 200 }
+      ],
+      "drift": [
+        { "field": "pm25", "perHour": 10, "toward": 3, "while": { "on": true } },
+        { "field": "pm25", "perHour": 2, "toward": 18, "while": { "on": false } }
+      ],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Switch {ref} on or off (true is on, false is off), which clears fine dust from the air slowly.",
+          "parameters": { "type": "object", "properties": { "on": { "type": "boolean" } }, "required": [ "on" ], "additionalProperties": false },
+          "safeWhen": { "on": false },
+          "effects": [ { "set": "on", "arg": "on", "ms": 600 } ],
+          "label": [
+            { "when": { "on": true }, "text": "{name} → on" },
+            { "text": "{name} → off" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "smart_lock", "name": "Smart lock", "ref": "the smart lock", "category": "Security", "mount": "wall", "new": true,
+      "initial": { "locked": true }, "faultText": "not responding",
+      "edit": [ { "field": "locked", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Lock or unlock {ref} (true locks the bolt, false unlocks it).",
+          "parameters": { "type": "object", "properties": { "locked": { "type": "boolean" } }, "required": [ "locked" ], "additionalProperties": false },
+          "safeWhen": { "locked": true },
+          "effects": [ { "set": "locked", "arg": "locked", "ms": 1500 } ],
+          "label": [
+            { "when": { "locked": true }, "text": "{name} → locked" },
+            { "text": "{name} → unlocked" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "video_doorbell", "name": "Video doorbell", "ref": "the video doorbell", "category": "Security", "mount": "wall", "new": true,
+      "initial": { "ringing": false, "motion": false }, "faultText": "off the network",
+      "edit": [ { "field": "ringing", "kind": "bool" }, { "field": "motion", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read whether someone is ringing {ref} and whether it sees motion at the door.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "ringing", "round": 0, "unit": "" }, { "field": "motion", "round": 0, "unit": "" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "door_window_sensor", "name": "Door/window sensor", "ref": "the door/window sensor", "category": "Sensors", "mount": "wall", "new": true,
+      "initial": { "open": false }, "faultText": "no signal",
+      "edit": [ { "field": "open", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read whether the door or window fitted with {ref} is open or closed.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "open", "round": 0, "unit": "" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "smoke_co_alarm", "name": "Smoke/CO alarm", "ref": "the smoke/CO alarm", "category": "Security", "mount": "ceiling", "new": true,
+      "initial": { "alarm": false }, "faultText": "not responding",
+      "edit": [ { "field": "alarm", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read whether {ref} is sounding an alarm.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "alarm", "round": 0, "unit": "" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "siren", "name": "Siren", "ref": "the siren", "category": "Security", "mount": "wall", "new": true,
+      "initial": { "sounding": false }, "faultText": "off the network",
+      "edit": [ { "field": "sounding", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Start or stop the loud alarm of {ref} (true sounds it, false silences it).",
+          "parameters": { "type": "object", "properties": { "sounding": { "type": "boolean" } }, "required": [ "sounding" ], "additionalProperties": false },
+          "safeWhen": { "sounding": false },
+          "effects": [ { "set": "sounding", "arg": "sounding", "ms": 600 } ],
+          "label": [
+            { "when": { "sounding": true }, "text": "{name} → sounding" },
+            { "text": "{name} → silent" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "garage_door", "name": "Garage door", "ref": "the garage door", "category": "Security", "mount": "wall", "new": true,
+      "initial": { "open": false }, "faultText": "door fault",
+      "edit": [ { "field": "open", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Open or close {ref} (true opens it, false closes it); it takes about 8 seconds to move.",
+          "parameters": { "type": "object", "properties": { "open": { "type": "boolean" } }, "required": [ "open" ], "additionalProperties": false },
+          "effects": [ { "set": "open", "arg": "open", "ms": 8000 } ],
+          "label": [
+            { "when": { "open": true }, "text": "{name} → opening" },
+            { "text": "{name} → closing" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "temp_humidity_sensor", "name": "Temperature & humidity sensor", "ref": "the temperature and humidity sensor", "category": "Sensors", "mount": "wall", "new": true,
+      "initial": { "temperature": 21.5, "humidity": 45 }, "faultText": "no signal",
+      "edit": [
+        { "field": "temperature", "kind": "number", "min": -10, "max": 45 },
+        { "field": "humidity", "kind": "number", "min": 0, "max": 100 }
+      ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read the temperature in degrees Celsius and the humidity percentage at {ref}.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "temperature", "round": 1, "unit": "°C" }, { "field": "humidity", "round": 0, "unit": "%" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "water_leak_sensor", "name": "Water-leak sensor", "ref": "the water-leak sensor", "category": "Sensors", "mount": "floor", "new": true,
+      "initial": { "leak": false }, "faultText": "no signal",
+      "edit": [ { "field": "leak", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read whether {ref} senses water on the floor.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "leak", "round": 0, "unit": "" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "presence_sensor", "name": "Presence sensor", "ref": "the presence sensor", "category": "Sensors", "mount": "ceiling", "new": true,
+      "initial": { "present": false }, "faultText": "not responding",
+      "edit": [ { "field": "present", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read whether {ref} sees someone in the room.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "present", "round": 0, "unit": "" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "energy_meter", "name": "Energy meter", "ref": "the energy meter", "category": "Energy", "mount": "wall", "new": true,
+      "initial": { "watts": 420, "kwh_today": 3.2 }, "faultText": "reads not trusted",
+      "edit": [ { "field": "watts", "kind": "number", "min": 0, "max": 10000 } ],
+      "drift": [ { "field": "kwh_today", "perHour": 0.42 } ],
+      "actions": [
+        {
+          "verb": "read", "kind": "Read", "outcome": "confirmed",
+          "description": "Read the power draw in watts and the energy used today in kilowatt-hours at {ref}.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "reads": [ { "field": "watts", "round": 0, "unit": " W" }, { "field": "kwh_today", "round": 1, "unit": " kWh" } ],
+          "label": [ { "text": "{name} → read" } ]
+        }
+      ]
+    },
+    {
+      "type": "ev_charger", "name": "EV charger", "ref": "the EV charger", "category": "Energy", "mount": "wall", "new": true,
+      "initial": { "charging": false, "battery": 40 }, "faultText": "off the network",
+      "edit": [
+        { "field": "charging", "kind": "bool" },
+        { "field": "battery", "kind": "number", "min": 0, "max": 100 }
+      ],
+      "drift": [ { "field": "battery", "perHour": 8, "while": { "charging": true }, "max": 100 } ],
+      "actions": [
+        {
+          "verb": "set", "kind": "Write", "outcome": "confirmed",
+          "description": "Start or stop charging with {ref} (true starts charging, false stops it).",
+          "parameters": { "type": "object", "properties": { "charging": { "type": "boolean" } }, "required": [ "charging" ], "additionalProperties": false },
+          "safeWhen": { "charging": false },
+          "effects": [ { "set": "charging", "arg": "charging", "ms": 800 } ],
+          "label": [
+            { "when": { "charging": true }, "text": "{name} → charging" },
+            { "text": "{name} → stopped" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "sprinkler_valve", "name": "Sprinkler valve", "ref": "the sprinkler valve", "category": "Outdoor", "mount": "floor", "new": true,
+      "initial": { "open": false }, "faultText": "not responding",
+      "edit": [ { "field": "open", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "run", "kind": "Write", "outcome": "commanded",
+          "description": "Open {ref} for a number of minutes, from 1 to 60. The valve cannot confirm that the lawn got water.",
+          "parameters": { "type": "object", "properties": { "minutes": { "type": "integer", "minimum": 1, "maximum": 60 } }, "required": [ "minutes" ], "additionalProperties": false },
+          "effects": [
+            { "set": "open", "value": true },
+            { "set": "open", "value": false, "afterArg": "minutes", "msPerUnit": 500, "minMs": 2500 }
+          ],
+          "label": [ { "text": "{name} → run {minutes} min" } ]
+        },
+        {
+          "verb": "close", "kind": "Safe", "outcome": "confirmed",
+          "description": "Close {ref} right away.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "effects": [ { "set": "open", "value": false } ],
+          "label": [ { "text": "{name} → closed" } ]
+        }
+      ]
+    },
+    {
+      "type": "printer_3d", "name": "3D printer", "ref": "the 3D printer", "category": "Work", "mount": "floor", "new": true,
+      "initial": { "printing": false, "progress": 0 }, "faultText": "not responding",
+      "edit": [
+        { "field": "printing", "kind": "bool" },
+        { "field": "progress", "kind": "number", "min": 0, "max": 100 }
+      ],
+      "drift": [ { "field": "progress", "perHour": 25, "while": { "printing": true }, "max": 100 } ],
+      "actions": [
+        {
+          "verb": "start", "kind": "Write", "outcome": "confirmed",
+          "description": "Start the loaded print job on {ref}, from the beginning.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "effects": [
+            { "set": "printing", "value": true },
+            { "set": "progress", "value": 0 }
+          ],
+          "label": [ { "text": "{name} → start" } ]
+        },
+        {
+          "verb": "cancel", "kind": "Safe", "outcome": "confirmed",
+          "description": "Cancel the print on {ref} right away.",
+          "parameters": { "type": "object", "properties": {}, "required": [], "additionalProperties": false },
+          "effects": [ { "set": "printing", "value": false } ],
+          "label": [ { "text": "{name} → cancelled" } ]
+        }
+      ]
+    },
+    {
+      "type": "robot_arm", "name": "Robot arm", "ref": "the robot arm", "category": "Work", "mount": "floor", "new": true,
+      "initial": { "pose": "home", "holding": false }, "faultText": "controller offline",
+      "edit": [ { "field": "holding", "kind": "bool" } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "move", "kind": "Write", "outcome": "confirmed",
+          "description": "Move {ref} to its home, pick or place position.",
+          "parameters": { "type": "object", "properties": { "pose": { "type": "string", "enum": [ "home", "pick", "place" ] } }, "required": [ "pose" ], "additionalProperties": false },
+          "effects": [ { "set": "pose", "arg": "pose", "ms": 2500 } ],
+          "label": [ { "text": "{name} → {pose}" } ]
+        },
+        {
+          "verb": "grip", "kind": "Write", "outcome": "confirmed",
+          "description": "Close or open the gripper of {ref} (true holds, false lets go).",
+          "parameters": { "type": "object", "properties": { "hold": { "type": "boolean" } }, "required": [ "hold" ], "additionalProperties": false },
+          "effects": [ { "set": "holding", "arg": "hold", "ms": 800 } ],
+          "label": [
+            { "when": { "hold": true }, "text": "{name} → grip" },
+            { "text": "{name} → release" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "label_printer", "name": "Label printer", "ref": "the label printer", "category": "Work", "mount": "floor", "new": true,
+      "initial": { "printed": 0 }, "faultText": "out of paper",
+      "edit": [ { "field": "printed", "kind": "number", "min": 0, "max": 999 } ],
+      "drift": [],
+      "actions": [
+        {
+          "verb": "print", "kind": "Write", "outcome": "confirmed",
+          "description": "Print a number of labels on {ref}, from 1 to 20.",
+          "parameters": { "type": "object", "properties": { "copies": { "type": "integer", "minimum": 1, "maximum": 20 } }, "required": [ "copies" ], "additionalProperties": false },
+          "effects": [ { "add": "printed", "arg": "copies", "ms": 1500 } ],
+          "label": [ { "text": "{name} → print {copies}" } ]
+        }
+      ]
+    }
+  ]
+}

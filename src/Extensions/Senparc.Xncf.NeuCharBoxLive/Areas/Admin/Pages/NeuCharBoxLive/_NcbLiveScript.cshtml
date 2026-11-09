@@ -1,0 +1,23 @@
+<script>
+    new Vue({ el: "#app" });
+
+    // Visitor text sits inside v-pre (Vue never compiles it), so these are delegated document listeners instead of
+    // Vue bindings: [data-copy] copies the field it names, form[data-confirm] asks first.
+    document.addEventListener('click', function (ev) {
+        var button = ev.target.closest ? ev.target.closest('[data-copy]') : null;
+        if (!button) return;
+        var field = document.getElementById(button.getAttribute('data-copy'));
+        if (!field) return;
+        var shown = function () {
+            button.textContent = 'Copied';
+            setTimeout(function () { button.textContent = 'Copy'; }, 1500);
+        };
+        var fallback = function () { field.select(); document.execCommand('copy'); shown(); };
+        if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(field.value).then(shown, fallback);
+        else fallback();
+    });
+    document.addEventListener('submit', function (ev) {
+        var question = ev.target.getAttribute ? ev.target.getAttribute('data-confirm') : null;
+        if (question && !window.confirm(question)) ev.preventDefault();
+    }, true);
+</script>
