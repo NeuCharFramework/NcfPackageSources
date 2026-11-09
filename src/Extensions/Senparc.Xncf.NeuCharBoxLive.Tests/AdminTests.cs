@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 设置页（SettingsView）、后台页面文本资源与时区的测试
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 新增测试：AI Kernel 读不到时模型列表为空并给出提示，不抛错
+
 ----------------------------------------------------------------*/
 
 using System.Reflection;
@@ -128,6 +131,49 @@ public class AdminTests
         Assert.AreEqual(0, (await SettingsView.SaveAsync(svc, LiveSettings.Defaults with { PlanModelId = 1 }, choices)).Count);
         Assert.AreEqual(1, raised);
         Assert.AreEqual(1, (await svc.GetAsync()).PlanModelId);
+    }
+
+    sealed class UnreadableModels : IAiModelSource
+    {
+        public Task<AIModelDto?> GetAsync(int id, CancellationToken ct) => throw new InvalidOperationException("no such table: Senparc_AIKernel_AIModel");
+        public Task<IReadOnlyList<AIModelDto>> ListAsync(CancellationToken ct) => throw new InvalidOperationException("no such table: Senparc_AIKernel_AIModel");
+    }
+
+    sealed class ListedModels(params AIModelDto[] models) : IAiModelSource
+    {
+        public Task<AIModelDto?> GetAsync(int id, CancellationToken ct) => Task.FromResult(models.FirstOrDefault(m => m.Id == id));
+        public Task<IReadOnlyList<AIModelDto>> ListAsync(CancellationToken ct) => Task.FromResult<IReadOnlyList<AIModelDto>>(models);
+    }
+
+    /// <summary>
+    /// Final review F4: AI Kernel not installed or its read failing must not break the module's home page: an empty picker,
+    /// a flag the page turns into a status line (in English and Chinese), and a warning with the exception's type only.
+    /// </summary>
+    [TestMethod]
+    public async Task LoadChoices_AiKernelUnreadable_EmptyPickerAndFlag_NeverThrows()
+    {
+        var log = new Fakes.ListLogger<AdminTests>();
+        var (choices, unreadable) = await SettingsView.LoadChoicesAsync(new UnreadableModels(), log);
+        Assert.AreEqual(0, choices.Count);
+        Assert.IsTrue(unreadable);
+        var warning = log.Entries.Single();
+        Assert.AreEqual(Microsoft.Extensions.Logging.LogLevel.Warning, warning.Level);
+        Assert.IsNull(warning.Exception);
+        StringAssert.Contains(warning.Message, nameof(InvalidOperationException));
+
+        (choices, unreadable) = await SettingsView.LoadChoicesAsync(new ListedModels(Model(1, ConfigModelType.Chat, AiPlatform.OpenAI)));
+        Assert.AreEqual(1, choices.Count);
+        Assert.IsFalse(unreadable);
+
+        // A request that was cancelled isn't reported as AI Kernel being unreadable.
+        using var cancelled = new CancellationTokenSource();
+        cancelled.Cancel();
+        await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => SettingsView.LoadChoicesAsync(new UnreadableModels(), null, cancelled.Token));
+
+        foreach (var file in new[] { "NeuCharBoxLiveResource.resx", "NeuCharBoxLiveResource.zh-CN.resx" })
+            Assert.IsTrue(ResxKeys(file).Contains("Settings.AiKernelUnreadable"), file);
+        var page = File.ReadAllText(Path.Combine(ModuleDir(), "Areas", "Admin", "Pages", "NeuCharBoxLive", "Settings.cshtml"));
+        StringAssert.Contains(page, "@XR[\"Settings.AiKernelUnreadable\"]", "the page shows the status line");
     }
 
     [TestMethod]

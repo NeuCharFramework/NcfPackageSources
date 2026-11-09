@@ -141,6 +141,9 @@
   <data name="Settings.NoModels" xml:space="preserve">
     <value>AI Kernel 中还没有 Chat 模型，请先添加。</value>
   </data>
+  <data name="Settings.AiKernelUnreadable" xml:space="preserve">
+    <value>无法读取 AI Kernel（是否已安装并启用？），因此无法列出模型。请先安装并启用 AI Kernel，再刷新本页。</value>
+  </data>
   <data name="Settings.PerCodeDaily" xml:space="preserve">
     <value>每个邀请码每日请求数</value>
   </data>

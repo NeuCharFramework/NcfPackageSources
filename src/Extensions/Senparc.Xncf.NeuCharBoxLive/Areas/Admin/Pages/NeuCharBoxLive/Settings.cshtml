@@ -31,6 +31,10 @@
     }
 
     <p class="status @(Model.IsOn ? "on" : "off")">@XR[Model.StatusKey]</p>
+    @if (Model.AiKernelUnreadable)
+    {
+        <p class="warn">@XR["Settings.AiKernelUnreadable"]</p>
+    }
     @if (!Model.PipelineHooked)
     {
         <p class="warn">@XR["Status.PipelineNotHooked"]</p>
@@ -100,7 +104,7 @@
                     }
                 </select>
             </label>
-            <div class="muted hint">@XR[Model.Choices.Count == 0 ? "Settings.NoModels" : "Settings.ModelHint"]</div>
+            <div class="muted hint">@XR[!Model.AiKernelUnreadable && Model.Choices.Count == 0 ? "Settings.NoModels" : "Settings.ModelHint"]</div>
         </div>
 
         <div class="row">

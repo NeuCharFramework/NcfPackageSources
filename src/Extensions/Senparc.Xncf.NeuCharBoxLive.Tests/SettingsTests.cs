@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 设置表与 LiveSettingsService 的测试，六种数据库的迁移检查
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 新增测试：ExtraOrigins 为 null 时保存为空，不抛错
+
 ----------------------------------------------------------------*/
 
 using System.Reflection;
@@ -78,6 +81,20 @@ public class SettingsTests
         CollectionAssert.AreEqual(new[] { "https://a.example", "http://b.example:81" }, (await svc.GetAsync()).ExtraOrigins.ToList());
         using var ctx = db.NewContext();
         Assert.AreEqual("https://a.example\nhttp://b.example:81", (await ctx.Settings.SingleAsync()).ExtraOrigins, "one origin per line");
+    }
+
+    /// <summary>Final review M15: Validate already tolerates null extra origins; SaveAsync stores them as none instead of throwing.</summary>
+    [TestMethod]
+    public async Task Settings_Save_NullOrigins_SavesNone()
+    {
+        using var db = new TestDb();
+        var svc = new LiveSettingsService(db.Scopes);
+        var s = LiveSettings.Defaults with { ExtraOrigins = null! };
+        Assert.AreEqual(0, LiveSettingsService.Validate(s).Count);
+        Assert.AreEqual(0, (await svc.SaveAsync(s)).Count);
+        Assert.AreEqual(0, (await svc.GetAsync()).ExtraOrigins.Count);
+        using var ctx = db.NewContext();
+        Assert.AreEqual("", (await ctx.Settings.SingleAsync()).ExtraOrigins);
     }
 
     [TestMethod]

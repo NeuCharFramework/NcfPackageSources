@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 新增设置读取与保存服务
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 SaveAsync 容忍 ExtraOrigins 为 null（存为空），与 Validate 一致
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -71,7 +74,7 @@ public sealed class LiveSettingsService(IServiceScopeFactory scopes)
             e.PerCodeDaily = s.PerCodeDaily;
             e.GlobalDaily = s.GlobalDaily;
             e.DailyTokenBudget = s.DailyTokenBudget;
-            e.ExtraOrigins = string.Join('\n', s.ExtraOrigins.Select(Normalize));
+            e.ExtraOrigins = string.Join('\n', (s.ExtraOrigins ?? []).Select(Normalize));
             e.UpdatedUtc = now;
             e.LastUpdateTime = now;
             await db.SaveChangesAsync(ct);

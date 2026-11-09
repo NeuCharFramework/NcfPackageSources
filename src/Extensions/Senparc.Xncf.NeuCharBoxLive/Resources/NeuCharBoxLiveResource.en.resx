@@ -141,6 +141,9 @@
   <data name="Settings.NoModels" xml:space="preserve">
     <value>AI Kernel has no chat models yet. Add one there first.</value>
   </data>
+  <data name="Settings.AiKernelUnreadable" xml:space="preserve">
+    <value>AI Kernel can't be read (is it installed and enabled?), so no models can be listed. Install and enable AI Kernel, then reload this page.</value>
+  </data>
   <data name="Settings.PerCodeDaily" xml:space="preserve">
     <value>Requests per code per day</value>
   </data>
