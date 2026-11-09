@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.1.0-preview1 注释：重试改由 Api/Model 的 ConnectRetryHandler 完成，含响应前连接重置的重试（ncb/live 90321e1）
+
 ----------------------------------------------------------------*/
 
 using System.Globalization;
@@ -26,7 +29,7 @@ using Senparc.Xncf.NeuCharBoxLive.Engine.Sim;
 
 namespace Senparc.Xncf.NeuCharBoxLive.Engine.Ai;
 
-/// <summary>A model call failed or stalled (after Senparc.Xncf.NeuCharBoxLive.NeuChar's retries). Message is the visitor's line.</summary>
+/// <summary>A model call failed or stalled (after Senparc.Xncf.NeuCharBoxLive.Api.Model's retries). Message is the visitor's line.</summary>
 public class ModelCallException(string visitorMessage, Exception? inner) : Exception(visitorMessage, inner);
 
 /// <summary>Today's token kill switch is tripped.</summary>
@@ -1286,8 +1289,10 @@ public sealed class RequestRunner
         }
 
         /// <summary>
-        /// True only when no connection was made (DNS, TCP connect, TLS handshake: the cases Senparc.Xncf.NeuCharBoxLive.NeuChar's retry
-        /// handler retries), so the request never reached the service and cost nothing. Anything else may have.
+        /// True only when no connection was made (DNS, TCP connect, TLS handshake: the connect failures
+        /// Senparc.Xncf.NeuCharBoxLive.Api.Model's retry handler retries), so the request never reached the service and cost
+        /// nothing. Anything else may have, including a reset before the response that is still failing after the handler's
+        /// reset retries.
         /// </summary>
         static bool NeverSent(Exception e)
         {

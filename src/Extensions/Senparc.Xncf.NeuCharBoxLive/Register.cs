@@ -13,13 +13,16 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 模块版本 0.2：新增设置表，并注册 LiveSettingsService
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.1.0-preview1 移除 NeuChar 环境变量密钥：临时运行时为关闭（no_model），并注册 AiKernelChatClients
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Senparc.Xncf.NeuCharBoxLive.Engine.Access;
-using Senparc.Xncf.NeuCharBoxLive.NeuChar;
 using Senparc.Xncf.NeuCharBoxLive.Api;
 using Senparc.Ncf.Core.Enums;
 using Senparc.Ncf.Database;
@@ -69,19 +72,13 @@ namespace Senparc.Xncf.NeuCharBoxLive
 
         #endregion
 
-        /// <summary>The NeuChar deployment endpoint the interim runtime uses (Task 5 replaces it with AI Kernel models).</summary>
-        internal const string NeuCharEndpoint = "https://www.neuchar.com/19194/";
-
-        /// <summary>The model the interim runtime plans and runs on.</summary>
-        internal const string NeuCharModel = "gpt-5-chat";
-
         /// <summary>
         /// NCF calls this for every scanned module, installed or not, so the live API is registered from here (it
         /// replaced Program.cs's temporary AddNcbLive call). Before the module is installed its tables don't exist, so the
         /// token meter fails closed: <c>GET health</c> answers 200 with <c>liveEnabled:false</c> and the other routes 503
         /// <c>live_off</c> (not 500). Install and enable the module in the NCF admin before opening the tunnel. Note that
-        /// uninstalling or disabling it does NOT turn live off (the live API is registered for every scanned module): the
-        /// off switches are removing the NeuChar key (live is then off with no_model) or stopping the tunnel.
+        /// uninstalling or disabling it does NOT turn live off (the live API is registered for every scanned module). Until the
+        /// runtime reads the module's settings (Task 5), live is off with no_model.
         /// </summary>
         public override IServiceCollection AddXncfModule(IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
         {
@@ -91,6 +88,9 @@ namespace Senparc.Xncf.NeuCharBoxLive
             services.AddHostedService<RetentionService>();
             // Not TryAddSingleton: Senparc.Ncf.Utility defines a type that clashes with its namespace here (CS0434).
             if (!services.Any(d => d.ServiceType == typeof(LiveSettingsService))) services.AddSingleton<LiveSettingsService>();
+            // One client per AI Kernel model configuration, kept for the host's lifetime (the runtime resolves through it).
+            if (!services.Any(d => d.ServiceType == typeof(AiKernelChatClients)))
+                services.AddSingleton(sp => new AiKernelChatClients(logger: sp.GetService<ILogger<AiKernelChatClients>>()));
 
             // NCF registers this module's context under its per-database type (…_Sqlite, …_SqlServer); EfLiveStore asks
             // for the base type, which resolves to the one the host's DatabaseType selects.
@@ -101,16 +101,9 @@ namespace Senparc.Xncf.NeuCharBoxLive
         }
 
         /// <summary>
-        /// Interim (removed in Task 5): one snapshot built at startup from the NeuChar key (env NEUCHAR_API_KEY), planning
-        /// and running on <see cref="NeuCharModel"/> with the default limits and the built-in origins; off with no_model
-        /// when the key is missing.
+        /// Interim (replaced in Task 5 by a runtime over the settings and AI Kernel models): off with no_model, on the
+        /// built-in origins.
         /// </summary>
-        static StaticLiveRuntime InterimRuntime()
-        {
-            var client = NeuCharChatClientFactory.Create(new(NeuCharEndpoint, NeuCharModel), ApiKeySource.Read());
-            if (client is null) return new StaticLiveRuntime(LiveSnapshot.Off(LiveOff.NoModel, LiveCors.BuiltIns));
-            var model = new LiveModel(NeuCharModel, client);
-            return new StaticLiveRuntime(new LiveSnapshot(LiveLimits.Defaults, model, model, LiveCors.BuiltIns, null));
-        }
+        static StaticLiveRuntime InterimRuntime() => new(LiveSnapshot.Off(LiveOff.NoModel, LiveCors.BuiltIns));
     }
 }

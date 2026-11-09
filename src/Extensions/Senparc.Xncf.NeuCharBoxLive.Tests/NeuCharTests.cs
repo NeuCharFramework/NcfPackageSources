@@ -10,24 +10,31 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.1.0-preview1 只保留 ConnectRetryHandler 的测试，加入响应前连接重置的重试测试（ncb/live 90321e1）；回环测试改走 AiKernelChatClients
+
 ----------------------------------------------------------------*/
 
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using Microsoft.Extensions.AI;
-using Senparc.Xncf.NeuCharBoxLive.NeuChar;
+using Senparc.AI;
+using Senparc.Xncf.AIKernel.Domain.Models;
+using Senparc.Xncf.AIKernel.Domain.Models.DatabaseModel.Dto;
+using Senparc.Xncf.NeuCharBoxLive.Api.Model;
+using Senparc.Xncf.NeuCharBoxLive.Domain.Services;
 
 namespace Senparc.Xncf.NeuCharBoxLive.Tests;
 
 /// <summary>
-/// The NeuChar client without the network: every handler here is a fake, and the key is a made-up one. Nothing reads
-/// NEUCHAR_API_KEY.
+/// The model transport's retry handler (<see cref="ConnectRetryHandler"/>) without the network: every handler here is a
+/// fake, except the loopback tests at the end, which talk to a server on 127.0.0.1 only. The key is a made-up one.
 /// </summary>
 [TestClass]
 public class NeuCharTests
 {
     const string FakeKey = "sk-SECRET123";
-    static readonly NeuCharOptions Opt = new("https://www.neuchar.com/19194/", "gpt-5-chat");
 
     static readonly TimeSpan[] Backoff = { TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2) };
 
@@ -67,6 +74,18 @@ public class NeuCharTests
     /// <summary>SocketsHttpHandler's ConnectTimeout: a TaskCanceledException over a TimeoutException, the caller's token untouched.</summary>
     static readonly Func<HttpRequestMessage, CancellationToken, HttpResponseMessage> ConnectTimeout =
         (_, _) => throw new TaskCanceledException("connect timed out", new TimeoutException("A connection could not be established within the configured ConnectTimeout."));
+
+    /// <summary>
+    /// What SocketsHttpHandler's SendAsync throws when the peer resets (10054) or aborts (10053) the connection before the
+    /// response arrived, as seen from neuchar.com on 2026-11-08: no status code, an IOException from the read, the socket error.
+    /// </summary>
+    static Func<HttpRequestMessage, CancellationToken, HttpResponseMessage> Reset(SocketError code = SocketError.ConnectionReset) =>
+        (_, _) => throw ResetError(code);
+
+    static HttpRequestException ResetError(SocketError code = SocketError.ConnectionReset) =>
+        new(HttpRequestError.Unknown, "An error occurred while sending the request.",
+            new IOException("Unable to read data from the transport connection: An existing connection was forcibly closed by the remote host.",
+                new SocketException((int)code)));
 
     static (HttpMessageInvoker Invoker, StepHandler Inner, List<TimeSpan> Delays) Retrying(params Func<HttpRequestMessage, CancellationToken, HttpResponseMessage>[] steps)
     {
@@ -122,7 +141,8 @@ public class NeuCharTests
     [TestMethod]
     public async Task Retry_FailuresAfterTheRequestWasSent_AreNotRetried()
     {
-        // The connection was up, so the request may have reached the server: never send it twice.
+        // The connection was up, so the request may have reached the server: never send it twice. The one exception is
+        // a reset or abort before the response (below).
         foreach (var error in new[] { HttpRequestError.ResponseEnded, HttpRequestError.Unknown, HttpRequestError.HttpProtocolError, HttpRequestError.InvalidResponse })
         {
             var (inv, inner, delays) = Retrying(Throw(error), Status(HttpStatusCode.OK));
@@ -156,102 +176,223 @@ public class NeuCharTests
         Assert.AreEqual(1, plainInner.Attempts);
     }
 
-    // ---- ApiKeySource ----
-
     [TestMethod]
-    public void ApiKey_ProcessFirst_UserFallbackOnlyOnWindows()
+    public async Task Retry_ResetBeforeResponse_UpTo2()
     {
-        Assert.AreEqual("p", ApiKeySource.Read(() => "p", () => "u"));
-        Assert.AreEqual("p", ApiKeySource.Read(() => " p\n", () => "u"), "trimmed");
-        Assert.AreEqual(OperatingSystem.IsWindows() ? "u" : null, ApiKeySource.Read(() => null, () => "u"));
-        Assert.AreEqual(OperatingSystem.IsWindows() ? "u" : null, ApiKeySource.Read(() => "  ", () => "u"));
-        Assert.IsNull(ApiKeySource.Read(() => null, () => ""));
-        Assert.IsNull(ApiKeySource.Read(() => null, null));
-    }
+        var (once, onceInner, onceDelays) = Retrying(Reset(), Status(HttpStatusCode.OK));
+        using (var r = await Send(once)) Assert.AreEqual(HttpStatusCode.OK, r.StatusCode);
+        Assert.AreEqual(2, onceInner.Attempts);
+        CollectionAssert.AreEqual(Backoff[..1], onceDelays);
 
-    // ---- NeuCharChatClientFactory ----
+        var (twice, twiceInner, twiceDelays) = Retrying(Reset(SocketError.ConnectionAborted), Reset(), Status(HttpStatusCode.OK));
+        using (var r = await Send(twice)) Assert.AreEqual(HttpStatusCode.OK, r.StatusCode);
+        Assert.AreEqual(3, twiceInner.Attempts);
+        CollectionAssert.AreEqual(Backoff[..2], twiceDelays);
 
-    [TestMethod]
-    public void Factory_NoKey_ReturnsNull()
-    {
-        Assert.IsNull(NeuCharChatClientFactory.Create(Opt, null));
-        Assert.IsNull(NeuCharChatClientFactory.Create(Opt, ""));
-        Assert.IsNull(NeuCharChatClientFactory.Create(Opt, "   "));
+        var (fail, failInner, failDelays) = Retrying(Reset());
+        var e = await Assert.ThrowsExceptionAsync<HttpRequestException>(() => Send(fail));
+        Assert.AreEqual(SocketError.ConnectionReset, ((SocketException)e.InnerException!.InnerException!).SocketErrorCode, "the last reset is passed on as is");
+        Assert.AreEqual(3, failInner.Attempts, "two retries, then the third reset fails the call");
+        CollectionAssert.AreEqual(Backoff[..2], failDelays);
     }
 
     [TestMethod]
-    public void Factory_ErrorsNeverCarryKey()
+    public async Task Retry_ResetsAndConnectFailures_CountSeparately()
     {
-        var bad = new[]
+        // Connect failures are free (nothing was sent) and keep their 3 retries here; resets keep their own 2.
+        var (inv, inner, delays) = Retrying(Reset(), Throw(HttpRequestError.ConnectionError), Reset(), Throw(HttpRequestError.ConnectionError),
+            Status(HttpStatusCode.OK));
+        using (var r = await Send(inv)) Assert.AreEqual(HttpStatusCode.OK, r.StatusCode);
+        Assert.AreEqual(5, inner.Attempts);
+        CollectionAssert.AreEqual(new[] { Backoff[0], Backoff[0], Backoff[1], Backoff[1] }, delays);
+
+        // A reset during the TCP connect or the TLS handshake is a connect failure: its retries end at 3, not 3 + 2.
+        foreach (var error in new[] { HttpRequestError.ConnectionError, HttpRequestError.SecureConnectionError })
         {
-            new NeuCharOptions("not a url", "gpt-5-chat"),
-            new NeuCharOptions("", "gpt-5-chat"),
-            new NeuCharOptions("/19194/", "gpt-5-chat"),
-            new NeuCharOptions("ftp://www.neuchar.com/19194/", "gpt-5-chat"),
-            new NeuCharOptions("https://www.neuchar.com/19194/", ""),
+            var (c, cInner, _) = Retrying((_, _) => throw new HttpRequestException(error, "connect reset", ResetError().InnerException));
+            await Assert.ThrowsExceptionAsync<HttpRequestException>(() => Send(c), error.ToString());
+            Assert.AreEqual(4, cInner.Attempts, error.ToString());
+        }
+    }
+
+    [TestMethod]
+    public async Task Retry_OtherTransportFailures_AreNotRetried()
+    {
+        var cases = new (string Name, Exception Error)[]
+        {
+            ("EOF, no socket error", new HttpRequestException(HttpRequestError.Unknown, "send failed",
+                new IOException("Received an unexpected EOF or 0 bytes from the transport stream."))),
+            ("socket timeout, not a reset", new HttpRequestException(HttpRequestError.Unknown, "send failed",
+                new IOException("timed out", new SocketException((int)SocketError.TimedOut)))),
+            ("a status code means a response came", new HttpRequestException("Response status code does not indicate success: 502.",
+                ResetError().InnerException, HttpStatusCode.BadGateway)),
+            ("a bare IOException is not SocketsHttpHandler's shape", new IOException("reset", new SocketException((int)SocketError.ConnectionReset))),
         };
-        foreach (var o in bad)
+        foreach (var (name, error) in cases)
         {
-            var e = Assert.ThrowsException<ArgumentException>(() => NeuCharChatClientFactory.Create(o, FakeKey), o.ToString());
-            StringAssert.DoesNotMatch(e.ToString(), new System.Text.RegularExpressions.Regex("SECRET123"), o.ToString());
-        }
-        Assert.IsFalse(Opt.ToString().Contains("SECRET"), "the options have no key member");
-    }
-
-    [TestMethod]
-    public async Task Factory_BuildsDeploymentUrl()
-    {
-        foreach (var endpoint in new[] { "https://www.neuchar.com/19194/", "https://www.neuchar.com/19194" })
-        {
-            var inner = new StepHandler(Status(HttpStatusCode.OK, Completion));
-            var client = NeuCharChatClientFactory.Create(Opt with { Endpoint = endpoint }, FakeKey, inner);
-            Assert.IsNotNull(client);
-            var resp = await client.GetResponseAsync("hi");
-            Assert.AreEqual("ok", resp.Text);
-            Assert.AreEqual(1, inner.Attempts);
-            Assert.AreEqual("https://www.neuchar.com/19194/openai/deployments/gpt-5-chat/chat/completions?api-version=2025-04-01-preview",
-                inner.Uris[0]?.ToString(), endpoint);
-            Assert.IsTrue(inner.HadKeyHeader[0], "api-key header present");
+            var (inv, inner, delays) = Retrying((_, _) => throw error, Status(HttpStatusCode.OK));
+            try { using var _ = await Send(inv); Assert.Fail(name + ": expected the failure to pass through"); }
+            catch (Exception e) when (e is not AssertFailedException) { Assert.AreSame(error, e, name); }
+            Assert.AreEqual(1, inner.Attempts, name);
+            Assert.AreEqual(0, delays.Count, name);
         }
     }
 
     [TestMethod]
-    public async Task Factory_ServerErrors_AreNeverRetried()
+    public async Task Retry_ResetAfterCallerCancel_IsNotRetried()
     {
-        // The SDK's own retry policy would resend a 429 or 5xx: it is off, so a request that reached NeuChar goes once.
-        foreach (var code in new[] { HttpStatusCode.InternalServerError, HttpStatusCode.ServiceUnavailable, HttpStatusCode.TooManyRequests, HttpStatusCode.Forbidden })
+        // The runner's work budget and HttpClient.Timeout cancel the token: a reset that lands after that is not retried.
+        using var cts = new CancellationTokenSource();
+        var (inv, inner, delays) = Retrying((_, _) => { cts.Cancel(); throw ResetError(); }, Status(HttpStatusCode.OK));
+        await Assert.ThrowsExceptionAsync<HttpRequestException>(() => Send(inv, cts.Token));
+        Assert.AreEqual(1, inner.Attempts);
+        Assert.AreEqual(0, delays.Count);
+    }
+
+    // ---- the real transport on loopback: SocketsHttpHandler, the SDK, and a server that resets ----
+
+    /// <summary>
+    /// A plain-HTTP/1.1 server on 127.0.0.1. Connection n runs script n (the last one repeats) once the whole request has
+    /// been read, so a reset lands while the client waits for the response, as in the 2026-11-08 failures.
+    /// </summary>
+    sealed class LoopbackServer : IAsyncDisposable
+    {
+        readonly TcpListener _listener = new(IPAddress.Loopback, 0);
+        readonly Func<Socket, Task>[] _scripts;
+        readonly CancellationTokenSource _stop = new();
+        readonly Task _loop;
+        int _connections;
+
+        public List<string> Bodies { get; } = new();
+        public int Connections => Volatile.Read(ref _connections);
+        public string Endpoint => $"http://127.0.0.1:{((IPEndPoint)_listener.LocalEndpoint).Port}/19194/";
+
+        public LoopbackServer(params Func<Socket, Task>[] scripts)
         {
-            var inner = new StepHandler(Status(code, """{"error":{"message":"AI 应用不可用或已暂时停用"}}"""), Status(HttpStatusCode.OK, Completion));
-            var client = NeuCharChatClientFactory.Create(Opt, FakeKey, inner)!;
-            var e = await Assert.ThrowsExceptionAsync<System.ClientModel.ClientResultException>(() => client.GetResponseAsync("hi"), code.ToString());
-            Assert.AreEqual((int)code, e.Status);
-            Assert.AreEqual(1, inner.Attempts, code.ToString());
-            StringAssert.DoesNotMatch(e.ToString(), new System.Text.RegularExpressions.Regex("SECRET123"));
+            _scripts = scripts;
+            _listener.Start();
+            _loop = LoopAsync();
+        }
+
+        async Task LoopAsync()
+        {
+            try
+            {
+                while (true)
+                {
+                    var s = await _listener.AcceptSocketAsync(_stop.Token);
+                    var i = Interlocked.Increment(ref _connections) - 1;
+                    var body = await ReadRequestAsync(s, _stop.Token);
+                    lock (Bodies) Bodies.Add(body);
+                    await _scripts[Math.Min(i, _scripts.Length - 1)](s);
+                }
+            }
+            catch (OperationCanceledException) { }
+            catch (SocketException) { }
+            catch (ObjectDisposedException) { }
+        }
+
+        /// <summary>The body of one request (Content-Length or chunked, kept raw).</summary>
+        static async Task<string> ReadRequestAsync(Socket s, CancellationToken ct)
+        {
+            var data = new List<byte>();
+            var buf = new byte[8192];
+            int headerEnd;
+            while ((headerEnd = IndexOf(data, "\r\n\r\n"u8.ToArray())) < 0) await ReadMore();
+            var head = Encoding.ASCII.GetString(data.GetRange(0, headerEnd).ToArray());
+            var bodyStart = headerEnd + 4;
+            var length = head.Split("\r\n").Select(l => l.Split(':', 2)).Where(p => p.Length == 2 && p[0].Trim().Equals("Content-Length", StringComparison.OrdinalIgnoreCase))
+                .Select(p => (int?)int.Parse(p[1].Trim())).FirstOrDefault();
+            if (length is int n) { while (data.Count - bodyStart < n) await ReadMore(); }
+            else if (head.Contains("chunked", StringComparison.OrdinalIgnoreCase)) { while (IndexOf(data, "0\r\n\r\n"u8.ToArray(), bodyStart) < 0) await ReadMore(); }
+            return Encoding.UTF8.GetString(data.GetRange(bodyStart, data.Count - bodyStart).ToArray());
+
+            async Task ReadMore()
+            {
+                var got = await s.ReceiveAsync(buf, SocketFlags.None, ct);
+                if (got == 0) throw new SocketException((int)SocketError.ConnectionAborted);
+                data.AddRange(buf.AsSpan(0, got).ToArray());
+            }
+        }
+
+        static int IndexOf(List<byte> data, byte[] needle, int from = 0)
+        {
+            for (var i = from; i + needle.Length <= data.Count; i++)
+                if (data.Skip(i).Take(needle.Length).SequenceEqual(needle)) return i;
+            return -1;
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            _stop.Cancel();
+            _listener.Stop();
+            await _loop;
+            _stop.Dispose();
         }
     }
 
-    [TestMethod]
-    public void Factory_Transport_ConnectTimeoutAndKeepAlive()
+    /// <summary>An abortive close: Windows sends RST, and the client's read fails with 10054.</summary>
+    static Task ResetConnection(Socket s)
     {
-        using var s = NeuCharChatClientFactory.NewSockets();
-        // About half the handshakes to neuchar.com stall; good ones finish in under 1.5 s. Seven tries of 6 s plus the
-        // 9.5 s of backoff stay well inside the 90 s request timeout.
-        Assert.AreEqual(TimeSpan.FromSeconds(6), s.ConnectTimeout);
-        Assert.AreEqual(6, NeuCharChatClientFactory.ConnectRetries);
-        Assert.IsTrue(NeuCharChatClientFactory.ConnectTimeout * (NeuCharChatClientFactory.ConnectRetries + 1)
-            + TimeSpan.FromSeconds(9.5) < NeuCharChatClientFactory.RequestTimeout - TimeSpan.FromSeconds(30), "room left for the model");
-        Assert.AreEqual(TimeSpan.FromSeconds(90), s.PooledConnectionIdleTimeout, "idle connections stay open for reuse");
-        Assert.AreEqual(TimeSpan.FromMinutes(10), s.PooledConnectionLifetime);
-        Assert.IsTrue(s.MaxConnectionsPerServer > 1);
+        s.LingerState = new LingerOption(true, 0);
+        s.Close();
+        return Task.CompletedTask;
+    }
+
+    static string ResponseHead(string json) =>
+        $"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {Encoding.UTF8.GetByteCount(json)}\r\nConnection: close\r\n\r\n";
+
+    static Func<Socket, Task> Answer(string json) => async s =>
+    {
+        await s.SendAsync(Encoding.UTF8.GetBytes(ResponseHead(json) + json), SocketFlags.None);
+        s.Shutdown(SocketShutdown.Both);
+        s.Close();
+    };
+
+    /// <summary>The status line, the headers and half the body, then a reset: the response had started.</summary>
+    static Func<Socket, Task> HalfThenReset(string json) => async s =>
+    {
+        var body = Encoding.UTF8.GetBytes(json);
+        await s.SendAsync(Encoding.UTF8.GetBytes(ResponseHead(json)).Concat(body[..(body.Length / 2)]).ToArray(), SocketFlags.None);
+        await Task.Delay(500); // let the client read the headers and start on the body before the reset
+        await ResetConnection(s);
+    };
+
+    /// <summary>A NeuCharAI chat model as AI Kernel stores it, at <paramref name="endpoint"/>, on the real transport.</summary>
+    static IChatClient LoopbackClient(string endpoint) =>
+        new AiKernelChatClients().Resolve(new AIModelDto
+        {
+            Id = 1, AiPlatform = AiPlatform.NeuCharAI, ConfigModelType = ConfigModelType.Chat, Endpoint = endpoint,
+            DeploymentName = "gpt-5-chat", ModelId = "gpt-5-chat", ApiKey = FakeKey, ApiVersion = "2025-04-01-preview",
+        }).Model!.Client;
+
+    [TestMethod]
+    public async Task Factory_ResetBeforeResponse_IsRetriedWithTheSameRequest()
+    {
+        await using var server = new LoopbackServer(ResetConnection, Answer(Completion));
+        var client = LoopbackClient(server.Endpoint);
+
+        var resp = await client.GetResponseAsync("hi");
+
+        Assert.AreEqual("ok", resp.Text);
+        Assert.AreEqual(2, server.Connections);
+        Assert.AreEqual(2, server.Bodies.Count);
+        StringAssert.Contains(server.Bodies[0], "\"hi\"", "the first attempt carried the prompt");
+        Assert.AreEqual(server.Bodies[0], server.Bodies[1], "the retry resends the same body");
     }
 
     [TestMethod]
-    public void Factory_Transport_NeverResumesTls()
+    public async Task Factory_ResetAfterTheResponseStarted_IsNotRetried()
     {
-        // Resumed TLS sessions to neuchar.com stall until the timeout about half the time (2026-11-07: 7 of 12 resumed
-        // requests stalled, 0 of 6 with resumption off, 0 of ~40 from curl, which never resumes).
-        using var s = NeuCharChatClientFactory.NewSockets();
-        Assert.IsNotNull(s.SslOptions);
-        Assert.IsFalse(s.SslOptions.AllowTlsResume, "every connection to NeuChar does a full TLS handshake");
+        await using var server = new LoopbackServer(HalfThenReset(Completion), Answer(Completion));
+        var client = LoopbackClient(server.Endpoint);
+
+        Exception? failed = null;
+        try { await client.GetResponseAsync("hi"); }
+        catch (Exception e) { failed = e; }
+
+        Assert.IsNotNull(failed, "a reset mid-body fails the call");
+        Assert.AreEqual(1, server.Connections, "never resent once response bytes came");
+        StringAssert.DoesNotMatch(failed.ToString(), new System.Text.RegularExpressions.Regex("SECRET123"));
     }
 }
