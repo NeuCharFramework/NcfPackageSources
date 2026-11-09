@@ -24,32 +24,44 @@ wrong method. Everything else on the site, including its admin login, is the hos
 
 ### Live is on only when
 
-1. the module is installed and opened in NCF (Install, then Enable), and multi-tenancy is off;
-2. the Settings page has "Enabled" ticked (the default); and
+1. the module is installed and enabled in NCF (Install, then Enable), and multi-tenancy is off;
+2. the Settings page has "Live AI is on" ticked (the default); and
 3. a plan model is chosen and its AI Kernel model can be called.
 
 Otherwise `GET /live/api/health` answers `{"ok":true,"liveEnabled":false,...}` and live requests answer `503 live_off`.
-The Settings page says which of these is missing. The runtime re-reads the settings every 5 seconds and right after a save.
+The Settings page says which of these is missing. The runtime re-reads the settings every 5 seconds and right after a save,
+but reads nothing until NCF reports the site ready (a site in maintenance mode, or whose database isn't updated yet, keeps
+live off as "starting").
+
+While the module isn't serving at all (not installed, not enabled, or multi-tenancy on), `POST apply` and
+`POST access/check` answer `503 live_off` too, so no visitor email or text is stored. For every other reason (switched
+off, no model yet, ...) they stay open: applications keep coming in while you set things up.
 
 ### Settings page
 
 | Field | Default | Meaning |
 |---|---|---|
-| Enabled | on | Master switch. Off stops new live requests; the demo falls back to its scripted mode. |
+| Live AI is on | on | Master switch. Off stops new live requests; the demo falls back to its scripted mode. |
 | Plan model | none | AI Kernel model that plans (required for live). |
 | Run model | same as plan | AI Kernel model that runs the steps. |
 | Requests per code per day | 20 | Limit a new invite code starts with. |
 | Requests per day, all codes | 300 | Cap for every code together. |
 | Daily token budget | 1,000,000 | Token kill switch for the usage day; at the limit new sessions and requests answer `429 budget`. |
-| Extra allowed origins | none | One per line, `http(s)://host[:port]`, no path and no `*`. Added to the published demo's origin. |
+| Extra allowed origins | none | One per line, `http(s)://host[:port]`, no path and no `*`. Added to the built-in ones (below). |
 
-The page also shows the status, today's token spend, and a "Try it" link to the demo against this site.
+Built-in allowed origins: the published demo, `https://leozheng265.github.io`; in the Development environment only, also
+`http://localhost:8765` (a local copy of the demo).
+
+The page also shows the status, today's token spend, and a "Try it" link to the demo against this site. If AI Kernel can't be
+read (not installed or not enabled), the model pickers are empty and the page says so.
 
 ### Configuration (`NcbLive` section of appsettings)
 
 Optional; every key has a default. On/off, the models, the daily limits and the origins are **not** here: they live on the
 Settings page. Values that cannot work together (for example `SessionIdle` shorter than `MaxWork` plus `ApprovalWait`) are
-logged as an error at startup and live stays off (`config`) until they are fixed.
+logged as an error at startup and live stays off (`config`) until they are fixed. So is a value that can't be read at all
+(for example `MaxWork` = `30m` instead of `00:30:00`): the error names the key, every `NcbLive` setting is at its default
+until it is fixed, and the rest of the site is unaffected.
 
 | Key | Default | Meaning |
 |---|---|---|
@@ -69,10 +81,17 @@ logged as an error at startup and live stays off (`config`) until they are fixed
 | `NcbLive:Pacing:EventSeconds` | 0.6 | Real seconds per timeline row in a fast-forward. |
 | `NcbLive:Pacing:WeekCapSeconds` | 25 | Most a simulated week may take. |
 
+#### Upgrading from the standalone host
+
+The standalone live host (`ncb/live`) read more `NcbLive` keys. The module ignores these, and names any still present in one
+warning at startup: `Enabled`, `PlanModel`, `RunModel`, `PerCodeDaily`, `GlobalDaily`, `DailyTokenBudget` and
+`ExtraOrigins` are now on the Settings page, and `Endpoint` (with its key) is the AI Kernel model's. The usage day also
+moves from New York to UTC: set `NcbLive:UsageTimeZone` to `America/New_York` to keep the old midnight.
+
 ### Trying it
 
-1. In the site's admin: Install, then Install + Enable "NeuCharBox Live"; add an AI Kernel chat model; choose it on the
-   module's Settings page.
+1. In the site's admin, install and enable AI Kernel first (the model pickers read it), and add a chat model there. Then
+   install "NeuCharBox Live" (Install, then Enable) and choose the model on the module's Settings page.
 2. On the Codes page, create an invite code.
 3. Open the "Try it" link on the Settings page and enter the code.
 

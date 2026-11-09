@@ -1,6 +1,8 @@
 <!-- Module copy of ncb/docs/superpowers/specs/2026-11-07-live-api-contract.md, with the automations additions of
 2026-11-08-automations-design.md section 3 already folded in (the "Automations" section and the notes dated 2026-11-08).
-The only edit is the 2026-11-09 note on the module's /live/api branch, which replaces the tunnel-guard line of the standalone host. -->
+Module edits: the 2026-11-09 notes (the module's /live/api branch, which replaces the tunnel-guard line of the standalone
+host, and apply/access-check while the module isn't serving), and the standalone host's details brought up to the module
+(the example address, the ngrok header, what live_off means, the work-time and model-call caps). The wire format is unchanged. -->
 
 # Live AI demo: wire contract (server ⇄ demo)
 
@@ -11,17 +13,19 @@ disagree, this file wins; change it here first.
 ## Transport
 
 - Base: `{apiBase}/live/api/` where `apiBase` comes from the demo's `js/live-config.js`
-  (e.g. `https://ncb-live.ngrok-free.app`). JSON bodies, UTF-8, `camelCase` field names.
+  (e.g. `https://ncf.example.com` for an NCF site, or `http://localhost:5000` for one on this machine). JSON bodies,
+  UTF-8, `camelCase` field names.
 - Invite-protected routes take `Authorization: Bearer <code>`. Codes are compared
   case-insensitively and with spaces stripped; the canonical form is `NCB-XXXX-XXXX`
   (alphabet `23456789ABCDEFGHJKMNPQRSTUVWXYZ`, 8 random characters).
-- Every request through the tunnel also sends `ngrok-skip-browser-warning: 1` (harmless
-  elsewhere; ngrok's free tier otherwise answers with an HTML interstitial).
+- The demo may send `ngrok-skip-browser-warning: 1` (a leftover of the standalone host's ngrok tunnel, whose free tier
+  otherwise answers with an HTML interstitial). The module accepts the header (it is in the allowed headers below) but
+  never requires it.
 - **CORS** (added by the demo plan): answer `OPTIONS` preflights for every route with
   `Access-Control-Allow-Origin` = the request's `Origin` when it is on the allowlist (spec 4.4),
   `Access-Control-Allow-Methods: GET, POST, OPTIONS`, `Access-Control-Allow-Headers:
   Authorization, Content-Type, Accept, ngrok-skip-browser-warning`, `Access-Control-Max-Age: 600`.
-  The custom `ngrok-skip-browser-warning` and `Authorization` headers make even `GET health`
+  A custom header (`Authorization`, or `ngrok-skip-browser-warning` when the demo sends it) makes even a `GET`
   preflighted. The SSE response carries the same `Access-Control-Allow-Origin`.
 - Error body for every non-2xx: `{ "error": "<kind>", "message": "<plain sentence for the visitor>" }`.
   The demo shows its own copy per `error` kind; `message` is only a fallback for unknown kinds.
@@ -33,11 +37,11 @@ disagree, this file wins; change it here first.
 | 404 | `no_session` (unknown or expired session), `no_request`, `no_automation` (`automations/{id}`: no rule or schedule with that id in the room) |
 | 409 | `busy` (a request is already active in this session), `not_waiting` (approve/decline/whatif when nothing is waiting for it), `device_unavailable` (`set`: the device is faulted or busy; message "That device can't be changed right now."). `advance` also answers `busy` while a request or another advance is running |
 | 429 | `code_limit` (code's daily limit, or all 5 of the code's live sessions busy on `POST sessions`), `global_limit` (all-codes daily cap, or the server's session cap on `POST sessions`), `budget` (token kill switch), `rate` (apply or access/check rate limit; also `set`, `advance` and `automations/{id}`, 10 per 5 s per session together) |
-| 503 | `live_off` (live disabled in config, or the kill switch tripped) |
+| 503 | `live_off` (live is off: see the first server note; for `apply` and `access/check`, only while the module isn't serving (2026-11-09 notes) or its store can't be read) |
 | 500 | `internal` (an unexpected server error; generic message, never a stack trace) |
 
 Server notes (added by the server plan):
-- Once today's token budget is spent, `POST sessions` and `POST …/requests` answer `429 budget`, and `GET health` reports `liveEnabled: false`. `503 live_off` is for live being disabled in config, or no NeuChar key.
+- Once today's token budget is spent, `POST sessions` and `POST …/requests` answer `429 budget`, and `GET health` reports `liveEnabled: false`. `503 live_off` is for live being off: switched off on the module's Settings page, no usable AI Kernel model (none chosen, deleted, or not a chat model on a supported platform), or the module not installed, closed or multi-tenant; also while its `NcbLive` settings can't work, its state can't be read, or the site isn't ready yet.
 - `too_long` counts `text.Trim().Length`, in UTF-16 units like the browser's `maxlength`, against 400.
 - A sensor read while running emits `reading`, then the usual `call` and `result` (outcome `reading`). While planning it emits `reading` only.
 - Server-made labels and texts never contain the copy-guard terms: the blinds read `"Blinds → closed"`, not `"… 100% closed"`.
@@ -50,11 +54,12 @@ Server notes (added by the server plan):
   - A preflight (`OPTIONS` with `Origin` and `Access-Control-Request-Method`) is answered `204` right there and goes no further: an allowed origin gets `Access-Control-Allow-Origin`, `-Methods`, `-Headers` and `-Max-Age`, and `Access-Control-Allow-Private-Network: true` when the request carried `Access-Control-Request-Private-Network: true` (Chrome's private network access, for the public demo calling a site on localhost or the LAN); any other origin gets none of them. Other requests with an allowed `Origin` get `Access-Control-Allow-Origin` when the response starts, errors and the SSE stream included.
   - A wrong method on a live route is a JSON `405` `bad_request` with the `Allow` header. A path under `/live/api` that no route matches is a JSON `404` `no_request`, never the host's page. A `HEAD` is left alone.
   - Nothing outside `/live/api` is touched. Protecting the site's admin and its other pages is the site's job (the NCF admin login does it for the module's own pages).
+- 2026-11-09, NCF module: while the module isn't serving at all (not installed, closed, or NCF multi-tenancy on), `POST apply` and `POST access/check` answer `503 live_off` before anything else (honeypot, rate limit, body), so no visitor email or text is stored. For every other reason live is off (switched off, no model, a model missing or unsupported, settings that can't work, starting, unavailable) both stay open: applications keep coming in while the owner picks a model.
 - 2026-11-07, server Task 9 review: `POST …/whatif` also answers `429 budget` when today's token budget is spent (what-ifs still don't count against the request limits). `reset` clears the session's replayable request, so a what-if after a reset answers `409 not_waiting`.
 - 2026-11-07, client branch review: `whatif` targets the session's latest **replayable** request: the latest non-what-if request that ended `ok` or `failed` after an approved plan. A later request that ends `declined`, `cannot_do`, `expired` or `limit`, or a planning-only failure, does not replace it. Any other rid answers `409 not_waiting`. `fault.text` is the short reason only, without the device name (e.g. `"not responding"`); the demo prefixes the name.
 - 2026-11-07, client plan pre-flight: a what-if never becomes the session's latest finished request, so `whatif` on the same `rid` replays that request again from its own `Before`. Declining a re-plan emits no event: the server tells the model "declined; carry on without these changes", the run continues, and the demo marks the re-plan card itself. `state` in `POST sessions`/`reset`/`room` is applied per field (see Routes). `done {limit}` shows the end card without the what-if.
 - 2026-11-07, server plan pre-flight: added the two notes above (stepless calls, re-plan ids) and dropped the SSE rule's exception for `clock` events sent by `reset`. `reset` answers over HTTP and emits no event.
-- 2026-11-07, real-model smoke: a model call that the per-request work time (3 min) cuts off now ends `limit {kind:"time"}` then `done {outcome:"limit"}`, not `error {model}`; a `say` may come before it. Caps are 12 model calls per request, 14 per what-if (were 8 / 10).
+- 2026-11-07, real-model smoke: a model call that the per-request work time cuts off now ends `limit {kind:"time"}` then `done {outcome:"limit"}`, not `error {model}`; a `say` may come before it. The work time and the model-call caps per request and per what-if are configurable (`NcbLive:MaxWork`, `MaxCalls`, `MaxCallsWhatIf`); the module's defaults are 30 min, 60 and 60 (the standalone host had 3 min, 12 and 14; earlier 8 / 10 calls).
 - 2026-11-08, custom scene (server Task 4): `GET health` lists `["home","custom"]`. `POST sessions` with scene `custom` takes `devices: [{type,id}]` and answers `400 bad_room` for an unknown type, a bad or duplicate id, a missing or empty list, or more than 20 devices. Rebuilding a room is a new session; the 6th session for a code still ends its least recently active idle one.
 
 - 2026-11-08, editable cards (server Task 6): `POST sessions/{sid}/set` and `POST sessions/{sid}/advance` added (see Routes); new error kinds `bad_value` (400) and `device_unavailable` (409); `set` and `advance` share a rate limit of 10 per 5 s per session (`429 rate`). Events caused by an edit or an advance carry `"src":"edit"`; `timeline` rows gain optional `origin` and `device`.
@@ -66,8 +71,8 @@ Server notes (added by the server plan):
 | Method & path | Auth | Body → 2xx response |
 |---|---|---|
 | `GET health` | none | → `200 { "ok": true, "liveEnabled": bool, "scenes": ["home", "custom"] }` |
-| `POST access/check` | none | `{ "code" }` → `200 { "ok": true, "remainingToday": int }`; bad code → 401 |
-| `POST apply` | none | `{ "email", "name"?, "interest": "home"\|"lab"\|"warehouse"\|"business"\|"other", "wouldTry", "scene", "website" }` → `202 {}`. `website` is the honeypot: non-empty → still `202`, nothing stored. 5 per IP per hour → 429 `rate`. |
+| `POST access/check` | none | `{ "code" }` → `200 { "ok": true, "remainingToday": int }`; bad code → 401. While the module isn't serving → 503 `live_off` (2026-11-09 note). |
+| `POST apply` | none | `{ "email", "name"?, "interest": "home"\|"lab"\|"warehouse"\|"business"\|"other", "wouldTry", "scene", "website" }` → `202 {}`. `website` is the honeypot: non-empty → still `202`, nothing stored. 5 per IP per hour → 429 `rate`. While the module isn't serving → 503 `live_off` first (2026-11-09 note). |
 | `POST sessions` | code | `{ "scene": "home" }` → `201 { "sessionId", "state": {…}, "clock": Clock, "suggestions": [string], "automations": [] }` (`automations` is always empty in a new room). `suggestions` = the scene manifest's "Try:" lines (spec 5.1), 2–4 of them (a custom room gives 1–4). For scene `custom` the body also carries `"devices": [{ "type", "id" }]` (1–20 devices from the catalog; ids are the type, then `_2`…`_20`); `state` then holds exactly those devices, and a missing or invalid list answers `400 bad_room`. |
 | `GET sessions/{sid}/events?after={seq}` | code | SSE stream (below). `after` omitted = from the start. |
 | `POST sessions/{sid}/requests` | code | `{ "text" }` → `202 { "requestId" }`. Counts against the code's and the global daily limits. |
