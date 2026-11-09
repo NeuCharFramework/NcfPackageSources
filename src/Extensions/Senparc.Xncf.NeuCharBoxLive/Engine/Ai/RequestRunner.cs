@@ -13,10 +13,15 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 注释：重试改由 Api/Model 的 ConnectRetryHandler 完成，含响应前连接重置的重试（ncb/live 90321e1）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 模型调用失败与请求失败的日志只记异常类型、状态码与清洗后的首行消息（SafeError），不再记录异常对象
+
 ----------------------------------------------------------------*/
 
 using System.Globalization;
+using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Microsoft.Extensions.AI;
@@ -34,6 +39,46 @@ public class ModelCallException(string visitorMessage, Exception? inner) : Excep
 
 /// <summary>Today's token kill switch is tripped.</summary>
 public class TokenBudgetSpentException() : Exception("today's token budget is spent");
+
+/// <summary>
+/// What a log line may say about an exception from a model call or a run (final review M7): its type, an HTTP status when
+/// it carries one, and the first line of its message, at most <see cref="MaxMessage"/> characters, with key-like runs
+/// masked. Never the exception object: an SDK puts the provider's response body after the first line of its message (or
+/// in an inner exception), and that body can echo the request or part of the key.
+/// </summary>
+internal static class SafeError
+{
+    public const int MaxMessage = 200;
+
+    /// <summary>A run of 24 or more key characters with both a letter and a digit in it (an API key, a token), not a plain identifier.</summary>
+    static readonly Regex KeyLike = new(@"(?<![A-Za-z0-9_\-])(?=[A-Za-z0-9_\-]*[0-9])(?=[A-Za-z0-9_\-]*[A-Za-z])[A-Za-z0-9_\-]{24,}(?![A-Za-z0-9_\-])",
+        RegexOptions.CultureInvariant);
+
+    /// <summary>The type's full name, the status ("none" without one), and the scrubbed first line of the message.</summary>
+    public static (string Type, string Status, string Message) Of(Exception e)
+    {
+        var line = e.Message ?? "";
+        var end = line.IndexOfAny(['\r', '\n']);
+        if (end >= 0) line = line[..end];
+        line = KeyLike.Replace(line, "***");
+        if (line.Length > MaxMessage) line = line[..MaxMessage] + "…";
+        return (e.GetType().FullName ?? e.GetType().Name, StatusOf(e)?.ToString(CultureInfo.InvariantCulture) ?? "none", line);
+    }
+
+    /// <summary>HttpRequestException.StatusCode, or a public int Status (the OpenAI SDK's ClientResultException, Azure's RequestFailedException).</summary>
+    static int? StatusOf(Exception e)
+    {
+        if (e is HttpRequestException { StatusCode: { } code }) return (int)code;
+        try
+        {
+            return e.GetType().GetProperty("Status", BindingFlags.Public | BindingFlags.Instance)?.GetValue(e) is int s && s > 0 ? s : null;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+}
 
 /// <summary>
 /// The AI loop (spec 6): plan with read-only tools, wait for approval, run the tool loop through the plan gate, then
@@ -204,7 +249,11 @@ public sealed class RequestRunner
             }
             catch (ModelCallException e)
             {
-                _o._log.LogWarning(ModelFailed, e.InnerException, "Model call failed in request {Rid}", _r.Rid);
+                // Never the exception object: an SDK's message after its first line, and its inner exceptions, can carry
+                // the provider's response body.
+                var (type, status, message) = SafeError.Of(e.InnerException ?? e);
+                _o._log.LogWarning(ModelFailed, "Model call failed in request {Rid}: {ExceptionType} (status {Status}): {Message}",
+                    _r.Rid, type, status, message);
                 Stop();
                 Emit(Ev.Error("model", e.Message));
                 outcome = "failed";
@@ -216,7 +265,10 @@ public sealed class RequestRunner
             }
             catch (Exception e)
             {
-                _o._log.LogError(RunFailed, e, "Request {Rid} failed", _r.Rid);
+                // The same, plus where it was thrown: the stack trace names methods only, and this is most likely a bug.
+                var (type, status, message) = SafeError.Of(e);
+                _o._log.LogError(RunFailed, "Request {Rid} failed: {ExceptionType} (status {Status}): {Message}{NewLine}{StackTrace}",
+                    _r.Rid, type, status, message, Environment.NewLine, e.StackTrace);
                 Stop();
                 Emit(Ev.Error("internal", Prompts.Internal));
                 outcome = "failed";

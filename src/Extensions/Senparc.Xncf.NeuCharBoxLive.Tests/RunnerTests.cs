@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 新增测试：模型调用失败与请求失败的日志只有类型、状态码与清洗后的首行，不带异常对象
+
 ----------------------------------------------------------------*/
 
 using System.Text.Json.Nodes;
@@ -489,6 +492,78 @@ public class RunnerTests
         Assert.AreEqual(end.PromptTokens + end.CompletionTokens, Meter.Added, "the day's meter got the same tokens");
         Assert.IsNull(S.Active);
         Assert.AreEqual(1, Log.Entries.Count(e => e.Level == Microsoft.Extensions.Logging.LogLevel.Warning));
+    }
+
+    /// <summary>
+    /// Final review M7: an SDK exception's message carries the provider's response body after its first line (it can echo
+    /// part of the key or the request). The warning has the type, the status and the first line only, and no exception object.
+    /// </summary>
+    [TestMethod]
+    public async Task ModelFailure_LogsTypeStatusAndFirstLine_NeverTheBodyOrTheException()
+    {
+        const string Body = "{\"error\":{\"message\":\"Incorrect API key provided: sk-proj-abcDEF123456ghiJKL789012mnoPQR\"}}";
+        var chat = new ScriptedChatClient(T(LampPlan()), T(SetLamp20()), (_, _) => throw new HttpRequestException(
+            "Service request failed.\nStatus: 401 (Unauthorized)\n\nContent:\n" + Body, null, System.Net.HttpStatusCode.Unauthorized));
+        await RunApproved(chat);
+
+        var entry = Log.Entries.Single(e => e.Id.Name == "ModelCallFailed");
+        Assert.IsNull(entry.Exception, "no exception object: a logger would print its whole message and inner exceptions");
+        StringAssert.Contains(entry.Message, "System.Net.Http.HttpRequestException");
+        StringAssert.Contains(entry.Message, "401");
+        StringAssert.Contains(entry.Message, "Service request failed.");
+        foreach (var leak in new[] { "sk-proj", "Incorrect API key", "Content:", "Unauthorized)" })
+            Assert.IsFalse(entry.Message.Contains(leak), leak);
+    }
+
+    /// <summary>The same for an unexpected failure (here the run store): type, status, first line and the stack trace only.</summary>
+    [TestMethod]
+    public async Task RunFailure_LogsTypeAndFirstLine_NotTheRestOrTheException()
+    {
+        var runs = new StartFails(Store, new InvalidOperationException("Duplicate key in Run\nINSERT INTO Run (Text) VALUES ('" + MovieText + "')"));
+        var r = Request();
+        await new RequestRunner(Opt, new InstantPacer(Fake.Advance), Fake, runs, Meter, UsageDay.Utc, Log)
+            .RunAsync(S, r, Snap(Chat(LampPlan())), CancellationToken.None).WaitAsync(Guard);
+
+        CollectionAssert.AreEqual(new[] { "error internal", "done failed" }, Kinds(await Of(r)).TakeLast(2).ToList());
+        var entry = Log.Entries.Single(e => e.Id.Name == "RunFailed");
+        Assert.IsNull(entry.Exception);
+        StringAssert.Contains(entry.Message, "System.InvalidOperationException");
+        StringAssert.Contains(entry.Message, "Duplicate key in Run");
+        StringAssert.Contains(entry.Message, nameof(StartFails), "where it was thrown");
+        Assert.IsFalse(entry.Message.Contains("INSERT") || entry.Message.Contains(MovieText), "never the rest of the message, nor visitor text");
+    }
+
+    sealed class StartFails(IRunStore inner, Exception e) : IRunStore
+    {
+        public Task<long> StartAsync(RunStart s) => throw e;
+        public Task FinishAsync(long runId, RunEnd end) => inner.FinishAsync(runId, end);
+        public Task<int> CountTodayAsync(DateOnly day, string? code) => inner.CountTodayAsync(day, code);
+        public Task<long> TokensTodayAsync(DateOnly day) => inner.TokensTodayAsync(day);
+        public Task BlankTextOlderThanAsync(DateTimeOffset cutoff) => inner.BlankTextOlderThanAsync(cutoff);
+        public Task<IReadOnlyList<RunRow>> ListAsync(int take) => inner.ListAsync(take);
+    }
+
+    sealed class StatusException(int status, string message) : Exception(message)
+    {
+        public int Status { get; } = status;
+    }
+
+    [TestMethod]
+    public void SafeError_FirstLine_KeyLikeRunsMasked_Capped_StatusFound()
+    {
+        var (type, status, message) = SafeError.Of(new StatusException(429, "Too many requests for key sk-abcdef0123456789ABCDEF0123\nbody"));
+        Assert.AreEqual(typeof(StatusException).FullName, type);
+        Assert.AreEqual("429", status, "an int Status, as the OpenAI and Azure SDK exceptions have");
+        Assert.AreEqual("Too many requests for key ***", message);
+
+        Assert.AreEqual("none", SafeError.Of(new InvalidOperationException("x")).Status);
+        Assert.AreEqual("SQLite Error 1: 'no such table: Senparc_NeuCharBoxLive_InviteCode'",
+            SafeError.Of(new InvalidOperationException("SQLite Error 1: 'no such table: Senparc_NeuCharBoxLive_InviteCode'\r\nmore")).Message,
+            "an identifier without digits is kept");
+        var cut = SafeError.Of(new InvalidOperationException(new string('a', 500))).Message;
+        Assert.AreEqual(SafeError.MaxMessage + 1, cut.Length);
+        StringAssert.EndsWith(cut, "…");
+        Assert.AreEqual("503", SafeError.Of(new HttpRequestException("x", null, System.Net.HttpStatusCode.ServiceUnavailable)).Status);
     }
 
     /// <summary>
