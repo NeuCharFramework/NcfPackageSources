@@ -154,6 +154,7 @@ The `[XncfOrder(x)]` attribute specifies the loading order of modules in descend
 | Senparc.Xncf.FileManager | 文件管理模块 | [![Senparc.Xncf.FileManager][badge-Senparc.Xncf.FileManager]][nuget-Senparc.Xncf.FileManager] |
 | Senparc.Xncf.KnowledgeBase | AI 知识库 | [![Senparc.Xncf.KnowledgeBase][badge-Senparc.Xncf.KnowledgeBase]][nuget-Senparc.Xncf.KnowledgeBase] |
 | Senparc.Xncf.MCP | MCF 多租户微服务平台 | [![Senparc.Xncf.MCP][badge-Senparc.Xncf.MCP]][nuget-Senparc.Xncf.MCP] |
+| Senparc.Xncf.NeuCharBoxLive | NeuCharBox Live AI 演示服务（邀请码实时体验） | [![Senparc.Xncf.NeuCharBoxLive][badge-Senparc.Xncf.NeuCharBoxLive]][nuget-Senparc.Xncf.NeuCharBoxLive] |
 | Senparc.Xncf.PromptRange | AI 提示词靶场 | [![Senparc.Xncf.PromptRange][badge-Senparc.Xncf.PromptRange]][nuget-Senparc.Xncf.PromptRange] |
 | Senparc.Xncf.SenMapic | SenMapic 爬虫模块 | [![Senparc.Xncf.SenMapic][badge-Senparc.Xncf.SenMapic]][nuget-Senparc.Xncf.SenMapic] |
 | Senparc.Xncf.Swagger | Swagger 接口文档 | [![Senparc.Xncf.Swagger][badge-Senparc.Xncf.Swagger]][nuget-Senparc.Xncf.Swagger] |
@@ -250,6 +251,8 @@ Apache License Version 2.0
 [nuget-Senparc.Xncf.KnowledgeBase]: https://www.nuget.org/packages/Senparc.Xncf.KnowledgeBase
 [badge-Senparc.Xncf.MCP]: https://img.shields.io/nuget/v/Senparc.Xncf.MCP.svg
 [nuget-Senparc.Xncf.MCP]: https://www.nuget.org/packages/Senparc.Xncf.MCP
+[badge-Senparc.Xncf.NeuCharBoxLive]: https://img.shields.io/nuget/v/Senparc.Xncf.NeuCharBoxLive.svg
+[nuget-Senparc.Xncf.NeuCharBoxLive]: https://www.nuget.org/packages/Senparc.Xncf.NeuCharBoxLive
 [badge-Senparc.Xncf.PromptRange]: https://img.shields.io/nuget/v/Senparc.Xncf.PromptRange.svg
 [nuget-Senparc.Xncf.PromptRange]: https://www.nuget.org/packages/Senparc.Xncf.PromptRange
 [badge-Senparc.Xncf.SenMapic]: https://img.shields.io/nuget/v/Senparc.Xncf.SenMapic.svg
