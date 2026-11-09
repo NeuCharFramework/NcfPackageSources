@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 后台时间改用使用日所在时区（AdminTime.InZone16 取代 Eastern16）
+
 ----------------------------------------------------------------*/
 
 using System.Globalization;
@@ -63,22 +66,21 @@ public static class RunStatus
         r.End is { } e ? e.Outcome : r.Start.Started >= hostStarted ? "running" : "unfinished";
 }
 
-/// <summary>Times on the admin pages, in the zone the usage day resets in (America/New_York).</summary>
+/// <summary>Text for a stored value (a status, an outcome) that the resx may or may not name: the raw value when there is no key.</summary>
+public static class AdminText
+{
+    public static string Of(Microsoft.Extensions.Localization.IStringLocalizer localizer, string prefix, string value)
+    {
+        var s = localizer[prefix + value];
+        return s.ResourceNotFound ? value : s.Value;
+    }
+}
+
+/// <summary>Times on the admin pages, in the zone the usage day resets in (<c>UsageDay.Zone</c>).</summary>
 public static class AdminTime
 {
-    static readonly TimeZoneInfo Eastern = FindEastern();
-
-    public static string Eastern16(DateTimeOffset t) =>
-        TimeZoneInfo.ConvertTime(t, Eastern).ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
-
-    static TimeZoneInfo FindEastern()
-    {
-        try { return TimeZoneInfo.FindSystemTimeZoneById("America/New_York"); }
-        catch (Exception e) when (e is TimeZoneNotFoundException or InvalidTimeZoneException)
-        {
-            return TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
-        }
-    }
+    public static string InZone16(DateTimeOffset t, TimeZoneInfo zone) =>
+        TimeZoneInfo.ConvertTime(t, zone).ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 }
 
 /// <summary>

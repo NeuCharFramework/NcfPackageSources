@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 页面文字改走资源文件，时间改用使用日所在时区
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -26,11 +29,16 @@ namespace Senparc.Xncf.NeuCharBoxLive.Areas.Admin.Pages.NeuCharBoxLive;
 /// no email: Leo does.
 /// </summary>
 public class ApplicationsModel(Lazy<XncfModuleService> xncfModuleService, IApplicationStore applications, IInviteStore codes,
-    ILiveRuntime runtime) : AdminXncfModulePageModelBase(xncfModuleService)
+    ILiveRuntime runtime, UsageDay usageDay) : AdminXncfModulePageModelBase(xncfModuleService)
 {
     public sealed record Row(Application App, InviteCode? Code, string? Message);
 
     public IReadOnlyList<Row> Rows { get; private set; } = Array.Empty<Row>();
+
+    /// <summary>The time zone whose midnight starts a usage day; admin times are shown in it.</summary>
+    public string UsageZone => usageDay.Zone.Id;
+
+    public TimeZoneInfo Zone => usageDay.Zone;
 
     /// <summary>The daily limit a code made on approval starts with.</summary>
     public int PerCodeDaily => runtime.Current.Limits.PerCodeDaily;

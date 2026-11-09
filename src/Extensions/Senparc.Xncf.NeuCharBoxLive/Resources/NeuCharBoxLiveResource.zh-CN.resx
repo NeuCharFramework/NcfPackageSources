@@ -15,4 +15,391 @@
   <data name="Area.Extensions" xml:space="preserve">
     <value>扩展模块</value>
   </data>
+  <data name="Area.NeuCharBoxLive" xml:space="preserve">
+    <value>NeuCharBox Live</value>
+  </data>
+  <data name="Area.NeuCharBoxLive.Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Area.NeuCharBoxLive.Applications" xml:space="preserve">
+    <value>申请</value>
+  </data>
+  <data name="Area.NeuCharBoxLive.Codes" xml:space="preserve">
+    <value>邀请码</value>
+  </data>
+  <data name="Area.NeuCharBoxLive.Runs" xml:space="preserve">
+    <value>运行记录</value>
+  </data>
+  <data name="Title.Settings" xml:space="preserve">
+    <value>NeuCharBox Live - 设置</value>
+  </data>
+  <data name="Title.Applications" xml:space="preserve">
+    <value>NeuCharBox Live - 申请</value>
+  </data>
+  <data name="Title.Codes" xml:space="preserve">
+    <value>NeuCharBox Live - 邀请码</value>
+  </data>
+  <data name="Title.Runs" xml:space="preserve">
+    <value>NeuCharBox Live - 运行记录</value>
+  </data>
+  <data name="Common.Copy" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="Common.Copied" xml:space="preserve">
+    <value>已复制</value>
+  </data>
+  <data name="Status.On" xml:space="preserve">
+    <value>实时 AI 已开启，持有邀请码的访客可以发起实时请求。</value>
+  </data>
+  <data name="Status.Off.starting" xml:space="preserve">
+    <value>实时 AI 已关闭：模块仍在启动。</value>
+  </data>
+  <data name="Status.Off.config" xml:space="preserve">
+    <value>实时 AI 已关闭：站点配置（appsettings）将其关闭。</value>
+  </data>
+  <data name="Status.Off.not_installed" xml:space="preserve">
+    <value>实时 AI 已关闭：模块尚未在 NCF 中安装。</value>
+  </data>
+  <data name="Status.Off.module_closed" xml:space="preserve">
+    <value>实时 AI 已关闭：模块在 NCF（模块管理）中处于关闭状态。</value>
+  </data>
+  <data name="Status.Off.multi_tenant" xml:space="preserve">
+    <value>实时 AI 已关闭：启用多租户时不运行。</value>
+  </data>
+  <data name="Status.Off.disabled" xml:space="preserve">
+    <value>实时 AI 已关闭：下方的开关处于关闭状态。</value>
+  </data>
+  <data name="Status.Off.no_model" xml:space="preserve">
+    <value>实时 AI 已关闭：尚未选择规划模型。</value>
+  </data>
+  <data name="Status.Off.model_missing" xml:space="preserve">
+    <value>实时 AI 已关闭：所选模型已不在 AI Kernel 中。</value>
+  </data>
+  <data name="Status.Off.model_unsupported" xml:space="preserve">
+    <value>实时 AI 已关闭：所选模型不是受支持平台上的 Chat 模型，或无法创建其客户端（请在 AI Kernel 中检查 Endpoint 与密钥）。</value>
+  </data>
+  <data name="Status.Off.unavailable" xml:space="preserve">
+    <value>实时 AI 已关闭：暂时无法读取其状态，将每隔几秒重试。</value>
+  </data>
+  <data name="Status.Off.budget" xml:space="preserve">
+    <value>实时 AI 已暂停：今日 Token 预算已用完，下一个使用日恢复。</value>
+  </data>
+  <data name="Status.DemoNeedsApiBase" xml:space="preserve">
+    <value>要试用，请打开演示页，并把本站地址（HTTPS）填为实时 API 地址。一键链接仅适用于 http 的 localhost。</value>
+  </data>
+  <data name="Status.PipelineNotHooked" xml:space="preserve">
+    <value>警告：/live/api 管道尚未接入。宿主没有调用 UseXncfModules，实时请求无法到达本模块。</value>
+  </data>
+  <data name="Settings.Intro" xml:space="preserve">
+    <value>保存后几秒内生效。实时 API 位于本站的 /live/api。</value>
+  </data>
+  <data name="Settings.StatusLabel" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="Settings.Spend" xml:space="preserve">
+    <value>今日 Token 用量（使用日 {0}，{1}）：{2} / {3} 个 Token。</value>
+  </data>
+  <data name="Settings.TryIt" xml:space="preserve">
+    <value>试用</value>
+  </data>
+  <data name="Settings.TryItLink" xml:space="preserve">
+    <value>用演示页连接本站</value>
+  </data>
+  <data name="Settings.FormHeading" xml:space="preserve">
+    <value>实时 AI 设置</value>
+  </data>
+  <data name="Settings.Enabled" xml:space="preserve">
+    <value>开启实时 AI</value>
+  </data>
+  <data name="Settings.EnabledHint" xml:space="preserve">
+    <value>总开关。关闭后不再接受新的实时请求，访客只能看到演示的脚本模式。</value>
+  </data>
+  <data name="Settings.PlanModel" xml:space="preserve">
+    <value>规划模型</value>
+  </data>
+  <data name="Settings.RunModel" xml:space="preserve">
+    <value>执行模型</value>
+  </data>
+  <data name="Settings.NoneChosen" xml:space="preserve">
+    <value>（未选择）</value>
+  </data>
+  <data name="Settings.SameAsPlan" xml:space="preserve">
+    <value>（与规划模型相同）</value>
+  </data>
+  <data name="Settings.Unsupported" xml:space="preserve">
+    <value>（平台不受支持）</value>
+  </data>
+  <data name="Settings.ModelHint" xml:space="preserve">
+    <value>来自 AI Kernel、平台为 NeuCharAI、Azure OpenAI、OpenAI 或 DeepSeek 的 Chat 模型。请在 AI Kernel 中添加或修正模型。</value>
+  </data>
+  <data name="Settings.NoModels" xml:space="preserve">
+    <value>AI Kernel 中还没有 Chat 模型，请先添加。</value>
+  </data>
+  <data name="Settings.PerCodeDaily" xml:space="preserve">
+    <value>每个邀请码每日请求数</value>
+  </data>
+  <data name="Settings.GlobalDaily" xml:space="preserve">
+    <value>所有邀请码每日请求总数</value>
+  </data>
+  <data name="Settings.DailyTokenBudget" xml:space="preserve">
+    <value>每日 Token 预算</value>
+  </data>
+  <data name="Settings.ExtraOrigins" xml:space="preserve">
+    <value>额外允许的来源</value>
+  </data>
+  <data name="Settings.ExtraOriginsHint" xml:space="preserve">
+    <value>每行一个，例如 https://demo.example.com。会加到演示页自身的来源之上；实时 API 只响应这些来源的浏览器。</value>
+  </data>
+  <data name="Settings.Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Settings.Saved" xml:space="preserve">
+    <value>已保存。实时 AI 会在几秒内采用新设置。</value>
+  </data>
+  <data name="Settings.ProblemsHeading" xml:space="preserve">
+    <value>未保存任何内容：</value>
+  </data>
+  <data name="Settings.Problem.PlanModelId" xml:space="preserve">
+    <value>规划模型必须是受支持平台上的 Chat 模型。</value>
+  </data>
+  <data name="Settings.Problem.RunModelId" xml:space="preserve">
+    <value>执行模型必须是受支持平台上的 Chat 模型。</value>
+  </data>
+  <data name="Settings.Problem.PerCodeDaily" xml:space="preserve">
+    <value>每个邀请码每日请求数不能小于 1。</value>
+  </data>
+  <data name="Settings.Problem.GlobalDaily" xml:space="preserve">
+    <value>每日请求总数不能小于 1。</value>
+  </data>
+  <data name="Settings.Problem.DailyTokenBudget" xml:space="preserve">
+    <value>每日 Token 预算不能小于 1。</value>
+  </data>
+  <data name="Settings.Problem.ExtraOrigins" xml:space="preserve">
+    <value>每个额外来源都必须是不带路径的 http 或 https 来源，例如 https://demo.example.com。</value>
+  </data>
+  <data name="App.Lead" xml:space="preserve">
+    <value>按时间倒序。批准会生成一个以该邮箱为标签的邀请码，每日可用 {0} 次请求（可在“邀请码”页修改），并给出要发送的消息。服务器不发送邮件。</value>
+  </data>
+  <data name="App.None" xml:space="preserve">
+    <value>暂无申请。</value>
+  </data>
+  <data name="App.Th.Submitted" xml:space="preserve">
+    <value>提交时间（{0}）</value>
+  </data>
+  <data name="App.Th.Email" xml:space="preserve">
+    <value>邮箱</value>
+  </data>
+  <data name="App.Th.Name" xml:space="preserve">
+    <value>姓名</value>
+  </data>
+  <data name="App.Th.Interest" xml:space="preserve">
+    <value>兴趣</value>
+  </data>
+  <data name="App.Th.Scene" xml:space="preserve">
+    <value>场景</value>
+  </data>
+  <data name="App.Th.WouldTry" xml:space="preserve">
+    <value>想尝试的内容</value>
+  </data>
+  <data name="App.Th.Status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="App.Approve" xml:space="preserve">
+    <value>批准</value>
+  </data>
+  <data name="App.Decline" xml:space="preserve">
+    <value>拒绝</value>
+  </data>
+  <data name="App.DeclineConfirm" xml:space="preserve">
+    <value>确定拒绝 {0} 的申请吗？</value>
+  </data>
+  <data name="App.CodeMissing" xml:space="preserve">
+    <value>找不到邀请码 #{0}</value>
+  </data>
+  <data name="App.CodeDisabled" xml:space="preserve">
+    <value>（已停用）</value>
+  </data>
+  <data name="App.Status.new" xml:space="preserve">
+    <value>新申请</value>
+  </data>
+  <data name="App.Status.approved" xml:space="preserve">
+    <value>已批准</value>
+  </data>
+  <data name="App.Status.declined" xml:space="preserve">
+    <value>已拒绝</value>
+  </data>
+  <data name="Codes.Heading" xml:space="preserve">
+    <value>邀请码</value>
+  </data>
+  <data name="Codes.Label" xml:space="preserve">
+    <value>标签</value>
+  </data>
+  <data name="Codes.LabelHint" xml:space="preserve">
+    <value>发给谁</value>
+  </data>
+  <data name="Codes.DailyLimit" xml:space="preserve">
+    <value>每日上限</value>
+  </data>
+  <data name="Codes.Create" xml:space="preserve">
+    <value>创建邀请码</value>
+  </data>
+  <data name="Codes.Lead" xml:space="preserve">
+    <value>按时间倒序。“今日使用”统计使用日 {0}（{1}）的请求，不含 what-if。</value>
+  </data>
+  <data name="Codes.None" xml:space="preserve">
+    <value>暂无邀请码。</value>
+  </data>
+  <data name="Codes.Th.Code" xml:space="preserve">
+    <value>邀请码</value>
+  </data>
+  <data name="Codes.Th.Label" xml:space="preserve">
+    <value>标签</value>
+  </data>
+  <data name="Codes.Th.Created" xml:space="preserve">
+    <value>创建时间（{0}）</value>
+  </data>
+  <data name="Codes.Th.UsesToday" xml:space="preserve">
+    <value>今日使用</value>
+  </data>
+  <data name="Codes.Th.UsesTotal" xml:space="preserve">
+    <value>累计使用</value>
+  </data>
+  <data name="Codes.Th.LastUsed" xml:space="preserve">
+    <value>最后使用（{0}）</value>
+  </data>
+  <data name="Codes.Th.DailyLimit" xml:space="preserve">
+    <value>每日上限</value>
+  </data>
+  <data name="Codes.Th.Status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="Codes.Set" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Codes.Disabled" xml:space="preserve">
+    <value>已停用</value>
+  </data>
+  <data name="Codes.Enabled" xml:space="preserve">
+    <value>已启用</value>
+  </data>
+  <data name="Codes.Enable" xml:space="preserve">
+    <value>启用</value>
+  </data>
+  <data name="Codes.Disable" xml:space="preserve">
+    <value>停用</value>
+  </data>
+  <data name="Codes.DisableConfirm" xml:space="preserve">
+    <value>确定停用 {0} 吗？在重新启用之前，持有者无法发起实时请求。</value>
+  </data>
+  <data name="Codes.ErrLabel" xml:space="preserve">
+    <value>标签必填，且不超过 {0} 个字符。</value>
+  </data>
+  <data name="Codes.ErrLimit" xml:space="preserve">
+    <value>每日上限必须是 1 到 {0} 的整数。</value>
+  </data>
+  <data name="Runs.SpendToday" xml:space="preserve">
+    <value>今日 Token 用量</value>
+  </data>
+  <data name="Runs.SpendDetail" xml:space="preserve">
+    <value>（使用日 {0}，{1}）：{2} / {3} 个 Token（每日 Token 预算）。</value>
+  </data>
+  <data name="Runs.SpendNote" xml:space="preserve">
+    <value>仅统计已结束的运行；紧急开关还会计入仍在进行中的运行。</value>
+  </data>
+  <data name="Runs.CsvLink" xml:space="preserve">
+    <value>下载全部运行记录（CSV）</value>
+  </data>
+  <data name="Runs.CsvNote" xml:space="preserve">
+    <value>（UTF-8，时间为 UTC，用于交接时的成本估算）</value>
+  </data>
+  <data name="Runs.Today" xml:space="preserve">
+    <value>今日</value>
+  </data>
+  <data name="Runs.AllTime" xml:space="preserve">
+    <value>累计</value>
+  </data>
+  <data name="Runs.NoRuns" xml:space="preserve">
+    <value>暂无运行。</value>
+  </data>
+  <data name="Runs.AllModels" xml:space="preserve">
+    <value>全部模型</value>
+  </data>
+  <data name="Runs.Latest" xml:space="preserve">
+    <value>最近 {0} 次运行</value>
+  </data>
+  <data name="Runs.NoneYet" xml:space="preserve">
+    <value>暂无运行记录。</value>
+  </data>
+  <data name="Runs.Lead" xml:space="preserve">
+    <value>按时间倒序。请求文本、计划和摘要会在运行 30 天后清空，数字保留。“running”表示尚未结束；“unfinished”表示服务器在运行结束前已停止。</value>
+  </data>
+  <data name="Runs.Th.Model" xml:space="preserve">
+    <value>模型</value>
+  </data>
+  <data name="Runs.Th.Requests" xml:space="preserve">
+    <value>请求数</value>
+  </data>
+  <data name="Runs.Th.WhatIfs" xml:space="preserve">
+    <value>其中 what-if</value>
+  </data>
+  <data name="Runs.Th.PromptTokens" xml:space="preserve">
+    <value>提示 Token</value>
+  </data>
+  <data name="Runs.Th.CompletionTokens" xml:space="preserve">
+    <value>补全 Token</value>
+  </data>
+  <data name="Runs.Th.Tokens" xml:space="preserve">
+    <value>Token 合计</value>
+  </data>
+  <data name="Runs.Th.Started" xml:space="preserve">
+    <value>开始时间（{0}）</value>
+  </data>
+  <data name="Runs.Th.Code" xml:space="preserve">
+    <value>邀请码</value>
+  </data>
+  <data name="Runs.Th.Scene" xml:space="preserve">
+    <value>场景</value>
+  </data>
+  <data name="Runs.Th.Request" xml:space="preserve">
+    <value>请求</value>
+  </data>
+  <data name="Runs.Th.PlanSummary" xml:space="preserve">
+    <value>计划与摘要</value>
+  </data>
+  <data name="Runs.Th.Outcome" xml:space="preserve">
+    <value>结果</value>
+  </data>
+  <data name="Runs.Th.Calls" xml:space="preserve">
+    <value>调用数</value>
+  </data>
+  <data name="Runs.Th.TokensPC" xml:space="preserve">
+    <value>Token（提示 + 补全）</value>
+  </data>
+  <data name="Runs.Th.Latency" xml:space="preserve">
+    <value>耗时</value>
+  </data>
+  <data name="Runs.Blanked" xml:space="preserve">
+    <value>（已清空）</value>
+  </data>
+  <data name="Runs.WhatIf" xml:space="preserve">
+    <value>what-if：{0}</value>
+  </data>
+  <data name="Runs.Plan" xml:space="preserve">
+    <value>计划</value>
+  </data>
+  <data name="Runs.Outcome.ok" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="Runs.Outcome.failed" xml:space="preserve">
+    <value>失败</value>
+  </data>
+  <data name="Runs.Outcome.running" xml:space="preserve">
+    <value>进行中</value>
+  </data>
+  <data name="Runs.Outcome.unfinished" xml:space="preserve">
+    <value>未完成</value>
+  </data>
+  <data name="Settings.Missing" xml:space="preserve">
+    <value>（已不在 AI Kernel 中）</value>
+  </data>
 </root>

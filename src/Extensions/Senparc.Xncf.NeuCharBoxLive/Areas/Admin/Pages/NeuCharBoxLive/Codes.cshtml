@@ -1,7 +1,7 @@
 @page
 @model CodesModel
 @{
-    ViewData["Title"] = "NeuCharBox Live - Codes";
+    ViewData["Title"] = XR["Title.Codes"].Value;
     Layout = "_Layout_Vue";
 }
 
@@ -11,13 +11,13 @@
 
 @section breadcrumbs {
     <el-breadcrumb-item>@XR["Area.Extensions"]</el-breadcrumb-item>
-    <el-breadcrumb-item>NeuCharBox Live</el-breadcrumb-item>
-    <el-breadcrumb-item>Codes</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.NeuCharBoxLive"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.NeuCharBoxLive.Codes"]</el-breadcrumb-item>
 }
 
 @* v-pre: labels are typed text and must never be compiled as a Vue template. *@
 <div class="ncb" v-pre>
-    <h3>Invite codes</h3>
+    <h3>@XR["Codes.Heading"]</h3>
     <partial name="_NcbLiveNav" model="@("Codes")" />
 
     @if (Model.Error is { } error)
@@ -26,31 +26,31 @@
     }
 
     <form method="post" asp-page-handler="Create" asp-route-uid="@Model.Uid" class="bar">
-        <label>Label <input type="text" name="label" maxlength="@Senparc.Xncf.NeuCharBoxLive.Models.LiveColumns.Label" size="32"
-                            value="@Model.NewLabel" placeholder="who it is for" required /></label>
-        <label>Daily limit <input type="number" name="limit" min="1" max="@CodesModel.MaxLimit" value="@(Model.NewLimit ?? Model.DefaultLimit)" required /></label>
-        <button type="submit" class="el-button el-button--primary el-button--mini">Create code</button>
+        <label>@XR["Codes.Label"] <input type="text" name="label" maxlength="@Senparc.Xncf.NeuCharBoxLive.Models.LiveColumns.Label" size="32"
+                            value="@Model.NewLabel" placeholder="@XR["Codes.LabelHint"]" required /></label>
+        <label>@XR["Codes.DailyLimit"] <input type="number" name="limit" min="1" max="@CodesModel.MaxLimit" value="@(Model.NewLimit ?? Model.DefaultLimit)" required /></label>
+        <button type="submit" class="el-button el-button--primary el-button--mini">@XR["Codes.Create"]</button>
     </form>
 
-    <p class="muted lead">Newest first. Uses today count requests on usage day @Model.Today.ToString("yyyy-MM-dd") (@Model.UsageZone), what-ifs excluded.</p>
+    <p class="muted lead">@XR["Codes.Lead", Model.Today.ToString("yyyy-MM-dd"), Model.UsageZone]</p>
 
     @if (Model.Codes.Count == 0)
     {
-        <p class="muted">No codes yet.</p>
+        <p class="muted">@XR["Codes.None"]</p>
     }
     else
     {
         <table>
             <thead>
                 <tr>
-                    <th>Code</th>
-                    <th>Label</th>
-                    <th>Created (ET)</th>
-                    <th class="num">Uses today</th>
-                    <th class="num">Uses total</th>
-                    <th>Last used (ET)</th>
-                    <th>Daily limit</th>
-                    <th>Status</th>
+                    <th>@XR["Codes.Th.Code"]</th>
+                    <th>@XR["Codes.Th.Label"]</th>
+                    <th>@XR["Codes.Th.Created", Model.UsageZone]</th>
+                    <th class="num">@XR["Codes.Th.UsesToday"]</th>
+                    <th class="num">@XR["Codes.Th.UsesTotal"]</th>
+                    <th>@XR["Codes.Th.LastUsed", Model.UsageZone]</th>
+                    <th>@XR["Codes.Th.DailyLimit"]</th>
+                    <th>@XR["Codes.Th.Status"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,30 +59,30 @@
                     <tr class="@(Model.Created == c.Id ? "hl" : null)">
                         <td class="nowrap">@c.Code</td>
                         <td class="text">@c.Label</td>
-                        <td class="nowrap">@AdminTime.Eastern16(c.Created)</td>
+                        <td class="nowrap">@AdminTime.InZone16(c.Created, Model.Zone)</td>
                         <td class="num">@(Model.UsesToday.TryGetValue(c.Code, out var n) ? n : 0)</td>
                         <td class="num">@c.UsesTotal</td>
-                        <td class="nowrap">@(c.LastUsed is { } t ? AdminTime.Eastern16(t) : "")</td>
+                        <td class="nowrap">@(c.LastUsed is { } t ? AdminTime.InZone16(t, Model.Zone) : "")</td>
                         <td>
                             <form method="post" class="inline" asp-page-handler="Limit" asp-route-id="@c.Id" asp-route-uid="@Model.Uid">
                                 <input type="number" name="limit" min="1" max="@CodesModel.MaxLimit" value="@c.DailyLimit" required />
-                                <button type="submit" class="el-button el-button--mini">Set</button>
+                                <button type="submit" class="el-button el-button--mini">@XR["Codes.Set"]</button>
                             </form>
                         </td>
                         <td class="nowrap">
                             @if (c.Disabled)
                             {
-                                <span class="tag disabled">disabled</span>
+                                <span class="tag disabled">@XR["Codes.Disabled"]</span>
                                 <form method="post" class="inline" asp-page-handler="Disabled" asp-route-id="@c.Id" asp-route-disabled="false" asp-route-uid="@Model.Uid">
-                                    <button type="submit" class="el-button el-button--mini">Enable</button>
+                                    <button type="submit" class="el-button el-button--mini">@XR["Codes.Enable"]</button>
                                 </form>
                             }
                             else
                             {
-                                <span class="tag ok">enabled</span>
+                                <span class="tag ok">@XR["Codes.Enabled"]</span>
                                 <form method="post" class="inline" asp-page-handler="Disabled" asp-route-id="@c.Id" asp-route-disabled="true" asp-route-uid="@Model.Uid"
-                                      data-confirm="Disable @c.Code? Its holder can't start live requests until you enable it again.">
-                                    <button type="submit" class="el-button el-button--mini">Disable</button>
+                                      data-confirm="@XR["Codes.DisableConfirm", c.Code]">
+                                    <button type="submit" class="el-button el-button--mini">@XR["Codes.Disable"]</button>
                                 </form>
                             }
                         </td>

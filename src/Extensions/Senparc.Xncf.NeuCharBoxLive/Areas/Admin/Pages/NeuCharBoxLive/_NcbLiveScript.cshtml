@@ -8,9 +8,10 @@
         if (!button) return;
         var field = document.getElementById(button.getAttribute('data-copy'));
         if (!field) return;
+        var original = button.textContent;
         var shown = function () {
-            button.textContent = 'Copied';
-            setTimeout(function () { button.textContent = 'Copy'; }, 1500);
+            button.textContent = button.getAttribute('data-copied') || 'Copied';
+            setTimeout(function () { button.textContent = original; }, 1500);
         };
         var fallback = function () { field.select(); document.execCommand('copy'); shown(); };
         if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(field.value).then(shown, fallback);

@@ -2,11 +2,12 @@
 @model RunsModel
 @using System.Globalization
 @{
-    ViewData["Title"] = "NeuCharBox Live - Runs";
+    ViewData["Title"] = XR["Title.Runs"].Value;
     Layout = "_Layout_Vue";
     string N(long n) => n.ToString("N0", CultureInfo.InvariantCulture);
-    var todayAll = RunsModel.Sum(Model.TodayTotals);
-    var allTime = RunsModel.Sum(Model.AllTotals);
+    var allModels = XR["Runs.AllModels"].Value;
+    var todayAll = RunsModel.Sum(Model.TodayTotals, allModels);
+    var allTime = RunsModel.Sum(Model.AllTotals, allModels);
 }
 
 @section Style {
@@ -15,43 +16,43 @@
 
 @section breadcrumbs {
     <el-breadcrumb-item>@XR["Area.Extensions"]</el-breadcrumb-item>
-    <el-breadcrumb-item>NeuCharBox Live</el-breadcrumb-item>
-    <el-breadcrumb-item>Runs</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.NeuCharBoxLive"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.NeuCharBoxLive.Runs"]</el-breadcrumb-item>
 }
 
 @* v-pre: request text, plans and summaries are visitor and model text and must never be compiled as a Vue template. *@
 <div class="ncb" v-pre>
-    <h3>Runs</h3>
+    <h3>@XR["Area.NeuCharBoxLive.Runs"]</h3>
     <partial name="_NcbLiveNav" model="@("Runs")" />
 
     <p class="lead">
-        <b>Token spend today</b> (usage day @Model.Today.ToString("yyyy-MM-dd"), @Model.UsageZone):
-        @N(Model.TokensToday) of @N(Model.DailyTokenBudget) tokens (DailyTokenBudget).
-        <span class="muted">Finished runs only; the kill switch also counts runs still in flight.</span>
+        <b>@XR["Runs.SpendToday"]</b>
+        @XR["Runs.SpendDetail", Model.Today.ToString("yyyy-MM-dd"), Model.UsageZone, N(Model.TokensToday), N(Model.DailyTokenBudget)]
+        <span class="muted">@XR["Runs.SpendNote"]</span>
     </p>
     <p class="lead">
-        <a asp-page-handler="Csv" asp-route-uid="@Model.Uid">Download every run as CSV</a>
-        <span class="muted">(UTF-8, times in UTC, for the handover cost estimate)</span>
+        <a asp-page-handler="Csv" asp-route-uid="@Model.Uid">@XR["Runs.CsvLink"]</a>
+        <span class="muted">@XR["Runs.CsvNote"]</span>
     </p>
 
-    @foreach (var (title, rows, sum) in new[] { ("Today", Model.TodayTotals, todayAll), ("All time", Model.AllTotals, allTime) })
+    @foreach (var (title, rows, sum) in new[] { (XR["Runs.Today"].Value, Model.TodayTotals, todayAll), (XR["Runs.AllTime"].Value, Model.AllTotals, allTime) })
     {
         <h4>@title</h4>
         @if (rows.Count == 0)
         {
-            <p class="muted">No runs.</p>
+            <p class="muted">@XR["Runs.NoRuns"]</p>
         }
         else
         {
             <table class="small">
                 <thead>
                     <tr>
-                        <th>Model</th>
-                        <th class="num">Requests</th>
-                        <th class="num">of which what-ifs</th>
-                        <th class="num">Prompt tokens</th>
-                        <th class="num">Completion tokens</th>
-                        <th class="num">Tokens</th>
+                        <th>@XR["Runs.Th.Model"]</th>
+                        <th class="num">@XR["Runs.Th.Requests"]</th>
+                        <th class="num">@XR["Runs.Th.WhatIfs"]</th>
+                        <th class="num">@XR["Runs.Th.PromptTokens"]</th>
+                        <th class="num">@XR["Runs.Th.CompletionTokens"]</th>
+                        <th class="num">@XR["Runs.Th.Tokens"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,29 +72,28 @@
         }
     }
 
-    <h4>Latest @RunsModel.Shown runs</h4>
+    <h4>@XR["Runs.Latest", RunsModel.Shown]</h4>
     @if (Model.Rows.Count == 0)
     {
-        <p class="muted">No runs yet.</p>
+        <p class="muted">@XR["Runs.NoneYet"]</p>
     }
     else
     {
-        <p class="muted lead">Newest first. Request text, plans and summaries are blanked 30 days after the run; the numbers stay.
-            "running" means no end yet; "unfinished" means the server stopped before the run ended.</p>
+        <p class="muted lead">@XR["Runs.Lead"]</p>
         <table>
             <thead>
                 <tr>
                     <th class="num">#</th>
-                    <th>Started (ET)</th>
-                    <th>Code</th>
-                    <th>Scene</th>
-                    <th>Request</th>
-                    <th>Plan and summary</th>
-                    <th>Outcome</th>
-                    <th class="num">Calls</th>
-                    <th class="num">Tokens (prompt + completion)</th>
-                    <th class="num">Latency</th>
-                    <th>Model</th>
+                    <th>@XR["Runs.Th.Started", Model.UsageZone]</th>
+                    <th>@XR["Runs.Th.Code"]</th>
+                    <th>@XR["Runs.Th.Scene"]</th>
+                    <th>@XR["Runs.Th.Request"]</th>
+                    <th>@XR["Runs.Th.PlanSummary"]</th>
+                    <th>@XR["Runs.Th.Outcome"]</th>
+                    <th class="num">@XR["Runs.Th.Calls"]</th>
+                    <th class="num">@XR["Runs.Th.TokensPC"]</th>
+                    <th class="num">@XR["Runs.Th.Latency"]</th>
+                    <th>@XR["Runs.Th.Model"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -104,13 +104,13 @@
                     var status = RunStatus.Of(r, RunStatus.ProcessStarted);
                     <tr>
                         <td class="num">@r.Id</td>
-                        <td class="nowrap">@AdminTime.Eastern16(s.Started)</td>
+                        <td class="nowrap">@AdminTime.InZone16(s.Started, Model.Zone)</td>
                         <td class="nowrap">@s.Code</td>
                         <td>@s.Scene</td>
                         <td class="text">
                             @if (string.IsNullOrEmpty(s.Text))
                             {
-                                <span class="muted">(blanked)</span>
+                                <span class="muted">@XR["Runs.Blanked"]</span>
                             }
                             else
                             {
@@ -118,7 +118,7 @@
                             }
                             @if (s.WhatIf)
                             {
-                                <div><span class="tag">what-if: @s.WhatIfDevice</span></div>
+                                <div><span class="tag">@XR["Runs.WhatIf", s.WhatIfDevice ?? ""]</span></div>
                             }
                         </td>
                         <td class="text">
@@ -129,12 +129,12 @@
                             @if (e?.PlanJson is { Length: > 0 } plan)
                             {
                                 <details>
-                                    <summary class="muted">plan</summary>
+                                    <summary class="muted">@XR["Runs.Plan"]</summary>
                                     <pre>@plan</pre>
                                 </details>
                             }
                         </td>
-                        <td><span class="tag @status">@status</span></td>
+                        <td><span class="tag @status">@AdminText.Of(XR, "Runs.Outcome.", status)</span></td>
                         <td class="num">@(e is null ? "" : N(e.Calls))</td>
                         <td class="num">@(e is null ? "" : $"{N(e.PromptTokens)} + {N(e.CompletionTokens)}")</td>
                         <td class="num">@(e is null ? "" : (e.LatencyMs / 1000.0).ToString("0.0", CultureInfo.InvariantCulture) + " s")</td>

@@ -1,0 +1,129 @@
+@page
+@model SettingsModel
+@using System.Globalization
+@{
+    ViewData["Title"] = XR["Title.Settings"].Value;
+    Layout = "_Layout_Vue";
+    string N(long n) => n.ToString("N0", CultureInfo.InvariantCulture);
+    var f = Model.Form;
+    bool Has(int id) => Model.Choices.Any(c => c.Id == id);
+}
+
+@section Style {
+    <partial name="_NcbLiveStyle" />
+}
+
+@section breadcrumbs {
+    <el-breadcrumb-item>@XR["Area.Extensions"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.NeuCharBoxLive"]</el-breadcrumb-item>
+    <el-breadcrumb-item>@XR["Area.NeuCharBoxLive.Settings"]</el-breadcrumb-item>
+}
+
+@* v-pre: model labels and origins are typed text and must never be compiled as a Vue template. *@
+<div class="ncb" v-pre>
+    <h3>@XR["Area.NeuCharBoxLive.Settings"]</h3>
+    <partial name="_NcbLiveNav" model="@("Settings")" />
+    <p class="muted lead">@XR["Settings.Intro"]</p>
+
+    @if (Model.Saved)
+    {
+        <p class="ok-msg">@XR["Settings.Saved"]</p>
+    }
+
+    <p class="status @(Model.IsOn ? "on" : "off")">@XR[Model.StatusKey]</p>
+    @if (!Model.PipelineHooked)
+    {
+        <p class="warn">@XR["Status.PipelineNotHooked"]</p>
+    }
+    <p class="lead">
+        @XR["Settings.Spend", Model.Today.ToString("yyyy-MM-dd"), Model.UsageZone, N(Model.TokensToday), N(Model.DailyTokenBudget)]
+    </p>
+    <p class="lead">
+        <b>@XR["Settings.TryIt"]</b>
+        @if (Model.TryItLink is { } link)
+        {
+            <a href="@link" target="_blank" rel="noopener">@XR["Settings.TryItLink"]</a>
+        }
+        else
+        {
+            <span class="muted">@XR["Status.DemoNeedsApiBase"]</span>
+        }
+    </p>
+
+    <h4>@XR["Settings.FormHeading"]</h4>
+    @if (Model.Problems.Count > 0)
+    {
+        <div class="err">
+            <div>@XR["Settings.ProblemsHeading"]</div>
+            <ul>
+                @foreach (var p in Model.Problems)
+                {
+                    <li>@AdminText.Of(XR, "Settings.Problem.", p)</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <form method="post" asp-route-uid="@Model.Uid" class="settings">
+        <div class="row">
+            <label><input type="checkbox" name="enabled" value="true" checked="@f.Enabled" /> @XR["Settings.Enabled"]</label>
+            <div class="muted hint">@XR["Settings.EnabledHint"]</div>
+        </div>
+
+        <div class="row">
+            <label>@XR["Settings.PlanModel"]
+                <select name="planModelId">
+                    <option value="" selected="@(f.PlanModelId is null)">@XR["Settings.NoneChosen"]</option>
+                    @if (f.PlanModelId is { } missingPlan && !Has(missingPlan))
+                    {
+                        <option value="@missingPlan" selected>#@missingPlan @XR["Settings.Missing"]</option>
+                    }
+                    @foreach (var c in Model.Choices)
+                    {
+                        <option value="@c.Id" selected="@(f.PlanModelId == c.Id)" disabled="@(!c.Supported && f.PlanModelId != c.Id)">@c.Label@(c.Supported ? "" : " " + XR["Settings.Unsupported"].Value)</option>
+                    }
+                </select>
+            </label>
+        </div>
+
+        <div class="row">
+            <label>@XR["Settings.RunModel"]
+                <select name="runModelId">
+                    <option value="" selected="@(f.RunModelId is null)">@XR["Settings.SameAsPlan"]</option>
+                    @if (f.RunModelId is { } missingRun && !Has(missingRun))
+                    {
+                        <option value="@missingRun" selected>#@missingRun @XR["Settings.Missing"]</option>
+                    }
+                    @foreach (var c in Model.Choices)
+                    {
+                        <option value="@c.Id" selected="@(f.RunModelId == c.Id)" disabled="@(!c.Supported && f.RunModelId != c.Id)">@c.Label@(c.Supported ? "" : " " + XR["Settings.Unsupported"].Value)</option>
+                    }
+                </select>
+            </label>
+            <div class="muted hint">@XR[Model.Choices.Count == 0 ? "Settings.NoModels" : "Settings.ModelHint"]</div>
+        </div>
+
+        <div class="row">
+            <label>@XR["Settings.PerCodeDaily"] <input type="number" name="perCodeDaily" min="1" value="@f.PerCodeDaily" required /></label>
+        </div>
+        <div class="row">
+            <label>@XR["Settings.GlobalDaily"] <input type="number" name="globalDaily" min="1" value="@f.GlobalDaily" required /></label>
+        </div>
+        <div class="row">
+            <label>@XR["Settings.DailyTokenBudget"] <input type="number" name="dailyTokenBudget" min="1" class="wide" value="@f.DailyTokenBudget" required /></label>
+        </div>
+
+        <div class="row">
+            <label>@XR["Settings.ExtraOrigins"]
+                <textarea name="extraOrigins" class="origins" rows="4" spellcheck="false">@Model.OriginsText</textarea>
+            </label>
+            <div class="muted hint">@XR["Settings.ExtraOriginsHint"]</div>
+        </div>
+
+        <button type="submit" class="el-button el-button--primary el-button--small">@XR["Settings.Save"]</button>
+    </form>
+</div>
+
+@section scripts {
+    <partial name="_NcbLiveScript" />
+}

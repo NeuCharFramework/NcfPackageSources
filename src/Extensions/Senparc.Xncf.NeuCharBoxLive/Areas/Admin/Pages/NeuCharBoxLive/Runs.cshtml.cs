@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 页面文字改走资源文件，时间改用使用日所在时区
+
 ----------------------------------------------------------------*/
 
 using System.Text;
@@ -45,6 +48,8 @@ public class RunsModel(Lazy<XncfModuleService> xncfModuleService, IRunStore runs
     /// <summary>The time zone whose midnight starts a usage day (NcbLive:UsageTimeZone).</summary>
     public string UsageZone => usageDay.Zone.Id;
 
+    public TimeZoneInfo Zone => usageDay.Zone;
+
     public async Task OnGetAsync()
     {
         Now = tp.GetUtcNow();
@@ -63,7 +68,7 @@ public class RunsModel(Lazy<XncfModuleService> xncfModuleService, IRunStore runs
     }
 
     /// <summary>The sum over models, or null when there is at most one model (its own row says it all).</summary>
-    public static RunTotals? Sum(IReadOnlyList<RunTotals> rows) => rows.Count < 2 ? null :
-        new RunTotals("All models", rows.Sum(r => r.Runs), rows.Sum(r => r.WhatIfs), rows.Sum(r => r.PromptTokens),
+    public static RunTotals? Sum(IReadOnlyList<RunTotals> rows, string label) => rows.Count < 2 ? null :
+        new RunTotals(label, rows.Sum(r => r.Runs), rows.Sum(r => r.WhatIfs), rows.Sum(r => r.PromptTokens),
             rows.Sum(r => r.CompletionTokens));
 }

@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 新增 IModuleState（XncfModuleService）与 IAiModelSource（AIModelService）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 IAiModelSource 新增 ListAsync，供设置页的模型选择使用
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +37,9 @@ public interface IAiModelSource
 {
     /// <summary>The model with that Id, or null when there is none (never created, or deleted).</summary>
     Task<AIModelDto?> GetAsync(int id, CancellationToken ct);
+
+    /// <summary>Every model, for the Settings page's pickers (the page maps them to <c>ModelChoice</c>, which has no key).</summary>
+    Task<IReadOnlyList<AIModelDto>> ListAsync(CancellationToken ct) => Task.FromResult<IReadOnlyList<AIModelDto>>([]);
 }
 
 /// <summary>
@@ -70,5 +76,13 @@ public sealed class AiKernelModelSource(IServiceScopeFactory scopes) : IAiModelS
         var models = scope.ServiceProvider.GetRequiredService<AIModelService>();
         var model = await models.GetObjectAsync(z => z.Id == id).ConfigureAwait(false);
         return model is null ? null : new AIModelDto(model);
+    }
+
+    public async Task<IReadOnlyList<AIModelDto>> ListAsync(CancellationToken ct)
+    {
+        await using var scope = scopes.CreateAsyncScope();
+        var models = scope.ServiceProvider.GetRequiredService<AIModelService>();
+        var all = await models.GetFullListAsync(z => true).ConfigureAwait(false);
+        return all.OrderBy(m => m.Id).Select(m => new AIModelDto(m)).ToList();
     }
 }

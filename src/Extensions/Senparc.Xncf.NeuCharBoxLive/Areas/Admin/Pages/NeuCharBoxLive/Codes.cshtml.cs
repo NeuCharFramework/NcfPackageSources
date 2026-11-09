@@ -10,9 +10,13 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 页面文字改走资源文件，时间改用使用日所在时区
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Senparc.Xncf.NeuCharBoxLive.Engine.Access;
 using Senparc.Ncf.AreaBase.Admin;
 using Senparc.Ncf.Service;
@@ -23,7 +27,7 @@ namespace Senparc.Xncf.NeuCharBoxLive.Areas.Admin.Pages.NeuCharBoxLive;
 
 /// <summary>Invite codes (spec 7.3): list, create by hand (label and daily limit), set the limit, disable or enable.</summary>
 public class CodesModel(Lazy<XncfModuleService> xncfModuleService, IInviteStore codes, EfLiveStore store, ILiveRuntime runtime,
-    UsageDay usageDay, TimeProvider tp) : AdminXncfModulePageModelBase(xncfModuleService)
+    UsageDay usageDay, TimeProvider tp, IStringLocalizer<NeuCharBoxLiveResource> XR) : AdminXncfModulePageModelBase(xncfModuleService)
 {
     /// <summary>Far above the global daily cap (GlobalDaily), so it never limits anything real.</summary>
     public const int MaxLimit = 1000;
@@ -34,6 +38,8 @@ public class CodesModel(Lazy<XncfModuleService> xncfModuleService, IInviteStore 
 
     /// <summary>The time zone whose midnight starts a usage day (NcbLive:UsageTimeZone).</summary>
     public string UsageZone => usageDay.Zone.Id;
+
+    public TimeZoneInfo Zone => usageDay.Zone;
 
     public int DefaultLimit => runtime.Current.Limits.PerCodeDaily;
     public string? Error { get; private set; }
@@ -50,9 +56,9 @@ public class CodesModel(Lazy<XncfModuleService> xncfModuleService, IInviteStore 
     {
         label = label?.Trim() ?? "";
         if (label.Length is 0 or > LiveColumns.Label)
-            return await InvalidAsync($"The label is required and at most {LiveColumns.Label} characters.", label, limit);
+            return await InvalidAsync(XR["Codes.ErrLabel", LiveColumns.Label].Value, label, limit);
         if (limit is not (>= 1 and <= MaxLimit))
-            return await InvalidAsync($"The daily limit is a whole number from 1 to {MaxLimit}.", label, limit);
+            return await InvalidAsync(XR["Codes.ErrLimit", MaxLimit].Value, label, limit);
         var c = await codes.CreateAsync(label, limit.Value);
         return RedirectToPage(new { uid = Uid, created = c.Id });
     }
@@ -60,7 +66,7 @@ public class CodesModel(Lazy<XncfModuleService> xncfModuleService, IInviteStore 
     public async Task<IActionResult> OnPostLimitAsync(long id, int? limit)
     {
         if (limit is not (>= 1 and <= MaxLimit))
-            return await InvalidAsync($"The daily limit is a whole number from 1 to {MaxLimit}.", null, null);
+            return await InvalidAsync(XR["Codes.ErrLimit", MaxLimit].Value, null, null);
         try { await codes.SetLimitAsync(id, limit.Value); }
         catch (KeyNotFoundException) { return NotFound(); }
         return RedirectToPage(new { uid = Uid });

@@ -15,4 +15,391 @@
   <data name="Area.Extensions" xml:space="preserve">
     <value>Extensions</value>
   </data>
+  <data name="Area.NeuCharBoxLive" xml:space="preserve">
+    <value>NeuCharBox Live</value>
+  </data>
+  <data name="Area.NeuCharBoxLive.Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Area.NeuCharBoxLive.Applications" xml:space="preserve">
+    <value>Applications</value>
+  </data>
+  <data name="Area.NeuCharBoxLive.Codes" xml:space="preserve">
+    <value>Codes</value>
+  </data>
+  <data name="Area.NeuCharBoxLive.Runs" xml:space="preserve">
+    <value>Runs</value>
+  </data>
+  <data name="Title.Settings" xml:space="preserve">
+    <value>NeuCharBox Live - Settings</value>
+  </data>
+  <data name="Title.Applications" xml:space="preserve">
+    <value>NeuCharBox Live - Applications</value>
+  </data>
+  <data name="Title.Codes" xml:space="preserve">
+    <value>NeuCharBox Live - Codes</value>
+  </data>
+  <data name="Title.Runs" xml:space="preserve">
+    <value>NeuCharBox Live - Runs</value>
+  </data>
+  <data name="Common.Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Common.Copied" xml:space="preserve">
+    <value>Copied</value>
+  </data>
+  <data name="Status.On" xml:space="preserve">
+    <value>Live is on. Visitors with an invite code can start live requests.</value>
+  </data>
+  <data name="Status.Off.starting" xml:space="preserve">
+    <value>Live is off: the module is still starting.</value>
+  </data>
+  <data name="Status.Off.config" xml:space="preserve">
+    <value>Live is off: the site's configuration (appsettings) turns it off.</value>
+  </data>
+  <data name="Status.Off.not_installed" xml:space="preserve">
+    <value>Live is off: the module is not installed in NCF.</value>
+  </data>
+  <data name="Status.Off.module_closed" xml:space="preserve">
+    <value>Live is off: the module is closed in NCF (module manager).</value>
+  </data>
+  <data name="Status.Off.multi_tenant" xml:space="preserve">
+    <value>Live is off: it does not run when multi-tenancy is enabled.</value>
+  </data>
+  <data name="Status.Off.disabled" xml:space="preserve">
+    <value>Live is off: the switch below is off.</value>
+  </data>
+  <data name="Status.Off.no_model" xml:space="preserve">
+    <value>Live is off: no plan model is chosen yet.</value>
+  </data>
+  <data name="Status.Off.model_missing" xml:space="preserve">
+    <value>Live is off: the chosen model no longer exists in AI Kernel.</value>
+  </data>
+  <data name="Status.Off.model_unsupported" xml:space="preserve">
+    <value>Live is off: the chosen model is not a chat model on a supported platform, or its client can't be built (check its endpoint and key in AI Kernel).</value>
+  </data>
+  <data name="Status.Off.unavailable" xml:space="preserve">
+    <value>Live is off: its state could not be read just now. It retries every few seconds.</value>
+  </data>
+  <data name="Status.Off.budget" xml:space="preserve">
+    <value>Live is paused: today's token budget is spent. It resumes on the next usage day.</value>
+  </data>
+  <data name="Status.DemoNeedsApiBase" xml:space="preserve">
+    <value>To try it, open the demo page and enter this site's address (HTTPS) as the live API base. The one-click link only works on plain-http localhost.</value>
+  </data>
+  <data name="Status.PipelineNotHooked" xml:space="preserve">
+    <value>Warning: the /live/api pipeline is not attached. The host never called UseXncfModules, so live requests will not reach this module.</value>
+  </data>
+  <data name="Settings.Intro" xml:space="preserve">
+    <value>These settings apply within a few seconds of saving. The live API is at /live/api on this site.</value>
+  </data>
+  <data name="Settings.StatusLabel" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Settings.Spend" xml:space="preserve">
+    <value>Token spend today (usage day {0}, {1}): {2} of {3} tokens.</value>
+  </data>
+  <data name="Settings.TryIt" xml:space="preserve">
+    <value>Try it</value>
+  </data>
+  <data name="Settings.TryItLink" xml:space="preserve">
+    <value>Open the demo against this site</value>
+  </data>
+  <data name="Settings.FormHeading" xml:space="preserve">
+    <value>Live settings</value>
+  </data>
+  <data name="Settings.Enabled" xml:space="preserve">
+    <value>Live AI is on</value>
+  </data>
+  <data name="Settings.EnabledHint" xml:space="preserve">
+    <value>The master switch. Turning it off stops new live requests; visitors see the demo's scripted mode.</value>
+  </data>
+  <data name="Settings.PlanModel" xml:space="preserve">
+    <value>Plan model</value>
+  </data>
+  <data name="Settings.RunModel" xml:space="preserve">
+    <value>Run model</value>
+  </data>
+  <data name="Settings.NoneChosen" xml:space="preserve">
+    <value>(none chosen)</value>
+  </data>
+  <data name="Settings.SameAsPlan" xml:space="preserve">
+    <value>(same as plan model)</value>
+  </data>
+  <data name="Settings.Unsupported" xml:space="preserve">
+    <value>(platform not supported)</value>
+  </data>
+  <data name="Settings.ModelHint" xml:space="preserve">
+    <value>Chat models from AI Kernel on NeuCharAI, Azure OpenAI, OpenAI or DeepSeek. Add or fix models in AI Kernel.</value>
+  </data>
+  <data name="Settings.NoModels" xml:space="preserve">
+    <value>AI Kernel has no chat models yet. Add one there first.</value>
+  </data>
+  <data name="Settings.PerCodeDaily" xml:space="preserve">
+    <value>Requests per code per day</value>
+  </data>
+  <data name="Settings.GlobalDaily" xml:space="preserve">
+    <value>Requests per day, all codes</value>
+  </data>
+  <data name="Settings.DailyTokenBudget" xml:space="preserve">
+    <value>Daily token budget</value>
+  </data>
+  <data name="Settings.ExtraOrigins" xml:space="preserve">
+    <value>Extra allowed origins</value>
+  </data>
+  <data name="Settings.ExtraOriginsHint" xml:space="preserve">
+    <value>One per line, for example https://demo.example.com. Added to the demo's own origin; the live API answers browsers on these origins only.</value>
+  </data>
+  <data name="Settings.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Settings.Saved" xml:space="preserve">
+    <value>Saved. Live picks the change up within a few seconds.</value>
+  </data>
+  <data name="Settings.ProblemsHeading" xml:space="preserve">
+    <value>Nothing was saved:</value>
+  </data>
+  <data name="Settings.Problem.PlanModelId" xml:space="preserve">
+    <value>The plan model must be a chat model on a supported platform.</value>
+  </data>
+  <data name="Settings.Problem.RunModelId" xml:space="preserve">
+    <value>The run model must be a chat model on a supported platform.</value>
+  </data>
+  <data name="Settings.Problem.PerCodeDaily" xml:space="preserve">
+    <value>Requests per code per day must be at least 1.</value>
+  </data>
+  <data name="Settings.Problem.GlobalDaily" xml:space="preserve">
+    <value>Requests per day must be at least 1.</value>
+  </data>
+  <data name="Settings.Problem.DailyTokenBudget" xml:space="preserve">
+    <value>The daily token budget must be at least 1.</value>
+  </data>
+  <data name="Settings.Problem.ExtraOrigins" xml:space="preserve">
+    <value>Each extra origin must be an http or https origin with no path, for example https://demo.example.com.</value>
+  </data>
+  <data name="App.Lead" xml:space="preserve">
+    <value>Newest first. Approve makes an invite code labelled with the email, good for {0} requests a day (change it on Codes), and shows the message to send. The server sends no email.</value>
+  </data>
+  <data name="App.None" xml:space="preserve">
+    <value>No applications yet.</value>
+  </data>
+  <data name="App.Th.Submitted" xml:space="preserve">
+    <value>Submitted ({0})</value>
+  </data>
+  <data name="App.Th.Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="App.Th.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="App.Th.Interest" xml:space="preserve">
+    <value>Interest</value>
+  </data>
+  <data name="App.Th.Scene" xml:space="preserve">
+    <value>Scene</value>
+  </data>
+  <data name="App.Th.WouldTry" xml:space="preserve">
+    <value>What they would try</value>
+  </data>
+  <data name="App.Th.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="App.Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="App.Decline" xml:space="preserve">
+    <value>Decline</value>
+  </data>
+  <data name="App.DeclineConfirm" xml:space="preserve">
+    <value>Decline the application from {0}?</value>
+  </data>
+  <data name="App.CodeMissing" xml:space="preserve">
+    <value>code #{0} not found</value>
+  </data>
+  <data name="App.CodeDisabled" xml:space="preserve">
+    <value>(disabled)</value>
+  </data>
+  <data name="App.Status.new" xml:space="preserve">
+    <value>new</value>
+  </data>
+  <data name="App.Status.approved" xml:space="preserve">
+    <value>approved</value>
+  </data>
+  <data name="App.Status.declined" xml:space="preserve">
+    <value>declined</value>
+  </data>
+  <data name="Codes.Heading" xml:space="preserve">
+    <value>Invite codes</value>
+  </data>
+  <data name="Codes.Label" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="Codes.LabelHint" xml:space="preserve">
+    <value>who it is for</value>
+  </data>
+  <data name="Codes.DailyLimit" xml:space="preserve">
+    <value>Daily limit</value>
+  </data>
+  <data name="Codes.Create" xml:space="preserve">
+    <value>Create code</value>
+  </data>
+  <data name="Codes.Lead" xml:space="preserve">
+    <value>Newest first. Uses today count requests on usage day {0} ({1}), what-ifs excluded.</value>
+  </data>
+  <data name="Codes.None" xml:space="preserve">
+    <value>No codes yet.</value>
+  </data>
+  <data name="Codes.Th.Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="Codes.Th.Label" xml:space="preserve">
+    <value>Label</value>
+  </data>
+  <data name="Codes.Th.Created" xml:space="preserve">
+    <value>Created ({0})</value>
+  </data>
+  <data name="Codes.Th.UsesToday" xml:space="preserve">
+    <value>Uses today</value>
+  </data>
+  <data name="Codes.Th.UsesTotal" xml:space="preserve">
+    <value>Uses total</value>
+  </data>
+  <data name="Codes.Th.LastUsed" xml:space="preserve">
+    <value>Last used ({0})</value>
+  </data>
+  <data name="Codes.Th.DailyLimit" xml:space="preserve">
+    <value>Daily limit</value>
+  </data>
+  <data name="Codes.Th.Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Codes.Set" xml:space="preserve">
+    <value>Set</value>
+  </data>
+  <data name="Codes.Disabled" xml:space="preserve">
+    <value>disabled</value>
+  </data>
+  <data name="Codes.Enabled" xml:space="preserve">
+    <value>enabled</value>
+  </data>
+  <data name="Codes.Enable" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="Codes.Disable" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="Codes.DisableConfirm" xml:space="preserve">
+    <value>Disable {0}? Its holder can't start live requests until you enable it again.</value>
+  </data>
+  <data name="Codes.ErrLabel" xml:space="preserve">
+    <value>The label is required and at most {0} characters.</value>
+  </data>
+  <data name="Codes.ErrLimit" xml:space="preserve">
+    <value>The daily limit is a whole number from 1 to {0}.</value>
+  </data>
+  <data name="Runs.SpendToday" xml:space="preserve">
+    <value>Token spend today</value>
+  </data>
+  <data name="Runs.SpendDetail" xml:space="preserve">
+    <value>(usage day {0}, {1}): {2} of {3} tokens (daily token budget).</value>
+  </data>
+  <data name="Runs.SpendNote" xml:space="preserve">
+    <value>Finished runs only; the kill switch also counts runs still in flight.</value>
+  </data>
+  <data name="Runs.CsvLink" xml:space="preserve">
+    <value>Download every run as CSV</value>
+  </data>
+  <data name="Runs.CsvNote" xml:space="preserve">
+    <value>(UTF-8, times in UTC, for the handover cost estimate)</value>
+  </data>
+  <data name="Runs.Today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="Runs.AllTime" xml:space="preserve">
+    <value>All time</value>
+  </data>
+  <data name="Runs.NoRuns" xml:space="preserve">
+    <value>No runs.</value>
+  </data>
+  <data name="Runs.AllModels" xml:space="preserve">
+    <value>All models</value>
+  </data>
+  <data name="Runs.Latest" xml:space="preserve">
+    <value>Latest {0} runs</value>
+  </data>
+  <data name="Runs.NoneYet" xml:space="preserve">
+    <value>No runs yet.</value>
+  </data>
+  <data name="Runs.Lead" xml:space="preserve">
+    <value>Newest first. Request text, plans and summaries are blanked 30 days after the run; the numbers stay. "running" means no end yet; "unfinished" means the server stopped before the run ended.</value>
+  </data>
+  <data name="Runs.Th.Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="Runs.Th.Requests" xml:space="preserve">
+    <value>Requests</value>
+  </data>
+  <data name="Runs.Th.WhatIfs" xml:space="preserve">
+    <value>of which what-ifs</value>
+  </data>
+  <data name="Runs.Th.PromptTokens" xml:space="preserve">
+    <value>Prompt tokens</value>
+  </data>
+  <data name="Runs.Th.CompletionTokens" xml:space="preserve">
+    <value>Completion tokens</value>
+  </data>
+  <data name="Runs.Th.Tokens" xml:space="preserve">
+    <value>Tokens</value>
+  </data>
+  <data name="Runs.Th.Started" xml:space="preserve">
+    <value>Started ({0})</value>
+  </data>
+  <data name="Runs.Th.Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="Runs.Th.Scene" xml:space="preserve">
+    <value>Scene</value>
+  </data>
+  <data name="Runs.Th.Request" xml:space="preserve">
+    <value>Request</value>
+  </data>
+  <data name="Runs.Th.PlanSummary" xml:space="preserve">
+    <value>Plan and summary</value>
+  </data>
+  <data name="Runs.Th.Outcome" xml:space="preserve">
+    <value>Outcome</value>
+  </data>
+  <data name="Runs.Th.Calls" xml:space="preserve">
+    <value>Calls</value>
+  </data>
+  <data name="Runs.Th.TokensPC" xml:space="preserve">
+    <value>Tokens (prompt + completion)</value>
+  </data>
+  <data name="Runs.Th.Latency" xml:space="preserve">
+    <value>Latency</value>
+  </data>
+  <data name="Runs.Blanked" xml:space="preserve">
+    <value>(blanked)</value>
+  </data>
+  <data name="Runs.WhatIf" xml:space="preserve">
+    <value>what-if: {0}</value>
+  </data>
+  <data name="Runs.Plan" xml:space="preserve">
+    <value>plan</value>
+  </data>
+  <data name="Runs.Outcome.ok" xml:space="preserve">
+    <value>ok</value>
+  </data>
+  <data name="Runs.Outcome.failed" xml:space="preserve">
+    <value>failed</value>
+  </data>
+  <data name="Runs.Outcome.running" xml:space="preserve">
+    <value>running</value>
+  </data>
+  <data name="Runs.Outcome.unfinished" xml:space="preserve">
+    <value>unfinished</value>
+  </data>
+  <data name="Settings.Missing" xml:space="preserve">
+    <value>(no longer in AI Kernel)</value>
+  </data>
 </root>
