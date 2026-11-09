@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：NeuCharBoxLiveSenparcEntities_MySqlModelSnapshot.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Migrations）：NeuCharBoxLiveSenparcEntities_MySqlModelSnapshot
+    文件功能描述：MySQL 迁移：当前数据库模型快照（EF Core 生成）
 
 
     创建标识：Senparc - 20261108

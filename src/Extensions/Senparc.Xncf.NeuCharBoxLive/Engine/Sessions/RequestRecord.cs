@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：RequestRecord.cs
-    文件功能描述：NeuCharBox Live 引擎（Sessions）：RequestRecord
+    文件功能描述：一次访客请求：回放用的原始房间、批准卡片的回答与结果
 
 
     创建标识：Senparc - 20261108

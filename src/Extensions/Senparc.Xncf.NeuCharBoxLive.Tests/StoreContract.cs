@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：StoreContract.cs
-    文件功能描述：NeuCharBox Live 测试：StoreContract
+    文件功能描述：存储契约测试基类：内存与数据库存储共用的断言
 
 
     创建标识：Senparc - 20261108

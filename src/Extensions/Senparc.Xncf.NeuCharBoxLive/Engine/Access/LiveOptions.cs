@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：LiveOptions.cs
-    文件功能描述：NeuCharBox Live 引擎（Access）：LiveOptions
+    文件功能描述：引擎调参（NcbLive 配置段）及其问题检测
 
 
     创建标识：Senparc - 20261108

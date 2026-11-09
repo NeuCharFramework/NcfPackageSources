@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：InviteCodeEntity.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Models）：InviteCodeEntity
+    文件功能描述：实体：邀请码（NCB-XXXX-XXXX）及其标签、每日限额与停用状态
 
 
     创建标识：Senparc - 20261108

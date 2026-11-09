@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ApiTests.cs
-    文件功能描述：NeuCharBox Live 测试：ApiTests
+    文件功能描述：测试 /live/api 各路由的状态码、错误体、鉴权与 SSE 事件流
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：RoomEditorTests.cs
-    文件功能描述：NeuCharBox Live 测试：RoomEditorTests
+    文件功能描述：测试房间手动编辑：可编辑路径、取值范围与设备不可用
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ISceneBehavior.cs
-    文件功能描述：NeuCharBox Live 引擎（Scenes）：ISceneBehavior
+    文件功能描述：场景行为接口：动作执行、读数、漂移与状态变化记录
 
 
     创建标识：Senparc - 20261108

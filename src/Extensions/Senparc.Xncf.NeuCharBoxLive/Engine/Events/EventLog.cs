@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：EventLog.cs
-    文件功能描述：NeuCharBox Live 引擎（Events）：EventLog
+    文件功能描述：会话内只追加的事件日志，支持按序号续传与等待新事件
 
 
     创建标识：Senparc - 20261108

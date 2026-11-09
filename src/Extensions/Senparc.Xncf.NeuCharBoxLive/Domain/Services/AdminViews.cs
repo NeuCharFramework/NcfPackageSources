@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：AdminViews.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Services）：AdminViews
+    文件功能描述：后台页面共用的视图辅助：批准申请后给申请人的话术等
 
 
     创建标识：Senparc - 20261108

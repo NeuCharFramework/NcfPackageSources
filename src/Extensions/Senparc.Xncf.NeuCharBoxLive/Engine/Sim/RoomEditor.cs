@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：RoomEditor.cs
-    文件功能描述：NeuCharBox Live 引擎（Sim）：RoomEditor
+    文件功能描述：校验并应用访客对设备字段的手动编辑，不调用模型
 
 
     创建标识：Senparc - 20261108

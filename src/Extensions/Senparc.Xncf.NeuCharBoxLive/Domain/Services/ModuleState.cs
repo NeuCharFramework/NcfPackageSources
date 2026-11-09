@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ModuleState.cs
-    文件功能描述：NeuCharBox Live 领域服务：模块运行时读取的 NCF 状态（模块安装与开放状态、AI Kernel 模型）
+    文件功能描述：模块运行时读取的 NCF 状态（模块安装与开放状态、AI Kernel 模型）
 
 
     创建标识：Senparc - 20261108

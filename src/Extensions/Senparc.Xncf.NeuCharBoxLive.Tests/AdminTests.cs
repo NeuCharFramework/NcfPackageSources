@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：AdminTests.cs
-    文件功能描述：NeuCharBox Live 测试：AdminTests
+    文件功能描述：测试后台页面逻辑：资源文件中英文键齐全、状态文案、页面引用的键存在、申请与邀请码的管理
 
 
     创建标识：Senparc - 20261109

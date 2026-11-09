@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：InMemoryLiveStore.cs
-    文件功能描述：NeuCharBox Live 引擎（Access）：InMemoryLiveStore
+    文件功能描述：内存存储：用于测试与不带模块的宿主
 
 
     创建标识：Senparc - 20261108

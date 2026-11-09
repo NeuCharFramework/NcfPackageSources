@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：RetentionService.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Services）：RetentionService
+    文件功能描述：后台服务：访客文字保留期（30 天）之后清空请求文本、计划与总结
 
 
     创建标识：Senparc - 20261108

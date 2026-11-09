@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：AutomationsTests.cs
-    文件功能描述：NeuCharBox Live 测试：AutomationsTests
+    文件功能描述：测试自动化（规则与定时）：文字生成、开关、触发、每日次数与事件
 
 
     创建标识：Senparc - 20261108

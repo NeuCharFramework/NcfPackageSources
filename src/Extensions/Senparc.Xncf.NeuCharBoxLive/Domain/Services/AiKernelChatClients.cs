@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：AiKernelChatClients.cs
-    文件功能描述：NeuCharBox Live 领域服务：由 AI Kernel 模型（AIModelDto）构建并缓存对话客户端（IChatClient）
+    文件功能描述：由 AI Kernel 模型（AIModelDto）构建并缓存对话客户端（IChatClient）
 
 
     创建标识：Senparc - 20261108

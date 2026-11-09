@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ToolCatalog.cs
-    文件功能描述：NeuCharBox Live 引擎（Ai）：ToolCatalog
+    文件功能描述：模型可见的工具声明（规划、执行、总结阶段）
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：EditQueue.cs
-    文件功能描述：NeuCharBox Live 引擎（Sessions）：EditQueue
+    文件功能描述：手动编辑与自动化开关的排队，请求或推进运行时由房间持有者统一应用
 
 
     创建标识：Senparc - 20261108

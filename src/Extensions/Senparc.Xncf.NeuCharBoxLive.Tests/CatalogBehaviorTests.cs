@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：CatalogBehaviorTests.cs
-    文件功能描述：NeuCharBox Live 测试：CatalogBehaviorTests
+    文件功能描述：测试自定义房间的设备目录行为：动作效果、读数、标签与漂移
 
 
     创建标识：Senparc - 20261108

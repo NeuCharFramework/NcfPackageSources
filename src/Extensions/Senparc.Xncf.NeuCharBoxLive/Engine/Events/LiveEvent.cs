@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：LiveEvent.cs
-    文件功能描述：NeuCharBox Live 引擎（Events）：LiveEvent
+    文件功能描述：一个 SSE 事件：种类、数据与所属请求
 
 
     创建标识：Senparc - 20261108

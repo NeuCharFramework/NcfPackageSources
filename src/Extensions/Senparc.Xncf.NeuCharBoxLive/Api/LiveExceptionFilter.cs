@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：LiveExceptionFilter.cs
-    文件功能描述：NeuCharBox Live HTTP 接口层：LiveExceptionFilter
+    文件功能描述：LiveApiController 的异常过滤器：意外异常一律答 500 internal，不泄露堆栈
 
 
     创建标识：Senparc - 20261108

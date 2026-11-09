@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：UsageDayTests.cs
-    文件功能描述：NeuCharBox Live 测试：UsageDayTests
+    文件功能描述：测试使用日：时区、日界与每日计数的归属
 
 
     创建标识：Senparc - 20261108

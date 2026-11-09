@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ReplanWhatIfTests.cs
-    文件功能描述：NeuCharBox Live 测试：ReplanWhatIfTests
+    文件功能描述：测试重新规划与 what-if 重放
 
 
     创建标识：Senparc - 20261108

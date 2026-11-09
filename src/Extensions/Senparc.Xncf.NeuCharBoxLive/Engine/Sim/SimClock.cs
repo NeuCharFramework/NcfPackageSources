@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：SimClock.cs
-    文件功能描述：NeuCharBox Live 引擎（Sim）：SimClock
+    文件功能描述：模拟时钟：把小时数换算成日期时间与标签
 
 
     创建标识：Senparc - 20261108

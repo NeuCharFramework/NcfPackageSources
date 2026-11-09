@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：EfLiveStoreTests.cs
-    文件功能描述：NeuCharBox Live 测试：EfLiveStoreTests
+    文件功能描述：测试 EfLiveStore 在 NCF 数据库上的邀请码、申请与运行记录读写
 
 
     创建标识：Senparc - 20261108

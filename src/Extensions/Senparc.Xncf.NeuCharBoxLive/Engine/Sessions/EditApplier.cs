@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：EditApplier.cs
-    文件功能描述：NeuCharBox Live 引擎（Sessions）：EditApplier
+    文件功能描述：应用手动编辑与自动化开关，并为被推送的路径打时间戳以保证顺序
 
 
     创建标识：Senparc - 20261108

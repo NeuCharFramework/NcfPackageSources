@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：TokenMeter.cs
-    文件功能描述：NeuCharBox Live 引擎（Access）：TokenMeter
+    文件功能描述：每日令牌熔断计量：合并已落库与进行中的用量
 
 
     创建标识：Senparc - 20261108

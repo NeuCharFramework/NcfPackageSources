@@ -12,6 +12,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Module.NeuCharBoxLive.MenuName" xml:space="preserve">
+    <value>NeuCharBox Live</value>
+  </data>
+  <data name="Module.NeuCharBoxLive.Description" xml:space="preserve">
+    <value>NeuCharBox Live AI 演示：凭邀请码进入的实时体验</value>
+  </data>
   <data name="Area.Extensions" xml:space="preserve">
     <value>扩展模块</value>
   </data>

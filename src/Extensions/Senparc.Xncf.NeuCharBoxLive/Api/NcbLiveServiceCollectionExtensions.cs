@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：NcbLiveServiceCollectionExtensions.cs
-    文件功能描述：NeuCharBox Live HTTP 接口层：NcbLiveServiceCollectionExtensions
+    文件功能描述：AddNcbLive 服务注册扩展，及可替换存储、运行时、节奏器的构建器
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：MSTestSettings.cs
-    文件功能描述：NeuCharBox Live 测试：MSTestSettings
+    文件功能描述：MSTest 全局设置（并行方式等）
 
 
     创建标识：Senparc - 20261108

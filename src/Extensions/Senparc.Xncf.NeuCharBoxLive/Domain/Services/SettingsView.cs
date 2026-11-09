@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：SettingsView.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Services）：设置页的纯逻辑（状态、试用链接、模型选项、保存校验）
+    文件功能描述：设置页的纯逻辑（状态、试用链接、模型选项、保存校验）
 
 
     创建标识：Senparc - 20261109

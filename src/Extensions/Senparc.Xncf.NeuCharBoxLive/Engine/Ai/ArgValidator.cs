@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ArgValidator.cs
-    文件功能描述：NeuCharBox Live 引擎（Ai）：ArgValidator
+    文件功能描述：按 JSON Schema 子集校验模型传来的工具参数
 
 
     创建标识：Senparc - 20261108

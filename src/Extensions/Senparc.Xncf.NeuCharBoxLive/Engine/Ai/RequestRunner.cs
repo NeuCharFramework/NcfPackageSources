@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：RequestRunner.cs
-    文件功能描述：NeuCharBox Live 引擎（Ai）：RequestRunner
+    文件功能描述：一次请求的执行：规划、等待批准、执行步骤、重新规划与总结，并记录运行
 
 
     创建标识：Senparc - 20261108

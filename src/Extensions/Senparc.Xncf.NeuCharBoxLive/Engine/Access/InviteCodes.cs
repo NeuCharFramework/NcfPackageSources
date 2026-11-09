@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：InviteCodes.cs
-    文件功能描述：NeuCharBox Live 引擎（Access）：InviteCodes
+    文件功能描述：邀请码格式（NCB-XXXX-XXXX）的生成、规范化与校验
 
 
     创建标识：Senparc - 20261108

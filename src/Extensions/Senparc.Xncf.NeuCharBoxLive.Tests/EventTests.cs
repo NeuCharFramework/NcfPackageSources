@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：EventTests.cs
-    文件功能描述：NeuCharBox Live 测试：EventTests
+    文件功能描述：测试事件构造器与事件日志（序号、续传、数据行编码）
 
 
     创建标识：Senparc - 20261108

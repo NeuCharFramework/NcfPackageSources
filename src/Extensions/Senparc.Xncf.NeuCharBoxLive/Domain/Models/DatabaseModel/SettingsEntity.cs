@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：SettingsEntity.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Models）：SettingsEntity
+    文件功能描述：实体：后台编辑的唯一一行设置（开关、模型、限额、额外来源）
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：20261109041016_AddSettings.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Migrations）：20261109041016_AddSettings
+    文件功能描述：SQL Server 迁移：新增设置表（Senparc_NeuCharBoxLive_Settings）
 
 
     创建标识：Senparc - 20261108

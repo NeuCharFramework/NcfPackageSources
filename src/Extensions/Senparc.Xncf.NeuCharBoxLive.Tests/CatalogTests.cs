@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：CatalogTests.cs
-    文件功能描述：NeuCharBox Live 测试：CatalogTests
+    文件功能描述：测试设备目录的格式与自定义房间的设备列表校验
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Catalog.cs
-    文件功能描述：NeuCharBox Live 引擎（Scenes）：Catalog
+    文件功能描述：设备目录的数据格式与加载：动作效果、标签、读数与漂移
 
 
     创建标识：Senparc - 20261108

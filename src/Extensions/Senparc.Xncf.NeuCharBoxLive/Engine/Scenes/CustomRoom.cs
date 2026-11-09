@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：CustomRoom.cs
-    文件功能描述：NeuCharBox Live 引擎（Scenes）：CustomRoom
+    文件功能描述：把访客选的设备列表转换成场景清单，并校验设备列表
 
 
     创建标识：Senparc - 20261108

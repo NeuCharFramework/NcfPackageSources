@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Runs.cshtml.cs
-    文件功能描述：NeuCharBox Live 管理端页面（Admin）：Runs.cshtml
+    文件功能描述：后台“运行记录”页：近期运行、今日令牌用量、按模型汇总，及 CSV 导出
 
 
     创建标识：Senparc - 20261108

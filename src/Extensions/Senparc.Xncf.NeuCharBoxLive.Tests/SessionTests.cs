@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：SessionTests.cs
-    文件功能描述：NeuCharBox Live 测试：SessionTests
+    文件功能描述：测试会话的创建、上限、过期、重置与忙碌规则
 
 
     创建标识：Senparc - 20261108

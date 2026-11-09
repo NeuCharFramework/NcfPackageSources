@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：AdvanceTests.cs
-    文件功能描述：NeuCharBox Live 测试：AdvanceTests
+    文件功能描述：测试推进模拟时钟（advance）：时长校验、忙碌冲突、事件与限流
 
 
     创建标识：Senparc - 20261108

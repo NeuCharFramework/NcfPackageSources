@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：20261107232352_Init.Designer.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Migrations）：20261107232352_Init.Designer
+    文件功能描述：SQLite 迁移元数据（EF Core 生成）：Init 的目标模型
 
 
     创建标识：Senparc - 20261108

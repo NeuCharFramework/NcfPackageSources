@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：HomeSceneTests.cs
-    文件功能描述：NeuCharBox Live 测试：HomeSceneTests
+    文件功能描述：测试 Home 场景的清单、起始状态与行为
 
 
     创建标识：Senparc - 20261108

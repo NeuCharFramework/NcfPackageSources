@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：FastForward.cs
-    文件功能描述：NeuCharBox Live 引擎（Sim）：FastForward
+    文件功能描述：快进：推进模拟时间并触发规则与定时，输出时间线与终态读数
 
 
     创建标识：Senparc - 20261108

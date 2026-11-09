@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Applications.cshtml.cs
-    文件功能描述：NeuCharBox Live 管理端页面（Admin）：Applications.cshtml
+    文件功能描述：后台“申请”页：查看申请，批准时生成邀请码与可复制的话术，或拒绝
 
 
     创建标识：Senparc - 20261108

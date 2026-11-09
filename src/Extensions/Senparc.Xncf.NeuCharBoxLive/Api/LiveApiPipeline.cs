@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：LiveApiPipeline.cs
-    文件功能描述：NeuCharBox Live HTTP 接口层：模块自行接入的 /live/api 分支（CORS、契约的 JSON 404 与 405）
+    文件功能描述：模块自行接入的 /live/api 分支（CORS、契约的 JSON 404 与 405）
 
 
     创建标识：Senparc - 20261109

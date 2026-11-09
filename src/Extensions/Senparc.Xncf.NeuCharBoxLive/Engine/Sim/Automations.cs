@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Automations.cs
-    文件功能描述：NeuCharBox Live 引擎（Sim）：Automations
+    文件功能描述：房间的自动化列表：按创建顺序把规则与定时转成访客看到的文字、设备与状态
 
 
     创建标识：Senparc - 20261108

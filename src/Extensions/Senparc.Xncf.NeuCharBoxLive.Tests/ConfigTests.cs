@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ConfigTests.cs
-    文件功能描述：NeuCharBox Live 测试：ConfigTests
+    文件功能描述：测试 NcbLive 配置段的绑定、问题检测与配置有误时关闭 Live
 
 
     创建标识：Senparc - 20261108

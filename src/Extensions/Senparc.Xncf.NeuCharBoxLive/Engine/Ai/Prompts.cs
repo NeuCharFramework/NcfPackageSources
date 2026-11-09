@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Prompts.cs
-    文件功能描述：NeuCharBox Live 引擎（Ai）：Prompts
+    文件功能描述：发给模型的全部提示词，以及访客可见的固定文案
 
 
     创建标识：Senparc - 20261108

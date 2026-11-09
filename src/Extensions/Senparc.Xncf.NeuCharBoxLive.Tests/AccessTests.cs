@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：AccessTests.cs
-    文件功能描述：NeuCharBox Live 测试：AccessTests
+    文件功能描述：测试邀请码校验、每码与全局每日限额、令牌熔断与访问检查限流
 
 
     创建标识：Senparc - 20261108

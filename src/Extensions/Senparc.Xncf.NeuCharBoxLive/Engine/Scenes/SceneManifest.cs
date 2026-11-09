@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：SceneManifest.cs
-    文件功能描述：NeuCharBox Live 引擎（Scenes）：SceneManifest
+    文件功能描述：场景清单的数据结构：设备、动作、参数与安全状态
 
 
     创建标识：Senparc - 20261108

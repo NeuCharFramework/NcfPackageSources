@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：PlanModels.cs
-    文件功能描述：NeuCharBox Live 引擎（Ai）：PlanModels
+    文件功能描述：已批准的计划与步骤（含合并的重新规划）
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ModuleRuntimeTests.cs
-    文件功能描述：NeuCharBox Live 测试：ModuleRuntimeTests（模块运行时：安装、启用、多租户、模型与来源）
+    文件功能描述：测试模块运行时：安装、启用、多租户、模型与来源如何决定 Live 是否开启
 
 
     创建标识：Senparc - 20261108

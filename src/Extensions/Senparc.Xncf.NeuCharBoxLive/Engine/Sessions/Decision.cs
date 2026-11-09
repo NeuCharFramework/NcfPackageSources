@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Decision.cs
-    文件功能描述：NeuCharBox Live 引擎（Sessions）：Decision
+    文件功能描述：访客对计划或重新规划卡片的回答（批准或拒绝）
 
 
     创建标识：Senparc - 20261108

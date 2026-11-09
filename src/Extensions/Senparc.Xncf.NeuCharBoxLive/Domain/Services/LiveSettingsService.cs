@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：LiveSettingsService.cs
-    文件功能描述：NeuCharBox Live 领域服务：LiveSettingsService
+    文件功能描述：读取与保存设置表，并校验设置（模型、限额、额外来源）
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：IpRateLimiter.cs
-    文件功能描述：NeuCharBox Live 引擎（Access）：IpRateLimiter
+    文件功能描述：按 IP 的滑动窗口限流（申请、访问检查）
 
 
     创建标识：Senparc - 20261108

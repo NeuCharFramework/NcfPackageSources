@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：EfLiveStore.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Services）：EfLiveStore
+    文件功能描述：基于 NCF 数据库的邀请码、申请与运行记录存储（IInviteStore、IApplicationStore、IRunStore）
 
 
     创建标识：Senparc - 20261108

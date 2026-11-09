@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Register.Area.cs
-    文件功能描述：NeuCharBox Live 模块：Register.Area
+    文件功能描述：模块的后台页面注册（菜单、区域与 Razor 运行时编译）
 
 
     创建标识：Senparc - 20261108

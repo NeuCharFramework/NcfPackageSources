@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Register.Database.cs
-    文件功能描述：NeuCharBox Live 模块：Register.Database
+    文件功能描述：模块的数据库注册（表前缀与多数据库 DbContext）
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Simulator.cs
-    文件功能描述：NeuCharBox Live 引擎（Sim）：Simulator
+    文件功能描述：模拟器：按场景清单与行为执行设备动作并返回结果
 
 
     创建标识：Senparc - 20261108

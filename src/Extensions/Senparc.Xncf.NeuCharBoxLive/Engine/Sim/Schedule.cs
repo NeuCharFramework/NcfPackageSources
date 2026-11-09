@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Schedule.cs
-    文件功能描述：NeuCharBox Live 引擎（Sim）：Schedule
+    文件功能描述：定时：每日或一次性的动作、星期与开关状态
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ScriptedChatClient.cs
-    文件功能描述：NeuCharBox Live 测试：ScriptedChatClient
+    文件功能描述：测试替身：按脚本回答的对话客户端，免去真实模型调用
 
 
     创建标识：Senparc - 20261108

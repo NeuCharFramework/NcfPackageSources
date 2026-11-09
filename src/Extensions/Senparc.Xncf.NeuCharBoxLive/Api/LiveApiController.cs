@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：LiveApiController.cs
-    文件功能描述：NeuCharBox Live HTTP 接口层：LiveApiController
+    文件功能描述：/live/api 控制器：契约中的全部路由，自行读写 JSON 正文与 SSE 事件流
 
 
     创建标识：Senparc - 20261108

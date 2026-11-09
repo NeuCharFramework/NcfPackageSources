@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：SessionManager.cs
-    文件功能描述：NeuCharBox Live 引擎（Sessions）：SessionManager
+    文件功能描述：会话管理：创建、上限、请求、批准、重置、what-if、编辑与过期清理
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：SessionEditTests.cs
-    文件功能描述：NeuCharBox Live 测试：SessionEditTests
+    文件功能描述：测试会话内的 set 编辑与自动化开关，以及排队应用
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Rule.cs
-    文件功能描述：NeuCharBox Live 引擎（Sim）：Rule
+    文件功能描述：规则：条件、触发动作、每日上限与开关状态
 
 
     创建标识：Senparc - 20261108

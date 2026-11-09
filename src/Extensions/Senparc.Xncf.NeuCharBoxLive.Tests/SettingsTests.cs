@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：SettingsTests.cs
-    文件功能描述：NeuCharBox Live 测试：SettingsTests
+    文件功能描述：测试设置服务与设置页逻辑：保存校验、状态、试用链接与模型选项
 
 
     创建标识：Senparc - 20261108

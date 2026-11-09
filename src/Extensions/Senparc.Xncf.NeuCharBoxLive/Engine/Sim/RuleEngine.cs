@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：RuleEngine.cs
-    文件功能描述：NeuCharBox Live 引擎（Sim）：RuleEngine
+    文件功能描述：规则引擎：为快进与手动编辑求值规则并执行动作
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：RunEntity.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Models）：RunEntity
+    文件功能描述：实体：一次 Live 请求（含 what-if）的运行记录
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：SseWriter.cs
-    文件功能描述：NeuCharBox Live HTTP 接口层：SseWriter
+    文件功能描述：把会话事件按 SSE 格式写出（id、event、data，空闲时发 ping）
 
 
     创建标识：Senparc - 20261108

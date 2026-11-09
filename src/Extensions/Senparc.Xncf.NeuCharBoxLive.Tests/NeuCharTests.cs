@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：NeuCharTests.cs
-    文件功能描述：NeuCharBox Live 测试：NeuCharTests
+    文件功能描述：测试 ConnectRetryHandler：连接失败与响应前连接重置的重试次数与不重试的情形
 
 
     创建标识：Senparc - 20261108

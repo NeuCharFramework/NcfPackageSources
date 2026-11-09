@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：SenparcDbContextFactoryConfig.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Models）：SenparcDbContextFactoryConfig
+    文件功能描述：各数据库 DbContext 工厂共用的配置（设计时迁移所需的根目录与连接）
 
 
     创建标识：Senparc - 20261108

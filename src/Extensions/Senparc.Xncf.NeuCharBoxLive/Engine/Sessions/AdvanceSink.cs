@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：AdvanceSink.cs
-    文件功能描述：NeuCharBox Live 引擎（Sessions）：AdvanceSink
+    文件功能描述：访客推进时钟时把 clock、state、timeline 事件按 src=edit 推送出去
 
 
     创建标识：Senparc - 20261108

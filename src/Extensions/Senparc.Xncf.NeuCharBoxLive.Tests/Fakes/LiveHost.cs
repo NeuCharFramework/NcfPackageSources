@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：LiveHost.cs
-    文件功能描述：NeuCharBox Live 测试：LiveHost
+    文件功能描述：测试替身：在内存中搭起带 Live 服务的 ASP.NET Core 测试宿主
 
 
     创建标识：Senparc - 20261108

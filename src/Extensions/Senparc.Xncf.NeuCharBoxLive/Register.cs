@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Register.cs
-    文件功能描述：NeuCharBox Live XNCF 模块注册（由 XNCF 模板生成后精简）
+    文件功能描述：NeuCharBox Live 模块注册：服务、数据库、/live/api 分支与安装卸载
 
 
     创建标识：Senparc - 20261108
@@ -21,6 +21,9 @@
 
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 UseXncfModule 接入模块自己的 /live/api 分支（LiveApiPipeline），宿主 Program.cs 无需改动
+
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 MenuName 与 Description 改走资源文件（NeuCharBoxLiveResource），英文与简体中文
 
 ----------------------------------------------------------------*/
 
@@ -57,11 +60,11 @@ namespace Senparc.Xncf.NeuCharBoxLive
 
         public override string Version => "0.2";
 
-        public override string MenuName => "NeuCharBox Live";
+        public override string MenuName => NeuCharBoxLiveResource.Get("Module.NeuCharBoxLive.MenuName", "NeuCharBox Live");
 
         public override string Icon => "fa fa-bolt";
 
-        public override string Description => "NeuCharBox live AI demo: invite-only live sessions";
+        public override string Description => NeuCharBoxLiveResource.Get("Module.NeuCharBoxLive.Description", "NeuCharBox live AI demo: invite-only live sessions");
 
         public override async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：LiveSession.cs
-    文件功能描述：NeuCharBox Live 引擎（Sessions）：LiveSession
+    文件功能描述：一个 Live 会话：房间、对话轮次、事件日志、请求与过期时间
 
 
     创建标识：Senparc - 20261108

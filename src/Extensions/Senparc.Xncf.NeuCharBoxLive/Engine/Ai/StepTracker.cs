@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：StepTracker.cs
-    文件功能描述：NeuCharBox Live 引擎（Ai）：StepTracker
+    文件功能描述：清单步骤状态跟踪（运行中、完成、失败）
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Codes.cshtml.cs
-    文件功能描述：NeuCharBox Live 管理端页面（Admin）：Codes.cshtml
+    文件功能描述：后台“邀请码”页：列表、手动创建、调整每日限额、停用与启用
 
 
     创建标识：Senparc - 20261108

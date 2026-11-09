@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：FaultyStore.cs
-    文件功能描述：NeuCharBox Live 测试：FaultyStore
+    文件功能描述：测试替身：会抛出异常的存储，用于验证存储故障时的行为
 
 
     创建标识：Senparc - 20261108

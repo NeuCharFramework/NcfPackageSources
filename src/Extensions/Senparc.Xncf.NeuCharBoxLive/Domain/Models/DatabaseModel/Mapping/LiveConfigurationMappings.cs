@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：LiveConfigurationMappings.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Models）：LiveConfigurationMappings
+    文件功能描述：实体映射：各表的列长度与索引
 
 
     创建标识：Senparc - 20261108

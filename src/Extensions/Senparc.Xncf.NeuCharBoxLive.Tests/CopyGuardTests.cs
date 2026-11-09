@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：CopyGuardTests.cs
-    文件功能描述：NeuCharBox Live 测试：CopyGuardTests
+    文件功能描述：测试禁用词守卫：模型文字与服务端标签不得含禁用词
 
 
     创建标识：Senparc - 20261108

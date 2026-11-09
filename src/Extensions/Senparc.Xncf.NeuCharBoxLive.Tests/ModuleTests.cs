@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ModuleTests.cs
-    文件功能描述：NeuCharBox Live 测试：ModuleTests
+    文件功能描述：测试数据库层：表结构与迁移、EfLiveStore 读写、保留清理、申请话术与运行记录导出
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Ev.cs
-    文件功能描述：NeuCharBox Live 引擎（Events）：Ev
+    文件功能描述：契约中每种 SSE 事件的构造器
 
 
     创建标识：Senparc - 20261108

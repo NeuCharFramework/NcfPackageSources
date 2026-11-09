@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：EditServicingPacer.cs
-    文件功能描述：NeuCharBox Live 引擎（Sim）：EditServicingPacer
+    文件功能描述：节奏器包装：等待期间同时处理访客的手动编辑
 
 
     创建标识：Senparc - 20261108

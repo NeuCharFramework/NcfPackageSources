@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ManifestLoader.cs
-    文件功能描述：NeuCharBox Live 引擎（Scenes）：ManifestLoader
+    文件功能描述：加载内置场景清单（嵌入资源）并列出可创建会话的场景
 
 
     创建标识：Senparc - 20261108

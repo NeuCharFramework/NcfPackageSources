@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：20261109041016_AddSettings.Designer.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Migrations）：20261109041016_AddSettings.Designer
+    文件功能描述：SQL Server 迁移元数据（EF Core 生成）：AddSettings 的目标模型
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：PipelineTests.cs
-    文件功能描述：NeuCharBox Live 测试：PipelineTests（模块自带的 /live/api 分支：CORS、JSON 404/405，宿主其他路径不受影响）
+    文件功能描述：测试模块自带的 /live/api 分支：CORS、JSON 404/405，宿主其他路径不受影响
 
 
     创建标识：Senparc - 20261109

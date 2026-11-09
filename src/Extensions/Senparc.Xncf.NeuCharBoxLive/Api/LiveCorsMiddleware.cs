@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：LiveCorsMiddleware.cs
-    文件功能描述：NeuCharBox Live HTTP 接口层：/live/api 的 CORS（每个请求按运行时快照的来源构建策略，自行应答预检）
+    文件功能描述：/live/api 的 CORS（每个请求按运行时快照的来源构建策略，自行应答预检）
 
 
     创建标识：Senparc - 20261109

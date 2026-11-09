@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：20261109041023_Init.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Migrations）：20261109041023_Init
+    文件功能描述：MySQL 迁移：创建邀请码、申请与运行记录三张表
 
 
     创建标识：Senparc - 20261108

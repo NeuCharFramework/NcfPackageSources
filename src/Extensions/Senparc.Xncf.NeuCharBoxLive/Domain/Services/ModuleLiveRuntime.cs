@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ModuleLiveRuntime.cs
-    文件功能描述：NeuCharBox Live 领域服务：模块运行时（模块已安装且开放、未启用多租户、设置已启用且选了模型时才开启 Live）
+    文件功能描述：模块运行时（模块已安装且开放、未启用多租户、设置已启用且选了模型时才开启 Live）
 
 
     创建标识：Senparc - 20261108

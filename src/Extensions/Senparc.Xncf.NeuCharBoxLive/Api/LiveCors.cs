@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：LiveCors.cs
-    文件功能描述：NeuCharBox Live HTTP 接口层：LiveCors
+    文件功能描述：/live/api 的 CORS 策略：按运行时快照的来源、允许的方法与头、预检缓存时间
 
 
     创建标识：Senparc - 20261108

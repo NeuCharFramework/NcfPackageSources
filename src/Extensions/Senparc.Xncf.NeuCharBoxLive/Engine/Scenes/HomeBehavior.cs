@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：HomeBehavior.cs
-    文件功能描述：NeuCharBox Live 引擎（Scenes）：HomeBehavior
+    文件功能描述：Home 场景的设备行为与起始时间设定
 
 
     创建标识：Senparc - 20261108

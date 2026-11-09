@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：RoomState.cs
-    文件功能描述：NeuCharBox Live 引擎（Sim）：RoomState
+    文件功能描述：房间状态：设备状态、规则、定时、模拟时钟与创建顺序
 
 
     创建标识：Senparc - 20261108

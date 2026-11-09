@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：AiKernelClientTests.cs
-    文件功能描述：NeuCharBox Live 测试：由 AI Kernel 模型构建对话客户端（AiKernelChatClients）
+    文件功能描述：测试由 AI Kernel 模型（AIModelDto）构建对话客户端（AiKernelChatClients）
 
 
     创建标识：Senparc - 20261108

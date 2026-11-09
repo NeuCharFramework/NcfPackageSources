@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Stores.cs
-    文件功能描述：NeuCharBox Live 引擎（Access）：Stores
+    文件功能描述：邀请码、申请与运行记录三个存储接口及其记录类型
 
 
     创建标识：Senparc - 20261108

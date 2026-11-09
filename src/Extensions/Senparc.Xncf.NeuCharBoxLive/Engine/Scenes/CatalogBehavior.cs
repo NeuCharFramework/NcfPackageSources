@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：CatalogBehavior.cs
-    文件功能描述：NeuCharBox Live 引擎（Scenes）：CatalogBehavior
+    文件功能描述：按设备目录运行自定义房间里每个设备的行为
 
 
     创建标识：Senparc - 20261108

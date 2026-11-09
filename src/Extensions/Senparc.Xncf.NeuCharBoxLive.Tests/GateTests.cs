@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：GateTests.cs
-    文件功能描述：NeuCharBox Live 测试：GateTests
+    文件功能描述：测试计划闸门与参数校验：未获批准的步骤不得改变设备
 
 
     创建标识：Senparc - 20261108

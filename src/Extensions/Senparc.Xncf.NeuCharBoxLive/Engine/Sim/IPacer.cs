@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：IPacer.cs
-    文件功能描述：NeuCharBox Live 引擎（Sim）：IPacer
+    文件功能描述：节奏器接口与实时实现：在流式事件之间等待，便于访客观看
 
 
     创建标识：Senparc - 20261108

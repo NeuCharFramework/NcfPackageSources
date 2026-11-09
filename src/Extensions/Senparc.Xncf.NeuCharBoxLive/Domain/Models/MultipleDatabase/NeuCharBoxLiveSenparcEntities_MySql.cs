@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：NeuCharBoxLiveSenparcEntities_MySql.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Models）：NeuCharBoxLiveSenparcEntities_MySql
+    文件功能描述：MySql 的 DbContext 子类：承载该数据库的迁移
 
 
     创建标识：Senparc - 20261108

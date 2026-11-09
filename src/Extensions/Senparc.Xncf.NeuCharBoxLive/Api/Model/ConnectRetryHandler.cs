@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ConnectRetryHandler.cs
-    文件功能描述：NeuCharBox Live 模型调用：ConnectRetryHandler（连接失败与响应前连接重置的重试）
+    文件功能描述：模型调用：连接失败与响应前连接重置的重试
 
 
     创建标识：Senparc - 20261108

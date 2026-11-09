@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：AccessService.cs
-    文件功能描述：NeuCharBox Live 引擎（Access）：AccessService
+    文件功能描述：邀请码校验与每日限额的占用（每码与全局）
 
 
     创建标识：Senparc - 20261108

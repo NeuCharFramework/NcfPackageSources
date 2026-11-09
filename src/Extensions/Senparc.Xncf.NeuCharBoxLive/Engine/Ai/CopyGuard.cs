@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：CopyGuard.cs
-    文件功能描述：NeuCharBox Live 引擎（Ai）：CopyGuard
+    文件功能描述：禁用词守卫：检查模型文字与服务端生成的标签
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：RunnerTests.cs
-    文件功能描述：NeuCharBox Live 测试：RunnerTests
+    文件功能描述：测试请求执行器：规划、批准、执行、总结与各类结束结果
 
 
     创建标识：Senparc - 20261108

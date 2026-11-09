@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：CustomRoomTests.cs
-    文件功能描述：NeuCharBox Live 测试：CustomRoomTests
+    文件功能描述：测试访客自建房间（custom 场景）的创建、校验与状态
 
 
     创建标识：Senparc - 20261108

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：RuntimeTests.cs
-    文件功能描述：NeuCharBox Live 测试：RuntimeTests（每个请求一份 LiveSnapshot）
+    文件功能描述：测试每个请求一份 LiveSnapshot：开关、限额、模型与来源的读取
 
 
     创建标识：Senparc - 20261108

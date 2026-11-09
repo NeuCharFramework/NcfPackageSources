@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：SessionSweepService.cs
-    文件功能描述：NeuCharBox Live HTTP 接口层：SessionSweepService
+    文件功能描述：后台服务：每分钟清理空闲过期的会话并结束其事件流
 
 
     创建标识：Senparc - 20261108

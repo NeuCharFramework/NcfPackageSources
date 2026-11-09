@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：Settings.cshtml.cs
-    文件功能描述：NeuCharBox Live 管理端页面（Admin）：Settings.cshtml
+    文件功能描述：后台“设置”页（模块首页）：状态、今日用量、试用链接，及启用、模型、限额与额外来源的表单
 
 
     创建标识：Senparc - 20261109

@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：UsageDay.cs
-    文件功能描述：NeuCharBox Live 引擎（Access）：UsageDay
+    文件功能描述：使用日：每日限额与令牌预算按所在时区的午夜重置
 
 
     创建标识：Senparc - 20261108

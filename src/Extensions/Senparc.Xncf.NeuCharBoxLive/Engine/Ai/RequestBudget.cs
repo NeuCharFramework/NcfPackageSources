@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：RequestBudget.cs
-    文件功能描述：NeuCharBox Live 引擎（Ai）：RequestBudget
+    文件功能描述：单个请求的调用数与工作时间预算
 
 
     创建标识：Senparc - 20261108

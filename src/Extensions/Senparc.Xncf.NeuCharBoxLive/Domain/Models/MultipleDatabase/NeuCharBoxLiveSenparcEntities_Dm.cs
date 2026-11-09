@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：NeuCharBoxLiveSenparcEntities_Dm.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Models）：NeuCharBoxLiveSenparcEntities_Dm
+    文件功能描述：Dm 的 DbContext 子类：承载该数据库的迁移
 
 
     创建标识：Senparc - 20261108

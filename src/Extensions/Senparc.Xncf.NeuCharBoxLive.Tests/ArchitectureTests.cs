@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：ArchitectureTests.cs
-    文件功能描述：NeuCharBox Live 测试：引擎目录（Engine/）不得依赖 ASP.NET Core 与 NCF
+    文件功能描述：测试引擎目录（Engine/）不得依赖 ASP.NET Core 与 NCF
 
     创建标识：Senparc - 20261108
 

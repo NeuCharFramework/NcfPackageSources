@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：PlanGate.cs
-    文件功能描述：NeuCharBox Live 引擎（Ai）：PlanGate
+    文件功能描述：计划闸门：设备变更必须属于已批准的步骤，读取与安全状态例外
 
 
     创建标识：Senparc - 20261108

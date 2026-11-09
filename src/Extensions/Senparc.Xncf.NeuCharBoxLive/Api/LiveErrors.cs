@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：LiveErrors.cs
-    文件功能描述：NeuCharBox Live HTTP 接口层：LiveErrors
+    文件功能描述：契约中的错误种类、HTTP 状态与默认文案，及写出 JSON 错误体
 
 
     创建标识：Senparc - 20261108

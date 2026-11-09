@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：NeuCharBoxLiveSenparcEntities.cs
-    文件功能描述：NeuCharBox Live 领域与数据库（Models）：NeuCharBoxLiveSenparcEntities
+    文件功能描述：模块的 DbContext：邀请码、申请、运行记录与设置四张表
 
 
     创建标识：Senparc - 20261108

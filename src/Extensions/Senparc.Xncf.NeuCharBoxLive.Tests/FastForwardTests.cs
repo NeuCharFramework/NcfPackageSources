@@ -2,7 +2,7 @@
     Copyright (C) 2026 Senparc
 
     文件名：FastForwardTests.cs
-    文件功能描述：NeuCharBox Live 测试：FastForwardTests
+    文件功能描述：测试快进：规则与定时的触发顺序、节奏上限与终态读数
 
 
     创建标识：Senparc - 20261108
