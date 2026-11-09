@@ -72,6 +72,7 @@
     <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     @RenderSection("HeaderContent", false)
     @RenderSection("Style", false)
+    <script src="~/js/Admin/Shared/AdminFrameHeight.js" asp-append-version="true"></script>
 </head>
 <body class="@(isEmbedded ? "ncf-admin-embedded" : null) @(isTabFrame ? "ncf-admin-tabbed" : null)">
     <div id="app" v-cloak>

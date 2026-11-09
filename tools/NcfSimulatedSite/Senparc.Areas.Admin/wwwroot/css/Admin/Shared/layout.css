@@ -495,8 +495,8 @@ li {
 }
 
 .ncf-admin-embedded .el-aside-index,
-.ncf-admin-embedded .el-header,
-.ncf-admin-embedded .footer,
+.ncf-admin-embedded .admin-workspace > .el-header,
+.ncf-admin-embedded .admin-workspace > .footer,
 .ncf-admin-embedded .admin-voice-nav {
     display: none !important;
 }
@@ -635,11 +635,79 @@ li {
     background: #fff;
 }
 
-.ncf-admin-tabbed.ncf-admin-embedded .admin-content {
+.ncf-admin-tabbed {
+    --ncf-tab-chrome: 96px; /* 隐藏的顶栏 60px + 底栏 36px */
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .admin-workspace,
+.ncf-admin-tabbed.ncf-admin-embedded .admin-content,
+.ncf-admin-tabbed.ncf-admin-embedded .admin-content > .ifram-wrapper {
+    height: 100%;
     min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .admin-content {
+    display: flex;
+    flex-direction: column;
     padding: 18px 20px 20px;
+    overflow: hidden;
     background: #f5f7fa;
     box-sizing: border-box;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .admin-content > .ifram-wrapper {
+    flex: 1 1 auto;
+    overflow: auto;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .admin-content > .ifram-wrapper > :first-of-type:not(.el-dialog__wrapper):not(.el-drawer__wrapper) {
+    box-sizing: border-box;
+    min-height: 100%;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .admin-content > .ifram-wrapper > .el-tabs {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .admin-content > .ifram-wrapper > .el-tabs > .el-tabs__content {
+    flex: 1 1 0;
+    height: 0;
+    min-height: 0;
+    overflow: auto;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .admin-content > .ifram-wrapper > .el-tabs > .el-tabs__content > .el-tab-pane {
+    height: 100%;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .tabPane-container {
+    align-items: stretch;
+    height: 100%;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .tabPane-container > .sidebar-container,
+.ncf-admin-tabbed.ncf-admin-embedded .tabPane-container > .main-container {
+    height: 100%;
+    min-height: 0;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .sidebar-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .sidebar-head-container {
+    flex: 0 0 auto;
+}
+
+.ncf-admin-tabbed.ncf-admin-embedded .sidebar-main-container {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
 }
 
 /* 标签里的 AdminChat 必须占满框架剩余高度，消息在对话区内部滚动。 */

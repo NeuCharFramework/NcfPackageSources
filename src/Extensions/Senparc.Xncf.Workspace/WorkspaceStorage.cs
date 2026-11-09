@@ -19,6 +19,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.2.2 add streamed large-file Workspace uploads with tenant-aware ownership checks
 
+    修改标识：Senparc - 20261109
+    修改描述：增加工作区用量统计，以及保留清单的内容清空
+
 ----------------------------------------------------------------*/
 
 using System.Collections.Concurrent;
@@ -645,6 +648,60 @@ public sealed class WorkspaceStorage : IWorkspaceStorage
             }
 
             throw;
+        }
+    }
+
+    public async Task<WorkspaceUsageStatistics> GetUsageAsync(
+        string workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        var path = GetWorkspaceRoot(workspaceId);
+        EnsureWorkspaceExists(path);
+        var descriptor = await GetAsync(workspaceId, cancellationToken).ConfigureAwait(false);
+        if (descriptor == null)
+        {
+            throw new DirectoryNotFoundException("Workspace does not exist.");
+        }
+
+        return await Task.Run(
+            () => WorkspaceDirectoryMaintenance.Measure(path, _options.MaxWorkspaceBytes, cancellationToken),
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task ClearContentAsync(
+        string workspaceId,
+        CancellationToken cancellationToken = default)
+    {
+        var path = GetWorkspaceRoot(workspaceId);
+        EnsureWorkspaceExists(path);
+        var descriptor = await GetAsync(workspaceId, cancellationToken).ConfigureAwait(false);
+        if (descriptor == null)
+        {
+            throw new DirectoryNotFoundException("Workspace does not exist.");
+        }
+
+        var writeLock = _streamWriteLocks.GetOrAdd(workspaceId, _ => new SemaphoreSlim(1, 1));
+        await writeLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try
+        {
+            await _agentPool.StopAsync(workspaceId).ConfigureAwait(false);
+            await Task.Run(
+                () => WorkspaceDirectoryMaintenance.ResetToInitialLayout(path, cancellationToken),
+                cancellationToken).ConfigureAwait(false);
+            await _agentPool.StopAsync(workspaceId).ConfigureAwait(false);
+
+            using var scope = _scopeFactory.CreateScope();
+            CaptureCurrentTenant().Restore(scope.ServiceProvider);
+            var metadataStore = scope.ServiceProvider.GetRequiredService<IWorkspaceMetadataStore>();
+            await metadataStore.TouchAsync(workspaceId, DateTime.UtcNow, cancellationToken).ConfigureAwait(false);
+            _logger.LogWarning(
+                "Workspace content cleared back to the initial layout: {WorkspaceId}, OwnerId={OwnerId}",
+                workspaceId,
+                descriptor.OwnerId);
+        }
+        finally
+        {
+            writeLock.Release();
         }
     }
 

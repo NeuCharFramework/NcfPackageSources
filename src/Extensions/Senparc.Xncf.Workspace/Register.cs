@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261103
     修改描述：v0.2.2 Workspace 单例存储的元数据读写恢复请求租户上下文
 
+    修改标识：Senparc - 20261109
+    修改描述：注册按管理员身份隔离的工作区用量目录
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -58,6 +61,7 @@ public sealed partial class Register : XncfRegisterBase, IXncfRegister
         services.AddSingleton<IWorkspaceStorage, WorkspaceStorage>();
         services.AddSingleton<IWorkspaceClientFactory, WorkspaceClientFactory>();
         services.AddScoped<IWorkspaceMetadataStore, WorkspaceMetadataStore>();
+        services.AddScoped<IWorkspaceCatalog, WorkspaceCatalog>();
         return base.AddXncfModule(services, configuration, env);
     }
 

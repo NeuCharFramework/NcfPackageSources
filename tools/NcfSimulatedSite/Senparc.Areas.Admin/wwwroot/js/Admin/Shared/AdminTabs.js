@@ -1,7 +1,7 @@
 // 后台顶部标签页。
 // 外壳固定为 /Admin/Index?ncfShell=1，左侧菜单打开的页面放进 iframe（embedded=1）。
-// 当前页面写在锚点里，复制后可直接打开，例如：
-// /Admin/Index?ncfShell=1#/Admin/AdminUserInfo/Index
+// 当前页面写在锚点里，复制后可直接打开。页面自己的查询和锚点接在后面，例如：
+// /Admin/Index?ncfShell=1#/Admin/AdminChat/Chat?sessionId=15&mode=1#session-15
 // 同一个地址只保留一个标签；再次打开时切回该标签，不重新加载。
 (function (root) {
     'use strict';
@@ -116,6 +116,7 @@
                 return {
                     id: tab.id,
                     url: tab.url,
+                    address: tab.address || tab.url,
                     frameUrl: tab.frameUrl,
                     title: tab.title,
                     menuIndex: tab.menuIndex || null,
@@ -156,6 +157,7 @@
         return {
             id: parsed.id,
             url: parsed.url,
+            address: parsed.url,
             frameUrl: parsed.frameUrl,
             title: isShell ? (options.homeTitle || untitled) : (options.title || titleFromPath(parsed, untitled)),
             menuIndex: options.menuIndex ? String(options.menuIndex) : null,
@@ -203,7 +205,7 @@
             if (!parsed || !parsed.hijack) {
                 return;
             }
-            pushTab(createTab(parsed, {
+            var restored = createTab(parsed, {
                 shellId: shell.id,
                 title: item.title,
                 menuIndex: item.menuIndex,
@@ -211,7 +213,13 @@
                 homeTitle: homeTitle,
                 openedAt: item.openedAt || 0,
                 loaded: false
-            }));
+            });
+            var storedAddress = parseAdminUrl(item.address, settings.shellHref);
+            if (storedAddress && storedAddress.hijack && !restored.isShell) {
+                restored.address = storedAddress.url;
+                restored.frameUrl = storedAddress.frameUrl;
+            }
+            pushTab(restored);
         });
 
         if (!seen[shell.id]) {
@@ -238,7 +246,24 @@
         var activeId = shell.id;
         var opened = settings.openUrl ? parseAdminUrl(settings.openUrl, settings.shellHref) : null;
         if (opened && opened.hijack) {
-            if (!seen[opened.id]) {
+            var exact = null;
+            var samePath = [];
+            tabs.forEach(function (tab) {
+                if (tab.id === opened.id) {
+                    exact = tab;
+                }
+                if (!tab.isShell && tabPath(tab).toLowerCase() === opened.path.toLowerCase()) {
+                    samePath.push(tab);
+                }
+            });
+            var adopted = exact || (samePath.length === 1 ? samePath[0] : null);
+            if (adopted) {
+                adopted.address = opened.url;
+                if (!adopted.isShell && !adopted.loaded) {
+                    adopted.frameUrl = opened.frameUrl;
+                }
+                activeId = adopted.id;
+            } else if (!seen[opened.id]) {
                 pushTab(createTab(opened, {
                     shellId: shell.id,
                     untitled: untitled,
@@ -246,8 +271,10 @@
                     openedAt: settings.now || 0,
                     loaded: opened.id !== shell.id
                 }));
+                activeId = opened.id;
+            } else {
+                activeId = opened.id;
             }
-            activeId = opened.id;
         } else if (settings.activeId && seen[settings.activeId]) {
             activeId = settings.activeId;
         }
@@ -403,15 +430,55 @@
         return { state: current, activeTab: active };
     }
 
-    function shellPageHash(tab) {
-        if (!tab || tab.isShell || !tab.url) {
+    function tabPath(tab) {
+        var source = tab && (tab.address || tab.url);
+        if (!source) {
             return '';
         }
-        var url = String(tab.url);
+        var parsed = parseAdminUrl(source, 'http://localhost' + source);
+        return parsed && parsed.path ? parsed.path : '';
+    }
+
+    function shellPageHash(tab) {
+        if (!tab || tab.isShell) {
+            return '';
+        }
+        var url = String(tab.address || tab.url || '');
         if (url.charAt(0) !== '/') {
             return '';
         }
         return '#' + url;
+    }
+
+    // iframe 已经自己完成跳转时，只记录真实地址，不改 iframe 的 src，避免整页重载。
+    function rememberTabAddress(state, liveHref, baseHref) {
+        var parsed = parseAdminUrl(liveHref, baseHref || liveHref);
+        var current = cloneState(state || { enabled: true, shellId: '', activeId: '', tabs: [] });
+        if (!parsed || !parsed.hijack) {
+            return { state: current, changed: false, tab: null };
+        }
+        var target = null;
+        current.tabs.forEach(function (tab) {
+            if (tab.id === parsed.id) {
+                target = tab;
+            }
+        });
+        if (!target) {
+            var samePath = [];
+            current.tabs.forEach(function (tab) {
+                if (!tab.isShell && tabPath(tab).toLowerCase() === parsed.path.toLowerCase()) {
+                    samePath.push(tab);
+                }
+            });
+            if (samePath.length === 1) {
+                target = samePath[0];
+            }
+        }
+        if (!target || target.isShell || (target.address || target.url) === parsed.url) {
+            return { state: current, changed: false, tab: target };
+        }
+        target.address = parsed.url;
+        return { state: current, changed: true, tab: target };
     }
 
     function shellAddress(tab) {
@@ -481,6 +548,7 @@
                     return {
                         id: tab.id,
                         url: tab.url,
+                        address: tab.address || tab.url,
                         title: tab.title,
                         menuIndex: tab.menuIndex,
                         openedAt: tab.openedAt
@@ -512,6 +580,7 @@
                 ordered.push({
                     id: tab.id,
                     url: tab.url,
+                    address: tab.address || tab.url,
                     frameUrl: tab.frameUrl,
                     title: tab.title,
                     menuIndex: tab.menuIndex || null,
@@ -522,6 +591,7 @@
                 return;
             }
             found.url = tab.url;
+            found.address = tab.address || found.address || tab.url;
             found.frameUrl = tab.frameUrl;
             found.title = tab.title;
             found.menuIndex = tab.menuIndex || null;
@@ -687,6 +757,35 @@
         return active;
     }
 
+    function installFrameLocationMirror() {
+        if (!root.history || root.top === root || root.history._ncfTabMirror) {
+            return;
+        }
+        root.history._ncfTabMirror = true;
+        var replaceState = root.history.replaceState.bind(root.history);
+        var pushState = root.history.pushState.bind(root.history);
+        function reportFrameLocation() {
+            try {
+                if (root.parent && root.parent !== root && typeof root.parent.ncfReportAdminTabLocation === 'function') {
+                    root.parent.ncfReportAdminTabLocation(root.location.href);
+                }
+            } catch (error) {
+                console.debug('[NCF][AdminTabs] 无法同步 iframe 地址', error && error.message);
+            }
+        }
+        root.history.replaceState = function () {
+            var result = replaceState.apply(root.history, arguments);
+            reportFrameLocation();
+            return result;
+        };
+        root.history.pushState = function () {
+            var result = pushState.apply(root.history, arguments);
+            reportFrameLocation();
+            return result;
+        };
+        root.addEventListener('hashchange', reportFrameLocation);
+    }
+
     function installPageBridge() {
         root.ncfOpenAdminPage = function (url, title, menuIndex) {
             try {
@@ -702,6 +801,7 @@
         if (!root.document || root.top === root) {
             return;
         }
+        installFrameLocationMirror();
         root.document.addEventListener('click', function (event) {
             if (event.defaultPrevented || event.button !== 0) {
                 return;
@@ -754,8 +854,21 @@
                 }
                 return;
             }
-            var parsed = parseAdminUrl(pageUrl, root.location.href);
-            if (!parsed || !parsed.hijack || current.activeId === parsed.id) {
+            var followed = rememberTabAddress(current, pageUrl, root.location.href);
+            if (followed.tab) {
+                var parsed = parseAdminUrl(pageUrl, root.location.href);
+                var frameChanged = !!(parsed && !followed.tab.isShell && followed.tab.frameUrl !== parsed.frameUrl);
+                if (frameChanged) {
+                    followed.tab.frameUrl = parsed.frameUrl;
+                }
+                if (!followed.changed && !frameChanged && followed.state.activeId === followed.tab.id) {
+                    return;
+                }
+                var next = followed.state;
+                if (next.activeId !== followed.tab.id) {
+                    next = activateTab(next, followed.tab.id);
+                }
+                publish(next, 'hash');
                 return;
             }
             var result = openTab(current, pageUrl, '', null, Date.now(), root.location.href);
@@ -763,6 +876,18 @@
                 publish(result.state, 'hash');
             }
         });
+
+        root.ncfReportAdminTabLocation = function (liveHref) {
+            var current = snapshot();
+            if (!current.enabled) {
+                return;
+            }
+            var followed = rememberTabAddress(current, liveHref, liveHref);
+            if (!followed.changed) {
+                return;
+            }
+            publish(followed.state, 'iframe-url');
+        };
 
         root.ncfHasAdminTab = function (url) {
             var parsed = parseAdminUrl(url, root.location.href);
@@ -814,6 +939,10 @@
                 console.debug('[NCF][AdminTabs] iframe 已加载', tab && tab.url, path);
                 if (/^\/admin\/login(\/|$)/i.test(path)) {
                     root.location.href = frameWindow.location.href;
+                    return;
+                }
+                if (typeof root.ncfReportAdminTabLocation === 'function') {
+                    root.ncfReportAdminTabLocation(frameWindow.location.href);
                 }
             } catch (error) {
                 console.debug('[NCF][AdminTabs] 无法读取 iframe 地址', error && error.message);
@@ -911,7 +1040,8 @@
         tabScrollState: tabScrollState,
         shellPageHash: shellPageHash,
         shellAddress: shellAddress,
-        pageUrlFromLocationHash: pageUrlFromLocationHash
+        pageUrlFromLocationHash: pageUrlFromLocationHash,
+        rememberTabAddress: rememberTabAddress
     };
 
     root.NcfAdminTabs = api;

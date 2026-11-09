@@ -124,6 +124,37 @@ test('当前页面写进外壳锚点，复制后能打开同一页', function ()
     assert.equal(chat.frameUrl.includes('#session-15'), true);
 });
 
+test('iframe 内部的查询和锚点写回外壳地址，并且仍是同一个标签', function () {
+    const state = tabs.openTab(initial(), '/Admin/AdminChat/Chat', 'Admin Chat', 3, 20, shellHref).state;
+    state.tabs.forEach(function (tab) {
+        if (!tab.isShell) tab.loaded = true;
+    });
+    const chatBefore = state.tabs.find(function (tab) { return tab.id === '/admin/adminchat/chat'; });
+    const live = 'http://localhost:5080/Admin/AdminChat/Chat?embedded=1&ncfTab=1&sessionId=15&mode=1#session-15';
+    const result = tabs.rememberTabAddress(state, live, live);
+    assert.equal(result.changed, true);
+    assert.equal(result.state.tabs.length, 2);
+    assert.equal(result.tab.frameUrl, chatBefore.frameUrl);
+    assert.equal(tabs.shellAddress(result.tab), '/Admin/Index?ncfShell=1#/Admin/AdminChat/Chat?mode=1&sessionId=15#session-15');
+    assert.equal(tabs.rememberTabAddress(result.state, live, live).changed, false);
+});
+
+test('刷新时带会话锚点会回到原来的 AdminChat 标签', function () {
+    const restored = initial({
+        storedTabs: [{ url: '/Admin/AdminChat/Chat', title: 'Admin Chat', address: '/Admin/AdminChat/Chat' }],
+        activeId: '/admin/adminchat/chat',
+        openUrl: '/Admin/AdminChat/Chat?mode=1&sessionId=15#session-15'
+    });
+    const chats = restored.tabs.filter(function (tab) { return !tab.isShell; });
+    assert.equal(chats.length, 1);
+    assert.equal(chats[0].id, '/admin/adminchat/chat');
+    assert.equal(restored.activeId, chats[0].id);
+    assert.equal(chats[0].frameUrl.includes('sessionId=15'), true);
+    assert.equal(chats[0].frameUrl.includes('#session-15'), true);
+    assert.equal(chats[0].frameUrl.includes('embedded=1'), true);
+    assert.equal(tabs.shellAddress(chats[0]), '/Admin/Index?ncfShell=1#/Admin/AdminChat/Chat?mode=1&sessionId=15#session-15');
+});
+
 test('超出上限时关闭最早且不是当前、也不是首页的标签', function () {
     let state = initial();
     for (let i = 0; i < tabs.MAX_ADMIN_TABS + 2; i++) {

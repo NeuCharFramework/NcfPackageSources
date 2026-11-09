@@ -361,8 +361,106 @@
         box-shadow: 0 18px 48px rgba(24, 35, 57, .18);
     }
 
+    .ws-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+    .ws-stat,
+    .ws-stat-note {
+        border: 1px solid #e4e7ed;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 6px 18px rgba(31, 45, 61, .045);
+    }
+
+    .ws-stat {
+        padding: 16px 18px;
+    }
+
+    .ws-stat-label {
+        display: block;
+        color: #8a94a6;
+        font-size: 12px;
+    }
+
+    .ws-stat strong {
+        display: block;
+        margin: 6px 0 4px;
+        color: #303133;
+        font-size: 26px;
+        line-height: 1.1;
+    }
+
+    .ws-stat small {
+        color: #606266;
+        font-size: 12px;
+    }
+
+    .ws-stat.is-other {
+        background: #fffaf3;
+    }
+
+    .ws-stat.is-total strong {
+        color: #5b6fd7;
+    }
+
+    .ws-stat-note {
+        margin: 12px 0 0;
+        padding: 12px 16px;
+        color: #606266;
+        font-size: 12.5px;
+        line-height: 1.7;
+    }
+
+    .ws-scope {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 8px;
+        padding: 1px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        vertical-align: 1px;
+    }
+
+    .ws-scope.is-own {
+        color: #3f6b32;
+        background: #eef8ea;
+    }
+
+    .ws-scope.is-other {
+        color: #9a5b12;
+        background: #fff1dc;
+    }
+
+    .ws-item.is-other {
+        background: #fffdf9;
+    }
+
+    .ws-usage {
+        max-width: 280px;
+        margin-top: 10px;
+    }
+
+    .ws-item-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .ws-clear-btn {
+        border-radius: 8px;
+    }
+
+    .ws-clear-form {
+        display: none;
+    }
+
     @@media (max-width: 900px) {
-        .ws-list {
+        .ws-list,
+        .ws-stats {
             grid-template-columns: 1fr;
         }
     }
@@ -384,8 +482,9 @@
             width: 100%;
         }
 
-        .ws-upload-btn {
-            width: 100%;
+        .ws-upload-btn,
+        .ws-clear-btn {
+            flex: 1 1 auto;
         }
 
         .ws-guide {
@@ -409,7 +508,7 @@
         <div class="workspace-hero-icon"><i class="fa fa-code"></i></div>
         <div>
             <h1>安全远程工作区</h1>
-            <p>把资料放进工作区，AdminChat、VS Code 与 Cursor 都会在隔离边界内读写，文件保存在 NCF 持久化目录中。</p>
+            <p>把资料放进工作区，AdminChat、VS Code 与 Cursor 都会在隔离边界内读写。这里显示每个工作区的文件数量和占用容量；清空内容会保留工作区，只恢复成新建时的空目录。</p>
         </div>
     </div>
 
@@ -422,10 +521,32 @@
         <el-alert class="workspace-alert" title="@error" type="error" show-icon :closable="false"></el-alert>
     }
 
+    <div class="ws-stats" v-if="report.actorId">
+        <div class="ws-stat">
+            <span class="ws-stat-label">我的工作区</span>
+            <strong>{{ report.ownSummary.workspaceCount }}</strong>
+            <small>{{ report.ownSummary.fileCount }} 个文件 · {{ formatFileSize(report.ownSummary.usedBytes) }}</small>
+        </div>
+        <div class="ws-stat is-other" v-if="report.isSuperAdmin">
+            <span class="ws-stat-label">其他管理员</span>
+            <strong>{{ report.otherSummary.workspaceCount }}</strong>
+            <small>{{ report.otherSummary.fileCount }} 个文件 · {{ formatFileSize(report.otherSummary.usedBytes) }}</small>
+        </div>
+        <div class="ws-stat is-total" v-if="report.isSuperAdmin">
+            <span class="ws-stat-label">当前租户合计</span>
+            <strong>{{ report.visibleSummary.workspaceCount }}</strong>
+            <small>{{ report.visibleSummary.fileCount }} 个文件 · {{ formatFileSize(report.visibleSummary.usedBytes) }}</small>
+        </div>
+    </div>
+    <p class="ws-stat-note" v-if="report.actorId">
+        当前账号 #{{ report.actorId }}。单个工作区配额 {{ formatFileSize(report.quotaBytes) }}，文件数和容量都不含工作区清单。
+        <span v-if="report.isSuperAdmin">「其他管理员」只包含当前租户里不属于你的工作区，其他租户不会出现在这里。</span>
+    </p>
+
     <div class="ws-section">
         <div class="ws-section-head">
             <h2>我的工作区<ncf-doc-help topic="workspace.manage"></ncf-doc-help></h2>
-            <span class="count-pill">{{ workspaces.length }} 个</span>
+            <span class="count-pill">{{ report.ownWorkspaces.length }} 个</span>
         </div>
 
         <form method="post" asp-page-handler="Create" class="ws-create">
@@ -436,21 +557,27 @@
             </button>
         </form>
 
-        <div class="ws-empty" v-if="!workspaces.length">
+        <div class="ws-empty" v-if="!report.ownWorkspaces.length">
             <i class="fa fa-folder-o"></i>
             <h3>还没有工作区</h3>
             <p>输入一个名字并点击「创建工作区」，即可在 AI 对话与远程编辑器之间安全共享文件。</p>
         </div>
 
-        <div class="ws-list" v-if="workspaces.length">
-            <div class="ws-item" v-for="ws in workspaces" :key="ws.id">
+        <div class="ws-list" v-if="report.ownWorkspaces.length">
+            <div class="ws-item" v-for="ws in report.ownWorkspaces" :key="ws.id">
                 <div class="ws-item-icon"><i class="fa fa-cube"></i></div>
                 <div class="ws-item-body">
-                    <div class="ws-item-name">{{ ws.name }}</div>
+                    <div class="ws-item-name">
+                        {{ ws.name }}
+                        <span class="ws-scope is-own" v-if="report.isSuperAdmin">我的</span>
+                    </div>
                     <div class="ws-item-meta">
+                        <span><i class="fa fa-files-o"></i>{{ ws.fileCount }} 个文件 / {{ ws.directoryCount }} 个目录</span>
+                        <span><i class="fa fa-database"></i>{{ formatFileSize(ws.usedBytes) }} / {{ formatFileSize(ws.quotaBytes) }}</span>
                         <span :title="formatDate(ws.createdUtc)"><i class="fa fa-calendar"></i>创建于 {{ relativeTime(ws.createdUtc) }}</span>
                         <span :title="formatDate(ws.lastAccessedUtc)"><i class="fa fa-clock-o"></i>最近访问 {{ relativeTime(ws.lastAccessedUtc) }}</span>
                     </div>
+                    <el-progress class="ws-usage" :percentage="usagePercent(ws)" :stroke-width="6" :show-text="false" :status="usageStatus(ws)"></el-progress>
                 </div>
                 <div class="ws-item-actions">
                     <el-button
@@ -458,9 +585,60 @@
                         type="primary"
                         size="small"
                         :loading="manualUploadWorkspaceId === ws.id && manualUploading"
-                        :disabled="manualUploading"
+                        :disabled="manualUploading || clearing"
                         @@click="chooseWorkspaceUpload(ws.id)">
                         <i class="el-icon-upload2"></i> 上传文件
+                    </el-button>
+                    <el-button
+                        class="ws-clear-btn"
+                        type="danger"
+                        size="small"
+                        plain
+                        :disabled="manualUploading || clearing"
+                        @@click="clearWorkspace(ws)">
+                        <i class="fa fa-eraser"></i> 清空内容
+                    </el-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ws-section" v-if="report.isSuperAdmin">
+        <div class="ws-section-head">
+            <h2>其他管理员的工作区</h2>
+            <span class="count-pill">{{ report.otherWorkspaces.length }} 个</span>
+        </div>
+        <p class="ws-stat-note">这些工作区不属于当前账号。超级管理员可以查看用量并清空内容，操作会记入日志；普通管理员不能看到或修改它们。</p>
+        <div class="ws-empty" v-if="!report.otherWorkspaces.length">
+            <i class="fa fa-folder-o"></i>
+            <h3>当前租户没有其他管理员的工作区</h3>
+            <p>这里只显示同一个租户里、所有者不是你的工作区。</p>
+        </div>
+        <div class="ws-list" v-if="report.otherWorkspaces.length">
+            <div class="ws-item is-other" v-for="ws in report.otherWorkspaces" :key="ws.id">
+                <div class="ws-item-icon"><i class="fa fa-cube"></i></div>
+                <div class="ws-item-body">
+                    <div class="ws-item-name">
+                        {{ ws.name }}
+                        <span class="ws-scope is-other">其他管理员 #{{ ws.ownerId }}</span>
+                    </div>
+                    <div class="ws-item-meta">
+                        <span><i class="fa fa-files-o"></i>{{ ws.fileCount }} 个文件 / {{ ws.directoryCount }} 个目录</span>
+                        <span><i class="fa fa-database"></i>{{ formatFileSize(ws.usedBytes) }} / {{ formatFileSize(ws.quotaBytes) }}</span>
+                        <span :title="formatDate(ws.createdUtc)"><i class="fa fa-calendar"></i>创建于 {{ relativeTime(ws.createdUtc) }}</span>
+                        <span :title="formatDate(ws.lastAccessedUtc)"><i class="fa fa-clock-o"></i>最近访问 {{ relativeTime(ws.lastAccessedUtc) }}</span>
+                    </div>
+                    <el-progress class="ws-usage" :percentage="usagePercent(ws)" :stroke-width="6" :show-text="false" :status="usageStatus(ws)"></el-progress>
+                </div>
+                <div class="ws-item-actions">
+                    <el-button
+                        class="ws-clear-btn"
+                        type="danger"
+                        size="small"
+                        plain
+                        :disabled="manualUploading || clearing"
+                        @@click="clearWorkspace(ws)">
+                        <i class="fa fa-eraser"></i> 清空内容
                     </el-button>
                 </div>
             </div>
@@ -490,6 +668,11 @@
         </div>
     </div>
 
+    <form method="post" asp-page-handler="Clear" ref="clearForm" class="ws-clear-form">
+        <input type="hidden" name="Uid" value="@Model.Uid" />
+        <input type="hidden" name="workspaceId" ref="clearWorkspaceId" value="" />
+    </form>
+
     <div class="ws-upload-toast" v-if="manualUploading">
         <div class="toast-file"><i class="fa fa-cloud-upload"></i>{{ manualUploadFileName }}</div>
         <el-progress :percentage="manualUploadProgress" :stroke-width="8" :show-text="true"></el-progress>
@@ -506,14 +689,8 @@
                     manualUploadFileName: '',
                     manualUploadProgress: 0,
                     manualUploading: false,
-                    workspaces: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
-                        Model.Workspaces.Select(x => new {
-                            id = x.Id,
-                            name = x.Name,
-                            createdUtc = x.CreatedUtc,
-                            lastAccessedUtc = x.LastAccessedUtc
-                        }),
-                        new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)))
+                    clearing: false,
+                    report: @Html.Raw(Model.ClientReportJson)
                 };
             },
             methods: {
@@ -599,9 +776,30 @@
                     }
                 },
                 formatFileSize: function (bytes) {
-                    if (bytes >= 1024 * 1024 * 1024) return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
-                    if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(0) + " MB";
-                    return Math.max(1, Math.round(bytes / 1024)) + " KB";
+                    var size = Number(bytes);
+                    if (!Number.isFinite(size) || size <= 0) return "0 B";
+                    if (size >= 1024 * 1024 * 1024) return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+                    if (size >= 1024 * 1024) return (size / (1024 * 1024)).toFixed(1) + " MB";
+                    if (size >= 1024) return (size / 1024).toFixed(1) + " KB";
+                    return Math.round(size) + " B";
+                },
+                usagePercent: function (ws) {
+                    var quota = Number(ws.quotaBytes);
+                    if (!Number.isFinite(quota) || quota <= 0) return 0;
+                    return Math.min(100, Math.round(Number(ws.usedBytes) * 100 / quota));
+                },
+                usageStatus: function (ws) {
+                    return Number(ws.usedBytes) > Number(ws.quotaBytes) ? "exception" : "";
+                },
+                clearWorkspace: function (ws) {
+                    if (!ws || !ws.id || this.clearing || this.manualUploading) return;
+                    var message = ws.scope === "Other"
+                        ? "这将清空其他管理员 #" + ws.ownerId + " 的工作区「" + ws.name + "」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。"
+                        : "这将清空你自己的工作区「" + ws.name + "」。文件会被删除，并恢复为新建时的 input、output、logs 空目录。工作区本身会保留。此操作不可撤销。";
+                    if (!window.confirm(message)) return;
+                    this.clearing = true;
+                    this.$refs.clearWorkspaceId.value = ws.id;
+                    this.$refs.clearForm.submit();
                 }
             }
         });
