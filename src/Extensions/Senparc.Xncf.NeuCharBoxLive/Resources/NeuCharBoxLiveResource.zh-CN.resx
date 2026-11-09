@@ -58,7 +58,7 @@
     <value>实时 AI 已开启，持有邀请码的访客可以发起实时请求。</value>
   </data>
   <data name="Status.Off.starting" xml:space="preserve">
-    <value>实时 AI 已关闭：模块仍在启动。</value>
+    <value>实时 AI 已关闭：模块仍在启动。如果站点是本次运行中新安装的，请刷新本页唤醒它。</value>
   </data>
   <data name="Status.Off.config" xml:space="preserve">
     <value>实时 AI 已关闭：站点配置（appsettings）将其关闭。</value>

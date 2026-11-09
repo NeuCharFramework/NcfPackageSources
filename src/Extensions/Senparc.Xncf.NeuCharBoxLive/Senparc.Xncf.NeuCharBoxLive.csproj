@@ -3,6 +3,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Version>0.1.0-preview1</Version>
     <PackageReleaseNotes>
+      [2026-11-09] v0.1.0-preview1 本次运行中新安装的站点：打开设置页即唤醒模块运行时（显式刷新读库成功视为就绪），无需重启
       [2026-11-09] v0.1.0-preview1 终审修正：NcbLive 配置值无法转换时模块照常注册（DbContext 不再被跳过）并关闭 Live（config）；模块未在服务时申请与邀请码检查答 503 live_off；NCF 就绪前不读数据库；AI Kernel 读不到时设置页不再抛错；保存后等运行时刷新；未接入 /live/api 时记错误；模型失败日志不带异常对象；不再注册 CORS 服务；旧版键告警
       [2026-11-09] v0.1.0-preview1 加入 NcfPackageSources 解决方案与模拟站点；新增 README 与 Live API 契约文档；菜单名称与说明改走资源文件（英文、简体中文）；补全文件头说明
       [2026-11-09] v0.1.0-preview1 新增设置页作为模块首页（状态、今日用量、试用链接、开关、模型、限额、额外来源）；后台全部文字改走资源文件（英文、简体中文），时间按使用日所在时区显示

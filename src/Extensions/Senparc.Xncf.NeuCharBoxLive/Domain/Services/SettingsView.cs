@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 新增 LoadChoicesAsync（AI Kernel 读不到时返回空列表并标记，页面不再抛错）；SaveAsync 保存成功后等待运行时刷新
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 新增 WakeIfStartingAsync：打开设置页时唤醒仍在 starting 的运行时（本次运行中新安装的站点）
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Logging;
@@ -101,6 +104,14 @@ public static class SettingsView
         if (problems.Count == 0 && refresh is not null) await refresh(ct);
         return problems;
     }
+
+    /// <summary>
+    /// Opening the Settings page wakes a runtime that is still <see cref="LiveOff.Starting"/>: on a site installed in this
+    /// run NCF never reports ready until a restart, and a successful refresh here (the admin page itself just read the
+    /// database) lets the runtime poll as usual. Does nothing for a runtime that is already awake.
+    /// </summary>
+    public static Task WakeIfStartingAsync(LiveSnapshot current, Func<CancellationToken, Task>? refresh, CancellationToken ct = default) =>
+        current.OffReason == LiveOff.Starting && refresh is not null ? refresh(ct) : Task.CompletedTask;
 
     /// <summary>The extra-origins textarea: one origin per line, blank lines dropped.</summary>
     public static IReadOnlyList<string> ParseOrigins(string? text) =>

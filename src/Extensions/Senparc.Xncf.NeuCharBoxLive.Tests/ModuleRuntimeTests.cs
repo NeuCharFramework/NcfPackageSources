@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 新增测试：NCF 未就绪时不读数据库、配置值无法转换时模块照常注册（含 DbContext）且 Live 关闭（config）、模块状态映射
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 新增测试：显式刷新成功后恢复轮询、失败则不恢复；设置页只唤醒仍在 starting 的运行时
+
 ----------------------------------------------------------------*/
 
 using System.Net.Http.Json;
@@ -429,6 +432,79 @@ public class ModuleRuntimeTests
             Assert.IsTrue(rig.Module.Reads > 0);
         }
         finally { await rig.Runtime.StopAsync(CancellationToken.None); }
+    }
+
+    /// <summary>
+    /// A site installed in this run never gets NCF's readiness flag until it restarts (its database was Uninitialized at
+    /// startup, so the host never starts the XNCF threads). An explicit refresh that reads the database successfully (the
+    /// Settings page's) proves the database is there: the hosted runtime then polls as usual, so later changes are seen.
+    /// </summary>
+    [TestMethod]
+    public async Task ExplicitRefresh_OnAFreshSite_WakesThePolling()
+    {
+        using var rig = new Rig();
+        await rig.SaveAsync(Good());
+        rig.Ready = false; // and it stays false: NCF never sets it on this run
+        await rig.Runtime.StartAsync(CancellationToken.None);
+        try
+        {
+            AssertOff(rig.Runtime.Current, LiveOff.Starting);
+            await rig.Runtime.RefreshAsync();
+            Assert.IsTrue(rig.Runtime.Current.On, "the explicit refresh reads the settings");
+
+            rig.Module.Status = ModuleStatus.Closed;
+            await LiveHost.WaitUntil(() =>
+            {
+                rig.Time.Advance(ModuleLiveRuntime.Period);
+                return Task.FromResult(rig.Runtime.Current.OffReason == LiveOff.ModuleClosed);
+            }, "the 5 s polling, resumed after the explicit refresh");
+        }
+        finally { await rig.Runtime.StopAsync(CancellationToken.None); }
+    }
+
+    /// <summary>An explicit refresh that fails proves nothing: the hosted runtime keeps waiting for NCF.</summary>
+    [TestMethod]
+    public async Task ExplicitRefresh_ThatFails_DoesNotWakeThePolling()
+    {
+        using var rig = new Rig();
+        await rig.SaveAsync(Good());
+        rig.Ready = false;
+        rig.Module.Throw = new InvalidOperationException("no tables yet");
+        await rig.Runtime.StartAsync(CancellationToken.None);
+        try
+        {
+            await rig.Runtime.RefreshAsync();
+            AssertOff(rig.Runtime.Current, LiveOff.Unavailable);
+            var reads = rig.Module.Reads;
+            rig.Module.Throw = null;
+            for (var i = 0; i < 3; i++)
+            {
+                await Task.Delay(50);
+                rig.Time.Advance(ModuleLiveRuntime.Period);
+            }
+            await Task.Delay(100);
+            Assert.AreEqual(reads, rig.Module.Reads, "still not polling");
+        }
+        finally { await rig.Runtime.StopAsync(CancellationToken.None); }
+    }
+
+    /// <summary>Opening the Settings page wakes a runtime that is still starting, and only then.</summary>
+    [TestMethod]
+    public async Task SettingsPage_WakesOnlyAStartingRuntime()
+    {
+        using var rig = new Rig();
+        await rig.SaveAsync(Good());
+        var calls = 0;
+        Task Count(CancellationToken ct) { calls++; return rig.Runtime.RefreshAsync(ct); }
+
+        await SettingsView.WakeIfStartingAsync(rig.Runtime.Current, Count);
+        Assert.AreEqual(1, calls);
+        Assert.IsTrue(rig.Runtime.Current.On);
+
+        await SettingsView.WakeIfStartingAsync(rig.Runtime.Current, Count);
+        Assert.AreEqual(1, calls, "an awake runtime isn't refreshed on every page view");
+
+        await SettingsView.WakeIfStartingAsync(LiveSnapshot.Off(LiveOff.Starting, []), null);
     }
 
     [TestMethod]

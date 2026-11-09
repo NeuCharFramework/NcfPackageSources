@@ -31,7 +31,8 @@ wrong method. Everything else on the site, including its admin login, is the hos
 Otherwise `GET /live/api/health` answers `{"ok":true,"liveEnabled":false,...}` and live requests answer `503 live_off`.
 The Settings page says which of these is missing. The runtime re-reads the settings every 5 seconds and right after a save,
 but reads nothing until NCF reports the site ready (a site in maintenance mode, or whose database isn't updated yet, keeps
-live off as "starting").
+live off as "starting"). On a site installed in this run NCF only reports ready after a restart; opening the Settings page
+wakes the module instead (its successful read counts as ready), so no restart is needed.
 
 While the module isn't serving at all (not installed, not enabled, or multi-tenancy on), `POST apply` and
 `POST access/check` answer `503 live_off` too, so no visitor email or text is stored. For every other reason (switched

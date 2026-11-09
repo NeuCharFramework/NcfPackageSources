@@ -58,7 +58,7 @@
     <value>Live is on. Visitors with an invite code can start live requests.</value>
   </data>
   <data name="Status.Off.starting" xml:space="preserve">
-    <value>Live is off: the module is still starting.</value>
+    <value>Live is off: the module is still starting. On a site installed in this run, reload this page to wake it.</value>
   </data>
   <data name="Status.Off.config" xml:space="preserve">
     <value>Live is off: the site's configuration (appsettings) turns it off.</value>

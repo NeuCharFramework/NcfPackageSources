@@ -16,6 +16,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 NCF 报告就绪（XNCF 线程已载入）之前，后台刷新与保存后的刷新都不读数据库，快照保持 starting
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 显式刷新读库成功即视为就绪：本次运行中新安装的站点打开设置页后恢复每 5 秒轮询，无需重启
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Hosting;
@@ -117,6 +120,9 @@ public sealed class ModuleLiveRuntime : ILiveRuntime, IHostedService
             try
             {
                 next = await BuildAsync(ct).ConfigureAwait(false);
+                // A read that worked proves the database is there. On a site installed in this run NCF never reports
+                // ready until a restart, so an explicit refresh that succeeds (the Settings page's) lets the loop poll.
+                _ready = true;
             }
             catch (OperationCanceledException) when (ct.IsCancellationRequested)
             {

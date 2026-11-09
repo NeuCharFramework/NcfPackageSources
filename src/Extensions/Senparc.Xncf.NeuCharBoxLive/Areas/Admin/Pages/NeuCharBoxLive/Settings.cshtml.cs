@@ -13,6 +13,9 @@
     修改标识：Senparc - 20261109
     修改描述：v0.1.0-preview1 AI Kernel 读不到时显示空的模型列表与提示，不再抛错；保存成功后先等运行时刷新再跳转
 
+    修改标识：Senparc - 20261109
+    修改描述：v0.1.0-preview1 打开设置页时唤醒仍在 starting 的运行时（本次运行中新安装的站点无需重启）
+
 ----------------------------------------------------------------*/
 
 using Microsoft.AspNetCore.Mvc;
@@ -72,6 +75,10 @@ public class SettingsModel(Lazy<XncfModuleService> xncfModuleService, LiveSettin
 
     public async Task OnGetAsync()
     {
+        // A site installed in this run: the runtime waits for NCF's readiness, which only a restart brings. This page just
+        // read the database, so a refresh here wakes it (the runtime's own state, not the config wrapper's).
+        if (HttpContext.RequestServices.GetService<ModuleLiveRuntime>() is { } module)
+            await SettingsView.WakeIfStartingAsync(module.Current, module.RefreshAsync, HttpContext.RequestAborted);
         Form = await settings.GetAsync(HttpContext.RequestAborted);
         OriginsText = string.Join("\n", Form.ExtraOrigins);
         await LoadAsync();
