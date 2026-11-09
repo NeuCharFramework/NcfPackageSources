@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.2.0-preview1 注册设置表映射
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +51,7 @@ namespace Senparc.Xncf.NeuCharBoxLive
             modelBuilder.ApplyConfiguration(new InviteCodeConfigurationMapping());
             modelBuilder.ApplyConfiguration(new ApplicationConfigurationMapping());
             modelBuilder.ApplyConfiguration(new RunConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new SettingsConfigurationMapping());
         }
 
         public void AddXncfDatabaseModule(IServiceCollection services)

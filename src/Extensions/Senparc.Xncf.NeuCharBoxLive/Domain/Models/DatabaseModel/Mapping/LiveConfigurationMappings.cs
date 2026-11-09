@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.2.0-preview1 新增设置表映射
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -80,6 +83,16 @@ namespace Senparc.Xncf.NeuCharBoxLive.Models
             builder.Property(e => e.Model).IsRequired().HasMaxLength(LiveColumns.Model);
             builder.Property(e => e.Outcome).HasMaxLength(LiveColumns.Outcome);
             builder.HasIndex(e => e.Day);
+        }
+    }
+
+    [XncfAutoConfigurationMapping]
+    public class SettingsConfigurationMapping : ConfigurationMappingWithIdBase<SettingsEntity, int>
+    {
+        public override void Configure(EntityTypeBuilder<SettingsEntity> builder)
+        {
+            base.Configure(builder);
+            builder.Property(e => e.ExtraOrigins).IsRequired(); // one origin per line, so no cap here
         }
     }
 }

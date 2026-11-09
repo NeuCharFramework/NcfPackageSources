@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.2.0-preview1 设置表加入后更新模型与迁移断言（SQLite、SQL Server 各多一个 AddSettings 迁移）
+
 ----------------------------------------------------------------*/
 
 using Microsoft.EntityFrameworkCore;
@@ -61,7 +64,7 @@ public class ModuleTests
         Assert.AreEqual(0, ctx.Model.GetEntityTypes().SelectMany(t => t.GetForeignKeys()).Count(),
             "CodeId is stored as given: no foreign key");
         CollectionAssert.AreEquivalent(
-            new[] { "Senparc_NeuCharBoxLive_InviteCode", "Senparc_NeuCharBoxLive_Application", "Senparc_NeuCharBoxLive_Run" },
+            new[] { "Senparc_NeuCharBoxLive_InviteCode", "Senparc_NeuCharBoxLive_Application", "Senparc_NeuCharBoxLive_Run", "Senparc_NeuCharBoxLive_Settings" },
             ctx.Model.GetEntityTypes().Select(t => t.GetTableName()).ToList());
     }
 
@@ -71,7 +74,7 @@ public class ModuleTests
         using var db = new TestDb(create: false);
         using (var ctx = db.NewContext())
         {
-            CollectionAssert.AreEqual(new[] { "Init" }, ctx.Database.GetMigrations().Select(m => m.Split('_', 2)[1]).ToList());
+            CollectionAssert.AreEqual(new[] { "Init", "AddSettings" }, ctx.Database.GetMigrations().Select(m => m.Split('_', 2)[1]).ToList());
             await ctx.Database.MigrateAsync();
         }
         await StoreContract.Invites(db.Store);
@@ -93,7 +96,7 @@ public class ModuleTests
         var options = new DbContextOptionsBuilder<NeuCharBoxLiveSenparcEntities_SqlServer>()
             .UseSqlServer("Server=unused;Database=unused;Trusted_Connection=True").Options;
         using var ctx = new NeuCharBoxLiveSenparcEntities_SqlServer(options);
-        Assert.AreEqual(1, ctx.Database.GetMigrations().Count());
+        Assert.AreEqual(2, ctx.Database.GetMigrations().Count());
         AssertSnapshotMatches(ctx);
     }
 
@@ -107,7 +110,7 @@ public class ModuleTests
             snapshotModel.GetRelationalModel(), ctx.GetService<IDesignTimeModel>().Model.GetRelationalModel());
         Assert.AreEqual(0, diff.Count, "the model changed without a migration: " + string.Join("; ", diff.Select(d => d.ToString())));
         CollectionAssert.AreEquivalent(
-            new[] { "Senparc_NeuCharBoxLive_InviteCode", "Senparc_NeuCharBoxLive_Application", "Senparc_NeuCharBoxLive_Run" },
+            new[] { "Senparc_NeuCharBoxLive_InviteCode", "Senparc_NeuCharBoxLive_Application", "Senparc_NeuCharBoxLive_Run", "Senparc_NeuCharBoxLive_Settings" },
             snapshotModel.GetEntityTypes().Select(t => t.GetTableName()).ToList(), "the snapshot holds only this module's tables");
     }
 

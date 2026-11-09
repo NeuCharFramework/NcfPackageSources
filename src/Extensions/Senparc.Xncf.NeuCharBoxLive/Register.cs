@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.2.0-preview1 模块版本 0.2：新增设置表，并注册 LiveSettingsService
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Extensions.Configuration;
@@ -41,7 +44,7 @@ namespace Senparc.Xncf.NeuCharBoxLive
         /// <summary>Fixed for good: NCF keys the installed module by it.</summary>
         public override string Uid => "8D3E6A52-4B1F-4C7E-9A3D-2F6B1C0E7A91";
 
-        public override string Version => "0.1";
+        public override string Version => "0.2";
 
         public override string MenuName => "NeuCharBox Live";
 
@@ -56,7 +59,7 @@ namespace Senparc.Xncf.NeuCharBoxLive
         }
 
         /// <summary>
-        /// Uninstalling keeps the three tables: the run log is the handover cost record, and codes Leo sent out should
+        /// Uninstalling keeps the tables: the run log is the handover cost record, and codes Leo sent out should
         /// work again after a reinstall. Drop them by hand (DatabaseToolkit or SQL) if they really must go.
         /// </summary>
         public override async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
@@ -86,6 +89,8 @@ namespace Senparc.Xncf.NeuCharBoxLive
                 .UseStores<EfLiveStore>()
                 .UseRuntime(InterimRuntime()));
             services.AddHostedService<RetentionService>();
+            // Not TryAddSingleton: Senparc.Ncf.Utility defines a type that clashes with its namespace here (CS0434).
+            if (!services.Any(d => d.ServiceType == typeof(LiveSettingsService))) services.AddSingleton<LiveSettingsService>();
 
             // NCF registers this module's context under its per-database type (…_Sqlite, …_SqlServer); EfLiveStore asks
             // for the base type, which resolves to the one the host's DatabaseType selects.

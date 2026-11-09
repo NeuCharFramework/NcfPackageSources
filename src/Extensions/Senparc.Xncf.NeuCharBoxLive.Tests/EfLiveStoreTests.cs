@@ -10,6 +10,9 @@
     修改标识：Senparc - 20261108
     修改描述：v0.1.0-preview1 首次加入 NcfPackageSources（从 ncb/live 迁移）
 
+    修改标识：Senparc - 20261108
+    修改描述：v0.2.0-preview1 TestDb 暴露 Scopes，供 LiveSettingsService 测试使用
+
 ----------------------------------------------------------------*/
 
 using Microsoft.Data.Sqlite;
@@ -50,6 +53,8 @@ sealed class TestDb : IDisposable
     readonly ServiceProvider _provider;
 
     public EfLiveStore Store { get; }
+
+    public IServiceScopeFactory Scopes => _provider.GetRequiredService<IServiceScopeFactory>();
 
     public TestDb(bool create = true)
     {
